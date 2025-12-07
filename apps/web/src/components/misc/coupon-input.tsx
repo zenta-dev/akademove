@@ -5,7 +5,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { orpcClient } from "@/lib/orpc";
+import { orpcClient, queryClient } from "@/lib/orpc";
 import { cn } from "@/utils/cn";
 
 interface CouponInputProps {
@@ -48,6 +48,7 @@ export function CouponInput({
 			return result.body.data;
 		},
 		onSuccess: (data) => {
+			queryClient.invalidateQueries();
 			if (data.valid && data.coupon) {
 				onCouponApplied(data.coupon, data.discountAmount);
 				setErrorMessage(null);

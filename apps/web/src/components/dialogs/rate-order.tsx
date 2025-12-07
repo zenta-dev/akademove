@@ -96,8 +96,7 @@ export function RateOrderDialog({
 				return result;
 			},
 			onSuccess: () => {
-				queryClient.invalidateQueries({ queryKey: ["reviews"] });
-				queryClient.invalidateQueries({ queryKey: ["user", "orders"] });
+				queryClient.invalidateQueries();
 				toast.success(m.rate_order_success());
 				onOpenChange(false);
 				form.reset();

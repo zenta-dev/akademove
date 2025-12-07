@@ -1,5 +1,5 @@
 import { m } from "@repo/i18n";
-import type { DayOfWeek } from "@repo/schema/common";
+import type { DayOfWeek, Time } from "@repo/schema/common";
 import type { DriverSchedule } from "@repo/schema/driver";
 import { UnifiedPaginationQuerySchema } from "@repo/schema/pagination";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -12,7 +12,7 @@ import {
 	Repeat,
 	Trash2,
 } from "lucide-react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { toast } from "sonner";
 import {
 	AlertDialog,
@@ -55,7 +55,7 @@ import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { hasAccess } from "@/lib/actions";
 import { SUB_ROUTE_TITLES } from "@/lib/constants";
-import { orpcClient, queryClient } from "@/lib/orpc";
+import { orpcQuery, queryClient } from "@/lib/orpc";
 
 export const Route = createFileRoute("/dash/driver/schedule")({
 	validateSearch: (values) => {
@@ -86,7 +86,7 @@ const DAYS_OF_WEEK: { value: DayOfWeek; label: string }[] = [
 ];
 
 interface ScheduleFormData {
-	name?: string;
+	name: string;
 	dayOfWeek: DayOfWeek;
 	startTime: string; // HH:MM format
 	endTime: string; // HH:MM format
@@ -95,12 +95,12 @@ interface ScheduleFormData {
 	isActive: boolean;
 }
 
-function timeToObject(timeStr: string): { h: number; m: number } {
+function timeToObject(timeStr: string): Time {
 	const [h, m] = timeStr.split(":").map(Number);
 	return { h, m };
 }
 
-function timeFromObject(time: { h: number; m: number }): string {
+function timeFromObject(time: Time): string {
 	return `${String(time.h).padStart(2, "0")}:${String(time.m).padStart(2, "0")}`;
 }
 
@@ -146,137 +146,80 @@ function RouteComponent() {
 	if (!allowed) navigate({ to: "/" });
 
 	// Fetch driver profile to get driverId
-	const { data: driver, isLoading: driverLoading } = useQuery({
-		queryKey: ["driver", "mine"],
-		queryFn: async () => {
-			const result = await orpcClient.driver.getMine();
-			if (result.status !== 200) throw new Error(result.body.message);
-			return result.body.data;
-		},
-	});
+	const { data: driverResponse, isLoading: driverLoading } = useQuery(
+		orpcQuery.driver.getMine.queryOptions({}),
+	);
+
+	const driver = useMemo(() => driverResponse?.body.data, [driverResponse]);
 
 	// Fetch schedules
 	const {
-		data: schedulesResult,
+		data: schedulesResponse,
 		isLoading: schedulesLoading,
 		refetch,
-	} = useQuery({
-		queryKey: ["schedules", driver?.id, search],
-		queryFn: async () => {
-			if (!driver?.id) return null;
-			const result = await orpcClient.driver.schedule.list({
-				params: { driverId: driver.id },
+	} = useQuery(
+		orpcQuery.driver.schedule.list.queryOptions({
+			input: {
+				params: { driverId: driver?.id || "" },
 				query: search,
-			});
-			if (result.status !== 200) throw new Error(result.body.message);
-			return result.body;
-		},
-		enabled: !!driver?.id,
-	});
+			},
+			enabled: !!driver?.id,
+		}),
+	);
+
+	const schedulesResult = useMemo(
+		() => schedulesResponse?.body.data,
+		[schedulesResponse],
+	);
 
 	// Create schedule mutation
-	const createMutation = useMutation({
-		mutationFn: async (data: ScheduleFormData) => {
-			if (!driver?.id) throw new Error("Driver ID not found");
-			const result = await orpcClient.driver.schedule.create({
-				params: { driverId: driver.id },
-				body: {
-					name:
-						data.name ||
-						generateScheduleName(
-							data.isRecurring,
-							data.dayOfWeek,
-							data.startTime,
-							data.endTime,
-							data.specificDate,
-						),
-					driverId: driver.id,
-					dayOfWeek: data.dayOfWeek,
-					startTime: timeToObject(data.startTime),
-					endTime: timeToObject(data.endTime),
-					isRecurring: data.isRecurring,
-					specificDate: data.specificDate
-						? new Date(data.specificDate)
-						: undefined,
-					isActive: data.isActive,
-				},
-			});
-			if (result.status !== 200) throw new Error(result.body.message);
-			return result.body.data;
-		},
-		onSuccess: () => {
-			toast.success("Schedule created successfully");
-			setDialogOpen(false);
-			resetForm();
-			queryClient.invalidateQueries({ queryKey: ["schedules"] });
-			refetch();
-		},
-		onError: (error: Error) => {
-			toast.error(`Failed to create schedule: ${error.message}`);
-		},
-	});
+	const createMutation = useMutation(
+		orpcQuery.driver.schedule.create.mutationOptions({
+			onSuccess: () => {
+				toast.success("Schedule created successfully");
+				setDialogOpen(false);
+				resetForm();
+				queryClient.invalidateQueries();
+				refetch();
+			},
+			onError: (error: Error) => {
+				toast.error(`Failed to create schedule: ${error.message}`);
+			},
+		}),
+	);
 
 	// Update schedule mutation
-	const updateMutation = useMutation({
-		mutationFn: async ({
-			id,
-			data,
-		}: {
-			id: string;
-			data: ScheduleFormData;
-		}) => {
-			if (!driver?.id) throw new Error("Driver ID not found");
-			const result = await orpcClient.driver.schedule.update({
-				params: { driverId: driver.id, id },
-				body: {
-					name: data.name,
-					dayOfWeek: data.dayOfWeek,
-					startTime: timeToObject(data.startTime),
-					endTime: timeToObject(data.endTime),
-					isRecurring: data.isRecurring,
-					specificDate: data.specificDate
-						? new Date(data.specificDate)
-						: undefined,
-					isActive: data.isActive,
-				},
-			});
-			if (result.status !== 200) throw new Error(result.body.message);
-			return result.body.data;
-		},
-		onSuccess: () => {
-			toast.success("Schedule updated successfully");
-			setDialogOpen(false);
-			setEditingSchedule(null);
-			resetForm();
-			queryClient.invalidateQueries({ queryKey: ["schedules"] });
-			refetch();
-		},
-		onError: (error: Error) => {
-			toast.error(`Failed to update schedule: ${error.message}`);
-		},
-	});
+	const updateMutation = useMutation(
+		orpcQuery.driver.schedule.update.mutationOptions({
+			onSuccess: () => {
+				toast.success("Schedule updated successfully");
+				setDialogOpen(false);
+				setEditingSchedule(null);
+				resetForm();
+				queryClient.invalidateQueries();
+				refetch();
+			},
+			onError: (error: Error) => {
+				toast.error(`Failed to update schedule: ${error.message}`);
+			},
+		}),
+	);
 
 	// Delete schedule mutation
-	const deleteMutation = useMutation({
-		mutationFn: async (id: string) => {
-			if (!driver?.id) throw new Error("Driver ID not found");
-			const result = await orpcClient.driver.schedule.remove({
-				params: { driverId: driver.id, id },
-			});
-			if (result.status !== 200) throw new Error(result.body.message);
-			return result.body.data;
-		},
-		onSuccess: () => {
-			toast.success("Schedule deleted successfully");
-			setDeleteDialogOpen(false);
-			setScheduleToDelete(null);
-			queryClient.invalidateQueries({ queryKey: ["schedules"] });
-			refetch();
-		},
-		onError: (error: Error) => {
-			toast.error(`Failed to delete schedule: ${error.message}`);
-		},
-	});
+	const deleteMutation = useMutation(
+		orpcQuery.driver.schedule.remove.mutationOptions({
+			onSuccess: () => {
+				toast.success("Schedule deleted successfully");
+				setDeleteDialogOpen(false);
+				setScheduleToDelete(null);
+				queryClient.invalidateQueries();
+				refetch();
+			},
+			onError: (error: Error) => {
+				toast.error(`Failed to delete schedule: ${error.message}`);
+			},
+		}),
+	);
 
 	const resetForm = () => {
 		setFormData({
@@ -312,10 +255,29 @@ function RouteComponent() {
 	};
 
 	const handleSubmit = () => {
+		if (!driver) {
+			toast.error("Driver profile not found");
+			return;
+		}
 		if (editingSchedule) {
-			updateMutation.mutate({ id: editingSchedule.id, data: formData });
+			updateMutation.mutate({
+				params: { id: editingSchedule.id, driverId: driver?.id },
+				body: {
+					...formData,
+					startTime: timeToObject(formData.startTime),
+					endTime: timeToObject(formData.endTime),
+				},
+			});
 		} else {
-			createMutation.mutate(formData);
+			createMutation.mutate({
+				params: { driverId: driver?.id },
+				body: {
+					...formData,
+					driverId: driver.id,
+					startTime: timeToObject(formData.startTime),
+					endTime: timeToObject(formData.endTime),
+				},
+			});
 		}
 	};
 
@@ -325,12 +287,19 @@ function RouteComponent() {
 	};
 
 	const confirmDelete = () => {
+		if (!driver) {
+			toast.error("Driver profile not found");
+			return;
+		}
+
 		if (scheduleToDelete) {
-			deleteMutation.mutate(scheduleToDelete.id);
+			deleteMutation.mutate({
+				params: { id: scheduleToDelete.id, driverId: driver?.id },
+			});
 		}
 	};
 
-	const schedules = schedulesResult?.data || [];
+	const schedules = schedulesResult || [];
 	const isLoading = driverLoading || schedulesLoading;
 
 	return (

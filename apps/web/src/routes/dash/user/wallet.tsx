@@ -11,7 +11,7 @@ import {
 	TrendingDown,
 	Wallet as WalletIcon,
 } from "lucide-react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -50,7 +50,7 @@ import {
 } from "@/components/ui/table";
 import { hasAccess } from "@/lib/actions";
 import { SUB_ROUTE_TITLES } from "@/lib/constants";
-import { orpcClient, orpcQuery, queryClient } from "@/lib/orpc";
+import { orpcQuery, queryClient } from "@/lib/orpc";
 import { cn } from "@/utils/cn";
 
 export const Route = createFileRoute("/dash/user/wallet")({
@@ -80,72 +80,56 @@ function RouteComponent() {
 	const [paymentMethod, setPaymentMethod] = useState<string>("QRIS");
 
 	// Fetch business configuration for validation limits
-	const { data: businessConfig } = useQuery({
-		queryKey: ["businessConfig"],
-		queryFn: async () => {
-			const result = await orpcClient.configuration.get({
-				params: { key: "business-configuration" },
-			});
-			if (result.status !== 200) throw new Error(result.body.message);
-			return result.body.data.value as {
-				minTransferAmount: number;
-				minWithdrawalAmount: number;
-				minTopUpAmount: number;
-				quickTopUpAmounts: number[];
-				userCancellationFeeBeforeAccept: number;
-				userCancellationFeeAfterAccept: number;
-				noShowFee: number;
-				highValueOrderThreshold: number;
-			};
-		},
-	});
+	const { data: businessConfigResponse } = useQuery(
+		orpcQuery.configuration.get.queryOptions({
+			input: { params: { key: "business-configuration" } },
+		}),
+	);
+
+	const businessConfig = useMemo(
+		() => businessConfigResponse?.body.data.value,
+		[businessConfigResponse],
+	);
 
 	// Fetch wallet data
-	const { data: wallet, isLoading: walletLoading } = useQuery({
-		queryKey: ["wallet"],
-		queryFn: async () => {
-			const result = await orpcClient.wallet.get({});
-			if (result.status !== 200) throw new Error(result.body.message);
-			return result.body.data;
-		},
-	});
+	const { data: walletResponse, isLoading: walletLoading } = useQuery(
+		orpcQuery.wallet.get.queryOptions({ input: {} }),
+	);
+
+	const wallet = useMemo(() => walletResponse?.body.data, [walletResponse]);
 
 	// Fetch transactions
-	const { data: transactionsResult, isLoading: transactionsLoading } = useQuery(
-		{
-			queryKey: ["transactions", search],
-			queryFn: async () => {
-				const result = await orpcClient.transaction.list({
-					query: search,
-				});
-				if (result.status !== 200) throw new Error(result.body.message);
-				return result.body;
-			},
-		},
+	const { data: transactionsResponse, isLoading: transactionsLoading } =
+		useQuery(
+			orpcQuery.transaction.list.queryOptions({
+				input: { query: search },
+			}),
+		);
+
+	const transactionsResult = useMemo(
+		() => transactionsResponse?.body.data,
+		[transactionsResponse],
 	);
 
 	// Fetch monthly summary
-	const { data: summary, isLoading: summaryLoading } = useQuery({
-		queryKey: ["wallet", "summary"],
-		queryFn: async () => {
-			const now = new Date();
-			const result = await orpcClient.wallet.getMonthlySummary({
+	const { data: summaryResponse, isLoading: summaryLoading } = useQuery(
+		orpcQuery.wallet.getMonthlySummary.queryOptions({
+			input: {
 				query: {
-					year: now.getFullYear(),
-					month: now.getMonth() + 1,
+					year: new Date().getFullYear(),
+					month: new Date().getMonth() + 1,
 				},
-			});
-			if (result.status !== 200) throw new Error(result.body.message);
-			return result.body.data;
-		},
-	});
+			},
+		}),
+	);
+
+	const summary = useMemo(() => summaryResponse?.body.data, [summaryResponse]);
 
 	// Top-up mutation
 	const topUpMutation = useMutation(
 		orpcQuery.wallet.topUp.mutationOptions({
 			onSuccess: (result) => {
-				queryClient.invalidateQueries({ queryKey: ["wallet"] });
-				queryClient.invalidateQueries({ queryKey: ["transactions"] });
+				queryClient.invalidateQueries();
 				setTopUpDialogOpen(false);
 				setTopUpAmount("");
 
@@ -337,8 +321,7 @@ function RouteComponent() {
 							<Skeleton className="h-12 w-full" />
 							<Skeleton className="h-12 w-full" />
 						</div>
-					) : !transactionsResult?.data ||
-						transactionsResult.data.length === 0 ? (
+					) : !transactionsResult || transactionsResult.length === 0 ? (
 						<div className="flex flex-col items-center justify-center py-12 text-center">
 							<WalletIcon className="mb-4 h-12 w-12 text-muted-foreground" />
 							<h3 className="mb-2 font-semibold text-lg">
@@ -364,7 +347,7 @@ function RouteComponent() {
 								</TableRow>
 							</TableHeader>
 							<TableBody>
-								{transactionsResult.data.map((transaction: Transaction) => {
+								{transactionsResult.map((transaction: Transaction) => {
 									const config =
 										transactionTypeConfig[transaction.type] ||
 										transactionTypeConfig.PAYMENT;

@@ -9,10 +9,11 @@ import {
 	TrendingUp,
 	Users,
 } from "lucide-react";
+import { useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { hasAccess } from "@/lib/actions";
 import { SUB_ROUTE_TITLES } from "@/lib/constants";
-import { orpcClient } from "@/lib/orpc";
+import { orpcQuery } from "@/lib/orpc";
 
 export const Route = createFileRoute("/dash/operator/")({
 	head: () => ({ meta: [{ title: SUB_ROUTE_TITLES.OPERATOR.OVERVIEW }] }),
@@ -32,17 +33,15 @@ function RouteComponent() {
 	const navigate = useNavigate();
 	if (!allowed) navigate({ to: "/" });
 
-	const { data: stats, isLoading } = useQuery({
-		queryKey: ["operator", "dashboard-stats"],
-		queryFn: async () => {
-			const result = await orpcClient.user.admin.dashboardStats({
-				query: { period: "month" },
-			});
-			if (result.status !== 200) throw new Error(result.body.message);
-			return result.body.data;
-		},
-		refetchInterval: 60000, // Refetch every minute
-	});
+	const { data: statsResponse, isLoading } = useQuery(
+		orpcQuery.user.admin.dashboardStats.queryOptions({
+			input: { query: { period: "month" } },
+		}),
+	);
+
+	const stats = useMemo(() => {
+		return statsResponse?.data;
+	}, [statsResponse]);
 
 	if (isLoading) {
 		return (

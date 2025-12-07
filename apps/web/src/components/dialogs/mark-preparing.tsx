@@ -15,7 +15,7 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "@/components/ui/dialog";
-import { orpcClient, queryClient } from "@/lib/orpc";
+import { orpcQuery, queryClient } from "@/lib/orpc";
 import { useMyMerchant } from "@/providers/merchant";
 
 interface MarkPreparingDialogProps {
@@ -30,32 +30,29 @@ export const MarkPreparingDialog = ({
 	const [dialogOpen, setDialogOpen] = useState(false);
 	const merchant = useMyMerchant();
 
-	const mutation = useMutation({
-		mutationFn: async () => {
-			if (!merchant.value?.id) throw new Error("Merchant not found");
-			const result = await orpcClient.merchant.order.markPreparing({
-				params: { merchantId: merchant.value.id, id: orderId },
-			});
-			if (result.status !== 200) throw new Error(result.body.message);
-			return result.body.data;
-		},
-		onSuccess: async () => {
-			await queryClient.invalidateQueries({ queryKey: ["orders"] });
-			await queryClient.invalidateQueries({
-				queryKey: ["merchant", "analytics"],
-			});
-			toast.success("Order marked as preparing");
-			setDialogOpen(false);
-		},
-		onError: (error: Error) => {
-			toast.error("Failed to update order status", {
-				description: error.message || "An unexpected error occurred",
-			});
-		},
-	});
+	const mutation = useMutation(
+		orpcQuery.merchant.order.markPreparing.mutationOptions({
+			onSuccess: async () => {
+				await queryClient.invalidateQueries();
+				toast.success("Order marked as preparing");
+				setDialogOpen(false);
+			},
+			onError: (error: Error) => {
+				toast.error("Failed to update order status", {
+					description: error.message || "An unexpected error occurred",
+				});
+			},
+		}),
+	);
 
 	const handleMarkPreparing = async () => {
-		await mutation.mutateAsync();
+		if (!merchant?.value?.id) {
+			toast.error("Merchant not found");
+			return;
+		}
+		await mutation.mutateAsync({
+			params: { merchantId: merchant.value.id, id: orderId },
+		});
 	};
 
 	const defaultTrigger = (

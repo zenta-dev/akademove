@@ -25,7 +25,7 @@ import {
 	FormItem,
 	FormMessage,
 } from "@/components/ui/form";
-import { orpcClient, queryClient } from "@/lib/orpc";
+import { orpcQuery, queryClient } from "@/lib/orpc";
 import { Input } from "../ui/input";
 
 export const ActivateDriverDialog = ({ driverId }: { driverId: string }) => {
@@ -38,36 +38,29 @@ export const ActivateDriverDialog = ({ driverId }: { driverId: string }) => {
 		},
 	});
 
-	const mutation = useMutation({
-		mutationFn: async () => {
-			const result = await orpcClient.driver.activate({
-				params: { id: driverId },
-			});
-			if (result.status !== 200) {
-				throw new Error(result.body.message);
-			}
-			return result;
-		},
-		onSuccess: async () => {
-			await queryClient.invalidateQueries();
-			toast.success(m.success_placeholder({ action: m.activate_driver() }));
-			setDialogOpen(false);
-			form.clearErrors();
-		},
-		onError: (error: Error) => {
-			toast.error(
-				m.failed_placeholder({
-					action: capitalizeFirstLetter(m.activate_driver().toLowerCase()),
-				}),
-				{
-					description: error.message || m.an_unexpected_error_occurred(),
-				},
-			);
-		},
-	});
+	const mutation = useMutation(
+		orpcQuery.driver.activate.mutationOptions({
+			onSuccess: async () => {
+				await queryClient.invalidateQueries();
+				toast.success(m.success_placeholder({ action: m.activate_driver() }));
+				setDialogOpen(false);
+				form.clearErrors();
+			},
+			onError: (error: Error) => {
+				toast.error(
+					m.failed_placeholder({
+						action: capitalizeFirstLetter(m.activate_driver().toLowerCase()),
+					}),
+					{
+						description: error.message || m.an_unexpected_error_occurred(),
+					},
+				);
+			},
+		}),
+	);
 
 	const onSubmit = async () => {
-		await mutation.mutateAsync();
+		await mutation.mutateAsync({ params: { id: driverId } });
 	};
 
 	return (

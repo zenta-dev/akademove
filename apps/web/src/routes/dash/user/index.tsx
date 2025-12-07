@@ -34,7 +34,7 @@ import {
 } from "@/components/ui/card";
 import { hasAccess } from "@/lib/actions";
 import { SUB_ROUTE_TITLES } from "@/lib/constants";
-import { orpcClient } from "@/lib/orpc";
+import { orpcQuery } from "@/lib/orpc";
 import { cn } from "@/utils/cn";
 
 export const Route = createFileRoute("/dash/user/")({
@@ -57,38 +57,34 @@ function RouteComponent() {
 	if (!allowed) navigate({ to: "/" });
 
 	// Fetch wallet data
-	const { data: walletData, isLoading: walletLoading } = useQuery({
-		queryKey: ["wallet"],
-		queryFn: async () => {
-			const result = await orpcClient.wallet.get({});
-			if (result.status !== 200) throw new Error(result.body.message);
-			return result.body.data;
-		},
-		refetchInterval: 60000,
-	});
+	const { data: walletResponse, isLoading: walletLoading } = useQuery(
+		orpcQuery.wallet.get.queryOptions({ input: {}, refetchInterval: 60000 }),
+	);
+
+	const walletData = useMemo(() => walletResponse?.body.data, [walletResponse]);
 
 	// Fetch wallet monthly summary
-	const { data: walletSummary } = useQuery({
-		queryKey: ["wallet", "summary", new Date().getMonth()],
-		queryFn: async () => {
-			const now = new Date();
-			const result = await orpcClient.wallet.getMonthlySummary({
+	const { data: walletMonthlySummaryResponse } = useQuery(
+		orpcQuery.wallet.getMonthlySummary.queryOptions({
+			input: {
 				query: {
-					month: now.getMonth() + 1,
-					year: now.getFullYear(),
+					month: new Date().getMonth() + 1,
+					year: new Date().getFullYear(),
 				},
-			});
-			if (result.status !== 200) throw new Error(result.body.message);
-			return result.body.data;
-		},
-		refetchInterval: 60000,
-	});
+			},
+			refetchInterval: 60000,
+		}),
+	);
+
+	const walletSummary = useMemo(
+		() => walletMonthlySummaryResponse?.body.data,
+		[walletMonthlySummaryResponse],
+	);
 
 	// Fetch recent orders
-	const { data: recentOrders, isLoading: ordersLoading } = useQuery({
-		queryKey: ["user", "orders", "recent"],
-		queryFn: async () => {
-			const result = await orpcClient.order.list({
+	const { data: recentOrdersResponse, isLoading: ordersLoading } = useQuery(
+		orpcQuery.order.list.queryOptions({
+			input: {
 				query: {
 					limit: 5,
 					sortBy: "id",
@@ -101,53 +97,57 @@ function RouteComponent() {
 						"IN_TRIP",
 					],
 				},
-			});
-			if (result.status !== 200) throw new Error(result.body.message);
-			return result.body.data;
-		},
-		refetchInterval: 15000,
-	});
+			},
+			refetchInterval: 15000,
+		}),
+	);
+
+	const recentOrders = useMemo(
+		() => recentOrdersResponse?.body.data,
+		[recentOrdersResponse],
+	);
 
 	// Fetch completed orders for stats
-	const { data: completedOrders } = useQuery({
-		queryKey: ["user", "orders", "completed"],
-		queryFn: async () => {
-			const result = await orpcClient.order.list({
+	const { data: completedOrdersResponse } = useQuery(
+		orpcQuery.order.list.queryOptions({
+			input: {
 				query: {
-					limit: 100,
+					limit: 1000,
 					sortBy: "id",
 					order: "desc",
 					statuses: ["COMPLETED"],
 				},
-			});
-			if (result.status !== 200) throw new Error(result.body.message);
-			return result.body.data;
-		},
-	});
+			},
+			refetchInterval: 60000,
+		}),
+	);
+
+	const completedOrders = useMemo(
+		() => completedOrdersResponse?.body.data,
+		[completedOrdersResponse],
+	);
 
 	// Fetch user badges
-	const { data: userBadges } = useQuery({
-		queryKey: ["user", "badges"],
-		queryFn: async () => {
-			const result = await orpcClient.badge.user.list({
-				query: { limit: 10, sortBy: "id", order: "desc", mode: "offset" },
-			});
-			if (result.status !== 200) throw new Error(result.body.message);
-			return result.body.data;
-		},
-	});
+	const { data: userBadgesResponse } = useQuery(
+		orpcQuery.badge.user.list.queryOptions({
+			input: { query: { limit: 100, sortBy: "id", order: "desc" } },
+		}),
+	);
+	const userBadges = useMemo(
+		() => userBadgesResponse?.body.data,
+		[userBadgesResponse],
+	);
 
 	// Fetch available coupons
-	const { data: coupons } = useQuery({
-		queryKey: ["user", "coupons"],
-		queryFn: async () => {
-			const result = await orpcClient.coupon.list({
+	const { data: couponsResponse } = useQuery(
+		orpcQuery.coupon.list.queryOptions({
+			input: {
 				query: { limit: 5, sortBy: "id", order: "desc", mode: "offset" },
-			});
-			if (result.status !== 200) throw new Error(result.body.message);
-			return result.body.data;
-		},
-	});
+			},
+		}),
+	);
+
+	const coupons = useMemo(() => couponsResponse?.body.data, [couponsResponse]);
 
 	const totalSpent = useMemo(() => {
 		if (!completedOrders) return 0;

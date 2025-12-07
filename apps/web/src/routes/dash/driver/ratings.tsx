@@ -13,6 +13,7 @@ import {
 	TrendingUp,
 	UserRound,
 } from "lucide-react";
+import { useMemo } from "react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -20,7 +21,7 @@ import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
 import { hasAccess } from "@/lib/actions";
 import { SUB_ROUTE_TITLES } from "@/lib/constants";
-import { orpcClient } from "@/lib/orpc";
+import { orpcQuery } from "@/lib/orpc";
 import { cn } from "@/utils/cn";
 
 export const Route = createFileRoute("/dash/driver/ratings")({
@@ -49,35 +50,26 @@ function RouteComponent() {
 	if (!allowed) navigate({ to: "/" });
 
 	// Fetch driver data
-	const { data: driverData, isLoading: driverLoading } = useQuery({
-		queryKey: ["driver", "mine"],
-		queryFn: async () => {
-			const result = await orpcClient.driver.getMine();
-			if (result.status !== 200) throw new Error(result.body.message);
-			return result.body.data;
-		},
-	});
+	const { data: driverResponse, isLoading: driverLoading } = useQuery(
+		orpcQuery.driver.getMine.queryOptions({}),
+	);
+
+	const driverData = useMemo(() => {
+		if (driverResponse?.status !== 200) return null;
+		return driverResponse.body.data;
+	}, [driverResponse]);
 
 	// Fetch reviews for this driver
-	const { data: reviewsResult, isLoading: reviewsLoading } = useQuery({
-		queryKey: ["reviews", "driver", driverData?.userId, search],
-		queryFn: async () => {
-			if (!driverData?.userId) return null;
-			const result = await orpcClient.review.list({
-				query: search,
-			});
-			if (result.status !== 200) throw new Error(result.body.message);
-			// Filter for reviews where this driver is the recipient
-			const filteredData = result.body.data.filter(
-				(r: Review) => r.toUserId === driverData.userId,
-			);
-			return {
-				...result.body,
-				data: filteredData,
-			};
-		},
-		enabled: !!driverData?.userId,
-	});
+	const { data: reviewsResponse, isLoading: reviewsLoading } = useQuery(
+		orpcQuery.review.list.queryOptions({ input: { query: search } }),
+	);
+
+	const reviewsResult = useMemo(() => {
+		if (!reviewsResponse || !driverData) return null;
+		return reviewsResponse.body.data.filter(
+			(r: Review) => r.toUserId === driverData?.userId,
+		);
+	}, [reviewsResponse, driverData]);
 
 	const formatDate = (date: Date | string | undefined) => {
 		if (!date) return "N/A";
@@ -90,7 +82,7 @@ function RouteComponent() {
 
 	// Calculate rating distribution (score is 1-5)
 	const ratingDistribution =
-		reviewsResult?.data?.reduce(
+		reviewsResult?.reduce(
 			(acc, review: Review) => {
 				acc[review.score as number] = (acc[review.score as number] || 0) + 1;
 				return acc;
@@ -98,11 +90,11 @@ function RouteComponent() {
 			{} as Record<number, number>,
 		) ?? {};
 
-	const totalReviews = reviewsResult?.data?.length ?? 0;
+	const totalReviews = reviewsResult?.length ?? 0;
 
 	// Category breakdown
 	const categoryBreakdown =
-		reviewsResult?.data?.reduce(
+		reviewsResult?.reduce(
 			(acc, review: Review) => {
 				if (review.category) {
 					acc[review.category] = (acc[review.category] || 0) + 1;
@@ -286,7 +278,7 @@ function RouteComponent() {
 							<Skeleton className="h-24 w-full" />
 							<Skeleton className="h-24 w-full" />
 						</div>
-					) : !reviewsResult?.data || reviewsResult.data.length === 0 ? (
+					) : !reviewsResult || reviewsResult.length === 0 ? (
 						<div className="flex flex-col items-center justify-center py-12 text-center">
 							<Star className="mb-4 h-12 w-12 text-muted-foreground" />
 							<h3 className="mb-2 font-semibold text-lg">No reviews yet</h3>
@@ -296,7 +288,7 @@ function RouteComponent() {
 						</div>
 					) : (
 						<div className="space-y-4">
-							{reviewsResult.data.map((review: Review) => (
+							{reviewsResult.map((review: Review) => (
 								<div
 									key={review.id}
 									className="flex gap-4 rounded-lg border p-4"

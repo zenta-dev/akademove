@@ -87,8 +87,7 @@ export function WithdrawDialog({
 			toast.success(m.withdraw_wallet_success());
 			onOpenChange(false);
 			resetForm();
-			queryClient.invalidateQueries({ queryKey: ["wallet"] });
-			queryClient.invalidateQueries({ queryKey: ["transactions"] });
+			queryClient.invalidateQueries();
 		},
 		onError: (error: Error) => {
 			toast.error(m.withdraw_wallet_error({ error: error.message }));

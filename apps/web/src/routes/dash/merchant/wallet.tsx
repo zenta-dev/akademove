@@ -10,7 +10,7 @@ import {
 	TrendingUp,
 	Wallet as WalletIcon,
 } from "lucide-react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { WithdrawDialog } from "@/components/dialogs/withdraw-wallet";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -32,7 +32,7 @@ import {
 } from "@/components/ui/table";
 import { hasAccess } from "@/lib/actions";
 import { SUB_ROUTE_TITLES } from "@/lib/constants";
-import { orpcClient } from "@/lib/orpc";
+import { orpcQuery } from "@/lib/orpc";
 import { cn } from "@/utils/cn";
 
 export const Route = createFileRoute("/dash/merchant/wallet")({
@@ -60,44 +60,36 @@ function RouteComponent() {
 	const [withdrawDialogOpen, setWithdrawDialogOpen] = useState(false);
 
 	// Fetch wallet data
-	const { data: wallet, isLoading: walletLoading } = useQuery({
-		queryKey: ["wallet"],
-		queryFn: async () => {
-			const result = await orpcClient.wallet.get({});
-			if (result.status !== 200) throw new Error(result.body.message);
-			return result.body.data;
-		},
-	});
+	const { data: walletResponse, isLoading: walletLoading } = useQuery(
+		orpcQuery.wallet.get.queryOptions({ input: {} }),
+	);
+
+	const wallet = useMemo(() => walletResponse?.body.data, [walletResponse]);
 
 	// Fetch transactions
-	const { data: transactionsResult, isLoading: transactionsLoading } = useQuery(
-		{
-			queryKey: ["transactions", search],
-			queryFn: async () => {
-				const result = await orpcClient.transaction.list({
-					query: search,
-				});
-				if (result.status !== 200) throw new Error(result.body.message);
-				return result.body;
-			},
-		},
+	const { data: transactionResponse, isLoading: transactionsLoading } =
+		useQuery(
+			orpcQuery.transaction.list.queryOptions({ input: { query: search } }),
+		);
+
+	const transactionsResult = useMemo(
+		() => transactionResponse?.body.data,
+		[transactionResponse],
 	);
 
 	// Fetch monthly summary
-	const { data: summary, isLoading: summaryLoading } = useQuery({
-		queryKey: ["wallet", "summary"],
-		queryFn: async () => {
-			const now = new Date();
-			const result = await orpcClient.wallet.getMonthlySummary({
+	const { data: summaryResponse, isLoading: summaryLoading } = useQuery(
+		orpcQuery.wallet.getMonthlySummary.queryOptions({
+			input: {
 				query: {
-					year: now.getFullYear(),
-					month: now.getMonth() + 1,
+					year: new Date().getFullYear(),
+					month: new Date().getMonth() + 1,
 				},
-			});
-			if (result.status !== 200) throw new Error(result.body.message);
-			return result.body.data;
-		},
-	});
+			},
+		}),
+	);
+
+	const summary = useMemo(() => summaryResponse?.body.data, [summaryResponse]);
 
 	if (!allowed) navigate({ to: "/" });
 
@@ -248,8 +240,7 @@ function RouteComponent() {
 							<Skeleton className="h-12 w-full" />
 							<Skeleton className="h-12 w-full" />
 						</div>
-					) : !transactionsResult?.data ||
-						transactionsResult.data.length === 0 ? (
+					) : !transactionsResult || transactionsResult.length === 0 ? (
 						<div className="flex flex-col items-center justify-center py-12 text-center">
 							<WalletIcon className="mb-4 h-12 w-12 text-muted-foreground" />
 							<h3 className="mb-2 font-semibold text-lg">
@@ -271,7 +262,7 @@ function RouteComponent() {
 								</TableRow>
 							</TableHeader>
 							<TableBody>
-								{transactionsResult.data.map((transaction: Transaction) => {
+								{transactionsResult.map((transaction: Transaction) => {
 									const config =
 										transactionTypeConfig[transaction.type] ||
 										transactionTypeConfig.PAYMENT;

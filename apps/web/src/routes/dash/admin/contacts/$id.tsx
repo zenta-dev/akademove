@@ -68,8 +68,7 @@ function RouteComponent() {
 				return result;
 			},
 			onSuccess: () => {
-				queryClient.invalidateQueries({ queryKey: ["contact", "getById", id] });
-				queryClient.invalidateQueries({ queryKey: ["contact", "list"] });
+				queryClient.invalidateQueries();
 				toast.success("Response sent and email delivered to user");
 				setResponse("");
 				navigate({

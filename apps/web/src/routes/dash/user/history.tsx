@@ -21,7 +21,7 @@ import {
 	Utensils,
 	XCircle,
 } from "lucide-react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { LiveTrackingDialog } from "@/components/dialogs/live-tracking";
 import { RateOrderDialog } from "@/components/dialogs/rate-order";
 import { ReportUserDialog } from "@/components/dialogs/report-user";
@@ -37,7 +37,7 @@ import {
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { hasAccess } from "@/lib/actions";
 import { SUB_ROUTE_TITLES } from "@/lib/constants";
-import { orpcClient } from "@/lib/orpc";
+import { orpcQuery } from "@/lib/orpc";
 import { cn } from "@/utils/cn";
 
 export const Route = createFileRoute("/dash/user/history")({
@@ -72,44 +72,40 @@ function RouteComponent() {
 
 	if (!allowed) navigate({ to: "/" });
 
+	const statuses = useMemo(() => {
+		let statuses: string[] | undefined;
+
+		if (filterStatus === "active") {
+			statuses = [
+				"REQUESTED",
+				"MATCHING",
+				"ACCEPTED",
+				"PREPARING",
+				"READY_FOR_PICKUP",
+				"ARRIVING",
+				"IN_TRIP",
+			];
+		} else if (filterStatus === "completed") {
+			statuses = ["COMPLETED"];
+		} else if (filterStatus === "cancelled") {
+			statuses = [
+				"CANCELLED_BY_USER",
+				"CANCELLED_BY_DRIVER",
+				"CANCELLED_BY_MERCHANT",
+				"CANCELLED_BY_SYSTEM",
+			];
+		}
+		return statuses;
+	}, [filterStatus]);
+
 	// Fetch orders based on filter
-	const { data: ordersResult, isLoading } = useQuery({
-		queryKey: ["user", "orders", filterStatus, search],
-		queryFn: async () => {
-			let statuses: string[] | undefined;
+	const { data: orderResponse, isLoading } = useQuery(
+		orpcQuery.order.list.queryOptions({
+			input: { query: { ...search, statuses } },
+		}),
+	);
 
-			if (filterStatus === "active") {
-				statuses = [
-					"REQUESTED",
-					"MATCHING",
-					"ACCEPTED",
-					"PREPARING",
-					"READY_FOR_PICKUP",
-					"ARRIVING",
-					"IN_TRIP",
-				];
-			} else if (filterStatus === "completed") {
-				statuses = ["COMPLETED"];
-			} else if (filterStatus === "cancelled") {
-				statuses = [
-					"CANCELLED_BY_USER",
-					"CANCELLED_BY_DRIVER",
-					"CANCELLED_BY_MERCHANT",
-					"CANCELLED_BY_SYSTEM",
-				];
-			}
-
-			const result = await orpcClient.order.list({
-				query: {
-					...search,
-					statuses,
-				},
-			});
-			if (result.status !== 200) throw new Error(result.body.message);
-			return result.body;
-		},
-		refetchInterval: filterStatus === "active" ? 10000 : undefined,
-	});
+	const ordersResult = useMemo(() => orderResponse?.body.data, [orderResponse]);
 
 	const orderTypeIcons = {
 		RIDE: Car,
@@ -206,7 +202,7 @@ function RouteComponent() {
 					<div className="flex min-h-[50vh] items-center justify-center">
 						<Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
 					</div>
-				) : !ordersResult?.data || ordersResult.data.length === 0 ? (
+				) : !ordersResult || ordersResult.length === 0 ? (
 					<Card>
 						<CardContent className="flex flex-col items-center justify-center py-12 text-center">
 							<Package className="mb-4 h-12 w-12 text-muted-foreground" />
@@ -227,7 +223,7 @@ function RouteComponent() {
 						</CardContent>
 					</Card>
 				) : (
-					ordersResult.data.map((order: Order) => {
+					ordersResult.map((order: Order) => {
 						const TypeIcon = orderTypeIcons[order.type];
 						const StatusIcon = getStatusIcon(order.status);
 						const isActive =

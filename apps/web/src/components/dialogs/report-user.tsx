@@ -21,7 +21,7 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { orpcClient } from "@/lib/orpc";
+import { orpcClient, queryClient } from "@/lib/orpc";
 
 const getReportCategories = (): { value: ReportCategory; label: string }[] => [
 	{ value: "BEHAVIOR", label: m.report_user_inappropriate() },
@@ -77,6 +77,7 @@ export function ReportUserDialog({
 			return result.body.data;
 		},
 		onSuccess: () => {
+			queryClient.invalidateQueries();
 			toast.success(m.report_user_success());
 			onOpenChange(false);
 			resetForm();

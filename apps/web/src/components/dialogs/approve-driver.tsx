@@ -17,7 +17,7 @@ import {
 	DialogTrigger,
 } from "@/components/ui/dialog";
 import { Form } from "@/components/ui/form";
-import { orpcClient, queryClient } from "@/lib/orpc";
+import { orpcQuery, queryClient } from "@/lib/orpc";
 
 export const ApproveDriverDialog = ({ driverId }: { driverId: string }) => {
 	const [dialogOpen, setDialogOpen] = useState(false);
@@ -26,36 +26,29 @@ export const ApproveDriverDialog = ({ driverId }: { driverId: string }) => {
 		defaultValues: {},
 	});
 
-	const mutation = useMutation({
-		mutationFn: async () => {
-			const result = await orpcClient.driver.approve({
-				params: { id: driverId },
-			});
-			if (result.status !== 200) {
-				throw new Error(result.body.message);
-			}
-			return result;
-		},
-		onSuccess: async () => {
-			await queryClient.invalidateQueries();
-			toast.success(m.success_placeholder({ action: m.approve_driver() }));
-			setDialogOpen(false);
-			form.clearErrors();
-		},
-		onError: (error: Error) => {
-			toast.error(
-				m.failed_placeholder({
-					action: capitalizeFirstLetter(m.approve_driver().toLowerCase()),
-				}),
-				{
-					description: error.message || m.an_unexpected_error_occurred(),
-				},
-			);
-		},
-	});
+	const mutation = useMutation(
+		orpcQuery.driver.approve.mutationOptions({
+			onSuccess: async () => {
+				await queryClient.invalidateQueries();
+				toast.success(m.success_placeholder({ action: m.approve_driver() }));
+				setDialogOpen(false);
+				form.clearErrors();
+			},
+			onError: (error: Error) => {
+				toast.error(
+					m.failed_placeholder({
+						action: capitalizeFirstLetter(m.approve_driver().toLowerCase()),
+					}),
+					{
+						description: error.message || m.an_unexpected_error_occurred(),
+					},
+				);
+			},
+		}),
+	);
 
 	const onSubmit = async () => {
-		await mutation.mutateAsync();
+		await mutation.mutateAsync({ params: { id: driverId } });
 	};
 
 	return (

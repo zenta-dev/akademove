@@ -25,7 +25,7 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Skeleton } from "@/components/ui/skeleton";
-import { orpcClient, orpcQuery, queryClient } from "@/lib/orpc";
+import { orpcQuery, queryClient } from "@/lib/orpc";
 import { cn } from "@/utils/cn";
 
 export const UserDropdwon = () => {
@@ -55,23 +55,15 @@ export const UserDropdwon = () => {
 		}),
 	);
 
-	const walletQuery = useQuery({
-		queryKey: ["wallet", "balance"],
-		queryFn: async () => {
-			if (!data?.body.data) return null;
-			if (!["USER", "DRIVER"].includes(data.body.data.user.role)) return null;
-			try {
-				const result = await orpcClient.wallet.get({});
-				return result;
-			} catch {
-				return null;
-			}
-		},
-		enabled:
-			!!data?.body.data &&
-			["USER", "DRIVER"].includes(data.body.data.user.role),
-		retry: false,
-	});
+	const walletQuery = useQuery(
+		orpcQuery.wallet.get.queryOptions({
+			input: {},
+			enabled:
+				!!data?.body.data &&
+				["USER", "DRIVER"].includes(data.body.data.user.role),
+			retry: false,
+		}),
+	);
 
 	const mutation = useMutation(
 		orpcQuery.auth.signOut.mutationOptions({

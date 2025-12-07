@@ -76,10 +76,7 @@ export const RejectOrderDialog = ({
 			return result.body.data;
 		},
 		onSuccess: async () => {
-			await queryClient.invalidateQueries({ queryKey: ["orders"] });
-			await queryClient.invalidateQueries({
-				queryKey: ["merchant", "analytics"],
-			});
+			await queryClient.invalidateQueries();
 			toast.success("Order rejected successfully");
 			setDialogOpen(false);
 			form.reset();
