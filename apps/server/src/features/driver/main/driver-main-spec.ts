@@ -1,15 +1,15 @@
+import { createSuccesSchema, FEATURE_TAGS } from "@/core/constants";
+import { toOAPIRequestBody } from "@/utils/oapi";
 import { oc } from "@orpc/contract";
 import {
 	DriverSchema,
 	DriverStatusSchema,
-	UpdateDriverSchema,
+	FlatUpdateDriverSchema,
 } from "@repo/schema/driver";
 import { UnifiedPaginationQuerySchema } from "@repo/schema/pagination";
 import { CoordinateSchema } from "@repo/schema/position";
 import { UserGenderSchema } from "@repo/schema/user";
 import * as z from "zod";
-import { createSuccesSchema, FEATURE_TAGS } from "@/core/constants";
-import { toOAPIRequestBody } from "@/utils/oapi";
 
 export const NearbyQuerySchema = z.object({
 	...CoordinateSchema.shape,
@@ -115,16 +115,40 @@ export const DriverMainSpec = {
 			outputStructure: "detailed",
 			spec: (spec) => ({
 				...spec,
-				...toOAPIRequestBody(UpdateDriverSchema),
+				...toOAPIRequestBody(FlatUpdateDriverSchema),
 			}),
 		})
 		.input(
 			z.object({
 				params: z.object({ id: z.string() }),
-				body: UpdateDriverSchema,
+				body: FlatUpdateDriverSchema,
 			}),
 		)
 		.output(createSuccesSchema(DriverSchema, "Driver updated successfully")),
+	markAsOnline: oc
+		.route({
+			tags: [FEATURE_TAGS.DRIVER],
+			method: "POST",
+			path: "/{id}/mark-as-online",
+			inputStructure: "detailed",
+			outputStructure: "detailed",
+		})
+		.input(z.object({ params: z.object({ id: z.string() }) }))
+		.output(
+			createSuccesSchema(DriverSchema, "Driver marked as online successfully"),
+		),
+	markAsOffline: oc
+		.route({
+			tags: [FEATURE_TAGS.DRIVER],
+			method: "POST",
+			path: "/{id}/mark-as-offline",
+			inputStructure: "detailed",
+			outputStructure: "detailed",
+		})
+		.input(z.object({ params: z.object({ id: z.string() }) }))
+		.output(
+			createSuccesSchema(DriverSchema, "Driver marked as online successfully"),
+		),
 	remove: oc
 		.route({
 			tags: [FEATURE_TAGS.DRIVER],

@@ -3,8 +3,7 @@ import 'package:api_client/api_client.dart';
 
 // tests for UpdateDriverQuizQuestion
 void main() {
-  final UpdateDriverQuizQuestion? instance = /* UpdateDriverQuizQuestion(...) */
-      null;
+  final UpdateDriverQuizQuestion? instance = /* UpdateDriverQuizQuestion(...) */ null;
   // TODO add properties to the entity
 
   group(UpdateDriverQuizQuestion, () {
@@ -47,5 +46,6 @@ void main() {
     test('to test the property `displayOrder`', () async {
       // TODO
     });
+
   });
 }

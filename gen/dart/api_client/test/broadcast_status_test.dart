@@ -3,5 +3,7 @@ import 'package:api_client/api_client.dart';
 
 // tests for BroadcastStatus
 void main() {
-  group(BroadcastStatus, () {});
+
+  group(BroadcastStatus, () {
+  });
 }

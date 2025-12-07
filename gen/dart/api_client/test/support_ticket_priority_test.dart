@@ -3,5 +3,7 @@ import 'package:api_client/api_client.dart';
 
 // tests for SupportTicketPriority
 void main() {
-  group(SupportTicketPriority, () {});
+
+  group(SupportTicketPriority, () {
+  });
 }

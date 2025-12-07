@@ -3,8 +3,7 @@ import 'package:api_client/api_client.dart';
 
 // tests for AuditList200ResponseDataInner
 void main() {
-  final AuditList200ResponseDataInner?
-  instance = /* AuditList200ResponseDataInner(...) */ null;
+  final AuditList200ResponseDataInner? instance = /* AuditList200ResponseDataInner(...) */ null;
   // TODO add properties to the entity
 
   group(AuditList200ResponseDataInner, () {
@@ -67,5 +66,6 @@ void main() {
     test('to test the property `updatedAt`', () async {
       // TODO
     });
+
   });
 }

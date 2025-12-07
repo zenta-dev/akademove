@@ -17,20 +17,21 @@ part 'merchant_set_online_status_request.g.dart';
 )
 class MerchantSetOnlineStatusRequest {
   /// Returns a new [MerchantSetOnlineStatusRequest] instance.
-  const MerchantSetOnlineStatusRequest({required this.isOnline});
+  const MerchantSetOnlineStatusRequest({
+    required this.isOnline,
+  });
   @JsonKey(name: r'isOnline', required: true, includeIfNull: false)
   final bool isOnline;
+  
+  @override
+  bool operator ==(Object other) => identical(this, other) || other is MerchantSetOnlineStatusRequest &&
+    other.isOnline == isOnline;
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is MerchantSetOnlineStatusRequest && other.isOnline == isOnline;
+  int get hashCode =>
+      isOnline.hashCode;
 
-  @override
-  int get hashCode => isOnline.hashCode;
-
-  factory MerchantSetOnlineStatusRequest.fromJson(Map<String, dynamic> json) =>
-      _$MerchantSetOnlineStatusRequestFromJson(json);
+  factory MerchantSetOnlineStatusRequest.fromJson(Map<String, dynamic> json) => _$MerchantSetOnlineStatusRequestFromJson(json);
 
   Map<String, dynamic> toJson() => _$MerchantSetOnlineStatusRequestToJson(this);
 
@@ -38,4 +39,6 @@ class MerchantSetOnlineStatusRequest {
   String toString() {
     return toJson().toString();
   }
+
 }
+

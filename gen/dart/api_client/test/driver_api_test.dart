@@ -1,6 +1,7 @@
 import 'package:test/test.dart';
 import 'package:api_client/api_client.dart';
 
+
 /// tests for DriverApi
 void main() {
   final instance = ApiClient().getDriverApi();
@@ -26,8 +27,23 @@ void main() {
       // TODO
     });
 
+    //Future<DriverGetReview200Response> driverGetReview(String id) async
+    test('test driverGetReview', () async {
+      // TODO
+    });
+
     //Future<DriverList200Response> driverList({ String cursor, Object limit, String direction, Object page, String query, String sortBy, PaginationOrder order, PaginationMode mode, Object statuses, Object isOnline, num minRating, num maxRating }) async
     test('test driverList', () async {
+      // TODO
+    });
+
+    //Future<DriverGetMine200ResponseBody> driverMarkAsOffline(String id) async
+    test('test driverMarkAsOffline', () async {
+      // TODO
+    });
+
+    //Future<DriverGetMine200ResponseBody> driverMarkAsOnline(String id) async
+    test('test driverMarkAsOnline', () async {
       // TODO
     });
 
@@ -66,9 +82,30 @@ void main() {
       // TODO
     });
 
-    //Future<DriverGetMine200ResponseBody> driverUpdate(String id, { num studentId, String licensePlate, MultipartFile studentCard, MultipartFile driverLicense, MultipartFile vehicleCertificate, DriverUpdateRequestBank bank, bool isTakingOrder, DriverUpdateRequestCurrentLocation currentLocation }) async
+    //Future<DriverGetReview200Response> driverSubmitApproval(String id, DriverSubmitApprovalRequest driverSubmitApprovalRequest) async
+    test('test driverSubmitApproval', () async {
+      // TODO
+    });
+
+    //Future<DriverGetReview200Response> driverSubmitRejection(String id, DriverSubmitRejectionRequest driverSubmitRejectionRequest) async
+    test('test driverSubmitRejection', () async {
+      // TODO
+    });
+
+    //Future<DriverGetMine200ResponseBody> driverUpdate(String id, String bankProvider, num bankNumber, num currentLocationX, num currentLocationY, { num studentId, String licensePlate, MultipartFile studentCard, MultipartFile driverLicense, MultipartFile vehicleCertificate }) async
     test('test driverUpdate', () async {
       // TODO
     });
+
+    //Future<DriverGetReview200Response> driverUpdateDocumentStatus(String id, DriverUpdateDocumentStatusRequest driverUpdateDocumentStatusRequest) async
+    test('test driverUpdateDocumentStatus', () async {
+      // TODO
+    });
+
+    //Future<DriverGetReview200Response> driverVerifyQuiz(String id, DriverVerifyQuizRequest driverVerifyQuizRequest) async
+    test('test driverVerifyQuiz', () async {
+      // TODO
+    });
+
   });
 }

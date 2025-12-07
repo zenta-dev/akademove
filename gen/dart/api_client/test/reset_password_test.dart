@@ -21,5 +21,6 @@ void main() {
     test('to test the property `confirmPassword`', () async {
       // TODO
     });
+
   });
 }

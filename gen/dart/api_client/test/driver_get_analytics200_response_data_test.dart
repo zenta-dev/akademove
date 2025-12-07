@@ -3,8 +3,7 @@ import 'package:api_client/api_client.dart';
 
 // tests for DriverGetAnalytics200ResponseData
 void main() {
-  final DriverGetAnalytics200ResponseData?
-  instance = /* DriverGetAnalytics200ResponseData(...) */ null;
+  final DriverGetAnalytics200ResponseData? instance = /* DriverGetAnalytics200ResponseData(...) */ null;
   // TODO add properties to the entity
 
   group(DriverGetAnalytics200ResponseData, () {
@@ -62,5 +61,6 @@ void main() {
     test('to test the property `topEarningDays`', () async {
       // TODO
     });
+
   });
 }

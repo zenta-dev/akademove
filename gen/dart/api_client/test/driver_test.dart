@@ -122,5 +122,6 @@ void main() {
     test('to test the property `distance`', () async {
       // TODO
     });
+
   });
 }

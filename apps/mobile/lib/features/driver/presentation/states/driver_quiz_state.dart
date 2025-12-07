@@ -14,15 +14,43 @@ class DriverQuizState extends BaseState2 with DriverQuizStateMappable {
     this.selectedAnswerId,
     this.answeredQuestions = const <String>{},
     this.result,
-    this.answerFeedback,
-  });
+    Map<String, dynamic>? answerFeedback,
+  }) : _answerFeedback = answerFeedback;
 
-  final QuizAttempt? attempt;
+  final DriverQuizAnswerStartQuiz201ResponseData? attempt;
   final int? currentQuestionIndex;
   final String? selectedAnswerId;
   final Set<String> answeredQuestions;
-  final QuizResult? result;
-  final Map<String, dynamic>? answerFeedback;
+
+  /// Quiz result - can be either DriverQuizResult or DriverQuizAnswer
+  /// DriverQuizResult is returned from completeQuiz
+  /// DriverQuizAnswer is returned from getLatestAttempt
+  final Object? result;
+
+  /// Raw answer feedback data (kept as Map for mapper compatibility)
+  final Map<String, dynamic>? _answerFeedback;
+
+  /// Get structured answer feedback from response data
+  DriverQuizAnswerSubmitAnswer200ResponseData? get answerFeedback {
+    if (_answerFeedback == null) return null;
+    return DriverQuizAnswerSubmitAnswer200ResponseData.fromJson(
+      _answerFeedback!,
+    );
+  }
+
+  /// Check if result is DriverQuizResult
+  bool get isCompletionResult => result is DriverQuizResult;
+
+  /// Check if result is DriverQuizAnswer
+  bool get isAttemptResult => result is DriverQuizAnswer;
+
+  /// Get result as DriverQuizResult if available
+  DriverQuizResult? get asCompletionResult =>
+      result is DriverQuizResult ? result as DriverQuizResult : null;
+
+  /// Get result as DriverQuizAnswer if available
+  DriverQuizAnswer? get asAttemptResult =>
+      result is DriverQuizAnswer ? result as DriverQuizAnswer : null;
 
   @override
   DriverQuizState toInitial() => DriverQuizState();
@@ -33,12 +61,12 @@ class DriverQuizState extends BaseState2 with DriverQuizStateMappable {
   @override
   DriverQuizState toSuccess({
     String? message,
-    QuizAttempt? attempt,
+    DriverQuizAnswerStartQuiz201ResponseData? attempt,
     int? currentQuestionIndex,
     String? selectedAnswerId,
     Set<String>? answeredQuestions,
-    QuizResult? result,
-    Map<String, dynamic>? answerFeedback,
+    Object? result,
+    DriverQuizAnswerSubmitAnswer200ResponseData? answerFeedbackObj,
   }) => copyWith(
     state: CubitState.success,
     message: message,
@@ -47,7 +75,7 @@ class DriverQuizState extends BaseState2 with DriverQuizStateMappable {
     selectedAnswerId: selectedAnswerId ?? this.selectedAnswerId,
     answeredQuestions: answeredQuestions ?? this.answeredQuestions,
     result: result ?? this.result,
-    answerFeedback: answerFeedback ?? this.answerFeedback,
+    answerFeedback: answerFeedbackObj?.toJson(),
   );
 
   @override

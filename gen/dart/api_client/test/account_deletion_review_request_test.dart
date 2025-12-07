@@ -3,8 +3,7 @@ import 'package:api_client/api_client.dart';
 
 // tests for AccountDeletionReviewRequest
 void main() {
-  final AccountDeletionReviewRequest?
-  instance = /* AccountDeletionReviewRequest(...) */ null;
+  final AccountDeletionReviewRequest? instance = /* AccountDeletionReviewRequest(...) */ null;
   // TODO add properties to the entity
 
   group(AccountDeletionReviewRequest, () {
@@ -17,5 +16,6 @@ void main() {
     test('to test the property `reviewNotes`', () async {
       // TODO
     });
+
   });
 }

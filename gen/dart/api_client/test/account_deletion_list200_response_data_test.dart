@@ -3,8 +3,7 @@ import 'package:api_client/api_client.dart';
 
 // tests for AccountDeletionList200ResponseData
 void main() {
-  final AccountDeletionList200ResponseData?
-  instance = /* AccountDeletionList200ResponseData(...) */ null;
+  final AccountDeletionList200ResponseData? instance = /* AccountDeletionList200ResponseData(...) */ null;
   // TODO add properties to the entity
 
   group(AccountDeletionList200ResponseData, () {
@@ -17,5 +16,6 @@ void main() {
     test('to test the property `pagination`', () async {
       // TODO
     });
+
   });
 }

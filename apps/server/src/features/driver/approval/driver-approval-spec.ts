@@ -1,6 +1,6 @@
+import { createSuccesSchema, FEATURE_TAGS } from "@/core/constants";
 import { oc } from "@orpc/contract";
 import * as z from "zod";
-import { createSuccesSchema, FEATURE_TAGS } from "@/core/constants";
 
 export const ApprovalDocumentStatusSchema = z.enum([
 	"PENDING",
@@ -64,6 +64,8 @@ export const DriverApprovalSpec = {
 			tags: [FEATURE_TAGS.DRIVER],
 			method: "GET",
 			path: "/{id}/approval-review",
+			inputStructure: "detailed",
+			outputStructure: "detailed",
 		})
 		.input(z.object({ params: z.object({ id: z.string() }) }))
 		.output(
@@ -78,6 +80,8 @@ export const DriverApprovalSpec = {
 			tags: [FEATURE_TAGS.DRIVER],
 			method: "POST",
 			path: "/{id}/approval-review/update-document",
+			inputStructure: "detailed",
+			outputStructure: "detailed",
 		})
 		.input(
 			z.object({
@@ -97,6 +101,8 @@ export const DriverApprovalSpec = {
 			tags: [FEATURE_TAGS.DRIVER],
 			method: "POST",
 			path: "/{id}/approval-review/verify-quiz",
+			inputStructure: "detailed",
+			outputStructure: "detailed",
 		})
 		.input(
 			z.object({
@@ -116,6 +122,8 @@ export const DriverApprovalSpec = {
 			tags: [FEATURE_TAGS.DRIVER],
 			method: "POST",
 			path: "/{id}/approval-review/submit-approval",
+			inputStructure: "detailed",
+			outputStructure: "detailed",
 		})
 		.input(
 			z.object({
@@ -135,6 +143,8 @@ export const DriverApprovalSpec = {
 			tags: [FEATURE_TAGS.DRIVER],
 			method: "POST",
 			path: "/{id}/approval-review/submit-rejection",
+			inputStructure: "detailed",
+			outputStructure: "detailed",
 		})
 		.input(
 			z.object({

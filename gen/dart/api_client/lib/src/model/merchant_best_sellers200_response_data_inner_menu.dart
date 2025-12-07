@@ -21,8 +21,8 @@ class MerchantBestSellers200ResponseDataInnerMenu {
     required this.id,
     required this.merchantId,
     required this.name,
-    this.image,
-    this.category,
+     this.image,
+     this.category,
     required this.price,
     required this.stock,
     required this.createdAt,
@@ -30,44 +30,42 @@ class MerchantBestSellers200ResponseDataInnerMenu {
   });
   @JsonKey(name: r'id', required: true, includeIfNull: false)
   final String id;
-
+  
   @JsonKey(name: r'merchantId', required: true, includeIfNull: false)
   final String merchantId;
-
+  
   @JsonKey(name: r'name', required: true, includeIfNull: false)
   final String name;
-
+  
   @JsonKey(name: r'image', required: false, includeIfNull: false)
   final String? image;
-
+  
   @JsonKey(name: r'category', required: false, includeIfNull: false)
   final String? category;
-
+  
   @JsonKey(name: r'price', required: true, includeIfNull: false)
   final num price;
-
+  
   @JsonKey(name: r'stock', required: true, includeIfNull: false)
   final num stock;
-
+  
   @JsonKey(name: r'createdAt', required: true, includeIfNull: false)
   final DateTime createdAt;
-
+  
   @JsonKey(name: r'updatedAt', required: true, includeIfNull: false)
   final DateTime updatedAt;
-
+  
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is MerchantBestSellers200ResponseDataInnerMenu &&
-          other.id == id &&
-          other.merchantId == merchantId &&
-          other.name == name &&
-          other.image == image &&
-          other.category == category &&
-          other.price == price &&
-          other.stock == stock &&
-          other.createdAt == createdAt &&
-          other.updatedAt == updatedAt;
+  bool operator ==(Object other) => identical(this, other) || other is MerchantBestSellers200ResponseDataInnerMenu &&
+    other.id == id &&
+    other.merchantId == merchantId &&
+    other.name == name &&
+    other.image == image &&
+    other.category == category &&
+    other.price == price &&
+    other.stock == stock &&
+    other.createdAt == createdAt &&
+    other.updatedAt == updatedAt;
 
   @override
   int get hashCode =>
@@ -81,15 +79,14 @@ class MerchantBestSellers200ResponseDataInnerMenu {
       createdAt.hashCode +
       updatedAt.hashCode;
 
-  factory MerchantBestSellers200ResponseDataInnerMenu.fromJson(
-    Map<String, dynamic> json,
-  ) => _$MerchantBestSellers200ResponseDataInnerMenuFromJson(json);
+  factory MerchantBestSellers200ResponseDataInnerMenu.fromJson(Map<String, dynamic> json) => _$MerchantBestSellers200ResponseDataInnerMenuFromJson(json);
 
-  Map<String, dynamic> toJson() =>
-      _$MerchantBestSellers200ResponseDataInnerMenuToJson(this);
+  Map<String, dynamic> toJson() => _$MerchantBestSellers200ResponseDataInnerMenuToJson(this);
 
   @override
   String toString() {
     return toJson().toString();
   }
+
 }
+

@@ -1,6 +1,7 @@
 import 'package:test/test.dart';
 import 'package:api_client/api_client.dart';
 
+
 /// tests for CouponApi
 void main() {
   final instance = ApiClient().getCouponApi();
@@ -50,5 +51,6 @@ void main() {
     test('test couponValidate', () async {
       // TODO
     });
+
   });
 }

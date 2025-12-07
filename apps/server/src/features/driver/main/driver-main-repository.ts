@@ -1,23 +1,3 @@
-import { m } from "@repo/i18n";
-import {
-	type Driver,
-	DriverKeySchema,
-	type DriverQuizStatus,
-	type DriverStatus,
-	type InsertDriver,
-	type UpdateDriver,
-} from "@repo/schema/driver";
-import {
-	and,
-	count,
-	eq,
-	gt,
-	gte,
-	ilike,
-	inArray,
-	lte,
-	type SQL,
-} from "drizzle-orm";
 import { BaseRepository } from "@/core/base";
 import { CACHE_TTLS } from "@/core/constants";
 import { RepositoryError } from "@/core/error";
@@ -30,6 +10,27 @@ import type { DetailedUserBadgeDatabase } from "@/core/tables/badge";
 import type { DriverDatabase } from "@/core/tables/driver";
 import { UserAdminRepository } from "@/features/user/admin/user-admin-repository";
 import { log } from "@/utils";
+import { m } from "@repo/i18n";
+import {
+	type Driver,
+	DriverKeySchema,
+	type DriverQuizStatus,
+	type DriverStatus,
+	type InsertDriver,
+	type UpdateDriver,
+} from "@repo/schema/driver";
+import { nullsToUndefined } from "@repo/shared";
+import {
+	and,
+	count,
+	eq,
+	gt,
+	gte,
+	ilike,
+	inArray,
+	lte,
+	type SQL,
+} from "drizzle-orm";
 import {
 	DriverDocumentService,
 	DriverLocationService,
@@ -85,7 +86,7 @@ export class DriverMainRepository extends BaseRepository {
 				UserAdminRepository.composeEntity(item.user, storage),
 			]);
 
-		return {
+		return nullsToUndefined({
 			...item,
 			user,
 			currentLocation: item.currentLocation ?? undefined,
@@ -100,7 +101,7 @@ export class DriverMainRepository extends BaseRepository {
 			studentCard,
 			driverLicense,
 			vehicleCertificate,
-		};
+		});
 	}
 
 	async #getFromDB(
@@ -443,6 +444,62 @@ export class DriverMainRepository extends BaseRepository {
 			return result;
 		} catch (error) {
 			throw this.handleError(error, "update");
+		}
+	}
+
+	async markAsOnline(id: string): Promise<Driver> {
+		try {
+			const existing = await this.#getFromDB(id);
+			if (!existing)
+				throw new RepositoryError(m.error_driver_not_found(), {
+					code: "NOT_FOUND",
+				});
+			const [updated] = await this.db
+				.update(tables.driver)
+				.set({ isOnline: true })
+				.where(eq(tables.driver.id, id))
+				.returning();
+			const user = await this.db.query.user.findFirst({
+				with: { userBadges: { with: { badge: true } } },
+				where: (f, op) => op.eq(f.id, existing.userId),
+			});
+			if (!user) throw new RepositoryError(m.error_user_not_found());
+			const result = await DriverMainRepository.composeEntity(
+				{ ...updated, user },
+				this.#storage,
+			);
+			await this.setCache(id, result, { expirationTtl: CACHE_TTLS["24h"] });
+			return result;
+		} catch (error) {
+			throw this.handleError(error, "mark as online");
+		}
+	}
+
+	async markAsOffline(id: string): Promise<Driver> {
+		try {
+			const existing = await this.#getFromDB(id);
+			if (!existing)
+				throw new RepositoryError(m.error_driver_not_found(), {
+					code: "NOT_FOUND",
+				});
+			const [updated] = await this.db
+				.update(tables.driver)
+				.set({ isOnline: false })
+				.where(eq(tables.driver.id, id))
+				.returning();
+			const user = await this.db.query.user.findFirst({
+				with: { userBadges: { with: { badge: true } } },
+				where: (f, op) => op.eq(f.id, existing.userId),
+			});
+			if (!user) throw new RepositoryError(m.error_user_not_found());
+			const result = await DriverMainRepository.composeEntity(
+				{ ...updated, user },
+				this.#storage,
+			);
+			await this.setCache(id, result, { expirationTtl: CACHE_TTLS["24h"] });
+			return result;
+		} catch (error) {
+			throw this.handleError(error, "mark as online");
 		}
 	}
 

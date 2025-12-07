@@ -3,5 +3,7 @@ import 'package:api_client/api_client.dart';
 
 // tests for DriverScheduleKey
 void main() {
-  group(DriverScheduleKey, () {});
+
+  group(DriverScheduleKey, () {
+  });
 }

@@ -8,6 +8,7 @@ export 'package:api_client/src/auth/basic_auth.dart';
 export 'package:api_client/src/auth/bearer_auth.dart';
 export 'package:api_client/src/auth/oauth.dart';
 
+
 export 'package:api_client/src/api/admin_api.dart';
 export 'package:api_client/src/api/auth_api.dart';
 export 'package:api_client/src/api/badge_api.dart';
@@ -137,6 +138,8 @@ export 'package:api_client/src/model/driver_get_analytics200_response_data_earni
 export 'package:api_client/src/model/driver_get_analytics200_response_data_top_earning_days_inner.dart';
 export 'package:api_client/src/model/driver_get_mine200_response.dart';
 export 'package:api_client/src/model/driver_get_mine200_response_body.dart';
+export 'package:api_client/src/model/driver_get_review200_response.dart';
+export 'package:api_client/src/model/driver_get_review200_response_data.dart';
 export 'package:api_client/src/model/driver_key.dart';
 export 'package:api_client/src/model/driver_list200_response.dart';
 export 'package:api_client/src/model/driver_quiz_answer.dart';
@@ -170,10 +173,12 @@ export 'package:api_client/src/model/driver_schedule_key.dart';
 export 'package:api_client/src/model/driver_schedule_list200_response.dart';
 export 'package:api_client/src/model/driver_schedule_update_request.dart';
 export 'package:api_client/src/model/driver_status.dart';
+export 'package:api_client/src/model/driver_submit_approval_request.dart';
+export 'package:api_client/src/model/driver_submit_rejection_request.dart';
 export 'package:api_client/src/model/driver_suspend_request.dart';
-export 'package:api_client/src/model/driver_update_request_bank.dart';
-export 'package:api_client/src/model/driver_update_request_current_location.dart';
+export 'package:api_client/src/model/driver_update_document_status_request.dart';
 export 'package:api_client/src/model/driver_user.dart';
+export 'package:api_client/src/model/driver_verify_quiz_request.dart';
 export 'package:api_client/src/model/emergency.dart';
 export 'package:api_client/src/model/emergency_contact_configuration.dart';
 export 'package:api_client/src/model/emergency_key.dart';
@@ -400,3 +405,4 @@ export 'package:api_client/src/model/wallet_monthly_summary_query.dart';
 export 'package:api_client/src/model/wallet_monthly_summary_response.dart';
 export 'package:api_client/src/model/wallet_top_up200_response.dart';
 export 'package:api_client/src/model/withdraw_request.dart';
+

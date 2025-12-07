@@ -781,12 +781,11 @@ class DriverQuizStateMapper extends ClassMapperBase<DriverQuizState> {
     _$error,
     opt: true,
   );
-  static QuizAttempt? _$attempt(DriverQuizState v) => v.attempt;
-  static const Field<DriverQuizState, QuizAttempt> _f$attempt = Field(
-    'attempt',
-    _$attempt,
-    opt: true,
-  );
+  static DriverQuizAnswerStartQuiz201ResponseData? _$attempt(
+    DriverQuizState v,
+  ) => v.attempt;
+  static const Field<DriverQuizState, DriverQuizAnswerStartQuiz201ResponseData>
+  _f$attempt = Field('attempt', _$attempt, opt: true);
   static int? _$currentQuestionIndex(DriverQuizState v) =>
       v.currentQuestionIndex;
   static const Field<DriverQuizState, int> _f$currentQuestionIndex = Field(
@@ -808,16 +807,21 @@ class DriverQuizStateMapper extends ClassMapperBase<DriverQuizState> {
     opt: true,
     def: const <String>{},
   );
-  static QuizResult? _$result(DriverQuizState v) => v.result;
-  static const Field<DriverQuizState, QuizResult> _f$result = Field(
+  static Object? _$result(DriverQuizState v) => v.result;
+  static const Field<DriverQuizState, Object> _f$result = Field(
     'result',
     _$result,
     opt: true,
   );
-  static Map<String, dynamic>? _$answerFeedback(DriverQuizState v) =>
-      v.answerFeedback;
-  static const Field<DriverQuizState, Map<String, dynamic>> _f$answerFeedback =
-      Field('answerFeedback', _$answerFeedback, opt: true);
+  static Map<String, dynamic>? _$_answerFeedback(DriverQuizState v) =>
+      v._answerFeedback;
+  static const Field<DriverQuizState, Map<String, dynamic>> _f$_answerFeedback =
+      Field(
+        '_answerFeedback',
+        _$_answerFeedback,
+        key: r'answerFeedback',
+        opt: true,
+      );
 
   @override
   final MappableFields<DriverQuizState> fields = const {
@@ -829,7 +833,7 @@ class DriverQuizStateMapper extends ClassMapperBase<DriverQuizState> {
     #selectedAnswerId: _f$selectedAnswerId,
     #answeredQuestions: _f$answeredQuestions,
     #result: _f$result,
-    #answerFeedback: _f$answerFeedback,
+    #_answerFeedback: _f$_answerFeedback,
   };
 
   static DriverQuizState _instantiate(DecodingData data) {
@@ -842,7 +846,7 @@ class DriverQuizStateMapper extends ClassMapperBase<DriverQuizState> {
       selectedAnswerId: data.dec(_f$selectedAnswerId),
       answeredQuestions: data.dec(_f$answeredQuestions),
       result: data.dec(_f$result),
-      answerFeedback: data.dec(_f$answerFeedback),
+      answerFeedback: data.dec(_f$_answerFeedback),
     );
   }
 
@@ -890,16 +894,16 @@ extension DriverQuizStateValueCopy<$R, $Out>
 abstract class DriverQuizStateCopyWith<$R, $In extends DriverQuizState, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
   MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic, dynamic>>?
-  get answerFeedback;
+  get _answerFeedback;
   $R call({
     CubitState? state,
     String? message,
     BaseError? error,
-    QuizAttempt? attempt,
+    DriverQuizAnswerStartQuiz201ResponseData? attempt,
     int? currentQuestionIndex,
     String? selectedAnswerId,
     Set<String>? answeredQuestions,
-    QuizResult? result,
+    Object? result,
     Map<String, dynamic>? answerFeedback,
   });
   DriverQuizStateCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
@@ -917,9 +921,9 @@ class _DriverQuizStateCopyWithImpl<$R, $Out>
       DriverQuizStateMapper.ensureInitialized();
   @override
   MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic, dynamic>>?
-  get answerFeedback => $value.answerFeedback != null
+  get _answerFeedback => $value._answerFeedback != null
       ? MapCopyWith(
-          $value.answerFeedback!,
+          $value._answerFeedback!,
           (v, t) => ObjectCopyWith(v, $identity, t),
           (v) => call(answerFeedback: v),
         )
@@ -965,7 +969,7 @@ class _DriverQuizStateCopyWithImpl<$R, $Out>
       or: $value.answeredQuestions,
     ),
     result: data.get(#result, or: $value.result),
-    answerFeedback: data.get(#answerFeedback, or: $value.answerFeedback),
+    answerFeedback: data.get(#answerFeedback, or: $value._answerFeedback),
   );
 
   @override
@@ -1545,5 +1549,187 @@ class _DriverStateCopyWithImpl<$R, $Out>
   DriverStateCopyWith<$R2, DriverState, $Out2> $chain<$R2, $Out2>(
     Then<$Out2, $R2> t,
   ) => _DriverStateCopyWithImpl<$R2, $Out2>($value, $cast, t);
+}
+
+class DriverListHistoryStateMapper
+    extends ClassMapperBase<DriverListHistoryState> {
+  DriverListHistoryStateMapper._();
+
+  static DriverListHistoryStateMapper? _instance;
+  static DriverListHistoryStateMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = DriverListHistoryStateMapper._());
+    }
+    return _instance!;
+  }
+
+  @override
+  final String id = 'DriverListHistoryState';
+
+  static CubitState _$state(DriverListHistoryState v) => v.state;
+  static const Field<DriverListHistoryState, CubitState> _f$state = Field(
+    'state',
+    _$state,
+    opt: true,
+    def: CubitState.initial,
+  );
+  static String? _$message(DriverListHistoryState v) => v.message;
+  static const Field<DriverListHistoryState, String> _f$message = Field(
+    'message',
+    _$message,
+    opt: true,
+  );
+  static BaseError? _$error(DriverListHistoryState v) => v.error;
+  static const Field<DriverListHistoryState, BaseError> _f$error = Field(
+    'error',
+    _$error,
+    opt: true,
+  );
+  static List<Order>? _$orders(DriverListHistoryState v) => v.orders;
+  static const Field<DriverListHistoryState, List<Order>> _f$orders = Field(
+    'orders',
+    _$orders,
+    opt: true,
+  );
+  static PaginationResult? _$paginationResult(DriverListHistoryState v) =>
+      v.paginationResult;
+  static const Field<DriverListHistoryState, PaginationResult>
+  _f$paginationResult = Field(
+    'paginationResult',
+    _$paginationResult,
+    opt: true,
+  );
+
+  @override
+  final MappableFields<DriverListHistoryState> fields = const {
+    #state: _f$state,
+    #message: _f$message,
+    #error: _f$error,
+    #orders: _f$orders,
+    #paginationResult: _f$paginationResult,
+  };
+
+  static DriverListHistoryState _instantiate(DecodingData data) {
+    return DriverListHistoryState(
+      state: data.dec(_f$state),
+      message: data.dec(_f$message),
+      error: data.dec(_f$error),
+      orders: data.dec(_f$orders),
+      paginationResult: data.dec(_f$paginationResult),
+    );
+  }
+
+  @override
+  final Function instantiate = _instantiate;
+}
+
+mixin DriverListHistoryStateMappable {
+  DriverListHistoryStateCopyWith<
+    DriverListHistoryState,
+    DriverListHistoryState,
+    DriverListHistoryState
+  >
+  get copyWith =>
+      _DriverListHistoryStateCopyWithImpl<
+        DriverListHistoryState,
+        DriverListHistoryState
+      >(this as DriverListHistoryState, $identity, $identity);
+  @override
+  String toString() {
+    return DriverListHistoryStateMapper.ensureInitialized().stringifyValue(
+      this as DriverListHistoryState,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return DriverListHistoryStateMapper.ensureInitialized().equalsValue(
+      this as DriverListHistoryState,
+      other,
+    );
+  }
+
+  @override
+  int get hashCode {
+    return DriverListHistoryStateMapper.ensureInitialized().hashValue(
+      this as DriverListHistoryState,
+    );
+  }
+}
+
+extension DriverListHistoryStateValueCopy<$R, $Out>
+    on ObjectCopyWith<$R, DriverListHistoryState, $Out> {
+  DriverListHistoryStateCopyWith<$R, DriverListHistoryState, $Out>
+  get $asDriverListHistoryState => $base.as(
+    (v, t, t2) => _DriverListHistoryStateCopyWithImpl<$R, $Out>(v, t, t2),
+  );
+}
+
+abstract class DriverListHistoryStateCopyWith<
+  $R,
+  $In extends DriverListHistoryState,
+  $Out
+>
+    implements ClassCopyWith<$R, $In, $Out> {
+  ListCopyWith<$R, Order, ObjectCopyWith<$R, Order, Order>>? get orders;
+  $R call({
+    CubitState? state,
+    String? message,
+    BaseError? error,
+    List<Order>? orders,
+    PaginationResult? paginationResult,
+  });
+  DriverListHistoryStateCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
+    Then<$Out2, $R2> t,
+  );
+}
+
+class _DriverListHistoryStateCopyWithImpl<$R, $Out>
+    extends ClassCopyWithBase<$R, DriverListHistoryState, $Out>
+    implements
+        DriverListHistoryStateCopyWith<$R, DriverListHistoryState, $Out> {
+  _DriverListHistoryStateCopyWithImpl(super.value, super.then, super.then2);
+
+  @override
+  late final ClassMapperBase<DriverListHistoryState> $mapper =
+      DriverListHistoryStateMapper.ensureInitialized();
+  @override
+  ListCopyWith<$R, Order, ObjectCopyWith<$R, Order, Order>>? get orders =>
+      $value.orders != null
+      ? ListCopyWith(
+          $value.orders!,
+          (v, t) => ObjectCopyWith(v, $identity, t),
+          (v) => call(orders: v),
+        )
+      : null;
+  @override
+  $R call({
+    CubitState? state,
+    Object? message = $none,
+    Object? error = $none,
+    Object? orders = $none,
+    Object? paginationResult = $none,
+  }) => $apply(
+    FieldCopyWithData({
+      if (state != null) #state: state,
+      if (message != $none) #message: message,
+      if (error != $none) #error: error,
+      if (orders != $none) #orders: orders,
+      if (paginationResult != $none) #paginationResult: paginationResult,
+    }),
+  );
+  @override
+  DriverListHistoryState $make(CopyWithData data) => DriverListHistoryState(
+    state: data.get(#state, or: $value.state),
+    message: data.get(#message, or: $value.message),
+    error: data.get(#error, or: $value.error),
+    orders: data.get(#orders, or: $value.orders),
+    paginationResult: data.get(#paginationResult, or: $value.paginationResult),
+  );
+
+  @override
+  DriverListHistoryStateCopyWith<$R2, DriverListHistoryState, $Out2>
+  $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
+      _DriverListHistoryStateCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
 

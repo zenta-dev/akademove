@@ -209,6 +209,12 @@ void _setupCubit() {
       ),
     )
     ..registerFactory(
+      () => DriverScheduleCubit(driverRepository: sl<DriverRepository>()),
+    )
+    ..registerFactory(
+      () => DriverListHistoryCubit(orderRepository: sl<OrderRepository>()),
+    )
+    ..registerFactory(
       () => DriverProfileCubit(driverRepository: sl<DriverRepository>()),
     )
     ..registerFactory(

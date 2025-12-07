@@ -3,8 +3,7 @@ import 'package:api_client/api_client.dart';
 
 // tests for ConfigurationGet200Response
 void main() {
-  final ConfigurationGet200Response?
-  instance = /* ConfigurationGet200Response(...) */ null;
+  final ConfigurationGet200Response? instance = /* ConfigurationGet200Response(...) */ null;
   // TODO add properties to the entity
 
   group(ConfigurationGet200Response, () {
@@ -27,5 +26,6 @@ void main() {
     test('to test the property `totalPages`', () async {
       // TODO
     });
+
   });
 }

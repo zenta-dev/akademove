@@ -3,8 +3,7 @@ import 'package:api_client/api_client.dart';
 
 // tests for DriverQuizAnswerSubmitAnswer200ResponseData
 void main() {
-  final DriverQuizAnswerSubmitAnswer200ResponseData?
-  instance = /* DriverQuizAnswerSubmitAnswer200ResponseData(...) */ null;
+  final DriverQuizAnswerSubmitAnswer200ResponseData? instance = /* DriverQuizAnswerSubmitAnswer200ResponseData(...) */ null;
   // TODO add properties to the entity
 
   group(DriverQuizAnswerSubmitAnswer200ResponseData, () {
@@ -27,5 +26,6 @@ void main() {
     test('to test the property `explanation`', () async {
       // TODO
     });
+
   });
 }

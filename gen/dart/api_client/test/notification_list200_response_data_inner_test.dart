@@ -3,8 +3,7 @@ import 'package:api_client/api_client.dart';
 
 // tests for NotificationList200ResponseDataInner
 void main() {
-  final NotificationList200ResponseDataInner?
-  instance = /* NotificationList200ResponseDataInner(...) */ null;
+  final NotificationList200ResponseDataInner? instance = /* NotificationList200ResponseDataInner(...) */ null;
   // TODO add properties to the entity
 
   group(NotificationList200ResponseDataInner, () {
@@ -52,5 +51,6 @@ void main() {
     test('to test the property `readAt`', () async {
       // TODO
     });
+
   });
 }

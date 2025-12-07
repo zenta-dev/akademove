@@ -17,28 +17,28 @@ part 'order_verify_delivery_otp200_response_data.g.dart';
 )
 class OrderVerifyDeliveryOTP200ResponseData {
   /// Returns a new [OrderVerifyDeliveryOTP200ResponseData] instance.
-  const OrderVerifyDeliveryOTP200ResponseData({required this.verified});
+  const OrderVerifyDeliveryOTP200ResponseData({
+    required this.verified,
+  });
   @JsonKey(name: r'verified', required: true, includeIfNull: false)
   final bool verified;
+  
+  @override
+  bool operator ==(Object other) => identical(this, other) || other is OrderVerifyDeliveryOTP200ResponseData &&
+    other.verified == verified;
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is OrderVerifyDeliveryOTP200ResponseData &&
-          other.verified == verified;
+  int get hashCode =>
+      verified.hashCode;
 
-  @override
-  int get hashCode => verified.hashCode;
+  factory OrderVerifyDeliveryOTP200ResponseData.fromJson(Map<String, dynamic> json) => _$OrderVerifyDeliveryOTP200ResponseDataFromJson(json);
 
-  factory OrderVerifyDeliveryOTP200ResponseData.fromJson(
-    Map<String, dynamic> json,
-  ) => _$OrderVerifyDeliveryOTP200ResponseDataFromJson(json);
-
-  Map<String, dynamic> toJson() =>
-      _$OrderVerifyDeliveryOTP200ResponseDataToJson(this);
+  Map<String, dynamic> toJson() => _$OrderVerifyDeliveryOTP200ResponseDataToJson(this);
 
   @override
   String toString() {
     return toJson().toString();
   }
+
 }
+

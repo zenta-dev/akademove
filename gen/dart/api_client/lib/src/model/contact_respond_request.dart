@@ -17,25 +17,27 @@ part 'contact_respond_request.g.dart';
 )
 class ContactRespondRequest {
   /// Returns a new [ContactRespondRequest] instance.
-  const ContactRespondRequest({required this.response, this.status});
+  const ContactRespondRequest({
+    required this.response,
+     this.status,
+  });
   @JsonKey(name: r'response', required: true, includeIfNull: false)
   final String response;
-
+  
   @JsonKey(name: r'status', required: false, includeIfNull: false)
   final ContactRespondRequestStatusEnum? status;
+  
+  @override
+  bool operator ==(Object other) => identical(this, other) || other is ContactRespondRequest &&
+    other.response == response &&
+    other.status == status;
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is ContactRespondRequest &&
-          other.response == response &&
-          other.status == status;
+  int get hashCode =>
+      response.hashCode +
+      status.hashCode;
 
-  @override
-  int get hashCode => response.hashCode + status.hashCode;
-
-  factory ContactRespondRequest.fromJson(Map<String, dynamic> json) =>
-      _$ContactRespondRequestFromJson(json);
+  factory ContactRespondRequest.fromJson(Map<String, dynamic> json) => _$ContactRespondRequestFromJson(json);
 
   Map<String, dynamic> toJson() => _$ContactRespondRequestToJson(this);
 
@@ -43,6 +45,7 @@ class ContactRespondRequest {
   String toString() {
     return toJson().toString();
   }
+
 }
 
 enum ContactRespondRequestStatusEnum {
@@ -54,11 +57,12 @@ enum ContactRespondRequestStatusEnum {
   RESOLVED(r'RESOLVED'),
   @JsonValue(r'CLOSED')
   CLOSED(r'CLOSED');
-
+  
   const ContactRespondRequestStatusEnum(this.value);
-
+  
   final String value;
-
+  
   @override
   String toString() => value;
 }
+

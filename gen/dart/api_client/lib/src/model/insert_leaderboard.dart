@@ -19,8 +19,8 @@ class InsertLeaderboard {
   /// Returns a new [InsertLeaderboard] instance.
   const InsertLeaderboard({
     required this.userId,
-    this.driverId,
-    this.merchantId,
+     this.driverId,
+     this.merchantId,
     required this.category,
     required this.period,
     required this.rank,
@@ -30,48 +30,46 @@ class InsertLeaderboard {
   });
   @JsonKey(name: r'userId', required: true, includeIfNull: false)
   final String userId;
-
+  
   @JsonKey(name: r'driverId', required: false, includeIfNull: false)
   final String? driverId;
-
+  
   @JsonKey(name: r'merchantId', required: false, includeIfNull: false)
   final String? merchantId;
-
+  
   @JsonKey(name: r'category', required: true, includeIfNull: false)
   final InsertLeaderboardCategoryEnum category;
-
+  
   @JsonKey(name: r'period', required: true, includeIfNull: false)
   final InsertLeaderboardPeriodEnum period;
-
-  // minimum: 1
-  // maximum: 9007199254740991
+  
+          // minimum: 1
+          // maximum: 9007199254740991
   @JsonKey(name: r'rank', required: true, includeIfNull: false)
   final int rank;
-
-  // minimum: 0
-  // maximum: 9007199254740991
+  
+          // minimum: 0
+          // maximum: 9007199254740991
   @JsonKey(name: r'score', required: true, includeIfNull: false)
   final int score;
-
+  
   @JsonKey(name: r'periodStart', required: true, includeIfNull: false)
   final DateTime periodStart;
-
+  
   @JsonKey(name: r'periodEnd', required: true, includeIfNull: false)
   final DateTime periodEnd;
-
+  
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is InsertLeaderboard &&
-          other.userId == userId &&
-          other.driverId == driverId &&
-          other.merchantId == merchantId &&
-          other.category == category &&
-          other.period == period &&
-          other.rank == rank &&
-          other.score == score &&
-          other.periodStart == periodStart &&
-          other.periodEnd == periodEnd;
+  bool operator ==(Object other) => identical(this, other) || other is InsertLeaderboard &&
+    other.userId == userId &&
+    other.driverId == driverId &&
+    other.merchantId == merchantId &&
+    other.category == category &&
+    other.period == period &&
+    other.rank == rank &&
+    other.score == score &&
+    other.periodStart == periodStart &&
+    other.periodEnd == periodEnd;
 
   @override
   int get hashCode =>
@@ -85,8 +83,7 @@ class InsertLeaderboard {
       periodStart.hashCode +
       periodEnd.hashCode;
 
-  factory InsertLeaderboard.fromJson(Map<String, dynamic> json) =>
-      _$InsertLeaderboardFromJson(json);
+  factory InsertLeaderboard.fromJson(Map<String, dynamic> json) => _$InsertLeaderboardFromJson(json);
 
   Map<String, dynamic> toJson() => _$InsertLeaderboardToJson(this);
 
@@ -94,6 +91,7 @@ class InsertLeaderboard {
   String toString() {
     return toJson().toString();
   }
+
 }
 
 enum InsertLeaderboardCategoryEnum {
@@ -109,11 +107,11 @@ enum InsertLeaderboardCategoryEnum {
   ON_TIME(r'ON-TIME'),
   @JsonValue(r'COMPLETION-RATE')
   COMPLETION_RATE(r'COMPLETION-RATE');
-
+  
   const InsertLeaderboardCategoryEnum(this.value);
-
+  
   final String value;
-
+  
   @override
   String toString() => value;
 }
@@ -131,11 +129,12 @@ enum InsertLeaderboardPeriodEnum {
   YEARLY(r'YEARLY'),
   @JsonValue(r'ALL-TIME')
   ALL_TIME(r'ALL-TIME');
-
+  
   const InsertLeaderboardPeriodEnum(this.value);
-
+  
   final String value;
-
+  
   @override
   String toString() => value;
 }
+

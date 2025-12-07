@@ -2,8 +2,8 @@ import 'package:akademove/app/router/router.dart';
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/l10n/l10n.dart';
+import 'package:akademove/locator.dart';
 import 'package:api_client/api_client.dart';
-import 'package:flutter/material.dart' as material;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -17,38 +17,16 @@ class DriverProfileScreen extends StatefulWidget {
 }
 
 class _DriverProfileScreenState extends State<DriverProfileScreen> {
-  Driver? _driver;
-  bool _isLoading = false;
-
   @override
   void initState() {
     super.initState();
-    _loadProfile();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadProfile();
+    });
   }
 
   Future<void> _loadProfile() async {
-    setState(() => _isLoading = true);
-
-    try {
-      final response = await context.read<DriverRepository>().getMine();
-      if (mounted) {
-        setState(() {
-          _driver = response.data;
-          _isLoading = false;
-        });
-      }
-    } catch (e) {
-      if (mounted) {
-        setState(() => _isLoading = false);
-        showToast(
-          context: context,
-          builder: (context, overlay) => context.buildToast(
-            title: context.l10n.error,
-            message: context.l10n.text_failed_to_load_profile(e.toString()),
-          ),
-        );
-      }
-    }
+    await sl<DriverRepository>().getMine();
   }
 
   Future<void> _onRefresh() async {
@@ -57,46 +35,39 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return MyScaffold(
-      headers: [
-        AppBar(
-          title: Text(context.l10n.profile),
-          trailing: [
-            IconButton(
-              icon: const Icon(LucideIcons.settings),
-              onPressed: () {
-                _showSettingsDialog();
-              },
-              variance: ButtonVariance.ghost,
+    return BlocBuilder<DriverCubit, DriverState>(
+      builder: (context, state) {
+        return MyScaffold(
+          headers: [
+            DefaultAppBar(
+              title: context.l10n.profile,
+              padding: EdgeInsets.all(16.r),
             ),
           ],
-        ),
-      ],
-      body: _isLoading && _driver == null
-          ? const Center(child: CircularProgressIndicator())
-          : material.RefreshIndicator(
-              onRefresh: _onRefresh,
-              child: SingleChildScrollView(
-                padding: EdgeInsets.all(16.dg),
-                child: Builder(
-                  builder: (context) {
-                    final driver = _driver;
-                    if (driver == null) return _buildErrorState();
+          body: RefreshTrigger(
+            onRefresh: _onRefresh,
+            child: SingleChildScrollView(
+              child: Builder(
+                builder: (context) {
+                  final driver = state.driver;
+                  if (driver == null) return _buildErrorState();
 
-                    return Column(
-                      spacing: 16.h,
-                      children: [
-                        _buildProfileHeader(driver),
-                        _buildStatsCards(driver),
-                        _buildDocumentSection(driver),
-                        _buildBankSection(driver),
-                        _buildActionButtons(),
-                      ],
-                    );
-                  },
-                ),
+                  return Column(
+                    spacing: 16.h,
+                    children: [
+                      _buildProfileHeader(driver),
+                      _buildStatsCards(driver),
+                      _buildDocumentSection(driver),
+                      _buildBankSection(driver),
+                      _buildActionButtons(),
+                    ],
+                  );
+                },
               ),
             ),
+          ),
+        );
+      },
     );
   }
 
@@ -130,116 +101,113 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
     final statusText = _getStatusText(context, driver.status);
 
     return Card(
-      child: Padding(
-        padding: EdgeInsets.all(16.dg),
-        child: Column(
-          spacing: 16.h,
-          children: [
-            // Avatar and basic info
-            Row(
-              spacing: 16.w,
-              children: [
-                Container(
-                  width: 80.r,
-                  height: 80.r,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: context.colorScheme.primary.withValues(alpha: 0.1),
-                    border: Border.all(
+      child: Column(
+        spacing: 16.h,
+        children: [
+          // Avatar and basic info
+          Row(
+            spacing: 16.w,
+            children: [
+              Container(
+                width: 80.r,
+                height: 80.r,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: context.colorScheme.primary.withValues(alpha: 0.1),
+                  border: Border.all(
+                    color: context.colorScheme.primary,
+                    width: 2,
+                  ),
+                ),
+                child: Center(
+                  child: Text(
+                    user?.name?.substring(0, 1).toUpperCase() ?? 'D',
+                    style: context.typography.h1.copyWith(
+                      fontSize: 32.sp,
                       color: context.colorScheme.primary,
-                      width: 2,
-                    ),
-                  ),
-                  child: Center(
-                    child: Text(
-                      user?.name?.substring(0, 1).toUpperCase() ?? 'D',
-                      style: context.typography.h1.copyWith(
-                        fontSize: 32.sp,
-                        color: context.colorScheme.primary,
-                      ),
                     ),
                   ),
                 ),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    spacing: 8.h,
-                    children: [
-                      Text(
-                        user?.name ?? 'Driver',
-                        style: context.typography.h3.copyWith(
-                          fontSize: 20.sp,
-                          fontWeight: FontWeight.bold,
-                        ),
+              ),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  spacing: 8.h,
+                  children: [
+                    Text(
+                      user?.name ?? 'Driver',
+                      style: context.typography.h3.copyWith(
+                        fontSize: 20.sp,
+                        fontWeight: FontWeight.bold,
                       ),
-                      Row(
-                        spacing: 8.w,
-                        children: [
-                          Icon(
-                            LucideIcons.star,
-                            size: 16.sp,
-                            color: const Color(0xFFFFC107),
-                          ),
-                          Text(
-                            driver.rating.toStringAsFixed(1),
-                            style: context.typography.p.copyWith(
-                              fontSize: 14.sp,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ],
-                      ),
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 8.w,
-                          vertical: 4.h,
+                    ),
+                    Row(
+                      spacing: 8.w,
+                      children: [
+                        Icon(
+                          LucideIcons.star,
+                          size: 16.sp,
+                          color: const Color(0xFFFFC107),
                         ),
-                        decoration: BoxDecoration(
-                          color: statusColor.withValues(alpha: 0.1),
-                          borderRadius: BorderRadius.circular(4.r),
-                          border: Border.all(color: statusColor),
-                        ),
-                        child: Text(
-                          statusText,
-                          style: context.typography.small.copyWith(
-                            fontSize: 12.sp,
+                        Text(
+                          driver.rating.toStringAsFixed(1),
+                          style: context.typography.p.copyWith(
+                            fontSize: 14.sp,
                             fontWeight: FontWeight.w600,
-                            color: statusColor,
                           ),
                         ),
+                      ],
+                    ),
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 8.w,
+                        vertical: 4.h,
                       ),
-                    ],
-                  ),
+                      decoration: BoxDecoration(
+                        color: statusColor.withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(4.r),
+                        border: Border.all(color: statusColor),
+                      ),
+                      child: Text(
+                        statusText,
+                        style: context.typography.small.copyWith(
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w600,
+                          color: statusColor,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-            const Divider(),
-            // License plate and student ID
-            Row(
-              children: [
-                Expanded(
-                  child: _buildInfoItem(
-                    LucideIcons.car,
-                    context.l10n.license_plate,
-                    driver.licensePlate,
-                  ),
+              ),
+            ],
+          ),
+          const Divider(),
+          // License plate and student ID
+          Row(
+            children: [
+              Expanded(
+                child: _buildInfoItem(
+                  LucideIcons.car,
+                  context.l10n.license_plate,
+                  driver.licensePlate,
                 ),
-                Container(
-                  width: 1.w,
-                  height: 40.h,
-                  color: context.colorScheme.border,
+              ),
+              Container(
+                width: 1.w,
+                height: 40.h,
+                color: context.colorScheme.border,
+              ),
+              Expanded(
+                child: _buildInfoItem(
+                  LucideIcons.idCard,
+                  'Student ID',
+                  driver.studentId.toString(),
                 ),
-                Expanded(
-                  child: _buildInfoItem(
-                    LucideIcons.idCard,
-                    'Student ID',
-                    driver.studentId.toString(),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -297,57 +265,51 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
 
   Widget _buildStatCard(IconData icon, String label, Color color) {
     return Card(
-      child: Padding(
-        padding: EdgeInsets.all(12.dg),
-        child: Column(
-          spacing: 8.h,
-          children: [
-            Icon(icon, size: 24.sp, color: color),
-            Text(
-              label,
-              textAlign: TextAlign.center,
-              style: context.typography.small.copyWith(
-                fontSize: 12.sp,
-                fontWeight: FontWeight.w600,
-                color: color,
-              ),
+      child: Column(
+        spacing: 8.h,
+        children: [
+          Icon(icon, size: 24.sp, color: color),
+          Text(
+            label,
+            textAlign: TextAlign.center,
+            style: context.typography.small.copyWith(
+              fontSize: 12.sp,
+              fontWeight: FontWeight.w600,
+              color: color,
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 
   Widget _buildDocumentSection(Driver driver) {
     return Card(
-      child: Padding(
-        padding: EdgeInsets.all(16.dg),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          spacing: 12.h,
-          children: [
-            Text(
-              'Documents',
-              style: context.typography.h4.copyWith(
-                fontSize: 16.sp,
-                fontWeight: FontWeight.bold,
-              ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        spacing: 12.h,
+        children: [
+          Text(
+            'Documents',
+            style: context.typography.h4.copyWith(
+              fontSize: 16.sp,
+              fontWeight: FontWeight.bold,
             ),
-            const Divider(),
-            _buildDocumentItem(
-              context.l10n.student_card,
-              driver.studentCard.isNotEmpty,
-            ),
-            _buildDocumentItem(
-              context.l10n.driver_license,
-              driver.driverLicense.isNotEmpty,
-            ),
-            _buildDocumentItem(
-              context.l10n.vehicle_certificate,
-              driver.vehicleCertificate.isNotEmpty,
-            ),
-          ],
-        ),
+          ),
+          const Divider(),
+          _buildDocumentItem(
+            context.l10n.student_card,
+            driver.studentCard.isNotEmpty,
+          ),
+          _buildDocumentItem(
+            context.l10n.driver_license,
+            driver.driverLicense.isNotEmpty,
+          ),
+          _buildDocumentItem(
+            context.l10n.vehicle_certificate,
+            driver.vehicleCertificate.isNotEmpty,
+          ),
+        ],
       ),
     );
   }
@@ -385,54 +347,51 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
 
   Widget _buildBankSection(Driver driver) {
     return Card(
-      child: Padding(
-        padding: EdgeInsets.all(16.dg),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          spacing: 12.h,
-          children: [
-            Text(
-              context.l10n.bank_account,
-              style: context.typography.h4.copyWith(
-                fontSize: 16.sp,
-                fontWeight: FontWeight.bold,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        spacing: 12.h,
+        children: [
+          Text(
+            context.l10n.bank_account,
+            style: context.typography.h4.copyWith(
+              fontSize: 16.sp,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const Divider(),
+          Row(
+            children: [
+              Icon(
+                LucideIcons.building,
+                size: 20.sp,
+                color: context.colorScheme.mutedForeground,
               ),
-            ),
-            const Divider(),
-            Row(
-              children: [
-                Icon(
-                  LucideIcons.building,
-                  size: 20.sp,
-                  color: context.colorScheme.mutedForeground,
-                ),
-                SizedBox(width: 12.w),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    spacing: 4.h,
-                    children: [
-                      Text(
-                        driver.bank.provider.name,
-                        style: context.typography.p.copyWith(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w600,
-                        ),
+              SizedBox(width: 12.w),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  spacing: 4.h,
+                  children: [
+                    Text(
+                      driver.bank.provider.name,
+                      style: context.typography.p.copyWith(
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w600,
                       ),
-                      Text(
-                        driver.bank.number.toString(),
-                        style: context.typography.small.copyWith(
-                          fontSize: 12.sp,
-                          color: context.colorScheme.mutedForeground,
-                        ),
+                    ),
+                    Text(
+                      driver.bank.number.toString(),
+                      style: context.typography.small.copyWith(
+                        fontSize: 12.sp,
+                        color: context.colorScheme.mutedForeground,
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          ],
-        ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -441,22 +400,6 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
     return Column(
       spacing: 12.h,
       children: [
-        SizedBox(
-          width: double.infinity,
-          child: OutlineButton(
-            onPressed: () {
-              _showEditProfileDialog();
-            },
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              spacing: 8.w,
-              children: [
-                Icon(LucideIcons.pencil),
-                Text(context.l10n.edit_profile),
-              ],
-            ),
-          ),
-        ),
         const DeleteAccountButtonWidget(accountType: 'DRIVER'),
         SizedBox(
           width: double.infinity,
@@ -503,17 +446,10 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
 
   Future<void> _performLogout() async {
     try {
-      setState(() => _isLoading = true);
-
       // Call AuthCubit to sign out
       await context.read<AuthCubit>().signOut();
 
       if (mounted) {
-        setState(() => _isLoading = false);
-
-        // Clear all cached data
-        AppCaches.clearAll();
-
         // Navigate to sign-in screen and clear navigation stack
         context.go(Routes.authSignIn.path);
 
@@ -525,231 +461,16 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
       }
     } on BaseError catch (e) {
       if (mounted) {
-        setState(() => _isLoading = false);
         context.showMyToast(e.message, type: ToastType.failed);
       }
     } catch (e) {
       if (mounted) {
-        setState(() => _isLoading = false);
         context.showMyToast(
           context.l10n.an_error_occurred,
           type: ToastType.failed,
         );
       }
     }
-  }
-
-  void _showEditProfileDialog() {
-    final driver = _driver;
-    if (driver == null) return;
-
-    final licensePlateController = TextEditingController(
-      text: driver.licensePlate,
-    );
-
-    showDialog(
-      context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: Text(context.l10n.edit_profile),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          spacing: 16.h,
-          children: [
-            Text(
-              context.l10n.update_your_license_plate,
-              style: context.typography.small.copyWith(
-                fontSize: 12.sp,
-                color: context.colorScheme.mutedForeground,
-              ),
-            ),
-            TextField(
-              controller: licensePlateController,
-              placeholder: Text(context.l10n.enter_license_plate),
-            ),
-          ],
-        ),
-        actions: [
-          OutlineButton(
-            onPressed: () {
-              licensePlateController.dispose();
-              Navigator.of(dialogContext).pop();
-            },
-            child: Text(context.l10n.cancel),
-          ),
-          PrimaryButton(
-            onPressed: () async {
-              final newLicensePlate = licensePlateController.text.trim();
-
-              if (newLicensePlate.isEmpty) {
-                context.showMyToast(
-                  context.l10n.license_plate_cannot_be_empty,
-                  type: ToastType.warning,
-                );
-                return;
-              }
-
-              // Close dialog
-              licensePlateController.dispose();
-              Navigator.of(dialogContext).pop();
-
-              // Update profile
-              try {
-                setState(() => _isLoading = true);
-
-                final response = await context.read<DriverRepository>().update(
-                  driverId: driver.id,
-                  licensePlate: newLicensePlate,
-                );
-
-                if (mounted) {
-                  setState(() {
-                    _driver = response.data;
-                    _isLoading = false;
-                  });
-
-                  context.showMyToast(
-                    context.l10n.profile_updated_successfully,
-                    type: ToastType.success,
-                  );
-                }
-              } on BaseError catch (e) {
-                if (mounted) {
-                  setState(() => _isLoading = false);
-                  context.showMyToast(e.message, type: ToastType.failed);
-                }
-              } catch (e) {
-                if (mounted) {
-                  setState(() => _isLoading = false);
-                  context.showMyToast(
-                    context.l10n.an_error_occurred,
-                    type: ToastType.failed,
-                  );
-                }
-              }
-            },
-            child: Text(context.l10n.save),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _showSettingsDialog() {
-    if (_driver == null) return;
-
-    showDialog(
-      context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: Text(context.l10n.settings),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          spacing: 16.h,
-          children: [
-            Text(
-              context.l10n.driver_preferences_and_settings,
-              style: context.typography.small.copyWith(
-                fontSize: 12.sp,
-                color: context.colorScheme.mutedForeground,
-              ),
-            ),
-            GestureDetector(
-              onTap: () {
-                Navigator.of(dialogContext).pop();
-                context.ensureNotification();
-              },
-              child: Card(
-                child: Padding(
-                  padding: EdgeInsets.all(12.dg),
-                  child: Row(
-                    spacing: 12.w,
-                    children: [
-                      Icon(LucideIcons.bell, size: 24.sp),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          spacing: 4.h,
-                          children: [
-                            Text(
-                              context.l10n.notifications,
-                              style: context.typography.p.copyWith(
-                                fontSize: 14.sp,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            Text(
-                              context.l10n.manage_notification_preferences,
-                              style: context.typography.small.copyWith(
-                                fontSize: 12.sp,
-                                color: context.colorScheme.mutedForeground,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Icon(LucideIcons.chevronRight, size: 20.sp),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            GestureDetector(
-              onTap: () {
-                Navigator.of(dialogContext).pop();
-                showToast(
-                  context: context,
-                  builder: (context, overlay) => context.buildToast(
-                    title: 'About',
-                    message: 'AkadeMove Driver v1.0.0',
-                  ),
-                );
-              },
-              child: Card(
-                child: Padding(
-                  padding: EdgeInsets.all(12.dg),
-                  child: Row(
-                    spacing: 12.w,
-                    children: [
-                      Icon(LucideIcons.info, size: 24.sp),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          spacing: 4.h,
-                          children: [
-                            Text(
-                              context.l10n.about,
-                              style: context.typography.p.copyWith(
-                                fontSize: 14.sp,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            Text(
-                              context.l10n.app_version_information,
-                              style: context.typography.small.copyWith(
-                                fontSize: 12.sp,
-                                color: context.colorScheme.mutedForeground,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Icon(LucideIcons.chevronRight, size: 20.sp),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-        actions: [
-          PrimaryButton(
-            onPressed: () => Navigator.of(dialogContext).pop(),
-            child: Text(context.l10n.close),
-          ),
-        ],
-      ),
-    );
   }
 
   Color _getStatusColor(DriverStatus status) {

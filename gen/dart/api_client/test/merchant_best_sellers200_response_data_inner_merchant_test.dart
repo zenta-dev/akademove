@@ -3,8 +3,7 @@ import 'package:api_client/api_client.dart';
 
 // tests for MerchantBestSellers200ResponseDataInnerMerchant
 void main() {
-  final MerchantBestSellers200ResponseDataInnerMerchant?
-  instance = /* MerchantBestSellers200ResponseDataInnerMerchant(...) */ null;
+  final MerchantBestSellers200ResponseDataInnerMerchant? instance = /* MerchantBestSellers200ResponseDataInnerMerchant(...) */ null;
   // TODO add properties to the entity
 
   group(MerchantBestSellers200ResponseDataInnerMerchant, () {
@@ -27,5 +26,6 @@ void main() {
     test('to test the property `rating`', () async {
       // TODO
     });
+
   });
 }

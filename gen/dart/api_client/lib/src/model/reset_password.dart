@@ -24,27 +24,26 @@ class ResetPassword {
   });
   @JsonKey(name: r'token', required: true, includeIfNull: false)
   final String token;
-
+  
   @JsonKey(name: r'newPassword', required: true, includeIfNull: false)
   final String newPassword;
-
+  
   @JsonKey(name: r'confirmPassword', required: true, includeIfNull: false)
   final String confirmPassword;
-
+  
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is ResetPassword &&
-          other.token == token &&
-          other.newPassword == newPassword &&
-          other.confirmPassword == confirmPassword;
+  bool operator ==(Object other) => identical(this, other) || other is ResetPassword &&
+    other.token == token &&
+    other.newPassword == newPassword &&
+    other.confirmPassword == confirmPassword;
 
   @override
   int get hashCode =>
-      token.hashCode + newPassword.hashCode + confirmPassword.hashCode;
+      token.hashCode +
+      newPassword.hashCode +
+      confirmPassword.hashCode;
 
-  factory ResetPassword.fromJson(Map<String, dynamic> json) =>
-      _$ResetPasswordFromJson(json);
+  factory ResetPassword.fromJson(Map<String, dynamic> json) => _$ResetPasswordFromJson(json);
 
   Map<String, dynamic> toJson() => _$ResetPasswordToJson(this);
 
@@ -52,4 +51,6 @@ class ResetPassword {
   String toString() {
     return toJson().toString();
   }
+
 }
+

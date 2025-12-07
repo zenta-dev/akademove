@@ -3,8 +3,7 @@ import 'package:api_client/api_client.dart';
 
 // tests for ContactList200Response
 void main() {
-  final ContactList200Response? instance = /* ContactList200Response(...) */
-      null;
+  final ContactList200Response? instance = /* ContactList200Response(...) */ null;
   // TODO add properties to the entity
 
   group(ContactList200Response, () {
@@ -27,5 +26,6 @@ void main() {
     test('to test the property `totalPages`', () async {
       // TODO
     });
+
   });
 }

@@ -1,6 +1,7 @@
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/locator.dart';
+import 'package:api_client/api_client.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 
@@ -60,8 +61,7 @@ class _DriverQuizScreenState extends State<DriverQuizScreen> {
 
           // Show quiz result if completed
           if (state.result != null) {
-            final result = state.result;
-            return _buildResultScreen(result);
+            return _buildResultScreen(state.result);
           }
 
           // Show quiz questions
@@ -314,7 +314,13 @@ class _DriverQuizScreenState extends State<DriverQuizScreen> {
     );
   }
 
-  Widget _buildQuestionCard(dynamic question, DriverQuizState state) {
+  Widget _buildQuestionCard(
+    DriverQuizQuestionGetQuizQuestions200ResponseDataInner? question,
+    DriverQuizState state,
+  ) {
+    if (question == null) {
+      return const Center(child: Text('No question available'));
+    }
     final primaryColor = context.colorScheme.primary;
     return Card(
       child: Padding(
@@ -326,11 +332,11 @@ class _DriverQuizScreenState extends State<DriverQuizScreen> {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               decoration: BoxDecoration(
-                color: _getCategoryColor(question.category as String),
+                color: _getCategoryColor(question.category),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Text(
-                (question.category as String).replaceAll('_', ' '),
+                question.category.replaceAll('_', ' '),
                 style: const TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
@@ -342,22 +348,22 @@ class _DriverQuizScreenState extends State<DriverQuizScreen> {
             const SizedBox(height: 16),
 
             // Question
-            Text(question.question as String, style: context.typography.medium),
+            Text(question.question, style: context.typography.medium),
 
             const SizedBox(height: 16),
 
             // Answer Feedback if submitted
-            if (state.answeredQuestions.contains(question.id as String) &&
+            if (state.answeredQuestions.contains(question.id) &&
                 state.answerFeedback != null)
               Container(
                 padding: const EdgeInsets.all(12),
                 margin: const EdgeInsets.only(bottom: 16),
                 decoration: BoxDecoration(
-                  color: (state.answerFeedback!['isCorrect'] ?? false)
+                  color: state.answerFeedback!.isCorrect
                       ? Colors.green.shade50
                       : Colors.red.shade50,
                   border: Border.all(
-                    color: (state.answerFeedback!['isCorrect'] ?? false)
+                    color: state.answerFeedback!.isCorrect
                         ? Colors.green.shade200
                         : Colors.red.shade200,
                   ),
@@ -366,10 +372,10 @@ class _DriverQuizScreenState extends State<DriverQuizScreen> {
                 child: Row(
                   children: [
                     Icon(
-                      (state.answerFeedback!['isCorrect'] ?? false)
+                      state.answerFeedback!.isCorrect
                           ? Icons.check_circle
                           : Icons.cancel,
-                      color: (state.answerFeedback!['isCorrect'] ?? false)
+                      color: state.answerFeedback!.isCorrect
                           ? Colors.green.shade700
                           : Colors.red.shade700,
                     ),
@@ -379,28 +385,24 @@ class _DriverQuizScreenState extends State<DriverQuizScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            (state.answerFeedback!['isCorrect'] ?? false)
+                            state.answerFeedback!.isCorrect
                                 ? 'Correct!'
                                 : 'Incorrect',
                             style: context.typography.medium.copyWith(
                               fontWeight: FontWeight.bold,
-                              color:
-                                  (state.answerFeedback!['isCorrect'] ?? false)
+                              color: state.answerFeedback!.isCorrect
                                   ? Colors.green.shade700
                                   : Colors.red.shade700,
                             ),
                           ),
-                          if (state.answerFeedback!['pointsEarned'] != null)
-                            Text(
-                              '+${state.answerFeedback!['pointsEarned']} points earned',
-                              style: context.typography.small.copyWith(
-                                color:
-                                    (state.answerFeedback!['isCorrect'] ??
-                                        false)
-                                    ? Colors.green.shade700
-                                    : Colors.red.shade700,
-                              ),
+                          Text(
+                            '+${state.answerFeedback!.pointsEarned.toInt()} points earned',
+                            style: context.typography.small.copyWith(
+                              color: state.answerFeedback!.isCorrect
+                                  ? Colors.green.shade700
+                                  : Colors.red.shade700,
                             ),
+                          ),
                         ],
                       ),
                     ),
@@ -409,18 +411,16 @@ class _DriverQuizScreenState extends State<DriverQuizScreen> {
               ),
 
             // Options
-            ...(question.options as List).map((option) {
+            ...question.options.map((option) {
               final isSelected = state.selectedAnswerId == option.id;
-              final isAnswered = state.answeredQuestions.contains(
-                question.id as String,
-              );
+              final isAnswered = state.answeredQuestions.contains(question.id);
 
               return Padding(
                 padding: const EdgeInsets.only(bottom: 8),
                 child: OutlineButton(
                   onPressed: isAnswered
                       ? null
-                      : () => _quizCubit.selectAnswer(option.id as String),
+                      : () => _quizCubit.selectAnswer(option.id),
                   child: Container(
                     width: double.infinity,
                     padding: const EdgeInsets.all(16),
@@ -462,7 +462,7 @@ class _DriverQuizScreenState extends State<DriverQuizScreen> {
                         // Option Text
                         Expanded(
                           child: Text(
-                            option.text as String,
+                            option.text,
                             style: TextStyle(
                               color: isSelected
                                   ? primaryColor
@@ -485,8 +485,26 @@ class _DriverQuizScreenState extends State<DriverQuizScreen> {
     );
   }
 
-  Widget _buildResultScreen(dynamic result) {
-    final passed = result.passed as bool;
+  Widget _buildResultScreen(Object? result) {
+    if (result == null) {
+      return const Center(child: Text('No result data available'));
+    }
+
+    // Handle DriverQuizResult (from completion)
+    if (result is DriverQuizResult) {
+      return _buildCompletionResultScreen(result);
+    }
+
+    // Handle DriverQuizAnswer (from latest attempt)
+    if (result is DriverQuizAnswer) {
+      return _buildAttemptResultScreen(result);
+    }
+
+    return const Center(child: Text('Unknown result type'));
+  }
+
+  Widget _buildCompletionResultScreen(DriverQuizResult result) {
+    final passed = result.passed;
     return Padding(
       padding: const EdgeInsets.all(16),
       child: SingleChildScrollView(
@@ -540,10 +558,7 @@ class _DriverQuizScreenState extends State<DriverQuizScreen> {
               ),
               child: Column(
                 children: [
-                  _buildScoreRow(
-                    'Score',
-                    '${(result.scorePercentage as num).toInt()}%',
-                  ),
+                  _buildScoreRow('Score', '${result.scorePercentage.toInt()}%'),
                   const SizedBox(height: 8),
                   _buildScoreRow(
                     'Correct Answers',
@@ -600,6 +615,139 @@ class _DriverQuizScreenState extends State<DriverQuizScreen> {
             const SizedBox(height: 32),
 
             // Action Button
+            SizedBox(
+              width: double.infinity,
+              child: passed
+                  ? IconButton(
+                      variance: ButtonVariance.primary,
+                      onPressed: () => Navigator.of(
+                        context,
+                      ).pushReplacementNamed('/sign-in'),
+                      icon: const Icon(Icons.arrow_forward),
+                    )
+                  : IconButton(
+                      variance: ButtonVariance.secondary,
+                      onPressed: () {
+                        _quizCubit.reset();
+                        _quizCubit.startQuiz();
+                      },
+                      icon: const Icon(Icons.refresh),
+                    ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAttemptResultScreen(DriverQuizAnswer attempt) {
+    // For DriverQuizAnswer, we can determine pass/fail based on status
+    final passed =
+        attempt.status == DriverQuizAnswerStatus.COMPLETED &&
+        attempt.scorePercentage >= (attempt.passingScore ?? 70);
+
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // Result Icon
+            Container(
+              width: 120,
+              height: 120,
+              decoration: BoxDecoration(
+                color: passed ? Colors.green.shade100 : Colors.red.shade100,
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                passed ? Icons.check_circle : Icons.cancel,
+                size: 64,
+                color: passed ? Colors.green.shade700 : Colors.red.shade700,
+              ),
+            ),
+            const SizedBox(height: 24),
+            // Result Message
+            Text(
+              passed ? 'Congratulations!' : 'Quiz Not Passed',
+              style: context.typography.h2.copyWith(
+                color: passed ? Colors.green.shade700 : Colors.red.shade700,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              passed
+                  ? 'You have successfully passed the driver knowledge quiz!'
+                  : 'Don\'t worry, you can try again!',
+              style: context.typography.large,
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 24),
+            // Score Details
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.gray.shade100,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Column(
+                children: [
+                  _buildScoreRow(
+                    'Score',
+                    '${attempt.scorePercentage.toInt()}%',
+                  ),
+                  const SizedBox(height: 8),
+                  _buildScoreRow(
+                    'Correct Answers',
+                    '${attempt.correctAnswers}/${attempt.totalQuestions}',
+                  ),
+                  const SizedBox(height: 8),
+                  _buildScoreRow('Points Earned', '${attempt.earnedPoints}'),
+                  const SizedBox(height: 8),
+                  _buildScoreRow('Total Points', '${attempt.totalPoints}'),
+                ],
+              ),
+            ),
+            if (!passed) ...[
+              const SizedBox(height: 24),
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.red.shade50,
+                  border: Border.all(color: Colors.red.shade200),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Row(
+                  children: [
+                    Icon(Icons.error_outline, color: Colors.red.shade700),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Not Passed',
+                            style: context.typography.medium.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.red.shade700,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            'You need at least ${attempt.passingScore ?? 70}% to pass. Please review and try again.',
+                            style: context.typography.small.copyWith(
+                              color: Colors.red.shade700,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+            const SizedBox(height: 32),
             SizedBox(
               width: double.infinity,
               child: passed

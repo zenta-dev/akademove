@@ -3,8 +3,7 @@ import 'package:api_client/api_client.dart';
 
 // tests for MerchantSetOnlineStatusRequest
 void main() {
-  final MerchantSetOnlineStatusRequest?
-  instance = /* MerchantSetOnlineStatusRequest(...) */ null;
+  final MerchantSetOnlineStatusRequest? instance = /* MerchantSetOnlineStatusRequest(...) */ null;
   // TODO add properties to the entity
 
   group(MerchantSetOnlineStatusRequest, () {
@@ -12,5 +11,6 @@ void main() {
     test('to test the property `isOnline`', () async {
       // TODO
     });
+
   });
 }

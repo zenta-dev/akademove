@@ -1,7 +1,3 @@
-import { useQuery } from "@tanstack/react-query";
-import { createFileRoute, redirect } from "@tanstack/react-router";
-import { AlertCircle, CheckCircle, Eye, Loader2, XCircle } from "lucide-react";
-import { useState } from "react";
 import { DriverApprovalPageApprovalDialog } from "@/components/dialogs/driver-approval-page-approval-dialog";
 import { DriverApprovalPageRejectionDialog } from "@/components/dialogs/driver-approval-page-rejection-dialog";
 import { DriverDocumentPreviewModal } from "@/components/modals/driver-document-preview-modal";
@@ -14,6 +10,10 @@ import { Separator } from "@/components/ui/separator";
 import { hasAccess } from "@/lib/actions";
 import { orpcQuery } from "@/lib/orpc";
 import { cn } from "@/utils/cn";
+import { useQuery } from "@tanstack/react-query";
+import { createFileRoute, redirect } from "@tanstack/react-router";
+import { AlertCircle, CheckCircle, Eye, Loader2, XCircle } from "lucide-react";
+import { useMemo, useState } from "react";
 
 export const Route = createFileRoute("/dash/admin/driver-approval/$driverId")({
 	beforeLoad: async () => {
@@ -37,32 +37,31 @@ function RouteComponent() {
 	const [rejectionDialogOpen, setRejectionDialogOpen] = useState(false);
 
 	// Fetch driver data
-	const driverQuery = useQuery({
-		queryKey: ["driver", driverId],
-		queryFn: async () => {
-			const result = await orpcQuery.driver.get.query({
-				params: { id: driverId },
-			});
-			if (result.status !== 200) throw new Error(result.body.message);
-			return result.body.data;
-		},
-	});
+	const driverQuery = useQuery(
+		orpcQuery.driver.get.queryOptions({
+			input: { params: { id: driverId } },
+		}),
+	);
 
 	// Fetch approval review
-	const reviewQuery = useQuery({
-		queryKey: ["driver-approval-review", driverId],
-		queryFn: async () => {
-			const result = await orpcQuery.driver.getReview.query({
-				params: { id: driverId },
-			});
-			if (result.status !== 200) throw new Error(result.body.message);
-			return result.body.data;
-		},
-	});
+	const reviewQuery = useQuery(
+		orpcQuery.driver.getReview.queryOptions({
+			input: { params: { id: driverId } },
+		}),
+	);
 
-	const driver = driverQuery.data;
-	const review = reviewQuery.data;
-	const isLoading = driverQuery.isPending || reviewQuery.isPending;
+	const driver = useMemo(
+		() => driverQuery.data?.body.data,
+		[driverQuery.data?.body.data],
+	);
+	const review = useMemo(
+		() => reviewQuery.data?.body.data,
+		[reviewQuery.data?.body.data],
+	);
+	const isLoading = useMemo(
+		() => driverQuery.isPending || reviewQuery.isPending,
+		[driverQuery.isPending, reviewQuery.isPending],
+	);
 
 	if (isLoading) {
 		return (
@@ -91,14 +90,14 @@ function RouteComponent() {
 			PENDING: {
 				icon: AlertCircle,
 				color: "text-yellow-600",
-				bg: "bg-yellow-50",
+				bg: "bg-yellow-500/20",
 			},
 			APPROVED: {
 				icon: CheckCircle,
 				color: "text-green-600",
-				bg: "bg-green-50",
+				bg: "bg-green-500/20",
 			},
-			REJECTED: { icon: XCircle, color: "text-red-600", bg: "bg-red-50" },
+			REJECTED: { icon: XCircle, color: "text-red-600", bg: "bg-red-500/20" },
 		};
 
 		const config = statusConfig[status];
@@ -120,7 +119,21 @@ function RouteComponent() {
 	};
 
 	return (
-		<div className="space-y-6">
+		<div className="mx-auto w-full max-w-3xl space-y-6 py-6">
+			{/* Back button */}
+
+			<Button
+				variant="link"
+				onClick={() => {
+					history.back();
+				}}
+				className="px-0"
+			>
+				&larr; Back to Driver
+			</Button>
+
+			{/* Driver Info Header */}
+
 			<div>
 				<h2 className="font-bold text-2xl">{driver.user?.name || "Driver"}</h2>
 				<p className="text-muted-foreground">Student ID: {driver.studentId}</p>
@@ -230,7 +243,7 @@ function RouteComponent() {
 					<CardTitle>Driver Quiz Verification</CardTitle>
 				</CardHeader>
 				<CardContent className="space-y-4">
-					<div className="rounded-lg bg-blue-50 p-4">
+					<div className="rounded-lg bg-blue-500/20 p-4">
 						<div className="mb-2 flex items-center justify-between">
 							<Label className="font-medium">
 								Quiz Status: {driver.quizStatus}
@@ -247,7 +260,7 @@ function RouteComponent() {
 						</p>
 					</div>
 
-					<div className="flex items-center gap-3 rounded-lg bg-gray-50 p-4">
+					<div className="flex items-center gap-3 rounded-lg bg-gray-500/20 p-4">
 						<Checkbox
 							id="quiz-verified"
 							checked={review.quizVerified}
@@ -272,13 +285,13 @@ function RouteComponent() {
 				</CardHeader>
 				<CardContent className="space-y-4">
 					{allRequirementsMet ? (
-						<div className="rounded-lg border border-green-200 bg-green-50 p-4">
+						<div className="rounded-lg border border-green-200 bg-green-500/20 p-4">
 							<p className="font-medium text-green-800">
 								✓ All requirements met. Driver can be approved.
 							</p>
 						</div>
 					) : (
-						<div className="rounded-lg border border-amber-200 bg-amber-50 p-4">
+						<div className="rounded-lg border border-amber-200 bg-amber-500/20 p-4">
 							<p className="font-medium text-amber-800">
 								⚠ Complete all requirements before approving:
 							</p>

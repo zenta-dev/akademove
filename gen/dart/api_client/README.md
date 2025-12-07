@@ -138,7 +138,10 @@ Class | Method | HTTP request | Description
 [*DriverApi*](doc/DriverApi.md) | [**driverGet**](doc/DriverApi.md#driverget) | **GET** /drivers/{id} | 
 [*DriverApi*](doc/DriverApi.md) | [**driverGetAnalytics**](doc/DriverApi.md#drivergetanalytics) | **GET** /drivers/{id}/analytics | 
 [*DriverApi*](doc/DriverApi.md) | [**driverGetMine**](doc/DriverApi.md#drivergetmine) | **GET** /drivers/mine | 
+[*DriverApi*](doc/DriverApi.md) | [**driverGetReview**](doc/DriverApi.md#drivergetreview) | **GET** /drivers/{id}/approval-review | 
 [*DriverApi*](doc/DriverApi.md) | [**driverList**](doc/DriverApi.md#driverlist) | **GET** /drivers | 
+[*DriverApi*](doc/DriverApi.md) | [**driverMarkAsOffline**](doc/DriverApi.md#drivermarkasoffline) | **POST** /drivers/{id}/mark-as-offline | 
+[*DriverApi*](doc/DriverApi.md) | [**driverMarkAsOnline**](doc/DriverApi.md#drivermarkasonline) | **POST** /drivers/{id}/mark-as-online | 
 [*DriverApi*](doc/DriverApi.md) | [**driverNearby**](doc/DriverApi.md#drivernearby) | **GET** /drivers/nearby | 
 [*DriverApi*](doc/DriverApi.md) | [**driverRemove**](doc/DriverApi.md#driverremove) | **DELETE** /drivers/{id} | 
 [*DriverApi*](doc/DriverApi.md) | [**driverScheduleCreate**](doc/DriverApi.md#driverschedulecreate) | **POST** /drivers/{driverId}/schedules | 
@@ -146,7 +149,11 @@ Class | Method | HTTP request | Description
 [*DriverApi*](doc/DriverApi.md) | [**driverScheduleList**](doc/DriverApi.md#driverschedulelist) | **GET** /drivers/{driverId}/schedules | 
 [*DriverApi*](doc/DriverApi.md) | [**driverScheduleRemove**](doc/DriverApi.md#driverscheduleremove) | **DELETE** /drivers/{driverId}/schedules/{id} | 
 [*DriverApi*](doc/DriverApi.md) | [**driverScheduleUpdate**](doc/DriverApi.md#driverscheduleupdate) | **PUT** /drivers/{driverId}/schedules/{id} | 
+[*DriverApi*](doc/DriverApi.md) | [**driverSubmitApproval**](doc/DriverApi.md#driversubmitapproval) | **POST** /drivers/{id}/approval-review/submit-approval | 
+[*DriverApi*](doc/DriverApi.md) | [**driverSubmitRejection**](doc/DriverApi.md#driversubmitrejection) | **POST** /drivers/{id}/approval-review/submit-rejection | 
 [*DriverApi*](doc/DriverApi.md) | [**driverUpdate**](doc/DriverApi.md#driverupdate) | **PUT** /drivers/{id} | 
+[*DriverApi*](doc/DriverApi.md) | [**driverUpdateDocumentStatus**](doc/DriverApi.md#driverupdatedocumentstatus) | **POST** /drivers/{id}/approval-review/update-document | 
+[*DriverApi*](doc/DriverApi.md) | [**driverVerifyQuiz**](doc/DriverApi.md#driververifyquiz) | **POST** /drivers/{id}/approval-review/verify-quiz | 
 [*DriverQuizAnswerApi*](doc/DriverQuizAnswerApi.md) | [**driverQuizAnswerCompleteQuiz**](doc/DriverQuizAnswerApi.md#driverquizanswercompletequiz) | **POST** /driver-quiz-answers/complete | 
 [*DriverQuizAnswerApi*](doc/DriverQuizAnswerApi.md) | [**driverQuizAnswerGetAttempt**](doc/DriverQuizAnswerApi.md#driverquizanswergetattempt) | **GET** /driver-quiz-answers/{attemptId} | 
 [*DriverQuizAnswerApi*](doc/DriverQuizAnswerApi.md) | [**driverQuizAnswerGetMyLatestAttempt**](doc/DriverQuizAnswerApi.md#driverquizanswergetmylatestattempt) | **GET** /driver-quiz-answers/me/latest | 
@@ -351,6 +358,8 @@ Class | Method | HTTP request | Description
  - [DriverGetAnalytics200ResponseDataTopEarningDaysInner](doc/DriverGetAnalytics200ResponseDataTopEarningDaysInner.md)
  - [DriverGetMine200Response](doc/DriverGetMine200Response.md)
  - [DriverGetMine200ResponseBody](doc/DriverGetMine200ResponseBody.md)
+ - [DriverGetReview200Response](doc/DriverGetReview200Response.md)
+ - [DriverGetReview200ResponseData](doc/DriverGetReview200ResponseData.md)
  - [DriverKey](doc/DriverKey.md)
  - [DriverList200Response](doc/DriverList200Response.md)
  - [DriverQuizAnswer](doc/DriverQuizAnswer.md)
@@ -384,10 +393,12 @@ Class | Method | HTTP request | Description
  - [DriverScheduleList200Response](doc/DriverScheduleList200Response.md)
  - [DriverScheduleUpdateRequest](doc/DriverScheduleUpdateRequest.md)
  - [DriverStatus](doc/DriverStatus.md)
+ - [DriverSubmitApprovalRequest](doc/DriverSubmitApprovalRequest.md)
+ - [DriverSubmitRejectionRequest](doc/DriverSubmitRejectionRequest.md)
  - [DriverSuspendRequest](doc/DriverSuspendRequest.md)
- - [DriverUpdateRequestBank](doc/DriverUpdateRequestBank.md)
- - [DriverUpdateRequestCurrentLocation](doc/DriverUpdateRequestCurrentLocation.md)
+ - [DriverUpdateDocumentStatusRequest](doc/DriverUpdateDocumentStatusRequest.md)
  - [DriverUser](doc/DriverUser.md)
+ - [DriverVerifyQuizRequest](doc/DriverVerifyQuizRequest.md)
  - [Emergency](doc/Emergency.md)
  - [EmergencyContactConfiguration](doc/EmergencyContactConfiguration.md)
  - [EmergencyKey](doc/EmergencyKey.md)

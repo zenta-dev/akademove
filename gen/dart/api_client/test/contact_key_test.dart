@@ -3,5 +3,7 @@ import 'package:api_client/api_client.dart';
 
 // tests for ContactKey
 void main() {
-  group(ContactKey, () {});
+
+  group(ContactKey, () {
+  });
 }

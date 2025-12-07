@@ -33,7 +33,7 @@ export const DriverDocumentPreviewModal = ({
 				<DialogHeader>
 					<DialogTitle>{DOCUMENT_LABELS[document]}</DialogTitle>
 				</DialogHeader>
-				<div className="relative h-[70vh] w-full overflow-auto rounded-lg bg-gray-100">
+				<div className="relative h-[70vh] w-full overflow-auto rounded-lg bg-gray-500/20">
 					{isPdf ? (
 						<iframe
 							src={documentUrl}

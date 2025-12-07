@@ -17,19 +17,21 @@ part 'verify_email.g.dart';
 )
 class VerifyEmail {
   /// Returns a new [VerifyEmail] instance.
-  const VerifyEmail({required this.token});
+  const VerifyEmail({
+    required this.token,
+  });
   @JsonKey(name: r'token', required: true, includeIfNull: false)
   final String token;
+  
+  @override
+  bool operator ==(Object other) => identical(this, other) || other is VerifyEmail &&
+    other.token == token;
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) || other is VerifyEmail && other.token == token;
+  int get hashCode =>
+      token.hashCode;
 
-  @override
-  int get hashCode => token.hashCode;
-
-  factory VerifyEmail.fromJson(Map<String, dynamic> json) =>
-      _$VerifyEmailFromJson(json);
+  factory VerifyEmail.fromJson(Map<String, dynamic> json) => _$VerifyEmailFromJson(json);
 
   Map<String, dynamic> toJson() => _$VerifyEmailToJson(this);
 
@@ -37,4 +39,6 @@ class VerifyEmail {
   String toString() {
     return toJson().toString();
   }
+
 }
+

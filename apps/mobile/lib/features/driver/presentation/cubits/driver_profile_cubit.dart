@@ -34,7 +34,7 @@ class DriverProfileCubit extends BaseCubit<DriverProfileState> {
     MultipartFile? studentCard,
     MultipartFile? driverLicense,
     MultipartFile? vehicleCertificate,
-    DriverUpdateRequestBank? bank,
+    Bank? bank,
   }) async =>
       await taskManager.execute('DPC-uP2-${state.myDriver?.id}', () async {
         final driver = state.myDriver;

@@ -3,8 +3,7 @@ import 'package:api_client/api_client.dart';
 
 // tests for FoodPricingConfiguration
 void main() {
-  final FoodPricingConfiguration? instance = /* FoodPricingConfiguration(...) */
-      null;
+  final FoodPricingConfiguration? instance = /* FoodPricingConfiguration(...) */ null;
   // TODO add properties to the entity
 
   group(FoodPricingConfiguration, () {
@@ -37,5 +36,6 @@ void main() {
     test('to test the property `merchantCommissionRate`', () async {
       // TODO
     });
+
   });
 }

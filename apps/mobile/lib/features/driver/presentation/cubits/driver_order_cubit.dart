@@ -41,7 +41,7 @@ class DriverOrderCubit extends BaseCubit<DriverOrderState> {
     _stopLocationTracking();
     return super.close();
   }
-
+ 
   Future<void> acceptOrder(String orderId) async =>
       await taskManager.execute('DOC-aO1-$orderId', () async {
         try {

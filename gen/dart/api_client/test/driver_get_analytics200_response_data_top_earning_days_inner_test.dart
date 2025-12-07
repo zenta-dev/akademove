@@ -3,9 +3,7 @@ import 'package:api_client/api_client.dart';
 
 // tests for DriverGetAnalytics200ResponseDataTopEarningDaysInner
 void main() {
-  final DriverGetAnalytics200ResponseDataTopEarningDaysInner?
-  instance = /* DriverGetAnalytics200ResponseDataTopEarningDaysInner(...) */
-      null;
+  final DriverGetAnalytics200ResponseDataTopEarningDaysInner? instance = /* DriverGetAnalytics200ResponseDataTopEarningDaysInner(...) */ null;
   // TODO add properties to the entity
 
   group(DriverGetAnalytics200ResponseDataTopEarningDaysInner, () {
@@ -23,5 +21,6 @@ void main() {
     test('to test the property `orders`', () async {
       // TODO
     });
+
   });
 }

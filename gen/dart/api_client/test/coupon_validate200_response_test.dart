@@ -3,8 +3,7 @@ import 'package:api_client/api_client.dart';
 
 // tests for CouponValidate200Response
 void main() {
-  final CouponValidate200Response?
-  instance = /* CouponValidate200Response(...) */ null;
+  final CouponValidate200Response? instance = /* CouponValidate200Response(...) */ null;
   // TODO add properties to the entity
 
   group(CouponValidate200Response, () {
@@ -27,5 +26,6 @@ void main() {
     test('to test the property `totalPages`', () async {
       // TODO
     });
+
   });
 }

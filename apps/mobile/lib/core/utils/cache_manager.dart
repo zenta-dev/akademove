@@ -156,41 +156,4 @@ class CacheStats {
   String toString() =>
       'CacheStats(size: $size/$maxSize, expired: $expiredCount)';
 }
-
-/// Global cache instances for common types
-class AppCaches {
-  static final orders = CacheManager<Object>(
-    defaultTTL: const Duration(minutes: 5),
-    maxSize: 50,
-  );
-
-  static final driver = CacheManager<Object>(
-    defaultTTL: const Duration(minutes: 10),
-    maxSize: 10,
-  );
-
-  static final earnings = CacheManager<Object>(
-    defaultTTL: const Duration(minutes: 15),
-    maxSize: 20,
-  );
-
-  static final configuration = CacheManager<Object>(
-    defaultTTL: const Duration(hours: 24),
-    maxSize: 50,
-  );
-
-  static void clearAll() {
-    orders.clear();
-    driver.clear();
-    earnings.clear();
-    configuration.clear();
-    logger.i('[AppCaches] All caches cleared');
-  }
-
-  static void removeExpired() {
-    orders.removeExpired();
-    driver.removeExpired();
-    earnings.removeExpired();
-    configuration.removeExpired();
-  }
-}
+ 

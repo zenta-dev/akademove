@@ -19,9 +19,6 @@ class DriverHistoryScreen extends StatefulWidget {
 
 class _DriverHistoryScreenState extends State<DriverHistoryScreen> {
   final _scrollController = ScrollController();
-  List<Order> _orders = [];
-  bool _isLoading = false;
-  bool _hasMore = true;
   OrderStatus? _selectedStatus;
   OrderType? _selectedType;
 
@@ -46,76 +43,43 @@ class _DriverHistoryScreenState extends State<DriverHistoryScreen> {
   }
 
   Future<void> _loadOrders() async {
-    if (_isLoading) return;
-
-    setState(() {
-      _isLoading = true;
-      _orders = [];
-      _hasMore = true;
-    });
-
     try {
       final selectedStatus = _selectedStatus;
-      final response = await context.read<OrderRepository>().list(
-        ListOrderQuery(
+      await context.read<DriverListHistoryCubit>().getOrders(
+        query: ListOrderQuery(
           statuses: selectedStatus != null ? [selectedStatus] : [],
           limit: 20,
           cursor: null,
         ),
       );
-
-      if (mounted) {
-        setState(() {
-          _orders = response.data;
-          _isLoading = false;
-          _hasMore = response.data.length >= 20;
-        });
-      }
     } on BaseError catch (e) {
       if (mounted) {
-        setState(() => _isLoading = false);
         context.showMyToast(e.message);
       }
     } catch (e) {
       if (mounted) {
-        setState(() => _isLoading = false);
         context.showMyToast(context.l10n.failed_to_load_orders);
       }
     }
   }
 
   Future<void> _loadMore() async {
-    if (_isLoading || !_hasMore) return;
-
-    setState(() => _isLoading = true);
-
     try {
-      final lastOrder = _orders.lastOrNull;
+      final lastOrder = context
+          .read<DriverListHistoryCubit>()
+          .state
+          .orders
+          ?.last;
       if (lastOrder == null) {
-        setState(() => _isLoading = false);
         return;
       }
 
       final selectedStatus = _selectedStatus;
-      final response = await context.read<OrderRepository>().list(
-        ListOrderQuery(
-          statuses: selectedStatus != null ? [selectedStatus] : [],
-          limit: 20,
-          cursor: lastOrder.id,
-        ),
+      await context.read<DriverListHistoryCubit>().loadMoreOrders(
+        statuses: selectedStatus != null ? [selectedStatus] : [],
       );
-
-      if (mounted) {
-        setState(() {
-          _orders.addAll(response.data);
-          _isLoading = false;
-          _hasMore = response.data.length >= 20;
-        });
-      }
     } catch (e) {
-      if (mounted) {
-        setState(() => _isLoading = false);
-      }
+      if (mounted) {}
     }
   }
 
@@ -135,121 +99,123 @@ class _DriverHistoryScreenState extends State<DriverHistoryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final filteredOrders = _selectedType == null
-        ? _orders
-        : _orders.where((o) => o.type == _selectedType).toList();
-
-    return MyScaffold(
-      headers: [
-        AppBar(
-          title: Text(context.l10n.order_history),
-          trailing: [
-            IconButton(
-              icon: const Icon(LucideIcons.filterX),
-              onPressed: () {
-                setState(() {
-                  _selectedStatus = null;
-                  _selectedType = null;
-                });
-                _loadOrders();
-              },
-              variance: ButtonVariance.ghost,
+    return BlocBuilder<DriverListHistoryCubit, DriverListHistoryState>(
+      builder: (context, state) {
+        final filteredOrders =
+            (_selectedType == null
+                ? state.orders
+                : state.orders
+                          ?.where((o) => o.type == _selectedType)
+                          .toList() ??
+                      []) ??
+            [];
+        return MyScaffold(
+          headers: [
+            DefaultAppBar(
+              title: context.l10n.order_history,
+              padding: EdgeInsets.all(16.r),
             ),
           ],
-        ),
-      ],
-      scrollable: false,
-      body: material.RefreshIndicator(
-        onRefresh: _onRefresh,
-        child: Column(
-          children: [
-            // Filter chips
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                spacing: 8.w,
-                children: [
-                  _buildStatusFilterChip(context.l10n.all, null),
-                  _buildStatusFilterChip(
-                    context.l10n.completed,
-                    OrderStatus.COMPLETED,
+          scrollable: false,
+          body: RefreshTrigger(
+            onRefresh: _onRefresh,
+            child: Column(
+              spacing: 8.h,
+              children: [
+                // Filter chips
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    spacing: 8.w,
+                    children: [
+                      _buildStatusFilterChip(context.l10n.all, null),
+                      _buildStatusFilterChip(
+                        context.l10n.completed,
+                        OrderStatus.COMPLETED,
+                      ),
+                      _buildStatusFilterChip(
+                        context.l10n.in_progress,
+                        OrderStatus.IN_TRIP,
+                      ),
+                      _buildStatusFilterChip(
+                        context.l10n.cancelled,
+                        OrderStatus.CANCELLED_BY_USER,
+                      ),
+                    ],
                   ),
-                  _buildStatusFilterChip(
-                    context.l10n.in_progress,
-                    OrderStatus.IN_TRIP,
+                ),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    spacing: 8.w,
+                    children: [
+                      _buildTypeFilterChip(context.l10n.all_types, null),
+                      _buildTypeFilterChip(context.l10n.ride, OrderType.RIDE),
+                      _buildTypeFilterChip(
+                        context.l10n.delivery,
+                        OrderType.DELIVERY,
+                      ),
+                      _buildTypeFilterChip(
+                        context.l10n.order_type_food,
+                        OrderType.FOOD,
+                      ),
+                    ],
                   ),
-                  _buildStatusFilterChip(
-                    context.l10n.cancelled,
-                    OrderStatus.CANCELLED_BY_USER,
-                  ),
-                ],
-              ),
+                ),
+                const Divider(),
+                // Order list
+                Expanded(
+                  child: filteredOrders.isEmpty
+                      ? _buildEmptyState()
+                      : ListView.separated(
+                          controller: _scrollController,
+                          padding: EdgeInsets.all(16.dg),
+                          itemCount: filteredOrders.length,
+                          separatorBuilder: (context, index) =>
+                              SizedBox(height: 12.h),
+                          itemBuilder: (context, index) {
+                            if (index >= filteredOrders.length) {
+                              return const Center(
+                                child: Padding(
+                                  padding: EdgeInsets.all(16),
+                                  child: CircularProgressIndicator(),
+                                ),
+                              );
+                            }
+                            return _buildOrderCard(
+                              context,
+                              filteredOrders[index],
+                            );
+                          },
+                        ),
+                ),
+              ],
             ),
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                spacing: 8.w,
-                children: [
-                  _buildTypeFilterChip(context.l10n.all_types, null),
-                  _buildTypeFilterChip(context.l10n.ride, OrderType.RIDE),
-                  _buildTypeFilterChip(
-                    context.l10n.delivery,
-                    OrderType.DELIVERY,
-                  ),
-                  _buildTypeFilterChip(
-                    context.l10n.order_type_food,
-                    OrderType.FOOD,
-                  ),
-                ],
-              ),
-            ),
-            const Divider(),
-            // Order list
-            Expanded(
-              child: _isLoading && _orders.isEmpty
-                  ? const Center(child: CircularProgressIndicator())
-                  : filteredOrders.isEmpty
-                  ? _buildEmptyState()
-                  : ListView.separated(
-                      controller: _scrollController,
-                      padding: EdgeInsets.all(16.dg),
-                      itemCount: filteredOrders.length + (_hasMore ? 1 : 0),
-                      separatorBuilder: (context, index) =>
-                          SizedBox(height: 12.h),
-                      itemBuilder: (context, index) {
-                        if (index >= filteredOrders.length) {
-                          return const Center(
-                            child: Padding(
-                              padding: EdgeInsets.all(16),
-                              child: CircularProgressIndicator(),
-                            ),
-                          );
-                        }
-                        return _buildOrderCard(context, filteredOrders[index]);
-                      },
-                    ),
-            ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 
   Widget _buildStatusFilterChip(String label, OrderStatus? status) {
     final isSelected = _selectedStatus == status;
-    return material.FilterChip(
-      label: Text(label),
-      selected: isSelected,
-      onSelected: (_) => _onStatusFilterChanged(status),
+    return Chip(
+      style: isSelected ? ButtonStyle.primary() : ButtonStyle.outline(),
+      child: ChipButton(
+        child: Text(label),
+        onPressed: () => _onStatusFilterChanged(status),
+      ),
     );
   }
 
   Widget _buildTypeFilterChip(String label, OrderType? type) {
     final isSelected = _selectedType == type;
-    return material.FilterChip(
-      label: Text(label),
-      selected: isSelected,
-      onSelected: (_) => _onTypeFilterChanged(type),
+    return Chip(
+      style: isSelected ? ButtonStyle.primary() : ButtonStyle.outline(),
+      child: ChipButton(
+        child: Text(label),
+        onPressed: () => _onTypeFilterChanged(type),
+      ),
     );
   }
 

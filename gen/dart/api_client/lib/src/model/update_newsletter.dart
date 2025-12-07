@@ -18,29 +18,33 @@ part 'update_newsletter.g.dart';
 )
 class UpdateNewsletter {
   /// Returns a new [UpdateNewsletter] instance.
-  const UpdateNewsletter({this.email, this.status, this.userId});
+  const UpdateNewsletter({
+     this.email,
+     this.status,
+     this.userId,
+  });
   @JsonKey(name: r'email', required: false, includeIfNull: false)
   final String? email;
-
+  
   @JsonKey(name: r'status', required: false, includeIfNull: false)
   final NewsletterStatus? status;
-
+  
   @JsonKey(name: r'userId', required: false, includeIfNull: false)
   final String? userId;
+  
+  @override
+  bool operator ==(Object other) => identical(this, other) || other is UpdateNewsletter &&
+    other.email == email &&
+    other.status == status &&
+    other.userId == userId;
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is UpdateNewsletter &&
-          other.email == email &&
-          other.status == status &&
-          other.userId == userId;
+  int get hashCode =>
+      email.hashCode +
+      status.hashCode +
+      userId.hashCode;
 
-  @override
-  int get hashCode => email.hashCode + status.hashCode + userId.hashCode;
-
-  factory UpdateNewsletter.fromJson(Map<String, dynamic> json) =>
-      _$UpdateNewsletterFromJson(json);
+  factory UpdateNewsletter.fromJson(Map<String, dynamic> json) => _$UpdateNewsletterFromJson(json);
 
   Map<String, dynamic> toJson() => _$UpdateNewsletterToJson(this);
 
@@ -48,4 +52,6 @@ class UpdateNewsletter {
   String toString() {
     return toJson().toString();
   }
+
 }
+

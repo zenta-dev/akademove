@@ -20,40 +20,38 @@ part 'list_driver_quiz_question_query.g.dart';
 class ListDriverQuizQuestionQuery {
   /// Returns a new [ListDriverQuizQuestionQuery] instance.
   const ListDriverQuizQuestionQuery({
-    this.category,
-    this.type,
-    this.isActive,
-    this.page,
-    this.limit,
+     this.category,
+     this.type,
+     this.isActive,
+     this.page,
+     this.limit,
   });
   @JsonKey(name: r'category', required: false, includeIfNull: false)
   final DriverQuizQuestionCategory? category;
-
+  
   @JsonKey(name: r'type', required: false, includeIfNull: false)
   final DriverQuizQuestionType? type;
-
+  
   @JsonKey(name: r'isActive', required: false, includeIfNull: false)
   final bool? isActive;
-
-  // minimum: 1
-  // maximum: 9007199254740991
+  
+          // minimum: 1
+          // maximum: 9007199254740991
   @JsonKey(name: r'page', required: false, includeIfNull: false)
   final int? page;
-
-  // minimum: 1
-  // maximum: 1000
+  
+          // minimum: 1
+          // maximum: 1000
   @JsonKey(name: r'limit', required: false, includeIfNull: false)
   final int? limit;
-
+  
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is ListDriverQuizQuestionQuery &&
-          other.category == category &&
-          other.type == type &&
-          other.isActive == isActive &&
-          other.page == page &&
-          other.limit == limit;
+  bool operator ==(Object other) => identical(this, other) || other is ListDriverQuizQuestionQuery &&
+    other.category == category &&
+    other.type == type &&
+    other.isActive == isActive &&
+    other.page == page &&
+    other.limit == limit;
 
   @override
   int get hashCode =>
@@ -63,8 +61,7 @@ class ListDriverQuizQuestionQuery {
       page.hashCode +
       limit.hashCode;
 
-  factory ListDriverQuizQuestionQuery.fromJson(Map<String, dynamic> json) =>
-      _$ListDriverQuizQuestionQueryFromJson(json);
+  factory ListDriverQuizQuestionQuery.fromJson(Map<String, dynamic> json) => _$ListDriverQuizQuestionQueryFromJson(json);
 
   Map<String, dynamic> toJson() => _$ListDriverQuizQuestionQueryToJson(this);
 
@@ -72,4 +69,6 @@ class ListDriverQuizQuestionQuery {
   String toString() {
     return toJson().toString();
   }
+
 }
+

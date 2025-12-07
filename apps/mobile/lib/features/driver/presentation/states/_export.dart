@@ -1,5 +1,4 @@
 import 'package:akademove/core/_export.dart';
-import 'package:akademove/features/features.dart';
 import 'package:api_client/api_client.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 
@@ -12,3 +11,4 @@ part 'driver_quiz_state.dart';
 part 'driver_review_state.dart';
 part 'driver_schedule_state.dart';
 part 'driver_state.dart';
+part 'driver_list_history_state.dart';

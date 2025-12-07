@@ -20,15 +20,16 @@ import 'package:api_client/src/model/start_driver_quiz.dart';
 import 'package:api_client/src/model/submit_driver_quiz_answer.dart';
 
 class DriverQuizAnswerApi {
+
   final Dio _dio;
 
   const DriverQuizAnswerApi(this._dio);
 
   /// driverQuizAnswerCompleteQuiz
-  ///
+  /// 
   ///
   /// Parameters:
-  /// * [completeDriverQuiz]
+  /// * [completeDriverQuiz] 
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -38,8 +39,7 @@ class DriverQuizAnswerApi {
   ///
   /// Returns a [Future] containing a [Response] with a [DriverQuizAnswerCompleteQuiz200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<DriverQuizAnswerCompleteQuiz200Response>>
-  driverQuizAnswerCompleteQuiz({
+  Future<Response<DriverQuizAnswerCompleteQuiz200Response>> driverQuizAnswerCompleteQuiz({ 
     required CompleteDriverQuiz completeDriverQuiz,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -51,10 +51,16 @@ class DriverQuizAnswerApi {
     final _path = r'/driver-quiz-answers/complete';
     final _options = Options(
       method: r'POST',
-      headers: <String, dynamic>{...?headers},
+      headers: <String, dynamic>{
+        ...?headers,
+      },
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
+          {
+            'type': 'http',
+            'scheme': 'bearer',
+            'name': 'bearer_auth',
+          },
         ],
         ...?extra,
       },
@@ -65,10 +71,13 @@ class DriverQuizAnswerApi {
     dynamic _bodyData;
 
     try {
-      _bodyData = jsonEncode(completeDriverQuiz);
-    } catch (error, stackTrace) {
+        _bodyData=jsonEncode(completeDriverQuiz);
+    } catch(error, stackTrace) {
       throw DioException(
-        requestOptions: _options.compose(_dio.options, _path),
+         requestOptions: _options.compose(
+          _dio.options,
+          _path,
+        ),
         type: DioExceptionType.unknown,
         error: error,
         stackTrace: stackTrace,
@@ -88,16 +97,7 @@ class DriverQuizAnswerApi {
 
     try {
       final rawData = _response.data;
-      _responseData = rawData == null
-          ? null
-          : deserialize<
-              DriverQuizAnswerCompleteQuiz200Response,
-              DriverQuizAnswerCompleteQuiz200Response
-            >(
-              rawData,
-              'DriverQuizAnswerCompleteQuiz200Response',
-              growable: true,
-            );
+_responseData = rawData == null ? null : deserialize<DriverQuizAnswerCompleteQuiz200Response, DriverQuizAnswerCompleteQuiz200Response>(rawData, 'DriverQuizAnswerCompleteQuiz200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -121,10 +121,10 @@ class DriverQuizAnswerApi {
   }
 
   /// driverQuizAnswerGetAttempt
-  ///
+  /// 
   ///
   /// Parameters:
-  /// * [attemptId]
+  /// * [attemptId] 
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -134,8 +134,7 @@ class DriverQuizAnswerApi {
   ///
   /// Returns a [Future] containing a [Response] with a [DriverQuizAnswerGetAttempt200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<DriverQuizAnswerGetAttempt200Response>>
-  driverQuizAnswerGetAttempt({
+  Future<Response<DriverQuizAnswerGetAttempt200Response>> driverQuizAnswerGetAttempt({ 
     required String attemptId,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -144,18 +143,19 @@ class DriverQuizAnswerApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/driver-quiz-answers/{attemptId}'.replaceAll(
-      '{'
-      r'attemptId'
-      '}',
-      attemptId.toString(),
-    );
+    final _path = r'/driver-quiz-answers/{attemptId}'.replaceAll('{' r'attemptId' '}', attemptId.toString());
     final _options = Options(
       method: r'GET',
-      headers: <String, dynamic>{...?headers},
+      headers: <String, dynamic>{
+        ...?headers,
+      },
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
+          {
+            'type': 'http',
+            'scheme': 'bearer',
+            'name': 'bearer_auth',
+          },
         ],
         ...?extra,
       },
@@ -174,12 +174,7 @@ class DriverQuizAnswerApi {
 
     try {
       final rawData = _response.data;
-      _responseData = rawData == null
-          ? null
-          : deserialize<
-              DriverQuizAnswerGetAttempt200Response,
-              DriverQuizAnswerGetAttempt200Response
-            >(rawData, 'DriverQuizAnswerGetAttempt200Response', growable: true);
+_responseData = rawData == null ? null : deserialize<DriverQuizAnswerGetAttempt200Response, DriverQuizAnswerGetAttempt200Response>(rawData, 'DriverQuizAnswerGetAttempt200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -203,7 +198,7 @@ class DriverQuizAnswerApi {
   }
 
   /// driverQuizAnswerGetMyLatestAttempt
-  ///
+  /// 
   ///
   /// Parameters:
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
@@ -215,8 +210,7 @@ class DriverQuizAnswerApi {
   ///
   /// Returns a [Future] containing a [Response] with a [DriverQuizAnswerGetAttempt200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<DriverQuizAnswerGetAttempt200Response>>
-  driverQuizAnswerGetMyLatestAttempt({
+  Future<Response<DriverQuizAnswerGetAttempt200Response>> driverQuizAnswerGetMyLatestAttempt({ 
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -227,10 +221,16 @@ class DriverQuizAnswerApi {
     final _path = r'/driver-quiz-answers/me/latest';
     final _options = Options(
       method: r'GET',
-      headers: <String, dynamic>{...?headers},
+      headers: <String, dynamic>{
+        ...?headers,
+      },
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
+          {
+            'type': 'http',
+            'scheme': 'bearer',
+            'name': 'bearer_auth',
+          },
         ],
         ...?extra,
       },
@@ -249,12 +249,7 @@ class DriverQuizAnswerApi {
 
     try {
       final rawData = _response.data;
-      _responseData = rawData == null
-          ? null
-          : deserialize<
-              DriverQuizAnswerGetAttempt200Response,
-              DriverQuizAnswerGetAttempt200Response
-            >(rawData, 'DriverQuizAnswerGetAttempt200Response', growable: true);
+_responseData = rawData == null ? null : deserialize<DriverQuizAnswerGetAttempt200Response, DriverQuizAnswerGetAttempt200Response>(rawData, 'DriverQuizAnswerGetAttempt200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -278,10 +273,10 @@ class DriverQuizAnswerApi {
   }
 
   /// driverQuizAnswerGetResult
-  ///
+  /// 
   ///
   /// Parameters:
-  /// * [attemptId]
+  /// * [attemptId] 
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -291,8 +286,7 @@ class DriverQuizAnswerApi {
   ///
   /// Returns a [Future] containing a [Response] with a [DriverQuizAnswerCompleteQuiz200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<DriverQuizAnswerCompleteQuiz200Response>>
-  driverQuizAnswerGetResult({
+  Future<Response<DriverQuizAnswerCompleteQuiz200Response>> driverQuizAnswerGetResult({ 
     required String attemptId,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -301,18 +295,19 @@ class DriverQuizAnswerApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/driver-quiz-answers/{attemptId}/result'.replaceAll(
-      '{'
-      r'attemptId'
-      '}',
-      attemptId.toString(),
-    );
+    final _path = r'/driver-quiz-answers/{attemptId}/result'.replaceAll('{' r'attemptId' '}', attemptId.toString());
     final _options = Options(
       method: r'GET',
-      headers: <String, dynamic>{...?headers},
+      headers: <String, dynamic>{
+        ...?headers,
+      },
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
+          {
+            'type': 'http',
+            'scheme': 'bearer',
+            'name': 'bearer_auth',
+          },
         ],
         ...?extra,
       },
@@ -331,16 +326,7 @@ class DriverQuizAnswerApi {
 
     try {
       final rawData = _response.data;
-      _responseData = rawData == null
-          ? null
-          : deserialize<
-              DriverQuizAnswerCompleteQuiz200Response,
-              DriverQuizAnswerCompleteQuiz200Response
-            >(
-              rawData,
-              'DriverQuizAnswerCompleteQuiz200Response',
-              growable: true,
-            );
+_responseData = rawData == null ? null : deserialize<DriverQuizAnswerCompleteQuiz200Response, DriverQuizAnswerCompleteQuiz200Response>(rawData, 'DriverQuizAnswerCompleteQuiz200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -364,13 +350,13 @@ class DriverQuizAnswerApi {
   }
 
   /// driverQuizAnswerList
-  ///
+  /// 
   ///
   /// Parameters:
-  /// * [driverId]
-  /// * [status]
-  /// * [page]
-  /// * [limit]
+  /// * [driverId] 
+  /// * [status] 
+  /// * [page] 
+  /// * [limit] 
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -380,7 +366,7 @@ class DriverQuizAnswerApi {
   ///
   /// Returns a [Future] containing a [Response] with a [DriverQuizAnswerList200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<DriverQuizAnswerList200Response>> driverQuizAnswerList({
+  Future<Response<DriverQuizAnswerList200Response>> driverQuizAnswerList({ 
     String? driverId,
     DriverQuizAnswerStatus? status,
     int? page,
@@ -395,10 +381,16 @@ class DriverQuizAnswerApi {
     final _path = r'/driver-quiz-answers';
     final _options = Options(
       method: r'GET',
-      headers: <String, dynamic>{...?headers},
+      headers: <String, dynamic>{
+        ...?headers,
+      },
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
+          {
+            'type': 'http',
+            'scheme': 'bearer',
+            'name': 'bearer_auth',
+          },
         ],
         ...?extra,
       },
@@ -425,12 +417,7 @@ class DriverQuizAnswerApi {
 
     try {
       final rawData = _response.data;
-      _responseData = rawData == null
-          ? null
-          : deserialize<
-              DriverQuizAnswerList200Response,
-              DriverQuizAnswerList200Response
-            >(rawData, 'DriverQuizAnswerList200Response', growable: true);
+_responseData = rawData == null ? null : deserialize<DriverQuizAnswerList200Response, DriverQuizAnswerList200Response>(rawData, 'DriverQuizAnswerList200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -454,10 +441,10 @@ class DriverQuizAnswerApi {
   }
 
   /// driverQuizAnswerStartQuiz
-  ///
+  /// 
   ///
   /// Parameters:
-  /// * [startDriverQuiz]
+  /// * [startDriverQuiz] 
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -467,8 +454,7 @@ class DriverQuizAnswerApi {
   ///
   /// Returns a [Future] containing a [Response] with a [DriverQuizAnswerStartQuiz201Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<DriverQuizAnswerStartQuiz201Response>>
-  driverQuizAnswerStartQuiz({
+  Future<Response<DriverQuizAnswerStartQuiz201Response>> driverQuizAnswerStartQuiz({ 
     required StartDriverQuiz startDriverQuiz,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -480,10 +466,16 @@ class DriverQuizAnswerApi {
     final _path = r'/driver-quiz-answers/start';
     final _options = Options(
       method: r'POST',
-      headers: <String, dynamic>{...?headers},
+      headers: <String, dynamic>{
+        ...?headers,
+      },
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
+          {
+            'type': 'http',
+            'scheme': 'bearer',
+            'name': 'bearer_auth',
+          },
         ],
         ...?extra,
       },
@@ -494,10 +486,13 @@ class DriverQuizAnswerApi {
     dynamic _bodyData;
 
     try {
-      _bodyData = jsonEncode(startDriverQuiz);
-    } catch (error, stackTrace) {
+        _bodyData=jsonEncode(startDriverQuiz);
+    } catch(error, stackTrace) {
       throw DioException(
-        requestOptions: _options.compose(_dio.options, _path),
+         requestOptions: _options.compose(
+          _dio.options,
+          _path,
+        ),
         type: DioExceptionType.unknown,
         error: error,
         stackTrace: stackTrace,
@@ -517,12 +512,7 @@ class DriverQuizAnswerApi {
 
     try {
       final rawData = _response.data;
-      _responseData = rawData == null
-          ? null
-          : deserialize<
-              DriverQuizAnswerStartQuiz201Response,
-              DriverQuizAnswerStartQuiz201Response
-            >(rawData, 'DriverQuizAnswerStartQuiz201Response', growable: true);
+_responseData = rawData == null ? null : deserialize<DriverQuizAnswerStartQuiz201Response, DriverQuizAnswerStartQuiz201Response>(rawData, 'DriverQuizAnswerStartQuiz201Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -546,10 +536,10 @@ class DriverQuizAnswerApi {
   }
 
   /// driverQuizAnswerSubmitAnswer
-  ///
+  /// 
   ///
   /// Parameters:
-  /// * [submitDriverQuizAnswer]
+  /// * [submitDriverQuizAnswer] 
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -559,8 +549,7 @@ class DriverQuizAnswerApi {
   ///
   /// Returns a [Future] containing a [Response] with a [DriverQuizAnswerSubmitAnswer200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<DriverQuizAnswerSubmitAnswer200Response>>
-  driverQuizAnswerSubmitAnswer({
+  Future<Response<DriverQuizAnswerSubmitAnswer200Response>> driverQuizAnswerSubmitAnswer({ 
     required SubmitDriverQuizAnswer submitDriverQuizAnswer,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -572,10 +561,16 @@ class DriverQuizAnswerApi {
     final _path = r'/driver-quiz-answers/answer';
     final _options = Options(
       method: r'POST',
-      headers: <String, dynamic>{...?headers},
+      headers: <String, dynamic>{
+        ...?headers,
+      },
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
+          {
+            'type': 'http',
+            'scheme': 'bearer',
+            'name': 'bearer_auth',
+          },
         ],
         ...?extra,
       },
@@ -586,10 +581,13 @@ class DriverQuizAnswerApi {
     dynamic _bodyData;
 
     try {
-      _bodyData = jsonEncode(submitDriverQuizAnswer);
-    } catch (error, stackTrace) {
+        _bodyData=jsonEncode(submitDriverQuizAnswer);
+    } catch(error, stackTrace) {
       throw DioException(
-        requestOptions: _options.compose(_dio.options, _path),
+         requestOptions: _options.compose(
+          _dio.options,
+          _path,
+        ),
         type: DioExceptionType.unknown,
         error: error,
         stackTrace: stackTrace,
@@ -609,16 +607,7 @@ class DriverQuizAnswerApi {
 
     try {
       final rawData = _response.data;
-      _responseData = rawData == null
-          ? null
-          : deserialize<
-              DriverQuizAnswerSubmitAnswer200Response,
-              DriverQuizAnswerSubmitAnswer200Response
-            >(
-              rawData,
-              'DriverQuizAnswerSubmitAnswer200Response',
-              growable: true,
-            );
+_responseData = rawData == null ? null : deserialize<DriverQuizAnswerSubmitAnswer200Response, DriverQuizAnswerSubmitAnswer200Response>(rawData, 'DriverQuizAnswerSubmitAnswer200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -640,4 +629,5 @@ class DriverQuizAnswerApi {
       extra: _response.extra,
     );
   }
+
 }

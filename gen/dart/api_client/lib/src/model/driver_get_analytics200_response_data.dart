@@ -35,54 +35,50 @@ class DriverGetAnalytics200ResponseData {
   });
   @JsonKey(name: r'totalEarnings', required: true, includeIfNull: false)
   final num totalEarnings;
-
+  
   @JsonKey(name: r'totalCommission', required: true, includeIfNull: false)
   final num totalCommission;
-
+  
   @JsonKey(name: r'netEarnings', required: true, includeIfNull: false)
   final num netEarnings;
-
+  
   @JsonKey(name: r'totalOrders', required: true, includeIfNull: false)
   final num totalOrders;
-
+  
   @JsonKey(name: r'completedOrders', required: true, includeIfNull: false)
   final num completedOrders;
-
+  
   @JsonKey(name: r'cancelledOrders', required: true, includeIfNull: false)
   final num cancelledOrders;
-
+  
   @JsonKey(name: r'completionRate', required: true, includeIfNull: false)
   final num completionRate;
-
+  
   @JsonKey(name: r'averageRating', required: true, includeIfNull: false)
   final num averageRating;
-
+  
   @JsonKey(name: r'earningsByType', required: true, includeIfNull: false)
-  final List<DriverGetAnalytics200ResponseDataEarningsByTypeInner>
-  earningsByType;
-
+  final List<DriverGetAnalytics200ResponseDataEarningsByTypeInner> earningsByType;
+  
   @JsonKey(name: r'earningsByDay', required: true, includeIfNull: false)
   final List<DriverGetAnalytics200ResponseDataEarningsByDayInner> earningsByDay;
-
+  
   @JsonKey(name: r'topEarningDays', required: true, includeIfNull: false)
-  final List<DriverGetAnalytics200ResponseDataTopEarningDaysInner>
-  topEarningDays;
-
+  final List<DriverGetAnalytics200ResponseDataTopEarningDaysInner> topEarningDays;
+  
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is DriverGetAnalytics200ResponseData &&
-          other.totalEarnings == totalEarnings &&
-          other.totalCommission == totalCommission &&
-          other.netEarnings == netEarnings &&
-          other.totalOrders == totalOrders &&
-          other.completedOrders == completedOrders &&
-          other.cancelledOrders == cancelledOrders &&
-          other.completionRate == completionRate &&
-          other.averageRating == averageRating &&
-          other.earningsByType == earningsByType &&
-          other.earningsByDay == earningsByDay &&
-          other.topEarningDays == topEarningDays;
+  bool operator ==(Object other) => identical(this, other) || other is DriverGetAnalytics200ResponseData &&
+    other.totalEarnings == totalEarnings &&
+    other.totalCommission == totalCommission &&
+    other.netEarnings == netEarnings &&
+    other.totalOrders == totalOrders &&
+    other.completedOrders == completedOrders &&
+    other.cancelledOrders == cancelledOrders &&
+    other.completionRate == completionRate &&
+    other.averageRating == averageRating &&
+    other.earningsByType == earningsByType &&
+    other.earningsByDay == earningsByDay &&
+    other.topEarningDays == topEarningDays;
 
   @override
   int get hashCode =>
@@ -98,15 +94,14 @@ class DriverGetAnalytics200ResponseData {
       earningsByDay.hashCode +
       topEarningDays.hashCode;
 
-  factory DriverGetAnalytics200ResponseData.fromJson(
-    Map<String, dynamic> json,
-  ) => _$DriverGetAnalytics200ResponseDataFromJson(json);
+  factory DriverGetAnalytics200ResponseData.fromJson(Map<String, dynamic> json) => _$DriverGetAnalytics200ResponseDataFromJson(json);
 
-  Map<String, dynamic> toJson() =>
-      _$DriverGetAnalytics200ResponseDataToJson(this);
+  Map<String, dynamic> toJson() => _$DriverGetAnalytics200ResponseDataToJson(this);
 
   @override
   String toString() {
     return toJson().toString();
   }
+
 }
+

@@ -22,28 +22,11 @@ class DriverCubit extends BaseCubit<DriverState> {
 
   Future<void> init() async {
     try {
-      final cachedDriver = AppCaches.driver.get('my-profile');
-      if (cachedDriver != null && cachedDriver is Driver) {
-        emit(
-          state.toSuccess(
-            driver: cachedDriver,
-            isOnline: cachedDriver.isTakingOrder,
-          ),
-        );
-      }
-
       emit(state.toLoading());
 
       // Get driver profile
       final driverRes = await _driverRepository.getMine();
       _driverId = driverRes.data.id;
-
-      // Cache driver profile for 5 minutes
-      AppCaches.driver.put(
-        'my-profile',
-        driverRes.data,
-        duration: const Duration(minutes: 5),
-      );
 
       // Get today's stats
       final orders = await _orderRepository.list(
@@ -102,18 +85,11 @@ class DriverCubit extends BaseCubit<DriverState> {
             isOnline: newStatus,
           );
 
-          // Update cache with new status
-          AppCaches.driver.put(
-            'my-profile',
-            res.data,
-            duration: const Duration(minutes: 5),
-          );
-
           emit(
             state.toSuccess(
               message: newStatus ? 'You are now online' : 'You are now offline',
               driver: res.data,
-              isOnline: res.data.isTakingOrder,
+              isOnline: res.data.isOnline,
             ),
           );
         } on BaseError catch (e, st) {
@@ -136,13 +112,6 @@ class DriverCubit extends BaseCubit<DriverState> {
         try {
           final res = await _driverRepository.getMine();
           _driverId = res.data.id;
-
-          // Update cache
-          AppCaches.driver.put(
-            'my-profile',
-            res.data,
-            duration: const Duration(minutes: 5),
-          );
 
           emit(
             state.toSuccess(driver: res.data, isOnline: res.data.isTakingOrder),

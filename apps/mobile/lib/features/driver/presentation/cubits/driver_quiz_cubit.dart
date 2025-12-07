@@ -1,5 +1,6 @@
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
+import 'package:api_client/api_client.dart';
 
 class DriverQuizCubit extends BaseCubit<DriverQuizState> {
   DriverQuizCubit({required DriverQuizRepository quizRepository})
@@ -12,9 +13,18 @@ class DriverQuizCubit extends BaseCubit<DriverQuizState> {
     try {
       emit(state.toLoading());
 
-      final request = StartDriverQuizRequest(
+      StartDriverQuizCategoryEnum? categoryEnum;
+
+      for (final cat in StartDriverQuizCategoryEnum.values) {
+        if (cat.name == category) {
+          categoryEnum = cat;
+          break;
+        }
+      }
+
+      final request = StartDriverQuiz(
         questionIds: questionIds,
-        category: category,
+        category: categoryEnum,
       );
 
       final res = await _quizRepository.startQuiz(request);
@@ -53,7 +63,7 @@ class DriverQuizCubit extends BaseCubit<DriverQuizState> {
 
       emit(state.toLoading());
 
-      final request = SubmitDriverQuizAnswerRequest(
+      final request = SubmitDriverQuizAnswer(
         attemptId: attempt.attemptId,
         questionId: question.id,
         selectedOptionId: selectedAnswerId,
@@ -68,7 +78,7 @@ class DriverQuizCubit extends BaseCubit<DriverQuizState> {
         state.toSuccess(
           message: res.message,
           answeredQuestions: newAnsweredQuestions,
-          answerFeedback: res.data, // Store feedback for UI display
+          answerFeedbackObj: res.data, // Store feedback for UI display
         ),
       );
     } on BaseError catch (e, st) {
@@ -126,7 +136,7 @@ class DriverQuizCubit extends BaseCubit<DriverQuizState> {
 
       emit(state.toLoading());
 
-      final request = CompleteDriverQuizRequest(attemptId: attempt.attemptId);
+      final request = CompleteDriverQuiz(attemptId: attempt.attemptId);
 
       final res = await _quizRepository.completeQuiz(request);
 
@@ -168,7 +178,7 @@ class DriverQuizCubit extends BaseCubit<DriverQuizState> {
   }
 
   // Getters
-  QuizQuestion? get currentQuestion {
+  DriverQuizQuestionGetQuizQuestions200ResponseDataInner? get currentQuestion {
     final attempt = state.attempt;
     final currentIndex = state.currentQuestionIndex;
 

@@ -18,25 +18,27 @@ part 'merchant_get_mine200_response.g.dart';
 )
 class MerchantGetMine200Response {
   /// Returns a new [MerchantGetMine200Response] instance.
-  const MerchantGetMine200Response({required this.status, required this.body});
+  const MerchantGetMine200Response({
+    required this.status,
+    required this.body,
+  });
   @JsonKey(name: r'status', required: true, includeIfNull: true)
   final Object? status;
-
+  
   @JsonKey(name: r'body', required: true, includeIfNull: false)
   final MerchantGetMine200ResponseBody body;
+  
+  @override
+  bool operator ==(Object other) => identical(this, other) || other is MerchantGetMine200Response &&
+    other.status == status &&
+    other.body == body;
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is MerchantGetMine200Response &&
-          other.status == status &&
-          other.body == body;
+  int get hashCode =>
+      (status == null ? 0 : status.hashCode) +
+      body.hashCode;
 
-  @override
-  int get hashCode => (status == null ? 0 : status.hashCode) + body.hashCode;
-
-  factory MerchantGetMine200Response.fromJson(Map<String, dynamic> json) =>
-      _$MerchantGetMine200ResponseFromJson(json);
+  factory MerchantGetMine200Response.fromJson(Map<String, dynamic> json) => _$MerchantGetMine200ResponseFromJson(json);
 
   Map<String, dynamic> toJson() => _$MerchantGetMine200ResponseToJson(this);
 
@@ -44,4 +46,6 @@ class MerchantGetMine200Response {
   String toString() {
     return toJson().toString();
   }
+
 }
+

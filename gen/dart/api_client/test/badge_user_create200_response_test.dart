@@ -3,8 +3,7 @@ import 'package:api_client/api_client.dart';
 
 // tests for BadgeUserCreate200Response
 void main() {
-  final BadgeUserCreate200Response?
-  instance = /* BadgeUserCreate200Response(...) */ null;
+  final BadgeUserCreate200Response? instance = /* BadgeUserCreate200Response(...) */ null;
   // TODO add properties to the entity
 
   group(BadgeUserCreate200Response, () {
@@ -27,5 +26,6 @@ void main() {
     test('to test the property `totalPages`', () async {
       // TODO
     });
+
   });
 }

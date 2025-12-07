@@ -1,11 +1,17 @@
 import 'package:akademove/core/_export.dart';
+import 'package:api_client/api_client.dart';
 import 'package:flutter/foundation.dart';
 
 sealed class BaseResponse<T> {
-  const BaseResponse({required this.message, required this.data});
+  const BaseResponse({
+    required this.message,
+    required this.data,
+    this.paginationResult,
+  });
 
   final String message;
   final T data;
+  final PaginationResult? paginationResult;
 
   bool get isSuccess => this is SuccessResponse<T>;
   bool get isFailed => this is FailedResponse;
@@ -52,27 +58,35 @@ sealed class BaseResponse<T> {
 
 @immutable
 final class SuccessResponse<T> extends BaseResponse<T> {
-  const SuccessResponse({required super.message, required super.data});
+  const SuccessResponse({
+    required super.message,
+    required super.data,
+    super.paginationResult,
+  });
 
   @override
-  String toString() => 'SuccessResponse(message: $message, data: $data)';
-
+  String toString() =>
+      'SuccessResponse(message: $message, data: $data, paginationResult: $paginationResult)';
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is SuccessResponse<T> &&
           runtimeType == other.runtimeType &&
           message == other.message &&
-          data == other.data;
+          data == other.data &&
+          paginationResult == other.paginationResult;
 
   @override
-  int get hashCode => Object.hash(message, data);
+  int get hashCode => Object.hash(message, data, paginationResult);
 }
 
 @immutable
 final class FailedResponse extends BaseResponse<void> {
-  const FailedResponse({required this.code, required super.message})
-    : super(data: null);
+  const FailedResponse({
+    required this.code,
+    required super.message,
+    super.paginationResult,
+  }) : super(data: null);
 
   factory FailedResponse.fromJson(Map<String, dynamic> json) {
     final codeStr = json['code'];

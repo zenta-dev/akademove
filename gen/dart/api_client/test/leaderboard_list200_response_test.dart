@@ -3,8 +3,7 @@ import 'package:api_client/api_client.dart';
 
 // tests for LeaderboardList200Response
 void main() {
-  final LeaderboardList200Response?
-  instance = /* LeaderboardList200Response(...) */ null;
+  final LeaderboardList200Response? instance = /* LeaderboardList200Response(...) */ null;
   // TODO add properties to the entity
 
   group(LeaderboardList200Response, () {
@@ -27,5 +26,6 @@ void main() {
     test('to test the property `totalPages`', () async {
       // TODO
     });
+
   });
 }

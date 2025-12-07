@@ -17,19 +17,21 @@ part 'activate_driver.g.dart';
 )
 class ActivateDriver {
   /// Returns a new [ActivateDriver] instance.
-  const ActivateDriver({required this.id});
+  const ActivateDriver({
+    required this.id,
+  });
   @JsonKey(name: r'id', required: true, includeIfNull: false)
   final String id;
+  
+  @override
+  bool operator ==(Object other) => identical(this, other) || other is ActivateDriver &&
+    other.id == id;
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) || other is ActivateDriver && other.id == id;
+  int get hashCode =>
+      id.hashCode;
 
-  @override
-  int get hashCode => id.hashCode;
-
-  factory ActivateDriver.fromJson(Map<String, dynamic> json) =>
-      _$ActivateDriverFromJson(json);
+  factory ActivateDriver.fromJson(Map<String, dynamic> json) => _$ActivateDriverFromJson(json);
 
   Map<String, dynamic> toJson() => _$ActivateDriverToJson(this);
 
@@ -37,4 +39,6 @@ class ActivateDriver {
   String toString() {
     return toJson().toString();
   }
+
 }
+

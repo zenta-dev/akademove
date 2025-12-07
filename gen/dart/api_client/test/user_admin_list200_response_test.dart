@@ -3,8 +3,7 @@ import 'package:api_client/api_client.dart';
 
 // tests for UserAdminList200Response
 void main() {
-  final UserAdminList200Response? instance = /* UserAdminList200Response(...) */
-      null;
+  final UserAdminList200Response? instance = /* UserAdminList200Response(...) */ null;
   // TODO add properties to the entity
 
   group(UserAdminList200Response, () {
@@ -27,5 +26,6 @@ void main() {
     test('to test the property `totalPages`', () async {
       // TODO
     });
+
   });
 }

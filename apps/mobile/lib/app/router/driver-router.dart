@@ -4,8 +4,14 @@ final driverRouter = StatefulShellRoute.indexedStack(
   builder: (context, state, navigationShell) => MultiBlocProvider(
     providers: [
       BlocProvider(create: (_) => sl<BottomNavBarCubit>()),
+      BlocProvider(create: (_) => sl<DriverCubit>()),
       BlocProvider(create: (_) => sl<DriverHomeCubit>()..init()),
       BlocProvider(create: (_) => sl<DriverOrderCubit>()),
+      BlocProvider(create: (_) => sl<DriverScheduleCubit>()),
+      BlocProvider(create: (_) => sl<DriverProfileCubit>()),
+      BlocProvider(create: (_) => sl<DriverProfileCubit>()),
+      BlocProvider(create: (_) => sl<DriverQuizCubit>()),
+      BlocProvider(create: (_) => sl<DriverListHistoryCubit>()),
     ],
     child: IncomingOrderListener(
       child: BottomNavbar(

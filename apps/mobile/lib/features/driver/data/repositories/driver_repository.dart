@@ -84,10 +84,9 @@ class DriverRepository extends BaseRepository {
     required bool isOnline,
   }) {
     return guard(() async {
-      final res = await _apiClient.getDriverApi().driverUpdate(
-        id: driverId,
-        isTakingOrder: isOnline,
-      );
+      final res = isOnline
+          ? await _apiClient.getDriverApi().driverMarkAsOnline(id: driverId)
+          : await _apiClient.getDriverApi().driverMarkAsOffline(id: driverId);
       final data =
           res.data ??
           (throw const RepositoryError(
@@ -106,10 +105,8 @@ class DriverRepository extends BaseRepository {
     return guard(() async {
       final res = await _apiClient.getDriverApi().driverUpdate(
         id: driverId,
-        currentLocation: DriverUpdateRequestCurrentLocation(
-          x: location.x,
-          y: location.y,
-        ),
+        currentLocationX: location.x,
+        currentLocationY: location.y,
       );
       final data =
           res.data ??
@@ -129,9 +126,8 @@ class DriverRepository extends BaseRepository {
     MultipartFile? studentCard,
     MultipartFile? driverLicense,
     MultipartFile? vehicleCertificate,
-    DriverUpdateRequestBank? bank,
-    bool? isTakingOrder,
-    DriverUpdateRequestCurrentLocation? currentLocation,
+    Bank? bank,
+    UpdateDriverLocationRequest? currentLocation,
   }) {
     return guard(() async {
       final res = await _apiClient.getDriverApi().driverUpdate(
@@ -141,9 +137,10 @@ class DriverRepository extends BaseRepository {
         studentCard: studentCard,
         driverLicense: driverLicense,
         vehicleCertificate: vehicleCertificate,
-        bank: bank,
-        isTakingOrder: isTakingOrder,
-        currentLocation: currentLocation,
+        bankProvider: bank?.provider.value,
+        bankNumber: bank?.number,
+        currentLocationX: currentLocation?.x,
+        currentLocationY: currentLocation?.y,
       );
       final data =
           res.data ??

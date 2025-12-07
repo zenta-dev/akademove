@@ -3,8 +3,7 @@ import 'package:api_client/api_client.dart';
 
 // tests for MerchantGetAvailabilityStatus200ResponseData
 void main() {
-  final MerchantGetAvailabilityStatus200ResponseData?
-  instance = /* MerchantGetAvailabilityStatus200ResponseData(...) */ null;
+  final MerchantGetAvailabilityStatus200ResponseData? instance = /* MerchantGetAvailabilityStatus200ResponseData(...) */ null;
   // TODO add properties to the entity
 
   group(MerchantGetAvailabilityStatus200ResponseData, () {
@@ -28,5 +27,6 @@ void main() {
     test('to test the property `operatingStatus`', () async {
       // TODO
     });
+
   });
 }

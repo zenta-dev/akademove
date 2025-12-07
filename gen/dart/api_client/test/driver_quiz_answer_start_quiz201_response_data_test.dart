@@ -3,8 +3,7 @@ import 'package:api_client/api_client.dart';
 
 // tests for DriverQuizAnswerStartQuiz201ResponseData
 void main() {
-  final DriverQuizAnswerStartQuiz201ResponseData?
-  instance = /* DriverQuizAnswerStartQuiz201ResponseData(...) */ null;
+  final DriverQuizAnswerStartQuiz201ResponseData? instance = /* DriverQuizAnswerStartQuiz201ResponseData(...) */ null;
   // TODO add properties to the entity
 
   group(DriverQuizAnswerStartQuiz201ResponseData, () {
@@ -32,5 +31,6 @@ void main() {
     test('to test the property `passingScore`', () async {
       // TODO
     });
+
   });
 }

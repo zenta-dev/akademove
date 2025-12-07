@@ -3,5 +3,7 @@ import 'package:api_client/api_client.dart';
 
 // tests for EnvelopeTarget
 void main() {
-  group(EnvelopeTarget, () {});
+
+  group(EnvelopeTarget, () {
+  });
 }

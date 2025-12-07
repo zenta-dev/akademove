@@ -3,5 +3,7 @@ import 'package:api_client/api_client.dart';
 
 // tests for AccountDeletionStatus
 void main() {
-  group(AccountDeletionStatus, () {});
+
+  group(AccountDeletionStatus, () {
+  });
 }

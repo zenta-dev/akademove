@@ -3,8 +3,7 @@ import 'package:api_client/api_client.dart';
 
 // tests for DeliveryPricingConfiguration
 void main() {
-  final DeliveryPricingConfiguration?
-  instance = /* DeliveryPricingConfiguration(...) */ null;
+  final DeliveryPricingConfiguration? instance = /* DeliveryPricingConfiguration(...) */ null;
   // TODO add properties to the entity
 
   group(DeliveryPricingConfiguration, () {
@@ -37,5 +36,6 @@ void main() {
     test('to test the property `perKgRate`', () async {
       // TODO
     });
+
   });
 }

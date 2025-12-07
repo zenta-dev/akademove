@@ -27,28 +27,26 @@ class DriverQuizAnswerStartQuiz201ResponseData {
   });
   @JsonKey(name: r'attemptId', required: true, includeIfNull: false)
   final String attemptId;
-
+  
   @JsonKey(name: r'questions', required: true, includeIfNull: false)
   final List<DriverQuizQuestionGetQuizQuestions200ResponseDataInner> questions;
-
+  
   @JsonKey(name: r'totalQuestions', required: true, includeIfNull: false)
   final num totalQuestions;
-
+  
   @JsonKey(name: r'totalPoints', required: true, includeIfNull: false)
   final num totalPoints;
-
+  
   @JsonKey(name: r'passingScore', required: true, includeIfNull: false)
   final num passingScore;
-
+  
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is DriverQuizAnswerStartQuiz201ResponseData &&
-          other.attemptId == attemptId &&
-          other.questions == questions &&
-          other.totalQuestions == totalQuestions &&
-          other.totalPoints == totalPoints &&
-          other.passingScore == passingScore;
+  bool operator ==(Object other) => identical(this, other) || other is DriverQuizAnswerStartQuiz201ResponseData &&
+    other.attemptId == attemptId &&
+    other.questions == questions &&
+    other.totalQuestions == totalQuestions &&
+    other.totalPoints == totalPoints &&
+    other.passingScore == passingScore;
 
   @override
   int get hashCode =>
@@ -58,15 +56,14 @@ class DriverQuizAnswerStartQuiz201ResponseData {
       totalPoints.hashCode +
       passingScore.hashCode;
 
-  factory DriverQuizAnswerStartQuiz201ResponseData.fromJson(
-    Map<String, dynamic> json,
-  ) => _$DriverQuizAnswerStartQuiz201ResponseDataFromJson(json);
+  factory DriverQuizAnswerStartQuiz201ResponseData.fromJson(Map<String, dynamic> json) => _$DriverQuizAnswerStartQuiz201ResponseDataFromJson(json);
 
-  Map<String, dynamic> toJson() =>
-      _$DriverQuizAnswerStartQuiz201ResponseDataToJson(this);
+  Map<String, dynamic> toJson() => _$DriverQuizAnswerStartQuiz201ResponseDataToJson(this);
 
   @override
   String toString() {
     return toJson().toString();
   }
+
 }
+

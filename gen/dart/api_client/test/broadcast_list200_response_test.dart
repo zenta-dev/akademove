@@ -3,8 +3,7 @@ import 'package:api_client/api_client.dart';
 
 // tests for BroadcastList200Response
 void main() {
-  final BroadcastList200Response? instance = /* BroadcastList200Response(...) */
-      null;
+  final BroadcastList200Response? instance = /* BroadcastList200Response(...) */ null;
   // TODO add properties to the entity
 
   group(BroadcastList200Response, () {
@@ -27,5 +26,6 @@ void main() {
     test('to test the property `totalPages`', () async {
       // TODO
     });
+
   });
 }

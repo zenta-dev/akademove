@@ -15,15 +15,16 @@ import 'package:api_client/src/model/pagination_mode.dart';
 import 'package:api_client/src/model/pagination_order.dart';
 
 class LeaderboardApi {
+
   final Dio _dio;
 
   const LeaderboardApi(this._dio);
 
   /// leaderboardGet
-  ///
+  /// 
   ///
   /// Parameters:
-  /// * [id]
+  /// * [id] 
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -33,7 +34,7 @@ class LeaderboardApi {
   ///
   /// Returns a [Future] containing a [Response] with a [LeaderboardGet200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<LeaderboardGet200Response>> leaderboardGet({
+  Future<Response<LeaderboardGet200Response>> leaderboardGet({ 
     required String id,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -42,18 +43,19 @@ class LeaderboardApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/leaderboards/{id}'.replaceAll(
-      '{'
-      r'id'
-      '}',
-      id.toString(),
-    );
+    final _path = r'/leaderboards/{id}'.replaceAll('{' r'id' '}', id.toString());
     final _options = Options(
       method: r'GET',
-      headers: <String, dynamic>{...?headers},
+      headers: <String, dynamic>{
+        ...?headers,
+      },
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
+          {
+            'type': 'http',
+            'scheme': 'bearer',
+            'name': 'bearer_auth',
+          },
         ],
         ...?extra,
       },
@@ -72,13 +74,7 @@ class LeaderboardApi {
 
     try {
       final rawData = _response.data;
-      _responseData = rawData == null
-          ? null
-          : deserialize<LeaderboardGet200Response, LeaderboardGet200Response>(
-              rawData,
-              'LeaderboardGet200Response',
-              growable: true,
-            );
+_responseData = rawData == null ? null : deserialize<LeaderboardGet200Response, LeaderboardGet200Response>(rawData, 'LeaderboardGet200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -102,17 +98,17 @@ class LeaderboardApi {
   }
 
   /// leaderboardList
-  ///
+  /// 
   ///
   /// Parameters:
-  /// * [cursor]
-  /// * [limit]
-  /// * [direction]
-  /// * [page]
-  /// * [query]
-  /// * [sortBy]
-  /// * [order]
-  /// * [mode]
+  /// * [cursor] 
+  /// * [limit] 
+  /// * [direction] 
+  /// * [page] 
+  /// * [query] 
+  /// * [sortBy] 
+  /// * [order] 
+  /// * [mode] 
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -122,7 +118,7 @@ class LeaderboardApi {
   ///
   /// Returns a [Future] containing a [Response] with a [LeaderboardList200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<LeaderboardList200Response>> leaderboardList({
+  Future<Response<LeaderboardList200Response>> leaderboardList({ 
     String? cursor,
     Object? limit,
     String? direction,
@@ -141,10 +137,16 @@ class LeaderboardApi {
     final _path = r'/leaderboards';
     final _options = Options(
       method: r'GET',
-      headers: <String, dynamic>{...?headers},
+      headers: <String, dynamic>{
+        ...?headers,
+      },
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
+          {
+            'type': 'http',
+            'scheme': 'bearer',
+            'name': 'bearer_auth',
+          },
         ],
         ...?extra,
       },
@@ -175,13 +177,7 @@ class LeaderboardApi {
 
     try {
       final rawData = _response.data;
-      _responseData = rawData == null
-          ? null
-          : deserialize<LeaderboardList200Response, LeaderboardList200Response>(
-              rawData,
-              'LeaderboardList200Response',
-              growable: true,
-            );
+_responseData = rawData == null ? null : deserialize<LeaderboardList200Response, LeaderboardList200Response>(rawData, 'LeaderboardList200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -203,4 +199,5 @@ class LeaderboardApi {
       extra: _response.extra,
     );
   }
+
 }

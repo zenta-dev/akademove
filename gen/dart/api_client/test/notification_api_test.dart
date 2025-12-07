@@ -1,6 +1,7 @@
 import 'package:test/test.dart';
 import 'package:api_client/api_client.dart';
 
+
 /// tests for NotificationApi
 void main() {
   final instance = ApiClient().getNotificationApi();
@@ -50,5 +51,6 @@ void main() {
     test('test notificationUnsubscribeToTopic', () async {
       // TODO
     });
+
   });
 }

@@ -62,6 +62,48 @@ export const DriverMainHandler = priv.router({
 			body: { message: m.server_driver_updated(), data: result },
 		};
 	}),
+	markAsOnline: priv.markAsOnline.handler(
+		async ({ context, input: { params } }) => {
+			// IDOR Protection: Drivers can only update their own profile
+			// Admins/Operators can update any driver
+			if (context.user.role === "DRIVER") {
+				const driver = await context.repo.driver.main.get(params.id);
+				if (driver.userId !== context.user.id) {
+					throw new AuthError(m.error_only_update_own_driver_profile(), {
+						code: "FORBIDDEN",
+					});
+				}
+			}
+
+			const result = await context.repo.driver.main.markAsOnline(params.id);
+
+			return {
+				status: 200,
+				body: { message: "Mark online success", data: result },
+			};
+		},
+	),
+	markAsOffline: priv.markAsOffline	.handler(
+		async ({ context, input: { params } }) => {
+			// IDOR Protection: Drivers can only update their own profile
+			// Admins/Operators can update any driver
+			if (context.user.role === "DRIVER") {
+				const driver = await context.repo.driver.main.get(params.id);
+				if (driver.userId !== context.user.id) {
+					throw new AuthError(m.error_only_update_own_driver_profile(), {
+						code: "FORBIDDEN",
+					});
+				}
+			}
+
+			const result = await context.repo.driver.main.markAsOffline(params.id);
+
+			return {
+				status: 200,
+				body: { message: "Mark offline success", data: result },
+			};
+		},
+	),
 	remove: priv.remove.handler(async ({ context, input: { params } }) => {
 		await context.repo.driver.main.remove(params.id);
 

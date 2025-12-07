@@ -3,8 +3,7 @@ import 'package:api_client/api_client.dart';
 
 // tests for QuickMessageCreate200Response
 void main() {
-  final QuickMessageCreate200Response?
-  instance = /* QuickMessageCreate200Response(...) */ null;
+  final QuickMessageCreate200Response? instance = /* QuickMessageCreate200Response(...) */ null;
   // TODO add properties to the entity
 
   group(QuickMessageCreate200Response, () {
@@ -27,5 +26,6 @@ void main() {
     test('to test the property `totalPages`', () async {
       // TODO
     });
+
   });
 }
