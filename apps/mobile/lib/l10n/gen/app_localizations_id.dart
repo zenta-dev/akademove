@@ -640,13 +640,22 @@ class AppLocalizationsId extends AppLocalizations {
   String get open_settings => 'Buka Pengaturan';
 
   @override
-  String get send_reset_link => 'Kirim Tautan Reset';
+  String get send_reset_link => 'Kirim Kode OTP';
 
   @override
   String get back_to_sign_in => 'Kembali ke Halaman Masuk';
 
   @override
   String get reset_password => 'Atur Ulang Kata Sandi';
+
+  @override
+  String get otp_code => 'Kode OTP';
+
+  @override
+  String get otp_code_sent_to_email => 'Kami telah mengirimkan kode 6 digit ke email Anda.';
+
+  @override
+  String get placeholder_otp_code => 'Masukkan kode 6 digit';
 
   @override
   String get reject => 'Tolak';

@@ -36,7 +36,7 @@ export const Route = createFileRoute("/(auth)/reset-password")({
 	validateSearch: zodValidator(
 		z
 			.object({
-				token: z.string(),
+				email: z.string(),
 			})
 			.partial(),
 	),
@@ -51,13 +51,16 @@ export const Route = createFileRoute("/(auth)/reset-password")({
 
 function RouteComponent() {
 	const router = useRouter();
-	const { token } = Route.useLoaderDeps();
+	const { email } = Route.useLoaderDeps();
 	const [showNewPassword, setShowNewPassword] = useState(false);
 	const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
 	const form = useForm({
 		resolver: zodResolver(ResetPasswordSchema),
-		defaultValues: createDefaults(ResetPasswordSchema),
+		defaultValues: {
+			...createDefaults(ResetPasswordSchema),
+			email: email ?? "",
+		},
 	});
 
 	const mutation = useMutation(
@@ -95,7 +98,7 @@ function RouteComponent() {
 		[mutation.mutateAsync],
 	);
 
-	if (!token) {
+	if (!email) {
 		return redirect({ to: localizeHref("/forgot-password"), throw: true });
 	}
 
@@ -113,11 +116,31 @@ function RouteComponent() {
 					>
 						<FormField
 							control={form.control}
-							name="token"
+							name="email"
 							render={({ field }) => (
 								<FormItem>
 									<FormControl>
-										<input {...field} className="hidden" />
+										<input {...field} type="hidden" />
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={form.control}
+							name="code"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>{m.otp_code()}</FormLabel>
+									<FormControl>
+										<Input
+											placeholder="123456"
+											autoComplete="one-time-code"
+											inputMode="numeric"
+											maxLength={6}
+											disabled={mutation.isPending}
+											{...field}
+										/>
 									</FormControl>
 									<FormMessage />
 								</FormItem>

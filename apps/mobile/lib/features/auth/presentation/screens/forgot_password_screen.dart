@@ -82,6 +82,7 @@ class _ForgotPasswordFormViewState extends State<_ForgotPasswordFormView> {
   late FocusNode _emailFn;
 
   final _emailValidator = const EmailValidator();
+  String? _submittedEmail;
 
   @override
   void initState() {
@@ -96,20 +97,23 @@ class _ForgotPasswordFormViewState extends State<_ForgotPasswordFormView> {
   }
 
   Future<void> handleEvent(BuildContext context, AuthState state) async {
-    if (state.resetPasswordResult.isFailure) {
+    if (state.forgotPasswordResult.isFailure) {
       context.showMyToast(
-        state.resetPasswordResult.error?.message,
+        state.forgotPasswordResult.error?.message,
         type: ToastType.failed,
       );
     }
-    if (state.resetPasswordResult.isSuccess) {
+    if (state.forgotPasswordResult.isSuccess) {
       context.showMyToast(
-        state.resetPasswordResult.message,
+        state.forgotPasswordResult.message,
         type: ToastType.success,
       );
       await delay(const Duration(seconds: 1), () {});
-      if (context.mounted) {
-        context.pop();
+      if (context.mounted && _submittedEmail != null) {
+        context.goNamed(
+          Routes.authResetPassword.name,
+          queryParameters: {'email': _submittedEmail!},
+        );
       }
     }
   }
@@ -121,10 +125,11 @@ class _ForgotPasswordFormViewState extends State<_ForgotPasswordFormView> {
       builder: (context, state) {
         return Form(
           onSubmit: (context, values) async {
-            if (state.resetPasswordResult.isLoading) return;
+            if (state.forgotPasswordResult.isLoading) return;
             final email = _emailKey[values];
             if (email == null) return;
 
+            _submittedEmail = email;
             await context.read<AuthCubit>().forgotPassword(email);
           },
           child: Column(
@@ -157,7 +162,7 @@ class _ForgotPasswordFormViewState extends State<_ForgotPasswordFormView> {
                   FormErrorBuilder(
                     builder: (context, errors, child) {
                       final hasErrors = errors.isNotEmpty;
-                      final isLoading = state.resetPasswordResult.isLoading;
+                      final isLoading = state.forgotPasswordResult.isLoading;
 
                       return Button(
                         style: isLoading || hasErrors

@@ -9,9 +9,9 @@ import 'package:go_router/go_router.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 
 class ResetPasswordScreen extends StatelessWidget {
-  const ResetPasswordScreen({super.key, this.token});
+  const ResetPasswordScreen({super.key, this.email});
 
-  final String? token;
+  final String? email;
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +58,7 @@ class ResetPasswordScreen extends StatelessWidget {
                     padding: EdgeInsets.all(8.dg),
                     child: SizedBox(
                       width: size.width.w,
-                      child: _ResetPasswordFormView(token: token),
+                      child: _ResetPasswordFormView(email: email),
                     ),
                   ).intrinsic(),
                 ],
@@ -72,31 +72,35 @@ class ResetPasswordScreen extends StatelessWidget {
 }
 
 class _ResetPasswordFormView extends StatefulWidget {
-  const _ResetPasswordFormView({this.token});
+  const _ResetPasswordFormView({this.email});
 
-  final String? token;
+  final String? email;
 
   @override
   State<_ResetPasswordFormView> createState() => _ResetPasswordFormViewState();
 }
 
 class _ResetPasswordFormViewState extends State<_ResetPasswordFormView> {
+  final FormKey<String> _codeKey = const TextFieldKey('code');
   final FormKey<String> _newPasswordKey = const TextFieldKey('newPassword');
   final FormKey<String> _confirmPasswordKey = const TextFieldKey(
     'confirmPassword',
   );
+  late FocusNode _codeFn;
   late FocusNode _newPasswordFn;
   late FocusNode _confirmPasswordFn;
 
   @override
   void initState() {
     super.initState();
+    _codeFn = FocusNode();
     _newPasswordFn = FocusNode();
     _confirmPasswordFn = FocusNode();
   }
 
   @override
   void dispose() {
+    _codeFn.dispose();
     _newPasswordFn.dispose();
     _confirmPasswordFn.dispose();
     super.dispose();
@@ -123,8 +127,8 @@ class _ResetPasswordFormViewState extends State<_ResetPasswordFormView> {
 
   @override
   Widget build(BuildContext context) {
-    final token = widget.token;
-    if (token == null || token.isEmpty) {
+    final email = widget.email;
+    if (email == null || email.isEmpty) {
       return Column(
         children: [
           Icon(LucideIcons.triangleAlert, size: 48.w, color: Colors.red),
@@ -150,9 +154,14 @@ class _ResetPasswordFormViewState extends State<_ResetPasswordFormView> {
         return Form(
           onSubmit: (context, values) async {
             if (state.resetPasswordResult.isLoading) return;
+            final code = _codeKey[values];
             final newPassword = _newPasswordKey[values];
             final confirmPassword = _confirmPasswordKey[values];
-            if (newPassword == null || confirmPassword == null) return;
+            if (code == null ||
+                newPassword == null ||
+                confirmPassword == null) {
+              return;
+            }
 
             if (newPassword != confirmPassword) {
               context.showMyToast(
@@ -163,7 +172,8 @@ class _ResetPasswordFormViewState extends State<_ResetPasswordFormView> {
             }
 
             await context.read<AuthCubit>().resetPassword(
-              token: token,
+              email: email,
+              code: code,
               newPassword: newPassword,
               confirmPassword: confirmPassword,
             );
@@ -175,6 +185,35 @@ class _ResetPasswordFormViewState extends State<_ResetPasswordFormView> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
+                  Text(
+                    context.l10n.otp_code_sent_to_email,
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      color: context.colorScheme.mutedForeground,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  Gap(8.h),
+                  FormField(
+                    key: _codeKey,
+                    label: DefaultText(
+                      context.l10n.otp_code,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    validator: const LengthValidator(min: 6, max: 6),
+                    showErrors: const {
+                      FormValidationMode.changed,
+                      FormValidationMode.submitted,
+                    },
+                    child: TextField(
+                      focusNode: _codeFn,
+                      placeholder: Text(context.l10n.placeholder_otp_code),
+                      keyboardType: TextInputType.number,
+                      features: const [
+                        InputFeature.leading(Icon(LucideIcons.keyRound)),
+                      ],
+                    ),
+                  ),
                   FormField(
                     key: _newPasswordKey,
                     label: DefaultText(

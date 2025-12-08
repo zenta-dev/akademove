@@ -256,14 +256,16 @@ class AuthRepository extends BaseRepository {
   }
 
   Future<BaseResponse<bool>> resetPassword({
-    required String token,
+    required String email,
+    required String code,
     required String newPassword,
     required String confirmPassword,
   }) async {
     return guard(() async {
       final result = await _apiClient.getAuthApi().authResetPassword(
         resetPassword: ResetPassword(
-          token: token.trim(),
+          email: email.trim(),
+          code: code.trim(),
           newPassword: newPassword.trim(),
           confirmPassword: confirmPassword.trim(),
         ),

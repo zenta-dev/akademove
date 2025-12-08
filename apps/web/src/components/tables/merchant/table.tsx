@@ -73,6 +73,7 @@ export const MerchantTable = ({ search, to }: Props) => {
 		phone: !isMobile,
 		category: true,
 		isActive: true,
+		status: true,
 		rating: true,
 		address: !isMobile,
 		actions: true,

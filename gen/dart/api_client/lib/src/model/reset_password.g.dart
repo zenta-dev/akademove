@@ -7,7 +7,9 @@ part of 'reset_password.dart';
 // **************************************************************************
 
 abstract class _$ResetPasswordCWProxy {
-  ResetPassword token(String token);
+  ResetPassword email(String email);
+
+  ResetPassword code(String code);
 
   ResetPassword newPassword(String newPassword);
 
@@ -21,7 +23,8 @@ abstract class _$ResetPasswordCWProxy {
   /// ResetPassword(...).copyWith(id: 12, name: "My name")
   /// ```
   ResetPassword call({
-    String token,
+    String email,
+    String code,
     String newPassword,
     String confirmPassword,
   });
@@ -35,7 +38,10 @@ class _$ResetPasswordCWProxyImpl implements _$ResetPasswordCWProxy {
   final ResetPassword _value;
 
   @override
-  ResetPassword token(String token) => call(token: token);
+  ResetPassword email(String email) => call(email: email);
+
+  @override
+  ResetPassword code(String code) => call(code: code);
 
   @override
   ResetPassword newPassword(String newPassword) =>
@@ -54,15 +60,20 @@ class _$ResetPasswordCWProxyImpl implements _$ResetPasswordCWProxy {
   /// ResetPassword(...).copyWith(id: 12, name: "My name")
   /// ```
   ResetPassword call({
-    Object? token = const $CopyWithPlaceholder(),
+    Object? email = const $CopyWithPlaceholder(),
+    Object? code = const $CopyWithPlaceholder(),
     Object? newPassword = const $CopyWithPlaceholder(),
     Object? confirmPassword = const $CopyWithPlaceholder(),
   }) {
     return ResetPassword(
-      token: token == const $CopyWithPlaceholder() || token == null
-          ? _value.token
+      email: email == const $CopyWithPlaceholder() || email == null
+          ? _value.email
           // ignore: cast_nullable_to_non_nullable
-          : token as String,
+          : email as String,
+      code: code == const $CopyWithPlaceholder() || code == null
+          ? _value.code
+          // ignore: cast_nullable_to_non_nullable
+          : code as String,
       newPassword:
           newPassword == const $CopyWithPlaceholder() || newPassword == null
           ? _value.newPassword
@@ -93,10 +104,11 @@ ResetPassword _$ResetPasswordFromJson(Map<String, dynamic> json) =>
     $checkedCreate('ResetPassword', json, ($checkedConvert) {
       $checkKeys(
         json,
-        requiredKeys: const ['token', 'newPassword', 'confirmPassword'],
+        requiredKeys: const ['email', 'code', 'newPassword', 'confirmPassword'],
       );
       final val = ResetPassword(
-        token: $checkedConvert('token', (v) => v as String),
+        email: $checkedConvert('email', (v) => v as String),
+        code: $checkedConvert('code', (v) => v as String),
         newPassword: $checkedConvert('newPassword', (v) => v as String),
         confirmPassword: $checkedConvert('confirmPassword', (v) => v as String),
       );
@@ -105,7 +117,8 @@ ResetPassword _$ResetPasswordFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$ResetPasswordToJson(ResetPassword instance) =>
     <String, dynamic>{
-      'token': instance.token,
+      'email': instance.email,
+      'code': instance.code,
       'newPassword': instance.newPassword,
       'confirmPassword': instance.confirmPassword,
     };

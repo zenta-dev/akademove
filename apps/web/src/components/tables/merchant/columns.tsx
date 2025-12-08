@@ -1,5 +1,5 @@
 import { m } from "@repo/i18n";
-import type { Merchant } from "@repo/schema/merchant";
+import type { Merchant, MerchantStatus } from "@repo/schema/merchant";
 import type { ColumnDef } from "@tanstack/react-table";
 import { cva } from "class-variance-authority";
 import { ArrowUpDown, BadgeCheckIcon, BadgeXIcon, Star } from "lucide-react";
@@ -120,6 +120,50 @@ export const MERCHANT_COLUMNS = [
 				>
 					<BadgeXIcon />
 					{m.no().toUpperCase()}
+				</Badge>
+			);
+		},
+	},
+	{
+		id: "status",
+		accessorKey: "status",
+		header: "Approval Status",
+		cell: ({ row }) => {
+			const status = row.getValue<MerchantStatus>("status");
+			const statusConfig: Record<
+				MerchantStatus,
+				{ className: string; label: string }
+			> = {
+				PENDING: {
+					className: "bg-yellow-500/20 text-yellow-600",
+					label: "Pending",
+				},
+				APPROVED: {
+					className: "bg-green-500/20 text-green-600",
+					label: "Approved",
+				},
+				REJECTED: {
+					className: "bg-red-500/20 text-red-600",
+					label: "Rejected",
+				},
+				ACTIVE: {
+					className: "bg-blue-500/20 text-blue-600",
+					label: "Active",
+				},
+				INACTIVE: {
+					className: "bg-gray-500/20 text-gray-600",
+					label: "Inactive",
+				},
+				SUSPENDED: {
+					className: "bg-orange-500/20 text-orange-600",
+					label: "Suspended",
+				},
+			};
+
+			const config = statusConfig[status] ?? statusConfig.PENDING;
+			return (
+				<Badge variant="secondary" className={config.className}>
+					{config.label}
 				</Badge>
 			);
 		},

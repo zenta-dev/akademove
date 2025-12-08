@@ -1,9 +1,9 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { m } from "@repo/i18n";
+import { localizeHref, m } from "@repo/i18n";
 import { type ForgotPassword, ForgotPasswordSchema } from "@repo/schema/auth";
 import { capitalizeFirstLetter } from "@repo/shared";
 import { useMutation } from "@tanstack/react-query";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -33,6 +33,7 @@ export const Route = createFileRoute("/(auth)/forgot-password")({
 });
 
 function RouteComponent() {
+	const router = useRouter();
 	const form = useForm({
 		resolver: zodResolver(ForgotPasswordSchema),
 		defaultValues: { email: "" },
@@ -40,7 +41,7 @@ function RouteComponent() {
 
 	const mutation = useMutation(
 		orpcQuery.auth.forgotPassword.mutationOptions({
-			onSuccess: async () => {
+			onSuccess: async (_data, variables) => {
 				toast.success(
 					m.success_placeholder({
 						action: capitalizeFirstLetter(m.forgot_password().toLowerCase()),
@@ -49,6 +50,11 @@ function RouteComponent() {
 						description: m.please_check_your_email(),
 					},
 				);
+				// Navigate to reset-password page with email
+				await router.navigate({
+					to: localizeHref("/reset-password"),
+					search: { email: variables.body.email },
+				});
 			},
 			onError: (error: BetterAuthClientError) => {
 				toast.error(

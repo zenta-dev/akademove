@@ -60,10 +60,10 @@ final authRouter = ShellRoute(
       name: Routes.authResetPassword.name,
       path: Routes.authResetPassword.path,
       builder: (context, state) {
-        final token = state.uri.queryParameters['token'];
+        final email = state.uri.queryParameters['email'];
         return BlocProvider.value(
           value: context.read<AuthCubit>()..reset(),
-          child: ResetPasswordScreen(token: token),
+          child: ResetPasswordScreen(email: email),
         );
       },
     ),

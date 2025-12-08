@@ -640,13 +640,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String get open_settings => 'Open Settings';
 
   @override
-  String get send_reset_link => 'Send Reset Link';
+  String get send_reset_link => 'Send OTP Code';
 
   @override
   String get back_to_sign_in => 'Back to Sign In';
 
   @override
   String get reset_password => 'Reset Password';
+
+  @override
+  String get otp_code => 'OTP Code';
+
+  @override
+  String get otp_code_sent_to_email => 'We\'ve sent a 6-digit code to your email.';
+
+  @override
+  String get placeholder_otp_code => 'Enter 6-digit code';
 
   @override
   String get reject => 'Reject';

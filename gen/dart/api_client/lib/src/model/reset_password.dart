@@ -18,32 +18,41 @@ part 'reset_password.g.dart';
 class ResetPassword {
   /// Returns a new [ResetPassword] instance.
   const ResetPassword({
-    required this.token,
+    required this.email,
+    required this.code,
     required this.newPassword,
     required this.confirmPassword,
   });
-  @JsonKey(name: r'token', required: true, includeIfNull: false)
-  final String token;
-  
+  @JsonKey(name: r'email', required: true, includeIfNull: false)
+  final String email;
+
+  @JsonKey(name: r'code', required: true, includeIfNull: false)
+  final String code;
+
   @JsonKey(name: r'newPassword', required: true, includeIfNull: false)
   final String newPassword;
-  
+
   @JsonKey(name: r'confirmPassword', required: true, includeIfNull: false)
   final String confirmPassword;
-  
+
   @override
-  bool operator ==(Object other) => identical(this, other) || other is ResetPassword &&
-    other.token == token &&
-    other.newPassword == newPassword &&
-    other.confirmPassword == confirmPassword;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ResetPassword &&
+          other.email == email &&
+          other.code == code &&
+          other.newPassword == newPassword &&
+          other.confirmPassword == confirmPassword;
 
   @override
   int get hashCode =>
-      token.hashCode +
+      email.hashCode +
+      code.hashCode +
       newPassword.hashCode +
       confirmPassword.hashCode;
 
-  factory ResetPassword.fromJson(Map<String, dynamic> json) => _$ResetPasswordFromJson(json);
+  factory ResetPassword.fromJson(Map<String, dynamic> json) =>
+      _$ResetPasswordFromJson(json);
 
   Map<String, dynamic> toJson() => _$ResetPasswordToJson(this);
 
@@ -51,6 +60,4 @@ class ResetPassword {
   String toString() {
     return toJson().toString();
   }
-
 }
-

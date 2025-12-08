@@ -92,7 +92,13 @@ export type ForgotPassword = z.infer<typeof ForgotPasswordSchema>;
 
 export const ResetPasswordSchema = z
 	.object({
-		token: z.string(),
+		email: z.email(
+			m.invalid_placeholder({ field: m.email_address().toLowerCase() }),
+		),
+		code: z
+			.string()
+			.length(6, m.invalid_placeholder({ field: "OTP code" }))
+			.regex(/^\d{6}$/, m.invalid_placeholder({ field: "OTP code" })),
 		newPassword: z
 			.string()
 			.min(8, m.min_placeholder({ field: m.new_password(), min: 8 })),

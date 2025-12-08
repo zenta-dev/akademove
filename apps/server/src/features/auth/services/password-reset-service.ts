@@ -1,5 +1,4 @@
-import { env } from "cloudflare:workers";
-import { randomBytes } from "node:crypto";
+import { randomInt } from "node:crypto";
 import { eq } from "drizzle-orm";
 import { v7 } from "uuid";
 import { AuthError } from "@/core/error";
@@ -20,7 +19,8 @@ export interface ForgotPasswordRequest {
  * Reset password request
  */
 export interface ResetPasswordRequest {
-	token: string;
+	email: string;
+	code: string;
 	newPassword: string;
 }
 
@@ -43,9 +43,9 @@ export interface PasswordResetDeps {
  * Service responsible for password reset flow
  *
  * Handles:
- * - Forgot password (email link generation)
- * - Reset token generation and storage
- * - Token validation and expiration
+ * - Forgot password (OTP code generation)
+ * - OTP code generation and storage
+ * - Code validation and expiration
  * - Password reset execution
  * - Email notifications
  *
@@ -53,15 +53,15 @@ export interface PasswordResetDeps {
  * ```typescript
  * const passwordResetService = new PasswordResetService(db, pw, mail);
  *
- * // Forgot password
+ * // Forgot password - sends OTP code via email
  * await passwordResetService.forgotPassword(
  *   { email },
  *   { findUserByEmail }
  * );
  *
- * // Reset password
+ * // Reset password with OTP code
  * await passwordResetService.resetPassword(
- *   { token, newPassword },
+ *   { email, code, newPassword },
  *   { deleteCache }
  * );
  * ```
@@ -71,7 +71,7 @@ export class PasswordResetService {
 	readonly #pw: PasswordManager;
 	readonly #mail: MailService;
 
-	readonly #RESET_TOKEN_EXPIRY_HOURS = 1;
+	readonly #RESET_CODE_EXPIRY_MINUTES = 15;
 
 	constructor(db: DatabaseService, pw: PasswordManager, mail: MailService) {
 		this.#db = db;
@@ -80,13 +80,14 @@ export class PasswordResetService {
 	}
 
 	/**
-	 * Generates reset token and sends email
+	 * Generates 6-digit OTP code and sends email
 	 *
 	 * Process:
 	 * 1. Find user by email
-	 * 2. Generate secure random token (32 bytes)
-	 * 3. Store token in verification table with 1-hour expiry
-	 * 4. Send reset email with link to user
+	 * 2. Delete any existing reset codes for this email
+	 * 3. Generate secure random 6-digit OTP code
+	 * 4. Store code in verification table with 15-minute expiry
+	 * 5. Send reset email with OTP code to user
 	 *
 	 * @param request - Email address
 	 * @param deps - User lookup function
@@ -104,29 +105,33 @@ export class PasswordResetService {
 				throw new AuthError("Email not registered", { code: "NOT_FOUND" });
 			}
 
-			const token = randomBytes(16).toString("hex");
+			// Delete any existing reset codes for this email
+			await this.#db
+				.delete(tables.verification)
+				.where(eq(tables.verification.identifier, request.email));
+
+			// Generate 6-digit OTP code
+			const code = randomInt(100000, 999999).toString();
 			const expiresAt = new Date(
-				Date.now() + this.#RESET_TOKEN_EXPIRY_HOURS * 60 * 60 * 1000,
+				Date.now() + this.#RESET_CODE_EXPIRY_MINUTES * 60 * 1000,
 			);
 
 			await this.#db.insert(tables.verification).values({
 				id: v7(),
 				identifier: request.email,
-				value: token,
+				value: code,
 				expiresAt,
 			});
 
-			const resetUrl = `${env.CORS_ORIGIN}/auth/reset-password?token=${token}`;
-
 			await this.#mail.sendResetPassword({
 				to: user.email,
-				url: resetUrl,
+				code,
 				userName: user.name,
 			});
 
 			log.info(
 				{ userId: user.id, email: user.email },
-				"[PasswordResetService] Password reset email sent",
+				"[PasswordResetService] Password reset OTP sent",
 			);
 
 			return true;
@@ -140,20 +145,20 @@ export class PasswordResetService {
 	}
 
 	/**
-	 * Validates token and resets password
+	 * Validates OTP code and resets password
 	 *
 	 * Process:
-	 * 1. Find verification token (not expired)
-	 * 2. Find user by email from token
+	 * 1. Find verification code by email and code (not expired)
+	 * 2. Find user by email
 	 * 3. Hash new password with scrypt
 	 * 4. Update account password in transaction
-	 * 5. Delete verification token
+	 * 5. Delete verification code
 	 * 6. Invalidate user session cache
 	 *
-	 * @param request - Token and new password
+	 * @param request - Email, OTP code, and new password
 	 * @param deps - Cache deletion function
 	 * @returns true if successful
-	 * @throws AuthError if token invalid/expired or user not found
+	 * @throws AuthError if code invalid/expired or user not found
 	 */
 	async resetPassword(
 		request: ResetPasswordRequest,
@@ -165,11 +170,15 @@ export class PasswordResetService {
 				opts?.tx ?? this.#db
 			).query.verification.findFirst({
 				where: (f, op) =>
-					op.and(op.eq(f.value, request.token), op.gt(f.expiresAt, new Date())),
+					op.and(
+						op.eq(f.identifier, request.email),
+						op.eq(f.value, request.code),
+						op.gt(f.expiresAt, new Date()),
+					),
 			});
 
 			if (!verification) {
-				throw new AuthError("Invalid or expired reset token", {
+				throw new AuthError("Invalid or expired OTP code", {
 					code: "BAD_REQUEST",
 				});
 			}
@@ -182,7 +191,7 @@ export class PasswordResetService {
 						where: (f, op) => op.eq(f.providerId, "credentials"),
 					},
 				},
-				where: (f, op) => op.eq(f.email, verification.identifier),
+				where: (f, op) => op.eq(f.email, request.email),
 			});
 
 			if (!user?.accounts[0]) {

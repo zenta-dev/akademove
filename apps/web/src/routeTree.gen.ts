@@ -25,6 +25,7 @@ import { Route as legalPrivacyRouteImport } from './routes/(legal)/privacy'
 import { Route as legalCookiesRouteImport } from './routes/(legal)/cookies'
 import { Route as legalAccountDeletionRouteImport } from './routes/(legal)/account-deletion'
 import { Route as companyAboutRouteImport } from './routes/(company)/about'
+import { Route as authVerifyEmailRouteImport } from './routes/(auth)/verify-email'
 import { Route as authSignInRouteImport } from './routes/(auth)/sign-in'
 import { Route as authResetPasswordRouteImport } from './routes/(auth)/reset-password'
 import { Route as authForgotPasswordRouteImport } from './routes/(auth)/forgot-password'
@@ -78,9 +79,11 @@ import { Route as DashOperatorCouponsIndexRouteImport } from './routes/dash/oper
 import { Route as DashOperatorContactsIndexRouteImport } from './routes/dash/operator/contacts/index'
 import { Route as DashAdminQuizQuestionsIndexRouteImport } from './routes/dash/admin/quiz-questions/index'
 import { Route as DashAdminContactsIndexRouteImport } from './routes/dash/admin/contacts/index'
+import { Route as DashOperatorMerchantApprovalMerchantIdRouteImport } from './routes/dash/operator/merchant-approval/$merchantId'
 import { Route as DashOperatorDriverApprovalDriverIdRouteImport } from './routes/dash/operator/driver-approval/$driverId'
 import { Route as DashOperatorCouponsNewRouteImport } from './routes/dash/operator/coupons/new'
 import { Route as DashOperatorContactsIdRouteImport } from './routes/dash/operator/contacts/$id'
+import { Route as DashAdminMerchantApprovalMerchantIdRouteImport } from './routes/dash/admin/merchant-approval/$merchantId'
 import { Route as DashAdminDriverApprovalDriverIdRouteImport } from './routes/dash/admin/driver-approval/$driverId'
 import { Route as DashAdminContactsIdRouteImport } from './routes/dash/admin/contacts/$id'
 import { Route as DashOperatorQuizQuestionsEditIdRouteImport } from './routes/dash/operator/quiz-questions/edit/$id'
@@ -163,6 +166,11 @@ const companyAboutRoute = companyAboutRouteImport.update({
   id: '/(company)/about',
   path: '/about',
   getParentRoute: () => rootRouteImport,
+} as any)
+const authVerifyEmailRoute = authVerifyEmailRouteImport.update({
+  id: '/verify-email',
+  path: '/verify-email',
+  getParentRoute: () => authRouteRoute,
 } as any)
 const authSignInRoute = authSignInRouteImport.update({
   id: '/sign-in',
@@ -434,6 +442,12 @@ const DashAdminContactsIndexRoute = DashAdminContactsIndexRouteImport.update({
   path: '/contacts/',
   getParentRoute: () => DashAdminRouteRoute,
 } as any)
+const DashOperatorMerchantApprovalMerchantIdRoute =
+  DashOperatorMerchantApprovalMerchantIdRouteImport.update({
+    id: '/merchant-approval/$merchantId',
+    path: '/merchant-approval/$merchantId',
+    getParentRoute: () => DashOperatorRouteRoute,
+  } as any)
 const DashOperatorDriverApprovalDriverIdRoute =
   DashOperatorDriverApprovalDriverIdRouteImport.update({
     id: '/driver-approval/$driverId',
@@ -450,6 +464,12 @@ const DashOperatorContactsIdRoute = DashOperatorContactsIdRouteImport.update({
   path: '/contacts/$id',
   getParentRoute: () => DashOperatorRouteRoute,
 } as any)
+const DashAdminMerchantApprovalMerchantIdRoute =
+  DashAdminMerchantApprovalMerchantIdRouteImport.update({
+    id: '/merchant-approval/$merchantId',
+    path: '/merchant-approval/$merchantId',
+    getParentRoute: () => DashAdminRouteRoute,
+  } as any)
 const DashAdminDriverApprovalDriverIdRoute =
   DashAdminDriverApprovalDriverIdRouteImport.update({
     id: '/driver-approval/$driverId',
@@ -484,6 +504,7 @@ export interface FileRoutesByFullPath {
   '/forgot-password': typeof authForgotPasswordRoute
   '/reset-password': typeof authResetPasswordRoute
   '/sign-in': typeof authSignInRoute
+  '/verify-email': typeof authVerifyEmailRoute
   '/about': typeof companyAboutRoute
   '/account-deletion': typeof legalAccountDeletionRoute
   '/cookies': typeof legalCookiesRoute
@@ -539,9 +560,11 @@ export interface FileRoutesByFullPath {
   '/dash/user/': typeof DashUserIndexRoute
   '/dash/admin/contacts/$id': typeof DashAdminContactsIdRoute
   '/dash/admin/driver-approval/$driverId': typeof DashAdminDriverApprovalDriverIdRoute
+  '/dash/admin/merchant-approval/$merchantId': typeof DashAdminMerchantApprovalMerchantIdRoute
   '/dash/operator/contacts/$id': typeof DashOperatorContactsIdRoute
   '/dash/operator/coupons/new': typeof DashOperatorCouponsNewRoute
   '/dash/operator/driver-approval/$driverId': typeof DashOperatorDriverApprovalDriverIdRoute
+  '/dash/operator/merchant-approval/$merchantId': typeof DashOperatorMerchantApprovalMerchantIdRoute
   '/dash/admin/contacts': typeof DashAdminContactsIndexRoute
   '/dash/admin/quiz-questions': typeof DashAdminQuizQuestionsIndexRoute
   '/dash/operator/contacts': typeof DashOperatorContactsIndexRoute
@@ -555,6 +578,7 @@ export interface FileRoutesByTo {
   '/forgot-password': typeof authForgotPasswordRoute
   '/reset-password': typeof authResetPasswordRoute
   '/sign-in': typeof authSignInRoute
+  '/verify-email': typeof authVerifyEmailRoute
   '/about': typeof companyAboutRoute
   '/account-deletion': typeof legalAccountDeletionRoute
   '/cookies': typeof legalCookiesRoute
@@ -610,9 +634,11 @@ export interface FileRoutesByTo {
   '/dash/user': typeof DashUserIndexRoute
   '/dash/admin/contacts/$id': typeof DashAdminContactsIdRoute
   '/dash/admin/driver-approval/$driverId': typeof DashAdminDriverApprovalDriverIdRoute
+  '/dash/admin/merchant-approval/$merchantId': typeof DashAdminMerchantApprovalMerchantIdRoute
   '/dash/operator/contacts/$id': typeof DashOperatorContactsIdRoute
   '/dash/operator/coupons/new': typeof DashOperatorCouponsNewRoute
   '/dash/operator/driver-approval/$driverId': typeof DashOperatorDriverApprovalDriverIdRoute
+  '/dash/operator/merchant-approval/$merchantId': typeof DashOperatorMerchantApprovalMerchantIdRoute
   '/dash/admin/contacts': typeof DashAdminContactsIndexRoute
   '/dash/admin/quiz-questions': typeof DashAdminQuizQuestionsIndexRoute
   '/dash/operator/contacts': typeof DashOperatorContactsIndexRoute
@@ -634,6 +660,7 @@ export interface FileRoutesById {
   '/(auth)/forgot-password': typeof authForgotPasswordRoute
   '/(auth)/reset-password': typeof authResetPasswordRoute
   '/(auth)/sign-in': typeof authSignInRoute
+  '/(auth)/verify-email': typeof authVerifyEmailRoute
   '/(company)/about': typeof companyAboutRoute
   '/(legal)/account-deletion': typeof legalAccountDeletionRoute
   '/(legal)/cookies': typeof legalCookiesRoute
@@ -689,9 +716,11 @@ export interface FileRoutesById {
   '/dash/user/': typeof DashUserIndexRoute
   '/dash/admin/contacts/$id': typeof DashAdminContactsIdRoute
   '/dash/admin/driver-approval/$driverId': typeof DashAdminDriverApprovalDriverIdRoute
+  '/dash/admin/merchant-approval/$merchantId': typeof DashAdminMerchantApprovalMerchantIdRoute
   '/dash/operator/contacts/$id': typeof DashOperatorContactsIdRoute
   '/dash/operator/coupons/new': typeof DashOperatorCouponsNewRoute
   '/dash/operator/driver-approval/$driverId': typeof DashOperatorDriverApprovalDriverIdRoute
+  '/dash/operator/merchant-approval/$merchantId': typeof DashOperatorMerchantApprovalMerchantIdRoute
   '/dash/admin/contacts/': typeof DashAdminContactsIndexRoute
   '/dash/admin/quiz-questions/': typeof DashAdminQuizQuestionsIndexRoute
   '/dash/operator/contacts/': typeof DashOperatorContactsIndexRoute
@@ -712,6 +741,7 @@ export interface FileRouteTypes {
     | '/forgot-password'
     | '/reset-password'
     | '/sign-in'
+    | '/verify-email'
     | '/about'
     | '/account-deletion'
     | '/cookies'
@@ -767,9 +797,11 @@ export interface FileRouteTypes {
     | '/dash/user/'
     | '/dash/admin/contacts/$id'
     | '/dash/admin/driver-approval/$driverId'
+    | '/dash/admin/merchant-approval/$merchantId'
     | '/dash/operator/contacts/$id'
     | '/dash/operator/coupons/new'
     | '/dash/operator/driver-approval/$driverId'
+    | '/dash/operator/merchant-approval/$merchantId'
     | '/dash/admin/contacts'
     | '/dash/admin/quiz-questions'
     | '/dash/operator/contacts'
@@ -783,6 +815,7 @@ export interface FileRouteTypes {
     | '/forgot-password'
     | '/reset-password'
     | '/sign-in'
+    | '/verify-email'
     | '/about'
     | '/account-deletion'
     | '/cookies'
@@ -838,9 +871,11 @@ export interface FileRouteTypes {
     | '/dash/user'
     | '/dash/admin/contacts/$id'
     | '/dash/admin/driver-approval/$driverId'
+    | '/dash/admin/merchant-approval/$merchantId'
     | '/dash/operator/contacts/$id'
     | '/dash/operator/coupons/new'
     | '/dash/operator/driver-approval/$driverId'
+    | '/dash/operator/merchant-approval/$merchantId'
     | '/dash/admin/contacts'
     | '/dash/admin/quiz-questions'
     | '/dash/operator/contacts'
@@ -861,6 +896,7 @@ export interface FileRouteTypes {
     | '/(auth)/forgot-password'
     | '/(auth)/reset-password'
     | '/(auth)/sign-in'
+    | '/(auth)/verify-email'
     | '/(company)/about'
     | '/(legal)/account-deletion'
     | '/(legal)/cookies'
@@ -916,9 +952,11 @@ export interface FileRouteTypes {
     | '/dash/user/'
     | '/dash/admin/contacts/$id'
     | '/dash/admin/driver-approval/$driverId'
+    | '/dash/admin/merchant-approval/$merchantId'
     | '/dash/operator/contacts/$id'
     | '/dash/operator/coupons/new'
     | '/dash/operator/driver-approval/$driverId'
+    | '/dash/operator/merchant-approval/$merchantId'
     | '/dash/admin/contacts/'
     | '/dash/admin/quiz-questions/'
     | '/dash/operator/contacts/'
@@ -1061,6 +1099,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/about'
       preLoaderRoute: typeof companyAboutRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/(auth)/verify-email': {
+      id: '/(auth)/verify-email'
+      path: '/verify-email'
+      fullPath: '/verify-email'
+      preLoaderRoute: typeof authVerifyEmailRouteImport
+      parentRoute: typeof authRouteRoute
     }
     '/(auth)/sign-in': {
       id: '/(auth)/sign-in'
@@ -1433,6 +1478,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashAdminContactsIndexRouteImport
       parentRoute: typeof DashAdminRouteRoute
     }
+    '/dash/operator/merchant-approval/$merchantId': {
+      id: '/dash/operator/merchant-approval/$merchantId'
+      path: '/merchant-approval/$merchantId'
+      fullPath: '/dash/operator/merchant-approval/$merchantId'
+      preLoaderRoute: typeof DashOperatorMerchantApprovalMerchantIdRouteImport
+      parentRoute: typeof DashOperatorRouteRoute
+    }
     '/dash/operator/driver-approval/$driverId': {
       id: '/dash/operator/driver-approval/$driverId'
       path: '/driver-approval/$driverId'
@@ -1453,6 +1505,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/dash/operator/contacts/$id'
       preLoaderRoute: typeof DashOperatorContactsIdRouteImport
       parentRoute: typeof DashOperatorRouteRoute
+    }
+    '/dash/admin/merchant-approval/$merchantId': {
+      id: '/dash/admin/merchant-approval/$merchantId'
+      path: '/merchant-approval/$merchantId'
+      fullPath: '/dash/admin/merchant-approval/$merchantId'
+      preLoaderRoute: typeof DashAdminMerchantApprovalMerchantIdRouteImport
+      parentRoute: typeof DashAdminRouteRoute
     }
     '/dash/admin/driver-approval/$driverId': {
       id: '/dash/admin/driver-approval/$driverId'
@@ -1489,6 +1548,7 @@ interface authRouteRouteChildren {
   authForgotPasswordRoute: typeof authForgotPasswordRoute
   authResetPasswordRoute: typeof authResetPasswordRoute
   authSignInRoute: typeof authSignInRoute
+  authVerifyEmailRoute: typeof authVerifyEmailRoute
   authQuizDriverRoute: typeof authQuizDriverRoute
   authSignUpDriverRoute: typeof authSignUpDriverRoute
   authSignUpMerchantRoute: typeof authSignUpMerchantRoute
@@ -1499,6 +1559,7 @@ const authRouteRouteChildren: authRouteRouteChildren = {
   authForgotPasswordRoute: authForgotPasswordRoute,
   authResetPasswordRoute: authResetPasswordRoute,
   authSignInRoute: authSignInRoute,
+  authVerifyEmailRoute: authVerifyEmailRoute,
   authQuizDriverRoute: authQuizDriverRoute,
   authSignUpDriverRoute: authSignUpDriverRoute,
   authSignUpMerchantRoute: authSignUpMerchantRoute,
@@ -1539,6 +1600,7 @@ interface DashAdminRouteRouteChildren {
   DashAdminIndexRoute: typeof DashAdminIndexRoute
   DashAdminContactsIdRoute: typeof DashAdminContactsIdRoute
   DashAdminDriverApprovalDriverIdRoute: typeof DashAdminDriverApprovalDriverIdRoute
+  DashAdminMerchantApprovalMerchantIdRoute: typeof DashAdminMerchantApprovalMerchantIdRoute
   DashAdminContactsIndexRoute: typeof DashAdminContactsIndexRoute
   DashAdminQuizQuestionsIndexRoute: typeof DashAdminQuizQuestionsIndexRoute
   DashAdminQuizQuestionsEditIdRoute: typeof DashAdminQuizQuestionsEditIdRoute
@@ -1556,6 +1618,8 @@ const DashAdminRouteRouteChildren: DashAdminRouteRouteChildren = {
   DashAdminIndexRoute: DashAdminIndexRoute,
   DashAdminContactsIdRoute: DashAdminContactsIdRoute,
   DashAdminDriverApprovalDriverIdRoute: DashAdminDriverApprovalDriverIdRoute,
+  DashAdminMerchantApprovalMerchantIdRoute:
+    DashAdminMerchantApprovalMerchantIdRoute,
   DashAdminContactsIndexRoute: DashAdminContactsIndexRoute,
   DashAdminQuizQuestionsIndexRoute: DashAdminQuizQuestionsIndexRoute,
   DashAdminQuizQuestionsEditIdRoute: DashAdminQuizQuestionsEditIdRoute,
@@ -1622,6 +1686,7 @@ interface DashOperatorRouteRouteChildren {
   DashOperatorContactsIdRoute: typeof DashOperatorContactsIdRoute
   DashOperatorCouponsNewRoute: typeof DashOperatorCouponsNewRoute
   DashOperatorDriverApprovalDriverIdRoute: typeof DashOperatorDriverApprovalDriverIdRoute
+  DashOperatorMerchantApprovalMerchantIdRoute: typeof DashOperatorMerchantApprovalMerchantIdRoute
   DashOperatorContactsIndexRoute: typeof DashOperatorContactsIndexRoute
   DashOperatorCouponsIndexRoute: typeof DashOperatorCouponsIndexRoute
   DashOperatorQuizQuestionsIndexRoute: typeof DashOperatorQuizQuestionsIndexRoute
@@ -1641,6 +1706,8 @@ const DashOperatorRouteRouteChildren: DashOperatorRouteRouteChildren = {
   DashOperatorCouponsNewRoute: DashOperatorCouponsNewRoute,
   DashOperatorDriverApprovalDriverIdRoute:
     DashOperatorDriverApprovalDriverIdRoute,
+  DashOperatorMerchantApprovalMerchantIdRoute:
+    DashOperatorMerchantApprovalMerchantIdRoute,
   DashOperatorContactsIndexRoute: DashOperatorContactsIndexRoute,
   DashOperatorCouponsIndexRoute: DashOperatorCouponsIndexRoute,
   DashOperatorQuizQuestionsIndexRoute: DashOperatorQuizQuestionsIndexRoute,

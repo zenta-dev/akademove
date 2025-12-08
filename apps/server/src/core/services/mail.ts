@@ -18,7 +18,7 @@ interface BaseSendMailProps {
 
 interface SendResetPasswordProps {
 	to: string;
-	url: string;
+	code: string;
 	userName?: string;
 }
 
@@ -116,12 +116,12 @@ export class ResendMailService implements MailService {
 			await this.#send(
 				React.createElement(ResetPasswordEmail, {
 					userName: props.userName ?? "User",
-					resetUrl: props.url,
+					verificationCode: props.code,
 				}),
 				{
 					from: MAIL_FROMS.SECURITY,
 					to: props.to,
-					subject: "Reset Your AkadeMove Password",
+					subject: "Your AkadeMove Password Reset Code",
 				},
 			);
 		} catch (error) {

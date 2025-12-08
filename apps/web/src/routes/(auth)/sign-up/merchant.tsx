@@ -83,12 +83,17 @@ function RouteComponent() {
 
 	const mutation = useMutation(
 		orpcQuery.auth.signUpMerchant.mutationOptions({
-			onSuccess: async () => {
-				toast.success(m.success_placeholder({ action: m.merchant_sign_up() }));
+			onSuccess: async (_data, variables) => {
+				toast.success(m.success_placeholder({ action: m.merchant_sign_up() }), {
+					description: "Please verify your email to continue",
+				});
 				await Promise.all([
 					router.invalidate(),
 					queryClient.invalidateQueries(),
-					router.navigate({ to: localizeHref("/sign-in") }),
+					router.navigate({
+						to: localizeHref("/verify-email"),
+						search: { email: variables.body.email },
+					}),
 				]);
 			},
 			onError: (error) => {

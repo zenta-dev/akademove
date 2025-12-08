@@ -254,14 +254,16 @@ class AuthCubit extends BaseCubit<AuthState> {
   });
 
   Future<void> resetPassword({
-    required String token,
+    required String email,
+    required String code,
     required String newPassword,
     required String confirmPassword,
   }) async => await taskManager.execute('AC-rP1', () async {
     emit(state.copyWith(resetPasswordResult: const OperationResult.loading()));
     try {
       final res = await _authRepository.resetPassword(
-        token: token,
+        email: email,
+        code: code,
         newPassword: newPassword,
         confirmPassword: confirmPassword,
       );

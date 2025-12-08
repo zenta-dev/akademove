@@ -1348,7 +1348,7 @@ abstract class AppLocalizations {
   /// No description provided for @send_reset_link.
   ///
   /// In en, this message translates to:
-  /// **'Send Reset Link'**
+  /// **'Send OTP Code'**
   String get send_reset_link;
 
   /// No description provided for @back_to_sign_in.
@@ -1362,6 +1362,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Reset Password'**
   String get reset_password;
+
+  /// No description provided for @otp_code.
+  ///
+  /// In en, this message translates to:
+  /// **'OTP Code'**
+  String get otp_code;
+
+  /// No description provided for @otp_code_sent_to_email.
+  ///
+  /// In en, this message translates to:
+  /// **'We\'ve sent a 6-digit code to your email.'**
+  String get otp_code_sent_to_email;
+
+  /// No description provided for @placeholder_otp_code.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter 6-digit code'**
+  String get placeholder_otp_code;
 
   /// No description provided for @reject.
   ///

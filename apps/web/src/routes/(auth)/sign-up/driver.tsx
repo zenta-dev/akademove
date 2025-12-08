@@ -74,7 +74,9 @@ function RouteComponent() {
 	const mutation = useMutation(
 		orpcQuery.auth.signUpDriver.mutationOptions({
 			onSuccess: () => {
-				toast.success(m.success_placeholder({ action: m.driver_sign_up() }));
+				toast.success(m.success_placeholder({ action: m.driver_sign_up() }), {
+					description: "Please check your email for verification code",
+				});
 				// Redirect to quiz route instead of sign-in
 				router.navigate({ to: "/quiz/driver" });
 			},
