@@ -9,9 +9,7 @@ part of 'driver_quiz_answer_start_quiz201_response.dart';
 abstract class _$DriverQuizAnswerStartQuiz201ResponseCWProxy {
   DriverQuizAnswerStartQuiz201Response message(String message);
 
-  DriverQuizAnswerStartQuiz201Response data(
-    DriverQuizAnswerStartQuiz201ResponseData data,
-  );
+  DriverQuizAnswerStartQuiz201Response data(DriverQuizAttempt data);
 
   DriverQuizAnswerStartQuiz201Response pagination(PaginationResult? pagination);
 
@@ -26,7 +24,7 @@ abstract class _$DriverQuizAnswerStartQuiz201ResponseCWProxy {
   /// ```
   DriverQuizAnswerStartQuiz201Response call({
     String message,
-    DriverQuizAnswerStartQuiz201ResponseData data,
+    DriverQuizAttempt data,
     PaginationResult? pagination,
     int? totalPages,
   });
@@ -45,9 +43,8 @@ class _$DriverQuizAnswerStartQuiz201ResponseCWProxyImpl
       call(message: message);
 
   @override
-  DriverQuizAnswerStartQuiz201Response data(
-    DriverQuizAnswerStartQuiz201ResponseData data,
-  ) => call(data: data);
+  DriverQuizAnswerStartQuiz201Response data(DriverQuizAttempt data) =>
+      call(data: data);
 
   @override
   DriverQuizAnswerStartQuiz201Response pagination(
@@ -80,7 +77,7 @@ class _$DriverQuizAnswerStartQuiz201ResponseCWProxyImpl
       data: data == const $CopyWithPlaceholder() || data == null
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
-          : data as DriverQuizAnswerStartQuiz201ResponseData,
+          : data as DriverQuizAttempt,
       pagination: pagination == const $CopyWithPlaceholder()
           ? _value.pagination
           // ignore: cast_nullable_to_non_nullable
@@ -116,9 +113,7 @@ _$DriverQuizAnswerStartQuiz201ResponseFromJson(Map<String, dynamic> json) =>
         message: $checkedConvert('message', (v) => v as String),
         data: $checkedConvert(
           'data',
-          (v) => DriverQuizAnswerStartQuiz201ResponseData.fromJson(
-            v as Map<String, dynamic>,
-          ),
+          (v) => DriverQuizAttempt.fromJson(v as Map<String, dynamic>),
         ),
         pagination: $checkedConvert(
           'pagination',

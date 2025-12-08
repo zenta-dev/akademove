@@ -1,7 +1,7 @@
-import { AuthError } from "@/core/error";
-import { createORPCRouter } from "@/core/router/orpc";
 import { m } from "@repo/i18n";
 import { trimObjectValues } from "@repo/shared";
+import { AuthError } from "@/core/error";
+import { createORPCRouter } from "@/core/router/orpc";
 import { DriverMainSpec } from "./driver-main-spec";
 
 const { priv } = createORPCRouter(DriverMainSpec);
@@ -87,8 +87,8 @@ export const DriverMainHandler = priv.router({
 			};
 		},
 	),
-	markAsOnline: priv.markAsOnline.handler(
-		async ({ context, input: { params } }) => {
+	updateOnlineStatus: priv.updateOnlineStatus.handler(
+		async ({ context, input: { params, body } }) => {
 			// IDOR Protection: Drivers can only update their own profile
 			// Admins/Operators can update any driver
 			if (context.user.role === "DRIVER") {
@@ -100,16 +100,20 @@ export const DriverMainHandler = priv.router({
 				}
 			}
 
-			const result = await context.repo.driver.main.markAsOnline(params.id);
+			const data = trimObjectValues(body);
+			const result = await context.repo.driver.main.updateOnlineStatus(
+				params.id,
+				data.isOnline,
+			);
 
 			return {
 				status: 200,
-				body: { message: "Mark online success", data: result },
+				body: { message: m.server_driver_updated(), data: result },
 			};
 		},
 	),
-	markAsOffline: priv.markAsOffline.handler(
-		async ({ context, input: { params } }) => {
+	updateTakingOrderStatus: priv.updateTakingOrderStatus.handler(
+		async ({ context, input: { params, body } }) => {
 			// IDOR Protection: Drivers can only update their own profile
 			// Admins/Operators can update any driver
 			if (context.user.role === "DRIVER") {
@@ -121,11 +125,15 @@ export const DriverMainHandler = priv.router({
 				}
 			}
 
-			const result = await context.repo.driver.main.markAsOffline(params.id);
+			const data = trimObjectValues(body);
+			const result = await context.repo.driver.main.updateTakingOrderStatus(
+				params.id,
+				data.isTakingOrder,
+			);
 
 			return {
 				status: 200,
-				body: { message: "Mark offline success", data: result },
+				body: { message: m.server_driver_updated(), data: result },
 			};
 		},
 	),

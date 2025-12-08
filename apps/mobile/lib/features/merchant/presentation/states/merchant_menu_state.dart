@@ -1,46 +1,29 @@
 import 'package:akademove/core/_export.dart';
 import 'package:api_client/api_client.dart';
-import 'package:dart_mappable/dart_mappable.dart';
+import 'package:equatable/equatable.dart';
 
-part 'merchant_menu_state.mapper.dart';
-
-@MappableClass(
-  generateMethods:
-      GenerateMethods.stringify | GenerateMethods.equals | GenerateMethods.copy,
-)
-class MerchantMenuState extends BaseState3<MerchantMenu>
-    with MerchantMenuStateMappable {
+class MerchantMenuState extends Equatable {
   const MerchantMenuState({
-    super.state,
-    super.message,
-    super.error,
-    super.list,
-    super.selected,
+    this.menus = const OperationResult.idle(),
+    this.menu = const OperationResult.idle(),
   });
 
-  MerchantMenuState toInitial() =>
-      copyWith(state: CubitState.initial, message: null, error: null);
+  final OperationResult<List<MerchantMenu>> menus;
+  final OperationResult<MerchantMenu> menu;
 
-  MerchantMenuState toLoading() => copyWith(
-    state: CubitState.loading,
-    list: list,
-    selected: selected,
-    message: null,
-    error: null,
-  );
+  @override
+  bool get stringify => true;
 
-  MerchantMenuState toSuccess({
-    List<MerchantMenu>? list,
-    MerchantMenu? selected,
-    String? message,
-  }) => copyWith(
-    state: CubitState.success,
-    list: list ?? this.list,
-    selected: selected ?? this.selected,
-    message: message,
-    error: null,
-  );
+  @override
+  List<Object> get props => [menus, menu];
 
-  MerchantMenuState toFailure(BaseError error, {String? message}) =>
-      copyWith(state: CubitState.failure, error: error, message: message);
+  MerchantMenuState copyWith({
+    OperationResult<List<MerchantMenu>>? merchantMenus,
+    OperationResult<MerchantMenu>? selectedMerchantMenu,
+  }) {
+    return MerchantMenuState(
+      menus: merchantMenus ?? menus,
+      menu: selectedMerchantMenu ?? menu,
+    );
+  }
 }

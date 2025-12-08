@@ -117,7 +117,7 @@ export const UserFiltersComponent = ({
 	);
 
 	return (
-		<div className="flex flex-wrap items-center gap-4 rounded-lg bg-muted/50 p-4">
+		<div className="flex flex-wrap items-center gap-4 rounded-lg bg-muted/50 px-4 py-2">
 			<MultiSelectFilter
 				options={ROLE_OPTIONS}
 				selectedValues={localFilters.roles ?? []}

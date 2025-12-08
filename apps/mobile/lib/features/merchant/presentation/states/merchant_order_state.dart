@@ -1,46 +1,29 @@
 import 'package:akademove/core/_export.dart';
 import 'package:api_client/api_client.dart';
-import 'package:dart_mappable/dart_mappable.dart';
+import 'package:equatable/equatable.dart';
 
-part 'merchant_order_state.mapper.dart';
-
-@MappableClass(
-  generateMethods:
-      GenerateMethods.stringify | GenerateMethods.equals | GenerateMethods.copy,
-)
-class MerchantOrderState extends BaseState3<Order>
-    with MerchantOrderStateMappable {
+class MerchantOrderState extends Equatable {
   const MerchantOrderState({
-    super.state,
-    super.message,
-    super.error,
-    super.list,
-    super.selected,
+    this.orders = const OperationResult.idle(),
+    this.order = const OperationResult.idle(),
   });
 
-  MerchantOrderState toInitial() =>
-      copyWith(state: CubitState.initial, message: null, error: null);
+  final OperationResult<List<Order>> orders;
+  final OperationResult<Order> order;
 
-  MerchantOrderState toLoading() => copyWith(
-    state: CubitState.loading,
-    list: list,
-    selected: selected,
-    message: null,
-    error: null,
-  );
+  @override
+  bool get stringify => true;
 
-  MerchantOrderState toSuccess({
-    List<Order>? list,
-    Order? selected,
-    String? message,
-  }) => copyWith(
-    state: CubitState.success,
-    list: list ?? this.list,
-    selected: selected ?? this.selected,
-    message: message,
-    error: null,
-  );
+  @override
+  List<Object> get props => [orders, order];
 
-  MerchantOrderState toFailure(BaseError error, {String? message}) =>
-      copyWith(state: CubitState.failure, error: error, message: message);
+  MerchantOrderState copyWith({
+    OperationResult<List<Order>>? orders,
+    OperationResult<Order>? order,
+  }) {
+    return MerchantOrderState(
+      orders: orders ?? this.orders,
+      order: order ?? this.order,
+    );
+  }
 }

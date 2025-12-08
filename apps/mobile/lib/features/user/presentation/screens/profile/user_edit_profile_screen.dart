@@ -111,7 +111,7 @@ class _UserEditProfileScreenState extends State<UserEditProfileScreen> {
                         Text(context.l10n.label_photo_profile).small(),
                         ImagePickerWidget(
                           enabled: !profileState.isLoading,
-                          previewUrl: authState.data?.image,
+                          previewUrl: authState.user.data?.value.image,
                           value: _pickedPhoto,
                           size: Size(86.h, 86.h),
                           onValueChanged: (file) =>
@@ -126,9 +126,9 @@ class _UserEditProfileScreenState extends State<UserEditProfileScreen> {
                       child: TextField(
                         enabled: !profileState.isLoading,
                         focusNode: _nameFn,
-                        initialValue: authState.data?.name,
+                        initialValue: authState.user.data?.value.name,
                         placeholder: Text(
-                          authState.data?.name ??
+                          authState.user.data?.value.name ??
                               context.l10n.placeholder_full_name,
                         ),
                         keyboardType: TextInputType.name,
@@ -150,9 +150,9 @@ class _UserEditProfileScreenState extends State<UserEditProfileScreen> {
                       child: TextField(
                         enabled: !profileState.isLoading,
                         focusNode: _emailFn,
-                        initialValue: authState.data?.email,
+                        initialValue: authState.user.data?.value.email,
                         placeholder: Text(
-                          authState.data?.email ?? 'john@gmail.com',
+                          authState.user.data?.value.email ?? 'john@gmail.com',
                         ),
                         keyboardType: TextInputType.emailAddress,
                         textInputAction: TextInputAction.next,
@@ -178,7 +178,8 @@ class _UserEditProfileScreenState extends State<UserEditProfileScreen> {
                         child: PhoneInput(
                           initialCountry: Country.indonesia,
                           countries: const [Country.indonesia],
-                          initialValue: authState.data?.phone.toPhoneNumber(),
+                          initialValue: authState.user.data?.value.phone
+                              .toPhoneNumber(),
                           onChanged: (value) {
                             switch (value.country) {
                               case Country.indonesia:

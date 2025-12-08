@@ -143,7 +143,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **driverQuizQuestionList**
-> DriverQuizQuestionList200Response driverQuizQuestionList(category, type, isActive, page, limit)
+> DriverQuizQuestionList200Response driverQuizQuestionList(cursor, limit, direction, page, query, sortBy, order, mode, category, type, isActive)
 
 
 
@@ -152,14 +152,20 @@ Name | Type | Description  | Notes
 import 'package:api_client/api.dart';
 
 final api = ApiClient().getDriverQuizQuestionApi();
+final String cursor = cursor_example; // String | 
+final Object limit = ; // Object | 
+final String direction = direction_example; // String | 
+final Object page = ; // Object | 
+final String query = query_example; // String | 
+final String sortBy = sortBy_example; // String | 
+final PaginationOrder order = ; // PaginationOrder | 
+final PaginationMode mode = ; // PaginationMode | 
 final DriverQuizQuestionCategory category = ; // DriverQuizQuestionCategory | 
 final DriverQuizQuestionType type = ; // DriverQuizQuestionType | 
 final bool isActive = true; // bool | 
-final int page = 56; // int | 
-final int limit = 56; // int | 
 
 try {
-    final response = api.driverQuizQuestionList(category, type, isActive, page, limit);
+    final response = api.driverQuizQuestionList(cursor, limit, direction, page, query, sortBy, order, mode, category, type, isActive);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling DriverQuizQuestionApi->driverQuizQuestionList: $e\n');
@@ -170,11 +176,17 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
+ **cursor** | **String**|  | [optional] 
+ **limit** | [**Object**](.md)|  | [optional] 
+ **direction** | **String**|  | [optional] 
+ **page** | [**Object**](.md)|  | [optional] 
+ **query** | **String**|  | [optional] 
+ **sortBy** | **String**|  | [optional] 
+ **order** | [**PaginationOrder**](.md)|  | [optional] [default to desc]
+ **mode** | [**PaginationMode**](.md)|  | [optional] [default to offset]
  **category** | [**DriverQuizQuestionCategory**](.md)|  | [optional] 
  **type** | [**DriverQuizQuestionType**](.md)|  | [optional] 
  **isActive** | **bool**|  | [optional] 
- **page** | **int**|  | [optional] 
- **limit** | **int**|  | [optional] 
 
 ### Return type
 

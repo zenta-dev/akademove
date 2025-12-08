@@ -1,5 +1,6 @@
 {
 	"@@locale": "en",
+	"driver_knowledge_quiz": "Driver Knowledge Quiz",
 	"new_order_request": "New order request",
 	"you_have_a_new_order_request_from_customer_please_check_your_orders_page": "You have a new order request from customer, please check your Orders page.",
 	"dismiss": "Dismiss",

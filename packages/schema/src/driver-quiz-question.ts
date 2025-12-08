@@ -6,6 +6,7 @@ import {
 	DRIVER_QUIZ_QUESTION_TYPES,
 } from "./constants.js";
 import { extractSchemaKeysAsEnum } from "./enum.helper.js";
+import { UnifiedPaginationQuerySchema } from "./pagination.ts";
 
 export const DriverQuizQuestionTypeSchema = z.enum(DRIVER_QUIZ_QUESTION_TYPES);
 export type DriverQuizQuestionType = z.infer<
@@ -43,6 +44,22 @@ export const DriverQuizQuestionSchema = z.object({
 });
 export type DriverQuizQuestion = z.infer<typeof DriverQuizQuestionSchema>;
 
+export const DriverMinQuizQuestionSchema = z.object({
+	id: z.string(),
+	question: z.string(),
+	type: z.string(),
+	category: z.string(),
+	points: z.number(),
+	displayOrder: z.number(),
+	options: z.array(
+		z.object({
+			id: z.string(),
+			text: z.string(),
+		}),
+	),
+});
+export type DriverMinQuizQuestion = z.infer<typeof DriverMinQuizQuestionSchema>;
+
 export const DriverQuizQuestionKeySchema = extractSchemaKeysAsEnum(
 	DriverQuizQuestionSchema,
 );
@@ -62,13 +79,12 @@ export type UpdateDriverQuizQuestion = z.infer<
 	typeof UpdateDriverQuizQuestionSchema
 >;
 
-export const ListDriverQuizQuestionQuerySchema = z.object({
-	category: DriverQuizQuestionCategorySchema.optional(),
-	type: DriverQuizQuestionTypeSchema.optional(),
-	isActive: z.boolean().optional(),
-	page: z.coerce.number().int().min(1).optional(),
-	limit: z.coerce.number().int().min(1).max(1000).optional(),
-});
+export const ListDriverQuizQuestionQuerySchema =
+	UnifiedPaginationQuerySchema.safeExtend({
+		category: DriverQuizQuestionCategorySchema.optional(),
+		type: DriverQuizQuestionTypeSchema.optional(),
+		isActive: z.boolean().optional(),
+	});
 export type ListDriverQuizQuestionQuery = z.infer<
 	typeof ListDriverQuizQuestionQuerySchema
 >;
@@ -101,5 +117,9 @@ export const DriverQuizQuestionSchemaRegistries = {
 	ListDriverQuizQuestionQuery: {
 		schema: ListDriverQuizQuestionQuerySchema,
 		strategy: "input",
+	},
+	DriverMinQuizQuestion: {
+		schema: DriverMinQuizQuestionSchema,
+		strategy: "output",
 	},
 } satisfies SchemaRegistries;

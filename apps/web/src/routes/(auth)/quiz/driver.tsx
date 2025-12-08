@@ -1,5 +1,8 @@
 import { m } from "@repo/i18n";
-import type { DriverQuizAnswerStatus } from "@repo/schema/driver-quiz-answer";
+import type {
+	DriverQuizAttempt,
+	DriverQuizResult,
+} from "@repo/schema/driver-quiz-answer";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import {
@@ -62,48 +65,17 @@ export const Route = createFileRoute("/(auth)/quiz/driver")({
 	component: RouteComponent,
 });
 
-interface QuizQuestion {
-	id: string;
-	question: string;
-	type: string;
-	category: string;
-	points: number;
-	displayOrder: number;
-	options: Array<{
-		id: string;
-		text: string;
-	}>;
-}
-
-interface QuizAttempt {
-	attemptId: string;
-	questions: QuizQuestion[];
-	totalQuestions: number;
-	totalPoints: number;
-	passingScore: number;
-}
-
-interface QuizResult {
-	attemptId: string;
-	status: DriverQuizAnswerStatus;
-	totalQuestions: number;
-	correctAnswers: number;
-	scorePercentage: number;
-	passed: boolean;
-	earnedPoints: number;
-	totalPoints: number;
-	completedAt: Date | null;
-}
-
 function RouteComponent() {
 	const navigate = useNavigate();
 	const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 	const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
-	const [quizAttempt, setQuizAttempt] = useState<QuizAttempt | null>(null);
+	const [quizAttempt, setQuizAttempt] = useState<DriverQuizAttempt | null>(
+		null,
+	);
 	const [answeredQuestions, setAnsweredQuestions] = useState<Set<string>>(
 		new Set(),
 	);
-	const [quizResult, setQuizResult] = useState<QuizResult | null>(null);
+	const [quizResult, setQuizResult] = useState<DriverQuizResult | null>(null);
 
 	// Fetch driver data to check quiz status
 	const { data: driverData, isLoading: driverLoading } = useQuery(

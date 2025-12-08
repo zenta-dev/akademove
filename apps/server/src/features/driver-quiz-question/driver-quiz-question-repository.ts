@@ -1,10 +1,11 @@
 import type {
+	DriverMinQuizQuestion,
 	DriverQuizQuestion,
 	InsertDriverQuizQuestion,
 	ListDriverQuizQuestionQuery,
 	UpdateDriverQuizQuestion,
 } from "@repo/schema/driver-quiz-question";
-import { eq, type SQL } from "drizzle-orm";
+import { eq, ilike, type SQL } from "drizzle-orm";
 import { v7 } from "uuid";
 import { BaseRepository } from "@/core/base";
 import { CACHE_TTLS } from "@/core/constants";
@@ -40,12 +41,19 @@ export class DriverQuizQuestionRepository extends BaseRepository {
 			: undefined;
 	}
 
-	async listQuestions(
+	async list(
 		query: ListDriverQuizQuestionQuery,
 		opts?: PartialWithTx,
 	): Promise<ListResult<DriverQuizQuestion>> {
 		try {
-			const { category, type, isActive, page = 1, limit = 20 } = query;
+			const {
+				category,
+				type,
+				isActive,
+				page = 1,
+				limit = 20,
+				query: search,
+			} = query;
 			const tx = opts?.tx ?? this.db;
 
 			const conditions: SQL[] = [];
@@ -57,6 +65,15 @@ export class DriverQuizQuestionRepository extends BaseRepository {
 			}
 			if (isActive !== undefined) {
 				conditions.push(eq(tables.driverQuizQuestion.isActive, isActive));
+			}
+
+			if (search) {
+				conditions.push(
+					ilike(
+						tables.driverQuizQuestion.question,
+						`%${search.trim().replace(/%/g, "\\%")}%`,
+					),
+				);
 			}
 
 			const offset = (page - 1) * limit;
@@ -223,17 +240,7 @@ export class DriverQuizQuestionRepository extends BaseRepository {
 	async getQuizQuestions(
 		query: { category?: string; limit?: number },
 		opts?: PartialWithTx,
-	): Promise<
-		Array<{
-			id: string;
-			question: string;
-			type: string;
-			category: string;
-			points: number;
-			displayOrder: number;
-			options: Array<{ id: string; text: string }>;
-		}>
-	> {
+	): Promise<Array<DriverMinQuizQuestion>> {
 		try {
 			const { category, limit = 20 } = query;
 			const tx = opts?.tx ?? this.db;

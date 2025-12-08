@@ -1,10 +1,13 @@
 import { oc } from "@orpc/contract";
+import { DriverMinQuizQuestionSchema } from "@repo/schema";
 import {
 	CompleteDriverQuizSchema,
 	DriverQuizAnswerSchema,
+	DriverQuizAttemptSchema,
 	DriverQuizResultSchema,
 	ListDriverQuizAnswerQuerySchema,
 	StartDriverQuizSchema,
+	SubmitDriverQuizAnswerResponseSchema,
 	SubmitDriverQuizAnswerSchema,
 } from "@repo/schema/driver-quiz-answer";
 import * as z from "zod/v4";
@@ -24,28 +27,7 @@ export const DriverQuizAnswerSpec = {
 		.output(
 			z.union([
 				createSuccesSchema(
-					z.object({
-						attemptId: z.string(),
-						questions: z.array(
-							z.object({
-								id: z.string(),
-								question: z.string(),
-								type: z.string(),
-								category: z.string(),
-								points: z.number(),
-								displayOrder: z.number(),
-								options: z.array(
-									z.object({
-										id: z.string(),
-										text: z.string(),
-									}),
-								),
-							}),
-						),
-						totalQuestions: z.number(),
-						totalPoints: z.number(),
-						passingScore: z.number(),
-					}),
+					DriverQuizAttemptSchema,
 					"Quiz started successfully",
 					{ status: 201 },
 				),
@@ -65,12 +47,7 @@ export const DriverQuizAnswerSpec = {
 		.output(
 			z.union([
 				createSuccesSchema(
-					z.object({
-						isCorrect: z.boolean(),
-						pointsEarned: z.number(),
-						correctOptionId: z.string().optional(),
-						explanation: z.string().nullable(),
-					}),
+					SubmitDriverQuizAnswerResponseSchema,
 					"Answer submitted successfully",
 				),
 			]),

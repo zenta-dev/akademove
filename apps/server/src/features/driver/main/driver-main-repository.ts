@@ -1,15 +1,3 @@
-import { BaseRepository } from "@/core/base";
-import { CACHE_TTLS } from "@/core/constants";
-import { RepositoryError } from "@/core/error";
-import type { ListResult, OrderByOperation, WithTx } from "@/core/interface";
-import { type DatabaseService, tables } from "@/core/services/db";
-import type { KeyValueService } from "@/core/services/kv";
-import type { StorageService } from "@/core/services/storage";
-import type { UserDatabase } from "@/core/tables/auth";
-import type { DetailedUserBadgeDatabase } from "@/core/tables/badge";
-import type { DriverDatabase } from "@/core/tables/driver";
-import { UserAdminRepository } from "@/features/user/admin/user-admin-repository";
-import { log } from "@/utils";
 import { m } from "@repo/i18n";
 import type { Coordinate } from "@repo/schema";
 import {
@@ -32,6 +20,18 @@ import {
 	lte,
 	type SQL,
 } from "drizzle-orm";
+import { BaseRepository } from "@/core/base";
+import { CACHE_TTLS } from "@/core/constants";
+import { RepositoryError } from "@/core/error";
+import type { ListResult, OrderByOperation, WithTx } from "@/core/interface";
+import { type DatabaseService, tables } from "@/core/services/db";
+import type { KeyValueService } from "@/core/services/kv";
+import type { StorageService } from "@/core/services/storage";
+import type { UserDatabase } from "@/core/tables/auth";
+import type { DetailedUserBadgeDatabase } from "@/core/tables/badge";
+import type { DriverDatabase } from "@/core/tables/driver";
+import { UserAdminRepository } from "@/features/user/admin/user-admin-repository";
+import { log } from "@/utils";
 import {
 	DriverDocumentService,
 	DriverLocationService,
@@ -472,59 +472,83 @@ export class DriverMainRepository extends BaseRepository {
 		}
 	}
 
-	async markAsOnline(id: string): Promise<Driver> {
+	async updateOnlineStatus(
+		id: string,
+		isOnline: boolean,
+		opts?: WithTx,
+	): Promise<Driver> {
 		try {
-			const existing = await this.#getFromDB(id);
-			if (!existing)
+			const tx = opts?.tx ?? this.db;
+			const existing = await this.#getFromDB(id, opts);
+			if (!existing) {
 				throw new RepositoryError(m.error_driver_not_found(), {
 					code: "NOT_FOUND",
 				});
-			const [updated] = await this.db
-				.update(tables.driver)
-				.set({ isOnline: true })
-				.where(eq(tables.driver.id, id))
-				.returning();
-			const user = await this.db.query.user.findFirst({
-				with: { userBadges: { with: { badge: true } } },
-				where: (f, op) => op.eq(f.id, existing.userId),
-			});
+			}
+
+			const [updated, user] = await Promise.all([
+				tx
+					.update(tables.driver)
+					.set({ isOnline })
+					.where(eq(tables.driver.id, id))
+					.returning()
+					.then((r) => r[0]),
+				tx.query.user.findFirst({
+					with: { userBadges: { with: { badge: true } } },
+					where: (f, op) => op.eq(f.id, existing.userId),
+				}),
+			]);
+
 			if (!user) throw new RepositoryError(m.error_user_not_found());
 			const result = await DriverMainRepository.composeEntity(
 				{ ...updated, user },
 				this.#storage,
 			);
+
 			await this.setCache(id, result, { expirationTtl: CACHE_TTLS["24h"] });
 			return result;
 		} catch (error) {
-			throw this.handleError(error, "mark as online");
+			throw this.handleError(error, "update online status");
 		}
 	}
 
-	async markAsOffline(id: string): Promise<Driver> {
+	async updateTakingOrderStatus(
+		id: string,
+		isTakingOrder: boolean,
+		opts?: WithTx,
+	): Promise<Driver> {
 		try {
-			const existing = await this.#getFromDB(id);
-			if (!existing)
+			const tx = opts?.tx ?? this.db;
+			const existing = await this.#getFromDB(id, opts);
+			if (!existing) {
 				throw new RepositoryError(m.error_driver_not_found(), {
 					code: "NOT_FOUND",
 				});
-			const [updated] = await this.db
-				.update(tables.driver)
-				.set({ isOnline: false })
-				.where(eq(tables.driver.id, id))
-				.returning();
-			const user = await this.db.query.user.findFirst({
-				with: { userBadges: { with: { badge: true } } },
-				where: (f, op) => op.eq(f.id, existing.userId),
-			});
+			}
+
+			const [updated, user] = await Promise.all([
+				tx
+					.update(tables.driver)
+					.set({ isTakingOrder })
+					.where(eq(tables.driver.id, id))
+					.returning()
+					.then((r) => r[0]),
+				tx.query.user.findFirst({
+					with: { userBadges: { with: { badge: true } } },
+					where: (f, op) => op.eq(f.id, existing.userId),
+				}),
+			]);
+
 			if (!user) throw new RepositoryError(m.error_user_not_found());
 			const result = await DriverMainRepository.composeEntity(
 				{ ...updated, user },
 				this.#storage,
 			);
+
 			await this.setCache(id, result, { expirationTtl: CACHE_TTLS["24h"] });
 			return result;
 		} catch (error) {
-			throw this.handleError(error, "mark as online");
+			throw this.handleError(error, "update online status");
 		}
 	}
 

@@ -18,9 +18,7 @@ class _DriverKrsScreenState extends State<DriverKrsScreen> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _loadDriverAndSchedules();
-    });
+    _loadDriverAndSchedules();
   }
 
   Future<void> _loadDriverAndSchedules() async {
@@ -36,47 +34,58 @@ class _DriverKrsScreenState extends State<DriverKrsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<DriverScheduleCubit, DriverScheduleState>(
-      listener: (context, state) {
-        if (state.isFailure && state.error != null) {
-          context.showMyToast(
-            state.error?.message ?? context.l10n.an_error_occurred,
-            type: ToastType.failed,
-          );
-        }
-      },
-      builder: (context, state) {
-        return MyScaffold(
-          headers: [
-            DefaultAppBar(
-              title: context.l10n.my_schedule,
-              padding: EdgeInsets.symmetric(horizontal: 16.r, vertical: 9.r),
-              trailing: [
-                IconButton(
-                  icon: const Icon(LucideIcons.plus),
-                  onPressed: () => _showScheduleDialog(),
-                  variance: ButtonVariance.ghost,
-                ),
-              ],
+    return MyScaffold(
+      headers: [
+        DefaultAppBar(
+          title: context.l10n.my_schedule,
+          padding: EdgeInsets.symmetric(horizontal: 16.r, vertical: 9.r),
+          trailing: [
+            IconButton(
+              icon: const Icon(LucideIcons.plus),
+              onPressed: () => _showScheduleDialog(),
+              variance: ButtonVariance.ghost,
             ),
           ],
-          scrollable: false,
-          body: RefreshTrigger(
-            onRefresh: _onRefresh,
-            child: state.schedules.isEmpty || state.isLoading
-                ? _buildEmptyState()
-                : ListView.separated(
-                    padding: EdgeInsets.zero,
-                    itemCount: state.schedules.length,
-                    separatorBuilder: (context, index) =>
-                        SizedBox(height: 12.h),
-                    itemBuilder: (context, index) {
-                      return _buildScheduleCard(state.schedules[index]);
-                    },
-                  ),
-          ),
-        );
-      },
+        ),
+      ],
+      scrollable: false,
+      body: RefreshTrigger(
+        onRefresh: _onRefresh,
+        child: BlocConsumer<DriverScheduleCubit, DriverScheduleState>(
+          listener: (context, state) {
+            if (state.isFailure && state.error != null) {
+              context.showMyToast(
+                state.error?.message ?? context.l10n.an_error_occurred,
+                type: ToastType.failed,
+              );
+            }
+          },
+          builder: (context, state) {
+            if (state.isLoading) {
+              return ListView.separated(
+                padding: EdgeInsets.zero,
+                itemCount: 4,
+                separatorBuilder: (context, index) => SizedBox(height: 12.h),
+                itemBuilder: (context, index) {
+                  return _buildScheduleCard(dummyDriverSchedule).asSkeleton();
+                },
+              );
+            }
+
+            if (state.schedules.isEmpty) {
+              return _buildEmptyState();
+            }
+            return ListView.separated(
+              padding: EdgeInsets.zero,
+              itemCount: state.schedules.length,
+              separatorBuilder: (context, index) => SizedBox(height: 12.h),
+              itemBuilder: (context, index) {
+                return _buildScheduleCard(state.schedules[index]);
+              },
+            );
+          },
+        ),
+      ),
     );
   }
 

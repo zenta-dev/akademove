@@ -121,6 +121,7 @@ doc/DriverGetReview200Response.md
 doc/DriverGetReview200ResponseData.md
 doc/DriverKey.md
 doc/DriverList200Response.md
+doc/DriverMinQuizQuestion.md
 doc/DriverQuizAnswer.md
 doc/DriverQuizAnswerApi.md
 doc/DriverQuizAnswerCompleteQuiz200Response.md
@@ -128,10 +129,9 @@ doc/DriverQuizAnswerGetAttempt200Response.md
 doc/DriverQuizAnswerList200Response.md
 doc/DriverQuizAnswerList200ResponseData.md
 doc/DriverQuizAnswerStartQuiz201Response.md
-doc/DriverQuizAnswerStartQuiz201ResponseData.md
 doc/DriverQuizAnswerStatus.md
 doc/DriverQuizAnswerSubmitAnswer200Response.md
-doc/DriverQuizAnswerSubmitAnswer200ResponseData.md
+doc/DriverQuizAttempt.md
 doc/DriverQuizQuestion.md
 doc/DriverQuizQuestionAnswer.md
 doc/DriverQuizQuestionApi.md
@@ -158,6 +158,8 @@ doc/DriverSubmitApprovalRequest.md
 doc/DriverSubmitRejectionRequest.md
 doc/DriverSuspendRequest.md
 doc/DriverUpdateDocumentStatusRequest.md
+doc/DriverUpdateOnlineStatusRequest.md
+doc/DriverUpdateTakingOrderStatusRequest.md
 doc/DriverUser.md
 doc/DriverVerifyQuizRequest.md
 doc/Emergency.md
@@ -226,7 +228,6 @@ doc/MerchantMenuKey.md
 doc/MerchantMenuList200Response.md
 doc/MerchantOrderAccept200Response.md
 doc/MerchantPopulars200Response.md
-doc/MerchantSetOnlineStatusRequest.md
 doc/MerchantSetOperatingStatusRequest.md
 doc/MerchantSetOrderTakingStatusRequest.md
 doc/Newsletter.md
@@ -328,6 +329,7 @@ doc/SignUpResponse.md
 doc/StartDriverQuiz.md
 doc/StartInvestigation.md
 doc/SubmitDriverQuizAnswer.md
+doc/SubmitDriverQuizAnswerResponse.md
 doc/SupportChatEnvelope.md
 doc/SupportChatEnvelopeAction.md
 doc/SupportChatEnvelopeEvent.md
@@ -537,16 +539,16 @@ lib/src/model/driver_get_review200_response.dart
 lib/src/model/driver_get_review200_response_data.dart
 lib/src/model/driver_key.dart
 lib/src/model/driver_list200_response.dart
+lib/src/model/driver_min_quiz_question.dart
 lib/src/model/driver_quiz_answer.dart
 lib/src/model/driver_quiz_answer_complete_quiz200_response.dart
 lib/src/model/driver_quiz_answer_get_attempt200_response.dart
 lib/src/model/driver_quiz_answer_list200_response.dart
 lib/src/model/driver_quiz_answer_list200_response_data.dart
 lib/src/model/driver_quiz_answer_start_quiz201_response.dart
-lib/src/model/driver_quiz_answer_start_quiz201_response_data.dart
 lib/src/model/driver_quiz_answer_status.dart
 lib/src/model/driver_quiz_answer_submit_answer200_response.dart
-lib/src/model/driver_quiz_answer_submit_answer200_response_data.dart
+lib/src/model/driver_quiz_attempt.dart
 lib/src/model/driver_quiz_question.dart
 lib/src/model/driver_quiz_question_answer.dart
 lib/src/model/driver_quiz_question_category.dart
@@ -572,6 +574,8 @@ lib/src/model/driver_submit_approval_request.dart
 lib/src/model/driver_submit_rejection_request.dart
 lib/src/model/driver_suspend_request.dart
 lib/src/model/driver_update_document_status_request.dart
+lib/src/model/driver_update_online_status_request.dart
+lib/src/model/driver_update_taking_order_status_request.dart
 lib/src/model/driver_user.dart
 lib/src/model/driver_verify_quiz_request.dart
 lib/src/model/emergency.dart
@@ -637,7 +641,6 @@ lib/src/model/merchant_menu_key.dart
 lib/src/model/merchant_menu_list200_response.dart
 lib/src/model/merchant_order_accept200_response.dart
 lib/src/model/merchant_populars200_response.dart
-lib/src/model/merchant_set_online_status_request.dart
 lib/src/model/merchant_set_operating_status_request.dart
 lib/src/model/merchant_set_order_taking_status_request.dart
 lib/src/model/newsletter.dart
@@ -734,6 +737,7 @@ lib/src/model/sign_up_response.dart
 lib/src/model/start_driver_quiz.dart
 lib/src/model/start_investigation.dart
 lib/src/model/submit_driver_quiz_answer.dart
+lib/src/model/submit_driver_quiz_answer_response.dart
 lib/src/model/support_chat_envelope.dart
 lib/src/model/support_chat_envelope_action.dart
 lib/src/model/support_chat_envelope_event.dart

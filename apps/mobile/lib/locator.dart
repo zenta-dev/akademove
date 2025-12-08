@@ -104,10 +104,7 @@ void _setupRepository() {
     )
     ..registerLazySingleton(() => ReportRepository(apiClient: sl<ApiClient>()))
     ..registerLazySingleton(
-      () => DriverQuizRepository(
-        apiClient: sl<ApiClient>(),
-        keyValueService: sl<KeyValueService>(),
-      ),
+      () => DriverQuizRepository(apiClient: sl<ApiClient>()),
     );
 }
 
@@ -115,9 +112,13 @@ void _setupCubit() {
   sl
     ..registerFactory(BottomNavBarCubit.new)
     ..registerFactory(() => AppCubit(keyValueService: sl<KeyValueService>()))
-    ..registerFactory(() => AuthCubit(authRepository: sl<AuthRepository>()))
-    ..registerFactory(() => SignInCubit(authRepository: sl<AuthRepository>()))
-    ..registerFactory(() => SignUpCubit(authRepository: sl<AuthRepository>()))
+    ..registerFactory(
+      () => AuthCubit(
+        authRepository: sl<AuthRepository>(),
+        driverRepository: sl<DriverRepository>(),
+        merchantRepository: sl<MerchantRepository>(),
+      ),
+    )
     ..registerFactory(
       () => EmailVerificationCubit(authRepository: sl<AuthRepository>()),
     )
@@ -131,6 +132,8 @@ void _setupCubit() {
       () => MerchantOrderCubit(
         orderRepository: sl<OrderRepository>(),
         merchantOrderRepository: sl<MerchantOrderRepository>(),
+        webSocketService: sl<WebSocketService>(),
+        notificationService: sl<NotificationService>(),
       ),
     )
     ..registerFactory(
@@ -254,6 +257,6 @@ void _setupCubit() {
     )
     ..registerFactory(() => ReportCubit(repository: sl<ReportRepository>()))
     ..registerFactory(
-      () => DriverQuizCubit(quizRepository: sl<DriverQuizRepository>()),
+      () => DriverQuizCubit2(quizRepository: sl<DriverQuizRepository>()),
     );
 }

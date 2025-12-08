@@ -141,8 +141,8 @@ class _MerchantHomeScreenState extends State<MerchantHomeScreen> {
             ),
             BlocBuilder<MerchantOrderCubit, MerchantOrderState>(
               builder: (context, state) {
-                final stats = _calculateTodayStats(state.list);
-                final isLoading = state.isLoading;
+                final stats = _calculateTodayStats(state.orders.value ?? []);
+                final isLoading = state.orders.isLoading;
 
                 return Row(
                   spacing: 12.w,

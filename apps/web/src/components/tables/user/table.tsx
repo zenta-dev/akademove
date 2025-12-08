@@ -93,6 +93,7 @@ export const UserTable = ({ search, to }: Props) => {
 				filterKeys={[m.name().toLowerCase(), m.email().toLowerCase()]}
 				filterValue={filter}
 				onFilterChange={setFilter}
+				skeletonLength={10}
 			>
 				<DefaultPagination
 					search={search}

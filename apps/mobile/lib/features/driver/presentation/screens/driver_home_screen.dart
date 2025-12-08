@@ -153,7 +153,7 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
   }
 
   Widget _buildOnlineToggle(BuildContext context, DriverState state) {
-    final isOnline = state.isOnline ?? false;
+    final isOnline = state.driver?.isOnline ?? false;
     final isLoading = state.isLoading;
 
     return Card(

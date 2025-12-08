@@ -1,5 +1,7 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:akademove/core/_export.dart';
 import 'package:bloc/bloc.dart';
+import 'package:equatable/equatable.dart';
 
 enum CubitState { initial, loading, success, failure }
 
@@ -36,6 +38,12 @@ abstract class BaseCubit<T> extends Cubit<T> {
   void emit(T state) {
     if (isClosed) return;
     super.emit(state);
+  }
+
+  @override
+  Future<void> close() {
+    taskManager.dispose();
+    return super.close();
   }
 }
 
@@ -97,91 +105,98 @@ abstract class BaseState2 {
     }
   }
 
-  // bool _isInOperationAndLoading(String name) {
-  //   try {
-  //     final find = operations.where((val) => val == name);
-  //     if (find.isNotEmpty && isLoading) return true;
-  //     return false;
-  //   } catch (e) {
-  //     return false;
-  //   }
-  // }
-
-  // bool checkAndAssignOperation(String name) {
-  //   final ok = _isInOperationAndLoading(name);
-  //   if (!ok) assignOperation(name);
-  //   return ok;
-  // }
-
-  // void unAssignOperation(String name) =>
-  //     safeSync(() => operations.removeWhere((val) => val == name));
-
-  // void assignOperation(String name) => safeSync(() => operations.add(name));
-
   BaseState2 toInitial();
   BaseState2 toLoading();
   BaseState2 toSuccess({String? message});
   BaseState2 toFailure(BaseError error, {String? message});
 }
 
-abstract class BaseState3<T> {
-  const BaseState3({
-    this.state = CubitState.initial,
-    this.message,
-    this.error,
-    this.selected,
-    this.list = const [],
-  });
+class BaseSuccess<T> extends Equatable {
+  const BaseSuccess(this.value, this.message);
 
-  final CubitState state;
+  final T value;
   final String? message;
+
+  @override
+  bool get stringify => true;
+
+  @override
+  List<Object> get props => [?value, ?message];
+}
+
+enum OperationStatus { idle, loading, success, failed }
+
+class OperationResult<T> extends Equatable {
+  const OperationResult._({required this.status, this.data, this.error});
+  const OperationResult.idle()
+    : status = OperationStatus.idle,
+      data = null,
+      error = null;
+
+  const OperationResult.loading()
+    : status = OperationStatus.loading,
+      data = null,
+      error = null;
+
+  OperationResult.success(T data, {String? message})
+    : status = OperationStatus.success,
+      data = BaseSuccess<T>(data, message ?? ''),
+      error = null;
+
+  const OperationResult.failed(this.error)
+    : status = OperationStatus.failed,
+      data = null;
+
+  final OperationStatus status;
+  final BaseSuccess<T>? data;
   final BaseError? error;
-  final T? selected;
-  final List<T> list;
 
-  bool get isInitial => state == CubitState.initial;
-  bool get isLoading => state == CubitState.loading;
-  bool get isSuccess => state == CubitState.success;
-  bool get isFailure => state == CubitState.failure;
+  bool get isIdle => status == OperationStatus.idle;
+  bool get isLoading => status == OperationStatus.loading;
+  bool get isSuccess => status == OperationStatus.success;
+  bool get isFailed => status == OperationStatus.failed;
+  bool get isFailure => isFailed;
 
-  bool get hasData => selected != null || list.isNotEmpty;
-  R when<R>({
-    required R Function() initial,
-    required R Function() loading,
-    required R Function({List<T>? list, T? selected, String? message}) success,
-    required R Function({BaseError error}) failure,
+  String? get message => data?.message ?? error?.message;
+  T? get value => data?.value;
+
+  @override
+  List<Object?> get props => [status, data, error];
+
+  @override
+  bool get stringify => true;
+
+  OperationResult<T> copyWith({
+    OperationStatus? status,
+    BaseSuccess<T>? data,
+    BaseError? error,
   }) {
-    switch (state) {
-      case CubitState.initial:
-        return initial();
-      case CubitState.loading:
-        return loading();
-      case CubitState.success:
-        return success(list: list, selected: selected, message: message);
-      case CubitState.failure:
-        final err = error;
-        if (err == null) {
-          throw StateError('Error is null in failure state');
-        }
-        return failure(error: err);
-    }
+    return OperationResult<T>._(
+      status: status ?? this.status,
+      data: data ?? this.data,
+      error: error ?? this.error,
+    );
   }
 
   R whenOr<R>({
     required R Function() orElse,
-    R Function()? initial,
+    R Function()? idle,
     R Function()? loading,
-    R Function(List<T>? list, T? selected, String? message)? success,
+    R Function(T value, String? message)? success,
     R Function(BaseError error)? failure,
   }) {
-    switch (state) {
-      case CubitState.initial:
-        return initial?.call() ?? orElse();
-      case CubitState.loading:
+    switch (status) {
+      case OperationStatus.idle:
+        return idle?.call() ?? orElse();
+      case OperationStatus.loading:
         return loading?.call() ?? orElse();
-      case CubitState.success:
-        return success?.call(list, selected, message) ?? orElse();
-      case CubitState.failure:
+      case OperationStatus.success:
+        final val = data;
+        if (val != null && success != null) {
+          return success(val.value, val.message);
+        }
+        return orElse();
+      case OperationStatus.failed:
         final err = error;
         if (err != null && failure != null) {
           return failure(err);

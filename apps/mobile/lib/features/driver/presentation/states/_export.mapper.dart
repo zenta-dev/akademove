@@ -781,11 +781,12 @@ class DriverQuizStateMapper extends ClassMapperBase<DriverQuizState> {
     _$error,
     opt: true,
   );
-  static DriverQuizAnswerStartQuiz201ResponseData? _$attempt(
-    DriverQuizState v,
-  ) => v.attempt;
-  static const Field<DriverQuizState, DriverQuizAnswerStartQuiz201ResponseData>
-  _f$attempt = Field('attempt', _$attempt, opt: true);
+  static DriverQuizAttempt? _$attempt(DriverQuizState v) => v.attempt;
+  static const Field<DriverQuizState, DriverQuizAttempt> _f$attempt = Field(
+    'attempt',
+    _$attempt,
+    opt: true,
+  );
   static int? _$currentQuestionIndex(DriverQuizState v) =>
       v.currentQuestionIndex;
   static const Field<DriverQuizState, int> _f$currentQuestionIndex = Field(
@@ -899,7 +900,7 @@ abstract class DriverQuizStateCopyWith<$R, $In extends DriverQuizState, $Out>
     CubitState? state,
     String? message,
     BaseError? error,
-    DriverQuizAnswerStartQuiz201ResponseData? attempt,
+    DriverQuizAttempt? attempt,
     int? currentQuestionIndex,
     String? selectedAnswerId,
     Set<String>? answeredQuestions,
@@ -1400,12 +1401,6 @@ class DriverStateMapper extends ClassMapperBase<DriverState> {
     _$driver,
     opt: true,
   );
-  static bool? _$isOnline(DriverState v) => v.isOnline;
-  static const Field<DriverState, bool> _f$isOnline = Field(
-    'isOnline',
-    _$isOnline,
-    opt: true,
-  );
   static Order? _$activeOrder(DriverState v) => v.activeOrder;
   static const Field<DriverState, Order> _f$activeOrder = Field(
     'activeOrder',
@@ -1431,7 +1426,6 @@ class DriverStateMapper extends ClassMapperBase<DriverState> {
     #message: _f$message,
     #error: _f$error,
     #driver: _f$driver,
-    #isOnline: _f$isOnline,
     #activeOrder: _f$activeOrder,
     #todayEarnings: _f$todayEarnings,
     #todayTrips: _f$todayTrips,
@@ -1443,7 +1437,6 @@ class DriverStateMapper extends ClassMapperBase<DriverState> {
       message: data.dec(_f$message),
       error: data.dec(_f$error),
       driver: data.dec(_f$driver),
-      isOnline: data.dec(_f$isOnline),
       activeOrder: data.dec(_f$activeOrder),
       todayEarnings: data.dec(_f$todayEarnings),
       todayTrips: data.dec(_f$todayTrips),
@@ -1495,7 +1488,6 @@ abstract class DriverStateCopyWith<$R, $In extends DriverState, $Out>
     String? message,
     BaseError? error,
     Driver? driver,
-    bool? isOnline,
     Order? activeOrder,
     num? todayEarnings,
     int? todayTrips,
@@ -1517,7 +1509,6 @@ class _DriverStateCopyWithImpl<$R, $Out>
     Object? message = $none,
     Object? error = $none,
     Object? driver = $none,
-    Object? isOnline = $none,
     Object? activeOrder = $none,
     Object? todayEarnings = $none,
     Object? todayTrips = $none,
@@ -1527,7 +1518,6 @@ class _DriverStateCopyWithImpl<$R, $Out>
       if (message != $none) #message: message,
       if (error != $none) #error: error,
       if (driver != $none) #driver: driver,
-      if (isOnline != $none) #isOnline: isOnline,
       if (activeOrder != $none) #activeOrder: activeOrder,
       if (todayEarnings != $none) #todayEarnings: todayEarnings,
       if (todayTrips != $none) #todayTrips: todayTrips,
@@ -1539,7 +1529,6 @@ class _DriverStateCopyWithImpl<$R, $Out>
     message: data.get(#message, or: $value.message),
     error: data.get(#error, or: $value.error),
     driver: data.get(#driver, or: $value.driver),
-    isOnline: data.get(#isOnline, or: $value.isOnline),
     activeOrder: data.get(#activeOrder, or: $value.activeOrder),
     todayEarnings: data.get(#todayEarnings, or: $value.todayEarnings),
     todayTrips: data.get(#todayTrips, or: $value.todayTrips),

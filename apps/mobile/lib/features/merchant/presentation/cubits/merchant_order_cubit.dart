@@ -1,7 +1,7 @@
 import 'dart:convert';
+
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
-import 'package:akademove/locator.dart';
 import 'package:api_client/api_client.dart';
 import 'package:flutter/services.dart';
 
@@ -9,12 +9,12 @@ class MerchantOrderCubit extends BaseCubit<MerchantOrderState> {
   MerchantOrderCubit({
     required OrderRepository orderRepository,
     required MerchantOrderRepository merchantOrderRepository,
-    WebSocketService? webSocketService,
-    NotificationService? notificationService,
+    required WebSocketService webSocketService,
+    required NotificationService notificationService,
   }) : _orderRepository = orderRepository,
        _merchantOrderRepository = merchantOrderRepository,
-       _webSocketService = webSocketService ?? sl<WebSocketService>(),
-       _notificationService = notificationService ?? sl<NotificationService>(),
+       _webSocketService = webSocketService,
+       _notificationService = notificationService,
        super(const MerchantOrderState());
 
   final OrderRepository _orderRepository;
@@ -22,23 +22,31 @@ class MerchantOrderCubit extends BaseCubit<MerchantOrderState> {
   final WebSocketService _webSocketService;
   final NotificationService _notificationService;
 
-  static const String _wsKey = 'merchant_order';
+  String? _orderId;
 
-  /// Subscribe to order WebSocket for real-time updates
+  void reset() => emit(const MerchantOrderState());
+
+  @override
+  Future<void> close() {
+    unsubscribeFromOrder();
+    return super.close();
+  }
+
   Future<void> subscribeToOrder(String orderId) async {
+    _orderId = orderId;
     try {
       logger.i(
         '[MerchantOrderCubit] - Subscribing to order WebSocket: $orderId',
       );
 
       await _webSocketService.connect(
-        _wsKey,
+        orderId,
         '${UrlConstants.wsBaseUrl}/order/$orderId',
         onMessage: (dynamic msg) {
           try {
             final json = jsonDecode(msg.toString()) as Map<String, dynamic>;
             final envelope = OrderEnvelope.fromJson(json);
-            _handleOrderUpdate(envelope);
+            // Handle order update...
           } catch (e, st) {
             logger.e(
               '[MerchantOrderCubit] - Failed to parse WebSocket message',
@@ -74,7 +82,10 @@ class MerchantOrderCubit extends BaseCubit<MerchantOrderState> {
     final isNewOrder =
         (updatedOrder.status == OrderStatus.REQUESTED ||
             updatedOrder.status == OrderStatus.MATCHING) &&
-        !state.list.any((order) => order.id == updatedOrder.id);
+        !(state.orders.data?.value != null &&
+            state.orders.data!.value.any(
+              (order) => order.id == updatedOrder.id,
+            ));
 
     // Trigger notification and vibration for new orders
     if (isNewOrder) {
@@ -82,7 +93,7 @@ class MerchantOrderCubit extends BaseCubit<MerchantOrderState> {
     }
 
     // Update the order in list and selected
-    final updatedList = state.list.map((order) {
+    final updatedList = (state.orders.value ?? []).map((order) {
       if (order.id == updatedOrder.id) {
         return updatedOrder;
       }
@@ -93,20 +104,22 @@ class MerchantOrderCubit extends BaseCubit<MerchantOrderState> {
     final finalList = isNewOrder ? [updatedOrder, ...updatedList] : updatedList;
 
     // Update selected if it's the same order
-    final updatedSelected = state.selected?.id == updatedOrder.id
+    final updatedSelected = state.order.value?.id == updatedOrder.id
         ? updatedOrder
-        : state.selected;
+        : state.order.value;
+
+    final msg = _getEventMessage(envelope.e);
 
     emit(
-      state.toSuccess(
-        list: finalList,
-        selected: updatedSelected,
-        message: _getEventMessage(envelope.e),
+      state.copyWith(
+        orders: OperationResult.success(finalList, message: msg),
+        order: updatedSelected != null
+            ? OperationResult.success(updatedSelected, message: msg)
+            : state.order,
       ),
     );
   }
 
-  /// Notify merchant of new order with sound and vibration
   Future<void> _notifyNewOrder(Order order) async {
     try {
       // Vibrate device
@@ -147,11 +160,10 @@ class MerchantOrderCubit extends BaseCubit<MerchantOrderState> {
     }
   }
 
-  /// Unsubscribe from order WebSocket
   Future<void> unsubscribeFromOrder() async {
     try {
       logger.i('[MerchantOrderCubit] - Unsubscribing from order WebSocket');
-      await _webSocketService.disconnect(_wsKey);
+      if (_orderId != null) await _webSocketService.disconnect(_orderId ?? '');
     } catch (e, st) {
       logger.e(
         '[MerchantOrderCubit] - Failed to unsubscribe from order WebSocket',
@@ -161,44 +173,41 @@ class MerchantOrderCubit extends BaseCubit<MerchantOrderState> {
     }
   }
 
-  @override
-  Future<void> close() {
-    unsubscribeFromOrder();
-    return super.close();
-  }
+  Future<void> getMine({required List<OrderStatus> statuses}) async =>
+      await taskManager.execute("MOC2-gM1-${statuses.join(',')}", () async {
+        try {
+          emit(state.copyWith(orders: OperationResult.loading()));
 
-  Future<void> getMine({required List<OrderStatus> statuses}) async {
-    try {
-      emit(state.toLoading());
+          final res = await _orderRepository.list(
+            ListOrderQuery(statuses: statuses),
+          );
 
-      final res = await _orderRepository.list(
-        ListOrderQuery(statuses: statuses),
-      );
+          final mergedList = {
+            for (final item in state.orders.value ?? <Order>[]) item.id: item,
+            for (final item in res.data) item.id: item,
+          }.values.toList();
 
-      final mergedList = {
-        for (final item in state.list) item.id: item,
-        for (final item in res.data) item.id: item,
-      }.values.toList();
+          emit(
+            state.copyWith(
+              orders: OperationResult.success(mergedList, message: res.message),
+            ),
+          );
+        } on BaseError catch (e, st) {
+          logger.e(
+            '[MerchantOrderCubit] - Error: ${e.message}',
+            error: e,
+            stackTrace: st,
+          );
+          emit(state.copyWith(orders: OperationResult.failed(e)));
+        }
+      });
 
-      emit(state.toSuccess(list: mergedList, message: res.message));
-    } on BaseError catch (e, st) {
-      logger.e(
-        '[MerchantOrderCubit] - Error: ${e.message}',
-        error: e,
-        stackTrace: st,
-      );
-      emit(state.toFailure(e));
-    }
-  }
-
-  /// Accept an order
-  /// Updates order status from REQUESTED/MATCHING to ACCEPTED
   Future<void> acceptOrder({
     required String merchantId,
     required String orderId,
-  }) async {
+  }) async => await taskManager.execute("MOC2-aO1-$orderId", () async {
     try {
-      emit(state.toLoading());
+      emit(state.copyWith(order: const OperationResult.loading()));
 
       final res = await _merchantOrderRepository.acceptOrder(
         merchantId: merchantId,
@@ -206,7 +215,7 @@ class MerchantOrderCubit extends BaseCubit<MerchantOrderState> {
       );
 
       // Update the order in the list
-      final updatedList = state.list.map((order) {
+      final updatedList = (state.orders.value ?? []).map((order) {
         if (order.id == orderId) {
           return res.data;
         }
@@ -214,10 +223,9 @@ class MerchantOrderCubit extends BaseCubit<MerchantOrderState> {
       }).toList();
 
       emit(
-        state.toSuccess(
-          list: updatedList,
-          selected: res.data,
-          message: res.message,
+        state.copyWith(
+          orders: OperationResult.success(updatedList, message: res.message),
+          order: OperationResult.success(res.data, message: res.message),
         ),
       );
     } on BaseError catch (e, st) {
@@ -226,20 +234,18 @@ class MerchantOrderCubit extends BaseCubit<MerchantOrderState> {
         error: e,
         stackTrace: st,
       );
-      emit(state.toFailure(e));
+      emit(state.copyWith(order: OperationResult.failed(e)));
     }
-  }
+  });
 
-  /// Reject an order
-  /// Updates order status to CANCELLED_BY_MERCHANT and processes refund
   Future<void> rejectOrder({
     required String merchantId,
     required String orderId,
     required String reason,
     String? note,
-  }) async {
+  }) async => await taskManager.execute("MOC2-rO1-$orderId", () async {
     try {
-      emit(state.toLoading());
+      emit(state.copyWith(order: const OperationResult.loading()));
 
       final res = await _merchantOrderRepository.rejectOrder(
         merchantId: merchantId,
@@ -249,15 +255,14 @@ class MerchantOrderCubit extends BaseCubit<MerchantOrderState> {
       );
 
       // Remove the rejected order from the list
-      final updatedList = state.list
+      final updatedList = (state.orders.value ?? [])
           .where((order) => order.id != orderId)
           .toList();
 
       emit(
-        state.toSuccess(
-          list: updatedList,
-          selected: res.data,
-          message: res.message,
+        state.copyWith(
+          orders: OperationResult.success(updatedList, message: res.message),
+          order: OperationResult.success(res.data, message: res.message),
         ),
       );
     } on BaseError catch (e, st) {
@@ -266,18 +271,16 @@ class MerchantOrderCubit extends BaseCubit<MerchantOrderState> {
         error: e,
         stackTrace: st,
       );
-      emit(state.toFailure(e));
+      emit(state.copyWith(order: OperationResult.failed(e)));
     }
-  }
+  });
 
-  /// Mark order as preparing
-  /// Updates order status from ACCEPTED to PREPARING
   Future<void> markPreparing({
     required String merchantId,
     required String orderId,
-  }) async {
+  }) async => await taskManager.execute("MOC2-mP1-$orderId", () async {
     try {
-      emit(state.toLoading());
+      emit(state.copyWith(order: const OperationResult.loading()));
 
       final res = await _merchantOrderRepository.markPreparing(
         merchantId: merchantId,
@@ -285,7 +288,7 @@ class MerchantOrderCubit extends BaseCubit<MerchantOrderState> {
       );
 
       // Update the order in the list
-      final updatedList = state.list.map((order) {
+      final updatedList = (state.orders.value ?? []).map((order) {
         if (order.id == orderId) {
           return res.data;
         }
@@ -293,10 +296,9 @@ class MerchantOrderCubit extends BaseCubit<MerchantOrderState> {
       }).toList();
 
       emit(
-        state.toSuccess(
-          list: updatedList,
-          selected: res.data,
-          message: res.message,
+        state.copyWith(
+          orders: OperationResult.success(updatedList, message: res.message),
+          order: OperationResult.success(res.data, message: res.message),
         ),
       );
     } on BaseError catch (e, st) {
@@ -305,18 +307,16 @@ class MerchantOrderCubit extends BaseCubit<MerchantOrderState> {
         error: e,
         stackTrace: st,
       );
-      emit(state.toFailure(e));
+      emit(state.copyWith(order: OperationResult.failed(e)));
     }
-  }
+  });
 
-  /// Mark order as ready for pickup
-  /// Updates order status from PREPARING to READY_FOR_PICKUP
   Future<void> markReady({
     required String merchantId,
     required String orderId,
-  }) async {
+  }) async => await taskManager.execute("MOC2-mR1-$orderId", () async {
     try {
-      emit(state.toLoading());
+      emit(state.copyWith(order: const OperationResult.loading()));
 
       final res = await _merchantOrderRepository.markReady(
         merchantId: merchantId,
@@ -324,7 +324,7 @@ class MerchantOrderCubit extends BaseCubit<MerchantOrderState> {
       );
 
       // Update the order in the list
-      final updatedList = state.list.map((order) {
+      final updatedList = (state.orders.value ?? []).map((order) {
         if (order.id == orderId) {
           return res.data;
         }
@@ -332,10 +332,9 @@ class MerchantOrderCubit extends BaseCubit<MerchantOrderState> {
       }).toList();
 
       emit(
-        state.toSuccess(
-          list: updatedList,
-          selected: res.data,
-          message: res.message,
+        state.copyWith(
+          orders: OperationResult.success(updatedList, message: res.message),
+          order: OperationResult.success(res.data, message: res.message),
         ),
       );
     } on BaseError catch (e, st) {
@@ -344,9 +343,7 @@ class MerchantOrderCubit extends BaseCubit<MerchantOrderState> {
         error: e,
         stackTrace: st,
       );
-      emit(state.toFailure(e));
+      emit(state.copyWith(order: OperationResult.failed(e)));
     }
-  }
-
-  void reset() => emit(const MerchantOrderState());
+  });
 }

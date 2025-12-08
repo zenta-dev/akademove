@@ -45,7 +45,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
     _notificationCubit.getUnreadCount();
     Future.wait([
       context.read<UserHomeCubit>().getPopulars(),
-      context.read<ConfigurationCubit>().getBanner(),
+      context.read<ConfigurationCubit>().getConfigurations(),
       context.read<UserLocationCubit>().getMyLocation(context),
       context.read<UserWalletCubit>().getMine(),
     ]);
@@ -119,15 +119,15 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
               builder: (context, state) {
                 return IconButton(
                   icon: UserAvatarWidget(
-                    name: state.data?.name ?? AppConstants.name,
-                    image: state.data?.image,
+                    name: state.user.data?.value.name ?? AppConstants.name,
+                    image: state.user.data?.value.image,
                   ),
                   variance: ButtonVariance.ghost,
                   onPressed: () {
                     context.read<BottomNavBarCubit>().setIndex(2);
                     context.goNamed(Routes.userProfile.name);
                   },
-                ).asSkeleton(enabled: state.isLoading);
+                ).asSkeleton(enabled: state.user.isLoading);
               },
             ),
           ],
@@ -326,10 +326,10 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
       padding: EdgeInsets.only(top: 8.dg),
       child: BlocBuilder<ConfigurationCubit, ConfigurationState>(
         builder: (context, state) {
-          final find = state.list.firstWhere(
+          final find = state.configurations.data?.value.firstWhere(
             (v) => v.key == 'user-home-banner',
           );
-          final banners = (find.value ?? []) as List<BannerConfiguration>;
+          final banners = (find?.value ?? []) as List<BannerConfiguration>;
 
           return Carousel(
             transition: CarouselTransition.sliding(gap: 16.w),

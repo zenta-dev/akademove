@@ -20,6 +20,7 @@ class MyScaffold extends StatelessWidget {
     this.footerBackgroundColor,
     this.showLoadingSparks,
     this.resizeToAvoidBottomInset,
+    this.onRefresh,
   });
 
   final Widget body;
@@ -39,6 +40,7 @@ class MyScaffold extends StatelessWidget {
   final Color? backgroundColor;
   final bool? showLoadingSparks;
   final bool? resizeToAvoidBottomInset;
+  final Future<void> Function()? onRefresh;
 
   @override
   Widget build(BuildContext context) {
@@ -53,6 +55,10 @@ class MyScaffold extends StatelessWidget {
 
     if (safeArea) {
       child = SafeArea(child: child);
+    }
+
+    if (onRefresh != null) {
+      child = RefreshTrigger(onRefresh: onRefresh!, child: child);
     }
 
     return Scaffold(

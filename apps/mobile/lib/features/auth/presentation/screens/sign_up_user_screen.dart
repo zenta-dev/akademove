@@ -46,6 +46,7 @@ class _SignUpUserFormViewState extends State<_SignUpUserFormView> {
   static const FormKey<String> _confirmPasswordKey = TextFieldKey(
     'confirm_password',
   );
+  static const FormKey<String> _genderKey = TextFieldKey('gender');
 
   UserGender _selectedGender = UserGender.MALE;
   CountryCode _selectedCountryCode = CountryCode.ID;
@@ -54,28 +55,28 @@ class _SignUpUserFormViewState extends State<_SignUpUserFormView> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<SignUpCubit, SignUpState>(
+    return BlocConsumer<AuthCubit, AuthState>(
       listener: (context, state) {
-        if (state.isFailure) {
+        if (state.user.isFailure) {
           showToast(
             context: context,
             builder: (context, overlay) => context.buildToast(
               title: context.l10n.sign_up_failed,
-              message: state.error?.message ?? context.l10n.error_unknown,
+              message: state.user.error?.message ?? context.l10n.error_unknown,
             ),
             location: ToastLocation.topCenter,
           );
         }
-        if (state.isSuccess) {
+        if (state.user.isSuccess) {
           showToast(
             context: context,
             builder: (context, overlay) => context.buildToast(
               title: context.l10n.sign_up_success,
-              message: state.message ?? context.l10n.success_sign_up,
+              message: state.user.message ?? context.l10n.success_sign_up,
             ),
             location: ToastLocation.topCenter,
           );
-          context.read<SignUpCubit>().reset();
+          context.read<AuthCubit>().reset();
           context.pushReplacementNamed(
             Routes.authEmailVerificationPending.name,
             queryParameters: {'email': _submittedEmail},
@@ -85,7 +86,7 @@ class _SignUpUserFormViewState extends State<_SignUpUserFormView> {
       builder: (context, state) {
         return Form(
           onSubmit: (context, values) {
-            if (state.isLoading) return;
+            if (state.user.isLoading) return;
             final name = _nameKey[values];
             final email = _emailKey[values];
             final phoneNumber = _phoneNumberKey[values];
@@ -101,7 +102,7 @@ class _SignUpUserFormViewState extends State<_SignUpUserFormView> {
             }
 
             _submittedEmail = email;
-            context.read<SignUpCubit>().signUpUser(
+            context.read<AuthCubit>().signUpUser(
               name: name,
               email: email,
               phone: Phone(
@@ -129,7 +130,7 @@ class _SignUpUserFormViewState extends State<_SignUpUserFormView> {
                 },
                 child: TextField(
                   placeholder: Text(context.l10n.placeholder_name),
-                  enabled: !state.isLoading,
+                  enabled: !state.user.isLoading,
                   features: const [
                     InputFeature.leading(Icon(LucideIcons.user)),
                   ],
@@ -145,55 +146,49 @@ class _SignUpUserFormViewState extends State<_SignUpUserFormView> {
                 },
                 child: TextField(
                   placeholder: Text(context.l10n.placeholder_email),
-                  enabled: !state.isLoading,
+                  enabled: !state.user.isLoading,
                   keyboardType: TextInputType.emailAddress,
                   features: const [
                     InputFeature.leading(Icon(LucideIcons.mail)),
                   ],
                 ),
               ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                spacing: 8.h,
-                children: [
-                  Text(
-                    context.l10n.gender,
-                    style: context.theme.typography.small.copyWith(
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w500,
-                    ),
+              FormField(
+                key: _genderKey,
+                label: Text(context.l10n.gender),
+                showErrors: const {
+                  FormValidationMode.changed,
+                  FormValidationMode.submitted,
+                },
+                child: SizedBox(
+                  width: double.infinity,
+                  child: Select<UserGender>(
+                    enabled: !state.user.isLoading,
+                    itemBuilder: (context, item) {
+                      return Text(item.name);
+                    },
+                    value: _selectedGender,
+                    onChanged: (value) {
+                      if (value != null) {
+                        setState(() {
+                          _selectedGender = value;
+                        });
+                      }
+                    },
+                    popup: SelectPopup<UserGender>(
+                      items: SelectItemList(
+                        children: UserGender.values
+                            .map(
+                              (e) => SelectItemButton(
+                                value: e,
+                                child: Text(e.name),
+                              ),
+                            )
+                            .toList(),
+                      ),
+                    ).call,
                   ),
-                  SizedBox(
-                    width: double.infinity,
-                    child: Select<UserGender>(
-                      enabled: !state.isLoading,
-                      itemBuilder: (context, item) {
-                        return Text(item.name);
-                      },
-                      placeholder: Text(context.l10n.gender),
-                      value: _selectedGender,
-                      onChanged: (value) {
-                        if (value != null) {
-                          setState(() {
-                            _selectedGender = value;
-                          });
-                        }
-                      },
-                      popup: SelectPopup<UserGender>(
-                        items: SelectItemList(
-                          children: UserGender.values
-                              .map(
-                                (e) => SelectItemButton(
-                                  value: e,
-                                  child: Text(e.name),
-                                ),
-                              )
-                              .toList(),
-                        ),
-                      ).call,
-                    ),
-                  ),
-                ],
+                ),
               ),
               FormField(
                 key: _phoneNumberKey,
@@ -228,7 +223,7 @@ class _SignUpUserFormViewState extends State<_SignUpUserFormView> {
                 },
                 child: TextField(
                   placeholder: Text("********"),
-                  enabled: !state.isLoading,
+                  enabled: !state.user.isLoading,
                   features: const [
                     InputFeature.leading(Icon(LucideIcons.key)),
                     InputFeature.passwordToggle(),
@@ -248,7 +243,7 @@ class _SignUpUserFormViewState extends State<_SignUpUserFormView> {
                 },
                 child: TextField(
                   placeholder: Text(context.l10n.placeholder_confirm_password),
-                  enabled: !state.isLoading,
+                  enabled: !state.user.isLoading,
                   features: const [
                     InputFeature.leading(Icon(LucideIcons.key)),
                     InputFeature.passwordToggle(),
@@ -263,7 +258,7 @@ class _SignUpUserFormViewState extends State<_SignUpUserFormView> {
                     state: _termsAccepted
                         ? CheckboxState.checked
                         : CheckboxState.unchecked,
-                    enabled: !state.isLoading,
+                    enabled: !state.user.isLoading,
                     onChanged: (checkboxState) {
                       setState(() {
                         _termsAccepted = checkboxState == CheckboxState.checked;
@@ -299,7 +294,7 @@ class _SignUpUserFormViewState extends State<_SignUpUserFormView> {
               FormErrorBuilder(
                 builder: (context, errors, child) {
                   final hasErrors = errors.isNotEmpty;
-                  final isLoading = state.isLoading;
+                  final isLoading = state.user.isLoading;
 
                   return Button(
                     style: isLoading || hasErrors || !_termsAccepted

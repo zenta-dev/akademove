@@ -32,7 +32,7 @@ class MerchantMenuDetailScreen extends StatelessWidget {
       body: BlocBuilder<MerchantMenuCubit, MerchantMenuState>(
         builder: (context, state) {
           // Use selected menu from state if available, otherwise use passed menu
-          final displayMenu = state.selected ?? menu;
+          final displayMenu = state.menu.data?.value ?? menu;
 
           return SingleChildScrollView(
             padding: const EdgeInsets.all(16),
@@ -129,7 +129,7 @@ class MerchantMenuDetailScreen extends StatelessWidget {
                 ),
 
                 // Action Buttons
-                if (state.isLoading)
+                if (state.menu.isLoading)
                   const Center(child: material.CircularProgressIndicator())
                 else
                   Row(
@@ -167,12 +167,13 @@ class MerchantMenuDetailScreen extends StatelessWidget {
                   ),
 
                 // Error Message
-                if (state.isFailure && state.error != null)
+                if (state.menu.isFailure && state.menu.error != null)
                   Card(
                     child: Padding(
                       padding: const EdgeInsets.all(12),
                       child: Text(
-                        state.error?.message ?? context.l10n.an_error_occurred,
+                        state.menu.error?.message ??
+                            context.l10n.an_error_occurred,
                         style: const TextStyle(color: Color(0xFFF44336)),
                       ),
                     ),
@@ -227,27 +228,28 @@ class MerchantMenuDetailScreen extends StatelessWidget {
 
     final state = menuCubit.state;
 
-    if (state.isSuccess) {
+    if (state.menu.isSuccess) {
       // Show success message
       showToast(
         context: context,
         builder: (context, overlay) => context.buildToast(
           title: context.l10n.success,
-          message: state.message ?? context.l10n.success_menu_deleted,
+          message: state.menu.message ?? context.l10n.success_menu_deleted,
         ),
         location: ToastLocation.topCenter,
       );
 
       // Navigate back to list
       context.pop();
-    } else if (state.isFailure) {
+    } else if (state.menu.isFailure) {
       // Show error message
       showToast(
         context: context,
         builder: (context, overlay) => context.buildToast(
           title: context.l10n.error,
           message:
-              state.error?.message ?? context.l10n.error_failed_delete_menu,
+              state.menu.error?.message ??
+              context.l10n.error_failed_delete_menu,
         ),
         location: ToastLocation.topCenter,
       );

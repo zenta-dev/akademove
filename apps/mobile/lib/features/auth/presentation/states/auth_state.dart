@@ -1,17 +1,49 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:akademove/core/_export.dart';
 import 'package:api_client/api_client.dart';
-import 'package:dart_mappable/dart_mappable.dart';
+import 'package:equatable/equatable.dart';
 
-part 'auth_state.mapper.dart';
+class AuthState extends Equatable {
+  const AuthState({
+    this.user = const OperationResult.idle(),
+    this.driver = const OperationResult.idle(),
+    this.merchant = const OperationResult.idle(),
+    this.resetPasswordResult = const OperationResult.idle(),
+    this.forgotPasswordResult = const OperationResult.idle(),
+  });
 
-@MappableClass()
-class AuthState extends BaseState<User?> with AuthStateMappable {
-  const AuthState({super.data, super.error, super.state, super.message});
+  final OperationResult<User> user;
+  final OperationResult<Driver?> driver;
+  final OperationResult<Merchant?> merchant;
 
-  factory AuthState.initial() => const AuthState();
-  factory AuthState.loading() => const AuthState(state: CubitState.loading);
-  factory AuthState.success(User? user, {String? message}) =>
-      AuthState(data: user, state: CubitState.success, message: message);
-  factory AuthState.failure(BaseError error) =>
-      AuthState(error: error, state: CubitState.failure);
+  final OperationResult<bool> resetPasswordResult;
+  final OperationResult<bool> forgotPasswordResult;
+
+  @override
+  List<Object> get props => [
+    user,
+    driver,
+    merchant,
+    resetPasswordResult,
+    forgotPasswordResult,
+  ];
+
+  AuthState copyWith({
+    OperationResult<User>? user,
+    OperationResult<Driver?>? driver,
+    OperationResult<Merchant?>? merchant,
+    OperationResult<bool>? resetPasswordResult,
+    OperationResult<bool>? forgotPasswordResult,
+  }) {
+    return AuthState(
+      user: user ?? this.user,
+      driver: driver ?? this.driver,
+      merchant: merchant ?? this.merchant,
+      resetPasswordResult: resetPasswordResult ?? this.resetPasswordResult,
+      forgotPasswordResult: forgotPasswordResult ?? this.forgotPasswordResult,
+    );
+  }
+
+  @override
+  bool get stringify => true;
 }

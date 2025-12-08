@@ -12,6 +12,9 @@ class AppLocalizationsId extends AppLocalizations {
   AppLocalizationsId([String locale = 'id']) : super(locale);
 
   @override
+  String get driver_knowledge_quiz => 'Kuis Pengetahuan Pengemudi';
+
+  @override
   String get new_order_request => 'Permintaan pesanan baru';
 
   @override

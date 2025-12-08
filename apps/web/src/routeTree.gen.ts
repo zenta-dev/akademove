@@ -73,14 +73,18 @@ import { Route as authSignUpUserRouteImport } from './routes/(auth)/sign-up/user
 import { Route as authSignUpMerchantRouteImport } from './routes/(auth)/sign-up/merchant'
 import { Route as authSignUpDriverRouteImport } from './routes/(auth)/sign-up/driver'
 import { Route as authQuizDriverRouteImport } from './routes/(auth)/quiz/driver'
+import { Route as DashOperatorQuizQuestionsIndexRouteImport } from './routes/dash/operator/quiz-questions/index'
 import { Route as DashOperatorCouponsIndexRouteImport } from './routes/dash/operator/coupons/index'
 import { Route as DashOperatorContactsIndexRouteImport } from './routes/dash/operator/contacts/index'
+import { Route as DashAdminQuizQuestionsIndexRouteImport } from './routes/dash/admin/quiz-questions/index'
 import { Route as DashAdminContactsIndexRouteImport } from './routes/dash/admin/contacts/index'
 import { Route as DashOperatorDriverApprovalDriverIdRouteImport } from './routes/dash/operator/driver-approval/$driverId'
 import { Route as DashOperatorCouponsNewRouteImport } from './routes/dash/operator/coupons/new'
 import { Route as DashOperatorContactsIdRouteImport } from './routes/dash/operator/contacts/$id'
 import { Route as DashAdminDriverApprovalDriverIdRouteImport } from './routes/dash/admin/driver-approval/$driverId'
 import { Route as DashAdminContactsIdRouteImport } from './routes/dash/admin/contacts/$id'
+import { Route as DashOperatorQuizQuestionsEditIdRouteImport } from './routes/dash/operator/quiz-questions/edit/$id'
+import { Route as DashAdminQuizQuestionsEditIdRouteImport } from './routes/dash/admin/quiz-questions/edit/$id'
 
 const supportRouteRoute = supportRouteRouteImport.update({
   id: '/(support)',
@@ -401,6 +405,12 @@ const authQuizDriverRoute = authQuizDriverRouteImport.update({
   path: '/quiz/driver',
   getParentRoute: () => authRouteRoute,
 } as any)
+const DashOperatorQuizQuestionsIndexRoute =
+  DashOperatorQuizQuestionsIndexRouteImport.update({
+    id: '/quiz-questions/',
+    path: '/quiz-questions/',
+    getParentRoute: () => DashOperatorRouteRoute,
+  } as any)
 const DashOperatorCouponsIndexRoute =
   DashOperatorCouponsIndexRouteImport.update({
     id: '/coupons/',
@@ -412,6 +422,12 @@ const DashOperatorContactsIndexRoute =
     id: '/contacts/',
     path: '/contacts/',
     getParentRoute: () => DashOperatorRouteRoute,
+  } as any)
+const DashAdminQuizQuestionsIndexRoute =
+  DashAdminQuizQuestionsIndexRouteImport.update({
+    id: '/quiz-questions/',
+    path: '/quiz-questions/',
+    getParentRoute: () => DashAdminRouteRoute,
   } as any)
 const DashAdminContactsIndexRoute = DashAdminContactsIndexRouteImport.update({
   id: '/contacts/',
@@ -445,6 +461,18 @@ const DashAdminContactsIdRoute = DashAdminContactsIdRouteImport.update({
   path: '/contacts/$id',
   getParentRoute: () => DashAdminRouteRoute,
 } as any)
+const DashOperatorQuizQuestionsEditIdRoute =
+  DashOperatorQuizQuestionsEditIdRouteImport.update({
+    id: '/quiz-questions/edit/$id',
+    path: '/quiz-questions/edit/$id',
+    getParentRoute: () => DashOperatorRouteRoute,
+  } as any)
+const DashAdminQuizQuestionsEditIdRoute =
+  DashAdminQuizQuestionsEditIdRouteImport.update({
+    id: '/quiz-questions/edit/$id',
+    path: '/quiz-questions/edit/$id',
+    getParentRoute: () => DashAdminRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -515,8 +543,12 @@ export interface FileRoutesByFullPath {
   '/dash/operator/coupons/new': typeof DashOperatorCouponsNewRoute
   '/dash/operator/driver-approval/$driverId': typeof DashOperatorDriverApprovalDriverIdRoute
   '/dash/admin/contacts': typeof DashAdminContactsIndexRoute
+  '/dash/admin/quiz-questions': typeof DashAdminQuizQuestionsIndexRoute
   '/dash/operator/contacts': typeof DashOperatorContactsIndexRoute
   '/dash/operator/coupons': typeof DashOperatorCouponsIndexRoute
+  '/dash/operator/quiz-questions': typeof DashOperatorQuizQuestionsIndexRoute
+  '/dash/admin/quiz-questions/edit/$id': typeof DashAdminQuizQuestionsEditIdRoute
+  '/dash/operator/quiz-questions/edit/$id': typeof DashOperatorQuizQuestionsEditIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -582,8 +614,12 @@ export interface FileRoutesByTo {
   '/dash/operator/coupons/new': typeof DashOperatorCouponsNewRoute
   '/dash/operator/driver-approval/$driverId': typeof DashOperatorDriverApprovalDriverIdRoute
   '/dash/admin/contacts': typeof DashAdminContactsIndexRoute
+  '/dash/admin/quiz-questions': typeof DashAdminQuizQuestionsIndexRoute
   '/dash/operator/contacts': typeof DashOperatorContactsIndexRoute
   '/dash/operator/coupons': typeof DashOperatorCouponsIndexRoute
+  '/dash/operator/quiz-questions': typeof DashOperatorQuizQuestionsIndexRoute
+  '/dash/admin/quiz-questions/edit/$id': typeof DashAdminQuizQuestionsEditIdRoute
+  '/dash/operator/quiz-questions/edit/$id': typeof DashOperatorQuizQuestionsEditIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -657,8 +693,12 @@ export interface FileRoutesById {
   '/dash/operator/coupons/new': typeof DashOperatorCouponsNewRoute
   '/dash/operator/driver-approval/$driverId': typeof DashOperatorDriverApprovalDriverIdRoute
   '/dash/admin/contacts/': typeof DashAdminContactsIndexRoute
+  '/dash/admin/quiz-questions/': typeof DashAdminQuizQuestionsIndexRoute
   '/dash/operator/contacts/': typeof DashOperatorContactsIndexRoute
   '/dash/operator/coupons/': typeof DashOperatorCouponsIndexRoute
+  '/dash/operator/quiz-questions/': typeof DashOperatorQuizQuestionsIndexRoute
+  '/dash/admin/quiz-questions/edit/$id': typeof DashAdminQuizQuestionsEditIdRoute
+  '/dash/operator/quiz-questions/edit/$id': typeof DashOperatorQuizQuestionsEditIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -731,8 +771,12 @@ export interface FileRouteTypes {
     | '/dash/operator/coupons/new'
     | '/dash/operator/driver-approval/$driverId'
     | '/dash/admin/contacts'
+    | '/dash/admin/quiz-questions'
     | '/dash/operator/contacts'
     | '/dash/operator/coupons'
+    | '/dash/operator/quiz-questions'
+    | '/dash/admin/quiz-questions/edit/$id'
+    | '/dash/operator/quiz-questions/edit/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -798,8 +842,12 @@ export interface FileRouteTypes {
     | '/dash/operator/coupons/new'
     | '/dash/operator/driver-approval/$driverId'
     | '/dash/admin/contacts'
+    | '/dash/admin/quiz-questions'
     | '/dash/operator/contacts'
     | '/dash/operator/coupons'
+    | '/dash/operator/quiz-questions'
+    | '/dash/admin/quiz-questions/edit/$id'
+    | '/dash/operator/quiz-questions/edit/$id'
   id:
     | '__root__'
     | '/'
@@ -872,8 +920,12 @@ export interface FileRouteTypes {
     | '/dash/operator/coupons/new'
     | '/dash/operator/driver-approval/$driverId'
     | '/dash/admin/contacts/'
+    | '/dash/admin/quiz-questions/'
     | '/dash/operator/contacts/'
     | '/dash/operator/coupons/'
+    | '/dash/operator/quiz-questions/'
+    | '/dash/admin/quiz-questions/edit/$id'
+    | '/dash/operator/quiz-questions/edit/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -1346,6 +1398,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof authQuizDriverRouteImport
       parentRoute: typeof authRouteRoute
     }
+    '/dash/operator/quiz-questions/': {
+      id: '/dash/operator/quiz-questions/'
+      path: '/quiz-questions'
+      fullPath: '/dash/operator/quiz-questions'
+      preLoaderRoute: typeof DashOperatorQuizQuestionsIndexRouteImport
+      parentRoute: typeof DashOperatorRouteRoute
+    }
     '/dash/operator/coupons/': {
       id: '/dash/operator/coupons/'
       path: '/coupons'
@@ -1359,6 +1418,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/dash/operator/contacts'
       preLoaderRoute: typeof DashOperatorContactsIndexRouteImport
       parentRoute: typeof DashOperatorRouteRoute
+    }
+    '/dash/admin/quiz-questions/': {
+      id: '/dash/admin/quiz-questions/'
+      path: '/quiz-questions'
+      fullPath: '/dash/admin/quiz-questions'
+      preLoaderRoute: typeof DashAdminQuizQuestionsIndexRouteImport
+      parentRoute: typeof DashAdminRouteRoute
     }
     '/dash/admin/contacts/': {
       id: '/dash/admin/contacts/'
@@ -1400,6 +1466,20 @@ declare module '@tanstack/react-router' {
       path: '/contacts/$id'
       fullPath: '/dash/admin/contacts/$id'
       preLoaderRoute: typeof DashAdminContactsIdRouteImport
+      parentRoute: typeof DashAdminRouteRoute
+    }
+    '/dash/operator/quiz-questions/edit/$id': {
+      id: '/dash/operator/quiz-questions/edit/$id'
+      path: '/quiz-questions/edit/$id'
+      fullPath: '/dash/operator/quiz-questions/edit/$id'
+      preLoaderRoute: typeof DashOperatorQuizQuestionsEditIdRouteImport
+      parentRoute: typeof DashOperatorRouteRoute
+    }
+    '/dash/admin/quiz-questions/edit/$id': {
+      id: '/dash/admin/quiz-questions/edit/$id'
+      path: '/quiz-questions/edit/$id'
+      fullPath: '/dash/admin/quiz-questions/edit/$id'
+      preLoaderRoute: typeof DashAdminQuizQuestionsEditIdRouteImport
       parentRoute: typeof DashAdminRouteRoute
     }
   }
@@ -1460,6 +1540,8 @@ interface DashAdminRouteRouteChildren {
   DashAdminContactsIdRoute: typeof DashAdminContactsIdRoute
   DashAdminDriverApprovalDriverIdRoute: typeof DashAdminDriverApprovalDriverIdRoute
   DashAdminContactsIndexRoute: typeof DashAdminContactsIndexRoute
+  DashAdminQuizQuestionsIndexRoute: typeof DashAdminQuizQuestionsIndexRoute
+  DashAdminQuizQuestionsEditIdRoute: typeof DashAdminQuizQuestionsEditIdRoute
 }
 
 const DashAdminRouteRouteChildren: DashAdminRouteRouteChildren = {
@@ -1475,6 +1557,8 @@ const DashAdminRouteRouteChildren: DashAdminRouteRouteChildren = {
   DashAdminContactsIdRoute: DashAdminContactsIdRoute,
   DashAdminDriverApprovalDriverIdRoute: DashAdminDriverApprovalDriverIdRoute,
   DashAdminContactsIndexRoute: DashAdminContactsIndexRoute,
+  DashAdminQuizQuestionsIndexRoute: DashAdminQuizQuestionsIndexRoute,
+  DashAdminQuizQuestionsEditIdRoute: DashAdminQuizQuestionsEditIdRoute,
 }
 
 const DashAdminRouteRouteWithChildren = DashAdminRouteRoute._addFileChildren(
@@ -1540,6 +1624,8 @@ interface DashOperatorRouteRouteChildren {
   DashOperatorDriverApprovalDriverIdRoute: typeof DashOperatorDriverApprovalDriverIdRoute
   DashOperatorContactsIndexRoute: typeof DashOperatorContactsIndexRoute
   DashOperatorCouponsIndexRoute: typeof DashOperatorCouponsIndexRoute
+  DashOperatorQuizQuestionsIndexRoute: typeof DashOperatorQuizQuestionsIndexRoute
+  DashOperatorQuizQuestionsEditIdRoute: typeof DashOperatorQuizQuestionsEditIdRoute
 }
 
 const DashOperatorRouteRouteChildren: DashOperatorRouteRouteChildren = {
@@ -1557,6 +1643,8 @@ const DashOperatorRouteRouteChildren: DashOperatorRouteRouteChildren = {
     DashOperatorDriverApprovalDriverIdRoute,
   DashOperatorContactsIndexRoute: DashOperatorContactsIndexRoute,
   DashOperatorCouponsIndexRoute: DashOperatorCouponsIndexRoute,
+  DashOperatorQuizQuestionsIndexRoute: DashOperatorQuizQuestionsIndexRoute,
+  DashOperatorQuizQuestionsEditIdRoute: DashOperatorQuizQuestionsEditIdRoute,
 }
 
 const DashOperatorRouteRouteWithChildren =

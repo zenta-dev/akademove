@@ -30,7 +30,7 @@ interface Props extends Omit<TableProps, "search"> {
 	to: FileRouteTypes["to"];
 }
 
-export const OrderTable = ({ search, to }: Props) => {
+export const OrderTable = ({ search, to, skeletonLength = 10 }: Props) => {
 	const navigate = useNavigate();
 	const [filter, setFilter] = useState<string | undefined>(search.query);
 	const debouncedFilter = useDebounce(filter ?? search.query, 500);
@@ -146,7 +146,7 @@ export const OrderTable = ({ search, to }: Props) => {
 
 	return (
 		<>
-			<div className="space-y-4 p-4">
+			<div className="space-y-4 px-4 pt-4">
 				<div className="flex flex-wrap gap-2">
 					<MultiSelectFilter
 						options={statusOptions}
@@ -186,6 +186,7 @@ export const OrderTable = ({ search, to }: Props) => {
 				filterKeys="userName,driverName,merchantName"
 				filterValue={filter}
 				onFilterChange={setFilter}
+				skeletonLength={skeletonLength}
 			>
 				<DefaultPagination
 					search={search}

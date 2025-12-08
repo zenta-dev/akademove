@@ -10,7 +10,7 @@ abstract class _$DriverQuizAnswerSubmitAnswer200ResponseCWProxy {
   DriverQuizAnswerSubmitAnswer200Response message(String message);
 
   DriverQuizAnswerSubmitAnswer200Response data(
-    DriverQuizAnswerSubmitAnswer200ResponseData data,
+    SubmitDriverQuizAnswerResponse data,
   );
 
   DriverQuizAnswerSubmitAnswer200Response pagination(
@@ -28,7 +28,7 @@ abstract class _$DriverQuizAnswerSubmitAnswer200ResponseCWProxy {
   /// ```
   DriverQuizAnswerSubmitAnswer200Response call({
     String message,
-    DriverQuizAnswerSubmitAnswer200ResponseData data,
+    SubmitDriverQuizAnswerResponse data,
     PaginationResult? pagination,
     int? totalPages,
   });
@@ -48,7 +48,7 @@ class _$DriverQuizAnswerSubmitAnswer200ResponseCWProxyImpl
 
   @override
   DriverQuizAnswerSubmitAnswer200Response data(
-    DriverQuizAnswerSubmitAnswer200ResponseData data,
+    SubmitDriverQuizAnswerResponse data,
   ) => call(data: data);
 
   @override
@@ -82,7 +82,7 @@ class _$DriverQuizAnswerSubmitAnswer200ResponseCWProxyImpl
       data: data == const $CopyWithPlaceholder() || data == null
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
-          : data as DriverQuizAnswerSubmitAnswer200ResponseData,
+          : data as SubmitDriverQuizAnswerResponse,
       pagination: pagination == const $CopyWithPlaceholder()
           ? _value.pagination
           // ignore: cast_nullable_to_non_nullable
@@ -118,7 +118,7 @@ _$DriverQuizAnswerSubmitAnswer200ResponseFromJson(Map<String, dynamic> json) =>
         message: $checkedConvert('message', (v) => v as String),
         data: $checkedConvert(
           'data',
-          (v) => DriverQuizAnswerSubmitAnswer200ResponseData.fromJson(
+          (v) => SubmitDriverQuizAnswerResponse.fromJson(
             v as Map<String, dynamic>,
           ),
         ),

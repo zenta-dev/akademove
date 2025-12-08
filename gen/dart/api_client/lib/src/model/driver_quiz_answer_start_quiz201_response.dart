@@ -3,7 +3,7 @@
 //
 
 // ignore_for_file: unused_element
-import 'package:api_client/src/model/driver_quiz_answer_start_quiz201_response_data.dart';
+import 'package:api_client/src/model/driver_quiz_attempt.dart';
 import 'package:api_client/src/model/pagination_result.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
@@ -29,7 +29,7 @@ class DriverQuizAnswerStartQuiz201Response {
   final String message;
   
   @JsonKey(name: r'data', required: true, includeIfNull: false)
-  final DriverQuizAnswerStartQuiz201ResponseData data;
+  final DriverQuizAttempt data;
   
   @JsonKey(name: r'pagination', required: false, includeIfNull: false)
   final PaginationResult? pagination;

@@ -85,7 +85,7 @@ class _UserDeliveryScreenState extends State<UserDeliveryScreen> {
   }
 
   Future<void> _fetchDriversAtLocation(LatLng center, int radiusKm) async {
-    final user = context.read<AuthCubit>().state.data;
+    final user = context.read<AuthCubit>().state.user.data?.value;
     await context.read<UserDeliveryCubit>().getNearbyDrivers(
       GetDriverNearbyQuery(
         x: center.longitude,

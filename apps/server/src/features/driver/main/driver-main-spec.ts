@@ -1,5 +1,3 @@
-import { createSuccesSchema, FEATURE_TAGS } from "@/core/constants";
-import { toOAPIRequestBody } from "@/utils/oapi";
 import { oc } from "@orpc/contract";
 import {
 	DriverSchema,
@@ -10,6 +8,8 @@ import { UnifiedPaginationQuerySchema } from "@repo/schema/pagination";
 import { CoordinateSchema } from "@repo/schema/position";
 import { UserGenderSchema } from "@repo/schema/user";
 import * as z from "zod";
+import { createSuccesSchema, FEATURE_TAGS } from "@/core/constants";
+import { toOAPIRequestBody } from "@/utils/oapi";
 
 export const NearbyQuerySchema = z.object({
 	...CoordinateSchema.shape,
@@ -140,29 +140,45 @@ export const DriverMainSpec = {
 			}),
 		)
 		.output(createSuccesSchema(DriverSchema, "Driver updated successfully")),
-	markAsOnline: oc
+	updateOnlineStatus: oc
 		.route({
 			tags: [FEATURE_TAGS.DRIVER],
 			method: "POST",
-			path: "/{id}/mark-as-online",
+			path: "/{id}/update-online-status",
 			inputStructure: "detailed",
 			outputStructure: "detailed",
 		})
-		.input(z.object({ params: z.object({ id: z.string() }) }))
+		.input(
+			z.object({
+				params: z.object({ id: z.string() }),
+				body: z.object({ isOnline: z.boolean() }),
+			}),
+		)
 		.output(
-			createSuccesSchema(DriverSchema, "Driver marked as online successfully"),
+			createSuccesSchema(
+				DriverSchema,
+				"Driver online status updated successfully",
+			),
 		),
-	markAsOffline: oc
+	updateTakingOrderStatus: oc
 		.route({
 			tags: [FEATURE_TAGS.DRIVER],
 			method: "POST",
-			path: "/{id}/mark-as-offline",
+			path: "/{id}/update-taking-order-status",
 			inputStructure: "detailed",
 			outputStructure: "detailed",
 		})
-		.input(z.object({ params: z.object({ id: z.string() }) }))
+		.input(
+			z.object({
+				params: z.object({ id: z.string() }),
+				body: z.object({ isTakingOrder: z.boolean() }),
+			}),
+		)
 		.output(
-			createSuccesSchema(DriverSchema, "Driver marked as online successfully"),
+			createSuccesSchema(
+				DriverSchema,
+				"Driver taking order status updated successfully",
+			),
 		),
 	remove: oc
 		.route({

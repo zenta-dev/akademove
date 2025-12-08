@@ -39,12 +39,12 @@ class UserWalletScreen extends StatelessWidget {
               builder: (context, state) {
                 return IconButton(
                   icon: UserAvatarWidget(
-                    name: state.data?.name ?? AppConstants.name,
-                    image: state.data?.image,
+                    name: state.user.data?.value.name ?? AppConstants.name,
+                    image: state.user.data?.value.image,
                   ),
                   variance: ButtonVariance.ghost,
                   onPressed: () => context.pushNamed(Routes.userProfile.name),
-                ).asSkeleton(enabled: state.isLoading);
+                ).asSkeleton(enabled: state.user.isLoading);
               },
             ),
           ],

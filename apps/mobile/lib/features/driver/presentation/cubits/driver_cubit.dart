@@ -70,10 +70,12 @@ class DriverCubit extends BaseCubit<DriverState> {
         if (_driverId == null) return;
 
         try {
-          final newStatus = !(state.isOnline ?? false);
+          final newStatus = !(state.driver?.isOnline ?? false);
 
           // Optimistic update
-          emit(state.copyWith(isOnline: newStatus));
+          emit(
+            state.copyWith(driver: state.driver?.copyWith(isOnline: newStatus)),
+          );
 
           final driverId = _driverId;
           if (driverId == null) {
@@ -99,9 +101,13 @@ class DriverCubit extends BaseCubit<DriverState> {
             stackTrace: st,
           );
           // Revert optimistic update to previous status
-          final previousStatus = state.isOnline;
+          final previousStatus = state.driver?.isOnline;
           if (previousStatus != null) {
-            emit(state.copyWith(isOnline: !previousStatus));
+            emit(
+              state.copyWith(
+                driver: state.driver?.copyWith(isOnline: !previousStatus),
+              ),
+            );
           }
           emit(state.toFailure(e));
         }

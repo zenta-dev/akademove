@@ -22,8 +22,8 @@ class UserProfileScreen extends StatelessWidget {
           BlocBuilder<AuthCubit, AuthState>(
             builder: (context, state) {
               return UserProfileCardWidget(
-                user: state.data ?? dummyUser,
-              ).asSkeleton(enabled: state.isLoading);
+                user: state.user.data?.value ?? dummyUser,
+              ).asSkeleton(enabled: state.user.isLoading);
             },
           ),
           DefaultText(

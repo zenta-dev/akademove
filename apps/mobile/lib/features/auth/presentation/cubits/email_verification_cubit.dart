@@ -1,49 +1,50 @@
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 
+typedef EmailVerificationState = OperationResult<bool>;
+
 class EmailVerificationCubit extends BaseCubit<EmailVerificationState> {
   EmailVerificationCubit({required AuthRepository authRepository})
     : _authRepository = authRepository,
-      super(EmailVerificationState.initial());
+      super(OperationResult.idle());
+
+  String? email;
 
   final AuthRepository _authRepository;
 
-  void reset() => emit(EmailVerificationState.initial());
+  void reset() => emit(OperationResult.idle());
 
-  void setEmail(String email) =>
-      emit(const EmailVerificationState().copyWith(email: email));
+  void setEmail(String email) => this.email = email;
 
   Future<void> sendVerificationEmail(String email) async =>
       await taskManager.execute('EVC-sVE-$email', () async {
         try {
-          emit(EmailVerificationState.loading(email: email));
+          emit(OperationResult.loading());
           final res = await _authRepository.sendEmailVerification(email: email);
-          emit(
-            EmailVerificationState.success(message: res.message, email: email),
-          );
+          emit(OperationResult.success(res.data, message: res.message));
         } on BaseError catch (e, st) {
           logger.e(
             '[EmailVerificationCubit] - Error: ${e.message}',
             error: e,
             stackTrace: st,
           );
-          emit(EmailVerificationState.failure(e, email: email));
+          emit(OperationResult.failed(e));
         }
       });
 
   Future<void> verifyEmail(String token) async =>
       await taskManager.execute('EVC-vE-$token', () async {
         try {
-          emit(EmailVerificationState.loading());
+          emit(OperationResult.loading());
           final res = await _authRepository.verifyEmail(token: token);
-          emit(EmailVerificationState.success(message: res.message));
+          emit(OperationResult.success(res.data, message: res.message));
         } on BaseError catch (e, st) {
           logger.e(
             '[EmailVerificationCubit] - Error: ${e.message}',
             error: e,
             stackTrace: st,
           );
-          emit(EmailVerificationState.failure(e));
+          emit(OperationResult.failed(e));
         }
       });
 }

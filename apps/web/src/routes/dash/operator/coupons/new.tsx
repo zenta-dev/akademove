@@ -1,6 +1,6 @@
 import { m } from "@repo/i18n";
 import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
-import { CouponForm } from "@/components/forms/coupon";
+import { CouponForm } from "@/components/forms/coupon-form";
 import { Card, CardContent } from "@/components/ui/card";
 import { hasAccess } from "@/lib/actions";
 import { SUB_ROUTE_TITLES } from "@/lib/constants";

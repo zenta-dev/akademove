@@ -1,5 +1,5 @@
 import 'package:akademove/core/_export.dart';
-import 'package:akademove/features/auth/data/repositories/auth_repository.dart';
+import 'package:akademove/features/auth/data/auth_repository.dart';
 import 'package:akademove/features/configuration/data/repositories/configuration_repository.dart';
 import 'package:akademove/features/coupon/data/repositories/coupon_repository.dart';
 import 'package:akademove/features/driver/data/repositories/driver_repository.dart';

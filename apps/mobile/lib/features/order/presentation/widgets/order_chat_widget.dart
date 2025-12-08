@@ -29,7 +29,7 @@ class _OrderChatWidgetState extends State<OrderChatWidget> {
     _scrollController.addListener(_onScroll);
 
     // Fetch quick message templates for current user's role
-    final currentUser = sl<AuthCubit>().state.data;
+    final currentUser = sl<AuthCubit>().state.user.data?.value;
     if (currentUser != null) {
       // Get app locale from Flutter localization context
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -153,7 +153,7 @@ class _ChatMessageBubble extends StatelessWidget {
   Widget build(BuildContext context) {
     // Determine if message is from current user
     final currentUser = context.select<AuthCubit, User?>(
-      (cubit) => cubit.state.data,
+      (cubit) => cubit.state.user.data?.value,
     );
     final isCurrentUser = currentUser?.id == message.senderId;
     final senderName = message.sender?.name ?? 'Unknown';

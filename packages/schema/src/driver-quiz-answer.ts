@@ -5,12 +5,22 @@ import {
 	DRIVER_QUIZ_ANSWER_STATUSES,
 	DRIVER_QUIZ_QUESTION_CATEGORIES,
 } from "./constants.js";
+import { DriverMinQuizQuestionSchema } from "./driver-quiz-question.ts";
 import { extractSchemaKeysAsEnum } from "./enum.helper.js";
 
 export const DriverQuizAnswerStatusSchema = z.enum(DRIVER_QUIZ_ANSWER_STATUSES);
 export type DriverQuizAnswerStatus = z.infer<
 	typeof DriverQuizAnswerStatusSchema
 >;
+
+export const DriverQuizAttemptSchema = z.object({
+	attemptId: z.string(),
+	questions: z.array(DriverMinQuizQuestionSchema),
+	totalQuestions: z.number(),
+	totalPoints: z.number(),
+	passingScore: z.number(),
+});
+export type DriverQuizAttempt = z.infer<typeof DriverQuizAttemptSchema>;
 
 /**
  * Individual answer to a quiz question
@@ -73,6 +83,13 @@ export type SubmitDriverQuizAnswer = z.infer<
 	typeof SubmitDriverQuizAnswerSchema
 >;
 
+export const SubmitDriverQuizAnswerResponseSchema = z.object({
+	isCorrect: z.boolean(),
+	pointsEarned: z.number(),
+	correctOptionId: z.string().optional(),
+	explanation: z.string().nullable(),
+});
+
 /**
  * Schema for completing a quiz attempt
  */
@@ -111,6 +128,10 @@ export const DriverQuizResultSchema = z.object({
 export type DriverQuizResult = z.infer<typeof DriverQuizResultSchema>;
 
 export const DriverQuizAnswerSchemaRegistries = {
+	DriverQuizAttempt: {
+		schema: DriverQuizAttemptSchema,
+		strategy: "output",
+	},
 	DriverQuizAnswerStatus: {
 		schema: DriverQuizAnswerStatusSchema,
 		strategy: "output",
@@ -130,6 +151,10 @@ export const DriverQuizAnswerSchemaRegistries = {
 	SubmitDriverQuizAnswer: {
 		schema: SubmitDriverQuizAnswerSchema,
 		strategy: "input",
+	},
+	SubmitDriverQuizAnswerResponse: {
+		schema: SubmitDriverQuizAnswerResponseSchema,
+		strategy: "output",
 	},
 	CompleteDriverQuiz: {
 		schema: CompleteDriverQuizSchema,

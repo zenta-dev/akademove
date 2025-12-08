@@ -12,6 +12,9 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
+  String get driver_knowledge_quiz => 'Driver Knowledge Quiz';
+
+  @override
   String get new_order_request => 'New order request';
 
   @override

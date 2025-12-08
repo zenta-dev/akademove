@@ -112,18 +112,19 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
         setState(() => _isProcessing = false);
 
         final cubitState = context.read<MerchantOrderCubit>().state;
-        if (cubitState.isSuccess) {
-          final selected = cubitState.selected;
+        if (cubitState.order.isSuccess) {
+          final selected = cubitState.order.value;
           if (selected != null) {
             setState(() => _currentOrder = selected);
             context.showMyToast(
-              cubitState.message ?? context.l10n.toast_order_accepted,
+              cubitState.order.message ?? context.l10n.toast_order_accepted,
               type: ToastType.success,
             );
           }
-        } else if (cubitState.isFailure) {
+        } else if (cubitState.order.isFailure) {
           context.showMyToast(
-            cubitState.error?.message ?? context.l10n.toast_failed_accept_order,
+            cubitState.order.error?.message ??
+                context.l10n.toast_failed_accept_order,
             type: ToastType.failed,
           );
         }
@@ -159,15 +160,17 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
         setState(() => _isProcessing = false);
 
         final cubitState = context.read<MerchantOrderCubit>().state;
-        if (cubitState.isSuccess) {
+        if (cubitState.order.isSuccess) {
           context.showMyToast(
-            cubitState.message ?? context.l10n.toast_order_rejected_success,
+            cubitState.order.message ??
+                context.l10n.toast_order_rejected_success,
             type: ToastType.success,
           );
           context.pop(); // Go back to order list
-        } else if (cubitState.isFailure) {
+        } else if (cubitState.order.isFailure) {
           context.showMyToast(
-            cubitState.error?.message ?? context.l10n.toast_failed_reject_order,
+            cubitState.order.error?.message ??
+                context.l10n.toast_failed_reject_order,
             type: ToastType.failed,
           );
         }
@@ -198,18 +201,20 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
       setState(() => _isProcessing = false);
 
       final cubitState = context.read<MerchantOrderCubit>().state;
-      if (cubitState.isSuccess) {
-        final selected = cubitState.selected;
+      if (cubitState.order.isSuccess) {
+        final selected = cubitState.order.value;
         if (selected != null) {
           setState(() => _currentOrder = selected);
           context.showMyToast(
-            cubitState.message ?? context.l10n.toast_order_marked_preparing,
+            cubitState.order.message ??
+                context.l10n.toast_order_marked_preparing,
             type: ToastType.success,
           );
         }
-      } else if (cubitState.isFailure) {
+      } else if (cubitState.order.isFailure) {
         context.showMyToast(
-          cubitState.error?.message ?? context.l10n.toast_failed_update_order,
+          cubitState.order.error?.message ??
+              context.l10n.toast_failed_update_order,
           type: ToastType.failed,
         );
       }
@@ -239,18 +244,19 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
       setState(() => _isProcessing = false);
 
       final cubitState = context.read<MerchantOrderCubit>().state;
-      if (cubitState.isSuccess) {
-        final selected = cubitState.selected;
+      if (cubitState.order.isSuccess) {
+        final selected = cubitState.order.value;
         if (selected != null) {
           setState(() => _currentOrder = selected);
           context.showMyToast(
-            cubitState.message ?? context.l10n.toast_order_marked_ready,
+            cubitState.order.message ?? context.l10n.toast_order_marked_ready,
             type: ToastType.success,
           );
         }
-      } else if (cubitState.isFailure) {
+      } else if (cubitState.order.isFailure) {
         context.showMyToast(
-          cubitState.error?.message ?? context.l10n.toast_failed_update_order,
+          cubitState.order.error?.message ??
+              context.l10n.toast_failed_update_order,
           type: ToastType.failed,
         );
       }
@@ -671,14 +677,14 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
     return BlocListener<MerchantOrderCubit, MerchantOrderState>(
       listener: (context, state) {
         // Update current order when state changes (from WebSocket or actions)
-        final selectedOrder = state.selected;
+        final selectedOrder = state.order.value;
         if (selectedOrder != null && selectedOrder.id == _currentOrder.id) {
           setState(() {
             _currentOrder = selectedOrder;
           });
 
           // Show toast for important events
-          final message = state.message;
+          final message = state.order.message;
           if (message != null && message.isNotEmpty) {
             context.showMyToast(message, type: ToastType.success);
           }

@@ -31,7 +31,7 @@ class AppSelectLocaleWidget extends StatelessWidget {
       width: double.infinity,
       child: BlocBuilder<AppCubit, AppState>(
         builder: (context, state) {
-          final currentLocale = state.data?.locale ?? const Locale('en');
+          final currentLocale = state.locale.data?.value ?? const Locale('en');
           final selectedAppLocale = _locales.firstWhere(
             (e) => e.locale == currentLocale,
             orElse: () => _locales.first,

@@ -7,7 +7,7 @@ final authRouter = ShellRoute(
       name: Routes.authSplash.name,
       path: Routes.authSplash.path,
       builder: (context, state) => BlocProvider.value(
-        value: sl<AuthCubit>()..init(),
+        value: context.read<AuthCubit>()..authenticate(),
         child: const SplashScreen(),
       ),
     ),
@@ -15,7 +15,7 @@ final authRouter = ShellRoute(
       name: Routes.authSignIn.name,
       path: Routes.authSignIn.path,
       builder: (context, state) => BlocProvider(
-        create: (_) => sl<SignInCubit>()..reset(),
+        create: (_) => context.read<AuthCubit>()..reset(),
         child: const SignInScreen(),
       ),
     ),
@@ -28,7 +28,7 @@ final authRouter = ShellRoute(
       name: Routes.authSignUpUser.name,
       path: Routes.authSignUpUser.path,
       builder: (context, state) => BlocProvider(
-        create: (_) => sl<SignUpCubit>()..reset(),
+        create: (_) => context.read<AuthCubit>()..reset(),
         child: const SignUpUserScreen(),
       ),
     ),
@@ -36,7 +36,7 @@ final authRouter = ShellRoute(
       name: Routes.authSignUpDriver.name,
       path: Routes.authSignUpDriver.path,
       builder: (context, state) => BlocProvider(
-        create: (_) => sl<SignUpCubit>()..reset(),
+        create: (_) => context.read<AuthCubit>()..reset(),
         child: const SignUpDriverScreen(),
       ),
     ),
@@ -44,7 +44,7 @@ final authRouter = ShellRoute(
       name: Routes.authSignUpMerchant.name,
       path: Routes.authSignUpMerchant.path,
       builder: (context, state) => BlocProvider(
-        create: (_) => sl<SignUpCubit>()..reset(),
+        create: (_) => context.read<AuthCubit>()..reset(),
         child: const SignUpMerchantScreen(),
       ),
     ),
@@ -52,7 +52,7 @@ final authRouter = ShellRoute(
       name: Routes.authForgotPassword.name,
       path: Routes.authForgotPassword.path,
       builder: (context, state) => BlocProvider.value(
-        value: sl<AuthCubit>()..reset(),
+        value: context.read<AuthCubit>()..reset(),
         child: const ForgotPasswordScreen(),
       ),
     ),
@@ -62,7 +62,7 @@ final authRouter = ShellRoute(
       builder: (context, state) {
         final token = state.uri.queryParameters['token'];
         return BlocProvider.value(
-          value: sl<AuthCubit>()..reset(),
+          value: context.read<AuthCubit>()..reset(),
           child: ResetPasswordScreen(token: token),
         );
       },
@@ -93,7 +93,7 @@ final authRouter = ShellRoute(
       name: Routes.driverQuiz.name,
       path: Routes.driverQuiz.path,
       builder: (context, state) => BlocProvider(
-        create: (_) => sl<DriverQuizCubit>(),
+        create: (_) => sl<DriverQuizCubit2>(),
         child: const DriverQuizScreen(),
       ),
     ),

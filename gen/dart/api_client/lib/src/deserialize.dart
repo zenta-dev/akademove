@@ -90,15 +90,15 @@ import 'package:api_client/src/model/driver_get_mine200_response_body.dart';
 import 'package:api_client/src/model/driver_get_review200_response.dart';
 import 'package:api_client/src/model/driver_get_review200_response_data.dart';
 import 'package:api_client/src/model/driver_list200_response.dart';
+import 'package:api_client/src/model/driver_min_quiz_question.dart';
 import 'package:api_client/src/model/driver_quiz_answer.dart';
 import 'package:api_client/src/model/driver_quiz_answer_complete_quiz200_response.dart';
 import 'package:api_client/src/model/driver_quiz_answer_get_attempt200_response.dart';
 import 'package:api_client/src/model/driver_quiz_answer_list200_response.dart';
 import 'package:api_client/src/model/driver_quiz_answer_list200_response_data.dart';
 import 'package:api_client/src/model/driver_quiz_answer_start_quiz201_response.dart';
-import 'package:api_client/src/model/driver_quiz_answer_start_quiz201_response_data.dart';
 import 'package:api_client/src/model/driver_quiz_answer_submit_answer200_response.dart';
-import 'package:api_client/src/model/driver_quiz_answer_submit_answer200_response_data.dart';
+import 'package:api_client/src/model/driver_quiz_attempt.dart';
 import 'package:api_client/src/model/driver_quiz_question.dart';
 import 'package:api_client/src/model/driver_quiz_question_answer.dart';
 import 'package:api_client/src/model/driver_quiz_question_create201_response.dart';
@@ -119,6 +119,8 @@ import 'package:api_client/src/model/driver_submit_approval_request.dart';
 import 'package:api_client/src/model/driver_submit_rejection_request.dart';
 import 'package:api_client/src/model/driver_suspend_request.dart';
 import 'package:api_client/src/model/driver_update_document_status_request.dart';
+import 'package:api_client/src/model/driver_update_online_status_request.dart';
+import 'package:api_client/src/model/driver_update_taking_order_status_request.dart';
 import 'package:api_client/src/model/driver_user.dart';
 import 'package:api_client/src/model/driver_verify_quiz_request.dart';
 import 'package:api_client/src/model/emergency.dart';
@@ -175,7 +177,6 @@ import 'package:api_client/src/model/merchant_menu_create200_response.dart';
 import 'package:api_client/src/model/merchant_menu_list200_response.dart';
 import 'package:api_client/src/model/merchant_order_accept200_response.dart';
 import 'package:api_client/src/model/merchant_populars200_response.dart';
-import 'package:api_client/src/model/merchant_set_online_status_request.dart';
 import 'package:api_client/src/model/merchant_set_operating_status_request.dart';
 import 'package:api_client/src/model/merchant_set_order_taking_status_request.dart';
 import 'package:api_client/src/model/newsletter.dart';
@@ -253,6 +254,7 @@ import 'package:api_client/src/model/sign_up_response.dart';
 import 'package:api_client/src/model/start_driver_quiz.dart';
 import 'package:api_client/src/model/start_investigation.dart';
 import 'package:api_client/src/model/submit_driver_quiz_answer.dart';
+import 'package:api_client/src/model/submit_driver_quiz_answer_response.dart';
 import 'package:api_client/src/model/support_chat_envelope.dart';
 import 'package:api_client/src/model/support_chat_envelope_payload.dart';
 import 'package:api_client/src/model/support_chat_message.dart';
@@ -569,6 +571,8 @@ final _regMap = RegExp(r'^Map<String,(.*)>$');
           
         case 'DriverList200Response':
           return DriverList200Response.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'DriverMinQuizQuestion':
+          return DriverMinQuizQuestion.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'DriverQuizAnswer':
           return DriverQuizAnswer.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'DriverQuizAnswerCompleteQuiz200Response':
@@ -581,15 +585,13 @@ final _regMap = RegExp(r'^Map<String,(.*)>$');
           return DriverQuizAnswerList200ResponseData.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'DriverQuizAnswerStartQuiz201Response':
           return DriverQuizAnswerStartQuiz201Response.fromJson(value as Map<String, dynamic>) as ReturnType;
-        case 'DriverQuizAnswerStartQuiz201ResponseData':
-          return DriverQuizAnswerStartQuiz201ResponseData.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'DriverQuizAnswerStatus':
           
           
         case 'DriverQuizAnswerSubmitAnswer200Response':
           return DriverQuizAnswerSubmitAnswer200Response.fromJson(value as Map<String, dynamic>) as ReturnType;
-        case 'DriverQuizAnswerSubmitAnswer200ResponseData':
-          return DriverQuizAnswerSubmitAnswer200ResponseData.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'DriverQuizAttempt':
+          return DriverQuizAttempt.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'DriverQuizQuestion':
           return DriverQuizQuestion.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'DriverQuizQuestionAnswer':
@@ -645,6 +647,10 @@ final _regMap = RegExp(r'^Map<String,(.*)>$');
           return DriverSuspendRequest.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'DriverUpdateDocumentStatusRequest':
           return DriverUpdateDocumentStatusRequest.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'DriverUpdateOnlineStatusRequest':
+          return DriverUpdateOnlineStatusRequest.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'DriverUpdateTakingOrderStatusRequest':
+          return DriverUpdateTakingOrderStatusRequest.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'DriverUser':
           return DriverUser.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'DriverVerifyQuizRequest':
@@ -784,8 +790,6 @@ final _regMap = RegExp(r'^Map<String,(.*)>$');
           return MerchantOrderAccept200Response.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'MerchantPopulars200Response':
           return MerchantPopulars200Response.fromJson(value as Map<String, dynamic>) as ReturnType;
-        case 'MerchantSetOnlineStatusRequest':
-          return MerchantSetOnlineStatusRequest.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'MerchantSetOperatingStatusRequest':
           return MerchantSetOperatingStatusRequest.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'MerchantSetOrderTakingStatusRequest':
@@ -997,6 +1001,8 @@ final _regMap = RegExp(r'^Map<String,(.*)>$');
           return StartInvestigation.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'SubmitDriverQuizAnswer':
           return SubmitDriverQuizAnswer.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'SubmitDriverQuizAnswerResponse':
+          return SubmitDriverQuizAnswerResponse.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'SupportChatEnvelope':
           return SupportChatEnvelope.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'SupportChatEnvelopeAction':

@@ -155,6 +155,11 @@ class TaskDedupeManager {
   void clearCacheFor(String key) {
     _CachedTaskDedupeManager._instance.clearCacheFor(key);
   }
+
+  void dispose() {
+    cancelAll();
+    clearCache();
+  }
 }
 
 /// Internal class for managing cached task results

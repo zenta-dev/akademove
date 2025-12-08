@@ -1,5 +1,6 @@
 import type {
 	DriverQuizAnswer,
+	DriverQuizAttempt,
 	DriverQuizQuestionAnswer,
 	DriverQuizResult,
 	ListDriverQuizAnswerQuery,
@@ -141,21 +142,7 @@ export class DriverQuizAnswerRepository extends BaseRepository {
 		driverId: string,
 		data: StartDriverQuiz,
 		opts: WithTx,
-	): Promise<{
-		attemptId: string;
-		questions: Array<{
-			id: string;
-			question: string;
-			type: string;
-			category: string;
-			points: number;
-			displayOrder: number;
-			options: Array<{ id: string; text: string }>;
-		}>;
-		totalQuestions: number;
-		totalPoints: number;
-		passingScore: number;
-	}> {
+	): Promise<DriverQuizAttempt> {
 		try {
 			// Get questions for the quiz
 			const questions = await this.questionRepo.getQuizQuestions(

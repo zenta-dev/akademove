@@ -36,12 +36,12 @@ class UserDetailProfileScreen extends StatelessWidget {
             children: [
               BlocBuilder<AuthCubit, AuthState>(
                 builder: (context, state) {
-                  final user = state.data ?? dummyUser;
+                  final user = state.user.data?.value ?? dummyUser;
                   return DefaultText(
                     user.name,
                     fontSize: 20.sp,
                     fontWeight: FontWeight.w600,
-                  ).asSkeleton(enabled: state.isLoading);
+                  ).asSkeleton(enabled: state.user.isLoading);
                 },
               ),
               SizedBox(
@@ -49,7 +49,7 @@ class UserDetailProfileScreen extends StatelessWidget {
                 child: Card(
                   child: BlocBuilder<AuthCubit, AuthState>(
                     builder: (context, state) {
-                      final user = state.data ?? dummyUser;
+                      final user = state.user.data?.value ?? dummyUser;
                       return Column(
                         spacing: 12.h,
                         children: [
@@ -78,7 +78,7 @@ class UserDetailProfileScreen extends StatelessWidget {
                             ],
                           ),
                         ],
-                      ).asSkeleton(enabled: state.isLoading);
+                      ).asSkeleton(enabled: state.user.isLoading);
                     },
                   ),
                 ),
@@ -92,7 +92,7 @@ class UserDetailProfileScreen extends StatelessWidget {
                 height: 0.3.sh,
                 child: BlocBuilder<AuthCubit, AuthState>(
                   builder: (context, state) {
-                    final user = state.data ?? dummyUser;
+                    final user = state.user.data?.value ?? dummyUser;
                     return ListView.builder(
                       itemCount: user.userBadges.length,
                       padding: EdgeInsets.zero,
@@ -240,12 +240,12 @@ class UserDetailProfileScreen extends StatelessWidget {
           left: 0.35.sw,
           child: BlocBuilder<AuthCubit, AuthState>(
             builder: (context, state) {
-              final user = state.data ?? dummyUser;
+              final user = state.user.data?.value ?? dummyUser;
               return UserAvatarWidget(
                 name: user.name,
                 image: user.image,
                 size: 86.dg,
-              ).asSkeleton(enabled: state.isLoading);
+              ).asSkeleton(enabled: state.user.isLoading);
             },
           ),
         ),

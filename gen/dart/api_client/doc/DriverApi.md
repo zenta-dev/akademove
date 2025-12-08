@@ -15,8 +15,6 @@ Method | HTTP request | Description
 [**driverGetMine**](DriverApi.md#drivergetmine) | **GET** /drivers/mine | 
 [**driverGetReview**](DriverApi.md#drivergetreview) | **GET** /drivers/{id}/approval-review | 
 [**driverList**](DriverApi.md#driverlist) | **GET** /drivers | 
-[**driverMarkAsOffline**](DriverApi.md#drivermarkasoffline) | **POST** /drivers/{id}/mark-as-offline | 
-[**driverMarkAsOnline**](DriverApi.md#drivermarkasonline) | **POST** /drivers/{id}/mark-as-online | 
 [**driverNearby**](DriverApi.md#drivernearby) | **GET** /drivers/nearby | 
 [**driverRemove**](DriverApi.md#driverremove) | **DELETE** /drivers/{id} | 
 [**driverScheduleCreate**](DriverApi.md#driverschedulecreate) | **POST** /drivers/{driverId}/schedules | 
@@ -29,6 +27,8 @@ Method | HTTP request | Description
 [**driverUpdate**](DriverApi.md#driverupdate) | **PUT** /drivers/{id} | 
 [**driverUpdateDocumentStatus**](DriverApi.md#driverupdatedocumentstatus) | **POST** /drivers/{id}/approval-review/update-document | 
 [**driverUpdateLocation**](DriverApi.md#driverupdatelocation) | **PUT** /drivers/{id}/location | 
+[**driverUpdateOnlineStatus**](DriverApi.md#driverupdateonlinestatus) | **POST** /drivers/{id}/update-online-status | 
+[**driverUpdateTakingOrderStatus**](DriverApi.md#driverupdatetakingorderstatus) | **POST** /drivers/{id}/update-taking-order-status | 
 [**driverVerifyQuiz**](DriverApi.md#driververifyquiz) | **POST** /drivers/{id}/approval-review/verify-quiz | 
 
 
@@ -294,88 +294,6 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**DriverList200Response**](DriverList200Response.md)
-
-### Authorization
-
-[bearer_auth](../README.md#bearer_auth)
-
-### HTTP request headers
-
- - **Content-Type**: Not defined
- - **Accept**: application/json
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
-
-# **driverMarkAsOffline**
-> DriverGetMine200ResponseBody driverMarkAsOffline(id)
-
-
-
-### Example
-```dart
-import 'package:api_client/api.dart';
-
-final api = ApiClient().getDriverApi();
-final String id = id_example; // String | 
-
-try {
-    final response = api.driverMarkAsOffline(id);
-    print(response);
-} catch on DioException (e) {
-    print('Exception when calling DriverApi->driverMarkAsOffline: $e\n');
-}
-```
-
-### Parameters
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **id** | **String**|  | 
-
-### Return type
-
-[**DriverGetMine200ResponseBody**](DriverGetMine200ResponseBody.md)
-
-### Authorization
-
-[bearer_auth](../README.md#bearer_auth)
-
-### HTTP request headers
-
- - **Content-Type**: Not defined
- - **Accept**: application/json
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
-
-# **driverMarkAsOnline**
-> DriverGetMine200ResponseBody driverMarkAsOnline(id)
-
-
-
-### Example
-```dart
-import 'package:api_client/api.dart';
-
-final api = ApiClient().getDriverApi();
-final String id = id_example; // String | 
-
-try {
-    final response = api.driverMarkAsOnline(id);
-    print(response);
-} catch on DioException (e) {
-    print('Exception when calling DriverApi->driverMarkAsOnline: $e\n');
-}
-```
-
-### Parameters
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **id** | **String**|  | 
-
-### Return type
-
-[**DriverGetMine200ResponseBody**](DriverGetMine200ResponseBody.md)
 
 ### Authorization
 
@@ -924,6 +842,92 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **id** | **String**|  | 
  **coordinate** | [**Coordinate**](Coordinate.md)|  | 
+
+### Return type
+
+[**DriverGetMine200ResponseBody**](DriverGetMine200ResponseBody.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **driverUpdateOnlineStatus**
+> DriverGetMine200ResponseBody driverUpdateOnlineStatus(id, driverUpdateOnlineStatusRequest)
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getDriverApi();
+final String id = id_example; // String | 
+final DriverUpdateOnlineStatusRequest driverUpdateOnlineStatusRequest = ; // DriverUpdateOnlineStatusRequest | 
+
+try {
+    final response = api.driverUpdateOnlineStatus(id, driverUpdateOnlineStatusRequest);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling DriverApi->driverUpdateOnlineStatus: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**|  | 
+ **driverUpdateOnlineStatusRequest** | [**DriverUpdateOnlineStatusRequest**](DriverUpdateOnlineStatusRequest.md)|  | 
+
+### Return type
+
+[**DriverGetMine200ResponseBody**](DriverGetMine200ResponseBody.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **driverUpdateTakingOrderStatus**
+> DriverGetMine200ResponseBody driverUpdateTakingOrderStatus(id, driverUpdateTakingOrderStatusRequest)
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getDriverApi();
+final String id = id_example; // String | 
+final DriverUpdateTakingOrderStatusRequest driverUpdateTakingOrderStatusRequest = ; // DriverUpdateTakingOrderStatusRequest | 
+
+try {
+    final response = api.driverUpdateTakingOrderStatus(id, driverUpdateTakingOrderStatusRequest);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling DriverApi->driverUpdateTakingOrderStatus: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**|  | 
+ **driverUpdateTakingOrderStatusRequest** | [**DriverUpdateTakingOrderStatusRequest**](DriverUpdateTakingOrderStatusRequest.md)|  | 
 
 ### Return type
 

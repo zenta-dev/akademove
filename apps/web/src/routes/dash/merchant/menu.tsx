@@ -1,9 +1,4 @@
-import { m } from "@repo/i18n";
-import { UnifiedPaginationQuerySchema } from "@repo/schema/pagination";
-import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
-import { PlusIcon } from "lucide-react";
-import { useState } from "react";
-import { MerchantMenuForm } from "@/components/forms/merchant-menu";
+import { MerchantMenuForm } from "@/components/forms/merchant-menu-form";
 import { MerchantMenuTable } from "@/components/tables/menu/table";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -20,6 +15,11 @@ import { hasAccess } from "@/lib/actions";
 import { SUB_ROUTE_TITLES } from "@/lib/constants";
 import { queryClient } from "@/lib/orpc";
 import { useMyMerchant } from "@/providers/merchant";
+import { m } from "@repo/i18n";
+import { UnifiedPaginationQuerySchema } from "@repo/schema/pagination";
+import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
+import { PlusIcon } from "lucide-react";
+import { useState } from "react";
 
 export const Route = createFileRoute("/dash/merchant/menu")({
 	validateSearch: (values) => {

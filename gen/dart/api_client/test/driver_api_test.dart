@@ -37,16 +37,6 @@ void main() {
       // TODO
     });
 
-    //Future<DriverGetMine200ResponseBody> driverMarkAsOffline(String id) async
-    test('test driverMarkAsOffline', () async {
-      // TODO
-    });
-
-    //Future<DriverGetMine200ResponseBody> driverMarkAsOnline(String id) async
-    test('test driverMarkAsOnline', () async {
-      // TODO
-    });
-
     //Future<DriverList200Response> driverNearby(num x, num y, num radiusKm, num limit, { UserGender gender }) async
     test('test driverNearby', () async {
       // TODO
@@ -92,13 +82,28 @@ void main() {
       // TODO
     });
 
-    //Future<DriverGetMine200ResponseBody> driverUpdate(String id, String bankProvider, num bankNumber, num currentLocationX, num currentLocationY, { num studentId, String licensePlate, MultipartFile studentCard, MultipartFile driverLicense, MultipartFile vehicleCertificate }) async
+    //Future<DriverGetMine200ResponseBody> driverUpdate(String id, { num studentId, String licensePlate, MultipartFile studentCard, MultipartFile driverLicense, MultipartFile vehicleCertificate, String bankProvider, num bankNumber, num currentLocationX, num currentLocationY }) async
     test('test driverUpdate', () async {
       // TODO
     });
 
     //Future<DriverGetReview200Response> driverUpdateDocumentStatus(String id, DriverUpdateDocumentStatusRequest driverUpdateDocumentStatusRequest) async
     test('test driverUpdateDocumentStatus', () async {
+      // TODO
+    });
+
+    //Future<DriverGetMine200ResponseBody> driverUpdateLocation(String id, Coordinate coordinate) async
+    test('test driverUpdateLocation', () async {
+      // TODO
+    });
+
+    //Future<DriverGetMine200ResponseBody> driverUpdateOnlineStatus(String id, DriverUpdateOnlineStatusRequest driverUpdateOnlineStatusRequest) async
+    test('test driverUpdateOnlineStatus', () async {
+      // TODO
+    });
+
+    //Future<DriverGetMine200ResponseBody> driverUpdateTakingOrderStatus(String id, DriverUpdateTakingOrderStatusRequest driverUpdateTakingOrderStatusRequest) async
+    test('test driverUpdateTakingOrderStatus', () async {
       // TODO
     });
 

@@ -46,7 +46,8 @@ class AppSelectThemeWidget extends StatelessWidget {
       width: double.infinity,
       child: BlocBuilder<AppCubit, AppState>(
         builder: (context, state) {
-          final currentThemeMode = state.data?.themeMode ?? ThemeMode.system;
+          final currentThemeMode =
+              state.themeMode.data?.value ?? ThemeMode.system;
           final themes = _getThemes(context);
           final selectedTheme = themes.firstWhere(
             (e) => e.themeMode == currentThemeMode,

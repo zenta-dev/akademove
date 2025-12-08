@@ -230,7 +230,7 @@ class DeleteAccountButtonWidget extends StatelessWidget {
   Future<void> _sendDeletionEmail(BuildContext context) async {
     // Get user data from auth state
     final authState = context.read<AuthCubit>().state;
-    final user = authState.data;
+    final user = authState.user.data?.value;
 
     final emailUri = Uri(
       scheme: 'mailto',

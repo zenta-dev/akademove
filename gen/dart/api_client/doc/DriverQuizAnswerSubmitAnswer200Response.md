@@ -9,7 +9,7 @@ import 'package:api_client/api.dart';
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **message** | **String** |  | 
-**data** | [**DriverQuizAnswerSubmitAnswer200ResponseData**](DriverQuizAnswerSubmitAnswer200ResponseData.md) |  | 
+**data** | [**SubmitDriverQuizAnswerResponse**](SubmitDriverQuizAnswerResponse.md) |  | 
 **pagination** | [**PaginationResult**](PaginationResult.md) |  | [optional] 
 **totalPages** | **int** |  | [optional] 
 

@@ -10,6 +10,7 @@ import 'package:api_client/src/deserialize.dart';
 import 'package:dio/dio.dart';
 
 import 'package:api_client/src/model/badge_remove200_response.dart';
+import 'package:api_client/src/model/driver_update_online_status_request.dart';
 import 'package:api_client/src/model/merchant_analytics200_response.dart';
 import 'package:api_client/src/model/merchant_best_sellers200_response.dart';
 import 'package:api_client/src/model/merchant_deactivate_request.dart';
@@ -20,7 +21,6 @@ import 'package:api_client/src/model/merchant_menu_create200_response.dart';
 import 'package:api_client/src/model/merchant_menu_list200_response.dart';
 import 'package:api_client/src/model/merchant_order_accept200_response.dart';
 import 'package:api_client/src/model/merchant_populars200_response.dart';
-import 'package:api_client/src/model/merchant_set_online_status_request.dart';
 import 'package:api_client/src/model/merchant_set_operating_status_request.dart';
 import 'package:api_client/src/model/merchant_set_order_taking_status_request.dart';
 import 'package:api_client/src/model/pagination_mode.dart';
@@ -1837,7 +1837,7 @@ _responseData = rawData == null ? null : deserialize<BadgeRemove200Response, Bad
   ///
   /// Parameters:
   /// * [id] 
-  /// * [merchantSetOnlineStatusRequest] 
+  /// * [driverUpdateOnlineStatusRequest] 
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -1849,7 +1849,7 @@ _responseData = rawData == null ? null : deserialize<BadgeRemove200Response, Bad
   /// Throws [DioException] if API call or serialization fails
   Future<Response<MerchantGetMine200ResponseBody>> merchantSetOnlineStatus({ 
     required String id,
-    required MerchantSetOnlineStatusRequest merchantSetOnlineStatusRequest,
+    required DriverUpdateOnlineStatusRequest driverUpdateOnlineStatusRequest,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -1880,7 +1880,7 @@ _responseData = rawData == null ? null : deserialize<BadgeRemove200Response, Bad
     dynamic _bodyData;
 
     try {
-        _bodyData=jsonEncode(merchantSetOnlineStatusRequest);
+        _bodyData=jsonEncode(driverUpdateOnlineStatusRequest);
     } catch(error, stackTrace) {
       throw DioException(
          requestOptions: _options.compose(

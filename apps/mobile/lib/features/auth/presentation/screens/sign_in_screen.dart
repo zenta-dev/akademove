@@ -92,20 +92,29 @@ class _SignInFormViewState extends State<_SignInFormView> {
     super.dispose();
   }
 
-  Future<void> handleEvent(BuildContext context, SignInState state) async {
-    if (state.isFailure) {
-      context.showMyToast(state.error?.message, type: ToastType.failed);
+  Future<void> handleEvent(BuildContext context, AuthState state) async {
+    if (state.user.isFailure) {
+      context.showMyToast(state.user.error?.message, type: ToastType.failed);
     }
-    if (state.isSuccess) {
-      context.showMyToast(state.message, type: ToastType.success);
+    if (state.user.isSuccess) {
+      context.showMyToast(state.user.message, type: ToastType.success);
       await delay(const Duration(seconds: 1), () {});
       if (context.mounted) {
-        switch (state.data?.role) {
+        switch (state.user.data?.value.role) {
           case UserRole.USER:
             context.pushReplacementNamed(Routes.userHome.name);
           case UserRole.MERCHANT:
             context.pushReplacementNamed(Routes.merchantHome.name);
           case UserRole.DRIVER:
+            if (state.driver.data?.value == null) {
+              context.pushReplacementNamed(Routes.authSignIn.name);
+              return;
+            }
+            if (state.driver.data?.value?.quizStatus !=
+                DriverQuizStatus.PASSED) {
+              context.pushReplacementNamed(Routes.driverQuiz.name);
+              return;
+            }
             context.pushReplacementNamed(Routes.driverHome.name);
           case UserRole.ADMIN:
           case UserRole.OPERATOR:
@@ -121,17 +130,17 @@ class _SignInFormViewState extends State<_SignInFormView> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<SignInCubit, SignInState>(
+    return BlocConsumer<AuthCubit, AuthState>(
       listener: handleEvent,
       builder: (context, state) {
         return Form(
           onSubmit: (context, values) async {
-            if (state.isLoading) return;
+            if (state.user.isLoading) return;
             final email = _emailKey[values];
             final password = _passwordKey[values];
             if (email == null || password == null) return;
 
-            await context.read<SignInCubit>().signIn(email, password);
+            await context.read<AuthCubit>().signIn(email, password);
           },
 
           child: Column(
@@ -213,7 +222,7 @@ class _SignInFormViewState extends State<_SignInFormView> {
                   FormErrorBuilder(
                     builder: (context, errors, child) {
                       final hasErrors = errors.isNotEmpty;
-                      final isLoading = state.isLoading;
+                      final isLoading = state.user.isLoading;
 
                       return Button(
                         style: isLoading || hasErrors

@@ -16,6 +16,8 @@ import 'package:api_client/src/model/driver_quiz_question_get_quiz_questions200_
 import 'package:api_client/src/model/driver_quiz_question_list200_response.dart';
 import 'package:api_client/src/model/driver_quiz_question_type.dart';
 import 'package:api_client/src/model/insert_driver_quiz_question.dart';
+import 'package:api_client/src/model/pagination_mode.dart';
+import 'package:api_client/src/model/pagination_order.dart';
 import 'package:api_client/src/model/update_driver_quiz_question.dart';
 
 class DriverQuizQuestionApi {
@@ -285,11 +287,17 @@ _responseData = rawData == null ? null : deserialize<DriverQuizQuestionGetQuizQu
   /// 
   ///
   /// Parameters:
+  /// * [cursor] 
+  /// * [limit] 
+  /// * [direction] 
+  /// * [page] 
+  /// * [query] 
+  /// * [sortBy] 
+  /// * [order] 
+  /// * [mode] 
   /// * [category] 
   /// * [type] 
   /// * [isActive] 
-  /// * [page] 
-  /// * [limit] 
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -300,11 +308,17 @@ _responseData = rawData == null ? null : deserialize<DriverQuizQuestionGetQuizQu
   /// Returns a [Future] containing a [Response] with a [DriverQuizQuestionList200Response] as data
   /// Throws [DioException] if API call or serialization fails
   Future<Response<DriverQuizQuestionList200Response>> driverQuizQuestionList({ 
+    String? cursor,
+    Object? limit,
+    String? direction,
+    Object? page,
+    String? query,
+    String? sortBy,
+    PaginationOrder? order = PaginationOrder.desc,
+    PaginationMode? mode = PaginationMode.offset,
     DriverQuizQuestionCategory? category,
     DriverQuizQuestionType? type,
     bool? isActive,
-    int? page,
-    int? limit,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -332,11 +346,17 @@ _responseData = rawData == null ? null : deserialize<DriverQuizQuestionGetQuizQu
     );
 
     final _queryParameters = <String, dynamic>{
+      if (cursor != null) r'cursor': cursor,
+      if (limit != null) r'limit': limit,
+      if (direction != null) r'direction': direction,
+      if (page != null) r'page': page,
+      if (query != null) r'query': query,
+      if (sortBy != null) r'sortBy': sortBy,
+      if (order != null) r'order': order,
+      if (mode != null) r'mode': mode,
       if (category != null) r'category': category,
       if (type != null) r'type': type,
       if (isActive != null) r'isActive': isActive,
-      if (page != null) r'page': page,
-      if (limit != null) r'limit': limit,
     };
 
     final _response = await _dio.request<Object>(

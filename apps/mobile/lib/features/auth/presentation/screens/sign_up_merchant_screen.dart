@@ -611,7 +611,7 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
       context.l10n.sign_up_success,
       message ?? context.l10n.success_signed_up,
     );
-    context.read<SignUpCubit>().reset();
+    context.read<AuthCubit>().reset();
     context.pushReplacementNamed(
       Routes.authEmailVerificationPending.name,
       queryParameters: {'email': email},
@@ -632,8 +632,8 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
   ) {
     if (!_validateStep(2, () => _isStep3Valid)) return;
 
-    final cubit = context.read<SignUpCubit>();
-    if (cubit.state.isLoading) return;
+    final cubit = context.read<AuthCubit>();
+    if (cubit.state.user.isLoading) return;
 
     final formData = _extractFormData(values);
     if (formData == null) {
@@ -741,15 +741,15 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
   Widget build(BuildContext context) {
     return MyScaffold(
       controller: _scrollController,
-      body: BlocConsumer<SignUpCubit, SignUpState>(
+      body: BlocConsumer<AuthCubit, AuthState>(
         listener: (context, state) {
-          if (state.isFailure) {
-            _handleSignUpFailure(context, state.error?.message);
+          if (state.user.isFailure) {
+            _handleSignUpFailure(context, state.user.error?.message);
           }
-          if (state.isSuccess) {
+          if (state.user.isSuccess) {
             final email = _submittedEmail;
             if (email != null) {
-              _handleSignUpSuccess(context, state.message, email);
+              _handleSignUpSuccess(context, state.user.message, email);
             }
           }
         },
@@ -788,7 +788,7 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
     );
   }
 
-  Step _buildStep1(BuildContext context, SignUpState state) {
+  Step _buildStep1(BuildContext context, AuthState state) {
     return Step(
       title: Text(context.l10n.step_1),
       contentBuilder: (context) => _buildStepContainer(
@@ -801,7 +801,7 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
             placeholder: context.l10n.placeholder_name,
             icon: LucideIcons.user,
             validator: const LengthValidator(min: 3),
-            enabled: !state.isLoading,
+            enabled: !state.user.isLoading,
           ),
           _buildTextField(
             key: _FormKeys.step1OwnerEmail,
@@ -810,7 +810,7 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
             icon: LucideIcons.mail,
             validator: const EmailValidator(),
             keyboardType: TextInputType.emailAddress,
-            enabled: !state.isLoading,
+            enabled: !state.user.isLoading,
           ),
           _buildPhoneField(context, state, _FormKeys.step1OwnerPhoneNumber, (
             val,
@@ -825,7 +825,7 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
             placeholder: context.l10n.placeholder_password,
             icon: LucideIcons.key,
             validator: const SafePasswordValidator(),
-            enabled: !state.isLoading,
+            enabled: !state.user.isLoading,
             isPassword: true,
           ),
           _buildTextField(
@@ -837,7 +837,7 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
               _FormKeys.step1OwnerPassword,
               message: context.l10n.error_passwords_not_match,
             ),
-            enabled: !state.isLoading,
+            enabled: !state.user.isLoading,
             isPassword: true,
           ),
           Row(
@@ -848,7 +848,7 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
                 state: _termsAccepted
                     ? CheckboxState.checked
                     : CheckboxState.unchecked,
-                enabled: !state.isLoading,
+                enabled: !state.user.isLoading,
                 onChanged: (checkboxState) {
                   setState(() {
                     _termsAccepted = checkboxState == CheckboxState.checked;
@@ -903,7 +903,7 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
     );
   }
 
-  Step _buildStep2(BuildContext context, SignUpState state) {
+  Step _buildStep2(BuildContext context, AuthState state) {
     return Step(
       title: Text(context.l10n.step_2),
       contentBuilder: (context) => _buildStepContainer(
@@ -916,7 +916,7 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
             placeholder: context.l10n.placeholder_outlet_name,
             icon: LucideIcons.store,
             validator: const LengthValidator(min: 3),
-            enabled: !state.isLoading,
+            enabled: !state.user.isLoading,
           ),
           _buildTextField(
             key: _FormKeys.step2OutletEmail,
@@ -924,7 +924,7 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
             placeholder: context.l10n.placeholder_outlet_email,
             icon: LucideIcons.mail,
             validator: const EmailValidator(),
-            enabled: !state.isLoading,
+            enabled: !state.user.isLoading,
           ),
           _buildPhoneField(context, state, _FormKeys.step2OutletPhoneNumber, (
             val,
@@ -991,7 +991,7 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
                               placeholder: Text(
                                 context.l10n.placeholder_search_location,
                               ),
-                              enabled: !state.isLoading,
+                              enabled: !state.user.isLoading,
                               onChanged: _onSearchChanged,
                               onSubmitted: (_) =>
                                   _searchLocation(_searchController.text),
@@ -1245,7 +1245,7 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
     );
   }
 
-  Step _buildStep3(BuildContext context, SignUpState state) {
+  Step _buildStep3(BuildContext context, AuthState state) {
     return Step(
       title: Text(context.l10n.step_3),
       contentBuilder: (context) => _buildStepContainer(
@@ -1260,7 +1260,7 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
             keyboardType: TextInputType.number,
             icon: LucideIcons.wallet,
             validator: const LengthValidator(min: 5),
-            enabled: !state.isLoading,
+            enabled: !state.user.isLoading,
           ),
         ],
         actions: [
@@ -1354,12 +1354,12 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
     ];
   }
 
-  Widget _buildSubmitButton(SignUpState state) {
+  Widget _buildSubmitButton(AuthState state) {
     return Expanded(
       child: FormErrorBuilder(
         builder: (context, errors, child) {
           final hasErrors = errors.isNotEmpty;
-          final isLoading = state.isLoading;
+          final isLoading = state.user.isLoading;
 
           return Button(
             style: isLoading || hasErrors
@@ -1412,7 +1412,7 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
     );
   }
 
-  Widget _buildBankProviderSelect(SignUpState state) {
+  Widget _buildBankProviderSelect(AuthState state) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: 4.h,
@@ -1423,14 +1423,14 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
           placeholder: context.l10n.hint_bank_provider,
           value: _selectedBankProvider,
           items: BankProvider.values,
-          enabled: !state.isLoading,
+          enabled: !state.user.isLoading,
           onChanged: (value) => setState(() => _selectedBankProvider = value),
         ),
       ],
     );
   }
 
-  Widget _buildCategorySelect(SignUpState state) {
+  Widget _buildCategorySelect(AuthState state) {
     const categories = MerchantCategory.values;
     final categoryIcons = {
       MerchantCategory.ATK: LucideIcons.pencil,
@@ -1455,7 +1455,7 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
         SizedBox(
           width: double.infinity,
           child: Select<MerchantCategory>(
-            enabled: !state.isLoading,
+            enabled: !state.user.isLoading,
             itemBuilder: (context, item) => Row(
               spacing: 8.w,
               children: [
@@ -1519,7 +1519,7 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
 
   Widget _buildPhoneField<T extends String>(
     BuildContext context,
-    SignUpState state,
+    AuthState state,
     FormKey<T> key,
     void Function(PhoneNumber val) onChanged,
   ) {

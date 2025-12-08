@@ -92,19 +92,19 @@ class _MerchantMenuScreenState extends State<MerchantMenuScreen> {
           Expanded(
             child: BlocBuilder<MerchantMenuCubit, MerchantMenuState>(
               builder: (context, state) {
-                if (state.isLoading) {
+                if (state.menus.isLoading) {
                   return const Center(
                     child: material.CircularProgressIndicator(),
                   );
                 }
 
-                if (state.isFailure) {
+                if (state.menus.isFailure) {
                   return Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          '${context.l10n.error}: ${state.error?.message ?? context.l10n.an_error_occurred}',
+                          '${context.l10n.error}: ${state.menus.error?.message ?? context.l10n.an_error_occurred}',
                         ),
                         const SizedBox(height: 16),
                         PrimaryButton(
@@ -118,8 +118,8 @@ class _MerchantMenuScreenState extends State<MerchantMenuScreen> {
 
                 // Filter menus based on search query
                 final filteredMenus = _query.isEmpty
-                    ? state.list
-                    : state.list
+                    ? state.menus.data?.value ?? []
+                    : (state.menus.data?.value ?? [])
                           .where(
                             (menu) => menu.name.toLowerCase().contains(
                               _query.toLowerCase(),

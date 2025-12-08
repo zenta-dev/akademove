@@ -12,7 +12,7 @@ void main() {
       // TODO
     });
 
-    // DriverQuizAnswerSubmitAnswer200ResponseData data
+    // SubmitDriverQuizAnswerResponse data
     test('to test the property `data`', () async {
       // TODO
     });

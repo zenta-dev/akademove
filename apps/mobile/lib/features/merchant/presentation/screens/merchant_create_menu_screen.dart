@@ -157,27 +157,29 @@ class _MerchantCreateMenuScreenState extends State<MerchantCreateMenuScreen> {
     // Check if mounted before navigating
     if (!mounted) return;
 
-    if (state.isSuccess) {
+    if (state.menu.isSuccess) {
       // Show success message
       showToast(
         context: context,
         builder: (context, overlay) => context.buildToast(
           title: context.l10n.success,
-          message: state.message ?? context.l10n.toast_menu_created_success,
+          message:
+              state.menu.message ?? context.l10n.toast_menu_created_success,
         ),
         location: ToastLocation.topCenter,
       );
 
       // Navigate back to list
       context.pop();
-    } else if (state.isFailure) {
+    } else if (state.menu.isFailure) {
       // Show error message
       showToast(
         context: context,
         builder: (context, overlay) => context.buildToast(
           title: context.l10n.error,
           message:
-              state.error?.message ?? context.l10n.toast_failed_create_menu,
+              state.menu.error?.message ??
+              context.l10n.toast_failed_create_menu,
         ),
         location: ToastLocation.topCenter,
       );
@@ -213,7 +215,7 @@ class _MerchantCreateMenuScreenState extends State<MerchantCreateMenuScreen> {
   Widget build(BuildContext context) {
     return BlocBuilder<MerchantMenuCubit, MerchantMenuState>(
       builder: (context, state) {
-        final isLoading = state.isLoading;
+        final isLoading = state.menu.isLoading;
 
         return Stack(
           children: [

@@ -5,6 +5,7 @@ import {
 	DollarSign,
 	Flag,
 	Gauge,
+	HelpCircle,
 	Mail,
 	Receipt,
 	Store,
@@ -67,6 +68,11 @@ const navMain = Object.freeze([
 		title: m.contact_us(),
 		href: localizeHref("/dash/operator/contacts"),
 		icon: Mail,
+	},
+	{
+		title: m.quiz_questions(),
+		href: localizeHref("/dash/operator/quiz-questions"),
+		icon: HelpCircle,
 	},
 ] as const);
 

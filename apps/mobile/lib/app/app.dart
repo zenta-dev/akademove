@@ -16,7 +16,7 @@ class App extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => sl<AppCubit>()..init()),
-        BlocProvider(create: (_) => sl<AuthCubit>()..init()),
+        BlocProvider(create: (_) => sl<AuthCubit>()..authenticate()),
         BlocProvider(create: (_) => sl<ConfigurationCubit>()),
       ],
       child: ScreenUtilInit(
@@ -24,7 +24,7 @@ class App extends StatelessWidget {
         splitScreenMode: true,
         builder: (_, child) => BlocConsumer<AppCubit, AppState>(
           listener: (context, state) {
-            final identifier = state.data?.timeZone?.identifier;
+            final identifier = state.timeZone.data?.value.identifier;
 
             if (identifier != null) {
               try {
@@ -44,8 +44,8 @@ class App extends StatelessWidget {
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             routerConfig: router,
-            locale: state.data?.locale,
-            themeMode: state.data?.themeMode ?? ThemeMode.system,
+            locale: state.locale.data?.value,
+            themeMode: state.themeMode.data?.value ?? ThemeMode.system,
           ),
         ),
       ),

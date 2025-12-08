@@ -10,14 +10,12 @@ class DriverState extends BaseState2 with DriverStateMappable {
     super.message,
     super.error,
     this.driver,
-    this.isOnline,
     this.activeOrder,
     this.todayEarnings,
     this.todayTrips,
   });
 
   final Driver? driver;
-  final bool? isOnline;
   final Order? activeOrder;
   final num? todayEarnings;
   final int? todayTrips;
@@ -40,7 +38,6 @@ class DriverState extends BaseState2 with DriverStateMappable {
     state: CubitState.success,
     message: message,
     driver: driver ?? this.driver,
-    isOnline: isOnline ?? this.isOnline,
     activeOrder: activeOrder ?? this.activeOrder,
     todayEarnings: todayEarnings ?? this.todayEarnings,
     todayTrips: todayTrips ?? this.todayTrips,

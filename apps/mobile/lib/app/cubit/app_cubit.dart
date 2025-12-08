@@ -7,87 +7,102 @@ import 'package:shadcn_flutter/shadcn_flutter.dart';
 class AppCubit extends BaseCubit<AppState> {
   AppCubit({required KeyValueService keyValueService})
     : _keyValueService = keyValueService,
-      super(AppState.initial());
+      super(const AppState());
 
   final KeyValueService _keyValueService;
 
   Future<void> init() async {
     try {
-      final currentTimeZone = await FlutterTimezone.getLocalTimezone();
+      await Future.wait([loadThemeMode(), loadLocale(), loadTimeZone()]);
+    } catch (e) {
+      logger.e('Failed to initialize app', error: e);
+    }
+  }
 
-      final themeModeIndex =
-          await _keyValueService.get<int>(KeyValueKeys.themeMode) ??
-          ThemeMode.system.index;
-      final themeMode = ThemeMode.values[themeModeIndex];
+  Future<void> loadTimeZone() async =>
+      await taskManager.execute('AC-lTZ1', () async {
+        try {
+          final currentTimeZone = await FlutterTimezone.getLocalTimezone();
+          emit(
+            state.copyWith(timeZone: OperationResult.success(currentTimeZone)),
+          );
+        } catch (e, st) {
+          logger.e('Failed to load time zone', error: e, stackTrace: st);
+        }
+      });
 
-      final localeTag = await _keyValueService.get<String>(KeyValueKeys.locale);
-      Locale? locale;
-      if (localeTag != null) {
-        final parts = localeTag.split('_');
-        locale = Locale.fromSubtags(
-          languageCode: parts[0],
-          countryCode: parts.length > 1 ? parts[1] : null,
+  Future<void> loadThemeMode() async => await taskManager.execute(
+    'AC-lTM1',
+    () async {
+      try {
+        final themeModeIndex =
+            await _keyValueService.get<int>(KeyValueKeys.themeMode) ??
+            ThemeMode.system.index;
+        final themeMode = ThemeMode.values[themeModeIndex];
+        emit(state.copyWith(themeMode: OperationResult.success(themeMode)));
+      } catch (e, st) {
+        logger.e('Failed to load theme mode', error: e, stackTrace: st);
+        emit(
+          state.copyWith(themeMode: OperationResult.success(ThemeMode.system)),
         );
       }
+    },
+  );
 
-      sl<AcceptLanguageInterceptor>().updateCached(
-        locale?.toLanguageTag() ?? 'en',
-      );
+  Future<void> loadLocale() async =>
+      await taskManager.execute('AC-lL1', () async {
+        try {
+          final localeTag = await _keyValueService.get<String>(
+            KeyValueKeys.locale,
+          );
+          Locale? locale;
+          if (localeTag != null) {
+            final parts = localeTag.split('_');
+            locale = Locale.fromSubtags(
+              languageCode: parts[0],
+              countryCode: parts.length > 1 ? parts[1] : null,
+            );
+          }
+          emit(
+            state.copyWith(
+              locale: OperationResult.success(locale ?? const Locale('en')),
+            ),
+          );
+          sl<AcceptLanguageInterceptor>().updateCached(
+            locale?.toLanguageTag() ?? 'en',
+          );
+        } catch (e, st) {
+          logger.e('Failed to load locale', error: e, stackTrace: st);
+          emit(
+            state.copyWith(locale: OperationResult.success(const Locale('en'))),
+          );
+        }
+      });
 
-      emit(
-        AppState.success(
-          InternalAppState(
-            themeMode: themeMode,
-            locale: locale ?? const Locale('en'),
-            timeZone: currentTimeZone,
-          ),
-        ),
-      );
-    } catch (e, st) {
-      logger.e('Failed to initialize app', error: e, stackTrace: st);
-      emit(AppState.failure(e is BaseError ? e : UnknownError(e.toString())));
-    }
-  }
+  Future<void> updateThemeMode(ThemeMode themeMode) async =>
+      await taskManager.execute('AC-uTM1', () async {
+        try {
+          await _keyValueService.set<int>(
+            KeyValueKeys.themeMode,
+            themeMode.index,
+          );
+          emit(state.copyWith(themeMode: OperationResult.success(themeMode)));
+        } catch (e, st) {
+          logger.e('Failed to update theme mode', error: e, stackTrace: st);
+        }
+      });
 
-  void reset() => emit(AppState.initial());
-
-  Future<void> updateThemeMode(ThemeMode themeMode) async {
-    try {
-      await _keyValueService.set<int>(KeyValueKeys.themeMode, themeMode.index);
-      final currentData = state.data;
-      final newState = currentData != null
-          ? currentData.copyWith(themeMode: themeMode)
-          : InternalAppState(themeMode: themeMode);
-      emit(AppState.success(newState));
-    } on BaseError catch (e, st) {
-      logger.e('Failed to update theme mode', error: e, stackTrace: st);
-      emit(AppState.failure(e));
-    } catch (e, st) {
-      logger.e('Failed to update theme mode', error: e, stackTrace: st);
-      emit(AppState.failure(UnknownError(e.toString())));
-    }
-  }
-
-  Future<void> updateLocale(Locale locale) async {
-    try {
-      await _keyValueService.set<String>(
-        KeyValueKeys.locale,
-        locale.toLanguageTag(),
-      );
-      sl<AcceptLanguageInterceptor>().updateCached(locale.toLanguageTag());
-
-      final currentData = state.data;
-      final newState = currentData != null
-          ? currentData.copyWith(locale: locale)
-          : InternalAppState(locale: locale);
-
-      emit(AppState.success(newState));
-    } on BaseError catch (e, st) {
-      logger.e('Failed to update locale', error: e, stackTrace: st);
-      emit(AppState.failure(e));
-    } catch (e, st) {
-      logger.e('Failed to update locale', error: e, stackTrace: st);
-      emit(AppState.failure(UnknownError(e.toString())));
-    }
-  }
+  Future<void> updateLocale(Locale locale) async =>
+      await taskManager.execute('AC-uL1', () async {
+        try {
+          await _keyValueService.set<String>(
+            KeyValueKeys.locale,
+            locale.toLanguageTag(),
+          );
+          sl<AcceptLanguageInterceptor>().updateCached(locale.toLanguageTag());
+          emit(state.copyWith(locale: OperationResult.success(locale)));
+        } catch (e, st) {
+          logger.e('Failed to update locale', error: e, stackTrace: st);
+        }
+      });
 }

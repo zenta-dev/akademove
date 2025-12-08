@@ -97,6 +97,12 @@ abstract class AppLocalizations {
     Locale('id')
   ];
 
+  /// No description provided for @driver_knowledge_quiz.
+  ///
+  /// In en, this message translates to:
+  /// **'Driver Knowledge Quiz'**
+  String get driver_knowledge_quiz;
+
   /// No description provided for @new_order_request.
   ///
   /// In en, this message translates to:

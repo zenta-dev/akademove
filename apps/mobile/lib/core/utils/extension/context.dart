@@ -29,7 +29,8 @@ extension BuildContextExt on BuildContext {
   }
 
   String formatCurrency(num amount, {Locale? locale, String? symbol}) {
-    final locale = read<AppCubit>().state.data?.locale ?? const Locale('id');
+    final locale =
+        read<AppCubit>().state.locale.data?.value ?? const Locale('id');
     final formatter = NumberFormat.currency(
       locale: locale.toString(),
       symbol: symbol ?? 'Rp ',

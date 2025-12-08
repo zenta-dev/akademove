@@ -140,8 +140,6 @@ Class | Method | HTTP request | Description
 [*DriverApi*](doc/DriverApi.md) | [**driverGetMine**](doc/DriverApi.md#drivergetmine) | **GET** /drivers/mine | 
 [*DriverApi*](doc/DriverApi.md) | [**driverGetReview**](doc/DriverApi.md#drivergetreview) | **GET** /drivers/{id}/approval-review | 
 [*DriverApi*](doc/DriverApi.md) | [**driverList**](doc/DriverApi.md#driverlist) | **GET** /drivers | 
-[*DriverApi*](doc/DriverApi.md) | [**driverMarkAsOffline**](doc/DriverApi.md#drivermarkasoffline) | **POST** /drivers/{id}/mark-as-offline | 
-[*DriverApi*](doc/DriverApi.md) | [**driverMarkAsOnline**](doc/DriverApi.md#drivermarkasonline) | **POST** /drivers/{id}/mark-as-online | 
 [*DriverApi*](doc/DriverApi.md) | [**driverNearby**](doc/DriverApi.md#drivernearby) | **GET** /drivers/nearby | 
 [*DriverApi*](doc/DriverApi.md) | [**driverRemove**](doc/DriverApi.md#driverremove) | **DELETE** /drivers/{id} | 
 [*DriverApi*](doc/DriverApi.md) | [**driverScheduleCreate**](doc/DriverApi.md#driverschedulecreate) | **POST** /drivers/{driverId}/schedules | 
@@ -154,6 +152,8 @@ Class | Method | HTTP request | Description
 [*DriverApi*](doc/DriverApi.md) | [**driverUpdate**](doc/DriverApi.md#driverupdate) | **PUT** /drivers/{id} | 
 [*DriverApi*](doc/DriverApi.md) | [**driverUpdateDocumentStatus**](doc/DriverApi.md#driverupdatedocumentstatus) | **POST** /drivers/{id}/approval-review/update-document | 
 [*DriverApi*](doc/DriverApi.md) | [**driverUpdateLocation**](doc/DriverApi.md#driverupdatelocation) | **PUT** /drivers/{id}/location | 
+[*DriverApi*](doc/DriverApi.md) | [**driverUpdateOnlineStatus**](doc/DriverApi.md#driverupdateonlinestatus) | **POST** /drivers/{id}/update-online-status | 
+[*DriverApi*](doc/DriverApi.md) | [**driverUpdateTakingOrderStatus**](doc/DriverApi.md#driverupdatetakingorderstatus) | **POST** /drivers/{id}/update-taking-order-status | 
 [*DriverApi*](doc/DriverApi.md) | [**driverVerifyQuiz**](doc/DriverApi.md#driververifyquiz) | **POST** /drivers/{id}/approval-review/verify-quiz | 
 [*DriverQuizAnswerApi*](doc/DriverQuizAnswerApi.md) | [**driverQuizAnswerCompleteQuiz**](doc/DriverQuizAnswerApi.md#driverquizanswercompletequiz) | **POST** /driver-quiz-answers/complete | 
 [*DriverQuizAnswerApi*](doc/DriverQuizAnswerApi.md) | [**driverQuizAnswerGetAttempt**](doc/DriverQuizAnswerApi.md#driverquizanswergetattempt) | **GET** /driver-quiz-answers/{attemptId} | 
@@ -363,16 +363,16 @@ Class | Method | HTTP request | Description
  - [DriverGetReview200ResponseData](doc/DriverGetReview200ResponseData.md)
  - [DriverKey](doc/DriverKey.md)
  - [DriverList200Response](doc/DriverList200Response.md)
+ - [DriverMinQuizQuestion](doc/DriverMinQuizQuestion.md)
  - [DriverQuizAnswer](doc/DriverQuizAnswer.md)
  - [DriverQuizAnswerCompleteQuiz200Response](doc/DriverQuizAnswerCompleteQuiz200Response.md)
  - [DriverQuizAnswerGetAttempt200Response](doc/DriverQuizAnswerGetAttempt200Response.md)
  - [DriverQuizAnswerList200Response](doc/DriverQuizAnswerList200Response.md)
  - [DriverQuizAnswerList200ResponseData](doc/DriverQuizAnswerList200ResponseData.md)
  - [DriverQuizAnswerStartQuiz201Response](doc/DriverQuizAnswerStartQuiz201Response.md)
- - [DriverQuizAnswerStartQuiz201ResponseData](doc/DriverQuizAnswerStartQuiz201ResponseData.md)
  - [DriverQuizAnswerStatus](doc/DriverQuizAnswerStatus.md)
  - [DriverQuizAnswerSubmitAnswer200Response](doc/DriverQuizAnswerSubmitAnswer200Response.md)
- - [DriverQuizAnswerSubmitAnswer200ResponseData](doc/DriverQuizAnswerSubmitAnswer200ResponseData.md)
+ - [DriverQuizAttempt](doc/DriverQuizAttempt.md)
  - [DriverQuizQuestion](doc/DriverQuizQuestion.md)
  - [DriverQuizQuestionAnswer](doc/DriverQuizQuestionAnswer.md)
  - [DriverQuizQuestionCategory](doc/DriverQuizQuestionCategory.md)
@@ -398,6 +398,8 @@ Class | Method | HTTP request | Description
  - [DriverSubmitRejectionRequest](doc/DriverSubmitRejectionRequest.md)
  - [DriverSuspendRequest](doc/DriverSuspendRequest.md)
  - [DriverUpdateDocumentStatusRequest](doc/DriverUpdateDocumentStatusRequest.md)
+ - [DriverUpdateOnlineStatusRequest](doc/DriverUpdateOnlineStatusRequest.md)
+ - [DriverUpdateTakingOrderStatusRequest](doc/DriverUpdateTakingOrderStatusRequest.md)
  - [DriverUser](doc/DriverUser.md)
  - [DriverVerifyQuizRequest](doc/DriverVerifyQuizRequest.md)
  - [Emergency](doc/Emergency.md)
@@ -463,7 +465,6 @@ Class | Method | HTTP request | Description
  - [MerchantMenuList200Response](doc/MerchantMenuList200Response.md)
  - [MerchantOrderAccept200Response](doc/MerchantOrderAccept200Response.md)
  - [MerchantPopulars200Response](doc/MerchantPopulars200Response.md)
- - [MerchantSetOnlineStatusRequest](doc/MerchantSetOnlineStatusRequest.md)
  - [MerchantSetOperatingStatusRequest](doc/MerchantSetOperatingStatusRequest.md)
  - [MerchantSetOrderTakingStatusRequest](doc/MerchantSetOrderTakingStatusRequest.md)
  - [Newsletter](doc/Newsletter.md)
@@ -560,6 +561,7 @@ Class | Method | HTTP request | Description
  - [StartDriverQuiz](doc/StartDriverQuiz.md)
  - [StartInvestigation](doc/StartInvestigation.md)
  - [SubmitDriverQuizAnswer](doc/SubmitDriverQuizAnswer.md)
+ - [SubmitDriverQuizAnswerResponse](doc/SubmitDriverQuizAnswerResponse.md)
  - [SupportChatEnvelope](doc/SupportChatEnvelope.md)
  - [SupportChatEnvelopeAction](doc/SupportChatEnvelopeAction.md)
  - [SupportChatEnvelopeEvent](doc/SupportChatEnvelopeEvent.md)

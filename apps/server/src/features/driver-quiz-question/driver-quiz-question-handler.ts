@@ -12,7 +12,7 @@ export const DriverQuizQuestionHandler = priv.router({
 		.use(adminMiddleware)
 		.handler(async ({ context, input: { query } }) => {
 			const { rows, totalPages } =
-				await context.repo.driverQuizQuestion.listQuestions(query);
+				await context.repo.driverQuizQuestion.list(query);
 			return {
 				status: 200,
 				body: {

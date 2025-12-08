@@ -74,7 +74,7 @@ class _EmergencyTriggerDialogState extends State<EmergencyTriggerDialog> {
     }
 
     final cubit = context.read<EmergencyCubit>();
-    final userId = context.read<AuthCubit>().state.data?.id;
+    final userId = context.read<AuthCubit>().state.user.data?.value.id;
 
     if (userId == null) {
       context.showMyToast('User not authenticated', type: ToastType.failed);

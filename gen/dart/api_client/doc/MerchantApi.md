@@ -962,7 +962,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **merchantSetOnlineStatus**
-> MerchantGetMine200ResponseBody merchantSetOnlineStatus(id, merchantSetOnlineStatusRequest)
+> MerchantGetMine200ResponseBody merchantSetOnlineStatus(id, driverUpdateOnlineStatusRequest)
 
 
 
@@ -972,10 +972,10 @@ import 'package:api_client/api.dart';
 
 final api = ApiClient().getMerchantApi();
 final String id = id_example; // String | 
-final MerchantSetOnlineStatusRequest merchantSetOnlineStatusRequest = ; // MerchantSetOnlineStatusRequest | 
+final DriverUpdateOnlineStatusRequest driverUpdateOnlineStatusRequest = ; // DriverUpdateOnlineStatusRequest | 
 
 try {
-    final response = api.merchantSetOnlineStatus(id, merchantSetOnlineStatusRequest);
+    final response = api.merchantSetOnlineStatus(id, driverUpdateOnlineStatusRequest);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling MerchantApi->merchantSetOnlineStatus: $e\n');
@@ -987,7 +987,7 @@ try {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **id** | **String**|  | 
- **merchantSetOnlineStatusRequest** | [**MerchantSetOnlineStatusRequest**](MerchantSetOnlineStatusRequest.md)|  | 
+ **driverUpdateOnlineStatusRequest** | [**DriverUpdateOnlineStatusRequest**](DriverUpdateOnlineStatusRequest.md)|  | 
 
 ### Return type
 

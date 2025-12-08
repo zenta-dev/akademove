@@ -14,7 +14,7 @@ sealed class BaseResponse<T> {
   final PaginationResult? paginationResult;
 
   bool get isSuccess => this is SuccessResponse<T>;
-  bool get isFailed => this is FailedResponse;
+  bool get isFailed => this is FailedResponse<T>;
 
   R when<R>({
     required R Function(T data, String message) success,
@@ -23,35 +23,6 @@ sealed class BaseResponse<T> {
     return switch (this) {
       SuccessResponse(:final data, :final message) => success(data, message),
       FailedResponse(:final code, :final message) => failed(code, message),
-    };
-  }
-
-  R? whenOrNull<R>({
-    R Function(T data, String message)? success,
-    R Function(ErrorCode code, String message)? failed,
-  }) {
-    return switch (this) {
-      SuccessResponse(:final data, :final message) => success?.call(
-        data,
-        message,
-      ),
-      FailedResponse(:final code, :final message) => failed?.call(
-        code,
-        message,
-      ),
-    };
-  }
-
-  R maybeWhen<R>({
-    required R Function() orElse,
-    R Function(T data, String message)? success,
-    R Function(ErrorCode code, String message)? failed,
-  }) {
-    return switch (this) {
-      SuccessResponse(:final data, :final message) =>
-        success?.call(data, message) ?? orElse(),
-      FailedResponse(:final code, :final message) =>
-        failed?.call(code, message) ?? orElse(),
     };
   }
 }
@@ -81,7 +52,7 @@ final class SuccessResponse<T> extends BaseResponse<T> {
 }
 
 @immutable
-final class FailedResponse extends BaseResponse<void> {
+final class FailedResponse<T> extends BaseResponse<T?> {
   const FailedResponse({
     required this.code,
     required super.message,

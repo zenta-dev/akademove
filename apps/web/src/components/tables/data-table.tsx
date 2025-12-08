@@ -39,6 +39,7 @@ interface DataTableProps<TData, TValue> {
 	totalPages?: number;
 	filterValue?: string;
 	onFilterChange?: (str: string) => void;
+	skeletonLength?: number;
 	children?: ReactNode;
 }
 
@@ -52,6 +53,7 @@ export function DataTable<TData, TValue>({
 	totalPages,
 	filterValue,
 	onFilterChange,
+	skeletonLength = 11,
 	children,
 }: DataTableProps<TData, TValue>) {
 	const [sorting, setSorting] = useState<SortingState>([]);
@@ -70,7 +72,7 @@ export function DataTable<TData, TValue>({
 	});
 
 	return (
-		<div className="p-2">
+		<div className="w-full p-4">
 			<div className="flex items-center">
 				{onFilterChange && (
 					<Input
@@ -116,7 +118,7 @@ export function DataTable<TData, TValue>({
 					</DropdownMenuContent>
 				</DropdownMenu>
 			</div>
-			<div className="my-2 overflow-hidden rounded-md border">
+			<div className="my-4 overflow-hidden rounded-md border">
 				<Table>
 					<TableHeader>
 						{table.getHeaderGroups().map((headerGroup) => (
@@ -138,7 +140,7 @@ export function DataTable<TData, TValue>({
 					</TableHeader>
 					<TableBody>
 						{isPending ? (
-							Array.from({ length: 12 }).map((_, i) => (
+							Array.from({ length: skeletonLength }).map((_, i) => (
 								<TableRow key={i}>
 									{Array.from({
 										length: table.getVisibleFlatColumns().length,

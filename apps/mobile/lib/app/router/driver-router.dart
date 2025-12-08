@@ -10,7 +10,6 @@ final driverRouter = StatefulShellRoute.indexedStack(
       BlocProvider(create: (_) => sl<DriverScheduleCubit>()),
       BlocProvider(create: (_) => sl<DriverProfileCubit>()),
       BlocProvider(create: (_) => sl<DriverProfileCubit>()),
-      BlocProvider(create: (_) => sl<DriverQuizCubit>()),
       BlocProvider(create: (_) => sl<DriverListHistoryCubit>()),
     ],
     child: IncomingOrderListener(

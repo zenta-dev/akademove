@@ -96,11 +96,17 @@ class _ForgotPasswordFormViewState extends State<_ForgotPasswordFormView> {
   }
 
   Future<void> handleEvent(BuildContext context, AuthState state) async {
-    if (state.isFailure) {
-      context.showMyToast(state.error?.message, type: ToastType.failed);
+    if (state.resetPasswordResult.isFailure) {
+      context.showMyToast(
+        state.resetPasswordResult.error?.message,
+        type: ToastType.failed,
+      );
     }
-    if (state.isSuccess) {
-      context.showMyToast(state.message, type: ToastType.success);
+    if (state.resetPasswordResult.isSuccess) {
+      context.showMyToast(
+        state.resetPasswordResult.message,
+        type: ToastType.success,
+      );
       await delay(const Duration(seconds: 1), () {});
       if (context.mounted) {
         context.pop();
@@ -115,7 +121,7 @@ class _ForgotPasswordFormViewState extends State<_ForgotPasswordFormView> {
       builder: (context, state) {
         return Form(
           onSubmit: (context, values) async {
-            if (state.isLoading) return;
+            if (state.resetPasswordResult.isLoading) return;
             final email = _emailKey[values];
             if (email == null) return;
 
@@ -151,7 +157,7 @@ class _ForgotPasswordFormViewState extends State<_ForgotPasswordFormView> {
                   FormErrorBuilder(
                     builder: (context, errors, child) {
                       final hasErrors = errors.isNotEmpty;
-                      final isLoading = state.isLoading;
+                      final isLoading = state.resetPasswordResult.isLoading;
 
                       return Button(
                         style: isLoading || hasErrors

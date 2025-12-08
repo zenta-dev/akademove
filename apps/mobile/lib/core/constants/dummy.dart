@@ -115,3 +115,14 @@ const dummyDriver = Driver(
   vehicleCertificate: '${UrlConstants.randomImageUrl}/seed/24/24',
   bank: dummyBank,
 );
+
+const dummyDriverSchedule = DriverSchedule(
+  id: dummyUUIDString,
+  name: 'Comp Science',
+  dayOfWeek: DayOfWeek.MONDAY,
+  startTime: Time(h: 12, m: 0),
+  endTime: Time(h: 14, m: 0),
+  driverId: dummyUUIDString,
+  createdAt: dummyConstDateTime,
+  updatedAt: dummyConstDateTime,
+);

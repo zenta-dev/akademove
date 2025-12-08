@@ -22,7 +22,7 @@ void main() {
       // TODO
     });
 
-    //Future<DriverQuizQuestionList200Response> driverQuizQuestionList({ DriverQuizQuestionCategory category, DriverQuizQuestionType type, bool isActive, int page, int limit }) async
+    //Future<DriverQuizQuestionList200Response> driverQuizQuestionList({ String cursor, Object limit, String direction, Object page, String query, String sortBy, PaginationOrder order, PaginationMode mode, DriverQuizQuestionCategory category, DriverQuizQuestionType type, bool isActive }) async
     test('test driverQuizQuestionList', () async {
       // TODO
     });

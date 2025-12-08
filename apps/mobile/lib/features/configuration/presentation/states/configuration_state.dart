@@ -1,46 +1,30 @@
 import 'package:akademove/core/_export.dart';
 import 'package:api_client/api_client.dart';
-import 'package:dart_mappable/dart_mappable.dart';
+import 'package:equatable/equatable.dart';
 
-part 'configuration_state.mapper.dart';
-
-@MappableClass(
-  generateMethods:
-      GenerateMethods.stringify | GenerateMethods.equals | GenerateMethods.copy,
-)
-class ConfigurationState extends BaseState3<Configuration>
-    with ConfigurationStateMappable {
+class ConfigurationState extends Equatable {
   const ConfigurationState({
-    super.state,
-    super.message,
-    super.error,
-    super.list,
-    super.selected,
+    this.configurations = const OperationResult.idle(),
+    this.selectedConfiguration = const OperationResult.idle(),
   });
 
-  ConfigurationState toInitial() =>
-      copyWith(state: CubitState.initial, message: null, error: null);
+  final OperationResult<List<Configuration>> configurations;
+  final OperationResult<Configuration> selectedConfiguration;
 
-  ConfigurationState toLoading() => copyWith(
-    state: CubitState.loading,
-    list: list,
-    selected: selected,
-    message: null,
-    error: null,
-  );
+  @override
+  bool get stringify => true;
 
-  ConfigurationState toSuccess({
-    List<Configuration>? list,
-    Configuration? selected,
-    String? message,
-  }) => copyWith(
-    state: CubitState.success,
-    list: list ?? this.list,
-    selected: selected ?? this.selected,
-    message: message,
-    error: null,
-  );
+  @override
+  List<Object> get props => [configurations, selectedConfiguration];
 
-  ConfigurationState toFailure(BaseError error, {String? message}) =>
-      copyWith(state: CubitState.failure, error: error, message: message);
+  ConfigurationState copyWith({
+    OperationResult<List<Configuration>>? configurations,
+    OperationResult<Configuration>? selectedConfiguration,
+  }) {
+    return ConfigurationState(
+      configurations: configurations ?? this.configurations,
+      selectedConfiguration:
+          selectedConfiguration ?? this.selectedConfiguration,
+    );
+  }
 }

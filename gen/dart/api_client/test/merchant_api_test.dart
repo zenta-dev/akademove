@@ -107,7 +107,7 @@ void main() {
       // TODO
     });
 
-    //Future<MerchantGetMine200ResponseBody> merchantSetOnlineStatus(String id, MerchantSetOnlineStatusRequest merchantSetOnlineStatusRequest) async
+    //Future<MerchantGetMine200ResponseBody> merchantSetOnlineStatus(String id, DriverUpdateOnlineStatusRequest driverUpdateOnlineStatusRequest) async
     test('test merchantSetOnlineStatus', () async {
       // TODO
     });

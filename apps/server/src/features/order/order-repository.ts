@@ -1,22 +1,4 @@
-import { BaseRepository } from "@/core/base";
-import {
-	CACHE_TTLS,
-	CONFIGURATION_KEYS,
-	DRIVER_POOL_KEY,
-} from "@/core/constants";
-import { RepositoryError } from "@/core/error";
-import type {
-	OrderByOperation,
-	UnifiedListResult,
-	WithTx,
-	WithUserId,
-} from "@/core/interface";
-import { type DatabaseService, tables } from "@/core/services/db";
-import type { KeyValueService } from "@/core/services/kv";
-import type { MapService } from "@/core/services/map";
-import type { OrderDatabase } from "@/core/tables/order";
-import { BusinessConfigurationService } from "@/features/configuration/services";
-import { log, safeAsync, toNumberSafe, toStringNumberSafe } from "@/utils";
+import { env } from "cloudflare:workers";
 import { m } from "@repo/i18n";
 import type {
 	ConfigurationValue,
@@ -37,7 +19,6 @@ import {
 } from "@repo/schema/order";
 import type { User, UserRole } from "@repo/schema/user";
 import { nullsToUndefined } from "@repo/shared";
-import { env } from "cloudflare:workers";
 import {
 	and,
 	count,
@@ -51,6 +32,25 @@ import {
 	type SQL,
 } from "drizzle-orm";
 import { v7 } from "uuid";
+import { BaseRepository } from "@/core/base";
+import {
+	CACHE_TTLS,
+	CONFIGURATION_KEYS,
+	DRIVER_POOL_KEY,
+} from "@/core/constants";
+import { RepositoryError } from "@/core/error";
+import type {
+	OrderByOperation,
+	UnifiedListResult,
+	WithTx,
+	WithUserId,
+} from "@/core/interface";
+import { type DatabaseService, tables } from "@/core/services/db";
+import type { KeyValueService } from "@/core/services/kv";
+import type { MapService } from "@/core/services/map";
+import type { OrderDatabase } from "@/core/tables/order";
+import { BusinessConfigurationService } from "@/features/configuration/services";
+import { log, safeAsync, toNumberSafe, toStringNumberSafe } from "@/utils";
 import type {
 	ChargePayload,
 	PaymentRepository,
@@ -86,7 +86,7 @@ export class OrderRepository extends BaseRepository {
 		map: MapService,
 		paymentRepo: PaymentRepository,
 		pricingService: OrderPricingService,
-		matchingService: OrderMatchingService,
+		_matchingService: OrderMatchingService,
 		stateService: OrderStateService,
 		deliveryProofService: DeliveryProofService,
 	) {

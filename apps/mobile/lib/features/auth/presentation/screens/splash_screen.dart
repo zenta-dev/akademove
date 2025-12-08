@@ -17,16 +17,25 @@ class SplashScreen extends StatelessWidget {
     return Scaffold(
       child: BlocListener<AuthCubit, AuthState>(
         listener: (context, state) {
-          if (state.isFailure) {
+          if (state.user.isFailure) {
             context.goNamed(Routes.authSignIn.name);
           }
-          if (state.isSuccess) {
-            switch (state.data?.role) {
+          if (state.user.isSuccess) {
+            switch (state.user.data?.value.role) {
               case UserRole.USER:
                 context.pushReplacementNamed(Routes.userHome.name);
               case UserRole.MERCHANT:
                 context.pushReplacementNamed(Routes.merchantHome.name);
               case UserRole.DRIVER:
+                if (state.driver.data?.value == null) {
+                  context.pushReplacementNamed(Routes.authSignIn.name);
+                  return;
+                }
+                if (state.driver.data?.value?.quizStatus !=
+                    DriverQuizStatus.PASSED) {
+                  context.pushReplacementNamed(Routes.driverQuiz.name);
+                  return;
+                }
                 context.pushReplacementNamed(Routes.driverHome.name);
               case UserRole.ADMIN:
               case UserRole.OPERATOR:
@@ -47,7 +56,7 @@ class SplashScreen extends StatelessWidget {
               Assets.images.brand.svg(width: 200.h, height: 200.h),
               BlocBuilder<AuthCubit, AuthState>(
                 builder: (context, state) {
-                  if (state.isLoading) {
+                  if (state.user.isLoading) {
                     return SizedBox(
                       width: context.mediaQuerySize.width / 4,
                       child: const LinearProgressIndicator(),

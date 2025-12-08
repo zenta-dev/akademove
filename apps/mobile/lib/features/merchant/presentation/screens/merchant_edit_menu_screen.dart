@@ -163,8 +163,8 @@ class _MerchantEditMenuScreenState extends State<MerchantEditMenuScreen> {
     }
 
     // Get merchant ID
-    final merchantCubit = context.read<MerchantCubit>();
-    final merchantId = merchantCubit.state.mine?.id;
+    final merchantCubit = context.read<AuthCubit>();
+    final merchantId = merchantCubit.state.merchant.data?.value?.id;
 
     if (merchantId == null) {
       _showToast(
@@ -200,27 +200,29 @@ class _MerchantEditMenuScreenState extends State<MerchantEditMenuScreen> {
 
     final state = menuCubit.state;
 
-    if (state.isSuccess) {
+    if (state.menu.isSuccess) {
       // Show success message
       showToast(
         context: context,
         builder: (context, overlay) => context.buildToast(
           title: context.l10n.success,
-          message: state.message ?? context.l10n.toast_menu_updated_success,
+          message:
+              state.menu.message ?? context.l10n.toast_menu_updated_success,
         ),
         location: ToastLocation.topCenter,
       );
 
       // Navigate back
       context.pop();
-    } else if (state.isFailure) {
+    } else if (state.menu.isFailure) {
       // Show error message
       showToast(
         context: context,
         builder: (context, overlay) => context.buildToast(
           title: context.l10n.error,
           message:
-              state.error?.message ?? context.l10n.toast_failed_update_menu,
+              state.menu.error?.message ??
+              context.l10n.toast_failed_update_menu,
         ),
         location: ToastLocation.topCenter,
       );
@@ -266,7 +268,7 @@ class _MerchantEditMenuScreenState extends State<MerchantEditMenuScreen> {
 
     return BlocBuilder<MerchantMenuCubit, MerchantMenuState>(
       builder: (context, state) {
-        final isLoading = state.isLoading;
+        final isLoading = state.menu.isLoading;
 
         return Stack(
           children: [

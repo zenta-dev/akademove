@@ -77,9 +77,13 @@ class DriverRepository extends BaseRepository {
     required bool isOnline,
   }) {
     return guard(() async {
-      final res = isOnline
-          ? await _apiClient.getDriverApi().driverMarkAsOnline(id: driverId)
-          : await _apiClient.getDriverApi().driverMarkAsOffline(id: driverId);
+      final res = await _apiClient.getDriverApi().driverUpdateOnlineStatus(
+        id: driverId,
+        driverUpdateOnlineStatusRequest: DriverUpdateOnlineStatusRequest(
+          isOnline: isOnline,
+        ),
+      );
+
       final data =
           res.data ??
           (throw const RepositoryError(

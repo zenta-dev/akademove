@@ -4,40 +4,12 @@ import 'package:akademove/core/_export.dart';
 import 'package:api_client/api_client.dart';
 
 class DriverQuizRepository extends BaseRepository {
-  DriverQuizRepository({
-    required ApiClient apiClient,
-    required KeyValueService keyValueService,
-  }) : _apiClient = apiClient,
-       _keyValueService = keyValueService;
+  DriverQuizRepository({required ApiClient apiClient}) : _apiClient = apiClient;
 
   final ApiClient _apiClient;
-  final KeyValueService _keyValueService;
-
-  /// Save quiz attempt to local storage
-  Future<void> _savePersistedAttempt(
-    DriverQuizAnswerStartQuiz201ResponseData attempt,
-  ) async {
-    try {
-      await _keyValueService.set(
-        KeyValueKeys.quizAttempt,
-        jsonEncode(attempt.toJson()),
-      );
-    } catch (e) {
-      logger.e('Failed to save persisted quiz attempt: $e');
-    }
-  }
-
-  /// Clear persisted quiz attempt
-  Future<void> _clearPersistedAttempt() async {
-    try {
-      await _keyValueService.remove(KeyValueKeys.quizAttempt);
-    } catch (e) {
-      logger.e('Failed to clear persisted quiz attempt: $e');
-    }
-  }
 
   /// Start a new quiz attempt
-  Future<BaseResponse<DriverQuizAnswerStartQuiz201ResponseData>> startQuiz(
+  Future<BaseResponse<DriverQuizAttempt>> startQuiz(
     StartDriverQuiz request,
   ) async {
     return guard(() async {
@@ -53,19 +25,24 @@ class DriverQuizRepository extends BaseRepository {
         );
       }
 
-      final data = response.data!;
-      final apiData = data.data;
+      final data = response.data;
+      if (data == null) {
+        throw RepositoryError(
+          'Failed to start quiz: empty data',
+          code: ErrorCode.unknown,
+        );
+      }
 
-      // Persist attempt locally
-      await _savePersistedAttempt(apiData);
+      final apiData = data.data;
 
       return SuccessResponse(message: data.message, data: apiData);
     });
   }
 
   /// Submit an answer to a question
-  Future<BaseResponse<DriverQuizAnswerSubmitAnswer200ResponseData>>
-  submitAnswer(SubmitDriverQuizAnswer request) async {
+  Future<BaseResponse<SubmitDriverQuizAnswerResponse>> submitAnswer(
+    SubmitDriverQuizAnswer request,
+  ) async {
     return guard(() async {
       // Call API to submit answer
       final response = await _apiClient
@@ -79,7 +56,15 @@ class DriverQuizRepository extends BaseRepository {
         );
       }
 
-      final data = response.data!;
+      final data = response.data;
+
+      if (data == null) {
+        throw RepositoryError(
+          'Failed to submit answer: empty response',
+          code: ErrorCode.unknown,
+        );
+      }
+
       return SuccessResponse(message: data.message, data: data.data);
     });
   }
@@ -103,9 +88,6 @@ class DriverQuizRepository extends BaseRepository {
 
       final data = response.data!;
       final resultData = data.data;
-
-      // Clear persisted attempt after completion
-      await _clearPersistedAttempt();
 
       return SuccessResponse(message: data.message, data: resultData);
     });
@@ -137,13 +119,6 @@ class DriverQuizRepository extends BaseRepository {
         logger.w('Failed to fetch from server: $e');
         rethrow;
       }
-    });
-  }
-
-  /// Clear quiz attempt cache (after successful completion/submission)
-  Future<void> clearQuizCache() async {
-    return guard(() async {
-      await _clearPersistedAttempt();
     });
   }
 }

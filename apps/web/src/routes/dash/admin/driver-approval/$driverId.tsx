@@ -1,3 +1,7 @@
+import { useQuery } from "@tanstack/react-query";
+import { createFileRoute, redirect } from "@tanstack/react-router";
+import { AlertCircle, CheckCircle, Eye, Loader2, XCircle } from "lucide-react";
+import { useMemo, useState } from "react";
 import { DriverApprovalPageApprovalDialog } from "@/components/dialogs/driver-approval-page-approval-dialog";
 import { DriverApprovalPageRejectionDialog } from "@/components/dialogs/driver-approval-page-rejection-dialog";
 import { DriverDocumentPreviewModal } from "@/components/modals/driver-document-preview-modal";
@@ -10,10 +14,6 @@ import { Separator } from "@/components/ui/separator";
 import { hasAccess } from "@/lib/actions";
 import { orpcQuery } from "@/lib/orpc";
 import { cn } from "@/utils/cn";
-import { useQuery } from "@tanstack/react-query";
-import { createFileRoute, redirect } from "@tanstack/react-router";
-import { AlertCircle, CheckCircle, Eye, Loader2, XCircle } from "lucide-react";
-import { useMemo, useState } from "react";
 
 export const Route = createFileRoute("/dash/admin/driver-approval/$driverId")({
 	beforeLoad: async () => {
