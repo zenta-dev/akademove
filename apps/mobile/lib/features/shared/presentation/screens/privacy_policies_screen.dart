@@ -171,19 +171,23 @@ class _PrivacyPoliciesScreenState extends State<PrivacyPoliciesScreen> {
       children: [
         MyScaffold(
           headers: [DefaultAppBar(title: context.l10n.title_privacy_policies)],
-          body: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            spacing: 16.h,
-            children: [
-              _buildHeaderCard(context),
-              ..._details.asMap().entries.map((entry) {
-                return _PrivacySection(
-                  detail: entry.value,
-                  isOpen: _openIndex == entry.key,
-                  onToggle: () => _toggleSection(entry.key),
-                );
-              }),
-            ],
+          scrollable: true,
+          body: Padding(
+            padding: EdgeInsets.only(bottom: 100.h),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              spacing: 16.h,
+              children: [
+                _buildHeaderCard(context),
+                ..._details.asMap().entries.map((entry) {
+                  return _PrivacySection(
+                    detail: entry.value,
+                    isOpen: _openIndex == entry.key,
+                    onToggle: () => _toggleSection(entry.key),
+                  );
+                }),
+              ],
+            ),
           ),
         ),
         _buildBottomButton(context),
