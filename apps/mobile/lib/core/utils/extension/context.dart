@@ -96,7 +96,7 @@ extension BuildContextExt on BuildContext {
                       if (context.mounted) Navigator.of(context).pop(granted);
                     },
                     child: isLoading
-                        ? const Submiting()
+                        ? const Submiting(simpleText: true)
                         : const Text('Grant Permission'),
                   ),
                 ],
@@ -149,7 +149,9 @@ extension BuildContextExt on BuildContext {
 
                       if (context.mounted) Navigator.of(context).pop(enabled);
                     },
-                    child: isLoading ? const Submiting() : const Text('Enable'),
+                    child: isLoading
+                        ? const Submiting(simpleText: true)
+                        : const Text('Enable'),
                   ),
                 ],
               );
@@ -214,7 +216,7 @@ extension BuildContextExt on BuildContext {
                       if (context.mounted) Navigator.of(context).pop(granted);
                     },
                     child: isLoading
-                        ? const Submiting()
+                        ? const Submiting(simpleText: true)
                         : const Text('Grant Permission'),
                   ),
                 ],
