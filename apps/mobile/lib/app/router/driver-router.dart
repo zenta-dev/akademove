@@ -31,7 +31,10 @@ final driverRouter = StatefulShellRoute.indexedStack(
         GoRoute(
           name: Routes.driverHome.name,
           path: Routes.driverHome.path,
-          builder: (context, state) => const DriverHomeScreen(),
+          builder: (context, state) => BlocProvider.value(
+            value: context.read<DriverHomeCubit>(),
+            child: const DriverHomeScreen(),
+          ),
           routes: [
             GoRoute(
               name: Routes.driverOrderDetail.name,

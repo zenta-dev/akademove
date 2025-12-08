@@ -1,5 +1,9 @@
 import { BaseRepository } from "@/core/base";
-import { CACHE_TTLS, CONFIGURATION_KEYS } from "@/core/constants";
+import {
+	CACHE_TTLS,
+	CONFIGURATION_KEYS,
+	DRIVER_POOL_KEY,
+} from "@/core/constants";
 import { RepositoryError } from "@/core/error";
 import type {
 	OrderByOperation,
@@ -82,7 +86,7 @@ export class OrderRepository extends BaseRepository {
 		map: MapService,
 		paymentRepo: PaymentRepository,
 		pricingService: OrderPricingService,
-		_matchingService: OrderMatchingService,
+		matchingService: OrderMatchingService,
 		stateService: OrderStateService,
 		deliveryProofService: DeliveryProofService,
 	) {
@@ -798,6 +802,20 @@ export class OrderRepository extends BaseRepository {
 				},
 				m.server_order_placed(),
 			);
+
+			const stub = OrderRepository.getRoomStubByName(DRIVER_POOL_KEY);
+			stub.broadcast({
+				f: "s",
+				t: "s",
+				a: "MATCHING",
+				p: {
+					detail: {
+						order,
+						payment,
+						transaction,
+					},
+				},
+			});
 
 			return { order, payment, transaction, autoAppliedCoupon };
 		} catch (err) {

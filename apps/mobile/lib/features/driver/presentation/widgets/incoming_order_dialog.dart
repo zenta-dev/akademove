@@ -374,16 +374,19 @@ class IncomingOrderListener extends StatelessWidget {
     showDialog<void>(
       context: context,
       barrierDismissible: false,
-      builder: (dialogContext) =>
-          BlocListener<DriverHomeCubit, DriverHomeState>(
-            // Listen for order cancellation or unavailability
-            listenWhen: (previous, current) {
-              return previous.incomingOrder != null &&
-                  current.incomingOrder == null;
-            },
-            listener: (context, state) {
-              // Order was cancelled/unavailable, close dialog
-              Navigator.of(dialogContext).pop();
+      builder: (dialogContext) => BlocListener<DriverHomeCubit, DriverHomeState>(
+        // Listen for order cancellation or unavailability
+        listenWhen: (previous, current) {
+          return previous.incomingOrder != null &&
+              current.incomingOrder == null;
+        },
+        listener: (context, state) {
+          // Order was cancelled/unavailable, close dialog
+          Navigator.of(dialogContext).pop();
+
+          // Use a post-frame callback to ensure context is still valid
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (context.mounted) {
               showToast(
                 context: context,
                 builder: (context, overlay) => context.buildToast(
@@ -392,39 +395,68 @@ class IncomingOrderListener extends StatelessWidget {
                       'This order was cancelled or accepted by another driver',
                 ),
               );
-            },
-            child: IncomingOrderDialog(
-              order: order,
-              onAccept: () async {
-                // Close the dialog
+            }
+          });
+        },
+        child: IncomingOrderDialog(
+          order: order,
+          onAccept: () async {
+            // Accept the order via DriverOrderCubit first
+            try {
+              await context.read<DriverOrderCubit>().acceptOrder(order.id);
+
+              // Only close dialog and clear state after successful acceptance
+              if (dialogContext.mounted) {
                 Navigator.of(dialogContext).pop();
-                // Clear incoming order from state
+              }
+
+              if (context.mounted) {
                 context.read<DriverHomeCubit>().clearIncomingOrder();
+              }
 
-                // Accept the order via DriverOrderCubit
-                await context.read<DriverOrderCubit>().acceptOrder(order.id);
-
-                // Navigation will be handled by the listener above
-                // when the order state changes to ACCEPTED
-              },
-              onReject: () async {
-                // Close the dialog
-                Navigator.of(dialogContext).pop();
-                // Clear incoming order from state
-                context.read<DriverHomeCubit>().clearIncomingOrder();
-
+              // Navigation will be handled by the listener above
+              // when the order state changes to ACCEPTED
+            } catch (e) {
+              // Handle error - show error message and keep dialog open
+              if (context.mounted) {
                 showToast(
                   context: context,
                   builder: (context, overlay) => context.buildToast(
-                    title: 'Order Rejected',
-                    message: 'You rejected the order',
+                    title: 'Error',
+                    message: 'Failed to accept order. Please try again.',
                   ),
                 );
+              }
+            }
+          },
+          onReject: () async {
+            // Close the dialog first
+            Navigator.of(dialogContext).pop();
 
+            // Clear incoming order from state
+            if (context.mounted) {
+              context.read<DriverHomeCubit>().clearIncomingOrder();
+
+              // Show rejection toast
+              showToast(
+                context: context,
+                builder: (context, overlay) => context.buildToast(
+                  title: 'Order Rejected',
+                  message: 'You rejected the order',
+                ),
+              );
+
+              // Reject the order in background
+              try {
                 await context.read<DriverOrderCubit>().rejectOrder(order.id);
-              },
-            ),
-          ),
+              } catch (e) {
+                // Silently handle rejection errors since user already rejected
+                // You could log this for debugging purposes
+              }
+            }
+          },
+        ),
+      ),
     );
   }
 }

@@ -22,13 +22,6 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
     context.read<DriverCubit>().init();
   }
 
-  void listenForIncomingOrders() {
-    final driverHomeCubit = context.watch<DriverHomeCubit>();
-    if (driverHomeCubit.state.incomingOrder != null) {
-      showIncomingOrderDialog(driverHomeCubit.state.incomingOrder!);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<DriverCubit, DriverState>(
@@ -73,35 +66,29 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
   void showIncomingOrderDialog(Order order) {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text(context.l10n.new_order_request),
+      builder: (dialogContext) => AlertDialog(
+        title: Text(dialogContext.l10n.new_order_request),
         content: Text(
-          context
+          dialogContext
               .l10n
               .you_have_a_new_order_request_from_customer_please_check_your_orders_page,
         ),
         actions: [
           TextButton(
             onPressed: () {
-              Navigator.of(context).pop();
-              context.read<DriverHomeCubit>().clearIncomingOrder();
+              Navigator.of(dialogContext).pop();
             },
-            child: Text(context.l10n.dismiss),
+            child: Text(dialogContext.l10n.dismiss),
           ),
           PrimaryButton(
             onPressed: () {
-              Navigator.of(context).pop();
-              context.read<DriverHomeCubit>().setCurrentOrder(order);
-              // context.push(Routes.driverOrderDetails.pathWithParams(order.id));
+              Navigator.of(dialogContext).pop();
             },
-            child: Text(context.l10n.view_order),
+            child: Text(dialogContext.l10n.view_order),
           ),
         ],
       ),
-    ).then((_) {
-      // Clear incoming order after dialog is dismissed
-      context.read<DriverHomeCubit>().clearIncomingOrder();
-    });
+    );
   }
 
   Widget _buildWelcomeCard(BuildContext context, DriverState state) {

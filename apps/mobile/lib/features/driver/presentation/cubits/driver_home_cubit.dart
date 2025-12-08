@@ -201,10 +201,14 @@ class DriverHomeCubit extends BaseCubit<DriverHomeState> {
           final envelope = OrderEnvelope.fromJson(json);
           logger.d('[DriverHomeCubit] - Driver Pool Message: $envelope');
 
-          if (envelope.e == OrderEnvelopeEvent.OFFER) {
+          if (envelope.e == OrderEnvelopeEvent.OFFER ||
+              envelope.a == OrderEnvelopeAction.MATCHING) {
             // New order offer received
             final order = envelope.p.detail?.order;
             if (order != null) {
+              logger.i(
+                '[DriverHomeCubit] - New incoming order offer: ${order.id}',
+              );
               emit(state.toSuccess(incomingOrder: order));
             }
           }
