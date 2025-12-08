@@ -3,7 +3,5 @@ import 'package:api_client/api_client.dart';
 
 // tests for SupportChatEnvelopeAction
 void main() {
-
-  group(SupportChatEnvelopeAction, () {
-  });
+  group(SupportChatEnvelopeAction, () {});
 }

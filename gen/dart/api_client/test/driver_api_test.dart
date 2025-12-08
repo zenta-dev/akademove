@@ -1,7 +1,6 @@
 import 'package:test/test.dart';
 import 'package:api_client/api_client.dart';
 
-
 /// tests for DriverApi
 void main() {
   final instance = ApiClient().getDriverApi();
@@ -111,6 +110,5 @@ void main() {
     test('test driverVerifyQuiz', () async {
       // TODO
     });
-
   });
 }

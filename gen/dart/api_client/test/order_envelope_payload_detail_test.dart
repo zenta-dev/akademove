@@ -3,7 +3,8 @@ import 'package:api_client/api_client.dart';
 
 // tests for OrderEnvelopePayloadDetail
 void main() {
-  final OrderEnvelopePayloadDetail? instance = /* OrderEnvelopePayloadDetail(...) */ null;
+  final OrderEnvelopePayloadDetail?
+  instance = /* OrderEnvelopePayloadDetail(...) */ null;
   // TODO add properties to the entity
 
   group(OrderEnvelopePayloadDetail, () {
@@ -21,6 +22,5 @@ void main() {
     test('to test the property `transaction`', () async {
       // TODO
     });
-
   });
 }

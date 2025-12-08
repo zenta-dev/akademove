@@ -17,21 +17,20 @@ part 'driver_verify_quiz_request.g.dart';
 )
 class DriverVerifyQuizRequest {
   /// Returns a new [DriverVerifyQuizRequest] instance.
-  const DriverVerifyQuizRequest({
-    required this.quizVerified,
-  });
+  const DriverVerifyQuizRequest({required this.quizVerified});
   @JsonKey(name: r'quizVerified', required: true, includeIfNull: false)
   final bool quizVerified;
-  
-  @override
-  bool operator ==(Object other) => identical(this, other) || other is DriverVerifyQuizRequest &&
-    other.quizVerified == quizVerified;
 
   @override
-  int get hashCode =>
-      quizVerified.hashCode;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is DriverVerifyQuizRequest && other.quizVerified == quizVerified;
 
-  factory DriverVerifyQuizRequest.fromJson(Map<String, dynamic> json) => _$DriverVerifyQuizRequestFromJson(json);
+  @override
+  int get hashCode => quizVerified.hashCode;
+
+  factory DriverVerifyQuizRequest.fromJson(Map<String, dynamic> json) =>
+      _$DriverVerifyQuizRequestFromJson(json);
 
   Map<String, dynamic> toJson() => _$DriverVerifyQuizRequestToJson(this);
 
@@ -39,6 +38,4 @@ class DriverVerifyQuizRequest {
   String toString() {
     return toJson().toString();
   }
-
 }
-

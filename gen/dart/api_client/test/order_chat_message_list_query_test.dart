@@ -3,7 +3,8 @@ import 'package:api_client/api_client.dart';
 
 // tests for OrderChatMessageListQuery
 void main() {
-  final OrderChatMessageListQuery? instance = /* OrderChatMessageListQuery(...) */ null;
+  final OrderChatMessageListQuery?
+  instance = /* OrderChatMessageListQuery(...) */ null;
   // TODO add properties to the entity
 
   group(OrderChatMessageListQuery, () {
@@ -21,6 +22,5 @@ void main() {
     test('to test the property `cursor`', () async {
       // TODO
     });
-
   });
 }

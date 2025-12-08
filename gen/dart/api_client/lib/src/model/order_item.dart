@@ -18,27 +18,23 @@ part 'order_item.g.dart';
 )
 class OrderItem {
   /// Returns a new [OrderItem] instance.
-  const OrderItem({
-    required this.quantity,
-    required this.item,
-  });
+  const OrderItem({required this.quantity, required this.item});
   @JsonKey(name: r'quantity', required: true, includeIfNull: false)
   final num quantity;
-  
+
   @JsonKey(name: r'item', required: true, includeIfNull: false)
   final OrderItemItem item;
-  
-  @override
-  bool operator ==(Object other) => identical(this, other) || other is OrderItem &&
-    other.quantity == quantity &&
-    other.item == item;
 
   @override
-  int get hashCode =>
-      quantity.hashCode +
-      item.hashCode;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is OrderItem && other.quantity == quantity && other.item == item;
 
-  factory OrderItem.fromJson(Map<String, dynamic> json) => _$OrderItemFromJson(json);
+  @override
+  int get hashCode => quantity.hashCode + item.hashCode;
+
+  factory OrderItem.fromJson(Map<String, dynamic> json) =>
+      _$OrderItemFromJson(json);
 
   Map<String, dynamic> toJson() => _$OrderItemToJson(this);
 
@@ -46,6 +42,4 @@ class OrderItem {
   String toString() {
     return toJson().toString();
   }
-
 }
-

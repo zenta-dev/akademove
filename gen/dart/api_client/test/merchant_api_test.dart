@@ -1,7 +1,6 @@
 import 'package:test/test.dart';
 import 'package:api_client/api_client.dart';
 
-
 /// tests for MerchantApi
 void main() {
   final instance = ApiClient().getMerchantApi();
@@ -44,6 +43,11 @@ void main() {
 
     //Future<MerchantGetMine200Response> merchantGetMine() async
     test('test merchantGetMine', () async {
+      // TODO
+    });
+
+    //Future<MerchantGetReview200Response> merchantGetReview(String id) async
+    test('test merchantGetReview', () async {
       // TODO
     });
 
@@ -122,10 +126,24 @@ void main() {
       // TODO
     });
 
+    //Future<MerchantGetReview200Response> merchantSubmitApproval(String id, DriverSubmitApprovalRequest driverSubmitApprovalRequest) async
+    test('test merchantSubmitApproval', () async {
+      // TODO
+    });
+
+    //Future<MerchantGetReview200Response> merchantSubmitRejection(String id, DriverSubmitRejectionRequest driverSubmitRejectionRequest) async
+    test('test merchantSubmitRejection', () async {
+      // TODO
+    });
+
     //Future<MerchantGetMine200ResponseBody> merchantUpdate(String id, String phoneCountryCode, int phoneNumber, num locationX, num locationY, String bankProvider, num bankNumber, { String name, String email, String address, String category, MultipartFile document, MultipartFile image }) async
     test('test merchantUpdate', () async {
       // TODO
     });
 
+    //Future<MerchantGetReview200Response> merchantUpdateDocumentStatus(String id, MerchantUpdateDocumentStatusRequest merchantUpdateDocumentStatusRequest) async
+    test('test merchantUpdateDocumentStatus', () async {
+      // TODO
+    });
   });
 }

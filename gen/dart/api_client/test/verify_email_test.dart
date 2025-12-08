@@ -7,10 +7,14 @@ void main() {
   // TODO add properties to the entity
 
   group(VerifyEmail, () {
-    // String token
-    test('to test the property `token`', () async {
+    // String email
+    test('to test the property `email`', () async {
       // TODO
     });
 
+    // String code
+    test('to test the property `code`', () async {
+      // TODO
+    });
   });
 }

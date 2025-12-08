@@ -3,7 +3,9 @@ import 'package:api_client/api_client.dart';
 
 // tests for DriverQuizQuestionGetQuizQuestions200ResponseDataInner
 void main() {
-  final DriverQuizQuestionGetQuizQuestions200ResponseDataInner? instance = /* DriverQuizQuestionGetQuizQuestions200ResponseDataInner(...) */ null;
+  final DriverQuizQuestionGetQuizQuestions200ResponseDataInner?
+  instance = /* DriverQuizQuestionGetQuizQuestions200ResponseDataInner(...) */
+      null;
   // TODO add properties to the entity
 
   group(DriverQuizQuestionGetQuizQuestions200ResponseDataInner, () {
@@ -41,6 +43,5 @@ void main() {
     test('to test the property `options`', () async {
       // TODO
     });
-
   });
 }

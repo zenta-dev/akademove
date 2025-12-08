@@ -3,7 +3,8 @@ import 'package:api_client/api_client.dart';
 
 // tests for NotificationGetUnreadCount200Response
 void main() {
-  final NotificationGetUnreadCount200Response? instance = /* NotificationGetUnreadCount200Response(...) */ null;
+  final NotificationGetUnreadCount200Response?
+  instance = /* NotificationGetUnreadCount200Response(...) */ null;
   // TODO add properties to the entity
 
   group(NotificationGetUnreadCount200Response, () {
@@ -26,6 +27,5 @@ void main() {
     test('to test the property `totalPages`', () async {
       // TODO
     });
-
   });
 }

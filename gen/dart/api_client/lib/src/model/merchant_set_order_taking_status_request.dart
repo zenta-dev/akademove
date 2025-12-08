@@ -17,28 +17,28 @@ part 'merchant_set_order_taking_status_request.g.dart';
 )
 class MerchantSetOrderTakingStatusRequest {
   /// Returns a new [MerchantSetOrderTakingStatusRequest] instance.
-  const MerchantSetOrderTakingStatusRequest({
-    required this.isTakingOrders,
-  });
+  const MerchantSetOrderTakingStatusRequest({required this.isTakingOrders});
   @JsonKey(name: r'isTakingOrders', required: true, includeIfNull: false)
   final bool isTakingOrders;
-  
-  @override
-  bool operator ==(Object other) => identical(this, other) || other is MerchantSetOrderTakingStatusRequest &&
-    other.isTakingOrders == isTakingOrders;
 
   @override
-  int get hashCode =>
-      isTakingOrders.hashCode;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is MerchantSetOrderTakingStatusRequest &&
+          other.isTakingOrders == isTakingOrders;
 
-  factory MerchantSetOrderTakingStatusRequest.fromJson(Map<String, dynamic> json) => _$MerchantSetOrderTakingStatusRequestFromJson(json);
+  @override
+  int get hashCode => isTakingOrders.hashCode;
 
-  Map<String, dynamic> toJson() => _$MerchantSetOrderTakingStatusRequestToJson(this);
+  factory MerchantSetOrderTakingStatusRequest.fromJson(
+    Map<String, dynamic> json,
+  ) => _$MerchantSetOrderTakingStatusRequestFromJson(json);
+
+  Map<String, dynamic> toJson() =>
+      _$MerchantSetOrderTakingStatusRequestToJson(this);
 
   @override
   String toString() {
     return toJson().toString();
   }
-
 }
-

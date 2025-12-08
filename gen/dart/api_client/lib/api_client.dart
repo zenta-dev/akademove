@@ -8,7 +8,6 @@ export 'package:api_client/src/auth/basic_auth.dart';
 export 'package:api_client/src/auth/bearer_auth.dart';
 export 'package:api_client/src/auth/oauth.dart';
 
-
 export 'package:api_client/src/api/admin_api.dart';
 export 'package:api_client/src/api/auth_api.dart';
 export 'package:api_client/src/api/badge_api.dart';
@@ -237,6 +236,8 @@ export 'package:api_client/src/model/merchant_get_availability_status200_respons
 export 'package:api_client/src/model/merchant_get_availability_status200_response_data.dart';
 export 'package:api_client/src/model/merchant_get_mine200_response.dart';
 export 'package:api_client/src/model/merchant_get_mine200_response_body.dart';
+export 'package:api_client/src/model/merchant_get_review200_response.dart';
+export 'package:api_client/src/model/merchant_get_review200_response_data.dart';
 export 'package:api_client/src/model/merchant_key.dart';
 export 'package:api_client/src/model/merchant_menu.dart';
 export 'package:api_client/src/model/merchant_menu_create200_response.dart';
@@ -246,6 +247,8 @@ export 'package:api_client/src/model/merchant_order_accept200_response.dart';
 export 'package:api_client/src/model/merchant_populars200_response.dart';
 export 'package:api_client/src/model/merchant_set_operating_status_request.dart';
 export 'package:api_client/src/model/merchant_set_order_taking_status_request.dart';
+export 'package:api_client/src/model/merchant_status.dart';
+export 'package:api_client/src/model/merchant_update_document_status_request.dart';
 export 'package:api_client/src/model/newsletter.dart';
 export 'package:api_client/src/model/newsletter_key.dart';
 export 'package:api_client/src/model/newsletter_status.dart';
@@ -407,4 +410,3 @@ export 'package:api_client/src/model/wallet_monthly_summary_query.dart';
 export 'package:api_client/src/model/wallet_monthly_summary_response.dart';
 export 'package:api_client/src/model/wallet_top_up200_response.dart';
 export 'package:api_client/src/model/withdraw_request.dart';
-

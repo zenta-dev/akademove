@@ -23,21 +23,22 @@ class InsertSupportChatMessage {
   });
   @JsonKey(name: r'ticketId', required: true, includeIfNull: false)
   final String ticketId;
-  
+
   @JsonKey(name: r'message', required: true, includeIfNull: false)
   final String message;
-  
-  @override
-  bool operator ==(Object other) => identical(this, other) || other is InsertSupportChatMessage &&
-    other.ticketId == ticketId &&
-    other.message == message;
 
   @override
-  int get hashCode =>
-      ticketId.hashCode +
-      message.hashCode;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is InsertSupportChatMessage &&
+          other.ticketId == ticketId &&
+          other.message == message;
 
-  factory InsertSupportChatMessage.fromJson(Map<String, dynamic> json) => _$InsertSupportChatMessageFromJson(json);
+  @override
+  int get hashCode => ticketId.hashCode + message.hashCode;
+
+  factory InsertSupportChatMessage.fromJson(Map<String, dynamic> json) =>
+      _$InsertSupportChatMessageFromJson(json);
 
   Map<String, dynamic> toJson() => _$InsertSupportChatMessageToJson(this);
 
@@ -45,6 +46,4 @@ class InsertSupportChatMessage {
   String toString() {
     return toJson().toString();
   }
-
 }
-

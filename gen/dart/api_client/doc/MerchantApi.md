@@ -17,6 +17,7 @@ Method | HTTP request | Description
 [**merchantGet**](MerchantApi.md#merchantget) | **GET** /merchants/{id} | 
 [**merchantGetAvailabilityStatus**](MerchantApi.md#merchantgetavailabilitystatus) | **GET** /merchants/{id}/availability/status | 
 [**merchantGetMine**](MerchantApi.md#merchantgetmine) | **GET** /merchants/mine | 
+[**merchantGetReview**](MerchantApi.md#merchantgetreview) | **GET** /merchants/{id}/approval-review | 
 [**merchantList**](MerchantApi.md#merchantlist) | **GET** /merchants | 
 [**merchantMenuCreate**](MerchantApi.md#merchantmenucreate) | **POST** /merchants/{merchantId}/menus | 
 [**merchantMenuGet**](MerchantApi.md#merchantmenuget) | **GET** /merchants/{merchantId}/menus/{id} | 
@@ -32,7 +33,10 @@ Method | HTTP request | Description
 [**merchantSetOnlineStatus**](MerchantApi.md#merchantsetonlinestatus) | **PATCH** /merchants/{id}/availability/online | 
 [**merchantSetOperatingStatus**](MerchantApi.md#merchantsetoperatingstatus) | **PATCH** /merchants/{id}/availability/operating-status | 
 [**merchantSetOrderTakingStatus**](MerchantApi.md#merchantsetordertakingstatus) | **PATCH** /merchants/{id}/availability/order-taking | 
+[**merchantSubmitApproval**](MerchantApi.md#merchantsubmitapproval) | **POST** /merchants/{id}/approval-review/submit-approval | 
+[**merchantSubmitRejection**](MerchantApi.md#merchantsubmitrejection) | **POST** /merchants/{id}/approval-review/submit-rejection | 
 [**merchantUpdate**](MerchantApi.md#merchantupdate) | **PUT** /merchants/{id} | 
+[**merchantUpdateDocumentStatus**](MerchantApi.md#merchantupdatedocumentstatus) | **POST** /merchants/{id}/approval-review/update-document | 
 
 
 # **analyticsExportMerchantAnalytics**
@@ -361,6 +365,47 @@ This endpoint does not need any parameter.
 ### Return type
 
 [**MerchantGetMine200Response**](MerchantGetMine200Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **merchantGetReview**
+> MerchantGetReview200Response merchantGetReview(id)
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getMerchantApi();
+final String id = id_example; // String | 
+
+try {
+    final response = api.merchantGetReview(id);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling MerchantApi->merchantGetReview: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**|  | 
+
+### Return type
+
+[**MerchantGetReview200Response**](MerchantGetReview200Response.md)
 
 ### Authorization
 
@@ -1090,6 +1135,92 @@ Name | Type | Description  | Notes
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
+# **merchantSubmitApproval**
+> MerchantGetReview200Response merchantSubmitApproval(id, driverSubmitApprovalRequest)
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getMerchantApi();
+final String id = id_example; // String | 
+final DriverSubmitApprovalRequest driverSubmitApprovalRequest = ; // DriverSubmitApprovalRequest | 
+
+try {
+    final response = api.merchantSubmitApproval(id, driverSubmitApprovalRequest);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling MerchantApi->merchantSubmitApproval: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**|  | 
+ **driverSubmitApprovalRequest** | [**DriverSubmitApprovalRequest**](DriverSubmitApprovalRequest.md)|  | 
+
+### Return type
+
+[**MerchantGetReview200Response**](MerchantGetReview200Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **merchantSubmitRejection**
+> MerchantGetReview200Response merchantSubmitRejection(id, driverSubmitRejectionRequest)
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getMerchantApi();
+final String id = id_example; // String | 
+final DriverSubmitRejectionRequest driverSubmitRejectionRequest = ; // DriverSubmitRejectionRequest | 
+
+try {
+    final response = api.merchantSubmitRejection(id, driverSubmitRejectionRequest);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling MerchantApi->merchantSubmitRejection: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**|  | 
+ **driverSubmitRejectionRequest** | [**DriverSubmitRejectionRequest**](DriverSubmitRejectionRequest.md)|  | 
+
+### Return type
+
+[**MerchantGetReview200Response**](MerchantGetReview200Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
 # **merchantUpdate**
 > MerchantGetMine200ResponseBody merchantUpdate(id, phoneCountryCode, phoneNumber, locationX, locationY, bankProvider, bankNumber, name, email, address, category, document, image)
 
@@ -1151,6 +1282,49 @@ Name | Type | Description  | Notes
 ### HTTP request headers
 
  - **Content-Type**: multipart/form-data
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **merchantUpdateDocumentStatus**
+> MerchantGetReview200Response merchantUpdateDocumentStatus(id, merchantUpdateDocumentStatusRequest)
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getMerchantApi();
+final String id = id_example; // String | 
+final MerchantUpdateDocumentStatusRequest merchantUpdateDocumentStatusRequest = ; // MerchantUpdateDocumentStatusRequest | 
+
+try {
+    final response = api.merchantUpdateDocumentStatus(id, merchantUpdateDocumentStatusRequest);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling MerchantApi->merchantUpdateDocumentStatus: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**|  | 
+ **merchantUpdateDocumentStatusRequest** | [**MerchantUpdateDocumentStatusRequest**](MerchantUpdateDocumentStatusRequest.md)|  | 
+
+### Return type
+
+[**MerchantGetReview200Response**](MerchantGetReview200Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)

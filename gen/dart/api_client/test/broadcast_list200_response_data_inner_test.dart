@@ -3,7 +3,8 @@ import 'package:api_client/api_client.dart';
 
 // tests for BroadcastList200ResponseDataInner
 void main() {
-  final BroadcastList200ResponseDataInner? instance = /* BroadcastList200ResponseDataInner(...) */ null;
+  final BroadcastList200ResponseDataInner?
+  instance = /* BroadcastList200ResponseDataInner(...) */ null;
   // TODO add properties to the entity
 
   group(BroadcastList200ResponseDataInner, () {
@@ -81,6 +82,5 @@ void main() {
     test('to test the property `updatedAt`', () async {
       // TODO
     });
-
   });
 }

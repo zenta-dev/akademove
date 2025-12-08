@@ -3,7 +3,8 @@ import 'package:api_client/api_client.dart';
 
 // tests for AccountDeletionDelete200ResponseData
 void main() {
-  final AccountDeletionDelete200ResponseData? instance = /* AccountDeletionDelete200ResponseData(...) */ null;
+  final AccountDeletionDelete200ResponseData?
+  instance = /* AccountDeletionDelete200ResponseData(...) */ null;
   // TODO add properties to the entity
 
   group(AccountDeletionDelete200ResponseData, () {
@@ -11,6 +12,5 @@ void main() {
     test('to test the property `success`', () async {
       // TODO
     });
-
   });
 }

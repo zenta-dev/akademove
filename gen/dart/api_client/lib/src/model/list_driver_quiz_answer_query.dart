@@ -19,42 +19,42 @@ part 'list_driver_quiz_answer_query.g.dart';
 class ListDriverQuizAnswerQuery {
   /// Returns a new [ListDriverQuizAnswerQuery] instance.
   const ListDriverQuizAnswerQuery({
-     this.driverId,
-     this.status,
-     this.page,
-     this.limit,
+    this.driverId,
+    this.status,
+    this.page,
+    this.limit,
   });
   @JsonKey(name: r'driverId', required: false, includeIfNull: false)
   final String? driverId;
-  
+
   @JsonKey(name: r'status', required: false, includeIfNull: false)
   final DriverQuizAnswerStatus? status;
-  
-          // minimum: 1
-          // maximum: 9007199254740991
+
+  // minimum: 1
+  // maximum: 9007199254740991
   @JsonKey(name: r'page', required: false, includeIfNull: false)
   final int? page;
-  
-          // minimum: 1
-          // maximum: 1000
+
+  // minimum: 1
+  // maximum: 1000
   @JsonKey(name: r'limit', required: false, includeIfNull: false)
   final int? limit;
-  
+
   @override
-  bool operator ==(Object other) => identical(this, other) || other is ListDriverQuizAnswerQuery &&
-    other.driverId == driverId &&
-    other.status == status &&
-    other.page == page &&
-    other.limit == limit;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ListDriverQuizAnswerQuery &&
+          other.driverId == driverId &&
+          other.status == status &&
+          other.page == page &&
+          other.limit == limit;
 
   @override
   int get hashCode =>
-      driverId.hashCode +
-      status.hashCode +
-      page.hashCode +
-      limit.hashCode;
+      driverId.hashCode + status.hashCode + page.hashCode + limit.hashCode;
 
-  factory ListDriverQuizAnswerQuery.fromJson(Map<String, dynamic> json) => _$ListDriverQuizAnswerQueryFromJson(json);
+  factory ListDriverQuizAnswerQuery.fromJson(Map<String, dynamic> json) =>
+      _$ListDriverQuizAnswerQueryFromJson(json);
 
   Map<String, dynamic> toJson() => _$ListDriverQuizAnswerQueryToJson(this);
 
@@ -62,6 +62,4 @@ class ListDriverQuizAnswerQuery {
   String toString() {
     return toJson().toString();
   }
-
 }
-

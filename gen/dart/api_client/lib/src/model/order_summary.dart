@@ -31,42 +31,44 @@ class OrderSummary {
   });
   @JsonKey(name: r'distanceKm', required: true, includeIfNull: false)
   final num distanceKm;
-  
+
   @JsonKey(name: r'baseFare', required: true, includeIfNull: false)
   final num baseFare;
-  
+
   @JsonKey(name: r'distanceFare', required: true, includeIfNull: false)
   final num distanceFare;
-  
+
   @JsonKey(name: r'additionalFees', required: true, includeIfNull: false)
   final num additionalFees;
-  
+
   @JsonKey(name: r'subtotal', required: true, includeIfNull: false)
   final num subtotal;
-  
+
   @JsonKey(name: r'platformFee', required: true, includeIfNull: false)
   final num platformFee;
-  
+
   @JsonKey(name: r'tax', required: true, includeIfNull: false)
   final num tax;
-  
+
   @JsonKey(name: r'totalCost', required: true, includeIfNull: false)
   final num totalCost;
-  
+
   @JsonKey(name: r'breakdown', required: true, includeIfNull: false)
   final OrderSummaryBreakdown breakdown;
-  
+
   @override
-  bool operator ==(Object other) => identical(this, other) || other is OrderSummary &&
-    other.distanceKm == distanceKm &&
-    other.baseFare == baseFare &&
-    other.distanceFare == distanceFare &&
-    other.additionalFees == additionalFees &&
-    other.subtotal == subtotal &&
-    other.platformFee == platformFee &&
-    other.tax == tax &&
-    other.totalCost == totalCost &&
-    other.breakdown == breakdown;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is OrderSummary &&
+          other.distanceKm == distanceKm &&
+          other.baseFare == baseFare &&
+          other.distanceFare == distanceFare &&
+          other.additionalFees == additionalFees &&
+          other.subtotal == subtotal &&
+          other.platformFee == platformFee &&
+          other.tax == tax &&
+          other.totalCost == totalCost &&
+          other.breakdown == breakdown;
 
   @override
   int get hashCode =>
@@ -80,7 +82,8 @@ class OrderSummary {
       totalCost.hashCode +
       breakdown.hashCode;
 
-  factory OrderSummary.fromJson(Map<String, dynamic> json) => _$OrderSummaryFromJson(json);
+  factory OrderSummary.fromJson(Map<String, dynamic> json) =>
+      _$OrderSummaryFromJson(json);
 
   Map<String, dynamic> toJson() => _$OrderSummaryToJson(this);
 
@@ -88,6 +91,4 @@ class OrderSummary {
   String toString() {
     return toJson().toString();
   }
-
 }
-

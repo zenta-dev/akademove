@@ -3,7 +3,8 @@ import 'package:api_client/api_client.dart';
 
 // tests for ListDriverQuizQuestionQuery
 void main() {
-  final ListDriverQuizQuestionQuery? instance = /* ListDriverQuizQuestionQuery(...) */ null;
+  final ListDriverQuizQuestionQuery?
+  instance = /* ListDriverQuizQuestionQuery(...) */ null;
   // TODO add properties to the entity
 
   group(ListDriverQuizQuestionQuery, () {
@@ -61,6 +62,5 @@ void main() {
     test('to test the property `isActive`', () async {
       // TODO
     });
-
   });
 }

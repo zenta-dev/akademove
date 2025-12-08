@@ -182,6 +182,7 @@ Class | Method | HTTP request | Description
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantGet**](doc/MerchantApi.md#merchantget) | **GET** /merchants/{id} | 
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantGetAvailabilityStatus**](doc/MerchantApi.md#merchantgetavailabilitystatus) | **GET** /merchants/{id}/availability/status | 
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantGetMine**](doc/MerchantApi.md#merchantgetmine) | **GET** /merchants/mine | 
+[*MerchantApi*](doc/MerchantApi.md) | [**merchantGetReview**](doc/MerchantApi.md#merchantgetreview) | **GET** /merchants/{id}/approval-review | 
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantList**](doc/MerchantApi.md#merchantlist) | **GET** /merchants | 
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantMenuCreate**](doc/MerchantApi.md#merchantmenucreate) | **POST** /merchants/{merchantId}/menus | 
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantMenuGet**](doc/MerchantApi.md#merchantmenuget) | **GET** /merchants/{merchantId}/menus/{id} | 
@@ -197,7 +198,10 @@ Class | Method | HTTP request | Description
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantSetOnlineStatus**](doc/MerchantApi.md#merchantsetonlinestatus) | **PATCH** /merchants/{id}/availability/online | 
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantSetOperatingStatus**](doc/MerchantApi.md#merchantsetoperatingstatus) | **PATCH** /merchants/{id}/availability/operating-status | 
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantSetOrderTakingStatus**](doc/MerchantApi.md#merchantsetordertakingstatus) | **PATCH** /merchants/{id}/availability/order-taking | 
+[*MerchantApi*](doc/MerchantApi.md) | [**merchantSubmitApproval**](doc/MerchantApi.md#merchantsubmitapproval) | **POST** /merchants/{id}/approval-review/submit-approval | 
+[*MerchantApi*](doc/MerchantApi.md) | [**merchantSubmitRejection**](doc/MerchantApi.md#merchantsubmitrejection) | **POST** /merchants/{id}/approval-review/submit-rejection | 
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantUpdate**](doc/MerchantApi.md#merchantupdate) | **PUT** /merchants/{id} | 
+[*MerchantApi*](doc/MerchantApi.md) | [**merchantUpdateDocumentStatus**](doc/MerchantApi.md#merchantupdatedocumentstatus) | **POST** /merchants/{id}/approval-review/update-document | 
 [*NotificationApi*](doc/NotificationApi.md) | [**notificationDelete**](doc/NotificationApi.md#notificationdelete) | **DELETE** /notifications/{id} | 
 [*NotificationApi*](doc/NotificationApi.md) | [**notificationGetUnreadCount**](doc/NotificationApi.md#notificationgetunreadcount) | **GET** /notifications/unread-count | 
 [*NotificationApi*](doc/NotificationApi.md) | [**notificationList**](doc/NotificationApi.md#notificationlist) | **GET** /notifications | 
@@ -458,6 +462,8 @@ Class | Method | HTTP request | Description
  - [MerchantGetAvailabilityStatus200ResponseData](doc/MerchantGetAvailabilityStatus200ResponseData.md)
  - [MerchantGetMine200Response](doc/MerchantGetMine200Response.md)
  - [MerchantGetMine200ResponseBody](doc/MerchantGetMine200ResponseBody.md)
+ - [MerchantGetReview200Response](doc/MerchantGetReview200Response.md)
+ - [MerchantGetReview200ResponseData](doc/MerchantGetReview200ResponseData.md)
  - [MerchantKey](doc/MerchantKey.md)
  - [MerchantMenu](doc/MerchantMenu.md)
  - [MerchantMenuCreate200Response](doc/MerchantMenuCreate200Response.md)
@@ -467,6 +473,8 @@ Class | Method | HTTP request | Description
  - [MerchantPopulars200Response](doc/MerchantPopulars200Response.md)
  - [MerchantSetOperatingStatusRequest](doc/MerchantSetOperatingStatusRequest.md)
  - [MerchantSetOrderTakingStatusRequest](doc/MerchantSetOrderTakingStatusRequest.md)
+ - [MerchantStatus](doc/MerchantStatus.md)
+ - [MerchantUpdateDocumentStatusRequest](doc/MerchantUpdateDocumentStatusRequest.md)
  - [Newsletter](doc/Newsletter.md)
  - [NewsletterKey](doc/NewsletterKey.md)
  - [NewsletterStatus](doc/NewsletterStatus.md)

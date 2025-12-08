@@ -8,7 +8,8 @@ import 'package:api_client/api.dart';
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**token** | **String** |  | 
+**email** | **String** |  | 
+**code** | **String** |  | 
 **newPassword** | **String** |  | 
 **confirmPassword** | **String** |  | 
 

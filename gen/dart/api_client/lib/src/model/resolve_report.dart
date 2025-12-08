@@ -17,21 +17,20 @@ part 'resolve_report.g.dart';
 )
 class ResolveReport {
   /// Returns a new [ResolveReport] instance.
-  const ResolveReport({
-    required this.resolution,
-  });
+  const ResolveReport({required this.resolution});
   @JsonKey(name: r'resolution', required: true, includeIfNull: false)
   final String resolution;
-  
-  @override
-  bool operator ==(Object other) => identical(this, other) || other is ResolveReport &&
-    other.resolution == resolution;
 
   @override
-  int get hashCode =>
-      resolution.hashCode;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ResolveReport && other.resolution == resolution;
 
-  factory ResolveReport.fromJson(Map<String, dynamic> json) => _$ResolveReportFromJson(json);
+  @override
+  int get hashCode => resolution.hashCode;
+
+  factory ResolveReport.fromJson(Map<String, dynamic> json) =>
+      _$ResolveReportFromJson(json);
 
   Map<String, dynamic> toJson() => _$ResolveReportToJson(this);
 
@@ -39,6 +38,4 @@ class ResolveReport {
   String toString() {
     return toJson().toString();
   }
-
 }
-

@@ -21,6 +21,8 @@ abstract class _$OrderMerchantCWProxy {
 
   OrderMerchant location(Coordinate? location);
 
+  OrderMerchant status(OrderMerchantStatusEnum? status);
+
   OrderMerchant isActive(bool? isActive);
 
   OrderMerchant isOnline(bool? isOnline);
@@ -62,6 +64,7 @@ abstract class _$OrderMerchantCWProxy {
     Phone? phone,
     String? address,
     Coordinate? location,
+    OrderMerchantStatusEnum? status,
     bool? isActive,
     bool? isOnline,
     bool? isTakingOrders,
@@ -104,6 +107,9 @@ class _$OrderMerchantCWProxyImpl implements _$OrderMerchantCWProxy {
 
   @override
   OrderMerchant location(Coordinate? location) => call(location: location);
+
+  @override
+  OrderMerchant status(OrderMerchantStatusEnum? status) => call(status: status);
 
   @override
   OrderMerchant isActive(bool? isActive) => call(isActive: isActive);
@@ -162,6 +168,7 @@ class _$OrderMerchantCWProxyImpl implements _$OrderMerchantCWProxy {
     Object? phone = const $CopyWithPlaceholder(),
     Object? address = const $CopyWithPlaceholder(),
     Object? location = const $CopyWithPlaceholder(),
+    Object? status = const $CopyWithPlaceholder(),
     Object? isActive = const $CopyWithPlaceholder(),
     Object? isOnline = const $CopyWithPlaceholder(),
     Object? isTakingOrders = const $CopyWithPlaceholder(),
@@ -204,6 +211,10 @@ class _$OrderMerchantCWProxyImpl implements _$OrderMerchantCWProxy {
           ? _value.location
           // ignore: cast_nullable_to_non_nullable
           : location as Coordinate?,
+      status: status == const $CopyWithPlaceholder()
+          ? _value.status
+          // ignore: cast_nullable_to_non_nullable
+          : status as OrderMerchantStatusEnum?,
       isActive: isActive == const $CopyWithPlaceholder()
           ? _value.isActive
           // ignore: cast_nullable_to_non_nullable
@@ -284,6 +295,10 @@ OrderMerchant _$OrderMerchantFromJson(Map<String, dynamic> json) =>
           (v) =>
               v == null ? null : Coordinate.fromJson(v as Map<String, dynamic>),
         ),
+        status: $checkedConvert(
+          'status',
+          (v) => $enumDecodeNullable(_$OrderMerchantStatusEnumEnumMap, v),
+        ),
         isActive: $checkedConvert('isActive', (v) => v as bool?),
         isOnline: $checkedConvert('isOnline', (v) => v as bool?),
         isTakingOrders: $checkedConvert('isTakingOrders', (v) => v as bool?),
@@ -328,6 +343,7 @@ Map<String, dynamic> _$OrderMerchantToJson(OrderMerchant instance) =>
       'phone': ?instance.phone?.toJson(),
       'address': ?instance.address,
       'location': ?instance.location?.toJson(),
+      'status': ?_$OrderMerchantStatusEnumEnumMap[instance.status],
       'isActive': ?instance.isActive,
       'isOnline': ?instance.isOnline,
       'isTakingOrders': ?instance.isTakingOrders,
@@ -342,6 +358,15 @@ Map<String, dynamic> _$OrderMerchantToJson(OrderMerchant instance) =>
       'createdAt': ?instance.createdAt?.toIso8601String(),
       'updatedAt': ?instance.updatedAt?.toIso8601String(),
     };
+
+const _$OrderMerchantStatusEnumEnumMap = {
+  OrderMerchantStatusEnum.PENDING: 'PENDING',
+  OrderMerchantStatusEnum.APPROVED: 'APPROVED',
+  OrderMerchantStatusEnum.REJECTED: 'REJECTED',
+  OrderMerchantStatusEnum.ACTIVE: 'ACTIVE',
+  OrderMerchantStatusEnum.INACTIVE: 'INACTIVE',
+  OrderMerchantStatusEnum.SUSPENDED: 'SUSPENDED',
+};
 
 const _$OrderMerchantOperatingStatusEnumEnumMap = {
   OrderMerchantOperatingStatusEnum.OPEN: 'OPEN',

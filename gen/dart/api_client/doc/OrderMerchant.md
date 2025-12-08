@@ -15,6 +15,7 @@ Name | Type | Description | Notes
 **phone** | [**Phone**](Phone.md) |  | [optional] 
 **address** | **String** |  | [optional] 
 **location** | [**Coordinate**](Coordinate.md) |  | [optional] 
+**status** | **String** | Merchant approval status | [optional] 
 **isActive** | **bool** |  | [optional] 
 **isOnline** | **bool** | Whether merchant is currently online/available | [optional] 
 **isTakingOrders** | **bool** | Whether merchant is actively taking orders (subset of online) | [optional] 

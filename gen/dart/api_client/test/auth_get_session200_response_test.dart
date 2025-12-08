@@ -3,7 +3,8 @@ import 'package:api_client/api_client.dart';
 
 // tests for AuthGetSession200Response
 void main() {
-  final AuthGetSession200Response? instance = /* AuthGetSession200Response(...) */ null;
+  final AuthGetSession200Response?
+  instance = /* AuthGetSession200Response(...) */ null;
   // TODO add properties to the entity
 
   group(AuthGetSession200Response, () {
@@ -26,6 +27,5 @@ void main() {
     test('to test the property `totalPages`', () async {
       // TODO
     });
-
   });
 }

@@ -17,21 +17,20 @@ part 'complete_driver_quiz.g.dart';
 )
 class CompleteDriverQuiz {
   /// Returns a new [CompleteDriverQuiz] instance.
-  const CompleteDriverQuiz({
-    required this.attemptId,
-  });
+  const CompleteDriverQuiz({required this.attemptId});
   @JsonKey(name: r'attemptId', required: true, includeIfNull: false)
   final String attemptId;
-  
-  @override
-  bool operator ==(Object other) => identical(this, other) || other is CompleteDriverQuiz &&
-    other.attemptId == attemptId;
 
   @override
-  int get hashCode =>
-      attemptId.hashCode;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is CompleteDriverQuiz && other.attemptId == attemptId;
 
-  factory CompleteDriverQuiz.fromJson(Map<String, dynamic> json) => _$CompleteDriverQuizFromJson(json);
+  @override
+  int get hashCode => attemptId.hashCode;
+
+  factory CompleteDriverQuiz.fromJson(Map<String, dynamic> json) =>
+      _$CompleteDriverQuizFromJson(json);
 
   Map<String, dynamic> toJson() => _$CompleteDriverQuizToJson(this);
 
@@ -39,6 +38,4 @@ class CompleteDriverQuiz {
   String toString() {
     return toJson().toString();
   }
-
 }
-

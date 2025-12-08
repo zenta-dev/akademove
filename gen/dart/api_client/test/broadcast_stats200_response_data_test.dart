@@ -3,7 +3,8 @@ import 'package:api_client/api_client.dart';
 
 // tests for BroadcastStats200ResponseData
 void main() {
-  final BroadcastStats200ResponseData? instance = /* BroadcastStats200ResponseData(...) */ null;
+  final BroadcastStats200ResponseData?
+  instance = /* BroadcastStats200ResponseData(...) */ null;
   // TODO add properties to the entity
 
   group(BroadcastStats200ResponseData, () {
@@ -31,6 +32,5 @@ void main() {
     test('to test the property `failed`', () async {
       // TODO
     });
-
   });
 }

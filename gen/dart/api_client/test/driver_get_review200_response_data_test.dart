@@ -3,7 +3,8 @@ import 'package:api_client/api_client.dart';
 
 // tests for DriverGetReview200ResponseData
 void main() {
-  final DriverGetReview200ResponseData? instance = /* DriverGetReview200ResponseData(...) */ null;
+  final DriverGetReview200ResponseData?
+  instance = /* DriverGetReview200ResponseData(...) */ null;
   // TODO add properties to the entity
 
   group(DriverGetReview200ResponseData, () {
@@ -86,6 +87,5 @@ void main() {
     test('to test the property `updatedAt`', () async {
       // TODO
     });
-
   });
 }

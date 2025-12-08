@@ -3,7 +3,8 @@ import 'package:api_client/api_client.dart';
 
 // tests for UserAdminListFiltersParameter
 void main() {
-  final UserAdminListFiltersParameter? instance = /* UserAdminListFiltersParameter(...) */ null;
+  final UserAdminListFiltersParameter?
+  instance = /* UserAdminListFiltersParameter(...) */ null;
   // TODO add properties to the entity
 
   group(UserAdminListFiltersParameter, () {
@@ -36,6 +37,5 @@ void main() {
     test('to test the property `endDate`', () async {
       // TODO
     });
-
   });
 }

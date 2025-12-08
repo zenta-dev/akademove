@@ -1,7 +1,6 @@
 import 'package:test/test.dart';
 import 'package:api_client/api_client.dart';
 
-
 /// tests for ConfigurationApi
 void main() {
   final instance = ApiClient().getConfigurationApi();
@@ -31,6 +30,5 @@ void main() {
     test('test configurationUpdate', () async {
       // TODO
     });
-
   });
 }

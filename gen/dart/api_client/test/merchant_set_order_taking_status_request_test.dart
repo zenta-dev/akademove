@@ -3,7 +3,8 @@ import 'package:api_client/api_client.dart';
 
 // tests for MerchantSetOrderTakingStatusRequest
 void main() {
-  final MerchantSetOrderTakingStatusRequest? instance = /* MerchantSetOrderTakingStatusRequest(...) */ null;
+  final MerchantSetOrderTakingStatusRequest?
+  instance = /* MerchantSetOrderTakingStatusRequest(...) */ null;
   // TODO add properties to the entity
 
   group(MerchantSetOrderTakingStatusRequest, () {
@@ -11,6 +12,5 @@ void main() {
     test('to test the property `isTakingOrders`', () async {
       // TODO
     });
-
   });
 }

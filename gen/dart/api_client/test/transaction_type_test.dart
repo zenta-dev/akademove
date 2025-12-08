@@ -3,7 +3,5 @@ import 'package:api_client/api_client.dart';
 
 // tests for TransactionType
 void main() {
-
-  group(TransactionType, () {
-  });
+  group(TransactionType, () {});
 }

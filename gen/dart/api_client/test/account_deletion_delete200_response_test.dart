@@ -3,7 +3,8 @@ import 'package:api_client/api_client.dart';
 
 // tests for AccountDeletionDelete200Response
 void main() {
-  final AccountDeletionDelete200Response? instance = /* AccountDeletionDelete200Response(...) */ null;
+  final AccountDeletionDelete200Response?
+  instance = /* AccountDeletionDelete200Response(...) */ null;
   // TODO add properties to the entity
 
   group(AccountDeletionDelete200Response, () {
@@ -26,6 +27,5 @@ void main() {
     test('to test the property `totalPages`', () async {
       // TODO
     });
-
   });
 }

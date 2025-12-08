@@ -3,7 +3,8 @@ import 'package:api_client/api_client.dart';
 
 // tests for SubmitDriverQuizAnswer
 void main() {
-  final SubmitDriverQuizAnswer? instance = /* SubmitDriverQuizAnswer(...) */ null;
+  final SubmitDriverQuizAnswer? instance = /* SubmitDriverQuizAnswer(...) */
+      null;
   // TODO add properties to the entity
 
   group(SubmitDriverQuizAnswer, () {
@@ -21,6 +22,5 @@ void main() {
     test('to test the property `selectedOptionId`', () async {
       // TODO
     });
-
   });
 }

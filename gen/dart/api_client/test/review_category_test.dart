@@ -3,7 +3,5 @@ import 'package:api_client/api_client.dart';
 
 // tests for ReviewCategory
 void main() {
-
-  group(ReviewCategory, () {
-  });
+  group(ReviewCategory, () {});
 }

@@ -27,18 +27,20 @@ class OrderEnvelopePayloadDetail {
   });
   @JsonKey(name: r'order', required: true, includeIfNull: false)
   final Order order;
-  
+
   @JsonKey(name: r'payment', required: true, includeIfNull: true)
   final Payment? payment;
-  
+
   @JsonKey(name: r'transaction', required: true, includeIfNull: true)
   final Transaction? transaction;
-  
+
   @override
-  bool operator ==(Object other) => identical(this, other) || other is OrderEnvelopePayloadDetail &&
-    other.order == order &&
-    other.payment == payment &&
-    other.transaction == transaction;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is OrderEnvelopePayloadDetail &&
+          other.order == order &&
+          other.payment == payment &&
+          other.transaction == transaction;
 
   @override
   int get hashCode =>
@@ -46,7 +48,8 @@ class OrderEnvelopePayloadDetail {
       (payment == null ? 0 : payment.hashCode) +
       (transaction == null ? 0 : transaction.hashCode);
 
-  factory OrderEnvelopePayloadDetail.fromJson(Map<String, dynamic> json) => _$OrderEnvelopePayloadDetailFromJson(json);
+  factory OrderEnvelopePayloadDetail.fromJson(Map<String, dynamic> json) =>
+      _$OrderEnvelopePayloadDetailFromJson(json);
 
   Map<String, dynamic> toJson() => _$OrderEnvelopePayloadDetailToJson(this);
 
@@ -54,6 +57,4 @@ class OrderEnvelopePayloadDetail {
   String toString() {
     return toJson().toString();
   }
-
 }
-

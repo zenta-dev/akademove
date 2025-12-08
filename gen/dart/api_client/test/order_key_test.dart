@@ -3,7 +3,5 @@ import 'package:api_client/api_client.dart';
 
 // tests for OrderKey
 void main() {
-
-  group(OrderKey, () {
-  });
+  group(OrderKey, () {});
 }

@@ -7,7 +7,9 @@ part of 'verify_email.dart';
 // **************************************************************************
 
 abstract class _$VerifyEmailCWProxy {
-  VerifyEmail token(String token);
+  VerifyEmail email(String email);
+
+  VerifyEmail code(String code);
 
   /// Creates a new instance with the provided field values.
   /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `VerifyEmail(...).copyWith.fieldName(value)`.
@@ -16,7 +18,7 @@ abstract class _$VerifyEmailCWProxy {
   /// ```dart
   /// VerifyEmail(...).copyWith(id: 12, name: "My name")
   /// ```
-  VerifyEmail call({String token});
+  VerifyEmail call({String email, String code});
 }
 
 /// Callable proxy for `copyWith` functionality.
@@ -27,7 +29,10 @@ class _$VerifyEmailCWProxyImpl implements _$VerifyEmailCWProxy {
   final VerifyEmail _value;
 
   @override
-  VerifyEmail token(String token) => call(token: token);
+  VerifyEmail email(String email) => call(email: email);
+
+  @override
+  VerifyEmail code(String code) => call(code: code);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -37,12 +42,19 @@ class _$VerifyEmailCWProxyImpl implements _$VerifyEmailCWProxy {
   /// ```dart
   /// VerifyEmail(...).copyWith(id: 12, name: "My name")
   /// ```
-  VerifyEmail call({Object? token = const $CopyWithPlaceholder()}) {
+  VerifyEmail call({
+    Object? email = const $CopyWithPlaceholder(),
+    Object? code = const $CopyWithPlaceholder(),
+  }) {
     return VerifyEmail(
-      token: token == const $CopyWithPlaceholder() || token == null
-          ? _value.token
+      email: email == const $CopyWithPlaceholder() || email == null
+          ? _value.email
           // ignore: cast_nullable_to_non_nullable
-          : token as String,
+          : email as String,
+      code: code == const $CopyWithPlaceholder() || code == null
+          ? _value.code
+          // ignore: cast_nullable_to_non_nullable
+          : code as String,
     );
   }
 }
@@ -60,12 +72,13 @@ extension $VerifyEmailCopyWith on VerifyEmail {
 
 VerifyEmail _$VerifyEmailFromJson(Map<String, dynamic> json) =>
     $checkedCreate('VerifyEmail', json, ($checkedConvert) {
-      $checkKeys(json, requiredKeys: const ['token']);
+      $checkKeys(json, requiredKeys: const ['email', 'code']);
       final val = VerifyEmail(
-        token: $checkedConvert('token', (v) => v as String),
+        email: $checkedConvert('email', (v) => v as String),
+        code: $checkedConvert('code', (v) => v as String),
       );
       return val;
     });
 
 Map<String, dynamic> _$VerifyEmailToJson(VerifyEmail instance) =>
-    <String, dynamic>{'token': instance.token};
+    <String, dynamic>{'email': instance.email, 'code': instance.code};

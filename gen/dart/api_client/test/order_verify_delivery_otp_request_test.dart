@@ -3,7 +3,8 @@ import 'package:api_client/api_client.dart';
 
 // tests for OrderVerifyDeliveryOTPRequest
 void main() {
-  final OrderVerifyDeliveryOTPRequest? instance = /* OrderVerifyDeliveryOTPRequest(...) */ null;
+  final OrderVerifyDeliveryOTPRequest?
+  instance = /* OrderVerifyDeliveryOTPRequest(...) */ null;
   // TODO add properties to the entity
 
   group(OrderVerifyDeliveryOTPRequest, () {
@@ -11,6 +12,5 @@ void main() {
     test('to test the property `otp`', () async {
       // TODO
     });
-
   });
 }

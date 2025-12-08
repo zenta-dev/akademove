@@ -42,6 +42,12 @@ void main() {
       // TODO
     });
 
+    // Merchant approval status
+    // String status
+    test('to test the property `status`', () async {
+      // TODO
+    });
+
     // bool isActive
     test('to test the property `isActive`', () async {
       // TODO
@@ -105,6 +111,5 @@ void main() {
     test('to test the property `updatedAt`', () async {
       // TODO
     });
-
   });
 }

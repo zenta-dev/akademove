@@ -24,26 +24,27 @@ class UserMeChangePasswordRequest {
   });
   @JsonKey(name: r'oldPassword', required: true, includeIfNull: false)
   final String oldPassword;
-  
+
   @JsonKey(name: r'newPassword', required: true, includeIfNull: false)
   final String newPassword;
-  
+
   @JsonKey(name: r'confirmNewPassword', required: true, includeIfNull: false)
   final String confirmNewPassword;
-  
+
   @override
-  bool operator ==(Object other) => identical(this, other) || other is UserMeChangePasswordRequest &&
-    other.oldPassword == oldPassword &&
-    other.newPassword == newPassword &&
-    other.confirmNewPassword == confirmNewPassword;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is UserMeChangePasswordRequest &&
+          other.oldPassword == oldPassword &&
+          other.newPassword == newPassword &&
+          other.confirmNewPassword == confirmNewPassword;
 
   @override
   int get hashCode =>
-      oldPassword.hashCode +
-      newPassword.hashCode +
-      confirmNewPassword.hashCode;
+      oldPassword.hashCode + newPassword.hashCode + confirmNewPassword.hashCode;
 
-  factory UserMeChangePasswordRequest.fromJson(Map<String, dynamic> json) => _$UserMeChangePasswordRequestFromJson(json);
+  factory UserMeChangePasswordRequest.fromJson(Map<String, dynamic> json) =>
+      _$UserMeChangePasswordRequestFromJson(json);
 
   Map<String, dynamic> toJson() => _$UserMeChangePasswordRequestToJson(this);
 
@@ -51,6 +52,4 @@ class UserMeChangePasswordRequest {
   String toString() {
     return toJson().toString();
   }
-
 }
-

@@ -3,7 +3,5 @@ import 'package:api_client/api_client.dart';
 
 // tests for NewsletterKey
 void main() {
-
-  group(NewsletterKey, () {
-  });
+  group(NewsletterKey, () {});
 }

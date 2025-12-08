@@ -24,33 +24,33 @@ class MerchantAnalytics200ResponseDataRevenueByDayInner {
   });
   @JsonKey(name: r'date', required: true, includeIfNull: false)
   final String date;
-  
+
   @JsonKey(name: r'revenue', required: true, includeIfNull: false)
   final num revenue;
-  
+
   @JsonKey(name: r'orders', required: true, includeIfNull: false)
   final num orders;
-  
-  @override
-  bool operator ==(Object other) => identical(this, other) || other is MerchantAnalytics200ResponseDataRevenueByDayInner &&
-    other.date == date &&
-    other.revenue == revenue &&
-    other.orders == orders;
 
   @override
-  int get hashCode =>
-      date.hashCode +
-      revenue.hashCode +
-      orders.hashCode;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is MerchantAnalytics200ResponseDataRevenueByDayInner &&
+          other.date == date &&
+          other.revenue == revenue &&
+          other.orders == orders;
 
-  factory MerchantAnalytics200ResponseDataRevenueByDayInner.fromJson(Map<String, dynamic> json) => _$MerchantAnalytics200ResponseDataRevenueByDayInnerFromJson(json);
+  @override
+  int get hashCode => date.hashCode + revenue.hashCode + orders.hashCode;
 
-  Map<String, dynamic> toJson() => _$MerchantAnalytics200ResponseDataRevenueByDayInnerToJson(this);
+  factory MerchantAnalytics200ResponseDataRevenueByDayInner.fromJson(
+    Map<String, dynamic> json,
+  ) => _$MerchantAnalytics200ResponseDataRevenueByDayInnerFromJson(json);
+
+  Map<String, dynamic> toJson() =>
+      _$MerchantAnalytics200ResponseDataRevenueByDayInnerToJson(this);
 
   @override
   String toString() {
     return toJson().toString();
   }
-
 }
-

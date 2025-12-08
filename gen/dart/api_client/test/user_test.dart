@@ -76,6 +76,5 @@ void main() {
     test('to test the property `userBadges`', () async {
       // TODO
     });
-
   });
 }

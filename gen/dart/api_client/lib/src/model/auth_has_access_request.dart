@@ -18,21 +18,20 @@ part 'auth_has_access_request.g.dart';
 )
 class AuthHasAccessRequest {
   /// Returns a new [AuthHasAccessRequest] instance.
-  const AuthHasAccessRequest({
-    required this.roles,
-  });
+  const AuthHasAccessRequest({required this.roles});
   @JsonKey(name: r'roles', required: true, includeIfNull: false)
   final List<RoleAccess> roles;
-  
-  @override
-  bool operator ==(Object other) => identical(this, other) || other is AuthHasAccessRequest &&
-    other.roles == roles;
 
   @override
-  int get hashCode =>
-      roles.hashCode;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is AuthHasAccessRequest && other.roles == roles;
 
-  factory AuthHasAccessRequest.fromJson(Map<String, dynamic> json) => _$AuthHasAccessRequestFromJson(json);
+  @override
+  int get hashCode => roles.hashCode;
+
+  factory AuthHasAccessRequest.fromJson(Map<String, dynamic> json) =>
+      _$AuthHasAccessRequestFromJson(json);
 
   Map<String, dynamic> toJson() => _$AuthHasAccessRequestToJson(this);
 
@@ -40,6 +39,4 @@ class AuthHasAccessRequest {
   String toString() {
     return toJson().toString();
   }
-
 }
-

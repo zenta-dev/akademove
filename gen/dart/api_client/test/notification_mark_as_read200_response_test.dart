@@ -3,7 +3,8 @@ import 'package:api_client/api_client.dart';
 
 // tests for NotificationMarkAsRead200Response
 void main() {
-  final NotificationMarkAsRead200Response? instance = /* NotificationMarkAsRead200Response(...) */ null;
+  final NotificationMarkAsRead200Response?
+  instance = /* NotificationMarkAsRead200Response(...) */ null;
   // TODO add properties to the entity
 
   group(NotificationMarkAsRead200Response, () {
@@ -26,6 +27,5 @@ void main() {
     test('to test the property `totalPages`', () async {
       // TODO
     });
-
   });
 }

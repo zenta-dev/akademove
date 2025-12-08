@@ -3,7 +3,8 @@ import 'package:api_client/api_client.dart';
 
 // tests for InsertSupportChatMessage
 void main() {
-  final InsertSupportChatMessage? instance = /* InsertSupportChatMessage(...) */ null;
+  final InsertSupportChatMessage? instance = /* InsertSupportChatMessage(...) */
+      null;
   // TODO add properties to the entity
 
   group(InsertSupportChatMessage, () {
@@ -16,6 +17,5 @@ void main() {
     test('to test the property `message`', () async {
       // TODO
     });
-
   });
 }

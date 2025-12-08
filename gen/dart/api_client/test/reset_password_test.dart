@@ -7,8 +7,13 @@ void main() {
   // TODO add properties to the entity
 
   group(ResetPassword, () {
-    // String token
-    test('to test the property `token`', () async {
+    // String email
+    test('to test the property `email`', () async {
+      // TODO
+    });
+
+    // String code
+    test('to test the property `code`', () async {
       // TODO
     });
 
@@ -21,6 +26,5 @@ void main() {
     test('to test the property `confirmPassword`', () async {
       // TODO
     });
-
   });
 }

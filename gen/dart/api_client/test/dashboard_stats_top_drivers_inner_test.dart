@@ -3,7 +3,8 @@ import 'package:api_client/api_client.dart';
 
 // tests for DashboardStatsTopDriversInner
 void main() {
-  final DashboardStatsTopDriversInner? instance = /* DashboardStatsTopDriversInner(...) */ null;
+  final DashboardStatsTopDriversInner?
+  instance = /* DashboardStatsTopDriversInner(...) */ null;
   // TODO add properties to the entity
 
   group(DashboardStatsTopDriversInner, () {
@@ -31,6 +32,5 @@ void main() {
     test('to test the property `rating`', () async {
       // TODO
     });
-
   });
 }

@@ -3,7 +3,8 @@ import 'package:api_client/api_client.dart';
 
 // tests for MerchantGetAvailabilityStatus200Response
 void main() {
-  final MerchantGetAvailabilityStatus200Response? instance = /* MerchantGetAvailabilityStatus200Response(...) */ null;
+  final MerchantGetAvailabilityStatus200Response?
+  instance = /* MerchantGetAvailabilityStatus200Response(...) */ null;
   // TODO add properties to the entity
 
   group(MerchantGetAvailabilityStatus200Response, () {
@@ -26,6 +27,5 @@ void main() {
     test('to test the property `totalPages`', () async {
       // TODO
     });
-
   });
 }

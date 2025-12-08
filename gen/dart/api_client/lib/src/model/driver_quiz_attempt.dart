@@ -27,26 +27,28 @@ class DriverQuizAttempt {
   });
   @JsonKey(name: r'attemptId', required: true, includeIfNull: false)
   final String attemptId;
-  
+
   @JsonKey(name: r'questions', required: true, includeIfNull: false)
   final List<DriverMinQuizQuestion> questions;
-  
+
   @JsonKey(name: r'totalQuestions', required: true, includeIfNull: false)
   final num totalQuestions;
-  
+
   @JsonKey(name: r'totalPoints', required: true, includeIfNull: false)
   final num totalPoints;
-  
+
   @JsonKey(name: r'passingScore', required: true, includeIfNull: false)
   final num passingScore;
-  
+
   @override
-  bool operator ==(Object other) => identical(this, other) || other is DriverQuizAttempt &&
-    other.attemptId == attemptId &&
-    other.questions == questions &&
-    other.totalQuestions == totalQuestions &&
-    other.totalPoints == totalPoints &&
-    other.passingScore == passingScore;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is DriverQuizAttempt &&
+          other.attemptId == attemptId &&
+          other.questions == questions &&
+          other.totalQuestions == totalQuestions &&
+          other.totalPoints == totalPoints &&
+          other.passingScore == passingScore;
 
   @override
   int get hashCode =>
@@ -56,7 +58,8 @@ class DriverQuizAttempt {
       totalPoints.hashCode +
       passingScore.hashCode;
 
-  factory DriverQuizAttempt.fromJson(Map<String, dynamic> json) => _$DriverQuizAttemptFromJson(json);
+  factory DriverQuizAttempt.fromJson(Map<String, dynamic> json) =>
+      _$DriverQuizAttemptFromJson(json);
 
   Map<String, dynamic> toJson() => _$DriverQuizAttemptToJson(this);
 
@@ -64,6 +67,4 @@ class DriverQuizAttempt {
   String toString() {
     return toJson().toString();
   }
-
 }
-
