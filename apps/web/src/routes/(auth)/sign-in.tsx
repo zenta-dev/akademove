@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { localizeHref, m } from "@repo/i18n";
+import { localizeHref, localizeUrl, m } from "@repo/i18n";
 import { type SignIn, SignInSchema } from "@repo/schema/auth";
 import { capitalizeFirstLetter } from "@repo/shared";
 import { useMutation } from "@tanstack/react-query";
@@ -78,7 +78,9 @@ function RouteComponent() {
 								await Promise.all([
 									router.invalidate(),
 									queryClient.invalidateQueries(),
-									router.navigate({ to: localizeHref("/sign-up/driver/quiz") }),
+									router.navigate({
+										to: localizeHref("/quiz/driver"),
+									}),
 								]);
 								return;
 							}

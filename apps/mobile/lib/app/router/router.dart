@@ -26,6 +26,7 @@ enum Routes {
   authEmailVerificationPending('/auth/email-verification-pending'),
   authVerifyEmail('/auth/verify-email'),
   driverQuiz('/auth/driver-quiz'),
+  driverApproval('/auth/driver-approval'),
 
   ///
   /// User Routes

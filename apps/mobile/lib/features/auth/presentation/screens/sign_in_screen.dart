@@ -115,6 +115,10 @@ class _SignInFormViewState extends State<_SignInFormView> {
               context.pushReplacementNamed(Routes.driverQuiz.name);
               return;
             }
+            if (state.driver.value?.status != DriverStatus.APPROVED) {
+              context.pushReplacementNamed(Routes.driverApproval.name);
+              return;
+            }
             context.pushReplacementNamed(Routes.driverHome.name);
           case UserRole.ADMIN:
           case UserRole.OPERATOR:

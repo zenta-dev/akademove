@@ -12,8 +12,8 @@ export type ApprovalDocumentStatus = z.infer<
 >;
 
 export const DriverApprovalReviewSchema = z.object({
-	id: z.string().uuid(),
-	driverId: z.string().uuid(),
+	id: z.uuid(),
+	driverId: z.uuid(),
 	status: z.enum(["PENDING", "APPROVED", "REJECTED"]),
 	studentCardStatus: ApprovalDocumentStatusSchema,
 	studentCardReason: z.string().nullable(),

@@ -1,5 +1,6 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
+  "driver_knowledge_quiz_description": "Complete this quiz to demonstrate your understanding of driver guidelines, safety protocols, and platform rules.",
   "checklist_for_marking_correct_answer": "Checklist for marking correct answer",
   "about_benefits_drivers_1": "Flexible additional income",
   "about_benefits_drivers_2": "Automatic class schedule integration",
@@ -1269,7 +1270,7 @@
   "view_all_merchants": "View All Merchants",
   "view_details": "View Details",
   "view_your_sales_analytics": "Track your sales performance and revenue",
-  "wallet": "wallet",
+  "wallet": "Wallet",
   "we_are_finding_best_driver": "We're finding the best driver for you",
   "web_app": "Web App",
   "wednesday": "Wednesday",

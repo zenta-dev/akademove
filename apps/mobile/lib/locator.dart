@@ -258,5 +258,8 @@ void _setupCubit() {
     ..registerFactory(() => ReportCubit(repository: sl<ReportRepository>()))
     ..registerFactory(
       () => DriverQuizCubit2(quizRepository: sl<DriverQuizRepository>()),
+    )
+    ..registerFactory(
+      () => DriverApprovalCubit(driverRepository: sl<DriverRepository>()),
     );
 }

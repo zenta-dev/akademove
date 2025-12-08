@@ -156,6 +156,7 @@ class OperationResult<T> extends Equatable {
   bool get isSuccess => status == OperationStatus.success;
   bool get isFailed => status == OperationStatus.failed;
   bool get isFailure => isFailed;
+  bool get hasData => data != null;
 
   String? get message => data?.message ?? error?.message;
   T? get value => data?.value;

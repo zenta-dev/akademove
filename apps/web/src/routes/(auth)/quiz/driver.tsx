@@ -40,26 +40,6 @@ export const Route = createFileRoute("/(auth)/quiz/driver")({
 		meta: [{ title: SUB_ROUTE_TITLES.DRIVER.QUIZ ?? "Driver Quiz" }],
 	}),
 	beforeLoad: async () => {
-		// Check if user is authenticated and is a DRIVER
-		const session = await getSession();
-		if (!session || session.role !== "DRIVER") {
-			redirect({ to: "/sign-up/driver", throw: true });
-		}
-
-		// Check if user has already passed the quiz
-		try {
-			const driverResult = await orpcClient.driver.getMine();
-			const driver = driverResult.body.data;
-
-			// If quiz is already passed, redirect to sign-in to establish proper session
-			if (driver.quizStatus === "PASSED") {
-				redirect({ to: "/sign-in", throw: true });
-			}
-		} catch (error) {
-			console.error("Failed to check driver status:", error);
-			redirect({ to: "/sign-up/driver", throw: true });
-		}
-
 		return { allowed: true };
 	},
 	component: RouteComponent,
@@ -184,8 +164,8 @@ function RouteComponent() {
 		});
 	}, [completeQuizMutation, quizAttempt]);
 
-	const handleGoToSignIn = useCallback(() => {
-		navigate({ to: "/sign-in" });
+	const handleGoToDashboard = useCallback(() => {
+		navigate({ to: "/dash/driver" });
 	}, [navigate]);
 
 	if (driverLoading || attemptLoading) {
@@ -229,8 +209,8 @@ function RouteComponent() {
 						</div>
 					</CardContent>
 					<CardFooter className="justify-center">
-						<Button onClick={handleGoToSignIn}>
-							Go to Sign In
+						<Button onClick={handleGoToDashboard}>
+							Go to Dashboard
 							<ArrowRight className="ml-2 h-4 w-4" />
 						</Button>
 					</CardFooter>
@@ -303,7 +283,7 @@ function RouteComponent() {
 					</CardContent>
 					<CardFooter className="flex justify-center gap-4">
 						{quizResult.passed ? (
-							<Button onClick={handleGoToSignIn}>
+							<Button onClick={handleGoToDashboard}>
 								Go to Sign In
 								<ArrowRight className="ml-2 h-4 w-4" />
 							</Button>
@@ -418,6 +398,7 @@ function RouteComponent() {
 									<Button
 										onClick={handleSubmitAnswer}
 										disabled={!selectedAnswer || submitAnswerMutation.isPending}
+										className="cursor-pointer"
 									>
 										{submitAnswerMutation.isPending ? (
 											<Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -427,7 +408,10 @@ function RouteComponent() {
 								)}
 
 								{isCurrentQuestionAnswered && !isLastQuestion && (
-									<Button onClick={handleNextQuestion}>
+									<Button
+										onClick={handleNextQuestion}
+										className="cursor-pointer"
+									>
 										Next
 										<ArrowRight className="ml-2 h-4 w-4" />
 									</Button>
@@ -437,7 +421,7 @@ function RouteComponent() {
 									<Button
 										onClick={handleCompleteQuiz}
 										disabled={completeQuizMutation.isPending}
-										className="bg-green-600 hover:bg-green-700"
+										className="cursor-pointer bg-green-600 hover:bg-green-700"
 									>
 										{completeQuizMutation.isPending ? (
 											<Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -470,7 +454,7 @@ function RouteComponent() {
 											: "outline"
 								}
 								className={cn(
-									"h-8 w-8 p-0",
+									"h-8 w-8 cursor-pointer p-0",
 									answeredQuestions.has(q.id) &&
 										index !== currentQuestionIndex &&
 										"bg-green-100 text-green-700",

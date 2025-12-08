@@ -12,6 +12,18 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
+  String get start_quiz => 'Start Quiz';
+
+  @override
+  String get previous_attempt_failed => 'Previous attempt failed';
+
+  @override
+  String get previous_attempt_failed_description => 'Your previous quiz attempt did not pass. You can try again now.';
+
+  @override
+  String get driver_knowledge_quiz_description => 'Complete this quiz to demonstrate your understanding of driver guidelines, safety protocols, and platform rules.';
+
+  @override
   String get driver_knowledge_quiz => 'Driver Knowledge Quiz';
 
   @override

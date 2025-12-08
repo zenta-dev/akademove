@@ -241,4 +241,21 @@ class DriverRepository extends BaseRepository {
       );
     });
   }
+
+  // Approval Review
+  Future<BaseResponse<DriverGetReview200ResponseData>> getApprovalReview(
+    String driverId,
+  ) {
+    return guard(() async {
+      final res = await _apiClient.getDriverApi().driverGetReview(id: driverId);
+      final data =
+          res.data ??
+          (throw const RepositoryError(
+            'Approval review not found',
+            code: ErrorCode.notFound,
+          ));
+
+      return SuccessResponse(message: data.message, data: data.data);
+    });
+  }
 }

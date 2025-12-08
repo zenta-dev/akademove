@@ -102,7 +102,10 @@ export const QuizQuestionForm = ({
 			// Remove extra options for true/false
 			form.setValue(
 				"options",
-				fields.slice(0, 2).map((field) => field),
+				fields.slice(0, 2).map((option, index) => ({
+					...option,
+					text: index === 0 ? "True" : "False",
+				})),
 			);
 		} else if (watchedType === "MULTIPLE_CHOICE" && fields.length < 2) {
 			// Ensure at least 2 options for multiple choice

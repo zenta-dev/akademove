@@ -1,5 +1,6 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
+  "driver_knowledge_quiz_description": "Selesaikan kuis ini untuk menunjukkan pemahaman Anda tentang pedoman driver, protokol keselamatan, dan aturan platform.",
   "checklist_for_marking_correct_answer": "Centang untuk menandai jawaban benar",
   "about_benefits_drivers_1": "Penghasilan tambahan yang fleksibel",
   "about_benefits_drivers_2": "Integrasi jadwal kuliah otomatis",

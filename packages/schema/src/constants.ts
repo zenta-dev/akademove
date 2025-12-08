@@ -7,6 +7,14 @@ export const CONSTANTS = Object.freeze({
 		"INACTIVE",
 		"SUSPENDED",
 	] as const,
+	MERCHANT_STATUSES: [
+		"PENDING",
+		"APPROVED",
+		"REJECTED",
+		"ACTIVE",
+		"INACTIVE",
+		"SUSPENDED",
+	] as const,
 	MERCHANT_CATEGORIES: ["ATK", "Printing", "Food"] as const,
 	MERCHANT_OPERATING_STATUSES: [
 		"OPEN",

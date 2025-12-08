@@ -1,5 +1,9 @@
 {
 	"@@locale": "id",
+	"start_quiz": "Mulai Kuis",
+	"previous_attempt_failed": "Percobaan sebelumnya gagal",
+	"previous_attempt_failed_description": "Percobaan kuis Anda sebelumnya tidak lulus. Anda dapat mencoba lagi sekarang.",
+	"driver_knowledge_quiz_description": "Selesaikan kuis ini untuk menunjukkan pemahaman Anda tentang pedoman driver, protokol keselamatan, dan aturan platform.",
 	"driver_knowledge_quiz": "Kuis Pengetahuan Pengemudi",
 	"new_order_request": "Permintaan pesanan baru",
 	"you_have_a_new_order_request_from_customer_please_check_your_orders_page": "Anda memiliki permintaan pesanan baru dari pelanggan, silakan periksa halaman Pesanan Anda.",

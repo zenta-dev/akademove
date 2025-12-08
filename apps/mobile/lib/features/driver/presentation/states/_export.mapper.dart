@@ -748,236 +748,236 @@ class _DriverProfileStateCopyWithImpl<$R, $Out>
   ) => _DriverProfileStateCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
 
-class DriverQuizStateMapper extends ClassMapperBase<DriverQuizState> {
-  DriverQuizStateMapper._();
+// class DriverQuizStateMapper extends ClassMapperBase<DriverQuizState> {
+//   DriverQuizStateMapper._();
 
-  static DriverQuizStateMapper? _instance;
-  static DriverQuizStateMapper ensureInitialized() {
-    if (_instance == null) {
-      MapperContainer.globals.use(_instance = DriverQuizStateMapper._());
-    }
-    return _instance!;
-  }
+//   static DriverQuizStateMapper? _instance;
+//   static DriverQuizStateMapper ensureInitialized() {
+//     if (_instance == null) {
+//       MapperContainer.globals.use(_instance = DriverQuizStateMapper._());
+//     }
+//     return _instance!;
+//   }
 
-  @override
-  final String id = 'DriverQuizState';
+//   @override
+//   final String id = 'DriverQuizState';
 
-  static CubitState _$state(DriverQuizState v) => v.state;
-  static const Field<DriverQuizState, CubitState> _f$state = Field(
-    'state',
-    _$state,
-    opt: true,
-    def: CubitState.initial,
-  );
-  static String? _$message(DriverQuizState v) => v.message;
-  static const Field<DriverQuizState, String> _f$message = Field(
-    'message',
-    _$message,
-    opt: true,
-  );
-  static BaseError? _$error(DriverQuizState v) => v.error;
-  static const Field<DriverQuizState, BaseError> _f$error = Field(
-    'error',
-    _$error,
-    opt: true,
-  );
-  static DriverQuizAttempt? _$attempt(DriverQuizState v) => v.attempt;
-  static const Field<DriverQuizState, DriverQuizAttempt> _f$attempt = Field(
-    'attempt',
-    _$attempt,
-    opt: true,
-  );
-  static int? _$currentQuestionIndex(DriverQuizState v) =>
-      v.currentQuestionIndex;
-  static const Field<DriverQuizState, int> _f$currentQuestionIndex = Field(
-    'currentQuestionIndex',
-    _$currentQuestionIndex,
-    opt: true,
-  );
-  static String? _$selectedAnswerId(DriverQuizState v) => v.selectedAnswerId;
-  static const Field<DriverQuizState, String> _f$selectedAnswerId = Field(
-    'selectedAnswerId',
-    _$selectedAnswerId,
-    opt: true,
-  );
-  static Set<String> _$answeredQuestions(DriverQuizState v) =>
-      v.answeredQuestions;
-  static const Field<DriverQuizState, Set<String>> _f$answeredQuestions = Field(
-    'answeredQuestions',
-    _$answeredQuestions,
-    opt: true,
-    def: const <String>{},
-  );
-  static Object? _$result(DriverQuizState v) => v.result;
-  static const Field<DriverQuizState, Object> _f$result = Field(
-    'result',
-    _$result,
-    opt: true,
-  );
-  static Map<String, dynamic>? _$_answerFeedback(DriverQuizState v) =>
-      v._answerFeedback;
-  static const Field<DriverQuizState, Map<String, dynamic>> _f$_answerFeedback =
-      Field(
-        '_answerFeedback',
-        _$_answerFeedback,
-        key: r'answerFeedback',
-        opt: true,
-      );
+//   static CubitState _$state(DriverQuizState v) => v.state;
+//   static const Field<DriverQuizState, CubitState> _f$state = Field(
+//     'state',
+//     _$state,
+//     opt: true,
+//     def: CubitState.initial,
+//   );
+//   static String? _$message(DriverQuizState v) => v.message;
+//   static const Field<DriverQuizState, String> _f$message = Field(
+//     'message',
+//     _$message,
+//     opt: true,
+//   );
+//   static BaseError? _$error(DriverQuizState v) => v.error;
+//   static const Field<DriverQuizState, BaseError> _f$error = Field(
+//     'error',
+//     _$error,
+//     opt: true,
+//   );
+//   static DriverQuizAttempt? _$attempt(DriverQuizState v) => v.attempt;
+//   static const Field<DriverQuizState, DriverQuizAttempt> _f$attempt = Field(
+//     'attempt',
+//     _$attempt,
+//     opt: true,
+//   );
+//   static int? _$currentQuestionIndex(DriverQuizState v) =>
+//       v.currentQuestionIndex;
+//   static const Field<DriverQuizState, int> _f$currentQuestionIndex = Field(
+//     'currentQuestionIndex',
+//     _$currentQuestionIndex,
+//     opt: true,
+//   );
+//   static String? _$selectedAnswerId(DriverQuizState v) => v.selectedAnswerId;
+//   static const Field<DriverQuizState, String> _f$selectedAnswerId = Field(
+//     'selectedAnswerId',
+//     _$selectedAnswerId,
+//     opt: true,
+//   );
+//   static Set<String> _$answeredQuestions(DriverQuizState v) =>
+//       v.answeredQuestions;
+//   static const Field<DriverQuizState, Set<String>> _f$answeredQuestions = Field(
+//     'answeredQuestions',
+//     _$answeredQuestions,
+//     opt: true,
+//     def: const <String>{},
+//   );
+//   static Object? _$result(DriverQuizState v) => v.result;
+//   static const Field<DriverQuizState, Object> _f$result = Field(
+//     'result',
+//     _$result,
+//     opt: true,
+//   );
+//   static Map<String, dynamic>? _$_answerFeedback(DriverQuizState v) =>
+//       v._answerFeedback;
+//   static const Field<DriverQuizState, Map<String, dynamic>> _f$_answerFeedback =
+//       Field(
+//         '_answerFeedback',
+//         _$_answerFeedback,
+//         key: r'answerFeedback',
+//         opt: true,
+//       );
 
-  @override
-  final MappableFields<DriverQuizState> fields = const {
-    #state: _f$state,
-    #message: _f$message,
-    #error: _f$error,
-    #attempt: _f$attempt,
-    #currentQuestionIndex: _f$currentQuestionIndex,
-    #selectedAnswerId: _f$selectedAnswerId,
-    #answeredQuestions: _f$answeredQuestions,
-    #result: _f$result,
-    #_answerFeedback: _f$_answerFeedback,
-  };
+//   @override
+//   final MappableFields<DriverQuizState> fields = const {
+//     #state: _f$state,
+//     #message: _f$message,
+//     #error: _f$error,
+//     #attempt: _f$attempt,
+//     #currentQuestionIndex: _f$currentQuestionIndex,
+//     #selectedAnswerId: _f$selectedAnswerId,
+//     #answeredQuestions: _f$answeredQuestions,
+//     #result: _f$result,
+//     #_answerFeedback: _f$_answerFeedback,
+//   };
 
-  static DriverQuizState _instantiate(DecodingData data) {
-    return DriverQuizState(
-      state: data.dec(_f$state),
-      message: data.dec(_f$message),
-      error: data.dec(_f$error),
-      attempt: data.dec(_f$attempt),
-      currentQuestionIndex: data.dec(_f$currentQuestionIndex),
-      selectedAnswerId: data.dec(_f$selectedAnswerId),
-      answeredQuestions: data.dec(_f$answeredQuestions),
-      result: data.dec(_f$result),
-      answerFeedback: data.dec(_f$_answerFeedback),
-    );
-  }
+//   static DriverQuizState _instantiate(DecodingData data) {
+//     return DriverQuizState(
+//       state: data.dec(_f$state),
+//       message: data.dec(_f$message),
+//       error: data.dec(_f$error),
+//       attempt: data.dec(_f$attempt),
+//       currentQuestionIndex: data.dec(_f$currentQuestionIndex),
+//       selectedAnswerId: data.dec(_f$selectedAnswerId),
+//       answeredQuestions: data.dec(_f$answeredQuestions),
+//       result: data.dec(_f$result),
+//       answerFeedback: data.dec(_f$_answerFeedback),
+//     );
+//   }
 
-  @override
-  final Function instantiate = _instantiate;
-}
+//   @override
+//   final Function instantiate = _instantiate;
+// }
 
-mixin DriverQuizStateMappable {
-  DriverQuizStateCopyWith<DriverQuizState, DriverQuizState, DriverQuizState>
-  get copyWith =>
-      _DriverQuizStateCopyWithImpl<DriverQuizState, DriverQuizState>(
-        this as DriverQuizState,
-        $identity,
-        $identity,
-      );
-  @override
-  String toString() {
-    return DriverQuizStateMapper.ensureInitialized().stringifyValue(
-      this as DriverQuizState,
-    );
-  }
+// mixin DriverQuizStateMappable {
+//   DriverQuizStateCopyWith<DriverQuizState, DriverQuizState, DriverQuizState>
+//   get copyWith =>
+//       _DriverQuizStateCopyWithImpl<DriverQuizState, DriverQuizState>(
+//         this as DriverQuizState,
+//         $identity,
+//         $identity,
+//       );
+//   @override
+//   String toString() {
+//     return DriverQuizStateMapper.ensureInitialized().stringifyValue(
+//       this as DriverQuizState,
+//     );
+//   }
 
-  @override
-  bool operator ==(Object other) {
-    return DriverQuizStateMapper.ensureInitialized().equalsValue(
-      this as DriverQuizState,
-      other,
-    );
-  }
+//   @override
+//   bool operator ==(Object other) {
+//     return DriverQuizStateMapper.ensureInitialized().equalsValue(
+//       this as DriverQuizState,
+//       other,
+//     );
+//   }
 
-  @override
-  int get hashCode {
-    return DriverQuizStateMapper.ensureInitialized().hashValue(
-      this as DriverQuizState,
-    );
-  }
-}
+//   @override
+//   int get hashCode {
+//     return DriverQuizStateMapper.ensureInitialized().hashValue(
+//       this as DriverQuizState,
+//     );
+//   }
+// }
 
-extension DriverQuizStateValueCopy<$R, $Out>
-    on ObjectCopyWith<$R, DriverQuizState, $Out> {
-  DriverQuizStateCopyWith<$R, DriverQuizState, $Out> get $asDriverQuizState =>
-      $base.as((v, t, t2) => _DriverQuizStateCopyWithImpl<$R, $Out>(v, t, t2));
-}
+// extension DriverQuizStateValueCopy<$R, $Out>
+//     on ObjectCopyWith<$R, DriverQuizState, $Out> {
+//   DriverQuizStateCopyWith<$R, DriverQuizState, $Out> get $asDriverQuizState =>
+//       $base.as((v, t, t2) => _DriverQuizStateCopyWithImpl<$R, $Out>(v, t, t2));
+// }
 
-abstract class DriverQuizStateCopyWith<$R, $In extends DriverQuizState, $Out>
-    implements ClassCopyWith<$R, $In, $Out> {
-  MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic, dynamic>>?
-  get _answerFeedback;
-  $R call({
-    CubitState? state,
-    String? message,
-    BaseError? error,
-    DriverQuizAttempt? attempt,
-    int? currentQuestionIndex,
-    String? selectedAnswerId,
-    Set<String>? answeredQuestions,
-    Object? result,
-    Map<String, dynamic>? answerFeedback,
-  });
-  DriverQuizStateCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
-    Then<$Out2, $R2> t,
-  );
-}
+// abstract class DriverQuizStateCopyWith<$R, $In extends DriverQuizState, $Out>
+//     implements ClassCopyWith<$R, $In, $Out> {
+//   MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic, dynamic>>?
+//   get _answerFeedback;
+//   $R call({
+//     CubitState? state,
+//     String? message,
+//     BaseError? error,
+//     DriverQuizAttempt? attempt,
+//     int? currentQuestionIndex,
+//     String? selectedAnswerId,
+//     Set<String>? answeredQuestions,
+//     Object? result,
+//     Map<String, dynamic>? answerFeedback,
+//   });
+//   DriverQuizStateCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
+//     Then<$Out2, $R2> t,
+//   );
+// }
 
-class _DriverQuizStateCopyWithImpl<$R, $Out>
-    extends ClassCopyWithBase<$R, DriverQuizState, $Out>
-    implements DriverQuizStateCopyWith<$R, DriverQuizState, $Out> {
-  _DriverQuizStateCopyWithImpl(super.value, super.then, super.then2);
+// class _DriverQuizStateCopyWithImpl<$R, $Out>
+//     extends ClassCopyWithBase<$R, DriverQuizState, $Out>
+//     implements DriverQuizStateCopyWith<$R, DriverQuizState, $Out> {
+//   _DriverQuizStateCopyWithImpl(super.value, super.then, super.then2);
 
-  @override
-  late final ClassMapperBase<DriverQuizState> $mapper =
-      DriverQuizStateMapper.ensureInitialized();
-  @override
-  MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic, dynamic>>?
-  get _answerFeedback => $value._answerFeedback != null
-      ? MapCopyWith(
-          $value._answerFeedback!,
-          (v, t) => ObjectCopyWith(v, $identity, t),
-          (v) => call(answerFeedback: v),
-        )
-      : null;
-  @override
-  $R call({
-    CubitState? state,
-    Object? message = $none,
-    Object? error = $none,
-    Object? attempt = $none,
-    Object? currentQuestionIndex = $none,
-    Object? selectedAnswerId = $none,
-    Set<String>? answeredQuestions,
-    Object? result = $none,
-    Object? answerFeedback = $none,
-  }) => $apply(
-    FieldCopyWithData({
-      if (state != null) #state: state,
-      if (message != $none) #message: message,
-      if (error != $none) #error: error,
-      if (attempt != $none) #attempt: attempt,
-      if (currentQuestionIndex != $none)
-        #currentQuestionIndex: currentQuestionIndex,
-      if (selectedAnswerId != $none) #selectedAnswerId: selectedAnswerId,
-      if (answeredQuestions != null) #answeredQuestions: answeredQuestions,
-      if (result != $none) #result: result,
-      if (answerFeedback != $none) #answerFeedback: answerFeedback,
-    }),
-  );
-  @override
-  DriverQuizState $make(CopyWithData data) => DriverQuizState(
-    state: data.get(#state, or: $value.state),
-    message: data.get(#message, or: $value.message),
-    error: data.get(#error, or: $value.error),
-    attempt: data.get(#attempt, or: $value.attempt),
-    currentQuestionIndex: data.get(
-      #currentQuestionIndex,
-      or: $value.currentQuestionIndex,
-    ),
-    selectedAnswerId: data.get(#selectedAnswerId, or: $value.selectedAnswerId),
-    answeredQuestions: data.get(
-      #answeredQuestions,
-      or: $value.answeredQuestions,
-    ),
-    result: data.get(#result, or: $value.result),
-    answerFeedback: data.get(#answerFeedback, or: $value._answerFeedback),
-  );
+//   @override
+//   late final ClassMapperBase<DriverQuizState> $mapper =
+//       DriverQuizStateMapper.ensureInitialized();
+//   @override
+//   MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic, dynamic>>?
+//   get _answerFeedback => $value._answerFeedback != null
+//       ? MapCopyWith(
+//           $value._answerFeedback!,
+//           (v, t) => ObjectCopyWith(v, $identity, t),
+//           (v) => call(answerFeedback: v),
+//         )
+//       : null;
+//   @override
+//   $R call({
+//     CubitState? state,
+//     Object? message = $none,
+//     Object? error = $none,
+//     Object? attempt = $none,
+//     Object? currentQuestionIndex = $none,
+//     Object? selectedAnswerId = $none,
+//     Set<String>? answeredQuestions,
+//     Object? result = $none,
+//     Object? answerFeedback = $none,
+//   }) => $apply(
+//     FieldCopyWithData({
+//       if (state != null) #state: state,
+//       if (message != $none) #message: message,
+//       if (error != $none) #error: error,
+//       if (attempt != $none) #attempt: attempt,
+//       if (currentQuestionIndex != $none)
+//         #currentQuestionIndex: currentQuestionIndex,
+//       if (selectedAnswerId != $none) #selectedAnswerId: selectedAnswerId,
+//       if (answeredQuestions != null) #answeredQuestions: answeredQuestions,
+//       if (result != $none) #result: result,
+//       if (answerFeedback != $none) #answerFeedback: answerFeedback,
+//     }),
+//   );
+//   @override
+//   DriverQuizState $make(CopyWithData data) => DriverQuizState(
+//     state: data.get(#state, or: $value.state),
+//     message: data.get(#message, or: $value.message),
+//     error: data.get(#error, or: $value.error),
+//     attempt: data.get(#attempt, or: $value.attempt),
+//     currentQuestionIndex: data.get(
+//       #currentQuestionIndex,
+//       or: $value.currentQuestionIndex,
+//     ),
+//     selectedAnswerId: data.get(#selectedAnswerId, or: $value.selectedAnswerId),
+//     answeredQuestions: data.get(
+//       #answeredQuestions,
+//       or: $value.answeredQuestions,
+//     ),
+//     result: data.get(#result, or: $value.result),
+//     answerFeedback: data.get(#answerFeedback, or: $value._answerFeedback),
+//   );
 
-  @override
-  DriverQuizStateCopyWith<$R2, DriverQuizState, $Out2> $chain<$R2, $Out2>(
-    Then<$Out2, $R2> t,
-  ) => _DriverQuizStateCopyWithImpl<$R2, $Out2>($value, $cast, t);
-}
+//   @override
+//   DriverQuizStateCopyWith<$R2, DriverQuizState, $Out2> $chain<$R2, $Out2>(
+//     Then<$Out2, $R2> t,
+//   ) => _DriverQuizStateCopyWithImpl<$R2, $Out2>($value, $cast, t);
+// }
 
 class DriverReviewStateMapper extends ClassMapperBase<DriverReviewState> {
   DriverReviewStateMapper._();

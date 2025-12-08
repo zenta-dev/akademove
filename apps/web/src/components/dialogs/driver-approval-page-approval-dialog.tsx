@@ -34,10 +34,12 @@ export const DriverApprovalPageApprovalDialog = ({
 	driverId,
 	isOpen,
 	onOpenChange,
+	onSuccess,
 }: {
 	driverId: string;
 	isOpen: boolean;
 	onOpenChange: (open: boolean) => void;
+	onSuccess?: () => void;
 }) => {
 	const form = useForm<z.infer<typeof FormSchema>>({
 		resolver: zodResolver(FormSchema),
@@ -53,6 +55,7 @@ export const DriverApprovalPageApprovalDialog = ({
 				toast.success(m.success_placeholder({ action: "Driver approved" }));
 				onOpenChange(false);
 				form.reset();
+				onSuccess?.();
 			},
 			onError: (error: Error) => {
 				toast.error("Failed to approve driver", {

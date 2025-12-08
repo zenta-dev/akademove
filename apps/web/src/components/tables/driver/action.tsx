@@ -27,36 +27,23 @@ export const DriverActionTable = ({ val }: { val: Driver }) => {
 			</DropdownMenuTrigger>
 			<DropdownMenuContent align="end" className="w-48">
 				<DropdownMenuLabel>{m.actions()}</DropdownMenuLabel>
-				{val.status === "PENDING" && (
-					<>
-						<Button
-							className="justify-start p-2 text-start font-normal"
-							variant="ghost"
-							size="sm"
-							onClick={() =>
-								navigate({
-									to: "/dash/admin/driver-approval/$driverId",
-									params: { driverId: val.id },
-								})
-							}
-						>
-							<CheckCircle className="mr-2 h-4 w-4" />
-							Review Application
-						</Button>
-						<ApproveDriverDialog driverId={val.id} />
-						<RejectDriverDialog driverId={val.id} />
-					</>
-				)}
-				{val.status === "APPROVED" && (
-					<ActivateDriverDialog driverId={val.id} />
-				)}
-				{val.status === "ACTIVE" && <SuspendDriverDialog driverId={val.id} />}
-				{val.status === "INACTIVE" && (
-					<ActivateDriverDialog driverId={val.id} />
-				)}
-				{val.status === "SUSPENDED" && (
-					<ActivateDriverDialog driverId={val.id} />
-				)}
+				<Button
+					className="justify-start p-2 text-start font-normal"
+					variant="ghost"
+					size="sm"
+					onClick={() =>
+						navigate({
+							to: "/dash/admin/driver-approval/$driverId",
+							params: { driverId: val.id },
+						})
+					}
+				>
+					<CheckCircle className="mr-2 h-4 w-4" />
+					Review Application
+				</Button>
+				<ApproveDriverDialog driverId={val.id} />
+				<ActivateDriverDialog driverId={val.id} />
+				<RejectDriverDialog driverId={val.id} />
 			</DropdownMenuContent>
 		</DropdownMenu>
 	);

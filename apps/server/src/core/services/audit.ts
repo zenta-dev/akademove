@@ -97,6 +97,8 @@ export class AuditService {
 				return tables.userAuditLog;
 			case "wallet":
 				return tables.walletAuditLog;
+			case "driver_approval_review":
+				return tables.driverApprovalReviewAuditLog;
 			default:
 				throw new Error(`Unknown audit table: ${tableName}`);
 		}

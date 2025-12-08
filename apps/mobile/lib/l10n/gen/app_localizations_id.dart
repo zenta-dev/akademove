@@ -12,6 +12,18 @@ class AppLocalizationsId extends AppLocalizations {
   AppLocalizationsId([String locale = 'id']) : super(locale);
 
   @override
+  String get start_quiz => 'Mulai Kuis';
+
+  @override
+  String get previous_attempt_failed => 'Percobaan sebelumnya gagal';
+
+  @override
+  String get previous_attempt_failed_description => 'Percobaan kuis Anda sebelumnya tidak lulus. Anda dapat mencoba lagi sekarang.';
+
+  @override
+  String get driver_knowledge_quiz_description => 'Selesaikan kuis ini untuk menunjukkan pemahaman Anda tentang pedoman driver, protokol keselamatan, dan aturan platform.';
+
+  @override
   String get driver_knowledge_quiz => 'Kuis Pengetahuan Pengemudi';
 
   @override

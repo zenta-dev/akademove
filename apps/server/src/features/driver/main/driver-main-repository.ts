@@ -89,7 +89,7 @@ export class DriverMainRepository extends BaseRepository {
 
 		return nullsToUndefined({
 			...item,
-			user,
+			user: nullsToUndefined(user),
 			studentCardId: item.studentCard,
 			driverLicenseId: item.driverLicense,
 			vehicleCertificateId: item.vehicleCertificate,
@@ -311,14 +311,18 @@ export class DriverMainRepository extends BaseRepository {
 
 	async get(id: string): Promise<Driver> {
 		try {
-			const fallback = async () => {
-				const res = await this.#getFromDB(id);
-				if (!res) throw new RepositoryError(m.error_failed_get_driver());
-				await this.setCache(id, res, { expirationTtl: CACHE_TTLS["24h"] });
-				return res;
-			};
-			const result = await this.getCache(id, { fallback });
-			return result;
+			const res = await this.#getFromDB(id);
+			if (!res) throw new RepositoryError(m.error_failed_get_driver());
+			await this.setCache(id, res, { expirationTtl: CACHE_TTLS["24h"] });
+			return res;
+			// const fallback = async () => {
+			// 	const res = await this.#getFromDB(id);
+			// 	if (!res) throw new RepositoryError(m.error_failed_get_driver());
+			// 	await this.setCache(id, res, { expirationTtl: CACHE_TTLS["24h"] });
+			// 	return res;
+			// };
+			// const result = await this.getCache(id, { fallback });
+			// return result;
 		} catch (error) {
 			throw this.handleError(error, "get by id");
 		}

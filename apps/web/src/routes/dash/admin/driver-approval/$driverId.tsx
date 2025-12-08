@@ -1,10 +1,17 @@
-import { useQuery } from "@tanstack/react-query";
-import { createFileRoute, redirect } from "@tanstack/react-router";
-import { AlertCircle, CheckCircle, Eye, Loader2, XCircle } from "lucide-react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { createFileRoute, redirect, useRouter } from "@tanstack/react-router";
+import {
+	AlertCircle,
+	CheckCircle,
+	Loader2,
+	Pencil,
+	XCircle,
+} from "lucide-react";
 import { useMemo, useState } from "react";
+import { toast } from "sonner";
 import { DriverApprovalPageApprovalDialog } from "@/components/dialogs/driver-approval-page-approval-dialog";
 import { DriverApprovalPageRejectionDialog } from "@/components/dialogs/driver-approval-page-rejection-dialog";
-import { DriverDocumentPreviewModal } from "@/components/modals/driver-document-preview-modal";
+import { DriverDocumentReviewDialog } from "@/components/dialogs/driver-document-review-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -12,7 +19,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { hasAccess } from "@/lib/actions";
-import { orpcQuery } from "@/lib/orpc";
+import { orpcClient, orpcQuery } from "@/lib/orpc";
 import { cn } from "@/utils/cn";
 
 export const Route = createFileRoute("/dash/admin/driver-approval/$driverId")({
@@ -26,11 +33,15 @@ export const Route = createFileRoute("/dash/admin/driver-approval/$driverId")({
 });
 
 function RouteComponent() {
+	const router = useRouter();
 	const { driverId } = Route.useParams();
-	const [previewModal, setPreviewModal] = useState<{
+	const queryClient = useQueryClient();
+	const [reviewModal, setReviewModal] = useState<{
 		open: boolean;
 		document?: "studentCard" | "driverLicense" | "vehicleRegistration";
 		url?: string;
+		status?: "PENDING" | "APPROVED" | "REJECTED";
+		reason?: string | null;
 	}>({ open: false });
 
 	const [approvalDialogOpen, setApprovalDialogOpen] = useState(false);
@@ -62,6 +73,29 @@ function RouteComponent() {
 		() => driverQuery.isPending || reviewQuery.isPending,
 		[driverQuery.isPending, reviewQuery.isPending],
 	);
+
+	// Quiz verification mutation
+	const verifyQuizMutation = useMutation({
+		mutationFn: async (quizVerified: boolean) => {
+			const result = await orpcClient.driver.verifyQuiz({
+				params: { id: driverId },
+				body: { quizVerified },
+			});
+			if (result.status !== 200) throw new Error(result.body.message);
+			return result.body.data;
+		},
+		onSuccess: (_, quizVerified) => {
+			toast.success(
+				quizVerified
+					? "Quiz verified successfully"
+					: "Quiz verification removed",
+			);
+			queryClient.invalidateQueries();
+		},
+		onError: (error) => {
+			toast.error(`Failed to update quiz verification: ${error.message}`);
+		},
+	});
 
 	if (isLoading) {
 		return (
@@ -156,20 +190,24 @@ function RouteComponent() {
 							<Label className="font-medium text-base">
 								Student Card (ID Verification)
 							</Label>
-							<Button
-								variant="outline"
-								size="sm"
-								onClick={() =>
-									setPreviewModal({
-										open: true,
-										document: "studentCard",
-										url: driver.studentCard,
-									})
-								}
-							>
-								<Eye className="mr-2 h-4 w-4" />
-								View
-							</Button>
+							<div className="flex gap-2">
+								<Button
+									variant="outline"
+									size="sm"
+									onClick={() =>
+										setReviewModal({
+											open: true,
+											document: "studentCard",
+											url: driver.studentCard,
+											status: review.studentCardStatus,
+											reason: review.studentCardReason,
+										})
+									}
+								>
+									<Pencil className="mr-2 h-4 w-4" />
+									Review
+								</Button>
+							</div>
 						</div>
 						{renderDocumentStatus(
 							review.studentCardStatus,
@@ -185,20 +223,24 @@ function RouteComponent() {
 							<Label className="font-medium text-base">
 								Driver License (License Verification)
 							</Label>
-							<Button
-								variant="outline"
-								size="sm"
-								onClick={() =>
-									setPreviewModal({
-										open: true,
-										document: "driverLicense",
-										url: driver.driverLicense,
-									})
-								}
-							>
-								<Eye className="mr-2 h-4 w-4" />
-								View
-							</Button>
+							<div className="flex gap-2">
+								<Button
+									variant="outline"
+									size="sm"
+									onClick={() =>
+										setReviewModal({
+											open: true,
+											document: "driverLicense",
+											url: driver.driverLicense,
+											status: review.driverLicenseStatus,
+											reason: review.driverLicenseReason,
+										})
+									}
+								>
+									<Pencil className="mr-2 h-4 w-4" />
+									Review
+								</Button>
+							</div>
 						</div>
 						{renderDocumentStatus(
 							review.driverLicenseStatus,
@@ -214,20 +256,24 @@ function RouteComponent() {
 							<Label className="font-medium text-base">
 								Vehicle Registration (Vehicle Verification)
 							</Label>
-							<Button
-								variant="outline"
-								size="sm"
-								onClick={() =>
-									setPreviewModal({
-										open: true,
-										document: "vehicleRegistration",
-										url: driver.vehicleCertificate,
-									})
-								}
-							>
-								<Eye className="mr-2 h-4 w-4" />
-								View
-							</Button>
+							<div className="flex gap-2">
+								<Button
+									variant="outline"
+									size="sm"
+									onClick={() =>
+										setReviewModal({
+											open: true,
+											document: "vehicleRegistration",
+											url: driver.vehicleCertificate,
+											status: review.vehicleRegistrationStatus,
+											reason: review.vehicleRegistrationReason,
+										})
+									}
+								>
+									<Pencil className="mr-2 h-4 w-4" />
+									Review
+								</Button>
+							</div>
 						</div>
 						{renderDocumentStatus(
 							review.vehicleRegistrationStatus,
@@ -264,16 +310,33 @@ function RouteComponent() {
 						<Checkbox
 							id="quiz-verified"
 							checked={review.quizVerified}
-							disabled
+							disabled={
+								verifyQuizMutation.isPending || driver.quizStatus !== "PASSED"
+							}
+							onCheckedChange={(checked) => {
+								verifyQuizMutation.mutate(checked === true);
+							}}
 						/>
 						<Label
 							htmlFor="quiz-verified"
 							className="flex-1 cursor-pointer font-medium"
 						>
-							{review.quizVerified
-								? "✓ Quiz Verified"
-								: "Quiz verification pending"}
+							{verifyQuizMutation.isPending ? (
+								<span className="flex items-center gap-2">
+									<Loader2 className="h-4 w-4 animate-spin" />
+									Updating...
+								</span>
+							) : review.quizVerified ? (
+								"✓ Quiz Verified"
+							) : (
+								"Quiz verification pending"
+							)}
 						</Label>
+						{driver.quizStatus !== "PASSED" && (
+							<span className="text-muted-foreground text-sm">
+								(Driver must pass quiz first)
+							</span>
+						)}
 					</div>
 				</CardContent>
 			</Card>
@@ -331,13 +394,16 @@ function RouteComponent() {
 				</CardContent>
 			</Card>
 
-			{/* Document Preview Modal */}
-			{previewModal.document && previewModal.url && (
-				<DriverDocumentPreviewModal
-					isOpen={previewModal.open}
-					onOpenChange={(open) => setPreviewModal({ ...previewModal, open })}
-					document={previewModal.document}
-					documentUrl={previewModal.url}
+			{/* Document Review Dialog */}
+			{reviewModal.document && reviewModal.url && (
+				<DriverDocumentReviewDialog
+					isOpen={reviewModal.open}
+					onOpenChange={(open) => setReviewModal({ ...reviewModal, open })}
+					driverId={driverId}
+					document={reviewModal.document}
+					documentUrl={reviewModal.url}
+					currentStatus={reviewModal.status ?? "PENDING"}
+					currentReason={reviewModal.reason}
 				/>
 			)}
 
@@ -346,6 +412,17 @@ function RouteComponent() {
 				driverId={driverId}
 				isOpen={approvalDialogOpen}
 				onOpenChange={setApprovalDialogOpen}
+				onSuccess={() => {
+					router.navigate({
+						to: "/dash/admin/drivers",
+						search: {
+							order: "desc",
+							mode: "cursor",
+							page: 1,
+							limit: 11,
+						},
+					});
+				}}
 			/>
 
 			<DriverApprovalPageRejectionDialog

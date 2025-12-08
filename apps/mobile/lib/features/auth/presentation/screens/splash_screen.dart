@@ -21,19 +21,22 @@ class SplashScreen extends StatelessWidget {
             context.goNamed(Routes.authSignIn.name);
           }
           if (state.user.isSuccess) {
-            switch (state.user.data?.value.role) {
+            switch (state.user.value?.role) {
               case UserRole.USER:
                 context.pushReplacementNamed(Routes.userHome.name);
               case UserRole.MERCHANT:
                 context.pushReplacementNamed(Routes.merchantHome.name);
               case UserRole.DRIVER:
-                if (state.driver.data?.value == null) {
+                if (state.driver.value == null) {
                   context.pushReplacementNamed(Routes.authSignIn.name);
                   return;
                 }
-                if (state.driver.data?.value?.quizStatus !=
-                    DriverQuizStatus.PASSED) {
+                if (state.driver.value?.quizStatus != DriverQuizStatus.PASSED) {
                   context.pushReplacementNamed(Routes.driverQuiz.name);
+                  return;
+                }
+                if (state.driver.value?.status != DriverStatus.APPROVED) {
+                  context.pushReplacementNamed(Routes.driverApproval.name);
                   return;
                 }
                 context.pushReplacementNamed(Routes.driverHome.name);

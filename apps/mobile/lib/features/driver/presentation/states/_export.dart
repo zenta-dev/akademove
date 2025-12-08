@@ -4,6 +4,7 @@ import 'package:dart_mappable/dart_mappable.dart';
 import 'package:equatable/equatable.dart';
 
 part '_export.mapper.dart';
+part 'driver_approval_state.dart';
 part 'driver_earnings_state.dart';
 part 'driver_home_state.dart';
 part 'driver_order_state.dart';

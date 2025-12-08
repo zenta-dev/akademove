@@ -210,7 +210,7 @@ export const UserDropdwon = () => {
 						</Link>
 					</DropdownMenuItem>
 
-					{["USER", "DRIVER"].includes(user.role) && (
+					{/* {["USER", "DRIVER"].includes(user.role) && (
 						<DropdownMenuItem asChild>
 							<Link
 								to={localizeHref(`/dash/${user.role.toLowerCase()}/wallet`)}
@@ -220,7 +220,7 @@ export const UserDropdwon = () => {
 								<span>{m.wallet()}</span>
 							</Link>
 						</DropdownMenuItem>
-					)}
+					)} */}
 
 					{user.userBadges && user.userBadges.length > 0 && (
 						<DropdownMenuItem disabled>

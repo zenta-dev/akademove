@@ -1,5 +1,9 @@
 {
 	"@@locale": "en",
+	"start_quiz": "Start Quiz",
+	"previous_attempt_failed": "Previous attempt failed",
+	"previous_attempt_failed_description": "Your previous quiz attempt did not pass. You can try again now.",
+	"driver_knowledge_quiz_description": "Complete this quiz to demonstrate your understanding of driver guidelines, safety protocols, and platform rules.",
 	"driver_knowledge_quiz": "Driver Knowledge Quiz",
 	"new_order_request": "New order request",
 	"you_have_a_new_order_request_from_customer_please_check_your_orders_page": "You have a new order request from customer, please check your Orders page.",

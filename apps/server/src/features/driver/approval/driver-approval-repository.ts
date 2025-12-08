@@ -228,12 +228,12 @@ export class DriverApprovalRepository extends BaseRepository {
 			}
 
 			// Check driver status
-			if (driver.status !== "PENDING") {
-				throw new RepositoryError(
-					"Driver must be in PENDING status to approve",
-					{ code: "BAD_REQUEST" },
-				);
-			}
+			// if (driver.status !== "PENDING") {
+			// 	throw new RepositoryError(
+			// 		"Driver must be in PENDING status to approve",
+			// 		{ code: "BAD_REQUEST" },
+			// 	);
+			// }
 
 			// Check quiz status
 			if (driver.quizStatus !== "PASSED") {

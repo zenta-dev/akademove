@@ -97,6 +97,30 @@ abstract class AppLocalizations {
     Locale('id')
   ];
 
+  /// No description provided for @start_quiz.
+  ///
+  /// In en, this message translates to:
+  /// **'Start Quiz'**
+  String get start_quiz;
+
+  /// No description provided for @previous_attempt_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Previous attempt failed'**
+  String get previous_attempt_failed;
+
+  /// No description provided for @previous_attempt_failed_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Your previous quiz attempt did not pass. You can try again now.'**
+  String get previous_attempt_failed_description;
+
+  /// No description provided for @driver_knowledge_quiz_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete this quiz to demonstrate your understanding of driver guidelines, safety protocols, and platform rules.'**
+  String get driver_knowledge_quiz_description;
+
   /// No description provided for @driver_knowledge_quiz.
   ///
   /// In en, this message translates to:
