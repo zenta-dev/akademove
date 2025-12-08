@@ -272,19 +272,23 @@ class _TermsOfServiceScreenState extends State<TermsOfServiceScreen> {
       children: [
         MyScaffold(
           headers: [const DefaultAppBar(title: 'Terms of Service')],
-          body: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            spacing: 16.h,
-            children: [
-              _buildHeaderCard(context),
-              ..._sections.asMap().entries.map((entry) {
-                return _TermsSection(
-                  section: entry.value,
-                  isOpen: _openIndex == entry.key,
-                  onToggle: () => _toggleSection(entry.key),
-                );
-              }),
-            ],
+          scrollable: true,
+          body: Padding(
+            padding: EdgeInsets.only(bottom: 100.h),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              spacing: 16.h,
+              children: [
+                _buildHeaderCard(context),
+                ..._sections.asMap().entries.map((entry) {
+                  return _TermsSection(
+                    section: entry.value,
+                    isOpen: _openIndex == entry.key,
+                    onToggle: () => _toggleSection(entry.key),
+                  );
+                }),
+              ],
+            ),
           ),
         ),
         _buildBottomButton(context),
