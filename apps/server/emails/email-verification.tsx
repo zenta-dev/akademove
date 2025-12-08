@@ -1,44 +1,37 @@
 /** @jsxImportSource react */
-import { Button, Heading, Hr, Section, Text } from "@react-email/components";
+import { Heading, Hr, Section, Text } from "@react-email/components";
 import { BaseLayout } from "./components/base-layout";
 
 interface EmailVerificationEmailProps {
 	userName?: string;
-	verificationUrl: string;
+	verificationCode: string;
 }
 
 export const EmailVerificationEmail = ({
 	userName = "User",
-	verificationUrl,
+	verificationCode,
 }: EmailVerificationEmailProps) => {
 	return (
-		<BaseLayout preview="Verify your email address for AkadeMove">
+		<BaseLayout preview="Your AkadeMove verification code">
 			<Section>
 				<Heading style={h1}>Verify Your Email Address</Heading>
 				<Text style={text}>Hi {userName},</Text>
 				<Text style={text}>
 					Thank you for signing up for AkadeMove! To complete your registration
-					and ensure the security of your account, please verify your email
-					address by clicking the button below.
+					and ensure the security of your account, please enter the verification
+					code below in the app.
 				</Text>
-				<Section style={buttonContainer}>
-					<Button style={button} href={verificationUrl}>
-						Verify Email Address
-					</Button>
+				<Section style={codeContainer}>
+					<Text style={codeText}>{verificationCode}</Text>
 				</Section>
 				<Text style={text}>
-					This verification link will expire in 24 hours for security reasons.
+					This verification code will expire in 15 minutes for security reasons.
 					If you didn't create an account with AkadeMove, you can safely ignore
 					this email.
 				</Text>
 				<Hr style={hr} />
 				<Text style={footerNote}>
-					If the button above doesn't work, you can copy and paste this link
-					into your browser:
-				</Text>
-				<Text style={linkText}>{verificationUrl}</Text>
-				<Text style={footerNote}>
-					For security reasons, never share this link with anyone.
+					For security reasons, never share this code with anyone.
 				</Text>
 			</Section>
 		</BaseLayout>
@@ -62,22 +55,21 @@ const text = {
 	margin: "0 0 16px 0",
 };
 
-const buttonContainer = {
+const codeContainer = {
 	margin: "32px 0",
 	textAlign: "center" as const,
+	backgroundColor: "#f3f4f6",
+	borderRadius: "8px",
+	padding: "24px",
 };
 
-const button = {
-	backgroundColor: "#0d9488",
-	borderRadius: "8px",
-	color: "#ffffff",
-	fontSize: "16px",
-	fontWeight: "600",
-	textDecoration: "none",
-	textAlign: "center" as const,
-	display: "inline-block",
-	padding: "14px 32px",
-	lineHeight: "1",
+const codeText = {
+	color: "#0d9488",
+	fontSize: "36px",
+	fontWeight: "700",
+	letterSpacing: "8px",
+	margin: "0",
+	fontFamily: "monospace",
 };
 
 const hr = {
@@ -90,12 +82,4 @@ const footerNote = {
 	fontSize: "14px",
 	lineHeight: "1.6",
 	margin: "0 0 8px 0",
-};
-
-const linkText = {
-	color: "#0d9488",
-	fontSize: "12px",
-	lineHeight: "1.6",
-	margin: "0 0 8px 0",
-	wordBreak: "break-all" as const,
 };

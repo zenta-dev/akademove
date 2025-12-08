@@ -19,6 +19,12 @@ export const MerchantOperatingStatusSchema = z
 	.enum(CONSTANTS.MERCHANT_OPERATING_STATUSES)
 	.describe("Merchant operating status");
 
+export const MerchantStatusSchema = z
+	.enum(CONSTANTS.MERCHANT_STATUSES)
+	.describe("Merchant approval status");
+
+export type MerchantStatus = z.infer<typeof MerchantStatusSchema>;
+
 export const MerchantSchema = z.object({
 	id: z.uuid(),
 	userId: z.string(),
@@ -29,6 +35,7 @@ export const MerchantSchema = z.object({
 	phone: PhoneSchema.optional(),
 	address: z.string(),
 	location: CoordinateSchema.optional(),
+	status: MerchantStatusSchema.describe("Merchant approval status"),
 	isActive: z.boolean(),
 	isOnline: z
 		.boolean()
@@ -56,6 +63,7 @@ export const InsertMerchantSchema = MerchantSchema.omit({
 	id: true,
 	userId: true,
 	rating: true,
+	status: true,
 	isActive: true,
 	isOnline: true,
 	isTakingOrders: true,
@@ -150,6 +158,7 @@ export type SetMerchantOperatingStatus = z.infer<
 
 export const MerchantSchemaRegistries = {
 	MerchantCategory: { schema: MerchantCategorySchema, strategy: "output" },
+	MerchantStatus: { schema: MerchantStatusSchema, strategy: "output" },
 	Merchant: { schema: MerchantSchema, strategy: "output" },
 	MerchantMenu: { schema: MerchantMenuSchema, strategy: "output" },
 	MerchantKey: { schema: MerchantKeySchema, strategy: "input" },

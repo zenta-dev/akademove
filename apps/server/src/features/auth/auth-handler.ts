@@ -55,6 +55,14 @@ export const AuthHandler = pub.router({
 						},
 						opts,
 					),
+					context.repo.auth
+						.sendEmailVerification({ email: data.email })
+						.catch((err) => {
+							log.error(
+								{ error: err, email: data.email },
+								"[AuthHandler] Failed to send verification email after user sign up",
+							);
+						}),
 				]);
 
 				if (!signInResult.user.banned) {
@@ -113,6 +121,14 @@ export const AuthHandler = pub.router({
 							},
 							opts,
 						),
+						context.repo.auth
+							.sendEmailVerification({ email: data.email })
+							.catch((err) => {
+								log.error(
+									{ error: err, email: data.email },
+									"[AuthHandler] Failed to send verification email after driver sign up",
+								);
+							}),
 					]);
 
 					if (!signInResult.user.banned) {
@@ -176,6 +192,14 @@ export const AuthHandler = pub.router({
 							},
 							opts,
 						),
+						context.repo.auth
+							.sendEmailVerification({ email: data.email })
+							.catch((err) => {
+								log.error(
+									{ error: err, email: data.email },
+									"[AuthHandler] Failed to send verification email after merchant sign up",
+								);
+							}),
 					]);
 
 					if (!signInResult.user.banned) {

@@ -36,6 +36,7 @@ import { DriverQuizAnswerRepository } from "@/features/driver-quiz-answer/driver
 import { DriverQuizQuestionRepository } from "@/features/driver-quiz-question/driver-quiz-question-repository";
 import { EmergencyRepository } from "@/features/emergency/emergency-repository";
 import { LeaderboardRepository } from "@/features/leaderboard/leaderboard-repository";
+import { MerchantApprovalRepository } from "@/features/merchant/approval/merchant-approval-repository";
 import { MerchantMainRepository } from "@/features/merchant/main/merchant-main-repository";
 import { MerchantMenuRepository } from "@/features/merchant/menu/merchant-menu-repository";
 import { MerchantOrderRepository } from "@/features/merchant/order/merchant-order-repository";
@@ -262,6 +263,11 @@ export function getRepositories(
 			main: new MerchantMainRepository(svc.db, svc.kv, svc.storage),
 			menu: new MerchantMenuRepository(svc.db, svc.kv, svc.storage),
 			order: new MerchantOrderRepository(svc.db, svc.kv),
+			approval: new MerchantApprovalRepository(
+				"merchantApprovalReview",
+				svc.kv,
+				svc.db,
+			),
 		},
 		order: new OrderRepository(
 			svc.db,

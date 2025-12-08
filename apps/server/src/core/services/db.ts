@@ -16,6 +16,7 @@ import * as driverQuizQuestion from "@/core/tables/driver-quiz-question";
 import * as emergency from "@/core/tables/emergency";
 import * as leaderboard from "@/core/tables/leaderboard";
 import * as merchant from "@/core/tables/merchant";
+import * as merchantApprovalReview from "@/core/tables/merchant-approval-review";
 import * as notification from "@/core/tables/notification";
 import * as order from "@/core/tables/order";
 import * as payment from "@/core/tables/payment";
@@ -42,6 +43,7 @@ export const tables = {
 	...emergency,
 	...leaderboard,
 	...merchant,
+	...merchantApprovalReview,
 	...notification,
 	...order,
 	...payment,

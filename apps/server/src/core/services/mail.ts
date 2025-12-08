@@ -3,6 +3,7 @@ import { ContactResponseEmail } from "emails/contact-response";
 import { DriverApprovalStatusEmail } from "emails/driver-approval-status";
 import { EmailVerificationEmail } from "emails/email-verification";
 import { InvitationEmail } from "emails/invitation";
+import { MerchantApprovalStatusEmail } from "emails/merchant-approval-status";
 import { ResetPasswordEmail } from "emails/reset-password";
 import * as React from "react";
 import { Resend } from "resend";
@@ -30,7 +31,7 @@ interface SendInvitationProps {
 
 interface SendEmailVerificationProps {
 	to: string;
-	url: string;
+	code: string;
 	userName?: string;
 }
 
@@ -55,6 +56,16 @@ interface SendDriverApprovalStatusProps {
 	};
 }
 
+interface SendMerchantApprovalStatusProps {
+	to: string;
+	merchantName: string;
+	status: "APPROVED" | "REJECTED";
+	reason?: string;
+	rejectionDetails?: {
+		businessDocument?: string;
+	};
+}
+
 interface SendEmailOptions {
 	from?: string;
 	to: string | string[];
@@ -72,6 +83,9 @@ export interface MailService {
 	sendEmailVerification(props: SendEmailVerificationProps): Promise<void>;
 	sendContactResponse(props: SendContactResponseProps): Promise<void>;
 	sendDriverApprovalStatus(props: SendDriverApprovalStatusProps): Promise<void>;
+	sendMerchantApprovalStatus(
+		props: SendMerchantApprovalStatusProps,
+	): Promise<void>;
 }
 
 export const MAIL_FROMS = {
@@ -144,12 +158,12 @@ export class ResendMailService implements MailService {
 			await this.#send(
 				React.createElement(EmailVerificationEmail, {
 					userName: props.userName ?? "User",
-					verificationUrl: props.url,
+					verificationCode: props.code,
 				}),
 				{
 					from: MAIL_FROMS.VERIFICATION,
 					to: props.to,
-					subject: "Verify Your AkadeMove Email Address",
+					subject: "Your AkadeMove Verification Code",
 				},
 			);
 		} catch (error) {
@@ -215,6 +229,34 @@ export class ResendMailService implements MailService {
 		} catch (error) {
 			if (error instanceof MailError) throw error;
 			throw new MailError("Failed to send driver approval email");
+		}
+	}
+
+	async sendMerchantApprovalStatus(
+		props: SendMerchantApprovalStatusProps,
+	): Promise<void> {
+		try {
+			const subject =
+				props.status === "APPROVED"
+					? "Your AkadeMove Merchant Application Approved ✓"
+					: "Action Required: Your AkadeMove Merchant Application";
+
+			await this.#send(
+				React.createElement(MerchantApprovalStatusEmail, {
+					merchantName: props.merchantName,
+					status: props.status,
+					reason: props.reason,
+					rejectionDetails: props.rejectionDetails,
+				}),
+				{
+					from: MAIL_FROMS.DEFAULT,
+					to: props.to,
+					subject,
+				},
+			);
+		} catch (error) {
+			if (error instanceof MailError) throw error;
+			throw new MailError("Failed to send merchant approval email");
 		}
 	}
 

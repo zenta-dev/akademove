@@ -1,3 +1,7 @@
+import { UserListQuerySchema } from "@repo/schema/pagination";
+import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
+import { Plus } from "lucide-react";
+import { useState } from "react";
 import { QuizQuestionForm } from "@/components/forms/quiz-question-form";
 import { QuizQuestionTable } from "@/components/tables/quiz-question/table";
 import { Button } from "@/components/ui/button";
@@ -9,10 +13,6 @@ import {
 	DialogTitle,
 } from "@/components/ui/dialog";
 import { hasAccess } from "@/lib/actions";
-import { UserListQuerySchema } from "@repo/schema/pagination";
-import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
-import { Plus } from "lucide-react";
-import { useState } from "react";
 
 export const Route = createFileRoute("/dash/admin/quiz-questions/")({
 	validateSearch: (values) => {

@@ -45,6 +45,7 @@ export const allowedLoggedTables = pgEnum("allowed_logged_table", [
 	"contact",
 	"coupon",
 	"driver_approval_review",
+	"merchant_approval_review",
 	"newsletter",
 	"report",
 	"user",

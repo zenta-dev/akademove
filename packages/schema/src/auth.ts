@@ -114,7 +114,13 @@ export const SendEmailVerificationSchema = z.object({
 export type SendEmailVerification = z.infer<typeof SendEmailVerificationSchema>;
 
 export const VerifyEmailSchema = z.object({
-	token: z.string(),
+	email: z.email(
+		m.invalid_placeholder({ field: m.email_address().toLowerCase() }),
+	),
+	code: z
+		.string()
+		.length(6, m.invalid_placeholder({ field: "OTP code" }))
+		.regex(/^\d{6}$/, m.invalid_placeholder({ field: "OTP code" })),
 });
 export type VerifyEmail = z.infer<typeof VerifyEmailSchema>;
 

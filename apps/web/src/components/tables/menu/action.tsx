@@ -1,3 +1,10 @@
+import { m } from "@repo/i18n";
+import type { MerchantMenu } from "@repo/schema/merchant";
+import { capitalizeFirstLetter } from "@repo/shared";
+import { useMutation } from "@tanstack/react-query";
+import { EditIcon, MoreHorizontal, TrashIcon } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
 import { MerchantMenuForm } from "@/components/forms/merchant-menu-form";
 import { Submitting } from "@/components/misc/submitting";
 import {
@@ -30,13 +37,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { orpcQuery, queryClient } from "@/lib/orpc";
 import { cn } from "@/utils/cn";
-import { m } from "@repo/i18n";
-import type { MerchantMenu } from "@repo/schema/merchant";
-import { capitalizeFirstLetter } from "@repo/shared";
-import { useMutation } from "@tanstack/react-query";
-import { EditIcon, MoreHorizontal, TrashIcon } from "lucide-react";
-import { useState } from "react";
-import { toast } from "sonner";
 
 export const MerchantMenuActionTable = ({ val }: { val: MerchantMenu }) => {
 	const [dropdownOpen, setDropdownOpen] = useState(false);

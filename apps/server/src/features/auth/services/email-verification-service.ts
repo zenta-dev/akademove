@@ -1,5 +1,4 @@
-import { env } from "cloudflare:workers";
-import { randomBytes } from "node:crypto";
+import { randomInt } from "node:crypto";
 import { eq } from "drizzle-orm";
 import { v7 } from "uuid";
 import { AuthError } from "@/core/error";
@@ -19,7 +18,8 @@ export interface SendEmailVerificationRequest {
  * Verify email request
  */
 export interface VerifyEmailRequest {
-	token: string;
+	email: string;
+	code: string;
 }
 
 /**
@@ -42,9 +42,9 @@ export interface EmailVerificationDeps {
  * Service responsible for email verification flow
  *
  * Handles:
- * - Send verification email (email link generation)
- * - Verification token generation and storage
- * - Token validation and expiration
+ * - Send verification email (OTP code generation)
+ * - OTP code generation and storage
+ * - Code validation and expiration
  * - Email verification execution
  * - Email notifications
  *
@@ -52,15 +52,15 @@ export interface EmailVerificationDeps {
  * ```typescript
  * const emailVerificationService = new EmailVerificationService(db, mail);
  *
- * // Send verification email
+ * // Send verification email with OTP
  * await emailVerificationService.sendEmailVerification(
  *   { email },
  *   { findUserByEmail }
  * );
  *
- * // Verify email
+ * // Verify email with OTP code
  * await emailVerificationService.verifyEmail(
- *   { token },
+ *   { email, code },
  *   { deleteCache }
  * );
  * ```
@@ -69,7 +69,7 @@ export class EmailVerificationService {
 	readonly #db: DatabaseService;
 	readonly #mail: MailService;
 
-	readonly #VERIFICATION_TOKEN_EXPIRY_HOURS = 24;
+	readonly #VERIFICATION_CODE_EXPIRY_MINUTES = 15;
 
 	constructor(db: DatabaseService, mail: MailService) {
 		this.#db = db;
@@ -77,14 +77,15 @@ export class EmailVerificationService {
 	}
 
 	/**
-	 * Generates verification token and sends email
+	 * Generates 6-digit OTP code and sends email
 	 *
 	 * Process:
 	 * 1. Find user by email
 	 * 2. Check if email is already verified
-	 * 3. Generate secure random token (32 bytes)
-	 * 4. Store token in verification table with 24-hour expiry
-	 * 5. Send verification email with link to user
+	 * 3. Delete any existing verification codes for this email
+	 * 4. Generate secure random 6-digit OTP code
+	 * 5. Store code in verification table with 15-minute expiry
+	 * 6. Send verification email with OTP code to user
 	 *
 	 * @param request - Email address
 	 * @param deps - User lookup function
@@ -108,29 +109,33 @@ export class EmailVerificationService {
 				});
 			}
 
-			const token = randomBytes(16).toString("hex");
+			// Delete any existing verification codes for this email
+			await this.#db
+				.delete(tables.verification)
+				.where(eq(tables.verification.identifier, request.email));
+
+			// Generate 6-digit OTP code
+			const code = randomInt(100000, 999999).toString();
 			const expiresAt = new Date(
-				Date.now() + this.#VERIFICATION_TOKEN_EXPIRY_HOURS * 60 * 60 * 1000,
+				Date.now() + this.#VERIFICATION_CODE_EXPIRY_MINUTES * 60 * 1000,
 			);
 
 			await this.#db.insert(tables.verification).values({
 				id: v7(),
 				identifier: request.email,
-				value: token,
+				value: code,
 				expiresAt,
 			});
 
-			const verificationUrl = `${env.CORS_ORIGIN}/auth/verify-email?token=${token}`;
-
 			await this.#mail.sendEmailVerification({
 				to: user.email,
-				url: verificationUrl,
+				code,
 				userName: user.name,
 			});
 
 			log.info(
 				{ userId: user.id, email: user.email },
-				"[EmailVerificationService] Email verification sent",
+				"[EmailVerificationService] Email verification OTP sent",
 			);
 
 			return true;
@@ -144,20 +149,20 @@ export class EmailVerificationService {
 	}
 
 	/**
-	 * Validates token and verifies email
+	 * Validates OTP code and verifies email
 	 *
 	 * Process:
-	 * 1. Find verification token (not expired)
-	 * 2. Find user by email from token
+	 * 1. Find verification code by email and code (not expired)
+	 * 2. Find user by email
 	 * 3. Check if email is already verified
 	 * 4. Update user emailVerified flag in transaction
-	 * 5. Delete verification token
+	 * 5. Delete verification code
 	 * 6. Invalidate user session cache
 	 *
-	 * @param request - Token
+	 * @param request - Email and OTP code
 	 * @param deps - Cache deletion function
 	 * @returns true if successful
-	 * @throws AuthError if token invalid/expired or user not found
+	 * @throws AuthError if code invalid/expired or user not found
 	 */
 	async verifyEmail(
 		request: VerifyEmailRequest,
@@ -169,18 +174,22 @@ export class EmailVerificationService {
 				opts?.tx ?? this.#db
 			).query.verification.findFirst({
 				where: (f, op) =>
-					op.and(op.eq(f.value, request.token), op.gt(f.expiresAt, new Date())),
+					op.and(
+						op.eq(f.identifier, request.email),
+						op.eq(f.value, request.code),
+						op.gt(f.expiresAt, new Date()),
+					),
 			});
 
 			if (!verification) {
-				throw new AuthError("Invalid or expired verification token", {
+				throw new AuthError("Invalid or expired verification code", {
 					code: "BAD_REQUEST",
 				});
 			}
 
 			const user = await (opts?.tx ?? this.#db).query.user.findFirst({
 				columns: { id: true, email: true, emailVerified: true },
-				where: (f, op) => op.eq(f.email, verification.identifier),
+				where: (f, op) => op.eq(f.email, request.email),
 			});
 
 			if (!user) {

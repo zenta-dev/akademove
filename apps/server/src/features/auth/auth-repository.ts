@@ -353,11 +353,11 @@ export class AuthRepository extends BaseRepository {
 	}
 
 	/**
-	 * Validates token and verifies email
+	 * Validates OTP code and verifies email
 	 *
 	 * Delegates to EmailVerificationService.verifyEmail()
 	 *
-	 * @param params - Token
+	 * @param params - Email and OTP code
 	 * @returns true if successful
 	 */
 	async verifyEmail(params: VerifyEmail) {
