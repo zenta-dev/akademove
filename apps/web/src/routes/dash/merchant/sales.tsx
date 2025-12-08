@@ -1,10 +1,14 @@
 import { m } from "@repo/i18n";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 import {
 	ArrowDown,
 	ArrowUp,
 	CircleDollarSign,
+	Download,
+	FileText,
 	Package,
 	ShoppingCart,
 	TrendingUp,
@@ -22,6 +26,8 @@ import {
 	XAxis,
 	YAxis,
 } from "recharts";
+import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
 import {
 	Card,
 	CardContent,
@@ -29,6 +35,12 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
 	Select,
 	SelectContent,
@@ -48,7 +60,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { hasAccess } from "@/lib/actions";
 import { SUB_ROUTE_TITLES } from "@/lib/constants";
-import { orpcQuery } from "@/lib/orpc";
+import { orpcClient, orpcQuery } from "@/lib/orpc";
 import { useMyMerchant } from "@/providers/merchant";
 import { cn } from "@/utils/cn";
 
@@ -139,6 +151,191 @@ function RouteComponent() {
 		];
 	}, [analytics.data, formatCurrency]);
 
+	const getPeriodLabel = useCallback((period: string) => {
+		switch (period) {
+			case "today":
+				return m.today();
+			case "week":
+				return m.this_week();
+			case "month":
+				return m.this_month();
+			case "year":
+				return m.this_year();
+			default:
+				return period;
+		}
+	}, []);
+
+	const handleExportPDF = useCallback(() => {
+		if (!analytics.data?.body.data || !merchant.value) return;
+
+		const data = analytics.data.body.data;
+		const doc = new jsPDF();
+		const pageWidth = doc.internal.pageSize.getWidth();
+
+		// Header
+		doc.setFontSize(20);
+		doc.setFont("helvetica", "bold");
+		doc.text("Sales Report", pageWidth / 2, 20, {
+			align: "center",
+		});
+
+		doc.setFontSize(12);
+		doc.setFont("helvetica", "normal");
+		doc.text(merchant.value.name, pageWidth / 2, 28, { align: "center" });
+
+		doc.setFontSize(10);
+		doc.text(`Period: ${getPeriodLabel(period)}`, pageWidth / 2, 35, {
+			align: "center",
+		});
+		doc.text(
+			`Generated on: ${new Date().toLocaleDateString("id-ID", {
+				weekday: "long",
+				year: "numeric",
+				month: "long",
+				day: "numeric",
+			})}`,
+			pageWidth / 2,
+			41,
+			{ align: "center" },
+		);
+
+		// Summary Section
+		doc.setFontSize(14);
+		doc.setFont("helvetica", "bold");
+		doc.text("Summary", 14, 55);
+
+		autoTable(doc, {
+			startY: 60,
+			head: [["Metric", "Value"]],
+			body: [
+				[m.total_revenue(), formatCurrency(data.totalRevenue)],
+				[m.total_orders(), data.totalOrders.toString()],
+				["Completed Orders", data.completedOrders.toString()],
+				[m.cancelled_orders(), data.cancelledOrders.toString()],
+				[m.commission_earned(), formatCurrency(data.totalCommission)],
+				[m.average_order_value(), formatCurrency(data.averageOrderValue)],
+			],
+			theme: "striped",
+			headStyles: { fillColor: [34, 197, 94] },
+		});
+
+		// Revenue by Day Section
+		if (data.revenueByDay.length > 0) {
+			const finalY = (doc as unknown as { lastAutoTable: { finalY: number } })
+				.lastAutoTable.finalY;
+
+			doc.setFontSize(14);
+			doc.setFont("helvetica", "bold");
+			doc.text("Daily Breakdown", 14, finalY + 15);
+
+			autoTable(doc, {
+				startY: finalY + 20,
+				head: [["Date", m.revenue(), m.orders()]],
+				body: data.revenueByDay.map((day) => [
+					new Date(`${day.date}T00:00:00`).toLocaleDateString("id-ID", {
+						weekday: "short",
+						year: "numeric",
+						month: "short",
+						day: "numeric",
+					}),
+					formatCurrency(day.revenue),
+					day.orders.toString(),
+				]),
+				theme: "striped",
+				headStyles: { fillColor: [59, 130, 246] },
+			});
+		}
+
+		// Top Selling Items Section
+		if (data.topSellingItems.length > 0) {
+			const finalY = (doc as unknown as { lastAutoTable: { finalY: number } })
+				.lastAutoTable.finalY;
+
+			doc.setFontSize(14);
+			doc.setFont("helvetica", "bold");
+			doc.text(m.top_selling_items(), 14, finalY + 15);
+
+			autoTable(doc, {
+				startY: finalY + 20,
+				head: [[m.item(), m.total_orders(), m.total_revenue()]],
+				body: data.topSellingItems.map((item) => [
+					item.menuName,
+					item.totalOrders.toString(),
+					formatCurrency(item.totalRevenue),
+				]),
+				theme: "striped",
+				headStyles: { fillColor: [168, 85, 247] },
+			});
+		}
+
+		// Footer
+		const pageCount = doc.getNumberOfPages();
+		for (let i = 1; i <= pageCount; i++) {
+			doc.setPage(i);
+			doc.setFontSize(8);
+			doc.setFont("helvetica", "normal");
+			doc.text(
+				`Page ${i} of ${pageCount}`,
+				pageWidth / 2,
+				doc.internal.pageSize.getHeight() - 10,
+				{ align: "center" },
+			);
+		}
+
+		doc.save(
+			`sales-report-${period}-${new Date().toISOString().split("T")[0]}.pdf`,
+		);
+		toast.success("Report exported successfully");
+	}, [analytics.data, merchant.value, period, formatCurrency, getPeriodLabel]);
+
+	const handleExportCSV = useCallback(async () => {
+		if (!merchant.value?.id) return;
+
+		try {
+			const endDate = new Date();
+			const startDate = new Date();
+
+			switch (period) {
+				case "today":
+					startDate.setHours(0, 0, 0, 0);
+					break;
+				case "week":
+					startDate.setDate(startDate.getDate() - 7);
+					break;
+				case "month":
+					startDate.setMonth(startDate.getMonth() - 1);
+					break;
+				case "year":
+					startDate.setFullYear(startDate.getFullYear() - 1);
+					break;
+			}
+
+			const result = await orpcClient.analytics.exportMerchantAnalytics({
+				params: { merchantId: merchant.value.id },
+				query: {
+					startDate: startDate.toISOString(),
+					endDate: endDate.toISOString(),
+				},
+			});
+
+			const csvData = result.status === 200 ? result.body : "";
+			const blob = new Blob([csvData], { type: "text/csv" });
+			const url = window.URL.createObjectURL(blob);
+			const a = document.createElement("a");
+			a.href = url;
+			a.download = `sales-report-${period}-${new Date().toISOString().split("T")[0]}.csv`;
+			document.body.appendChild(a);
+			a.click();
+			window.URL.revokeObjectURL(url);
+			document.body.removeChild(a);
+			toast.success("Report exported successfully");
+		} catch (error) {
+			console.error("Export failed:", error);
+			toast.error("Failed to export report");
+		}
+	}, [merchant.value?.id, period]);
+
 	if (!allowed) navigate({ to: "/" });
 
 	if (merchant.isLoading || analytics.isLoading) {
@@ -191,22 +388,42 @@ function RouteComponent() {
 						{m.view_your_sales_analytics()}
 					</p>
 				</div>
-				<Select
-					value={period}
-					onValueChange={(v) =>
-						setPeriod(v as "today" | "week" | "month" | "year")
-					}
-				>
-					<SelectTrigger className="w-32">
-						<SelectValue />
-					</SelectTrigger>
-					<SelectContent>
-						<SelectItem value="today">{m.today()}</SelectItem>
-						<SelectItem value="week">{m.this_week()}</SelectItem>
-						<SelectItem value="month">{m.this_month()}</SelectItem>
-						<SelectItem value="year">{m.this_year()}</SelectItem>
-					</SelectContent>
-				</Select>
+				<div className="flex items-center gap-2">
+					<DropdownMenu>
+						<DropdownMenuTrigger asChild>
+							<Button variant="outline" size="sm">
+								<Download className="mr-2 h-4 w-4" />
+								Export
+							</Button>
+						</DropdownMenuTrigger>
+						<DropdownMenuContent align="end">
+							<DropdownMenuItem onClick={handleExportPDF}>
+								<FileText className="mr-2 h-4 w-4" />
+								Export as PDF
+							</DropdownMenuItem>
+							<DropdownMenuItem onClick={handleExportCSV}>
+								<Download className="mr-2 h-4 w-4" />
+								Export as CSV
+							</DropdownMenuItem>
+						</DropdownMenuContent>
+					</DropdownMenu>
+					<Select
+						value={period}
+						onValueChange={(v) =>
+							setPeriod(v as "today" | "week" | "month" | "year")
+						}
+					>
+						<SelectTrigger className="w-32">
+							<SelectValue />
+						</SelectTrigger>
+						<SelectContent>
+							<SelectItem value="today">{m.today()}</SelectItem>
+							<SelectItem value="week">{m.this_week()}</SelectItem>
+							<SelectItem value="month">{m.this_month()}</SelectItem>
+							<SelectItem value="year">{m.this_year()}</SelectItem>
+						</SelectContent>
+					</Select>
+				</div>
 			</div>
 
 			{/* Stats Cards */}

@@ -5,7 +5,6 @@ import { CheckCircle, MoreHorizontal } from "lucide-react";
 import { ActivateDriverDialog } from "@/components/dialogs/activate-driver";
 import { ApproveDriverDialog } from "@/components/dialogs/approve-driver";
 import { RejectDriverDialog } from "@/components/dialogs/reject-driver";
-import { SuspendDriverDialog } from "@/components/dialogs/suspend-driver";
 import { Button } from "@/components/ui/button";
 import {
 	DropdownMenu,

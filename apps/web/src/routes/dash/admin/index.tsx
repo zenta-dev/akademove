@@ -31,9 +31,8 @@ export const Route = createFileRoute("/dash/admin/")({
 function RouteComponent() {
 	const { allowed } = Route.useLoaderData();
 	const navigate = useNavigate();
-	const fcm = useFCM();
+	useFCM();
 	if (!allowed) navigate({ to: "/" });
-	console.log("FCM initialized:", !!fcm);
 
 	const { data: stats, isLoading } = useQuery(
 		orpcQuery.user.admin.dashboardStats.queryOptions({

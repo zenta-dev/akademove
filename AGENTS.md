@@ -14,7 +14,7 @@
 **Monorepo**: Turbo + Bun workspaces. **Server**: Cloudflare Workers (Hono + oRPC + Drizzle ORM + PostgreSQL + PostGIS). **Web**: React 19 + TanStack Router/Query + Shadcn UI. **Mobile**: Flutter + BLoC + GetIt DI. **Packages**: `@repo/schema` (Zod), `@repo/shared` (utils), `@repo/i18n` (translations). **Real-time**: WebSocket + Durable Objects for order tracking, driver location streaming.
 
 ## 🚀 Commands
-**Lint/Format**: `bun run check` (Biome auto-fix). **Type Check**: `turbo check-types`. **Build All**: `turbo build`. **Dev All**: `bun run dev` (alchemy + i18n). **Dev Server**: `turbo -F server dev` or `bun run dev:server`. **Dev Web**: `turbo -F web dev` or `bun run dev:web`. **Flutter Test (Single)**: `cd apps/mobile && flutter test test/path/to/test_file.dart`. **Flutter Test (All)**: `cd apps/mobile && flutter test`. **DB Push**: `turbo -F server db:push` or `bun run db:push`. **DB Studio**: `bun run db:studio`. **DB Generate Migration**: `turbo -F server db:generate`. **DB Migrate**: `turbo -F server db:migrate`. **DB Seed**: `bun run db:seed`. **DB Reset**: `bun run db:reset`. **Generate Dart API Client**: (1) `bun run dev` (start server, may take time), (2) `make gen` (generates client from OpenAPI spec at `http://localhost:3000/api/spec.json`), (3) `melos generate` (runs build_runner for json_serializable). All commands run from project root.
+**Lint/Format**: `bun run check` (Biome auto-fix). **Type Check**: `turbo check-types`. **Build All**: `turbo build`. **Dev All**: `bun run dev` (alchemy + i18n). **Dev Server**: `turbo -F server dev` or `bun run dev:server`. **Dev Web**: `turbo -F web dev` or `bun run dev:web`. **Flutter Test (Single)**: `cd apps/mobile && flutter test test/path/to/test_file.dart`. **Flutter Test (All)**: `cd apps/mobile && flutter test`. **DB Push**: `turbo -F server db:push` or `bun run db:push`. **DB Studio**: `bun run db:studio`. **DB Generate Migration**: `turbo -F server db:generate`. **DB Migrate**: `turbo -F server db:migrate`. **DB Seed**: `bun run db:seed`. **DB Reset**: `bun run db:reset`. **Generate Dart API Client**: (1) `bun run dev` (start server, may take time), (2) `bun run gen` (generates client from OpenAPI spec at `http://localhost:3000/api/spec.json`), (3) `melos generate` (runs build_runner for json_serializable). All commands run from project root.
 
 ## 📝 Code Style
 **Formatting**: Tabs (indentStyle), double quotes (Biome enforced). **Imports**: Auto-organize imports (Biome). Use `@/*` path aliases (e.g., `@/core/services/db`). Import from `@repo/schema`, `@repo/shared`, `@repo/i18n`. **Types**: NEVER use `any` (TypeScript) or `dynamic` (Dart) - use `unknown` instead. NEVER use null assertion operators (`!.` in TypeScript/Dart) - always check for null/undefined explicitly. Enable strict mode. **Naming**: camelCase for TS/JS variables, PascalCase for classes/components, snake_case for Dart/database columns. **File Naming**: kebab-case for all files (e.g., `order-handler.ts`, `order_cubit.dart`).
@@ -146,8 +146,9 @@ const mutation = useMutation(
 2. Each feature has: `cubit`, `repository`, `view`, `widgets`
 3. Use BLoC pattern with `BaseCubit<State>`
 4. Dependency injection with GetIt: `sl<Service>()`
-5. **Location**: Use `geolocator` for GPS, `google_maps_flutter` for map display
-6. **Real-time**: Use `web_socket_channel` for order/location updates
+5. **UI**: Use shadcn_flutter components (NOT Material Design)
+6. **Location**: Use `geolocator` for GPS, `google_maps_flutter` for map display
+7. **Real-time**: Use `web_socket_channel` for order/location updates
 
 ### Cubits (State Management)
 1. Extend `BaseCubit<FeatureState>` from `@/core/*`

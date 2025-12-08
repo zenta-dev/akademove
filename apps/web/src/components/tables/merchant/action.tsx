@@ -1,7 +1,7 @@
 import { m } from "@repo/i18n";
 import type { Merchant } from "@repo/schema/merchant";
-import { useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
+import { useNavigate } from "@tanstack/react-router";
 import { MoreHorizontal } from "lucide-react";
 import { useState } from "react";
 import { ActivateMerchantDialog } from "@/components/dialogs/activate-merchant";

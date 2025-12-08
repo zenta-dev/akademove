@@ -1,7 +1,6 @@
 import 'package:akademove/app/router/router.dart';
 import 'package:akademove/gen/assets.gen.dart';
 import 'package:akademove/l10n/l10n.dart';
-import 'package:flutter/material.dart' show InkWell;
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
@@ -68,9 +67,9 @@ class SignUpChoiceScreen extends StatelessWidget {
                 separatorBuilder: (_, _) => Gap(12.h),
                 itemBuilder: (context, index) {
                   final route = routes[index];
-                  return InkWell(
-                    borderRadius: BorderRadius.circular(12),
-                    onTap: () => context.pushNamed(route.route.name),
+                  return OutlineButton(
+                    density: ButtonDensity.compact,
+                    onPressed: () => context.pushNamed(route.route.name),
                     child: Card(
                       padding: const EdgeInsets.all(16),
                       child: Column(

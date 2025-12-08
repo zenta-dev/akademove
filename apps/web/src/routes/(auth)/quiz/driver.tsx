@@ -4,7 +4,7 @@ import type {
 	DriverQuizResult,
 } from "@repo/schema/driver-quiz-answer";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import {
 	AlertCircle,
 	ArrowRight,
@@ -30,9 +30,8 @@ import {
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { getSession } from "@/lib/actions";
 import { SUB_ROUTE_TITLES } from "@/lib/constants";
-import { orpcClient, orpcQuery, queryClient } from "@/lib/orpc";
+import { orpcQuery, queryClient } from "@/lib/orpc";
 import { cn } from "@/utils/cn";
 
 export const Route = createFileRoute("/(auth)/quiz/driver")({

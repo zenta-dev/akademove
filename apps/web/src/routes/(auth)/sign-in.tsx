@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { localizeHref, localizeUrl, m } from "@repo/i18n";
+import { localizeHref, m } from "@repo/i18n";
 import { type SignIn, SignInSchema } from "@repo/schema/auth";
 import { capitalizeFirstLetter } from "@repo/shared";
 import { useMutation } from "@tanstack/react-query";
@@ -126,7 +126,53 @@ function RouteComponent() {
 					}
 				}
 
-				// Normal flow for non-drivers or drivers who passed quiz and are approved
+				// Check if user is a merchant and check approval status
+				if (user.role === "MERCHANT") {
+					try {
+						const merchantResult = await orpcClient.merchant.getMine();
+						if (merchantResult.status === 200) {
+							const merchant = merchantResult.body.data;
+
+							await Promise.all([
+								router.invalidate(),
+								queryClient.invalidateQueries(),
+							]);
+
+							// Show toast based on merchant approval status
+							if (merchant.status === "PENDING") {
+								toast.info(
+									m.account_pending_approval?.() || "Account Pending Approval",
+									{
+										description:
+											m.admin_will_review_and_activate_your_account?.() ||
+											"An admin will review your documents and activate your account soon.",
+									},
+								);
+							} else if (merchant.status === "REJECTED") {
+								toast.error(m.account_rejected?.() || "Account Rejected", {
+									description:
+										m.your_account_has_been_rejected_contact_support?.() ||
+										"Your account has been rejected. Please contact support for more information.",
+								});
+							} else if (merchant.status === "INACTIVE") {
+								toast.warning(m.account_inactive?.() || "Account Inactive", {
+									description:
+										m.your_account_has_been_deactivated?.() ||
+										"Your account has been deactivated. Please contact support.",
+								});
+							}
+
+							// Always redirect merchant to their dashboard
+							await router.navigate({ to: localizeHref("/dash/merchant") });
+							return;
+						}
+					} catch (error) {
+						console.error("Failed to fetch merchant data:", error);
+						// Continue with normal flow if merchant data fetch fails
+					}
+				}
+
+				// Normal flow for non-drivers/non-merchants or when data fetch fails
 				await Promise.all([
 					router.invalidate(),
 					queryClient.invalidateQueries(),

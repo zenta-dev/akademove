@@ -88,8 +88,23 @@ class _EmailVerificationPendingView extends StatefulWidget {
 
 class _EmailVerificationPendingViewState
     extends State<_EmailVerificationPendingView> {
+  final FormKey<String> _codeKey = const TextFieldKey('code');
+  late FocusNode _codeFn;
+
   bool _canResend = true;
   int _resendCountdown = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _codeFn = FocusNode();
+  }
+
+  @override
+  void dispose() {
+    _codeFn.dispose();
+    super.dispose();
+  }
 
   void _startResendTimer() {
     setState(() {
@@ -127,9 +142,13 @@ class _EmailVerificationPendingViewState
     }
     if (state.isSuccess) {
       context.showMyToast(
-        state.message ?? context.l10n.email_verification_sent,
+        state.message ?? context.l10n.email_verification_success_title,
         type: ToastType.success,
       );
+      await delay(const Duration(seconds: 1), () {});
+      if (context.mounted) {
+        context.goNamed(Routes.authSignIn.name);
+      }
     }
   }
 
@@ -138,93 +157,146 @@ class _EmailVerificationPendingViewState
     return BlocConsumer<EmailVerificationCubit, EmailVerificationState>(
       listener: handleEvent,
       builder: (context, state) {
-        return Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Container(
-              padding: EdgeInsets.all(12.dg),
-              decoration: BoxDecoration(
-                color: context.theme.colorScheme.muted.withValues(alpha: 0.5),
-                borderRadius: BorderRadius.circular(8.r),
-              ),
-              child: Row(
-                children: [
-                  Icon(
-                    LucideIcons.mail,
-                    size: 20.w,
-                    color: context.colorScheme.mutedForeground,
-                  ),
-                  Gap(8.w),
-                  Expanded(
-                    child: DefaultText(
-                      widget.email,
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Gap(16.h),
-            Text(
-              context.l10n.email_verification_instruction,
-              style: TextStyle(
-                fontSize: 13.sp,
-                color: context.colorScheme.mutedForeground,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            Gap(24.h),
-            Button(
-              style: _canResend && !state.isLoading
-                  ? const ButtonStyle.outline()
-                  : const ButtonStyle.ghost(),
-              onPressed: _canResend && !state.isLoading
-                  ? () => _handleResend(context)
-                  : null,
-              child: state.isLoading
-                  ? const Submiting()
-                  : _canResend
-                  ? Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(LucideIcons.refreshCw, size: 16.w),
-                        Gap(8.w),
-                        DefaultText(
-                          context.l10n.email_verification_resend,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ],
-                    )
-                  : DefaultText(
-                      context.l10n.email_verification_resend_countdown(
-                        _resendCountdown.toString(),
-                      ),
-                      fontWeight: FontWeight.w500,
+        return Form(
+          onSubmit: (context, values) async {
+            if (state.isLoading) return;
+            final code = _codeKey[values];
+            if (code == null || code.isEmpty) return;
+
+            await context.read<EmailVerificationCubit>().verifyEmail(
+              email: widget.email,
+              code: code,
+            );
+          },
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Container(
+                padding: EdgeInsets.all(12.dg),
+                decoration: BoxDecoration(
+                  color: context.theme.colorScheme.muted.withValues(alpha: 0.5),
+                  borderRadius: BorderRadius.circular(8.r),
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      LucideIcons.mail,
+                      size: 20.w,
                       color: context.colorScheme.mutedForeground,
                     ),
-            ),
-            Gap(16.h),
-            Button(
-              style: const ButtonStyle.primary(),
-              onPressed: () => context.goNamed(Routes.authSignIn.name),
-              child: DefaultText(
-                context.l10n.back_to_sign_in,
-                fontWeight: FontWeight.w500,
-                color: Colors.white,
+                    Gap(8.w),
+                    Expanded(
+                      child: DefaultText(
+                        widget.email,
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            Gap(8.h),
-            Text(
-              context.l10n.email_verification_spam_hint,
-              style: TextStyle(
-                fontSize: 12.sp,
-                color: context.colorScheme.mutedForeground,
+              Gap(16.h),
+              Text(
+                context.l10n.email_verification_instruction,
+                style: TextStyle(
+                  fontSize: 13.sp,
+                  color: context.colorScheme.mutedForeground,
+                ),
+                textAlign: TextAlign.center,
               ),
-              textAlign: TextAlign.center,
-            ),
-          ],
+              Gap(16.h),
+              FormField(
+                key: _codeKey,
+                label: DefaultText(
+                  context.l10n.otp_code,
+                  fontWeight: FontWeight.w500,
+                ),
+                validator: const LengthValidator(min: 6, max: 6),
+                showErrors: const {
+                  FormValidationMode.changed,
+                  FormValidationMode.submitted,
+                },
+                child: TextField(
+                  focusNode: _codeFn,
+                  placeholder: Text(context.l10n.placeholder_otp_code),
+                  keyboardType: TextInputType.number,
+                  features: const [
+                    InputFeature.leading(Icon(LucideIcons.keyRound)),
+                  ],
+                ),
+              ),
+              Gap(16.h),
+              FormErrorBuilder(
+                builder: (context, errors, child) {
+                  final hasErrors = errors.isNotEmpty;
+                  final isLoading = state.isLoading;
+
+                  return Button(
+                    style: isLoading || hasErrors
+                        ? const ButtonStyle.outline()
+                        : const ButtonStyle.primary(),
+                    onPressed: (!hasErrors && !isLoading)
+                        ? () => context.submitForm()
+                        : null,
+                    child: isLoading
+                        ? const Submiting()
+                        : DefaultText(
+                            context.l10n.submit,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.white,
+                          ),
+                  );
+                },
+              ),
+              Gap(16.h),
+              Button(
+                style: _canResend && !state.isLoading
+                    ? const ButtonStyle.outline()
+                    : const ButtonStyle.ghost(),
+                onPressed: _canResend && !state.isLoading
+                    ? () => _handleResend(context)
+                    : null,
+                child: _canResend
+                    ? Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(LucideIcons.refreshCw, size: 16.w),
+                          Gap(8.w),
+                          DefaultText(
+                            context.l10n.email_verification_resend,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ],
+                      )
+                    : DefaultText(
+                        context.l10n.email_verification_resend_countdown(
+                          _resendCountdown.toString(),
+                        ),
+                        fontWeight: FontWeight.w500,
+                        color: context.colorScheme.mutedForeground,
+                      ),
+              ),
+              Gap(16.h),
+              Button(
+                style: const ButtonStyle.ghost(),
+                onPressed: () => context.goNamed(Routes.authSignIn.name),
+                child: DefaultText(
+                  context.l10n.back_to_sign_in,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Gap(8.h),
+              Text(
+                context.l10n.email_verification_spam_hint,
+                style: TextStyle(
+                  fontSize: 12.sp,
+                  color: context.colorScheme.mutedForeground,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
         );
       },
     );

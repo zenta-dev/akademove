@@ -203,19 +203,19 @@ export function AccountDeletionForm({ onSuccess }: AccountDeletionFormProps) {
 								render={({ field }) => (
 									<FormItem>
 										<FormLabel>
-											{m.account_deletion_phone_label()}{" "}
+											{m.account_deletion_confirm_email()}{" "}
 											<span className="text-red-500">*</span>
 										</FormLabel>
 										<FormControl>
 											<Input
-												type="tel"
-												placeholder={m.account_deletion_phone_placeholder()}
+												type="email"
+												placeholder={m.account_deletion_confirm_email_placeholder()}
 												{...field}
 												disabled={isSubmitting}
 											/>
 										</FormControl>
 										<FormDescription>
-											{m.account_deletion_phone_desc()}
+											{m.account_deletion_confirm_email_desc()}
 										</FormDescription>
 										<FormMessage />
 									</FormItem>
@@ -228,7 +228,7 @@ export function AccountDeletionForm({ onSuccess }: AccountDeletionFormProps) {
 								render={({ field }) => (
 									<FormItem>
 										<FormLabel>
-											{m.account_deletion_full_name()}{" "}
+											{m.account_deletion_phone_label()}{" "}
 											<span className="text-red-500">*</span>
 										</FormLabel>
 										<FormControl>
@@ -240,7 +240,7 @@ export function AccountDeletionForm({ onSuccess }: AccountDeletionFormProps) {
 											/>
 										</FormControl>
 										<FormDescription>
-											{m.account_deletion_full_name_desc()}
+											{m.account_deletion_phone_desc()}
 										</FormDescription>
 										<FormMessage />
 									</FormItem>

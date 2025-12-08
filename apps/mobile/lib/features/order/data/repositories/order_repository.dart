@@ -162,30 +162,48 @@ class OrderRepository extends BaseRepository {
 
   /// Upload delivery proof photo (driver only)
   /// POST /api/orders/{id}/delivery-proof
-  Future<BaseResponse<Order>> uploadDeliveryProof(
+  /// Returns the uploaded proof URL
+  Future<BaseResponse<String>> uploadDeliveryProof(
     String orderId,
-    String imagePath,
+    Object file,
   ) {
     return guard(() async {
-      // TODO: Implement multipart upload when API client is regenerated
-      // For now, this is a placeholder that will be replaced
-      throw UnimplementedError(
-        'uploadDeliveryProof: API client needs regeneration. '
-        'Use: POST /api/orders/$orderId/delivery-proof with multipart/form-data',
+      final res = await _apiClient.getOrderApi().orderUploadDeliveryProof(
+        id: orderId,
+        orderUploadDeliveryProofRequest: OrderUploadDeliveryProofRequest(
+          file: file,
+        ),
       );
+
+      final data =
+          res.data ??
+          (throw const RepositoryError(
+            'Failed to upload delivery proof',
+            code: ErrorCode.unknown,
+          ));
+
+      return SuccessResponse(message: data.message, data: data.data.url);
     });
   }
 
   /// Verify delivery OTP (customer only)
   /// POST /api/orders/{id}/verify-otp
-  Future<BaseResponse<Order>> verifyDeliveryOTP(String orderId, String otp) {
+  /// Returns whether verification was successful
+  Future<BaseResponse<bool>> verifyDeliveryOTP(String orderId, String otp) {
     return guard(() async {
-      // TODO: Implement when API client is regenerated
-      // For now, this is a placeholder that will be replaced
-      throw UnimplementedError(
-        'verifyDeliveryOTP: API client needs regeneration. '
-        'Use: POST /api/orders/$orderId/verify-otp with body: {"otp": "$otp"}',
+      final res = await _apiClient.getOrderApi().orderVerifyDeliveryOTP(
+        id: orderId,
+        orderVerifyDeliveryOTPRequest: OrderVerifyDeliveryOTPRequest(otp: otp),
       );
+
+      final data =
+          res.data ??
+          (throw const RepositoryError(
+            'Failed to verify delivery OTP',
+            code: ErrorCode.unknown,
+          ));
+
+      return SuccessResponse(message: data.message, data: data.data.verified);
     });
   }
 }

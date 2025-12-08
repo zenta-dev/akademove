@@ -4,7 +4,6 @@ import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { InviteUserDialog } from "@/components/dialogs/invite-user";
 import { UserTable } from "@/components/tables/user/table";
 import { Card, CardContent } from "@/components/ui/card";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { hasAccess } from "@/lib/actions";
 import { SUB_ROUTE_TITLES } from "@/lib/constants";
 

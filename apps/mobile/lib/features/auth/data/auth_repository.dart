@@ -301,10 +301,13 @@ class AuthRepository extends BaseRepository {
     });
   }
 
-  Future<BaseResponse<bool>> verifyEmail({required String token}) async {
+  Future<BaseResponse<bool>> verifyEmail({
+    required String email,
+    required String code,
+  }) async {
     return guard(() async {
       final result = await _apiClient.getAuthApi().authVerifyEmail(
-        verifyEmail: VerifyEmail(token: token.trim()),
+        verifyEmail: VerifyEmail(email: email.trim(), code: code.trim()),
       );
 
       final data =

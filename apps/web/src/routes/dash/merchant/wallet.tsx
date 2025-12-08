@@ -3,14 +3,19 @@ import { UnifiedPaginationQuerySchema } from "@repo/schema/pagination";
 import type { Transaction } from "@repo/schema/transaction";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 import {
 	ArrowDownLeft,
 	ArrowUpRight,
 	DollarSign,
+	Download,
+	FileText,
 	TrendingUp,
 	Wallet as WalletIcon,
 } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
+import { toast } from "sonner";
 import { WithdrawDialog } from "@/components/dialogs/withdraw-wallet";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -21,6 +26,12 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
 	Table,
@@ -33,6 +44,7 @@ import {
 import { hasAccess } from "@/lib/actions";
 import { SUB_ROUTE_TITLES } from "@/lib/constants";
 import { orpcQuery } from "@/lib/orpc";
+import { useMyMerchant } from "@/providers/merchant";
 import { cn } from "@/utils/cn";
 
 export const Route = createFileRoute("/dash/merchant/wallet")({
@@ -58,6 +70,7 @@ function RouteComponent() {
 	const navigate = useNavigate();
 	const search = Route.useSearch();
 	const [withdrawDialogOpen, setWithdrawDialogOpen] = useState(false);
+	const merchant = useMyMerchant();
 
 	// Fetch wallet data
 	const { data: walletResponse, isLoading: walletLoading } = useQuery(
@@ -93,15 +106,15 @@ function RouteComponent() {
 
 	if (!allowed) navigate({ to: "/" });
 
-	const formatPrice = (price: number) => {
+	const formatPrice = useCallback((price: number) => {
 		return new Intl.NumberFormat("id-ID", {
 			style: "currency",
 			currency: "IDR",
 			minimumFractionDigits: 0,
 		}).format(price);
-	};
+	}, []);
 
-	const formatDate = (date: Date | string | undefined) => {
+	const formatDate = useCallback((date: Date | string | undefined) => {
 		if (!date) return "N/A";
 		return new Intl.DateTimeFormat("id-ID", {
 			weekday: "short",
@@ -110,38 +123,212 @@ function RouteComponent() {
 			hour: "2-digit",
 			minute: "2-digit",
 		}).format(new Date(date));
-	};
+	}, []);
 
-	const transactionTypeConfig: Record<
-		string,
-		{ label: string; icon: typeof ArrowUpRight; color: string }
-	> = {
-		EARNING: {
-			label: "Earning",
-			icon: ArrowDownLeft,
-			color: "text-green-600",
-		},
-		COMMISSION: {
-			label: "Commission",
-			icon: ArrowUpRight,
-			color: "text-orange-600",
-		},
-		WITHDRAWAL: {
-			label: "Withdrawal",
-			icon: ArrowUpRight,
-			color: "text-blue-600",
-		},
-		REFUND: {
-			label: "Refund",
-			icon: ArrowDownLeft,
-			color: "text-purple-600",
-		},
-		PAYMENT: {
-			label: "Payment",
-			icon: ArrowUpRight,
-			color: "text-red-600",
-		},
-	};
+	const transactionTypeConfig = useMemo<
+		Record<string, { label: string; icon: typeof ArrowUpRight; color: string }>
+	>(
+		() => ({
+			EARNING: {
+				label: "Earning",
+				icon: ArrowDownLeft,
+				color: "text-green-600",
+			},
+			COMMISSION: {
+				label: "Commission",
+				icon: ArrowUpRight,
+				color: "text-orange-600",
+			},
+			WITHDRAWAL: {
+				label: "Withdrawal",
+				icon: ArrowUpRight,
+				color: "text-blue-600",
+			},
+			REFUND: {
+				label: "Refund",
+				icon: ArrowDownLeft,
+				color: "text-purple-600",
+			},
+			PAYMENT: {
+				label: "Payment",
+				icon: ArrowUpRight,
+				color: "text-red-600",
+			},
+		}),
+		[],
+	);
+
+	const commissionTransactions = useMemo(() => {
+		if (!transactionsResult) return [];
+		return transactionsResult.filter((t) => t.type === "COMMISSION");
+	}, [transactionsResult]);
+
+	const handleExportCommissionPDF = useCallback(() => {
+		if (!merchant.value) return;
+
+		const doc = new jsPDF();
+		const pageWidth = doc.internal.pageSize.getWidth();
+		const currentMonth = new Date().toLocaleDateString("id-ID", {
+			month: "long",
+			year: "numeric",
+		});
+
+		// Header
+		doc.setFontSize(20);
+		doc.setFont("helvetica", "bold");
+		doc.text("Commission Report", pageWidth / 2, 20, { align: "center" });
+
+		doc.setFontSize(12);
+		doc.setFont("helvetica", "normal");
+		doc.text(merchant.value.name, pageWidth / 2, 28, { align: "center" });
+
+		doc.setFontSize(10);
+		doc.text(`Period: ${currentMonth}`, pageWidth / 2, 35, { align: "center" });
+		doc.text(
+			`Generated on: ${new Date().toLocaleDateString("id-ID", {
+				weekday: "long",
+				year: "numeric",
+				month: "long",
+				day: "numeric",
+			})}`,
+			pageWidth / 2,
+			41,
+			{ align: "center" },
+		);
+
+		// Summary Section
+		doc.setFontSize(14);
+		doc.setFont("helvetica", "bold");
+		doc.text("Summary", 14, 55);
+
+		autoTable(doc, {
+			startY: 60,
+			head: [["Metric", "Value"]],
+			body: [
+				["Current Balance", formatPrice(wallet?.balance || 0)],
+				["This Month Earnings", formatPrice(summary?.totalIncome || 0)],
+				["This Month Commission", formatPrice(summary?.totalExpense || 0)],
+				[
+					"Net Earnings",
+					formatPrice(
+						(summary?.totalIncome || 0) - (summary?.totalExpense || 0),
+					),
+				],
+			],
+			theme: "striped",
+			headStyles: { fillColor: [168, 85, 247] },
+		});
+
+		// Commission Transactions Section
+		if (commissionTransactions.length > 0) {
+			const finalY = (doc as unknown as { lastAutoTable: { finalY: number } })
+				.lastAutoTable.finalY;
+
+			doc.setFontSize(14);
+			doc.setFont("helvetica", "bold");
+			doc.text("Commission Transactions", 14, finalY + 15);
+
+			autoTable(doc, {
+				startY: finalY + 20,
+				head: [["Date", "Description", "Status", "Amount"]],
+				body: commissionTransactions.map((t) => [
+					formatDate(t.createdAt),
+					t.description || "Platform Commission",
+					t.status,
+					formatPrice(Math.abs(t.amount)),
+				]),
+				theme: "striped",
+				headStyles: { fillColor: [249, 115, 22] },
+			});
+		}
+
+		// All Transactions Section
+		if (transactionsResult && transactionsResult.length > 0) {
+			const finalY = (doc as unknown as { lastAutoTable: { finalY: number } })
+				.lastAutoTable.finalY;
+
+			doc.setFontSize(14);
+			doc.setFont("helvetica", "bold");
+			doc.text("All Transactions", 14, finalY + 15);
+
+			autoTable(doc, {
+				startY: finalY + 20,
+				head: [["Date", "Type", "Description", "Status", "Amount"]],
+				body: transactionsResult.map((t) => {
+					const isIncome = t.type === "EARNING" || t.type === "REFUND";
+					return [
+						formatDate(t.createdAt),
+						transactionTypeConfig[t.type]?.label || t.type,
+						t.description || "N/A",
+						t.status,
+						`${isIncome ? "+" : "-"}${formatPrice(Math.abs(t.amount))}`,
+					];
+				}),
+				theme: "striped",
+				headStyles: { fillColor: [59, 130, 246] },
+			});
+		}
+
+		// Footer
+		const pageCount = doc.getNumberOfPages();
+		for (let i = 1; i <= pageCount; i++) {
+			doc.setPage(i);
+			doc.setFontSize(8);
+			doc.setFont("helvetica", "normal");
+			doc.text(
+				`Page ${i} of ${pageCount}`,
+				pageWidth / 2,
+				doc.internal.pageSize.getHeight() - 10,
+				{ align: "center" },
+			);
+		}
+
+		doc.save(`commission-report-${new Date().toISOString().split("T")[0]}.pdf`);
+		toast.success("Report exported successfully");
+	}, [
+		merchant.value,
+		wallet?.balance,
+		summary,
+		commissionTransactions,
+		transactionsResult,
+		formatPrice,
+		formatDate,
+		transactionTypeConfig,
+	]);
+
+	const handleExportCommissionCSV = useCallback(() => {
+		if (!transactionsResult || transactionsResult.length === 0) {
+			toast.error("No transactions to export");
+			return;
+		}
+
+		const headers = ["Date", "Type", "Description", "Status", "Amount"];
+		const rows = transactionsResult.map((t) => {
+			const isIncome = t.type === "EARNING" || t.type === "REFUND";
+			return [
+				formatDate(t.createdAt),
+				transactionTypeConfig[t.type]?.label || t.type,
+				t.description || "N/A",
+				t.status,
+				`${isIncome ? "+" : "-"}${Math.abs(t.amount)}`,
+			];
+		});
+
+		const csvContent = [headers, ...rows]
+			.map((row) => row.map((cell) => `"${cell}"`).join(","))
+			.join("\n");
+
+		const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+		const url = window.URL.createObjectURL(blob);
+		const a = document.createElement("a");
+		a.href = url;
+		a.download = `commission-report-${new Date().toISOString().split("T")[0]}.csv`;
+		document.body.appendChild(a);
+		a.click();
+		window.URL.revokeObjectURL(url);
+		document.body.removeChild(a);
+		toast.success("Report exported successfully");
+	}, [transactionsResult, formatDate, transactionTypeConfig]);
 
 	return (
 		<>
@@ -228,9 +415,29 @@ function RouteComponent() {
 								View all your earnings and expenses
 							</CardDescription>
 						</div>
-						<Button onClick={() => setWithdrawDialogOpen(true)}>
-							Request Withdrawal
-						</Button>
+						<div className="flex items-center gap-2">
+							<DropdownMenu>
+								<DropdownMenuTrigger asChild>
+									<Button variant="outline" size="sm">
+										<Download className="mr-2 h-4 w-4" />
+										Export
+									</Button>
+								</DropdownMenuTrigger>
+								<DropdownMenuContent align="end">
+									<DropdownMenuItem onClick={handleExportCommissionPDF}>
+										<FileText className="mr-2 h-4 w-4" />
+										Export as PDF
+									</DropdownMenuItem>
+									<DropdownMenuItem onClick={handleExportCommissionCSV}>
+										<Download className="mr-2 h-4 w-4" />
+										Export as CSV
+									</DropdownMenuItem>
+								</DropdownMenuContent>
+							</DropdownMenu>
+							<Button onClick={() => setWithdrawDialogOpen(true)}>
+								Request Withdrawal
+							</Button>
+						</div>
 					</div>
 				</CardHeader>
 				<CardContent>

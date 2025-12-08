@@ -1,5 +1,4 @@
 import { oc } from "@orpc/contract";
-import { DriverMinQuizQuestionSchema } from "@repo/schema";
 import {
 	CompleteDriverQuizSchema,
 	DriverQuizAnswerSchema,
