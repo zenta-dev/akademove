@@ -41,7 +41,6 @@ class _SignUpUserFormView extends StatefulWidget {
 class _SignUpUserFormViewState extends State<_SignUpUserFormView> {
   static const FormKey<String> _nameKey = TextFieldKey('name');
   static const FormKey<String> _emailKey = TextFieldKey('email');
-  static const FormKey<UserGender> _genderKey = SelectKey(UserGender.MALE);
   static const FormKey<String> _phoneNumberKey = TextFieldKey('phone-number');
   static const FormKey<String> _passwordKey = TextFieldKey('password');
   static const FormKey<String> _confirmPasswordKey = TextFieldKey(
@@ -153,42 +152,48 @@ class _SignUpUserFormViewState extends State<_SignUpUserFormView> {
                   ],
                 ),
               ),
-              FormField(
-                key: _genderKey,
-                label: Text(context.l10n.gender),
-                showErrors: const {
-                  FormValidationMode.changed,
-                  FormValidationMode.submitted,
-                },
-                child: SizedBox(
-                  width: double.infinity,
-                  child: Select<UserGender>(
-                    enabled: !state.isLoading,
-                    itemBuilder: (context, item) {
-                      return Text(item.name);
-                    },
-                    value: _selectedGender,
-                    onChanged: (value) {
-                      if (value != null) {
-                        setState(() {
-                          _selectedGender = value;
-                        });
-                      }
-                    },
-                    popup: SelectPopup<UserGender>(
-                      items: SelectItemList(
-                        children: UserGender.values
-                            .map(
-                              (e) => SelectItemButton(
-                                value: e,
-                                child: Text(e.name),
-                              ),
-                            )
-                            .toList(),
-                      ),
-                    ).call,
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                spacing: 8.h,
+                children: [
+                  Text(
+                    context.l10n.gender,
+                    style: context.theme.typography.small.copyWith(
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
-                ),
+                  SizedBox(
+                    width: double.infinity,
+                    child: Select<UserGender>(
+                      enabled: !state.isLoading,
+                      itemBuilder: (context, item) {
+                        return Text(item.name);
+                      },
+                      placeholder: Text(context.l10n.gender),
+                      value: _selectedGender,
+                      onChanged: (value) {
+                        if (value != null) {
+                          setState(() {
+                            _selectedGender = value;
+                          });
+                        }
+                      },
+                      popup: SelectPopup<UserGender>(
+                        items: SelectItemList(
+                          children: UserGender.values
+                              .map(
+                                (e) => SelectItemButton(
+                                  value: e,
+                                  child: Text(e.name),
+                                ),
+                              )
+                              .toList(),
+                        ),
+                      ).call,
+                    ),
+                  ),
+                ],
               ),
               FormField(
                 key: _phoneNumberKey,
@@ -199,10 +204,7 @@ class _SignUpUserFormViewState extends State<_SignUpUserFormView> {
                   FormValidationMode.submitted,
                 },
                 child: ComponentTheme(
-                  data: PhoneInputTheme(
-                    maxWidth: 200 * context.theme.scaling,
-                    flagWidth: 22.w,
-                  ),
+                  data: PhoneInputTheme(maxWidth: null, flagWidth: 22.w),
                   child: PhoneInput(
                     initialCountry: Country.indonesia,
                     countries: const [Country.indonesia],
@@ -307,7 +309,7 @@ class _SignUpUserFormViewState extends State<_SignUpUserFormView> {
                         ? () => context.submitForm()
                         : null,
                     child: isLoading
-                        ? const Submiting()
+                        ? const Submiting(simpleText: true)
                         : Text(
                             context.l10n.sign_up,
                             style: context.theme.typography.medium.copyWith(
