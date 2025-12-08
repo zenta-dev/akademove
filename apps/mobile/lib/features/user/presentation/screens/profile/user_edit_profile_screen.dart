@@ -172,7 +172,7 @@ class _UserEditProfileScreenState extends State<UserEditProfileScreen> {
                       },
                       child: ComponentTheme(
                         data: PhoneInputTheme(
-                          maxWidth: 212 * context.theme.scaling,
+                          maxWidth: 200 * context.theme.scaling,
                           flagWidth: 22.w,
                         ),
                         child: PhoneInput(
