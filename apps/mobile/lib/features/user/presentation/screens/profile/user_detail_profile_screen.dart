@@ -2,6 +2,7 @@ import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/gen/assets.gen.dart';
 import 'package:akademove/l10n/l10n.dart';
+import 'package:api_client/api_client.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -98,23 +99,33 @@ class UserDetailProfileScreen extends StatelessWidget {
                       itemBuilder: (context, index) {
                         final userBadge = user.userBadges[index];
                         final badge = userBadge.badge;
-                        return Basic(
-                          leading: CachedNetworkImage(
-                            imageUrl: badge.icon ?? randomBadgeImage,
-                            width: 42,
-                            height: 42,
-                            placeholder: (context, url) => Container(
+                        return Button(
+                          style: const ButtonStyle.ghost(
+                            density: ButtonDensity.compact,
+                          ),
+                          onPressed: () => _showBadgeDialog(context, userBadge),
+                          child: Basic(
+                            leading: CachedNetworkImage(
+                              imageUrl: badge.icon ?? randomBadgeImage,
+                              width: 42,
+                              height: 42,
+                              placeholder: (context, url) => Container(
+                                color: context.colorScheme.mutedForeground,
+                              ),
+                              errorWidget: (context, url, error) =>
+                                  const Center(
+                                    child: Icon(
+                                      LucideIcons.info,
+                                      color: Colors.red,
+                                    ),
+                                  ),
+                            ),
+                            title: DefaultText(badge.name),
+                            subtitle: DefaultText(
+                              '${context.l10n.text_earned_at} ${userBadge.earnedAt.format('dd MMMM yyyy')}',
+                              fontSize: 12.sp,
                               color: context.colorScheme.mutedForeground,
                             ),
-                            errorWidget: (context, url, error) => const Center(
-                              child: Icon(LucideIcons.info, color: Colors.red),
-                            ),
-                          ),
-                          title: DefaultText(badge.name),
-                          subtitle: DefaultText(
-                            '${context.l10n.text_earned_at} ${userBadge.earnedAt.format('dd MMMM yyyy')}',
-                            fontSize: 12.sp,
-                            color: context.colorScheme.mutedForeground,
                           ),
                         );
                       },
@@ -129,6 +140,80 @@ class UserDetailProfileScreen extends StatelessWidget {
     );
   }
 
+  void _showBadgeDialog(BuildContext context, UserBadge userBadge) {
+    final badge = userBadge.badge;
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: DefaultText(
+                badge.name,
+                fontSize: 16.sp,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            IconButton.ghost(
+              icon: const Icon(LucideIcons.x),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          spacing: 16.h,
+          children: [
+            // Badge icon
+            Center(
+              child: CachedNetworkImage(
+                imageUrl: badge.icon ?? randomBadgeImage,
+                width: 80.w,
+                height: 80.h,
+                placeholder: (context, url) => Container(
+                  width: 80.w,
+                  height: 80.h,
+                  color: context.colorScheme.mutedForeground,
+                ),
+                errorWidget: (context, url, error) => Container(
+                  width: 80.w,
+                  height: 80.h,
+                  color: context.colorScheme.mutedForeground,
+                  child: const Icon(LucideIcons.award, color: Colors.red),
+                ),
+              ),
+            ),
+
+            // Earned date
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+              decoration: BoxDecoration(
+                color: context.colorScheme.secondary.withOpacity(0.3),
+                borderRadius: BorderRadius.circular(8.r),
+              ),
+              child: DefaultText(
+                '${context.l10n.text_earned_at} ${userBadge.earnedAt.format('dd MMMM yyyy')}',
+                fontSize: 12.sp,
+                color: context.colorScheme.mutedForeground,
+              ),
+            ),
+
+            // Description
+            DefaultText(
+              badge.description ?? 'No description available',
+              fontSize: 14.sp,
+              fontWeight: FontWeight.normal,
+              color: context.colorScheme.foreground,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Stack _buildHeader(BuildContext context) {
     return Stack(
       clipBehavior: Clip.none,
@@ -137,7 +222,6 @@ class UserDetailProfileScreen extends StatelessWidget {
                 ? Assets.images.bg.staticGradientDark
                 : Assets.images.bg.staticGradientLight)
             .image(width: double.infinity, height: 180.h, fit: BoxFit.cover),
-
         Positioned(
           top: 0.08.sw,
           left: 0.01.sw,
