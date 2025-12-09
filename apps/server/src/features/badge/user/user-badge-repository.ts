@@ -148,6 +148,19 @@ export class UserBadgeRepository extends BaseRepository {
 	async create(item: InsertUserBadge, opts?: WithTx): Promise<UserBadge> {
 		try {
 			const tx = opts?.tx ?? this.db;
+
+			// Check if badge already exists for this user (unique constraint: userId + badgeId)
+			const existing = await tx.query.userBadge.findFirst({
+				with: { badge: true },
+				where: (f, op) =>
+					op.and(eq(f.userId, item.userId), eq(f.badgeId, item.badgeId)),
+			});
+
+			if (existing) {
+				// Return existing badge instead of throwing error
+				return UserBadgeRepository.composeEntity(existing, this.#storage);
+			}
+
 			const [operation, badge] = await Promise.all([
 				tx
 					.insert(tables.userBadge)

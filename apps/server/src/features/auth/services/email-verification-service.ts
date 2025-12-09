@@ -2,7 +2,7 @@ import { randomInt } from "node:crypto";
 import { eq } from "drizzle-orm";
 import { v7 } from "uuid";
 import { AuthError } from "@/core/error";
-import type { WithTx } from "@/core/interface";
+import type { PartialWithTx, WithTx } from "@/core/interface";
 import { type DatabaseService, tables } from "@/core/services/db";
 import type { MailService } from "@/core/services/mail";
 import { log } from "@/utils";
@@ -95,8 +95,10 @@ export class EmailVerificationService {
 	async sendEmailVerification(
 		request: SendEmailVerificationRequest,
 		deps: EmailVerificationDeps,
+		opts?: PartialWithTx,
 	): Promise<boolean> {
 		try {
+			const db = opts?.tx ?? this.#db;
 			const user = await deps.findUserByEmail(request.email);
 
 			if (!user) {
@@ -110,7 +112,7 @@ export class EmailVerificationService {
 			}
 
 			// Delete any existing verification codes for this email
-			await this.#db
+			await db
 				.delete(tables.verification)
 				.where(eq(tables.verification.identifier, request.email));
 
@@ -120,7 +122,7 @@ export class EmailVerificationService {
 				Date.now() + this.#VERIFICATION_CODE_EXPIRY_MINUTES * 60 * 1000,
 			);
 
-			await this.#db.insert(tables.verification).values({
+			await db.insert(tables.verification).values({
 				id: v7(),
 				identifier: request.email,
 				value: code,
@@ -170,9 +172,8 @@ export class EmailVerificationService {
 		opts?: WithTx,
 	): Promise<boolean> {
 		try {
-			const verification = await (
-				opts?.tx ?? this.#db
-			).query.verification.findFirst({
+			const db = opts?.tx ?? this.#db;
+			const verification = await db.query.verification.findFirst({
 				where: (f, op) =>
 					op.and(
 						op.eq(f.identifier, request.email),
@@ -187,7 +188,7 @@ export class EmailVerificationService {
 				});
 			}
 
-			const user = await (opts?.tx ?? this.#db).query.user.findFirst({
+			const user = await db.query.user.findFirst({
 				columns: { id: true, email: true, emailVerified: true },
 				where: (f, op) => op.eq(f.email, request.email),
 			});
@@ -202,7 +203,7 @@ export class EmailVerificationService {
 				});
 			}
 
-			await (opts?.tx ?? this.#db).transaction(async (tx) => {
+			await db.transaction(async (tx) => {
 				await Promise.all([
 					tx
 						.update(tables.user)

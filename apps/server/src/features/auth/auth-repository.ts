@@ -12,7 +12,7 @@ import type { ClientAgent, Phone } from "@repo/schema/common";
 import type { UserRole } from "@repo/schema/user";
 import { eq, type SQL } from "drizzle-orm";
 import { BaseRepository } from "@/core/base";
-import type { PartialWithTx } from "@/core/interface";
+import type { PartialWithTx, WithTx } from "@/core/interface";
 import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
 import type { MailService } from "@/core/services/mail";
@@ -328,7 +328,7 @@ export class AuthRepository extends BaseRepository {
 	 */
 	async sendEmailVerification(
 		params: SendEmailVerification,
-		opts?: PartialWithTx,
+		opts: PartialWithTx,
 	) {
 		try {
 			return await this.#emailVerificationService.sendEmailVerification(
@@ -350,6 +350,7 @@ export class AuthRepository extends BaseRepository {
 						await this.deleteCache(userId);
 					},
 				},
+				opts,
 			);
 		} catch (error) {
 			throw this.handleError(error, "send email verification");
@@ -364,13 +365,17 @@ export class AuthRepository extends BaseRepository {
 	 * @param params - Email and OTP code
 	 * @returns true if successful
 	 */
-	async verifyEmail(params: VerifyEmail) {
+	async verifyEmail(params: VerifyEmail, opts: WithTx) {
 		try {
-			return await this.#emailVerificationService.verifyEmail(params, {
-				deleteCache: async (userId: string) => {
-					await this.deleteCache(userId);
+			return await this.#emailVerificationService.verifyEmail(
+				params,
+				{
+					deleteCache: async (userId: string) => {
+						await this.deleteCache(userId);
+					},
 				},
-			});
+				opts,
+			);
 		} catch (error) {
 			throw this.handleError(error, "verify email");
 		}

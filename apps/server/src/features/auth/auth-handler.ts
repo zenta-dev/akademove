@@ -70,6 +70,8 @@ export const AuthHandler = pub.router({
 					context.repo.badge.main.getByCode("NEW_CUSTOMER", opts),
 				]);
 
+				const tasks: Promise<unknown>[] = [];
+
 				// Duplicate account detection (non-blocking - monitoring only)
 				if (ipAddress ?? data.name) {
 					const [recentIpRegistrations, similarNames] = await Promise.all([
@@ -112,9 +114,8 @@ export const AuthHandler = pub.router({
 							duplicateResult.signals,
 						);
 
-						// Fire and forget - don't block registration
-						context.repo.fraud
-							.create(
+						tasks.push(
+							context.repo.fraud.create(
 								{
 									eventType: duplicateResult.signals[0].type,
 									severity: duplicateResult.signals[0].severity,
@@ -137,38 +138,26 @@ export const AuthHandler = pub.router({
 									resolvedAt: null,
 								},
 								opts,
-							)
-							.catch((error) => {
-								log.error(
-									{ error, userId: result.user.id },
-									"[AuthHandler] Failed to log duplicate account fraud event",
-								);
-							});
+							),
+						);
 					}
 
 					// Record the IP for future duplicate detection
 					if (ipAddress) {
-						context.repo.fraud
-							.recordRegistrationIp(result.user.id, ipAddress, opts)
-							.catch((error) => {
-								log.error(
-									{ error, userId: result.user.id },
-									"[AuthHandler] Failed to record registration IP",
-								);
-							});
+						tasks.push(
+							context.repo.fraud.recordRegistrationIp(
+								result.user.id,
+								ipAddress,
+								opts,
+							),
+						);
 					}
 				}
 
+				await Promise.all(tasks);
+
 				const [signInResult] = await Promise.all([
 					context.repo.auth.signIn(data, opts),
-					context.repo.auth
-						.sendEmailVerification({ email: data.email })
-						.catch((err) => {
-							log.error(
-								{ error: err, email: data.email },
-								"[AuthHandler] Failed to send verification email after user sign up",
-							);
-						}),
 					context.repo.badge.user.create(
 						{
 							userId: result.user.id,
@@ -177,6 +166,17 @@ export const AuthHandler = pub.router({
 						opts,
 					),
 				]);
+
+				// Send email verification outside the critical Promise.all
+				// This is non-critical and shouldn't fail the entire signup
+				context.repo.auth
+					.sendEmailVerification({ email: data.email }, opts)
+					.catch((error) => {
+						log.warn(
+							{ error, email: data.email },
+							"[AuthHandler] Failed to send email verification during signup, user can request later",
+						);
+					});
 
 				if (!signInResult.user.banned) {
 					context.resHeaders?.set(
@@ -225,6 +225,8 @@ export const AuthHandler = pub.router({
 						context.repo.auth.signUpDriver(data, opts),
 						context.repo.badge.main.getByCode("NEW_DRIVER", opts),
 					]);
+
+					const tasks: Promise<unknown>[] = [];
 
 					// Duplicate account detection for drivers (includes bank account check)
 					const bankAccountNumber = data.detail?.bank?.number
@@ -280,9 +282,8 @@ export const AuthHandler = pub.router({
 								duplicateResult.signals,
 							);
 
-							// Fire and forget - don't block registration
-							context.repo.fraud
-								.create(
+							tasks.push(
+								context.repo.fraud.create(
 									{
 										eventType: duplicateResult.signals[0].type,
 										severity: duplicateResult.signals[0].severity,
@@ -305,27 +306,23 @@ export const AuthHandler = pub.router({
 										resolvedAt: null,
 									},
 									opts,
-								)
-								.catch((error) => {
-									log.error(
-										{ error, userId: result.user.id },
-										"[AuthHandler] Failed to log driver duplicate account fraud event",
-									);
-								});
+								),
+							);
 						}
 
 						// Record the IP for future duplicate detection
 						if (ipAddress) {
-							context.repo.fraud
-								.recordRegistrationIp(result.user.id, ipAddress, opts)
-								.catch((error) => {
-									log.error(
-										{ error, userId: result.user.id },
-										"[AuthHandler] Failed to record driver registration IP",
-									);
-								});
+							tasks.push(
+								context.repo.fraud.recordRegistrationIp(
+									result.user.id,
+									ipAddress,
+									opts,
+								),
+							);
 						}
 					}
+
+					await Promise.all(tasks);
 
 					const [signInResult] = await Promise.all([
 						context.repo.auth.signIn(data, opts),
@@ -336,14 +333,6 @@ export const AuthHandler = pub.router({
 							},
 							opts,
 						),
-						context.repo.auth
-							.sendEmailVerification({ email: data.email }, opts)
-							.catch((err) => {
-								log.error(
-									{ error: err, email: data.email },
-									"[AuthHandler] Failed to send verification email after driver sign up",
-								);
-							}),
 						context.repo.badge.user.create(
 							{
 								userId: result.user.id,
@@ -352,6 +341,17 @@ export const AuthHandler = pub.router({
 							opts,
 						),
 					]);
+
+					// Send email verification outside the critical Promise.all
+					// This is non-critical and shouldn't fail the entire signup
+					context.repo.auth
+						.sendEmailVerification({ email: data.email }, opts)
+						.catch((error) => {
+							log.warn(
+								{ error, email: data.email },
+								"[AuthHandler] Failed to send email verification during driver signup, user can request later",
+							);
+						});
 
 					if (!signInResult.user.banned) {
 						context.resHeaders?.set(
@@ -407,14 +407,6 @@ export const AuthHandler = pub.router({
 							},
 							opts,
 						),
-						context.repo.auth
-							.sendEmailVerification({ email: data.email }, opts)
-							.catch((err) => {
-								log.error(
-									{ error: err, email: data.email },
-									"[AuthHandler] Failed to send verification email after merchant sign up",
-								);
-							}),
 						context.repo.badge.user.create(
 							{
 								userId: result.user.id,
@@ -423,6 +415,17 @@ export const AuthHandler = pub.router({
 							opts,
 						),
 					]);
+
+					// Send email verification outside the critical Promise.all
+					// This is non-critical and shouldn't fail the entire signup
+					context.repo.auth
+						.sendEmailVerification({ email: data.email }, opts)
+						.catch((error) => {
+							log.warn(
+								{ error, email: data.email },
+								"[AuthHandler] Failed to send email verification during merchant signup, user can request later",
+							);
+						});
 
 					if (!signInResult.user.banned) {
 						context.resHeaders?.set(
@@ -562,26 +565,35 @@ export const AuthHandler = pub.router({
 	}),
 	sendEmailVerification: pub.sendEmailVerification.handler(
 		async ({ context, input: { body } }) => {
-			await context.repo.auth.sendEmailVerification(trimObjectValues(body));
+			return context.svc.db.transaction(async (tx) => {
+				const opts = { tx };
+				await context.repo.auth.sendEmailVerification(
+					trimObjectValues(body),
+					opts,
+				);
 
-			return {
-				status: 202,
-				body: {
-					message: "Email verification sent successfully",
-					data: true,
-				},
-			};
+				return {
+					status: 202,
+					body: {
+						message: "Email verification sent successfully",
+						data: true,
+					},
+				};
+			});
 		},
 	),
 	verifyEmail: pub.verifyEmail.handler(async ({ context, input: { body } }) => {
-		await context.repo.auth.verifyEmail(trimObjectValues(body));
+		return context.svc.db.transaction(async (tx) => {
+			const opts = { tx };
+			await context.repo.auth.verifyEmail(trimObjectValues(body), opts);
 
-		return {
-			status: 200,
-			body: {
-				message: "Email verified successfully",
-				data: true,
-			},
-		};
+			return {
+				status: 200,
+				body: {
+					message: "Email verified successfully",
+					data: true,
+				},
+			};
+		});
 	}),
 });
