@@ -5,6 +5,7 @@ import { setupOrpcRouter } from "./core/router/orpc";
 import { handleAutoOfflineCron } from "./features/driver/cron/auto-offline-handler";
 import { handleLeaderboardCron } from "./features/leaderboard/leaderboard-cron";
 import { handleOrderCheckerCron } from "./features/order/order-checker-cron";
+import { handleScheduledOrderCron } from "./features/order/scheduled-order-cron";
 import { setupWebsocketRouter } from "./features/ws";
 import { log } from "./utils";
 
@@ -35,6 +36,13 @@ export default {
 		ctx.waitUntil(
 			handleOrderCheckerCron(env, ctx).catch((error) => {
 				log.error({ error }, "[Cron] Order checker handler failed");
+			}),
+		);
+
+		// Process scheduled orders ready for matching
+		ctx.waitUntil(
+			handleScheduledOrderCron(env, ctx).catch((error) => {
+				log.error({ error }, "[Cron] Scheduled order handler failed");
 			}),
 		);
 
