@@ -77,6 +77,9 @@ function RouteComponent() {
 		if (typeof window === "undefined" || !("serviceWorker" in navigator))
 			return;
 
+		// Store reference to serviceWorker.ready promise result
+		let controller: ServiceWorkerContainer | null = null;
+
 		const handleNotificationClick = (event: Event) => {
 			const notificationEvent = event as unknown as {
 				notification: { data: { orderId: string } };
@@ -88,20 +91,32 @@ function RouteComponent() {
 			}
 		};
 
+		// Only add listener if serviceWorker is available
+		if (navigator.serviceWorker.controller) {
+			controller = navigator.serviceWorker;
+			controller.addEventListener("message", handleNotificationClick);
+		}
+
 		navigator.serviceWorker.addEventListener(
-			"notificationclick",
+			"message",
 			handleNotificationClick,
 		);
 
 		return () => {
 			navigator.serviceWorker.removeEventListener(
-				"notificationclick",
+				"message",
 				handleNotificationClick,
 			);
+			if (controller) {
+				controller.removeEventListener("message", handleNotificationClick);
+			}
 		};
 	}, []);
 
-	if (!allowed) navigate({ to: "/" });
+	if (!allowed) {
+		navigate({ to: "/" });
+		return null;
+	}
 
 	return (
 		<>

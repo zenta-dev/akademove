@@ -47,8 +47,8 @@ export function MerchantStatusToggle({
 			queryClient.invalidateQueries();
 			toast.success(data.isOnline ? "You're now online" : "You're now offline");
 		},
-		onError: (error) => {
-			setIsOnline(!isOnline); // Revert state
+		onError: (error, variables) => {
+			setIsOnline(!variables); // Revert to opposite of what was attempted
 			toast.error(
 				error instanceof Error
 					? error.message
@@ -76,8 +76,8 @@ export function MerchantStatusToggle({
 					: "You've stopped taking orders",
 			);
 		},
-		onError: (error) => {
-			setIsTakingOrders(!isTakingOrders); // Revert state
+		onError: (error, variables) => {
+			setIsTakingOrders(!variables); // Revert to opposite of what was attempted
 			toast.error(
 				error instanceof Error
 					? error.message

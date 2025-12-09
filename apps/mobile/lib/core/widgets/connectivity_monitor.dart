@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:akademove/core/_export.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
@@ -87,9 +88,15 @@ class _ConnectivityMonitorState extends State<ConnectivityMonitor> {
 
   Future<bool> _pingNetwork() async {
     try {
-      // Simple connectivity check - just see if we can resolve DNS
-      // This is lightweight and doesn't require actual API access
-      return true; // In production, implement actual ping
+      // Perform actual DNS lookup to verify network connectivity
+      final result = await InternetAddress.lookup(
+        'google.com',
+      ).timeout(const Duration(seconds: 3));
+      return result.isNotEmpty && result[0].rawAddress.isNotEmpty;
+    } on SocketException {
+      return false;
+    } on TimeoutException {
+      return false;
     } catch (e) {
       return false;
     }

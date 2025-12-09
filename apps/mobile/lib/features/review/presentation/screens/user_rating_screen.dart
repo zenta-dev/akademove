@@ -243,7 +243,9 @@ class _UserRatingScreenState extends State<UserRatingScreen> {
   }
 
   Widget _buildRatingSection() {
-    final category = _selectedCategory!;
+    final category = _selectedCategory;
+    if (category == null) return const SizedBox.shrink();
+
     final rating = _ratings[category] ?? 0;
 
     return Card(

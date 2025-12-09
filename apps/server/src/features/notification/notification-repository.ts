@@ -556,11 +556,11 @@ class FCMTopicSubscriptionRepository extends BaseRepository {
 	async subscribe(
 		item: InsertFCMTopicSubscription,
 		opts?: PartialWithTx,
-	): Promise<FCMTopicSubscription> {
+	): Promise<FCMTopicSubscription | undefined> {
 		try {
 			const tx = opts?.tx ?? this.db;
 
-			const [[res]] = await Promise.all([
+			const [res] = await Promise.all([
 				tx
 					.insert(tables.fcmTopicSubscription)
 					.values({ ...item, id: v7() })
@@ -569,7 +569,12 @@ class FCMTopicSubscriptionRepository extends BaseRepository {
 				this.deleteCache(item.topic),
 			]);
 
-			return FCMTopicSubscriptionRepository.composeEntity(res);
+			// onConflictDoNothing may return empty array if conflict occurred
+			if (!res || res.length === 0) {
+				return undefined;
+			}
+
+			return FCMTopicSubscriptionRepository.composeEntity(res[0]);
 		} catch (error) {
 			throw this.handleError(error, "subscribe");
 		}
@@ -666,19 +671,22 @@ class FCMNotificationLogRepository extends BaseRepository {
 			if (page) {
 				const offset = (page - 1) * limit;
 
-				const [res, totalCount] = await Promise.all([
+				const [res, [totalCountRes]] = await Promise.all([
 					tx.query.fcmNotificationLog.findMany({
 						where: (_, op) => op.and(...clauses),
 						orderBy,
 						offset,
 						limit,
 					}),
-					this.getTotalRow(opts),
+					tx
+						.select({ count: count(tables.fcmNotificationLog.id) })
+						.from(tables.fcmNotificationLog)
+						.where(and(...clauses)),
 				]);
 
 				const rows = res.map(FCMNotificationLogRepository.composeEntity);
 
-				const totalPages = Math.ceil(totalCount / limit);
+				const totalPages = Math.ceil(totalCountRes.count / limit);
 
 				return { rows, totalPages };
 			}
@@ -813,19 +821,22 @@ class UserNotificationRepository extends BaseRepository {
 			if (page) {
 				const offset = (page - 1) * limit;
 
-				const [res, totalCount] = await Promise.all([
+				const [res, [totalCountRes]] = await Promise.all([
 					tx.query.userNotification.findMany({
 						where: (_, op) => op.and(...clauses),
 						orderBy,
 						offset,
 						limit,
 					}),
-					this.getTotalRow(opts),
+					tx
+						.select({ count: count(tables.userNotification.id) })
+						.from(tables.userNotification)
+						.where(and(...clauses)),
 				]);
 
 				const rows = res.map(UserNotificationRepository.composeEntity);
 
-				const totalPages = Math.ceil(totalCount / limit);
+				const totalPages = Math.ceil(totalCountRes.count / limit);
 
 				return { rows, totalPages };
 			}

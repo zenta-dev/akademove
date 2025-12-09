@@ -1,5 +1,5 @@
 import { nullToUndefined } from "@repo/shared";
-import { and, asc, desc, eq, gte, lte, type SQL } from "drizzle-orm";
+import { and, asc, count, desc, eq, gte, lte, type SQL } from "drizzle-orm";
 import type { ListResult, PartialWithTx } from "@/core/interface";
 import { type DatabaseService, tables } from "@/core/services/db";
 import type { AllowedLoggedTable } from "@/core/tables/common";
@@ -82,7 +82,7 @@ export class AuditRepository {
 						? desc(auditTable.updatedAt)
 						: asc(auditTable.updatedAt);
 
-				const [result, countResult] = await Promise.all([
+				const [result, [countResult]] = await Promise.all([
 					(opts?.tx ?? this.db)
 						.select()
 						.from(auditTable)
@@ -91,12 +91,12 @@ export class AuditRepository {
 						.offset(offset)
 						.limit(limit),
 					(opts?.tx ?? this.db)
-						.select({ count: auditTable.id })
+						.select({ count: count(auditTable.id) })
 						.from(auditTable)
 						.where(and(...clauses)),
 				]);
 
-				const totalRecords = countResult.length;
+				const totalRecords = countResult.count;
 				const totalPages = Math.ceil(totalRecords / limit);
 
 				return {

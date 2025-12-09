@@ -18,39 +18,41 @@ part 'user_admin_list_filters_parameter.g.dart';
 class UserAdminListFiltersParameter {
   /// Returns a new [UserAdminListFiltersParameter] instance.
   const UserAdminListFiltersParameter({
-     this.roles,
-     this.genders,
-     this.emailVerified,
-     this.banned,
-     this.startDate,
-     this.endDate,
+    this.roles,
+    this.genders,
+    this.emailVerified,
+    this.banned,
+    this.startDate,
+    this.endDate,
   });
   @JsonKey(name: r'roles', required: false, includeIfNull: false)
   final List<UserAdminListFiltersParameterRolesEnum>? roles;
-  
+
   @JsonKey(name: r'genders', required: false, includeIfNull: false)
   final List<UserAdminListFiltersParameterGendersEnum>? genders;
-  
+
   @JsonKey(name: r'emailVerified', required: false, includeIfNull: false)
   final bool? emailVerified;
-  
+
   @JsonKey(name: r'banned', required: false, includeIfNull: false)
   final bool? banned;
-  
+
   @JsonKey(name: r'startDate', required: false, includeIfNull: false)
   final DateTime? startDate;
-  
+
   @JsonKey(name: r'endDate', required: false, includeIfNull: false)
   final DateTime? endDate;
-  
+
   @override
-  bool operator ==(Object other) => identical(this, other) || other is UserAdminListFiltersParameter &&
-    other.roles == roles &&
-    other.genders == genders &&
-    other.emailVerified == emailVerified &&
-    other.banned == banned &&
-    other.startDate == startDate &&
-    other.endDate == endDate;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is UserAdminListFiltersParameter &&
+          other.roles == roles &&
+          other.genders == genders &&
+          other.emailVerified == emailVerified &&
+          other.banned == banned &&
+          other.startDate == startDate &&
+          other.endDate == endDate;
 
   @override
   int get hashCode =>
@@ -61,7 +63,8 @@ class UserAdminListFiltersParameter {
       startDate.hashCode +
       endDate.hashCode;
 
-  factory UserAdminListFiltersParameter.fromJson(Map<String, dynamic> json) => _$UserAdminListFiltersParameterFromJson(json);
+  factory UserAdminListFiltersParameter.fromJson(Map<String, dynamic> json) =>
+      _$UserAdminListFiltersParameterFromJson(json);
 
   Map<String, dynamic> toJson() => _$UserAdminListFiltersParameterToJson(this);
 
@@ -69,7 +72,6 @@ class UserAdminListFiltersParameter {
   String toString() {
     return toJson().toString();
   }
-
 }
 
 enum UserAdminListFiltersParameterRolesEnum {
@@ -83,11 +85,11 @@ enum UserAdminListFiltersParameterRolesEnum {
   DRIVER(r'DRIVER'),
   @JsonValue(r'USER')
   USER(r'USER');
-  
+
   const UserAdminListFiltersParameterRolesEnum(this.value);
-  
+
   final String value;
-  
+
   @override
   String toString() => value;
 }
@@ -97,12 +99,11 @@ enum UserAdminListFiltersParameterGendersEnum {
   MALE(r'MALE'),
   @JsonValue(r'FEMALE')
   FEMALE(r'FEMALE');
-  
+
   const UserAdminListFiltersParameterGendersEnum(this.value);
-  
+
   final String value;
-  
+
   @override
   String toString() => value;
 }
-

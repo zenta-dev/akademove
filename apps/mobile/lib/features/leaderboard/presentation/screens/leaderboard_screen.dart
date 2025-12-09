@@ -287,13 +287,19 @@ class _BadgeCard extends StatelessWidget {
                 ),
               ),
               child: Center(
-                child: badge.icon != null
-                    ? Text(badge.icon!, style: TextStyle(fontSize: 40.sp))
-                    : Icon(
-                        Icons.emoji_events,
-                        size: 40.sp,
-                        color: _getBadgeLevelColor(badge.level),
-                      ),
+                child: Builder(
+                  builder: (context) {
+                    final icon = badge.icon;
+                    if (icon != null) {
+                      return Text(icon, style: TextStyle(fontSize: 40.sp));
+                    }
+                    return Icon(
+                      Icons.emoji_events,
+                      size: 40.sp,
+                      color: _getBadgeLevelColor(badge.level),
+                    );
+                  },
+                ),
               ),
             ),
             SizedBox(height: 12.h),

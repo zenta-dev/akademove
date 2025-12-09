@@ -16,17 +16,10 @@ class DriverQuizRepository extends BaseRepository {
           .getDriverQuizAnswerApi()
           .driverQuizAnswerStartQuiz(startDriverQuiz: request);
 
-      if (response.data == null) {
-        throw RepositoryError(
-          'Failed to start quiz: empty response',
-          code: ErrorCode.unknown,
-        );
-      }
-
       final data = response.data;
       if (data == null) {
         throw RepositoryError(
-          'Failed to start quiz: empty data',
+          'Failed to start quiz: empty response',
           code: ErrorCode.unknown,
         );
       }
@@ -47,15 +40,7 @@ class DriverQuizRepository extends BaseRepository {
           .getDriverQuizAnswerApi()
           .driverQuizAnswerSubmitAnswer(submitDriverQuizAnswer: request);
 
-      if (response.data == null) {
-        throw RepositoryError(
-          'Failed to submit answer: empty response',
-          code: ErrorCode.unknown,
-        );
-      }
-
       final data = response.data;
-
       if (data == null) {
         throw RepositoryError(
           'Failed to submit answer: empty response',
@@ -77,14 +62,14 @@ class DriverQuizRepository extends BaseRepository {
           .getDriverQuizAnswerApi()
           .driverQuizAnswerCompleteQuiz(completeDriverQuiz: request);
 
-      if (response.data == null) {
+      final data = response.data;
+      if (data == null) {
         throw RepositoryError(
           'Failed to complete quiz: empty response',
           code: ErrorCode.unknown,
         );
       }
 
-      final data = response.data!;
       final resultData = data.data;
 
       return SuccessResponse(message: data.message, data: resultData);
@@ -100,15 +85,11 @@ class DriverQuizRepository extends BaseRepository {
             .getDriverQuizAnswerApi()
             .driverQuizAnswerGetMyLatestAttempt();
 
-        if (response.data != null) {
-          final resultData = response.data!.data;
+        final data = response.data;
+        if (data != null) {
+          final resultData = data.data;
 
-          return SuccessResponse(
-            message:
-                response.data?.message ??
-                'Latest quiz attempt retrieved successfully',
-            data: resultData,
-          );
+          return SuccessResponse(message: data.message, data: resultData);
         }
 
         return SuccessResponse(message: 'No quiz attempt found', data: null);

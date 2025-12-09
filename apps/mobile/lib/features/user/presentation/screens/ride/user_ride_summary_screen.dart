@@ -132,7 +132,8 @@ class _UserRideSummaryScreenState extends State<UserRideSummaryScreen> {
       return;
     }
 
-    if (scheduledAt == null) {
+    final scheduledTime = scheduledAt;
+    if (scheduledTime == null) {
       context.showMyToast(
         context.l10n.please_select_schedule_time,
         type: ToastType.failed,
@@ -146,7 +147,7 @@ class _UserRideSummaryScreenState extends State<UserRideSummaryScreen> {
       dropoff,
       OrderType.RIDE,
       method,
-      scheduledAt!,
+      scheduledTime,
       gender: gender,
       bankProvider: bankProvider,
       couponCode: selectedCoupon?.code,
@@ -177,10 +178,11 @@ class _UserRideSummaryScreenState extends State<UserRideSummaryScreen> {
     final now = DateTime.now();
     final minDate = now.add(const Duration(minutes: 30));
     final maxDate = now.add(const Duration(days: 7));
+    final currentScheduled = scheduledAt;
 
     final pickedDate = await material.showDatePicker(
       context: context,
-      initialDate: scheduledAt ?? minDate,
+      initialDate: currentScheduled ?? minDate,
       firstDate: minDate,
       lastDate: maxDate,
     );
@@ -189,8 +191,8 @@ class _UserRideSummaryScreenState extends State<UserRideSummaryScreen> {
 
     final pickedTime = await material.showTimePicker(
       context: context,
-      initialTime: scheduledAt != null
-          ? material.TimeOfDay.fromDateTime(scheduledAt!)
+      initialTime: currentScheduled != null
+          ? material.TimeOfDay.fromDateTime(currentScheduled)
           : material.TimeOfDay.fromDateTime(minDate),
     );
 
@@ -349,13 +351,20 @@ class _UserRideSummaryScreenState extends State<UserRideSummaryScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        scheduledAt == null
-                            ? context.l10n.schedule_for_later
-                            : context.l10n.scheduled_for(
-                                _formatScheduledAt(scheduledAt!),
-                              ),
-                        style: context.typography.p.copyWith(fontSize: 14.sp),
+                      Builder(
+                        builder: (context) {
+                          final scheduled = scheduledAt;
+                          return Text(
+                            scheduled != null
+                                ? context.l10n.scheduled_for(
+                                    _formatScheduledAt(scheduled),
+                                  )
+                                : context.l10n.schedule_for_later,
+                            style: context.typography.p.copyWith(
+                              fontSize: 14.sp,
+                            ),
+                          );
+                        },
                       ),
                       if (scheduledAt != null)
                         Text(

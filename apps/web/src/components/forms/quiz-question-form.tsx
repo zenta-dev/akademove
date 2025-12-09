@@ -99,10 +99,11 @@ export const QuizQuestionForm = ({
 	// Adjust options when type changes
 	useEffect(() => {
 		if (watchedType === "TRUE_FALSE" && fields.length > 2) {
-			// Remove extra options for true/false
+			// Remove extra options for true/false - get current options from form
+			const currentOptions = form.getValues("options");
 			form.setValue(
 				"options",
-				fields.slice(0, 2).map((option, index) => ({
+				currentOptions.slice(0, 2).map((option, index) => ({
 					...option,
 					text: index === 0 ? "True" : "False",
 				})),
@@ -113,7 +114,7 @@ export const QuizQuestionForm = ({
 				append({ ...defaultOption, id: crypto.randomUUID() });
 			}
 		}
-	}, [watchedType, fields.length, append, form, fields.slice]);
+	}, [watchedType, fields.length, append, form]);
 
 	const createMutation = useMutation(
 		orpcQuery.driverQuizQuestion.create.mutationOptions({

@@ -56,6 +56,7 @@ export const OrderDetailDialog = ({
 
 	const formatDate = (date: Date | string | undefined) => {
 		if (!date) return "N/A";
+		const dateObj = typeof date === "string" ? new Date(date) : date;
 		return new Intl.DateTimeFormat("id-ID", {
 			weekday: "short",
 			year: "numeric",
@@ -63,7 +64,8 @@ export const OrderDetailDialog = ({
 			day: "numeric",
 			hour: "2-digit",
 			minute: "2-digit",
-		}).format(new Date(date));
+			timeZone: "Asia/Jakarta",
+		}).format(dateObj);
 	};
 
 	const statusConfig: Record<

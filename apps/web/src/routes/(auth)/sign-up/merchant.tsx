@@ -106,8 +106,9 @@ function RouteComponent() {
 					},
 				);
 
-				if (error instanceof ORPCError) {
-					const fields = (error.data.fields ?? []) as string[];
+				if (error instanceof ORPCError && error.data) {
+					const data = error.data as { fields?: string[] };
+					const fields = data.fields ?? [];
 					if (fields.includes("email")) {
 						form.setError("email", { message: error.message });
 						scrollToField("email");
@@ -126,7 +127,7 @@ function RouteComponent() {
 		async (values: FlatSignUpMerchant) => {
 			await mutation.mutateAsync({ body: values });
 		},
-		[mutation.mutateAsync],
+		[mutation],
 	);
 
 	useEffect(() => {
@@ -428,7 +429,7 @@ function RouteComponent() {
 										<FormLabel>{m.email()}</FormLabel>
 										<FormControl>
 											<Input
-												disabled={copyPersonal ?? mutation.isPending}
+												disabled={copyPersonal || mutation.isPending}
 												{...field}
 											/>
 										</FormControl>
@@ -447,7 +448,7 @@ function RouteComponent() {
 												countries={["ID"]}
 												defaultCountry={"ID"}
 												name={field.name}
-												disabled={copyPersonal ?? mutation.isPending}
+												disabled={copyPersonal || mutation.isPending}
 												onCountryChange={(val) => {
 													if (val)
 														form.setValue(

@@ -104,12 +104,14 @@ export const DriverApprovalHandler = priv.router({
 			const data = trimObjectValues(body);
 
 			// Start transaction for approval
-			const result = await context.svc.db.transaction(async () => {
+			const result = await context.svc.db.transaction(async (tx) => {
+				const opts = { tx };
 				const approvalResult =
 					await context.repo.driver.approval.submitApproval(
 						params.id,
 						data.reviewNotes,
 						context,
+						opts,
 					);
 
 				// Get driver info for email
@@ -158,12 +160,14 @@ export const DriverApprovalHandler = priv.router({
 			const data = trimObjectValues(body);
 
 			// Start transaction for rejection
-			const result = await context.svc.db.transaction(async () => {
+			const result = await context.svc.db.transaction(async (tx) => {
+				const opts = { tx };
 				const rejectionResult =
 					await context.repo.driver.approval.submitRejection(
 						params.id,
 						data.reason,
 						context,
+						opts,
 					);
 
 				// Get driver info and approval details for email

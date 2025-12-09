@@ -56,7 +56,8 @@ class _PickLocationWidgetState extends State<PickLocationWidget> {
     scrollController
       ..removeListener(_onScroll)
       ..dispose();
-    refreshTriggerKey.currentState?.dispose();
+    // Note: Do not call dispose() on GlobalKey's currentState
+    // The widget framework handles disposal of the state automatically
     super.dispose();
   }
 

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:akademove/core/utils/_export.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
@@ -25,11 +27,15 @@ class FirebaseService {
     }
   }
 
-  void onTokenRefresh(void Function(String) handler) {
-    _fcm.onTokenRefresh.listen(handler);
+  /// Returns the stream subscription so caller can cancel it when needed
+  StreamSubscription<String> onTokenRefresh(void Function(String) handler) {
+    return _fcm.onTokenRefresh.listen(handler);
   }
 
-  void onMessage(void Function(RemoteMessage message) handler) {
-    FirebaseMessaging.onMessage.listen(handler);
+  /// Returns the stream subscription so caller can cancel it when needed
+  StreamSubscription<RemoteMessage> onMessage(
+    void Function(RemoteMessage message) handler,
+  ) {
+    return FirebaseMessaging.onMessage.listen(handler);
   }
 }

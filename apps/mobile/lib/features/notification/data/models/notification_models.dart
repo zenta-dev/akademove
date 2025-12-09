@@ -98,36 +98,16 @@ class NotificationModel {
   }
 
   /// Get the notification type from data
-  String get type {
-    if (data != null) {
-      return data!['type'] as String? ?? 'general';
-    }
-    return 'general';
-  }
+  String get type => data?['type'] as String? ?? 'general';
 
   /// Get the order ID from data if available
-  String? get orderId {
-    if (data != null) {
-      return data!['orderId'] as String?;
-    }
-    return null;
-  }
+  String? get orderId => data?['orderId'] as String?;
 
   /// Get the target screen from data if available
-  String? get screen {
-    if (data != null) {
-      return data!['screen'] as String?;
-    }
-    return null;
-  }
+  String? get screen => data?['screen'] as String?;
 
   /// Get the target route from data if available
-  String? get route {
-    if (data != null) {
-      return data!['route'] as String?;
-    }
-    return null;
-  }
+  String? get route => data?['route'] as String?;
 }
 
 /// Response model for notification list API

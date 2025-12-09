@@ -907,6 +907,7 @@ export async function seedConfigurations() {
 					userCancellationFeeBeforeAccept: 0, // 0% before driver accepts
 					userCancellationFeeAfterAccept: 0.1, // 10% after driver accepts
 					noShowFee: 0.5, // 50% no-show penalty
+					noShowDriverCompensationRate: 0.8, // 80% of penalty goes to driver
 					// Delivery verification
 					highValueOrderThreshold: 100_000, // 100k IDR threshold for OTP
 				},

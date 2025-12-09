@@ -42,7 +42,6 @@ export const Route = createFileRoute("/dash/user/bookings")({
 function RouteComponent() {
 	const { allowed } = Route.useLoaderData();
 	const navigate = useNavigate();
-	if (!allowed) navigate({ to: "/" });
 
 	const [orderType, setOrderType] = useState<"RIDE" | "DELIVERY" | "FOOD">(
 		"RIDE",
@@ -65,6 +64,12 @@ function RouteComponent() {
 		additionalFares: number;
 		totalCost: number;
 	} | null>(null);
+
+	// Redirect handled in beforeLoad, but kept as fallback
+	if (!allowed) {
+		navigate({ to: "/" });
+		return null;
+	}
 
 	const isDelivery = orderType === "DELIVERY" || orderType === "FOOD";
 

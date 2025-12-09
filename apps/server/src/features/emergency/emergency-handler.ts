@@ -22,7 +22,14 @@ export const EmergencyHandler = priv.router({
 
 			// Verify user is part of the order (either passenger or driver)
 			const userId = context.user.id;
-			const isDriver = order.driverId !== null && order.driverId === userId;
+			// Check if user is the driver by looking up their driver record
+			const userDriver = await context.repo.driver.main
+				.getByUserId(userId)
+				.catch(() => null);
+			const isDriver =
+				order.driverId !== null &&
+				userDriver !== null &&
+				order.driverId === userDriver.id;
 			if (order.userId !== userId && !isDriver) {
 				throw new Error(
 					"You are not authorized to trigger emergency for this order",
@@ -102,7 +109,14 @@ export const EmergencyHandler = priv.router({
 			const isOperatorOrAdmin = ["OPERATOR", "ADMIN"].includes(
 				context.user.role,
 			);
-			const isDriver = order.driverId !== null && order.driverId === userId;
+			// Check if user is the driver by looking up their driver record
+			const userDriver = await context.repo.driver.main
+				.getByUserId(userId)
+				.catch(() => null);
+			const isDriver =
+				order.driverId !== null &&
+				userDriver !== null &&
+				order.driverId === userDriver.id;
 
 			if (!isOperatorOrAdmin && order.userId !== userId && !isDriver) {
 				throw new Error(
@@ -128,7 +142,14 @@ export const EmergencyHandler = priv.router({
 		// Verify access
 		const userId = context.user.id;
 		const isOperatorOrAdmin = ["OPERATOR", "ADMIN"].includes(context.user.role);
-		const isDriver = result.driverId !== null && result.driverId === userId;
+		// Check if user is the driver by looking up their driver record
+		const userDriver = await context.repo.driver.main
+			.getByUserId(userId)
+			.catch(() => null);
+		const isDriver =
+			result.driverId !== null &&
+			userDriver !== null &&
+			result.driverId === userDriver.id;
 
 		if (!isOperatorOrAdmin && result.userId !== userId && !isDriver) {
 			throw new Error("You are not authorized to view this emergency");

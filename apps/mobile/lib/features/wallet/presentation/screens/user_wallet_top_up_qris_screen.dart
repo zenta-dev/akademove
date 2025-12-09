@@ -29,9 +29,11 @@ class UserWalletTopUpQRISScreen extends StatelessWidget {
                   context.l10n.top_up_success,
                   type: ToastType.success,
                 );
+                // Teardown websocket immediately, don't wait for delay
+                context.read<UserWalletTopUpCubit>().teardownWebsocket();
+                // Wait before navigating to let user see the success message
                 await Future.delayed(const Duration(seconds: 3), () {
                   if (!context.mounted) return;
-                  context.read<UserWalletTopUpCubit>().teardownWebsocket();
                   context
                     ..pop()
                     ..pop()
@@ -54,9 +56,10 @@ class UserWalletTopUpQRISScreen extends StatelessWidget {
                     context.l10n.qr_code_expired,
                     type: ToastType.failed,
                   );
+                  // Teardown websocket immediately, don't wait for delay
+                  context.read<UserWalletTopUpCubit>().teardownWebsocket();
                   await Future.delayed(const Duration(seconds: 3), () {
                     if (!context.mounted) return;
-                    context.read<UserWalletTopUpCubit>().teardownWebsocket();
                     context.pop();
                   });
                 },

@@ -30,7 +30,10 @@ function RouteComponent() {
 	const search = Route.useSearch();
 	const navigate = useNavigate();
 
-	if (!allowed) navigate({ to: "/" });
+	if (!allowed) {
+		navigate({ to: "/" });
+		return null;
+	}
 
 	return (
 		<>

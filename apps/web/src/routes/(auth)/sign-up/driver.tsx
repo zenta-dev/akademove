@@ -71,6 +71,27 @@ function RouteComponent() {
 
 	const router = useRouter();
 
+	const form = useForm({
+		resolver: zodResolver(FlatSignUpDriverSchema),
+		defaultValues: {
+			name: "",
+			email: "",
+			gender: "MALE",
+			phone_countryCode: "ID",
+			phone_number: 0,
+			password: "",
+			confirmPassword: "",
+			photo: undefined,
+			detail_studentId: 0,
+			detail_licensePlate: "",
+			detail_studentCard: undefined,
+			detail_driverLicense: undefined,
+			detail_vehicleCertificate: undefined,
+			detail_bank_number: 0,
+			detail_bank_provider: "BCA",
+		},
+	});
+
 	const mutation = useMutation(
 		orpcQuery.auth.signUpDriver.mutationOptions({
 			onSuccess: async (_data, variables) => {
@@ -93,8 +114,9 @@ function RouteComponent() {
 					},
 				);
 
-				if (error instanceof ORPCError) {
-					const fields = (error.data.fields ?? []) as string[];
+				if (error instanceof ORPCError && error.data) {
+					const data = error.data as { fields?: string[] };
+					const fields = data.fields ?? [];
 
 					if (fields.includes("email")) {
 						form.setError("email", { message: error.message });
@@ -110,33 +132,11 @@ function RouteComponent() {
 		}),
 	);
 
-	const form = useForm({
-		disabled: mutation.isPending,
-		resolver: zodResolver(FlatSignUpDriverSchema),
-		defaultValues: {
-			name: "",
-			email: "",
-			gender: "MALE",
-			phone_countryCode: "ID",
-			phone_number: 0,
-			password: "",
-			confirmPassword: "",
-			photo: undefined,
-			detail_studentId: 0,
-			detail_licensePlate: "",
-			detail_studentCard: undefined,
-			detail_driverLicense: undefined,
-			detail_vehicleCertificate: undefined,
-			detail_bank_number: 0,
-			detail_bank_provider: "BCA",
-		},
-	});
-
 	const onSubmit = useCallback(
 		async (values: FlatSignUpDriver) => {
 			await mutation.mutateAsync({ body: values });
 		},
-		[mutation.mutateAsync],
+		[mutation],
 	);
 
 	return (

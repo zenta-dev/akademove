@@ -11,7 +11,11 @@ import { v7 } from "uuid";
 import { BaseRepository } from "@/core/base";
 import { CACHE_TTLS } from "@/core/constants";
 import { RepositoryError } from "@/core/error";
-import type { ListResult, OrderByOperation } from "@/core/interface";
+import type {
+	ListResult,
+	OrderByOperation,
+	PartialWithTx,
+} from "@/core/interface";
 import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
 import type { ReviewDatabase } from "@/core/tables/review";
@@ -130,9 +134,9 @@ export class ReviewRepository extends BaseRepository {
 		}
 	}
 
-	async create(item: InsertReview): Promise<Review> {
+	async create(item: InsertReview, opts?: PartialWithTx): Promise<Review> {
 		try {
-			const [operation] = await this.db
+			const [operation] = await (opts?.tx ?? this.db)
 				.insert(tables.review)
 				.values({ ...item, id: v7() })
 				.returning();
@@ -147,13 +151,17 @@ export class ReviewRepository extends BaseRepository {
 		}
 	}
 
-	async update(id: string, item: UpdateReview): Promise<Review> {
+	async update(
+		id: string,
+		item: UpdateReview,
+		opts?: PartialWithTx,
+	): Promise<Review> {
 		try {
 			const existing = await this.#getFromDB(id);
 			if (!existing)
 				throw new RepositoryError(`Review with id "${id}" not found`);
 
-			const [operation] = await this.db
+			const [operation] = await (opts?.tx ?? this.db)
 				.update(tables.review)
 				.set({
 					...item,
@@ -170,9 +178,9 @@ export class ReviewRepository extends BaseRepository {
 		}
 	}
 
-	async remove(id: string): Promise<void> {
+	async remove(id: string, opts?: PartialWithTx): Promise<void> {
 		try {
-			const result = await this.db
+			const result = await (opts?.tx ?? this.db)
 				.delete(tables.review)
 				.where(eq(tables.review.id, id))
 				.returning({ id: tables.review.id });

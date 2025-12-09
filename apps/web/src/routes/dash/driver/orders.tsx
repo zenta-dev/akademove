@@ -115,7 +115,10 @@ function RouteComponent() {
 		};
 	}, [navigate]);
 
-	if (!allowed) navigate({ to: "/" });
+	if (!allowed) {
+		navigate({ to: "/" });
+		return null;
+	}
 
 	return (
 		<>

@@ -31,46 +31,53 @@ class MerchantGetReview200ResponseData {
   });
   @JsonKey(name: r'id', required: true, includeIfNull: false)
   final String id;
-  
+
   @JsonKey(name: r'merchantId', required: true, includeIfNull: false)
   final String merchantId;
-  
+
   @JsonKey(name: r'status', required: true, includeIfNull: false)
   final MerchantGetReview200ResponseDataStatusEnum status;
-  
-  @JsonKey(name: r'businessDocumentStatus', required: true, includeIfNull: false)
-  final MerchantGetReview200ResponseDataBusinessDocumentStatusEnum businessDocumentStatus;
-  
+
+  @JsonKey(
+    name: r'businessDocumentStatus',
+    required: true,
+    includeIfNull: false,
+  )
+  final MerchantGetReview200ResponseDataBusinessDocumentStatusEnum
+  businessDocumentStatus;
+
   @JsonKey(name: r'businessDocumentReason', required: true, includeIfNull: true)
   final String? businessDocumentReason;
-  
+
   @JsonKey(name: r'reviewedBy', required: true, includeIfNull: true)
   final String? reviewedBy;
-  
+
   @JsonKey(name: r'reviewedAt', required: true, includeIfNull: true)
   final DateTime? reviewedAt;
-  
+
   @JsonKey(name: r'reviewNotes', required: true, includeIfNull: true)
   final String? reviewNotes;
-  
+
   @JsonKey(name: r'createdAt', required: true, includeIfNull: false)
   final DateTime createdAt;
-  
+
   @JsonKey(name: r'updatedAt', required: true, includeIfNull: false)
   final DateTime updatedAt;
-  
+
   @override
-  bool operator ==(Object other) => identical(this, other) || other is MerchantGetReview200ResponseData &&
-    other.id == id &&
-    other.merchantId == merchantId &&
-    other.status == status &&
-    other.businessDocumentStatus == businessDocumentStatus &&
-    other.businessDocumentReason == businessDocumentReason &&
-    other.reviewedBy == reviewedBy &&
-    other.reviewedAt == reviewedAt &&
-    other.reviewNotes == reviewNotes &&
-    other.createdAt == createdAt &&
-    other.updatedAt == updatedAt;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is MerchantGetReview200ResponseData &&
+          other.id == id &&
+          other.merchantId == merchantId &&
+          other.status == status &&
+          other.businessDocumentStatus == businessDocumentStatus &&
+          other.businessDocumentReason == businessDocumentReason &&
+          other.reviewedBy == reviewedBy &&
+          other.reviewedAt == reviewedAt &&
+          other.reviewNotes == reviewNotes &&
+          other.createdAt == createdAt &&
+          other.updatedAt == updatedAt;
 
   @override
   int get hashCode =>
@@ -85,15 +92,17 @@ class MerchantGetReview200ResponseData {
       createdAt.hashCode +
       updatedAt.hashCode;
 
-  factory MerchantGetReview200ResponseData.fromJson(Map<String, dynamic> json) => _$MerchantGetReview200ResponseDataFromJson(json);
+  factory MerchantGetReview200ResponseData.fromJson(
+    Map<String, dynamic> json,
+  ) => _$MerchantGetReview200ResponseDataFromJson(json);
 
-  Map<String, dynamic> toJson() => _$MerchantGetReview200ResponseDataToJson(this);
+  Map<String, dynamic> toJson() =>
+      _$MerchantGetReview200ResponseDataToJson(this);
 
   @override
   String toString() {
     return toJson().toString();
   }
-
 }
 
 enum MerchantGetReview200ResponseDataStatusEnum {
@@ -103,11 +112,11 @@ enum MerchantGetReview200ResponseDataStatusEnum {
   APPROVED(r'APPROVED'),
   @JsonValue(r'REJECTED')
   REJECTED(r'REJECTED');
-  
+
   const MerchantGetReview200ResponseDataStatusEnum(this.value);
-  
+
   final String value;
-  
+
   @override
   String toString() => value;
 }
@@ -119,12 +128,11 @@ enum MerchantGetReview200ResponseDataBusinessDocumentStatusEnum {
   APPROVED(r'APPROVED'),
   @JsonValue(r'REJECTED')
   REJECTED(r'REJECTED');
-  
+
   const MerchantGetReview200ResponseDataBusinessDocumentStatusEnum(this.value);
-  
+
   final String value;
-  
+
   @override
   String toString() => value;
 }
-

@@ -115,16 +115,16 @@ export class UserBanService {
  * @example
  * ```typescript
  * const userId = UserIdService.generate();
- * // Returns: 64-character hex string
+ * // Returns: 32-character hex string
  * ```
  */
 export class UserIdService {
 	/**
 	 * Generates a cryptographically secure random ID
 	 *
-	 * Uses 32 random bytes converted to 64-character hex string
+	 * Uses 16 random bytes converted to 32-character hex string
 	 *
-	 * @returns Random ID string (64 hex characters)
+	 * @returns Random ID string (32 hex characters)
 	 */
 	static generate(): string {
 		return randomBytes(16).toString("hex");
@@ -134,9 +134,9 @@ export class UserIdService {
 	 * Validates if string is a valid user ID format
 	 *
 	 * @param id - ID to validate
-	 * @returns true if valid format
+	 * @returns true if valid format (32 hex characters)
 	 */
 	static isValid(id: string): boolean {
-		return /^[0-9a-f]{64}$/.test(id);
+		return /^[0-9a-f]{32}$/.test(id);
 	}
 }

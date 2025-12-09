@@ -42,48 +42,24 @@ export const NotificationDropdown = () => {
 
 	const markAsReadMutation = useMutation(
 		orpcQuery.notification.markAsRead.mutationOptions({
-			onSuccess: async (_data) => {
-				await Promise.all([
-					queryClient.invalidateQueries(
-						// 	{
-						// 	queryKey: orpcQuery.notification.list.queryKey({
-						// 		input: { query: { limit, read, order, sortBy } },
-						// 	}),
-						// }
-					),
-				]);
+			onSuccess: async () => {
+				await queryClient.invalidateQueries();
 			},
 		}),
 	);
 
 	const markAllAsReadMutation = useMutation(
 		orpcQuery.notification.markAllAsRead.mutationOptions({
-			onSuccess: async (_data) => {
-				await Promise.all([
-					queryClient.invalidateQueries(
-						// 	{
-						// 	queryKey: orpcQuery.notification.list.queryKey({
-						// 		input: { query: { limit, read, order, sortBy } },
-						// 	}),
-						// }
-					),
-				]);
+			onSuccess: async () => {
+				await queryClient.invalidateQueries();
 			},
 		}),
 	);
 
 	const deleteMutation = useMutation(
 		orpcQuery.notification.delete.mutationOptions({
-			onSuccess: async (_data) => {
-				await Promise.all([
-					queryClient.invalidateQueries(
-						// 	{
-						// 	queryKey: orpcQuery.notification.list.queryKey({
-						// 		input: { query: { limit, read, order, sortBy } },
-						// 	}),
-						// }
-					),
-				]);
+			onSuccess: async () => {
+				await queryClient.invalidateQueries();
 			},
 		}),
 	);

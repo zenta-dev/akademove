@@ -61,24 +61,30 @@ class _DeliveryProofUploadDialogState extends State<DeliveryProofUploadDialog> {
 
     final driverOrderCubit = context.read<DriverOrderCubit>();
 
-    await driverOrderCubit.uploadDeliveryProof(selectedImage.path);
+    try {
+      await driverOrderCubit.uploadDeliveryProof(selectedImage.path);
 
-    if (!mounted) return;
+      if (!mounted) return;
 
-    final state = driverOrderCubit.state;
+      final state = driverOrderCubit.state;
 
-    if (state.isSuccess) {
-      Navigator.of(context).pop(true);
-      context.showMyToast(
-        state.message ?? 'Delivery proof uploaded successfully',
-        type: ToastType.success,
-      );
-    } else if (state.isFailure) {
-      setState(() => _isUploading = false);
-      context.showMyToast(
-        state.error?.message ?? 'Failed to upload delivery proof',
-        type: ToastType.failed,
-      );
+      if (state.isSuccess) {
+        Navigator.of(context).pop(true);
+        context.showMyToast(
+          state.message ?? 'Delivery proof uploaded successfully',
+          type: ToastType.success,
+        );
+      } else if (state.isFailure) {
+        context.showMyToast(
+          state.error?.message ?? 'Failed to upload delivery proof',
+          type: ToastType.failed,
+        );
+      }
+    } finally {
+      // Always reset uploading state if widget is still mounted
+      if (mounted) {
+        setState(() => _isUploading = false);
+      }
     }
   }
 

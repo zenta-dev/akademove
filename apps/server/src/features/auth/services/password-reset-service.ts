@@ -200,17 +200,18 @@ export class PasswordResetService {
 
 			const hashedPassword = this.#pw.hash(request.newPassword);
 
-			await (opts?.tx ?? this.#db).transaction(async (tx) => {
-				await Promise.all([
-					tx
-						.update(tables.account)
-						.set({ password: hashedPassword })
-						.where(eq(tables.account.id, user.accounts[0].id)),
-					tx
-						.delete(tables.verification)
-						.where(eq(tables.verification.id, verification.id)),
-				]);
-			});
+			// Use existing transaction if provided, otherwise use db directly
+			// Avoid creating nested transaction which may not be supported
+			const db = opts?.tx ?? this.#db;
+			await Promise.all([
+				db
+					.update(tables.account)
+					.set({ password: hashedPassword })
+					.where(eq(tables.account.id, user.accounts[0].id)),
+				db
+					.delete(tables.verification)
+					.where(eq(tables.verification.id, verification.id)),
+			]);
 
 			await deps.deleteCache(user.id);
 

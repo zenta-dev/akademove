@@ -203,17 +203,18 @@ export class EmailVerificationService {
 				});
 			}
 
-			await db.transaction(async (tx) => {
-				await Promise.all([
-					tx
-						.update(tables.user)
-						.set({ emailVerified: true })
-						.where(eq(tables.user.id, user.id)),
-					tx
-						.delete(tables.verification)
-						.where(eq(tables.verification.id, verification.id)),
-				]);
-			});
+			// Use existing transaction if provided, otherwise use db directly
+			// Avoid creating nested transaction which may not be supported
+			const dbForUpdate = opts?.tx ?? this.#db;
+			await Promise.all([
+				dbForUpdate
+					.update(tables.user)
+					.set({ emailVerified: true })
+					.where(eq(tables.user.id, user.id)),
+				dbForUpdate
+					.delete(tables.verification)
+					.where(eq(tables.verification.id, verification.id)),
+			]);
 
 			await deps.deleteCache(user.id);
 

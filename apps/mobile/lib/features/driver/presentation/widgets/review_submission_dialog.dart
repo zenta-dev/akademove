@@ -43,32 +43,38 @@ class _ReviewSubmissionDialogState extends State<ReviewSubmissionDialog> {
 
     final reviewCubit = context.read<DriverReviewCubit>();
 
-    await reviewCubit.submitReview(
-      orderId: widget.orderId,
-      toUserId: widget.toUserId,
-      category: _selectedCategory,
-      score: _score,
-      comment: _commentController.text.trim().isEmpty
-          ? null
-          : _commentController.text.trim(),
-    );
-
-    if (!mounted) return;
-
-    final state = reviewCubit.state;
-
-    if (state.isSuccess && state.submitted != null) {
-      Navigator.of(context).pop(true);
-      context.showMyToast(
-        state.message ?? context.l10n.toast_review_submitted,
-        type: ToastType.success,
+    try {
+      await reviewCubit.submitReview(
+        orderId: widget.orderId,
+        toUserId: widget.toUserId,
+        category: _selectedCategory,
+        score: _score,
+        comment: _commentController.text.trim().isEmpty
+            ? null
+            : _commentController.text.trim(),
       );
-    } else if (state.isFailure) {
-      setState(() => _isSubmitting = false);
-      context.showMyToast(
-        state.error?.message ?? context.l10n.toast_review_failed,
-        type: ToastType.failed,
-      );
+
+      if (!mounted) return;
+
+      final state = reviewCubit.state;
+
+      if (state.isSuccess && state.submitted != null) {
+        Navigator.of(context).pop(true);
+        context.showMyToast(
+          state.message ?? context.l10n.toast_review_submitted,
+          type: ToastType.success,
+        );
+      } else if (state.isFailure) {
+        context.showMyToast(
+          state.error?.message ?? context.l10n.toast_review_failed,
+          type: ToastType.failed,
+        );
+      }
+    } finally {
+      // Always reset submitting state if widget is still mounted
+      if (mounted) {
+        setState(() => _isSubmitting = false);
+      }
     }
   }
 

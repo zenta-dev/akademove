@@ -53,6 +53,7 @@ export function useFCM() {
 
 	const client = firebaseClient;
 
+	// biome-ignore lint/correctness/useExhaustiveDependencies: saveTokenMutation.mutateAsync is intentionally excluded to prevent infinite loops - it's an unstable reference
 	useEffect(() => {
 		if (!client) return;
 
@@ -100,7 +101,7 @@ export function useFCM() {
 		});
 
 		return () => unsubscribe();
-	}, [client, saveTokenMutation.mutateAsync]);
+	}, [client]);
 
 	const subscribeToTopic = async (topic: string) => {
 		if (!fcmToken) throw new Error("No FCM token available");

@@ -79,13 +79,12 @@ class MerchantOrderCubit extends BaseCubit<MerchantOrderState> {
     }
 
     // Check if this is a new order (REQUESTED or MATCHING status and not in our list)
+    final existingOrders = state.orders.data?.value;
     final isNewOrder =
         (updatedOrder.status == OrderStatus.REQUESTED ||
             updatedOrder.status == OrderStatus.MATCHING) &&
-        !(state.orders.data?.value != null &&
-            state.orders.data!.value.any(
-              (order) => order.id == updatedOrder.id,
-            ));
+        (existingOrders == null ||
+            !existingOrders.any((order) => order.id == updatedOrder.id));
 
     // Trigger notification and vibration for new orders
     if (isNewOrder) {

@@ -48,9 +48,18 @@ class _QRISPaymentWidgetState extends State<QRISPaymentWidget> {
       final imageStream = imageProvider.resolve(ImageConfiguration.empty);
       final completer = Completer<ui.Image>();
 
-      imageStream.addListener(
-        ImageStreamListener((info, _) => completer.complete(info.image)),
+      late ImageStreamListener listener;
+      listener = ImageStreamListener(
+        (info, _) {
+          imageStream.removeListener(listener);
+          completer.complete(info.image);
+        },
+        onError: (error, stackTrace) {
+          imageStream.removeListener(listener);
+          completer.completeError(error, stackTrace);
+        },
       );
+      imageStream.addListener(listener);
 
       final qrImage = await completer.future;
 

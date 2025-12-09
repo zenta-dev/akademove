@@ -22,29 +22,31 @@ class MerchantGetMine200ResponseBody {
   const MerchantGetMine200ResponseBody({
     required this.message,
     required this.data,
-     this.pagination,
-     this.totalPages,
+    this.pagination,
+    this.totalPages,
   });
   @JsonKey(name: r'message', required: true, includeIfNull: false)
   final String message;
-  
+
   @JsonKey(name: r'data', required: true, includeIfNull: false)
   final Merchant data;
-  
+
   @JsonKey(name: r'pagination', required: false, includeIfNull: false)
   final PaginationResult? pagination;
-  
-          // minimum: 0
-          // maximum: 9007199254740991
+
+  // minimum: 0
+  // maximum: 9007199254740991
   @JsonKey(name: r'totalPages', required: false, includeIfNull: false)
   final int? totalPages;
-  
+
   @override
-  bool operator ==(Object other) => identical(this, other) || other is MerchantGetMine200ResponseBody &&
-    other.message == message &&
-    other.data == data &&
-    other.pagination == pagination &&
-    other.totalPages == totalPages;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is MerchantGetMine200ResponseBody &&
+          other.message == message &&
+          other.data == data &&
+          other.pagination == pagination &&
+          other.totalPages == totalPages;
 
   @override
   int get hashCode =>
@@ -53,7 +55,8 @@ class MerchantGetMine200ResponseBody {
       pagination.hashCode +
       totalPages.hashCode;
 
-  factory MerchantGetMine200ResponseBody.fromJson(Map<String, dynamic> json) => _$MerchantGetMine200ResponseBodyFromJson(json);
+  factory MerchantGetMine200ResponseBody.fromJson(Map<String, dynamic> json) =>
+      _$MerchantGetMine200ResponseBodyFromJson(json);
 
   Map<String, dynamic> toJson() => _$MerchantGetMine200ResponseBodyToJson(this);
 
@@ -61,6 +64,4 @@ class MerchantGetMine200ResponseBody {
   String toString() {
     return toJson().toString();
   }
-
 }
-

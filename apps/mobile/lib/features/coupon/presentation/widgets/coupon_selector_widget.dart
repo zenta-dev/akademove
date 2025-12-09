@@ -304,8 +304,8 @@ class _CouponCard extends StatelessWidget {
         return '$percentText (max ${_formatCurrency(maxDiscount)})';
       }
       return percentText;
-    } else if (coupon.discountAmount != null) {
-      return '${_formatCurrency(coupon.discountAmount!)} OFF';
+    } else if (coupon.discountAmount case final discountAmount?) {
+      return '${_formatCurrency(discountAmount)} OFF';
     }
     return 'Discount';
   }
@@ -406,8 +406,8 @@ class CouponDetailDialog extends StatelessWidget {
         return '$percentText (max ${_formatCurrency(maxDiscount)})';
       }
       return percentText;
-    } else if (coupon.discountAmount != null) {
-      return '${_formatCurrency(coupon.discountAmount!)} OFF';
+    } else if (coupon.discountAmount case final discountAmount?) {
+      return '${_formatCurrency(discountAmount)} OFF';
     }
     return 'Discount';
   }

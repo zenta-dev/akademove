@@ -42,6 +42,10 @@ export const Route = createFileRoute("/(auth)/reset-password")({
 	),
 	component: RouteComponent,
 	beforeLoad: ({ search }) => {
+		// Redirect if no email provided - do this in beforeLoad instead of component body
+		if (!search.email) {
+			throw redirect({ to: localizeHref("/forgot-password") });
+		}
 		return search;
 	},
 	loaderDeps: (c) => {
@@ -95,11 +99,12 @@ function RouteComponent() {
 		async (values: ResetPassword) => {
 			await mutation.mutateAsync({ body: values });
 		},
-		[mutation.mutateAsync],
+		[mutation],
 	);
 
 	if (!email) {
-		return redirect({ to: localizeHref("/forgot-password"), throw: true });
+		// This case should not happen due to beforeLoad redirect, but handle it gracefully
+		return null;
 	}
 
 	return (

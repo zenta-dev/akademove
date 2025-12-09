@@ -225,13 +225,10 @@ class _QuickMessageChips extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<QuickMessageCubit, QuickMessageState>(
       builder: (context, state) {
-        if (!state.isSuccess ||
-            state.templates == null ||
-            state.templates!.isEmpty) {
+        final templates = state.templates;
+        if (!state.isSuccess || templates == null || templates.isEmpty) {
           return const SizedBox.shrink();
         }
-
-        final templates = state.templates!;
         return Container(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
           color: Colors.grey[100],

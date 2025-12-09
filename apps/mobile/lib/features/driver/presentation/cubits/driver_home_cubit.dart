@@ -142,14 +142,15 @@ class DriverHomeCubit extends BaseCubit<DriverHomeState> {
         }
       });
 
-  void _startLocationTracking() {
+  Future<void> _startLocationTracking() async {
     _locationUpdateTimer?.cancel();
     _locationUpdateTimer = Timer.periodic(const Duration(seconds: 10), (
       _,
     ) async {
       await _updateLocation();
     });
-    _updateLocation();
+    // Await initial location update to catch any errors
+    await _updateLocation();
   }
 
   void _stopLocationTracking() {

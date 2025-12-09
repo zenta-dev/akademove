@@ -61,7 +61,7 @@ export const Route = createFileRoute("/dash/driver/profile")({
 		// Check if driver has passed quiz
 		try {
 			const driverResult = await orpcClient.driver.getMine();
-			if (driverResult.body.data.quizStatus !== "PASSED") {
+			if (driverResult.body.data?.quizStatus !== "PASSED") {
 				redirect({ to: "/quiz/driver", throw: true });
 			}
 		} catch (error) {
@@ -87,7 +87,10 @@ function RouteComponent() {
 		orpcQuery.auth.getSession.queryOptions({}),
 	);
 
-	if (!allowed) navigate({ to: "/" });
+	if (!allowed) {
+		navigate({ to: "/" });
+		return null;
+	}
 
 	if (driver.isLoading) {
 		return (
@@ -402,7 +405,9 @@ function EditDriverProfile({
 	const mutation = useMutation(
 		orpcQuery.driver.update.mutationOptions({
 			onSuccess: async () => {
-				queryClient.invalidateQueries();
+				await queryClient.invalidateQueries({
+					queryKey: orpcQuery.driver.getMine.queryKey({}),
+				});
 				toast.success(
 					m.success_placeholder({
 						action: capitalizeFirstLetter(m.update_profile().toLowerCase()),

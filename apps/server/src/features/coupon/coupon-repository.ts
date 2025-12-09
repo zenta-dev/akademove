@@ -6,7 +6,7 @@ import {
 	type UpdateCoupon,
 } from "@repo/schema/coupon";
 import type { UnifiedPaginationQuery } from "@repo/schema/pagination";
-import { count, eq, gt, ilike, type SQL } from "drizzle-orm";
+import { count, eq, gt, ilike, type SQL, sql } from "drizzle-orm";
 import { v7 } from "uuid";
 import { BaseRepository } from "@/core/base";
 import { CACHE_TTLS } from "@/core/constants";
@@ -163,7 +163,7 @@ export class CouponRepository extends BaseRepository {
 		context?: ORPCContext,
 	): Promise<Coupon> {
 		try {
-			const [operation] = await this.db
+			const [operation] = await (opts?.tx ?? this.db)
 				.insert(tables.coupon)
 				.values({
 					...item,
@@ -491,10 +491,11 @@ export class CouponRepository extends BaseRepository {
 
 	async incrementUsageCount(id: string): Promise<void> {
 		try {
+			// Use SQL subquery to count usage correctly
 			await this.db
 				.update(tables.coupon)
 				.set({
-					usedCount: count(tables.couponUsage.id),
+					usedCount: sql`(SELECT COUNT(*) FROM ${tables.couponUsage} WHERE ${tables.couponUsage.couponId} = ${id})`,
 				})
 				.where(eq(tables.coupon.id, id));
 

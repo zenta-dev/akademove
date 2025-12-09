@@ -77,6 +77,7 @@ export class DriverLocationService {
 			const conditions = [
 				eq(tables.driver.isOnline, true),
 				eq(tables.driver.isTakingOrder, false),
+				eq(tables.driver.status, "ACTIVE"), // Only active drivers can accept orders
 				isNotNull(tables.driver.currentLocation),
 				sql`ST_DWithin(
 					${tables.driver.currentLocation}::geography,

@@ -197,7 +197,7 @@ function RouteComponent() {
 		async (values: SignIn) => {
 			await mutation.mutateAsync({ body: values });
 		},
-		[mutation.mutateAsync],
+		[mutation],
 	);
 
 	return (

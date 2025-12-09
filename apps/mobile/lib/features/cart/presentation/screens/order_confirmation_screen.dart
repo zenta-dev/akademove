@@ -432,6 +432,7 @@ class _OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
     );
   }
 
+  // ignore: use_build_context_synchronously
   Future<void> _placeOrder(BuildContext context, Cart cart) async {
     setState(() {
       _isPlacingOrder = true;
@@ -483,19 +484,14 @@ class _OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
 
       if (!mounted) return;
 
-      if (response.isSuccess && mounted) {
+      if (response.isSuccess) {
         // Clear cart
-        // ignore: use_build_context_synchronously
         context.read<CartCubit>().clearCart();
 
         // Show success message
-        // ignore: use_build_context_synchronously
         final successTitle = context.l10n.order_confirm_success;
-        // ignore: use_build_context_synchronously
         final successMessage = context.l10n.order_confirm_success_message;
-        // ignore: use_build_context_synchronously
         showToast(
-          // ignore: use_build_context_synchronously
           context: context,
           builder: (ctx, overlay) =>
               ctx.buildToast(title: successTitle, message: successMessage),
@@ -505,7 +501,6 @@ class _OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
         // For food orders, navigate to home for now
         // TODO: Consider adding order tracking screen for food orders
         // by updating UserOrderCubit state and navigating to userRideOnTrip
-        // ignore: use_build_context_synchronously
         context.go('/user/home');
       } else {
         throw Exception('Failed to place order');
@@ -514,11 +509,8 @@ class _OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
       logger.e('Failed to place order', error: e);
 
       if (mounted) {
-        // ignore: use_build_context_synchronously
         final failedTitle = context.l10n.order_confirm_failed;
-        // ignore: use_build_context_synchronously
         showToast(
-          // ignore: use_build_context_synchronously
           context: context,
           builder: (ctx, overlay) =>
               ctx.buildToast(title: failedTitle, message: e.toString()),

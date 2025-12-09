@@ -153,14 +153,21 @@ class _DriverQuizScreenState extends State<DriverQuizScreen> {
               ),
             ),
             SizedBox(height: 16.h),
-            if (driver?.quizCompletedAt != null)
-              Text(
-                'Completed on: ${_formatDate(driver!.quizCompletedAt!)}',
-                style: context.typography.small.copyWith(
-                  fontSize: 12.sp,
-                  color: context.colorScheme.mutedForeground,
-                ),
-              ),
+            Builder(
+              builder: (context) {
+                final completedAt = driver?.quizCompletedAt;
+                if (completedAt != null) {
+                  return Text(
+                    'Completed on: ${_formatDate(completedAt)}',
+                    style: context.typography.small.copyWith(
+                      fontSize: 12.sp,
+                      color: context.colorScheme.mutedForeground,
+                    ),
+                  );
+                }
+                return const SizedBox.shrink();
+              },
+            ),
           ],
           SizedBox(height: 32.h),
           PrimaryButton(

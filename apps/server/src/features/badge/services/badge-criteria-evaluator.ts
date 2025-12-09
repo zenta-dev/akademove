@@ -39,8 +39,9 @@ export class BadgeCriteriaEvaluator {
 			}
 
 			// All criteria must be met
+			// If no criteria are defined (checks.length === 0), badge is auto-awarded
 			const allCriteriaMet =
-				checks.length > 0 && checks.every((c) => c === true);
+				checks.length === 0 || checks.every((c) => c === true);
 
 			log.debug(
 				{

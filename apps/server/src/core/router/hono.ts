@@ -4,7 +4,7 @@ import { logger } from "hono/logger";
 import { matchedRoutes } from "hono/route";
 import { BaseError } from "@/core/error";
 import type { HonoContext } from "@/core/interface";
-import { isCloudflare } from "@/utils";
+import { isCloudflare, log } from "@/utils";
 import { TRUSTED_ORIGINS } from "../constants";
 import { getManagers, getRepositories, getServices } from "../factory";
 import { honoAuthMiddleware } from "../middlewares/auth";
@@ -89,5 +89,5 @@ export const setupHonoRouter = () => {
 };
 
 function logError(err: unknown) {
-	console.error("HONO ERROR => ", err);
+	log.error({ error: err }, "HONO ERROR");
 }

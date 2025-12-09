@@ -17,25 +17,23 @@ part 'insert_configuration.g.dart';
 )
 class InsertConfiguration {
   /// Returns a new [InsertConfiguration] instance.
-  const InsertConfiguration({
-    required this.name,
-     this.value,
-     this.description,
-  });
+  const InsertConfiguration({required this.name, this.value, this.description});
   @JsonKey(name: r'name', required: true, includeIfNull: false)
   final String name;
-  
+
   @JsonKey(name: r'value', required: false, includeIfNull: false)
   final Object? value;
-  
+
   @JsonKey(name: r'description', required: false, includeIfNull: false)
   final String? description;
-  
+
   @override
-  bool operator ==(Object other) => identical(this, other) || other is InsertConfiguration &&
-    other.name == name &&
-    other.value == value &&
-    other.description == description;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is InsertConfiguration &&
+          other.name == name &&
+          other.value == value &&
+          other.description == description;
 
   @override
   int get hashCode =>
@@ -43,7 +41,8 @@ class InsertConfiguration {
       (value == null ? 0 : value.hashCode) +
       description.hashCode;
 
-  factory InsertConfiguration.fromJson(Map<String, dynamic> json) => _$InsertConfigurationFromJson(json);
+  factory InsertConfiguration.fromJson(Map<String, dynamic> json) =>
+      _$InsertConfigurationFromJson(json);
 
   Map<String, dynamic> toJson() => _$InsertConfigurationToJson(this);
 
@@ -51,6 +50,4 @@ class InsertConfiguration {
   String toString() {
     return toJson().toString();
   }
-
 }
-

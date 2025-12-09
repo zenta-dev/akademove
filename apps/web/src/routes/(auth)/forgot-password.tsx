@@ -74,7 +74,7 @@ function RouteComponent() {
 		async (values: ForgotPassword) => {
 			await mutation.mutateAsync({ body: values });
 		},
-		[mutation.mutateAsync],
+		[mutation],
 	);
 
 	return (

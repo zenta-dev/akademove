@@ -108,9 +108,10 @@ class UserMerchantDetailCubit extends BaseCubit<UserMerchantDetailState> {
 
   /// Get item from grouped menus by ID
   MerchantMenu? _getItemFromMenus(String itemId) {
-    if (state.menuByCategory == null) return null;
+    final menuByCategory = state.menuByCategory;
+    if (menuByCategory == null) return null;
 
-    for (var categoryItems in state.menuByCategory!.values) {
+    for (var categoryItems in menuByCategory.values) {
       final found = categoryItems.where((item) => item.id == itemId).toList();
       if (found.isNotEmpty) {
         return found.first;

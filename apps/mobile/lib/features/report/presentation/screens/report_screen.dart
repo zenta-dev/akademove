@@ -186,11 +186,11 @@ class _ReportUserScreenState extends State<ReportUserScreen> {
             );
           }).toList(),
         ),
-        if (_selectedCategory != null)
+        if (_selectedCategory case final selectedCategory?)
           Padding(
             padding: EdgeInsets.only(top: 8.h),
             child: Text(
-              _getCategoryDescription(_selectedCategory!),
+              _getCategoryDescription(selectedCategory),
               style: context.typography.small.copyWith(
                 fontSize: 12.sp,
                 color: context.colorScheme.mutedForeground,

@@ -7,6 +7,7 @@ import { MerchantApprovalStatusEmail } from "emails/merchant-approval-status";
 import { ResetPasswordEmail } from "emails/reset-password";
 import * as React from "react";
 import { Resend } from "resend";
+import { log } from "@/utils";
 import { MailError } from "../error";
 
 interface BaseSendMailProps {
@@ -174,14 +175,17 @@ export class ResendMailService implements MailService {
 
 	async sendContactResponse(props: SendContactResponseProps): Promise<void> {
 		try {
-			console.log("[MailService] Sending contact response email with props:", {
-				to: props.to,
-				userName: props.userName,
-				subject: props.subject,
-				originalMessageLength: props.originalMessage?.length,
-				responseLength: props.response?.length,
-				respondedBy: props.respondedBy,
-			});
+			log.debug(
+				{
+					to: props.to,
+					userName: props.userName,
+					subject: props.subject,
+					originalMessageLength: props.originalMessage?.length,
+					responseLength: props.response?.length,
+					respondedBy: props.respondedBy,
+				},
+				"[MailService] Sending contact response email",
+			);
 			const res = await this.#send(
 				React.createElement(ContactResponseEmail, {
 					userName: props.userName,
@@ -196,9 +200,9 @@ export class ResendMailService implements MailService {
 					subject: `Re: ${props.subject}`,
 				},
 			);
-			console.log("Contact response email sent, res:", res);
+			log.debug({ res }, "[MailService] Contact response email sent");
 		} catch (error) {
-			console.error("[MailService] sendContactResponse error:", error);
+			log.error({ error }, "[MailService] sendContactResponse error");
 			if (error instanceof MailError) throw error;
 			throw new MailError("Failed to send contact response email");
 		}

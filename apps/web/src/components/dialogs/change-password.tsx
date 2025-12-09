@@ -4,7 +4,7 @@ import { UpdateUserPasswordSchema } from "@repo/schema/user";
 import { capitalizeFirstLetter } from "@repo/shared";
 import { useMutation } from "@tanstack/react-query";
 import { KeyRound } from "lucide-react";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { Submitting } from "@/components/misc/submitting";
@@ -37,6 +37,8 @@ export const ChangePasswordDialog = ({
 	children,
 	asChild,
 }: ChangePasswordDialogProps) => {
+	const [open, setOpen] = useState(false);
+
 	const form = useForm({
 		resolver: zodResolver(UpdateUserPasswordSchema),
 		defaultValues: {
@@ -58,6 +60,7 @@ export const ChangePasswordDialog = ({
 					}),
 				);
 				form.reset();
+				setOpen(false);
 			},
 			onError: (error) => {
 				toast.error(
@@ -84,8 +87,18 @@ export const ChangePasswordDialog = ({
 		[mutation],
 	);
 
+	const handleOpenChange = useCallback(
+		(newOpen: boolean) => {
+			setOpen(newOpen);
+			if (!newOpen) {
+				form.reset();
+			}
+		},
+		[form],
+	);
+
 	return (
-		<Dialog>
+		<Dialog open={open} onOpenChange={handleOpenChange}>
 			<DialogTrigger asChild={asChild}>
 				{children || (
 					<Button variant="outline">

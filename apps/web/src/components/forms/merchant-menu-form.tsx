@@ -66,13 +66,7 @@ export const MerchantMenuForm = ({
 
 	const _onSuccess = useCallback(
 		async (kind: "insert" | "update") => {
-			await queryClient.invalidateQueries(
-				// 	{
-				// 	queryKey: orpcQuery.merchant.menu.list.queryKey({
-				// 		input: { params: { merchantId }, query: { limit: 10 } },
-				// 	}),
-				// }
-			);
+			await queryClient.invalidateQueries();
 			toast.success(
 				m.success_placeholder({
 					action: capitalizeFirstLetter(
@@ -87,7 +81,7 @@ export const MerchantMenuForm = ({
 			form.reset();
 			onSuccess?.();
 		},
-		[form.reset, onSuccess],
+		[form, onSuccess],
 	);
 
 	const onError = useCallback((kind: "insert" | "update", error: Error) => {
@@ -167,7 +161,7 @@ export const MerchantMenuForm = ({
 			});
 			setImagePreview(data.image);
 		}
-	}, [kind, data, form]);
+	}, [kind, data, form.reset]);
 
 	return (
 		<Form {...form}>

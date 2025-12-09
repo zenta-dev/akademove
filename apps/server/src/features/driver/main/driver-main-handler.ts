@@ -265,9 +265,9 @@ export const DriverMainHandler = priv.router({
 			});
 		} catch (error) {
 			// Log but don't fail the request if notification sending fails
-			console.error(
-				`Failed to send approval notification to user ${result.userId}:`,
-				error,
+			log.error(
+				{ error, userId: result.userId, driverId: result.id },
+				"[DriverHandler.approve] Failed to send approval notification",
 			);
 		}
 
@@ -302,9 +302,9 @@ export const DriverMainHandler = priv.router({
 			});
 		} catch (error) {
 			// Log but don't fail the request if notification sending fails
-			console.error(
-				`Failed to send rejection notification to user ${result.userId}:`,
-				error,
+			log.error(
+				{ error, userId: result.userId, driverId: result.id },
+				"[DriverHandler.reject] Failed to send rejection notification",
 			);
 		}
 

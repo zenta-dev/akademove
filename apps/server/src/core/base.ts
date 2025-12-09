@@ -220,11 +220,7 @@ export abstract class BaseRepository {
 	}
 
 	protected handleError(error: unknown, action: string) {
-		console.error(error, `[${this.constructor.name}] - ${action} failed`);
-		log.debug(
-			{ detail: error },
-			`[${this.constructor.name}] - ${action} failed`,
-		);
+		log.error({ error }, `[${this.constructor.name}] - ${action} failed`);
 		if (error instanceof BaseError) return error;
 		return new RepositoryError(
 			`Failed to ${action} ${this.#tableName.toLowerCase()}`,

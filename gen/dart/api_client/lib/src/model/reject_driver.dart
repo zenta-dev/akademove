@@ -17,27 +17,23 @@ part 'reject_driver.g.dart';
 )
 class RejectDriver {
   /// Returns a new [RejectDriver] instance.
-  const RejectDriver({
-    required this.id,
-    required this.reason,
-  });
+  const RejectDriver({required this.id, required this.reason});
   @JsonKey(name: r'id', required: true, includeIfNull: false)
   final String id;
-  
+
   @JsonKey(name: r'reason', required: true, includeIfNull: false)
   final String reason;
-  
-  @override
-  bool operator ==(Object other) => identical(this, other) || other is RejectDriver &&
-    other.id == id &&
-    other.reason == reason;
 
   @override
-  int get hashCode =>
-      id.hashCode +
-      reason.hashCode;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is RejectDriver && other.id == id && other.reason == reason;
 
-  factory RejectDriver.fromJson(Map<String, dynamic> json) => _$RejectDriverFromJson(json);
+  @override
+  int get hashCode => id.hashCode + reason.hashCode;
+
+  factory RejectDriver.fromJson(Map<String, dynamic> json) =>
+      _$RejectDriverFromJson(json);
 
   Map<String, dynamic> toJson() => _$RejectDriverToJson(this);
 
@@ -45,6 +41,4 @@ class RejectDriver {
   String toString() {
     return toJson().toString();
   }
-
 }
-

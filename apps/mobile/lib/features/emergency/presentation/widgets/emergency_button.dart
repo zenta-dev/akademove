@@ -1,4 +1,5 @@
 import 'package:akademove/core/_export.dart';
+import 'package:akademove/features/auth/presentation/cubits/_export.dart';
 import 'package:akademove/features/emergency/presentation/cubits/_export.dart';
 import 'package:akademove/features/emergency/presentation/states/_export.dart';
 import 'package:akademove/l10n/l10n.dart';
@@ -56,12 +57,22 @@ class EmergencyButton extends StatelessWidget {
   }
 
   void _showEmergencyDialog(BuildContext context) {
+    // Capture cubits from parent context before showing dialog
+    final emergencyCubit = context.read<EmergencyCubit>();
+    final authCubit = context.read<AuthCubit>();
+
     showDialog<void>(
       context: context,
       barrierDismissible: false,
-      builder: (ctx) => EmergencyTriggerDialog(
-        orderId: orderId,
-        currentLocation: currentLocation,
+      builder: (ctx) => MultiBlocProvider(
+        providers: [
+          BlocProvider.value(value: emergencyCubit),
+          BlocProvider.value(value: authCubit),
+        ],
+        child: EmergencyTriggerDialog(
+          orderId: orderId,
+          currentLocation: currentLocation,
+        ),
       ),
     );
   }

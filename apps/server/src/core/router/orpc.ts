@@ -46,13 +46,13 @@ const _sharedInterceptor: Interceptor<
 		log.debug(response, "Outcoming response");
 		return res;
 	} catch (error) {
-		console.error("ORPC Error Interceptor:", error);
+		log.error({ error }, "ORPC Error Interceptor");
 
 		if (error instanceof ORPCError) {
 			const { cause } = error;
 			if (cause instanceof ValidationError) {
 				for (const iss of cause.issues) {
-					console.error(iss);
+					log.error({ issue: iss }, "ORPC Validation Error");
 				}
 			}
 		}

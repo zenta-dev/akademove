@@ -81,16 +81,16 @@ function RouteComponent() {
 			toast.error("Account Rejected", {
 				description:
 					"Your account has been rejected. Please contact support for more information.",
-				duration: Number.POSITIVE_INFINITY,
+				duration: 10000,
 			});
 		} else if (status === "INACTIVE") {
 			toast.warning("Account Inactive", {
 				description:
 					"Your account has been deactivated. Please contact support.",
-				duration: Number.POSITIVE_INFINITY,
+				duration: 10000,
 			});
 		}
-	}, [driverData?.body?.data]);
+	}, [driverData?.body?.data?.status, driverData?.body?.data]);
 
 	// Fetch wallet data for earnings
 	const { data: walletData, isLoading: walletLoading } = useQuery(
@@ -202,12 +202,12 @@ function RouteComponent() {
 
 	// Calculate total earnings from completed orders
 	const totalEarnings = useMemo(() => {
-		if (!completedOrders) return 0;
+		if (!completedOrders?.body?.data) return 0;
 		return completedOrders.body.data.reduce(
 			(sum, order) => sum + (order.driverEarning ?? order.totalPrice * 0.8),
 			0,
 		);
-	}, [completedOrders]);
+	}, [completedOrders?.body?.data]);
 
 	const statusColors: Record<string, string> = {
 		ACCEPTED: "bg-cyan-100 text-cyan-800 dark:bg-cyan-900 dark:text-cyan-300",
@@ -305,7 +305,7 @@ function RouteComponent() {
 				<Card>
 					<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
 						<CardTitle className="font-medium text-sm">
-							wallet Balance
+							Wallet Balance
 						</CardTitle>
 						<DollarSign className="h-4 w-4 text-muted-foreground" />
 					</CardHeader>

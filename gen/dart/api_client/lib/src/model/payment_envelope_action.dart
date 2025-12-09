@@ -5,10 +5,9 @@
 // ignore_for_file: unused_element
 import 'package:json_annotation/json_annotation.dart';
 
-
 enum PaymentEnvelopeAction {
-      @JsonValue(r'NONE')
-      NONE(r'NONE');
+  @JsonValue(r'NONE')
+  NONE(r'NONE');
 
   const PaymentEnvelopeAction(this.value);
 

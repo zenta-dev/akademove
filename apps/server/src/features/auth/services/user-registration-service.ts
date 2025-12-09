@@ -3,6 +3,7 @@ import type { Phone } from "@repo/schema";
 import type { SignUp, SignUpDriver, SignUpMerchant } from "@repo/schema/auth";
 import type { User, UserRole } from "@repo/schema/user";
 import { getFileExtension } from "@repo/shared";
+import { eq } from "drizzle-orm";
 import { v7 } from "uuid";
 import { RepositoryError } from "@/core/error";
 import type { PartialWithTx } from "@/core/interface";
@@ -144,7 +145,8 @@ export class UserRegistrationService {
 				})
 				.returning();
 
-			const promises: Promise<unknown>[] = [
+			// Perform DB inserts first (within potential transaction)
+			await Promise.all([
 				(opts?.tx ?? this.#db).insert(tables.account).values({
 					id: this.#generateId(),
 					accountId: this.#generateId(),
@@ -157,19 +159,29 @@ export class UserRegistrationService {
 					userId: user.id,
 					balance: "0",
 				}),
-			];
+			]);
 
+			// Upload photo to S3 AFTER DB inserts succeed
+			// If S3 upload fails, we log error but don't rollback DB (user can re-upload)
 			if (photoKey && params.photo) {
-				promises.push(
-					this.#storage.upload({
+				try {
+					await this.#storage.upload({
 						bucket: BUCKET,
 						key: photoKey,
 						file: params.photo,
-					}),
-				);
+					});
+				} catch (uploadError) {
+					log.error(
+						{ uploadError, userId: user.id, photoKey },
+						"[UserRegistrationService] Failed to upload profile photo, user will need to re-upload",
+					);
+					// Clear the image reference since upload failed
+					await (opts?.tx ?? this.#db)
+						.update(tables.user)
+						.set({ image: null })
+						.where(eq(tables.user.id, user.id));
+				}
 			}
-
-			await Promise.all(promises);
 
 			log.info(
 				{ userId: user.id, email: user.email, role: user.role },

@@ -153,7 +153,7 @@ export const CouponForm = ({
 				search: {},
 			});
 		},
-		[form.reset, router.navigate],
+		[form, router],
 	);
 
 	const onError = useCallback((kind: "insert" | "update", error: Error) => {

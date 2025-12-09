@@ -25,63 +25,65 @@ class Contact {
     required this.subject,
     required this.message,
     required this.status,
-     this.userId,
-     this.respondedById,
-     this.response,
+    this.userId,
+    this.respondedById,
+    this.response,
     required this.createdAt,
     required this.updatedAt,
-     this.respondedAt,
+    this.respondedAt,
   });
   @JsonKey(name: r'id', required: true, includeIfNull: false)
   final String id;
-  
+
   @JsonKey(name: r'name', required: true, includeIfNull: false)
   final String name;
-  
+
   @JsonKey(name: r'email', required: true, includeIfNull: false)
   final String email;
-  
+
   @JsonKey(name: r'subject', required: true, includeIfNull: false)
   final String subject;
-  
+
   @JsonKey(name: r'message', required: true, includeIfNull: false)
   final String message;
-  
+
   @JsonKey(name: r'status', required: true, includeIfNull: false)
   final ContactStatus status;
-  
+
   @JsonKey(name: r'userId', required: false, includeIfNull: false)
   final String? userId;
-  
+
   @JsonKey(name: r'respondedById', required: false, includeIfNull: false)
   final String? respondedById;
-  
+
   @JsonKey(name: r'response', required: false, includeIfNull: false)
   final String? response;
-  
+
   @JsonKey(name: r'createdAt', required: true, includeIfNull: false)
   final DateTime createdAt;
-  
+
   @JsonKey(name: r'updatedAt', required: true, includeIfNull: false)
   final DateTime updatedAt;
-  
+
   @JsonKey(name: r'respondedAt', required: false, includeIfNull: false)
   final DateTime? respondedAt;
-  
+
   @override
-  bool operator ==(Object other) => identical(this, other) || other is Contact &&
-    other.id == id &&
-    other.name == name &&
-    other.email == email &&
-    other.subject == subject &&
-    other.message == message &&
-    other.status == status &&
-    other.userId == userId &&
-    other.respondedById == respondedById &&
-    other.response == response &&
-    other.createdAt == createdAt &&
-    other.updatedAt == updatedAt &&
-    other.respondedAt == respondedAt;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Contact &&
+          other.id == id &&
+          other.name == name &&
+          other.email == email &&
+          other.subject == subject &&
+          other.message == message &&
+          other.status == status &&
+          other.userId == userId &&
+          other.respondedById == respondedById &&
+          other.response == response &&
+          other.createdAt == createdAt &&
+          other.updatedAt == updatedAt &&
+          other.respondedAt == respondedAt;
 
   @override
   int get hashCode =>
@@ -98,7 +100,8 @@ class Contact {
       updatedAt.hashCode +
       respondedAt.hashCode;
 
-  factory Contact.fromJson(Map<String, dynamic> json) => _$ContactFromJson(json);
+  factory Contact.fromJson(Map<String, dynamic> json) =>
+      _$ContactFromJson(json);
 
   Map<String, dynamic> toJson() => _$ContactToJson(this);
 
@@ -106,6 +109,4 @@ class Contact {
   String toString() {
     return toJson().toString();
   }
-
 }
-

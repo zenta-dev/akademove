@@ -125,9 +125,11 @@ export class OrderCancellationService {
 		const total = new Decimal(totalPrice);
 		const penaltyAmount = total.times(businessConfig.noShowFee);
 		const refundAmount = total.minus(penaltyAmount);
-		// Driver receives 80% of the penalty as compensation
-		// Platform keeps 20% of the penalty as commission
-		const driverCompensation = penaltyAmount.times(0.8);
+		// Driver receives configured percentage of the penalty as compensation
+		// Platform keeps the rest as commission
+		const driverCompensation = penaltyAmount.times(
+			businessConfig.noShowDriverCompensationRate,
+		);
 
 		return { refundAmount, penaltyAmount, driverCompensation };
 	}

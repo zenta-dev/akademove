@@ -17,27 +17,25 @@ part 'transfer_request.g.dart';
 )
 class TransferRequest {
   /// Returns a new [TransferRequest] instance.
-  const TransferRequest({
-    required this.amount,
-    required this.walletId,
-  });
+  const TransferRequest({required this.amount, required this.walletId});
   @JsonKey(name: r'amount', required: true, includeIfNull: false)
   final num amount;
-  
+
   @JsonKey(name: r'walletId', required: true, includeIfNull: false)
   final String walletId;
-  
-  @override
-  bool operator ==(Object other) => identical(this, other) || other is TransferRequest &&
-    other.amount == amount &&
-    other.walletId == walletId;
 
   @override
-  int get hashCode =>
-      amount.hashCode +
-      walletId.hashCode;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is TransferRequest &&
+          other.amount == amount &&
+          other.walletId == walletId;
 
-  factory TransferRequest.fromJson(Map<String, dynamic> json) => _$TransferRequestFromJson(json);
+  @override
+  int get hashCode => amount.hashCode + walletId.hashCode;
+
+  factory TransferRequest.fromJson(Map<String, dynamic> json) =>
+      _$TransferRequestFromJson(json);
 
   Map<String, dynamic> toJson() => _$TransferRequestToJson(this);
 
@@ -45,6 +43,4 @@ class TransferRequest {
   String toString() {
     return toJson().toString();
   }
-
 }
-

@@ -25,39 +25,41 @@ class InsertAccountDeletion {
     required this.phone,
     required this.accountType,
     required this.reason,
-     this.additionalInfo,
-     this.userId,
+    this.additionalInfo,
+    this.userId,
   });
   @JsonKey(name: r'fullName', required: true, includeIfNull: false)
   final String fullName;
-  
+
   @JsonKey(name: r'email', required: true, includeIfNull: false)
   final String email;
-  
+
   @JsonKey(name: r'phone', required: true, includeIfNull: false)
   final String phone;
-  
+
   @JsonKey(name: r'accountType', required: true, includeIfNull: false)
   final AccountType accountType;
-  
+
   @JsonKey(name: r'reason', required: true, includeIfNull: false)
   final AccountDeletionReason reason;
-  
+
   @JsonKey(name: r'additionalInfo', required: false, includeIfNull: false)
   final String? additionalInfo;
-  
+
   @JsonKey(name: r'userId', required: false, includeIfNull: false)
   final String? userId;
-  
+
   @override
-  bool operator ==(Object other) => identical(this, other) || other is InsertAccountDeletion &&
-    other.fullName == fullName &&
-    other.email == email &&
-    other.phone == phone &&
-    other.accountType == accountType &&
-    other.reason == reason &&
-    other.additionalInfo == additionalInfo &&
-    other.userId == userId;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is InsertAccountDeletion &&
+          other.fullName == fullName &&
+          other.email == email &&
+          other.phone == phone &&
+          other.accountType == accountType &&
+          other.reason == reason &&
+          other.additionalInfo == additionalInfo &&
+          other.userId == userId;
 
   @override
   int get hashCode =>
@@ -69,7 +71,8 @@ class InsertAccountDeletion {
       additionalInfo.hashCode +
       userId.hashCode;
 
-  factory InsertAccountDeletion.fromJson(Map<String, dynamic> json) => _$InsertAccountDeletionFromJson(json);
+  factory InsertAccountDeletion.fromJson(Map<String, dynamic> json) =>
+      _$InsertAccountDeletionFromJson(json);
 
   Map<String, dynamic> toJson() => _$InsertAccountDeletionToJson(this);
 
@@ -77,6 +80,4 @@ class InsertAccountDeletion {
   String toString() {
     return toJson().toString();
   }
-
 }
-

@@ -18,27 +18,25 @@ part 'time_rules.g.dart';
 )
 class TimeRules {
   /// Returns a new [TimeRules] instance.
-  const TimeRules({
-     this.allowedDays,
-     this.allowedHours,
-  });
+  const TimeRules({this.allowedDays, this.allowedHours});
   @JsonKey(name: r'allowedDays', required: false, includeIfNull: false)
   final List<DayOfWeek>? allowedDays;
-  
+
   @JsonKey(name: r'allowedHours', required: false, includeIfNull: false)
   final List<int>? allowedHours;
-  
-  @override
-  bool operator ==(Object other) => identical(this, other) || other is TimeRules &&
-    other.allowedDays == allowedDays &&
-    other.allowedHours == allowedHours;
 
   @override
-  int get hashCode =>
-      allowedDays.hashCode +
-      allowedHours.hashCode;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is TimeRules &&
+          other.allowedDays == allowedDays &&
+          other.allowedHours == allowedHours;
 
-  factory TimeRules.fromJson(Map<String, dynamic> json) => _$TimeRulesFromJson(json);
+  @override
+  int get hashCode => allowedDays.hashCode + allowedHours.hashCode;
+
+  factory TimeRules.fromJson(Map<String, dynamic> json) =>
+      _$TimeRulesFromJson(json);
 
   Map<String, dynamic> toJson() => _$TimeRulesToJson(this);
 
@@ -46,6 +44,4 @@ class TimeRules {
   String toString() {
     return toJson().toString();
   }
-
 }
-

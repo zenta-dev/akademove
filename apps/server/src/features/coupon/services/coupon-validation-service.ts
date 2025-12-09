@@ -210,19 +210,20 @@ export class CouponValidationService {
 	}
 
 	/**
-	 * Validate service type compatibility
+	 * Validate discount type compatibility
+	 * Note: This validates the coupon's discount type (FIXED/PERCENTAGE), not service type (RIDE/DELIVERY/FOOD)
 	 */
-	static validateServiceType(coupon: Coupon): CouponValidationResult {
-		const couponServiceType = coupon.rules?.general?.type;
+	static validateDiscountType(coupon: Coupon): CouponValidationResult {
+		const couponDiscountType = coupon.rules?.general?.type;
 
 		if (
-			couponServiceType &&
-			couponServiceType !== "FIXED" &&
-			couponServiceType !== "PERCENTAGE"
+			couponDiscountType &&
+			couponDiscountType !== "FIXED" &&
+			couponDiscountType !== "PERCENTAGE"
 		) {
 			return {
 				valid: false,
-				reason: "Coupon type not supported",
+				reason: "Coupon discount type not supported",
 			};
 		}
 
@@ -251,11 +252,11 @@ export class CouponValidationService {
 				getUserOrderCount,
 			} = params;
 
-			// Check service type
-			const serviceTypeCheck =
-				CouponValidationService.validateServiceType(coupon);
-			if (!serviceTypeCheck.valid) {
-				return serviceTypeCheck;
+			// Check discount type
+			const discountTypeCheck =
+				CouponValidationService.validateDiscountType(coupon);
+			if (!discountTypeCheck.valid) {
+				return discountTypeCheck;
 			}
 
 			// Check merchant eligibility
@@ -411,6 +412,7 @@ export class CouponValidationService {
 
 	/**
 	 * Create getUserOrderCount callback for database queries
+	 * Note: Throws on error to prevent incorrect coupon eligibility
 	 */
 	static createGetUserOrderCount(
 		db: DatabaseService | DatabaseTransaction,
@@ -428,13 +430,15 @@ export class CouponValidationService {
 					{ error, userId },
 					"[CouponValidationService] Failed to get user order count",
 				);
-				return 0;
+				// Throw error instead of returning 0 to prevent incorrect eligibility
+				throw error;
 			}
 		};
 	}
 
 	/**
 	 * Create getUserUsageCount callback for database queries
+	 * Note: Throws on error to prevent incorrect coupon eligibility
 	 */
 	static createGetUserUsageCount(
 		db: DatabaseService | DatabaseTransaction,
@@ -452,7 +456,8 @@ export class CouponValidationService {
 					{ error, couponId, userId },
 					"[CouponValidationService] Failed to get user usage count",
 				);
-				return 0;
+				// Throw error instead of returning 0 to prevent incorrect eligibility
+				throw error;
 			}
 		};
 	}

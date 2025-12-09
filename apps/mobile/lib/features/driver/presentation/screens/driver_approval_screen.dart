@@ -91,10 +91,20 @@ class _DriverApprovalScreenState extends State<DriverApprovalScreen> {
         _buildDocumentsSection(context, review),
         SizedBox(height: 24.h),
         _buildQuizSection(context, state, driver),
-        if (review.reviewNotes != null && review.reviewNotes!.isNotEmpty) ...[
-          SizedBox(height: 24.h),
-          _buildReviewNotesSection(context, review),
-        ],
+        Builder(
+          builder: (context) {
+            final notes = review.reviewNotes;
+            if (notes != null && notes.isNotEmpty) {
+              return Column(
+                children: [
+                  SizedBox(height: 24.h),
+                  _buildReviewNotesSection(context, review),
+                ],
+              );
+            }
+            return const SizedBox.shrink();
+          },
+        ),
         SizedBox(height: 32.h),
       ],
     );
@@ -610,16 +620,26 @@ class _DriverApprovalScreenState extends State<DriverApprovalScreen> {
               style: context.typography.p.copyWith(fontSize: 14.sp),
             ),
           ),
-          if (review.reviewedAt != null) ...[
-            SizedBox(height: 8.h),
-            Text(
-              'Reviewed on ${_formatDate(review.reviewedAt!)}',
-              style: context.typography.small.copyWith(
-                fontSize: 12.sp,
-                color: context.colorScheme.mutedForeground,
-              ),
-            ),
-          ],
+          Builder(
+            builder: (context) {
+              final reviewedAt = review.reviewedAt;
+              if (reviewedAt != null) {
+                return Column(
+                  children: [
+                    SizedBox(height: 8.h),
+                    Text(
+                      'Reviewed on ${_formatDate(reviewedAt)}',
+                      style: context.typography.small.copyWith(
+                        fontSize: 12.sp,
+                        color: context.colorScheme.mutedForeground,
+                      ),
+                    ),
+                  ],
+                );
+              }
+              return const SizedBox.shrink();
+            },
+          ),
         ],
       ),
     );

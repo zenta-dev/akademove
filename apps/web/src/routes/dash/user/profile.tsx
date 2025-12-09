@@ -106,7 +106,10 @@ function RouteComponent() {
 		orpcQuery.auth.getSession.queryOptions(),
 	);
 
-	if (!allowed) navigate({ to: "/" });
+	if (!allowed) {
+		navigate({ to: "/" });
+		return null;
+	}
 
 	if (isPending) {
 		return (
@@ -331,11 +334,9 @@ function EditUserProfile({
 	const mutation = useMutation(
 		orpcQuery.user.me.update.mutationOptions({
 			onSuccess: async () => {
-				await queryClient.invalidateQueries(
-					// 	{
-					// 	queryKey: orpcQuery.auth.getSession.queryKey({}),
-					// }
-				);
+				await queryClient.invalidateQueries({
+					queryKey: orpcQuery.auth.getSession.queryKey({}),
+				});
 				toast.success(
 					m.success_placeholder({
 						action: capitalizeFirstLetter(m.update_profile().toLowerCase()),

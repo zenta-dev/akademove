@@ -1,6 +1,7 @@
 import { m } from "@repo/i18n";
 import { trimObjectValues } from "@repo/shared";
 import { createORPCRouter } from "@/core/router/orpc";
+import { log } from "@/utils";
 import { MerchantApprovalSpec } from "./merchant-approval-spec";
 
 const { priv } = createORPCRouter(MerchantApprovalSpec);
@@ -44,12 +45,13 @@ export const MerchantApprovalHandler = priv.router({
 			const data = trimObjectValues(body);
 
 			// Start transaction for approval
-			const result = await context.svc.db.transaction(async () => {
+			const result = await context.svc.db.transaction(async (tx) => {
 				const approvalResult =
 					await context.repo.merchant.approval.submitApproval(
 						params.id,
 						data.reviewNotes,
 						context,
+						{ tx },
 					);
 
 				// Get merchant info for email
@@ -63,9 +65,9 @@ export const MerchantApprovalHandler = priv.router({
 						status: "APPROVED",
 					});
 				} catch (error) {
-					console.error(
-						"[MerchantApprovalHandler] Failed to send approval email:",
-						error,
+					log.error(
+						{ error, merchantId: params.id },
+						"[MerchantApprovalHandler] Failed to send approval email",
 					);
 					// Don't fail the request if email fails
 				}
@@ -88,18 +90,20 @@ export const MerchantApprovalHandler = priv.router({
 			const data = trimObjectValues(body);
 
 			// Start transaction for rejection
-			const result = await context.svc.db.transaction(async () => {
+			const result = await context.svc.db.transaction(async (tx) => {
 				const rejectionResult =
 					await context.repo.merchant.approval.submitRejection(
 						params.id,
 						data.reason,
 						context,
+						{ tx },
 					);
 
 				// Get merchant info and approval details for email
 				const merchant = await context.repo.merchant.main.get(params.id);
 				const review = await context.repo.merchant.approval.getReview(
 					params.id,
+					{ tx },
 				);
 
 				// Build rejection details from review
@@ -121,9 +125,9 @@ export const MerchantApprovalHandler = priv.router({
 						rejectionDetails,
 					});
 				} catch (error) {
-					console.error(
-						"[MerchantApprovalHandler] Failed to send rejection email:",
-						error,
+					log.error(
+						{ error, merchantId: params.id },
+						"[MerchantApprovalHandler] Failed to send rejection email",
 					);
 					// Don't fail the request if email fails
 				}

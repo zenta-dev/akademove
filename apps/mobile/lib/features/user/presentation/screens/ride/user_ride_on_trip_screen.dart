@@ -545,11 +545,12 @@ class _UserRideOnTripScreenState extends State<UserRideOnTripScreen> {
                 context.mounted) {
               // Navigate to rating/review screen
               final driver = state.currentAssignedDriver;
-              if (driver != null) {
+              final currentOrder = state.currentOrder;
+              if (driver != null && currentOrder != null) {
                 final result = await context.pushNamed(
                   Routes.userRating.name,
                   extra: {
-                    'orderId': state.currentOrder!.id,
+                    'orderId': currentOrder.id,
                     'driverId': driver.userId,
                     'driverName': driver.user?.name ?? 'Driver',
                   },

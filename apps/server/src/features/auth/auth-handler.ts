@@ -105,7 +105,8 @@ export const AuthHandler = pub.router({
 						},
 					);
 
-					// Log fraud event if signals detected
+					// Log fraud event if signals detected - await inside transaction
+					// to ensure data consistency on rollback
 					if (
 						duplicateResult.hasDuplicates &&
 						duplicateResult.signals.length > 0
@@ -114,8 +115,8 @@ export const AuthHandler = pub.router({
 							duplicateResult.signals,
 						);
 
-						tasks.push(
-							context.repo.fraud.create(
+						try {
+							await context.repo.fraud.create(
 								{
 									eventType: duplicateResult.signals[0].type,
 									severity: duplicateResult.signals[0].severity,
@@ -138,19 +139,31 @@ export const AuthHandler = pub.router({
 									resolvedAt: null,
 								},
 								opts,
-							),
-						);
+							);
+						} catch (error) {
+							log.error(
+								{ error, userId: result.user.id },
+								"[AuthHandler] Failed to log duplicate account fraud event",
+							);
+							// Continue registration even if fraud logging fails
+						}
 					}
 
 					// Record the IP for future duplicate detection
 					if (ipAddress) {
-						tasks.push(
-							context.repo.fraud.recordRegistrationIp(
+						try {
+							await context.repo.fraud.recordRegistrationIp(
 								result.user.id,
 								ipAddress,
 								opts,
-							),
-						);
+							);
+						} catch (error) {
+							log.error(
+								{ error, userId: result.user.id },
+								"[AuthHandler] Failed to record registration IP",
+							);
+							// Continue registration even if IP logging fails
+						}
 					}
 				}
 
@@ -273,7 +286,8 @@ export const AuthHandler = pub.router({
 							},
 						);
 
-						// Log fraud event if signals detected
+						// Log fraud event if signals detected - await inside transaction
+						// to ensure data consistency on rollback
 						if (
 							duplicateResult.hasDuplicates &&
 							duplicateResult.signals.length > 0
@@ -282,8 +296,8 @@ export const AuthHandler = pub.router({
 								duplicateResult.signals,
 							);
 
-							tasks.push(
-								context.repo.fraud.create(
+							try {
+								await context.repo.fraud.create(
 									{
 										eventType: duplicateResult.signals[0].type,
 										severity: duplicateResult.signals[0].severity,
@@ -306,19 +320,31 @@ export const AuthHandler = pub.router({
 										resolvedAt: null,
 									},
 									opts,
-								),
-							);
+								);
+							} catch (error) {
+								log.error(
+									{ error, userId: result.user.id },
+									"[AuthHandler] Failed to log driver duplicate account fraud event",
+								);
+								// Continue registration even if fraud logging fails
+							}
 						}
 
 						// Record the IP for future duplicate detection
 						if (ipAddress) {
-							tasks.push(
-								context.repo.fraud.recordRegistrationIp(
+							try {
+								await context.repo.fraud.recordRegistrationIp(
 									result.user.id,
 									ipAddress,
 									opts,
-								),
-							);
+								);
+							} catch (error) {
+								log.error(
+									{ error, userId: result.user.id },
+									"[AuthHandler] Failed to record driver registration IP",
+								);
+								// Continue registration even if IP logging fails
+							}
 						}
 					}
 

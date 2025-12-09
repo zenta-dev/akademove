@@ -92,6 +92,9 @@ export class MerchantMainRepository extends BaseRepository {
 			isActive?: boolean;
 			minRating?: number;
 			maxRating?: number;
+			maxDistance?: number;
+			latitude?: number;
+			longitude?: number;
 		},
 	): Promise<number> {
 		try {
@@ -116,6 +119,20 @@ export class MerchantMainRepository extends BaseRepository {
 			}
 			if (filters?.maxRating !== undefined) {
 				clauses.push(lte(tables.merchant.rating, filters.maxRating));
+			}
+			// Add distance filter if coordinates provided
+			if (
+				filters?.maxDistance &&
+				filters?.latitude !== undefined &&
+				filters?.longitude !== undefined
+			) {
+				clauses.push(
+					sql`ST_DWithin(
+						${tables.merchant.location}::geography,
+						ST_MakePoint(${filters.longitude}, ${filters.latitude})::geography,
+						${filters.maxDistance}
+					)`,
+				);
 			}
 
 			const [dbResult] = await this.db
@@ -247,6 +264,9 @@ export class MerchantMainRepository extends BaseRepository {
 						isActive,
 						minRating,
 						maxRating,
+						maxDistance,
+						latitude,
+						longitude,
 					});
 					const totalPages = Math.ceil(totalCount / limit);
 
@@ -461,32 +481,61 @@ export class MerchantMainRepository extends BaseRepository {
 			const docKey = MerchantDocumentService.generateDocumentKey(id, doc);
 			const imageKey = MerchantDocumentService.generateImageKey(id, image);
 
-			const [operation] = await Promise.all([
-				(opts?.tx ?? this.db)
-					.insert(tables.merchant)
-					.values({
-						...item,
-						id,
-						document: docKey,
-						image: imageKey,
-					})
-					.returning()
-					.then((r) => r[0]),
-				doc && docKey
-					? this.#storage.upload({
+			// First, insert into DB (within potential transaction)
+			const [operation] = await (opts?.tx ?? this.db)
+				.insert(tables.merchant)
+				.values({
+					...item,
+					id,
+					document: docKey,
+					image: imageKey,
+				})
+				.returning();
+
+			// Then upload files to S3 after DB insert succeeds
+			// If S3 upload fails, clear the reference in DB
+			const uploadPromises: Promise<unknown>[] = [];
+			if (doc && docKey) {
+				uploadPromises.push(
+					this.#storage
+						.upload({
 							bucket: MerchantDocumentService.PRIV_BUCKET,
 							key: docKey,
 							file: doc,
 						})
-					: Promise.resolve(),
-				image && imageKey
-					? this.#storage.upload({
+						.catch(async (uploadError) => {
+							log.error(
+								{ uploadError, merchantId: id, docKey },
+								"[MerchantMainRepository] Failed to upload document",
+							);
+							await (opts?.tx ?? this.db)
+								.update(tables.merchant)
+								.set({ document: null })
+								.where(eq(tables.merchant.id, id));
+						}),
+				);
+			}
+			if (image && imageKey) {
+				uploadPromises.push(
+					this.#storage
+						.upload({
 							bucket: MerchantDocumentService.PUB_BUCKET,
 							key: imageKey,
 							file: image,
 						})
-					: Promise.resolve(),
-			]);
+						.catch(async (uploadError) => {
+							log.error(
+								{ uploadError, merchantId: id, imageKey },
+								"[MerchantMainRepository] Failed to upload image",
+							);
+							await (opts?.tx ?? this.db)
+								.update(tables.merchant)
+								.set({ image: null })
+								.where(eq(tables.merchant.id, id));
+						}),
+				);
+			}
+			await Promise.all(uploadPromises);
 
 			const result = await MerchantMainRepository.composeEntity(
 				operation,

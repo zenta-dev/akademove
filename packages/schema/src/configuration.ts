@@ -58,6 +58,9 @@ export const BusinessConfigurationSchema = z.object({
 	userCancellationFeeAfterAccept: z.coerce.number().min(0).max(1),
 	noShowFee: z.coerce.number().min(0).max(1),
 
+	// No-show driver compensation (as decimal, e.g., 0.8 = 80% of penalty goes to driver)
+	noShowDriverCompensationRate: z.coerce.number().min(0).max(1),
+
 	// Delivery verification
 	highValueOrderThreshold: z.coerce.number().positive(),
 });

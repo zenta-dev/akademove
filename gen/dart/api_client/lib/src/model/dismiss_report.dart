@@ -17,21 +17,20 @@ part 'dismiss_report.g.dart';
 )
 class DismissReport {
   /// Returns a new [DismissReport] instance.
-  const DismissReport({
-    required this.reason,
-  });
+  const DismissReport({required this.reason});
   @JsonKey(name: r'reason', required: true, includeIfNull: false)
   final String reason;
-  
-  @override
-  bool operator ==(Object other) => identical(this, other) || other is DismissReport &&
-    other.reason == reason;
 
   @override
-  int get hashCode =>
-      reason.hashCode;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is DismissReport && other.reason == reason;
 
-  factory DismissReport.fromJson(Map<String, dynamic> json) => _$DismissReportFromJson(json);
+  @override
+  int get hashCode => reason.hashCode;
+
+  factory DismissReport.fromJson(Map<String, dynamic> json) =>
+      _$DismissReportFromJson(json);
 
   Map<String, dynamic> toJson() => _$DismissReportToJson(this);
 
@@ -39,6 +38,4 @@ class DismissReport {
   String toString() {
     return toJson().toString();
   }
-
 }
-

@@ -155,7 +155,11 @@ export const Route = createFileRoute("/dash/operator/pricing")({
 function RouteComponent() {
 	const { allowed } = Route.useLoaderData();
 	const navigate = useNavigate();
-	if (!allowed) navigate({ to: "/" });
+
+	if (!allowed) {
+		navigate({ to: "/" });
+		return null;
+	}
 
 	return (
 		<>
@@ -245,13 +249,7 @@ export function ConfigurationItem({
 	const mutation = useMutation(
 		orpcQuery.configuration.update.mutationOptions({
 			onSuccess: async () => {
-				await queryClient.invalidateQueries(
-					// 	{
-					// 	queryKey: orpcQuery.configuration.get.queryKey({
-					// 		input: { params: { key } },
-					// 	}),
-					// }
-				);
+				await queryClient.invalidateQueries();
 				toast.success(
 					m.success_placeholder({
 						action: capitalizeFirstLetter(m.update_pricing().toLowerCase()),

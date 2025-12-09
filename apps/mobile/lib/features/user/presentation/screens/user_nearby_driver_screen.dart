@@ -49,6 +49,7 @@ class _UserNearbyDriverScreenState extends State<UserNearbyDriverScreen> {
       const ImageConfiguration(size: Size(64, 64)),
       Assets.images.motorcycleAbove.path,
     );
+    if (!mounted) return;
     setState(() {
       _driverIcon = bitmap;
     });
@@ -75,6 +76,7 @@ class _UserNearbyDriverScreenState extends State<UserNearbyDriverScreen> {
       await _mapController?.animateCamera(CameraUpdate.newLatLng(myPos));
 
       await _fetchDriversAtLocation(myPos, _radiusKm, true);
+      if (!mounted) return;
       setState(() {});
     } catch (e, st) {
       logger.e(
@@ -94,6 +96,7 @@ class _UserNearbyDriverScreenState extends State<UserNearbyDriverScreen> {
       if (!mounted) return;
 
       _updateDriverMarkers(context.read<UserRideCubit>().state.nearbyDrivers);
+      if (!mounted) return;
       setState(() {});
       return;
     }
@@ -112,6 +115,7 @@ class _UserNearbyDriverScreenState extends State<UserNearbyDriverScreen> {
     if (!mounted) return;
 
     _updateDriverMarkers(context.read<UserRideCubit>().state.nearbyDrivers);
+    if (!mounted) return;
     setState(() {});
   }
 
@@ -137,6 +141,7 @@ class _UserNearbyDriverScreenState extends State<UserNearbyDriverScreen> {
         .whereType<Marker>()
         .toSet();
 
+    if (!mounted) return;
     setState(() {
       _markers
         ..clear()

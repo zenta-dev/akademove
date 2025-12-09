@@ -21,7 +21,11 @@ export const Route = createFileRoute("/dash/operator/coupons/new")({
 function RouteComponent() {
 	const { allowed } = Route.useLoaderData();
 	const navigate = useNavigate();
-	if (!allowed) navigate({ to: "/" });
+
+	if (!allowed) {
+		navigate({ to: "/" });
+		return null;
+	}
 
 	return (
 		<div className="mx-auto w-full max-w-3xl">

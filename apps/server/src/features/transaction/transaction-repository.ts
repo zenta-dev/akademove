@@ -4,7 +4,7 @@ import type {
 	Transaction,
 	UpdateTransaction,
 } from "@repo/schema/transaction";
-import { eq, gt, inArray, type SQL } from "drizzle-orm";
+import { and, count, eq, gt, inArray, type SQL } from "drizzle-orm";
 import { v7 } from "uuid";
 import { BaseRepository } from "@/core/base";
 import { CACHE_TTLS } from "@/core/constants";
@@ -160,13 +160,16 @@ export class TransactionRepository extends BaseRepository {
 
 			// Page-based pagination
 			if (page) {
-				const totalCount = await this.getTotalRow();
+				const [totalCount] = await tx
+					.select({ count: count(tables.transaction.id) })
+					.from(tables.transaction)
+					.where(and(...clauses));
 
 				const { offset, totalPages } =
 					TransactionListQueryService.calculatePagination({
 						page,
 						limit,
-						totalCount,
+						totalCount: totalCount.count,
 					});
 
 				const result = await tx.query.transaction.findMany({
@@ -183,6 +186,7 @@ export class TransactionRepository extends BaseRepository {
 
 			// Default: no pagination
 			const res = await tx.query.transaction.findMany({
+				where: (_f, op) => op.and(...clauses),
 				orderBy,
 				limit,
 			});
