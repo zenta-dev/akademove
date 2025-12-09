@@ -78,14 +78,13 @@ class _UserMerchantDetailScreenState extends State<UserMerchantDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        if (widget.isSummary) {
+    return PopScope(
+      canPop: !widget.isSummary,
+      onPopInvokedWithResult: (didPop, result) {
+        if (!didPop && widget.isSummary) {
           // Go back to detail screen (non-summary mode)
           context.pop();
-          return false;
         }
-        return true;
       },
       child: MyScaffold(
         headers: [

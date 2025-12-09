@@ -8,6 +8,7 @@ import {
 import { AuthError, BaseError, RepositoryError } from "@/core/error";
 import { hasRoles } from "@/core/middlewares/auth";
 import { createORPCRouter } from "@/core/router/orpc";
+import { DuplicateAccountService } from "@/features/fraud/services";
 import { isDev, log } from "@/utils";
 import { AuthSpec } from "./auth-spec";
 
@@ -17,16 +18,31 @@ export const AuthHandler = pub.router({
 	signIn: pub.signIn.handler(async ({ context, input: { body } }) => {
 		const result = await context.repo.auth.signIn(trimObjectValues(body));
 
-		if (!result.user.banned) {
-			context.resHeaders?.set(
-				"Set-Cookie",
-				composeAuthCookieValue({
-					token: result.token,
-					isDev,
-					maxAge: 7 * 24 * 60 * 60,
-				}),
-			);
+		// FIX: Check if user is banned BEFORE returning token
+		if (result.user.banned) {
+			// Check if ban has expired
+			if (result.user.banExpires && new Date() > result.user.banExpires) {
+				// Ban expired - allow sign in and clear ban status
+				// Note: A separate job should handle clearing expired bans
+			} else {
+				// Ban is still active - throw error, don't return token
+				const message = result.user.banReason
+					? `Account banned: ${result.user.banReason}`
+					: "Your account has been banned";
+				throw new AuthError(message, {
+					code: "FORBIDDEN",
+				});
+			}
 		}
+
+		context.resHeaders?.set(
+			"Set-Cookie",
+			composeAuthCookieValue({
+				token: result.token,
+				isDev,
+				maxAge: 7 * 24 * 60 * 60,
+			}),
+		);
 
 		return {
 			status: 200,
@@ -38,6 +54,14 @@ export const AuthHandler = pub.router({
 	}),
 	signUpUser: pub.signUpUser.handler(async ({ context, input: { body } }) => {
 		const data = trimObjectValues(unflattenData(body));
+
+		// Get IP for fraud detection
+		const ipAddress =
+			context.req.headers.get("x-forwarded-for") ??
+			context.req.headers.get("x-real-ip") ??
+			undefined;
+		const userAgent = context.req.headers.get("user-agent") ?? undefined;
+
 		return await context.svc.db.transaction(async (tx) => {
 			try {
 				const opts = { tx };
@@ -45,6 +69,92 @@ export const AuthHandler = pub.router({
 					context.repo.auth.signUp({ ...data, role: "USER" }, opts),
 					context.repo.badge.main.getByCode("NEW_CUSTOMER", opts),
 				]);
+
+				// Duplicate account detection (non-blocking - monitoring only)
+				if (ipAddress ?? data.name) {
+					const [recentIpRegistrations, similarNames] = await Promise.all([
+						ipAddress
+							? context.repo.fraud.getRecentRegistrationsByIp(ipAddress)
+							: Promise.resolve([]),
+						data.name
+							? context.repo.fraud.findSimilarUserNames(data.name)
+							: Promise.resolve([]),
+					]);
+
+					const duplicateResult = DuplicateAccountService.checkForDuplicates(
+						{
+							ipAddress,
+							name: data.name,
+						},
+						{
+							existingBankAccounts: [],
+							recentIpRegistrations,
+							similarNames,
+						},
+						{
+							userId: result.user.id,
+							name: data.name,
+							email: data.email,
+							ipAddress,
+							userAgent,
+						},
+					);
+
+					// Log fraud event if signals detected
+					if (
+						duplicateResult.hasDuplicates &&
+						duplicateResult.signals.length > 0
+					) {
+						const score = DuplicateAccountService.calculateScore(
+							duplicateResult.signals,
+						);
+
+						// Fire and forget - don't block registration
+						context.repo.fraud
+							.create(
+								{
+									eventType: duplicateResult.signals[0].type,
+									severity: duplicateResult.signals[0].severity,
+									status: "PENDING",
+									userId: result.user.id,
+									driverId: null,
+									signals: duplicateResult.signals,
+									score,
+									location: null,
+									previousLocation: null,
+									distanceKm: null,
+									timeDeltaSeconds: null,
+									velocityKmh: null,
+									ipAddress: ipAddress ?? null,
+									userAgent: userAgent ?? null,
+									handledById: null,
+									resolution: null,
+									actionTaken: null,
+									detectedAt: new Date(),
+									resolvedAt: null,
+								},
+								opts,
+							)
+							.catch((error) => {
+								log.error(
+									{ error, userId: result.user.id },
+									"[AuthHandler] Failed to log duplicate account fraud event",
+								);
+							});
+					}
+
+					// Record the IP for future duplicate detection
+					if (ipAddress) {
+						context.repo.fraud
+							.recordRegistrationIp(result.user.id, ipAddress, opts)
+							.catch((error) => {
+								log.error(
+									{ error, userId: result.user.id },
+									"[AuthHandler] Failed to record registration IP",
+								);
+							});
+					}
+				}
 
 				const [signInResult] = await Promise.all([
 					context.repo.auth.signIn(data, opts),
@@ -97,6 +207,14 @@ export const AuthHandler = pub.router({
 	signUpDriver: pub.signUpDriver.handler(
 		async ({ context, input: { body } }) => {
 			const data = trimObjectValues(unflattenData(body));
+
+			// Get IP for fraud detection
+			const ipAddress =
+				context.req.headers.get("x-forwarded-for") ??
+				context.req.headers.get("x-real-ip") ??
+				undefined;
+			const userAgent = context.req.headers.get("user-agent") ?? undefined;
+
 			return await context.svc.db.transaction(async (tx) => {
 				try {
 					const opts = { tx };
@@ -104,6 +222,101 @@ export const AuthHandler = pub.router({
 						context.repo.auth.signUpDriver(data, opts),
 						context.repo.badge.main.getByCode("NEW_DRIVER", opts),
 					]);
+
+					// Duplicate account detection for drivers (includes bank account check)
+					const bankAccountNumber = data.detail?.bank?.number
+						? String(data.detail.bank.number)
+						: undefined;
+					if (ipAddress ?? data.name ?? bankAccountNumber) {
+						const [existingBankAccounts, recentIpRegistrations, similarNames] =
+							await Promise.all([
+								bankAccountNumber
+									? context.repo.fraud.checkBankAccountExists(bankAccountNumber)
+									: Promise.resolve([]),
+								ipAddress
+									? context.repo.fraud.getRecentRegistrationsByIp(ipAddress)
+									: Promise.resolve([]),
+								data.name
+									? context.repo.fraud.findSimilarUserNames(data.name)
+									: Promise.resolve([]),
+							]);
+
+						const duplicateResult = DuplicateAccountService.checkForDuplicates(
+							{
+								bankAccountNumber,
+								ipAddress,
+								name: data.name,
+							},
+							{
+								existingBankAccounts,
+								recentIpRegistrations,
+								similarNames,
+							},
+							{
+								userId: result.user.id,
+								name: data.name,
+								email: data.email,
+								bankAccountNumber,
+								ipAddress,
+								userAgent,
+							},
+						);
+
+						// Log fraud event if signals detected
+						if (
+							duplicateResult.hasDuplicates &&
+							duplicateResult.signals.length > 0
+						) {
+							const score = DuplicateAccountService.calculateScore(
+								duplicateResult.signals,
+							);
+
+							// Fire and forget - don't block registration
+							context.repo.fraud
+								.create(
+									{
+										eventType: duplicateResult.signals[0].type,
+										severity: duplicateResult.signals[0].severity,
+										status: "PENDING",
+										userId: result.user.id,
+										driverId: null, // Driver not created yet at this point
+										signals: duplicateResult.signals,
+										score,
+										location: null,
+										previousLocation: null,
+										distanceKm: null,
+										timeDeltaSeconds: null,
+										velocityKmh: null,
+										ipAddress: ipAddress ?? null,
+										userAgent: userAgent ?? null,
+										handledById: null,
+										resolution: null,
+										actionTaken: null,
+										detectedAt: new Date(),
+										resolvedAt: null,
+									},
+									opts,
+								)
+								.catch((error) => {
+									log.error(
+										{ error, userId: result.user.id },
+										"[AuthHandler] Failed to log driver duplicate account fraud event",
+									);
+								});
+						}
+
+						// Record the IP for future duplicate detection
+						if (ipAddress) {
+							context.repo.fraud
+								.recordRegistrationIp(result.user.id, ipAddress, opts)
+								.catch((error) => {
+									log.error(
+										{ error, userId: result.user.id },
+										"[AuthHandler] Failed to record driver registration IP",
+									);
+								});
+						}
+					}
 
 					const [signInResult] = await Promise.all([
 						context.repo.auth.signIn(data, opts),

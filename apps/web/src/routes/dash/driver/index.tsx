@@ -45,7 +45,7 @@ export const Route = createFileRoute("/dash/driver/")({
 
 			// If quiz not passed, redirect to quiz page
 			if (driver.quizStatus !== "PASSED") {
-				redirect({ to: "/sign-up/driver/quiz", throw: true });
+				redirect({ to: "/quiz/driver", throw: true });
 			}
 		} catch (error) {
 			console.error("Failed to check driver status:", error);
@@ -167,6 +167,7 @@ function RouteComponent() {
 		if (!driverData) return;
 		toggleOnlineMutation.mutate({
 			params: { id: driverData.body.data.id },
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			body: {
 				isTakingOrder: !driverData.body.data.isTakingOrder,
 			},

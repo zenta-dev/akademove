@@ -5,7 +5,7 @@ import {
 	DRIVER_QUIZ_ANSWER_STATUSES,
 	DRIVER_QUIZ_QUESTION_CATEGORIES,
 } from "./constants.js";
-import { DriverMinQuizQuestionSchema } from "./driver-quiz-question.ts";
+import { DriverMinQuizQuestionSchema } from "./driver-quiz-question.js";
 import { extractSchemaKeysAsEnum } from "./enum.helper.js";
 
 export const DriverQuizAnswerStatusSchema = z.enum(DRIVER_QUIZ_ANSWER_STATUSES);

@@ -41,7 +41,7 @@ export const MerchantApprovalPageApprovalDialog = ({
 	onOpenChange: (open: boolean) => void;
 	onSuccess?: () => void;
 }) => {
-	const form = useForm<z.infer<typeof FormSchema>>({
+	const form = useForm({
 		resolver: zodResolver(FormSchema),
 		defaultValues: {
 			reviewNotes: "",

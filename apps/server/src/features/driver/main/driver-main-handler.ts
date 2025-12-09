@@ -1,7 +1,10 @@
 import { m } from "@repo/i18n";
+import { toLocation } from "@repo/schema/position";
 import { trimObjectValues } from "@repo/shared";
 import { AuthError } from "@/core/error";
 import { createORPCRouter } from "@/core/router/orpc";
+import { FraudDetectionService } from "@/features/fraud/services";
+import { log } from "@/utils";
 import { DriverMainSpec } from "./driver-main-spec";
 
 const { priv } = createORPCRouter(DriverMainSpec);
@@ -66,8 +69,8 @@ export const DriverMainHandler = priv.router({
 		async ({ context, input: { params, body } }) => {
 			// IDOR Protection: Drivers can only update their own profile
 			// Admins/Operators can update any driver
+			const driver = await context.repo.driver.main.get(params.id);
 			if (context.user.role === "DRIVER") {
-				const driver = await context.repo.driver.main.get(params.id);
 				if (driver.userId !== context.user.id) {
 					throw new AuthError(m.error_only_update_own_driver_profile(), {
 						code: "FORBIDDEN",
@@ -76,10 +79,79 @@ export const DriverMainHandler = priv.router({
 			}
 
 			const data = trimObjectValues(body);
-			const result = await context.repo.driver.main.updateLocation(
-				params.id,
-				data,
+
+			// Convert coordinate format: body is {x, y} (PostGIS), fraud service expects {lat, lng}
+			const currentLocation = toLocation(data);
+			const previousLocation = driver.currentLocation
+				? toLocation(driver.currentLocation)
+				: null;
+
+			// Fraud detection: Check for GPS spoofing
+			const ipAddress =
+				context.req.headers.get("x-forwarded-for") ??
+				context.req.headers.get("x-real-ip") ??
+				undefined;
+			const userAgent = context.req.headers.get("user-agent") ?? undefined;
+
+			const fraudResult = FraudDetectionService.validateLocationUpdate(
+				{
+					location: currentLocation,
+					previousLocation,
+					timestamp: new Date(),
+					previousTimestamp: driver.lastLocationUpdate ?? null,
+					isMockLocation: data.isMockLocation,
+				},
+				{
+					userId: context.user.id,
+					driverId: params.id,
+					ipAddress,
+					userAgent,
+				},
 			);
+
+			// Log fraud event if signals detected (non-blocking - monitoring only)
+			if (fraudResult.shouldLog && fraudResult.signals.length > 0) {
+				const score = FraudDetectionService.calculateScore(fraudResult.signals);
+
+				// Fire and forget - don't block location update
+				context.repo.fraud
+					.create({
+						eventType: fraudResult.signals[0].type,
+						severity: fraudResult.highestSeverity ?? "LOW",
+						status: "PENDING",
+						userId: context.user.id,
+						driverId: params.id,
+						signals: fraudResult.signals,
+						score,
+						location: currentLocation,
+						previousLocation,
+						distanceKm:
+							(fraudResult.signals[0].metadata?.distanceKm as number) ?? null,
+						timeDeltaSeconds:
+							(fraudResult.signals[0].metadata?.timeDeltaSeconds as number) ??
+							null,
+						velocityKmh:
+							(fraudResult.signals[0].metadata?.velocityKmh as number) ?? null,
+						ipAddress: ipAddress ?? null,
+						userAgent: userAgent ?? null,
+						handledById: null,
+						resolution: null,
+						actionTaken: null,
+						detectedAt: new Date(),
+						resolvedAt: null,
+					})
+					.catch((error) => {
+						log.error(
+							{ error, driverId: params.id },
+							"[DriverMainHandler] Failed to log fraud event",
+						);
+					});
+			}
+
+			const result = await context.repo.driver.main.updateLocation(params.id, {
+				x: data.x,
+				y: data.y,
+			});
 
 			return {
 				status: 200,

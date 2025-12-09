@@ -17,6 +17,7 @@ import { log } from "@/utils";
  * This defines the order state machine
  */
 const VALID_TRANSITIONS: Record<OrderStatus, OrderStatus[]> = {
+	SCHEDULED: ["MATCHING", "CANCELLED_BY_USER", "CANCELLED_BY_SYSTEM"],
 	REQUESTED: ["MATCHING", "CANCELLED_BY_USER", "CANCELLED_BY_SYSTEM"],
 	MATCHING: ["ACCEPTED", "CANCELLED_BY_USER", "CANCELLED_BY_SYSTEM"],
 	ACCEPTED: [
@@ -41,6 +42,7 @@ const VALID_TRANSITIONS: Record<OrderStatus, OrderStatus[]> = {
  * Order state descriptions for logging/UI
  */
 const STATE_DESCRIPTIONS: Record<OrderStatus, string> = {
+	SCHEDULED: "Order scheduled for future pickup",
 	REQUESTED: "Order created, waiting for matching",
 	MATCHING: "Finding available driver",
 	ACCEPTED: "Driver accepted order",
@@ -146,6 +148,16 @@ export class OrderStateService {
 	}
 
 	/**
+	 * Check if order is a scheduled order waiting to be activated
+	 *
+	 * @param currentStatus - Current order status
+	 * @returns True if order is scheduled
+	 */
+	isScheduled(currentStatus: OrderStatus): boolean {
+		return currentStatus === "SCHEDULED";
+	}
+
+	/**
 	 * Get all allowed next states
 	 *
 	 * @param currentStatus - Current order status
@@ -173,6 +185,7 @@ export class OrderStateService {
 	 */
 	getCompletionPercentage(currentStatus: OrderStatus): number {
 		const stateOrder: OrderStatus[] = [
+			"SCHEDULED",
 			"REQUESTED",
 			"MATCHING",
 			"ACCEPTED",
@@ -193,23 +206,38 @@ export class OrderStateService {
 	 * Get timeline events for order tracking UI
 	 *
 	 * @param currentStatus - Current order status
+	 * @param isScheduledOrder - Whether order is a scheduled order
 	 * @returns Array of timeline events with completion status
 	 */
-	getTimelineEvents(currentStatus: OrderStatus): Array<{
+	getTimelineEvents(
+		currentStatus: OrderStatus,
+		isScheduledOrder = false,
+	): Array<{
 		status: OrderStatus;
 		description: string;
 		completed: boolean;
 	}> {
-		const timeline: OrderStatus[] = [
-			"REQUESTED",
-			"MATCHING",
-			"ACCEPTED",
-			"PREPARING",
-			"READY_FOR_PICKUP",
-			"ARRIVING",
-			"IN_TRIP",
-			"COMPLETED",
-		];
+		const timeline: OrderStatus[] = isScheduledOrder
+			? [
+					"SCHEDULED",
+					"MATCHING",
+					"ACCEPTED",
+					"PREPARING",
+					"READY_FOR_PICKUP",
+					"ARRIVING",
+					"IN_TRIP",
+					"COMPLETED",
+				]
+			: [
+					"REQUESTED",
+					"MATCHING",
+					"ACCEPTED",
+					"PREPARING",
+					"READY_FOR_PICKUP",
+					"ARRIVING",
+					"IN_TRIP",
+					"COMPLETED",
+				];
 
 		const currentIndex = timeline.indexOf(currentStatus);
 

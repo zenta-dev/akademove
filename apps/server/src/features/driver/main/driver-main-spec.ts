@@ -5,7 +5,10 @@ import {
 	FlatUpdateDriverSchema,
 } from "@repo/schema/driver";
 import { UnifiedPaginationQuerySchema } from "@repo/schema/pagination";
-import { CoordinateSchema } from "@repo/schema/position";
+import {
+	CoordinateSchema,
+	CoordinateWithMetaSchema,
+} from "@repo/schema/position";
 import { UserGenderSchema } from "@repo/schema/user";
 import * as z from "zod";
 import { createSuccesSchema, FEATURE_TAGS } from "@/core/constants";
@@ -136,7 +139,7 @@ export const DriverMainSpec = {
 		.input(
 			z.object({
 				params: z.object({ id: z.string() }),
-				body: CoordinateSchema,
+				body: CoordinateWithMetaSchema,
 			}),
 		)
 		.output(createSuccesSchema(DriverSchema, "Driver updated successfully")),

@@ -25,7 +25,7 @@ export const InsertNewsletterSchema = NewsletterSchema.omit({
 	status: true,
 	createdAt: true,
 	updatedAt: true,
-}).extend({
+}).safeExtend({
 	userId: z.uuid().optional(),
 });
 export type InsertNewsletter = z.infer<typeof InsertNewsletterSchema>;

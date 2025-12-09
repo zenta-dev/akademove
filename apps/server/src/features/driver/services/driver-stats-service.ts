@@ -117,8 +117,8 @@ export class DriverStatsService {
 		return sql`
 			SELECT
 				COUNT(*)::int AS total_orders,
-				COALESCE(SUM(CASE WHEN status = 'COMPLETED' THEN total_price END), 0)::text AS total_earnings,
-				COALESCE(SUM(CASE WHEN status = 'COMPLETED' THEN driver_commission END), 0)::text AS total_commission,
+				COALESCE(SUM(CASE WHEN status = 'COMPLETED' THEN driver_earning END), 0)::text AS total_earnings,
+				COALESCE(SUM(CASE WHEN status = 'COMPLETED' THEN platform_commission END), 0)::text AS total_commission,
 				COUNT(CASE WHEN status = 'COMPLETED' THEN 1 END)::int AS completed_orders,
 				COUNT(CASE WHEN status LIKE 'CANCELLED%' THEN 1 END)::int AS cancelled_orders,
 				COALESCE(AVG(CASE WHEN driver_rating IS NOT NULL THEN driver_rating END), 0)::text AS average_rating
@@ -141,8 +141,8 @@ export class DriverStatsService {
 			SELECT
 				type,
 				COUNT(*)::int AS orders,
-				COALESCE(SUM(total_price), 0)::text AS earnings,
-				COALESCE(SUM(driver_commission), 0)::text AS commission
+				COALESCE(SUM(driver_earning), 0)::text AS earnings,
+				COALESCE(SUM(platform_commission), 0)::text AS commission
 			FROM am_orders
 			WHERE driver_id = ${driverId}
 				AND status = 'COMPLETED'
@@ -159,8 +159,8 @@ export class DriverStatsService {
 		return sql`
 			SELECT
 				TO_CHAR(DATE(requested_at), 'YYYY-MM-DD') AS date,
-				COALESCE(SUM(total_price), 0)::text AS earnings,
-				COALESCE(SUM(driver_commission), 0)::text AS commission,
+				COALESCE(SUM(driver_earning), 0)::text AS earnings,
+				COALESCE(SUM(platform_commission), 0)::text AS commission,
 				COUNT(*)::int AS orders
 			FROM am_orders
 			WHERE driver_id = ${driverId}

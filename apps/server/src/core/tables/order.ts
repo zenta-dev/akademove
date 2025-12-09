@@ -100,6 +100,10 @@ export const order = pgTable(
 		gender: userGender(),
 		genderPreference: text("gender_preference").$type<"SAME" | "ANY">(),
 
+		// Scheduled order fields
+		scheduledAt: timestamp("scheduled_at"),
+		scheduledMatchingAt: timestamp("scheduled_matching_at"),
+
 		// Proof of delivery fields
 		proofOfDeliveryUrl: text("proof_of_delivery_url"),
 		deliveryOtp: text("delivery_otp"),
@@ -129,6 +133,10 @@ export const order = pgTable(
 
 		// Coupon index for analytics
 		index("order_coupon_id_idx").on(t.couponId),
+
+		// Scheduled orders indexes
+		index("order_scheduled_at_idx").on(t.scheduledAt),
+		index("order_scheduled_status_idx").on(t.status, t.scheduledAt),
 	],
 );
 

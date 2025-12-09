@@ -55,8 +55,6 @@ class MerchantCardWidget extends StatelessWidget {
                 // Rating
                 _RatingWidget(rating: (merchant.rating).toDouble()),
                 SizedBox(width: 12.w),
-
-                
               ],
             ),
             SizedBox(height: 8.h),

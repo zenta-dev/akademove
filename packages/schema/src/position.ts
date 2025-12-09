@@ -21,6 +21,15 @@ export const CoordinateSchema = z.object({
 });
 export type Coordinate = z.infer<typeof CoordinateSchema>;
 
+// Coordinate with mock location metadata (for fraud detection)
+export const CoordinateWithMetaSchema = CoordinateSchema.extend({
+	isMockLocation: z
+		.boolean()
+		.optional()
+		.describe("Whether the location is from a mock provider (Android only)"),
+});
+export type CoordinateWithMeta = z.infer<typeof CoordinateWithMetaSchema>;
+
 export function toLocation(coord: Coordinate): Location {
 	return { lat: coord.y, lng: coord.x };
 }
@@ -31,4 +40,5 @@ export function toCoordinate(loc: Location): Coordinate {
 export const PositionSchemaRegistries = {
 	Location: { schema: LocationSchema, strategy: "output" },
 	Coordinate: { schema: CoordinateSchema, strategy: "output" },
+	CoordinateWithMeta: { schema: CoordinateWithMetaSchema, strategy: "input" },
 } satisfies SchemaRegistries;

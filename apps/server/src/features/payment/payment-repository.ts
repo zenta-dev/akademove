@@ -249,6 +249,12 @@ export class PaymentRepository extends BaseRepository {
 				});
 			}
 
+			if (!user.phone) {
+				throw new RepositoryError("User phone number is required for payment", {
+					code: "BAD_REQUEST",
+				});
+			}
+
 			// Convert phone to string format for payment gateway
 			const userForPayment = {
 				name: user.name,

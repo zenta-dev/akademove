@@ -46,7 +46,7 @@ class MerchantOrderCubit extends BaseCubit<MerchantOrderState> {
           try {
             final json = jsonDecode(msg.toString()) as Map<String, dynamic>;
             final envelope = OrderEnvelope.fromJson(json);
-            // Handle order update...
+            _handleOrderUpdate(envelope);
           } catch (e, st) {
             logger.e(
               '[MerchantOrderCubit] - Failed to parse WebSocket message',

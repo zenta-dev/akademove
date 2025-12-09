@@ -6,7 +6,8 @@ export interface DriverAnalyticsRecord {
 	type: string;
 	status: string;
 	total_price: string;
-	driver_commission: string;
+	platform_commission: string | null;
+	driver_earning: string | null;
 	driver_rating: string | null;
 	user_rating: string | null;
 	requested_at: string;
@@ -30,7 +31,7 @@ export interface OperatorAnalyticsRecord {
 	type: string;
 	status: string;
 	total_price: string;
-	driver_commission: string | null;
+	platform_commission: string | null;
 	merchant_commission: string | null;
 	driver_id: string | null;
 	driver_name: string | null;
@@ -98,11 +99,8 @@ export class AnalyticsExportService {
 				"Service Type": row.type,
 				Status: row.status,
 				"Total Price": row.total_price,
-				"Driver Commission": row.driver_commission,
-				"Net Earnings": AnalyticsExportService.calculateNetEarnings(
-					row.total_price,
-					row.driver_commission,
-				),
+				"Platform Commission": row.platform_commission ?? "0",
+				"Driver Earning": row.driver_earning ?? "0",
 				"Driver Rating": row.driver_rating ?? "N/A",
 				"User Rating": row.user_rating ?? "N/A",
 				"Requested At": row.requested_at,
@@ -160,10 +158,10 @@ export class AnalyticsExportService {
 				"Service Type": row.type,
 				Status: row.status,
 				"Total Price": row.total_price,
-				"Driver Commission": row.driver_commission ?? "0",
+				"Platform Commission": row.platform_commission ?? "0",
 				"Merchant Commission": row.merchant_commission ?? "0",
 				"Platform Revenue": AnalyticsExportService.calculatePlatformRevenue(
-					row.driver_commission,
+					row.platform_commission,
 					row.merchant_commission,
 				),
 				"Driver ID": row.driver_id ?? "N/A",
@@ -198,8 +196,8 @@ export class AnalyticsExportService {
 					"Service Type",
 					"Status",
 					"Total Price",
-					"Driver Commission",
-					"Net Earnings",
+					"Platform Commission",
+					"Driver Earning",
 					"Driver Rating",
 					"User Rating",
 					"Requested At",
@@ -274,7 +272,7 @@ export class AnalyticsExportService {
 					"Service Type",
 					"Status",
 					"Total Price",
-					"Driver Commission",
+					"Platform Commission",
 					"Merchant Commission",
 					"Platform Revenue",
 					"Driver ID",

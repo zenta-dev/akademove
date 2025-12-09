@@ -19,7 +19,6 @@ export type {
 export { SessionService } from "./session-service";
 
 export type {
-	PhoneNumber,
 	SignUpResult,
 	UserRegistrationDeps,
 } from "./user-registration-service";

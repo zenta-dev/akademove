@@ -1,5 +1,6 @@
 import { m } from "@repo/i18n";
 import { trimObjectValues } from "@repo/shared";
+import { AuthError } from "@/core/error";
 import { createORPCRouter } from "@/core/router/orpc";
 import { MerchantMenuSpec } from "./merchant-menu-spec";
 
@@ -32,6 +33,35 @@ export const MerchantMenuHandler = priv.router({
 		};
 	}),
 	create: priv.create.handler(async ({ context, input: { body, params } }) => {
+		// Only MERCHANT, ADMIN, and OPERATOR can create menu items
+		if (
+			context.user.role !== "MERCHANT" &&
+			context.user.role !== "ADMIN" &&
+			context.user.role !== "OPERATOR"
+		) {
+			throw new AuthError(
+				"Access denied: Only merchants can create menu items",
+				{
+					code: "FORBIDDEN",
+				},
+			);
+		}
+
+		// IDOR protection: Merchants can only create menu items for their own merchant
+		if (context.user.role === "MERCHANT") {
+			const merchant = await context.repo.merchant.main.getByUserId(
+				context.user.id,
+			);
+			if (merchant.id !== params.merchantId) {
+				throw new AuthError(
+					"Access denied: Cannot create menu items for other merchants",
+					{
+						code: "FORBIDDEN",
+					},
+				);
+			}
+		}
+
 		const data = trimObjectValues(body);
 		const result = await context.repo.merchant.menu.create({
 			...data,
@@ -44,6 +74,35 @@ export const MerchantMenuHandler = priv.router({
 		};
 	}),
 	update: priv.update.handler(async ({ context, input: { params, body } }) => {
+		// Only MERCHANT, ADMIN, and OPERATOR can update menu items
+		if (
+			context.user.role !== "MERCHANT" &&
+			context.user.role !== "ADMIN" &&
+			context.user.role !== "OPERATOR"
+		) {
+			throw new AuthError(
+				"Access denied: Only merchants can update menu items",
+				{
+					code: "FORBIDDEN",
+				},
+			);
+		}
+
+		// IDOR protection: Merchants can only update menu items for their own merchant
+		if (context.user.role === "MERCHANT") {
+			const merchant = await context.repo.merchant.main.getByUserId(
+				context.user.id,
+			);
+			if (merchant.id !== params.merchantId) {
+				throw new AuthError(
+					"Access denied: Cannot update menu items for other merchants",
+					{
+						code: "FORBIDDEN",
+					},
+				);
+			}
+		}
+
 		const data = trimObjectValues(body);
 		const result = await context.repo.merchant.menu.update(params.id, {
 			...data,
@@ -56,6 +115,36 @@ export const MerchantMenuHandler = priv.router({
 		};
 	}),
 	remove: priv.remove.handler(async ({ context, input: { params } }) => {
+		// Only MERCHANT, ADMIN, and OPERATOR can delete menu items
+		if (
+			context.user.role !== "MERCHANT" &&
+			context.user.role !== "ADMIN" &&
+			context.user.role !== "OPERATOR"
+		) {
+			throw new AuthError(
+				"Access denied: Only merchants can delete menu items",
+				{
+					code: "FORBIDDEN",
+				},
+			);
+		}
+
+		// IDOR protection: Merchants can only delete menu items for their own merchant
+		if (context.user.role === "MERCHANT") {
+			const menu = await context.repo.merchant.menu.get(params.id);
+			const merchant = await context.repo.merchant.main.getByUserId(
+				context.user.id,
+			);
+			if (menu.merchantId !== merchant.id) {
+				throw new AuthError(
+					"Access denied: Cannot delete menu items for other merchants",
+					{
+						code: "FORBIDDEN",
+					},
+				);
+			}
+		}
+
 		await context.repo.merchant.menu.remove(params.id);
 
 		return {

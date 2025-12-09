@@ -73,12 +73,15 @@ function RouteComponent() {
 
 	const mutation = useMutation(
 		orpcQuery.auth.signUpDriver.mutationOptions({
-			onSuccess: () => {
+			onSuccess: async (_data, variables) => {
 				toast.success(m.success_placeholder({ action: m.driver_sign_up() }), {
 					description: "Please check your email for verification code",
 				});
-				// Redirect to quiz route instead of sign-in
-				router.navigate({ to: "/quiz/driver" });
+				// Redirect to email verification first, then quiz
+				router.navigate({
+					to: localizeHref("/verify-email"),
+					search: { email: variables.body.email },
+				});
 			},
 			onError: (error) => {
 				toast.error(
@@ -590,6 +593,65 @@ function RouteComponent() {
 								)}
 							/>
 						</div>
+
+						{/* Bank Information Section */}
+						<div className="grid grid-cols-1 gap-6 rounded-lg border p-4 md:grid-cols-2">
+							<div className="space-y-2 md:col-span-2">
+								<p className="font-medium text-md">{m.bank_information()}</p>
+							</div>
+
+							<FormField
+								control={form.control}
+								name="detail_bank_provider"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>{m.bank_provider()}</FormLabel>
+										<Select
+											onValueChange={field.onChange}
+											defaultValue={field.value}
+										>
+											<FormControl>
+												<SelectTrigger>
+													<SelectValue
+														placeholder={m.select_your_bank_provider()}
+													/>
+												</SelectTrigger>
+											</FormControl>
+											<SelectContent>
+												<SelectItem value="BCA">BCA</SelectItem>
+												<SelectItem value="BNI">BNI</SelectItem>
+												<SelectItem value="BRI">BRI</SelectItem>
+												<SelectItem value="MANDIRI">Mandiri</SelectItem>
+												<SelectItem value="PERMATA">Permata</SelectItem>
+											</SelectContent>
+										</Select>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+
+							<FormField
+								control={form.control}
+								name="detail_bank_number"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>{m.withdraw_wallet_account_number()}</FormLabel>
+										<FormControl>
+											<Input
+												type="text"
+												placeholder={m.withdraw_wallet_account_number_placeholder()}
+												value={String(field.value || "")}
+												onChange={(e) =>
+													field.onChange(e.target.value.replace(/\D/g, ""))
+												}
+											/>
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+						</div>
+
 						<Button
 							type="submit"
 							className="w-full"

@@ -1,8 +1,10 @@
 import type { ExecutionContext } from "@cloudflare/workers-types";
+import Decimal from "decimal.js";
 import { and, eq, inArray, lte } from "drizzle-orm";
 import { getServices } from "@/core/factory";
 import { tables } from "@/core/services/db";
-import { log } from "@/utils";
+import { OrderRefundService } from "@/features/order/services/order-refund-service";
+import { log, toNumberSafe } from "@/utils";
 
 /**
  * Scheduled handler for order status checking and cleanup
@@ -44,6 +46,20 @@ export async function handleOrderCheckerCron(
 		for (const order of stuckMatchingOrders) {
 			try {
 				await svc.db.transaction(async (tx) => {
+					// Process full refund for system-cancelled orders
+					const refundAmount = new Decimal(order.totalPrice);
+					const penaltyAmount = new Decimal(0);
+
+					await OrderRefundService.processRefund(
+						order.id,
+						order.userId,
+						refundAmount,
+						penaltyAmount,
+						{ tx },
+						`Order cancelled due to timeout: no drivers available within ${MATCHING_TIMEOUT_MINUTES} minutes`,
+					);
+
+					// Update order status
 					await tx
 						.update(tables.order)
 						.set({
@@ -55,8 +71,12 @@ export async function handleOrderCheckerCron(
 				});
 
 				log.info(
-					{ orderId: order.id, userId: order.userId },
-					"[OrderCheckerCron] Cancelled stuck MATCHING order",
+					{
+						orderId: order.id,
+						userId: order.userId,
+						refundAmount: toNumberSafe(order.totalPrice),
+					},
+					"[OrderCheckerCron] Cancelled stuck MATCHING order and processed refund",
 				);
 				processedOrders++;
 			} catch (error) {
@@ -118,16 +138,41 @@ export async function handleOrderCheckerCron(
 		for (const order of noShowOrders) {
 			try {
 				await svc.db.transaction(async (tx) => {
-					// Process refund and finalize the order
-					// This would typically involve:
-					// 1. Processing refund through payment service
-					// 2. Updating order status to a final state
-					// 3. Notifying user and driver
+					// NO_SHOW orders should have already been processed with penalty logic
+					// by the WebSocket handler. This cron just ensures any stuck NO_SHOW orders
+					// are finalized and refunds are processed if not already done.
 
-					// For now, we'll just update the updatedAt timestamp
+					// Check if a refund has already been processed for this order
+					const existingRefund = await tx.query.transaction.findFirst({
+						where: (f, op) =>
+							op.and(op.eq(f.referenceId, order.id), op.eq(f.type, "REFUND")),
+					});
+
+					// If no refund exists yet, process partial refund (50% for NO_SHOW)
+					if (!existingRefund) {
+						const totalPrice = new Decimal(order.totalPrice);
+						// 50% refund for NO_SHOW per SRS penalty logic
+						const refundAmount = totalPrice.mul(0.5);
+						const penaltyAmount = totalPrice.sub(refundAmount);
+
+						await OrderRefundService.processRefund(
+							order.id,
+							order.userId,
+							refundAmount,
+							penaltyAmount,
+							{ tx },
+							`NO_SHOW penalty: 50% refund for order #${order.id.slice(0, 8)}`,
+						);
+					}
+
+					// Update order status to finalized
 					await tx
 						.update(tables.order)
-						.set({ updatedAt: now })
+						.set({
+							status: "CANCELLED_BY_SYSTEM",
+							cancelReason: "Order finalized after NO_SHOW timeout",
+							updatedAt: now,
+						})
 						.where(eq(tables.order.id, order.id));
 				});
 

@@ -73,6 +73,7 @@ const dummyMerchant = Merchant(
   operatingStatus: MerchantOperatingStatusEnum.MAINTENANCE,
   isTakingOrders: false,
   isOnline: false,
+  status: MerchantStatusEnum.ACTIVE,
   createdAt: dummyConstDateTime,
   updatedAt: dummyConstDateTime,
 );

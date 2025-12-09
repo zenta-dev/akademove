@@ -4,6 +4,7 @@ import { DashboardHeader } from "@/components/header/dashboard";
 import { SidebarChildren } from "@/components/sidebar/children";
 import { DriverSidebar } from "@/components/sidebar/driver";
 import { SidebarProvider } from "@/components/ui/sidebar";
+import { MyDriverProvider } from "@/providers/driver";
 
 export const Route = createFileRoute("/dash/driver")({
 	component: RouteComponent,
@@ -16,7 +17,9 @@ function RouteComponent() {
 				<DashboardHeader scope={m.driver()} />
 				<div className="flex flex-1">
 					<DriverSidebar />
-					<SidebarChildren />
+					<MyDriverProvider>
+						<SidebarChildren />
+					</MyDriverProvider>
 				</div>
 			</SidebarProvider>
 		</div>

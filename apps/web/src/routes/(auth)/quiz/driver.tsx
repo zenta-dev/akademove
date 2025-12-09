@@ -1,10 +1,10 @@
-import { m } from "@repo/i18n";
+import { localizeHref, m } from "@repo/i18n";
 import type {
 	DriverQuizAttempt,
 	DriverQuizResult,
 } from "@repo/schema/driver-quiz-answer";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import {
 	AlertCircle,
 	ArrowRight,
@@ -30,6 +30,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { getSession } from "@/lib/actions";
 import { SUB_ROUTE_TITLES } from "@/lib/constants";
 import { orpcQuery, queryClient } from "@/lib/orpc";
 import { cn } from "@/utils/cn";
@@ -39,6 +40,17 @@ export const Route = createFileRoute("/(auth)/quiz/driver")({
 		meta: [{ title: SUB_ROUTE_TITLES.DRIVER.QUIZ ?? "Driver Quiz" }],
 	}),
 	beforeLoad: async () => {
+		// Check if user is authenticated and is a driver
+		const session = await getSession();
+		if (!session || session.role !== "DRIVER") {
+			throw redirect({ to: localizeHref("/sign-in"), throw: true });
+		}
+
+		// Check if email is verified
+		if (!session.emailVerified) {
+			throw redirect({ to: localizeHref("/verify-email"), throw: true });
+		}
+
 		return { allowed: true };
 	},
 	component: RouteComponent,

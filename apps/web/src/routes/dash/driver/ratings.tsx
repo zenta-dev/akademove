@@ -39,7 +39,7 @@ export const Route = createFileRoute("/dash/driver/ratings")({
 		try {
 			const driverResult = await orpcClient.driver.getMine();
 			if (driverResult.body.data.quizStatus !== "PASSED") {
-				redirect({ to: "/sign-up/driver/quiz", throw: true });
+				redirect({ to: "/quiz/driver", throw: true });
 			}
 		} catch (error) {
 			console.error("Failed to check quiz status:", error);

@@ -28,9 +28,7 @@ export const ToggleQuizQuestionActiveDialog = ({
 	const toggleMutation = useMutation(
 		orpcQuery.driverQuizQuestion.update.mutationOptions({
 			onSuccess: async () => {
-				await queryClient.invalidateQueries({
-					queryKey: ["driverQuizQuestion"],
-				});
+				await queryClient.invalidateQueries();
 				toast.success(m.server_driver_quiz_question_updated());
 				setOpen(false);
 			},

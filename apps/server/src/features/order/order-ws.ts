@@ -218,28 +218,28 @@ export class OrderRoom extends BaseDurableObject {
 				try {
 					const { transaction } = findPayment;
 					const wallet = transaction.wallet;
-					const safeCurrentBalance = new Decimal(wallet.balance);
-					const safeAmount = new Decimal(updatedOrder.totalPrice);
-					const safeNewBalance = safeCurrentBalance.plus(safeAmount);
+					const refundAmount = updatedOrder.totalPrice;
 
-					const [updatedTransaction, updatedPayment, _] = await Promise.all([
+					// Use atomic balance add service for refund
+					const { balanceBefore, balanceAfter } =
+						await this.#svc.walletServices.balance.add(
+							{ walletId: wallet.id, amount: refundAmount },
+							{ tx: opts.tx },
+						);
+
+					const [updatedTransaction, updatedPayment] = await Promise.all([
 						this.#repo.transaction.update(
 							transaction.id,
 							{
 								status: "REFUNDED",
-								balanceBefore: toNumberSafe(safeCurrentBalance),
-								balanceAfter: toNumberSafe(safeNewBalance),
+								balanceBefore,
+								balanceAfter,
 							},
 							opts,
 						),
 						this.#repo.payment.update(
 							findPayment.id,
 							{ status: "REFUNDED" },
-							opts,
-						),
-						this.#repo.wallet.update(
-							wallet.id,
-							{ balance: toNumberSafe(safeNewBalance) },
 							opts,
 						),
 					]);
@@ -256,7 +256,7 @@ export class OrderRoom extends BaseDurableObject {
 						{
 							orderId: updatedOrder.id,
 							userId: wallet.userId,
-							refundAmount: toNumberSafe(safeAmount),
+							refundAmount,
 						},
 						"[OrderRoom] Refund processed successfully",
 					);
@@ -345,6 +345,86 @@ export class OrderRoom extends BaseDurableObject {
 		const userId = detail.order.userId;
 		const orderId = detail.order.id;
 
+		const driverId = this.findUserIdBySocket(ws);
+		if (!driverId) return;
+
+		const opts = { tx };
+
+		// Use SELECT FOR UPDATE to prevent race condition when multiple drivers accept
+		// This locks the order row until the transaction completes
+		const lockedOrder = await tx.query.order.findFirst({
+			where: (f, op) => op.eq(f.id, orderId),
+			// Note: Drizzle doesn't have built-in FOR UPDATE, so we use raw SQL
+		});
+
+		// Execute raw SQL for row-level locking
+		await tx.execute(
+			`SELECT * FROM "order" WHERE id = '${orderId}' FOR UPDATE NOWAIT`,
+		);
+
+		// Check if order is still available (not already accepted by another driver)
+		if (
+			lockedOrder?.status !== "MATCHING" &&
+			lockedOrder?.status !== "REQUESTED"
+		) {
+			log.warn(
+				{ orderId, currentStatus: lockedOrder?.status, driverId },
+				"[OrderRoom] Order already accepted by another driver",
+			);
+
+			// Notify this driver that the order is no longer available
+			const unavailablePayload: OrderEnvelope = {
+				e: "UNAVAILABLE",
+				f: "s",
+				t: "c",
+				tg: "DRIVER",
+				p: { cancelReason: "Order already accepted by another driver" },
+			};
+			ws.send(JSON.stringify(unavailablePayload));
+			return;
+		}
+
+		// For FOOD orders, validate stock availability before accepting
+		// This prevents accepting orders for out-of-stock items
+		if (lockedOrder?.type === "FOOD") {
+			try {
+				const { OrderValidationService } = await import(
+					"@/features/order/services/order-validation-service"
+				);
+				await OrderValidationService.validateStockAvailability(orderId, tx);
+			} catch (stockError) {
+				log.warn(
+					{ orderId, driverId, error: stockError },
+					"[OrderRoom] FOOD order rejected due to insufficient stock",
+				);
+
+				// Notify driver that order cannot be accepted due to stock issues
+				const stockErrorPayload: OrderEnvelope = {
+					e: "UNAVAILABLE",
+					f: "s",
+					t: "c",
+					tg: "DRIVER",
+					p: {
+						cancelReason:
+							stockError instanceof Error
+								? stockError.message
+								: "Some items are out of stock",
+					},
+				};
+				ws.send(JSON.stringify(stockErrorPayload));
+				return;
+			}
+		}
+
+		// Now safe to update - we have the lock
+		const [updatedOrder, updatedDriver] = await Promise.all([
+			this.#repo.order.update(orderId, { status: "ACCEPTED", driverId }, opts),
+			// FIX: Move driver update inside transaction to ensure atomicity
+			this.#repo.driver.main.update(driverId, { isTakingOrder: true }, opts),
+		]);
+		detail.order = updatedOrder;
+
+		// Notify other drivers that the order is no longer available
 		const broadcastedDrivers = this.#broadcasted.get(orderId);
 
 		if (broadcastedDrivers) {
@@ -368,16 +448,6 @@ export class OrderRoom extends BaseDurableObject {
 
 			this.#broadcasted.delete(orderId);
 		}
-
-		const driverId = this.findUserIdBySocket(ws);
-		if (!driverId) return;
-
-		const opts = { tx };
-		const [updatedOrder, updatedDriver] = await Promise.all([
-			this.#repo.order.update(orderId, { status: "ACCEPTED", driverId }, opts),
-			this.#repo.driver.main.update(driverId, { isTakingOrder: true }),
-		]);
-		detail.order = updatedOrder;
 
 		const userWs = this.findById(userId);
 
@@ -565,13 +635,13 @@ export class OrderRoom extends BaseDurableObject {
 			}),
 		]);
 
-		// Update driver wallet balance
-		await this.#repo.wallet.update(
-			driverwallet.id,
+		// Update driver wallet balance atomically
+		await this.#svc.walletServices.balance.add(
 			{
-				balance: driverwallet.balance + toNumberSafe(driverEarning.toString()),
+				walletId: driverwallet.id,
+				amount: toNumberSafe(driverEarning.toString()),
 			},
-			opts,
+			{ tx: opts.tx },
 		);
 
 		// Award badges to driver after order completion
@@ -983,11 +1053,22 @@ export class OrderRoom extends BaseDurableObject {
 				);
 
 				if (userWallet && payment) {
-					const safeUserBalance = new Decimal(userWallet.balance);
-					const safeNewUserBalance = safeUserBalance.plus(refundAmount);
-					const safeDriverBalance = new Decimal(driverWallet.balance);
-					const safeNewDriverBalance =
-						safeDriverBalance.plus(driverCompensation);
+					// Perform atomic balance updates first and get balance info
+					const [userBalanceResult, driverBalanceResult] = await Promise.all([
+						// Refund partial amount to user wallet (50%) - atomic
+						this.#svc.walletServices.balance.add(
+							{ walletId: userWallet.id, amount: toNumberSafe(refundAmount) },
+							{ tx: opts.tx },
+						),
+						// Credit driver wallet with compensation - atomic
+						this.#svc.walletServices.balance.add(
+							{
+								walletId: driverWallet.id,
+								amount: toNumberSafe(driverCompensation),
+							},
+							{ tx: opts.tx },
+						),
+					]);
 
 					await Promise.all([
 						// Update user transaction as partial refund
@@ -995,19 +1076,13 @@ export class OrderRoom extends BaseDurableObject {
 							paymentTransaction.id,
 							{
 								status: "REFUNDED",
-								balanceBefore: toNumberSafe(safeUserBalance),
-								balanceAfter: toNumberSafe(safeNewUserBalance),
+								balanceBefore: userBalanceResult.balanceBefore,
+								balanceAfter: userBalanceResult.balanceAfter,
 							},
 							opts,
 						),
 						// Update payment status
 						this.#repo.payment.update(payment.id, { status: "REFUNDED" }, opts),
-						// Refund partial amount to user wallet (50%)
-						this.#repo.wallet.update(
-							userWallet.id,
-							{ balance: toNumberSafe(safeNewUserBalance) },
-							opts,
-						),
 						// Create penalty transaction for audit trail
 						this.#repo.transaction.insert(
 							{
@@ -1025,20 +1100,14 @@ export class OrderRoom extends BaseDurableObject {
 							},
 							opts,
 						),
-						// Credit driver wallet with compensation
-						this.#repo.wallet.update(
-							driverWallet.id,
-							{ balance: toNumberSafe(safeNewDriverBalance) },
-							opts,
-						),
 						// Create earning transaction for driver
 						this.#repo.transaction.insert(
 							{
 								walletId: driverWallet.id,
 								type: "EARNING",
 								amount: toNumberSafe(driverCompensation),
-								balanceBefore: toNumberSafe(safeDriverBalance),
-								balanceAfter: toNumberSafe(safeNewDriverBalance),
+								balanceBefore: driverBalanceResult.balanceBefore,
+								balanceAfter: driverBalanceResult.balanceAfter,
 								status: "SUCCESS",
 								description: `No-show compensation for order #${orderId.slice(0, 8)}`,
 								referenceId: orderId,

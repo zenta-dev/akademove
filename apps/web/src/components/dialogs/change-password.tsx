@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { m } from "@repo/i18n";
-import { AdminUpdateUserPasswordSchema } from "@repo/schema/user";
+import { UpdateUserPasswordSchema } from "@repo/schema/user";
 import { capitalizeFirstLetter } from "@repo/shared";
 import { useMutation } from "@tanstack/react-query";
 import { KeyRound } from "lucide-react";
@@ -38,7 +38,7 @@ export const ChangePasswordDialog = ({
 	asChild,
 }: ChangePasswordDialogProps) => {
 	const form = useForm({
-		resolver: zodResolver(AdminUpdateUserPasswordSchema),
+		resolver: zodResolver(UpdateUserPasswordSchema),
 		defaultValues: {
 			oldPassword: "",
 			newPassword: "",
@@ -49,9 +49,7 @@ export const ChangePasswordDialog = ({
 	const mutation = useMutation(
 		orpcQuery.user.me.changePassword.mutationOptions({
 			onSuccess: async () => {
-				await queryClient.invalidateQueries({
-					queryKey: orpcQuery.auth.getSession.queryKey(),
-				});
+				await queryClient.invalidateQueries();
 				toast.success(
 					m.success_placeholder({
 						action: capitalizeFirstLetter(
@@ -78,7 +76,7 @@ export const ChangePasswordDialog = ({
 
 	const onSubmit = useCallback(
 		async (values: unknown) => {
-			const parsed = AdminUpdateUserPasswordSchema.safeParse(values);
+			const parsed = UpdateUserPasswordSchema.safeParse(values);
 			if (parsed.success) {
 				await mutation.mutateAsync({ body: parsed.data });
 			}

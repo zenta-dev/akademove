@@ -279,9 +279,11 @@ function EditUserProfile({
 	const mutation = useMutation(
 		orpcQuery.user.me.update.mutationOptions({
 			onSuccess: async () => {
-				await queryClient.invalidateQueries({
-					queryKey: orpcQuery.auth.getSession.queryKey({}),
-				});
+				await queryClient.invalidateQueries(
+					// 	{
+					// 	queryKey: orpcQuery.auth.getSession.queryKey({}),
+					// }
+				);
 				toast.success(
 					m.success_placeholder({
 						action: capitalizeFirstLetter(m.update_profile().toLowerCase()),

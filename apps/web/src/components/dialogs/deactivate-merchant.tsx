@@ -46,7 +46,7 @@ export const DeactivateMerchantDialog = ({
 	const [isLoading, setIsLoading] = useState(false);
 	const queryClient = useQueryClient();
 
-	const form = useForm<DeactivateFormData>({
+	const form = useForm({
 		resolver: zodResolver(deactivateSchema),
 		defaultValues: {
 			reason: "",
@@ -62,7 +62,7 @@ export const DeactivateMerchantDialog = ({
 			});
 			if (result.status === 200) {
 				toast.success(m.server_merchant_deactivated());
-				queryClient.invalidateQueries({ queryKey: ["merchants"] });
+				queryClient.invalidateQueries();
 				form.reset();
 				onOpenChange(false);
 			} else {

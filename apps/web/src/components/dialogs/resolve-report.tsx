@@ -46,7 +46,7 @@ export const ResolveReportDialog = ({
 	const [isLoading, setIsLoading] = useState(false);
 	const queryClient = useQueryClient();
 
-	const form = useForm<ResolveFormData>({
+	const form = useForm({
 		resolver: zodResolver(resolveSchema),
 		defaultValues: {
 			resolution: "",
@@ -62,7 +62,7 @@ export const ResolveReportDialog = ({
 			});
 			if (result.status === 200) {
 				toast.success(m.server_report_resolved());
-				queryClient.invalidateQueries({ queryKey: ["reports"] });
+				queryClient.invalidateQueries();
 				form.reset();
 				onOpenChange(false);
 			} else {

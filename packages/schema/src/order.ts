@@ -92,6 +92,10 @@ export const OrderSchema = z.object({
 	gender: UserGenderSchema.optional(),
 	genderPreference: GenderPreferenceSchema.optional(),
 
+	// Scheduled order fields
+	scheduledAt: DateSchema.optional(),
+	scheduledMatchingAt: DateSchema.optional(),
+
 	// Proof of delivery
 	proofOfDeliveryUrl: z.string().url().optional(),
 	deliveryOtp: z.string().length(6).optional(),
@@ -123,7 +127,7 @@ export const PlaceOrderSchema = OrderSchema.pick({
 	type: true,
 	items: true,
 	gender: true,
-}).extend({
+}).safeExtend({
 	couponCode: z.string().optional(),
 	payment: z.object({
 		method: PaymentMethodSchema,
@@ -146,6 +150,33 @@ export const PlaceOrderResponseSchema = z.object({
 });
 export type PlaceOrderResponse = z.infer<typeof PlaceOrderResponseSchema>;
 
+// Scheduled order schemas
+export const PlaceScheduledOrderSchema = PlaceOrderSchema.safeExtend({
+	scheduledAt: z.coerce.date(),
+});
+export type PlaceScheduledOrder = z.infer<typeof PlaceScheduledOrderSchema>;
+
+export const PlaceScheduledOrderResponseSchema = z.object({
+	order: OrderSchema,
+	payment: PaymentSchema,
+	transaction: TransactionSchema,
+	autoAppliedCoupon: z
+		.object({
+			code: z.string(),
+			discountAmount: z.number(),
+		})
+		.optional(),
+});
+export type PlaceScheduledOrderResponse = z.infer<
+	typeof PlaceScheduledOrderResponseSchema
+>;
+
+export const UpdateScheduledOrderSchema = z.object({
+	scheduledAt: z.coerce.date().optional(),
+	cancelReason: z.string().optional(),
+});
+export type UpdateScheduledOrder = z.infer<typeof UpdateScheduledOrderSchema>;
+
 export const UpdateOrderSchema = OrderSchema.omit({
 	id: true,
 	userId: true,
@@ -164,7 +195,7 @@ export type UpdateOrder = z.infer<typeof UpdateOrderSchema>;
 
 export const EstimateOrderSchema = PlaceOrderSchema.omit({
 	payment: true,
-}).extend({
+}).safeExtend({
 	discountIds: z.array(z.coerce.number()).optional(),
 	weight: z.number().positive().max(20).optional(),
 });
@@ -181,6 +212,15 @@ export const OrderSchemaRegistries = {
 	OrderSummary: { schema: OrderSummarySchema, strategy: "output" },
 	PlaceOrder: { schema: PlaceOrderSchema, strategy: "input" },
 	PlaceOrderResponse: { schema: PlaceOrderResponseSchema, strategy: "input" },
+	PlaceScheduledOrder: { schema: PlaceScheduledOrderSchema, strategy: "input" },
+	PlaceScheduledOrderResponse: {
+		schema: PlaceScheduledOrderResponseSchema,
+		strategy: "input",
+	},
+	UpdateScheduledOrder: {
+		schema: UpdateScheduledOrderSchema,
+		strategy: "input",
+	},
 	UpdateOrder: { schema: UpdateOrderSchema, strategy: "input" },
 	EstimateOrder: { schema: EstimateOrderSchema, strategy: "input" },
 	OrderKey: { schema: OrderKeySchema, strategy: "input" },

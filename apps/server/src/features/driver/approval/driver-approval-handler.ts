@@ -1,12 +1,24 @@
 import { m } from "@repo/i18n";
 import { trimObjectValues } from "@repo/shared";
+import { AuthError } from "@/core/error";
 import { createORPCRouter } from "@/core/router/orpc";
+import { log } from "@/utils";
 import { DriverApprovalSpec } from "./driver-approval-spec";
 
 const { priv } = createORPCRouter(DriverApprovalSpec);
 
 export const DriverApprovalHandler = priv.router({
 	getReview: priv.getReview.handler(async ({ context, input: { params } }) => {
+		// Only ADMIN and OPERATOR can view driver approval reviews
+		if (context.user.role !== "ADMIN" && context.user.role !== "OPERATOR") {
+			throw new AuthError(
+				"Access denied: Only admins and operators can view approval reviews",
+				{
+					code: "FORBIDDEN",
+				},
+			);
+		}
+
 		const result = await context.repo.driver.approval.getReview(params.id);
 
 		return {
@@ -20,6 +32,16 @@ export const DriverApprovalHandler = priv.router({
 
 	updateDocumentStatus: priv.updateDocumentStatus.handler(
 		async ({ context, input: { params, body } }) => {
+			// Only ADMIN and OPERATOR can update document status
+			if (context.user.role !== "ADMIN" && context.user.role !== "OPERATOR") {
+				throw new AuthError(
+					"Access denied: Only admins and operators can update document status",
+					{
+						code: "FORBIDDEN",
+					},
+				);
+			}
+
 			const data = trimObjectValues(body);
 			const result = await context.repo.driver.approval.updateDocumentStatus(
 				params.id,
@@ -41,6 +63,16 @@ export const DriverApprovalHandler = priv.router({
 
 	verifyQuiz: priv.verifyQuiz.handler(
 		async ({ context, input: { params, body } }) => {
+			// Only ADMIN and OPERATOR can verify quiz
+			if (context.user.role !== "ADMIN" && context.user.role !== "OPERATOR") {
+				throw new AuthError(
+					"Access denied: Only admins and operators can verify quiz",
+					{
+						code: "FORBIDDEN",
+					},
+				);
+			}
+
 			const result = await context.repo.driver.approval.verifyQuiz(
 				params.id,
 				body.quizVerified,
@@ -59,6 +91,16 @@ export const DriverApprovalHandler = priv.router({
 
 	submitApproval: priv.submitApproval.handler(
 		async ({ context, input: { params, body } }) => {
+			// Only ADMIN and OPERATOR can approve drivers
+			if (context.user.role !== "ADMIN" && context.user.role !== "OPERATOR") {
+				throw new AuthError(
+					"Access denied: Only admins and operators can approve drivers",
+					{
+						code: "FORBIDDEN",
+					},
+				);
+			}
+
 			const data = trimObjectValues(body);
 
 			// Start transaction for approval
@@ -76,14 +118,14 @@ export const DriverApprovalHandler = priv.router({
 				// Send approval email
 				try {
 					await context.svc.mail.sendDriverApprovalStatus({
-						to: driver.user?.email || "",
-						driverName: driver.user?.name || "Driver",
+						to: driver.user?.email ?? "",
+						driverName: driver.user?.name ?? "Driver",
 						status: "APPROVED",
 					});
 				} catch (error) {
-					console.error(
-						"[DriverApprovalHandler] Failed to send approval email:",
-						error,
+					log.error(
+						{ error, driverId: params.id },
+						"[DriverApprovalHandler] Failed to send approval email",
 					);
 					// Don't fail the request if email fails
 				}
@@ -103,6 +145,16 @@ export const DriverApprovalHandler = priv.router({
 
 	submitRejection: priv.submitRejection.handler(
 		async ({ context, input: { params, body } }) => {
+			// Only ADMIN and OPERATOR can reject drivers
+			if (context.user.role !== "ADMIN" && context.user.role !== "OPERATOR") {
+				throw new AuthError(
+					"Access denied: Only admins and operators can reject drivers",
+					{
+						code: "FORBIDDEN",
+					},
+				);
+			}
+
 			const data = trimObjectValues(body);
 
 			// Start transaction for rejection
@@ -143,16 +195,16 @@ export const DriverApprovalHandler = priv.router({
 				// Send rejection email
 				try {
 					await context.svc.mail.sendDriverApprovalStatus({
-						to: driver.user?.email || "",
-						driverName: driver.user?.name || "Driver",
+						to: driver.user?.email ?? "",
+						driverName: driver.user?.name ?? "Driver",
 						status: "REJECTED",
 						reason: data.reason,
 						rejectionDetails,
 					});
 				} catch (error) {
-					console.error(
-						"[DriverApprovalHandler] Failed to send rejection email:",
-						error,
+					log.error(
+						{ error, driverId: params.id },
+						"[DriverApprovalHandler] Failed to send rejection email",
 					);
 					// Don't fail the request if email fails
 				}

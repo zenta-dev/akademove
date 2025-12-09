@@ -6,7 +6,7 @@ import {
 	DRIVER_QUIZ_QUESTION_TYPES,
 } from "./constants.js";
 import { extractSchemaKeysAsEnum } from "./enum.helper.js";
-import { UnifiedPaginationQuerySchema } from "./pagination.ts";
+import { UnifiedPaginationQuerySchema } from "./pagination.js";
 
 export const DriverQuizQuestionTypeSchema = z.enum(DRIVER_QUIZ_QUESTION_TYPES);
 export type DriverQuizQuestionType = z.infer<

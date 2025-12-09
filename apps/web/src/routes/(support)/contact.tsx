@@ -41,7 +41,7 @@ export const Route = createFileRoute("/(support)/contact")({
 function ContactComponent() {
 	const [submitted, setSubmitted] = useState(false);
 
-	const form = useForm<InsertContact>({
+	const form = useForm({
 		resolver: zodResolver(InsertContactSchema),
 		defaultValues: {
 			name: "",

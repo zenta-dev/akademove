@@ -59,17 +59,17 @@ export type UpdatePayment = z.infer<typeof UpdatePaymentSchema>;
 export const TopUpRequestSchema = PaymentSchema.pick({
 	amount: true,
 	provider: true,
-}).extend({ method: PaymentMethodSchema.exclude(["wallet"]) });
+}).safeExtend({ method: PaymentMethodSchema.exclude(["wallet"]) });
 export type TopUpRequest = z.infer<typeof TopUpRequestSchema>;
 
 export const PayRequestSchema = PaymentSchema.pick({
 	amount: true,
-}).extend({ referenceId: z.string().optional() });
+}).safeExtend({ referenceId: z.string().optional() });
 export type PayRequest = z.infer<typeof PayRequestSchema>;
 
 export const TransferRequestSchema = PaymentSchema.pick({
 	amount: true,
-}).extend({ walletId: z.uuid() });
+}).safeExtend({ walletId: z.uuid() });
 export type TransferRequest = z.infer<typeof TransferRequestSchema>;
 
 export const WithdrawRequestSchema = z.object({

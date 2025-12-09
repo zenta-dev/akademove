@@ -91,6 +91,8 @@ export class AuditService {
 				return tables.couponAuditLog;
 			case "contact":
 				return tables.contactAuditLog;
+			case "fraud_event":
+				return tables.fraudEventAuditLog;
 			case "report":
 				return tables.reportAuditLog;
 			case "user":

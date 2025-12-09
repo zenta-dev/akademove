@@ -136,22 +136,22 @@ export function hasRoles(userRole?: UserRole, ...roles: RoleAccess[]) {
 	return hasRole;
 }
 
-export const requireRoles = (..._roles: RoleAccess[]) =>
-	base.middleware(async ({ next }) => {
-		// const userRole = context.user?.role;
-		// if (!userRole) {
-		// 	throw new AuthError("Invalid session", {
-		// 		code: "UNAUTHORIZED",
-		// 	});
-		// }
+export const requireRoles = (...roles: RoleAccess[]) =>
+	base.middleware(async ({ context, next }) => {
+		const userRole = context.user?.role;
+		if (!userRole) {
+			throw new AuthError("Invalid session", {
+				code: "UNAUTHORIZED",
+			});
+		}
 
-		// const hasRole = hasRoles(userRole, ...roles);
+		const hasRole = hasRoles(userRole, ...roles);
 
-		// if (!hasRole) {
-		// 	throw new AuthError("Access denied: Missing required role", {
-		// 		code: "UNAUTHORIZED",
-		// 	});
-		// }
+		if (!hasRole) {
+			throw new AuthError("Access denied: Missing required role", {
+				code: "FORBIDDEN",
+			});
+		}
 
 		return next();
 	});

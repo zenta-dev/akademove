@@ -153,40 +153,46 @@ class DriverOrderCubit extends BaseCubit<DriverOrderState> {
   }
 
   /// Upload delivery proof photo (for high-value orders > 100k IDR)
-  Future<void> uploadDeliveryProof(String imagePath) async =>
-      await taskManager.execute('DOC-uDP-$imagePath', () async {
-        final orderId = _currentOrderId;
-        if (orderId == null) {
-          logger.w('[DriverOrderCubit] - No current order to upload proof for');
-          return;
-        }
+  Future<void> uploadDeliveryProof(
+    String imagePath,
+  ) async => await taskManager.execute('DOC-uDP-$imagePath', () async {
+    final orderId = _currentOrderId;
+    if (orderId == null) {
+      logger.w('[DriverOrderCubit] - No current order to upload proof for');
+      return;
+    }
 
-        try {
-          emit(state.toLoading());
+    try {
+      emit(state.toLoading());
 
-          final res = await _orderRepository.uploadDeliveryProof(
-            orderId,
-            imagePath,
-          );
+      final res = await _orderRepository.uploadDeliveryProof(
+        orderId,
+        imagePath,
+      );
 
-          emit(
-            state.toSuccess(
-              currentOrder: res.data,
-              orderStatus: res.data.status,
-              message: res.message,
-            ),
-          );
+      // res.data is the uploaded proof URL (String), not an Order
+      // Keep the current order state and just update with success message
+      final currentOrder = state.currentOrder;
+      emit(
+        state.toSuccess(
+          currentOrder: currentOrder,
+          orderStatus: currentOrder?.status,
+          message: res.message,
+        ),
+      );
 
-          logger.i('[DriverOrderCubit] - Delivery proof uploaded successfully');
-        } on BaseError catch (e, st) {
-          logger.e(
-            '[DriverOrderCubit] - Error uploading delivery proof: ${e.message}',
-            error: e,
-            stackTrace: st,
-          );
-          emit(state.toFailure(e));
-        }
-      });
+      logger.i(
+        '[DriverOrderCubit] - Delivery proof uploaded successfully: ${res.data}',
+      );
+    } on BaseError catch (e, st) {
+      logger.e(
+        '[DriverOrderCubit] - Error uploading delivery proof: ${e.message}',
+        error: e,
+        stackTrace: st,
+      );
+      emit(state.toFailure(e));
+    }
+  });
 
   void _startLocationTracking() {
     _locationUpdateTimer?.cancel();
@@ -223,14 +229,18 @@ class DriverOrderCubit extends BaseCubit<DriverOrderState> {
 
       final driverRes = await _driverRepository.getMine();
 
-      // Update location on server
+      // Update location on server with mock location flag
       await _driverRepository.updateLocation(
         driverId: driverRes.data.id,
-        location: Coordinate(x: position.longitude, y: position.latitude),
+        location: CoordinateWithMeta(
+          x: position.longitude,
+          y: position.latitude,
+          isMockLocation: position.isMocked,
+        ),
       );
 
       logger.d(
-        '[DriverOrderCubit] - Location updated: ${position.latitude}, ${position.longitude}',
+        '[DriverOrderCubit] - Location updated: ${position.latitude}, ${position.longitude}, isMock: ${position.isMocked}',
       );
     } catch (e, st) {
       logger.e(

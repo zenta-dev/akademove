@@ -165,15 +165,17 @@ function ViewUserProfile({ user }: { user: User }) {
 							<p className="font-medium">{user.email}</p>
 						</div>
 					</div>
-					<div className="flex items-center gap-3">
-						<Phone className="h-5 w-5 text-muted-foreground" />
-						<div>
-							<p className="text-muted-foreground text-sm">{m.phone()}</p>
-							<p className="font-medium">
-								+{user.phone.countryCode} {user.phone.number}
-							</p>
+					{user.phone && (
+						<div className="flex items-center gap-3">
+							<Phone className="h-5 w-5 text-muted-foreground" />
+							<div>
+								<p className="text-muted-foreground text-sm">{m.phone()}</p>
+								<p className="font-medium">
+									+{user.phone.countryCode} {user.phone.number}
+								</p>
+							</div>
 						</div>
-					</div>
+					)}
 					{user.gender && (
 						<div>
 							<p className="text-muted-foreground text-sm">Gender</p>
@@ -279,9 +281,11 @@ function EditUserProfile({
 	const mutation = useMutation(
 		orpcQuery.user.me.update.mutationOptions({
 			onSuccess: async () => {
-				await queryClient.invalidateQueries({
-					queryKey: orpcQuery.auth.getSession.queryKey({}),
-				});
+				await queryClient.invalidateQueries(
+					// 	{
+					// 	queryKey: orpcQuery.auth.getSession.queryKey({}),
+					// }
+				);
 				toast.success(
 					m.success_placeholder({
 						action: capitalizeFirstLetter(m.update_profile().toLowerCase()),

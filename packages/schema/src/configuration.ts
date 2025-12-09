@@ -4,24 +4,23 @@ import { DateSchema, type SchemaRegistries } from "./common.js";
 import { extractSchemaKeysAsEnum } from "./enum.helper.js";
 
 const _BasePricingConfigurationSchema = z.object({
-	baseFare: z.coerce.number().positive(),
-	perKmRate: z.coerce.number().positive(),
-	minimumFare: z.coerce.number().positive(),
-	platformFeeRate: z.coerce.number().positive(),
-	taxRate: z.coerce.number().positive(),
+	baseFare: z.coerce.number<number>().positive(),
+	perKmRate: z.coerce.number<number>().positive(),
+	minimumFare: z.coerce.number<number>().positive(),
+	platformFeeRate: z.coerce.number<number>().positive(),
+	taxRate: z.coerce.number<number>().positive(),
 });
 export type BasePricingConfiguration = z.infer<
 	typeof _BasePricingConfigurationSchema
 >;
 
-export const RidePricingConfigurationSchema =
-	_BasePricingConfigurationSchema.extend({});
+export const RidePricingConfigurationSchema = _BasePricingConfigurationSchema;
 export type RidePricingConfiguration = z.infer<
 	typeof RidePricingConfigurationSchema
 >;
 
 export const DeliveryPricingConfigurationSchema =
-	_BasePricingConfigurationSchema.extend({
+	_BasePricingConfigurationSchema.safeExtend({
 		perKgRate: z.coerce.number().positive(),
 	});
 export type DeliveryPricingConfiguration = z.infer<
@@ -29,7 +28,7 @@ export type DeliveryPricingConfiguration = z.infer<
 >;
 
 export const FoodPricingConfigurationSchema =
-	_BasePricingConfigurationSchema.extend({
+	_BasePricingConfigurationSchema.safeExtend({
 		merchantCommissionRate: z.coerce.number().min(0).max(1),
 	});
 export type FoodPricingConfiguration = z.infer<

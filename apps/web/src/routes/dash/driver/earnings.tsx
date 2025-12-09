@@ -65,7 +65,7 @@ export const Route = createFileRoute("/dash/driver/earnings")({
 		try {
 			const driverResult = await orpcClient.driver.getMine();
 			if (driverResult.body.data.quizStatus !== "PASSED") {
-				redirect({ to: "/sign-up/driver/quiz", throw: true });
+				redirect({ to: "/quiz/driver", throw: true });
 			}
 		} catch (error) {
 			console.error("Failed to check quiz status:", error);
@@ -591,7 +591,7 @@ function RouteComponent() {
 						</CardHeader>
 						<CardContent>
 							{!analytics?.body.data.topEarningDays ||
-							analytics.topEarningDays.length === 0 ? (
+							analytics.body.data.topEarningDays.length === 0 ? (
 								<div className="flex flex-col items-center justify-center py-12 text-center">
 									<Calendar className="mb-4 h-12 w-12 text-muted-foreground" />
 									<h3 className="mb-2 font-semibold text-lg">No data yet</h3>
@@ -610,35 +610,40 @@ function RouteComponent() {
 										</TableRow>
 									</TableHeader>
 									<TableBody>
-										{analytics.topEarningDays.map((day, index) => (
-											<TableRow key={day.date}>
-												<TableCell>
-													<div className="flex items-center gap-2">
-														{index === 0 && (
-															<span className="text-2xl">🥇</span>
-														)}
-														{index === 1 && (
-															<span className="text-2xl">🥈</span>
-														)}
-														{index === 2 && (
-															<span className="text-2xl">🥉</span>
-														)}
-														{index > 2 && (
-															<span className="font-medium">{index + 1}</span>
-														)}
-													</div>
-												</TableCell>
-												<TableCell className="font-medium">
-													{day.date}
-												</TableCell>
-												<TableCell className="text-right">
-													{day.orders}
-												</TableCell>
-												<TableCell className="text-right font-semibold text-green-600">
-													{formatPrice(day.earnings)}
-												</TableCell>
-											</TableRow>
-										))}
+										{analytics.body.data.topEarningDays.map(
+											(
+												day: { date: string; orders: number; earnings: number },
+												index: number,
+											) => (
+												<TableRow key={day.date}>
+													<TableCell>
+														<div className="flex items-center gap-2">
+															{index === 0 && (
+																<span className="text-2xl">🥇</span>
+															)}
+															{index === 1 && (
+																<span className="text-2xl">🥈</span>
+															)}
+															{index === 2 && (
+																<span className="text-2xl">🥉</span>
+															)}
+															{index > 2 && (
+																<span className="font-medium">{index + 1}</span>
+															)}
+														</div>
+													</TableCell>
+													<TableCell className="font-medium">
+														{day.date}
+													</TableCell>
+													<TableCell className="text-right">
+														{day.orders}
+													</TableCell>
+													<TableCell className="text-right font-semibold text-green-600">
+														{formatPrice(day.earnings)}
+													</TableCell>
+												</TableRow>
+											),
+										)}
 									</TableBody>
 								</Table>
 							)}

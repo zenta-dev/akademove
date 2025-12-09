@@ -8,7 +8,7 @@ import {
 } from "./common.js";
 import { CONSTANTS, DRIVER_QUIZ_STATUSES } from "./constants.js";
 import { extractSchemaKeysAsEnum } from "./enum.helper.js";
-import { flattenZodObject } from "./flatten.helper.ts";
+import { flattenZodObject } from "./flatten.helper.js";
 import { CoordinateSchema } from "./position.js";
 import { UserSchema } from "./user.js";
 
@@ -72,9 +72,6 @@ export const DriverDocumentSchema = z.object({
 export const InsertDriverSchema = DriverSchema.pick({
 	studentId: true,
 	licensePlate: true,
-	studentCard: true,
-	driverLicense: true,
-	vehicleCertificate: true,
 	bank: true,
 }).extend({
 	...DriverDocumentSchema.shape,
@@ -84,10 +81,8 @@ export type InsertDriver = z.infer<typeof InsertDriverSchema>;
 export const UpdateDriverSchema = DriverSchema.pick({
 	studentId: true,
 	licensePlate: true,
-	studentCard: true,
-	driverLicense: true,
-	vehicleCertificate: true,
 	bank: true,
+	isTakingOrder: true,
 })
 	.extend({
 		currentLocation: CoordinateSchema.optional(),

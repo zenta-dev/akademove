@@ -1,5 +1,6 @@
 import type { Coupon } from "@repo/schema/coupon";
 import { RepositoryError } from "@/core/error";
+import type { PartialWithTx } from "@/core/interface";
 import type { DatabaseService } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
 import { log, toStringNumberSafe } from "@/utils";
@@ -173,5 +174,66 @@ export class OrderCouponService {
 					? toStringNumberSafe(discountAmount)
 					: undefined,
 		};
+	}
+
+	/**
+	 * Record coupon usage after successful order placement
+	 * This ensures the coupon usage is tracked for:
+	 * 1. Per-user usage limits
+	 * 2. Global usage count tracking
+	 *
+	 * @param couponId - The coupon ID that was used
+	 * @param orderId - The order ID the coupon was applied to
+	 * @param userId - The user who used the coupon
+	 * @param discountAmount - The discount amount applied
+	 * @param db - Database service
+	 * @param kv - KeyValue service
+	 * @param opts - Optional transaction context
+	 */
+	static async recordCouponUsage(
+		couponId: string,
+		orderId: string,
+		userId: string,
+		discountAmount: number,
+		db: DatabaseService,
+		kv: KeyValueService,
+		_opts?: PartialWithTx,
+	): Promise<void> {
+		try {
+			// Create a CouponRepository instance
+			const couponRepo = new (
+				await import("../../coupon/coupon-repository")
+			).CouponRepository(db, kv);
+
+			// Record the usage in coupon_usages table
+			await couponRepo.recordUsage(couponId, orderId, userId, discountAmount);
+
+			// Increment the used count on the coupon
+			await couponRepo.incrementUsageCount(couponId);
+
+			log.info(
+				{
+					couponId,
+					orderId,
+					userId,
+					discountAmount,
+				},
+				"[OrderCouponService] Coupon usage recorded successfully",
+			);
+		} catch (error) {
+			// Log error but don't fail the order - usage recording is not critical
+			log.error(
+				{
+					error,
+					couponId,
+					orderId,
+					userId,
+					discountAmount,
+				},
+				"[OrderCouponService] Failed to record coupon usage",
+			);
+			// Re-throw to ensure transaction rollback if within a transaction
+			throw error;
+		}
 	}
 }

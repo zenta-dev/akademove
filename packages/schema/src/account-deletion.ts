@@ -61,7 +61,7 @@ export const InsertAccountDeletionSchema = AccountDeletionSchema.omit({
 	updatedAt: true,
 	reviewedAt: true,
 	completedAt: true,
-}).extend({
+}).safeExtend({
 	userId: z.uuid().optional(),
 });
 export type InsertAccountDeletion = z.infer<typeof InsertAccountDeletionSchema>;
@@ -72,7 +72,7 @@ export const UpdateAccountDeletionSchema = AccountDeletionSchema.omit({
 	updatedAt: true,
 })
 	.partial()
-	.extend({
+	.safeExtend({
 		reviewedAt: DateSchema.optional(),
 		completedAt: DateSchema.optional(),
 	});

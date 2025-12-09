@@ -1403,13 +1403,6 @@ class UserMerchantListStateMapper
     opt: true,
     def: '',
   );
-  // static bool _$showBestsellers(UserMerchantListState v) => v.showBestsellers;
-  // static const Field<UserMerchantListState, bool> _f$showBestsellers = Field(
-  //   'showBestsellers',
-  //   _$showBestsellers,
-  //   opt: true,
-  //   def: false,
-  // );
   static CubitState _$state(UserMerchantListState v) => v.state;
   static const Field<UserMerchantListState, CubitState> _f$state = Field(
     'state',
@@ -1431,12 +1424,11 @@ class UserMerchantListStateMapper
   );
 
   @override
-  final MappableFields<UserMerchantListState> fields = {
+  final MappableFields<UserMerchantListState> fields = const {
     #merchants: _f$merchants,
     #hasMore: _f$hasMore,
     #cursor: _f$cursor,
     #searchQuery: _f$searchQuery,
-    // #showBestsellers: _f$showBestsellers,
     #state: _f$state,
     #message: _f$message,
     #error: _f$error,
@@ -1448,7 +1440,6 @@ class UserMerchantListStateMapper
       hasMore: data.dec(_f$hasMore),
       cursor: data.dec(_f$cursor),
       searchQuery: data.dec(_f$searchQuery),
-      // showBestsellers: data.dec(_f$showBestsellers),
       state: data.dec(_f$state),
       message: data.dec(_f$message),
       error: data.dec(_f$error),
@@ -1514,8 +1505,6 @@ abstract class UserMerchantListStateCopyWith<
     bool? hasMore,
     String? cursor,
     String? searchQuery,
-    bool? showNearby,
-    bool? showBestsellers,
     CubitState? state,
     String? message,
     BaseError? error,
@@ -1546,8 +1535,6 @@ class _UserMerchantListStateCopyWithImpl<$R, $Out>
     bool? hasMore,
     Object? cursor = $none,
     String? searchQuery,
-    bool? showNearby,
-    bool? showBestsellers,
     CubitState? state,
     Object? message = $none,
     Object? error = $none,
@@ -1557,8 +1544,6 @@ class _UserMerchantListStateCopyWithImpl<$R, $Out>
       if (hasMore != null) #hasMore: hasMore,
       if (cursor != $none) #cursor: cursor,
       if (searchQuery != null) #searchQuery: searchQuery,
-      if (showNearby != null) #showNearby: showNearby,
-      if (showBestsellers != null) #showBestsellers: showBestsellers,
       if (state != null) #state: state,
       if (message != $none) #message: message,
       if (error != $none) #error: error,
@@ -1570,7 +1555,6 @@ class _UserMerchantListStateCopyWithImpl<$R, $Out>
     hasMore: data.get(#hasMore, or: $value.hasMore),
     cursor: data.get(#cursor, or: $value.cursor),
     searchQuery: data.get(#searchQuery, or: $value.searchQuery),
-    // showBestsellers: data.get(#showBestsellers, or: $value.showBestsellers),
     state: data.get(#state, or: $value.state),
     message: data.get(#message, or: $value.message),
     error: data.get(#error, or: $value.error),
@@ -1580,5 +1564,209 @@ class _UserMerchantListStateCopyWithImpl<$R, $Out>
   UserMerchantListStateCopyWith<$R2, UserMerchantListState, $Out2>
   $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
       _UserMerchantListStateCopyWithImpl<$R2, $Out2>($value, $cast, t);
+}
+
+class UserMerchantDetailStateMapper
+    extends ClassMapperBase<UserMerchantDetailState> {
+  UserMerchantDetailStateMapper._();
+
+  static UserMerchantDetailStateMapper? _instance;
+  static UserMerchantDetailStateMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(
+        _instance = UserMerchantDetailStateMapper._(),
+      );
+    }
+    return _instance!;
+  }
+
+  @override
+  final String id = 'UserMerchantDetailState';
+
+  static Merchant? _$merchant(UserMerchantDetailState v) => v.merchant;
+  static const Field<UserMerchantDetailState, Merchant> _f$merchant = Field(
+    'merchant',
+    _$merchant,
+    opt: true,
+  );
+  static Map<String, List<MerchantMenu>>? _$menuByCategory(
+    UserMerchantDetailState v,
+  ) => v.menuByCategory;
+  static const Field<UserMerchantDetailState, Map<String, List<MerchantMenu>>>
+  _f$menuByCategory = Field('menuByCategory', _$menuByCategory, opt: true);
+  static String? _$warningToast(UserMerchantDetailState v) => v.warningToast;
+  static const Field<UserMerchantDetailState, String> _f$warningToast = Field(
+    'warningToast',
+    _$warningToast,
+    opt: true,
+  );
+  static CubitState _$state(UserMerchantDetailState v) => v.state;
+  static const Field<UserMerchantDetailState, CubitState> _f$state = Field(
+    'state',
+    _$state,
+    opt: true,
+    def: CubitState.initial,
+  );
+  static String? _$message(UserMerchantDetailState v) => v.message;
+  static const Field<UserMerchantDetailState, String> _f$message = Field(
+    'message',
+    _$message,
+    opt: true,
+  );
+  static BaseError? _$error(UserMerchantDetailState v) => v.error;
+  static const Field<UserMerchantDetailState, BaseError> _f$error = Field(
+    'error',
+    _$error,
+    opt: true,
+  );
+
+  @override
+  final MappableFields<UserMerchantDetailState> fields = const {
+    #merchant: _f$merchant,
+    #menuByCategory: _f$menuByCategory,
+    #warningToast: _f$warningToast,
+    #state: _f$state,
+    #message: _f$message,
+    #error: _f$error,
+  };
+
+  static UserMerchantDetailState _instantiate(DecodingData data) {
+    return UserMerchantDetailState(
+      merchant: data.dec(_f$merchant),
+      menuByCategory: data.dec(_f$menuByCategory),
+      warningToast: data.dec(_f$warningToast),
+      state: data.dec(_f$state),
+      message: data.dec(_f$message),
+      error: data.dec(_f$error),
+    );
+  }
+
+  @override
+  final Function instantiate = _instantiate;
+}
+
+mixin UserMerchantDetailStateMappable {
+  UserMerchantDetailStateCopyWith<
+    UserMerchantDetailState,
+    UserMerchantDetailState,
+    UserMerchantDetailState
+  >
+  get copyWith =>
+      _UserMerchantDetailStateCopyWithImpl<
+        UserMerchantDetailState,
+        UserMerchantDetailState
+      >(this as UserMerchantDetailState, $identity, $identity);
+  @override
+  String toString() {
+    return UserMerchantDetailStateMapper.ensureInitialized().stringifyValue(
+      this as UserMerchantDetailState,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return UserMerchantDetailStateMapper.ensureInitialized().equalsValue(
+      this as UserMerchantDetailState,
+      other,
+    );
+  }
+
+  @override
+  int get hashCode {
+    return UserMerchantDetailStateMapper.ensureInitialized().hashValue(
+      this as UserMerchantDetailState,
+    );
+  }
+}
+
+extension UserMerchantDetailStateValueCopy<$R, $Out>
+    on ObjectCopyWith<$R, UserMerchantDetailState, $Out> {
+  UserMerchantDetailStateCopyWith<$R, UserMerchantDetailState, $Out>
+  get $asUserMerchantDetailState => $base.as(
+    (v, t, t2) => _UserMerchantDetailStateCopyWithImpl<$R, $Out>(v, t, t2),
+  );
+}
+
+abstract class UserMerchantDetailStateCopyWith<
+  $R,
+  $In extends UserMerchantDetailState,
+  $Out
+>
+    implements ClassCopyWith<$R, $In, $Out> {
+  MapCopyWith<
+    $R,
+    String,
+    List<MerchantMenu>,
+    ObjectCopyWith<$R, List<MerchantMenu>, List<MerchantMenu>>
+  >?
+  get menuByCategory;
+  $R call({
+    Merchant? merchant,
+    Map<String, List<MerchantMenu>>? menuByCategory,
+    String? warningToast,
+    CubitState? state,
+    String? message,
+    BaseError? error,
+  });
+  UserMerchantDetailStateCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
+    Then<$Out2, $R2> t,
+  );
+}
+
+class _UserMerchantDetailStateCopyWithImpl<$R, $Out>
+    extends ClassCopyWithBase<$R, UserMerchantDetailState, $Out>
+    implements
+        UserMerchantDetailStateCopyWith<$R, UserMerchantDetailState, $Out> {
+  _UserMerchantDetailStateCopyWithImpl(super.value, super.then, super.then2);
+
+  @override
+  late final ClassMapperBase<UserMerchantDetailState> $mapper =
+      UserMerchantDetailStateMapper.ensureInitialized();
+  @override
+  MapCopyWith<
+    $R,
+    String,
+    List<MerchantMenu>,
+    ObjectCopyWith<$R, List<MerchantMenu>, List<MerchantMenu>>
+  >?
+  get menuByCategory => $value.menuByCategory != null
+      ? MapCopyWith(
+          $value.menuByCategory!,
+          (v, t) => ObjectCopyWith(v, $identity, t),
+          (v) => call(menuByCategory: v),
+        )
+      : null;
+  @override
+  $R call({
+    Object? merchant = $none,
+    Object? menuByCategory = $none,
+    Object? warningToast = $none,
+    CubitState? state,
+    Object? message = $none,
+    Object? error = $none,
+  }) => $apply(
+    FieldCopyWithData({
+      if (merchant != $none) #merchant: merchant,
+      if (menuByCategory != $none) #menuByCategory: menuByCategory,
+      if (warningToast != $none) #warningToast: warningToast,
+      if (state != null) #state: state,
+      if (message != $none) #message: message,
+      if (error != $none) #error: error,
+    }),
+  );
+  @override
+  UserMerchantDetailState $make(CopyWithData data) => UserMerchantDetailState(
+    merchant: data.get(#merchant, or: $value.merchant),
+    menuByCategory: data.get(#menuByCategory, or: $value.menuByCategory),
+    warningToast: data.get(#warningToast, or: $value.warningToast),
+    state: data.get(#state, or: $value.state),
+    message: data.get(#message, or: $value.message),
+    error: data.get(#error, or: $value.error),
+  );
+
+  @override
+  UserMerchantDetailStateCopyWith<$R2, UserMerchantDetailState, $Out2>
+  $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
+      _UserMerchantDetailStateCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
 

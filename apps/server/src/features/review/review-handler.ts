@@ -1,7 +1,9 @@
 import { m } from "@repo/i18n";
 import { trimObjectValues } from "@repo/shared";
+import { RepositoryError } from "@/core/error";
 import { createORPCRouter } from "@/core/router/orpc";
 import { ReviewSpec } from "./review-spec";
+import { ReviewValidationService } from "./services/review-validation-service";
 
 const { priv } = createORPCRouter(ReviewSpec);
 
@@ -66,12 +68,36 @@ export const ReviewHandler = priv.router({
 
 		if (!reviewStatus.canReview) {
 			if (reviewStatus.alreadyReviewed) {
-				throw new Error(m.server_review_already_exists());
+				throw new RepositoryError(m.server_review_already_exists(), {
+					code: "BAD_REQUEST",
+				});
 			}
 			if (!reviewStatus.orderCompleted) {
-				throw new Error(m.server_review_order_not_completed());
+				throw new RepositoryError(m.server_review_order_not_completed(), {
+					code: "BAD_REQUEST",
+				});
 			}
-			throw new Error(m.server_review_not_authorized());
+			throw new RepositoryError(m.server_review_not_authorized(), {
+				code: "BAD_REQUEST",
+			});
+		}
+
+		// FIX: Validate that toUserId is the correct party in the order
+		// This prevents users from reviewing arbitrary users
+		const validationService = new ReviewValidationService(context.svc.db);
+		const targetValidation = await validationService.validateReviewTarget({
+			orderId: data.orderId,
+			fromUserId: context.user.id,
+			toUserId: data.toUserId,
+		});
+
+		if (!targetValidation.valid) {
+			throw new RepositoryError(
+				targetValidation.error ?? "Invalid review target",
+				{
+					code: "BAD_REQUEST",
+				},
+			);
 		}
 
 		const result = await context.repo.review.create({

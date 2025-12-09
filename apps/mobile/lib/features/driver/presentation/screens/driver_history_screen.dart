@@ -3,7 +3,6 @@ import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/l10n/l10n.dart';
 import 'package:api_client/api_client.dart';
-import 'package:flutter/material.dart' as material;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -117,80 +116,90 @@ class _DriverHistoryScreenState extends State<DriverHistoryScreen> {
             ),
           ],
           scrollable: false,
-          body: RefreshTrigger(
-            onRefresh: _onRefresh,
-            child: Column(
-              spacing: 8.h,
-              children: [
-                // Filter chips
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    spacing: 8.w,
-                    children: [
-                      _buildStatusFilterChip(context.l10n.all, null),
-                      _buildStatusFilterChip(
-                        context.l10n.completed,
-                        OrderStatus.COMPLETED,
-                      ),
-                      _buildStatusFilterChip(
-                        context.l10n.in_progress,
-                        OrderStatus.IN_TRIP,
-                      ),
-                      _buildStatusFilterChip(
-                        context.l10n.cancelled,
-                        OrderStatus.CANCELLED_BY_USER,
-                      ),
-                    ],
-                  ),
+          body: Column(
+            spacing: 8.h,
+            children: [
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  spacing: 8.w,
+                  children: [
+                    _buildStatusFilterChip(context.l10n.all, null),
+                    _buildStatusFilterChip(
+                      context.l10n.completed,
+                      OrderStatus.COMPLETED,
+                    ),
+                    _buildStatusFilterChip(
+                      context.l10n.in_progress,
+                      OrderStatus.IN_TRIP,
+                    ),
+                    _buildStatusFilterChip(
+                      context.l10n.cancelled,
+                      OrderStatus.CANCELLED_BY_USER,
+                    ),
+                  ],
                 ),
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    spacing: 8.w,
+              ),
+              Expanded(
+                child: RefreshTrigger(
+                  onRefresh: _onRefresh,
+                  child: Column(
+                    spacing: 8.h,
                     children: [
-                      _buildTypeFilterChip(context.l10n.all_types, null),
-                      _buildTypeFilterChip(context.l10n.ride, OrderType.RIDE),
-                      _buildTypeFilterChip(
-                        context.l10n.delivery,
-                        OrderType.DELIVERY,
-                      ),
-                      _buildTypeFilterChip(
-                        context.l10n.order_type_food,
-                        OrderType.FOOD,
-                      ),
-                    ],
-                  ),
-                ),
-                const Divider(),
-                // Order list
-                Expanded(
-                  child: filteredOrders.isEmpty
-                      ? _buildEmptyState()
-                      : ListView.separated(
-                          controller: _scrollController,
-                          padding: EdgeInsets.all(16.dg),
-                          itemCount: filteredOrders.length,
-                          separatorBuilder: (context, index) =>
-                              SizedBox(height: 12.h),
-                          itemBuilder: (context, index) {
-                            if (index >= filteredOrders.length) {
-                              return const Center(
-                                child: Padding(
-                                  padding: EdgeInsets.all(16),
-                                  child: CircularProgressIndicator(),
-                                ),
-                              );
-                            }
-                            return _buildOrderCard(
-                              context,
-                              filteredOrders[index],
-                            );
-                          },
+                      // Filter chips
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          spacing: 8.w,
+                          children: [
+                            _buildTypeFilterChip(context.l10n.all_types, null),
+                            _buildTypeFilterChip(
+                              context.l10n.ride,
+                              OrderType.RIDE,
+                            ),
+                            _buildTypeFilterChip(
+                              context.l10n.delivery,
+                              OrderType.DELIVERY,
+                            ),
+                            _buildTypeFilterChip(
+                              context.l10n.order_type_food,
+                              OrderType.FOOD,
+                            ),
+                          ],
                         ),
+                      ),
+                      const Divider(),
+                      // Order list
+                      Expanded(
+                        child: filteredOrders.isEmpty
+                            ? _buildEmptyState()
+                            : ListView.separated(
+                                controller: _scrollController,
+                                padding: EdgeInsets.all(16.dg),
+                                itemCount: filteredOrders.length,
+                                separatorBuilder: (context, index) =>
+                                    SizedBox(height: 12.h),
+                                itemBuilder: (context, index) {
+                                  if (index >= filteredOrders.length) {
+                                    return const Center(
+                                      child: Padding(
+                                        padding: EdgeInsets.all(16),
+                                        child: CircularProgressIndicator(),
+                                      ),
+                                    );
+                                  }
+                                  return _buildOrderCard(
+                                    context,
+                                    filteredOrders[index],
+                                  );
+                                },
+                              ),
+                      ),
+                    ],
+                  ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         );
       },
@@ -254,107 +263,103 @@ class _DriverHistoryScreenState extends State<DriverHistoryScreen> {
     final statusColor = _getStatusColor(order.status);
     final statusText = _getStatusText(context, order.status);
 
-    return Card(
-      child: material.InkWell(
-        onTap: () => context.goNamed(
-          Routes.driverOrderDetail.name,
-          pathParameters: {'orderId': order.id},
-        ),
-        borderRadius: BorderRadius.circular(8.r),
-        child: Padding(
-          padding: EdgeInsets.all(16.dg),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            spacing: 12.h,
-            children: [
-              // Header: Type badge + Status badge
-              Row(
-                children: [
-                  _buildTypeBadge(order.type),
-                  SizedBox(width: 8.w),
-                  _buildStatusBadge(statusText, statusColor),
-                  const Spacer(),
-                  Text(
-                    DateFormat('MMM dd, yyyy').format(order.createdAt),
-                    style: context.typography.small.copyWith(
-                      fontSize: 12.sp,
+    return GhostButton(
+      onPressed: () => context.goNamed(
+        Routes.driverOrderDetail.name,
+        pathParameters: {'orderId': order.id},
+      ),
+      child: Card(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          spacing: 12.h,
+          children: [
+            // Header: Type badge + Status badge
+            Row(
+              children: [
+                _buildTypeBadge(order.type),
+                SizedBox(width: 8.w),
+                _buildStatusBadge(statusText, statusColor),
+                const Spacer(),
+                Text(
+                  DateFormat('MMM dd, yyyy').format(order.createdAt),
+                  style: context.typography.small.copyWith(
+                    fontSize: 12.sp,
+                    color: context.colorScheme.mutedForeground,
+                  ),
+                ),
+              ],
+            ),
+            const Divider(),
+            // Pickup and Dropoff
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              spacing: 12.w,
+              children: [
+                Column(
+                  spacing: 8.h,
+                  children: [
+                    Icon(
+                      LucideIcons.mapPin,
+                      size: 16.sp,
+                      color: const Color(0xFF4CAF50),
+                    ),
+                    Container(
+                      width: 2.w,
+                      height: 20.h,
                       color: context.colorScheme.mutedForeground,
                     ),
-                  ),
-                ],
-              ),
-              const Divider(),
-              // Pickup and Dropoff
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                spacing: 12.w,
-                children: [
-                  Column(
+                    Icon(
+                      LucideIcons.navigation,
+                      size: 16.sp,
+                      color: const Color(0xFFF44336),
+                    ),
+                  ],
+                ),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     spacing: 8.h,
                     children: [
-                      Icon(
-                        LucideIcons.mapPin,
-                        size: 16.sp,
-                        color: const Color(0xFF4CAF50),
+                      Text(
+                        '${order.pickupLocation.y.toStringAsFixed(4)}, ${order.pickupLocation.x.toStringAsFixed(4)}',
+                        style: context.typography.p.copyWith(fontSize: 14.sp),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                      Container(
-                        width: 2.w,
-                        height: 20.h,
-                        color: context.colorScheme.mutedForeground,
-                      ),
-                      Icon(
-                        LucideIcons.navigation,
-                        size: 16.sp,
-                        color: const Color(0xFFF44336),
+                      SizedBox(height: 12.h),
+                      Text(
+                        '${order.dropoffLocation.y.toStringAsFixed(4)}, ${order.dropoffLocation.x.toStringAsFixed(4)}',
+                        style: context.typography.p.copyWith(fontSize: 14.sp),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ],
                   ),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      spacing: 8.h,
-                      children: [
-                        Text(
-                          '${order.pickupLocation.y.toStringAsFixed(4)}, ${order.pickupLocation.x.toStringAsFixed(4)}',
-                          style: context.typography.p.copyWith(fontSize: 14.sp),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        SizedBox(height: 12.h),
-                        Text(
-                          '${order.dropoffLocation.y.toStringAsFixed(4)}, ${order.dropoffLocation.x.toStringAsFixed(4)}',
-                          style: context.typography.p.copyWith(fontSize: 14.sp),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ],
-                    ),
+                ),
+              ],
+            ),
+            const Divider(),
+            // Footer: Distance + Fare
+            Row(
+              children: [
+                Icon(LucideIcons.ruler, size: 16.sp),
+                SizedBox(width: 4.w),
+                Text(
+                  '${order.distanceKm.toStringAsFixed(2)} km',
+                  style: context.typography.small.copyWith(fontSize: 12.sp),
+                ),
+                const Spacer(),
+                Text(
+                  context.formatCurrency(order.totalPrice),
+                  style: context.typography.h4.copyWith(
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.bold,
+                    color: context.colorScheme.primary,
                   ),
-                ],
-              ),
-              const Divider(),
-              // Footer: Distance + Fare
-              Row(
-                children: [
-                  Icon(LucideIcons.ruler, size: 16.sp),
-                  SizedBox(width: 4.w),
-                  Text(
-                    '${order.distanceKm.toStringAsFixed(2)} km',
-                    style: context.typography.small.copyWith(fontSize: 12.sp),
-                  ),
-                  const Spacer(),
-                  Text(
-                    context.formatCurrency(order.totalPrice),
-                    style: context.typography.h4.copyWith(
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.bold,
-                      color: context.colorScheme.primary,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );

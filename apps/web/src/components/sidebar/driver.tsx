@@ -2,7 +2,6 @@ import { localizeHref, m } from "@repo/i18n";
 import { Link, useRouterState } from "@tanstack/react-router";
 import {
 	Calendar,
-	ClipboardList,
 	Gauge,
 	LineChart,
 	Receipt,
@@ -25,11 +24,6 @@ const navMain = Object.freeze([
 		title: m.overview(),
 		href: localizeHref("/dash/driver"),
 		icon: Gauge,
-	},
-	{
-		title: "Quiz",
-		href: localizeHref("/sign-up/driver/quiz"),
-		icon: ClipboardList,
 	},
 	{
 		title: m.schedule(),

@@ -1,5 +1,6 @@
 import { m } from "@repo/i18n";
 import { trimObjectValues } from "@repo/shared";
+import { AuthError } from "@/core/error";
 import { createORPCRouter } from "@/core/router/orpc";
 import { MerchantOrderSpec } from "./merchant-order-spec";
 
@@ -7,6 +8,17 @@ const { priv } = createORPCRouter(MerchantOrderSpec);
 
 export const MerchantOrderHandler = priv.router({
 	accept: priv.accept.handler(async ({ context, input: { params } }) => {
+		// Only MERCHANT, ADMIN, and OPERATOR can accept orders
+		if (
+			context.user.role !== "MERCHANT" &&
+			context.user.role !== "ADMIN" &&
+			context.user.role !== "OPERATOR"
+		) {
+			throw new AuthError("Access denied: Only merchants can accept orders", {
+				code: "FORBIDDEN",
+			});
+		}
+
 		return await context.svc.db.transaction(async (tx) => {
 			// Get merchant ID from logged-in user
 			const merchant = await context.repo.merchant.main.getByUserId(
@@ -27,6 +39,17 @@ export const MerchantOrderHandler = priv.router({
 	}),
 
 	reject: priv.reject.handler(async ({ context, input: { params, body } }) => {
+		// Only MERCHANT, ADMIN, and OPERATOR can reject orders
+		if (
+			context.user.role !== "MERCHANT" &&
+			context.user.role !== "ADMIN" &&
+			context.user.role !== "OPERATOR"
+		) {
+			throw new AuthError("Access denied: Only merchants can reject orders", {
+				code: "FORBIDDEN",
+			});
+		}
+
 		return await context.svc.db.transaction(async (tx) => {
 			const data = trimObjectValues(body);
 
@@ -52,6 +75,20 @@ export const MerchantOrderHandler = priv.router({
 
 	markPreparing: priv.markPreparing.handler(
 		async ({ context, input: { params } }) => {
+			// Only MERCHANT, ADMIN, and OPERATOR can mark orders as preparing
+			if (
+				context.user.role !== "MERCHANT" &&
+				context.user.role !== "ADMIN" &&
+				context.user.role !== "OPERATOR"
+			) {
+				throw new AuthError(
+					"Access denied: Only merchants can update order status",
+					{
+						code: "FORBIDDEN",
+					},
+				);
+			}
+
 			return await context.svc.db.transaction(async (tx) => {
 				// Get merchant ID from logged-in user
 				const merchant = await context.repo.merchant.main.getByUserId(
@@ -76,6 +113,20 @@ export const MerchantOrderHandler = priv.router({
 	),
 
 	markReady: priv.markReady.handler(async ({ context, input: { params } }) => {
+		// Only MERCHANT, ADMIN, and OPERATOR can mark orders as ready
+		if (
+			context.user.role !== "MERCHANT" &&
+			context.user.role !== "ADMIN" &&
+			context.user.role !== "OPERATOR"
+		) {
+			throw new AuthError(
+				"Access denied: Only merchants can update order status",
+				{
+					code: "FORBIDDEN",
+				},
+			);
+		}
+
 		return await context.svc.db.transaction(async (tx) => {
 			// Get merchant ID from logged-in user
 			const merchant = await context.repo.merchant.main.getByUserId(

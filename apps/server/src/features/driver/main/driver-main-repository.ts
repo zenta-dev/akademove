@@ -493,7 +493,12 @@ export class DriverMainRepository extends BaseRepository {
 			const [updated, user] = await Promise.all([
 				tx
 					.update(tables.driver)
-					.set({ isOnline })
+					.set({
+						isOnline,
+						...(isOnline
+							? {}
+							: { currentLocation: null, lastLocationUpdate: null }),
+					})
 					.where(eq(tables.driver.id, id))
 					.returning()
 					.then((r) => r[0]),

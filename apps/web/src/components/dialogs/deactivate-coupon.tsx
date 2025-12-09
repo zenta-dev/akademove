@@ -36,7 +36,7 @@ export const DeactivateCouponDialog = ({
 			});
 			if (result.status === 200) {
 				toast.success(m.server_coupon_deactivated());
-				queryClient.invalidateQueries({ queryKey: ["coupons"] });
+				queryClient.invalidateQueries();
 				onOpenChange(false);
 			} else {
 				toast.error(m.an_unexpected_error_occurred());

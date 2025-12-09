@@ -48,7 +48,7 @@ export const InsertBadgeSchema = BadgeSchema.omit({
 	icon: true,
 	createdAt: true,
 	updatedAt: true,
-}).extend({
+}).safeExtend({
 	icon: z
 		.file()
 		.mime(["image/png", "image/jpg", "image/jpeg", "image/svg"])

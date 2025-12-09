@@ -70,7 +70,7 @@ export function AccountDeletionForm({ onSuccess }: AccountDeletionFormProps) {
 	const [showSuccessDialog, setShowSuccessDialog] = useState(false);
 	const [formData, setFormData] = useState<DeletionFormValues | null>(null);
 
-	const form = useForm<DeletionFormValues>({
+	const form = useForm({
 		resolver: zodResolver(
 			createDeletionFormSchema().refine(
 				(data) => data.email === data.confirmEmail,

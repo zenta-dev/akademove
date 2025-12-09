@@ -48,7 +48,7 @@ export const SuspendDriverDialog = ({ driverId }: { driverId: string }) => {
 	const [date, setDate] = useState<Date | undefined>(undefined);
 	const [time, setTime] = useState("10:30:00");
 
-	const form = useForm<SuspendDriverForm>({
+	const form = useForm({
 		defaultValues: { reason: "", suspendUntil: undefined },
 	});
 

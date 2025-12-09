@@ -97,12 +97,12 @@ class DriverRepository extends BaseRepository {
 
   Future<BaseResponse<Driver>> updateLocation({
     required String driverId,
-    required Coordinate location,
+    required CoordinateWithMeta location,
   }) {
     return guard(() async {
       final res = await _apiClient.getDriverApi().driverUpdateLocation(
         id: driverId,
-        coordinate: location,
+        coordinateWithMeta: location,
       );
       final data =
           res.data ??

@@ -165,36 +165,26 @@ export const useOrderWebSocket = (
 					// Invalidate relevant queries based on event
 					switch (eventType) {
 						case "DRIVER_ACCEPTED":
-							queryClient.invalidateQueries({ queryKey: ["order", orderId] });
-							queryClient.invalidateQueries({ queryKey: ["orders"] });
+							queryClient.invalidateQueries();
 							break;
 
 						case "DRIVER_LOCATION_UPDATE":
-							// Update only the driver location, don't refetch entire order
-							queryClient.setQueryData(
-								["order", orderId, "driverLocation"],
-								envelope.p.driverUpdateLocation,
-							);
+							queryClient.invalidateQueries();
 							break;
 
 						case "COMPLETED":
 						case "CANCELED":
-							queryClient.invalidateQueries({ queryKey: ["order", orderId] });
-							queryClient.invalidateQueries({ queryKey: ["orders"] });
-							queryClient.invalidateQueries({ queryKey: ["wallet"] });
-							queryClient.invalidateQueries({ queryKey: ["transactions"] });
+							queryClient.invalidateQueries();
 							break;
 
 						case "MATCHING":
 						case "OFFER":
 						case "UNAVAILABLE":
-							queryClient.invalidateQueries({ queryKey: ["order", orderId] });
+							queryClient.invalidateQueries();
 							break;
 
 						case "CHAT_MESSAGE":
-							queryClient.invalidateQueries({
-								queryKey: ["order", orderId, "messages"],
-							});
+							queryClient.invalidateQueries();
 							break;
 					}
 				} catch (error) {

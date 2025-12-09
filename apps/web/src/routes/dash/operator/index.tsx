@@ -40,7 +40,7 @@ function RouteComponent() {
 	);
 
 	const stats = useMemo(() => {
-		return statsResponse?.data;
+		return statsResponse?.body.data;
 	}, [statsResponse]);
 
 	if (isLoading) {

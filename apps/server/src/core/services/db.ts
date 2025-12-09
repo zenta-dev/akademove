@@ -14,6 +14,7 @@ import * as driverApprovalReview from "@/core/tables/driver-approval-review";
 import * as driverQuizAnswer from "@/core/tables/driver-quiz-answer";
 import * as driverQuizQuestion from "@/core/tables/driver-quiz-question";
 import * as emergency from "@/core/tables/emergency";
+import * as fraud from "@/core/tables/fraud";
 import * as leaderboard from "@/core/tables/leaderboard";
 import * as merchant from "@/core/tables/merchant";
 import * as merchantApprovalReview from "@/core/tables/merchant-approval-review";
@@ -41,6 +42,7 @@ export const tables = {
 	...driverQuizAnswer,
 	...driverQuizQuestion,
 	...emergency,
+	...fraud,
 	...leaderboard,
 	...merchant,
 	...merchantApprovalReview,

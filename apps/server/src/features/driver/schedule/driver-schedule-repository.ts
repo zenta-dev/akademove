@@ -16,6 +16,11 @@ import type { KeyValueService } from "@/core/services/kv";
 import type { DriverScheduleDatabase } from "@/core/tables/driver";
 import { DriverScheduleListQueryService } from "./services/driver-schedule-list-query-service";
 
+// Extended query type that includes driverId filter
+interface DriverScheduleListQuery extends UnifiedPaginationQuery {
+	driverId?: string;
+}
+
 export class DriverScheduleRepository extends BaseRepository {
 	constructor(db: DatabaseService, kv: KeyValueService) {
 		super("driverSchedule", kv, db);
@@ -36,12 +41,15 @@ export class DriverScheduleRepository extends BaseRepository {
 	}
 
 	async list(
-		query?: UnifiedPaginationQuery,
+		query?: DriverScheduleListQuery,
 	): Promise<ListResult<DriverSchedule>> {
 		try {
 			// Extract pagination parameters
 			const { cursor, page, limit, search, sortBy, order } =
 				DriverScheduleListQueryService.extractPaginationParams(query);
+
+			// Extract driverId filter
+			const driverId = query?.driverId;
 
 			// Generate ORDER BY clause
 			const orderBy = (
@@ -61,6 +69,7 @@ export class DriverScheduleRepository extends BaseRepository {
 			const clauses = DriverScheduleListQueryService.generateWhereClauses({
 				search,
 				cursor,
+				driverId,
 			});
 
 			// Cursor-based pagination
@@ -91,10 +100,14 @@ export class DriverScheduleRepository extends BaseRepository {
 
 				const rows = res.map(DriverScheduleRepository.composeEntity);
 
-				// Get total count based on search
-				const totalCount = search
-					? await DriverScheduleListQueryService.getSearchCount(this.db, search)
-					: await this.getTotalRow();
+				// Get total count based on search and driverId
+				const totalCount =
+					search || driverId
+						? await DriverScheduleListQueryService.getFilteredCount(this.db, {
+								search,
+								driverId,
+							})
+						: await this.getTotalRow();
 
 				const { totalPages } =
 					DriverScheduleListQueryService.calculatePagination({

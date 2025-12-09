@@ -8,6 +8,7 @@ import {
 	HelpCircle,
 	Mail,
 	Receipt,
+	Shield,
 	Store,
 	Ticket,
 	Users,
@@ -63,6 +64,11 @@ const navMain = Object.freeze([
 		title: m.reports(),
 		href: localizeHref("/dash/operator/reports"),
 		icon: Flag,
+	},
+	{
+		title: "Fraud Detection",
+		href: localizeHref("/dash/operator/fraud"),
+		icon: Shield,
 	},
 	{
 		title: m.contact_us(),

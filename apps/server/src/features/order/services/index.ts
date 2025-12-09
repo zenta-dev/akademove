@@ -12,6 +12,7 @@
  * - OrderRefundService: Processes refunds for cancelled orders
  * - DriverCancellationService: Manages driver cancellation tracking and suspension
  * - OrderValidationService: Validates order placement parameters
+ * - OrderSchedulingService: Validates and manages scheduled order logic
  */
 
 export { DeliveryProofService } from "./delivery-proof-service";
@@ -23,5 +24,9 @@ export { OrderMatchingService } from "./order-matching-service";
 export { OrderPricingConfigProvider } from "./order-pricing-config-provider";
 export { OrderPricingService } from "./order-pricing-service";
 export { OrderRefundService } from "./order-refund-service";
+export {
+	OrderSchedulingService,
+	SCHEDULING_CONFIG,
+} from "./order-scheduling-service";
 export { OrderStateService } from "./order-state-service";
 export { OrderValidationService } from "./order-validation-service";

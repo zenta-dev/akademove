@@ -167,13 +167,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                           EdgeInsetsGeometry.all(4.dg),
                     ),
                 onPressed: () {
-                  print('🔵 View All clicked!');
-                  print('🔵 Route name: ${Routes.userListMerchant.name}');
-                  print('🔵 Route path: ${Routes.userListMerchant.path}');
-
                   context.pushNamed(Routes.userListMerchant.name);
-
-                  print('🔵 Navigation called');
                 },
                 child: Row(
                   children: [

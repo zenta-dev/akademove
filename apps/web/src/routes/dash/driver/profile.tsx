@@ -62,7 +62,7 @@ export const Route = createFileRoute("/dash/driver/profile")({
 		try {
 			const driverResult = await orpcClient.driver.getMine();
 			if (driverResult.body.data.quizStatus !== "PASSED") {
-				redirect({ to: "/sign-up/driver/quiz", throw: true });
+				redirect({ to: "/quiz/driver", throw: true });
 			}
 		} catch (error) {
 			console.error("Failed to check quiz status:", error);
@@ -121,7 +121,21 @@ function RouteComponent() {
 		);
 	}
 
-	const user = sessionData?.body.data?.user;
+	const user = sessionData?.body.data?.user
+		? {
+				name: sessionData.body.data.user.name,
+				email: sessionData.body.data.user.email,
+				phone: sessionData.body.data.user.phone
+					? {
+							countryCode: sessionData.body.data.user.phone
+								.countryCode as string,
+							number: sessionData.body.data.user.phone.number,
+						}
+					: undefined,
+				image: sessionData.body.data.user.image,
+				gender: sessionData.body.data.user.gender,
+			}
+		: undefined;
 
 	return (
 		<>
@@ -166,7 +180,7 @@ function ViewDriverProfile({
 	user?: {
 		name: string;
 		email: string;
-		phone: { countryCode: string; number: number };
+		phone?: { countryCode: string; number: number };
 		image?: string;
 		gender?: string;
 	};
@@ -217,15 +231,17 @@ function ViewDriverProfile({
 							<p className="font-medium">{user?.email}</p>
 						</div>
 					</div>
-					<div className="flex items-center gap-3">
-						<Phone className="h-5 w-5 text-muted-foreground" />
-						<div>
-							<p className="text-muted-foreground text-sm">{m.phone()}</p>
-							<p className="font-medium">
-								+{user?.phone.countryCode} {user?.phone.number}
-							</p>
+					{user?.phone && (
+						<div className="flex items-center gap-3">
+							<Phone className="h-5 w-5 text-muted-foreground" />
+							<div>
+								<p className="text-muted-foreground text-sm">{m.phone()}</p>
+								<p className="font-medium">
+									+{user.phone.countryCode} {user.phone.number}
+								</p>
+							</div>
 						</div>
-					</div>
+					)}
 					{user?.gender && (
 						<div>
 							<p className="text-muted-foreground text-sm">Gender</p>
@@ -386,9 +402,7 @@ function EditDriverProfile({
 	const mutation = useMutation(
 		orpcQuery.driver.update.mutationOptions({
 			onSuccess: async () => {
-				await queryClient.invalidateQueries({
-					queryKey: ["driver", "mine"],
-				});
+				queryClient.invalidateQueries();
 				toast.success(
 					m.success_placeholder({
 						action: capitalizeFirstLetter(m.update_profile().toLowerCase()),

@@ -14,6 +14,7 @@ import { useDebounce } from "@/hooks/use-debounce";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { orpcQuery } from "@/lib/orpc";
 import type { FileRouteTypes } from "@/routeTree.gen";
+import type { MerchantListQuery } from "../../../../../server/src/features/merchant/main/merchant-main-spec";
 import type { TableProps } from "../type";
 import { MERCHANT_COLUMNS } from "./columns";
 
@@ -45,23 +46,20 @@ export const MerchantTable = ({ search, to }: Props) => {
 		search.maxRating,
 	);
 
+	const query: MerchantListQuery = {
+		...search,
+		sortBy: undefined,
+		query: debouncedFilter?.trim() ?? search.query?.trim(),
+		categories: categories.length > 0 ? categories : undefined,
+		isActive:
+			isActive === "true" ? true : isActive === "false" ? false : undefined,
+		minRating,
+		maxRating,
+	};
+
 	const merchants = useQuery(
 		orpcQuery.merchant.list.queryOptions({
-			input: {
-				query: {
-					...search,
-					query: debouncedFilter?.trim() ?? search.query?.trim(),
-					categories: categories.length > 0 ? categories : undefined,
-					isActive:
-						isActive === "true"
-							? true
-							: isActive === "false"
-								? false
-								: undefined,
-					minRating,
-					maxRating,
-				},
-			},
+			input: { query },
 		}),
 	);
 

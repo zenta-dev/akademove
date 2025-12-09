@@ -33,7 +33,7 @@ import { Input } from "../ui/input";
 export const RejectDriverDialog = ({ driverId }: { driverId: string }) => {
 	const [dialogOpen, setDialogOpen] = useState(false);
 
-	const form = useForm<RejectDriver>({
+	const form = useForm({
 		resolver: zodResolver(RejectDriverSchema),
 		defaultValues: { reason: "", id: driverId },
 	});

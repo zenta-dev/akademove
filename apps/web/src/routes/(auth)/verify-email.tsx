@@ -61,7 +61,7 @@ function RouteComponent() {
 		}
 	}, [countdown]);
 
-	const form = useForm<VerifyEmail>({
+	const form = useForm({
 		resolver: zodResolver(VerifyEmailSchema),
 		defaultValues: {
 			email: email ?? "",

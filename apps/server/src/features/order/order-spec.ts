@@ -12,7 +12,10 @@ import {
 	OrderTypeSchema,
 	PlaceOrderResponseSchema,
 	PlaceOrderSchema,
+	PlaceScheduledOrderResponseSchema,
+	PlaceScheduledOrderSchema,
 	UpdateOrderSchema,
+	UpdateScheduledOrderSchema,
 } from "@repo/schema/order";
 import { UnifiedPaginationQuerySchema } from "@repo/schema/pagination";
 import * as z from "zod";
@@ -225,5 +228,77 @@ export const OrderSpec = {
 		)
 		.output(
 			createSuccesSchema(z.object({ verified: z.boolean() }), "OTP verified"),
+		),
+
+	// Scheduled order endpoints
+	placeScheduledOrder: oc
+		.route({
+			tags: [FEATURE_TAGS.ORDER],
+			method: "POST",
+			path: "/scheduled",
+			inputStructure: "detailed",
+			outputStructure: "detailed",
+		})
+		.input(
+			z.object({
+				body: PlaceScheduledOrderSchema,
+			}),
+		)
+		.output(
+			createSuccesSchema(
+				PlaceScheduledOrderResponseSchema,
+				"Scheduled order created successfully",
+			),
+		),
+	listScheduledOrders: oc
+		.route({
+			tags: [FEATURE_TAGS.ORDER],
+			method: "GET",
+			path: "/scheduled",
+			inputStructure: "detailed",
+			outputStructure: "detailed",
+		})
+		.input(z.object({ query: OrderListQuerySchema }))
+		.output(
+			createSuccesSchema(
+				z.array(OrderSchema),
+				"Successfully retrieved scheduled orders",
+			),
+		),
+	updateScheduledOrder: oc
+		.route({
+			tags: [FEATURE_TAGS.ORDER],
+			method: "PUT",
+			path: "/scheduled/{id}",
+			inputStructure: "detailed",
+			outputStructure: "detailed",
+		})
+		.input(
+			z.object({
+				params: z.object({ id: z.uuid() }),
+				body: UpdateScheduledOrderSchema,
+			}),
+		)
+		.output(
+			createSuccesSchema(OrderSchema, "Scheduled order updated successfully"),
+		),
+	cancelScheduledOrder: oc
+		.route({
+			tags: [FEATURE_TAGS.ORDER],
+			method: "POST",
+			path: "/scheduled/{id}/cancel",
+			inputStructure: "detailed",
+			outputStructure: "detailed",
+		})
+		.input(
+			z.object({
+				params: z.object({ id: z.uuid() }),
+				body: z.object({
+					reason: z.string().optional(),
+				}),
+			}),
+		)
+		.output(
+			createSuccesSchema(OrderSchema, "Scheduled order cancelled successfully"),
 		),
 };

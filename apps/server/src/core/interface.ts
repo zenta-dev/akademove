@@ -31,6 +31,7 @@ import type {
 import type { DriverQuizAnswerRepository } from "@/features/driver-quiz-answer/driver-quiz-answer-repository";
 import type { DriverQuizQuestionRepository } from "@/features/driver-quiz-question/driver-quiz-question-repository";
 import type { EmergencyRepository } from "@/features/emergency/emergency-repository";
+import type { FraudRepository } from "@/features/fraud/fraud-repository";
 import type { LeaderboardRepository } from "@/features/leaderboard/leaderboard-repository";
 import type { MerchantApprovalRepository } from "@/features/merchant/approval/merchant-approval-repository";
 import type { MerchantMainRepository } from "@/features/merchant/main/merchant-main-repository";
@@ -128,6 +129,7 @@ export interface RepositoryContext {
 	driverQuizQuestion: DriverQuizQuestionRepository;
 	driverQuizAnswer: DriverQuizAnswerRepository;
 	emergency: EmergencyRepository;
+	fraud: FraudRepository;
 	leaderboard: LeaderboardRepository;
 	merchant: {
 		main: MerchantMainRepository;

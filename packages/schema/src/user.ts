@@ -114,7 +114,7 @@ export const UpdateUserSchema = UserSchema.pick({
 	name: true,
 	email: true,
 })
-	.extend({
+	.safeExtend({
 		photo: z
 			.file(m.required_placeholder({ field: m.photo() }))
 			.mime(["image/png", "image/jpg", "image/jpeg"]),

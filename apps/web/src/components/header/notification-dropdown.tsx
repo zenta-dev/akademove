@@ -44,11 +44,13 @@ export const NotificationDropdown = () => {
 		orpcQuery.notification.markAsRead.mutationOptions({
 			onSuccess: async (_data) => {
 				await Promise.all([
-					queryClient.invalidateQueries({
-						queryKey: orpcQuery.notification.list.queryKey({
-							input: { query: { limit, read, order, sortBy } },
-						}),
-					}),
+					queryClient.invalidateQueries(
+						// 	{
+						// 	queryKey: orpcQuery.notification.list.queryKey({
+						// 		input: { query: { limit, read, order, sortBy } },
+						// 	}),
+						// }
+					),
 				]);
 			},
 		}),
@@ -58,11 +60,13 @@ export const NotificationDropdown = () => {
 		orpcQuery.notification.markAllAsRead.mutationOptions({
 			onSuccess: async (_data) => {
 				await Promise.all([
-					queryClient.invalidateQueries({
-						queryKey: orpcQuery.notification.list.queryKey({
-							input: { query: { limit, read, order, sortBy } },
-						}),
-					}),
+					queryClient.invalidateQueries(
+						// 	{
+						// 	queryKey: orpcQuery.notification.list.queryKey({
+						// 		input: { query: { limit, read, order, sortBy } },
+						// 	}),
+						// }
+					),
 				]);
 			},
 		}),
@@ -72,11 +76,13 @@ export const NotificationDropdown = () => {
 		orpcQuery.notification.delete.mutationOptions({
 			onSuccess: async (_data) => {
 				await Promise.all([
-					queryClient.invalidateQueries({
-						queryKey: orpcQuery.notification.list.queryKey({
-							input: { query: { limit, read, order, sortBy } },
-						}),
-					}),
+					queryClient.invalidateQueries(
+						// 	{
+						// 	queryKey: orpcQuery.notification.list.queryKey({
+						// 		input: { query: { limit, read, order, sortBy } },
+						// 	}),
+						// }
+					),
 				]);
 			},
 		}),

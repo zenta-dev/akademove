@@ -14,7 +14,7 @@ import {
 	Shield,
 	XCircle,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -119,11 +119,13 @@ function RouteComponent() {
 		orpcQuery.report.update.mutationOptions({
 			onSuccess: () => {
 				toast.success("Report updated successfully");
-				queryClient.invalidateQueries({
-					queryKey: orpcQuery.report.list.queryKey({
-						input: { query: search },
-					}),
-				});
+				queryClient.invalidateQueries(
+					// 	{
+					// 	queryKey: orpcQuery.report.list.queryKey({
+					// 		input: { query: search },
+					// 	}),
+					// }
+				);
 				setUpdateDialogOpen(false);
 				setSelectedReport(null);
 			},
@@ -564,12 +566,12 @@ function UpdateReportDialog({
 	const [resolution, setResolution] = useState(report?.resolution || "");
 
 	// Update form when report changes
-	useState(() => {
+	useEffect(() => {
 		if (report) {
 			setStatus(report.status);
 			setResolution(report.resolution || "");
 		}
-	});
+	}, [report]);
 
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault();

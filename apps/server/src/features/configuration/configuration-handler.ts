@@ -1,5 +1,6 @@
 import { m } from "@repo/i18n";
 import { trimObjectValues } from "@repo/shared";
+import { AuthError } from "@/core/error";
 import { createORPCRouter } from "@/core/router/orpc";
 import { ConfigurationSpec } from "./configuration-spec";
 import { BusinessConfigurationService } from "./services";
@@ -8,6 +9,13 @@ const { pub, priv } = createORPCRouter(ConfigurationSpec);
 
 export const ConfigurationHandler = pub.router({
 	list: priv.list.handler(async ({ context, input: { query } }) => {
+		// Only ADMIN and OPERATOR can list configurations
+		if (context.user.role !== "ADMIN" && context.user.role !== "OPERATOR") {
+			throw new AuthError("Access denied: Missing required role", {
+				code: "FORBIDDEN",
+			});
+		}
+
 		const result = await context.repo.configuration.list(query);
 		return {
 			status: 200,
@@ -18,6 +26,13 @@ export const ConfigurationHandler = pub.router({
 		};
 	}),
 	get: priv.get.handler(async ({ context, input: { params } }) => {
+		// Only ADMIN and OPERATOR can get configuration details
+		if (context.user.role !== "ADMIN" && context.user.role !== "OPERATOR") {
+			throw new AuthError("Access denied: Missing required role", {
+				code: "FORBIDDEN",
+			});
+		}
+
 		const result = await context.repo.configuration.get(params.key);
 		return {
 			status: 200,
@@ -28,6 +43,13 @@ export const ConfigurationHandler = pub.router({
 		};
 	}),
 	update: priv.update.handler(async ({ context, input: { params, body } }) => {
+		// Only ADMIN and OPERATOR can update configurations
+		if (context.user.role !== "ADMIN" && context.user.role !== "OPERATOR") {
+			throw new AuthError("Access denied: Missing required role", {
+				code: "FORBIDDEN",
+			});
+		}
+
 		const data = trimObjectValues(body);
 		const result = await context.repo.configuration.update(params.key, {
 			...data,

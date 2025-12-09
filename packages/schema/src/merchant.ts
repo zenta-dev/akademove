@@ -110,7 +110,7 @@ export const InsertMerchantMenuSchema = MerchantMenuSchema.omit({
 	merchantId: true,
 	createdAt: true,
 	updatedAt: true,
-}).extend({
+}).safeExtend({
 	image: z.file().mime(["image/png", "image/jpg", "image/jpeg"]).optional(),
 });
 export type InsertMerchantMenu = z.infer<typeof InsertMerchantMenuSchema>;

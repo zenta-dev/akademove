@@ -36,7 +36,7 @@ export const InsertContactSchema = ContactSchema.omit({
 	createdAt: true,
 	updatedAt: true,
 	respondedAt: true,
-}).extend({
+}).safeExtend({
 	userId: z.uuid().optional(),
 });
 export type InsertContact = z.infer<typeof InsertContactSchema>;

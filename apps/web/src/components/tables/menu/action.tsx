@@ -45,9 +45,7 @@ export const MerchantMenuActionTable = ({ val }: { val: MerchantMenu }) => {
 	const toggleStockMutation = useMutation(
 		orpcQuery.merchant.menu.update.mutationOptions({
 			onSuccess: async () => {
-				await queryClient.invalidateQueries({
-					queryKey: ["merchant", "menu", val.merchantId],
-				});
+				await queryClient.invalidateQueries();
 				toast.success(
 					val.stock > 0
 						? "Item marked as out of stock"
@@ -142,9 +140,7 @@ export const DeleteMerchantMenuDialog = ({
 	const mutation = useMutation(
 		orpcQuery.merchant.menu.remove.mutationOptions({
 			onSuccess: async () => {
-				await queryClient.invalidateQueries({
-					queryKey: ["merchant", "menu", val.merchantId],
-				});
+				await queryClient.invalidateQueries();
 				toast.success(
 					m.success_placeholder({
 						action: capitalizeFirstLetter(

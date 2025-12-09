@@ -160,15 +160,17 @@ function ViewMerchantProfile({ merchant }: { merchant: Merchant }) {
 							<p className="font-medium">{merchant.email}</p>
 						</div>
 					</div>
-					<div className="flex items-center gap-3">
-						<Phone className="h-5 w-5 text-muted-foreground" />
-						<div>
-							<p className="text-muted-foreground text-sm">{m.phone()}</p>
-							<p className="font-medium">
-								+{merchant.phone.countryCode} {merchant.phone.number}
-							</p>
+					{merchant.phone && (
+						<div className="flex items-center gap-3">
+							<Phone className="h-5 w-5 text-muted-foreground" />
+							<div>
+								<p className="text-muted-foreground text-sm">{m.phone()}</p>
+								<p className="font-medium">
+									+{merchant.phone.countryCode} {merchant.phone.number}
+								</p>
+							</div>
 						</div>
-					</div>
+					)}
 					<div className="flex items-center gap-3">
 						<MapPin className="h-5 w-5 text-muted-foreground" />
 						<div>
@@ -270,9 +272,11 @@ function EditMerchantProfile({
 	const mutation = useMutation(
 		orpcQuery.merchant.update.mutationOptions({
 			onSuccess: async () => {
-				await queryClient.invalidateQueries({
-					queryKey: orpcQuery.merchant.getMine.queryKey(),
-				});
+				await queryClient.invalidateQueries(
+					// 	{
+					// 	queryKey: orpcQuery.merchant.getMine.queryKey(),
+					// }
+				);
 				toast.success(
 					m.success_placeholder({
 						action: capitalizeFirstLetter(m.update_profile().toLowerCase()),

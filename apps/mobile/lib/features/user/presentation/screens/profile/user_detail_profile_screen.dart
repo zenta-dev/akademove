@@ -191,7 +191,7 @@ class UserDetailProfileScreen extends StatelessWidget {
             Container(
               padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
               decoration: BoxDecoration(
-                color: context.colorScheme.secondary.withOpacity(0.3),
+                color: context.colorScheme.secondary.withValues(alpha: 0.3),
                 borderRadius: BorderRadius.circular(8.r),
               ),
               child: DefaultText(
@@ -203,7 +203,7 @@ class UserDetailProfileScreen extends StatelessWidget {
 
             // Description
             DefaultText(
-              badge.description ?? 'No description available',
+              badge.description,
               fontSize: 14.sp,
               fontWeight: FontWeight.normal,
               color: context.colorScheme.foreground,

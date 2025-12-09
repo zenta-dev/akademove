@@ -73,7 +73,7 @@ export const InsertSupportTicketSchema = SupportTicketSchema.omit({
 	updatedAt: true,
 	user: true,
 	assignedTo: true,
-}).extend({
+}).safeExtend({
 	message: z.string().min(1).max(5000), // Initial message for the ticket
 });
 export type InsertSupportTicket = z.infer<typeof InsertSupportTicketSchema>;

@@ -90,17 +90,12 @@ export async function handleAutoOfflineCron() {
 					currentTimeMinutes >= scheduleStart &&
 					currentTimeMinutes <= scheduleEnd;
 
-				// If in schedule period → driver should be offline
-				// If outside schedule → driver should be online (if they were offline due to schedule)
-				const shouldBeOnline = !isInSchedule;
-
 				log.debug(
 					{
 						driverId: driver.id,
 						scheduleName: schedule.name,
 						isInSchedule,
 						currentIsOnline: driver.isOnline,
-						shouldBeOnline,
 						scheduleStart,
 						scheduleEnd,
 						currentTimeMinutes,
@@ -108,11 +103,15 @@ export async function handleAutoOfflineCron() {
 					"[AutoOfflineCron] Checking driver schedule",
 				);
 
-				// Only toggle if needed
-				if (driver.isOnline !== shouldBeOnline) {
+				// FIX: Only set driver offline when in schedule period
+				// We should NOT automatically force drivers online when outside schedule,
+				// as they may have manually set themselves offline for personal reasons.
+				// The schedule system only enforces "class time = offline", not "free time = online"
+				if (isInSchedule && driver.isOnline) {
+					// Driver is in class but still online - set them offline
 					await svc.db
 						.update(tables.driver)
-						.set({ isOnline: shouldBeOnline })
+						.set({ isOnline: false })
 						.where(eq(tables.driver.id, driver.id));
 
 					// Invalidate driver cache
@@ -124,11 +123,11 @@ export async function handleAutoOfflineCron() {
 						{
 							driverId: driver.id,
 							userId: driver.userId,
-							previousStatus: driver.isOnline,
-							newStatus: shouldBeOnline,
-							reason: isInSchedule ? "in_schedule" : "outside_schedule",
+							previousStatus: true,
+							newStatus: false,
+							reason: "in_schedule",
 						},
-						"[AutoOfflineCron] Toggled driver availability",
+						"[AutoOfflineCron] Set driver offline due to class schedule",
 					);
 				}
 			} catch (error) {

@@ -2,10 +2,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { m } from "@repo/i18n";
 import {
 	type DeliveryPricingConfiguration,
+	DeliveryPricingConfigurationSchema,
 	type FoodPricingConfiguration,
+	FoodPricingConfigurationSchema,
 	type PricingConfiguration,
-	PricingConfigurationSchema,
 	type RidePricingConfiguration,
+	RidePricingConfigurationSchema,
 } from "@repo/schema/configuration";
 import { capitalizeFirstLetter } from "@repo/shared";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -49,6 +51,7 @@ export const CONFIGURATIONS = [
 				bgColor: "data-[state=active]:bg-blue-500/10",
 			},
 		},
+		schema: RidePricingConfigurationSchema,
 		defaultValues: {
 			baseFare: 0,
 			perKmRate: 0,
@@ -80,6 +83,7 @@ export const CONFIGURATIONS = [
 				bgColor: "data-[state=active]:bg-green-500/10",
 			},
 		},
+		schema: DeliveryPricingConfigurationSchema,
 		defaultValues: {
 			baseFare: 0,
 			perKmRate: 0,
@@ -113,6 +117,7 @@ export const CONFIGURATIONS = [
 				bgColor: "data-[state=active]:bg-yellow-500/10",
 			},
 		},
+		schema: FoodPricingConfigurationSchema,
 		defaultValues: {
 			baseFare: 0,
 			perKmRate: 0,
@@ -193,10 +198,12 @@ function getFieldLabel(fieldName: string) {
 		baseFare: () => m.base_fare?.() || "Base Fare",
 		perKmRate: () => m.per_km_rate?.() || "Price per KM",
 		minimumFare: () => m.minimum_fare?.() || "Minimum Fare",
-		platformFeeRate: () => m.platform_fee_rate?.() || "Platform Fee Rate (%)",
-		taxRate: () => m.tax_rate?.() || "Tax Rate (%)",
+		platformFeeRate: () =>
+			m.platform_fee_rate?.() || "Platform Fee Rate (decimal, e.g., 0.1 = 10%)",
+		taxRate: () => m.tax_rate?.() || "Tax Rate (decimal, e.g., 0.1 = 10%)",
 		perKgRate: () => m.per_kg_rate?.() || "Price per KG",
-		merchantCommissionRate: () => "Merchant Commission Rate",
+		merchantCommissionRate: () =>
+			"Merchant Commission Rate (decimal, e.g., 0.1 = 10%)",
 	};
 	return labels[fieldName]?.() || fieldName;
 }
@@ -207,6 +214,7 @@ export function ConfigurationItem({
 	icon: CustomIcon,
 	textColor,
 	bgColor,
+	schema,
 	defaultValues,
 	fields,
 }: Configuration) {
@@ -217,7 +225,8 @@ export function ConfigurationItem({
 	);
 
 	const form = useForm({
-		resolver: zodResolver(PricingConfigurationSchema),
+		// biome-ignore lint/suspicious/noExplicitAny: Schema type varies per configuration, using any for type-safe zodResolver
+		resolver: zodResolver(schema as any),
 		defaultValues: defaultValues,
 		values: pricing.data
 			? {
@@ -236,11 +245,13 @@ export function ConfigurationItem({
 	const mutation = useMutation(
 		orpcQuery.configuration.update.mutationOptions({
 			onSuccess: async () => {
-				await queryClient.invalidateQueries({
-					queryKey: orpcQuery.configuration.get.queryKey({
-						input: { params: { key } },
-					}),
-				});
+				await queryClient.invalidateQueries(
+					// 	{
+					// 	queryKey: orpcQuery.configuration.get.queryKey({
+					// 		input: { params: { key } },
+					// 	}),
+					// }
+				);
 				toast.success(
 					m.success_placeholder({
 						action: capitalizeFirstLetter(m.update_pricing().toLowerCase()),
@@ -273,14 +284,23 @@ export function ConfigurationItem({
 	const perKgRate =
 		"perKgRate" in formValues ? Number(formValues.perKgRate) || 0 : 0;
 
+	// Calculate subtotal (base + distance + additional fees)
 	let subtotal = baseFare + perKmRate * EXAMPLE_KM;
 	if (key === "delivery-service-pricing") {
 		subtotal += perKgRate * EXAMPLE_KG;
 	}
 
-	const platformFee = subtotal * (platformFeeRate / 100);
-	const tax = subtotal * (taxRate / 100);
-	const totalPrice = Math.max(subtotal + platformFee + tax, minimumFare);
+	// Apply minimum fare BEFORE calculating fees (matching server logic)
+	if (subtotal < minimumFare) {
+		subtotal = minimumFare;
+	}
+
+	// Platform fee is calculated as decimal rate (e.g., 0.1 = 10%)
+	const platformFee = subtotal * platformFeeRate;
+	// Tax is applied to subtotal + platformFee (matching server logic)
+	const tax = (subtotal + platformFee) * taxRate;
+	const totalPrice = subtotal + platformFee + tax;
+	// Driver receives subtotal minus platform fee
 	const driverReceives = subtotal - platformFee;
 
 	return (
@@ -377,11 +397,13 @@ export function ConfigurationItem({
 											</span>
 										</div>
 										<div className="flex justify-between text-xs">
-											<span>Platform Fee ({platformFeeRate}%):</span>
+											<span>
+												Platform Fee ({(platformFeeRate * 100).toFixed(1)}%):
+											</span>
 											<span>Rp {platformFee.toLocaleString("id-ID")}</span>
 										</div>
 										<div className="flex justify-between text-xs">
-											<span>Tax ({taxRate}%):</span>
+											<span>Tax ({(taxRate * 100).toFixed(1)}%):</span>
 											<span>Rp {tax.toLocaleString("id-ID")}</span>
 										</div>
 										<div className="flex justify-between border-t pt-1 font-medium text-foreground">

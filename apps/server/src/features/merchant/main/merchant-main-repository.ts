@@ -131,7 +131,9 @@ export class MerchantMainRepository extends BaseRepository {
 		}
 	}
 
-	async list(query?: MerchantListQuery): Promise<ListResult<Merchant>> {
+	override async list(
+		query?: MerchantListQuery,
+	): Promise<ListResult<Merchant>> {
 		try {
 			const {
 				cursor,

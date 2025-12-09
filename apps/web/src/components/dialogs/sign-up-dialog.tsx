@@ -70,7 +70,7 @@ export const SignUpDialog: FC<SignUpDialogProps> = ({ asChild, children }) => {
 								<CardContent className="flex w-full flex-col items-center gap-2">
 									<img src={AssetImage} alt={name} className="size-20" />
 									<div className="w-full">
-										<p className="text-center font-medium text-;g">{name}</p>
+										<p className="text-center font-medium text-lg">{name}</p>
 										<p className="text-center text-muted-foreground text-sm">
 											{desc}
 										</p>

@@ -39,7 +39,7 @@ export const MerchantApprovalPageRejectionDialog = ({
 	isOpen: boolean;
 	onOpenChange: (open: boolean) => void;
 }) => {
-	const form = useForm<z.infer<typeof FormSchema>>({
+	const form = useForm({
 		resolver: zodResolver(FormSchema),
 		defaultValues: {
 			reason: "",

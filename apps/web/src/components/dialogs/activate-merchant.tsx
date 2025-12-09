@@ -36,7 +36,7 @@ export const ActivateMerchantDialog = ({
 			});
 			if (result.status === 200) {
 				toast.success(m.server_merchant_activated());
-				queryClient.invalidateQueries({ queryKey: ["merchants"] });
+				queryClient.invalidateQueries();
 				onOpenChange(false);
 			} else {
 				toast.error(m.an_unexpected_error_occurred());

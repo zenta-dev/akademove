@@ -182,7 +182,7 @@ class _MerchantOrderScreenState extends State<MerchantOrderScreen> {
           },
           child: state.orders.whenOr(
             success: (orders, message) {
-              final filtered = (orders ?? [])
+              final filtered = orders
                   .where((o) => statuses.contains(o.status))
                   .toList();
 

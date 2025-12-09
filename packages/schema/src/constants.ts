@@ -23,6 +23,7 @@ export const CONSTANTS = Object.freeze({
 		"MAINTENANCE",
 	] as const,
 	ORDER_STATUSES: [
+		"SCHEDULED",
 		"REQUESTED",
 		"MATCHING",
 		"ACCEPTED",
@@ -179,4 +180,29 @@ export const DRIVER_QUIZ_STATUSES = [
 	"IN_PROGRESS",
 	"PASSED",
 	"FAILED",
+] as const;
+
+// Fraud Detection Constants
+export const FRAUD_EVENT_TYPES = [
+	"GPS_SPOOF_VELOCITY", // Impossible speed between locations
+	"GPS_SPOOF_TELEPORT", // Location jumped impossibly far
+	"GPS_SPOOF_MOCK_DETECTED", // Mock location API detected
+	"DUPLICATE_BANK_ACCOUNT", // Same bank account across accounts
+	"DUPLICATE_IP_PATTERN", // Suspicious IP registration pattern
+	"DUPLICATE_NAME_SIMILARITY", // Very similar names with other signals
+	"SUSPICIOUS_REGISTRATION", // Multiple signals combined
+] as const;
+
+export const FRAUD_SEVERITY_LEVELS = [
+	"LOW",
+	"MEDIUM",
+	"HIGH",
+	"CRITICAL",
+] as const;
+
+export const FRAUD_STATUSES = [
+	"PENDING",
+	"REVIEWING",
+	"CONFIRMED",
+	"DISMISSED",
 ] as const;

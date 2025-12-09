@@ -4,6 +4,8 @@ import { omit } from "@repo/shared";
 import { AuthError } from "@/core/error";
 import type { KeyValueService } from "@/core/services/kv";
 import { S3StorageService, type StorageService } from "@/core/services/storage";
+import type { UserDatabase } from "@/core/tables/auth";
+import type { DetailedUserBadgeDatabase } from "@/core/tables/badge";
 import { UserAdminRepository } from "@/features/user/admin/user-admin-repository";
 import { log } from "@/utils";
 import type { JwtManager, TokenPayload } from "@/utils/jwt";
@@ -36,11 +38,18 @@ export interface SessionData {
 }
 
 /**
+ * User with badges from database
+ */
+export type UserWithBadges = UserDatabase & {
+	userBadges: DetailedUserBadgeDatabase[];
+};
+
+/**
  * Dependencies for session operations
  */
 export interface SessionDeps {
 	getUserWithAccount: (email: string) => Promise<unknown | undefined>;
-	getUserById: (id: string) => Promise<unknown | undefined>;
+	getUserById: (id: string) => Promise<UserWithBadges | undefined>;
 	getCache: <T>(key: string) => Promise<T | undefined>;
 	setCache: <T>(key: string, value: T) => Promise<void>;
 	deleteCache: (key: string) => Promise<void>;
@@ -132,12 +141,12 @@ export class SessionService {
 				throw new AuthError("Invalid credentials", { code: "UNAUTHORIZED" });
 			}
 
-			const userWithoutAccounts = omit(user as Record<string, unknown>, [
-				"accounts",
-			]);
+			const userWithoutAccounts = omit(
+				user as UserWithBadges & { accounts: unknown[] },
+				["accounts"],
+			) as UserWithBadges;
 			const composedUser = await UserAdminRepository.composeEntity(
-				// biome-ignore lint/suspicious/noExplicitAny: Dynamic user data from database
-				userWithoutAccounts as any,
+				userWithoutAccounts,
 				this.#storage,
 				{ expiresIn: S3StorageService.SEVEN_DAY_PRESIGNED_URL_EXPIRY },
 			);
@@ -198,14 +207,9 @@ export class SessionService {
 				if (!res) {
 					throw new AuthError("User not found", { code: "UNAUTHORIZED" });
 				}
-				user = await UserAdminRepository.composeEntity(
-					// biome-ignore lint/suspicious/noExplicitAny: Dynamic user data from database
-					res as any,
-					this.#storage,
-					{
-						expiresIn: S3StorageService.SEVEN_DAY_PRESIGNED_URL_EXPIRY,
-					},
-				);
+				user = await UserAdminRepository.composeEntity(res, this.#storage, {
+					expiresIn: S3StorageService.SEVEN_DAY_PRESIGNED_URL_EXPIRY,
+				});
 				await deps.setCache(user.id, user);
 			}
 

@@ -1,6 +1,7 @@
 import { m } from "@repo/i18n";
 import Decimal from "decimal.js";
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
+import { v7 } from "uuid";
 import type { WithTx } from "@/core/interface";
 import { type DatabaseTransaction, tables } from "@/core/services/db";
 import { log, toNumberSafe, toStringNumberSafe } from "@/utils";
@@ -47,7 +48,8 @@ export class OrderRefundService {
 	}
 
 	/**
-	 * Calculate new wallet balance after refund
+	 * Calculate expected new wallet balance after refund
+	 * NOTE: This is only used for transaction record, actual balance update uses atomic SQL
 	 */
 	static calculateNewBalance(
 		currentBalance: string,
@@ -90,17 +92,55 @@ export class OrderRefundService {
 	}
 
 	/**
-	 * Update wallet balance
+	 * Update wallet balance atomically using SQL
+	 * This prevents race conditions when multiple refunds happen concurrently
 	 */
 	static async updateWalletBalance(
 		tx: DatabaseTransaction,
 		walletId: string,
-		newBalance: Decimal,
+		refundAmount: Decimal,
 	): Promise<void> {
+		const amountSql = toStringNumberSafe(refundAmount);
 		await tx
 			.update(tables.wallet)
-			.set({ balance: toStringNumberSafe(newBalance) })
+			.set({
+				balance: sql`balance + ${amountSql}`,
+				updatedAt: new Date(),
+			})
 			.where(eq(tables.wallet.id, walletId));
+	}
+
+	/**
+	 * Create a REFUND transaction record for audit trail
+	 */
+	static async createRefundTransaction(
+		tx: DatabaseTransaction,
+		params: {
+			walletId: string;
+			orderId: string;
+			refundAmount: Decimal;
+			balanceBefore: Decimal;
+			balanceAfter: Decimal;
+			reason?: string;
+		},
+	): Promise<void> {
+		await tx.insert(tables.transaction).values({
+			id: v7(),
+			walletId: params.walletId,
+			type: "REFUND",
+			amount: toStringNumberSafe(params.refundAmount),
+			balanceBefore: toStringNumberSafe(params.balanceBefore),
+			balanceAfter: toStringNumberSafe(params.balanceAfter),
+			status: "SUCCESS",
+			description:
+				params.reason ?? `Refund for order #${params.orderId.slice(0, 8)}`,
+			referenceId: params.orderId,
+			metadata: {
+				type: "ORDER_REFUND",
+				orderId: params.orderId,
+				reason: params.reason,
+			},
+		});
 	}
 
 	/**
@@ -111,6 +151,7 @@ export class OrderRefundService {
 	 * @param refundAmount - Amount to refund (as Decimal)
 	 * @param penaltyAmount - Penalty amount deducted (as Decimal)
 	 * @param opts - Transaction context
+	 * @param reason - Optional reason for the refund
 	 */
 	static async processRefund(
 		orderId: string,
@@ -118,6 +159,7 @@ export class OrderRefundService {
 		refundAmount: Decimal,
 		penaltyAmount: Decimal,
 		opts: WithTx,
+		reason?: string,
 	): Promise<void> {
 		const { tx } = opts;
 
@@ -156,26 +198,33 @@ export class OrderRefundService {
 			return;
 		}
 
-		// Calculate new balance
+		// Calculate balances for transaction record
 		const currentBalance = new Decimal(wallet.balance);
-		const newBalance = OrderRefundService.calculateNewBalance(
-			wallet.balance,
-			refundAmount,
-		);
+		const balanceAfter = currentBalance.plus(refundAmount);
 
-		// Update transaction status
+		// Update original payment transaction status
 		await OrderRefundService.updateTransactionStatus(
 			tx,
 			paymentTransaction.id,
 			currentBalance,
-			newBalance,
+			balanceAfter,
 		);
 
 		// Update payment status
 		await OrderRefundService.updatePaymentStatus(tx, payment.id);
 
-		// Update wallet balance
-		await OrderRefundService.updateWalletBalance(tx, wallet.id, newBalance);
+		// Update wallet balance atomically
+		await OrderRefundService.updateWalletBalance(tx, wallet.id, refundAmount);
+
+		// Create a new REFUND transaction record for audit trail
+		await OrderRefundService.createRefundTransaction(tx, {
+			walletId: wallet.id,
+			orderId,
+			refundAmount,
+			balanceBefore: currentBalance,
+			balanceAfter,
+			reason,
+		});
 
 		log.info(
 			{

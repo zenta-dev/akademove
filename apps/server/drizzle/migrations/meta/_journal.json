@@ -120,6 +120,20 @@
 			"when": 1765089712932,
 			"tag": "0016_black_felicia_hardy",
 			"breakpoints": true
+		},
+		{
+			"idx": 17,
+			"version": "7",
+			"when": 1765242181609,
+			"tag": "0017_safe_earthquake",
+			"breakpoints": true
+		},
+		{
+			"idx": 18,
+			"version": "7",
+			"when": 1765247312654,
+			"tag": "0018_plain_jack_power",
+			"breakpoints": true
 		}
 	]
 }

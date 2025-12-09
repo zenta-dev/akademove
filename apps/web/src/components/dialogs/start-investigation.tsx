@@ -48,7 +48,7 @@ export const StartInvestigationDialog = ({
 	const [isLoading, setIsLoading] = useState(false);
 	const queryClient = useQueryClient();
 
-	const form = useForm<InvestigationFormData>({
+	const form = useForm({
 		resolver: zodResolver(investigationSchema),
 		defaultValues: {
 			notes: "",
@@ -64,7 +64,7 @@ export const StartInvestigationDialog = ({
 			});
 			if (result.status === 200) {
 				toast.success(m.server_report_investigation_started());
-				queryClient.invalidateQueries({ queryKey: ["reports"] });
+				queryClient.invalidateQueries();
 				form.reset();
 				onOpenChange(false);
 			} else {

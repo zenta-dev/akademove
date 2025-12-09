@@ -1,6 +1,6 @@
 import { DriverScheduleKeySchema } from "@repo/schema/driver";
 import type { UnifiedPaginationQuery } from "@repo/schema/pagination";
-import { count, gt, ilike, type SQL } from "drizzle-orm";
+import { and, count, eq, gt, ilike, type SQL } from "drizzle-orm";
 import type { DatabaseService } from "@/core/services/db";
 import { tables } from "@/core/services/db";
 import { log } from "@/utils";
@@ -27,8 +27,9 @@ export class DriverScheduleListQueryService {
 	static generateWhereClauses(options: {
 		search?: string;
 		cursor?: string;
+		driverId?: string;
 	}): SQL[] {
-		const { search, cursor } = options;
+		const { search, cursor, driverId } = options;
 		const clauses: SQL[] = [];
 
 		if (search) {
@@ -37,6 +38,11 @@ export class DriverScheduleListQueryService {
 
 		if (cursor) {
 			clauses.push(gt(tables.driverSchedule.createdAt, new Date(cursor)));
+		}
+
+		// FIX: Add driverId filter to ensure drivers only see their own schedules
+		if (driverId) {
+			clauses.push(eq(tables.driverSchedule.driverId, driverId));
 		}
 
 		return clauses;
@@ -60,6 +66,41 @@ export class DriverScheduleListQueryService {
 			log.error(
 				{ search, error },
 				"[DriverScheduleListQueryService] Failed to get search count",
+			);
+			return 0;
+		}
+	}
+
+	/**
+	 * Get count of schedules matching filters (search and/or driverId)
+	 */
+	static async getFilteredCount(
+		db: DatabaseService,
+		filters: { search?: string; driverId?: string },
+	): Promise<number> {
+		try {
+			const conditions: SQL[] = [];
+
+			if (filters.search) {
+				conditions.push(
+					ilike(tables.driverSchedule.name, `%${filters.search}%`),
+				);
+			}
+
+			if (filters.driverId) {
+				conditions.push(eq(tables.driverSchedule.driverId, filters.driverId));
+			}
+
+			const [dbResult] = await db
+				.select({ count: count(tables.driverSchedule.id) })
+				.from(tables.driverSchedule)
+				.where(conditions.length > 0 ? and(...conditions) : undefined);
+
+			return dbResult?.count ?? 0;
+		} catch (error) {
+			log.error(
+				{ filters, error },
+				"[DriverScheduleListQueryService] Failed to get filtered count",
 			);
 			return 0;
 		}

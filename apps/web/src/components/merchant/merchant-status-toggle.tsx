@@ -44,7 +44,7 @@ export function MerchantStatusToggle({
 		},
 		onSuccess: (data) => {
 			setIsOnline(data.isOnline);
-			queryClient.invalidateQueries({ queryKey: ["merchant"] });
+			queryClient.invalidateQueries();
 			toast.success(data.isOnline ? "You're now online" : "You're now offline");
 		},
 		onError: (error) => {
@@ -69,7 +69,7 @@ export function MerchantStatusToggle({
 		},
 		onSuccess: (data) => {
 			setIsTakingOrders(data.isTakingOrders);
-			queryClient.invalidateQueries({ queryKey: ["merchant"] });
+			queryClient.invalidateQueries();
 			toast.success(
 				data.isTakingOrders
 					? "You're now taking orders"
@@ -100,7 +100,7 @@ export function MerchantStatusToggle({
 		},
 		onSuccess: (data) => {
 			setOperatingStatus(data.operatingStatus);
-			queryClient.invalidateQueries({ queryKey: ["merchant"] });
+			queryClient.invalidateQueries();
 			toast.success(`Store is now ${data.operatingStatus.toLowerCase()}`);
 		},
 		onError: (error) => {

@@ -5,7 +5,12 @@ import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import * as readline from "node:readline";
 import { faker, fakerID_ID } from "@faker-js/faker";
-import type { Phone, UserGender, UserRole } from "@repo/schema";
+import type {
+	InsertQuickMessageTemplate,
+	Phone,
+	UserGender,
+	UserRole,
+} from "@repo/schema";
 import type { InsertBadge } from "@repo/schema/badge";
 import {
 	CONSTANTS,
@@ -14,6 +19,7 @@ import {
 	type TRANSACTION_STATUS,
 	type TRANSACTION_TYPE,
 } from "@repo/schema/constants";
+import type { FraudSignal } from "@repo/schema/fraud";
 import type { InsertMerchant } from "@repo/schema/merchant";
 import { eq, inArray, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/postgres-js";
@@ -30,14 +36,18 @@ import {
 import { contact } from "@/core/tables/contact";
 import { coupon, couponUsage } from "@/core/tables/coupon";
 import { driver, driverSchedule } from "@/core/tables/driver";
+import { driverApprovalReview } from "@/core/tables/driver-approval-review";
 import { driverQuizAnswer } from "@/core/tables/driver-quiz-answer";
 import { driverQuizQuestion } from "@/core/tables/driver-quiz-question";
 import { emergency } from "@/core/tables/emergency";
+import { fraudEvent, userFraudProfile } from "@/core/tables/fraud";
 import { leaderboard } from "@/core/tables/leaderboard";
 import { merchant, merchantMenu } from "@/core/tables/merchant";
+import { merchantApprovalReview } from "@/core/tables/merchant-approval-review";
 import { userNotification } from "@/core/tables/notification";
 import { order, orderItem } from "@/core/tables/order";
 import { payment } from "@/core/tables/payment";
+import { quickMessageTemplate } from "@/core/tables/quick-message";
 import { report } from "@/core/tables/report";
 import { review } from "@/core/tables/review";
 import { transaction } from "@/core/tables/transaction";
@@ -462,6 +472,11 @@ async function promptSeedingOptions(): Promise<SeedOptions> {
 				"23": "contacts",
 				"24": "userNotifications",
 				"25": "accountDeletions",
+				"26": "driverApprovalReviews",
+				"27": "merchantApprovalReviews",
+				"28": "fraudEvents",
+				"29": "userFraudProfiles",
+				"30": "quickMessages",
 			};
 			const selectedSeeders = new Set(
 				(cliArgs.seeders ?? "")
@@ -535,6 +550,11 @@ async function promptSeedingOptions(): Promise<SeedOptions> {
 		console.log("23. contacts - Support contact submissions");
 		console.log("24. userNotifications - In-app notifications");
 		console.log("25. accountDeletions - Account deletion requests");
+		console.log("26. driverApprovalReviews - Driver document approval reviews");
+		console.log("27. merchantApprovalReviews - Merchant approval reviews");
+		console.log("28. fraudEvents - Fraud detection events");
+		console.log("29. userFraudProfiles - User fraud risk profiles");
+		console.log("30. quickMessages - Quick message templates for chat");
 
 		const selections = await question(
 			"\nEnter seeder numbers separated by commas (e.g., 1,2,3): ",
@@ -566,6 +586,11 @@ async function promptSeedingOptions(): Promise<SeedOptions> {
 			"23": "contacts",
 			"24": "userNotifications",
 			"25": "accountDeletions",
+			"26": "driverApprovalReviews",
+			"27": "merchantApprovalReviews",
+			"28": "fraudEvents",
+			"29": "userFraudProfiles",
+			"30": "quickMessages",
 		};
 
 		const selectedSeeders = new Set(
@@ -963,6 +988,36 @@ async function seedMerchants() {
 		.from(merchant);
 
 	const existingUserIds = new Set(existingMerchants.map((m) => m.userId));
+
+	// IMPORTANT: Ensure test merchant is seeded first
+	const testMerchantUser = users.find(
+		(u) => u.email === "test-merchant-1@akademove.com",
+	);
+
+	if (testMerchantUser && !existingUserIds.has(testMerchantUser.id)) {
+		const testMerchant = {
+			id: v7(),
+			userId: testMerchantUser.id,
+			name: "Warung Makan Test Merchant",
+			email: testMerchantUser.email,
+			phone: testMerchantUser.phone ?? undefined,
+			address: "Jl. Kampus Raya No. 1, Depok",
+			category: "Food" as const, // Ensure Food category for menu items
+			location: {
+				y: BASE_LAT + 0.001,
+				x: BASE_LNG + 0.001,
+			},
+			bank: {
+				provider: "BCA" as const,
+				number: 1234567890,
+			},
+		} satisfies InsertMerchant & { userId: string; id: string };
+
+		await db.insert(merchant).values(testMerchant);
+		console.log("✅ Test merchant profile created.");
+		existingUserIds.add(testMerchantUser.id);
+	}
+
 	const availableUsers = users.filter((u) => !existingUserIds.has(u.id));
 
 	if (availableUsers.length === 0) {
@@ -1043,12 +1098,6 @@ async function seedDrivers() {
 		.from(driver);
 
 	const existingUserIds = new Set(existingDrivers.map((d) => d.userId));
-	const availableUsers = users.filter((u) => !existingUserIds.has(u.id));
-
-	if (availableUsers.length === 0) {
-		console.log("✅ All driver users already have driver profiles.");
-		return;
-	}
 
 	// Pre-populate Sets with existing values from database to avoid unique constraint violations
 	const usedStudentIds = new Set<number>(
@@ -1075,6 +1124,46 @@ async function seedDrivers() {
 		usedLicensePlates.add(plate);
 		return plate;
 	};
+
+	// IMPORTANT: Ensure test driver is seeded first with APPROVED status
+	const testDriverUser = users.find(
+		(u) => u.email === "test-driver-1@akademove.com",
+	);
+
+	if (testDriverUser && !existingUserIds.has(testDriverUser.id)) {
+		const testDriver = {
+			id: v7(),
+			userId: testDriverUser.id,
+			studentId: generateUniqueStudentId(),
+			licensePlate: "B 1234 TST",
+			status: "APPROVED" as const, // Ensure APPROVED status for test driver
+			rating: 4.8,
+			isOnline: true,
+			currentLocation: sql`ST_SetSRID(ST_MakePoint(${BASE_LNG}, ${BASE_LAT}), 4326)`,
+			lastLocationUpdate: new Date(),
+			bank: {
+				provider: "BCA" as const,
+				number: 9876543210,
+			},
+			studentCard: "DL-0199ef0c-7758-7508-b906-4a706df54709.jpg",
+			driverLicense: "DL-0199ef0c-7758-7508-b906-4a706df54709.jpg",
+			vehicleCertificate: "DL-0199ef0c-7758-7508-b906-4a706df54709.jpg",
+			createdAt: new Date(),
+			updatedAt: new Date(),
+		};
+
+		usedLicensePlates.add("B 1234 TST");
+		await db.insert(driver).values(testDriver);
+		console.log("✅ Test driver profile created with APPROVED status.");
+		existingUserIds.add(testDriverUser.id);
+	}
+
+	const availableUsers = users.filter((u) => !existingUserIds.has(u.id));
+
+	if (availableUsers.length === 0) {
+		console.log("✅ All driver users already have driver profiles.");
+		return;
+	}
 
 	const drivers = availableUsers.map((user) => {
 		const bankProvider = faker.helpers.arrayElement(CONSTANTS.BANK_PROVIDERS);
@@ -1136,28 +1225,73 @@ async function seedDrivers() {
 async function seedOrders() {
 	console.log("📦 Seeding Orders...");
 
-	const users = await db
-		.select({ id: tables.user.id })
-		.from(tables.user)
-		.where(eq(tables.user.role, "USER"));
+	const allUsers = await db
+		.select({ id: tables.user.id, email: tables.user.email })
+		.from(tables.user);
 
-	const drivers = await db.select({ id: driver.id }).from(driver);
-	const merchants = await db.select({ id: merchant.id }).from(merchant);
+	const users = allUsers.filter((u) => {
+		// Include test-user-1 and other USER role users
+		// For simplicity, use email patterns
+		return !u.email.includes("admin") && !u.email.includes("operator");
+	});
+
+	const allDrivers = await db
+		.select({ id: driver.id, userId: driver.userId })
+		.from(driver);
+
+	const allMerchants = await db
+		.select({ id: merchant.id, userId: merchant.userId })
+		.from(merchant);
 
 	if (!users.length) {
 		console.warn("⚠️ No user accounts found.");
 		return;
 	}
 
+	// Find test accounts
+	const testUser = allUsers.find(
+		(u) => u.email === "test-user-1@akademove.com",
+	);
+	const testDriverUser = allUsers.find(
+		(u) => u.email === "test-driver-1@akademove.com",
+	);
+	const testMerchantUser = allUsers.find(
+		(u) => u.email === "test-merchant-1@akademove.com",
+	);
+	const testDriver = allDrivers.find((d) => d.userId === testDriverUser?.id);
+	const testMerchant = allMerchants.find(
+		(m) => m.userId === testMerchantUser?.id,
+	);
+
 	const maybePick = <T extends { id: string }>(arr: T[]) =>
 		arr.length > 0 && faker.datatype.boolean()
 			? faker.helpers.arrayElement(arr).id
 			: null;
 
-	const orders = Array.from({ length: 50 }).map(() => {
-		const u = faker.helpers.arrayElement(users);
+	const orders: Array<{
+		id: string;
+		userId: string;
+		driverId: string | null;
+		merchantId: string | null;
+		type: (typeof CONSTANTS.ORDER_TYPES)[number];
+		status: (typeof CONSTANTS.ORDER_STATUSES)[number];
+		pickupLocation: ReturnType<typeof sql>;
+		dropoffLocation: ReturnType<typeof sql>;
+		distanceKm: number;
+		basePrice: string;
+		totalPrice: string;
+		createdAt: Date;
+	}> = [];
+
+	const createOrder = (
+		userId: string,
+		driverId: string | null,
+		merchantId: string | null,
+		type: (typeof CONSTANTS.ORDER_TYPES)[number],
+		status: (typeof CONSTANTS.ORDER_STATUSES)[number],
+	) => {
 		const distanceKm = Number(
-			faker.number.float({ min: 1, max: 50 }).toFixed(2),
+			faker.number.float({ min: 1, max: 20 }).toFixed(2),
 		);
 		const baseFare = faker.number.int({
 			min: 5000,
@@ -1182,11 +1316,11 @@ async function seedOrders() {
 
 		return {
 			id: v7(),
-			userId: u.id,
-			driverId: maybePick(drivers),
-			merchantId: maybePick(merchants),
-			type: faker.helpers.arrayElement(CONSTANTS.ORDER_TYPES),
-			status: faker.helpers.arrayElement(CONSTANTS.ORDER_STATUSES),
+			userId,
+			driverId,
+			merchantId,
+			type,
+			status,
 			pickupLocation: sql`ST_SetSRID(ST_MakePoint(${pickup.x}, ${pickup.y}), 4326)`,
 			dropoffLocation: sql`ST_SetSRID(ST_MakePoint(${dropoff.x}, ${dropoff.y}), 4326)`,
 			distanceKm,
@@ -1194,7 +1328,144 @@ async function seedOrders() {
 			totalPrice: `${totalPrice}`,
 			createdAt: faker.date.recent({ days: 30 }),
 		};
-	});
+	};
+
+	// IMPORTANT: Ensure test user has orders with various statuses
+	if (testUser) {
+		// Completed orders for test user
+		orders.push(
+			createOrder(
+				testUser.id,
+				testDriver?.id ?? null,
+				null,
+				"RIDE",
+				"COMPLETED",
+			),
+		);
+		orders.push(
+			createOrder(
+				testUser.id,
+				testDriver?.id ?? null,
+				null,
+				"RIDE",
+				"COMPLETED",
+			),
+		);
+		orders.push(
+			createOrder(
+				testUser.id,
+				testDriver?.id ?? null,
+				null,
+				"DELIVERY",
+				"COMPLETED",
+			),
+		);
+
+		// Food order for test user with test merchant
+		if (testMerchant) {
+			orders.push(
+				createOrder(
+					testUser.id,
+					testDriver?.id ?? null,
+					testMerchant.id,
+					"FOOD",
+					"COMPLETED",
+				),
+			);
+			orders.push(
+				createOrder(
+					testUser.id,
+					testDriver?.id ?? null,
+					testMerchant.id,
+					"FOOD",
+					"IN_TRIP",
+				),
+			);
+		}
+
+		// Orders in various statuses
+		orders.push(
+			createOrder(
+				testUser.id,
+				testDriver?.id ?? null,
+				null,
+				"RIDE",
+				"ACCEPTED",
+			),
+		);
+		orders.push(createOrder(testUser.id, null, null, "RIDE", "REQUESTED"));
+		orders.push(
+			createOrder(
+				testUser.id,
+				testDriver?.id ?? null,
+				null,
+				"RIDE",
+				"CANCELLED_BY_USER",
+			),
+		);
+	}
+
+	// IMPORTANT: Ensure test driver has orders with COMPLETED status (for earnings/reviews)
+	if (testDriver && testUser) {
+		// Additional completed orders for test driver
+		orders.push(
+			createOrder(testUser.id, testDriver.id, null, "RIDE", "COMPLETED"),
+		);
+		orders.push(
+			createOrder(testUser.id, testDriver.id, null, "RIDE", "COMPLETED"),
+		);
+		orders.push(
+			createOrder(testUser.id, testDriver.id, null, "DELIVERY", "COMPLETED"),
+		);
+	}
+
+	// IMPORTANT: Ensure test merchant has FOOD orders
+	if (testMerchant && testUser && testDriver) {
+		orders.push(
+			createOrder(
+				testUser.id,
+				testDriver.id,
+				testMerchant.id,
+				"FOOD",
+				"COMPLETED",
+			),
+		);
+		orders.push(
+			createOrder(
+				testUser.id,
+				testDriver.id,
+				testMerchant.id,
+				"FOOD",
+				"COMPLETED",
+			),
+		);
+		orders.push(
+			createOrder(testUser.id, null, testMerchant.id, "FOOD", "REQUESTED"),
+		);
+	}
+
+	// Generate remaining random orders
+	const remainingCount = Math.max(0, 50 - orders.length);
+	for (let i = 0; i < remainingCount; i++) {
+		const u = faker.helpers.arrayElement(users);
+		const driverId =
+			allDrivers.length > 0 && faker.datatype.boolean()
+				? faker.helpers.arrayElement(allDrivers).id
+				: null;
+		const merchantId = maybePick(allMerchants);
+		const type = faker.helpers.arrayElement(CONSTANTS.ORDER_TYPES);
+		const status = faker.helpers.arrayElement(CONSTANTS.ORDER_STATUSES);
+
+		orders.push(
+			createOrder(
+				u.id,
+				driverId,
+				type === "FOOD" ? merchantId : null,
+				type,
+				status,
+			),
+		);
+	}
 
 	await db.insert(order).values(orders);
 	console.log(`✅ Inserted ${orders.length} orders.`);
@@ -1581,28 +1852,33 @@ async function seedMerchantMenus() {
 	console.log("🍜 Seeding Merchant Menus...");
 
 	const merchants = await db
-		.select({ id: merchant.id, category: merchant.category })
+		.select({
+			id: merchant.id,
+			category: merchant.category,
+			userId: merchant.userId,
+		})
 		.from(merchant);
+
+	const allUsers = await db
+		.select({ id: tables.user.id, email: tables.user.email })
+		.from(tables.user);
 
 	if (merchants.length === 0) {
 		console.warn("⚠️ No merchants found. Skipping merchant menus.");
 		return;
 	}
 
+	// Find test merchant
+	const testMerchantUser = allUsers.find(
+		(u) => u.email === "test-merchant-1@akademove.com",
+	);
+	const testMerchant = merchants.find((m) => m.userId === testMerchantUser?.id);
+
 	// Check existing menus
 	const existingMenus = await db
 		.select({ merchantId: merchantMenu.merchantId })
 		.from(merchantMenu);
 	const merchantsWithMenus = new Set(existingMenus.map((m) => m.merchantId));
-
-	const merchantsToSeed = merchants.filter(
-		(m) => !merchantsWithMenus.has(m.id),
-	);
-
-	if (merchantsToSeed.length === 0) {
-		console.log("✅ All merchants already have menus.");
-		return;
-	}
 
 	const menus: Array<{
 		id: string;
@@ -1612,6 +1888,69 @@ async function seedMerchantMenus() {
 		price: string;
 		stock: number;
 	}> = [];
+
+	// IMPORTANT: Ensure test merchant has menu items
+	if (testMerchant && !merchantsWithMenus.has(testMerchant.id)) {
+		// Add specific menu items for test merchant
+		const testMerchantMenuItems = [
+			{
+				name: "Nasi Goreng Spesial",
+				category: "Makanan Berat",
+				price: "15000",
+				stock: 50,
+			},
+			{
+				name: "Mie Ayam Bakso",
+				category: "Makanan Berat",
+				price: "12000",
+				stock: 40,
+			},
+			{
+				name: "Ayam Geprek",
+				category: "Makanan Berat",
+				price: "18000",
+				stock: 30,
+			},
+			{
+				name: "Soto Ayam",
+				category: "Makanan Berat",
+				price: "14000",
+				stock: 35,
+			},
+			{ name: "Es Teh Manis", category: "Minuman", price: "5000", stock: 100 },
+			{ name: "Kopi Susu", category: "Minuman", price: "8000", stock: 80 },
+			{ name: "Jus Alpukat", category: "Minuman", price: "12000", stock: 50 },
+			{
+				name: "Gado-Gado",
+				category: "Makanan Berat",
+				price: "13000",
+				stock: 25,
+			},
+			{ name: "Es Cendol", category: "Dessert", price: "10000", stock: 40 },
+			{ name: "Roti Bakar", category: "Snack", price: "8000", stock: 45 },
+		];
+
+		for (const item of testMerchantMenuItems) {
+			menus.push({
+				id: v7(),
+				merchantId: testMerchant.id,
+				...item,
+			});
+		}
+		merchantsWithMenus.add(testMerchant.id);
+		console.log(
+			`   ✅ Test merchant seeded with ${testMerchantMenuItems.length} menu items.`,
+		);
+	}
+
+	const merchantsToSeed = merchants.filter(
+		(m) => !merchantsWithMenus.has(m.id),
+	);
+
+	if (merchantsToSeed.length === 0 && menus.length === 0) {
+		console.log("✅ All merchants already have menus.");
+		return;
+	}
 
 	for (const m of merchantsToSeed) {
 		// Only Food category merchants get food menus
@@ -1644,9 +1983,15 @@ async function seedMerchantMenus() {
 async function seedDriverSchedules() {
 	console.log("📅 Seeding Driver Schedules...");
 
-	const drivers = await db.select({ id: driver.id }).from(driver);
+	const allDrivers = await db
+		.select({ id: driver.id, userId: driver.userId })
+		.from(driver);
 
-	if (drivers.length === 0) {
+	const allUsers = await db
+		.select({ id: tables.user.id, email: tables.user.email })
+		.from(tables.user);
+
+	if (allDrivers.length === 0) {
 		console.warn("⚠️ No drivers found. Skipping schedules.");
 		return;
 	}
@@ -1658,13 +2003,6 @@ async function seedDriverSchedules() {
 	const driversWithSchedules = new Set(
 		existingSchedules.map((s) => s.driverId),
 	);
-
-	const driversToSeed = drivers.filter((d) => !driversWithSchedules.has(d.id));
-
-	if (driversToSeed.length === 0) {
-		console.log("✅ All drivers already have schedules.");
-		return;
-	}
 
 	const schedules: Array<{
 		id: string;
@@ -1686,6 +2024,68 @@ async function seedDriverSchedules() {
 		"Kerja Kelompok",
 		"Organisasi Kampus",
 	];
+
+	// IMPORTANT: Ensure test driver has schedules seeded first
+	const testDriverUser = allUsers.find(
+		(u) => u.email === "test-driver-1@akademove.com",
+	);
+	const testDriver = allDrivers.find((d) => d.userId === testDriverUser?.id);
+
+	if (testDriver && !driversWithSchedules.has(testDriver.id)) {
+		// Add specific schedules for test driver (typical student schedule)
+		const testDriverSchedules = [
+			{
+				name: "Kuliah Pagi - Matematika",
+				dayOfWeek: "MONDAY" as const,
+				startTime: { h: 8, m: 0 },
+				endTime: { h: 10, m: 0 },
+			},
+			{
+				name: "Kuliah Siang - Pemrograman",
+				dayOfWeek: "MONDAY" as const,
+				startTime: { h: 13, m: 0 },
+				endTime: { h: 15, m: 0 },
+			},
+			{
+				name: "Praktikum Lab",
+				dayOfWeek: "WEDNESDAY" as const,
+				startTime: { h: 9, m: 0 },
+				endTime: { h: 12, m: 0 },
+			},
+			{
+				name: "Kuliah Pagi - Database",
+				dayOfWeek: "FRIDAY" as const,
+				startTime: { h: 8, m: 0 },
+				endTime: { h: 10, m: 0 },
+			},
+		];
+
+		for (const sched of testDriverSchedules) {
+			schedules.push({
+				id: v7(),
+				name: sched.name,
+				driverId: testDriver.id,
+				dayOfWeek: sched.dayOfWeek,
+				startTime: sched.startTime,
+				endTime: sched.endTime,
+				isRecurring: true,
+				isActive: true,
+			});
+		}
+		driversWithSchedules.add(testDriver.id);
+		console.log(
+			`   ✅ Test driver seeded with ${testDriverSchedules.length} class schedules.`,
+		);
+	}
+
+	const driversToSeed = allDrivers.filter(
+		(d) => !driversWithSchedules.has(d.id),
+	);
+
+	if (driversToSeed.length === 0 && schedules.length === 0) {
+		console.log("✅ All drivers already have schedules.");
+		return;
+	}
 
 	for (const d of driversToSeed) {
 		// Add 2-4 schedules per driver (class times)
@@ -1746,11 +2146,19 @@ async function seedDriverQuizQuestions() {
 async function seedDriverQuizAnswers() {
 	console.log("📝 Seeding Driver Quiz Answers...");
 
-	const drivers = await db
-		.select({ id: driver.id, quizStatus: driver.quizStatus })
+	const allDrivers = await db
+		.select({
+			id: driver.id,
+			userId: driver.userId,
+			quizStatus: driver.quizStatus,
+		})
 		.from(driver);
 
-	if (drivers.length === 0) {
+	const allUsers = await db
+		.select({ id: tables.user.id, email: tables.user.email })
+		.from(tables.user);
+
+	if (allDrivers.length === 0) {
 		console.warn("⚠️ No drivers found. Skipping quiz answers.");
 		return;
 	}
@@ -1760,15 +2168,6 @@ async function seedDriverQuizAnswers() {
 		.select({ driverId: driverQuizAnswer.driverId })
 		.from(driverQuizAnswer);
 	const driversWithAnswers = new Set(existingAnswers.map((a) => a.driverId));
-
-	const driversToSeed = drivers
-		.filter((d) => !driversWithAnswers.has(d.id))
-		.slice(0, 30); // Only seed for 30 drivers
-
-	if (driversToSeed.length === 0) {
-		console.log("✅ Drivers already have quiz answers.");
-		return;
-	}
 
 	const questions = await db.select().from(driverQuizQuestion);
 	if (questions.length === 0) {
@@ -1797,10 +2196,9 @@ async function seedDriverQuizAnswers() {
 		completedAt: Date | null;
 	}> = [];
 
-	for (const d of driversToSeed) {
-		const isPassed = faker.datatype.boolean({ probability: 0.7 });
+	const createQuizAnswer = (driverId: string, isPassed: boolean) => {
 		const correctCount = isPassed
-			? faker.number.int({ min: 7, max: 10 })
+			? faker.number.int({ min: 8, max: 10 }) // High score for passed
 			: faker.number.int({ min: 3, max: 6 });
 
 		const totalPoints = questions.reduce((sum, q) => sum + q.points, 0);
@@ -1824,10 +2222,10 @@ async function seedDriverQuizAnswers() {
 		});
 
 		const startedAt = faker.date.recent({ days: 30 });
-		answers.push({
+		return {
 			id: v7(),
-			driverId: d.id,
-			status: isPassed ? "PASSED" : "FAILED",
+			driverId,
+			status: isPassed ? ("PASSED" as const) : ("FAILED" as const),
 			totalQuestions: 10,
 			correctAnswers: correctCount,
 			totalPoints,
@@ -1837,7 +2235,53 @@ async function seedDriverQuizAnswers() {
 			answers: answerDetails,
 			startedAt,
 			completedAt: new Date(startedAt.getTime() + 1000 * 60 * 15), // 15 min later
+		};
+	};
+
+	// IMPORTANT: Ensure test driver has PASSED quiz answer first
+	const testDriverUser = allUsers.find(
+		(u) => u.email === "test-driver-1@akademove.com",
+	);
+	const testDriver = allDrivers.find((d) => d.userId === testDriverUser?.id);
+
+	if (testDriver && !driversWithAnswers.has(testDriver.id)) {
+		// Create a PASSED quiz answer for test driver with perfect score
+		const testAnswer = createQuizAnswer(testDriver.id, true);
+		// Override with perfect score for test driver
+		testAnswer.correctAnswers = 10;
+		testAnswer.scorePercentage = 100;
+		testAnswer.earnedPoints = questions.reduce((sum, q) => sum + q.points, 0);
+		testAnswer.answers = questions.map((q, idx) => {
+			const correctOption = q.options.find((o) => o.isCorrect);
+			return {
+				questionId: q.id,
+				selectedOptionId: correctOption?.id ?? "",
+				isCorrect: true,
+				pointsEarned: q.points,
+				answeredAt: new Date(testAnswer.startedAt.getTime() + idx * 60000),
+			};
 		});
+
+		answers.push(testAnswer);
+		driversWithAnswers.add(testDriver.id);
+		console.log(
+			"   ✅ Test driver seeded with PASSED quiz status (100% score).",
+		);
+	}
+
+	// Seed remaining drivers
+	const driversToSeed = allDrivers
+		.filter((d) => !driversWithAnswers.has(d.id))
+		.slice(0, 29); // 29 more to make ~30 total
+
+	if (driversToSeed.length === 0 && answers.length === 0) {
+		console.log("✅ Drivers already have quiz answers.");
+		return;
+	}
+
+	for (const d of driversToSeed) {
+		const isPassed = faker.datatype.boolean({ probability: 0.7 });
+		answers.push(createQuizAnswer(d.id, isPassed));
 	}
 
 	await db.insert(driverQuizAnswer).values(answers);
@@ -1968,6 +2412,10 @@ async function seedTransactions() {
 		.select({ id: tables.wallet.id, userId: tables.wallet.userId })
 		.from(tables.wallet);
 
+	const allUsers = await db
+		.select({ id: tables.user.id, email: tables.user.email })
+		.from(tables.user);
+
 	if (wallets.length === 0) {
 		console.warn("⚠️ No wallets found. Skipping transactions.");
 		return;
@@ -1995,10 +2443,169 @@ async function seedTransactions() {
 		referenceId: string;
 	}> = [];
 
-	// Create transactions for first 50 wallets
-	const walletsToSeed = wallets.slice(0, 50);
+	// Find test accounts
+	const testUser = allUsers.find(
+		(u) => u.email === "test-user-1@akademove.com",
+	);
+	const testDriver = allUsers.find(
+		(u) => u.email === "test-driver-1@akademove.com",
+	);
+	const testMerchant = allUsers.find(
+		(u) => u.email === "test-merchant-1@akademove.com",
+	);
 
-	for (const w of walletsToSeed) {
+	const testUserWallet = wallets.find((w) => w.userId === testUser?.id);
+	const testDriverWallet = wallets.find((w) => w.userId === testDriver?.id);
+	const testMerchantWallet = wallets.find((w) => w.userId === testMerchant?.id);
+
+	// IMPORTANT: Seed transactions for test user (topups and payments)
+	if (testUserWallet) {
+		let balance = 0;
+
+		// Topup 1
+		const topup1 = 500000;
+		transactions.push({
+			id: v7(),
+			walletId: testUserWallet.id,
+			type: "TOPUP",
+			amount: topup1.toString(),
+			balanceBefore: balance.toString(),
+			balanceAfter: (balance + topup1).toString(),
+			status: "SUCCESS",
+			description: "Top up saldo via QRIS",
+			referenceId: v7(),
+		});
+		balance += topup1;
+
+		// Payment 1
+		const payment1 = 25000;
+		transactions.push({
+			id: v7(),
+			walletId: testUserWallet.id,
+			type: "PAYMENT",
+			amount: payment1.toString(),
+			balanceBefore: balance.toString(),
+			balanceAfter: (balance - payment1).toString(),
+			status: "SUCCESS",
+			description: "Pembayaran perjalanan RIDE",
+			referenceId: v7(),
+		});
+		balance -= payment1;
+
+		// Payment 2
+		const payment2 = 35000;
+		transactions.push({
+			id: v7(),
+			walletId: testUserWallet.id,
+			type: "PAYMENT",
+			amount: payment2.toString(),
+			balanceBefore: balance.toString(),
+			balanceAfter: (balance - payment2).toString(),
+			status: "SUCCESS",
+			description: "Pembayaran pesanan FOOD",
+			referenceId: v7(),
+		});
+		balance -= payment2;
+
+		// Topup 2
+		const topup2 = 200000;
+		transactions.push({
+			id: v7(),
+			walletId: testUserWallet.id,
+			type: "TOPUP",
+			amount: topup2.toString(),
+			balanceBefore: balance.toString(),
+			balanceAfter: (balance + topup2).toString(),
+			status: "SUCCESS",
+			description: "Top up saldo via Bank Transfer",
+			referenceId: v7(),
+		});
+		balance += topup2;
+
+		console.log(
+			`   ✅ Test user wallet seeded with ${transactions.length} transactions, balance: ${balance}`,
+		);
+	}
+
+	// IMPORTANT: Seed transactions for test driver (earnings)
+	if (testDriverWallet) {
+		let balance = 0;
+
+		// Earnings from completed orders
+		const earnings = [20000, 25000, 30000, 22000, 28000];
+		for (const earning of earnings) {
+			transactions.push({
+				id: v7(),
+				walletId: testDriverWallet.id,
+				type: "EARNING",
+				amount: earning.toString(),
+				balanceBefore: balance.toString(),
+				balanceAfter: (balance + earning).toString(),
+				status: "SUCCESS",
+				description: "Pendapatan dari orderan selesai",
+				referenceId: v7(),
+			});
+			balance += earning;
+		}
+
+		// Withdrawal
+		const withdrawal = 100000;
+		transactions.push({
+			id: v7(),
+			walletId: testDriverWallet.id,
+			type: "WITHDRAW",
+			amount: withdrawal.toString(),
+			balanceBefore: balance.toString(),
+			balanceAfter: (balance - withdrawal).toString(),
+			status: "SUCCESS",
+			description: "Penarikan saldo ke rekening bank",
+			referenceId: v7(),
+		});
+		balance -= withdrawal;
+
+		console.log(
+			`   ✅ Test driver wallet seeded with earnings, balance: ${balance}`,
+		);
+	}
+
+	// IMPORTANT: Seed transactions for test merchant (earnings)
+	if (testMerchantWallet) {
+		let balance = 0;
+
+		// Earnings from food orders
+		const earnings = [45000, 50000, 38000, 62000];
+		for (const earning of earnings) {
+			transactions.push({
+				id: v7(),
+				walletId: testMerchantWallet.id,
+				type: "EARNING",
+				amount: earning.toString(),
+				balanceBefore: balance.toString(),
+				balanceAfter: (balance + earning).toString(),
+				status: "SUCCESS",
+				description: "Pendapatan dari pesanan makanan",
+				referenceId: v7(),
+			});
+			balance += earning;
+		}
+
+		console.log(
+			`   ✅ Test merchant wallet seeded with earnings, balance: ${balance}`,
+		);
+	}
+
+	// Seed transactions for other wallets
+	const testWalletIds = new Set(
+		[testUserWallet?.id, testDriverWallet?.id, testMerchantWallet?.id].filter(
+			Boolean,
+		),
+	);
+
+	const otherWallets = wallets
+		.filter((w) => !testWalletIds.has(w.id))
+		.slice(0, 47);
+
+	for (const w of otherWallets) {
 		let balance = 0;
 
 		// Create 3-5 transactions per wallet
@@ -2198,15 +2805,24 @@ async function seedLeaderboards() {
 		return;
 	}
 
-	const drivers = await db
+	const allDrivers = await db
 		.select({ id: driver.id, userId: driver.userId, rating: driver.rating })
-		.from(driver)
-		.limit(20);
+		.from(driver);
 
-	if (drivers.length === 0) {
+	const allUsers = await db
+		.select({ id: tables.user.id, email: tables.user.email })
+		.from(tables.user);
+
+	if (allDrivers.length === 0) {
 		console.warn("⚠️ No drivers found. Skipping leaderboards.");
 		return;
 	}
+
+	// Find test driver
+	const testDriverUser = allUsers.find(
+		(u) => u.email === "test-driver-1@akademove.com",
+	);
+	const testDriver = allDrivers.find((d) => d.userId === testDriverUser?.id);
 
 	const now = new Date();
 	const periodStart = new Date(now.getFullYear(), now.getMonth(), 1);
@@ -2224,10 +2840,23 @@ async function seedLeaderboards() {
 		periodEnd: Date;
 	}> = [];
 
-	// Sort drivers by rating and create rankings
-	const sortedDrivers = [...drivers].sort(
-		(a, b) => (b.rating ?? 0) - (a.rating ?? 0),
-	);
+	// IMPORTANT: Ensure test driver is in leaderboard with high rank
+	// Get drivers and prioritize test driver
+	const drivers = allDrivers.slice(0, 20);
+
+	// Make sure test driver is included
+	if (testDriver && !drivers.some((d) => d.id === testDriver.id)) {
+		drivers.unshift(testDriver);
+		drivers.pop(); // Keep only 20 drivers
+	}
+
+	// Sort drivers by rating but put test driver at top for RATING category
+	const sortedDrivers = [...drivers].sort((a, b) => {
+		// Test driver always first
+		if (a.id === testDriver?.id) return -1;
+		if (b.id === testDriver?.id) return 1;
+		return (b.rating ?? 0) - (a.rating ?? 0);
+	});
 
 	sortedDrivers.forEach((d, idx) => {
 		leaderboards.push({
@@ -2237,15 +2866,20 @@ async function seedLeaderboards() {
 			category: "RATING",
 			period: "MONTHLY",
 			rank: idx + 1,
-			score: Math.round((d.rating ?? 0) * 100),
+			score: d.id === testDriver?.id ? 480 : Math.round((d.rating ?? 0) * 100), // Test driver gets high score
 			periodStart,
 			periodEnd,
 		});
 	});
 
-	// Add volume category
-	const shuffled = [...drivers].sort(() => Math.random() - 0.5);
-	shuffled.forEach((d, idx) => {
+	// Add volume category - test driver gets rank 1
+	const volumeDrivers = [...drivers].sort((a, b) => {
+		if (a.id === testDriver?.id) return -1;
+		if (b.id === testDriver?.id) return 1;
+		return Math.random() - 0.5;
+	});
+
+	volumeDrivers.forEach((d, idx) => {
 		leaderboards.push({
 			id: v7(),
 			userId: d.userId,
@@ -2253,7 +2887,8 @@ async function seedLeaderboards() {
 			category: "VOLUME",
 			period: "MONTHLY",
 			rank: idx + 1,
-			score: faker.number.int({ min: 10, max: 100 }),
+			score:
+				d.id === testDriver?.id ? 50 : faker.number.int({ min: 10, max: 45 }), // Test driver gets highest volume
 			periodStart,
 			periodEnd,
 		});
@@ -2261,6 +2896,11 @@ async function seedLeaderboards() {
 
 	await db.insert(leaderboard).values(leaderboards);
 	console.log(`✅ Inserted ${leaderboards.length} leaderboard entries.`);
+	if (testDriver) {
+		console.log(
+			"   ✅ Test driver is ranked #1 in RATING and VOLUME categories.",
+		);
+	}
 }
 
 async function seedOrderItems() {
@@ -2691,25 +3331,34 @@ async function seedContacts() {
 async function seedUserNotifications() {
 	console.log("🔔 Seeding User Notifications...");
 
-	const users = await db
-		.select({ id: tables.user.id })
-		.from(tables.user)
-		.limit(30);
+	const allUsers = await db
+		.select({ id: tables.user.id, email: tables.user.email })
+		.from(tables.user);
 
-	if (users.length === 0) {
+	if (allUsers.length === 0) {
 		console.warn("⚠️ No users found. Skipping notifications.");
 		return;
 	}
 
-	// Check existing notifications
+	// Check existing notifications (use LIMIT 1 for efficiency)
 	const existing = await db
-		.select({ userId: userNotification.userId })
-		.from(userNotification);
+		.select({ id: userNotification.id })
+		.from(userNotification)
+		.limit(1);
 
 	if (existing.length > 0) {
 		console.log("✅ User notifications already exist.");
 		return;
 	}
+
+	// Find test accounts
+	const testAccounts = [
+		"test-admin-1@akademove.com",
+		"test-operator-1@akademove.com",
+		"test-merchant-1@akademove.com",
+		"test-driver-1@akademove.com",
+		"test-user-1@akademove.com",
+	];
 
 	const notifications: Array<{
 		id: string;
@@ -2721,7 +3370,58 @@ async function seedUserNotifications() {
 		readAt: Date | null;
 	}> = [];
 
-	for (const u of users.slice(0, 20)) {
+	// IMPORTANT: Ensure all test accounts have notifications
+	for (const email of testAccounts) {
+		const user = allUsers.find((u) => u.email === email);
+		if (!user) continue;
+
+		// Add specific notifications for each test account
+		const testNotifications = [
+			{
+				title: "Selamat Datang!",
+				body: "Selamat bergabung di AkadeMove. Nikmati layanan transportasi kampus yang nyaman.",
+			},
+			{
+				title: "Promo Spesial",
+				body: "Dapatkan diskon 20% untuk 3 perjalanan pertama hari ini!",
+			},
+			{
+				title: "Verifikasi Berhasil",
+				body: "Akun Anda telah terverifikasi. Selamat menggunakan layanan kami!",
+			},
+		];
+
+		for (const notif of testNotifications) {
+			const createdAt = faker.date.recent({ days: 14 });
+			const isRead = faker.datatype.boolean();
+			notifications.push({
+				id: v7(),
+				userId: user.id,
+				title: notif.title,
+				body: notif.body,
+				isRead,
+				createdAt,
+				readAt: isRead ? new Date(createdAt.getTime() + 1000 * 60 * 30) : null,
+			});
+		}
+	}
+
+	console.log(
+		`   ✅ Test accounts seeded with ${notifications.length} notifications.`,
+	);
+
+	// Seed notifications for other users
+	const testUserIds = new Set(
+		testAccounts
+			.map((email) => allUsers.find((u) => u.email === email)?.id)
+			.filter(Boolean),
+	);
+
+	const otherUsers = allUsers
+		.filter((u) => !testUserIds.has(u.id))
+		.slice(0, 15);
+
+	for (const u of otherUsers) {
 		const notifCount = faker.number.int({ min: 2, max: 5 });
 		for (let i = 0; i < notifCount; i++) {
 			const notif = faker.helpers.arrayElement(INDONESIAN_NOTIFICATIONS);
@@ -2808,6 +3508,821 @@ async function seedAccountDeletions() {
 
 	await db.insert(accountDeletion).values(deletions);
 	console.log(`✅ Inserted ${deletions.length} account deletion requests.`);
+}
+
+async function seedQuickMessages() {
+	console.log("💬 Seeding Quick Message Templates...");
+
+	// Check existing templates (use LIMIT 1 for efficiency)
+	const existing = await db
+		.select({ id: quickMessageTemplate.id })
+		.from(quickMessageTemplate)
+		.limit(1);
+
+	if (existing.length > 0) {
+		console.log("✅ Quick message templates already exist.");
+		return;
+	}
+
+	const now = new Date();
+
+	const TEMPLATES: Omit<
+		InsertQuickMessageTemplate,
+		"id" | "createdAt" | "updatedAt"
+	>[] = [
+		// ==========================================
+		// DRIVER TEMPLATES (English)
+		// ==========================================
+		{
+			role: "DRIVER",
+			message: "On my way! 🚗",
+			orderType: null, // All order types
+			locale: "en",
+			isActive: true,
+			displayOrder: 1,
+		},
+		{
+			role: "DRIVER",
+			message: "I've arrived 📍",
+			orderType: null,
+			locale: "en",
+			isActive: true,
+			displayOrder: 2,
+		},
+		{
+			role: "DRIVER",
+			message: "Running a bit late, sorry! 🚦",
+			orderType: null,
+			locale: "en",
+			isActive: true,
+			displayOrder: 3,
+		},
+		{
+			role: "DRIVER",
+			message: "Where should I wait for you?",
+			orderType: "RIDE",
+			locale: "en",
+			isActive: true,
+			displayOrder: 4,
+		},
+		{
+			role: "DRIVER",
+			message: "Package delivered ✅",
+			orderType: "DELIVERY",
+			locale: "en",
+			isActive: true,
+			displayOrder: 5,
+		},
+		{
+			role: "DRIVER",
+			message: "Your order is here! ✅",
+			orderType: "FOOD",
+			locale: "en",
+			isActive: true,
+			displayOrder: 6,
+		},
+		{
+			role: "DRIVER",
+			message: "Thank you! Have a great day 🙏",
+			orderType: null,
+			locale: "en",
+			isActive: true,
+			displayOrder: 7,
+		},
+
+		// ==========================================
+		// DRIVER TEMPLATES (Indonesian)
+		// ==========================================
+		{
+			role: "DRIVER",
+			message: "Dalam perjalanan! 🚗",
+			orderType: null,
+			locale: "id",
+			isActive: true,
+			displayOrder: 1,
+		},
+		{
+			role: "DRIVER",
+			message: "Sudah sampai 📍",
+			orderType: null,
+			locale: "id",
+			isActive: true,
+			displayOrder: 2,
+		},
+		{
+			role: "DRIVER",
+			message: "Maaf, sedikit terlambat 🚦",
+			orderType: null,
+			locale: "id",
+			isActive: true,
+			displayOrder: 3,
+		},
+		{
+			role: "DRIVER",
+			message: "Tunggu di mana ya?",
+			orderType: "RIDE",
+			locale: "id",
+			isActive: true,
+			displayOrder: 4,
+		},
+		{
+			role: "DRIVER",
+			message: "Paket sudah diantar ✅",
+			orderType: "DELIVERY",
+			locale: "id",
+			isActive: true,
+			displayOrder: 5,
+		},
+		{
+			role: "DRIVER",
+			message: "Pesanan sudah sampai! ✅",
+			orderType: "FOOD",
+			locale: "id",
+			isActive: true,
+			displayOrder: 6,
+		},
+		{
+			role: "DRIVER",
+			message: "Terima kasih! Semoga hari Anda menyenangkan 🙏",
+			orderType: null,
+			locale: "id",
+			isActive: true,
+			displayOrder: 7,
+		},
+
+		// ==========================================
+		// USER TEMPLATES (English)
+		// ==========================================
+		{
+			role: "USER",
+			message: "Where are you now? 📱",
+			orderType: null,
+			locale: "en",
+			isActive: true,
+			displayOrder: 1,
+		},
+		{
+			role: "USER",
+			message: "Thank you! 🙏",
+			orderType: null,
+			locale: "en",
+			isActive: true,
+			displayOrder: 2,
+		},
+		{
+			role: "USER",
+			message: "Please hurry, I'm in a rush 🏃",
+			orderType: null,
+			locale: "en",
+			isActive: true,
+			displayOrder: 3,
+		},
+		{
+			role: "USER",
+			message: "I'm waiting at the pickup point",
+			orderType: "RIDE",
+			locale: "en",
+			isActive: true,
+			displayOrder: 4,
+		},
+		{
+			role: "USER",
+			message: "Please call me when you arrive",
+			orderType: null,
+			locale: "en",
+			isActive: true,
+			displayOrder: 5,
+		},
+		{
+			role: "USER",
+			message: "Can you please be careful with the package? 📦",
+			orderType: "DELIVERY",
+			locale: "en",
+			isActive: true,
+			displayOrder: 6,
+		},
+		{
+			role: "USER",
+			message: "Please make sure the food doesn't spill 🍜",
+			orderType: "FOOD",
+			locale: "en",
+			isActive: true,
+			displayOrder: 7,
+		},
+
+		// ==========================================
+		// USER TEMPLATES (Indonesian)
+		// ==========================================
+		{
+			role: "USER",
+			message: "Sekarang di mana? 📱",
+			orderType: null,
+			locale: "id",
+			isActive: true,
+			displayOrder: 1,
+		},
+		{
+			role: "USER",
+			message: "Terima kasih! 🙏",
+			orderType: null,
+			locale: "id",
+			isActive: true,
+			displayOrder: 2,
+		},
+		{
+			role: "USER",
+			message: "Tolong cepat ya, saya terburu-buru 🏃",
+			orderType: null,
+			locale: "id",
+			isActive: true,
+			displayOrder: 3,
+		},
+		{
+			role: "USER",
+			message: "Saya tunggu di titik jemput",
+			orderType: "RIDE",
+			locale: "id",
+			isActive: true,
+			displayOrder: 4,
+		},
+		{
+			role: "USER",
+			message: "Tolong telepon saat sudah sampai",
+			orderType: null,
+			locale: "id",
+			isActive: true,
+			displayOrder: 5,
+		},
+		{
+			role: "USER",
+			message: "Tolong hati-hati dengan paketnya ya 📦",
+			orderType: "DELIVERY",
+			locale: "id",
+			isActive: true,
+			displayOrder: 6,
+		},
+		{
+			role: "USER",
+			message: "Pastikan makanannya tidak tumpah ya 🍜",
+			orderType: "FOOD",
+			locale: "id",
+			isActive: true,
+			displayOrder: 7,
+		},
+
+		// ==========================================
+		// MERCHANT TEMPLATES (English)
+		// ==========================================
+		{
+			role: "MERCHANT",
+			message: "Order ready for pickup! ✅",
+			orderType: "FOOD",
+			locale: "en",
+			isActive: true,
+			displayOrder: 1,
+		},
+		{
+			role: "MERCHANT",
+			message: "Preparing your order... 👨‍🍳",
+			orderType: "FOOD",
+			locale: "en",
+			isActive: true,
+			displayOrder: 2,
+		},
+		{
+			role: "MERCHANT",
+			message: "Sorry, this item is out of stock 😞",
+			orderType: "FOOD",
+			locale: "en",
+			isActive: true,
+			displayOrder: 3,
+		},
+		{
+			role: "MERCHANT",
+			message: "Your order will be ready in 10 minutes ⏰",
+			orderType: "FOOD",
+			locale: "en",
+			isActive: true,
+			displayOrder: 4,
+		},
+		{
+			role: "MERCHANT",
+			message: "Driver has picked up your order 🚗",
+			orderType: "FOOD",
+			locale: "en",
+			isActive: true,
+			displayOrder: 5,
+		},
+
+		// ==========================================
+		// MERCHANT TEMPLATES (Indonesian)
+		// ==========================================
+		{
+			role: "MERCHANT",
+			message: "Pesanan siap diambil! ✅",
+			orderType: "FOOD",
+			locale: "id",
+			isActive: true,
+			displayOrder: 1,
+		},
+		{
+			role: "MERCHANT",
+			message: "Sedang menyiapkan pesanan... 👨‍🍳",
+			orderType: "FOOD",
+			locale: "id",
+			isActive: true,
+			displayOrder: 2,
+		},
+		{
+			role: "MERCHANT",
+			message: "Maaf, item ini habis 😞",
+			orderType: "FOOD",
+			locale: "id",
+			isActive: true,
+			displayOrder: 3,
+		},
+		{
+			role: "MERCHANT",
+			message: "Pesanan siap dalam 10 menit ⏰",
+			orderType: "FOOD",
+			locale: "id",
+			isActive: true,
+			displayOrder: 4,
+		},
+		{
+			role: "MERCHANT",
+			message: "Driver sudah mengambil pesanan 🚗",
+			orderType: "FOOD",
+			locale: "id",
+			isActive: true,
+			displayOrder: 5,
+		},
+	];
+
+	try {
+		const values = TEMPLATES.map((template) => ({
+			...template,
+			id: v7(),
+			createdAt: now,
+			updatedAt: now,
+		}));
+
+		await db.insert(quickMessageTemplate).values(values).onConflictDoNothing();
+
+		console.log(
+			`✅ Successfully seeded ${values.length} quick message templates`,
+		);
+		console.log("   - Driver templates: English + Indonesian");
+		console.log("   - User templates: English + Indonesian");
+		console.log("   - Merchant templates: English + Indonesian");
+	} catch (error) {
+		console.error("❌ Failed to seed quick messages:", error);
+		throw error;
+	}
+}
+
+async function seedDriverApprovalReviews() {
+	console.log("📋 Seeding Driver Approval Reviews...");
+
+	const allDrivers = await db
+		.select({ id: driver.id, userId: driver.userId })
+		.from(driver);
+
+	const allUsers = await db
+		.select({ id: tables.user.id, email: tables.user.email })
+		.from(tables.user);
+
+	if (allDrivers.length === 0) {
+		console.warn("⚠️ No drivers found. Skipping driver approval reviews.");
+		return;
+	}
+
+	// Check existing reviews
+	const existing = await db
+		.select({ id: driverApprovalReview.id })
+		.from(driverApprovalReview);
+
+	if (existing.length > 0) {
+		console.log("✅ Driver approval reviews already exist.");
+		return;
+	}
+
+	const [admin] = await db
+		.select()
+		.from(tables.user)
+		.where(eq(tables.user.email, "test-admin-1@akademove.com"))
+		.limit(1);
+
+	const reviews: Array<{
+		id: string;
+		driverId: string;
+		status: "PENDING" | "APPROVED" | "REJECTED";
+		studentCardStatus: "PENDING" | "APPROVED" | "REJECTED";
+		studentCardReason?: string;
+		driverLicenseStatus: "PENDING" | "APPROVED" | "REJECTED";
+		driverLicenseReason?: string;
+		vehicleRegistrationStatus: "PENDING" | "APPROVED" | "REJECTED";
+		vehicleRegistrationReason?: string;
+		quizVerified: boolean;
+		reviewedBy?: string;
+		reviewedAt?: Date;
+		reviewNotes?: string;
+	}> = [];
+
+	// IMPORTANT: Ensure test driver has APPROVED review
+	const testDriverUser = allUsers.find(
+		(u) => u.email === "test-driver-1@akademove.com",
+	);
+	const testDriver = allDrivers.find((d) => d.userId === testDriverUser?.id);
+
+	if (testDriver) {
+		reviews.push({
+			id: v7(),
+			driverId: testDriver.id,
+			status: "APPROVED",
+			studentCardStatus: "APPROVED",
+			driverLicenseStatus: "APPROVED",
+			vehicleRegistrationStatus: "APPROVED",
+			quizVerified: true,
+			reviewedBy: admin?.id,
+			reviewedAt: new Date(),
+			reviewNotes: "All documents verified and approved. Quiz passed.",
+		});
+		console.log("   ✅ Test driver approved with all documents.");
+	}
+
+	// Seed reviews for other drivers
+	const otherDrivers = allDrivers
+		.filter((d) => d.id !== testDriver?.id)
+		.slice(0, 20);
+
+	for (const d of otherDrivers) {
+		const isApproved = faker.datatype.boolean({ probability: 0.7 });
+		const isRejected = faker.datatype.boolean({ probability: 0.1 });
+		const status = isApproved
+			? "APPROVED"
+			: isRejected
+				? "REJECTED"
+				: "PENDING";
+
+		reviews.push({
+			id: v7(),
+			driverId: d.id,
+			status,
+			studentCardStatus: isApproved
+				? "APPROVED"
+				: faker.helpers.arrayElement(["PENDING", "REJECTED"]),
+			studentCardReason:
+				!isApproved && faker.datatype.boolean()
+					? "Kartu mahasiswa tidak jelas"
+					: undefined,
+			driverLicenseStatus: isApproved
+				? "APPROVED"
+				: faker.helpers.arrayElement(["PENDING", "REJECTED"]),
+			driverLicenseReason:
+				!isApproved && faker.datatype.boolean()
+					? "SIM sudah kadaluarsa"
+					: undefined,
+			vehicleRegistrationStatus: isApproved
+				? "APPROVED"
+				: faker.helpers.arrayElement(["PENDING", "REJECTED"]),
+			vehicleRegistrationReason:
+				!isApproved && faker.datatype.boolean()
+					? "STNK tidak sesuai dengan kendaraan"
+					: undefined,
+			quizVerified: isApproved,
+			reviewedBy: status !== "PENDING" ? admin?.id : undefined,
+			reviewedAt:
+				status !== "PENDING" ? faker.date.recent({ days: 30 }) : undefined,
+			reviewNotes:
+				status !== "PENDING"
+					? faker.helpers.arrayElement([
+							"Dokumen lengkap dan valid",
+							"Perlu verifikasi ulang",
+							"Dokumen ditolak karena tidak valid",
+						])
+					: undefined,
+		});
+	}
+
+	await db.insert(driverApprovalReview).values(reviews);
+	console.log(`✅ Inserted ${reviews.length} driver approval reviews.`);
+}
+
+async function seedMerchantApprovalReviews() {
+	console.log("🏪 Seeding Merchant Approval Reviews...");
+
+	const merchants = await db
+		.select({ id: merchant.id, userId: merchant.userId })
+		.from(merchant);
+
+	const allUsers = await db
+		.select({ id: tables.user.id, email: tables.user.email })
+		.from(tables.user);
+
+	if (merchants.length === 0) {
+		console.warn("⚠️ No merchants found. Skipping merchant approval reviews.");
+		return;
+	}
+
+	// Check existing reviews
+	const existing = await db
+		.select({ id: merchantApprovalReview.id })
+		.from(merchantApprovalReview);
+
+	if (existing.length > 0) {
+		console.log("✅ Merchant approval reviews already exist.");
+		return;
+	}
+
+	const [admin] = await db
+		.select()
+		.from(tables.user)
+		.where(eq(tables.user.email, "test-admin-1@akademove.com"))
+		.limit(1);
+
+	const reviews: Array<{
+		id: string;
+		merchantId: string;
+		status: "PENDING" | "APPROVED" | "REJECTED";
+		businessDocumentStatus: "PENDING" | "APPROVED" | "REJECTED";
+		businessDocumentReason?: string;
+		reviewedBy?: string;
+		reviewedAt?: Date;
+		reviewNotes?: string;
+	}> = [];
+
+	// IMPORTANT: Ensure test merchant has APPROVED review
+	const testMerchantUser = allUsers.find(
+		(u) => u.email === "test-merchant-1@akademove.com",
+	);
+	const testMerchant = merchants.find((m) => m.userId === testMerchantUser?.id);
+
+	if (testMerchant) {
+		reviews.push({
+			id: v7(),
+			merchantId: testMerchant.id,
+			status: "APPROVED",
+			businessDocumentStatus: "APPROVED",
+			reviewedBy: admin?.id,
+			reviewedAt: new Date(),
+			reviewNotes: "Business documents verified and approved.",
+		});
+		console.log("   ✅ Test merchant approved with business documents.");
+	}
+
+	// Seed reviews for other merchants
+	const otherMerchants = merchants
+		.filter((m) => m.id !== testMerchant?.id)
+		.slice(0, 15);
+
+	for (const m of otherMerchants) {
+		const isApproved = faker.datatype.boolean({ probability: 0.6 });
+		const isRejected = faker.datatype.boolean({ probability: 0.2 });
+		const status = isApproved
+			? "APPROVED"
+			: isRejected
+				? "REJECTED"
+				: "PENDING";
+
+		reviews.push({
+			id: v7(),
+			merchantId: m.id,
+			status,
+			businessDocumentStatus: isApproved
+				? "APPROVED"
+				: faker.helpers.arrayElement(["PENDING", "REJECTED"]),
+			businessDocumentReason:
+				!isApproved && faker.datatype.boolean()
+					? "Dokumen bisnis tidak lengkap"
+					: undefined,
+			reviewedBy: status !== "PENDING" ? admin?.id : undefined,
+			reviewedAt:
+				status !== "PENDING" ? faker.date.recent({ days: 30 }) : undefined,
+			reviewNotes:
+				status !== "PENDING"
+					? faker.helpers.arrayElement([
+							"Dokumen bisnis lengkap dan valid",
+							"Perlu verifikasi ulang dokumen",
+							"Dokumen ditolak karena tidak valid",
+						])
+					: undefined,
+		});
+	}
+
+	await db.insert(merchantApprovalReview).values(reviews);
+	console.log(`✅ Inserted ${reviews.length} merchant approval reviews.`);
+}
+
+async function seedFraudEvents() {
+	console.log("🚨 Seeding Fraud Events...");
+
+	// Check existing events
+	const existing = await db.select({ id: fraudEvent.id }).from(fraudEvent);
+
+	if (existing.length > 0) {
+		console.log("✅ Fraud events already exist.");
+		return;
+	}
+
+	const allUsers = await db
+		.select({ id: tables.user.id, email: tables.user.email })
+		.from(tables.user);
+
+	const allDrivers = await db
+		.select({ id: driver.id, userId: driver.userId })
+		.from(driver);
+
+	const [admin] = await db
+		.select()
+		.from(tables.user)
+		.where(eq(tables.user.email, "test-admin-1@akademove.com"))
+		.limit(1);
+
+	if (allUsers.length === 0) {
+		console.warn("⚠️ No users found. Skipping fraud events.");
+		return;
+	}
+
+	const events: Array<{
+		id: string;
+		eventType:
+			| "GPS_SPOOF_VELOCITY"
+			| "GPS_SPOOF_TELEPORT"
+			| "GPS_SPOOF_MOCK_DETECTED"
+			| "DUPLICATE_BANK_ACCOUNT"
+			| "DUPLICATE_IP_PATTERN"
+			| "DUPLICATE_NAME_SIMILARITY"
+			| "SUSPICIOUS_REGISTRATION";
+		severity: "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
+		status: "PENDING" | "REVIEWING" | "CONFIRMED" | "DISMISSED";
+		userId?: string;
+		driverId?: string;
+		signals: FraudSignal[];
+		score: string;
+		location?: ReturnType<typeof sql>;
+		ipAddress?: string;
+		userAgent?: string;
+		handledById?: string;
+		resolution?: string;
+		actionTaken?: string;
+		detectedAt: Date;
+		resolvedAt?: Date;
+	}> = [];
+
+	// Generate sample fraud events
+	const fraudTypes = [
+		{
+			type: "GPS_SPOOF_VELOCITY" as const,
+			severity: "HIGH" as const,
+			description: "Impossible speed detected",
+		},
+		{
+			type: "GPS_SPOOF_TELEPORT" as const,
+			severity: "CRITICAL" as const,
+			description: "Location jump detected",
+		},
+		{
+			type: "GPS_SPOOF_MOCK_DETECTED" as const,
+			severity: "HIGH" as const,
+			description: "Mock location API detected",
+		},
+		{
+			type: "DUPLICATE_BANK_ACCOUNT" as const,
+			severity: "MEDIUM" as const,
+			description: "Same bank account across accounts",
+		},
+		{
+			type: "DUPLICATE_IP_PATTERN" as const,
+			severity: "MEDIUM" as const,
+			description: "Suspicious IP registration pattern",
+		},
+		{
+			type: "DUPLICATE_NAME_SIMILARITY" as const,
+			severity: "LOW" as const,
+			description: "Similar names with other signals",
+		},
+		{
+			type: "SUSPICIOUS_REGISTRATION" as const,
+			severity: "HIGH" as const,
+			description: "Multiple suspicious signals",
+		},
+	];
+
+	for (let i = 0; i < 15; i++) {
+		const fraudType = faker.helpers.arrayElement(fraudTypes);
+		const user = faker.helpers.arrayElement(allUsers);
+		const driver =
+			allDrivers.length > 0 && faker.datatype.boolean()
+				? faker.helpers.arrayElement(allDrivers)
+				: undefined;
+
+		const isResolved = faker.datatype.boolean({ probability: 0.6 });
+		const detectedAt = faker.date.recent({ days: 30 });
+
+		events.push({
+			id: v7(),
+			eventType: fraudType.type,
+			severity: fraudType.severity,
+			status: isResolved ? ("CONFIRMED" as const) : ("PENDING" as const),
+			userId: user.id,
+			driverId: driver?.id,
+			signals: [
+				{
+					type: "GPS_SPOOF_TELEPORT",
+					severity: "HIGH",
+					confidence: faker.number.int({ min: 60, max: 95 }),
+					metadata: {
+						description: "Location jump detected",
+						distance: faker.number.int({ min: 5, max: 50 }),
+					},
+				},
+				{
+					type: "DUPLICATE_IP_PATTERN",
+					severity: "MEDIUM",
+					confidence: faker.number.int({ min: 40, max: 80 }),
+					metadata: {
+						description: "Device ID mismatch",
+						deviceId: faker.string.alphanumeric(32),
+					},
+				},
+			],
+			score: faker.number
+				.float({ min: 0.1, max: 0.9, fractionDigits: 2 })
+				.toString(),
+			location: sql`ST_SetSRID(ST_MakePoint(${BASE_LNG + faker.number.float({ min: -0.01, max: 0.01 })}, ${BASE_LAT + faker.number.float({ min: -0.01, max: 0.01 })}), 4326)`,
+			ipAddress: faker.internet.ip(),
+			userAgent: faker.internet.userAgent(),
+			handledById: isResolved ? admin?.id : undefined,
+			resolution: isResolved
+				? faker.helpers.arrayElement([
+						"User warned and monitored",
+						"Account temporarily suspended",
+						"False positive - case closed",
+						"Driver verification required",
+					])
+				: undefined,
+			actionTaken: isResolved
+				? faker.helpers.arrayElement([
+						"Warning sent",
+						"Account suspended",
+						"Monitoring increased",
+						"No action needed",
+					])
+				: undefined,
+			detectedAt,
+			resolvedAt: isResolved
+				? new Date(detectedAt.getTime() + 1000 * 60 * 60 * 24)
+				: undefined,
+		});
+	}
+
+	await db.insert(fraudEvent).values(events);
+	console.log(`✅ Inserted ${events.length} fraud events.`);
+}
+
+async function seedUserFraudProfiles() {
+	console.log("👤 Seeding User Fraud Profiles...");
+
+	// Check existing profiles
+	const existing = await db
+		.select({ id: userFraudProfile.id })
+		.from(userFraudProfile);
+
+	if (existing.length > 0) {
+		console.log("✅ User fraud profiles already exist.");
+		return;
+	}
+
+	const allUsers = await db
+		.select({ id: tables.user.id })
+		.from(tables.user)
+		.limit(50);
+
+	if (allUsers.length === 0) {
+		console.warn("⚠️ No users found. Skipping fraud profiles.");
+		return;
+	}
+
+	const profiles = allUsers.map((user) => ({
+		id: v7(),
+		userId: user.id,
+		riskScore: faker.number
+			.float({ min: 0, max: 0.8, fractionDigits: 2 })
+			.toString(),
+		totalEvents: faker.number.int({ min: 0, max: 5 }),
+		confirmedEvents: faker.number.int({ min: 0, max: 2 }),
+		isHighRisk: faker.datatype.boolean({ probability: 0.1 }),
+		knownIps: Array.from({ length: faker.number.int({ min: 1, max: 3 }) }, () =>
+			faker.internet.ip(),
+		),
+		lastEventAt: faker.datatype.boolean({ probability: 0.3 })
+			? faker.date.recent({ days: 30 })
+			: null,
+	}));
+
+	await db.insert(userFraudProfile).values(profiles);
+	console.log(`✅ Inserted ${profiles.length} user fraud profiles.`);
 }
 
 async function main() {
@@ -2904,39 +4419,62 @@ async function main() {
 			await Promise.all(phase4);
 		}
 
-		// Phase 5: User interaction and gamification data
-		const phase5: Promise<void>[] = [];
+		// Phase 5a: User interaction data (first batch)
+		const phase5a: Promise<void>[] = [];
 
 		if (shouldRun("reviews")) {
-			phase5.push(seedReviews());
+			phase5a.push(seedReviews());
 		}
 		if (shouldRun("leaderboards")) {
-			phase5.push(seedLeaderboards());
+			phase5a.push(seedLeaderboards());
 		}
 		if (shouldRun("orderChatMessages")) {
-			phase5.push(seedOrderChatMessages());
+			phase5a.push(seedOrderChatMessages());
 		}
 		if (shouldRun("emergencies")) {
-			phase5.push(seedEmergencies());
+			phase5a.push(seedEmergencies());
 		}
 		if (shouldRun("reports")) {
-			phase5.push(seedReports());
+			phase5a.push(seedReports());
 		}
 		if (shouldRun("broadcasts")) {
-			phase5.push(seedBroadcasts());
+			phase5a.push(seedBroadcasts());
 		}
 		if (shouldRun("contacts")) {
-			phase5.push(seedContacts());
-		}
-		if (shouldRun("userNotifications")) {
-			phase5.push(seedUserNotifications());
-		}
-		if (shouldRun("accountDeletions")) {
-			phase5.push(seedAccountDeletions());
+			phase5a.push(seedContacts());
 		}
 
-		if (phase5.length > 0) {
-			await Promise.all(phase5);
+		if (phase5a.length > 0) {
+			await Promise.all(phase5a);
+		}
+
+		// Phase 5b: User interaction data (second batch)
+		const phase5b: Promise<void>[] = [];
+
+		if (shouldRun("userNotifications")) {
+			phase5b.push(seedUserNotifications());
+		}
+		if (shouldRun("accountDeletions")) {
+			phase5b.push(seedAccountDeletions());
+		}
+		if (shouldRun("quickMessages")) {
+			phase5b.push(seedQuickMessages());
+		}
+		if (shouldRun("driverApprovalReviews")) {
+			phase5b.push(seedDriverApprovalReviews());
+		}
+		if (shouldRun("merchantApprovalReviews")) {
+			phase5b.push(seedMerchantApprovalReviews());
+		}
+		if (shouldRun("fraudEvents")) {
+			phase5b.push(seedFraudEvents());
+		}
+		if (shouldRun("userFraudProfiles")) {
+			phase5b.push(seedUserFraudProfiles());
+		}
+
+		if (phase5b.length > 0) {
+			await Promise.all(phase5b);
 		}
 
 		console.log("\n✅ Database seeded successfully.");

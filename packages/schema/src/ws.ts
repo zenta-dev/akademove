@@ -127,7 +127,7 @@ export const PaymentEnvelopeEventSchema = z.enum([
 	"TOP_UP_FAILED",
 	"PAYMENT_FAILED",
 ]);
-export const PaymentEnvelopeActionSchema = z.enum([]);
+export const PaymentEnvelopeActionSchema = z.enum(["NONE"]);
 export const PaymentEnvelopePayloadSchema = z.object({
 	failReason: z.string().optional(),
 	payment: PaymentSchema,

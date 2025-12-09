@@ -35,6 +35,7 @@ import {
 import { DriverQuizAnswerRepository } from "@/features/driver-quiz-answer/driver-quiz-answer-repository";
 import { DriverQuizQuestionRepository } from "@/features/driver-quiz-question/driver-quiz-question-repository";
 import { EmergencyRepository } from "@/features/emergency/emergency-repository";
+import { FraudRepository } from "@/features/fraud/fraud-repository";
 import { LeaderboardRepository } from "@/features/leaderboard/leaderboard-repository";
 import { MerchantApprovalRepository } from "@/features/merchant/approval/merchant-approval-repository";
 import { MerchantMainRepository } from "@/features/merchant/main/merchant-main-repository";
@@ -258,6 +259,7 @@ export function getRepositories(
 		driverQuizQuestion,
 		driverQuizAnswer,
 		emergency: new EmergencyRepository(svc.db, svc.kv),
+		fraud: new FraudRepository(svc.db, svc.kv),
 		leaderboard: new LeaderboardRepository(svc.db, svc.kv),
 		merchant: {
 			main: new MerchantMainRepository(svc.db, svc.kv, svc.storage),

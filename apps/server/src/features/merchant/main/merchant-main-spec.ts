@@ -49,10 +49,6 @@ const MerchantListQuerySchema = UnifiedPaginationQuerySchema.safeExtend({
 		.describe(
 			"Sort merchants by rating (bestsellers), distance (nearby), or other fields",
 		),
-	order: z
-		.enum(["asc", "desc"])
-		.optional()
-		.describe("Sort order: ascending or descending"),
 	cursor: z
 		.string()
 		.optional()

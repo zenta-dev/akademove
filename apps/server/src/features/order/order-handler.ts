@@ -107,23 +107,29 @@ export const OrderHandler = priv.router({
 				}
 
 				// Drivers can only update orders assigned to them
-				if (
-					context.user.role === "DRIVER" &&
-					order.driverId !== context.user.id
-				) {
-					throw new AuthError(m.error_only_update_assigned_orders(), {
-						code: "FORBIDDEN",
-					});
+				// FIX: Need to get driver record to compare user IDs correctly
+				if (context.user.role === "DRIVER") {
+					const driver = await context.repo.driver.main.getByUserId(
+						context.user.id,
+					);
+					if (order.driverId !== driver.id) {
+						throw new AuthError(m.error_only_update_assigned_orders(), {
+							code: "FORBIDDEN",
+						});
+					}
 				}
 
 				// Merchants can only update orders for their restaurant
-				if (
-					context.user.role === "MERCHANT" &&
-					order.merchantId !== context.user.id
-				) {
-					throw new AuthError(m.error_only_update_own_orders(), {
-						code: "FORBIDDEN",
-					});
+				// FIX: Need to get merchant record to compare IDs correctly
+				if (context.user.role === "MERCHANT") {
+					const merchant = await context.repo.merchant.main.getByUserId(
+						context.user.id,
+					);
+					if (order.merchantId !== merchant.id) {
+						throw new AuthError(m.error_only_update_own_orders(), {
+							code: "FORBIDDEN",
+						});
+					}
 				}
 			}
 
@@ -295,6 +301,152 @@ export const OrderHandler = priv.router({
 						message: "OTP verified successfully",
 						data: { verified: true },
 					},
+				};
+			});
+		},
+	),
+
+	// Scheduled order handlers
+	placeScheduledOrder: priv.placeScheduledOrder.handler(
+		async ({ context, input: { body } }) => {
+			return await context.svc.db.transaction(async (tx) => {
+				const data = trimObjectValues(body);
+				const result = await context.repo.order.placeScheduledOrder(
+					{ ...data, userId: context.user.id },
+					{ tx },
+				);
+
+				log.info(
+					{
+						orderId: result.order.id,
+						userId: context.user.id,
+						scheduledAt: result.order.scheduledAt,
+					},
+					"[OrderHandler] Scheduled order placed",
+				);
+
+				return {
+					status: 200,
+					body: {
+						message: m.server_order_placed(),
+						data: result,
+					},
+				} as const;
+			});
+		},
+	),
+
+	listScheduledOrders: priv.listScheduledOrders.handler(
+		async ({ context, input: { query } }) => {
+			log.debug(
+				{ query, userId: context.user.id },
+				"[OrderHandler] Listing scheduled orders",
+			);
+
+			const { rows, pagination } = await context.repo.order.listScheduledOrders(
+				{
+					...query,
+					userId: context.user.id,
+				},
+			);
+
+			return {
+				status: 200,
+				body: {
+					message: m.server_orders_retrieved(),
+					data: rows,
+					totalPages: pagination?.totalPages,
+					pagination,
+				},
+			};
+		},
+	),
+
+	updateScheduledOrder: priv.updateScheduledOrder.handler(
+		async ({ context, input: { params, body } }) => {
+			return await context.svc.db.transaction(async (tx) => {
+				// Get the order first to verify ownership
+				const order = await context.repo.order.get(params.id, { tx });
+
+				// Users can only update their own scheduled orders
+				if (order.userId !== context.user.id) {
+					throw new AuthError(m.error_only_update_own_orders(), {
+						code: "FORBIDDEN",
+					});
+				}
+
+				// Only SCHEDULED orders can be updated
+				if (order.status !== "SCHEDULED") {
+					throw new AuthError(
+						"Only scheduled orders can be updated. Order has already started processing.",
+						{ code: "BAD_REQUEST" },
+					);
+				}
+
+				const data = trimObjectValues(body);
+				const result = await context.repo.order.updateScheduledOrder(
+					params.id,
+					data,
+					{ tx },
+				);
+
+				log.info(
+					{
+						orderId: params.id,
+						userId: context.user.id,
+						newScheduledAt: data.scheduledAt,
+					},
+					"[OrderHandler] Scheduled order updated",
+				);
+
+				return {
+					status: 200,
+					body: { message: m.server_order_updated(), data: result },
+				};
+			});
+		},
+	),
+
+	cancelScheduledOrder: priv.cancelScheduledOrder.handler(
+		async ({ context, input: { params, body } }) => {
+			return await context.svc.db.transaction(async (tx) => {
+				// Get the order first to verify ownership
+				const order = await context.repo.order.get(params.id, { tx });
+
+				// Users can only cancel their own scheduled orders
+				if (order.userId !== context.user.id) {
+					throw new AuthError(m.error_only_update_own_orders(), {
+						code: "FORBIDDEN",
+					});
+				}
+
+				// Only SCHEDULED orders can be cancelled via this endpoint
+				if (order.status !== "SCHEDULED") {
+					throw new AuthError(
+						"Only scheduled orders can be cancelled via this endpoint. Use the regular cancel endpoint for active orders.",
+						{ code: "BAD_REQUEST" },
+					);
+				}
+
+				const result = await context.repo.order.cancelScheduledOrder(
+					params.id,
+					context.user.id,
+					body.reason,
+					{ tx },
+				);
+
+				log.info(
+					{
+						orderId: params.id,
+						userId: context.user.id,
+						reason: body.reason,
+					},
+					"[OrderHandler] Scheduled order cancelled",
+				);
+
+				return {
+					status: 200,
+					body: { message: m.server_order_cancelled(), data: result },
 				};
 			});
 		},

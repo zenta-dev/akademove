@@ -177,11 +177,15 @@ class DriverHomeCubit extends BaseCubit<DriverHomeState> {
 
       await _driverRepository.updateLocation(
         driverId: driverId,
-        location: Coordinate(x: position.longitude, y: position.latitude),
+        location: CoordinateWithMeta(
+          x: position.longitude,
+          y: position.latitude,
+          isMockLocation: position.isMocked,
+        ),
       );
 
       logger.d(
-        '[DriverHomeCubit] - Location updated: ${position.latitude}, ${position.longitude}',
+        '[DriverHomeCubit] - Location updated: ${position.latitude}, ${position.longitude}, isMock: ${position.isMocked}',
       );
     } catch (e, st) {
       logger.e(

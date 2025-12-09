@@ -46,7 +46,7 @@ export const DismissReportDialog = ({
 	const [isLoading, setIsLoading] = useState(false);
 	const queryClient = useQueryClient();
 
-	const form = useForm<DismissFormData>({
+	const form = useForm({
 		resolver: zodResolver(dismissSchema),
 		defaultValues: {
 			reason: "",
@@ -62,7 +62,7 @@ export const DismissReportDialog = ({
 			});
 			if (result.status === 200) {
 				toast.success(m.server_report_dismissed());
-				queryClient.invalidateQueries({ queryKey: ["reports"] });
+				queryClient.invalidateQueries();
 				form.reset();
 				onOpenChange(false);
 			} else {
