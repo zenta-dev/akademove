@@ -6,6 +6,8 @@
 import 'package:json_annotation/json_annotation.dart';
 
 enum OrderStatus {
+  @JsonValue(r'SCHEDULED')
+  SCHEDULED(r'SCHEDULED'),
   @JsonValue(r'REQUESTED')
   REQUESTED(r'REQUESTED'),
   @JsonValue(r'MATCHING')

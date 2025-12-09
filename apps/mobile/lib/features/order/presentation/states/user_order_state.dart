@@ -9,12 +9,12 @@ class UserOrderState extends BaseState2 with UserOrderStateMappable {
     this.estimateOrder,
     this.orderHistories,
     this.selectedOrder,
-
     this.currentOrder,
     this.currentPayment,
     this.currentTransaction,
     this.currentAssignedDriver,
-
+    this.scheduledOrders,
+    this.selectedScheduledOrder,
     super.state,
     super.message,
     super.error,
@@ -28,6 +28,12 @@ class UserOrderState extends BaseState2 with UserOrderStateMappable {
   final Payment? currentPayment;
   final Transaction? currentTransaction;
   final Driver? currentAssignedDriver;
+
+  /// List of scheduled orders for the user
+  final List<Order>? scheduledOrders;
+
+  /// Currently selected scheduled order for viewing/editing
+  final Order? selectedScheduledOrder;
 
   @override
   UserOrderState toInitial() =>
@@ -46,6 +52,8 @@ class UserOrderState extends BaseState2 with UserOrderStateMappable {
     Driver? currentAssignedDriver,
     List<Order>? orderHistories,
     Order? selectedOrder,
+    List<Order>? scheduledOrders,
+    Order? selectedScheduledOrder,
     String? message,
   }) => copyWith(
     state: CubitState.success,
@@ -56,6 +64,9 @@ class UserOrderState extends BaseState2 with UserOrderStateMappable {
     currentAssignedDriver: currentAssignedDriver ?? this.currentAssignedDriver,
     orderHistories: orderHistories ?? this.orderHistories,
     selectedOrder: selectedOrder ?? this.selectedOrder,
+    scheduledOrders: scheduledOrders ?? this.scheduledOrders,
+    selectedScheduledOrder:
+        selectedScheduledOrder ?? this.selectedScheduledOrder,
     message: message,
     error: null,
   );

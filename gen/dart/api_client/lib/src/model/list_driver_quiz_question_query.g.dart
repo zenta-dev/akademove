@@ -341,6 +341,9 @@ const _$ListDriverQuizQuestionQuerySortByEnumEnumMap = {
   ListDriverQuizQuestionQuerySortByEnum.cancelReason: 'cancelReason',
   ListDriverQuizQuestionQuerySortByEnum.gender: 'gender',
   ListDriverQuizQuestionQuerySortByEnum.genderPreference: 'genderPreference',
+  ListDriverQuizQuestionQuerySortByEnum.scheduledAt: 'scheduledAt',
+  ListDriverQuizQuestionQuerySortByEnum.scheduledMatchingAt:
+      'scheduledMatchingAt',
   ListDriverQuizQuestionQuerySortByEnum.proofOfDeliveryUrl:
       'proofOfDeliveryUrl',
   ListDriverQuizQuestionQuerySortByEnum.deliveryOtp: 'deliveryOtp',

@@ -2684,9 +2684,10 @@ async function seedPayments() {
 			method === "BANK_TRANSFER"
 				? faker.helpers.arrayElement(CONSTANTS.BANK_PROVIDERS)
 				: null;
+		const paymentId = v7();
 
 		return {
-			id: v7(),
+			id: paymentId,
 			transactionId: t.id,
 			provider: "MIDTRANS" as const,
 			method,
@@ -2695,7 +2696,8 @@ async function seedPayments() {
 				.int({ min: 50000, max: 500000, multipleOf: 10000 })
 				.toString(),
 			status: "SUCCESS" as const,
-			externalId: `MID-${v7().slice(0, 8).toUpperCase()}`,
+			// Use last 16 chars of UUID (random part) to avoid timestamp collision in v7
+			externalId: `MID-${paymentId.replace(/-/g, "").slice(-16).toUpperCase()}`,
 		};
 	});
 

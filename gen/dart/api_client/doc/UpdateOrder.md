@@ -25,6 +25,8 @@ Name | Type | Description | Notes
 **cancelReason** | **String** |  | [optional] 
 **gender** | [**UserGender**](UserGender.md) |  | [optional] 
 **genderPreference** | **String** |  | [optional] 
+**scheduledAt** | [**DateTime**](DateTime.md) |  | [optional] 
+**scheduledMatchingAt** | [**DateTime**](DateTime.md) |  | [optional] 
 **proofOfDeliveryUrl** | **String** |  | [optional] 
 **deliveryOtp** | **String** |  | [optional] 
 **otpVerifiedAt** | [**DateTime**](DateTime.md) |  | [optional] 

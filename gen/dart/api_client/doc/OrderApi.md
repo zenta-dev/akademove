@@ -12,13 +12,17 @@ Method | HTTP request | Description
 [**chatList**](OrderApi.md#chatlist) | **GET** /chat | 
 [**chatSend**](OrderApi.md#chatsend) | **POST** /chat | 
 [**orderCancel**](OrderApi.md#ordercancel) | **POST** /orders/{id}/cancel | 
+[**orderCancelScheduledOrder**](OrderApi.md#ordercancelscheduledorder) | **POST** /orders/scheduled/{id}/cancel | 
 [**orderEstimate**](OrderApi.md#orderestimate) | **GET** /orders/estimate | 
 [**orderGet**](OrderApi.md#orderget) | **GET** /orders/{id} | 
 [**orderList**](OrderApi.md#orderlist) | **GET** /orders | 
 [**orderListMessages**](OrderApi.md#orderlistmessages) | **GET** /orders/{id}/messages | 
+[**orderListScheduledOrders**](OrderApi.md#orderlistscheduledorders) | **GET** /orders/scheduled | 
 [**orderPlaceOrder**](OrderApi.md#orderplaceorder) | **POST** /orders | 
+[**orderPlaceScheduledOrder**](OrderApi.md#orderplacescheduledorder) | **POST** /orders/scheduled | 
 [**orderSendMessage**](OrderApi.md#ordersendmessage) | **POST** /orders/{id}/messages | 
 [**orderUpdate**](OrderApi.md#orderupdate) | **PUT** /orders/{id} | 
+[**orderUpdateScheduledOrder**](OrderApi.md#orderupdatescheduledorder) | **PUT** /orders/scheduled/{id} | 
 [**orderUploadDeliveryProof**](OrderApi.md#orderuploaddeliveryproof) | **POST** /orders/{id}/delivery-proof | 
 [**orderVerifyDeliveryOTP**](OrderApi.md#orderverifydeliveryotp) | **POST** /orders/{id}/verify-otp | 
 
@@ -127,6 +131,49 @@ try {
     print(response);
 } catch on DioException (e) {
     print('Exception when calling OrderApi->orderCancel: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**|  | 
+ **orderCancelRequest** | [**OrderCancelRequest**](OrderCancelRequest.md)|  | 
+
+### Return type
+
+[**MerchantOrderAccept200Response**](MerchantOrderAccept200Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **orderCancelScheduledOrder**
+> MerchantOrderAccept200Response orderCancelScheduledOrder(id, orderCancelRequest)
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getOrderApi();
+final String id = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
+final OrderCancelRequest orderCancelRequest = ; // OrderCancelRequest | 
+
+try {
+    final response = api.orderCancelScheduledOrder(id, orderCancelRequest);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling OrderApi->orderCancelScheduledOrder: $e\n');
 }
 ```
 
@@ -366,6 +413,69 @@ Name | Type | Description  | Notes
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
+# **orderListScheduledOrders**
+> OrderList200Response orderListScheduledOrders(cursor, limit, direction, page, query, sortBy, order, mode, statuses, type, startDate, endDate)
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getOrderApi();
+final String cursor = cursor_example; // String | 
+final Object limit = ; // Object | 
+final String direction = direction_example; // String | 
+final Object page = ; // Object | 
+final String query = query_example; // String | 
+final String sortBy = sortBy_example; // String | 
+final PaginationOrder order = ; // PaginationOrder | 
+final PaginationMode mode = ; // PaginationMode | 
+final Object statuses = ; // Object | 
+final Object type = ; // Object | 
+final DateTime startDate = 2013-10-20T19:20:30+01:00; // DateTime | 
+final DateTime endDate = 2013-10-20T19:20:30+01:00; // DateTime | 
+
+try {
+    final response = api.orderListScheduledOrders(cursor, limit, direction, page, query, sortBy, order, mode, statuses, type, startDate, endDate);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling OrderApi->orderListScheduledOrders: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **cursor** | **String**|  | [optional] 
+ **limit** | [**Object**](.md)|  | [optional] 
+ **direction** | **String**|  | [optional] 
+ **page** | [**Object**](.md)|  | [optional] 
+ **query** | **String**|  | [optional] 
+ **sortBy** | **String**|  | [optional] 
+ **order** | [**PaginationOrder**](.md)|  | [optional] [default to desc]
+ **mode** | [**PaginationMode**](.md)|  | [optional] [default to offset]
+ **statuses** | [**Object**](.md)|  | [optional] 
+ **type** | [**Object**](.md)|  | [optional] 
+ **startDate** | **DateTime**|  | [optional] 
+ **endDate** | **DateTime**|  | [optional] 
+
+### Return type
+
+[**OrderList200Response**](OrderList200Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
 # **orderPlaceOrder**
 > OrderPlaceOrder200Response orderPlaceOrder(placeOrder)
 
@@ -395,6 +505,47 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**OrderPlaceOrder200Response**](OrderPlaceOrder200Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **orderPlaceScheduledOrder**
+> OrderPlaceScheduledOrder200Response orderPlaceScheduledOrder(placeScheduledOrder)
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getOrderApi();
+final PlaceScheduledOrder placeScheduledOrder = ; // PlaceScheduledOrder | 
+
+try {
+    final response = api.orderPlaceScheduledOrder(placeScheduledOrder);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling OrderApi->orderPlaceScheduledOrder: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **placeScheduledOrder** | [**PlaceScheduledOrder**](PlaceScheduledOrder.md)|  | 
+
+### Return type
+
+[**OrderPlaceScheduledOrder200Response**](OrderPlaceScheduledOrder200Response.md)
 
 ### Authorization
 
@@ -477,6 +628,49 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **id** | **String**|  | 
  **updateOrder** | [**UpdateOrder**](UpdateOrder.md)|  | 
+
+### Return type
+
+[**MerchantOrderAccept200Response**](MerchantOrderAccept200Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **orderUpdateScheduledOrder**
+> MerchantOrderAccept200Response orderUpdateScheduledOrder(id, updateScheduledOrder)
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getOrderApi();
+final String id = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
+final UpdateScheduledOrder updateScheduledOrder = ; // UpdateScheduledOrder | 
+
+try {
+    final response = api.orderUpdateScheduledOrder(id, updateScheduledOrder);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling OrderApi->orderUpdateScheduledOrder: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**|  | 
+ **updateScheduledOrder** | [**UpdateScheduledOrder**](UpdateScheduledOrder.md)|  | 
 
 ### Return type
 

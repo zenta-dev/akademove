@@ -250,6 +250,19 @@ class UserOrderStateMapper extends ClassMapperBase<UserOrderState> {
     _$currentAssignedDriver,
     opt: true,
   );
+  static List<Order>? _$scheduledOrders(UserOrderState v) => v.scheduledOrders;
+  static const Field<UserOrderState, List<Order>> _f$scheduledOrders = Field(
+    'scheduledOrders',
+    _$scheduledOrders,
+    opt: true,
+  );
+  static Order? _$selectedScheduledOrder(UserOrderState v) =>
+      v.selectedScheduledOrder;
+  static const Field<UserOrderState, Order> _f$selectedScheduledOrder = Field(
+    'selectedScheduledOrder',
+    _$selectedScheduledOrder,
+    opt: true,
+  );
   static CubitState _$state(UserOrderState v) => v.state;
   static const Field<UserOrderState, CubitState> _f$state = Field(
     'state',
@@ -279,6 +292,8 @@ class UserOrderStateMapper extends ClassMapperBase<UserOrderState> {
     #currentPayment: _f$currentPayment,
     #currentTransaction: _f$currentTransaction,
     #currentAssignedDriver: _f$currentAssignedDriver,
+    #scheduledOrders: _f$scheduledOrders,
+    #selectedScheduledOrder: _f$selectedScheduledOrder,
     #state: _f$state,
     #message: _f$message,
     #error: _f$error,
@@ -293,6 +308,8 @@ class UserOrderStateMapper extends ClassMapperBase<UserOrderState> {
       currentPayment: data.dec(_f$currentPayment),
       currentTransaction: data.dec(_f$currentTransaction),
       currentAssignedDriver: data.dec(_f$currentAssignedDriver),
+      scheduledOrders: data.dec(_f$scheduledOrders),
+      selectedScheduledOrder: data.dec(_f$selectedScheduledOrder),
       state: data.dec(_f$state),
       message: data.dec(_f$message),
       error: data.dec(_f$error),
@@ -342,6 +359,8 @@ extension UserOrderStateValueCopy<$R, $Out>
 abstract class UserOrderStateCopyWith<$R, $In extends UserOrderState, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
   ListCopyWith<$R, Order, ObjectCopyWith<$R, Order, Order>>? get orderHistories;
+  ListCopyWith<$R, Order, ObjectCopyWith<$R, Order, Order>>?
+  get scheduledOrders;
   $R call({
     EstimateOrderResult? estimateOrder,
     List<Order>? orderHistories,
@@ -350,6 +369,8 @@ abstract class UserOrderStateCopyWith<$R, $In extends UserOrderState, $Out>
     Payment? currentPayment,
     Transaction? currentTransaction,
     Driver? currentAssignedDriver,
+    List<Order>? scheduledOrders,
+    Order? selectedScheduledOrder,
     CubitState? state,
     String? message,
     BaseError? error,
@@ -377,6 +398,15 @@ class _UserOrderStateCopyWithImpl<$R, $Out>
         )
       : null;
   @override
+  ListCopyWith<$R, Order, ObjectCopyWith<$R, Order, Order>>?
+  get scheduledOrders => $value.scheduledOrders != null
+      ? ListCopyWith(
+          $value.scheduledOrders!,
+          (v, t) => ObjectCopyWith(v, $identity, t),
+          (v) => call(scheduledOrders: v),
+        )
+      : null;
+  @override
   $R call({
     Object? estimateOrder = $none,
     Object? orderHistories = $none,
@@ -385,6 +415,8 @@ class _UserOrderStateCopyWithImpl<$R, $Out>
     Object? currentPayment = $none,
     Object? currentTransaction = $none,
     Object? currentAssignedDriver = $none,
+    Object? scheduledOrders = $none,
+    Object? selectedScheduledOrder = $none,
     CubitState? state,
     Object? message = $none,
     Object? error = $none,
@@ -398,6 +430,9 @@ class _UserOrderStateCopyWithImpl<$R, $Out>
       if (currentTransaction != $none) #currentTransaction: currentTransaction,
       if (currentAssignedDriver != $none)
         #currentAssignedDriver: currentAssignedDriver,
+      if (scheduledOrders != $none) #scheduledOrders: scheduledOrders,
+      if (selectedScheduledOrder != $none)
+        #selectedScheduledOrder: selectedScheduledOrder,
       if (state != null) #state: state,
       if (message != $none) #message: message,
       if (error != $none) #error: error,
@@ -417,6 +452,11 @@ class _UserOrderStateCopyWithImpl<$R, $Out>
     currentAssignedDriver: data.get(
       #currentAssignedDriver,
       or: $value.currentAssignedDriver,
+    ),
+    scheduledOrders: data.get(#scheduledOrders, or: $value.scheduledOrders),
+    selectedScheduledOrder: data.get(
+      #selectedScheduledOrder,
+      or: $value.selectedScheduledOrder,
     ),
     state: data.get(#state, or: $value.state),
     message: data.get(#message, or: $value.message),

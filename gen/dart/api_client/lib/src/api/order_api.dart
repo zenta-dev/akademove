@@ -18,6 +18,7 @@ import 'package:api_client/src/model/order_estimate200_response.dart';
 import 'package:api_client/src/model/order_item.dart';
 import 'package:api_client/src/model/order_list200_response.dart';
 import 'package:api_client/src/model/order_place_order200_response.dart';
+import 'package:api_client/src/model/order_place_scheduled_order200_response.dart';
 import 'package:api_client/src/model/order_send_message_request.dart';
 import 'package:api_client/src/model/order_type.dart';
 import 'package:api_client/src/model/order_upload_delivery_proof200_response.dart';
@@ -27,7 +28,9 @@ import 'package:api_client/src/model/order_verify_delivery_otp_request.dart';
 import 'package:api_client/src/model/pagination_mode.dart';
 import 'package:api_client/src/model/pagination_order.dart';
 import 'package:api_client/src/model/place_order.dart';
+import 'package:api_client/src/model/place_scheduled_order.dart';
 import 'package:api_client/src/model/update_order.dart';
+import 'package:api_client/src/model/update_scheduled_order.dart';
 import 'package:api_client/src/model/user_gender.dart';
 
 class OrderApi {
@@ -241,6 +244,104 @@ class OrderApi {
     ProgressCallback? onReceiveProgress,
   }) async {
     final _path = r'/orders/{id}/cancel'.replaceAll(
+      '{'
+      r'id'
+      '}',
+      id.toString(),
+    );
+    final _options = Options(
+      method: r'POST',
+      headers: <String, dynamic>{...?headers},
+      extra: <String, dynamic>{
+        'secure': <Map<String, String>>[
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
+        ],
+        ...?extra,
+      },
+      contentType: 'application/json',
+      validateStatus: validateStatus,
+    );
+
+    dynamic _bodyData;
+
+    try {
+      _bodyData = jsonEncode(orderCancelRequest);
+    } catch (error, stackTrace) {
+      throw DioException(
+        requestOptions: _options.compose(_dio.options, _path),
+        type: DioExceptionType.unknown,
+        error: error,
+        stackTrace: stackTrace,
+      );
+    }
+
+    final _response = await _dio.request<Object>(
+      _path,
+      data: _bodyData,
+      options: _options,
+      cancelToken: cancelToken,
+      onSendProgress: onSendProgress,
+      onReceiveProgress: onReceiveProgress,
+    );
+
+    MerchantOrderAccept200Response? _responseData;
+
+    try {
+      final rawData = _response.data;
+      _responseData = rawData == null
+          ? null
+          : deserialize<
+              MerchantOrderAccept200Response,
+              MerchantOrderAccept200Response
+            >(rawData, 'MerchantOrderAccept200Response', growable: true);
+    } catch (error, stackTrace) {
+      throw DioException(
+        requestOptions: _response.requestOptions,
+        response: _response,
+        type: DioExceptionType.unknown,
+        error: error,
+        stackTrace: stackTrace,
+      );
+    }
+
+    return Response<MerchantOrderAccept200Response>(
+      data: _responseData,
+      headers: _response.headers,
+      isRedirect: _response.isRedirect,
+      requestOptions: _response.requestOptions,
+      redirects: _response.redirects,
+      statusCode: _response.statusCode,
+      statusMessage: _response.statusMessage,
+      extra: _response.extra,
+    );
+  }
+
+  /// orderCancelScheduledOrder
+  ///
+  ///
+  /// Parameters:
+  /// * [id]
+  /// * [orderCancelRequest]
+  /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
+  /// * [headers] - Can be used to add additional headers to the request
+  /// * [extras] - Can be used to add flags to the request
+  /// * [validateStatus] - A [ValidateStatus] callback that can be used to determine request success based on the HTTP status of the response
+  /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
+  /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
+  ///
+  /// Returns a [Future] containing a [Response] with a [MerchantOrderAccept200Response] as data
+  /// Throws [DioException] if API call or serialization fails
+  Future<Response<MerchantOrderAccept200Response>> orderCancelScheduledOrder({
+    required String id,
+    required OrderCancelRequest orderCancelRequest,
+    CancelToken? cancelToken,
+    Map<String, dynamic>? headers,
+    Map<String, dynamic>? extra,
+    ValidateStatus? validateStatus,
+    ProgressCallback? onSendProgress,
+    ProgressCallback? onReceiveProgress,
+  }) async {
+    final _path = r'/orders/scheduled/{id}/cancel'.replaceAll(
       '{'
       r'id'
       '}',
@@ -719,6 +820,121 @@ class OrderApi {
     );
   }
 
+  /// orderListScheduledOrders
+  ///
+  ///
+  /// Parameters:
+  /// * [cursor]
+  /// * [limit]
+  /// * [direction]
+  /// * [page]
+  /// * [query]
+  /// * [sortBy]
+  /// * [order]
+  /// * [mode]
+  /// * [statuses]
+  /// * [type]
+  /// * [startDate]
+  /// * [endDate]
+  /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
+  /// * [headers] - Can be used to add additional headers to the request
+  /// * [extras] - Can be used to add flags to the request
+  /// * [validateStatus] - A [ValidateStatus] callback that can be used to determine request success based on the HTTP status of the response
+  /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
+  /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
+  ///
+  /// Returns a [Future] containing a [Response] with a [OrderList200Response] as data
+  /// Throws [DioException] if API call or serialization fails
+  Future<Response<OrderList200Response>> orderListScheduledOrders({
+    String? cursor,
+    Object? limit,
+    String? direction,
+    Object? page,
+    String? query,
+    String? sortBy,
+    PaginationOrder? order = PaginationOrder.desc,
+    PaginationMode? mode = PaginationMode.offset,
+    Object? statuses,
+    Object? type,
+    DateTime? startDate,
+    DateTime? endDate,
+    CancelToken? cancelToken,
+    Map<String, dynamic>? headers,
+    Map<String, dynamic>? extra,
+    ValidateStatus? validateStatus,
+    ProgressCallback? onSendProgress,
+    ProgressCallback? onReceiveProgress,
+  }) async {
+    final _path = r'/orders/scheduled';
+    final _options = Options(
+      method: r'GET',
+      headers: <String, dynamic>{...?headers},
+      extra: <String, dynamic>{
+        'secure': <Map<String, String>>[
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
+        ],
+        ...?extra,
+      },
+      validateStatus: validateStatus,
+    );
+
+    final _queryParameters = <String, dynamic>{
+      if (cursor != null) r'cursor': cursor,
+      if (limit != null) r'limit': limit,
+      if (direction != null) r'direction': direction,
+      if (page != null) r'page': page,
+      if (query != null) r'query': query,
+      if (sortBy != null) r'sortBy': sortBy,
+      if (order != null) r'order': order,
+      if (mode != null) r'mode': mode,
+      if (statuses != null) r'statuses': statuses,
+      if (type != null) r'type': type,
+      if (startDate != null) r'startDate': startDate,
+      if (endDate != null) r'endDate': endDate,
+    };
+
+    final _response = await _dio.request<Object>(
+      _path,
+      options: _options,
+      queryParameters: _queryParameters,
+      cancelToken: cancelToken,
+      onSendProgress: onSendProgress,
+      onReceiveProgress: onReceiveProgress,
+    );
+
+    OrderList200Response? _responseData;
+
+    try {
+      final rawData = _response.data;
+      _responseData = rawData == null
+          ? null
+          : deserialize<OrderList200Response, OrderList200Response>(
+              rawData,
+              'OrderList200Response',
+              growable: true,
+            );
+    } catch (error, stackTrace) {
+      throw DioException(
+        requestOptions: _response.requestOptions,
+        response: _response,
+        type: DioExceptionType.unknown,
+        error: error,
+        stackTrace: stackTrace,
+      );
+    }
+
+    return Response<OrderList200Response>(
+      data: _responseData,
+      headers: _response.headers,
+      isRedirect: _response.isRedirect,
+      requestOptions: _response.requestOptions,
+      redirects: _response.redirects,
+      statusCode: _response.statusCode,
+      statusMessage: _response.statusMessage,
+      extra: _response.extra,
+    );
+  }
+
   /// orderPlaceOrder
   ///
   ///
@@ -800,6 +1016,98 @@ class OrderApi {
     }
 
     return Response<OrderPlaceOrder200Response>(
+      data: _responseData,
+      headers: _response.headers,
+      isRedirect: _response.isRedirect,
+      requestOptions: _response.requestOptions,
+      redirects: _response.redirects,
+      statusCode: _response.statusCode,
+      statusMessage: _response.statusMessage,
+      extra: _response.extra,
+    );
+  }
+
+  /// orderPlaceScheduledOrder
+  ///
+  ///
+  /// Parameters:
+  /// * [placeScheduledOrder]
+  /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
+  /// * [headers] - Can be used to add additional headers to the request
+  /// * [extras] - Can be used to add flags to the request
+  /// * [validateStatus] - A [ValidateStatus] callback that can be used to determine request success based on the HTTP status of the response
+  /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
+  /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
+  ///
+  /// Returns a [Future] containing a [Response] with a [OrderPlaceScheduledOrder200Response] as data
+  /// Throws [DioException] if API call or serialization fails
+  Future<Response<OrderPlaceScheduledOrder200Response>>
+  orderPlaceScheduledOrder({
+    required PlaceScheduledOrder placeScheduledOrder,
+    CancelToken? cancelToken,
+    Map<String, dynamic>? headers,
+    Map<String, dynamic>? extra,
+    ValidateStatus? validateStatus,
+    ProgressCallback? onSendProgress,
+    ProgressCallback? onReceiveProgress,
+  }) async {
+    final _path = r'/orders/scheduled';
+    final _options = Options(
+      method: r'POST',
+      headers: <String, dynamic>{...?headers},
+      extra: <String, dynamic>{
+        'secure': <Map<String, String>>[
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
+        ],
+        ...?extra,
+      },
+      contentType: 'application/json',
+      validateStatus: validateStatus,
+    );
+
+    dynamic _bodyData;
+
+    try {
+      _bodyData = jsonEncode(placeScheduledOrder);
+    } catch (error, stackTrace) {
+      throw DioException(
+        requestOptions: _options.compose(_dio.options, _path),
+        type: DioExceptionType.unknown,
+        error: error,
+        stackTrace: stackTrace,
+      );
+    }
+
+    final _response = await _dio.request<Object>(
+      _path,
+      data: _bodyData,
+      options: _options,
+      cancelToken: cancelToken,
+      onSendProgress: onSendProgress,
+      onReceiveProgress: onReceiveProgress,
+    );
+
+    OrderPlaceScheduledOrder200Response? _responseData;
+
+    try {
+      final rawData = _response.data;
+      _responseData = rawData == null
+          ? null
+          : deserialize<
+              OrderPlaceScheduledOrder200Response,
+              OrderPlaceScheduledOrder200Response
+            >(rawData, 'OrderPlaceScheduledOrder200Response', growable: true);
+    } catch (error, stackTrace) {
+      throw DioException(
+        requestOptions: _response.requestOptions,
+        response: _response,
+        type: DioExceptionType.unknown,
+        error: error,
+        stackTrace: stackTrace,
+      );
+    }
+
+    return Response<OrderPlaceScheduledOrder200Response>(
       data: _responseData,
       headers: _response.headers,
       isRedirect: _response.isRedirect,
@@ -958,6 +1266,104 @@ class OrderApi {
 
     try {
       _bodyData = jsonEncode(updateOrder);
+    } catch (error, stackTrace) {
+      throw DioException(
+        requestOptions: _options.compose(_dio.options, _path),
+        type: DioExceptionType.unknown,
+        error: error,
+        stackTrace: stackTrace,
+      );
+    }
+
+    final _response = await _dio.request<Object>(
+      _path,
+      data: _bodyData,
+      options: _options,
+      cancelToken: cancelToken,
+      onSendProgress: onSendProgress,
+      onReceiveProgress: onReceiveProgress,
+    );
+
+    MerchantOrderAccept200Response? _responseData;
+
+    try {
+      final rawData = _response.data;
+      _responseData = rawData == null
+          ? null
+          : deserialize<
+              MerchantOrderAccept200Response,
+              MerchantOrderAccept200Response
+            >(rawData, 'MerchantOrderAccept200Response', growable: true);
+    } catch (error, stackTrace) {
+      throw DioException(
+        requestOptions: _response.requestOptions,
+        response: _response,
+        type: DioExceptionType.unknown,
+        error: error,
+        stackTrace: stackTrace,
+      );
+    }
+
+    return Response<MerchantOrderAccept200Response>(
+      data: _responseData,
+      headers: _response.headers,
+      isRedirect: _response.isRedirect,
+      requestOptions: _response.requestOptions,
+      redirects: _response.redirects,
+      statusCode: _response.statusCode,
+      statusMessage: _response.statusMessage,
+      extra: _response.extra,
+    );
+  }
+
+  /// orderUpdateScheduledOrder
+  ///
+  ///
+  /// Parameters:
+  /// * [id]
+  /// * [updateScheduledOrder]
+  /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
+  /// * [headers] - Can be used to add additional headers to the request
+  /// * [extras] - Can be used to add flags to the request
+  /// * [validateStatus] - A [ValidateStatus] callback that can be used to determine request success based on the HTTP status of the response
+  /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
+  /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
+  ///
+  /// Returns a [Future] containing a [Response] with a [MerchantOrderAccept200Response] as data
+  /// Throws [DioException] if API call or serialization fails
+  Future<Response<MerchantOrderAccept200Response>> orderUpdateScheduledOrder({
+    required String id,
+    required UpdateScheduledOrder updateScheduledOrder,
+    CancelToken? cancelToken,
+    Map<String, dynamic>? headers,
+    Map<String, dynamic>? extra,
+    ValidateStatus? validateStatus,
+    ProgressCallback? onSendProgress,
+    ProgressCallback? onReceiveProgress,
+  }) async {
+    final _path = r'/orders/scheduled/{id}'.replaceAll(
+      '{'
+      r'id'
+      '}',
+      id.toString(),
+    );
+    final _options = Options(
+      method: r'PUT',
+      headers: <String, dynamic>{...?headers},
+      extra: <String, dynamic>{
+        'secure': <Map<String, String>>[
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
+        ],
+        ...?extra,
+      },
+      contentType: 'application/json',
+      validateStatus: validateStatus,
+    );
+
+    dynamic _bodyData;
+
+    try {
+      _bodyData = jsonEncode(updateScheduledOrder);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _options.compose(_dio.options, _path),

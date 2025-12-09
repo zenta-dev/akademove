@@ -206,4 +206,101 @@ class OrderRepository extends BaseRepository {
       return SuccessResponse(message: data.message, data: data.data.verified);
     });
   }
+
+  /// Place a scheduled order
+  /// POST /api/orders/scheduled
+  Future<BaseResponse<PlaceScheduledOrderResponse>> placeScheduledOrder(
+    PlaceScheduledOrder req,
+  ) {
+    return guard(() async {
+      final res = await _apiClient.getOrderApi().orderPlaceScheduledOrder(
+        placeScheduledOrder: req,
+      );
+
+      final data =
+          res.data ??
+          (throw const RepositoryError(
+            'Failed to place scheduled order',
+            code: ErrorCode.unknown,
+          ));
+
+      return SuccessResponse(message: data.message, data: data.data);
+    });
+  }
+
+  /// List scheduled orders
+  /// GET /api/orders/scheduled
+  Future<BaseResponse<List<Order>>> listScheduledOrders(ListOrderQuery query) {
+    return guard(() async {
+      final res = await _apiClient.getOrderApi().orderListScheduledOrders(
+        cursor: query.cursor?.trim(),
+        limit: query.limit,
+        page: query.page,
+        query: query.query?.trim(),
+        sortBy: query.sortBy?.trim(),
+        order: query.orderBy,
+        mode: PaginationMode.cursor,
+        statuses: query.statuses.map((v) => v.value).toList(),
+      );
+
+      final data =
+          res.data ??
+          (throw const RepositoryError(
+            'Scheduled orders not found',
+            code: ErrorCode.notFound,
+          ));
+
+      return SuccessResponse(
+        message: data.message,
+        data: data.data,
+        paginationResult: data.pagination,
+      );
+    });
+  }
+
+  /// Update a scheduled order (reschedule)
+  /// PUT /api/orders/scheduled/{id}
+  Future<BaseResponse<Order>> updateScheduledOrder(
+    String id,
+    UpdateScheduledOrder request,
+  ) {
+    return guard(() async {
+      final res = await _apiClient.getOrderApi().orderUpdateScheduledOrder(
+        id: id,
+        updateScheduledOrder: request,
+      );
+
+      final data =
+          res.data ??
+          (throw const RepositoryError(
+            'Failed to update scheduled order',
+            code: ErrorCode.unknown,
+          ));
+
+      return SuccessResponse(message: data.message, data: data.data);
+    });
+  }
+
+  /// Cancel a scheduled order
+  /// POST /api/orders/scheduled/{id}/cancel
+  Future<BaseResponse<Order>> cancelScheduledOrder(
+    String id, {
+    String? reason,
+  }) {
+    return guard(() async {
+      final res = await _apiClient.getOrderApi().orderCancelScheduledOrder(
+        id: id,
+        orderCancelRequest: OrderCancelRequest(reason: reason),
+      );
+
+      final data =
+          res.data ??
+          (throw const RepositoryError(
+            'Failed to cancel scheduled order',
+            code: ErrorCode.unknown,
+          ));
+
+      return SuccessResponse(message: data.message, data: data.data);
+    });
+  }
 }

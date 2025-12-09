@@ -338,4 +338,172 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
 
     await Future.wait(futures);
   }
+
+  // ==================== Scheduled Orders ====================
+
+  /// List all scheduled orders for the current user
+  Future<void> listScheduledOrders() async => await taskManager.execute(
+    'UOC-lso',
+    () async {
+      try {
+        emit(state.toLoading());
+
+        final res = await _orderRepository.listScheduledOrders(
+          const ListOrderQuery(statuses: [OrderStatus.SCHEDULED]),
+        );
+
+        emit(state.toSuccess(scheduledOrders: res.data, message: res.message));
+      } on BaseError catch (e, st) {
+        logger.e(
+          '[UserOrderCubit] - Error listing scheduled orders: ${e.message}',
+          error: e,
+          stackTrace: st,
+        );
+        emit(state.toFailure(e));
+      }
+    },
+  );
+
+  /// Place a new scheduled order
+  Future<PlaceScheduledOrderResponse?> placeScheduledOrder(
+    Place pickup,
+    Place dropoff,
+    OrderType type,
+    PaymentMethod method,
+    DateTime scheduledAt, {
+    UserGender? gender,
+    BankProvider? bankProvider,
+    String? couponCode,
+  }) async => await taskManager.execute('UOC-pso', () async {
+    try {
+      emit(state.toLoading());
+
+      final res = await _orderRepository.placeScheduledOrder(
+        PlaceScheduledOrder(
+          dropoffLocation: dropoff.toCoordinate(),
+          pickupLocation: pickup.toCoordinate(),
+          type: type,
+          scheduledAt: scheduledAt,
+          gender: gender,
+          couponCode: couponCode,
+          payment: PlaceOrderPayment(
+            provider: PaymentProvider.MIDTRANS,
+            method: method,
+            bankProvider: bankProvider,
+          ),
+        ),
+      );
+
+      _orderId = res.data.order.id;
+      _paymentId = res.data.payment.id;
+      await _setupPaymentWebsocket(paymentId: res.data.payment.id);
+
+      emit(
+        state.toSuccess(
+          currentOrder: res.data.order,
+          currentPayment: res.data.payment,
+          currentTransaction: res.data.transaction,
+        ),
+      );
+
+      return res.data;
+    } on BaseError catch (e, st) {
+      logger.e(
+        '[UserOrderCubit] - Error placing scheduled order: ${e.message}',
+        error: e,
+        stackTrace: st,
+      );
+      emit(state.toFailure(e));
+      return null;
+    }
+  });
+
+  /// Update (reschedule) an existing scheduled order
+  Future<Order?> updateScheduledOrder(
+    String orderId,
+    DateTime newScheduledAt,
+  ) async => await taskManager.execute('UOC-uso-$orderId', () async {
+    try {
+      emit(state.toLoading());
+
+      final res = await _orderRepository.updateScheduledOrder(
+        orderId,
+        UpdateScheduledOrder(scheduledAt: newScheduledAt),
+      );
+
+      // Update the scheduled orders list with the updated order
+      final updatedList = state.scheduledOrders?.map((order) {
+        if (order.id == orderId) {
+          return res.data;
+        }
+        return order;
+      }).toList();
+
+      emit(
+        state.toSuccess(
+          scheduledOrders: updatedList,
+          selectedScheduledOrder: res.data,
+          message: res.message,
+        ),
+      );
+
+      return res.data;
+    } on BaseError catch (e, st) {
+      logger.e(
+        '[UserOrderCubit] - Error updating scheduled order: ${e.message}',
+        error: e,
+        stackTrace: st,
+      );
+      emit(state.toFailure(e));
+      return null;
+    }
+  });
+
+  /// Cancel a scheduled order
+  Future<Order?> cancelScheduledOrder(String orderId, {String? reason}) async =>
+      await taskManager.execute('UOC-cso-$orderId', () async {
+        try {
+          emit(state.toLoading());
+
+          final res = await _orderRepository.cancelScheduledOrder(
+            orderId,
+            reason: reason,
+          );
+
+          // Remove cancelled order from the scheduled orders list
+          final updatedList = state.scheduledOrders
+              ?.where((order) => order.id != orderId)
+              .toList();
+
+          emit(
+            state.toSuccess(
+              scheduledOrders: updatedList,
+              selectedScheduledOrder: null,
+              message: res.message,
+            ),
+          );
+
+          return res.data;
+        } on BaseError catch (e, st) {
+          logger.e(
+            '[UserOrderCubit] - Error cancelling scheduled order: ${e.message}',
+            error: e,
+            stackTrace: st,
+          );
+          emit(state.toFailure(e));
+          return null;
+        }
+      });
+
+  /// Select a scheduled order for viewing/editing
+  void selectScheduledOrder(Order? order) {
+    emit(state.toSuccess(selectedScheduledOrder: order));
+  }
+
+  /// Clear the selected scheduled order
+  void clearSelectedScheduledOrder() {
+    emit(
+      state.copyWith(selectedScheduledOrder: null, state: CubitState.success),
+    );
+  }
 }

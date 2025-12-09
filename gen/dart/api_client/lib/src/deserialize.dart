@@ -231,6 +231,7 @@ import 'package:api_client/src/model/order_list200_response.dart';
 import 'package:api_client/src/model/order_merchant.dart';
 import 'package:api_client/src/model/order_note.dart';
 import 'package:api_client/src/model/order_place_order200_response.dart';
+import 'package:api_client/src/model/order_place_scheduled_order200_response.dart';
 import 'package:api_client/src/model/order_send_message_request.dart';
 import 'package:api_client/src/model/order_summary.dart';
 import 'package:api_client/src/model/order_summary_breakdown.dart';
@@ -250,6 +251,8 @@ import 'package:api_client/src/model/place_order.dart';
 import 'package:api_client/src/model/place_order_payment.dart';
 import 'package:api_client/src/model/place_order_response.dart';
 import 'package:api_client/src/model/place_order_response_auto_applied_coupon.dart';
+import 'package:api_client/src/model/place_scheduled_order.dart';
+import 'package:api_client/src/model/place_scheduled_order_response.dart';
 import 'package:api_client/src/model/pricing_configuration.dart';
 import 'package:api_client/src/model/quick_message_create200_response.dart';
 import 'package:api_client/src/model/quick_message_list200_response.dart';
@@ -308,6 +311,7 @@ import 'package:api_client/src/model/update_payment.dart';
 import 'package:api_client/src/model/update_quick_message_template.dart';
 import 'package:api_client/src/model/update_report.dart';
 import 'package:api_client/src/model/update_review.dart';
+import 'package:api_client/src/model/update_scheduled_order.dart';
 import 'package:api_client/src/model/update_support_ticket.dart';
 import 'package:api_client/src/model/update_transaction.dart';
 import 'package:api_client/src/model/update_user_password.dart';
@@ -1231,6 +1235,11 @@ ReturnType deserialize<ReturnType, BaseType>(
     case 'OrderPlaceOrder200Response':
       return OrderPlaceOrder200Response.fromJson(value as Map<String, dynamic>)
           as ReturnType;
+    case 'OrderPlaceScheduledOrder200Response':
+      return OrderPlaceScheduledOrder200Response.fromJson(
+            value as Map<String, dynamic>,
+          )
+          as ReturnType;
     case 'OrderSendMessageRequest':
       return OrderSendMessageRequest.fromJson(value as Map<String, dynamic>)
           as ReturnType;
@@ -1305,6 +1314,12 @@ ReturnType deserialize<ReturnType, BaseType>(
       return PlaceOrderResponseAutoAppliedCoupon.fromJson(
             value as Map<String, dynamic>,
           )
+          as ReturnType;
+    case 'PlaceScheduledOrder':
+      return PlaceScheduledOrder.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
+    case 'PlaceScheduledOrderResponse':
+      return PlaceScheduledOrderResponse.fromJson(value as Map<String, dynamic>)
           as ReturnType;
     case 'PricingConfiguration':
       return PricingConfiguration.fromJson(value as Map<String, dynamic>)
@@ -1492,6 +1507,9 @@ ReturnType deserialize<ReturnType, BaseType>(
       return UpdateReport.fromJson(value as Map<String, dynamic>) as ReturnType;
     case 'UpdateReview':
       return UpdateReview.fromJson(value as Map<String, dynamic>) as ReturnType;
+    case 'UpdateScheduledOrder':
+      return UpdateScheduledOrder.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
     case 'UpdateSupportTicket':
       return UpdateSupportTicket.fromJson(value as Map<String, dynamic>)
           as ReturnType;

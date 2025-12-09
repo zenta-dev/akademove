@@ -221,13 +221,17 @@ Class | Method | HTTP request | Description
 [*OrderApi*](doc/OrderApi.md) | [**chatList**](doc/OrderApi.md#chatlist) | **GET** /chat | 
 [*OrderApi*](doc/OrderApi.md) | [**chatSend**](doc/OrderApi.md#chatsend) | **POST** /chat | 
 [*OrderApi*](doc/OrderApi.md) | [**orderCancel**](doc/OrderApi.md#ordercancel) | **POST** /orders/{id}/cancel | 
+[*OrderApi*](doc/OrderApi.md) | [**orderCancelScheduledOrder**](doc/OrderApi.md#ordercancelscheduledorder) | **POST** /orders/scheduled/{id}/cancel | 
 [*OrderApi*](doc/OrderApi.md) | [**orderEstimate**](doc/OrderApi.md#orderestimate) | **GET** /orders/estimate | 
 [*OrderApi*](doc/OrderApi.md) | [**orderGet**](doc/OrderApi.md#orderget) | **GET** /orders/{id} | 
 [*OrderApi*](doc/OrderApi.md) | [**orderList**](doc/OrderApi.md#orderlist) | **GET** /orders | 
 [*OrderApi*](doc/OrderApi.md) | [**orderListMessages**](doc/OrderApi.md#orderlistmessages) | **GET** /orders/{id}/messages | 
+[*OrderApi*](doc/OrderApi.md) | [**orderListScheduledOrders**](doc/OrderApi.md#orderlistscheduledorders) | **GET** /orders/scheduled | 
 [*OrderApi*](doc/OrderApi.md) | [**orderPlaceOrder**](doc/OrderApi.md#orderplaceorder) | **POST** /orders | 
+[*OrderApi*](doc/OrderApi.md) | [**orderPlaceScheduledOrder**](doc/OrderApi.md#orderplacescheduledorder) | **POST** /orders/scheduled | 
 [*OrderApi*](doc/OrderApi.md) | [**orderSendMessage**](doc/OrderApi.md#ordersendmessage) | **POST** /orders/{id}/messages | 
 [*OrderApi*](doc/OrderApi.md) | [**orderUpdate**](doc/OrderApi.md#orderupdate) | **PUT** /orders/{id} | 
+[*OrderApi*](doc/OrderApi.md) | [**orderUpdateScheduledOrder**](doc/OrderApi.md#orderupdatescheduledorder) | **PUT** /orders/scheduled/{id} | 
 [*OrderApi*](doc/OrderApi.md) | [**orderUploadDeliveryProof**](doc/OrderApi.md#orderuploaddeliveryproof) | **POST** /orders/{id}/delivery-proof | 
 [*OrderApi*](doc/OrderApi.md) | [**orderVerifyDeliveryOTP**](doc/OrderApi.md#orderverifydeliveryotp) | **POST** /orders/{id}/verify-otp | 
 [*PaymentApi*](doc/PaymentApi.md) | [**paymentWebhookMidtrans**](doc/PaymentApi.md#paymentwebhookmidtrans) | **POST** /payments/webhook/midtrans | 
@@ -539,6 +543,7 @@ Class | Method | HTTP request | Description
  - [OrderMerchant](doc/OrderMerchant.md)
  - [OrderNote](doc/OrderNote.md)
  - [OrderPlaceOrder200Response](doc/OrderPlaceOrder200Response.md)
+ - [OrderPlaceScheduledOrder200Response](doc/OrderPlaceScheduledOrder200Response.md)
  - [OrderSendMessageRequest](doc/OrderSendMessageRequest.md)
  - [OrderStatus](doc/OrderStatus.md)
  - [OrderSummary](doc/OrderSummary.md)
@@ -567,6 +572,8 @@ Class | Method | HTTP request | Description
  - [PlaceOrderPayment](doc/PlaceOrderPayment.md)
  - [PlaceOrderResponse](doc/PlaceOrderResponse.md)
  - [PlaceOrderResponseAutoAppliedCoupon](doc/PlaceOrderResponseAutoAppliedCoupon.md)
+ - [PlaceScheduledOrder](doc/PlaceScheduledOrder.md)
+ - [PlaceScheduledOrderResponse](doc/PlaceScheduledOrderResponse.md)
  - [PricingConfiguration](doc/PricingConfiguration.md)
  - [QuickMessageCreate200Response](doc/QuickMessageCreate200Response.md)
  - [QuickMessageList200Response](doc/QuickMessageList200Response.md)
@@ -640,6 +647,7 @@ Class | Method | HTTP request | Description
  - [UpdateQuickMessageTemplate](doc/UpdateQuickMessageTemplate.md)
  - [UpdateReport](doc/UpdateReport.md)
  - [UpdateReview](doc/UpdateReview.md)
+ - [UpdateScheduledOrder](doc/UpdateScheduledOrder.md)
  - [UpdateSupportTicket](doc/UpdateSupportTicket.md)
  - [UpdateTransaction](doc/UpdateTransaction.md)
  - [UpdateUserPassword](doc/UpdateUserPassword.md)

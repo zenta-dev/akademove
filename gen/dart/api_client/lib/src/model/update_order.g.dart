@@ -43,6 +43,10 @@ abstract class _$UpdateOrderCWProxy {
     UpdateOrderGenderPreferenceEnum? genderPreference,
   );
 
+  UpdateOrder scheduledAt(DateTime? scheduledAt);
+
+  UpdateOrder scheduledMatchingAt(DateTime? scheduledMatchingAt);
+
   UpdateOrder proofOfDeliveryUrl(String? proofOfDeliveryUrl);
 
   UpdateOrder deliveryOtp(String? deliveryOtp);
@@ -84,6 +88,8 @@ abstract class _$UpdateOrderCWProxy {
     String? cancelReason,
     UserGender? gender,
     UpdateOrderGenderPreferenceEnum? genderPreference,
+    DateTime? scheduledAt,
+    DateTime? scheduledMatchingAt,
     String? proofOfDeliveryUrl,
     String? deliveryOtp,
     DateTime? otpVerifiedAt,
@@ -161,6 +167,14 @@ class _$UpdateOrderCWProxyImpl implements _$UpdateOrderCWProxy {
   ) => call(genderPreference: genderPreference);
 
   @override
+  UpdateOrder scheduledAt(DateTime? scheduledAt) =>
+      call(scheduledAt: scheduledAt);
+
+  @override
+  UpdateOrder scheduledMatchingAt(DateTime? scheduledMatchingAt) =>
+      call(scheduledMatchingAt: scheduledMatchingAt);
+
+  @override
   UpdateOrder proofOfDeliveryUrl(String? proofOfDeliveryUrl) =>
       call(proofOfDeliveryUrl: proofOfDeliveryUrl);
 
@@ -213,6 +227,8 @@ class _$UpdateOrderCWProxyImpl implements _$UpdateOrderCWProxy {
     Object? cancelReason = const $CopyWithPlaceholder(),
     Object? gender = const $CopyWithPlaceholder(),
     Object? genderPreference = const $CopyWithPlaceholder(),
+    Object? scheduledAt = const $CopyWithPlaceholder(),
+    Object? scheduledMatchingAt = const $CopyWithPlaceholder(),
     Object? proofOfDeliveryUrl = const $CopyWithPlaceholder(),
     Object? deliveryOtp = const $CopyWithPlaceholder(),
     Object? otpVerifiedAt = const $CopyWithPlaceholder(),
@@ -291,6 +307,14 @@ class _$UpdateOrderCWProxyImpl implements _$UpdateOrderCWProxy {
           ? _value.genderPreference
           // ignore: cast_nullable_to_non_nullable
           : genderPreference as UpdateOrderGenderPreferenceEnum?,
+      scheduledAt: scheduledAt == const $CopyWithPlaceholder()
+          ? _value.scheduledAt
+          // ignore: cast_nullable_to_non_nullable
+          : scheduledAt as DateTime?,
+      scheduledMatchingAt: scheduledMatchingAt == const $CopyWithPlaceholder()
+          ? _value.scheduledMatchingAt
+          // ignore: cast_nullable_to_non_nullable
+          : scheduledMatchingAt as DateTime?,
       proofOfDeliveryUrl: proofOfDeliveryUrl == const $CopyWithPlaceholder()
           ? _value.proofOfDeliveryUrl
           // ignore: cast_nullable_to_non_nullable
@@ -374,6 +398,14 @@ UpdateOrder _$UpdateOrderFromJson(
       'genderPreference',
       (v) => $enumDecodeNullable(_$UpdateOrderGenderPreferenceEnumEnumMap, v),
     ),
+    scheduledAt: $checkedConvert(
+      'scheduledAt',
+      (v) => v == null ? null : DateTime.parse(v as String),
+    ),
+    scheduledMatchingAt: $checkedConvert(
+      'scheduledMatchingAt',
+      (v) => v == null ? null : DateTime.parse(v as String),
+    ),
     proofOfDeliveryUrl: $checkedConvert(
       'proofOfDeliveryUrl',
       (v) => v as String?,
@@ -427,6 +459,8 @@ Map<String, dynamic> _$UpdateOrderToJson(UpdateOrder instance) =>
       'gender': ?_$UserGenderEnumMap[instance.gender],
       'genderPreference':
           ?_$UpdateOrderGenderPreferenceEnumEnumMap[instance.genderPreference],
+      'scheduledAt': ?instance.scheduledAt?.toIso8601String(),
+      'scheduledMatchingAt': ?instance.scheduledMatchingAt?.toIso8601String(),
       'proofOfDeliveryUrl': ?instance.proofOfDeliveryUrl,
       'deliveryOtp': ?instance.deliveryOtp,
       'otpVerifiedAt': ?instance.otpVerifiedAt?.toIso8601String(),
@@ -444,6 +478,7 @@ const _$OrderTypeEnumMap = {
 };
 
 const _$OrderStatusEnumMap = {
+  OrderStatus.SCHEDULED: 'SCHEDULED',
   OrderStatus.REQUESTED: 'REQUESTED',
   OrderStatus.MATCHING: 'MATCHING',
   OrderStatus.ACCEPTED: 'ACCEPTED',

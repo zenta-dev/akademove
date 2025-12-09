@@ -56,6 +56,8 @@ export class MerchantOrderRepository extends BaseRepository {
 			proofOfDeliveryUrl: item.proofOfDeliveryUrl ?? undefined,
 			deliveryOtp: item.deliveryOtp ?? undefined,
 			otpVerifiedAt: item.otpVerifiedAt ?? undefined,
+			scheduledAt: item.scheduledAt ?? undefined,
+			scheduledMatchingAt: item.scheduledMatchingAt ?? undefined,
 		};
 	}
 

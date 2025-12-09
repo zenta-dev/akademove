@@ -64,6 +64,10 @@ enum OrderKey {
   gender(r'gender'),
   @JsonValue(r'genderPreference')
   genderPreference(r'genderPreference'),
+  @JsonValue(r'scheduledAt')
+  scheduledAt(r'scheduledAt'),
+  @JsonValue(r'scheduledMatchingAt')
+  scheduledMatchingAt(r'scheduledMatchingAt'),
   @JsonValue(r'proofOfDeliveryUrl')
   proofOfDeliveryUrl(r'proofOfDeliveryUrl'),
   @JsonValue(r'deliveryOtp')

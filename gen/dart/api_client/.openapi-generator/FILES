@@ -294,6 +294,7 @@ doc/OrderList200Response.md
 doc/OrderMerchant.md
 doc/OrderNote.md
 doc/OrderPlaceOrder200Response.md
+doc/OrderPlaceScheduledOrder200Response.md
 doc/OrderSendMessageRequest.md
 doc/OrderStatus.md
 doc/OrderSummary.md
@@ -323,6 +324,8 @@ doc/PlaceOrder.md
 doc/PlaceOrderPayment.md
 doc/PlaceOrderResponse.md
 doc/PlaceOrderResponseAutoAppliedCoupon.md
+doc/PlaceScheduledOrder.md
+doc/PlaceScheduledOrderResponse.md
 doc/PricingConfiguration.md
 doc/QuickMessageCreate200Response.md
 doc/QuickMessageList200Response.md
@@ -399,6 +402,7 @@ doc/UpdatePayment.md
 doc/UpdateQuickMessageTemplate.md
 doc/UpdateReport.md
 doc/UpdateReview.md
+doc/UpdateScheduledOrder.md
 doc/UpdateSupportTicket.md
 doc/UpdateTransaction.md
 doc/UpdateUserPassword.md
@@ -736,6 +740,7 @@ lib/src/model/order_list200_response.dart
 lib/src/model/order_merchant.dart
 lib/src/model/order_note.dart
 lib/src/model/order_place_order200_response.dart
+lib/src/model/order_place_scheduled_order200_response.dart
 lib/src/model/order_send_message_request.dart
 lib/src/model/order_status.dart
 lib/src/model/order_summary.dart
@@ -764,6 +769,8 @@ lib/src/model/place_order.dart
 lib/src/model/place_order_payment.dart
 lib/src/model/place_order_response.dart
 lib/src/model/place_order_response_auto_applied_coupon.dart
+lib/src/model/place_scheduled_order.dart
+lib/src/model/place_scheduled_order_response.dart
 lib/src/model/pricing_configuration.dart
 lib/src/model/quick_message_create200_response.dart
 lib/src/model/quick_message_list200_response.dart
@@ -837,6 +844,7 @@ lib/src/model/update_payment.dart
 lib/src/model/update_quick_message_template.dart
 lib/src/model/update_report.dart
 lib/src/model/update_review.dart
+lib/src/model/update_scheduled_order.dart
 lib/src/model/update_support_ticket.dart
 lib/src/model/update_transaction.dart
 lib/src/model/update_user_password.dart
@@ -867,3 +875,7 @@ lib/src/model/wallet_monthly_summary_response.dart
 lib/src/model/wallet_top_up200_response.dart
 lib/src/model/withdraw_request.dart
 pubspec.yaml
+test/order_place_scheduled_order200_response_test.dart
+test/place_scheduled_order_response_test.dart
+test/place_scheduled_order_test.dart
+test/update_scheduled_order_test.dart

@@ -22,6 +22,7 @@ import {
 } from "@repo/schema/order";
 import type { User, UserRole } from "@repo/schema/user";
 import { nullsToUndefined } from "@repo/shared";
+import Decimal from "decimal.js";
 import {
 	and,
 	count,
@@ -1305,7 +1306,7 @@ export class OrderRepository extends BaseRepository {
 				opts,
 			);
 
-			let order = await this.#getFromDB(orderRow.id, opts);
+			const order = await this.#getFromDB(orderRow.id, opts);
 			if (!order)
 				throw new RepositoryError(m.error_failed_retrieve_placed_order());
 
@@ -1604,8 +1605,8 @@ export class OrderRepository extends BaseRepository {
 			await OrderRefundService.processRefund(
 				order.id,
 				order.userId,
-				toStringNumberSafe(refundAmount),
-				toStringNumberSafe(penaltyAmount),
+				new Decimal(refundAmount),
+				new Decimal(penaltyAmount),
 				opts,
 			);
 

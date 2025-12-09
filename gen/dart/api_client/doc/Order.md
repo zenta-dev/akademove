@@ -37,6 +37,8 @@ Name | Type | Description | Notes
 **updatedAt** | [**DateTime**](DateTime.md) |  | 
 **gender** | [**UserGender**](UserGender.md) |  | [optional] 
 **genderPreference** | **String** |  | [optional] 
+**scheduledAt** | [**DateTime**](DateTime.md) |  | [optional] 
+**scheduledMatchingAt** | [**DateTime**](DateTime.md) |  | [optional] 
 **proofOfDeliveryUrl** | **String** |  | [optional] 
 **deliveryOtp** | **String** |  | [optional] 
 **otpVerifiedAt** | [**DateTime**](DateTime.md) |  | [optional] 
