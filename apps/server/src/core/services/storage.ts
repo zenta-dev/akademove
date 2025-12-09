@@ -8,7 +8,7 @@ import {
 	S3Client,
 } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { log } from "@/utils";
+
 import type { StorageBucket } from "../constants";
 import { StorageError } from "../error";
 
@@ -86,7 +86,7 @@ export class S3StorageService implements StorageService {
 		try {
 			await this.#client.send(new HeadBucketCommand({ Bucket: bucket }));
 			this.#bucketExists.set(bucket, true);
-			log.debug({ bucket }, "[S3StorageService] Bucket already exists");
+			console.debug("[S3StorageService] Bucket already exists", { bucket });
 		} catch (error) {
 			if (this.#isNotFoundError(error)) {
 				await this.#createBucket(bucket);
@@ -109,7 +109,9 @@ export class S3StorageService implements StorageService {
 			);
 
 			this.#bucketExists.set(bucket, true);
-			log.info({ bucket }, "[S3StorageService] Bucket created successfully");
+			console.info("[S3StorageService] Bucket created successfully", {
+				bucket,
+			});
 		} catch (error) {
 			throw this.#wrapError(error, "Failed to create bucket");
 		}
@@ -184,7 +186,7 @@ export class S3StorageService implements StorageService {
 	}
 
 	#wrapError(error: unknown, defaultMessage: string) {
-		log.error({ error }, `[S3StorageService] ${defaultMessage}`);
+		console.error(`[S3StorageService] ${defaultMessage}`, { error });
 		return new StorageError(
 			error instanceof Error ? error.message : defaultMessage,
 		);

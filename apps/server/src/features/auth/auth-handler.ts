@@ -166,7 +166,6 @@ export const AuthHandler = pub.router({
 						}
 					}
 				}
-
 				await Promise.all(tasks);
 
 				const [signInResult] = await Promise.all([
@@ -180,16 +179,10 @@ export const AuthHandler = pub.router({
 					),
 				]);
 
-				// Send email verification outside the critical Promise.all
-				// This is non-critical and shouldn't fail the entire signup
-				context.repo.auth
-					.sendEmailVerification({ email: data.email }, opts)
-					.catch((error) => {
-						log.warn(
-							{ error, email: data.email },
-							"[AuthHandler] Failed to send email verification during signup, user can request later",
-						);
-					});
+				await context.repo.auth.sendEmailVerification(
+					{ email: data.email },
+					opts,
+				);
 
 				if (!signInResult.user.banned) {
 					context.resHeaders?.set(
@@ -368,16 +361,10 @@ export const AuthHandler = pub.router({
 						),
 					]);
 
-					// Send email verification outside the critical Promise.all
-					// This is non-critical and shouldn't fail the entire signup
-					context.repo.auth
-						.sendEmailVerification({ email: data.email }, opts)
-						.catch((error) => {
-							log.warn(
-								{ error, email: data.email },
-								"[AuthHandler] Failed to send email verification during driver signup, user can request later",
-							);
-						});
+					await context.repo.auth.sendEmailVerification(
+						{ email: data.email },
+						opts,
+					);
 
 					if (!signInResult.user.banned) {
 						context.resHeaders?.set(
@@ -442,16 +429,10 @@ export const AuthHandler = pub.router({
 						),
 					]);
 
-					// Send email verification outside the critical Promise.all
-					// This is non-critical and shouldn't fail the entire signup
-					context.repo.auth
-						.sendEmailVerification({ email: data.email }, opts)
-						.catch((error) => {
-							log.warn(
-								{ error, email: data.email },
-								"[AuthHandler] Failed to send email verification during merchant signup, user can request later",
-							);
-						});
+					await context.repo.auth.sendEmailVerification(
+						{ email: data.email },
+						opts,
+					);
 
 					if (!signInResult.user.banned) {
 						context.resHeaders?.set(
