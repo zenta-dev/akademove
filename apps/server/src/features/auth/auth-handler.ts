@@ -67,7 +67,9 @@ export const AuthHandler = pub.router({
 				const opts = { tx };
 				const [result, newCustomerBadge] = await Promise.all([
 					context.repo.auth.signUp({ ...data, role: "USER" }, opts),
-					context.repo.badge.main.getByCode("NEW_CUSTOMER", opts),
+					context.repo.badge.main
+						.getByCode("NEW_CUSTOMER", opts)
+						.catch(() => null),
 				]);
 
 				// Duplicate account detection (non-blocking - monitoring only)
@@ -158,13 +160,6 @@ export const AuthHandler = pub.router({
 
 				const [signInResult] = await Promise.all([
 					context.repo.auth.signIn(data, opts),
-					context.repo.badge.user.create(
-						{
-							userId: result.user.id,
-							badgeId: newCustomerBadge.id,
-						},
-						opts,
-					),
 					context.repo.auth
 						.sendEmailVerification({ email: data.email })
 						.catch((err) => {
@@ -174,6 +169,17 @@ export const AuthHandler = pub.router({
 							);
 						}),
 				]);
+
+				// Create badge separately if it exists
+				if (newCustomerBadge) {
+					await context.repo.badge.user.create(
+						{
+							userId: result.user.id,
+							badgeId: newCustomerBadge.id,
+						},
+						opts,
+					);
+				}
 
 				if (!signInResult.user.banned) {
 					context.resHeaders?.set(
@@ -220,7 +226,9 @@ export const AuthHandler = pub.router({
 					const opts = { tx };
 					const [result, newDriverBadge] = await Promise.all([
 						context.repo.auth.signUpDriver(data, opts),
-						context.repo.badge.main.getByCode("NEW_DRIVER", opts),
+						context.repo.badge.main
+							.getByCode("NEW_DRIVER", opts)
+							.catch(() => null),
 					]);
 
 					// Duplicate account detection for drivers (includes bank account check)
@@ -327,13 +335,6 @@ export const AuthHandler = pub.router({
 							},
 							opts,
 						),
-						context.repo.badge.user.create(
-							{
-								userId: result.user.id,
-								badgeId: newDriverBadge.id,
-							},
-							opts,
-						),
 						context.repo.auth
 							.sendEmailVerification({ email: data.email })
 							.catch((err) => {
@@ -343,6 +344,17 @@ export const AuthHandler = pub.router({
 								);
 							}),
 					]);
+
+					// Create badge separately if it exists
+					if (newDriverBadge) {
+						await context.repo.badge.user.create(
+							{
+								userId: result.user.id,
+								badgeId: newDriverBadge.id,
+							},
+							opts,
+						);
+					}
 
 					if (!signInResult.user.banned) {
 						context.resHeaders?.set(
@@ -384,9 +396,11 @@ export const AuthHandler = pub.router({
 			return await context.svc.db.transaction(async (tx) => {
 				try {
 					const opts = { tx };
-					const [result, newCustomerBadge] = await Promise.all([
+					const [result, newMerchantBadge] = await Promise.all([
 						context.repo.auth.signUpMerchant(data, opts),
-						context.repo.badge.main.getByCode("NEW_MERCHANT", opts),
+						context.repo.badge.main
+							.getByCode("NEW_MERCHANT", opts)
+							.catch(() => null),
 					]);
 
 					const [signInResult] = await Promise.all([
@@ -395,13 +409,6 @@ export const AuthHandler = pub.router({
 							{
 								...data.detail,
 								userId: result.user.id,
-							},
-							opts,
-						),
-						context.repo.badge.user.create(
-							{
-								userId: result.user.id,
-								badgeId: newCustomerBadge.id,
 							},
 							opts,
 						),
@@ -414,6 +421,17 @@ export const AuthHandler = pub.router({
 								);
 							}),
 					]);
+
+					// Create badge separately if it exists
+					if (newMerchantBadge) {
+						await context.repo.badge.user.create(
+							{
+								userId: result.user.id,
+								badgeId: newMerchantBadge.id,
+							},
+							opts,
+						);
+					}
 
 					if (!signInResult.user.banned) {
 						context.resHeaders?.set(
