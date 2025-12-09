@@ -9,6 +9,7 @@ import {
 } from "@tanstack/react-router";
 import { CookieConsent } from "@/components/cookie-consent";
 import { ErrorBoundary } from "@/components/error-boundary";
+import { NavigationProgress } from "@/components/navigation-progress";
 import { ThemeProvider } from "@/components/providers/theme";
 import { Toaster } from "@/components/ui/sonner";
 import { getLocaleIsomorphic, getThemeCookie } from "@/lib/actions";
@@ -100,6 +101,7 @@ function RootDocument() {
 						enableSystem
 						disableTransitionOnChange
 					>
+						<NavigationProgress />
 						<Outlet />
 						<Toaster richColors />
 						<CookieConsent />
