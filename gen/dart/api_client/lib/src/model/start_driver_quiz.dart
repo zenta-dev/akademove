@@ -17,25 +17,27 @@ part 'start_driver_quiz.g.dart';
 )
 class StartDriverQuiz {
   /// Returns a new [StartDriverQuiz] instance.
-  const StartDriverQuiz({this.questionIds, this.category});
+  const StartDriverQuiz({
+     this.questionIds,
+     this.category,
+  });
   @JsonKey(name: r'questionIds', required: false, includeIfNull: false)
   final List<String>? questionIds;
-
+  
   @JsonKey(name: r'category', required: false, includeIfNull: false)
   final StartDriverQuizCategoryEnum? category;
+  
+  @override
+  bool operator ==(Object other) => identical(this, other) || other is StartDriverQuiz &&
+    other.questionIds == questionIds &&
+    other.category == category;
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is StartDriverQuiz &&
-          other.questionIds == questionIds &&
-          other.category == category;
+  int get hashCode =>
+      questionIds.hashCode +
+      category.hashCode;
 
-  @override
-  int get hashCode => questionIds.hashCode + category.hashCode;
-
-  factory StartDriverQuiz.fromJson(Map<String, dynamic> json) =>
-      _$StartDriverQuizFromJson(json);
+  factory StartDriverQuiz.fromJson(Map<String, dynamic> json) => _$StartDriverQuizFromJson(json);
 
   Map<String, dynamic> toJson() => _$StartDriverQuizToJson(this);
 
@@ -43,6 +45,7 @@ class StartDriverQuiz {
   String toString() {
     return toJson().toString();
   }
+
 }
 
 enum StartDriverQuizCategoryEnum {
@@ -60,11 +63,12 @@ enum StartDriverQuizCategoryEnum {
   VEHICLE_MAINTENANCE(r'VEHICLE_MAINTENANCE'),
   @JsonValue(r'GENERAL')
   GENERAL(r'GENERAL');
-
+  
   const StartDriverQuizCategoryEnum(this.value);
-
+  
   final String value;
-
+  
   @override
   String toString() => value;
 }
+

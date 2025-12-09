@@ -168,9 +168,9 @@ function RouteComponent() {
 						<CardContent className="space-y-4">
 							<div className="grid grid-cols-2 gap-4">
 								<div>
-									<label className="text-muted-foreground text-sm">
+									<span className="text-muted-foreground text-sm">
 										Event Type
-									</label>
+									</span>
 									<div className="mt-1 flex items-center gap-2">
 										{getEventTypeIcon(event.eventType)}
 										<span className="font-medium">
@@ -179,23 +179,23 @@ function RouteComponent() {
 									</div>
 								</div>
 								<div>
-									<label className="text-muted-foreground text-sm">
+									<span className="text-muted-foreground text-sm">
 										Severity
-									</label>
+									</span>
 									<div className="mt-1">{getSeverityBadge(event.severity)}</div>
 								</div>
 								<div>
-									<label className="text-muted-foreground text-sm">
+									<span className="text-muted-foreground text-sm">
 										Fraud Score
-									</label>
+									</span>
 									<div className="mt-1 font-bold font-mono text-lg">
 										{event.score}/100
 									</div>
 								</div>
 								<div>
-									<label className="text-muted-foreground text-sm">
+									<span className="text-muted-foreground text-sm">
 										Detected At
-									</label>
+									</span>
 									<div className="mt-1">
 										{new Date(event.detectedAt).toLocaleString()}
 									</div>
@@ -211,8 +211,11 @@ function RouteComponent() {
 						</CardHeader>
 						<CardContent>
 							<div className="space-y-3">
-								{event.signals.map((signal, idx) => (
-									<div key={idx} className="rounded-lg border bg-muted/30 p-3">
+								{event.signals.map((signal) => (
+									<div
+										key={`${signal.type}-${signal.confidence}`}
+										className="rounded-lg border bg-muted/30 p-3"
+									>
 										<div className="mb-2 flex items-center justify-between">
 											<span className="font-medium">
 												{formatEventType(signal.type as FraudEventType)}
@@ -250,9 +253,9 @@ function RouteComponent() {
 								<div className="grid grid-cols-2 gap-4 md:grid-cols-4">
 									{event.location && (
 										<div>
-											<label className="text-muted-foreground text-sm">
+											<span className="text-muted-foreground text-sm">
 												Current Location
-											</label>
+											</span>
 											<div className="mt-1 font-mono text-sm">
 												{event.location.lat.toFixed(6)},{" "}
 												{event.location.lng.toFixed(6)}
@@ -261,9 +264,9 @@ function RouteComponent() {
 									)}
 									{event.previousLocation && (
 										<div>
-											<label className="text-muted-foreground text-sm">
+											<span className="text-muted-foreground text-sm">
 												Previous Location
-											</label>
+											</span>
 											<div className="mt-1 font-mono text-sm">
 												{event.previousLocation.lat.toFixed(6)},{" "}
 												{event.previousLocation.lng.toFixed(6)}
@@ -272,9 +275,9 @@ function RouteComponent() {
 									)}
 									{event.distanceKm !== null && (
 										<div>
-											<label className="text-muted-foreground text-sm">
+											<span className="text-muted-foreground text-sm">
 												Distance
-											</label>
+											</span>
 											<div className="mt-1 font-mono text-sm">
 												{event.distanceKm.toFixed(2)} km
 											</div>
@@ -282,9 +285,9 @@ function RouteComponent() {
 									)}
 									{event.velocityKmh !== null && (
 										<div>
-											<label className="text-muted-foreground text-sm">
+											<span className="text-muted-foreground text-sm">
 												Velocity
-											</label>
+											</span>
 											<div className="mt-1 font-mono text-sm">
 												{event.velocityKmh.toFixed(1)} km/h
 											</div>
@@ -292,9 +295,9 @@ function RouteComponent() {
 									)}
 									{event.timeDeltaSeconds !== null && (
 										<div>
-											<label className="text-muted-foreground text-sm">
+											<span className="text-muted-foreground text-sm">
 												Time Delta
-											</label>
+											</span>
 											<div className="mt-1 font-mono text-sm">
 												{event.timeDeltaSeconds}s
 											</div>
@@ -314,33 +317,33 @@ function RouteComponent() {
 							<CardContent className="space-y-3">
 								{event.handledBy && (
 									<div>
-										<label className="text-muted-foreground text-sm">
+										<span className="text-muted-foreground text-sm">
 											Handled By
-										</label>
+										</span>
 										<div className="mt-1">{event.handledBy.name}</div>
 									</div>
 								)}
 								{event.resolution && (
 									<div>
-										<label className="text-muted-foreground text-sm">
+										<span className="text-muted-foreground text-sm">
 											Resolution Notes
-										</label>
+										</span>
 										<div className="mt-1">{event.resolution}</div>
 									</div>
 								)}
 								{event.actionTaken && (
 									<div>
-										<label className="text-muted-foreground text-sm">
+										<span className="text-muted-foreground text-sm">
 											Action Taken
-										</label>
+										</span>
 										<div className="mt-1">{event.actionTaken}</div>
 									</div>
 								)}
 								{event.resolvedAt && (
 									<div>
-										<label className="text-muted-foreground text-sm">
+										<span className="text-muted-foreground text-sm">
 											Resolved At
-										</label>
+										</span>
 										<div className="mt-1">
 											{new Date(event.resolvedAt).toLocaleString()}
 										</div>
@@ -365,21 +368,17 @@ function RouteComponent() {
 							{event.user ? (
 								<>
 									<div>
-										<label className="text-muted-foreground text-sm">
-											Name
-										</label>
+										<span className="text-muted-foreground text-sm">Name</span>
 										<div className="mt-1 font-medium">{event.user.name}</div>
 									</div>
 									<div>
-										<label className="text-muted-foreground text-sm">
-											Email
-										</label>
+										<span className="text-muted-foreground text-sm">Email</span>
 										<div className="mt-1">{event.user.email}</div>
 									</div>
 									<div>
-										<label className="text-muted-foreground text-sm">
+										<span className="text-muted-foreground text-sm">
 											User ID
-										</label>
+										</span>
 										<div className="mt-1 break-all font-mono text-sm">
 											{event.userId}
 										</div>
@@ -399,15 +398,15 @@ function RouteComponent() {
 							</CardHeader>
 							<CardContent className="space-y-3">
 								<div>
-									<label className="text-muted-foreground text-sm">
+									<span className="text-muted-foreground text-sm">
 										Student ID
-									</label>
+									</span>
 									<div className="mt-1 font-mono">{event.driver.studentId}</div>
 								</div>
 								<div>
-									<label className="text-muted-foreground text-sm">
+									<span className="text-muted-foreground text-sm">
 										License Plate
-									</label>
+									</span>
 									<div className="mt-1 font-mono">
 										{event.driver.licensePlate}
 									</div>
@@ -424,9 +423,9 @@ function RouteComponent() {
 						<CardContent className="space-y-3">
 							{event.ipAddress && (
 								<div>
-									<label className="text-muted-foreground text-sm">
+									<span className="text-muted-foreground text-sm">
 										IP Address
-									</label>
+									</span>
 									<div className="mt-1 font-mono text-sm">
 										{event.ipAddress}
 									</div>
@@ -434,9 +433,9 @@ function RouteComponent() {
 							)}
 							{event.userAgent && (
 								<div>
-									<label className="text-muted-foreground text-sm">
+									<span className="text-muted-foreground text-sm">
 										User Agent
-									</label>
+									</span>
 									<div className="mt-1 break-all text-muted-foreground text-sm">
 										{event.userAgent}
 									</div>
@@ -453,7 +452,10 @@ function RouteComponent() {
 							</CardHeader>
 							<CardContent className="space-y-4">
 								<div>
-									<label className="text-muted-foreground text-sm">
+									<label
+										htmlFor="fraud-status"
+										className="text-muted-foreground text-sm"
+									>
 										Update Status
 									</label>
 									<Select
@@ -462,7 +464,7 @@ function RouteComponent() {
 											setNewStatus(v as Exclude<FraudStatus, "PENDING">)
 										}
 									>
-										<SelectTrigger className="mt-1">
+										<SelectTrigger id="fraud-status" className="mt-1">
 											<SelectValue placeholder="Select status" />
 										</SelectTrigger>
 										<SelectContent>
@@ -474,10 +476,14 @@ function RouteComponent() {
 								</div>
 
 								<div>
-									<label className="text-muted-foreground text-sm">
+									<label
+										htmlFor="fraud-resolution"
+										className="text-muted-foreground text-sm"
+									>
 										Resolution Notes
 									</label>
 									<Textarea
+										id="fraud-resolution"
 										className="mt-1"
 										placeholder="Enter resolution details..."
 										value={resolution}
@@ -486,10 +492,14 @@ function RouteComponent() {
 								</div>
 
 								<div>
-									<label className="text-muted-foreground text-sm">
+									<label
+										htmlFor="fraud-action"
+										className="text-muted-foreground text-sm"
+									>
 										Action Taken
 									</label>
 									<Textarea
+										id="fraud-action"
 										className="mt-1"
 										placeholder="Describe actions taken..."
 										value={actionTaken}

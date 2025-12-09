@@ -196,10 +196,10 @@ Class | Method | HTTP request | Description
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantMenuList**](doc/MerchantApi.md#merchantmenulist) | **GET** /merchants/{merchantId}/menus | 
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantMenuRemove**](doc/MerchantApi.md#merchantmenuremove) | **DELETE** /merchants/{merchantId}/menus/{id} | 
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantMenuUpdate**](doc/MerchantApi.md#merchantmenuupdate) | **PUT** /merchants/{merchantId}/menus/{id} | 
-[*MerchantApi*](doc/MerchantApi.md) | [**merchantOrderAccept**](doc/MerchantApi.md#merchantorderaccept) | **POST** /merchants/{merchantId}/orders/orders/{id}/accept | 
-[*MerchantApi*](doc/MerchantApi.md) | [**merchantOrderMarkPreparing**](doc/MerchantApi.md#merchantordermarkpreparing) | **PUT** /merchants/{merchantId}/orders/orders/{id}/preparing | 
-[*MerchantApi*](doc/MerchantApi.md) | [**merchantOrderMarkReady**](doc/MerchantApi.md#merchantordermarkready) | **PUT** /merchants/{merchantId}/orders/orders/{id}/ready | 
-[*MerchantApi*](doc/MerchantApi.md) | [**merchantOrderReject**](doc/MerchantApi.md#merchantorderreject) | **POST** /merchants/{merchantId}/orders/orders/{id}/reject | 
+[*MerchantApi*](doc/MerchantApi.md) | [**merchantOrderAccept**](doc/MerchantApi.md#merchantorderaccept) | **POST** /merchants/{merchantId}/orders/{id}/accept | 
+[*MerchantApi*](doc/MerchantApi.md) | [**merchantOrderMarkPreparing**](doc/MerchantApi.md#merchantordermarkpreparing) | **PUT** /merchants/{merchantId}/orders/{id}/preparing | 
+[*MerchantApi*](doc/MerchantApi.md) | [**merchantOrderMarkReady**](doc/MerchantApi.md#merchantordermarkready) | **PUT** /merchants/{merchantId}/orders/{id}/ready | 
+[*MerchantApi*](doc/MerchantApi.md) | [**merchantOrderReject**](doc/MerchantApi.md#merchantorderreject) | **POST** /merchants/{merchantId}/orders/{id}/reject | 
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantPopulars**](doc/MerchantApi.md#merchantpopulars) | **GET** /merchants/populars | 
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantRemove**](doc/MerchantApi.md#merchantremove) | **DELETE** /merchants/{id} | 
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantSetOnlineStatus**](doc/MerchantApi.md#merchantsetonlinestatus) | **PATCH** /merchants/{id}/availability/online | 

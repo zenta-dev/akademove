@@ -16,7 +16,7 @@ export const MerchantOrderSpec = {
 		.route({
 			tags: [FEATURE_TAGS.MERCHANT],
 			method: "POST",
-			path: "/orders/{id}/accept",
+			path: "/{id}/accept",
 			inputStructure: "detailed",
 			outputStructure: "detailed",
 		})
@@ -34,7 +34,7 @@ export const MerchantOrderSpec = {
 		.route({
 			tags: [FEATURE_TAGS.MERCHANT],
 			method: "POST",
-			path: "/orders/{id}/reject",
+			path: "/{id}/reject",
 			inputStructure: "detailed",
 			outputStructure: "detailed",
 			spec: (spec) => ({
@@ -57,7 +57,7 @@ export const MerchantOrderSpec = {
 		.route({
 			tags: [FEATURE_TAGS.MERCHANT],
 			method: "PUT",
-			path: "/orders/{id}/preparing",
+			path: "/{id}/preparing",
 			inputStructure: "detailed",
 			outputStructure: "detailed",
 		})
@@ -77,7 +77,7 @@ export const MerchantOrderSpec = {
 		.route({
 			tags: [FEATURE_TAGS.MERCHANT],
 			method: "PUT",
-			path: "/orders/{id}/ready",
+			path: "/{id}/ready",
 			inputStructure: "detailed",
 			outputStructure: "detailed",
 		})

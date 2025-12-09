@@ -49,17 +49,20 @@ class _ScheduledOrderListScreenState extends State<ScheduledOrderListScreen> {
   }
 
   void _showEditScheduleBottomSheet(BuildContext context, Order order) {
+    final cubit = context.read<UserOrderCubit>();
+    final successMessage = context.l10n.scheduled_order_updated;
     material.showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
       builder: (sheetContext) => ScheduledOrderEditBottomSheet(
         order: order,
         onSave: (newDateTime) async {
-          final result = await context
-              .read<UserOrderCubit>()
-              .updateScheduledOrder(order.id, newDateTime);
+          final result = await cubit.updateScheduledOrder(
+            order.id,
+            newDateTime,
+          );
           if (result != null && mounted) {
-            context.showMyToast(context.l10n.scheduled_order_updated);
+            this.context.showMyToast(successMessage);
           }
         },
       ),
@@ -67,27 +70,31 @@ class _ScheduledOrderListScreenState extends State<ScheduledOrderListScreen> {
   }
 
   void _showCancelConfirmDialog(BuildContext context, Order order) {
+    final cubit = context.read<UserOrderCubit>();
+    final cancelTitle = context.l10n.cancel_scheduled_order;
+    final cancelContent = context.l10n.cancel_scheduled_order_confirm;
+    final noText = context.l10n.no;
+    final yesCancelText = context.l10n.yes_cancel;
+    final successMessage = context.l10n.scheduled_order_cancelled;
     showDialog<void>(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: Text(context.l10n.cancel_scheduled_order),
-        content: Text(context.l10n.cancel_scheduled_order_confirm),
+        title: Text(cancelTitle),
+        content: Text(cancelContent),
         actions: [
           OutlineButton(
             onPressed: () => Navigator.of(dialogContext).pop(),
-            child: Text(context.l10n.no),
+            child: Text(noText),
           ),
           DestructiveButton(
             onPressed: () async {
               Navigator.of(dialogContext).pop();
-              final result = await context
-                  .read<UserOrderCubit>()
-                  .cancelScheduledOrder(order.id);
+              final result = await cubit.cancelScheduledOrder(order.id);
               if (result != null && mounted) {
-                context.showMyToast(context.l10n.scheduled_order_cancelled);
+                this.context.showMyToast(successMessage);
               }
             },
-            child: Text(context.l10n.yes_cancel),
+            child: Text(yesCancelText),
           ),
         ],
       ),

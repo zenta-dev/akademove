@@ -24,26 +24,26 @@ class FraudEventUser {
   });
   @JsonKey(name: r'id', required: true, includeIfNull: false)
   final String id;
-
+  
   @JsonKey(name: r'name', required: true, includeIfNull: false)
   final String name;
-
+  
   @JsonKey(name: r'email', required: true, includeIfNull: false)
   final String email;
+  
+  @override
+  bool operator ==(Object other) => identical(this, other) || other is FraudEventUser &&
+    other.id == id &&
+    other.name == name &&
+    other.email == email;
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is FraudEventUser &&
-          other.id == id &&
-          other.name == name &&
-          other.email == email;
+  int get hashCode =>
+      id.hashCode +
+      name.hashCode +
+      email.hashCode;
 
-  @override
-  int get hashCode => id.hashCode + name.hashCode + email.hashCode;
-
-  factory FraudEventUser.fromJson(Map<String, dynamic> json) =>
-      _$FraudEventUserFromJson(json);
+  factory FraudEventUser.fromJson(Map<String, dynamic> json) => _$FraudEventUserFromJson(json);
 
   Map<String, dynamic> toJson() => _$FraudEventUserToJson(this);
 
@@ -51,4 +51,6 @@ class FraudEventUser {
   String toString() {
     return toJson().toString();
   }
+
 }
+

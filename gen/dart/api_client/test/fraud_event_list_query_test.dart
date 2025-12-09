@@ -52,12 +52,12 @@ void main() {
       // TODO
     });
 
-    // String sortBy (default value: 'detectedAt')
+    // String sortBy
     test('to test the property `sortBy`', () async {
       // TODO
     });
 
-    // String order (default value: 'desc')
+    // String order
     test('to test the property `order`', () async {
       // TODO
     });

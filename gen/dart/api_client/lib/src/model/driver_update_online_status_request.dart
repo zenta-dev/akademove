@@ -17,26 +17,28 @@ part 'driver_update_online_status_request.g.dart';
 )
 class DriverUpdateOnlineStatusRequest {
   /// Returns a new [DriverUpdateOnlineStatusRequest] instance.
-  const DriverUpdateOnlineStatusRequest({required this.isOnline});
+  const DriverUpdateOnlineStatusRequest({
+    required this.isOnline,
+  });
   @JsonKey(name: r'isOnline', required: true, includeIfNull: false)
   final bool isOnline;
+  
+  @override
+  bool operator ==(Object other) => identical(this, other) || other is DriverUpdateOnlineStatusRequest &&
+    other.isOnline == isOnline;
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is DriverUpdateOnlineStatusRequest && other.isOnline == isOnline;
+  int get hashCode =>
+      isOnline.hashCode;
 
-  @override
-  int get hashCode => isOnline.hashCode;
+  factory DriverUpdateOnlineStatusRequest.fromJson(Map<String, dynamic> json) => _$DriverUpdateOnlineStatusRequestFromJson(json);
 
-  factory DriverUpdateOnlineStatusRequest.fromJson(Map<String, dynamic> json) =>
-      _$DriverUpdateOnlineStatusRequestFromJson(json);
-
-  Map<String, dynamic> toJson() =>
-      _$DriverUpdateOnlineStatusRequestToJson(this);
+  Map<String, dynamic> toJson() => _$DriverUpdateOnlineStatusRequestToJson(this);
 
   @override
   String toString() {
     return toJson().toString();
   }
+
 }
+

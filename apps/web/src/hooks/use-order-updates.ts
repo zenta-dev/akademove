@@ -1,6 +1,15 @@
 import { useQueryClient } from "@tanstack/react-query";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
+
+interface WebSocketEnvelope {
+	event: string;
+	payload?: {
+		orderId?: string;
+		order?: unknown;
+		location?: { lat: number; lng: number };
+	};
+}
 
 interface UseOrderUpdatesOptions {
 	enabled?: boolean;
@@ -56,7 +65,25 @@ export const useOrderUpdates = (
 	const [isConnected, setIsConnected] = useState(false);
 	const [error, setError] = useState<string | undefined>();
 
-	const getWebSocketUrl = () => {
+	// Store callbacks in refs to avoid recreating connect/disconnect
+	const onNewOrderRef = useRef(onNewOrder);
+	const onOrderUpdateRef = useRef(onOrderUpdate);
+	const onDriverLocationRef = useRef(onDriverLocation);
+
+	// Update refs when callbacks change
+	useEffect(() => {
+		onNewOrderRef.current = onNewOrder;
+	}, [onNewOrder]);
+
+	useEffect(() => {
+		onOrderUpdateRef.current = onOrderUpdate;
+	}, [onOrderUpdate]);
+
+	useEffect(() => {
+		onDriverLocationRef.current = onDriverLocation;
+	}, [onDriverLocation]);
+
+	const getWebSocketUrl = useCallback(() => {
 		const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
 		const host = window.location.host;
 
@@ -70,10 +97,134 @@ export const useOrderUpdates = (
 		}
 		// Default to payment room for general updates
 		return `${protocol}//${host}/ws/payment/general`;
-	};
+	}, [orderId, role]);
 
-	const connect = () => {
-		if (!enabled || wsRef.current?.readyState === WebSocket.OPEN) {
+	const handleMessage = useCallback(
+		(envelope: WebSocketEnvelope) => {
+			switch (envelope.event) {
+				case "NEW_ORDER":
+					if (onNewOrderRef.current) {
+						onNewOrderRef.current(envelope.payload);
+						// Invalidate order list queries
+						queryClient.invalidateQueries({ queryKey: ["orders"] });
+					}
+					break;
+
+				case "ORDER_UPDATE":
+					if (onOrderUpdateRef.current) {
+						onOrderUpdateRef.current(envelope.payload);
+					}
+					// Update specific order in cache
+					if (envelope.payload?.orderId) {
+						queryClient.setQueryData(
+							["order", envelope.payload.orderId],
+							envelope.payload.order,
+						);
+					}
+					// Invalidate order list queries
+					queryClient.invalidateQueries({ queryKey: ["orders"] });
+					break;
+
+				case "DRIVER_LOCATION":
+					if (
+						onDriverLocationRef.current &&
+						envelope.payload?.orderId &&
+						envelope.payload?.location
+					) {
+						onDriverLocationRef.current({
+							orderId: envelope.payload.orderId,
+							location: envelope.payload.location,
+						});
+					}
+					break;
+
+				case "ORDER_ACCEPTED":
+					toast.success("Order has been accepted by a driver");
+					if (envelope.payload?.orderId) {
+						queryClient.setQueryData(
+							["order", envelope.payload.orderId],
+							envelope.payload.order,
+						);
+					}
+					queryClient.invalidateQueries({ queryKey: ["orders"] });
+					break;
+
+				case "ORDER_CANCELLED":
+					toast.error("Order has been cancelled");
+					if (envelope.payload?.orderId) {
+						queryClient.setQueryData(
+							["order", envelope.payload.orderId],
+							envelope.payload.order,
+						);
+					}
+					queryClient.invalidateQueries({ queryKey: ["orders"] });
+					break;
+
+				case "DRIVER_ARRIVED":
+					toast.info("Driver has arrived at pickup location");
+					if (envelope.payload?.orderId) {
+						queryClient.setQueryData(
+							["order", envelope.payload.orderId],
+							envelope.payload.order,
+						);
+					}
+					break;
+
+				case "ORDER_COMPLETED":
+					toast.success("Order has been completed");
+					if (envelope.payload?.orderId) {
+						queryClient.setQueryData(
+							["order", envelope.payload.orderId],
+							envelope.payload.order,
+						);
+					}
+					queryClient.invalidateQueries({ queryKey: ["orders"] });
+					break;
+
+				case "MERCHANT_ACCEPTED":
+					toast.success("Merchant has accepted your order");
+					if (envelope.payload?.orderId) {
+						queryClient.setQueryData(
+							["order", envelope.payload.orderId],
+							envelope.payload.order,
+						);
+					}
+					queryClient.invalidateQueries({ queryKey: ["orders"] });
+					break;
+
+				case "MERCHANT_READY":
+					toast.info("Your order is ready for pickup");
+					if (envelope.payload?.orderId) {
+						queryClient.setQueryData(
+							["order", envelope.payload.orderId],
+							envelope.payload.order,
+						);
+					}
+					break;
+
+				default:
+					console.log("Unknown WebSocket event:", envelope.event);
+			}
+		},
+		[queryClient],
+	);
+
+	const disconnect = useCallback(() => {
+		if (reconnectTimeoutRef.current) {
+			clearTimeout(reconnectTimeoutRef.current);
+			reconnectTimeoutRef.current = null;
+		}
+
+		if (wsRef.current) {
+			wsRef.current.close(1000, "Component unmounted");
+			wsRef.current = null;
+		}
+
+		setIsConnected(false);
+	}, []);
+
+	const connect = useCallback(() => {
+		if (wsRef.current?.readyState === WebSocket.OPEN) {
 			return;
 		}
 
@@ -92,7 +243,7 @@ export const useOrderUpdates = (
 				console.log(`WebSocket disconnected: ${event.code} ${event.reason}`);
 
 				// Attempt reconnection after delay
-				if (enabled && event.code !== 1000) {
+				if (event.code !== 1000) {
 					reconnectTimeoutRef.current = setTimeout(() => {
 						console.log("Attempting to reconnect WebSocket...");
 						connect();
@@ -107,7 +258,7 @@ export const useOrderUpdates = (
 
 			wsRef.current.onmessage = (event) => {
 				try {
-					const envelope = JSON.parse(event.data);
+					const envelope = JSON.parse(event.data) as WebSocketEnvelope;
 					handleMessage(envelope);
 				} catch (err) {
 					console.error("Failed to parse WebSocket message:", err);
@@ -117,128 +268,7 @@ export const useOrderUpdates = (
 			console.error("Failed to create WebSocket connection:", err);
 			setError("Failed to connect");
 		}
-	};
-
-	const handleMessage = (envelope: any) => {
-		switch (envelope.event) {
-			case "NEW_ORDER":
-				if (onNewOrder) {
-					onNewOrder(envelope.payload);
-					// Invalidate order list queries
-					queryClient.invalidateQueries({ queryKey: ["orders"] });
-				}
-				break;
-
-			case "ORDER_UPDATE":
-				if (onOrderUpdate) {
-					onOrderUpdate(envelope.payload);
-				}
-				// Update specific order in cache
-				if (envelope.payload?.orderId) {
-					queryClient.setQueryData(
-						["order", envelope.payload.orderId],
-						envelope.payload.order,
-					);
-				}
-				// Invalidate order list queries
-				queryClient.invalidateQueries({ queryKey: ["orders"] });
-				break;
-
-			case "DRIVER_LOCATION":
-				if (
-					onDriverLocation &&
-					envelope.payload?.orderId &&
-					envelope.payload?.location
-				) {
-					onDriverLocation({
-						orderId: envelope.payload.orderId,
-						location: envelope.payload.location,
-					});
-				}
-				break;
-
-			case "ORDER_ACCEPTED":
-				toast.success("Order has been accepted by a driver");
-				if (envelope.payload?.orderId) {
-					queryClient.setQueryData(
-						["order", envelope.payload.orderId],
-						envelope.payload.order,
-					);
-				}
-				queryClient.invalidateQueries({ queryKey: ["orders"] });
-				break;
-
-			case "ORDER_CANCELLED":
-				toast.error("Order has been cancelled");
-				if (envelope.payload?.orderId) {
-					queryClient.setQueryData(
-						["order", envelope.payload.orderId],
-						envelope.payload.order,
-					);
-				}
-				queryClient.invalidateQueries({ queryKey: ["orders"] });
-				break;
-
-			case "DRIVER_ARRIVED":
-				toast.info("Driver has arrived at pickup location");
-				if (envelope.payload?.orderId) {
-					queryClient.setQueryData(
-						["order", envelope.payload.orderId],
-						envelope.payload.order,
-					);
-				}
-				break;
-
-			case "ORDER_COMPLETED":
-				toast.success("Order has been completed");
-				if (envelope.payload?.orderId) {
-					queryClient.setQueryData(
-						["order", envelope.payload.orderId],
-						envelope.payload.order,
-					);
-				}
-				queryClient.invalidateQueries({ queryKey: ["orders"] });
-				break;
-
-			case "MERCHANT_ACCEPTED":
-				toast.success("Merchant has accepted your order");
-				if (envelope.payload?.orderId) {
-					queryClient.setQueryData(
-						["order", envelope.payload.orderId],
-						envelope.payload.order,
-					);
-				}
-				queryClient.invalidateQueries({ queryKey: ["orders"] });
-				break;
-
-			case "MERCHANT_READY":
-				toast.info("Your order is ready for pickup");
-				if (envelope.payload?.orderId) {
-					queryClient.setQueryData(
-						["order", envelope.payload.orderId],
-						envelope.payload.order,
-					);
-				}
-				break;
-
-			default:
-				console.log("Unknown WebSocket event:", envelope.event);
-		}
-	};
-
-	const disconnect = () => {
-		if (reconnectTimeoutRef.current) {
-			clearTimeout(reconnectTimeoutRef.current);
-			reconnectTimeoutRef.current = null;
-		}
-
-		if (wsRef.current) {
-			wsRef.current.close(1000, "Component unmounted");
-			wsRef.current = null;
-		}
-
-		setIsConnected(false);
-	};
+	}, [getWebSocketUrl, handleMessage]);
 
 	useEffect(() => {
 		if (enabled) {

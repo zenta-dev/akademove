@@ -24,10 +24,10 @@ Method | HTTP request | Description
 [**merchantMenuList**](MerchantApi.md#merchantmenulist) | **GET** /merchants/{merchantId}/menus | 
 [**merchantMenuRemove**](MerchantApi.md#merchantmenuremove) | **DELETE** /merchants/{merchantId}/menus/{id} | 
 [**merchantMenuUpdate**](MerchantApi.md#merchantmenuupdate) | **PUT** /merchants/{merchantId}/menus/{id} | 
-[**merchantOrderAccept**](MerchantApi.md#merchantorderaccept) | **POST** /merchants/{merchantId}/orders/orders/{id}/accept | 
-[**merchantOrderMarkPreparing**](MerchantApi.md#merchantordermarkpreparing) | **PUT** /merchants/{merchantId}/orders/orders/{id}/preparing | 
-[**merchantOrderMarkReady**](MerchantApi.md#merchantordermarkready) | **PUT** /merchants/{merchantId}/orders/orders/{id}/ready | 
-[**merchantOrderReject**](MerchantApi.md#merchantorderreject) | **POST** /merchants/{merchantId}/orders/orders/{id}/reject | 
+[**merchantOrderAccept**](MerchantApi.md#merchantorderaccept) | **POST** /merchants/{merchantId}/orders/{id}/accept | 
+[**merchantOrderMarkPreparing**](MerchantApi.md#merchantordermarkpreparing) | **PUT** /merchants/{merchantId}/orders/{id}/preparing | 
+[**merchantOrderMarkReady**](MerchantApi.md#merchantordermarkready) | **PUT** /merchants/{merchantId}/orders/{id}/ready | 
+[**merchantOrderReject**](MerchantApi.md#merchantorderreject) | **POST** /merchants/{merchantId}/orders/{id}/reject | 
 [**merchantPopulars**](MerchantApi.md#merchantpopulars) | **GET** /merchants/populars | 
 [**merchantRemove**](MerchantApi.md#merchantremove) | **DELETE** /merchants/{id} | 
 [**merchantSetOnlineStatus**](MerchantApi.md#merchantsetonlinestatus) | **PATCH** /merchants/{id}/availability/online | 

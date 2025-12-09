@@ -17,7 +17,7 @@ void main() {
       // TODO
     });
 
-    // int trendDays (default value: 30)
+    // int trendDays
     test('to test the property `trendDays`', () async {
       // TODO
     });

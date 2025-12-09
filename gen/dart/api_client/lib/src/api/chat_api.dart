@@ -16,15 +16,16 @@ import 'package:api_client/src/model/quick_message_list200_response.dart';
 import 'package:api_client/src/model/update_quick_message_template.dart';
 
 class ChatApi {
+
   final Dio _dio;
 
   const ChatApi(this._dio);
 
   /// quickMessageCreate
-  ///
+  /// 
   ///
   /// Parameters:
-  /// * [insertQuickMessageTemplate]
+  /// * [insertQuickMessageTemplate] 
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -34,7 +35,7 @@ class ChatApi {
   ///
   /// Returns a [Future] containing a [Response] with a [QuickMessageCreate200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<QuickMessageCreate200Response>> quickMessageCreate({
+  Future<Response<QuickMessageCreate200Response>> quickMessageCreate({ 
     required InsertQuickMessageTemplate insertQuickMessageTemplate,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -46,10 +47,16 @@ class ChatApi {
     final _path = r'/quick-messages';
     final _options = Options(
       method: r'POST',
-      headers: <String, dynamic>{...?headers},
+      headers: <String, dynamic>{
+        ...?headers,
+      },
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
+          {
+            'type': 'http',
+            'scheme': 'bearer',
+            'name': 'bearer_auth',
+          },
         ],
         ...?extra,
       },
@@ -60,10 +67,13 @@ class ChatApi {
     dynamic _bodyData;
 
     try {
-      _bodyData = jsonEncode(insertQuickMessageTemplate);
-    } catch (error, stackTrace) {
+        _bodyData=jsonEncode(insertQuickMessageTemplate);
+    } catch(error, stackTrace) {
       throw DioException(
-        requestOptions: _options.compose(_dio.options, _path),
+         requestOptions: _options.compose(
+          _dio.options,
+          _path,
+        ),
         type: DioExceptionType.unknown,
         error: error,
         stackTrace: stackTrace,
@@ -83,12 +93,7 @@ class ChatApi {
 
     try {
       final rawData = _response.data;
-      _responseData = rawData == null
-          ? null
-          : deserialize<
-              QuickMessageCreate200Response,
-              QuickMessageCreate200Response
-            >(rawData, 'QuickMessageCreate200Response', growable: true);
+_responseData = rawData == null ? null : deserialize<QuickMessageCreate200Response, QuickMessageCreate200Response>(rawData, 'QuickMessageCreate200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -112,10 +117,10 @@ class ChatApi {
   }
 
   /// quickMessageDelete
-  ///
+  /// 
   ///
   /// Parameters:
-  /// * [id]
+  /// * [id] 
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -125,7 +130,7 @@ class ChatApi {
   ///
   /// Returns a [Future] containing a [Response] with a [AccountDeletionDelete200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<AccountDeletionDelete200Response>> quickMessageDelete({
+  Future<Response<AccountDeletionDelete200Response>> quickMessageDelete({ 
     required String id,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -134,18 +139,19 @@ class ChatApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/quick-messages/:id'.replaceAll(
-      '{'
-      r'id'
-      '}',
-      id.toString(),
-    );
+    final _path = r'/quick-messages/:id'.replaceAll('{' r'id' '}', id.toString());
     final _options = Options(
       method: r'DELETE',
-      headers: <String, dynamic>{...?headers},
+      headers: <String, dynamic>{
+        ...?headers,
+      },
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
+          {
+            'type': 'http',
+            'scheme': 'bearer',
+            'name': 'bearer_auth',
+          },
         ],
         ...?extra,
       },
@@ -164,12 +170,7 @@ class ChatApi {
 
     try {
       final rawData = _response.data;
-      _responseData = rawData == null
-          ? null
-          : deserialize<
-              AccountDeletionDelete200Response,
-              AccountDeletionDelete200Response
-            >(rawData, 'AccountDeletionDelete200Response', growable: true);
+_responseData = rawData == null ? null : deserialize<AccountDeletionDelete200Response, AccountDeletionDelete200Response>(rawData, 'AccountDeletionDelete200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -193,10 +194,10 @@ class ChatApi {
   }
 
   /// quickMessageGet
-  ///
+  /// 
   ///
   /// Parameters:
-  /// * [id]
+  /// * [id] 
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -206,7 +207,7 @@ class ChatApi {
   ///
   /// Returns a [Future] containing a [Response] with a [QuickMessageCreate200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<QuickMessageCreate200Response>> quickMessageGet({
+  Future<Response<QuickMessageCreate200Response>> quickMessageGet({ 
     required String id,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -215,18 +216,19 @@ class ChatApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/quick-messages/:id'.replaceAll(
-      '{'
-      r'id'
-      '}',
-      id.toString(),
-    );
+    final _path = r'/quick-messages/:id'.replaceAll('{' r'id' '}', id.toString());
     final _options = Options(
       method: r'GET',
-      headers: <String, dynamic>{...?headers},
+      headers: <String, dynamic>{
+        ...?headers,
+      },
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
+          {
+            'type': 'http',
+            'scheme': 'bearer',
+            'name': 'bearer_auth',
+          },
         ],
         ...?extra,
       },
@@ -245,12 +247,7 @@ class ChatApi {
 
     try {
       final rawData = _response.data;
-      _responseData = rawData == null
-          ? null
-          : deserialize<
-              QuickMessageCreate200Response,
-              QuickMessageCreate200Response
-            >(rawData, 'QuickMessageCreate200Response', growable: true);
+_responseData = rawData == null ? null : deserialize<QuickMessageCreate200Response, QuickMessageCreate200Response>(rawData, 'QuickMessageCreate200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -274,13 +271,13 @@ class ChatApi {
   }
 
   /// quickMessageList
-  ///
+  /// 
   ///
   /// Parameters:
-  /// * [role]
-  /// * [orderType]
-  /// * [locale]
-  /// * [isActive]
+  /// * [role] 
+  /// * [orderType] 
+  /// * [locale] 
+  /// * [isActive] 
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -290,7 +287,7 @@ class ChatApi {
   ///
   /// Returns a [Future] containing a [Response] with a [QuickMessageList200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<QuickMessageList200Response>> quickMessageList({
+  Future<Response<QuickMessageList200Response>> quickMessageList({ 
     String? role,
     String? orderType,
     String? locale,
@@ -305,10 +302,16 @@ class ChatApi {
     final _path = r'/quick-messages';
     final _options = Options(
       method: r'GET',
-      headers: <String, dynamic>{...?headers},
+      headers: <String, dynamic>{
+        ...?headers,
+      },
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
+          {
+            'type': 'http',
+            'scheme': 'bearer',
+            'name': 'bearer_auth',
+          },
         ],
         ...?extra,
       },
@@ -335,12 +338,7 @@ class ChatApi {
 
     try {
       final rawData = _response.data;
-      _responseData = rawData == null
-          ? null
-          : deserialize<
-              QuickMessageList200Response,
-              QuickMessageList200Response
-            >(rawData, 'QuickMessageList200Response', growable: true);
+_responseData = rawData == null ? null : deserialize<QuickMessageList200Response, QuickMessageList200Response>(rawData, 'QuickMessageList200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -364,11 +362,11 @@ class ChatApi {
   }
 
   /// quickMessageUpdate
-  ///
+  /// 
   ///
   /// Parameters:
-  /// * [id]
-  /// * [updateQuickMessageTemplate]
+  /// * [id] 
+  /// * [updateQuickMessageTemplate] 
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -378,7 +376,7 @@ class ChatApi {
   ///
   /// Returns a [Future] containing a [Response] with a [QuickMessageCreate200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<QuickMessageCreate200Response>> quickMessageUpdate({
+  Future<Response<QuickMessageCreate200Response>> quickMessageUpdate({ 
     required String id,
     required UpdateQuickMessageTemplate updateQuickMessageTemplate,
     CancelToken? cancelToken,
@@ -388,18 +386,19 @@ class ChatApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/quick-messages/:id'.replaceAll(
-      '{'
-      r'id'
-      '}',
-      id.toString(),
-    );
+    final _path = r'/quick-messages/:id'.replaceAll('{' r'id' '}', id.toString());
     final _options = Options(
       method: r'PATCH',
-      headers: <String, dynamic>{...?headers},
+      headers: <String, dynamic>{
+        ...?headers,
+      },
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
+          {
+            'type': 'http',
+            'scheme': 'bearer',
+            'name': 'bearer_auth',
+          },
         ],
         ...?extra,
       },
@@ -410,10 +409,13 @@ class ChatApi {
     dynamic _bodyData;
 
     try {
-      _bodyData = jsonEncode(updateQuickMessageTemplate);
-    } catch (error, stackTrace) {
+        _bodyData=jsonEncode(updateQuickMessageTemplate);
+    } catch(error, stackTrace) {
       throw DioException(
-        requestOptions: _options.compose(_dio.options, _path),
+         requestOptions: _options.compose(
+          _dio.options,
+          _path,
+        ),
         type: DioExceptionType.unknown,
         error: error,
         stackTrace: stackTrace,
@@ -433,12 +435,7 @@ class ChatApi {
 
     try {
       final rawData = _response.data;
-      _responseData = rawData == null
-          ? null
-          : deserialize<
-              QuickMessageCreate200Response,
-              QuickMessageCreate200Response
-            >(rawData, 'QuickMessageCreate200Response', growable: true);
+_responseData = rawData == null ? null : deserialize<QuickMessageCreate200Response, QuickMessageCreate200Response>(rawData, 'QuickMessageCreate200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -460,4 +457,5 @@ class ChatApi {
       extra: _response.extra,
     );
   }
+
 }

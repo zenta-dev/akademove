@@ -23,34 +23,28 @@ class DriverQuizQuestionGetQuizQuestions200ResponseDataInnerOptionsInner {
   });
   @JsonKey(name: r'id', required: true, includeIfNull: false)
   final String id;
-
+  
   @JsonKey(name: r'text', required: true, includeIfNull: false)
   final String text;
+  
+  @override
+  bool operator ==(Object other) => identical(this, other) || other is DriverQuizQuestionGetQuizQuestions200ResponseDataInnerOptionsInner &&
+    other.id == id &&
+    other.text == text;
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is DriverQuizQuestionGetQuizQuestions200ResponseDataInnerOptionsInner &&
-          other.id == id &&
-          other.text == text;
+  int get hashCode =>
+      id.hashCode +
+      text.hashCode;
 
-  @override
-  int get hashCode => id.hashCode + text.hashCode;
+  factory DriverQuizQuestionGetQuizQuestions200ResponseDataInnerOptionsInner.fromJson(Map<String, dynamic> json) => _$DriverQuizQuestionGetQuizQuestions200ResponseDataInnerOptionsInnerFromJson(json);
 
-  factory DriverQuizQuestionGetQuizQuestions200ResponseDataInnerOptionsInner.fromJson(
-    Map<String, dynamic> json,
-  ) =>
-      _$DriverQuizQuestionGetQuizQuestions200ResponseDataInnerOptionsInnerFromJson(
-        json,
-      );
-
-  Map<String, dynamic> toJson() =>
-      _$DriverQuizQuestionGetQuizQuestions200ResponseDataInnerOptionsInnerToJson(
-        this,
-      );
+  Map<String, dynamic> toJson() => _$DriverQuizQuestionGetQuizQuestions200ResponseDataInnerOptionsInnerToJson(this);
 
   @override
   String toString() {
     return toJson().toString();
   }
+
 }
+

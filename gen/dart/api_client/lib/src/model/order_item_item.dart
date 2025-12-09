@@ -18,59 +18,57 @@ part 'order_item_item.g.dart';
 class OrderItemItem {
   /// Returns a new [OrderItemItem] instance.
   const OrderItemItem({
-    this.id,
-    this.merchantId,
-    this.name,
-    this.image,
-    this.category,
-    this.price,
-    this.stock,
-    this.createdAt,
-    this.updatedAt,
+     this.id,
+     this.merchantId,
+     this.name,
+     this.image,
+     this.category,
+     this.price,
+     this.stock,
+     this.createdAt,
+     this.updatedAt,
   });
   @JsonKey(name: r'id', required: false, includeIfNull: false)
   final String? id;
-
+  
   @JsonKey(name: r'merchantId', required: false, includeIfNull: false)
   final String? merchantId;
-
+  
   @JsonKey(name: r'name', required: false, includeIfNull: false)
   final String? name;
-
+  
   @JsonKey(name: r'image', required: false, includeIfNull: false)
   final String? image;
-
+  
   @JsonKey(name: r'category', required: false, includeIfNull: false)
   final String? category;
-
-  // minimum: 0
+  
+          // minimum: 0
   @JsonKey(name: r'price', required: false, includeIfNull: false)
   final num? price;
-
-  // minimum: 0
-  // maximum: 9007199254740991
+  
+          // minimum: 0
+          // maximum: 9007199254740991
   @JsonKey(name: r'stock', required: false, includeIfNull: false)
   final int? stock;
-
+  
   @JsonKey(name: r'createdAt', required: false, includeIfNull: false)
   final DateTime? createdAt;
-
+  
   @JsonKey(name: r'updatedAt', required: false, includeIfNull: false)
   final DateTime? updatedAt;
-
+  
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is OrderItemItem &&
-          other.id == id &&
-          other.merchantId == merchantId &&
-          other.name == name &&
-          other.image == image &&
-          other.category == category &&
-          other.price == price &&
-          other.stock == stock &&
-          other.createdAt == createdAt &&
-          other.updatedAt == updatedAt;
+  bool operator ==(Object other) => identical(this, other) || other is OrderItemItem &&
+    other.id == id &&
+    other.merchantId == merchantId &&
+    other.name == name &&
+    other.image == image &&
+    other.category == category &&
+    other.price == price &&
+    other.stock == stock &&
+    other.createdAt == createdAt &&
+    other.updatedAt == updatedAt;
 
   @override
   int get hashCode =>
@@ -84,8 +82,7 @@ class OrderItemItem {
       createdAt.hashCode +
       updatedAt.hashCode;
 
-  factory OrderItemItem.fromJson(Map<String, dynamic> json) =>
-      _$OrderItemItemFromJson(json);
+  factory OrderItemItem.fromJson(Map<String, dynamic> json) => _$OrderItemItemFromJson(json);
 
   Map<String, dynamic> toJson() => _$OrderItemItemToJson(this);
 
@@ -93,4 +90,6 @@ class OrderItemItem {
   String toString() {
     return toJson().toString();
   }
+
 }
+

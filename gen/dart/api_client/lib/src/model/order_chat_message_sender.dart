@@ -17,25 +17,27 @@ part 'order_chat_message_sender.g.dart';
 )
 class OrderChatMessageSender {
   /// Returns a new [OrderChatMessageSender] instance.
-  const OrderChatMessageSender({required this.name, this.image});
+  const OrderChatMessageSender({
+    required this.name,
+     this.image,
+  });
   @JsonKey(name: r'name', required: true, includeIfNull: false)
   final String name;
-
+  
   @JsonKey(name: r'image', required: false, includeIfNull: false)
   final String? image;
+  
+  @override
+  bool operator ==(Object other) => identical(this, other) || other is OrderChatMessageSender &&
+    other.name == name &&
+    other.image == image;
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is OrderChatMessageSender &&
-          other.name == name &&
-          other.image == image;
+  int get hashCode =>
+      name.hashCode +
+      image.hashCode;
 
-  @override
-  int get hashCode => name.hashCode + image.hashCode;
-
-  factory OrderChatMessageSender.fromJson(Map<String, dynamic> json) =>
-      _$OrderChatMessageSenderFromJson(json);
+  factory OrderChatMessageSender.fromJson(Map<String, dynamic> json) => _$OrderChatMessageSenderFromJson(json);
 
   Map<String, dynamic> toJson() => _$OrderChatMessageSenderToJson(this);
 
@@ -43,4 +45,6 @@ class OrderChatMessageSender {
   String toString() {
     return toJson().toString();
   }
+
 }
+

@@ -26,28 +26,26 @@ class DashboardStatsHighCancellationDriversInner {
   });
   @JsonKey(name: r'id', required: true, includeIfNull: false)
   final String id;
-
+  
   @JsonKey(name: r'name', required: true, includeIfNull: false)
   final String name;
-
+  
   @JsonKey(name: r'totalOrders', required: true, includeIfNull: false)
   final num totalOrders;
-
+  
   @JsonKey(name: r'cancelledOrders', required: true, includeIfNull: false)
   final num cancelledOrders;
-
+  
   @JsonKey(name: r'cancellationRate', required: true, includeIfNull: false)
   final num cancellationRate;
-
+  
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is DashboardStatsHighCancellationDriversInner &&
-          other.id == id &&
-          other.name == name &&
-          other.totalOrders == totalOrders &&
-          other.cancelledOrders == cancelledOrders &&
-          other.cancellationRate == cancellationRate;
+  bool operator ==(Object other) => identical(this, other) || other is DashboardStatsHighCancellationDriversInner &&
+    other.id == id &&
+    other.name == name &&
+    other.totalOrders == totalOrders &&
+    other.cancelledOrders == cancelledOrders &&
+    other.cancellationRate == cancellationRate;
 
   @override
   int get hashCode =>
@@ -57,15 +55,14 @@ class DashboardStatsHighCancellationDriversInner {
       cancelledOrders.hashCode +
       cancellationRate.hashCode;
 
-  factory DashboardStatsHighCancellationDriversInner.fromJson(
-    Map<String, dynamic> json,
-  ) => _$DashboardStatsHighCancellationDriversInnerFromJson(json);
+  factory DashboardStatsHighCancellationDriversInner.fromJson(Map<String, dynamic> json) => _$DashboardStatsHighCancellationDriversInnerFromJson(json);
 
-  Map<String, dynamic> toJson() =>
-      _$DashboardStatsHighCancellationDriversInnerToJson(this);
+  Map<String, dynamic> toJson() => _$DashboardStatsHighCancellationDriversInnerToJson(this);
 
   @override
   String toString() {
     return toJson().toString();
   }
+
 }
+

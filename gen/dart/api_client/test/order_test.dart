@@ -152,6 +152,16 @@ void main() {
       // TODO
     });
 
+    // DateTime scheduledAt
+    test('to test the property `scheduledAt`', () async {
+      // TODO
+    });
+
+    // DateTime scheduledMatchingAt
+    test('to test the property `scheduledMatchingAt`', () async {
+      // TODO
+    });
+
     // String proofOfDeliveryUrl
     test('to test the property `proofOfDeliveryUrl`', () async {
       // TODO

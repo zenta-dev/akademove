@@ -58,7 +58,13 @@ function RouteComponent() {
 	const [specialInstructions, setSpecialInstructions] = useState("");
 	const [isEstimating, setIsEstimating] = useState(false);
 	const [isPlacingOrder, setIsPlacingOrder] = useState(false);
-	const [orderSummary, setOrderSummary] = useState<any>(null);
+	const [orderSummary, setOrderSummary] = useState<{
+		distanceKm: number;
+		baseFare: number;
+		distanceFare: number;
+		additionalFares: number;
+		totalCost: number;
+	} | null>(null);
 
 	const isDelivery = orderType === "DELIVERY" || orderType === "FOOD";
 

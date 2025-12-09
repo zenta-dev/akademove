@@ -17,28 +17,28 @@ part 'notification_get_unread_count200_response_data.g.dart';
 )
 class NotificationGetUnreadCount200ResponseData {
   /// Returns a new [NotificationGetUnreadCount200ResponseData] instance.
-  const NotificationGetUnreadCount200ResponseData({required this.count});
+  const NotificationGetUnreadCount200ResponseData({
+    required this.count,
+  });
   @JsonKey(name: r'count', required: true, includeIfNull: false)
   final num count;
+  
+  @override
+  bool operator ==(Object other) => identical(this, other) || other is NotificationGetUnreadCount200ResponseData &&
+    other.count == count;
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is NotificationGetUnreadCount200ResponseData &&
-          other.count == count;
+  int get hashCode =>
+      count.hashCode;
 
-  @override
-  int get hashCode => count.hashCode;
+  factory NotificationGetUnreadCount200ResponseData.fromJson(Map<String, dynamic> json) => _$NotificationGetUnreadCount200ResponseDataFromJson(json);
 
-  factory NotificationGetUnreadCount200ResponseData.fromJson(
-    Map<String, dynamic> json,
-  ) => _$NotificationGetUnreadCount200ResponseDataFromJson(json);
-
-  Map<String, dynamic> toJson() =>
-      _$NotificationGetUnreadCount200ResponseDataToJson(this);
+  Map<String, dynamic> toJson() => _$NotificationGetUnreadCount200ResponseDataToJson(this);
 
   @override
   String toString() {
     return toJson().toString();
   }
+
 }
+

@@ -21,58 +21,51 @@ part 'support_ticket_list_query.g.dart';
 class SupportTicketListQuery {
   /// Returns a new [SupportTicketListQuery] instance.
   const SupportTicketListQuery({
-    this.status,
-    this.category,
-    this.priority,
-    this.assignedToId,
-    this.userId,
-    this.search,
-    this.limit = 20,
-    this.cursor,
+     this.status,
+     this.category,
+     this.priority,
+     this.assignedToId,
+     this.userId,
+     this.search,
+     this.limit = 20,
+     this.cursor,
   });
   @JsonKey(name: r'status', required: false, includeIfNull: false)
   final SupportTicketStatus? status;
-
+  
   @JsonKey(name: r'category', required: false, includeIfNull: false)
   final SupportTicketCategory? category;
-
+  
   @JsonKey(name: r'priority', required: false, includeIfNull: false)
   final SupportTicketPriority? priority;
-
+  
   @JsonKey(name: r'assignedToId', required: false, includeIfNull: false)
   final String? assignedToId;
-
+  
   @JsonKey(name: r'userId', required: false, includeIfNull: false)
   final String? userId;
-
+  
   @JsonKey(name: r'search', required: false, includeIfNull: false)
   final String? search;
-
-  // minimum: -9007199254740991
-  // maximum: 1000
-  @JsonKey(
-    defaultValue: 20,
-    name: r'limit',
-    required: false,
-    includeIfNull: false,
-  )
+  
+          // minimum: -9007199254740991
+          // maximum: 1000
+  @JsonKey(defaultValue: 20,name: r'limit', required: false, includeIfNull: false)
   final int? limit;
-
+  
   @JsonKey(name: r'cursor', required: false, includeIfNull: false)
   final String? cursor;
-
+  
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is SupportTicketListQuery &&
-          other.status == status &&
-          other.category == category &&
-          other.priority == priority &&
-          other.assignedToId == assignedToId &&
-          other.userId == userId &&
-          other.search == search &&
-          other.limit == limit &&
-          other.cursor == cursor;
+  bool operator ==(Object other) => identical(this, other) || other is SupportTicketListQuery &&
+    other.status == status &&
+    other.category == category &&
+    other.priority == priority &&
+    other.assignedToId == assignedToId &&
+    other.userId == userId &&
+    other.search == search &&
+    other.limit == limit &&
+    other.cursor == cursor;
 
   @override
   int get hashCode =>
@@ -85,8 +78,7 @@ class SupportTicketListQuery {
       limit.hashCode +
       cursor.hashCode;
 
-  factory SupportTicketListQuery.fromJson(Map<String, dynamic> json) =>
-      _$SupportTicketListQueryFromJson(json);
+  factory SupportTicketListQuery.fromJson(Map<String, dynamic> json) => _$SupportTicketListQueryFromJson(json);
 
   Map<String, dynamic> toJson() => _$SupportTicketListQueryToJson(this);
 
@@ -94,4 +86,6 @@ class SupportTicketListQuery {
   String toString() {
     return toJson().toString();
   }
+
 }
+

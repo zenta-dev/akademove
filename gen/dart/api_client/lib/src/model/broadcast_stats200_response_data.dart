@@ -24,40 +24,38 @@ class BroadcastStats200ResponseData {
     required this.sent,
     required this.failed,
   });
-  // minimum: -9007199254740991
-  // maximum: 9007199254740991
+          // minimum: -9007199254740991
+          // maximum: 9007199254740991
   @JsonKey(name: r'total', required: true, includeIfNull: false)
   final int total;
-
-  // minimum: -9007199254740991
-  // maximum: 9007199254740991
+  
+          // minimum: -9007199254740991
+          // maximum: 9007199254740991
   @JsonKey(name: r'pending', required: true, includeIfNull: false)
   final int pending;
-
-  // minimum: -9007199254740991
-  // maximum: 9007199254740991
+  
+          // minimum: -9007199254740991
+          // maximum: 9007199254740991
   @JsonKey(name: r'sending', required: true, includeIfNull: false)
   final int sending;
-
-  // minimum: -9007199254740991
-  // maximum: 9007199254740991
+  
+          // minimum: -9007199254740991
+          // maximum: 9007199254740991
   @JsonKey(name: r'sent', required: true, includeIfNull: false)
   final int sent;
-
-  // minimum: -9007199254740991
-  // maximum: 9007199254740991
+  
+          // minimum: -9007199254740991
+          // maximum: 9007199254740991
   @JsonKey(name: r'failed', required: true, includeIfNull: false)
   final int failed;
-
+  
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is BroadcastStats200ResponseData &&
-          other.total == total &&
-          other.pending == pending &&
-          other.sending == sending &&
-          other.sent == sent &&
-          other.failed == failed;
+  bool operator ==(Object other) => identical(this, other) || other is BroadcastStats200ResponseData &&
+    other.total == total &&
+    other.pending == pending &&
+    other.sending == sending &&
+    other.sent == sent &&
+    other.failed == failed;
 
   @override
   int get hashCode =>
@@ -67,8 +65,7 @@ class BroadcastStats200ResponseData {
       sent.hashCode +
       failed.hashCode;
 
-  factory BroadcastStats200ResponseData.fromJson(Map<String, dynamic> json) =>
-      _$BroadcastStats200ResponseDataFromJson(json);
+  factory BroadcastStats200ResponseData.fromJson(Map<String, dynamic> json) => _$BroadcastStats200ResponseDataFromJson(json);
 
   Map<String, dynamic> toJson() => _$BroadcastStats200ResponseDataToJson(this);
 
@@ -76,4 +73,6 @@ class BroadcastStats200ResponseData {
   String toString() {
     return toJson().toString();
   }
+
 }
+

@@ -38,15 +38,16 @@ import 'package:api_client/src/model/user_admin_list200_response.dart';
 import 'package:api_client/src/model/user_admin_list_filters_parameter.dart';
 
 class AdminApi {
+
   final Dio _dio;
 
   const AdminApi(this._dio);
 
   /// accountDeletionDelete
-  ///
+  /// 
   ///
   /// Parameters:
-  /// * [id]
+  /// * [id] 
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -56,7 +57,7 @@ class AdminApi {
   ///
   /// Returns a [Future] containing a [Response] with a [AccountDeletionDelete200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<AccountDeletionDelete200Response>> accountDeletionDelete({
+  Future<Response<AccountDeletionDelete200Response>> accountDeletionDelete({ 
     required String id,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -65,18 +66,19 @@ class AdminApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/account-deletion/{id}'.replaceAll(
-      '{'
-      r'id'
-      '}',
-      id.toString(),
-    );
+    final _path = r'/account-deletion/{id}'.replaceAll('{' r'id' '}', id.toString());
     final _options = Options(
       method: r'DELETE',
-      headers: <String, dynamic>{...?headers},
+      headers: <String, dynamic>{
+        ...?headers,
+      },
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
+          {
+            'type': 'http',
+            'scheme': 'bearer',
+            'name': 'bearer_auth',
+          },
         ],
         ...?extra,
       },
@@ -95,12 +97,7 @@ class AdminApi {
 
     try {
       final rawData = _response.data;
-      _responseData = rawData == null
-          ? null
-          : deserialize<
-              AccountDeletionDelete200Response,
-              AccountDeletionDelete200Response
-            >(rawData, 'AccountDeletionDelete200Response', growable: true);
+_responseData = rawData == null ? null : deserialize<AccountDeletionDelete200Response, AccountDeletionDelete200Response>(rawData, 'AccountDeletionDelete200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -124,10 +121,10 @@ class AdminApi {
   }
 
   /// accountDeletionGetById
-  ///
+  /// 
   ///
   /// Parameters:
-  /// * [id]
+  /// * [id] 
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -137,7 +134,7 @@ class AdminApi {
   ///
   /// Returns a [Future] containing a [Response] with a [AccountDeletionSubmit201Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<AccountDeletionSubmit201Response>> accountDeletionGetById({
+  Future<Response<AccountDeletionSubmit201Response>> accountDeletionGetById({ 
     required String id,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -146,18 +143,19 @@ class AdminApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/account-deletion/{id}'.replaceAll(
-      '{'
-      r'id'
-      '}',
-      id.toString(),
-    );
+    final _path = r'/account-deletion/{id}'.replaceAll('{' r'id' '}', id.toString());
     final _options = Options(
       method: r'GET',
-      headers: <String, dynamic>{...?headers},
+      headers: <String, dynamic>{
+        ...?headers,
+      },
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
+          {
+            'type': 'http',
+            'scheme': 'bearer',
+            'name': 'bearer_auth',
+          },
         ],
         ...?extra,
       },
@@ -176,12 +174,7 @@ class AdminApi {
 
     try {
       final rawData = _response.data;
-      _responseData = rawData == null
-          ? null
-          : deserialize<
-              AccountDeletionSubmit201Response,
-              AccountDeletionSubmit201Response
-            >(rawData, 'AccountDeletionSubmit201Response', growable: true);
+_responseData = rawData == null ? null : deserialize<AccountDeletionSubmit201Response, AccountDeletionSubmit201Response>(rawData, 'AccountDeletionSubmit201Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -205,13 +198,13 @@ class AdminApi {
   }
 
   /// accountDeletionList
-  ///
+  /// 
   ///
   /// Parameters:
-  /// * [page]
-  /// * [limit]
-  /// * [status]
-  /// * [search]
+  /// * [page] 
+  /// * [limit] 
+  /// * [status] 
+  /// * [search] 
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -221,7 +214,7 @@ class AdminApi {
   ///
   /// Returns a [Future] containing a [Response] with a [AccountDeletionList200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<AccountDeletionList200Response>> accountDeletionList({
+  Future<Response<AccountDeletionList200Response>> accountDeletionList({ 
     int? page,
     int? limit,
     String? status,
@@ -236,10 +229,16 @@ class AdminApi {
     final _path = r'/account-deletion';
     final _options = Options(
       method: r'GET',
-      headers: <String, dynamic>{...?headers},
+      headers: <String, dynamic>{
+        ...?headers,
+      },
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
+          {
+            'type': 'http',
+            'scheme': 'bearer',
+            'name': 'bearer_auth',
+          },
         ],
         ...?extra,
       },
@@ -266,12 +265,7 @@ class AdminApi {
 
     try {
       final rawData = _response.data;
-      _responseData = rawData == null
-          ? null
-          : deserialize<
-              AccountDeletionList200Response,
-              AccountDeletionList200Response
-            >(rawData, 'AccountDeletionList200Response', growable: true);
+_responseData = rawData == null ? null : deserialize<AccountDeletionList200Response, AccountDeletionList200Response>(rawData, 'AccountDeletionList200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -295,11 +289,11 @@ class AdminApi {
   }
 
   /// accountDeletionReview
-  ///
+  /// 
   ///
   /// Parameters:
-  /// * [id]
-  /// * [accountDeletionReviewRequest]
+  /// * [id] 
+  /// * [accountDeletionReviewRequest] 
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -309,7 +303,7 @@ class AdminApi {
   ///
   /// Returns a [Future] containing a [Response] with a [AccountDeletionSubmit201Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<AccountDeletionSubmit201Response>> accountDeletionReview({
+  Future<Response<AccountDeletionSubmit201Response>> accountDeletionReview({ 
     required String id,
     required AccountDeletionReviewRequest accountDeletionReviewRequest,
     CancelToken? cancelToken,
@@ -319,18 +313,19 @@ class AdminApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/account-deletion/{id}/review'.replaceAll(
-      '{'
-      r'id'
-      '}',
-      id.toString(),
-    );
+    final _path = r'/account-deletion/{id}/review'.replaceAll('{' r'id' '}', id.toString());
     final _options = Options(
       method: r'PUT',
-      headers: <String, dynamic>{...?headers},
+      headers: <String, dynamic>{
+        ...?headers,
+      },
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
+          {
+            'type': 'http',
+            'scheme': 'bearer',
+            'name': 'bearer_auth',
+          },
         ],
         ...?extra,
       },
@@ -341,10 +336,13 @@ class AdminApi {
     dynamic _bodyData;
 
     try {
-      _bodyData = jsonEncode(accountDeletionReviewRequest);
-    } catch (error, stackTrace) {
+        _bodyData=jsonEncode(accountDeletionReviewRequest);
+    } catch(error, stackTrace) {
       throw DioException(
-        requestOptions: _options.compose(_dio.options, _path),
+         requestOptions: _options.compose(
+          _dio.options,
+          _path,
+        ),
         type: DioExceptionType.unknown,
         error: error,
         stackTrace: stackTrace,
@@ -364,12 +362,7 @@ class AdminApi {
 
     try {
       final rawData = _response.data;
-      _responseData = rawData == null
-          ? null
-          : deserialize<
-              AccountDeletionSubmit201Response,
-              AccountDeletionSubmit201Response
-            >(rawData, 'AccountDeletionSubmit201Response', growable: true);
+_responseData = rawData == null ? null : deserialize<AccountDeletionSubmit201Response, AccountDeletionSubmit201Response>(rawData, 'AccountDeletionSubmit201Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -393,11 +386,11 @@ class AdminApi {
   }
 
   /// analyticsExportOperatorAnalytics
-  ///
+  /// 
   ///
   /// Parameters:
-  /// * [startDate]
-  /// * [endDate]
+  /// * [startDate] 
+  /// * [endDate] 
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -407,7 +400,7 @@ class AdminApi {
   ///
   /// Returns a [Future] containing a [Response] with a [String] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<String>> analyticsExportOperatorAnalytics({
+  Future<Response<String>> analyticsExportOperatorAnalytics({ 
     required DateTime startDate,
     required DateTime endDate,
     CancelToken? cancelToken,
@@ -420,10 +413,16 @@ class AdminApi {
     final _path = r'/analytics/operator/export';
     final _options = Options(
       method: r'GET',
-      headers: <String, dynamic>{...?headers},
+      headers: <String, dynamic>{
+        ...?headers,
+      },
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
+          {
+            'type': 'http',
+            'scheme': 'bearer',
+            'name': 'bearer_auth',
+          },
         ],
         ...?extra,
       },
@@ -448,9 +447,7 @@ class AdminApi {
 
     try {
       final rawData = _response.data;
-      _responseData = rawData == null
-          ? null
-          : deserialize<String, String>(rawData, 'String', growable: true);
+_responseData = rawData == null ? null : deserialize<String, String>(rawData, 'String', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -474,10 +471,10 @@ class AdminApi {
   }
 
   /// broadcastCreate
-  ///
+  /// 
   ///
   /// Parameters:
-  /// * [broadcastCreateRequest]
+  /// * [broadcastCreateRequest] 
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -487,7 +484,7 @@ class AdminApi {
   ///
   /// Returns a [Future] containing a [Response] with a [BroadcastCreate201Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<BroadcastCreate201Response>> broadcastCreate({
+  Future<Response<BroadcastCreate201Response>> broadcastCreate({ 
     required BroadcastCreateRequest broadcastCreateRequest,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -499,10 +496,16 @@ class AdminApi {
     final _path = r'/broadcasts';
     final _options = Options(
       method: r'POST',
-      headers: <String, dynamic>{...?headers},
+      headers: <String, dynamic>{
+        ...?headers,
+      },
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
+          {
+            'type': 'http',
+            'scheme': 'bearer',
+            'name': 'bearer_auth',
+          },
         ],
         ...?extra,
       },
@@ -513,10 +516,13 @@ class AdminApi {
     dynamic _bodyData;
 
     try {
-      _bodyData = jsonEncode(broadcastCreateRequest);
-    } catch (error, stackTrace) {
+        _bodyData=jsonEncode(broadcastCreateRequest);
+    } catch(error, stackTrace) {
       throw DioException(
-        requestOptions: _options.compose(_dio.options, _path),
+         requestOptions: _options.compose(
+          _dio.options,
+          _path,
+        ),
         type: DioExceptionType.unknown,
         error: error,
         stackTrace: stackTrace,
@@ -536,13 +542,7 @@ class AdminApi {
 
     try {
       final rawData = _response.data;
-      _responseData = rawData == null
-          ? null
-          : deserialize<BroadcastCreate201Response, BroadcastCreate201Response>(
-              rawData,
-              'BroadcastCreate201Response',
-              growable: true,
-            );
+_responseData = rawData == null ? null : deserialize<BroadcastCreate201Response, BroadcastCreate201Response>(rawData, 'BroadcastCreate201Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -566,10 +566,10 @@ class AdminApi {
   }
 
   /// broadcastDelete
-  ///
+  /// 
   ///
   /// Parameters:
-  /// * [id]
+  /// * [id] 
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -579,7 +579,7 @@ class AdminApi {
   ///
   /// Returns a [Future] containing a [Response] with a [BroadcastDelete200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<BroadcastDelete200Response>> broadcastDelete({
+  Future<Response<BroadcastDelete200Response>> broadcastDelete({ 
     required String id,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -588,18 +588,19 @@ class AdminApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/broadcasts/{id}'.replaceAll(
-      '{'
-      r'id'
-      '}',
-      id.toString(),
-    );
+    final _path = r'/broadcasts/{id}'.replaceAll('{' r'id' '}', id.toString());
     final _options = Options(
       method: r'DELETE',
-      headers: <String, dynamic>{...?headers},
+      headers: <String, dynamic>{
+        ...?headers,
+      },
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
+          {
+            'type': 'http',
+            'scheme': 'bearer',
+            'name': 'bearer_auth',
+          },
         ],
         ...?extra,
       },
@@ -618,13 +619,7 @@ class AdminApi {
 
     try {
       final rawData = _response.data;
-      _responseData = rawData == null
-          ? null
-          : deserialize<BroadcastDelete200Response, BroadcastDelete200Response>(
-              rawData,
-              'BroadcastDelete200Response',
-              growable: true,
-            );
+_responseData = rawData == null ? null : deserialize<BroadcastDelete200Response, BroadcastDelete200Response>(rawData, 'BroadcastDelete200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -648,10 +643,10 @@ class AdminApi {
   }
 
   /// broadcastGet
-  ///
+  /// 
   ///
   /// Parameters:
-  /// * [id]
+  /// * [id] 
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -661,7 +656,7 @@ class AdminApi {
   ///
   /// Returns a [Future] containing a [Response] with a [BroadcastCreate201Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<BroadcastCreate201Response>> broadcastGet({
+  Future<Response<BroadcastCreate201Response>> broadcastGet({ 
     required String id,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -670,18 +665,19 @@ class AdminApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/broadcasts/{id}'.replaceAll(
-      '{'
-      r'id'
-      '}',
-      id.toString(),
-    );
+    final _path = r'/broadcasts/{id}'.replaceAll('{' r'id' '}', id.toString());
     final _options = Options(
       method: r'GET',
-      headers: <String, dynamic>{...?headers},
+      headers: <String, dynamic>{
+        ...?headers,
+      },
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
+          {
+            'type': 'http',
+            'scheme': 'bearer',
+            'name': 'bearer_auth',
+          },
         ],
         ...?extra,
       },
@@ -700,13 +696,7 @@ class AdminApi {
 
     try {
       final rawData = _response.data;
-      _responseData = rawData == null
-          ? null
-          : deserialize<BroadcastCreate201Response, BroadcastCreate201Response>(
-              rawData,
-              'BroadcastCreate201Response',
-              growable: true,
-            );
+_responseData = rawData == null ? null : deserialize<BroadcastCreate201Response, BroadcastCreate201Response>(rawData, 'BroadcastCreate201Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -730,21 +720,21 @@ class AdminApi {
   }
 
   /// broadcastList
-  ///
+  /// 
   ///
   /// Parameters:
-  /// * [cursor]
-  /// * [limit]
-  /// * [direction]
-  /// * [page]
-  /// * [query]
-  /// * [sortBy]
-  /// * [order]
-  /// * [mode]
-  /// * [status]
-  /// * [type]
-  /// * [targetAudience]
-  /// * [search]
+  /// * [cursor] 
+  /// * [limit] 
+  /// * [direction] 
+  /// * [page] 
+  /// * [query] 
+  /// * [sortBy] 
+  /// * [order] 
+  /// * [mode] 
+  /// * [status] 
+  /// * [type] 
+  /// * [targetAudience] 
+  /// * [search] 
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -754,7 +744,7 @@ class AdminApi {
   ///
   /// Returns a [Future] containing a [Response] with a [BroadcastList200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<BroadcastList200Response>> broadcastList({
+  Future<Response<BroadcastList200Response>> broadcastList({ 
     String? cursor,
     Object? limit,
     String? direction,
@@ -777,10 +767,16 @@ class AdminApi {
     final _path = r'/broadcasts';
     final _options = Options(
       method: r'GET',
-      headers: <String, dynamic>{...?headers},
+      headers: <String, dynamic>{
+        ...?headers,
+      },
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
+          {
+            'type': 'http',
+            'scheme': 'bearer',
+            'name': 'bearer_auth',
+          },
         ],
         ...?extra,
       },
@@ -815,13 +811,7 @@ class AdminApi {
 
     try {
       final rawData = _response.data;
-      _responseData = rawData == null
-          ? null
-          : deserialize<BroadcastList200Response, BroadcastList200Response>(
-              rawData,
-              'BroadcastList200Response',
-              growable: true,
-            );
+_responseData = rawData == null ? null : deserialize<BroadcastList200Response, BroadcastList200Response>(rawData, 'BroadcastList200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -845,10 +835,10 @@ class AdminApi {
   }
 
   /// broadcastSend
-  ///
+  /// 
   ///
   /// Parameters:
-  /// * [id]
+  /// * [id] 
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -858,7 +848,7 @@ class AdminApi {
   ///
   /// Returns a [Future] containing a [Response] with a [BroadcastCreate201Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<BroadcastCreate201Response>> broadcastSend({
+  Future<Response<BroadcastCreate201Response>> broadcastSend({ 
     required String id,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -867,18 +857,19 @@ class AdminApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/broadcasts/{id}/send'.replaceAll(
-      '{'
-      r'id'
-      '}',
-      id.toString(),
-    );
+    final _path = r'/broadcasts/{id}/send'.replaceAll('{' r'id' '}', id.toString());
     final _options = Options(
       method: r'POST',
-      headers: <String, dynamic>{...?headers},
+      headers: <String, dynamic>{
+        ...?headers,
+      },
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
+          {
+            'type': 'http',
+            'scheme': 'bearer',
+            'name': 'bearer_auth',
+          },
         ],
         ...?extra,
       },
@@ -897,13 +888,7 @@ class AdminApi {
 
     try {
       final rawData = _response.data;
-      _responseData = rawData == null
-          ? null
-          : deserialize<BroadcastCreate201Response, BroadcastCreate201Response>(
-              rawData,
-              'BroadcastCreate201Response',
-              growable: true,
-            );
+_responseData = rawData == null ? null : deserialize<BroadcastCreate201Response, BroadcastCreate201Response>(rawData, 'BroadcastCreate201Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -927,7 +912,7 @@ class AdminApi {
   }
 
   /// broadcastStats
-  ///
+  /// 
   ///
   /// Parameters:
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
@@ -939,7 +924,7 @@ class AdminApi {
   ///
   /// Returns a [Future] containing a [Response] with a [BroadcastStats200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<BroadcastStats200Response>> broadcastStats({
+  Future<Response<BroadcastStats200Response>> broadcastStats({ 
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -950,10 +935,16 @@ class AdminApi {
     final _path = r'/broadcasts/stats';
     final _options = Options(
       method: r'GET',
-      headers: <String, dynamic>{...?headers},
+      headers: <String, dynamic>{
+        ...?headers,
+      },
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
+          {
+            'type': 'http',
+            'scheme': 'bearer',
+            'name': 'bearer_auth',
+          },
         ],
         ...?extra,
       },
@@ -972,13 +963,7 @@ class AdminApi {
 
     try {
       final rawData = _response.data;
-      _responseData = rawData == null
-          ? null
-          : deserialize<BroadcastStats200Response, BroadcastStats200Response>(
-              rawData,
-              'BroadcastStats200Response',
-              growable: true,
-            );
+_responseData = rawData == null ? null : deserialize<BroadcastStats200Response, BroadcastStats200Response>(rawData, 'BroadcastStats200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -1002,11 +987,11 @@ class AdminApi {
   }
 
   /// broadcastUpdate
-  ///
+  /// 
   ///
   /// Parameters:
-  /// * [id]
-  /// * [broadcastUpdateRequest]
+  /// * [id] 
+  /// * [broadcastUpdateRequest] 
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -1016,7 +1001,7 @@ class AdminApi {
   ///
   /// Returns a [Future] containing a [Response] with a [BroadcastCreate201Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<BroadcastCreate201Response>> broadcastUpdate({
+  Future<Response<BroadcastCreate201Response>> broadcastUpdate({ 
     required String id,
     required BroadcastUpdateRequest broadcastUpdateRequest,
     CancelToken? cancelToken,
@@ -1026,18 +1011,19 @@ class AdminApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/broadcasts/{id}'.replaceAll(
-      '{'
-      r'id'
-      '}',
-      id.toString(),
-    );
+    final _path = r'/broadcasts/{id}'.replaceAll('{' r'id' '}', id.toString());
     final _options = Options(
       method: r'PUT',
-      headers: <String, dynamic>{...?headers},
+      headers: <String, dynamic>{
+        ...?headers,
+      },
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
+          {
+            'type': 'http',
+            'scheme': 'bearer',
+            'name': 'bearer_auth',
+          },
         ],
         ...?extra,
       },
@@ -1048,10 +1034,13 @@ class AdminApi {
     dynamic _bodyData;
 
     try {
-      _bodyData = jsonEncode(broadcastUpdateRequest);
-    } catch (error, stackTrace) {
+        _bodyData=jsonEncode(broadcastUpdateRequest);
+    } catch(error, stackTrace) {
       throw DioException(
-        requestOptions: _options.compose(_dio.options, _path),
+         requestOptions: _options.compose(
+          _dio.options,
+          _path,
+        ),
         type: DioExceptionType.unknown,
         error: error,
         stackTrace: stackTrace,
@@ -1071,13 +1060,7 @@ class AdminApi {
 
     try {
       final rawData = _response.data;
-      _responseData = rawData == null
-          ? null
-          : deserialize<BroadcastCreate201Response, BroadcastCreate201Response>(
-              rawData,
-              'BroadcastCreate201Response',
-              growable: true,
-            );
+_responseData = rawData == null ? null : deserialize<BroadcastCreate201Response, BroadcastCreate201Response>(rawData, 'BroadcastCreate201Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -1101,10 +1084,10 @@ class AdminApi {
   }
 
   /// contactDelete
-  ///
+  /// 
   ///
   /// Parameters:
-  /// * [id]
+  /// * [id] 
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -1114,7 +1097,7 @@ class AdminApi {
   ///
   /// Returns a [Future] containing a [Response] with a [AuthSignOut200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<AuthSignOut200Response>> contactDelete({
+  Future<Response<AuthSignOut200Response>> contactDelete({ 
     required String id,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -1123,18 +1106,19 @@ class AdminApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/contacts/{id}'.replaceAll(
-      '{'
-      r'id'
-      '}',
-      id.toString(),
-    );
+    final _path = r'/contacts/{id}'.replaceAll('{' r'id' '}', id.toString());
     final _options = Options(
       method: r'DELETE',
-      headers: <String, dynamic>{...?headers},
+      headers: <String, dynamic>{
+        ...?headers,
+      },
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
+          {
+            'type': 'http',
+            'scheme': 'bearer',
+            'name': 'bearer_auth',
+          },
         ],
         ...?extra,
       },
@@ -1153,13 +1137,7 @@ class AdminApi {
 
     try {
       final rawData = _response.data;
-      _responseData = rawData == null
-          ? null
-          : deserialize<AuthSignOut200Response, AuthSignOut200Response>(
-              rawData,
-              'AuthSignOut200Response',
-              growable: true,
-            );
+_responseData = rawData == null ? null : deserialize<AuthSignOut200Response, AuthSignOut200Response>(rawData, 'AuthSignOut200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -1183,10 +1161,10 @@ class AdminApi {
   }
 
   /// contactGetById
-  ///
+  /// 
   ///
   /// Parameters:
-  /// * [id]
+  /// * [id] 
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -1196,7 +1174,7 @@ class AdminApi {
   ///
   /// Returns a [Future] containing a [Response] with a [ContactSubmit201Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<ContactSubmit201Response>> contactGetById({
+  Future<Response<ContactSubmit201Response>> contactGetById({ 
     required String id,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -1205,18 +1183,19 @@ class AdminApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/contacts/{id}'.replaceAll(
-      '{'
-      r'id'
-      '}',
-      id.toString(),
-    );
+    final _path = r'/contacts/{id}'.replaceAll('{' r'id' '}', id.toString());
     final _options = Options(
       method: r'GET',
-      headers: <String, dynamic>{...?headers},
+      headers: <String, dynamic>{
+        ...?headers,
+      },
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
+          {
+            'type': 'http',
+            'scheme': 'bearer',
+            'name': 'bearer_auth',
+          },
         ],
         ...?extra,
       },
@@ -1235,13 +1214,7 @@ class AdminApi {
 
     try {
       final rawData = _response.data;
-      _responseData = rawData == null
-          ? null
-          : deserialize<ContactSubmit201Response, ContactSubmit201Response>(
-              rawData,
-              'ContactSubmit201Response',
-              growable: true,
-            );
+_responseData = rawData == null ? null : deserialize<ContactSubmit201Response, ContactSubmit201Response>(rawData, 'ContactSubmit201Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -1265,13 +1238,13 @@ class AdminApi {
   }
 
   /// contactList
-  ///
+  /// 
   ///
   /// Parameters:
-  /// * [page]
-  /// * [limit]
-  /// * [status]
-  /// * [search]
+  /// * [page] 
+  /// * [limit] 
+  /// * [status] 
+  /// * [search] 
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -1281,7 +1254,7 @@ class AdminApi {
   ///
   /// Returns a [Future] containing a [Response] with a [ContactList200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<ContactList200Response>> contactList({
+  Future<Response<ContactList200Response>> contactList({ 
     int? page,
     int? limit,
     String? status,
@@ -1296,10 +1269,16 @@ class AdminApi {
     final _path = r'/contacts';
     final _options = Options(
       method: r'GET',
-      headers: <String, dynamic>{...?headers},
+      headers: <String, dynamic>{
+        ...?headers,
+      },
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
+          {
+            'type': 'http',
+            'scheme': 'bearer',
+            'name': 'bearer_auth',
+          },
         ],
         ...?extra,
       },
@@ -1326,13 +1305,7 @@ class AdminApi {
 
     try {
       final rawData = _response.data;
-      _responseData = rawData == null
-          ? null
-          : deserialize<ContactList200Response, ContactList200Response>(
-              rawData,
-              'ContactList200Response',
-              growable: true,
-            );
+_responseData = rawData == null ? null : deserialize<ContactList200Response, ContactList200Response>(rawData, 'ContactList200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -1356,11 +1329,11 @@ class AdminApi {
   }
 
   /// contactRespond
-  ///
+  /// 
   ///
   /// Parameters:
-  /// * [id]
-  /// * [contactRespondRequest]
+  /// * [id] 
+  /// * [contactRespondRequest] 
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -1370,7 +1343,7 @@ class AdminApi {
   ///
   /// Returns a [Future] containing a [Response] with a [ContactSubmit201Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<ContactSubmit201Response>> contactRespond({
+  Future<Response<ContactSubmit201Response>> contactRespond({ 
     required String id,
     required ContactRespondRequest contactRespondRequest,
     CancelToken? cancelToken,
@@ -1380,18 +1353,19 @@ class AdminApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/contacts/{id}/respond'.replaceAll(
-      '{'
-      r'id'
-      '}',
-      id.toString(),
-    );
+    final _path = r'/contacts/{id}/respond'.replaceAll('{' r'id' '}', id.toString());
     final _options = Options(
       method: r'POST',
-      headers: <String, dynamic>{...?headers},
+      headers: <String, dynamic>{
+        ...?headers,
+      },
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
+          {
+            'type': 'http',
+            'scheme': 'bearer',
+            'name': 'bearer_auth',
+          },
         ],
         ...?extra,
       },
@@ -1402,10 +1376,13 @@ class AdminApi {
     dynamic _bodyData;
 
     try {
-      _bodyData = jsonEncode(contactRespondRequest);
-    } catch (error, stackTrace) {
+        _bodyData=jsonEncode(contactRespondRequest);
+    } catch(error, stackTrace) {
       throw DioException(
-        requestOptions: _options.compose(_dio.options, _path),
+         requestOptions: _options.compose(
+          _dio.options,
+          _path,
+        ),
         type: DioExceptionType.unknown,
         error: error,
         stackTrace: stackTrace,
@@ -1425,13 +1402,7 @@ class AdminApi {
 
     try {
       final rawData = _response.data;
-      _responseData = rawData == null
-          ? null
-          : deserialize<ContactSubmit201Response, ContactSubmit201Response>(
-              rawData,
-              'ContactSubmit201Response',
-              growable: true,
-            );
+_responseData = rawData == null ? null : deserialize<ContactSubmit201Response, ContactSubmit201Response>(rawData, 'ContactSubmit201Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -1455,11 +1426,11 @@ class AdminApi {
   }
 
   /// contactUpdate
-  ///
+  /// 
   ///
   /// Parameters:
-  /// * [id]
-  /// * [updateContact]
+  /// * [id] 
+  /// * [updateContact] 
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -1469,7 +1440,7 @@ class AdminApi {
   ///
   /// Returns a [Future] containing a [Response] with a [ContactSubmit201Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<ContactSubmit201Response>> contactUpdate({
+  Future<Response<ContactSubmit201Response>> contactUpdate({ 
     required String id,
     required UpdateContact updateContact,
     CancelToken? cancelToken,
@@ -1479,18 +1450,19 @@ class AdminApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/contacts/{id}'.replaceAll(
-      '{'
-      r'id'
-      '}',
-      id.toString(),
-    );
+    final _path = r'/contacts/{id}'.replaceAll('{' r'id' '}', id.toString());
     final _options = Options(
       method: r'PUT',
-      headers: <String, dynamic>{...?headers},
+      headers: <String, dynamic>{
+        ...?headers,
+      },
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
+          {
+            'type': 'http',
+            'scheme': 'bearer',
+            'name': 'bearer_auth',
+          },
         ],
         ...?extra,
       },
@@ -1501,10 +1473,13 @@ class AdminApi {
     dynamic _bodyData;
 
     try {
-      _bodyData = jsonEncode(updateContact);
-    } catch (error, stackTrace) {
+        _bodyData=jsonEncode(updateContact);
+    } catch(error, stackTrace) {
       throw DioException(
-        requestOptions: _options.compose(_dio.options, _path),
+         requestOptions: _options.compose(
+          _dio.options,
+          _path,
+        ),
         type: DioExceptionType.unknown,
         error: error,
         stackTrace: stackTrace,
@@ -1524,13 +1499,7 @@ class AdminApi {
 
     try {
       final rawData = _response.data;
-      _responseData = rawData == null
-          ? null
-          : deserialize<ContactSubmit201Response, ContactSubmit201Response>(
-              rawData,
-              'ContactSubmit201Response',
-              growable: true,
-            );
+_responseData = rawData == null ? null : deserialize<ContactSubmit201Response, ContactSubmit201Response>(rawData, 'ContactSubmit201Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -1554,10 +1523,10 @@ class AdminApi {
   }
 
   /// driverActivate
-  ///
+  /// 
   ///
   /// Parameters:
-  /// * [id]
+  /// * [id] 
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -1567,7 +1536,7 @@ class AdminApi {
   ///
   /// Returns a [Future] containing a [Response] with a [DriverGetMine200ResponseBody] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<DriverGetMine200ResponseBody>> driverActivate({
+  Future<Response<DriverGetMine200ResponseBody>> driverActivate({ 
     required String id,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -1576,18 +1545,19 @@ class AdminApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/drivers/{id}/activate'.replaceAll(
-      '{'
-      r'id'
-      '}',
-      id.toString(),
-    );
+    final _path = r'/drivers/{id}/activate'.replaceAll('{' r'id' '}', id.toString());
     final _options = Options(
       method: r'POST',
-      headers: <String, dynamic>{...?headers},
+      headers: <String, dynamic>{
+        ...?headers,
+      },
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
+          {
+            'type': 'http',
+            'scheme': 'bearer',
+            'name': 'bearer_auth',
+          },
         ],
         ...?extra,
       },
@@ -1606,12 +1576,7 @@ class AdminApi {
 
     try {
       final rawData = _response.data;
-      _responseData = rawData == null
-          ? null
-          : deserialize<
-              DriverGetMine200ResponseBody,
-              DriverGetMine200ResponseBody
-            >(rawData, 'DriverGetMine200ResponseBody', growable: true);
+_responseData = rawData == null ? null : deserialize<DriverGetMine200ResponseBody, DriverGetMine200ResponseBody>(rawData, 'DriverGetMine200ResponseBody', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -1635,10 +1600,10 @@ class AdminApi {
   }
 
   /// driverApprove
-  ///
+  /// 
   ///
   /// Parameters:
-  /// * [id]
+  /// * [id] 
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -1648,7 +1613,7 @@ class AdminApi {
   ///
   /// Returns a [Future] containing a [Response] with a [DriverGetMine200ResponseBody] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<DriverGetMine200ResponseBody>> driverApprove({
+  Future<Response<DriverGetMine200ResponseBody>> driverApprove({ 
     required String id,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -1657,18 +1622,19 @@ class AdminApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/drivers/{id}/approve'.replaceAll(
-      '{'
-      r'id'
-      '}',
-      id.toString(),
-    );
+    final _path = r'/drivers/{id}/approve'.replaceAll('{' r'id' '}', id.toString());
     final _options = Options(
       method: r'POST',
-      headers: <String, dynamic>{...?headers},
+      headers: <String, dynamic>{
+        ...?headers,
+      },
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
+          {
+            'type': 'http',
+            'scheme': 'bearer',
+            'name': 'bearer_auth',
+          },
         ],
         ...?extra,
       },
@@ -1687,12 +1653,7 @@ class AdminApi {
 
     try {
       final rawData = _response.data;
-      _responseData = rawData == null
-          ? null
-          : deserialize<
-              DriverGetMine200ResponseBody,
-              DriverGetMine200ResponseBody
-            >(rawData, 'DriverGetMine200ResponseBody', growable: true);
+_responseData = rawData == null ? null : deserialize<DriverGetMine200ResponseBody, DriverGetMine200ResponseBody>(rawData, 'DriverGetMine200ResponseBody', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -1716,11 +1677,11 @@ class AdminApi {
   }
 
   /// driverReject
-  ///
+  /// 
   ///
   /// Parameters:
-  /// * [id]
-  /// * [driverRejectRequest]
+  /// * [id] 
+  /// * [driverRejectRequest] 
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -1730,7 +1691,7 @@ class AdminApi {
   ///
   /// Returns a [Future] containing a [Response] with a [DriverGetMine200ResponseBody] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<DriverGetMine200ResponseBody>> driverReject({
+  Future<Response<DriverGetMine200ResponseBody>> driverReject({ 
     required String id,
     required DriverRejectRequest driverRejectRequest,
     CancelToken? cancelToken,
@@ -1740,18 +1701,19 @@ class AdminApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/drivers/{id}/reject'.replaceAll(
-      '{'
-      r'id'
-      '}',
-      id.toString(),
-    );
+    final _path = r'/drivers/{id}/reject'.replaceAll('{' r'id' '}', id.toString());
     final _options = Options(
       method: r'POST',
-      headers: <String, dynamic>{...?headers},
+      headers: <String, dynamic>{
+        ...?headers,
+      },
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
+          {
+            'type': 'http',
+            'scheme': 'bearer',
+            'name': 'bearer_auth',
+          },
         ],
         ...?extra,
       },
@@ -1762,10 +1724,13 @@ class AdminApi {
     dynamic _bodyData;
 
     try {
-      _bodyData = jsonEncode(driverRejectRequest);
-    } catch (error, stackTrace) {
+        _bodyData=jsonEncode(driverRejectRequest);
+    } catch(error, stackTrace) {
       throw DioException(
-        requestOptions: _options.compose(_dio.options, _path),
+         requestOptions: _options.compose(
+          _dio.options,
+          _path,
+        ),
         type: DioExceptionType.unknown,
         error: error,
         stackTrace: stackTrace,
@@ -1785,12 +1750,7 @@ class AdminApi {
 
     try {
       final rawData = _response.data;
-      _responseData = rawData == null
-          ? null
-          : deserialize<
-              DriverGetMine200ResponseBody,
-              DriverGetMine200ResponseBody
-            >(rawData, 'DriverGetMine200ResponseBody', growable: true);
+_responseData = rawData == null ? null : deserialize<DriverGetMine200ResponseBody, DriverGetMine200ResponseBody>(rawData, 'DriverGetMine200ResponseBody', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -1814,11 +1774,11 @@ class AdminApi {
   }
 
   /// driverSuspend
-  ///
+  /// 
   ///
   /// Parameters:
-  /// * [id]
-  /// * [driverSuspendRequest]
+  /// * [id] 
+  /// * [driverSuspendRequest] 
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -1828,7 +1788,7 @@ class AdminApi {
   ///
   /// Returns a [Future] containing a [Response] with a [DriverGetMine200ResponseBody] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<DriverGetMine200ResponseBody>> driverSuspend({
+  Future<Response<DriverGetMine200ResponseBody>> driverSuspend({ 
     required String id,
     required DriverSuspendRequest driverSuspendRequest,
     CancelToken? cancelToken,
@@ -1838,18 +1798,19 @@ class AdminApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/drivers/{id}/suspend'.replaceAll(
-      '{'
-      r'id'
-      '}',
-      id.toString(),
-    );
+    final _path = r'/drivers/{id}/suspend'.replaceAll('{' r'id' '}', id.toString());
     final _options = Options(
       method: r'POST',
-      headers: <String, dynamic>{...?headers},
+      headers: <String, dynamic>{
+        ...?headers,
+      },
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
+          {
+            'type': 'http',
+            'scheme': 'bearer',
+            'name': 'bearer_auth',
+          },
         ],
         ...?extra,
       },
@@ -1860,10 +1821,13 @@ class AdminApi {
     dynamic _bodyData;
 
     try {
-      _bodyData = jsonEncode(driverSuspendRequest);
-    } catch (error, stackTrace) {
+        _bodyData=jsonEncode(driverSuspendRequest);
+    } catch(error, stackTrace) {
       throw DioException(
-        requestOptions: _options.compose(_dio.options, _path),
+         requestOptions: _options.compose(
+          _dio.options,
+          _path,
+        ),
         type: DioExceptionType.unknown,
         error: error,
         stackTrace: stackTrace,
@@ -1883,12 +1847,7 @@ class AdminApi {
 
     try {
       final rawData = _response.data;
-      _responseData = rawData == null
-          ? null
-          : deserialize<
-              DriverGetMine200ResponseBody,
-              DriverGetMine200ResponseBody
-            >(rawData, 'DriverGetMine200ResponseBody', growable: true);
+_responseData = rawData == null ? null : deserialize<DriverGetMine200ResponseBody, DriverGetMine200ResponseBody>(rawData, 'DriverGetMine200ResponseBody', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -1912,10 +1871,10 @@ class AdminApi {
   }
 
   /// userAdminCreate
-  ///
+  /// 
   ///
   /// Parameters:
-  /// * [insertUser]
+  /// * [insertUser] 
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -1925,7 +1884,7 @@ class AdminApi {
   ///
   /// Returns a [Future] containing a [Response] with a [UserAdminCreate200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<UserAdminCreate200Response>> userAdminCreate({
+  Future<Response<UserAdminCreate200Response>> userAdminCreate({ 
     required InsertUser insertUser,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -1937,10 +1896,16 @@ class AdminApi {
     final _path = r'/users/admin';
     final _options = Options(
       method: r'POST',
-      headers: <String, dynamic>{...?headers},
+      headers: <String, dynamic>{
+        ...?headers,
+      },
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
+          {
+            'type': 'http',
+            'scheme': 'bearer',
+            'name': 'bearer_auth',
+          },
         ],
         ...?extra,
       },
@@ -1951,10 +1916,13 @@ class AdminApi {
     dynamic _bodyData;
 
     try {
-      _bodyData = jsonEncode(insertUser);
-    } catch (error, stackTrace) {
+        _bodyData=jsonEncode(insertUser);
+    } catch(error, stackTrace) {
       throw DioException(
-        requestOptions: _options.compose(_dio.options, _path),
+         requestOptions: _options.compose(
+          _dio.options,
+          _path,
+        ),
         type: DioExceptionType.unknown,
         error: error,
         stackTrace: stackTrace,
@@ -1974,13 +1942,7 @@ class AdminApi {
 
     try {
       final rawData = _response.data;
-      _responseData = rawData == null
-          ? null
-          : deserialize<UserAdminCreate200Response, UserAdminCreate200Response>(
-              rawData,
-              'UserAdminCreate200Response',
-              growable: true,
-            );
+_responseData = rawData == null ? null : deserialize<UserAdminCreate200Response, UserAdminCreate200Response>(rawData, 'UserAdminCreate200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -2004,12 +1966,12 @@ class AdminApi {
   }
 
   /// userAdminDashboardStats
-  ///
+  /// 
   ///
   /// Parameters:
-  /// * [startDate]
-  /// * [endDate]
-  /// * [period]
+  /// * [startDate] 
+  /// * [endDate] 
+  /// * [period] 
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -2019,7 +1981,7 @@ class AdminApi {
   ///
   /// Returns a [Future] containing a [Response] with a [UserAdminDashboardStats200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<UserAdminDashboardStats200Response>> userAdminDashboardStats({
+  Future<Response<UserAdminDashboardStats200Response>> userAdminDashboardStats({ 
     DateTime? startDate,
     DateTime? endDate,
     String? period,
@@ -2033,10 +1995,16 @@ class AdminApi {
     final _path = r'/users/admin/dashboard-stats';
     final _options = Options(
       method: r'GET',
-      headers: <String, dynamic>{...?headers},
+      headers: <String, dynamic>{
+        ...?headers,
+      },
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
+          {
+            'type': 'http',
+            'scheme': 'bearer',
+            'name': 'bearer_auth',
+          },
         ],
         ...?extra,
       },
@@ -2062,12 +2030,7 @@ class AdminApi {
 
     try {
       final rawData = _response.data;
-      _responseData = rawData == null
-          ? null
-          : deserialize<
-              UserAdminDashboardStats200Response,
-              UserAdminDashboardStats200Response
-            >(rawData, 'UserAdminDashboardStats200Response', growable: true);
+_responseData = rawData == null ? null : deserialize<UserAdminDashboardStats200Response, UserAdminDashboardStats200Response>(rawData, 'UserAdminDashboardStats200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -2091,10 +2054,10 @@ class AdminApi {
   }
 
   /// userAdminGet
-  ///
+  /// 
   ///
   /// Parameters:
-  /// * [id]
+  /// * [id] 
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -2104,7 +2067,7 @@ class AdminApi {
   ///
   /// Returns a [Future] containing a [Response] with a [UserAdminCreate200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<UserAdminCreate200Response>> userAdminGet({
+  Future<Response<UserAdminCreate200Response>> userAdminGet({ 
     required String id,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -2113,18 +2076,19 @@ class AdminApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/users/admin/{id}'.replaceAll(
-      '{'
-      r'id'
-      '}',
-      id.toString(),
-    );
+    final _path = r'/users/admin/{id}'.replaceAll('{' r'id' '}', id.toString());
     final _options = Options(
       method: r'GET',
-      headers: <String, dynamic>{...?headers},
+      headers: <String, dynamic>{
+        ...?headers,
+      },
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
+          {
+            'type': 'http',
+            'scheme': 'bearer',
+            'name': 'bearer_auth',
+          },
         ],
         ...?extra,
       },
@@ -2143,13 +2107,7 @@ class AdminApi {
 
     try {
       final rawData = _response.data;
-      _responseData = rawData == null
-          ? null
-          : deserialize<UserAdminCreate200Response, UserAdminCreate200Response>(
-              rawData,
-              'UserAdminCreate200Response',
-              growable: true,
-            );
+_responseData = rawData == null ? null : deserialize<UserAdminCreate200Response, UserAdminCreate200Response>(rawData, 'UserAdminCreate200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -2173,18 +2131,18 @@ class AdminApi {
   }
 
   /// userAdminList
-  ///
+  /// 
   ///
   /// Parameters:
-  /// * [cursor]
-  /// * [limit]
-  /// * [direction]
-  /// * [page]
-  /// * [query]
-  /// * [sortBy]
-  /// * [order]
-  /// * [mode]
-  /// * [filters]
+  /// * [cursor] 
+  /// * [limit] 
+  /// * [direction] 
+  /// * [page] 
+  /// * [query] 
+  /// * [sortBy] 
+  /// * [order] 
+  /// * [mode] 
+  /// * [filters] 
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -2194,7 +2152,7 @@ class AdminApi {
   ///
   /// Returns a [Future] containing a [Response] with a [UserAdminList200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<UserAdminList200Response>> userAdminList({
+  Future<Response<UserAdminList200Response>> userAdminList({ 
     String? cursor,
     Object? limit,
     String? direction,
@@ -2214,10 +2172,16 @@ class AdminApi {
     final _path = r'/users/admin';
     final _options = Options(
       method: r'GET',
-      headers: <String, dynamic>{...?headers},
+      headers: <String, dynamic>{
+        ...?headers,
+      },
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
+          {
+            'type': 'http',
+            'scheme': 'bearer',
+            'name': 'bearer_auth',
+          },
         ],
         ...?extra,
       },
@@ -2249,13 +2213,7 @@ class AdminApi {
 
     try {
       final rawData = _response.data;
-      _responseData = rawData == null
-          ? null
-          : deserialize<UserAdminList200Response, UserAdminList200Response>(
-              rawData,
-              'UserAdminList200Response',
-              growable: true,
-            );
+_responseData = rawData == null ? null : deserialize<UserAdminList200Response, UserAdminList200Response>(rawData, 'UserAdminList200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -2279,10 +2237,10 @@ class AdminApi {
   }
 
   /// userAdminRemove
-  ///
+  /// 
   ///
   /// Parameters:
-  /// * [id]
+  /// * [id] 
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -2292,7 +2250,7 @@ class AdminApi {
   ///
   /// Returns a [Future] containing a [Response] with a [BadgeRemove200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<BadgeRemove200Response>> userAdminRemove({
+  Future<Response<BadgeRemove200Response>> userAdminRemove({ 
     required String id,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -2301,18 +2259,19 @@ class AdminApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/users/admin/{id}'.replaceAll(
-      '{'
-      r'id'
-      '}',
-      id.toString(),
-    );
+    final _path = r'/users/admin/{id}'.replaceAll('{' r'id' '}', id.toString());
     final _options = Options(
       method: r'DELETE',
-      headers: <String, dynamic>{...?headers},
+      headers: <String, dynamic>{
+        ...?headers,
+      },
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
+          {
+            'type': 'http',
+            'scheme': 'bearer',
+            'name': 'bearer_auth',
+          },
         ],
         ...?extra,
       },
@@ -2331,13 +2290,7 @@ class AdminApi {
 
     try {
       final rawData = _response.data;
-      _responseData = rawData == null
-          ? null
-          : deserialize<BadgeRemove200Response, BadgeRemove200Response>(
-              rawData,
-              'BadgeRemove200Response',
-              growable: true,
-            );
+_responseData = rawData == null ? null : deserialize<BadgeRemove200Response, BadgeRemove200Response>(rawData, 'BadgeRemove200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -2361,11 +2314,11 @@ class AdminApi {
   }
 
   /// userAdminUpdate
-  ///
+  /// 
   ///
   /// Parameters:
-  /// * [id]
-  /// * [adminUpdateUser]
+  /// * [id] 
+  /// * [adminUpdateUser] 
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -2375,7 +2328,7 @@ class AdminApi {
   ///
   /// Returns a [Future] containing a [Response] with a [UserAdminCreate200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<UserAdminCreate200Response>> userAdminUpdate({
+  Future<Response<UserAdminCreate200Response>> userAdminUpdate({ 
     required String id,
     required AdminUpdateUser adminUpdateUser,
     CancelToken? cancelToken,
@@ -2385,18 +2338,19 @@ class AdminApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/users/admin/{id}'.replaceAll(
-      '{'
-      r'id'
-      '}',
-      id.toString(),
-    );
+    final _path = r'/users/admin/{id}'.replaceAll('{' r'id' '}', id.toString());
     final _options = Options(
       method: r'PUT',
-      headers: <String, dynamic>{...?headers},
+      headers: <String, dynamic>{
+        ...?headers,
+      },
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
+          {
+            'type': 'http',
+            'scheme': 'bearer',
+            'name': 'bearer_auth',
+          },
         ],
         ...?extra,
       },
@@ -2407,10 +2361,13 @@ class AdminApi {
     dynamic _bodyData;
 
     try {
-      _bodyData = jsonEncode(adminUpdateUser);
-    } catch (error, stackTrace) {
+        _bodyData=jsonEncode(adminUpdateUser);
+    } catch(error, stackTrace) {
       throw DioException(
-        requestOptions: _options.compose(_dio.options, _path),
+         requestOptions: _options.compose(
+          _dio.options,
+          _path,
+        ),
         type: DioExceptionType.unknown,
         error: error,
         stackTrace: stackTrace,
@@ -2430,13 +2387,7 @@ class AdminApi {
 
     try {
       final rawData = _response.data;
-      _responseData = rawData == null
-          ? null
-          : deserialize<UserAdminCreate200Response, UserAdminCreate200Response>(
-              rawData,
-              'UserAdminCreate200Response',
-              growable: true,
-            );
+_responseData = rawData == null ? null : deserialize<UserAdminCreate200Response, UserAdminCreate200Response>(rawData, 'UserAdminCreate200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -2458,4 +2409,5 @@ class AdminApi {
       extra: _response.extra,
     );
   }
+
 }

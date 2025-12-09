@@ -875,7 +875,3 @@ lib/src/model/wallet_monthly_summary_response.dart
 lib/src/model/wallet_top_up200_response.dart
 lib/src/model/withdraw_request.dart
 pubspec.yaml
-test/order_place_scheduled_order200_response_test.dart
-test/place_scheduled_order_response_test.dart
-test/place_scheduled_order_test.dart
-test/update_scheduled_order_test.dart

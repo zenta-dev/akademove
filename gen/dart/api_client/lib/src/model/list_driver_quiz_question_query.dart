@@ -22,76 +22,64 @@ part 'list_driver_quiz_question_query.g.dart';
 class ListDriverQuizQuestionQuery {
   /// Returns a new [ListDriverQuizQuestionQuery] instance.
   const ListDriverQuizQuestionQuery({
-    this.cursor,
-    this.limit,
-    this.direction,
-    this.page,
-    this.query,
-    this.sortBy,
-    this.order = PaginationOrder.desc,
-    this.mode = PaginationMode.offset,
-    this.category,
-    this.type,
-    this.isActive,
+     this.cursor,
+     this.limit,
+     this.direction,
+     this.page,
+     this.query,
+     this.sortBy,
+     this.order = PaginationOrder.desc,
+     this.mode = PaginationMode.offset,
+     this.category,
+     this.type,
+     this.isActive,
   });
   @JsonKey(name: r'cursor', required: false, includeIfNull: false)
   final String? cursor;
-
+  
   @JsonKey(name: r'limit', required: false, includeIfNull: false)
   final Object? limit;
-
+  
   @JsonKey(name: r'direction', required: false, includeIfNull: false)
   final ListDriverQuizQuestionQueryDirectionEnum? direction;
-
+  
   @JsonKey(name: r'page', required: false, includeIfNull: false)
   final Object? page;
-
+  
   @JsonKey(name: r'query', required: false, includeIfNull: false)
   final String? query;
-
+  
   @JsonKey(name: r'sortBy', required: false, includeIfNull: false)
   final ListDriverQuizQuestionQuerySortByEnum? sortBy;
-
-  @JsonKey(
-    defaultValue: PaginationOrder.desc,
-    name: r'order',
-    required: false,
-    includeIfNull: false,
-  )
+  
+  @JsonKey(defaultValue: PaginationOrder.desc,name: r'order', required: false, includeIfNull: false)
   final PaginationOrder? order;
-
-  @JsonKey(
-    defaultValue: PaginationMode.offset,
-    name: r'mode',
-    required: false,
-    includeIfNull: false,
-  )
+  
+  @JsonKey(defaultValue: PaginationMode.offset,name: r'mode', required: false, includeIfNull: false)
   final PaginationMode? mode;
-
+  
   @JsonKey(name: r'category', required: false, includeIfNull: false)
   final DriverQuizQuestionCategory? category;
-
+  
   @JsonKey(name: r'type', required: false, includeIfNull: false)
   final DriverQuizQuestionType? type;
-
+  
   @JsonKey(name: r'isActive', required: false, includeIfNull: false)
   final bool? isActive;
-
+  
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is ListDriverQuizQuestionQuery &&
-          other.cursor == cursor &&
-          other.limit == limit &&
-          other.direction == direction &&
-          other.page == page &&
-          other.query == query &&
-          other.sortBy == sortBy &&
-          other.order == order &&
-          other.mode == mode &&
-          other.category == category &&
-          other.type == type &&
-          other.isActive == isActive;
+  bool operator ==(Object other) => identical(this, other) || other is ListDriverQuizQuestionQuery &&
+    other.cursor == cursor &&
+    other.limit == limit &&
+    other.direction == direction &&
+    other.page == page &&
+    other.query == query &&
+    other.sortBy == sortBy &&
+    other.order == order &&
+    other.mode == mode &&
+    other.category == category &&
+    other.type == type &&
+    other.isActive == isActive;
 
   @override
   int get hashCode =>
@@ -107,8 +95,7 @@ class ListDriverQuizQuestionQuery {
       type.hashCode +
       isActive.hashCode;
 
-  factory ListDriverQuizQuestionQuery.fromJson(Map<String, dynamic> json) =>
-      _$ListDriverQuizQuestionQueryFromJson(json);
+  factory ListDriverQuizQuestionQuery.fromJson(Map<String, dynamic> json) => _$ListDriverQuizQuestionQueryFromJson(json);
 
   Map<String, dynamic> toJson() => _$ListDriverQuizQuestionQueryToJson(this);
 
@@ -116,6 +103,7 @@ class ListDriverQuizQuestionQuery {
   String toString() {
     return toJson().toString();
   }
+
 }
 
 enum ListDriverQuizQuestionQueryDirectionEnum {
@@ -123,11 +111,11 @@ enum ListDriverQuizQuestionQueryDirectionEnum {
   next(r'next'),
   @JsonValue(r'prev')
   prev(r'prev');
-
+  
   const ListDriverQuizQuestionQueryDirectionEnum(this.value);
-
+  
   final String value;
-
+  
   @override
   String toString() => value;
 }
@@ -371,11 +359,12 @@ enum ListDriverQuizQuestionQuerySortByEnum {
   balance(r'balance'),
   @JsonValue(r'currency')
   currency(r'currency');
-
+  
   const ListDriverQuizQuestionQuerySortByEnum(this.value);
-
+  
   final String value;
-
+  
   @override
   String toString() => value;
 }
+

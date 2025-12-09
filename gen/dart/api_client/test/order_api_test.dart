@@ -21,6 +21,11 @@ void main() {
       // TODO
     });
 
+    //Future<MerchantOrderAccept200Response> orderCancelScheduledOrder(String id, OrderCancelRequest orderCancelRequest) async
+    test('test orderCancelScheduledOrder', () async {
+      // TODO
+    });
+
     //Future<OrderEstimate200Response> orderEstimate(num dropoffLocationX, num dropoffLocationY, num pickupLocationX, num pickupLocationY, OrderType type, { String notePickup, String noteDropoff, String noteInstructions, List<OrderItem> items, UserGender gender, String couponCode, List<num> discountIds, num weight }) async
     test('test orderEstimate', () async {
       // TODO
@@ -41,8 +46,18 @@ void main() {
       // TODO
     });
 
+    //Future<OrderList200Response> orderListScheduledOrders({ String cursor, Object limit, String direction, Object page, String query, String sortBy, PaginationOrder order, PaginationMode mode, Object statuses, Object type, DateTime startDate, DateTime endDate }) async
+    test('test orderListScheduledOrders', () async {
+      // TODO
+    });
+
     //Future<OrderPlaceOrder200Response> orderPlaceOrder(PlaceOrder placeOrder) async
     test('test orderPlaceOrder', () async {
+      // TODO
+    });
+
+    //Future<OrderPlaceScheduledOrder200Response> orderPlaceScheduledOrder(PlaceScheduledOrder placeScheduledOrder) async
+    test('test orderPlaceScheduledOrder', () async {
       // TODO
     });
 
@@ -53,6 +68,11 @@ void main() {
 
     //Future<MerchantOrderAccept200Response> orderUpdate(String id, UpdateOrder updateOrder) async
     test('test orderUpdate', () async {
+      // TODO
+    });
+
+    //Future<MerchantOrderAccept200Response> orderUpdateScheduledOrder(String id, UpdateScheduledOrder updateScheduledOrder) async
+    test('test orderUpdateScheduledOrder', () async {
       // TODO
     });
 
