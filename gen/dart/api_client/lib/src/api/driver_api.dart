@@ -10,7 +10,7 @@ import 'package:api_client/src/deserialize.dart';
 import 'package:dio/dio.dart';
 
 import 'package:api_client/src/model/badge_remove200_response.dart';
-import 'package:api_client/src/model/coordinate.dart';
+import 'package:api_client/src/model/coordinate_with_meta.dart';
 import 'package:api_client/src/model/driver_get_analytics200_response.dart';
 import 'package:api_client/src/model/driver_get_mine200_response.dart';
 import 'package:api_client/src/model/driver_get_mine200_response_body.dart';
@@ -1446,13 +1446,14 @@ class DriverApi {
   /// * [id]
   /// * [studentId]
   /// * [licensePlate]
+  /// * [bankProvider]
+  /// * [bankNumber]
+  /// * [isTakingOrder]
+  /// * [currentLocationX] - Longitude (X-axis, East-West)
+  /// * [currentLocationY] - Latitude (Y-axis, North-South)
   /// * [studentCard]
   /// * [driverLicense]
   /// * [vehicleCertificate]
-  /// * [bankProvider]
-  /// * [bankNumber]
-  /// * [currentLocationX] - Longitude (X-axis, East-West)
-  /// * [currentLocationY] - Latitude (Y-axis, North-South)
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -1466,13 +1467,14 @@ class DriverApi {
     required String id,
     num? studentId,
     String? licensePlate,
+    String? bankProvider,
+    num? bankNumber,
+    bool? isTakingOrder,
+    num? currentLocationX,
+    num? currentLocationY,
     MultipartFile? studentCard,
     MultipartFile? driverLicense,
     MultipartFile? vehicleCertificate,
-    String? bankProvider,
-    num? bankNumber,
-    num? currentLocationX,
-    num? currentLocationY,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -1505,14 +1507,15 @@ class DriverApi {
       _bodyData = FormData.fromMap(<String, dynamic>{
         if (studentId != null) r'studentId': studentId,
         if (licensePlate != null) r'licensePlate': licensePlate,
+        if (bankProvider != null) r'bank_provider': bankProvider,
+        if (bankNumber != null) r'bank_number': bankNumber,
+        if (isTakingOrder != null) r'isTakingOrder': isTakingOrder,
+        if (currentLocationX != null) r'currentLocation_x': currentLocationX,
+        if (currentLocationY != null) r'currentLocation_y': currentLocationY,
         if (studentCard != null) r'studentCard': studentCard,
         if (driverLicense != null) r'driverLicense': driverLicense,
         if (vehicleCertificate != null)
           r'vehicleCertificate': vehicleCertificate,
-        if (bankProvider != null) r'bank_provider': bankProvider,
-        if (bankNumber != null) r'bank_number': bankNumber,
-        if (currentLocationX != null) r'currentLocation_x': currentLocationX,
-        if (currentLocationY != null) r'currentLocation_y': currentLocationY,
       });
     } catch (error, stackTrace) {
       throw DioException(
@@ -1669,7 +1672,7 @@ class DriverApi {
   ///
   /// Parameters:
   /// * [id]
-  /// * [coordinate]
+  /// * [coordinateWithMeta]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -1681,7 +1684,7 @@ class DriverApi {
   /// Throws [DioException] if API call or serialization fails
   Future<Response<DriverGetMine200ResponseBody>> driverUpdateLocation({
     required String id,
-    required Coordinate coordinate,
+    required CoordinateWithMeta coordinateWithMeta,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -1711,7 +1714,7 @@ class DriverApi {
     dynamic _bodyData;
 
     try {
-      _bodyData = jsonEncode(coordinate);
+      _bodyData = jsonEncode(coordinateWithMeta);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _options.compose(_dio.options, _path),

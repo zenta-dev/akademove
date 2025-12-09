@@ -714,7 +714,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **driverUpdate**
-> DriverGetMine200ResponseBody driverUpdate(id, studentId, licensePlate, studentCard, driverLicense, vehicleCertificate, bankProvider, bankNumber, currentLocationX, currentLocationY)
+> DriverGetMine200ResponseBody driverUpdate(id, studentId, licensePlate, bankProvider, bankNumber, isTakingOrder, currentLocationX, currentLocationY, studentCard, driverLicense, vehicleCertificate)
 
 
 
@@ -726,16 +726,17 @@ final api = ApiClient().getDriverApi();
 final String id = id_example; // String | 
 final num studentId = 8.14; // num | 
 final String licensePlate = licensePlate_example; // String | 
+final String bankProvider = bankProvider_example; // String | 
+final num bankNumber = 8.14; // num | 
+final bool isTakingOrder = true; // bool | 
+final num currentLocationX = 8.14; // num | Longitude (X-axis, East-West)
+final num currentLocationY = 8.14; // num | Latitude (Y-axis, North-South)
 final MultipartFile studentCard = BINARY_DATA_HERE; // MultipartFile | 
 final MultipartFile driverLicense = BINARY_DATA_HERE; // MultipartFile | 
 final MultipartFile vehicleCertificate = BINARY_DATA_HERE; // MultipartFile | 
-final String bankProvider = bankProvider_example; // String | 
-final num bankNumber = 8.14; // num | 
-final num currentLocationX = 8.14; // num | Longitude (X-axis, East-West)
-final num currentLocationY = 8.14; // num | Latitude (Y-axis, North-South)
 
 try {
-    final response = api.driverUpdate(id, studentId, licensePlate, studentCard, driverLicense, vehicleCertificate, bankProvider, bankNumber, currentLocationX, currentLocationY);
+    final response = api.driverUpdate(id, studentId, licensePlate, bankProvider, bankNumber, isTakingOrder, currentLocationX, currentLocationY, studentCard, driverLicense, vehicleCertificate);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling DriverApi->driverUpdate: $e\n');
@@ -749,13 +750,14 @@ Name | Type | Description  | Notes
  **id** | **String**|  | 
  **studentId** | **num**|  | [optional] 
  **licensePlate** | **String**|  | [optional] 
+ **bankProvider** | **String**|  | [optional] 
+ **bankNumber** | **num**|  | [optional] 
+ **isTakingOrder** | **bool**|  | [optional] 
+ **currentLocationX** | **num**| Longitude (X-axis, East-West) | [optional] 
+ **currentLocationY** | **num**| Latitude (Y-axis, North-South) | [optional] 
  **studentCard** | **MultipartFile**|  | [optional] 
  **driverLicense** | **MultipartFile**|  | [optional] 
  **vehicleCertificate** | **MultipartFile**|  | [optional] 
- **bankProvider** | **String**|  | [optional] 
- **bankNumber** | **num**|  | [optional] 
- **currentLocationX** | **num**| Longitude (X-axis, East-West) | [optional] 
- **currentLocationY** | **num**| Latitude (Y-axis, North-South) | [optional] 
 
 ### Return type
 
@@ -816,7 +818,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **driverUpdateLocation**
-> DriverGetMine200ResponseBody driverUpdateLocation(id, coordinate)
+> DriverGetMine200ResponseBody driverUpdateLocation(id, coordinateWithMeta)
 
 
 
@@ -826,10 +828,10 @@ import 'package:api_client/api.dart';
 
 final api = ApiClient().getDriverApi();
 final String id = id_example; // String | 
-final Coordinate coordinate = ; // Coordinate | 
+final CoordinateWithMeta coordinateWithMeta = ; // CoordinateWithMeta | 
 
 try {
-    final response = api.driverUpdateLocation(id, coordinate);
+    final response = api.driverUpdateLocation(id, coordinateWithMeta);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling DriverApi->driverUpdateLocation: $e\n');
@@ -841,7 +843,7 @@ try {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **id** | **String**|  | 
- **coordinate** | [**Coordinate**](Coordinate.md)|  | 
+ **coordinateWithMeta** | [**CoordinateWithMeta**](CoordinateWithMeta.md)|  | 
 
 ### Return type
 

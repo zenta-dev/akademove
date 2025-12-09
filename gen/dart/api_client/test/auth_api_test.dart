@@ -46,7 +46,7 @@ void main() {
       // TODO
     });
 
-    //Future<AuthSignUpUser201Response> authSignUpDriver(String name, String email, String phoneCountryCode, int phoneNumber, String password, String confirmPassword, MultipartFile photo, num detailStudentId, String detailLicensePlate, MultipartFile detailStudentCard, MultipartFile detailDriverLicense, MultipartFile detailVehicleCertificate, String detailBankProvider, num detailBankNumber, { String gender }) async
+    //Future<AuthSignUpUser201Response> authSignUpDriver(String name, String email, String phoneCountryCode, int phoneNumber, String password, String confirmPassword, MultipartFile photo, num detailStudentId, String detailLicensePlate, String detailBankProvider, num detailBankNumber, MultipartFile detailStudentCard, MultipartFile detailDriverLicense, MultipartFile detailVehicleCertificate, { String gender }) async
     test('test authSignUpDriver', () async {
       // TODO
     });

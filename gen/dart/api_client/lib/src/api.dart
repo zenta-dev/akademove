@@ -17,6 +17,7 @@ import 'package:api_client/src/api/driver_api.dart';
 import 'package:api_client/src/api/driver_quiz_answer_api.dart';
 import 'package:api_client/src/api/driver_quiz_question_api.dart';
 import 'package:api_client/src/api/emergency_api.dart';
+import 'package:api_client/src/api/fraud_api.dart';
 import 'package:api_client/src/api/leaderboard_api.dart';
 import 'package:api_client/src/api/merchant_api.dart';
 import 'package:api_client/src/api/notification_api.dart';
@@ -155,6 +156,12 @@ class ApiClient {
   /// by doing that all interceptors will not be executed
   EmergencyApi getEmergencyApi() {
     return EmergencyApi(dio);
+  }
+
+  /// Get FraudApi instance, base route and serializer can be overridden by a given but be careful,
+  /// by doing that all interceptors will not be executed
+  FraudApi getFraudApi() {
+    return FraudApi(dio);
   }
 
   /// Get LeaderboardApi instance, base route and serializer can be overridden by a given but be careful,

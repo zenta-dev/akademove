@@ -434,7 +434,7 @@ final String direction = direction_example; // String |
 final Object page = ; // Object | 
 final String query = query_example; // String | 
 final String sortBy = sortBy_example; // String | 
-final String order = order_example; // String | 
+final PaginationOrder order = ; // PaginationOrder | 
 final PaginationMode mode = ; // PaginationMode | 
 final Object categories = ; // Object | 
 final Object isActive = ; // Object | 
@@ -462,7 +462,7 @@ Name | Type | Description  | Notes
  **page** | [**Object**](.md)|  | [optional] 
  **query** | **String**|  | [optional] 
  **sortBy** | **String**|  | [optional] 
- **order** | **String**|  | [optional] 
+ **order** | [**PaginationOrder**](.md)|  | [optional] [default to desc]
  **mode** | [**PaginationMode**](.md)|  | [optional] [default to offset]
  **categories** | [**Object**](.md)|  | [optional] 
  **isActive** | [**Object**](.md)|  | [optional] 

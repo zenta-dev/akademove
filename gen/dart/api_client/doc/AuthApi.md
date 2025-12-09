@@ -340,7 +340,7 @@ This endpoint does not need any parameter.
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **authSignUpDriver**
-> AuthSignUpUser201Response authSignUpDriver(name, email, phoneCountryCode, phoneNumber, password, confirmPassword, photo, detailStudentId, detailLicensePlate, detailStudentCard, detailDriverLicense, detailVehicleCertificate, detailBankProvider, detailBankNumber, gender)
+> AuthSignUpUser201Response authSignUpDriver(name, email, phoneCountryCode, phoneNumber, password, confirmPassword, photo, detailStudentId, detailLicensePlate, detailBankProvider, detailBankNumber, detailStudentCard, detailDriverLicense, detailVehicleCertificate, gender)
 
 
 
@@ -358,15 +358,15 @@ final String confirmPassword = confirmPassword_example; // String |
 final MultipartFile photo = BINARY_DATA_HERE; // MultipartFile | 
 final num detailStudentId = 8.14; // num | 
 final String detailLicensePlate = detailLicensePlate_example; // String | 
+final String detailBankProvider = detailBankProvider_example; // String | 
+final num detailBankNumber = 8.14; // num | 
 final MultipartFile detailStudentCard = BINARY_DATA_HERE; // MultipartFile | 
 final MultipartFile detailDriverLicense = BINARY_DATA_HERE; // MultipartFile | 
 final MultipartFile detailVehicleCertificate = BINARY_DATA_HERE; // MultipartFile | 
-final String detailBankProvider = detailBankProvider_example; // String | 
-final num detailBankNumber = 8.14; // num | 
 final String gender = gender_example; // String | 
 
 try {
-    final response = api.authSignUpDriver(name, email, phoneCountryCode, phoneNumber, password, confirmPassword, photo, detailStudentId, detailLicensePlate, detailStudentCard, detailDriverLicense, detailVehicleCertificate, detailBankProvider, detailBankNumber, gender);
+    final response = api.authSignUpDriver(name, email, phoneCountryCode, phoneNumber, password, confirmPassword, photo, detailStudentId, detailLicensePlate, detailBankProvider, detailBankNumber, detailStudentCard, detailDriverLicense, detailVehicleCertificate, gender);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling AuthApi->authSignUpDriver: $e\n');
@@ -386,11 +386,11 @@ Name | Type | Description  | Notes
  **photo** | **MultipartFile**|  | 
  **detailStudentId** | **num**|  | 
  **detailLicensePlate** | **String**|  | 
+ **detailBankProvider** | **String**|  | 
+ **detailBankNumber** | **num**|  | 
  **detailStudentCard** | **MultipartFile**|  | 
  **detailDriverLicense** | **MultipartFile**|  | 
  **detailVehicleCertificate** | **MultipartFile**|  | 
- **detailBankProvider** | **String**|  | 
- **detailBankNumber** | **num**|  | 
  **gender** | **String**|  | [optional] 
 
 ### Return type

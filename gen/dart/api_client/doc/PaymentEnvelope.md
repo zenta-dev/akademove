@@ -9,7 +9,7 @@ import 'package:api_client/api.dart';
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **e** | [**PaymentEnvelopeEvent**](PaymentEnvelopeEvent.md) |  | [optional] 
-**a** | **String** |  | [optional] 
+**a** | [**PaymentEnvelopeAction**](PaymentEnvelopeAction.md) |  | [optional] 
 **tg** | [**EnvelopeTarget**](EnvelopeTarget.md) |  | [optional] 
 **f** | [**EnvelopeSender**](EnvelopeSender.md) |  | 
 **t** | [**EnvelopeSender**](EnvelopeSender.md) |  | 

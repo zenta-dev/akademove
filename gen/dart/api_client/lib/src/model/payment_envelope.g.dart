@@ -9,7 +9,7 @@ part of 'payment_envelope.dart';
 abstract class _$PaymentEnvelopeCWProxy {
   PaymentEnvelope e(PaymentEnvelopeEvent? e);
 
-  PaymentEnvelope a(String? a);
+  PaymentEnvelope a(PaymentEnvelopeAction? a);
 
   PaymentEnvelope tg(EnvelopeTarget? tg);
 
@@ -28,7 +28,7 @@ abstract class _$PaymentEnvelopeCWProxy {
   /// ```
   PaymentEnvelope call({
     PaymentEnvelopeEvent? e,
-    String? a,
+    PaymentEnvelopeAction? a,
     EnvelopeTarget? tg,
     EnvelopeSender f,
     EnvelopeSender t,
@@ -47,7 +47,7 @@ class _$PaymentEnvelopeCWProxyImpl implements _$PaymentEnvelopeCWProxy {
   PaymentEnvelope e(PaymentEnvelopeEvent? e) => call(e: e);
 
   @override
-  PaymentEnvelope a(String? a) => call(a: a);
+  PaymentEnvelope a(PaymentEnvelopeAction? a) => call(a: a);
 
   @override
   PaymentEnvelope tg(EnvelopeTarget? tg) => call(tg: tg);
@@ -85,7 +85,7 @@ class _$PaymentEnvelopeCWProxyImpl implements _$PaymentEnvelopeCWProxy {
       a: a == const $CopyWithPlaceholder()
           ? _value.a
           // ignore: cast_nullable_to_non_nullable
-          : a as String?,
+          : a as PaymentEnvelopeAction?,
       tg: tg == const $CopyWithPlaceholder()
           ? _value.tg
           // ignore: cast_nullable_to_non_nullable
@@ -125,7 +125,10 @@ PaymentEnvelope _$PaymentEnvelopeFromJson(Map<String, dynamic> json) =>
           'e',
           (v) => $enumDecodeNullable(_$PaymentEnvelopeEventEnumMap, v),
         ),
-        a: $checkedConvert('a', (v) => v as String?),
+        a: $checkedConvert(
+          'a',
+          (v) => $enumDecodeNullable(_$PaymentEnvelopeActionEnumMap, v),
+        ),
         tg: $checkedConvert(
           'tg',
           (v) => $enumDecodeNullable(_$EnvelopeTargetEnumMap, v),
@@ -143,7 +146,7 @@ PaymentEnvelope _$PaymentEnvelopeFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$PaymentEnvelopeToJson(PaymentEnvelope instance) =>
     <String, dynamic>{
       'e': ?_$PaymentEnvelopeEventEnumMap[instance.e],
-      'a': ?instance.a,
+      'a': ?_$PaymentEnvelopeActionEnumMap[instance.a],
       'tg': ?_$EnvelopeTargetEnumMap[instance.tg],
       'f': _$EnvelopeSenderEnumMap[instance.f]!,
       't': _$EnvelopeSenderEnumMap[instance.t]!,
@@ -156,6 +159,8 @@ const _$PaymentEnvelopeEventEnumMap = {
   PaymentEnvelopeEvent.TOP_UP_FAILED: 'TOP_UP_FAILED',
   PaymentEnvelopeEvent.PAYMENT_FAILED: 'PAYMENT_FAILED',
 };
+
+const _$PaymentEnvelopeActionEnumMap = {PaymentEnvelopeAction.NONE: 'NONE'};
 
 const _$EnvelopeTargetEnumMap = {
   EnvelopeTarget.ADMIN: 'ADMIN',

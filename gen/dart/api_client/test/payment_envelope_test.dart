@@ -12,7 +12,7 @@ void main() {
       // TODO
     });
 
-    // String a
+    // PaymentEnvelopeAction a
     test('to test the property `a`', () async {
       // TODO
     });

@@ -724,11 +724,11 @@ class AuthApi {
   /// * [photo]
   /// * [detailStudentId]
   /// * [detailLicensePlate]
+  /// * [detailBankProvider]
+  /// * [detailBankNumber]
   /// * [detailStudentCard]
   /// * [detailDriverLicense]
   /// * [detailVehicleCertificate]
-  /// * [detailBankProvider]
-  /// * [detailBankNumber]
   /// * [gender]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
@@ -749,11 +749,11 @@ class AuthApi {
     required MultipartFile photo,
     required num detailStudentId,
     required String detailLicensePlate,
+    required String detailBankProvider,
+    required num detailBankNumber,
     required MultipartFile detailStudentCard,
     required MultipartFile detailDriverLicense,
     required MultipartFile detailVehicleCertificate,
-    required String detailBankProvider,
-    required num detailBankNumber,
     String? gender,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -790,11 +790,11 @@ class AuthApi {
         r'photo': photo,
         r'detail_studentId': detailStudentId,
         r'detail_licensePlate': detailLicensePlate,
+        r'detail_bank_provider': detailBankProvider,
+        r'detail_bank_number': detailBankNumber,
         r'detail_studentCard': detailStudentCard,
         r'detail_driverLicense': detailDriverLicense,
         r'detail_vehicleCertificate': detailVehicleCertificate,
-        r'detail_bank_provider': detailBankProvider,
-        r'detail_bank_number': detailBankNumber,
       });
     } catch (error, stackTrace) {
       throw DioException(

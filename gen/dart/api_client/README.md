@@ -172,6 +172,13 @@ Class | Method | HTTP request | Description
 [*EmergencyApi*](doc/EmergencyApi.md) | [**emergencyListByOrder**](doc/EmergencyApi.md#emergencylistbyorder) | **GET** /emergencies/order/{orderId} | 
 [*EmergencyApi*](doc/EmergencyApi.md) | [**emergencyTrigger**](doc/EmergencyApi.md#emergencytrigger) | **POST** /emergencies | 
 [*EmergencyApi*](doc/EmergencyApi.md) | [**emergencyUpdateStatus**](doc/EmergencyApi.md#emergencyupdatestatus) | **PATCH** /emergencies/{id}/status | 
+[*FraudApi*](doc/FraudApi.md) | [**fraudGetEvent**](doc/FraudApi.md#fraudgetevent) | **GET** /fraud/events/{id} | 
+[*FraudApi*](doc/FraudApi.md) | [**fraudGetStats**](doc/FraudApi.md#fraudgetstats) | **GET** /fraud/stats | 
+[*FraudApi*](doc/FraudApi.md) | [**fraudGetUserEvents**](doc/FraudApi.md#fraudgetuserevents) | **GET** /fraud/users/{userId}/events | 
+[*FraudApi*](doc/FraudApi.md) | [**fraudGetUserProfile**](doc/FraudApi.md#fraudgetuserprofile) | **GET** /fraud/users/{userId}/profile | 
+[*FraudApi*](doc/FraudApi.md) | [**fraudListEvents**](doc/FraudApi.md#fraudlistevents) | **GET** /fraud/events | 
+[*FraudApi*](doc/FraudApi.md) | [**fraudListHighRiskUsers**](doc/FraudApi.md#fraudlisthighriskusers) | **GET** /fraud/users/high-risk | 
+[*FraudApi*](doc/FraudApi.md) | [**fraudReviewEvent**](doc/FraudApi.md#fraudreviewevent) | **POST** /fraud/events/{id}/review | 
 [*LeaderboardApi*](doc/LeaderboardApi.md) | [**leaderboardGet**](doc/LeaderboardApi.md#leaderboardget) | **GET** /leaderboards/{id} | 
 [*LeaderboardApi*](doc/LeaderboardApi.md) | [**leaderboardList**](doc/LeaderboardApi.md#leaderboardlist) | **GET** /leaderboards | 
 [*MerchantApi*](doc/MerchantApi.md) | [**analyticsExportMerchantAnalytics**](doc/MerchantApi.md#analyticsexportmerchantanalytics) | **GET** /analytics/merchant/{merchantId}/export | 
@@ -331,6 +338,7 @@ Class | Method | HTTP request | Description
  - [ContactStatus](doc/ContactStatus.md)
  - [ContactSubmit201Response](doc/ContactSubmit201Response.md)
  - [Coordinate](doc/Coordinate.md)
+ - [CoordinateWithMeta](doc/CoordinateWithMeta.md)
  - [CountryCode](doc/CountryCode.md)
  - [Coupon](doc/Coupon.md)
  - [CouponCreate200Response](doc/CouponCreate200Response.md)
@@ -419,6 +427,25 @@ Class | Method | HTTP request | Description
  - [EnvelopeTarget](doc/EnvelopeTarget.md)
  - [EstimateOrder](doc/EstimateOrder.md)
  - [FoodPricingConfiguration](doc/FoodPricingConfiguration.md)
+ - [FraudConfig](doc/FraudConfig.md)
+ - [FraudEvent](doc/FraudEvent.md)
+ - [FraudEventDriver](doc/FraudEventDriver.md)
+ - [FraudEventHandledBy](doc/FraudEventHandledBy.md)
+ - [FraudEventListQuery](doc/FraudEventListQuery.md)
+ - [FraudEventType](doc/FraudEventType.md)
+ - [FraudEventUser](doc/FraudEventUser.md)
+ - [FraudGetEvent200Response](doc/FraudGetEvent200Response.md)
+ - [FraudGetStats200Response](doc/FraudGetStats200Response.md)
+ - [FraudGetUserProfile200Response](doc/FraudGetUserProfile200Response.md)
+ - [FraudListEvents200Response](doc/FraudListEvents200Response.md)
+ - [FraudListHighRiskUsers200Response](doc/FraudListHighRiskUsers200Response.md)
+ - [FraudSeverity](doc/FraudSeverity.md)
+ - [FraudSignal](doc/FraudSignal.md)
+ - [FraudStats](doc/FraudStats.md)
+ - [FraudStatsEventsBySeverity](doc/FraudStatsEventsBySeverity.md)
+ - [FraudStatsQuery](doc/FraudStatsQuery.md)
+ - [FraudStatsRecentTrendInner](doc/FraudStatsRecentTrendInner.md)
+ - [FraudStatus](doc/FraudStatus.md)
  - [GeneralRuleType](doc/GeneralRuleType.md)
  - [GeneralRules](doc/GeneralRules.md)
  - [GetSessionResponse](doc/GetSessionResponse.md)
@@ -429,6 +456,7 @@ Class | Method | HTTP request | Description
  - [InsertCoupon](doc/InsertCoupon.md)
  - [InsertDriverQuizQuestion](doc/InsertDriverQuizQuestion.md)
  - [InsertEmergency](doc/InsertEmergency.md)
+ - [InsertFraudEvent](doc/InsertFraudEvent.md)
  - [InsertLeaderboard](doc/InsertLeaderboard.md)
  - [InsertNewsletter](doc/InsertNewsletter.md)
  - [InsertOrderChatMessage](doc/InsertOrderChatMessage.md)
@@ -528,6 +556,7 @@ Class | Method | HTTP request | Description
  - [PayRequest](doc/PayRequest.md)
  - [Payment](doc/Payment.md)
  - [PaymentEnvelope](doc/PaymentEnvelope.md)
+ - [PaymentEnvelopeAction](doc/PaymentEnvelopeAction.md)
  - [PaymentEnvelopeEvent](doc/PaymentEnvelopeEvent.md)
  - [PaymentEnvelopePayload](doc/PaymentEnvelopePayload.md)
  - [PaymentKey](doc/PaymentKey.md)
@@ -557,6 +586,7 @@ Class | Method | HTTP request | Description
  - [ReviewCheckCanReview200Response](doc/ReviewCheckCanReview200Response.md)
  - [ReviewCheckCanReview200ResponseData](doc/ReviewCheckCanReview200ResponseData.md)
  - [ReviewCreate200Response](doc/ReviewCreate200Response.md)
+ - [ReviewFraudEvent](doc/ReviewFraudEvent.md)
  - [ReviewKeySchema](doc/ReviewKeySchema.md)
  - [ReviewList200Response](doc/ReviewList200Response.md)
  - [RidePricingConfiguration](doc/RidePricingConfiguration.md)
@@ -602,6 +632,7 @@ Class | Method | HTTP request | Description
  - [UpdateCoupon](doc/UpdateCoupon.md)
  - [UpdateDriverQuizQuestion](doc/UpdateDriverQuizQuestion.md)
  - [UpdateEmergency](doc/UpdateEmergency.md)
+ - [UpdateFraudEvent](doc/UpdateFraudEvent.md)
  - [UpdateLeaderboard](doc/UpdateLeaderboard.md)
  - [UpdateNewsletter](doc/UpdateNewsletter.md)
  - [UpdateOrder](doc/UpdateOrder.md)
@@ -621,6 +652,8 @@ Class | Method | HTTP request | Description
  - [UserAdminListFiltersParameter](doc/UserAdminListFiltersParameter.md)
  - [UserBadge](doc/UserBadge.md)
  - [UserBadgeMetadata](doc/UserBadgeMetadata.md)
+ - [UserFraudProfile](doc/UserFraudProfile.md)
+ - [UserFraudProfileUser](doc/UserFraudProfileUser.md)
  - [UserGender](doc/UserGender.md)
  - [UserKey](doc/UserKey.md)
  - [UserMeChangePasswordRequest](doc/UserMeChangePasswordRequest.md)

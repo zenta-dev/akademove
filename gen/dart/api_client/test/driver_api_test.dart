@@ -81,7 +81,7 @@ void main() {
       // TODO
     });
 
-    //Future<DriverGetMine200ResponseBody> driverUpdate(String id, { num studentId, String licensePlate, MultipartFile studentCard, MultipartFile driverLicense, MultipartFile vehicleCertificate, String bankProvider, num bankNumber, num currentLocationX, num currentLocationY }) async
+    //Future<DriverGetMine200ResponseBody> driverUpdate(String id, { num studentId, String licensePlate, String bankProvider, num bankNumber, bool isTakingOrder, num currentLocationX, num currentLocationY, MultipartFile studentCard, MultipartFile driverLicense, MultipartFile vehicleCertificate }) async
     test('test driverUpdate', () async {
       // TODO
     });
@@ -91,7 +91,7 @@ void main() {
       // TODO
     });
 
-    //Future<DriverGetMine200ResponseBody> driverUpdateLocation(String id, Coordinate coordinate) async
+    //Future<DriverGetMine200ResponseBody> driverUpdateLocation(String id, CoordinateWithMeta coordinateWithMeta) async
     test('test driverUpdateLocation', () async {
       // TODO
     });

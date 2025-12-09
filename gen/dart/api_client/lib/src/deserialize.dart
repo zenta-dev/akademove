@@ -60,6 +60,7 @@ import 'package:api_client/src/model/contact_list200_response_data.dart';
 import 'package:api_client/src/model/contact_respond_request.dart';
 import 'package:api_client/src/model/contact_submit201_response.dart';
 import 'package:api_client/src/model/coordinate.dart';
+import 'package:api_client/src/model/coordinate_with_meta.dart';
 import 'package:api_client/src/model/coupon.dart';
 import 'package:api_client/src/model/coupon_create200_response.dart';
 import 'package:api_client/src/model/coupon_get_eligible_coupons200_response.dart';
@@ -131,6 +132,22 @@ import 'package:api_client/src/model/emergency_trigger200_response.dart';
 import 'package:api_client/src/model/emergency_update_status_request.dart';
 import 'package:api_client/src/model/estimate_order.dart';
 import 'package:api_client/src/model/food_pricing_configuration.dart';
+import 'package:api_client/src/model/fraud_config.dart';
+import 'package:api_client/src/model/fraud_event.dart';
+import 'package:api_client/src/model/fraud_event_driver.dart';
+import 'package:api_client/src/model/fraud_event_handled_by.dart';
+import 'package:api_client/src/model/fraud_event_list_query.dart';
+import 'package:api_client/src/model/fraud_event_user.dart';
+import 'package:api_client/src/model/fraud_get_event200_response.dart';
+import 'package:api_client/src/model/fraud_get_stats200_response.dart';
+import 'package:api_client/src/model/fraud_get_user_profile200_response.dart';
+import 'package:api_client/src/model/fraud_list_events200_response.dart';
+import 'package:api_client/src/model/fraud_list_high_risk_users200_response.dart';
+import 'package:api_client/src/model/fraud_signal.dart';
+import 'package:api_client/src/model/fraud_stats.dart';
+import 'package:api_client/src/model/fraud_stats_events_by_severity.dart';
+import 'package:api_client/src/model/fraud_stats_query.dart';
+import 'package:api_client/src/model/fraud_stats_recent_trend_inner.dart';
 import 'package:api_client/src/model/general_rules.dart';
 import 'package:api_client/src/model/get_session_response.dart';
 import 'package:api_client/src/model/insert_account_deletion.dart';
@@ -140,6 +157,7 @@ import 'package:api_client/src/model/insert_contact.dart';
 import 'package:api_client/src/model/insert_coupon.dart';
 import 'package:api_client/src/model/insert_driver_quiz_question.dart';
 import 'package:api_client/src/model/insert_emergency.dart';
+import 'package:api_client/src/model/insert_fraud_event.dart';
 import 'package:api_client/src/model/insert_leaderboard.dart';
 import 'package:api_client/src/model/insert_newsletter.dart';
 import 'package:api_client/src/model/insert_order_chat_message.dart';
@@ -247,6 +265,7 @@ import 'package:api_client/src/model/review.dart';
 import 'package:api_client/src/model/review_check_can_review200_response.dart';
 import 'package:api_client/src/model/review_check_can_review200_response_data.dart';
 import 'package:api_client/src/model/review_create200_response.dart';
+import 'package:api_client/src/model/review_fraud_event.dart';
 import 'package:api_client/src/model/review_list200_response.dart';
 import 'package:api_client/src/model/ride_pricing_configuration.dart';
 import 'package:api_client/src/model/send_email_verification.dart';
@@ -281,6 +300,7 @@ import 'package:api_client/src/model/update_contact.dart';
 import 'package:api_client/src/model/update_coupon.dart';
 import 'package:api_client/src/model/update_driver_quiz_question.dart';
 import 'package:api_client/src/model/update_emergency.dart';
+import 'package:api_client/src/model/update_fraud_event.dart';
 import 'package:api_client/src/model/update_leaderboard.dart';
 import 'package:api_client/src/model/update_newsletter.dart';
 import 'package:api_client/src/model/update_order.dart';
@@ -300,6 +320,8 @@ import 'package:api_client/src/model/user_admin_list200_response.dart';
 import 'package:api_client/src/model/user_admin_list_filters_parameter.dart';
 import 'package:api_client/src/model/user_badge.dart';
 import 'package:api_client/src/model/user_badge_metadata.dart';
+import 'package:api_client/src/model/user_fraud_profile.dart';
+import 'package:api_client/src/model/user_fraud_profile_user.dart';
 import 'package:api_client/src/model/user_me_change_password_request.dart';
 import 'package:api_client/src/model/user_rules.dart';
 import 'package:api_client/src/model/va_number.dart';
@@ -553,6 +575,9 @@ ReturnType deserialize<ReturnType, BaseType>(
           as ReturnType;
     case 'Coordinate':
       return Coordinate.fromJson(value as Map<String, dynamic>) as ReturnType;
+    case 'CoordinateWithMeta':
+      return CoordinateWithMeta.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
     case 'CountryCode':
     case 'Coupon':
       return Coupon.fromJson(value as Map<String, dynamic>) as ReturnType;
@@ -854,6 +879,57 @@ ReturnType deserialize<ReturnType, BaseType>(
     case 'FoodPricingConfiguration':
       return FoodPricingConfiguration.fromJson(value as Map<String, dynamic>)
           as ReturnType;
+    case 'FraudConfig':
+      return FraudConfig.fromJson(value as Map<String, dynamic>) as ReturnType;
+    case 'FraudEvent':
+      return FraudEvent.fromJson(value as Map<String, dynamic>) as ReturnType;
+    case 'FraudEventDriver':
+      return FraudEventDriver.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
+    case 'FraudEventHandledBy':
+      return FraudEventHandledBy.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
+    case 'FraudEventListQuery':
+      return FraudEventListQuery.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
+    case 'FraudEventType':
+    case 'FraudEventUser':
+      return FraudEventUser.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
+    case 'FraudGetEvent200Response':
+      return FraudGetEvent200Response.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
+    case 'FraudGetStats200Response':
+      return FraudGetStats200Response.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
+    case 'FraudGetUserProfile200Response':
+      return FraudGetUserProfile200Response.fromJson(
+            value as Map<String, dynamic>,
+          )
+          as ReturnType;
+    case 'FraudListEvents200Response':
+      return FraudListEvents200Response.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
+    case 'FraudListHighRiskUsers200Response':
+      return FraudListHighRiskUsers200Response.fromJson(
+            value as Map<String, dynamic>,
+          )
+          as ReturnType;
+    case 'FraudSeverity':
+    case 'FraudSignal':
+      return FraudSignal.fromJson(value as Map<String, dynamic>) as ReturnType;
+    case 'FraudStats':
+      return FraudStats.fromJson(value as Map<String, dynamic>) as ReturnType;
+    case 'FraudStatsEventsBySeverity':
+      return FraudStatsEventsBySeverity.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
+    case 'FraudStatsQuery':
+      return FraudStatsQuery.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
+    case 'FraudStatsRecentTrendInner':
+      return FraudStatsRecentTrendInner.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
+    case 'FraudStatus':
     case 'GeneralRuleType':
     case 'GeneralRules':
       return GeneralRules.fromJson(value as Map<String, dynamic>) as ReturnType;
@@ -879,6 +955,9 @@ ReturnType deserialize<ReturnType, BaseType>(
           as ReturnType;
     case 'InsertEmergency':
       return InsertEmergency.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
+    case 'InsertFraudEvent':
+      return InsertFraudEvent.fromJson(value as Map<String, dynamic>)
           as ReturnType;
     case 'InsertLeaderboard':
       return InsertLeaderboard.fromJson(value as Map<String, dynamic>)
@@ -1204,6 +1283,7 @@ ReturnType deserialize<ReturnType, BaseType>(
     case 'PaymentEnvelope':
       return PaymentEnvelope.fromJson(value as Map<String, dynamic>)
           as ReturnType;
+    case 'PaymentEnvelopeAction':
     case 'PaymentEnvelopeEvent':
     case 'PaymentEnvelopePayload':
       return PaymentEnvelopePayload.fromJson(value as Map<String, dynamic>)
@@ -1279,6 +1359,9 @@ ReturnType deserialize<ReturnType, BaseType>(
           as ReturnType;
     case 'ReviewCreate200Response':
       return ReviewCreate200Response.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
+    case 'ReviewFraudEvent':
+      return ReviewFraudEvent.fromJson(value as Map<String, dynamic>)
           as ReturnType;
     case 'ReviewKeySchema':
     case 'ReviewList200Response':
@@ -1388,6 +1471,9 @@ ReturnType deserialize<ReturnType, BaseType>(
     case 'UpdateEmergency':
       return UpdateEmergency.fromJson(value as Map<String, dynamic>)
           as ReturnType;
+    case 'UpdateFraudEvent':
+      return UpdateFraudEvent.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
     case 'UpdateLeaderboard':
       return UpdateLeaderboard.fromJson(value as Map<String, dynamic>)
           as ReturnType;
@@ -1442,6 +1528,12 @@ ReturnType deserialize<ReturnType, BaseType>(
       return UserBadge.fromJson(value as Map<String, dynamic>) as ReturnType;
     case 'UserBadgeMetadata':
       return UserBadgeMetadata.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
+    case 'UserFraudProfile':
+      return UserFraudProfile.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
+    case 'UserFraudProfileUser':
+      return UserFraudProfileUser.fromJson(value as Map<String, dynamic>)
           as ReturnType;
     case 'UserGender':
     case 'UserKey':

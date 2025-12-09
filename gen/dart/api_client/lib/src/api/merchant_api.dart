@@ -838,7 +838,7 @@ class MerchantApi {
     Object? page,
     String? query,
     String? sortBy,
-    String? order,
+    PaginationOrder? order = PaginationOrder.desc,
     PaginationMode? mode = PaginationMode.offset,
     Object? categories,
     Object? isActive,

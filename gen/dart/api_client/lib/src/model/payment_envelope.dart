@@ -7,6 +7,7 @@ import 'package:api_client/src/model/envelope_target.dart';
 import 'package:api_client/src/model/payment_envelope_payload.dart';
 import 'package:api_client/src/model/payment_envelope_event.dart';
 import 'package:api_client/src/model/envelope_sender.dart';
+import 'package:api_client/src/model/payment_envelope_action.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
 
@@ -33,7 +34,7 @@ class PaymentEnvelope {
   final PaymentEnvelopeEvent? e;
 
   @JsonKey(name: r'a', required: false, includeIfNull: false)
-  final String? a;
+  final PaymentEnvelopeAction? a;
 
   @JsonKey(name: r'tg', required: false, includeIfNull: false)
   final EnvelopeTarget? tg;
