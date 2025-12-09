@@ -117,6 +117,7 @@ final userRouter = StatefulShellRoute.indexedStack(
 
         //
         ShellRoute(
+          builder: (context, state, child) => child,
           routes: [
             GoRoute(
               name: Routes.userDelivery.name,

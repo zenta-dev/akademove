@@ -46,7 +46,13 @@ void _setupService() {
       dispose: (param) => param.dispose(),
     )
     ..registerLazySingleton(FirebaseService.new)
-    ..registerLazySingleton(NotificationService.new);
+    ..registerLazySingleton(NotificationService.new)
+    ..registerLazySingleton(
+      () => StateResetService(
+        webSocketService: sl<WebSocketService>(),
+        keyValueService: sl<KeyValueService>(),
+      ),
+    );
 }
 
 void _setupRepository() {
@@ -56,6 +62,7 @@ void _setupRepository() {
         apiClient: sl<ApiClient>(),
         localKV: sl<KeyValueService>(),
         ws: sl<WebSocketService>(),
+        stateResetService: sl<StateResetService>(),
       ),
     )
     ..registerLazySingleton(

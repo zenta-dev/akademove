@@ -1,7 +1,10 @@
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 
-typedef EmailVerificationState = OperationResult<bool>;
+enum EmailVerificationStep { requestCode, verifyCode }
+
+typedef _EmailState = ({EmailVerificationStep step, String? email});
+typedef EmailVerificationState = OperationResult<_EmailState>;
 
 class EmailVerificationCubit extends BaseCubit<EmailVerificationState> {
   EmailVerificationCubit({required AuthRepository authRepository})
@@ -21,7 +24,12 @@ class EmailVerificationCubit extends BaseCubit<EmailVerificationState> {
         try {
           emit(OperationResult.loading());
           final res = await _authRepository.sendEmailVerification(email: email);
-          emit(OperationResult.success(res.data, message: res.message));
+          emit(
+            OperationResult.success((
+              step: EmailVerificationStep.requestCode,
+              email: email,
+            ), message: res.message),
+          );
         } on BaseError catch (e, st) {
           logger.e(
             '[EmailVerificationCubit] - Error: ${e.message}',
@@ -39,7 +47,12 @@ class EmailVerificationCubit extends BaseCubit<EmailVerificationState> {
     try {
       emit(OperationResult.loading());
       final res = await _authRepository.verifyEmail(email: email, code: code);
-      emit(OperationResult.success(res.data, message: res.message));
+      emit(
+        OperationResult.success((
+          step: EmailVerificationStep.verifyCode,
+          email: email,
+        ), message: res.message),
+      );
     } on BaseError catch (e, st) {
       logger.e(
         '[EmailVerificationCubit] - Error: ${e.message}',

@@ -72,25 +72,26 @@ class SignUpChoiceScreen extends StatelessWidget {
                     onPressed: () => context.pushNamed(route.route.name),
                     child: Card(
                       padding: const EdgeInsets.all(16),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          route.icon.svg(height: 64),
-                          const SizedBox(height: 12),
-                          Text(
-                            route.name,
-                            style: context.theme.typography.h4.copyWith(
-                              fontSize: 14.sp,
+                      child: SizedBox(
+                        width: double.infinity,
+                        child: Column(
+                          children: [
+                            route.icon.svg(height: 64),
+                            const SizedBox(height: 12),
+                            Text(
+                              route.name,
+                              style: context.theme.typography.h4.copyWith(
+                                fontSize: 14.sp,
+                              ),
                             ),
-                          ),
-                          Text(
-                            route.description,
-                            style: context.theme.typography.textMuted.copyWith(
-                              fontSize: 12.sp,
-                            ),
-                            textAlign: TextAlign.center,
-                          ).muted,
-                        ],
+                            Text(
+                              route.description,
+                              style: context.theme.typography.textMuted
+                                  .copyWith(fontSize: 12.sp),
+                              textAlign: TextAlign.center,
+                            ).muted,
+                          ],
+                        ),
                       ),
                     ),
                   );

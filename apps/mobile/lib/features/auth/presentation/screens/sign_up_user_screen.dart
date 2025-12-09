@@ -46,7 +46,6 @@ class _SignUpUserFormViewState extends State<_SignUpUserFormView> {
   static const FormKey<String> _confirmPasswordKey = TextFieldKey(
     'confirm_password',
   );
-  static const FormKey<String> _genderKey = TextFieldKey('gender');
 
   UserGender _selectedGender = UserGender.MALE;
   CountryCode _selectedCountryCode = CountryCode.ID;
@@ -76,7 +75,6 @@ class _SignUpUserFormViewState extends State<_SignUpUserFormView> {
             ),
             location: ToastLocation.topCenter,
           );
-          context.read<AuthCubit>().reset();
           context.pushReplacementNamed(
             Routes.authEmailVerificationPending.name,
             queryParameters: {'email': _submittedEmail},
@@ -122,6 +120,7 @@ class _SignUpUserFormViewState extends State<_SignUpUserFormView> {
             children: [
               FormField(
                 key: _nameKey,
+
                 label: Text(context.l10n.name),
                 validator: const LengthValidator(min: 3),
                 showErrors: const {
@@ -153,45 +152,36 @@ class _SignUpUserFormViewState extends State<_SignUpUserFormView> {
                   ],
                 ),
               ),
-              FormField(
-                key: _genderKey,
-                label: Text(context.l10n.gender),
-                showErrors: const {
-                  FormValidationMode.changed,
-                  FormValidationMode.submitted,
-                },
-                child: SizedBox(
-                  width: double.infinity,
-                  child: Select<UserGender>(
-                    enabled: !state.user.isLoading,
-                    itemBuilder: (context, item) {
-                      return Text(item.name);
-                    },
-                    value: _selectedGender,
-                    onChanged: (value) {
-                      if (value != null) {
-                        setState(() {
-                          _selectedGender = value;
-                        });
-                      }
-                    },
-                    popup: SelectPopup<UserGender>(
-                      items: SelectItemList(
-                        children: UserGender.values
-                            .map(
-                              (e) => SelectItemButton(
-                                value: e,
-                                child: Text(e.name),
-                              ),
-                            )
-                            .toList(),
-                      ),
-                    ).call,
-                  ),
+              SizedBox(
+                width: double.infinity,
+                child: Select<UserGender>(
+                  enabled: !state.user.isLoading,
+                  itemBuilder: (context, item) {
+                    return Text(item.name);
+                  },
+                  value: _selectedGender,
+                  onChanged: (value) {
+                    if (value != null) {
+                      setState(() {
+                        _selectedGender = value;
+                      });
+                    }
+                  },
+                  popup: SelectPopup<UserGender>(
+                    items: SelectItemList(
+                      children: UserGender.values
+                          .map(
+                            (e) =>
+                                SelectItemButton(value: e, child: Text(e.name)),
+                          )
+                          .toList(),
+                    ),
+                  ).call,
                 ),
               ),
               FormField(
                 key: _phoneNumberKey,
+
                 label: Text(context.l10n.phone),
                 validator: const LengthValidator(min: 10),
                 showErrors: const {
@@ -215,6 +205,7 @@ class _SignUpUserFormViewState extends State<_SignUpUserFormView> {
               ),
               FormField(
                 key: _passwordKey,
+
                 label: Text(context.l10n.password),
                 validator: const SafePasswordValidator(),
                 showErrors: const {
@@ -232,6 +223,7 @@ class _SignUpUserFormViewState extends State<_SignUpUserFormView> {
               ),
               FormField(
                 key: _confirmPasswordKey,
+
                 label: Text(context.l10n.confirm_password),
                 validator: CompareWith.equal(
                   _passwordKey,

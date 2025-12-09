@@ -148,7 +148,6 @@ class _SignUpDriverScreenState extends State<SignUpDriverScreen> {
       message ?? context.l10n.sign_up_success,
       type: ToastType.success,
     );
-    context.read<AuthCubit>().reset();
     // Redirect to driver quiz (required before accessing driver features)
     // Driver must complete and pass quiz before being approved by operator
     context.pushReplacementNamed(Routes.driverQuiz.name);

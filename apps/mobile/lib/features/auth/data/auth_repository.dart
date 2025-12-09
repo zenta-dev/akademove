@@ -7,13 +7,16 @@ class AuthRepository extends BaseRepository {
     required ApiClient apiClient,
     required KeyValueService localKV,
     required WebSocketService ws,
+    required StateResetService stateResetService,
   }) : _apiClient = apiClient,
        _localKV = localKV,
-       _ws = ws;
+       _ws = ws,
+       _stateResetService = stateResetService;
 
   final ApiClient _apiClient;
   final KeyValueService _localKV;
   final WebSocketService _ws;
+  final StateResetService _stateResetService;
 
   Future<BaseResponse<User>> signIn(SignInRequest request) async {
     return guard(() async {
@@ -180,13 +183,19 @@ class AuthRepository extends BaseRepository {
   Future<BaseResponse<bool>> signOut() async {
     return guard(() async {
       final result = await _apiClient.getAuthApi().authSignOut();
+
+      // Clear auth token
       await _localKV.remove(KeyValueKeys.token);
-      _apiClient.setBearerAuth('bearer_auth', '');
+      _apiClient.setBearerAuth("bearer_auth", "");
+      _ws.sessionToken = null;
+
+      // Reset all user-specific state (WebSocket, cart, FCM token, etc.)
+      await _stateResetService.resetAll();
 
       final data =
           result.data ??
           (throw const RepositoryError(
-            'An error occured',
+            "An error occured",
             code: ErrorCode.internalServerError,
           ));
       return SuccessResponse(message: data.message, data: true);

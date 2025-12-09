@@ -100,7 +100,18 @@ class _SignInFormViewState extends State<_SignInFormView> {
       context.showMyToast(state.user.message, type: ToastType.success);
       await delay(const Duration(seconds: 1), () {});
       if (context.mounted) {
-        switch (state.user.data?.value.role) {
+        final user = state.user.data?.value;
+
+        // Check if email is verified first
+        if (user != null && !user.emailVerified) {
+          context.pushReplacementNamed(
+            Routes.authEmailVerificationPending.name,
+            queryParameters: {"email": user.email},
+          );
+          return;
+        }
+
+        switch (user?.role) {
           case UserRole.USER:
             context.pushReplacementNamed(Routes.userHome.name);
           case UserRole.MERCHANT:

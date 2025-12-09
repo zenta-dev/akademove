@@ -611,7 +611,6 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
       context.l10n.sign_up_success,
       message ?? context.l10n.success_signed_up,
     );
-    context.read<AuthCubit>().reset();
     context.pushReplacementNamed(
       Routes.authEmailVerificationPending.name,
       queryParameters: {'email': email},

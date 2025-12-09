@@ -21,7 +21,18 @@ class SplashScreen extends StatelessWidget {
             context.goNamed(Routes.authSignIn.name);
           }
           if (state.user.isSuccess) {
-            switch (state.user.value?.role) {
+            final user = state.user.value;
+
+            // Check if email is verified first
+            if (user != null && !user.emailVerified) {
+              context.pushReplacementNamed(
+                Routes.authEmailVerificationPending.name,
+                queryParameters: {"email": user.email},
+              );
+              return;
+            }
+
+            switch (user?.role) {
               case UserRole.USER:
                 context.pushReplacementNamed(Routes.userHome.name);
               case UserRole.MERCHANT:

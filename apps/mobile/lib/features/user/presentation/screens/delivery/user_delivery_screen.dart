@@ -150,28 +150,28 @@ class _UserDeliveryScreenState extends State<UserDeliveryScreen> {
     final pickupLoc = pickup;
     final dropoffLoc = dropoff;
     if (pickupLoc != null && dropoffLoc != null) {
+      if (!mounted) return; // Check mounted before async operation
+
       try {
-        // Create cache key from pickup and dropoff coordinates
         final routeKey =
             '${pickupLoc.lat},${pickupLoc.lng}-${dropoffLoc.lat},${dropoffLoc.lng}';
 
-        // Use cached route if available
         List<Coordinate> routeCoordinates;
         final cachedRoute = _cachedRoute;
         if (_cachedRouteKey == routeKey && cachedRoute != null) {
           routeCoordinates = cachedRoute;
         } else {
-          // Get actual route from MapService via cubit
-          routeCoordinates = await context.read<UserDeliveryCubit>().getRoutes(
+          final cubit = context.read<UserDeliveryCubit>();
+          routeCoordinates = await cubit.getRoutes(
             pickupLoc.toCoordinate(),
             dropoffLoc.toCoordinate(),
           );
-          // Cache the route
+
+          if (!mounted) return; // Check again after async
+
           _cachedRoute = routeCoordinates;
           _cachedRouteKey = routeKey;
         }
-
-        if (!mounted) return;
 
         if (routeCoordinates.isNotEmpty) {
           final routePoints = routeCoordinates
@@ -187,37 +187,16 @@ class _UserDeliveryScreenState extends State<UserDeliveryScreen> {
             ),
           );
         } else {
-          // Fallback to straight line if no route available
-          _polylines.add(
-            Polyline(
-              polylineId: const PolylineId('route'),
-              points: [
-                LatLng(pickupLoc.lat, pickupLoc.lng),
-                LatLng(dropoffLoc.lat, dropoffLoc.lng),
-              ],
-              color: context.colorScheme.primary,
-              width: 4,
-            ),
-          );
+          _addFallbackPolyline(pickupLoc, dropoffLoc);
         }
       } catch (e) {
         if (!mounted) return;
-
         logger.e('Failed to get route: $e');
-        // Fallback to straight line on error
-        _polylines.add(
-          Polyline(
-            polylineId: const PolylineId('route'),
-            points: [
-              LatLng(pickupLoc.lat, pickupLoc.lng),
-              LatLng(dropoffLoc.lat, dropoffLoc.lng),
-            ],
-            color: context.colorScheme.primary,
-            width: 4,
-          ),
-        );
+        _addFallbackPolyline(pickupLoc, dropoffLoc);
       }
     }
+
+    if (!mounted) return; // Final check before setState
 
     setState(() {
       _markers
@@ -226,26 +205,43 @@ class _UserDeliveryScreenState extends State<UserDeliveryScreen> {
     });
 
     // Adjust camera to show both markers
-    if (bounds.length > 1 && _mapController != null) {
-      final boundsToFit = LatLngBounds(
-        southwest: LatLng(
-          bounds.map((e) => e.latitude).reduce((a, b) => a < b ? a : b),
-          bounds.map((e) => e.longitude).reduce((a, b) => a < b ? a : b),
-        ),
-        northeast: LatLng(
-          bounds.map((e) => e.latitude).reduce((a, b) => a > b ? a : b),
-          bounds.map((e) => e.longitude).reduce((a, b) => a > b ? a : b),
-        ),
-      );
+    if (bounds.length > 1) {
+      final controller = _mapController;
+      if (controller != null) {
+        final boundsToFit = LatLngBounds(
+          southwest: LatLng(
+            bounds.map((e) => e.latitude).reduce((a, b) => a < b ? a : b),
+            bounds.map((e) => e.longitude).reduce((a, b) => a < b ? a : b),
+          ),
+          northeast: LatLng(
+            bounds.map((e) => e.latitude).reduce((a, b) => a > b ? a : b),
+            bounds.map((e) => e.longitude).reduce((a, b) => a > b ? a : b),
+          ),
+        );
 
-      await _mapController?.animateCamera(
-        CameraUpdate.newLatLngBounds(boundsToFit, 100),
-      );
-    } else if (bounds.length == 1 && _mapController != null) {
+        await controller.animateCamera(
+          CameraUpdate.newLatLngBounds(boundsToFit, 100),
+        );
+      }
+    } else if (bounds.length == 1) {
       await _mapController?.animateCamera(
         CameraUpdate.newLatLngZoom(bounds.first, 15),
       );
     }
+  }
+
+  void _addFallbackPolyline(Place pickupLoc, Place dropoffLoc) {
+    _polylines.add(
+      Polyline(
+        polylineId: const PolylineId('route'),
+        points: [
+          LatLng(pickupLoc.lat, pickupLoc.lng),
+          LatLng(dropoffLoc.lat, dropoffLoc.lng),
+        ],
+        color: context.colorScheme.primary,
+        width: 4,
+      ),
+    );
   }
 
   @override

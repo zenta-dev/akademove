@@ -14,20 +14,35 @@ class ConfigurationCubit extends BaseCubit<ConfigurationState> {
       try {
         emit(state.copyWith(configurations: OperationResult.loading()));
         final now = DateTime.now();
-        final dummmy = List.generate(
-          5,
-          (i) => BannerConfiguration(
-            title: 'title-$i',
+
+        final banners = [
+          BannerConfiguration(
+            title: "atk",
             description: '',
-            imageUrl: '${UrlConstants.randomImageUrl}/seed/$this/512/512',
+            imageUrl: 'https://akademove.com/banner/atk.png',
           ),
-        );
+          BannerConfiguration(
+            title: "food",
+            description: '',
+            imageUrl: 'https://akademove.com/banner/food.png',
+          ),
+          BannerConfiguration(
+            title: "package",
+            description: '',
+            imageUrl: 'https://akademove.com/banner/package.png',
+          ),
+          BannerConfiguration(
+            title: "ride",
+            description: '',
+            imageUrl: 'https://akademove.com/banner/ride.png',
+          ),
+        ];
 
         final configs = [
           Configuration(
             key: 'user-home-banner',
             name: 'User Home Banner',
-            value: dummmy,
+            value: banners,
             updatedById: '',
             updatedAt: now,
           ),

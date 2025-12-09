@@ -1,7 +1,10 @@
 part of 'router.dart';
 
 final authRouter = ShellRoute(
-  builder: (context, state, child) => child,
+  builder: (context, state, child) => MultiBlocProvider(
+    providers: [BlocProvider(create: (_) => sl<EmailVerificationCubit>())],
+    child: child,
+  ),
   routes: [
     GoRoute(
       name: Routes.authSplash.name,
@@ -14,8 +17,8 @@ final authRouter = ShellRoute(
     GoRoute(
       name: Routes.authSignIn.name,
       path: Routes.authSignIn.path,
-      builder: (context, state) => BlocProvider(
-        create: (_) => context.read<AuthCubit>()..reset(),
+      builder: (context, state) => BlocProvider.value(
+        value: context.read<AuthCubit>()..reset(),
         child: const SignInScreen(),
       ),
     ),
@@ -27,24 +30,24 @@ final authRouter = ShellRoute(
     GoRoute(
       name: Routes.authSignUpUser.name,
       path: Routes.authSignUpUser.path,
-      builder: (context, state) => BlocProvider(
-        create: (_) => context.read<AuthCubit>()..reset(),
+      builder: (context, state) => BlocProvider.value(
+        value: context.read<AuthCubit>()..reset(),
         child: const SignUpUserScreen(),
       ),
     ),
     GoRoute(
       name: Routes.authSignUpDriver.name,
       path: Routes.authSignUpDriver.path,
-      builder: (context, state) => BlocProvider(
-        create: (_) => context.read<AuthCubit>()..reset(),
+      builder: (context, state) => BlocProvider.value(
+        value: context.read<AuthCubit>()..reset(),
         child: const SignUpDriverScreen(),
       ),
     ),
     GoRoute(
       name: Routes.authSignUpMerchant.name,
       path: Routes.authSignUpMerchant.path,
-      builder: (context, state) => BlocProvider(
-        create: (_) => context.read<AuthCubit>()..reset(),
+      builder: (context, state) => BlocProvider.value(
+        value: context.read<AuthCubit>()..reset(),
         child: const SignUpMerchantScreen(),
       ),
     ),
@@ -72,8 +75,8 @@ final authRouter = ShellRoute(
       path: Routes.authEmailVerificationPending.path,
       builder: (context, state) {
         final email = state.uri.queryParameters['email'] ?? '';
-        return BlocProvider(
-          create: (_) => sl<EmailVerificationCubit>(),
+        return BlocProvider.value(
+          value: context.read<EmailVerificationCubit>(),
           child: EmailVerificationPendingScreen(email: email),
         );
       },
@@ -83,8 +86,8 @@ final authRouter = ShellRoute(
       path: Routes.authVerifyEmail.path,
       builder: (context, state) {
         final token = state.uri.queryParameters['token'];
-        return BlocProvider(
-          create: (_) => sl<EmailVerificationCubit>(),
+        return BlocProvider.value(
+          value: context.read<EmailVerificationCubit>(),
           child: EmailVerificationScreen(token: token),
         );
       },
