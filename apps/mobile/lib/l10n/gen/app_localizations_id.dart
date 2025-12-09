@@ -3247,4 +3247,144 @@ class AppLocalizationsId extends AppLocalizations {
   String notification_time_ago(String time) {
     return '$time yang lalu';
   }
+
+  @override
+  String get scheduled_orders => 'Pesanan Terjadwal';
+
+  @override
+  String get scheduled_order => 'Pesanan Terjadwal';
+
+  @override
+  String get schedule_a_ride => 'Jadwalkan Perjalanan';
+
+  @override
+  String get schedule_a_delivery => 'Jadwalkan Pengiriman';
+
+  @override
+  String get schedule_order => 'Jadwalkan Pesanan';
+
+  @override
+  String get no_scheduled_orders => 'Tidak ada pesanan terjadwal';
+
+  @override
+  String get no_scheduled_orders_desc => 'Anda belum memiliki pesanan terjadwal. Jadwalkan perjalanan atau pengiriman untuk waktu mendatang.';
+
+  @override
+  String scheduled_for(String datetime) {
+    return 'Dijadwalkan untuk: $datetime';
+  }
+
+  @override
+  String get schedule_date => 'Tanggal Jadwal';
+
+  @override
+  String get schedule_time => 'Waktu Jadwal';
+
+  @override
+  String get select_date => 'Pilih Tanggal';
+
+  @override
+  String get select_time => 'Pilih Waktu';
+
+  @override
+  String get scheduled => 'Terjadwal';
+
+  @override
+  String get schedule_order_title => 'Jadwalkan Pesanan Anda';
+
+  @override
+  String get schedule_order_desc => 'Pilih kapan Anda ingin pesanan Anda dipenuhi';
+
+  @override
+  String get min_schedule_time => 'Minimal 30 menit dari sekarang';
+
+  @override
+  String get max_schedule_time => 'Maksimal 7 hari ke depan';
+
+  @override
+  String schedule_confirmation(String datetime) {
+    return 'Pesanan Anda akan dijadwalkan untuk $datetime. Driver akan dicocokkan sekitar 15 menit sebelum waktu yang dijadwalkan.';
+  }
+
+  @override
+  String get confirm_schedule => 'Konfirmasi Jadwal';
+
+  @override
+  String get edit_schedule => 'Ubah Jadwal';
+
+  @override
+  String get cancel_scheduled_order => 'Batalkan Pesanan Terjadwal';
+
+  @override
+  String get cancel_scheduled_order_confirm => 'Apakah Anda yakin ingin membatalkan pesanan terjadwal ini?';
+
+  @override
+  String get scheduled_order_cancelled => 'Pesanan terjadwal berhasil dibatalkan';
+
+  @override
+  String get scheduled_order_updated => 'Pesanan terjadwal berhasil diperbarui';
+
+  @override
+  String get scheduled_order_placed => 'Pesanan berhasil dijadwalkan';
+
+  @override
+  String get failed_to_schedule_order => 'Gagal menjadwalkan pesanan';
+
+  @override
+  String get failed_to_cancel_scheduled_order => 'Gagal membatalkan pesanan terjadwal';
+
+  @override
+  String get failed_to_update_scheduled_order => 'Gagal memperbarui pesanan terjadwal';
+
+  @override
+  String get failed_to_load_scheduled_orders => 'Gagal memuat pesanan terjadwal';
+
+  @override
+  String get schedule_time_too_soon => 'Waktu jadwal harus minimal 30 menit dari sekarang';
+
+  @override
+  String get schedule_time_too_far => 'Waktu jadwal tidak boleh lebih dari 7 hari ke depan';
+
+  @override
+  String matching_starts_at(String time) {
+    return 'Pencarian driver dimulai pada $time';
+  }
+
+  @override
+  String get view_scheduled_orders => 'Lihat Pesanan Terjadwal';
+
+  @override
+  String get upcoming_scheduled_orders => 'Pesanan Terjadwal Mendatang';
+
+  @override
+  String get past_scheduled_orders => 'Pesanan Terjadwal Sebelumnya';
+
+  @override
+  String get scheduled_order_details => 'Detail Pesanan Terjadwal';
+
+  @override
+  String order_will_be_matched(String time) {
+    return 'Pesanan akan dicocokkan $time';
+  }
+
+  @override
+  String get schedule_now => 'Jadwalkan Sekarang';
+
+  @override
+  String get order_now => 'Pesan Sekarang';
+
+  @override
+  String get or_schedule_for_later => 'Atau jadwalkan untuk nanti';
+
+  @override
+  String get please_select_schedule_time => 'Silakan pilih waktu jadwal';
+
+  @override
+  String get scheduled_order_created => 'Pesanan Anda telah berhasil dijadwalkan';
+
+  @override
+  String get schedule_for_later => 'Jadwalkan untuk Nanti';
+
+  @override
+  String get tap_to_change_schedule => 'Ketuk untuk mengubah';
 }

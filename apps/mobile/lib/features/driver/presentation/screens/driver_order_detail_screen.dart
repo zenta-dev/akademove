@@ -293,6 +293,9 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
       case OrderStatus.NO_SHOW:
         statusText = 'No Show';
         statusColor = const Color(0xFFFF5722);
+      case OrderStatus.SCHEDULED:
+        statusText = context.l10n.scheduled;
+        statusColor = const Color(0xFF00BCD4);
     }
 
     return Container(

@@ -3247,4 +3247,144 @@ class AppLocalizationsEn extends AppLocalizations {
   String notification_time_ago(String time) {
     return '$time ago';
   }
+
+  @override
+  String get scheduled_orders => 'Scheduled Orders';
+
+  @override
+  String get scheduled_order => 'Scheduled Order';
+
+  @override
+  String get schedule_a_ride => 'Schedule a Ride';
+
+  @override
+  String get schedule_a_delivery => 'Schedule a Delivery';
+
+  @override
+  String get schedule_order => 'Schedule Order';
+
+  @override
+  String get no_scheduled_orders => 'No scheduled orders';
+
+  @override
+  String get no_scheduled_orders_desc => 'You haven\'t scheduled any orders yet. Schedule a ride or delivery for a future time.';
+
+  @override
+  String scheduled_for(String datetime) {
+    return 'Scheduled for: $datetime';
+  }
+
+  @override
+  String get schedule_date => 'Schedule Date';
+
+  @override
+  String get schedule_time => 'Schedule Time';
+
+  @override
+  String get select_date => 'Select Date';
+
+  @override
+  String get select_time => 'Select Time';
+
+  @override
+  String get scheduled => 'Scheduled';
+
+  @override
+  String get schedule_order_title => 'Schedule Your Order';
+
+  @override
+  String get schedule_order_desc => 'Choose when you want your order to be fulfilled';
+
+  @override
+  String get min_schedule_time => 'Minimum 30 minutes from now';
+
+  @override
+  String get max_schedule_time => 'Maximum 7 days in advance';
+
+  @override
+  String schedule_confirmation(String datetime) {
+    return 'Your order will be scheduled for $datetime. A driver will be matched approximately 15 minutes before the scheduled time.';
+  }
+
+  @override
+  String get confirm_schedule => 'Confirm Schedule';
+
+  @override
+  String get edit_schedule => 'Edit Schedule';
+
+  @override
+  String get cancel_scheduled_order => 'Cancel Scheduled Order';
+
+  @override
+  String get cancel_scheduled_order_confirm => 'Are you sure you want to cancel this scheduled order?';
+
+  @override
+  String get scheduled_order_cancelled => 'Scheduled order cancelled successfully';
+
+  @override
+  String get scheduled_order_updated => 'Scheduled order updated successfully';
+
+  @override
+  String get scheduled_order_placed => 'Order scheduled successfully';
+
+  @override
+  String get failed_to_schedule_order => 'Failed to schedule order';
+
+  @override
+  String get failed_to_cancel_scheduled_order => 'Failed to cancel scheduled order';
+
+  @override
+  String get failed_to_update_scheduled_order => 'Failed to update scheduled order';
+
+  @override
+  String get failed_to_load_scheduled_orders => 'Failed to load scheduled orders';
+
+  @override
+  String get schedule_time_too_soon => 'Schedule time must be at least 30 minutes from now';
+
+  @override
+  String get schedule_time_too_far => 'Schedule time cannot be more than 7 days in advance';
+
+  @override
+  String matching_starts_at(String time) {
+    return 'Driver matching starts at $time';
+  }
+
+  @override
+  String get view_scheduled_orders => 'View Scheduled Orders';
+
+  @override
+  String get upcoming_scheduled_orders => 'Upcoming Scheduled Orders';
+
+  @override
+  String get past_scheduled_orders => 'Past Scheduled Orders';
+
+  @override
+  String get scheduled_order_details => 'Scheduled Order Details';
+
+  @override
+  String order_will_be_matched(String time) {
+    return 'Order will be matched $time';
+  }
+
+  @override
+  String get schedule_now => 'Schedule Now';
+
+  @override
+  String get order_now => 'Order Now';
+
+  @override
+  String get or_schedule_for_later => 'Or schedule for later';
+
+  @override
+  String get please_select_schedule_time => 'Please select a schedule time';
+
+  @override
+  String get scheduled_order_created => 'Your order has been scheduled successfully';
+
+  @override
+  String get schedule_for_later => 'Schedule for Later';
+
+  @override
+  String get tap_to_change_schedule => 'Tap to change';
 }

@@ -63,6 +63,7 @@ enum Routes {
 
   userHistory('/user/history'),
   userHistoryDetail('/user/history/:orderId'),
+  userScheduledOrders('/user/scheduled-orders'),
 
   userProfile('/user/profile'),
   userDetailProfile('/user/profile/detail'),

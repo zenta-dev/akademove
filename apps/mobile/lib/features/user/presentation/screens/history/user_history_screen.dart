@@ -35,6 +35,14 @@ class UserHistoryScreen extends StatelessWidget {
         DefaultAppBar(
           title: context.l10n.history,
           padding: EdgeInsets.all(16.r),
+          trailing: [
+            IconButton(
+              icon: const Icon(LucideIcons.calendarClock),
+              onPressed: () =>
+                  context.pushNamed(Routes.userScheduledOrders.name),
+              variance: ButtonVariance.ghost,
+            ),
+          ],
         ),
       ],
       scrollable: false,

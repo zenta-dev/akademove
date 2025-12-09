@@ -1363,5 +1363,85 @@
 				"type": "String"
 			}
 		}
-	}
+	},
+	"scheduled_orders": "Scheduled Orders",
+	"scheduled_order": "Scheduled Order",
+	"schedule_a_ride": "Schedule a Ride",
+	"schedule_a_delivery": "Schedule a Delivery",
+	"schedule_order": "Schedule Order",
+	"no_scheduled_orders": "No scheduled orders",
+	"no_scheduled_orders_desc": "You haven't scheduled any orders yet. Schedule a ride or delivery for a future time.",
+	"scheduled_for": "Scheduled for {datetime}",
+	"@scheduled_for": {
+		"placeholders": {
+			"datetime": {
+				"type": "String"
+			}
+		}
+	},
+	"schedule_date": "Schedule Date",
+	"schedule_time": "Schedule Time",
+	"select_date": "Select Date",
+	"select_time": "Select Time",
+	"scheduled": "Scheduled",
+	"schedule_order_title": "Schedule Your Order",
+	"schedule_order_desc": "Choose when you want your order to be fulfilled",
+	"min_schedule_time": "Minimum 30 minutes from now",
+	"max_schedule_time": "Maximum 7 days in advance",
+	"schedule_confirmation": "Your order will be scheduled for {datetime}. A driver will be matched approximately 15 minutes before the scheduled time.",
+	"@schedule_confirmation": {
+		"placeholders": {
+			"datetime": {
+				"type": "String"
+			}
+		}
+	},
+	"confirm_schedule": "Confirm Schedule",
+	"edit_schedule": "Edit Schedule",
+	"cancel_scheduled_order": "Cancel Scheduled Order",
+	"cancel_scheduled_order_confirm": "Are you sure you want to cancel this scheduled order?",
+	"scheduled_order_cancelled": "Scheduled order cancelled successfully",
+	"scheduled_order_updated": "Scheduled order updated successfully",
+	"scheduled_order_placed": "Order scheduled successfully",
+	"failed_to_schedule_order": "Failed to schedule order",
+	"failed_to_cancel_scheduled_order": "Failed to cancel scheduled order",
+	"failed_to_update_scheduled_order": "Failed to update scheduled order",
+	"failed_to_load_scheduled_orders": "Failed to load scheduled orders",
+	"schedule_time_too_soon": "Schedule time must be at least 30 minutes from now",
+	"schedule_time_too_far": "Schedule time cannot be more than 7 days in advance",
+	"matching_starts_at": "Driver matching starts at {time}",
+	"@matching_starts_at": {
+		"placeholders": {
+			"time": {
+				"type": "String"
+			}
+		}
+	},
+	"view_scheduled_orders": "View Scheduled Orders",
+	"upcoming_scheduled_orders": "Upcoming Scheduled Orders",
+	"past_scheduled_orders": "Past Scheduled Orders",
+	"scheduled_order_details": "Scheduled Order Details",
+	"order_will_be_matched": "Order will be matched {time}",
+	"@order_will_be_matched": {
+		"placeholders": {
+			"time": {
+				"type": "String"
+			}
+		}
+	},
+	"schedule_now": "Schedule Now",
+	"order_now": "Order Now",
+	"or_schedule_for_later": "Or schedule for later",
+	"please_select_schedule_time": "Please select a schedule time",
+	"scheduled_order_created": "Your order has been scheduled successfully",
+	"schedule_for_later": "Schedule for Later",
+	"scheduled_for": "Scheduled for: {datetime}",
+	"@scheduled_for": {
+		"placeholders": {
+			"datetime": {
+				"type": "String"
+			}
+		}
+	},
+	"tap_to_change_schedule": "Tap to change"
 }

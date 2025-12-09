@@ -6426,6 +6426,270 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{time} ago'**
   String notification_time_ago(String time);
+
+  /// No description provided for @scheduled_orders.
+  ///
+  /// In en, this message translates to:
+  /// **'Scheduled Orders'**
+  String get scheduled_orders;
+
+  /// No description provided for @scheduled_order.
+  ///
+  /// In en, this message translates to:
+  /// **'Scheduled Order'**
+  String get scheduled_order;
+
+  /// No description provided for @schedule_a_ride.
+  ///
+  /// In en, this message translates to:
+  /// **'Schedule a Ride'**
+  String get schedule_a_ride;
+
+  /// No description provided for @schedule_a_delivery.
+  ///
+  /// In en, this message translates to:
+  /// **'Schedule a Delivery'**
+  String get schedule_a_delivery;
+
+  /// No description provided for @schedule_order.
+  ///
+  /// In en, this message translates to:
+  /// **'Schedule Order'**
+  String get schedule_order;
+
+  /// No description provided for @no_scheduled_orders.
+  ///
+  /// In en, this message translates to:
+  /// **'No scheduled orders'**
+  String get no_scheduled_orders;
+
+  /// No description provided for @no_scheduled_orders_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'You haven\'t scheduled any orders yet. Schedule a ride or delivery for a future time.'**
+  String get no_scheduled_orders_desc;
+
+  /// No description provided for @scheduled_for.
+  ///
+  /// In en, this message translates to:
+  /// **'Scheduled for: {datetime}'**
+  String scheduled_for(String datetime);
+
+  /// No description provided for @schedule_date.
+  ///
+  /// In en, this message translates to:
+  /// **'Schedule Date'**
+  String get schedule_date;
+
+  /// No description provided for @schedule_time.
+  ///
+  /// In en, this message translates to:
+  /// **'Schedule Time'**
+  String get schedule_time;
+
+  /// No description provided for @select_date.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Date'**
+  String get select_date;
+
+  /// No description provided for @select_time.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Time'**
+  String get select_time;
+
+  /// No description provided for @scheduled.
+  ///
+  /// In en, this message translates to:
+  /// **'Scheduled'**
+  String get scheduled;
+
+  /// No description provided for @schedule_order_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Schedule Your Order'**
+  String get schedule_order_title;
+
+  /// No description provided for @schedule_order_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose when you want your order to be fulfilled'**
+  String get schedule_order_desc;
+
+  /// No description provided for @min_schedule_time.
+  ///
+  /// In en, this message translates to:
+  /// **'Minimum 30 minutes from now'**
+  String get min_schedule_time;
+
+  /// No description provided for @max_schedule_time.
+  ///
+  /// In en, this message translates to:
+  /// **'Maximum 7 days in advance'**
+  String get max_schedule_time;
+
+  /// No description provided for @schedule_confirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Your order will be scheduled for {datetime}. A driver will be matched approximately 15 minutes before the scheduled time.'**
+  String schedule_confirmation(String datetime);
+
+  /// No description provided for @confirm_schedule.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Schedule'**
+  String get confirm_schedule;
+
+  /// No description provided for @edit_schedule.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Schedule'**
+  String get edit_schedule;
+
+  /// No description provided for @cancel_scheduled_order.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel Scheduled Order'**
+  String get cancel_scheduled_order;
+
+  /// No description provided for @cancel_scheduled_order_confirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to cancel this scheduled order?'**
+  String get cancel_scheduled_order_confirm;
+
+  /// No description provided for @scheduled_order_cancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Scheduled order cancelled successfully'**
+  String get scheduled_order_cancelled;
+
+  /// No description provided for @scheduled_order_updated.
+  ///
+  /// In en, this message translates to:
+  /// **'Scheduled order updated successfully'**
+  String get scheduled_order_updated;
+
+  /// No description provided for @scheduled_order_placed.
+  ///
+  /// In en, this message translates to:
+  /// **'Order scheduled successfully'**
+  String get scheduled_order_placed;
+
+  /// No description provided for @failed_to_schedule_order.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to schedule order'**
+  String get failed_to_schedule_order;
+
+  /// No description provided for @failed_to_cancel_scheduled_order.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to cancel scheduled order'**
+  String get failed_to_cancel_scheduled_order;
+
+  /// No description provided for @failed_to_update_scheduled_order.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to update scheduled order'**
+  String get failed_to_update_scheduled_order;
+
+  /// No description provided for @failed_to_load_scheduled_orders.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load scheduled orders'**
+  String get failed_to_load_scheduled_orders;
+
+  /// No description provided for @schedule_time_too_soon.
+  ///
+  /// In en, this message translates to:
+  /// **'Schedule time must be at least 30 minutes from now'**
+  String get schedule_time_too_soon;
+
+  /// No description provided for @schedule_time_too_far.
+  ///
+  /// In en, this message translates to:
+  /// **'Schedule time cannot be more than 7 days in advance'**
+  String get schedule_time_too_far;
+
+  /// No description provided for @matching_starts_at.
+  ///
+  /// In en, this message translates to:
+  /// **'Driver matching starts at {time}'**
+  String matching_starts_at(String time);
+
+  /// No description provided for @view_scheduled_orders.
+  ///
+  /// In en, this message translates to:
+  /// **'View Scheduled Orders'**
+  String get view_scheduled_orders;
+
+  /// No description provided for @upcoming_scheduled_orders.
+  ///
+  /// In en, this message translates to:
+  /// **'Upcoming Scheduled Orders'**
+  String get upcoming_scheduled_orders;
+
+  /// No description provided for @past_scheduled_orders.
+  ///
+  /// In en, this message translates to:
+  /// **'Past Scheduled Orders'**
+  String get past_scheduled_orders;
+
+  /// No description provided for @scheduled_order_details.
+  ///
+  /// In en, this message translates to:
+  /// **'Scheduled Order Details'**
+  String get scheduled_order_details;
+
+  /// No description provided for @order_will_be_matched.
+  ///
+  /// In en, this message translates to:
+  /// **'Order will be matched {time}'**
+  String order_will_be_matched(String time);
+
+  /// No description provided for @schedule_now.
+  ///
+  /// In en, this message translates to:
+  /// **'Schedule Now'**
+  String get schedule_now;
+
+  /// No description provided for @order_now.
+  ///
+  /// In en, this message translates to:
+  /// **'Order Now'**
+  String get order_now;
+
+  /// No description provided for @or_schedule_for_later.
+  ///
+  /// In en, this message translates to:
+  /// **'Or schedule for later'**
+  String get or_schedule_for_later;
+
+  /// No description provided for @please_select_schedule_time.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select a schedule time'**
+  String get please_select_schedule_time;
+
+  /// No description provided for @scheduled_order_created.
+  ///
+  /// In en, this message translates to:
+  /// **'Your order has been scheduled successfully'**
+  String get scheduled_order_created;
+
+  /// No description provided for @schedule_for_later.
+  ///
+  /// In en, this message translates to:
+  /// **'Schedule for Later'**
+  String get schedule_for_later;
+
+  /// No description provided for @tap_to_change_schedule.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to change'**
+  String get tap_to_change_schedule;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

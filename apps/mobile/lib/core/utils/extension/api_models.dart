@@ -18,6 +18,7 @@ extension OrderStatusExt on OrderStatus {
       OrderStatus.CANCELLED_BY_MERCHANT => Colors.pink,
       OrderStatus.CANCELLED_BY_SYSTEM => Colors.gray,
       OrderStatus.NO_SHOW => Colors.stone,
+      OrderStatus.SCHEDULED => Colors.cyan,
     };
   }
 
@@ -36,6 +37,7 @@ extension OrderStatusExt on OrderStatus {
       OrderStatus.CANCELLED_BY_MERCHANT => LucideIcons.store,
       OrderStatus.CANCELLED_BY_SYSTEM => LucideIcons.triangleAlert,
       OrderStatus.NO_SHOW => LucideIcons.forward,
+      OrderStatus.SCHEDULED => LucideIcons.calendarClock,
     };
   }
 
@@ -54,6 +56,7 @@ extension OrderStatusExt on OrderStatus {
       OrderStatus.CANCELLED_BY_MERCHANT => context.l10n.cancelled_by_merchant,
       OrderStatus.CANCELLED_BY_SYSTEM => context.l10n.cancelled_by_system,
       OrderStatus.NO_SHOW => context.l10n.no_show,
+      OrderStatus.SCHEDULED => context.l10n.scheduled,
     };
   }
 }

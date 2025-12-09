@@ -303,6 +303,14 @@ final userRouter = StatefulShellRoute.indexedStack(
             );
           },
         ),
+        GoRoute(
+          name: Routes.userScheduledOrders.name,
+          path: Routes.userScheduledOrders.path,
+          builder: (context, state) => BlocProvider.value(
+            value: BlocProvider.of<UserOrderCubit>(context),
+            child: const ScheduledOrderListScreen(),
+          ),
+        ),
       ],
     ),
     StatefulShellBranch(

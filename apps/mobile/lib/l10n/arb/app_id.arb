@@ -1365,5 +1365,85 @@
 				"type": "String"
 			}
 		}
-	}
+	},
+	"scheduled_orders": "Pesanan Terjadwal",
+	"scheduled_order": "Pesanan Terjadwal",
+	"schedule_a_ride": "Jadwalkan Perjalanan",
+	"schedule_a_delivery": "Jadwalkan Pengiriman",
+	"schedule_order": "Jadwalkan Pesanan",
+	"no_scheduled_orders": "Tidak ada pesanan terjadwal",
+	"no_scheduled_orders_desc": "Anda belum memiliki pesanan terjadwal. Jadwalkan perjalanan atau pengiriman untuk waktu mendatang.",
+	"scheduled_for": "Dijadwalkan untuk {datetime}",
+	"@scheduled_for": {
+		"placeholders": {
+			"datetime": {
+				"type": "String"
+			}
+		}
+	},
+	"schedule_date": "Tanggal Jadwal",
+	"schedule_time": "Waktu Jadwal",
+	"select_date": "Pilih Tanggal",
+	"select_time": "Pilih Waktu",
+	"scheduled": "Terjadwal",
+	"schedule_order_title": "Jadwalkan Pesanan Anda",
+	"schedule_order_desc": "Pilih kapan Anda ingin pesanan Anda dipenuhi",
+	"min_schedule_time": "Minimal 30 menit dari sekarang",
+	"max_schedule_time": "Maksimal 7 hari ke depan",
+	"schedule_confirmation": "Pesanan Anda akan dijadwalkan untuk {datetime}. Driver akan dicocokkan sekitar 15 menit sebelum waktu yang dijadwalkan.",
+	"@schedule_confirmation": {
+		"placeholders": {
+			"datetime": {
+				"type": "String"
+			}
+		}
+	},
+	"confirm_schedule": "Konfirmasi Jadwal",
+	"edit_schedule": "Ubah Jadwal",
+	"cancel_scheduled_order": "Batalkan Pesanan Terjadwal",
+	"cancel_scheduled_order_confirm": "Apakah Anda yakin ingin membatalkan pesanan terjadwal ini?",
+	"scheduled_order_cancelled": "Pesanan terjadwal berhasil dibatalkan",
+	"scheduled_order_updated": "Pesanan terjadwal berhasil diperbarui",
+	"scheduled_order_placed": "Pesanan berhasil dijadwalkan",
+	"failed_to_schedule_order": "Gagal menjadwalkan pesanan",
+	"failed_to_cancel_scheduled_order": "Gagal membatalkan pesanan terjadwal",
+	"failed_to_update_scheduled_order": "Gagal memperbarui pesanan terjadwal",
+	"failed_to_load_scheduled_orders": "Gagal memuat pesanan terjadwal",
+	"schedule_time_too_soon": "Waktu jadwal harus minimal 30 menit dari sekarang",
+	"schedule_time_too_far": "Waktu jadwal tidak boleh lebih dari 7 hari ke depan",
+	"matching_starts_at": "Pencarian driver dimulai pada {time}",
+	"@matching_starts_at": {
+		"placeholders": {
+			"time": {
+				"type": "String"
+			}
+		}
+	},
+	"view_scheduled_orders": "Lihat Pesanan Terjadwal",
+	"upcoming_scheduled_orders": "Pesanan Terjadwal Mendatang",
+	"past_scheduled_orders": "Pesanan Terjadwal Sebelumnya",
+	"scheduled_order_details": "Detail Pesanan Terjadwal",
+	"order_will_be_matched": "Pesanan akan dicocokkan {time}",
+	"@order_will_be_matched": {
+		"placeholders": {
+			"time": {
+				"type": "String"
+			}
+		}
+	},
+	"schedule_now": "Jadwalkan Sekarang",
+	"order_now": "Pesan Sekarang",
+	"or_schedule_for_later": "Atau jadwalkan untuk nanti",
+	"please_select_schedule_time": "Silakan pilih waktu jadwal",
+	"scheduled_order_created": "Pesanan Anda telah berhasil dijadwalkan",
+	"schedule_for_later": "Jadwalkan untuk Nanti",
+	"scheduled_for": "Dijadwalkan untuk: {datetime}",
+	"@scheduled_for": {
+		"placeholders": {
+			"datetime": {
+				"type": "String"
+			}
+		}
+	},
+	"tap_to_change_schedule": "Ketuk untuk mengubah"
 }

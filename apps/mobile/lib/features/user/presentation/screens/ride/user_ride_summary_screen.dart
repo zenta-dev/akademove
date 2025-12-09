@@ -3,7 +3,7 @@ import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/l10n/l10n.dart';
 import 'package:api_client/api_client.dart';
-import 'package:flutter/material.dart' show showModalBottomSheet;
+import 'package:flutter/material.dart' as material;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -22,6 +22,7 @@ class _UserRideSummaryScreenState extends State<UserRideSummaryScreen> {
   BankProvider? bankProvider;
   Coupon? selectedCoupon;
   num discountAmount = 0;
+  DateTime? scheduledAt;
 
   @override
   void initState() {
@@ -120,6 +121,107 @@ class _UserRideSummaryScreenState extends State<UserRideSummaryScreen> {
     }
   }
 
+  Future<void> placeScheduledOrder(UserOrderState state) async {
+    final pickup = state.estimateOrder?.pickup;
+    final dropoff = state.estimateOrder?.dropoff;
+    if (pickup == null || dropoff == null) {
+      context.showMyToast(
+        context.l10n.toast_app_state_corrupted,
+        type: ToastType.failed,
+      );
+      return;
+    }
+
+    if (scheduledAt == null) {
+      context.showMyToast(
+        context.l10n.please_select_schedule_time,
+        type: ToastType.failed,
+      );
+      return;
+    }
+
+    final orderCubit = context.read<UserOrderCubit>();
+    final result = await orderCubit.placeScheduledOrder(
+      pickup,
+      dropoff,
+      OrderType.RIDE,
+      method,
+      scheduledAt!,
+      gender: gender,
+      bankProvider: bankProvider,
+      couponCode: selectedCoupon?.code,
+    );
+
+    if (!mounted || !context.mounted) return;
+
+    if (result == null) {
+      context.showMyToast(
+        context.l10n.toast_failed_place_order,
+        type: ToastType.failed,
+      );
+      return;
+    }
+
+    context.showMyToast(
+      context.l10n.scheduled_order_created,
+      type: ToastType.success,
+    );
+
+    // Pop back and navigate to scheduled orders
+    context.pop();
+    if (!mounted || !context.mounted) return;
+    context.pushNamed(Routes.userScheduledOrders.name);
+  }
+
+  Future<void> _selectScheduleDateTime() async {
+    final now = DateTime.now();
+    final minDate = now.add(const Duration(minutes: 30));
+    final maxDate = now.add(const Duration(days: 7));
+
+    final pickedDate = await material.showDatePicker(
+      context: context,
+      initialDate: scheduledAt ?? minDate,
+      firstDate: minDate,
+      lastDate: maxDate,
+    );
+
+    if (pickedDate == null || !mounted) return;
+
+    final pickedTime = await material.showTimePicker(
+      context: context,
+      initialTime: scheduledAt != null
+          ? material.TimeOfDay.fromDateTime(scheduledAt!)
+          : material.TimeOfDay.fromDateTime(minDate),
+    );
+
+    if (pickedTime == null || !mounted) return;
+
+    final newDateTime = DateTime(
+      pickedDate.year,
+      pickedDate.month,
+      pickedDate.day,
+      pickedTime.hour,
+      pickedTime.minute,
+    );
+
+    // Validate
+    final validMinTime = DateTime.now().add(const Duration(minutes: 30));
+    if (newDateTime.isBefore(validMinTime)) {
+      if (mounted) {
+        context.showMyToast(context.l10n.schedule_time_too_soon);
+      }
+      return;
+    }
+
+    setState(() {
+      scheduledAt = newDateTime;
+    });
+  }
+
+  String _formatScheduledAt(DateTime dt) {
+    return '${dt.day}/${dt.month}/${dt.year} ${dt.hour.toString().padLeft(2, '0')}:${dt.minute.toString().padLeft(2, '0')}';
+  }
+
   @override
   Widget build(BuildContext context) {
     return MyScaffold(
@@ -188,7 +290,7 @@ class _UserRideSummaryScreenState extends State<UserRideSummaryScreen> {
             builder: (context, couponState) {
               return OutlineButton(
                 onPressed: () {
-                  showModalBottomSheet(
+                  material.showModalBottomSheet(
                     context: context,
                     isScrollControlled: true,
                     builder: (_) => BlocProvider.value(
@@ -236,6 +338,47 @@ class _UserRideSummaryScreenState extends State<UserRideSummaryScreen> {
               );
             },
           ),
+          // Schedule for later option
+          OutlineButton(
+            onPressed: _selectScheduleDateTime,
+            child: Row(
+              children: [
+                Icon(LucideIcons.calendarClock, size: 20.sp),
+                SizedBox(width: 12.w),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        scheduledAt == null
+                            ? context.l10n.schedule_for_later
+                            : context.l10n.scheduled_for(
+                                _formatScheduledAt(scheduledAt!),
+                              ),
+                        style: context.typography.p.copyWith(fontSize: 14.sp),
+                      ),
+                      if (scheduledAt != null)
+                        Text(
+                          context.l10n.tap_to_change_schedule,
+                          style: context.typography.small.copyWith(
+                            fontSize: 12.sp,
+                            color: context.colorScheme.mutedForeground,
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+                if (scheduledAt != null)
+                  IconButton(
+                    icon: Icon(LucideIcons.x, size: 16.sp),
+                    onPressed: () => setState(() => scheduledAt = null),
+                    variance: ButtonVariance.ghost,
+                  )
+                else
+                  Icon(LucideIcons.chevronRight, size: 20.sp),
+              ],
+            ),
+          ),
           DefaultText(
             context.l10n.label_payment_summary,
             fontSize: 16.sp,
@@ -255,6 +398,30 @@ class _UserRideSummaryScreenState extends State<UserRideSummaryScreen> {
               final hasEstimate = state.estimateOrder != null;
               final canProceed =
                   state.isSuccess && hasEstimate && !state.isLoading;
+
+              // If scheduled, show schedule button, otherwise show proceed button
+              if (scheduledAt != null) {
+                return SizedBox(
+                  width: double.infinity,
+                  child: Button(
+                    style: const ButtonStyle.primary(),
+                    enabled: canProceed,
+                    onPressed: canProceed
+                        ? () => placeScheduledOrder(state)
+                        : null,
+                    child: state.isLoading
+                        ? const Submiting()
+                        : Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            spacing: 8.w,
+                            children: [
+                              const Icon(LucideIcons.calendarCheck),
+                              Text(context.l10n.schedule_now),
+                            ],
+                          ),
+                  ),
+                );
+              }
 
               return SizedBox(
                 width: double.infinity,

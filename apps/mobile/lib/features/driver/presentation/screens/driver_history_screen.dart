@@ -447,6 +447,8 @@ class _DriverHistoryScreenState extends State<DriverHistoryScreen> {
         return const Color(0xFFF44336);
       case OrderStatus.NO_SHOW:
         return const Color(0xFFFF5722);
+      case OrderStatus.SCHEDULED:
+        return const Color(0xFF00BCD4);
     }
   }
 
@@ -475,6 +477,8 @@ class _DriverHistoryScreenState extends State<DriverHistoryScreen> {
         return context.l10n.cancelled;
       case OrderStatus.NO_SHOW:
         return 'No Show';
+      case OrderStatus.SCHEDULED:
+        return context.l10n.scheduled;
     }
   }
 }
