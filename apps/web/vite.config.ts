@@ -1,9 +1,20 @@
+import { createHash } from "node:crypto";
 import tailwindcss from "@tailwindcss/vite";
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import viteReact from "@vitejs/plugin-react";
 import alchemy from "alchemy/cloudflare/tanstack-start";
 import { defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
+
+const hashCache = new Map<string, string>();
+
+function hashString(str: string): string {
+	if (hashCache.has(str)) return hashCache.get(str) ?? "";
+
+	const hash = createHash("sha256").update(str).digest("hex").slice(0, 5);
+	hashCache.set(str, hash);
+	return hash;
+}
 
 const prerender = {
 	enabled: true,
@@ -19,15 +30,6 @@ export default defineConfig({
 			enable_nodejs_process_v2: true,
 		},
 	},
-	assetsInclude: [
-		"**/*.svg",
-		"**/*.png",
-		"**/*.jpg",
-		"**/*.jpeg",
-		"**/*.gif",
-		"**/*.webp",
-		"**/*.ico",
-	],
 	plugins: [
 		tsconfigPaths(),
 		tailwindcss(),
@@ -65,75 +67,72 @@ export default defineConfig({
 		rollupOptions: {
 			external: ["node:async_hooks", "cloudflare:workers"],
 			output: {
-				chunkFileNames: "assets/[name].js",
-				entryFileNames: "assets/[name].js",
-				assetFileNames: "assets/[name].[ext]",
 				manualChunks(id) {
 					if (id.includes("node_modules")) {
 						const parts = id.split("/");
 						const idx = parts.lastIndexOf("node_modules");
 						if (parts[idx + 1] === "react-dom") {
-							return "react-dom";
+							return hashString("rd");
 						}
 						if (parts[idx + 1] === "react") {
-							return "react";
+							return hashString("r");
 						}
 						if (parts[idx + 1] === "scheduler") {
-							return "scheduler";
+							return hashString("rsc");
 						}
 						if (id.includes("zod")) {
-							return "zod";
+							return hashString("z");
 						}
 						if (id.includes("next-themes")) {
-							return "next-themes";
+							return hashString("nt");
 						}
 						if (id.includes("react-hook-form")) {
-							return "react-hook-form";
+							return hashString("rhf");
 						}
 						if (id.includes("class-variance-authority")) {
-							return "class-variance-authority";
+							return hashString("cva");
 						}
 						if (id.includes("clsx")) {
-							return "clsx";
+							return hashString("clsx");
 						}
 						if (id.includes("tailwind-merge")) {
-							return "tailwind-merge";
+							return hashString("twm");
 						}
 						if (parts[idx + 1].includes("radix-ui")) {
-							return `radix-ui-${parts[idx + 2]}`;
+							return hashString(`rdxui${parts[idx + 2]}`);
 						}
 						if (id.includes("lucide")) {
-							return "lucide";
+							return hashString("l");
 						}
 						if (id.includes("sonner")) {
-							return "sonner";
+							return hashString("s");
 						}
 						if (id.includes("framer-motion")) {
-							return "framer-motion";
+							return hashString("fm");
 						}
 						if (id.includes("date-fns")) {
-							return "date-fns";
+							return hashString("df");
 						}
 						if (id.includes("react-day-picker")) {
-							return "react-day-picker";
+							return hashString("rdp");
 						}
 						if (id.includes("@orpc")) {
-							return "orpc";
+							return hashString("orpc");
 						}
 						if (id.includes("radash")) {
-							return "radash";
+							return hashString("radash");
 						}
 						if (id.includes("cmdk")) {
-							return "cmdk";
+							return hashString("cmdk");
 						}
 						if (id.includes("pino")) {
-							return "pino";
+							return hashString("pino");
 						}
 						if (id.includes("react-medium-image-zoom")) {
-							return "react-medium-image-zoom";
+							return hashString("pmiz");
 						}
 						// if (id.includes("react-phone-number-input")) {
-						// 	return "react-phone-number-input";
+						// 	return hashString("rpni");
 						// }
 					}
 				},
