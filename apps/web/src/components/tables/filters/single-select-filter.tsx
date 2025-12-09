@@ -39,11 +39,14 @@ export const SingleSelectFilter = ({
 			</SelectTrigger>
 			<SelectContent>
 				<SelectItem value={allOption.value}>{allOption.label}</SelectItem>
-				{options.map((option) => (
-					<SelectItem key={option.value} value={option.value}>
-						{option.label}
-					</SelectItem>
-				))}
+				{options.map(
+					(option) =>
+						option.value && (
+							<SelectItem key={option.value} value={option.value}>
+								{option.label}
+							</SelectItem>
+						),
+				)}
 			</SelectContent>
 		</Select>
 	);
