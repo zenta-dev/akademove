@@ -67,19 +67,20 @@ export const AuthHandler = pub.router({
 				const opts = { tx };
 				const [result, newCustomerBadge] = await Promise.all([
 					context.repo.auth.signUp({ ...data, role: "USER" }, opts),
-					context.repo.badge.main
-						.getByCode("NEW_CUSTOMER", opts)
-						.catch(() => null),
+					context.repo.badge.main.getByCode("NEW_CUSTOMER", opts),
 				]);
 
 				// Duplicate account detection (non-blocking - monitoring only)
 				if (ipAddress ?? data.name) {
 					const [recentIpRegistrations, similarNames] = await Promise.all([
 						ipAddress
-							? context.repo.fraud.getRecentRegistrationsByIp(ipAddress)
+							? context.repo.fraud.getRecentRegistrationsByIp(
+									{ ipAddress },
+									opts,
+								)
 							: Promise.resolve([]),
 						data.name
-							? context.repo.fraud.findSimilarUserNames(data.name)
+							? context.repo.fraud.findSimilarUserNames(data, opts)
 							: Promise.resolve([]),
 					]);
 
@@ -168,18 +169,14 @@ export const AuthHandler = pub.router({
 								"[AuthHandler] Failed to send verification email after user sign up",
 							);
 						}),
-				]);
-
-				// Create badge separately if it exists
-				if (newCustomerBadge) {
-					await context.repo.badge.user.create(
+					context.repo.badge.user.create(
 						{
 							userId: result.user.id,
 							badgeId: newCustomerBadge.id,
 						},
 						opts,
-					);
-				}
+					),
+				]);
 
 				if (!signInResult.user.banned) {
 					context.resHeaders?.set(
@@ -226,9 +223,7 @@ export const AuthHandler = pub.router({
 					const opts = { tx };
 					const [result, newDriverBadge] = await Promise.all([
 						context.repo.auth.signUpDriver(data, opts),
-						context.repo.badge.main
-							.getByCode("NEW_DRIVER", opts)
-							.catch(() => null),
+						context.repo.badge.main.getByCode("NEW_DRIVER", opts),
 					]);
 
 					// Duplicate account detection for drivers (includes bank account check)
@@ -239,13 +234,19 @@ export const AuthHandler = pub.router({
 						const [existingBankAccounts, recentIpRegistrations, similarNames] =
 							await Promise.all([
 								bankAccountNumber
-									? context.repo.fraud.checkBankAccountExists(bankAccountNumber)
+									? context.repo.fraud.checkBankAccountExists(
+											{ bankAccountNumber },
+											opts,
+										)
 									: Promise.resolve([]),
 								ipAddress
-									? context.repo.fraud.getRecentRegistrationsByIp(ipAddress)
+									? context.repo.fraud.getRecentRegistrationsByIp(
+											{ ipAddress },
+											opts,
+										)
 									: Promise.resolve([]),
 								data.name
-									? context.repo.fraud.findSimilarUserNames(data.name)
+									? context.repo.fraud.findSimilarUserNames(data, opts)
 									: Promise.resolve([]),
 							]);
 
@@ -336,25 +337,21 @@ export const AuthHandler = pub.router({
 							opts,
 						),
 						context.repo.auth
-							.sendEmailVerification({ email: data.email })
+							.sendEmailVerification({ email: data.email }, opts)
 							.catch((err) => {
 								log.error(
 									{ error: err, email: data.email },
 									"[AuthHandler] Failed to send verification email after driver sign up",
 								);
 							}),
-					]);
-
-					// Create badge separately if it exists
-					if (newDriverBadge) {
-						await context.repo.badge.user.create(
+						context.repo.badge.user.create(
 							{
 								userId: result.user.id,
 								badgeId: newDriverBadge.id,
 							},
 							opts,
-						);
-					}
+						),
+					]);
 
 					if (!signInResult.user.banned) {
 						context.resHeaders?.set(
@@ -398,13 +395,11 @@ export const AuthHandler = pub.router({
 					const opts = { tx };
 					const [result, newMerchantBadge] = await Promise.all([
 						context.repo.auth.signUpMerchant(data, opts),
-						context.repo.badge.main
-							.getByCode("NEW_MERCHANT", opts)
-							.catch(() => null),
+						context.repo.badge.main.getByCode("NEW_MERCHANT", opts),
 					]);
 
 					const [signInResult] = await Promise.all([
-						context.repo.auth.signIn(data),
+						context.repo.auth.signIn(data, opts),
 						context.repo.merchant.main.create(
 							{
 								...data.detail,
@@ -413,25 +408,21 @@ export const AuthHandler = pub.router({
 							opts,
 						),
 						context.repo.auth
-							.sendEmailVerification({ email: data.email })
+							.sendEmailVerification({ email: data.email }, opts)
 							.catch((err) => {
 								log.error(
 									{ error: err, email: data.email },
 									"[AuthHandler] Failed to send verification email after merchant sign up",
 								);
 							}),
-					]);
-
-					// Create badge separately if it exists
-					if (newMerchantBadge) {
-						await context.repo.badge.user.create(
+						context.repo.badge.user.create(
 							{
 								userId: result.user.id,
 								badgeId: newMerchantBadge.id,
 							},
 							opts,
-						);
-					}
+						),
+					]);
 
 					if (!signInResult.user.banned) {
 						context.resHeaders?.set(

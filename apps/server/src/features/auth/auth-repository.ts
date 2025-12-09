@@ -326,13 +326,17 @@ export class AuthRepository extends BaseRepository {
 	 * @param params - Email address
 	 * @returns true if successful
 	 */
-	async sendEmailVerification(params: SendEmailVerification) {
+	async sendEmailVerification(
+		params: SendEmailVerification,
+		opts?: PartialWithTx,
+	) {
 		try {
 			return await this.#emailVerificationService.sendEmailVerification(
 				params,
 				{
 					findUserByEmail: async (email: string) => {
-						return await this.db.query.user.findFirst({
+						const db = opts?.tx ?? this.db;
+						return await db.query.user.findFirst({
 							columns: {
 								id: true,
 								name: true,

@@ -670,11 +670,14 @@ export class FraudRepository extends BaseRepository {
 	 * Check for existing bank accounts in driver table
 	 */
 	async checkBankAccountExists(
-		bankAccountNumber: string,
+		params: { bankAccountNumber: string },
+		opts?: PartialWithTx,
 	): Promise<Array<{ bankAccountNumber: string; userId: string }>> {
+		const { bankAccountNumber } = params;
 		try {
+			const db = opts?.tx ?? this.db;
 			// Query actual driver records for matching bank account numbers
-			const drivers = await this.db.query.driver.findMany({
+			const drivers = await db.query.driver.findMany({
 				columns: { userId: true, bank: true },
 			});
 
@@ -706,14 +709,20 @@ export class FraudRepository extends BaseRepository {
 	 * This queries actual user registrations, not fraud events
 	 */
 	async getRecentRegistrationsByIp(
-		ipAddress: string,
-		windowHours = 24,
+		params: {
+			ipAddress: string;
+			windowHours?: number;
+		},
+		opts?: PartialWithTx,
 	): Promise<Array<{ userId: string; registeredAt: Date }>> {
+		const { ipAddress, windowHours = 24 } = params;
 		try {
+			const db = opts?.tx ?? this.db;
+
 			const windowStart = new Date(Date.now() - windowHours * 60 * 60 * 1000);
 
 			// Query user fraud profiles that have this IP in their known IPs
-			const profiles = await this.db.query.userFraudProfile.findMany({
+			const profiles = await db.query.userFraudProfile.findMany({
 				where: (f, op) => op.gte(f.createdAt, windowStart),
 				columns: { userId: true, knownIps: true, createdAt: true },
 			});
@@ -744,16 +753,18 @@ export class FraudRepository extends BaseRepository {
 	 * Find users with similar names for duplicate detection
 	 */
 	async findSimilarUserNames(
-		name: string,
-		threshold = 0.85,
+		params: { name: string; threshold?: number },
+		opts?: PartialWithTx,
 	): Promise<Array<{ userId: string; name: string; similarity: number }>> {
+		const { name, threshold = 0.8 } = params;
 		try {
+			const db = opts?.tx ?? this.db;
 			const { DuplicateAccountService } = await import(
 				"./services/duplicate-account-service"
 			);
 
 			// Get all users (limit to recent for performance)
-			const users = await this.db.query.user.findMany({
+			const users = await db.query.user.findMany({
 				columns: { id: true, name: true },
 				limit: 1000,
 				orderBy: desc(tables.user.createdAt),
