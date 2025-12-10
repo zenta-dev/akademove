@@ -4413,151 +4413,58 @@ async function seedBanners() {
 	const BANNERS = [
 		// USER_HOME banners
 		{
-			title: "Selamat Datang di AkadeMove!",
+			title: "Ride with Us",
 			description:
-				"Platform transportasi kampus terpercaya. Nikmati perjalanan aman dan nyaman bersama driver mahasiswa terverifikasi.",
-			imageUrl:
-				"https://placehold.co/800x400/2563eb/ffffff?text=Welcome+to+AkadeMove",
-			actionType: "NONE" as const,
-			actionValue: null,
+				"Butuh tumpangan cepat dan aman di sekitar kampus? Pesan sekarang juga!",
+			imageUrl: "https://akademove.com/banner/ride.png",
+			actionType: "ROUTE" as const,
+			actionValue: "/user/home/ride",
 			placement: "USER_HOME" as const,
 			targetAudience: "ALL" as const,
 			isActive: true,
-			priority: 100,
+			priority: 10,
 			startAt: now,
 			endAt: sixtyDaysFromNow,
 		},
 		{
-			title: "Promo Mahasiswa Baru!",
+			title: "Food Delivery",
 			description:
-				"Diskon 50% untuk 3 perjalanan pertama! Gunakan kode MAHASISWABARU saat checkout.",
-			imageUrl:
-				"https://placehold.co/800x400/16a34a/ffffff?text=Promo+Mahasiswa+Baru",
+				"Nikmati kemudahan pesan makanan dari kantin dan warung kampus favoritmu. Antar langsung ke lokasi!",
+			imageUrl: "https://akademove.com/banner/food.png",
 			actionType: "ROUTE" as const,
-			actionValue: "/promo",
+			actionValue: "/user/home/mart",
 			placement: "USER_HOME" as const,
-			targetAudience: "USERS" as const,
+			targetAudience: "ALL" as const,
 			isActive: true,
-			priority: 90,
+			priority: 10,
 			startAt: now,
-			endAt: thirtyDaysFromNow,
+			endAt: sixtyDaysFromNow,
 		},
 		{
-			title: "Pesan Makanan Kampus",
+			title: "Package Delivery",
 			description:
-				"Lapar? Pesan makanan dari kantin dan warung kampus favoritmu. Antar langsung ke lokasi!",
-			imageUrl: "https://placehold.co/800x400/ea580c/ffffff?text=Food+Delivery",
+				"Kirim paket antar teman di kampus dengan mudah dan cepat. Cukup pesan, kami antar!",
+			imageUrl: "https://akademove.com/banner/package.png",
 			actionType: "ROUTE" as const,
-			actionValue: "/food",
+			actionValue: "/user/home/delivery",
 			placement: "USER_HOME" as const,
-			targetAudience: "USERS" as const,
+			targetAudience: "ALL" as const,
 			isActive: true,
-			priority: 80,
+			priority: 10,
 			startAt: now,
 			endAt: sixtyDaysFromNow,
 		},
 		{
-			title: "Kirim Dokumen & Paket",
+			title: "ATK & Supplies",
 			description:
-				"Perlu kirim tugas atau paket? Gunakan layanan delivery kami. Cepat, aman, terpercaya!",
-			imageUrl:
-				"https://placehold.co/800x400/7c3aed/ffffff?text=Delivery+Service",
+				"Butuh alat tulis atau perlengkapan kampus? Pesan sekarang, kami antar ke lokasi kamu!",
+			imageUrl: "https://akademove.com/banner/atk.png",
 			actionType: "ROUTE" as const,
-			actionValue: "/delivery",
+			actionValue: "/user/home/delivery",
 			placement: "USER_HOME" as const,
-			targetAudience: "USERS" as const,
+			targetAudience: "ALL" as const,
 			isActive: true,
-			priority: 70,
-			startAt: now,
-			endAt: sixtyDaysFromNow,
-		},
-
-		// DRIVER_HOME banners
-		{
-			title: "Tips Driver Bintang 5!",
-			description:
-				"Pelajari cara meningkatkan rating dan pendapatan sebagai driver AkadeMove.",
-			imageUrl: "https://placehold.co/800x400/0891b2/ffffff?text=Driver+Tips",
-			actionType: "LINK" as const,
-			actionValue: "https://akademove.com/driver-tips",
-			placement: "DRIVER_HOME" as const,
-			targetAudience: "DRIVERS" as const,
-			isActive: true,
-			priority: 100,
-			startAt: now,
-			endAt: sixtyDaysFromNow,
-		},
-		{
-			title: "Bonus Akhir Bulan!",
-			description:
-				"Selesaikan 50 trip bulan ini dan dapatkan bonus Rp100.000. Ayo semangat!",
-			imageUrl: "https://placehold.co/800x400/059669/ffffff?text=Monthly+Bonus",
-			actionType: "NONE" as const,
-			actionValue: null,
-			placement: "DRIVER_HOME" as const,
-			targetAudience: "DRIVERS" as const,
-			isActive: true,
-			priority: 90,
-			startAt: now,
-			endAt: thirtyDaysFromNow,
-		},
-		{
-			title: "Update Jadwal Kuliahmu",
-			description:
-				"Jangan lupa update jadwal kuliah di aplikasi agar tidak mengganggu waktu belajarmu.",
-			imageUrl:
-				"https://placehold.co/800x400/dc2626/ffffff?text=Update+Schedule",
-			actionType: "ROUTE" as const,
-			actionValue: "/schedule",
-			placement: "DRIVER_HOME" as const,
-			targetAudience: "DRIVERS" as const,
-			isActive: true,
-			priority: 80,
-			startAt: now,
-			endAt: sixtyDaysFromNow,
-		},
-
-		// MERCHANT_HOME banners
-		{
-			title: "Tingkatkan Penjualanmu!",
-			description:
-				"Pelajari cara meningkatkan penjualan dan menarik lebih banyak pelanggan.",
-			imageUrl: "https://placehold.co/800x400/ca8a04/ffffff?text=Boost+Sales",
-			actionType: "LINK" as const,
-			actionValue: "https://akademove.com/merchant-guide",
-			placement: "MERCHANT_HOME" as const,
-			targetAudience: "MERCHANTS" as const,
-			isActive: true,
-			priority: 100,
-			startAt: now,
-			endAt: sixtyDaysFromNow,
-		},
-		{
-			title: "Promo Gratis Ongkir",
-			description:
-				"Daftarkan menu favoritmu ke promo gratis ongkir dan tingkatkan orderan!",
-			imageUrl:
-				"https://placehold.co/800x400/be185d/ffffff?text=Free+Delivery+Promo",
-			actionType: "ROUTE" as const,
-			actionValue: "/merchant/promo",
-			placement: "MERCHANT_HOME" as const,
-			targetAudience: "MERCHANTS" as const,
-			isActive: true,
-			priority: 90,
-			startAt: now,
-			endAt: thirtyDaysFromNow,
-		},
-		{
-			title: "Update Menu & Harga",
-			description:
-				"Pastikan menu dan harga selalu up-to-date untuk pelayanan terbaik.",
-			imageUrl: "https://placehold.co/800x400/4f46e5/ffffff?text=Update+Menu",
-			actionType: "ROUTE" as const,
-			actionValue: "/merchant/menu",
-			placement: "MERCHANT_HOME" as const,
-			targetAudience: "MERCHANTS" as const,
-			isActive: true,
-			priority: 80,
+			priority: 10,
 			startAt: now,
 			endAt: sixtyDaysFromNow,
 		},
@@ -4574,8 +4481,6 @@ async function seedBanners() {
 	await db.insert(banner).values(banners);
 	console.log(`✅ Inserted ${banners.length} banners.`);
 	console.log("   - USER_HOME: 4 banners");
-	console.log("   - DRIVER_HOME: 3 banners");
-	console.log("   - MERCHANT_HOME: 3 banners");
 }
 
 async function main() {
