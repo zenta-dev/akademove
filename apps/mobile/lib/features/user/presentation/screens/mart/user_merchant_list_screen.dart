@@ -4,10 +4,11 @@ import 'package:akademove/features/user/presentation/cubits/_export.dart';
 import 'package:akademove/features/user/presentation/state/_export.dart';
 import 'package:akademove/features/user/presentation/widgets/merchant_card_widget.dart';
 import 'package:akademove/features/user/presentation/widgets/merchant_list_search_bar_widget.dart';
-import 'package:flutter/material.dart';
+import 'package:akademove/l10n/l10n.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shadcn_flutter/shadcn_flutter.dart';
 
 class UserMerchantListScreen extends StatefulWidget {
   const UserMerchantListScreen({super.key});
@@ -62,40 +63,37 @@ class _UserMerchantListScreenState extends State<UserMerchantListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Popular Merchants'),
-        elevation: 0,
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black,
-      ),
+    return MyScaffold(
+      scrollable: false,
+      padding: EdgeInsets.zero,
+      headers: [DefaultAppBar(title: context.l10n.popular_merchants)],
+      onRefresh: _onRefresh,
       body: BlocBuilder<UserMerchantListCubit, UserMerchantListState>(
         builder: (context, state) {
           // Error state
           if (state.merchants.isFailure) {
             return _ErrorView(
-              error: state.merchants.message ?? 'Failed to load merchants',
+              error:
+                  state.merchants.message ??
+                  context.l10n.error_failed_load_merchants,
               onRetry: () =>
                   context.read<UserMerchantListCubit>().loadMerchants(),
             );
           }
 
-          return RefreshIndicator(
-            onRefresh: _onRefresh,
-            child: Column(
-              children: [
-                // Search bar
-                MerchantListSearchBarWidget(
-                  onSearch: _onSearchChanged,
-                  onClear: () =>
-                      context.read<UserMerchantListCubit>().clearSearch(),
-                  initialValue: state.searchQuery,
-                ),
+          return Column(
+            children: [
+              // Search bar
+              MerchantListSearchBarWidget(
+                onSearch: _onSearchChanged,
+                onClear: () =>
+                    context.read<UserMerchantListCubit>().clearSearch(),
+                initialValue: state.searchQuery,
+              ),
 
-                // Merchants list
-                Expanded(child: _buildMerchantList(context, state)),
-              ],
-            ),
+              // Merchants list
+              Expanded(child: _buildMerchantList(context, state)),
+            ],
           );
         },
       ),
@@ -160,8 +158,8 @@ class _LoadingView extends StatelessWidget {
           const CircularProgressIndicator(),
           SizedBox(height: 16.h),
           Text(
-            'Loading merchants...',
-            style: Theme.of(context).textTheme.bodyMedium,
+            context.l10n.loading,
+            style: context.typography.p.copyWith(fontSize: 14.sp),
           ),
         ],
       ),
@@ -181,26 +179,38 @@ class _EmptyView extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.store_rounded, size: 64.sp, color: Colors.grey[400]),
+          Icon(
+            LucideIcons.store,
+            size: 64.sp,
+            color: context.colorScheme.mutedForeground,
+          ),
           SizedBox(height: 16.h),
           Text(
-            'No merchants found',
-            style: Theme.of(
-              context,
-            ).textTheme.titleMedium?.copyWith(color: Colors.grey[600]),
+            context.l10n.text_no_merchants_found,
+            style: context.typography.h4.copyWith(
+              fontSize: 16.sp,
+              color: context.colorScheme.mutedForeground,
+            ),
           ),
           SizedBox(height: 8.h),
           Text(
-            'Try adjusting your search',
-            style: Theme.of(
-              context,
-            ).textTheme.bodySmall?.copyWith(color: Colors.grey[500]),
+            context.l10n.text_try_different_category,
+            style: context.typography.small.copyWith(
+              fontSize: 12.sp,
+              color: context.colorScheme.mutedForeground,
+            ),
           ),
           SizedBox(height: 24.h),
-          ElevatedButton.icon(
+          PrimaryButton(
             onPressed: onRetry,
-            icon: const Icon(Icons.refresh),
-            label: const Text('Try Again'),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(LucideIcons.refreshCw, size: 16),
+                SizedBox(width: 8.w),
+                Text(context.l10n.retry),
+              ],
+            ),
           ),
         ],
       ),
@@ -221,13 +231,18 @@ class _ErrorView extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.error_outline, size: 64.sp, color: Colors.red[400]),
+          Icon(
+            LucideIcons.circleAlert,
+            size: 64.sp,
+            color: context.colorScheme.destructive,
+          ),
           SizedBox(height: 16.h),
           Text(
-            'Something went wrong',
-            style: Theme.of(
-              context,
-            ).textTheme.titleMedium?.copyWith(color: Colors.red[600]),
+            context.l10n.oops,
+            style: context.typography.h4.copyWith(
+              fontSize: 16.sp,
+              color: context.colorScheme.destructive,
+            ),
           ),
           SizedBox(height: 8.h),
           Padding(
@@ -235,16 +250,23 @@ class _ErrorView extends StatelessWidget {
             child: Text(
               error,
               textAlign: TextAlign.center,
-              style: Theme.of(
-                context,
-              ).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
+              style: context.typography.small.copyWith(
+                fontSize: 12.sp,
+                color: context.colorScheme.mutedForeground,
+              ),
             ),
           ),
           SizedBox(height: 24.h),
-          ElevatedButton.icon(
+          PrimaryButton(
             onPressed: onRetry,
-            icon: const Icon(Icons.refresh),
-            label: const Text('Retry'),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(LucideIcons.refreshCw, size: 16),
+                SizedBox(width: 8.w),
+                Text(context.l10n.retry),
+              ],
+            ),
           ),
         ],
       ),

@@ -21,11 +21,10 @@ class UserRideOnTripScreen extends StatefulWidget {
 
 class _UserRideOnTripScreenState extends State<UserRideOnTripScreen> {
   GoogleMapController? _mapController;
-  final Set<Marker> _markers = {};
-  final Set<Polyline> _polylines = {};
   BitmapDescriptor? _driverIcon;
   BitmapDescriptor? _pickupIcon;
   BitmapDescriptor? _dropoffIcon;
+  bool _isFirstLoad = true;
 
   @override
   void initState() {
@@ -55,6 +54,7 @@ class _UserRideOnTripScreenState extends State<UserRideOnTripScreen> {
   }
 
   Future<void> _updateMapWithOrderData(UserOrderState state) async {
+    final locationCubit = context.read<UserLocationCubit>();
     final driver = state.currentAssignedDriver.value;
     final order = state.currentOrder.value;
 
@@ -119,22 +119,24 @@ class _UserRideOnTripScreenState extends State<UserRideOnTripScreen> {
       );
 
       // Animate camera to show driver if this is initial load
-      if (_markers.isEmpty) {
+      if (_isFirstLoad) {
+        _isFirstLoad = false;
         await _mapController?.animateCamera(
           CameraUpdate.newLatLng(LatLng(driverLat, driverLng)),
         );
       }
     } else {
       // If no driver location, center on pickup
-      if (_markers.isEmpty) {
+      if (_isFirstLoad) {
+        _isFirstLoad = false;
         await _mapController?.animateCamera(
           CameraUpdate.newLatLng(LatLng(pickupLat, pickupLng)),
         );
       }
     }
 
-    // Add polyline between pickup and dropoff with actual route
-    _polylines.clear();
+    // Build polylines
+    final newPolylines = <Polyline>{};
 
     if (!mounted) return;
     final color = context.colorScheme.primary;
@@ -152,7 +154,7 @@ class _UserRideOnTripScreenState extends State<UserRideOnTripScreen> {
             .map((coord) => LatLng(coord.y.toDouble(), coord.x.toDouble()))
             .toList();
 
-        _polylines.add(
+        newPolylines.add(
           Polyline(
             polylineId: const PolylineId('route'),
             points: routePoints,
@@ -162,7 +164,7 @@ class _UserRideOnTripScreenState extends State<UserRideOnTripScreen> {
         );
       } else {
         // Fallback to straight line if no route available
-        _polylines.add(
+        newPolylines.add(
           Polyline(
             polylineId: const PolylineId('route'),
             points: [
@@ -177,7 +179,7 @@ class _UserRideOnTripScreenState extends State<UserRideOnTripScreen> {
     } catch (e) {
       logger.e('[UserRideOnTripScreen] - Failed to get route: $e');
       // Fallback to straight line on error
-      _polylines.add(
+      newPolylines.add(
         Polyline(
           polylineId: const PolylineId('route'),
           points: [
@@ -190,11 +192,10 @@ class _UserRideOnTripScreenState extends State<UserRideOnTripScreen> {
       );
     }
 
-    setState(() {
-      _markers
-        ..clear()
-        ..addAll(newMarkers);
-    });
+    if (!mounted) return;
+
+    // Update cubit with markers and polylines
+    locationCubit.setMapData(markers: newMarkers, polylines: newPolylines);
   }
 
   Widget _buildCell(String title, String value, {bool allowMultiline = false}) {
@@ -592,16 +593,23 @@ class _UserRideOnTripScreenState extends State<UserRideOnTripScreen> {
                 height: 300.h,
                 child: Stack(
                   children: [
-                    MapWrapperWidget(
-                      onMapCreated: (controller) {
-                        _mapController = controller;
-                        // Initial map update
-                        final state = context.read<UserOrderCubit>().state;
-                        _updateMapWithOrderData(state);
+                    BlocBuilder<UserLocationCubit, UserLocationState>(
+                      buildWhen: (previous, current) =>
+                          previous.markers != current.markers ||
+                          previous.polylines != current.polylines,
+                      builder: (context, locationState) {
+                        return MapWrapperWidget(
+                          onMapCreated: (controller) {
+                            _mapController = controller;
+                            // Initial map update
+                            final state = context.read<UserOrderCubit>().state;
+                            _updateMapWithOrderData(state);
+                          },
+                          markers: locationState.markers,
+                          polylines: locationState.polylines,
+                          myLocationEnabled: true,
+                        );
                       },
-                      markers: _markers,
-                      polylines: _polylines,
-                      myLocationEnabled: true,
                     ),
                     if (_mapController == null)
                       Positioned.fill(

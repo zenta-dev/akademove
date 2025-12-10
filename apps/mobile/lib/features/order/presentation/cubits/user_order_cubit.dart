@@ -30,6 +30,10 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
     return super.close();
   }
 
+  void setLocation({Place? pickup, Place? dropoff}) {
+    emit(state.copyWith(pickupLocation: pickup, dropoffLocation: dropoff));
+  }
+
   Future<void> list() async => await taskManager.execute('UOC-l1', () async {
     try {
       emit(state.copyWith(orderHistories: const OperationResult.loading()));
@@ -95,39 +99,47 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
         }
       });
 
-  Future<void> estimate(Place pickup, Place dropoff) async => await taskManager
-      .execute('UOC-e1-${pickup.hashCode}-${dropoff.hashCode}', () async {
-        try {
-          emit(state.copyWith(estimateOrder: const OperationResult.loading()));
+  Future<void> estimate({
+    required OrderEstimateRequest req,
+    required Place pickup,
+    required Place dropoff,
+  }) async => await taskManager.execute(
+    'UOC-e1-${pickup.hashCode}-${dropoff.hashCode}',
+    () async {
+      try {
+        emit(
+          state.copyWith(
+            estimateOrder: const OperationResult.loading(),
+            pickupLocation: pickup,
+            dropoffLocation: dropoff,
+          ),
+        );
 
-          final res = await _orderRepository.estimate(
-            EstimateOrderQuery(
-              type: OrderType.RIDE,
-              pickupLocation: pickup.toCoordinate(),
-              dropoffLocation: dropoff.toCoordinate(),
-            ),
-          );
+        final res = await _orderRepository.estimate(req);
 
-          emit(
-            state.copyWith(
-              estimateOrder: OperationResult.success(
-                EstimateOrderResult(
-                  summary: res.data,
-                  pickup: pickup,
-                  dropoff: dropoff,
-                ),
+        emit(
+          state.copyWith(
+            estimateOrder: OperationResult.success(
+              EstimateOrderResult(
+                summary: res.data,
+                pickup: pickup,
+                dropoff: dropoff,
               ),
             ),
-          );
-        } on BaseError catch (e, st) {
-          logger.e(
-            '[UserOrderCubit] - Error: ${e.message}',
-            error: e,
-            stackTrace: st,
-          );
-          emit(state.copyWith(estimateOrder: OperationResult.failed(e)));
-        }
-      });
+            pickupLocation: pickup,
+            dropoffLocation: dropoff,
+          ),
+        );
+      } on BaseError catch (e, st) {
+        logger.e(
+          '[UserOrderCubit] - Error: ${e.message}',
+          error: e,
+          stackTrace: st,
+        );
+        emit(state.copyWith(estimateOrder: OperationResult.failed(e)));
+      }
+    },
+  );
 
   Future<PlaceOrderResponse?> placeOrder(
     Place pickup,
@@ -144,6 +156,8 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
           currentOrder: const OperationResult.loading(),
           currentPayment: const OperationResult.loading(),
           currentTransaction: const OperationResult.loading(),
+          pickupLocation: pickup,
+          dropoffLocation: dropoff,
         ),
       );
 
@@ -170,6 +184,8 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
           currentOrder: OperationResult.success(res.data.order),
           currentPayment: OperationResult.success(res.data.payment),
           currentTransaction: OperationResult.success(res.data.transaction),
+          pickupLocation: pickup,
+          dropoffLocation: dropoff,
         ),
       );
       return res.data;

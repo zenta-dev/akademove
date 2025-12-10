@@ -394,15 +394,15 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
                 spacing: 8.w,
                 children: [
                   const Icon(Icons.menu_book_rounded),
-                  Expanded(
-                    child: Text(
-                      note.instructions ?? '',
-                      style: context.typography.small.copyWith(
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
+                  // Expanded(
+                  //   child: Text(
+                  //     note.instructions ?? '',
+                  //     style: context.typography.small.copyWith(
+                  //       fontSize: 12.sp,
+                  //       fontWeight: FontWeight.w500,
+                  //     ),
+                  //   ),
+                  // ),
                 ],
               ),
             ),

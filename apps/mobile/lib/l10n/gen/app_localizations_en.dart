@@ -12,6 +12,57 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
+  String get edit_detail => 'Edit Detail';
+
+  @override
+  String get total_delivery_distance => 'Total delivery distance';
+
+  @override
+  String get choose_item_type => 'Choose your item type';
+
+  @override
+  String get document => 'Document';
+
+  @override
+  String get cloth => 'Cloth';
+
+  @override
+  String get medicine => 'Medicine';
+
+  @override
+  String get book => 'Book';
+
+  @override
+  String get other => 'Other';
+
+  @override
+  String get max => 'Max';
+
+  @override
+  String get choose_your_items_size => 'Choose your item\'s size';
+
+  @override
+  String get choose => 'Choose';
+
+  @override
+  String get total_weight => 'Total weight';
+
+  @override
+  String get small => 'Small';
+
+  @override
+  String get medium => 'Medium';
+
+  @override
+  String get large => 'Large';
+
+  @override
+  String get add_delivery_detail => 'Add delivery detail';
+
+  @override
+  String get pickup_and_dropoff_must_be_set => 'Pickup and dropoff locations must be set';
+
+  @override
   String get start_quiz => 'Start Quiz';
 
   @override
@@ -833,9 +884,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get courtesy => 'Courtesy';
-
-  @override
-  String get other => 'Other';
 
   @override
   String get comment_optional => 'Comment (Optional)';

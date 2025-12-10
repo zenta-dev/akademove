@@ -33,7 +33,7 @@ class UserRidePaymentScreen extends StatelessWidget {
                     ),
                   )
                   .large(color: context.colorScheme.primary)
-                  .asSkeleton(enabled: state.isLoading);
+                  .asSkeleton(enabled: state.currentOrder.isLoading);
             },
           ),
           BlocConsumer<UserOrderCubit, UserOrderState>(
@@ -49,7 +49,7 @@ class UserRidePaymentScreen extends StatelessWidget {
                     type: ToastType.success,
                   )
                   ..pushReplacementNamed(Routes.userRideOnTrip.name);
-              } else if (state.isFailure ||
+              } else if (state.currentOrder.isFailure ||
                   payment.status == TransactionStatus.FAILED) {
                 context.showMyToast(
                   context.l10n.text_payment_failed,
@@ -65,7 +65,7 @@ class UserRidePaymentScreen extends StatelessWidget {
                   onExpired: () {
                     context.pop();
                   },
-                ).asSkeleton(enabled: state.isLoading);
+                ).asSkeleton(enabled: state.currentOrder.isLoading);
               }
               if (paymentMethod == PaymentMethod.BANK_TRANSFER) {
                 return BankTransferPaymentWidget(
@@ -74,7 +74,7 @@ class UserRidePaymentScreen extends StatelessWidget {
                   onExpired: () {
                     context.pop();
                   },
-                ).asSkeleton(enabled: state.isLoading);
+                ).asSkeleton(enabled: state.currentOrder.isLoading);
               }
               return Alert.destructive(
                 title: Text(context.l10n.text_unsupported_payment_method),

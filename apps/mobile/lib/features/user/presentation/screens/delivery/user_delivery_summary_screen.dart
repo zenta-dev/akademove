@@ -26,8 +26,9 @@ class _UserDeliverySummaryScreenState extends State<UserDeliverySummaryScreen> {
     super.initState();
     // Load eligible coupons when screen loads
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final deliveryState = context.read<UserDeliveryCubit>().state;
-      final totalAmount = deliveryState.estimate.value?.summary.totalCost ?? 0;
+      final orderState = context.read<UserOrderCubit>().state;
+      final totalAmount =
+          orderState.estimateOrder.value?.summary.totalCost ?? 0;
       if (totalAmount > 0) {
         context.read<CouponCubit>().loadEligibleCoupons(
           serviceType: OrderType.DELIVERY,
@@ -56,13 +57,13 @@ class _UserDeliverySummaryScreenState extends State<UserDeliverySummaryScreen> {
           ],
         ),
       ],
-      body: BlocBuilder<UserDeliveryCubit, UserDeliveryState>(
+      body: BlocBuilder<UserOrderCubit, UserOrderState>(
         builder: (context, state) {
-          if (state.status.isLoading) {
+          if (state.estimateOrder.isLoading) {
             return const Center(child: CircularProgressIndicator());
           }
 
-          final estimate = state.estimate.value;
+          final estimate = state.estimateOrder.value;
           if (estimate == null) {
             return Center(
               child: DefaultText(
@@ -99,25 +100,25 @@ class _UserDeliverySummaryScreenState extends State<UserDeliverySummaryScreen> {
                           context.l10n.label_to,
                           estimate.dropoff.vicinity,
                         ),
-                        _buildDetailRow(
-                          context,
-                          context.l10n.label_item,
-                          estimate.details.description,
-                        ),
+                        // _buildDetailRow(
+                        //   context,
+                        //   context.l10n.label_item,
+                        //   estimate.details.description,
+                        // ),
                         _buildDetailRow(
                           context,
                           context.l10n.label_weight,
-                          '${estimate.details.weight}kg',
+                          '${estimate.summary.breakdown.weight}kg',
                         ),
-                        if (estimate.details.specialInstructions
-                            case final instructions?) ...[
-                          const Divider(),
-                          _buildDetailRow(
-                            context,
-                            context.l10n.label_instructions,
-                            instructions,
-                          ),
-                        ],
+                        // if (estimate.details.specialInstructions
+                        //     case final instructions?) ...[
+                        //   const Divider(),
+                        //   _buildDetailRow(
+                        //     context,
+                        //     context.l10n.label_instructions,
+                        //     instructions,
+                        //   ),
+                        // ],
                       ],
                     ),
                   ),

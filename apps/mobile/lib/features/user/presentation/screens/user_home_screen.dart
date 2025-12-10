@@ -44,10 +44,10 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
     _bannerController = CarouselController();
     _notificationCubit = sl<NotificationCubit>();
     _notificationCubit.getUnreadCount();
+    // Location is auto-initialized by UserLocationCubit, no need to fetch here
     Future.wait([
       context.read<UserHomeCubit>().getPopulars(),
       context.read<ConfigurationCubit>().getBanners(placement: 'USER_HOME'),
-      context.read<UserLocationCubit>().getMyLocation(context),
       context.read<UserWalletCubit>().getMine(),
     ]);
   }

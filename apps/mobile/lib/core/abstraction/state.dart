@@ -2,10 +2,12 @@
 import 'package:akademove/core/_export.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:shadcn_flutter/shadcn_flutter.dart';
 
 abstract class BaseCubit<T> extends Cubit<T> {
   BaseCubit(super.initialState);
 
+  @protected
   final taskManager = TaskDedupeManager();
 
   // Future<void> init();

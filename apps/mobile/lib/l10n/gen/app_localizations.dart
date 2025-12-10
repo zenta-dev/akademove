@@ -97,6 +97,108 @@ abstract class AppLocalizations {
     Locale('id')
   ];
 
+  /// No description provided for @edit_detail.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Detail'**
+  String get edit_detail;
+
+  /// No description provided for @total_delivery_distance.
+  ///
+  /// In en, this message translates to:
+  /// **'Total delivery distance'**
+  String get total_delivery_distance;
+
+  /// No description provided for @choose_item_type.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose your item type'**
+  String get choose_item_type;
+
+  /// No description provided for @document.
+  ///
+  /// In en, this message translates to:
+  /// **'Document'**
+  String get document;
+
+  /// No description provided for @cloth.
+  ///
+  /// In en, this message translates to:
+  /// **'Cloth'**
+  String get cloth;
+
+  /// No description provided for @medicine.
+  ///
+  /// In en, this message translates to:
+  /// **'Medicine'**
+  String get medicine;
+
+  /// No description provided for @book.
+  ///
+  /// In en, this message translates to:
+  /// **'Book'**
+  String get book;
+
+  /// No description provided for @other.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get other;
+
+  /// No description provided for @max.
+  ///
+  /// In en, this message translates to:
+  /// **'Max'**
+  String get max;
+
+  /// No description provided for @choose_your_items_size.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose your item\'s size'**
+  String get choose_your_items_size;
+
+  /// No description provided for @choose.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose'**
+  String get choose;
+
+  /// No description provided for @total_weight.
+  ///
+  /// In en, this message translates to:
+  /// **'Total weight'**
+  String get total_weight;
+
+  /// No description provided for @small.
+  ///
+  /// In en, this message translates to:
+  /// **'Small'**
+  String get small;
+
+  /// No description provided for @medium.
+  ///
+  /// In en, this message translates to:
+  /// **'Medium'**
+  String get medium;
+
+  /// No description provided for @large.
+  ///
+  /// In en, this message translates to:
+  /// **'Large'**
+  String get large;
+
+  /// No description provided for @add_delivery_detail.
+  ///
+  /// In en, this message translates to:
+  /// **'Add delivery detail'**
+  String get add_delivery_detail;
+
+  /// No description provided for @pickup_and_dropoff_must_be_set.
+  ///
+  /// In en, this message translates to:
+  /// **'Pickup and dropoff locations must be set'**
+  String get pickup_and_dropoff_must_be_set;
+
   /// No description provided for @start_quiz.
   ///
   /// In en, this message translates to:
@@ -1734,12 +1836,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Courtesy'**
   String get courtesy;
-
-  /// No description provided for @other.
-  ///
-  /// In en, this message translates to:
-  /// **'Other'**
-  String get other;
 
   /// No description provided for @comment_optional.
   ///

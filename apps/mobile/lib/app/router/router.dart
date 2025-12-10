@@ -44,6 +44,7 @@ enum Routes {
   userDeliveryPickup('/user/home/delivery/pickup'),
   userDeliveryDropoff('/user/home/delivery/dropoff'),
   userDeliveryDetails('/user/home/delivery/details'),
+  userDeliveryDetailsEditDetail('/user/home/delivery/details/edit/detail'),
   userDeliverySummary('/user/home/delivery/summary'),
   userDeliveryPayment('/user/home/delivery/payment'),
   userMart('/user/home/mart'),

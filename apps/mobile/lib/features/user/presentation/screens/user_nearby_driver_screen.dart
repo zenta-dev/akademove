@@ -21,7 +21,6 @@ class UserNearbyDriverScreen extends StatefulWidget {
 class _UserNearbyDriverScreenState extends State<UserNearbyDriverScreen> {
   bool isMapReady = false;
   GoogleMapController? _mapController;
-  final Set<Marker> _markers = {};
 
   int _radiusKm = 10;
   double _lastZoom = 14;
@@ -59,12 +58,12 @@ class _UserNearbyDriverScreenState extends State<UserNearbyDriverScreen> {
     try {
       final cubit = context.read<UserLocationCubit>();
 
-      var coordinate = cubit.state.coordinate;
-      coordinate ??= await cubit.getMyLocation(context);
+      // Use ensureLocationLoaded which leverages cache automatically
+      final coordinate = await cubit.ensureLocationLoaded();
 
       if (coordinate == null) {
         logger.w(
-          '[UserNearbyDriverScreen] Coordinate is still null after getMyLocation',
+          '[UserNearbyDriverScreen] Coordinate is still null after ensureLocationLoaded',
         );
         return;
       }
@@ -76,8 +75,6 @@ class _UserNearbyDriverScreenState extends State<UserNearbyDriverScreen> {
       await _mapController?.animateCamera(CameraUpdate.newLatLng(myPos));
 
       await _fetchDriversAtLocation(myPos, _radiusKm, true);
-      if (!mounted) return;
-      setState(() {});
     } catch (e, st) {
       logger.e(
         '[UserNearbyDriverScreen] Location setup failed',
@@ -92,14 +89,15 @@ class _UserNearbyDriverScreenState extends State<UserNearbyDriverScreen> {
     int radiusKm,
     bool useCache,
   ) async {
+    final locationCubit = context.read<UserLocationCubit>();
+
     if (useCache) {
       if (!mounted) return;
 
       _updateDriverMarkers(
+        locationCubit,
         context.read<UserRideCubit>().state.nearbyDrivers.value ?? [],
       );
-      if (!mounted) return;
-      setState(() {});
       return;
     }
 
@@ -117,13 +115,15 @@ class _UserNearbyDriverScreenState extends State<UserNearbyDriverScreen> {
     if (!mounted) return;
 
     _updateDriverMarkers(
+      locationCubit,
       context.read<UserRideCubit>().state.nearbyDrivers.value ?? [],
     );
-    if (!mounted) return;
-    setState(() {});
   }
 
-  void _updateDriverMarkers(List<Driver> drivers) {
+  void _updateDriverMarkers(
+    UserLocationCubit locationCubit,
+    List<Driver> drivers,
+  ) {
     final newMarkers = drivers
         .where((driver) => driver.currentLocation != null)
         .map((driver) {
@@ -143,14 +143,9 @@ class _UserNearbyDriverScreenState extends State<UserNearbyDriverScreen> {
           );
         })
         .whereType<Marker>()
-        .toSet();
+        .toList();
 
-    if (!mounted) return;
-    setState(() {
-      _markers
-        ..clear()
-        ..addAll(newMarkers);
-    });
+    locationCubit.setDriverMarkers(newMarkers);
   }
 
   Future<void> _onCameraIdle() async {
@@ -251,16 +246,23 @@ class _UserNearbyDriverScreenState extends State<UserNearbyDriverScreen> {
           Expanded(
             child: Stack(
               children: [
-                MapWrapperWidget(
-                  onMapCreated: (controller) {
-                    _mapController = controller;
-                    setState(() {});
-                    _setupLocation();
+                BlocBuilder<UserLocationCubit, UserLocationState>(
+                  buildWhen: (previous, current) =>
+                      previous.markers != current.markers,
+                  builder: (context, locationState) {
+                    return MapWrapperWidget(
+                      onMapCreated: (controller) {
+                        _mapController = controller;
+                        setState(() {});
+                        _setupLocation();
+                      },
+                      onCameraMove: (position) =>
+                          _currentCameraPosition = position,
+                      onCameraIdle: _onCameraIdle,
+                      myLocationEnabled: true,
+                      markers: locationState.markers,
+                    );
                   },
-                  onCameraMove: (position) => _currentCameraPosition = position,
-                  onCameraIdle: _onCameraIdle,
-                  myLocationEnabled: true,
-                  markers: _markers,
                 ),
                 if (_mapController == null)
                   Positioned.fill(
@@ -300,15 +302,23 @@ class _UserNearbyDriverScreenState extends State<UserNearbyDriverScreen> {
                     );
                   },
                 ),
-                BlocBuilder<UserRideCubit, UserRideState>(
-                  builder: (context, state) {
-                    return Text(
-                      context.l10n.text_drivers_around_you(_markers.length),
-                      style: context.typography.small.copyWith(
-                        fontSize: 12.sp,
-                        color: context.colorScheme.mutedForeground,
-                      ),
-                    ).asSkeleton(enabled: state.nearbyDrivers.isLoading);
+                BlocBuilder<UserLocationCubit, UserLocationState>(
+                  buildWhen: (previous, current) =>
+                      previous.markers != current.markers,
+                  builder: (context, locationState) {
+                    return BlocBuilder<UserRideCubit, UserRideState>(
+                      builder: (context, state) {
+                        return Text(
+                          context.l10n.text_drivers_around_you(
+                            locationState.markers.length,
+                          ),
+                          style: context.typography.small.copyWith(
+                            fontSize: 12.sp,
+                            color: context.colorScheme.mutedForeground,
+                          ),
+                        ).asSkeleton(enabled: state.nearbyDrivers.isLoading);
+                      },
+                    );
                   },
                 ),
               ],

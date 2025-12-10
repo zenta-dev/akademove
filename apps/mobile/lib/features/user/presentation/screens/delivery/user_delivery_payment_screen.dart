@@ -1,4 +1,3 @@
-import 'package:akademove/app/router/router.dart';
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/l10n/l10n.dart';
@@ -50,74 +49,74 @@ class _UserDeliveryPaymentScreenState extends State<UserDeliveryPaymentScreen> {
           }
         },
         builder: (context, deliveryState) {
-          final estimate = deliveryState.estimate.value;
+          // final estimate = deliveryState.estimate.value;
           return Padding(
             padding: EdgeInsets.all(16.w),
             child: Column(
               spacing: 16.h,
               children: [
-                DefaultText(
-                  context.l10n.title_payment_method,
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.w500,
-                ),
-                BlocBuilder<UserWalletCubit, UserWalletState>(
-                  builder: (context, walletState) {
-                    return PaymentMethodPickerWidget(
-                      value: method,
-                      onChanged: (val, {BankProvider? bankProvider}) =>
-                          setState(() {
-                            method = val;
-                            this.bankProvider = bankProvider;
-                          }),
-                      bankProvider: bankProvider,
-                      walletBalance:
-                          walletState.myWallet.value?.balance.toDouble() ?? 0,
-                      totalCost: estimate?.summary.totalCost.toDouble() ?? 0,
-                    );
-                  },
-                ),
-                const Spacer(),
-                SizedBox(
-                  width: double.infinity,
-                  child: Button.primary(
-                    enabled: !deliveryState.isLoading,
-                    onPressed: () async {
-                      final cubit = context.read<UserDeliveryCubit>();
-                      final result = await cubit.placeDeliveryOrder(
-                        method,
-                        bankProvider: bankProvider,
-                        couponCode: cubit.selectedCouponCode,
-                      );
+                // DefaultText(
+                //   context.l10n.title_payment_method,
+                //   fontSize: 16.sp,
+                //   fontWeight: FontWeight.w500,
+                // ),
+                // BlocBuilder<UserWalletCubit, UserWalletState>(
+                //   builder: (context, walletState) {
+                //     return PaymentMethodPickerWidget(
+                //       value: method,
+                //       onChanged: (val, {BankProvider? bankProvider}) =>
+                //           setState(() {
+                //             method = val;
+                //             this.bankProvider = bankProvider;
+                //           }),
+                //       bankProvider: bankProvider,
+                //       walletBalance:
+                //           walletState.myWallet.value?.balance.toDouble() ?? 0,
+                //       totalCost: estimate?.summary.totalCost.toDouble() ?? 0,
+                //     );
+                //   },
+                // ),
+                // const Spacer(),
+                // SizedBox(
+                //   width: double.infinity,
+                //   child: Button.primary(
+                //     enabled: !deliveryState.isLoading,
+                //     onPressed: () async {
+                //       // final cubit = context.read<UserDeliveryCubit>();
+                //       // final result = await cubit.placeDeliveryOrder(
+                //       //   method,
+                //       //   bankProvider: bankProvider,
+                //       //   couponCode: cubit.selectedCouponCode,
+                //       // );
 
-                      if (result != null && context.mounted) {
-                        // For wallet payment, navigate to trip tracking screen
-                        if (method == PaymentMethod.wallet &&
-                            result.payment.status ==
-                                TransactionStatus.SUCCESS) {
-                          context
-                            ..showMyToast(
-                              context.l10n.toast_delivery_order_placed,
-                              type: ToastType.success,
-                            )
-                            ..pushReplacementNamed(Routes.userRideOnTrip.name);
-                        } else {
-                          // For other payment methods, navigate to home
-                          // (payment flow will be handled by payment provider)
-                          context
-                            ..showMyToast(
-                              context.l10n.toast_delivery_order_placed,
-                              type: ToastType.success,
-                            )
-                            ..go(Routes.userHome.path);
-                        }
-                      }
-                    },
-                    child: deliveryState.isLoading
-                        ? const Submiting()
-                        : Text(context.l10n.button_place_order),
-                  ),
-                ),
+                //       // if (result != null && context.mounted) {
+                //       //   // For wallet payment, navigate to trip tracking screen
+                //       //   if (method == PaymentMethod.wallet &&
+                //       //       result.payment.status ==
+                //       //           TransactionStatus.SUCCESS) {
+                //       //     context
+                //       //       ..showMyToast(
+                //       //         context.l10n.toast_delivery_order_placed,
+                //       //         type: ToastType.success,
+                //       //       )
+                //       //       ..pushReplacementNamed(Routes.userRideOnTrip.name);
+                //       //   } else {
+                //       //     // For other payment methods, navigate to home
+                //       //     // (payment flow will be handled by payment provider)
+                //       //     context
+                //       //       ..showMyToast(
+                //       //         context.l10n.toast_delivery_order_placed,
+                //       //         type: ToastType.success,
+                //       //       )
+                //       //       ..go(Routes.userHome.path);
+                //       //   }
+                //       // }
+                //     },
+                //     child: deliveryState.isLoading
+                //         ? const Submiting()
+                //         : Text(context.l10n.button_place_order),
+                //   ),
+                // ),
               ],
             ),
           );

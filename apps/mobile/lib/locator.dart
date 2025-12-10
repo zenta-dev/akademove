@@ -192,6 +192,7 @@ void _setupCubit() {
     ..registerFactory(
       () => UserProfileCubit(userRepository: sl<UserRepository>()),
     )
+    ..registerFactory(() => UserMapCubit(mapService: sl<MapService>()))
     ..registerFactory(
       () => ConfigurationCubit(
         configurationRepository: sl<ConfigurationRepository>(),

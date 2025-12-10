@@ -1,11 +1,11 @@
+import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/l10n/l10n.dart';
 import 'package:akademove/locator.dart';
 import 'package:api_client/api_client.dart' as api_client;
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
+import 'package:shadcn_flutter/shadcn_flutter.dart';
 
 class LeaderboardScreen extends StatelessWidget {
   const LeaderboardScreen({super.key});
@@ -26,85 +26,73 @@ class _LeaderboardView extends StatefulWidget {
   State<_LeaderboardView> createState() => _LeaderboardViewState();
 }
 
-class _LeaderboardViewState extends State<_LeaderboardView>
-    with SingleTickerProviderStateMixin {
-  late TabController _tabController;
-
-  @override
-  void initState() {
-    super.initState();
-    _tabController = TabController(length: 2, vsync: this);
-  }
-
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
-  }
+class _LeaderboardViewState extends State<_LeaderboardView> {
+  int _tabIndex = 0;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(context.l10n.leaderboard_title),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => context.pop(),
-        ),
-      ),
-      body: BlocBuilder<LeaderboardCubit, LeaderboardState>(
-        builder: (context, state) {
-          if (state.isLoading) {
-            return const Center(child: CircularProgressIndicator());
-          }
+    return BlocBuilder<LeaderboardCubit, LeaderboardState>(
+      builder: (context, state) {
+        return MyScaffold(
+          scrollable: false,
+          padding: EdgeInsets.zero,
+          headers: [DefaultAppBar(title: context.l10n.leaderboard_title)],
+          onRefresh: state.isLoading
+              ? null
+              : () => context.read<LeaderboardCubit>().refresh(),
+          body: _buildBody(context, state),
+        );
+      },
+    );
+  }
 
-          if (state.isFailure) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    state.message ?? 'Failed to load data',
-                    style: const TextStyle(color: Colors.red),
-                  ),
-                  const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: () => context.read<LeaderboardCubit>().init(),
-                    child: Text(context.l10n.retry),
-                  ),
-                ],
-              ),
-            );
-          }
+  Widget _buildBody(BuildContext context, LeaderboardState state) {
+    if (state.isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
 
-          return RefreshIndicator(
-            onRefresh: () => context.read<LeaderboardCubit>().refresh(),
-            child: Column(
-              children: [
-                // Tab Bar
-                TabBar(
-                  controller: _tabController,
-                  tabs: [
-                    Tab(text: context.l10n.tab_rankings),
-                    Tab(text: context.l10n.tab_badges),
-                  ],
-                ),
-
-                // Tab Views
-                Expanded(
-                  child: TabBarView(
-                    controller: _tabController,
-                    children: [
-                      _buildLeaderboardTab(state),
-                      _buildBadgesTab(state),
-                    ],
-                  ),
-                ),
-              ],
+    if (state.isFailure) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              state.message ?? 'Failed to load data',
+              style: TextStyle(color: context.colorScheme.destructive),
             ),
-          );
-        },
-      ),
+            SizedBox(height: 16.h),
+            PrimaryButton(
+              onPressed: () => context.read<LeaderboardCubit>().init(),
+              child: Text(context.l10n.retry),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return Column(
+      children: [
+        // Tab Bar
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+          child: TabList(
+            index: _tabIndex,
+            onChanged: (index) => setState(() => _tabIndex = index),
+            children: [
+              TabChild(child: Text(context.l10n.tab_rankings)),
+              TabChild(child: Text(context.l10n.tab_badges)),
+            ],
+          ),
+        ),
+
+        // Tab Views
+        Expanded(
+          child: IndexedStack(
+            index: _tabIndex,
+            children: [_buildLeaderboardTab(state), _buildBadgesTab(state)],
+          ),
+        ),
+      ],
     );
   }
 
@@ -158,63 +146,75 @@ class _LeaderboardCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: EdgeInsets.only(bottom: 12.h),
-      child: Padding(
-        padding: EdgeInsets.all(16.w),
-        child: Row(
-          children: [
-            // Rank Badge
-            _buildRankBadge(context),
-            SizedBox(width: 16.w),
+    return Padding(
+      padding: EdgeInsets.only(bottom: 12.h),
+      child: Card(
+        child: Padding(
+          padding: EdgeInsets.all(16.w),
+          child: Row(
+            children: [
+              // Rank Badge
+              _buildRankBadge(context),
+              SizedBox(width: 16.w),
 
-            // User Info
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              // User Info
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      context.l10n.text_user_id(
+                        leaderboard.userId.substring(0, 8),
+                      ),
+                      style: context.typography.p.copyWith(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14.sp,
+                      ),
+                    ),
+                    SizedBox(height: 4.h),
+                    Text(
+                      context.l10n.text_category_value(
+                        leaderboard.category.value,
+                      ),
+                      style: context.typography.small.copyWith(
+                        fontSize: 12.sp,
+                        color: context.colorScheme.mutedForeground,
+                      ),
+                    ),
+                    SizedBox(height: 4.h),
+                    Text(
+                      context.l10n.text_period_value(leaderboard.period.value),
+                      style: context.typography.small.copyWith(
+                        fontSize: 12.sp,
+                        color: context.colorScheme.mutedForeground,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              // Score
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
-                    context.l10n.text_user_id(
-                      leaderboard.userId.substring(0, 8),
-                    ),
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    leaderboard.score.toString(),
+                    style: context.typography.h4.copyWith(
                       fontWeight: FontWeight.bold,
+                      color: context.colorScheme.primary,
                     ),
                   ),
-                  SizedBox(height: 4.h),
                   Text(
-                    context.l10n.text_category_value(
-                      leaderboard.category.value,
+                    context.l10n.leaderboard_pts,
+                    style: context.typography.small.copyWith(
+                      fontSize: 12.sp,
+                      color: context.colorScheme.mutedForeground,
                     ),
-                    style: Theme.of(context).textTheme.bodySmall,
-                  ),
-                  SizedBox(height: 4.h),
-                  Text(
-                    context.l10n.text_period_value(leaderboard.period.value),
-                    style: Theme.of(context).textTheme.bodySmall,
                   ),
                 ],
               ),
-            ),
-
-            // Score
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text(
-                  leaderboard.score.toString(),
-                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
-                ),
-                Text(
-                  context.l10n.leaderboard_pts,
-                  style: Theme.of(context).textTheme.bodySmall,
-                ),
-              ],
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -226,16 +226,16 @@ class _LeaderboardCard extends StatelessWidget {
 
     if (leaderboard.rank == 1) {
       badgeColor = const Color(0xFFFFD700); // Gold
-      icon = Icons.emoji_events;
+      icon = LucideIcons.trophy;
     } else if (leaderboard.rank == 2) {
       badgeColor = const Color(0xFFC0C0C0); // Silver
-      icon = Icons.military_tech;
+      icon = LucideIcons.medal;
     } else if (leaderboard.rank == 3) {
       badgeColor = const Color(0xFFCD7F32); // Bronze
-      icon = Icons.workspace_premium;
+      icon = LucideIcons.award;
     } else {
-      badgeColor = Theme.of(context).colorScheme.secondary;
-      icon = Icons.person;
+      badgeColor = context.colorScheme.secondary;
+      icon = LucideIcons.user;
     }
 
     return Container(
@@ -273,7 +273,6 @@ class _BadgeCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: isEarned ? 4 : 1,
       child: Padding(
         padding: EdgeInsets.all(12.w),
         child: Column(
@@ -299,7 +298,7 @@ class _BadgeCard extends StatelessWidget {
                       return Text(icon, style: TextStyle(fontSize: 40.sp));
                     }
                     return Icon(
-                      Icons.emoji_events,
+                      LucideIcons.trophy,
                       size: 40.sp,
                       color: _getBadgeLevelColor(badge.level),
                     );
@@ -315,9 +314,10 @@ class _BadgeCard extends StatelessWidget {
               textAlign: TextAlign.center,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
-              style: Theme.of(
-                context,
-              ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
+              style: context.typography.p.copyWith(
+                fontWeight: FontWeight.bold,
+                fontSize: 14.sp,
+              ),
             ),
             SizedBox(height: 4.h),
 
@@ -344,20 +344,24 @@ class _BadgeCard extends StatelessWidget {
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
                 decoration: BoxDecoration(
-                  color: Colors.green.withAlpha(51),
+                  color: const Color(0xFF22C55E).withAlpha(51),
                   borderRadius: BorderRadius.circular(12.r),
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(Icons.check, size: 12.sp, color: Colors.green),
+                    Icon(
+                      LucideIcons.check,
+                      size: 12.sp,
+                      color: const Color(0xFF22C55E),
+                    ),
                     SizedBox(width: 4.w),
                     Text(
                       context.l10n.text_earned,
                       style: TextStyle(
                         fontSize: 10.sp,
                         fontWeight: FontWeight.bold,
-                        color: Colors.green,
+                        color: const Color(0xFF22C55E),
                       ),
                     ),
                   ],

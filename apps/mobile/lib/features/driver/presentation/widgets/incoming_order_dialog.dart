@@ -263,18 +263,18 @@ class IncomingOrderDialog extends StatelessWidget {
   bool _hasNoteContent(OrderNote note) {
     final pickup = note.pickup;
     final dropoff = note.dropoff;
-    final instructions = note.instructions;
+    // final instructions = note.instructions;
 
     return (pickup != null && pickup.isNotEmpty) ||
-        (dropoff != null && dropoff.isNotEmpty) ||
-        (instructions != null && instructions.isNotEmpty);
+        (dropoff != null && dropoff.isNotEmpty);
+    // ||   (instructions != null && instructions.isNotEmpty);
   }
 
   String _getNoteText(OrderNote note) {
     final parts = <String>[];
     final pickup = note.pickup;
     final dropoff = note.dropoff;
-    final instructions = note.instructions;
+    // final instructions = note.instructions;
 
     if (pickup != null && pickup.isNotEmpty) {
       parts.add('Pickup: $pickup');
@@ -282,9 +282,9 @@ class IncomingOrderDialog extends StatelessWidget {
     if (dropoff != null && dropoff.isNotEmpty) {
       parts.add('Dropoff: $dropoff');
     }
-    if (instructions != null && instructions.isNotEmpty) {
-      parts.add('Instructions: $instructions');
-    }
+    // if (instructions != null && instructions.isNotEmpty) {
+    //   parts.add('Instructions: $instructions');
+    // }
     return parts.join('\n');
   }
 

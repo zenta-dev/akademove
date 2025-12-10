@@ -35,24 +35,6 @@ class ListOrderQuery extends UnifiedQuery {
   }
 }
 
-class EstimateOrderQuery {
-  const EstimateOrderQuery({
-    required this.type,
-    required this.pickupLocation,
-    required this.dropoffLocation,
-    this.weight,
-    this.items,
-    this.gender,
-  });
-
-  final OrderType type;
-  final Coordinate pickupLocation;
-  final Coordinate dropoffLocation;
-  final num? weight;
-  final List<OrderItem>? items;
-  final UserGender? gender;
-}
-
 class OrderRepository extends BaseRepository {
   OrderRepository({required ApiClient apiClient}) : _apiClient = apiClient;
 
@@ -86,17 +68,10 @@ class OrderRepository extends BaseRepository {
     });
   }
 
-  Future<BaseResponse<OrderSummary>> estimate(EstimateOrderQuery query) {
+  Future<BaseResponse<OrderSummary>> estimate(OrderEstimateRequest req) {
     return guard(() async {
       final res = await _apiClient.getOrderApi().orderEstimate(
-        type: query.type,
-        pickupLocationX: query.pickupLocation.x,
-        pickupLocationY: query.pickupLocation.y,
-        dropoffLocationX: query.dropoffLocation.x,
-        dropoffLocationY: query.dropoffLocation.y,
-        weight: query.weight,
-        items: query.items,
-        gender: query.gender,
+        orderEstimateRequest: req,
       );
 
       final data =

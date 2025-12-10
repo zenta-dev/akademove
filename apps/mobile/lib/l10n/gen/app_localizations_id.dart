@@ -12,6 +12,57 @@ class AppLocalizationsId extends AppLocalizations {
   AppLocalizationsId([String locale = 'id']) : super(locale);
 
   @override
+  String get edit_detail => 'Ubah Detail';
+
+  @override
+  String get total_delivery_distance => 'Total jarak pengiriman';
+
+  @override
+  String get choose_item_type => 'Pilih jenis item Anda';
+
+  @override
+  String get document => 'Dokumen';
+
+  @override
+  String get cloth => 'Pakaian';
+
+  @override
+  String get medicine => 'Obat';
+
+  @override
+  String get book => 'Buku';
+
+  @override
+  String get other => 'Lainnya';
+
+  @override
+  String get max => 'Maks';
+
+  @override
+  String get choose_your_items_size => 'Pilih ukuran item Anda';
+
+  @override
+  String get choose => 'Pilih';
+
+  @override
+  String get total_weight => 'Total berat';
+
+  @override
+  String get small => 'Small';
+
+  @override
+  String get medium => 'Medium';
+
+  @override
+  String get large => 'Large';
+
+  @override
+  String get add_delivery_detail => 'Tambah detail pengiriman';
+
+  @override
+  String get pickup_and_dropoff_must_be_set => 'Lokasi penjemputan dan tujuan harus diatur';
+
+  @override
   String get start_quiz => 'Mulai Kuis';
 
   @override
@@ -833,9 +884,6 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get courtesy => 'Kesopanan';
-
-  @override
-  String get other => 'Lainnya';
 
   @override
   String get comment_optional => 'Komentar (Opsional)';

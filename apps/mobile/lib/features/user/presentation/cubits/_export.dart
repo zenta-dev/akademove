@@ -5,3 +5,4 @@ export 'user_mart_cubit.dart';
 export 'user_merchant_list_cubit.dart';
 export 'user_profile_cubit.dart';
 export 'user_ride_cubit.dart';
+export 'user_map_cubit.dart';

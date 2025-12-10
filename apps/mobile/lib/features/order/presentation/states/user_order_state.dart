@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 part of '_export.dart';
 
 class UserOrderState extends Equatable {
@@ -11,6 +12,8 @@ class UserOrderState extends Equatable {
     this.currentAssignedDriver = const OperationResult.idle(),
     this.scheduledOrders = const OperationResult.idle(),
     this.selectedScheduledOrder = const OperationResult.idle(),
+    this.pickupLocation,
+    this.dropoffLocation,
   });
 
   final OperationResult<EstimateOrderResult> estimateOrder;
@@ -22,17 +25,12 @@ class UserOrderState extends Equatable {
   final OperationResult<Transaction> currentTransaction;
   final OperationResult<Driver?> currentAssignedDriver;
 
-  /// List of scheduled orders for the user
   final OperationResult<List<Order>> scheduledOrders;
 
-  /// Currently selected scheduled order for viewing/editing
   final OperationResult<Order> selectedScheduledOrder;
 
-  // Convenience getters mainly for scheduled orders as that was the error context
-  bool get isLoading =>
-      scheduledOrders.isLoading; // Add others if needed contextually
-  bool get isFailure => scheduledOrders.isFailure;
-  BaseError? get error => scheduledOrders.error;
+  final Place? pickupLocation;
+  final Place? dropoffLocation;
 
   @override
   List<Object> get props => [
@@ -45,6 +43,8 @@ class UserOrderState extends Equatable {
     currentAssignedDriver,
     scheduledOrders,
     selectedScheduledOrder,
+    ?pickupLocation,
+    ?dropoffLocation,
   ];
 
   UserOrderState copyWith({
@@ -57,6 +57,8 @@ class UserOrderState extends Equatable {
     OperationResult<Driver?>? currentAssignedDriver,
     OperationResult<List<Order>>? scheduledOrders,
     OperationResult<Order>? selectedScheduledOrder,
+    Place? pickupLocation,
+    Place? dropoffLocation,
   }) {
     return UserOrderState(
       estimateOrder: estimateOrder ?? this.estimateOrder,
@@ -70,6 +72,8 @@ class UserOrderState extends Equatable {
       scheduledOrders: scheduledOrders ?? this.scheduledOrders,
       selectedScheduledOrder:
           selectedScheduledOrder ?? this.selectedScheduledOrder,
+      pickupLocation: pickupLocation ?? this.pickupLocation,
+      dropoffLocation: dropoffLocation ?? this.dropoffLocation,
     );
   }
 

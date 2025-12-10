@@ -70,3 +70,34 @@ extension OrderTypeExt on OrderType {
     };
   }
 }
+
+extension DeliveryItemTypeExt on DeliveryItemType {
+  String localizedName(BuildContext context) {
+    return switch (this) {
+      DeliveryItemType.DOCUMENT => context.l10n.document,
+      DeliveryItemType.FOOD => context.l10n.food,
+      DeliveryItemType.CLOTH => context.l10n.cloth,
+      DeliveryItemType.MEDICINE => context.l10n.medicine,
+      DeliveryItemType.BOOK => context.l10n.book,
+      DeliveryItemType.OTHER => context.l10n.other,
+    };
+  }
+}
+
+extension WeightSizeExt on WeightSize {
+  String localizedName(BuildContext context) {
+    return switch (this) {
+      WeightSize.SMALL => context.l10n.small,
+      WeightSize.MEDIUM => context.l10n.medium,
+      WeightSize.LARGE => context.l10n.large,
+    };
+  }
+
+  int get maxWeight {
+    return switch (this) {
+      WeightSize.SMALL => 5,
+      WeightSize.MEDIUM => 10,
+      WeightSize.LARGE => 20,
+    };
+  }
+}

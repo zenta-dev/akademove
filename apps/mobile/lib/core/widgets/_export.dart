@@ -1,12 +1,17 @@
+export 'avatar.dart';
 export 'bank_transfer_payment_widget.dart';
 export 'bottom_navbar.dart';
 export 'default_app_bar.dart';
 export 'default_text.dart';
+export 'floating_action_button.dart';
 export 'image_picker.dart';
 export 'map_wrapper_widget.dart';
 export 'my_scaffold.dart';
 export 'oops_alert_widget.dart';
+export 'option_tile.dart';
 export 'qris_payment_widget.dart';
 export 'sign_out_button_widget.dart';
+export 'status_indicator.dart';
 export 'submiting.dart';
 export 'svg_tiled_background.dart';
+export 'switch_tile.dart';

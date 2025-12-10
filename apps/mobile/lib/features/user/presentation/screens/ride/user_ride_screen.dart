@@ -20,8 +20,6 @@ class _UserRideScreenState extends State<UserRideScreen> {
   late TextEditingController pickupController;
   late TextEditingController dropoffController;
   GoogleMapController? _mapController;
-  final Set<Marker> _markers = {};
-  final Set<Polyline> _polylines = {};
 
   Place? pickup;
   Place? dropoff;
@@ -35,6 +33,8 @@ class _UserRideScreenState extends State<UserRideScreen> {
     super.initState();
     pickupController = TextEditingController();
     dropoffController = TextEditingController();
+    // Clear map state when entering ride flow
+    context.read<UserLocationCubit>().clearMapState();
   }
 
   @override
@@ -49,8 +49,8 @@ class _UserRideScreenState extends State<UserRideScreen> {
     try {
       final cubit = context.read<UserLocationCubit>();
 
-      var coordinate = cubit.state.coordinate;
-      coordinate ??= await cubit.getMyLocation(context);
+      // Use ensureLocationLoaded which leverages cache automatically
+      final coordinate = await cubit.ensureLocationLoaded();
 
       logger.d(
         '🏁 UserRideScreen | _setupLocation got coordinate: $coordinate',
@@ -58,7 +58,7 @@ class _UserRideScreenState extends State<UserRideScreen> {
 
       if (coordinate == null) {
         logger.w(
-          '[UserRideScreen] Coordinate is still null after getMyLocation',
+          '[UserRideScreen] Coordinate is still null after ensureLocationLoaded',
         );
         return;
       }
@@ -71,8 +71,6 @@ class _UserRideScreenState extends State<UserRideScreen> {
       await _mapController?.animateCamera(
         CameraUpdate.newLatLngZoom(position, 15),
       );
-
-      setState(() {});
 
       await _fetchDriversAtLocation(position, 10);
     } catch (e, st) {
@@ -95,14 +93,12 @@ class _UserRideScreenState extends State<UserRideScreen> {
         gender: user?.gender,
       ),
     );
-
-    if (!mounted) return;
-
-    setState(() {});
   }
 
   Future<void> _updateMapMarkers() async {
+    final locationCubit = context.read<UserLocationCubit>();
     final newMarkers = <Marker>{};
+    final newPolylines = <Polyline>{};
     final bounds = <LatLng>[];
 
     // Add pickup marker
@@ -146,7 +142,6 @@ class _UserRideScreenState extends State<UserRideScreen> {
     }
 
     // Add polyline if both locations are selected
-    _polylines.clear();
     final pickupLoc = pickup;
     final dropoffLoc = dropoff;
     if (pickupLoc != null && dropoffLoc != null) {
@@ -178,7 +173,7 @@ class _UserRideScreenState extends State<UserRideScreen> {
               .map((coord) => LatLng(coord.y.toDouble(), coord.x.toDouble()))
               .toList();
 
-          _polylines.add(
+          newPolylines.add(
             Polyline(
               polylineId: const PolylineId('route'),
               points: routePoints,
@@ -188,7 +183,7 @@ class _UserRideScreenState extends State<UserRideScreen> {
           );
         } else {
           // Fallback to straight line if no route available
-          _polylines.add(
+          newPolylines.add(
             Polyline(
               polylineId: const PolylineId('route'),
               points: [
@@ -205,7 +200,7 @@ class _UserRideScreenState extends State<UserRideScreen> {
 
         logger.e('Failed to get route: $e');
         // Fallback to straight line on error
-        _polylines.add(
+        newPolylines.add(
           Polyline(
             polylineId: const PolylineId('route'),
             points: [
@@ -219,11 +214,8 @@ class _UserRideScreenState extends State<UserRideScreen> {
       }
     }
 
-    setState(() {
-      _markers
-        ..clear()
-        ..addAll(newMarkers);
-    });
+    // Update cubit state with new markers and polylines
+    locationCubit.setMapData(markers: newMarkers, polylines: newPolylines);
 
     // Adjust camera to show both markers
     if (bounds.length > 1 && _mapController != null) {
@@ -269,9 +261,11 @@ class _UserRideScreenState extends State<UserRideScreen> {
       ],
       body: BlocListener<UserOrderCubit, UserOrderState>(
         listener: (context, state) {
-          if (state.isFailure && state.error != null) {
+          if (state.currentOrder.isFailure &&
+              state.currentOrder.error != null) {
             context.showMyToast(
-              state.error?.message ?? context.l10n.toast_failed_estimate_order,
+              state.currentOrder.error?.message ??
+                  context.l10n.toast_failed_estimate_order,
               type: ToastType.failed,
             );
           }
@@ -336,7 +330,7 @@ class _UserRideScreenState extends State<UserRideScreen> {
                 return SizedBox(
                   width: double.infinity,
                   child: Button.primary(
-                    enabled: !state.isLoading && canProceed,
+                    enabled: !state.currentOrder.isLoading && canProceed,
                     onPressed: canProceed
                         ? () async {
                             final pickupLoc = pickup;
@@ -344,8 +338,17 @@ class _UserRideScreenState extends State<UserRideScreen> {
                             if (pickupLoc == null || dropoffLoc == null) return;
 
                             await context.read<UserOrderCubit>().estimate(
-                              pickupLoc,
-                              dropoffLoc,
+                              pickup: pickupLoc,
+                              dropoff: dropoffLoc,
+                              req: OrderEstimateRequest(
+                                type: OrderType.RIDE,
+                                pickupLocationX: pickupLoc.lng,
+                                pickupLocationY: pickupLoc.lat,
+                                dropoffLocationX: dropoffLoc.lng,
+                                dropoffLocationY: dropoffLoc.lat,
+                                items: [],
+                                // weight: null, // TODO: add weight input
+                              ),
                             );
 
                             if (context.mounted) {
@@ -361,7 +364,7 @@ class _UserRideScreenState extends State<UserRideScreen> {
                             }
                           }
                         : null,
-                    child: state.isLoading
+                    child: state.currentOrder.isLoading
                         ? const Submiting()
                         : DefaultText(context.l10n.button_proceed),
                   ),
@@ -388,24 +391,31 @@ class _UserRideScreenState extends State<UserRideScreen> {
           borderRadius: BorderRadius.circular(16.dg),
           child: Stack(
             children: [
-              GoogleMap(
-                initialCameraPosition: MapConstants.defaultCameraPosition,
-                style: context.isDarkMode ? MapConstants.darkStyle : null,
-                onMapCreated: (controller) async {
-                  _mapController = controller;
-                  setState(() {});
-                  await _setupLocation();
+              BlocBuilder<UserLocationCubit, UserLocationState>(
+                buildWhen: (prev, curr) =>
+                    prev.markers != curr.markers ||
+                    prev.polylines != curr.polylines,
+                builder: (context, locationState) {
+                  return GoogleMap(
+                    initialCameraPosition: MapConstants.defaultCameraPosition,
+                    style: context.isDarkMode ? MapConstants.darkStyle : null,
+                    onMapCreated: (controller) async {
+                      _mapController = controller;
+                      setState(() {});
+                      await _setupLocation();
+                    },
+                    markers: locationState.markers,
+                    polylines: locationState.polylines,
+                    myLocationEnabled: true,
+                    myLocationButtonEnabled: false,
+                    zoomControlsEnabled: false,
+                    scrollGesturesEnabled: false,
+                    zoomGesturesEnabled: false,
+                    rotateGesturesEnabled: false,
+                    tiltGesturesEnabled: false,
+                    onTap: (_) => navigateToDriverSearch(),
+                  );
                 },
-                markers: _markers,
-                polylines: _polylines,
-                myLocationEnabled: true,
-                myLocationButtonEnabled: false,
-                zoomControlsEnabled: false,
-                scrollGesturesEnabled: false,
-                zoomGesturesEnabled: false,
-                rotateGesturesEnabled: false,
-                tiltGesturesEnabled: false,
-                onTap: (_) => navigateToDriverSearch(),
               ),
               if (_mapController == null)
                 Positioned.fill(

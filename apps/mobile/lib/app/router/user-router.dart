@@ -5,14 +5,15 @@ final userRouter = StatefulShellRoute.indexedStack(
     providers: [
       BlocProvider(create: (_) => sl<BottomNavBarCubit>()),
       BlocProvider(create: (_) => sl<UserHomeCubit>()),
-      BlocProvider(create: (context) => sl<UserLocationCubit>()),
-      BlocProvider(create: (context) => sl<UserRideCubit>()),
-      BlocProvider(create: (context) => sl<UserDeliveryCubit>()),
+      BlocProvider(create: (_) => sl<UserLocationCubit>()),
+      BlocProvider(create: (_) => sl<UserRideCubit>()),
+      BlocProvider(create: (_) => sl<UserDeliveryCubit>()),
       BlocProvider(create: (_) => sl<UserMartCubit>()),
       BlocProvider(create: (_) => sl<CartCubit>()..loadCart()),
       BlocProvider(create: (_) => sl<UserWalletCubit>()),
       BlocProvider(create: (_) => sl<UserWalletTopUpCubit>()),
       BlocProvider(create: (_) => sl<UserOrderCubit>()),
+      BlocProvider(create: (_) => sl<UserMapCubit>()),
     ],
     child: BottomNavbar(
       shell: navigationShell,
@@ -148,6 +149,22 @@ final userRouter = StatefulShellRoute.indexedStack(
               ),
             ),
             GoRoute(
+              name: Routes.userDeliveryDetailsEditDetail.name,
+              path: Routes.userDeliveryDetailsEditDetail.path,
+              builder: (context, state) {
+                final extra = state.extra as Map<String, dynamic>?;
+                final initialNote = extra?['initialNote'] as OrderNote;
+                final place = extra?['place'] as Place;
+                final isPickup = extra?['isPickup'] as bool;
+
+                return UserDeliveryEditDetailScreen(
+                  initialNote: initialNote,
+                  place: place,
+                  isPickup: isPickup,
+                );
+              },
+            ),
+            GoRoute(
               name: Routes.userDeliveryPayment.name,
               path: Routes.userDeliveryPayment.path,
               builder: (context, state) => const UserDeliveryPaymentScreen(),
@@ -272,7 +289,10 @@ final userRouter = StatefulShellRoute.indexedStack(
         GoRoute(
           name: Routes.userVoucher.name,
           path: Routes.userVoucher.path,
-          builder: (context, state) => const UserVoucherScreen(),
+          builder: (context, state) => BlocProvider(
+            create: (_) => sl<CouponCubit>(),
+            child: const UserVoucherScreen(),
+          ),
         ),
         GoRoute(
           name: Routes.userNotifications.name,

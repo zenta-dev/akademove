@@ -22,7 +22,7 @@ abstract class MapService extends BaseService {
 
   Future<List<Coordinate>> getRoutes(Coordinate origin, Coordinate destination);
 
-  Future<DistanceWithDuration?> routeDistance(
+  Future<DistanceWithDuration?> getRouteDistance(
     Coordinate origin,
     Coordinate destination,
   );
@@ -206,7 +206,7 @@ class IMapService implements MapService {
   // ---------------------------------------------------------------------------
 
   @override
-  Future<DistanceWithDuration?> routeDistance(
+  Future<DistanceWithDuration?> getRouteDistance(
     Coordinate origin,
     Coordinate destination,
   ) async {

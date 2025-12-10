@@ -244,7 +244,7 @@ class _UserRideSummaryScreenState extends State<UserRideSummaryScreen> {
                   enabled: false,
                   text: state.estimateOrder.value?.dropoff.vicinity,
                 ),
-              ).asSkeleton(enabled: state.isLoading);
+              ).asSkeleton(enabled: state.currentOrder.isLoading);
             },
           ),
           PickGenderWidget(
@@ -405,7 +405,7 @@ class _UserRideSummaryScreenState extends State<UserRideSummaryScreen> {
               return RideSummaryWidget(
                 summary: state.estimateOrder.value?.summary,
                 discountAmount: discountAmount,
-              ).asSkeleton(enabled: state.isLoading);
+              ).asSkeleton(enabled: state.currentOrder.isLoading);
             },
           ),
 
@@ -415,7 +415,7 @@ class _UserRideSummaryScreenState extends State<UserRideSummaryScreen> {
               final canProceed =
                   state.estimateOrder.isSuccess &&
                   hasEstimate &&
-                  !state.isLoading;
+                  !state.currentOrder.isLoading;
 
               // If scheduled, show schedule button, otherwise show proceed button
               if (scheduledAt != null) {
@@ -427,7 +427,7 @@ class _UserRideSummaryScreenState extends State<UserRideSummaryScreen> {
                     onPressed: canProceed
                         ? () => placeScheduledOrder(state)
                         : null,
-                    child: state.isLoading
+                    child: state.currentOrder.isLoading
                         ? const Submiting()
                         : Row(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -447,7 +447,7 @@ class _UserRideSummaryScreenState extends State<UserRideSummaryScreen> {
                   style: const ButtonStyle.primary(),
                   enabled: canProceed,
                   onPressed: canProceed ? () => placeOrder(state) : null,
-                  child: state.isLoading
+                  child: state.currentOrder.isLoading
                       ? const Submiting()
                       : Text(context.l10n.button_proceed),
                 ),

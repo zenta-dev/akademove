@@ -375,24 +375,24 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
               context.l10n.fare,
               context.formatCurrency(order.totalPrice),
             ),
-            if (order.note?.instructions != null)
-              Builder(
-                builder: (context) {
-                  final instructions = order.note?.instructions;
-                  if (instructions == null) return const SizedBox.shrink();
+            // if (order.note?.instructions != null)
+            //   Builder(
+            //     builder: (context) {
+            //       final instructions = order.note?.instructions;
+            //       if (instructions == null) return const SizedBox.shrink();
 
-                  return Column(
-                    children: [
-                      const Divider(),
-                      _buildInfoRow(
-                        LucideIcons.messageSquare,
-                        context.l10n.label_notes,
-                        instructions,
-                      ),
-                    ],
-                  );
-                },
-              ),
+            //       return Column(
+            //         children: [
+            //           const Divider(),
+            //           _buildInfoRow(
+            //             LucideIcons.messageSquare,
+            //             context.l10n.label_notes,
+            //             instructions,
+            //           ),
+            //         ],
+            //       );
+            //     },
+            //   ),
           ],
         ),
       ),

@@ -20,21 +20,22 @@ class _UserDeliveryScreenState extends State<UserDeliveryScreen> {
   late TextEditingController pickupController;
   late TextEditingController dropoffController;
   GoogleMapController? _mapController;
-  final Set<Marker> _markers = {};
-  final Set<Polyline> _polylines = {};
 
-  Place? pickup;
-  Place? dropoff;
-
-  // Cache route to avoid redundant API calls
-  List<Coordinate>? _cachedRoute;
-  String? _cachedRouteKey;
+  Place? pickupLocation;
+  Place? dropoffLocation;
 
   @override
   void initState() {
     super.initState();
     pickupController = TextEditingController();
     dropoffController = TextEditingController();
+
+    // Clear map state when entering delivery flow
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        context.read<UserLocationCubit>().clearMapState();
+      }
+    });
   }
 
   @override
@@ -49,8 +50,8 @@ class _UserDeliveryScreenState extends State<UserDeliveryScreen> {
     try {
       final cubit = context.read<UserLocationCubit>();
 
-      var coordinate = cubit.state.coordinate;
-      coordinate ??= await cubit.getMyLocation(context);
+      // Use ensureLocationLoaded which leverages cache automatically
+      final coordinate = await cubit.ensureLocationLoaded();
 
       logger.d(
         '🏁 UserDeliveryScreen | _setupLocation got coordinate: $coordinate',
@@ -58,7 +59,7 @@ class _UserDeliveryScreenState extends State<UserDeliveryScreen> {
 
       if (coordinate == null) {
         logger.w(
-          '[UserDeliveryScreen] Coordinate is still null after getMyLocation',
+          '[UserDeliveryScreen] Coordinate is still null after ensureLocationLoaded',
         );
         return;
       }
@@ -71,8 +72,6 @@ class _UserDeliveryScreenState extends State<UserDeliveryScreen> {
       await _mapController?.animateCamera(
         CameraUpdate.newLatLngZoom(position, 15),
       );
-
-      setState(() {});
 
       await _fetchDriversAtLocation(position, 10);
     } catch (e, st) {
@@ -95,18 +94,16 @@ class _UserDeliveryScreenState extends State<UserDeliveryScreen> {
         gender: user?.gender,
       ),
     );
-
-    if (!mounted) return;
-
-    setState(() {});
   }
 
   Future<void> _updateMapMarkers() async {
+    final locationCubit = context.read<UserLocationCubit>();
     final newMarkers = <Marker>{};
+    final newPolylines = <Polyline>{};
     final bounds = <LatLng>[];
 
     // Add pickup marker
-    final pickupLocation = pickup;
+    final pickupLocation = this.pickupLocation;
     if (pickupLocation != null) {
       final pickupLatLng = LatLng(pickupLocation.lat, pickupLocation.lng);
       bounds.add(pickupLatLng);
@@ -127,7 +124,7 @@ class _UserDeliveryScreenState extends State<UserDeliveryScreen> {
     }
 
     // Add dropoff marker
-    final dropoffLocation = dropoff;
+    final dropoffLocation = this.dropoffLocation;
     if (dropoffLocation != null) {
       final dropoffLatLng = LatLng(dropoffLocation.lat, dropoffLocation.lng);
       bounds.add(dropoffLatLng);
@@ -146,39 +143,27 @@ class _UserDeliveryScreenState extends State<UserDeliveryScreen> {
     }
 
     // Add polyline if both locations are selected
-    _polylines.clear();
-    final pickupLoc = pickup;
-    final dropoffLoc = dropoff;
+    final pickupLoc = this.pickupLocation;
+    final dropoffLoc = this.dropoffLocation;
     if (pickupLoc != null && dropoffLoc != null) {
       if (!mounted) return; // Check mounted before async operation
 
       try {
-        final routeKey =
-            '${pickupLoc.lat},${pickupLoc.lng}-${dropoffLoc.lat},${dropoffLoc.lng}';
+        // Use UserDeliveryCubit to get routes
+        final deliveryCubit = context.read<UserDeliveryCubit>();
+        final routeCoordinates = await deliveryCubit.getRoutes(
+          pickupLoc.toCoordinate(),
+          dropoffLoc.toCoordinate(),
+        );
 
-        List<Coordinate> routeCoordinates;
-        final cachedRoute = _cachedRoute;
-        if (_cachedRouteKey == routeKey && cachedRoute != null) {
-          routeCoordinates = cachedRoute;
-        } else {
-          final cubit = context.read<UserDeliveryCubit>();
-          routeCoordinates = await cubit.getRoutes(
-            pickupLoc.toCoordinate(),
-            dropoffLoc.toCoordinate(),
-          );
-
-          if (!mounted) return; // Check again after async
-
-          _cachedRoute = routeCoordinates;
-          _cachedRouteKey = routeKey;
-        }
+        if (!mounted) return; // Check again after async
 
         if (routeCoordinates.isNotEmpty) {
           final routePoints = routeCoordinates
               .map((coord) => LatLng(coord.y.toDouble(), coord.x.toDouble()))
               .toList();
 
-          _polylines.add(
+          newPolylines.add(
             Polyline(
               polylineId: const PolylineId('route'),
               points: routePoints,
@@ -187,22 +172,19 @@ class _UserDeliveryScreenState extends State<UserDeliveryScreen> {
             ),
           );
         } else {
-          _addFallbackPolyline(pickupLoc, dropoffLoc);
+          _addFallbackPolyline(newPolylines, pickupLoc, dropoffLoc);
         }
       } catch (e) {
         if (!mounted) return;
         logger.e('Failed to get route: $e');
-        _addFallbackPolyline(pickupLoc, dropoffLoc);
+        _addFallbackPolyline(newPolylines, pickupLoc, dropoffLoc);
       }
     }
 
-    if (!mounted) return; // Final check before setState
+    if (!mounted) return; // Final check before updating cubit
 
-    setState(() {
-      _markers
-        ..clear()
-        ..addAll(newMarkers);
-    });
+    // Update cubit with markers and polylines
+    locationCubit.setMapData(markers: newMarkers, polylines: newPolylines);
 
     // Adjust camera to show both markers
     if (bounds.length > 1) {
@@ -230,8 +212,12 @@ class _UserDeliveryScreenState extends State<UserDeliveryScreen> {
     }
   }
 
-  void _addFallbackPolyline(Place pickupLoc, Place dropoffLoc) {
-    _polylines.add(
+  void _addFallbackPolyline(
+    Set<Polyline> polylines,
+    Place pickupLoc,
+    Place dropoffLoc,
+  ) {
+    polylines.add(
       Polyline(
         polylineId: const PolylineId('route'),
         points: [
@@ -297,14 +283,14 @@ class _UserDeliveryScreenState extends State<UserDeliveryScreen> {
                       enabled: false,
                       controller: pickupController,
                       onPresesed: () async {
-                        pickup = await context.pushNamed(
+                        pickupLocation = await context.pushNamed(
                           Routes.userDeliveryPickup.name,
                           extra: {
                             LocationType.pickup.name: pickupController,
                             LocationType.dropoff.name: dropoffController,
                           },
                         );
-                        pickupController.text = pickup?.vicinity ?? '';
+                        pickupController.text = pickupLocation?.vicinity ?? '';
                         await _updateMapMarkers();
                       },
                     ),
@@ -312,14 +298,15 @@ class _UserDeliveryScreenState extends State<UserDeliveryScreen> {
                       enabled: false,
                       controller: dropoffController,
                       onPresesed: () async {
-                        dropoff = await context.pushNamed(
+                        dropoffLocation = await context.pushNamed(
                           Routes.userDeliveryDropoff.name,
                           extra: {
                             LocationType.pickup.name: pickupController,
                             LocationType.dropoff.name: dropoffController,
                           },
                         );
-                        dropoffController.text = dropoff?.vicinity ?? '';
+                        dropoffController.text =
+                            dropoffLocation?.vicinity ?? '';
                         await _updateMapMarkers();
                       },
                     ),
@@ -327,44 +314,49 @@ class _UserDeliveryScreenState extends State<UserDeliveryScreen> {
                 ],
               ),
             ),
-            BlocBuilder<UserOrderCubit, UserOrderState>(
-              builder: (context, state) {
-                final canProceed = pickup != null && dropoff != null;
+            SizedBox(
+              width: double.infinity,
+              child: Button.primary(
+                onPressed: () async {
+                  final pickupLoc = pickupLocation;
+                  final dropoffLoc = dropoffLocation;
+                  if (pickupLoc == null || dropoffLoc == null) {
+                    context.showMyToast(
+                      context.l10n.pickup_and_dropoff_must_be_set,
+                      type: ToastType.failed,
+                    );
+                    return;
+                  }
+                  context.read<UserOrderCubit>().setLocation(
+                    pickup: pickupLoc,
+                    dropoff: dropoffLoc,
+                  );
+                  final origin = Coordinate(x: pickupLoc.lng, y: pickupLoc.lat);
+                  final destination = Coordinate(
+                    x: dropoffLoc.lng,
+                    y: dropoffLoc.lat,
+                  );
+                  // Ensure location is loaded (uses cache if available)
+                  await context
+                      .read<UserLocationCubit>()
+                      .ensureLocationLoaded();
 
-                return SizedBox(
-                  width: double.infinity,
-                  child: Button.primary(
-                    enabled: !state.isLoading && canProceed,
-                    onPressed: canProceed
-                        ? () async {
-                            final pickupLoc = pickup;
-                            final dropoffLoc = dropoff;
-                            if (pickupLoc == null || dropoffLoc == null) return;
-
-                            await context.read<UserOrderCubit>().estimate(
-                              pickupLoc,
-                              dropoffLoc,
-                            );
-
-                            if (context.mounted) {
-                              final orderState = context
-                                  .read<UserOrderCubit>()
-                                  .state;
-                              if (orderState.estimateOrder.isSuccess &&
-                                  orderState.estimateOrder.value != null) {
-                                await context.pushNamed(
-                                  Routes.userDeliverySummary.name,
-                                );
-                              }
-                            }
-                          }
-                        : null,
-                    child: state.isLoading
-                        ? const Submiting()
-                        : DefaultText(context.l10n.button_proceed),
-                  ),
-                );
-              },
+                  if (!context.mounted) return;
+                  await Future.wait([
+                    context.read<UserMapCubit>().getRoutes(
+                      origin: origin,
+                      destination: destination,
+                    ),
+                    context.read<UserMapCubit>().getDistanceAndDuration(
+                      origin: origin,
+                      destination: destination,
+                    ),
+                  ]);
+                  if (!context.mounted) return;
+                  await context.pushNamed(Routes.userDeliveryDetails.name);
+                },
+                child: DefaultText(context.l10n.button_proceed),
+              ),
             ),
           ],
         ),
@@ -386,24 +378,31 @@ class _UserDeliveryScreenState extends State<UserDeliveryScreen> {
           borderRadius: BorderRadius.circular(16.dg),
           child: Stack(
             children: [
-              GoogleMap(
-                initialCameraPosition: MapConstants.defaultCameraPosition,
-                style: context.isDarkMode ? MapConstants.darkStyle : null,
-                onMapCreated: (controller) async {
-                  _mapController = controller;
-                  setState(() {});
-                  await _setupLocation();
+              BlocBuilder<UserLocationCubit, UserLocationState>(
+                buildWhen: (previous, current) =>
+                    previous.markers != current.markers ||
+                    previous.polylines != current.polylines,
+                builder: (context, locationState) {
+                  return GoogleMap(
+                    initialCameraPosition: MapConstants.defaultCameraPosition,
+                    style: context.isDarkMode ? MapConstants.darkStyle : null,
+                    onMapCreated: (controller) async {
+                      _mapController = controller;
+                      setState(() {});
+                      await _setupLocation();
+                    },
+                    markers: locationState.markers,
+                    polylines: locationState.polylines,
+                    myLocationEnabled: true,
+                    myLocationButtonEnabled: false,
+                    zoomControlsEnabled: false,
+                    scrollGesturesEnabled: false,
+                    zoomGesturesEnabled: false,
+                    rotateGesturesEnabled: false,
+                    tiltGesturesEnabled: false,
+                    onTap: (_) => navigateToDriverSearch(),
+                  );
                 },
-                markers: _markers,
-                polylines: _polylines,
-                myLocationEnabled: true,
-                myLocationButtonEnabled: false,
-                zoomControlsEnabled: false,
-                scrollGesturesEnabled: false,
-                zoomGesturesEnabled: false,
-                rotateGesturesEnabled: false,
-                tiltGesturesEnabled: false,
-                onTap: (_) => navigateToDriverSearch(),
               ),
               if (_mapController == null)
                 Positioned.fill(
