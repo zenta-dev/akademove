@@ -53,7 +53,7 @@ export const ContactSpec = {
 						rows: z.array(ContactSchema),
 						pagination: z
 							.object({
-								totalPages: z.number().int().min(0),
+								totalPages: z.coerce.number().int().min(0),
 							})
 							.optional(),
 					}),

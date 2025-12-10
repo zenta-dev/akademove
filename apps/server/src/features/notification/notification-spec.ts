@@ -37,7 +37,7 @@ export const NotificationSpec = {
 		.input(z.object({}))
 		.output(
 			createSuccesSchema(
-				z.object({ count: z.number() }),
+				z.object({ count: z.coerce.number() }),
 				"Get unread count success",
 			),
 		),
@@ -62,7 +62,7 @@ export const NotificationSpec = {
 		.input(z.object({}))
 		.output(
 			createSuccesSchema(
-				z.object({ count: z.number() }),
+				z.object({ count: z.coerce.number() }),
 				"Mark all as read success",
 			),
 		),
@@ -92,8 +92,8 @@ export const NotificationSpec = {
 		.output(
 			createSuccesSchema(
 				z.object({
-					successCount: z.number(),
-					failureCount: z.number(),
+					successCount: z.coerce.number(),
+					failureCount: z.coerce.number(),
 					errors: z.any(),
 				}),
 				"Subscribe to topic success",
@@ -113,8 +113,8 @@ export const NotificationSpec = {
 		.output(
 			createSuccesSchema(
 				z.object({
-					successCount: z.number(),
-					failureCount: z.number(),
+					successCount: z.coerce.number(),
+					failureCount: z.coerce.number(),
 					errors: z.any(),
 				}),
 				"Unsubscribe to topic success",

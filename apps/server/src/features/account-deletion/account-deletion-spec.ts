@@ -62,7 +62,7 @@ export const AccountDeletionSpec = {
 						rows: z.array(AccountDeletionSchema),
 						pagination: z
 							.object({
-								totalPages: z.number().int().min(0),
+								totalPages: z.coerce.number().int().min(0),
 							})
 							.optional(),
 					}),

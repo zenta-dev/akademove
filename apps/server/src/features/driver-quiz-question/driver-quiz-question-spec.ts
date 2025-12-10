@@ -133,8 +133,8 @@ export const DriverQuizQuestionSpec = {
 							question: z.string(),
 							type: z.string(),
 							category: z.string(),
-							points: z.number(),
-							displayOrder: z.number(),
+							points: z.coerce.number(),
+							displayOrder: z.coerce.number(),
 							options: z.array(
 								z.object({
 									id: z.string(),

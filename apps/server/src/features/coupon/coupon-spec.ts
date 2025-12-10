@@ -49,7 +49,7 @@ export const CouponSpec = {
 			z.object({
 				body: z.object({
 					code: z.string(),
-					orderAmount: z.number(),
+					orderAmount: z.coerce.number(),
 					serviceType: OrderTypeSchema.optional(),
 					merchantId: z.uuid().optional(),
 				}),
@@ -60,8 +60,8 @@ export const CouponSpec = {
 				z.object({
 					valid: z.boolean(),
 					coupon: CouponSchema.optional(),
-					discountAmount: z.number(),
-					finalAmount: z.number(),
+					discountAmount: z.coerce.number(),
+					finalAmount: z.coerce.number(),
 					reason: z.string().optional(),
 				}),
 				"Coupon validated successfully",
@@ -89,7 +89,7 @@ export const CouponSpec = {
 				z.object({
 					coupons: z.array(CouponSchema),
 					bestCoupon: CouponSchema.nullable(),
-					bestDiscountAmount: z.number(),
+					bestDiscountAmount: z.coerce.number(),
 				}),
 				"Successfully retrieved eligible coupons",
 			),

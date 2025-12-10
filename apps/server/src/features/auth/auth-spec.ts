@@ -102,7 +102,7 @@ export const AuthSpec = {
 		})
 		.input(z.any())
 		.output(
-			z.union([createSuccesSchema(z.literal(true), "Sign Out Successfully")]),
+			z.union([createSuccesSchema(z.boolean(), "Sign Out Successfully")]),
 		),
 	getSession: oc
 		.route({
@@ -133,8 +133,9 @@ export const AuthSpec = {
 		.output(
 			z.union([
 				createSuccesSchema(
-					z.literal(true),
+					z.boolean(),
 					"Password reset requested successfully",
+					{ status: 202 },
 				),
 			]),
 		),
@@ -148,9 +149,7 @@ export const AuthSpec = {
 		})
 		.input(z.object({ body: ResetPasswordSchema }))
 		.output(
-			z.union([
-				createSuccesSchema(z.literal(true), "Reset password successfully"),
-			]),
+			z.union([createSuccesSchema(z.boolean(), "Reset password successfully")]),
 		),
 	hasAccess: oc
 		.route({
@@ -188,10 +187,7 @@ export const AuthSpec = {
 		.input(z.object({ body: SendEmailVerificationSchema }))
 		.output(
 			z.union([
-				createSuccesSchema(
-					z.literal(true),
-					"Email verification sent successfully",
-				),
+				createSuccesSchema(z.boolean(), "Email verification sent successfully"),
 			]),
 		),
 	verifyEmail: oc
@@ -204,8 +200,6 @@ export const AuthSpec = {
 		})
 		.input(z.object({ body: VerifyEmailSchema }))
 		.output(
-			z.union([
-				createSuccesSchema(z.literal(true), "Email verified successfully"),
-			]),
+			z.union([createSuccesSchema(z.boolean(), "Email verified successfully")]),
 		),
 };

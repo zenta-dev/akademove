@@ -214,35 +214,35 @@ export const DriverMainSpec = {
 		.output(
 			createSuccesSchema(
 				z.object({
-					totalEarnings: z.number(),
-					totalCommission: z.number(),
-					netEarnings: z.number(),
-					totalOrders: z.number(),
-					completedOrders: z.number(),
-					cancelledOrders: z.number(),
-					completionRate: z.number(),
-					averageRating: z.number(),
+					totalEarnings: z.coerce.number(),
+					totalCommission: z.coerce.number(),
+					netEarnings: z.coerce.number(),
+					totalOrders: z.coerce.number(),
+					completedOrders: z.coerce.number(),
+					cancelledOrders: z.coerce.number(),
+					completionRate: z.coerce.number(),
+					averageRating: z.coerce.number(),
 					earningsByType: z.array(
 						z.object({
 							type: z.enum(["RIDE", "DELIVERY", "FOOD"]),
-							orders: z.number(),
-							earnings: z.number(),
-							commission: z.number(),
+							orders: z.coerce.number(),
+							earnings: z.coerce.number(),
+							commission: z.coerce.number(),
 						}),
 					),
 					earningsByDay: z.array(
 						z.object({
 							date: z.string(),
-							earnings: z.number(),
-							orders: z.number(),
-							commission: z.number(),
+							earnings: z.coerce.number(),
+							orders: z.coerce.number(),
+							commission: z.coerce.number(),
 						}),
 					),
 					topEarningDays: z.array(
 						z.object({
 							date: z.string(),
-							earnings: z.number(),
-							orders: z.number(),
+							earnings: z.coerce.number(),
+							orders: z.coerce.number(),
 						}),
 					),
 				}),
