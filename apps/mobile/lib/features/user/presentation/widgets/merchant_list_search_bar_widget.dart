@@ -1,5 +1,6 @@
-import 'package:flutter/material.dart';
+import 'package:akademove/core/_export.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:shadcn_flutter/shadcn_flutter.dart';
 
 /// Search bar widget for filtering merchants by name
 /// Includes search input field and filter options
@@ -43,41 +44,40 @@ class _MerchantListSearchBarWidgetState
       child: Column(
         children: [
           // Search input field
-          Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(12.r),
-              border: Border.all(color: const Color(0xFFE5E7EB), width: 1),
-            ),
-            child: TextField(
-              controller: _searchController,
-              onChanged: (value) {
-                widget.onSearch(value);
-              },
-              decoration: InputDecoration(
-                hintText: 'Search merchants...',
-                hintStyle: TextStyle(color: Colors.grey[500], fontSize: 14.sp),
-                border: InputBorder.none,
-                prefixIcon: Icon(Icons.search_rounded, color: Colors.grey[600]),
-                suffixIcon: _searchController.text.isNotEmpty
-                    ? GestureDetector(
-                        onTap: () {
-                          _searchController.clear();
-                          widget.onClear();
-                        },
-                        child: Icon(
-                          Icons.close_rounded,
-                          color: Colors.grey[600],
-                          size: 20.sp,
-                        ),
-                      )
-                    : null,
-                contentPadding: EdgeInsets.symmetric(
-                  horizontal: 12.w,
-                  vertical: 12.h,
+          Row(
+            children: [
+              Icon(
+                LucideIcons.search,
+                color: context.colorScheme.mutedForeground,
+                size: 20.sp,
+              ),
+              SizedBox(width: 8.w),
+              Expanded(
+                child: TextField(
+                  controller: _searchController,
+                  onChanged: (value) {
+                    widget.onSearch(value);
+                    setState(() {});
+                  },
+                  placeholder: const Text('Search merchants...'),
                 ),
               ),
-            ),
+              if (_searchController.text.isNotEmpty) ...[
+                SizedBox(width: 8.w),
+                GestureDetector(
+                  onTap: () {
+                    _searchController.clear();
+                    widget.onClear();
+                    setState(() {});
+                  },
+                  child: Icon(
+                    LucideIcons.x,
+                    color: context.colorScheme.mutedForeground,
+                    size: 20.sp,
+                  ),
+                ),
+              ],
+            ],
           ),
         ],
       ),

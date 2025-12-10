@@ -1,6 +1,7 @@
+import 'package:akademove/core/_export.dart';
 import 'package:api_client/api_client.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:shadcn_flutter/shadcn_flutter.dart';
 
 /// Merchant card widget for displaying merchant information in a list
 /// Shows: merchant name, rating, distance, categories, and availability status
@@ -22,9 +23,9 @@ class MerchantCardWidget extends StatelessWidget {
         margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
         padding: EdgeInsets.all(12.w),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: context.colorScheme.background,
           borderRadius: BorderRadius.circular(12.r),
-          border: Border.all(color: const Color(0xFFE5E7EB), width: 1),
+          border: Border.all(color: context.colorScheme.border, width: 1),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -36,7 +37,8 @@ class MerchantCardWidget extends StatelessWidget {
                 Expanded(
                   child: Text(
                     merchant.name,
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    style: context.typography.h4.copyWith(
+                      fontSize: 16.sp,
                       fontWeight: FontWeight.w600,
                     ),
                     maxLines: 1,
@@ -86,13 +88,11 @@ class _RatingWidget extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(Icons.star_rounded, color: Colors.amber[600], size: 16.sp),
+        Icon(LucideIcons.star, color: Colors.amber.shade600, size: 16.sp),
         SizedBox(width: 4.w),
         Text(
           rating.toStringAsFixed(1),
-          style: Theme.of(
-            context,
-          ).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w600),
+          style: context.typography.small.copyWith(fontWeight: FontWeight.w600),
         ),
       ],
     );
@@ -107,9 +107,11 @@ class _AvailabilityBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final backgroundColor = isActive ? Colors.green[100] : Colors.red[100];
-    final textColor = isActive ? Colors.green[700] : Colors.red[700];
-    final dotColor = isActive ? Colors.green[600] : Colors.red[600];
+    final backgroundColor = isActive
+        ? Colors.green.shade100
+        : Colors.red.shade100;
+    final textColor = isActive ? Colors.green.shade700 : Colors.red.shade700;
+    final dotColor = isActive ? Colors.green.shade600 : Colors.red.shade600;
     final label = isActive ? 'Open' : 'Closed';
 
     return Container(
@@ -152,14 +154,15 @@ class _CategoryChip extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
       decoration: BoxDecoration(
-        color: Colors.grey[100],
+        color: context.colorScheme.muted,
         borderRadius: BorderRadius.circular(6.r),
       ),
       child: Text(
         category,
-        style: Theme.of(
-          context,
-        ).textTheme.labelSmall?.copyWith(color: Colors.grey[700]),
+        style: context.typography.small.copyWith(
+          fontSize: 11.sp,
+          color: context.colorScheme.mutedForeground,
+        ),
       ),
     );
   }
