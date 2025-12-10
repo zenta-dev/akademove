@@ -3,6 +3,7 @@ import type { Order } from "@repo/schema/order";
 import {
 	CheckCircle2,
 	Clock,
+	History,
 	MapPin,
 	Package,
 	Phone,
@@ -13,9 +14,15 @@ import type { ReactElement } from "react";
 import { useState } from "react";
 import { MarkPreparingDialog } from "@/components/dialogs/mark-preparing";
 import { MarkReadyDialog } from "@/components/dialogs/mark-ready";
+import { OrderAuditHistory } from "@/components/order-audit-history";
 import { OrderTrackingMap } from "@/components/order-tracking-map";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import {
+	Collapsible,
+	CollapsibleContent,
+	CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 import {
 	Dialog,
 	DialogContent,
@@ -441,6 +448,30 @@ export const OrderDetailDialog = ({
 							))}
 						</div>
 					</div>
+
+					{/* Audit History - Collapsible Section */}
+					<Collapsible>
+						<CollapsibleTrigger asChild>
+							<Button
+								variant="ghost"
+								className="flex w-full items-center justify-between p-0 hover:bg-transparent"
+							>
+								<span className="flex items-center gap-2 font-semibold text-sm">
+									<History className="h-4 w-4" />
+									{m.order_history_title()}
+								</span>
+								<span className="text-muted-foreground text-xs">
+									{m.order_history_click_expand()}
+								</span>
+							</Button>
+						</CollapsibleTrigger>
+						<CollapsibleContent className="pt-3">
+							<OrderAuditHistory
+								orderId={order.id}
+								className="border-0 p-0 shadow-none"
+							/>
+						</CollapsibleContent>
+					</Collapsible>
 
 					{/* Action Buttons */}
 					{order.type === "FOOD" && (

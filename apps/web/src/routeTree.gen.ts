@@ -78,6 +78,7 @@ import { Route as DashOperatorQuizQuestionsIndexRouteImport } from './routes/das
 import { Route as DashOperatorFraudIndexRouteImport } from './routes/dash/operator/fraud/index'
 import { Route as DashOperatorCouponsIndexRouteImport } from './routes/dash/operator/coupons/index'
 import { Route as DashOperatorContactsIndexRouteImport } from './routes/dash/operator/contacts/index'
+import { Route as DashOperatorBannersIndexRouteImport } from './routes/dash/operator/banners/index'
 import { Route as DashAdminQuizQuestionsIndexRouteImport } from './routes/dash/admin/quiz-questions/index'
 import { Route as DashAdminContactsIndexRouteImport } from './routes/dash/admin/contacts/index'
 import { Route as DashOperatorMerchantApprovalMerchantIdRouteImport } from './routes/dash/operator/merchant-approval/$merchantId'
@@ -85,6 +86,8 @@ import { Route as DashOperatorFraudIdRouteImport } from './routes/dash/operator/
 import { Route as DashOperatorDriverApprovalDriverIdRouteImport } from './routes/dash/operator/driver-approval/$driverId'
 import { Route as DashOperatorCouponsNewRouteImport } from './routes/dash/operator/coupons/new'
 import { Route as DashOperatorContactsIdRouteImport } from './routes/dash/operator/contacts/$id'
+import { Route as DashOperatorBannersNewRouteImport } from './routes/dash/operator/banners/new'
+import { Route as DashOperatorBannersIdRouteImport } from './routes/dash/operator/banners/$id'
 import { Route as DashAdminMerchantApprovalMerchantIdRouteImport } from './routes/dash/admin/merchant-approval/$merchantId'
 import { Route as DashAdminDriverApprovalDriverIdRouteImport } from './routes/dash/admin/driver-approval/$driverId'
 import { Route as DashAdminContactsIdRouteImport } from './routes/dash/admin/contacts/$id'
@@ -438,6 +441,12 @@ const DashOperatorContactsIndexRoute =
     path: '/contacts/',
     getParentRoute: () => DashOperatorRouteRoute,
   } as any)
+const DashOperatorBannersIndexRoute =
+  DashOperatorBannersIndexRouteImport.update({
+    id: '/banners/',
+    path: '/banners/',
+    getParentRoute: () => DashOperatorRouteRoute,
+  } as any)
 const DashAdminQuizQuestionsIndexRoute =
   DashAdminQuizQuestionsIndexRouteImport.update({
     id: '/quiz-questions/',
@@ -474,6 +483,16 @@ const DashOperatorCouponsNewRoute = DashOperatorCouponsNewRouteImport.update({
 const DashOperatorContactsIdRoute = DashOperatorContactsIdRouteImport.update({
   id: '/contacts/$id',
   path: '/contacts/$id',
+  getParentRoute: () => DashOperatorRouteRoute,
+} as any)
+const DashOperatorBannersNewRoute = DashOperatorBannersNewRouteImport.update({
+  id: '/banners/new',
+  path: '/banners/new',
+  getParentRoute: () => DashOperatorRouteRoute,
+} as any)
+const DashOperatorBannersIdRoute = DashOperatorBannersIdRouteImport.update({
+  id: '/banners/$id',
+  path: '/banners/$id',
   getParentRoute: () => DashOperatorRouteRoute,
 } as any)
 const DashAdminMerchantApprovalMerchantIdRoute =
@@ -573,6 +592,8 @@ export interface FileRoutesByFullPath {
   '/dash/admin/contacts/$id': typeof DashAdminContactsIdRoute
   '/dash/admin/driver-approval/$driverId': typeof DashAdminDriverApprovalDriverIdRoute
   '/dash/admin/merchant-approval/$merchantId': typeof DashAdminMerchantApprovalMerchantIdRoute
+  '/dash/operator/banners/$id': typeof DashOperatorBannersIdRoute
+  '/dash/operator/banners/new': typeof DashOperatorBannersNewRoute
   '/dash/operator/contacts/$id': typeof DashOperatorContactsIdRoute
   '/dash/operator/coupons/new': typeof DashOperatorCouponsNewRoute
   '/dash/operator/driver-approval/$driverId': typeof DashOperatorDriverApprovalDriverIdRoute
@@ -580,6 +601,7 @@ export interface FileRoutesByFullPath {
   '/dash/operator/merchant-approval/$merchantId': typeof DashOperatorMerchantApprovalMerchantIdRoute
   '/dash/admin/contacts': typeof DashAdminContactsIndexRoute
   '/dash/admin/quiz-questions': typeof DashAdminQuizQuestionsIndexRoute
+  '/dash/operator/banners': typeof DashOperatorBannersIndexRoute
   '/dash/operator/contacts': typeof DashOperatorContactsIndexRoute
   '/dash/operator/coupons': typeof DashOperatorCouponsIndexRoute
   '/dash/operator/fraud': typeof DashOperatorFraudIndexRoute
@@ -649,6 +671,8 @@ export interface FileRoutesByTo {
   '/dash/admin/contacts/$id': typeof DashAdminContactsIdRoute
   '/dash/admin/driver-approval/$driverId': typeof DashAdminDriverApprovalDriverIdRoute
   '/dash/admin/merchant-approval/$merchantId': typeof DashAdminMerchantApprovalMerchantIdRoute
+  '/dash/operator/banners/$id': typeof DashOperatorBannersIdRoute
+  '/dash/operator/banners/new': typeof DashOperatorBannersNewRoute
   '/dash/operator/contacts/$id': typeof DashOperatorContactsIdRoute
   '/dash/operator/coupons/new': typeof DashOperatorCouponsNewRoute
   '/dash/operator/driver-approval/$driverId': typeof DashOperatorDriverApprovalDriverIdRoute
@@ -656,6 +680,7 @@ export interface FileRoutesByTo {
   '/dash/operator/merchant-approval/$merchantId': typeof DashOperatorMerchantApprovalMerchantIdRoute
   '/dash/admin/contacts': typeof DashAdminContactsIndexRoute
   '/dash/admin/quiz-questions': typeof DashAdminQuizQuestionsIndexRoute
+  '/dash/operator/banners': typeof DashOperatorBannersIndexRoute
   '/dash/operator/contacts': typeof DashOperatorContactsIndexRoute
   '/dash/operator/coupons': typeof DashOperatorCouponsIndexRoute
   '/dash/operator/fraud': typeof DashOperatorFraudIndexRoute
@@ -733,6 +758,8 @@ export interface FileRoutesById {
   '/dash/admin/contacts/$id': typeof DashAdminContactsIdRoute
   '/dash/admin/driver-approval/$driverId': typeof DashAdminDriverApprovalDriverIdRoute
   '/dash/admin/merchant-approval/$merchantId': typeof DashAdminMerchantApprovalMerchantIdRoute
+  '/dash/operator/banners/$id': typeof DashOperatorBannersIdRoute
+  '/dash/operator/banners/new': typeof DashOperatorBannersNewRoute
   '/dash/operator/contacts/$id': typeof DashOperatorContactsIdRoute
   '/dash/operator/coupons/new': typeof DashOperatorCouponsNewRoute
   '/dash/operator/driver-approval/$driverId': typeof DashOperatorDriverApprovalDriverIdRoute
@@ -740,6 +767,7 @@ export interface FileRoutesById {
   '/dash/operator/merchant-approval/$merchantId': typeof DashOperatorMerchantApprovalMerchantIdRoute
   '/dash/admin/contacts/': typeof DashAdminContactsIndexRoute
   '/dash/admin/quiz-questions/': typeof DashAdminQuizQuestionsIndexRoute
+  '/dash/operator/banners/': typeof DashOperatorBannersIndexRoute
   '/dash/operator/contacts/': typeof DashOperatorContactsIndexRoute
   '/dash/operator/coupons/': typeof DashOperatorCouponsIndexRoute
   '/dash/operator/fraud/': typeof DashOperatorFraudIndexRoute
@@ -816,6 +844,8 @@ export interface FileRouteTypes {
     | '/dash/admin/contacts/$id'
     | '/dash/admin/driver-approval/$driverId'
     | '/dash/admin/merchant-approval/$merchantId'
+    | '/dash/operator/banners/$id'
+    | '/dash/operator/banners/new'
     | '/dash/operator/contacts/$id'
     | '/dash/operator/coupons/new'
     | '/dash/operator/driver-approval/$driverId'
@@ -823,6 +853,7 @@ export interface FileRouteTypes {
     | '/dash/operator/merchant-approval/$merchantId'
     | '/dash/admin/contacts'
     | '/dash/admin/quiz-questions'
+    | '/dash/operator/banners'
     | '/dash/operator/contacts'
     | '/dash/operator/coupons'
     | '/dash/operator/fraud'
@@ -892,6 +923,8 @@ export interface FileRouteTypes {
     | '/dash/admin/contacts/$id'
     | '/dash/admin/driver-approval/$driverId'
     | '/dash/admin/merchant-approval/$merchantId'
+    | '/dash/operator/banners/$id'
+    | '/dash/operator/banners/new'
     | '/dash/operator/contacts/$id'
     | '/dash/operator/coupons/new'
     | '/dash/operator/driver-approval/$driverId'
@@ -899,6 +932,7 @@ export interface FileRouteTypes {
     | '/dash/operator/merchant-approval/$merchantId'
     | '/dash/admin/contacts'
     | '/dash/admin/quiz-questions'
+    | '/dash/operator/banners'
     | '/dash/operator/contacts'
     | '/dash/operator/coupons'
     | '/dash/operator/fraud'
@@ -975,6 +1009,8 @@ export interface FileRouteTypes {
     | '/dash/admin/contacts/$id'
     | '/dash/admin/driver-approval/$driverId'
     | '/dash/admin/merchant-approval/$merchantId'
+    | '/dash/operator/banners/$id'
+    | '/dash/operator/banners/new'
     | '/dash/operator/contacts/$id'
     | '/dash/operator/coupons/new'
     | '/dash/operator/driver-approval/$driverId'
@@ -982,6 +1018,7 @@ export interface FileRouteTypes {
     | '/dash/operator/merchant-approval/$merchantId'
     | '/dash/admin/contacts/'
     | '/dash/admin/quiz-questions/'
+    | '/dash/operator/banners/'
     | '/dash/operator/contacts/'
     | '/dash/operator/coupons/'
     | '/dash/operator/fraud/'
@@ -1495,6 +1532,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashOperatorContactsIndexRouteImport
       parentRoute: typeof DashOperatorRouteRoute
     }
+    '/dash/operator/banners/': {
+      id: '/dash/operator/banners/'
+      path: '/banners'
+      fullPath: '/dash/operator/banners'
+      preLoaderRoute: typeof DashOperatorBannersIndexRouteImport
+      parentRoute: typeof DashOperatorRouteRoute
+    }
     '/dash/admin/quiz-questions/': {
       id: '/dash/admin/quiz-questions/'
       path: '/quiz-questions'
@@ -1542,6 +1586,20 @@ declare module '@tanstack/react-router' {
       path: '/contacts/$id'
       fullPath: '/dash/operator/contacts/$id'
       preLoaderRoute: typeof DashOperatorContactsIdRouteImport
+      parentRoute: typeof DashOperatorRouteRoute
+    }
+    '/dash/operator/banners/new': {
+      id: '/dash/operator/banners/new'
+      path: '/banners/new'
+      fullPath: '/dash/operator/banners/new'
+      preLoaderRoute: typeof DashOperatorBannersNewRouteImport
+      parentRoute: typeof DashOperatorRouteRoute
+    }
+    '/dash/operator/banners/$id': {
+      id: '/dash/operator/banners/$id'
+      path: '/banners/$id'
+      fullPath: '/dash/operator/banners/$id'
+      preLoaderRoute: typeof DashOperatorBannersIdRouteImport
       parentRoute: typeof DashOperatorRouteRoute
     }
     '/dash/admin/merchant-approval/$merchantId': {
@@ -1721,11 +1779,14 @@ interface DashOperatorRouteRouteChildren {
   DashOperatorReportsRoute: typeof DashOperatorReportsRoute
   DashOperatorUsersRoute: typeof DashOperatorUsersRoute
   DashOperatorIndexRoute: typeof DashOperatorIndexRoute
+  DashOperatorBannersIdRoute: typeof DashOperatorBannersIdRoute
+  DashOperatorBannersNewRoute: typeof DashOperatorBannersNewRoute
   DashOperatorContactsIdRoute: typeof DashOperatorContactsIdRoute
   DashOperatorCouponsNewRoute: typeof DashOperatorCouponsNewRoute
   DashOperatorDriverApprovalDriverIdRoute: typeof DashOperatorDriverApprovalDriverIdRoute
   DashOperatorFraudIdRoute: typeof DashOperatorFraudIdRoute
   DashOperatorMerchantApprovalMerchantIdRoute: typeof DashOperatorMerchantApprovalMerchantIdRoute
+  DashOperatorBannersIndexRoute: typeof DashOperatorBannersIndexRoute
   DashOperatorContactsIndexRoute: typeof DashOperatorContactsIndexRoute
   DashOperatorCouponsIndexRoute: typeof DashOperatorCouponsIndexRoute
   DashOperatorFraudIndexRoute: typeof DashOperatorFraudIndexRoute
@@ -1742,6 +1803,8 @@ const DashOperatorRouteRouteChildren: DashOperatorRouteRouteChildren = {
   DashOperatorReportsRoute: DashOperatorReportsRoute,
   DashOperatorUsersRoute: DashOperatorUsersRoute,
   DashOperatorIndexRoute: DashOperatorIndexRoute,
+  DashOperatorBannersIdRoute: DashOperatorBannersIdRoute,
+  DashOperatorBannersNewRoute: DashOperatorBannersNewRoute,
   DashOperatorContactsIdRoute: DashOperatorContactsIdRoute,
   DashOperatorCouponsNewRoute: DashOperatorCouponsNewRoute,
   DashOperatorDriverApprovalDriverIdRoute:
@@ -1749,6 +1812,7 @@ const DashOperatorRouteRouteChildren: DashOperatorRouteRouteChildren = {
   DashOperatorFraudIdRoute: DashOperatorFraudIdRoute,
   DashOperatorMerchantApprovalMerchantIdRoute:
     DashOperatorMerchantApprovalMerchantIdRoute,
+  DashOperatorBannersIndexRoute: DashOperatorBannersIndexRoute,
   DashOperatorContactsIndexRoute: DashOperatorContactsIndexRoute,
   DashOperatorCouponsIndexRoute: DashOperatorCouponsIndexRoute,
   DashOperatorFraudIndexRoute: DashOperatorFraudIndexRoute,

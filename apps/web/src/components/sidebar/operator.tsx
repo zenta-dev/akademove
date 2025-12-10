@@ -6,6 +6,7 @@ import {
 	Flag,
 	Gauge,
 	HelpCircle,
+	Image,
 	Mail,
 	Receipt,
 	Shield,
@@ -79,6 +80,11 @@ const navMain = Object.freeze([
 		title: m.quiz_questions(),
 		href: localizeHref("/dash/operator/quiz-questions"),
 		icon: HelpCircle,
+	},
+	{
+		title: m.banners(),
+		href: localizeHref("/dash/operator/banners"),
+		icon: Image,
 	},
 ] as const);
 
