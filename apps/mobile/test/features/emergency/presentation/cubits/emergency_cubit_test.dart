@@ -38,23 +38,25 @@ void main() {
 
     test('initial state is correct', () {
       expect(cubit.state, isA<EmergencyState>());
-      expect(cubit.state.triggered, isNull);
-      expect(cubit.state.list, isEmpty);
+      expect(cubit.state.triggerEmergency.value, isNull);
+      expect(cubit.state.emergencies.value, isNull);
     });
 
     group('init', () {
       test('resets state to initial', () async {
         // Arrange - modify state first
         cubit.emit(
-          cubit.state.toSuccess(
-            triggered: Emergency(
-              id: TestConstants.testEmergencyId,
-              orderId: TestConstants.testOrderId,
-              userId: TestConstants.testUserId,
-              type: EmergencyType.ACCIDENT,
-              status: EmergencyStatus.REPORTED,
-              description: 'Test',
-              reportedAt: TestConstants.testCreatedAt,
+          cubit.state.copyWith(
+            triggerEmergency: OperationResult.success(
+              Emergency(
+                id: TestConstants.testEmergencyId,
+                orderId: TestConstants.testOrderId,
+                userId: TestConstants.testUserId,
+                type: EmergencyType.ACCIDENT,
+                status: EmergencyStatus.REPORTED,
+                description: 'Test',
+                reportedAt: TestConstants.testCreatedAt,
+              ),
             ),
           ),
         );
@@ -63,8 +65,8 @@ void main() {
         await cubit.init();
 
         // Assert
-        expect(cubit.state.triggered, isNull);
-        expect(cubit.state.list, isEmpty);
+        expect(cubit.state.triggerEmergency.value, isNull);
+        expect(cubit.state.emergencies.value, isNull);
       });
     });
 
@@ -72,15 +74,17 @@ void main() {
       test('resets state to initial', () {
         // Arrange - modify state first
         cubit.emit(
-          cubit.state.toSuccess(
-            triggered: Emergency(
-              id: TestConstants.testEmergencyId,
-              orderId: TestConstants.testOrderId,
-              userId: TestConstants.testUserId,
-              type: EmergencyType.ACCIDENT,
-              status: EmergencyStatus.REPORTED,
-              description: 'Test',
-              reportedAt: TestConstants.testCreatedAt,
+          cubit.state.copyWith(
+            triggerEmergency: OperationResult.success(
+              Emergency(
+                id: TestConstants.testEmergencyId,
+                orderId: TestConstants.testOrderId,
+                userId: TestConstants.testUserId,
+                type: EmergencyType.ACCIDENT,
+                status: EmergencyStatus.REPORTED,
+                description: 'Test',
+                reportedAt: TestConstants.testCreatedAt,
+              ),
             ),
           ),
         );
@@ -89,8 +93,8 @@ void main() {
         cubit.reset();
 
         // Assert
-        expect(cubit.state.triggered, isNull);
-        expect(cubit.state.list, isEmpty);
+        expect(cubit.state.triggerEmergency.value, isNull);
+        expect(cubit.state.emergencies.value, isNull);
       });
     });
 
@@ -124,13 +128,25 @@ void main() {
           description: 'Test emergency',
         ),
         expect: () => [
-          isA<EmergencyState>().having((s) => s.isLoading, 'isLoading', true),
+          isA<EmergencyState>().having(
+            (s) => s.triggerEmergency.isLoading,
+            'triggerEmergency.isLoading',
+            true,
+          ),
           isA<EmergencyState>()
-              .having((s) => s.isSuccess, 'isSuccess', true)
-              .having((s) => s.triggered, 'triggered', isNotNull)
               .having(
-                (s) => s.triggered?.id,
-                'triggered.id',
+                (s) => s.triggerEmergency.isSuccess,
+                'triggerEmergency.isSuccess',
+                true,
+              )
+              .having(
+                (s) => s.triggerEmergency.value,
+                'triggerEmergency.value',
+                isNotNull,
+              )
+              .having(
+                (s) => s.triggerEmergency.value?.id,
+                'triggerEmergency.value.id',
                 TestConstants.testEmergencyId,
               ),
         ],
@@ -158,10 +174,22 @@ void main() {
           description: 'Test emergency',
         ),
         expect: () => [
-          isA<EmergencyState>().having((s) => s.isLoading, 'isLoading', true),
+          isA<EmergencyState>().having(
+            (s) => s.triggerEmergency.isLoading,
+            'triggerEmergency.isLoading',
+            true,
+          ),
           isA<EmergencyState>()
-              .having((s) => s.isFailure, 'isFailure', true)
-              .having((s) => s.error, 'error', isA<RepositoryError>()),
+              .having(
+                (s) => s.triggerEmergency.isFailure,
+                'triggerEmergency.isFailure',
+                true,
+              )
+              .having(
+                (s) => s.triggerEmergency.error,
+                'triggerEmergency.error',
+                isA<RepositoryError>(),
+              ),
         ],
       );
 
@@ -248,13 +276,25 @@ void main() {
         },
         act: (cubit) => cubit.loadByOrder(TestConstants.testOrderId),
         expect: () => [
-          isA<EmergencyState>().having((s) => s.isLoading, 'isLoading', true),
+          isA<EmergencyState>().having(
+            (s) => s.emergencies.isLoading,
+            'emergencies.isLoading',
+            true,
+          ),
           isA<EmergencyState>()
-              .having((s) => s.isSuccess, 'isSuccess', true)
-              .having((s) => s.list, 'list', hasLength(1))
               .having(
-                (s) => s.list.first.id,
-                'list.first.id',
+                (s) => s.emergencies.isSuccess,
+                'emergencies.isSuccess',
+                true,
+              )
+              .having(
+                (s) => s.emergencies.value,
+                'emergencies.value',
+                hasLength(1),
+              )
+              .having(
+                (s) => s.emergencies.value?.first.id,
+                'emergencies.value.first.id',
                 TestConstants.testEmergencyId,
               ),
         ],
@@ -280,10 +320,18 @@ void main() {
         },
         act: (cubit) => cubit.loadByOrder(TestConstants.testOrderId),
         expect: () => [
-          isA<EmergencyState>().having((s) => s.isLoading, 'isLoading', true),
+          isA<EmergencyState>().having(
+            (s) => s.emergencies.isLoading,
+            'emergencies.isLoading',
+            true,
+          ),
           isA<EmergencyState>()
-              .having((s) => s.isSuccess, 'isSuccess', true)
-              .having((s) => s.list, 'list', isEmpty),
+              .having(
+                (s) => s.emergencies.isSuccess,
+                'emergencies.isSuccess',
+                true,
+              )
+              .having((s) => s.emergencies.value, 'emergencies.value', isEmpty),
         ],
       );
 
@@ -301,10 +349,22 @@ void main() {
         },
         act: (cubit) => cubit.loadByOrder(TestConstants.testOrderId),
         expect: () => [
-          isA<EmergencyState>().having((s) => s.isLoading, 'isLoading', true),
+          isA<EmergencyState>().having(
+            (s) => s.emergencies.isLoading,
+            'emergencies.isLoading',
+            true,
+          ),
           isA<EmergencyState>()
-              .having((s) => s.isFailure, 'isFailure', true)
-              .having((s) => s.error, 'error', isA<RepositoryError>()),
+              .having(
+                (s) => s.emergencies.isFailure,
+                'emergencies.isFailure',
+                true,
+              )
+              .having(
+                (s) => s.emergencies.error,
+                'emergencies.error',
+                isA<RepositoryError>(),
+              ),
         ],
       );
     });
@@ -334,13 +394,25 @@ void main() {
         },
         act: (cubit) => cubit.get(TestConstants.testEmergencyId),
         expect: () => [
-          isA<EmergencyState>().having((s) => s.isLoading, 'isLoading', true),
+          isA<EmergencyState>().having(
+            (s) => s.triggerEmergency.isLoading,
+            'triggerEmergency.isLoading',
+            true,
+          ),
           isA<EmergencyState>()
-              .having((s) => s.isSuccess, 'isSuccess', true)
-              .having((s) => s.triggered, 'triggered', isNotNull)
               .having(
-                (s) => s.triggered?.id,
-                'triggered.id',
+                (s) => s.triggerEmergency.isSuccess,
+                'triggerEmergency.isSuccess',
+                true,
+              )
+              .having(
+                (s) => s.triggerEmergency.value,
+                'triggerEmergency.value',
+                isNotNull,
+              )
+              .having(
+                (s) => s.triggerEmergency.value?.id,
+                'triggerEmergency.value.id',
                 TestConstants.testEmergencyId,
               ),
         ],
@@ -365,10 +437,22 @@ void main() {
         },
         act: (cubit) => cubit.get(TestConstants.testEmergencyId),
         expect: () => [
-          isA<EmergencyState>().having((s) => s.isLoading, 'isLoading', true),
+          isA<EmergencyState>().having(
+            (s) => s.triggerEmergency.isLoading,
+            'triggerEmergency.isLoading',
+            true,
+          ),
           isA<EmergencyState>()
-              .having((s) => s.isFailure, 'isFailure', true)
-              .having((s) => s.error, 'error', isA<RepositoryError>()),
+              .having(
+                (s) => s.triggerEmergency.isFailure,
+                'triggerEmergency.isFailure',
+                true,
+              )
+              .having(
+                (s) => s.triggerEmergency.error,
+                'triggerEmergency.error',
+                isA<RepositoryError>(),
+              ),
         ],
       );
     });

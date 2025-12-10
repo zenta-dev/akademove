@@ -128,12 +128,12 @@ void main() {
         act: (cubit) => cubit.topUp(amount, method),
         expect: () => [
           isA<UserWalletTopUpState>().having(
-            (s) => s.state,
-            'state',
-            CubitState.loading,
+            (s) => s.isLoading,
+            'isLoading',
+            true,
           ),
           isA<UserWalletTopUpState>()
-              .having((s) => s.state, 'state', CubitState.success)
+              .having((s) => s.isSuccess, 'isSuccess', true)
               .having(
                 (s) => s.paymentResult?.id,
                 'paymentResult.id',
@@ -146,9 +146,9 @@ void main() {
               ),
           // teardownWebsocket is called on close, emitting initial state
           isA<UserWalletTopUpState>().having(
-            (s) => s.state,
-            'state',
-            CubitState.initial,
+            (s) => s.status.isIdle,
+            'isIdle',
+            true,
           ),
         ],
         verify: (_) {

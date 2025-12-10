@@ -4,38 +4,39 @@ import 'package:flutter_test/flutter_test.dart';
 /// Custom matchers and test utilities
 
 // ============================================================================
-// State Matchers
+// OperationResult Matchers
 // ============================================================================
 
-/// Matcher for checking if state is initial
-Matcher isInitialState<T extends BaseState2>() =>
-    isA<T>().having((s) => s.isInitial, 'isInitial', true);
+/// Matcher for checking if OperationResult is idle
+Matcher isIdleResult<T>() =>
+    isA<OperationResult<T>>().having((r) => r.isIdle, 'isIdle', true);
 
-/// Matcher for checking if state is loading
-Matcher isLoadingState<T extends BaseState2>() =>
-    isA<T>().having((s) => s.isLoading, 'isLoading', true);
+/// Matcher for checking if OperationResult is loading
+Matcher isLoadingResult<T>() =>
+    isA<OperationResult<T>>().having((r) => r.isLoading, 'isLoading', true);
 
-/// Matcher for checking if state is success
-Matcher isSuccessState<T extends BaseState2>() =>
-    isA<T>().having((s) => s.isSuccess, 'isSuccess', true);
+/// Matcher for checking if OperationResult is success
+Matcher isSuccessResult<T>() =>
+    isA<OperationResult<T>>().having((r) => r.isSuccess, 'isSuccess', true);
 
-/// Matcher for checking if state is failure
-Matcher isFailureState<T extends BaseState2>() =>
-    isA<T>().having((s) => s.isFailure, 'isFailure', true);
+/// Matcher for checking if OperationResult is failure
+Matcher isFailureResult<T>() =>
+    isA<OperationResult<T>>().having((r) => r.isFailure, 'isFailure', true);
 
-/// Matcher for checking if state has specific error
-Matcher hasError<T extends BaseState2>(BaseError error) => isA<T>()
-    .having((s) => s.isFailure, 'isFailure', true)
-    .having((s) => s.error, 'error', error);
+/// Matcher for checking if OperationResult has specific error
+Matcher hasResultError<T>(BaseError error) => isA<OperationResult<T>>()
+    .having((r) => r.isFailure, 'isFailure', true)
+    .having((r) => r.error, 'error', error);
 
-/// Matcher for checking if state has specific error type
-Matcher hasErrorType<T extends BaseState2, E extends BaseError>() => isA<T>()
-    .having((s) => s.isFailure, 'isFailure', true)
-    .having((s) => s.error, 'error', isA<E>());
+/// Matcher for checking if OperationResult has specific error type
+Matcher hasResultErrorType<T, E extends BaseError>() =>
+    isA<OperationResult<T>>()
+        .having((r) => r.isFailure, 'isFailure', true)
+        .having((r) => r.error, 'error', isA<E>());
 
-/// Matcher for checking if state has specific message
-Matcher hasMessage<T extends BaseState2>(String message) =>
-    isA<T>().having((s) => s.message, 'message', message);
+/// Matcher for checking if OperationResult has specific message
+Matcher hasResultMessage<T>(String message) =>
+    isA<OperationResult<T>>().having((r) => r.message, 'message', message);
 
 // ============================================================================
 // Error Matchers

@@ -30,9 +30,9 @@ void main() {
 
     test('initial state is correct', () {
       expect(cubit.state, isA<UserWalletState>());
-      expect(cubit.state.myWallet, isNull);
-      expect(cubit.state.myTransactions, isEmpty);
-      expect(cubit.state.thisMonthSummary, isNull);
+      expect(cubit.state.myWallet.isIdle, true);
+      expect(cubit.state.myTransactions.isIdle, true);
+      expect(cubit.state.thisMonthSummary.isIdle, true);
     });
 
     group('init', () {
@@ -109,13 +109,17 @@ void main() {
         },
         act: (cubit) => cubit.getMine(),
         expect: () => [
-          isA<UserWalletState>().having((s) => s.isLoading, 'isLoading', true),
+          isA<UserWalletState>().having(
+            (s) => s.myWallet.isLoading,
+            'isLoading',
+            true,
+          ),
           isA<UserWalletState>()
-              .having((s) => s.isSuccess, 'isSuccess', true)
-              .having((s) => s.myWallet, 'myWallet', isNotNull)
+              .having((s) => s.myWallet.isSuccess, 'isSuccess', true)
+              .having((s) => s.myWallet.value, 'myWallet.value', isNotNull)
               .having(
-                (s) => s.myWallet.id,
-                'myWallet.id',
+                (s) => s.myWallet.value?.id,
+                'myWallet.value.id',
                 TestConstants.testWalletId,
               ),
         ],
@@ -163,8 +167,9 @@ void main() {
           // Act
           await cubit.getMine();
 
-          // Assert - error is caught and logged, wallet remains null
-          expect(cubit.state.myWallet, isNull);
+          // Assert - error is caught and logged, wallet remains in loading state
+          // (since no success was emitted after loading)
+          expect(cubit.state.myWallet.isLoading, true);
         },
       );
 
@@ -182,7 +187,11 @@ void main() {
         act: (cubit) => cubit.getMine(),
         expect: () => [
           // Error is logged but state remains in loading
-          isA<UserWalletState>().having((s) => s.isLoading, 'isLoading', true),
+          isA<UserWalletState>().having(
+            (s) => s.myWallet.isLoading,
+            'isLoading',
+            true,
+          ),
         ],
       );
     });
@@ -210,13 +219,21 @@ void main() {
         },
         act: (cubit) => cubit.getTransactionsMine(),
         expect: () => [
-          isA<UserWalletState>().having((s) => s.isLoading, 'isLoading', true),
+          isA<UserWalletState>().having(
+            (s) => s.myTransactions.isLoading,
+            'isLoading',
+            true,
+          ),
           isA<UserWalletState>()
-              .having((s) => s.isSuccess, 'isSuccess', true)
-              .having((s) => s.myTransactions, 'myTransactions', isNotEmpty)
+              .having((s) => s.myTransactions.isSuccess, 'isSuccess', true)
               .having(
-                (s) => s.myTransactions.length,
-                'myTransactions.length',
+                (s) => s.myTransactions.value,
+                'myTransactions.value',
+                isNotEmpty,
+              )
+              .having(
+                (s) => s.myTransactions.value?.length,
+                'myTransactions.value.length',
                 1,
               ),
         ],
@@ -235,10 +252,18 @@ void main() {
         },
         act: (cubit) => cubit.getTransactionsMine(),
         expect: () => [
-          isA<UserWalletState>().having((s) => s.isLoading, 'isLoading', true),
+          isA<UserWalletState>().having(
+            (s) => s.myTransactions.isLoading,
+            'isLoading',
+            true,
+          ),
           isA<UserWalletState>()
-              .having((s) => s.isSuccess, 'isSuccess', true)
-              .having((s) => s.myTransactions, 'myTransactions', isEmpty),
+              .having((s) => s.myTransactions.isSuccess, 'isSuccess', true)
+              .having(
+                (s) => s.myTransactions.value,
+                'myTransactions.value',
+                isEmpty,
+              ),
         ],
       );
     });
@@ -265,16 +290,24 @@ void main() {
         },
         act: (cubit) => cubit.getMonthlySummary(),
         expect: () => [
-          isA<UserWalletState>().having((s) => s.isLoading, 'isLoading', true),
+          isA<UserWalletState>().having(
+            (s) => s.thisMonthSummary.isLoading,
+            'isLoading',
+            true,
+          ),
           isA<UserWalletState>()
-              .having((s) => s.isSuccess, 'isSuccess', true)
-              .having((s) => s.thisMonthSummary, 'thisMonthSummary', isNotNull)
+              .having((s) => s.thisMonthSummary.isSuccess, 'isSuccess', true)
               .having(
-                (s) => s.thisMonthSummary.totalIncome,
+                (s) => s.thisMonthSummary.value,
+                'thisMonthSummary.value',
+                isNotNull,
+              )
+              .having(
+                (s) => s.thisMonthSummary.value?.totalIncome,
                 'totalIncome',
                 500000,
               )
-              .having((s) => s.thisMonthSummary.net, 'net', 400000),
+              .having((s) => s.thisMonthSummary.value?.net, 'net', 400000),
         ],
         verify: (_) {
           verify(
