@@ -493,10 +493,10 @@ export class CouponRepository extends BaseRepository {
 		}
 	}
 
-	async incrementUsageCount(id: string): Promise<void> {
+	async incrementUsageCount(id: string, opts?: PartialWithTx): Promise<void> {
 		try {
 			// Use SQL subquery to count usage correctly
-			await this.db
+			await (opts?.tx ?? this.db)
 				.update(tables.coupon)
 				.set({
 					usedCount: sql`(SELECT COUNT(*) FROM ${tables.couponUsage} WHERE ${tables.couponUsage.couponId} = ${id})`,
@@ -515,9 +515,10 @@ export class CouponRepository extends BaseRepository {
 		orderId: string,
 		userId: string,
 		discountApplied: number,
+		opts?: PartialWithTx,
 	): Promise<void> {
 		try {
-			await this.db.insert(tables.couponUsage).values({
+			await (opts?.tx ?? this.db).insert(tables.couponUsage).values({
 				id: v7(),
 				couponId,
 				orderId,

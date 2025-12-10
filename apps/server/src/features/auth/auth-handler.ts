@@ -9,7 +9,7 @@ import { AuthError, BaseError, RepositoryError } from "@/core/error";
 import { hasRoles } from "@/core/middlewares/auth";
 import { createORPCRouter } from "@/core/router/orpc";
 import { DuplicateAccountService } from "@/features/fraud/services";
-import { isDev } from "@/utils";
+import { isDev, safeAsync } from "@/utils";
 import { logger } from "@/utils/logger";
 import { AuthSpec } from "./auth-spec";
 
@@ -520,7 +520,9 @@ export const AuthHandler = pub.router({
 	}),
 	forgotPassword: pub.forgotPassword.handler(
 		async ({ context, input: { body } }) => {
-			await context.repo.auth.forgotPassword(trimObjectValues(body));
+			const res = await safeAsync(
+				context.repo.auth.forgotPassword(trimObjectValues(body)),
+			);
 
 			return {
 				status: 202,
@@ -545,6 +547,10 @@ export const AuthHandler = pub.router({
 		},
 	),
 	hasAccess: priv.hasAccess.handler(async ({ context, input: { body } }) => {
+		logger.debug(
+			{ user: context.user, roles: body.roles },
+			"verifying permissions",
+		);
 		const ok = hasRoles(context.user?.role, ...body.roles);
 
 		return {
