@@ -1102,6 +1102,13 @@
 	"label_nearby_drivers": "Nearby drivers",
 	"text_your_current_location": "Your current location",
 	"item_count": "{count} item(s)",
+	"@item_count": {
+		"placeholders": {
+			"count": {
+				"type": "int"
+			}
+		}
+	},
 	"button_accept": "Accept",
 	"how_was_your_experience": "How was your experience?",
 	"mixed": "Mixed",

@@ -1,5 +1,8 @@
 {
 	"@@locale": "id",
+	"small": " Kecil",
+	"medium": "Sedang",
+	"large": "Besar",
 	"transfer": "Transfer",
 	"transfer_success": "Transfer berhasil",
 	"transfer_failed": "Transfer gagal",
@@ -1100,6 +1103,13 @@
 	"label_nearby_drivers": "Driver terdekat",
 	"text_your_current_location": "Lokasi Anda saat ini",
 	"item_count": "{count} item",
+	"@item_count": {
+		"placeholders": {
+			"count": {
+				"type": "int"
+			}
+		}
+	},
 	"button_accept": "Terima",
 	"how_was_your_experience": "Bagaimana pengalaman Anda?",
 	"mixed": "Campuran",
