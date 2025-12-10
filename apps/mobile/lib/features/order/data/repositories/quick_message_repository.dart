@@ -32,7 +32,10 @@ class QuickMessageRepository extends BaseRepository {
 
       final templates = responseData.data.rows;
 
-      return SuccessResponse(data: templates, message: responseData.message);
+      return SuccessResponse(
+        data: templates,
+        message: responseData.message ?? '',
+      );
     });
   }
 }

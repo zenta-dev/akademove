@@ -45,7 +45,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
     _notificationCubit.getUnreadCount();
     Future.wait([
       context.read<UserHomeCubit>().getPopulars(),
-      context.read<ConfigurationCubit>().getConfigurations(),
+      context.read<ConfigurationCubit>().getBanners(placement: 'USER_HOME'),
       context.read<UserLocationCubit>().getMyLocation(context),
       context.read<UserWalletCubit>().getMine(),
     ]);
@@ -316,33 +316,54 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
       padding: EdgeInsets.only(top: 8.dg),
       child: BlocBuilder<ConfigurationCubit, ConfigurationState>(
         builder: (context, state) {
-          final find = state.configurations.data?.value.firstWhere(
-            (v) => v.key == 'user-home-banner',
-          );
-          final banners = (find?.value ?? []) as List<BannerConfiguration>;
-
-          return Carousel(
-            transition: CarouselTransition.sliding(gap: 16.w),
-            controller: _bannerController,
-            autoplaySpeed: const Duration(seconds: 10),
-            itemCount: banners.length,
-            itemBuilder: (context, index) {
-              final banner = banners[index];
-              return SizedBox(
-                width: context.mediaQuerySize.width,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(16.r),
-                  child: CachedNetworkImage(
-                    imageUrl: banner.imageUrl,
-                    fit: BoxFit.cover,
+          return state.banners.whenOr(
+            success: (banners, _) {
+              // Filter out banners with null imageUrl
+              final validBanners = banners
+                  .where((b) => b.imageUrl != null)
+                  .toList();
+              if (validBanners.isEmpty) {
+                return const SizedBox.shrink();
+              }
+              return Carousel(
+                transition: CarouselTransition.sliding(gap: 16.w),
+                controller: _bannerController,
+                autoplaySpeed: const Duration(seconds: 10),
+                itemCount: validBanners.length,
+                itemBuilder: (context, index) {
+                  final banner = validBanners[index];
+                  return SizedBox(
                     width: context.mediaQuerySize.width,
-                    height: context.mediaQuerySize.height,
-                  ),
-                ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(16.r),
+                      child: CachedNetworkImage(
+                        imageUrl: banner.imageUrl!,
+                        fit: BoxFit.cover,
+                        width: context.mediaQuerySize.width,
+                        height: context.mediaQuerySize.height,
+                      ),
+                    ),
+                  );
+                },
+                speed: const Duration(seconds: 10),
+                duration: const Duration(seconds: 10),
               );
             },
-            speed: const Duration(seconds: 10),
-            duration: const Duration(seconds: 10),
+            loading: () => Carousel(
+              transition: CarouselTransition.sliding(gap: 16.w),
+              controller: _bannerController,
+              itemCount: 3,
+              itemBuilder: (context, index) {
+                return SizedBox(
+                  width: context.mediaQuerySize.width,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(16.r),
+                    child: Container(color: context.colorScheme.muted),
+                  ),
+                ).asSkeleton();
+              },
+            ),
+            orElse: () => const SizedBox.shrink(),
           );
         },
       ),

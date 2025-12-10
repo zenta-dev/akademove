@@ -1,6 +1,5 @@
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
-import 'package:api_client/api_client.dart';
 
 class ConfigurationCubit extends BaseCubit<ConfigurationState> {
   ConfigurationCubit({required this.configurationRepository})
@@ -8,56 +7,54 @@ class ConfigurationCubit extends BaseCubit<ConfigurationState> {
 
   final ConfigurationRepository configurationRepository;
 
-  Future<void> getConfigurations() async => await taskManager.execute(
-    'CC2-lC1',
-    () async {
-      try {
-        emit(state.copyWith(configurations: OperationResult.loading()));
-        final now = DateTime.now();
+  /// Fetch public banners from the API for a specific placement
+  Future<void> getBanners({String? placement}) async =>
+      await taskManager.execute('CC-getBanners', () async {
+        try {
+          emit(state.copyWith(banners: const OperationResult.loading()));
+          final response = await configurationRepository.getPublicBanners(
+            placement: placement,
+          );
+          emit(
+            state.copyWith(
+              banners: OperationResult.success(
+                response.data,
+                message: response.message,
+              ),
+            ),
+          );
+        } on BaseError catch (e, st) {
+          logger.e(
+            '[ConfigurationCubit] - Error fetching banners: ${e.message}',
+            error: e,
+            stackTrace: st,
+          );
+          emit(state.copyWith(banners: OperationResult.failed(e)));
+        }
+      });
 
-        final banners = [
-          BannerConfiguration(
-            title: "atk",
-            description: '',
-            imageUrl: 'https://akademove.com/banner/atk.png',
-          ),
-          BannerConfiguration(
-            title: "food",
-            description: '',
-            imageUrl: 'https://akademove.com/banner/food.png',
-          ),
-          BannerConfiguration(
-            title: "package",
-            description: '',
-            imageUrl: 'https://akademove.com/banner/package.png',
-          ),
-          BannerConfiguration(
-            title: "ride",
-            description: '',
-            imageUrl: 'https://akademove.com/banner/ride.png',
-          ),
-        ];
-
-        final configs = [
-          Configuration(
-            key: 'user-home-banner',
-            name: 'User Home Banner',
-            value: banners,
-            updatedById: '',
-            updatedAt: now,
-          ),
-        ];
-        emit(state.copyWith(configurations: OperationResult.success(configs)));
-      } on BaseError catch (e, st) {
-        logger.e(
-          '[ConfigurationCubit] - Error: ${e.message}',
-          error: e,
-          stackTrace: st,
-        );
-        emit(state.copyWith(configurations: OperationResult.failed(e)));
-      }
-    },
-  );
+  Future<void> getConfigurations() async =>
+      await taskManager.execute('CC2-lC1', () async {
+        try {
+          emit(state.copyWith(configurations: const OperationResult.loading()));
+          final response = await configurationRepository.list();
+          emit(
+            state.copyWith(
+              configurations: OperationResult.success(
+                response.data,
+                message: response.message,
+              ),
+            ),
+          );
+        } on BaseError catch (e, st) {
+          logger.e(
+            '[ConfigurationCubit] - Error: ${e.message}',
+            error: e,
+            stackTrace: st,
+          );
+          emit(state.copyWith(configurations: OperationResult.failed(e)));
+        }
+      });
 
   void reset() => emit(const ConfigurationState());
 }

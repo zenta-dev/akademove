@@ -40,4 +40,24 @@ class ConfigurationRepository extends BaseRepository {
       );
     });
   }
+
+  /// Fetch public banners for a specific placement (USER_HOME, DRIVER_HOME, MERCHANT_HOME)
+  Future<BaseResponse<List<BannerListPublic200ResponseDataInner>>>
+  getPublicBanners({String? placement}) {
+    return guard(() async {
+      final res = await _apiClient.getConfigurationApi().bannerListPublic(
+        placement: placement,
+      );
+
+      final data = res.data?.data;
+      if (data == null) {
+        throw RepositoryError('Failed to fetch banners');
+      }
+
+      return SuccessResponse(
+        message: res.data?.message ?? 'Banners fetched',
+        data: data,
+      );
+    });
+  }
 }

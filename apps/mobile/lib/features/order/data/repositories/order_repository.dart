@@ -79,7 +79,7 @@ class OrderRepository extends BaseRepository {
           ));
 
       return SuccessResponse(
-        message: data.message,
+        message: data.message ?? '',
         data: data.data,
         paginationResult: data.pagination,
       );
@@ -106,7 +106,7 @@ class OrderRepository extends BaseRepository {
             code: ErrorCode.notFound,
           ));
 
-      return SuccessResponse(message: data.message, data: data.data);
+      return SuccessResponse(message: data.message ?? '', data: data.data);
     });
   }
 
@@ -121,7 +121,7 @@ class OrderRepository extends BaseRepository {
             code: ErrorCode.notFound,
           ));
 
-      return SuccessResponse(message: data.message, data: data.data);
+      return SuccessResponse(message: data.message ?? '', data: data.data);
     });
   }
 
@@ -138,7 +138,7 @@ class OrderRepository extends BaseRepository {
             code: ErrorCode.notFound,
           ));
 
-      return SuccessResponse(message: data.message, data: data.data);
+      return SuccessResponse(message: data.message ?? '', data: data.data);
     });
   }
 
@@ -156,7 +156,7 @@ class OrderRepository extends BaseRepository {
             code: ErrorCode.unknown,
           ));
 
-      return SuccessResponse(message: data.message, data: data.data);
+      return SuccessResponse(message: data.message ?? '', data: data.data);
     });
   }
 
@@ -182,7 +182,7 @@ class OrderRepository extends BaseRepository {
             code: ErrorCode.unknown,
           ));
 
-      return SuccessResponse(message: data.message, data: data.data.url);
+      return SuccessResponse(message: data.message ?? '', data: data.data.url);
     });
   }
 
@@ -203,7 +203,10 @@ class OrderRepository extends BaseRepository {
             code: ErrorCode.unknown,
           ));
 
-      return SuccessResponse(message: data.message, data: data.data.verified);
+      return SuccessResponse(
+        message: data.message ?? '',
+        data: data.data.verified,
+      );
     });
   }
 
@@ -224,7 +227,7 @@ class OrderRepository extends BaseRepository {
             code: ErrorCode.unknown,
           ));
 
-      return SuccessResponse(message: data.message, data: data.data);
+      return SuccessResponse(message: data.message ?? '', data: data.data);
     });
   }
 
@@ -251,7 +254,7 @@ class OrderRepository extends BaseRepository {
           ));
 
       return SuccessResponse(
-        message: data.message,
+        message: data.message ?? '',
         data: data.data,
         paginationResult: data.pagination,
       );
@@ -277,7 +280,7 @@ class OrderRepository extends BaseRepository {
             code: ErrorCode.unknown,
           ));
 
-      return SuccessResponse(message: data.message, data: data.data);
+      return SuccessResponse(message: data.message ?? '', data: data.data);
     });
   }
 
@@ -290,7 +293,9 @@ class OrderRepository extends BaseRepository {
     return guard(() async {
       final res = await _apiClient.getOrderApi().orderCancelScheduledOrder(
         id: id,
-        orderCancelRequest: OrderCancelRequest(reason: reason),
+        orderCancelScheduledOrderRequest: OrderCancelScheduledOrderRequest(
+          reason: reason,
+        ),
       );
 
       final data =
@@ -300,7 +305,7 @@ class OrderRepository extends BaseRepository {
             code: ErrorCode.unknown,
           ));
 
-      return SuccessResponse(message: data.message, data: data.data);
+      return SuccessResponse(message: data.message ?? '', data: data.data);
     });
   }
 }

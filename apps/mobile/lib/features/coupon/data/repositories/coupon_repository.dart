@@ -66,7 +66,7 @@ class CouponRepository extends BaseRepository {
             code: ErrorCode.notFound,
           ));
 
-      return SuccessResponse(message: data.message, data: data.data);
+      return SuccessResponse(message: data.message ?? '', data: data.data);
     });
   }
 
@@ -95,7 +95,7 @@ class CouponRepository extends BaseRepository {
       final data = responseData.data;
 
       return SuccessResponse(
-        message: responseData.message,
+        message: responseData.message ?? '',
         data: EligibleCouponsResult(
           coupons: data.coupons,
           bestCoupon: data.bestCoupon,
@@ -132,7 +132,7 @@ class CouponRepository extends BaseRepository {
       final data = responseData.data;
 
       return SuccessResponse(
-        message: responseData.message,
+        message: responseData.message ?? '',
         data: CouponValidationResult(
           valid: data.valid,
           coupon: data.coupon,

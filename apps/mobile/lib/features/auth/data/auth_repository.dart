@@ -31,11 +31,12 @@ class AuthRepository extends BaseRepository {
             code: ErrorCode.unknown,
           ));
 
-      _apiClient.setBearerAuth('bearer_auth', data.data.token);
-      _ws.sessionToken = data.data.token;
-      await _localKV.set(KeyValueKeys.token, data.data.token);
+      final token = data.data.token ?? '';
+      _apiClient.setBearerAuth('bearer_auth', token);
+      _ws.sessionToken = token;
+      await _localKV.set(KeyValueKeys.token, token);
 
-      return SuccessResponse(message: data.message, data: data.data.user);
+      return SuccessResponse(message: data.message ?? '', data: data.data.user);
     });
   }
 
@@ -67,11 +68,12 @@ class AuthRepository extends BaseRepository {
             code: ErrorCode.internalServerError,
           ));
 
-      _apiClient.setBearerAuth('bearer_auth', data.data.token);
-      _ws.sessionToken = data.data.token;
-      await _localKV.set(KeyValueKeys.token, data.data.token);
+      final token = data.data.token ?? '';
+      _apiClient.setBearerAuth('bearer_auth', token);
+      _ws.sessionToken = token;
+      await _localKV.set(KeyValueKeys.token, token);
 
-      return SuccessResponse(message: data.message, data: data.data.user);
+      return SuccessResponse(message: data.message ?? '', data: data.data.user);
     });
   }
 
@@ -116,11 +118,12 @@ class AuthRepository extends BaseRepository {
             code: ErrorCode.internalServerError,
           ));
 
-      _apiClient.setBearerAuth('bearer_auth', data.data.token);
-      _ws.sessionToken = data.data.token;
-      await _localKV.set(KeyValueKeys.token, data.data.token);
+      final token = data.data.token ?? '';
+      _apiClient.setBearerAuth('bearer_auth', token);
+      _ws.sessionToken = token;
+      await _localKV.set(KeyValueKeys.token, token);
 
-      return SuccessResponse(message: data.message, data: data.data.user);
+      return SuccessResponse(message: data.message ?? '', data: data.data.user);
     });
   }
 
@@ -172,11 +175,12 @@ class AuthRepository extends BaseRepository {
             code: ErrorCode.internalServerError,
           ));
 
-      _apiClient.setBearerAuth('bearer_auth', data.data.token);
-      _ws.sessionToken = data.data.token;
-      await _localKV.set(KeyValueKeys.token, data.data.token);
+      final token = data.data.token ?? '';
+      _apiClient.setBearerAuth('bearer_auth', token);
+      _ws.sessionToken = token;
+      await _localKV.set(KeyValueKeys.token, token);
 
-      return SuccessResponse(message: data.message, data: data.data.user);
+      return SuccessResponse(message: data.message ?? '', data: data.data.user);
     });
   }
 
@@ -198,7 +202,7 @@ class AuthRepository extends BaseRepository {
             "An error occured",
             code: ErrorCode.internalServerError,
           ));
-      return SuccessResponse(message: data.message, data: true);
+      return SuccessResponse(message: data.message ?? '', data: true);
     });
   }
 
@@ -241,7 +245,7 @@ class AuthRepository extends BaseRepository {
         );
       }
 
-      return SuccessResponse(message: data.message, data: remoteUser);
+      return SuccessResponse(message: data.message ?? '', data: remoteUser);
     });
   }
 
@@ -260,7 +264,7 @@ class AuthRepository extends BaseRepository {
             code: ErrorCode.unknown,
           ));
 
-      return SuccessResponse(message: data.message, data: true);
+      return SuccessResponse(message: data.message ?? '', data: true);
     });
   }
 
@@ -287,7 +291,7 @@ class AuthRepository extends BaseRepository {
             code: ErrorCode.unknown,
           ));
 
-      return SuccessResponse(message: data.message, data: true);
+      return SuccessResponse(message: data.message ?? '', data: true);
     });
   }
 
@@ -306,7 +310,7 @@ class AuthRepository extends BaseRepository {
             code: ErrorCode.unknown,
           ));
 
-      return SuccessResponse(message: data.message, data: true);
+      return SuccessResponse(message: data.message ?? '', data: true);
     });
   }
 
@@ -326,7 +330,7 @@ class AuthRepository extends BaseRepository {
             code: ErrorCode.unknown,
           ));
 
-      return SuccessResponse(message: data.message, data: true);
+      return SuccessResponse(message: data.message ?? '', data: true);
     });
   }
 }

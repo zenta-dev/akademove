@@ -19,6 +19,24 @@ class NotificationModel {
 
   factory NotificationModel.fromDto(NotificationList200ResponseDataInner dto) {
     return NotificationModel(
+      id: dto.id ?? '',
+      userId: dto.userId ?? '',
+      title: dto.title ?? '',
+      body: dto.body ?? '',
+      data: dto.data is Map<String, dynamic>
+          ? dto.data as Map<String, dynamic>
+          : null,
+      messageId: dto.messageId,
+      isRead: dto.isRead,
+      createdAt: dto.createdAt ?? DateTime.now(),
+      readAt: dto.readAt,
+    );
+  }
+
+  factory NotificationModel.fromMarkAsReadDto(
+    NotificationMarkAsRead200ResponseData dto,
+  ) {
+    return NotificationModel(
       id: dto.id,
       userId: dto.userId,
       title: dto.title,

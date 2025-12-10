@@ -70,18 +70,19 @@ class DriverQuizCubit2 extends BaseCubit<DriverQuizState2> {
           }
 
           final question = attempt.questions[currentIndex];
+          final questionId = question.id ?? '';
 
           final res = await quizRepository.submitAnswer(
             SubmitDriverQuizAnswer(
               attemptId: attempt.attemptId,
-              questionId: question.id,
+              questionId: questionId,
               selectedOptionId: selectedAnswerId,
             ),
           );
 
           final newAnsweredQuestions = Set<String>.from(
             state.answeredQuestions ?? {},
-          )..add(question.id);
+          )..add(questionId);
 
           emit(
             state.copyWith(

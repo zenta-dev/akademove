@@ -498,11 +498,11 @@ class _DriverQuizScreenState extends State<DriverQuizScreen> {
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
                 decoration: BoxDecoration(
-                  color: _getCategoryColor(question.category),
+                  color: _getCategoryColor(question.category ?? ''),
                   borderRadius: BorderRadius.circular(12.r),
                 ),
                 child: Text(
-                  question.category.replaceAll('_', ' '),
+                  (question.category ?? '').replaceAll('_', ' '),
                   style: context.typography.small.copyWith(
                     fontSize: 12.sp,
                     color: Colors.white,
@@ -517,7 +517,7 @@ class _DriverQuizScreenState extends State<DriverQuizScreen> {
             ],
           ),
           Text(
-            question.question,
+            question.question ?? '',
             style: context.typography.medium.copyWith(fontSize: 16.sp),
             textAlign: TextAlign.left,
           ),

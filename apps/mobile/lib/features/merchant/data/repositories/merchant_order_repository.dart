@@ -34,7 +34,7 @@ class MerchantOrderRepository extends BaseRepository {
             code: ErrorCode.unknown,
           ));
 
-      return SuccessResponse(message: data.message, data: data.data);
+      return SuccessResponse(message: data.message ?? '', data: data.data);
     });
   }
 
@@ -69,7 +69,7 @@ class MerchantOrderRepository extends BaseRepository {
             code: ErrorCode.unknown,
           ));
 
-      return SuccessResponse(message: data.message, data: data.data);
+      return SuccessResponse(message: data.message ?? '', data: data.data);
     });
   }
 
@@ -98,7 +98,7 @@ class MerchantOrderRepository extends BaseRepository {
             code: ErrorCode.unknown,
           ));
 
-      return SuccessResponse(message: data.message, data: data.data);
+      return SuccessResponse(message: data.message ?? '', data: data.data);
     });
   }
 
@@ -128,7 +128,7 @@ class MerchantOrderRepository extends BaseRepository {
             code: ErrorCode.unknown,
           ));
 
-      return SuccessResponse(message: data.message, data: data.data);
+      return SuccessResponse(message: data.message ?? '', data: data.data);
     });
   }
 }

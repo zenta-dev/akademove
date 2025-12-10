@@ -64,12 +64,6 @@ class _DriverHistoryScreenState extends State<DriverHistoryScreen> {
 
   Future<void> _loadMore() async {
     try {
-      final lastOrder = context
-          .read<DriverListHistoryCubit>()
-          .state
-          .orders
-          .last;
-
       final selectedStatus = _selectedStatus;
       await context.read<DriverListHistoryCubit>().loadMoreOrders(
         statuses: selectedStatus != null ? [selectedStatus] : [],
@@ -97,12 +91,9 @@ class _DriverHistoryScreenState extends State<DriverHistoryScreen> {
   Widget build(BuildContext context) {
     return BlocBuilder<DriverListHistoryCubit, DriverListHistoryState>(
       builder: (context, state) {
-        final filteredOrders =
-            (_selectedType == null
-                ? state.orders
-                : state.orders.where((o) => o.type == _selectedType).toList() ??
-                      []) ??
-            [];
+        final filteredOrders = _selectedType == null
+            ? state.orders
+            : state.orders.where((o) => o.type == _selectedType).toList();
         return MyScaffold(
           headers: [
             DefaultAppBar(

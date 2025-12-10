@@ -30,17 +30,17 @@ class UserMartCubit extends BaseCubit<UserMartState> {
         final menu = item.menu;
         return BestSellerItem(
           menu: MerchantMenu(
-            id: menu.id,
-            merchantId: menu.merchantId,
-            name: menu.name,
+            id: menu.id ?? '',
+            merchantId: menu.merchantId ?? '',
+            name: menu.name ?? '',
             image: menu.image,
             category: menu.category,
             price: menu.price,
             stock: menu.stock.toInt(),
-            createdAt: menu.createdAt,
-            updatedAt: menu.updatedAt,
+            createdAt: menu.createdAt ?? DateTime.now(),
+            updatedAt: menu.updatedAt ?? DateTime.now(),
           ),
-          merchantName: item.merchant.name,
+          merchantName: item.merchant.name ?? '',
         );
       }).toList();
 
