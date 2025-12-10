@@ -134,6 +134,13 @@
 			"when": 1765247312654,
 			"tag": "0018_plain_jack_power",
 			"breakpoints": true
+		},
+		{
+			"idx": 19,
+			"version": "7",
+			"when": 1765348705689,
+			"tag": "0019_conscious_punisher",
+			"breakpoints": true
 		}
 	]
 }

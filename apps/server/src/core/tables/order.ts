@@ -137,6 +137,15 @@ export const order = pgTable(
 		// Scheduled orders indexes
 		index("order_scheduled_at_idx").on(t.scheduledAt),
 		index("order_scheduled_status_idx").on(t.status, t.scheduledAt),
+
+		// Index for scheduled order cron query (finds orders where scheduledMatchingAt <= now)
+		index("order_scheduled_matching_at_idx").on(
+			t.status,
+			t.scheduledMatchingAt,
+		),
+
+		// Composite index for date range queries with status filter
+		index("order_status_requested_at_idx").on(t.status, t.requestedAt),
 	],
 );
 
@@ -155,6 +164,47 @@ export const orderItem = pgTable("order_items", {
 	}).notNull(),
 });
 
+/**
+ * Order Status History - Audit trail for order status changes
+ *
+ * Tracks all status transitions for debugging, analytics, and auditing:
+ * - Previous and new status
+ * - Who made the change (user, driver, system, merchant)
+ * - Timestamp of change
+ * - Optional metadata (reason, context)
+ */
+export const orderStatusHistory = pgTable(
+	"order_status_history",
+	{
+		id: serial().primaryKey(),
+		orderId: uuid("order_id")
+			.notNull()
+			.references(() => order.id, { onDelete: "cascade" }),
+		previousStatus: orderStatus("previous_status"),
+		newStatus: orderStatus("new_status").notNull(),
+		changedBy: text("changed_by").references(() => user.id, {
+			onDelete: "set null",
+		}),
+		changedByRole: text("changed_by_role").$type<
+			"USER" | "DRIVER" | "MERCHANT" | "OPERATOR" | "ADMIN" | "SYSTEM"
+		>(),
+		reason: text(),
+		metadata: jsonb().$type<Record<string, unknown>>(),
+		changedAt: timestamp("changed_at").notNull().$defaultFn(nowFn),
+	},
+	(t) => [
+		// Index for querying history by order
+		index("order_status_history_order_id_idx").on(t.orderId),
+		// Index for querying by timestamp (analytics)
+		index("order_status_history_changed_at_idx").on(t.changedAt),
+		// Composite index for querying by order and timestamp
+		index("order_status_history_order_changed_at_idx").on(
+			t.orderId,
+			t.changedAt,
+		),
+	],
+);
+
 ///
 /// --- Relations --- ///
 ///
@@ -172,6 +222,7 @@ export const orderRelations = relations(order, ({ one, many }) => ({
 		references: [merchant.id],
 	}),
 	items: many(orderItem),
+	statusHistory: many(orderStatusHistory),
 }));
 
 export const orderItemRelations = relations(orderItem, ({ one }) => ({
@@ -181,4 +232,19 @@ export const orderItemRelations = relations(orderItem, ({ one }) => ({
 	}),
 }));
 
+export const orderStatusHistoryRelations = relations(
+	orderStatusHistory,
+	({ one }) => ({
+		order: one(order, {
+			fields: [orderStatusHistory.orderId],
+			references: [order.id],
+		}),
+		changedByUser: one(user, {
+			fields: [orderStatusHistory.changedBy],
+			references: [user.id],
+		}),
+	}),
+);
+
 export type OrderDatabase = typeof order.$inferSelect;
+export type OrderStatusHistoryDatabase = typeof orderStatusHistory.$inferSelect;

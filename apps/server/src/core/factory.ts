@@ -19,6 +19,7 @@ import {
 } from "@/features/auth/services";
 import { BadgeRepository } from "@/features/badge/main/badge-main-repository";
 import { UserBadgeRepository } from "@/features/badge/user/user-badge-repository";
+import { BannerRepository } from "@/features/banner/banner-repository";
 import { BroadcastRepository } from "@/features/broadcast/broadcast-repository";
 import { ChatRepository } from "@/features/chat/chat-repository";
 import { ConfigurationRepository } from "@/features/configuration/configuration-repository";
@@ -243,6 +244,7 @@ export function getRepositories(
 			main: new BadgeRepository(svc.db, svc.kv, svc.storage),
 			user: new UserBadgeRepository(svc.db, svc.kv, svc.storage),
 		},
+		banner: new BannerRepository(svc.db, svc.kv),
 		chat: new ChatRepository(svc.db, svc.kv),
 		configuration: new ConfigurationRepository(svc.db, svc.kv),
 		contact: new ContactRepository(svc.db, svc.kv),

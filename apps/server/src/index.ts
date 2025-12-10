@@ -1,11 +1,13 @@
 import "./polyfill";
 
+import type { QueueMessage } from "@repo/schema/queue";
 import { setupHonoRouter } from "@/core/router/hono";
 import { setupOrpcRouter } from "./core/router/orpc";
 import { handleAutoOfflineCron } from "./features/driver/cron/auto-offline-handler";
 import { handleLeaderboardCron } from "./features/leaderboard/leaderboard-cron";
 import { handleOrderCheckerCron } from "./features/order/order-checker-cron";
 import { handleScheduledOrderCron } from "./features/order/scheduled-order-cron";
+import { handleQueue } from "./features/queue/queue-handler";
 import { setupWebsocketRouter } from "./features/ws";
 import { log } from "./utils";
 
@@ -53,6 +55,13 @@ export default {
 			);
 		};
 		ctx.waitUntil(logAsync());
+	},
+	async queue(
+		batch: MessageBatch<QueueMessage>,
+		env: Env,
+		ctx: ExecutionContext,
+	) {
+		await handleQueue(batch, env, ctx);
 	},
 };
 export * from "./features/ws";

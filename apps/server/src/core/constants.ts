@@ -88,6 +88,8 @@ export const BUSINESS_CONSTANTS = Object.freeze({
 	DRIVER_MATCHING_TIMEOUT_MS: 30_000, // 30 seconds
 	DRIVER_MATCHING_RADIUS_KM: 5, // Initial radius in kilometers
 	DRIVER_MATCHING_RADIUS_EXPANSION: 0.2, // Expand by 20% on timeout
+	DRIVER_MATCHING_MAX_EXPANSION_ATTEMPTS: 3, // Maximum radius expansion attempts (5km → 6km → 7.2km)
+	DRIVER_MATCHING_BROADCAST_LIMIT: 10, // Maximum drivers to broadcast order to
 	DRIVER_MAX_CANCELLATIONS_PER_DAY: 3,
 
 	// Location tracking
