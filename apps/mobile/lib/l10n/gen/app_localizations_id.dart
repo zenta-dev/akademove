@@ -45,6 +45,39 @@ class AppLocalizationsId extends AppLocalizations {
   String get recipient => 'Penerima';
 
   @override
+  String get recipient_phone => 'Nomor Telepon Penerima';
+
+  @override
+  String get enter_recipient_phone => 'Masukkan nomor telepon penerima';
+
+  @override
+  String get lookup_recipient => 'Cari';
+
+  @override
+  String get recipient_found => 'Penerima ditemukan';
+
+  @override
+  String get recipient_not_found => 'Pengguna tidak ditemukan dengan nomor telepon ini';
+
+  @override
+  String get use_user_id_instead => 'Gunakan ID Pengguna';
+
+  @override
+  String get scan_qr => 'Scan QR';
+
+  @override
+  String get my_qr_code => 'QR Code Saya';
+
+  @override
+  String get scan_qr_to_transfer => 'Scan QR code untuk transfer';
+
+  @override
+  String get share_qr_to_receive => 'Bagikan QR code ini untuk menerima transfer';
+
+  @override
+  String get or_enter_manually => 'Atau masukkan manual';
+
+  @override
   String get confirm => 'Konfirmasi';
 
   @override
@@ -1407,6 +1440,9 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get enter_withdrawal_amount => 'Masukkan jumlah penarikan';
+
+  @override
+  String get withdraw_wallet_save_bank => 'Simpan data bank untuk penarikan selanjutnya';
 
   @override
   String get cart_shopping_cart => 'Keranjang Belanja';

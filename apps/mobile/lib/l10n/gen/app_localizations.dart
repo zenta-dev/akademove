@@ -163,6 +163,72 @@ abstract class AppLocalizations {
   /// **'Recipient'**
   String get recipient;
 
+  /// No description provided for @recipient_phone.
+  ///
+  /// In en, this message translates to:
+  /// **'Recipient Phone Number'**
+  String get recipient_phone;
+
+  /// No description provided for @enter_recipient_phone.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter recipient\'s phone number'**
+  String get enter_recipient_phone;
+
+  /// No description provided for @lookup_recipient.
+  ///
+  /// In en, this message translates to:
+  /// **'Lookup'**
+  String get lookup_recipient;
+
+  /// No description provided for @recipient_found.
+  ///
+  /// In en, this message translates to:
+  /// **'Recipient found'**
+  String get recipient_found;
+
+  /// No description provided for @recipient_not_found.
+  ///
+  /// In en, this message translates to:
+  /// **'User not found with this phone number'**
+  String get recipient_not_found;
+
+  /// No description provided for @use_user_id_instead.
+  ///
+  /// In en, this message translates to:
+  /// **'Use User ID instead'**
+  String get use_user_id_instead;
+
+  /// No description provided for @scan_qr.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan QR'**
+  String get scan_qr;
+
+  /// No description provided for @my_qr_code.
+  ///
+  /// In en, this message translates to:
+  /// **'My QR Code'**
+  String get my_qr_code;
+
+  /// No description provided for @scan_qr_to_transfer.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan QR code to transfer'**
+  String get scan_qr_to_transfer;
+
+  /// No description provided for @share_qr_to_receive.
+  ///
+  /// In en, this message translates to:
+  /// **'Share this QR code to receive transfer'**
+  String get share_qr_to_receive;
+
+  /// No description provided for @or_enter_manually.
+  ///
+  /// In en, this message translates to:
+  /// **'Or enter manually'**
+  String get or_enter_manually;
+
   /// No description provided for @confirm.
   ///
   /// In en, this message translates to:
@@ -2862,6 +2928,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Enter withdrawal amount'**
   String get enter_withdrawal_amount;
+
+  /// No description provided for @withdraw_wallet_save_bank.
+  ///
+  /// In en, this message translates to:
+  /// **'Save bank details for future withdrawals'**
+  String get withdraw_wallet_save_bank;
 
   /// No description provided for @cart_shopping_cart.
   ///

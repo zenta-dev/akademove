@@ -45,6 +45,39 @@ class AppLocalizationsEn extends AppLocalizations {
   String get recipient => 'Recipient';
 
   @override
+  String get recipient_phone => 'Recipient Phone Number';
+
+  @override
+  String get enter_recipient_phone => 'Enter recipient\'s phone number';
+
+  @override
+  String get lookup_recipient => 'Lookup';
+
+  @override
+  String get recipient_found => 'Recipient found';
+
+  @override
+  String get recipient_not_found => 'User not found with this phone number';
+
+  @override
+  String get use_user_id_instead => 'Use User ID instead';
+
+  @override
+  String get scan_qr => 'Scan QR';
+
+  @override
+  String get my_qr_code => 'My QR Code';
+
+  @override
+  String get scan_qr_to_transfer => 'Scan QR code to transfer';
+
+  @override
+  String get share_qr_to_receive => 'Share this QR code to receive transfer';
+
+  @override
+  String get or_enter_manually => 'Or enter manually';
+
+  @override
   String get confirm => 'Confirm';
 
   @override
@@ -1407,6 +1440,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get enter_withdrawal_amount => 'Enter withdrawal amount';
+
+  @override
+  String get withdraw_wallet_save_bank => 'Save bank details for future withdrawals';
 
   @override
   String get cart_shopping_cart => 'Shopping Cart';
