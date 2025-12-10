@@ -3,7 +3,6 @@ import 'package:akademove/features/features.dart';
 import 'package:akademove/features/merchant/presentation/widgets/order_rejection_dialog.dart';
 import 'package:akademove/l10n/l10n.dart';
 import 'package:api_client/api_client.dart';
-import 'package:flutter/material.dart' as material;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -295,7 +294,7 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
             onPressed: () {
               _showChatDialog(context, _currentOrder.id);
             },
-            icon: const Icon(Icons.message_rounded),
+            icon: const Icon(LucideIcons.messageCircle),
             variance: ButtonVariance.primary,
           ),
         ],
@@ -335,7 +334,7 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
                 onPressed: () {
                   _showChatDialog(context, _currentOrder.id);
                 },
-                icon: const Icon(Icons.message_rounded),
+                icon: const Icon(LucideIcons.messageCircle),
                 variance: ButtonVariance.primary,
               ),
             ],
@@ -393,7 +392,7 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
               child: Row(
                 spacing: 8.w,
                 children: [
-                  const Icon(Icons.menu_book_rounded),
+                  const Icon(LucideIcons.bookOpen),
                   // Expanded(
                   //   child: Text(
                   //     note.instructions ?? '',
@@ -565,12 +564,7 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
               ? SizedBox(
                   width: 20.w,
                   height: 20.h,
-                  child: material.CircularProgressIndicator(
-                    strokeWidth: 2,
-                    valueColor: material.AlwaysStoppedAnimation<Color>(
-                      context.colorScheme.primaryForeground,
-                    ),
-                  ),
+                  child: const CircularProgressIndicator(),
                 )
               : Text(
                   context.l10n.accept_order,
@@ -594,12 +588,7 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
               ? SizedBox(
                   width: 20.w,
                   height: 20.h,
-                  child: material.CircularProgressIndicator(
-                    strokeWidth: 2,
-                    valueColor: material.AlwaysStoppedAnimation<Color>(
-                      context.colorScheme.primaryForeground,
-                    ),
-                  ),
+                  child: const CircularProgressIndicator(),
                 )
               : Text(
                   context.l10n.start_preparing,
@@ -616,12 +605,7 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
               ? SizedBox(
                   width: 20.w,
                   height: 20.h,
-                  child: material.CircularProgressIndicator(
-                    strokeWidth: 2,
-                    valueColor: material.AlwaysStoppedAnimation<Color>(
-                      context.colorScheme.primaryForeground,
-                    ),
-                  ),
+                  child: const CircularProgressIndicator(),
                 )
               : Text(
                   context.l10n.order_ready,
@@ -727,55 +711,35 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
   }
 
   void _showChatDialog(BuildContext context, String orderId) {
-    material.showModalBottomSheet(
+    openDrawer(
       context: context,
-      isScrollControlled: true,
-      builder: (bottomSheetContext) => material.DraggableScrollableSheet(
-        initialChildSize: 0.9,
-        minChildSize: 0.5,
-        maxChildSize: 0.95,
-        expand: false,
-        builder: (context, scrollController) => Container(
-          decoration: BoxDecoration(
-            color: material.Theme.of(context).scaffoldBackgroundColor,
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(16),
-              topRight: Radius.circular(16),
-            ),
-          ),
-          child: Column(
-            children: [
-              Container(
-                padding: EdgeInsets.all(16.w),
-                decoration: BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(
-                      color: const Color(0xFFE0E0E0),
-                      width: 1,
-                    ),
+      position: OverlayPosition.bottom,
+      expands: true,
+      builder: (drawerContext) => Container(
+        padding: EdgeInsets.all(16.w),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  context.l10n.order_chat,
+                  style: TextStyle(
+                    fontSize: 18.sp,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      context.l10n.order_chat,
-                      style: TextStyle(
-                        fontSize: 18.sp,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    IconButton(
-                      icon: const Icon(material.Icons.close),
-                      onPressed: () => Navigator.of(bottomSheetContext).pop(),
-                      variance: ButtonVariance.ghost,
-                    ),
-                  ],
+                IconButton(
+                  icon: const Icon(LucideIcons.x),
+                  onPressed: () => closeDrawer(drawerContext),
+                  variance: ButtonVariance.ghost,
                 ),
-              ),
-              Expanded(child: OrderChatWidget(orderId: orderId)),
-            ],
-          ),
+              ],
+            ),
+            SizedBox(height: 16.h),
+            Expanded(child: OrderChatWidget(orderId: orderId)),
+          ],
         ),
       ),
     );

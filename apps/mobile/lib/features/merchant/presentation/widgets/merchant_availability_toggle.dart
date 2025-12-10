@@ -1,4 +1,6 @@
-import 'package:flutter/material.dart';
+import 'package:akademove/core/_export.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:shadcn_flutter/shadcn_flutter.dart';
 
 class MerchantAvailabilityToggle extends StatelessWidget {
   final bool isOnline;
@@ -40,211 +42,174 @@ class MerchantAvailabilityToggle extends StatelessWidget {
         children: [
           // Status Summary Card
           Card(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Row(
-                children: [
-                  CircleAvatar(
-                    backgroundColor: statusColor.withValues(alpha: 0.2),
+            padding: EdgeInsets.all(16.w),
+            child: Row(
+              children: [
+                Container(
+                  width: 40.w,
+                  height: 40.w,
+                  decoration: BoxDecoration(
+                    color: statusColor.withValues(alpha: 0.2),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Center(
                     child: Icon(
-                      isOnline
-                          ? Icons.radio_button_checked
-                          : Icons.radio_button_off,
+                      isOnline ? LucideIcons.circleCheck : LucideIcons.circle,
                       color: statusColor,
+                      size: 20.sp,
                     ),
                   ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          statusText,
-                          style: Theme.of(context).textTheme.titleMedium
-                              ?.copyWith(
-                                color: statusColor,
-                                fontWeight: FontWeight.bold,
-                              ),
-                        ),
-                        Text(
-                          isOnline
-                              ? 'You can receive orders'
-                              : 'Not receiving orders',
-                          style: Theme.of(
-                            context,
-                          ).textTheme.bodySmall?.copyWith(color: Colors.grey),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          const SizedBox(height: 16),
-
-          // Online Toggle
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
+                ),
+                SizedBox(width: 16.w),
+                Expanded(
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        isOnline ? 'Online' : 'Offline',
-                        style: Theme.of(context).textTheme.titleSmall,
+                        statusText,
+                        style: context.typography.h4.copyWith(
+                          color: statusColor,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16.sp,
+                        ),
                       ),
-                      const SizedBox(height: 4),
                       Text(
-                        isOnline ? 'Available for orders' : 'Not available',
-                        style: Theme.of(
-                          context,
-                        ).textTheme.bodySmall?.copyWith(color: Colors.grey),
+                        isOnline
+                            ? 'You can receive orders'
+                            : 'Not receiving orders',
+                        style: context.typography.small.copyWith(
+                          color: context.colorScheme.mutedForeground,
+                        ),
                       ),
                     ],
                   ),
-                  Switch(
-                    value: isOnline,
-                    onChanged: isLoading ? null : onOnlineChanged,
-                    activeThumbColor: Colors.green,
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16.h),
+
+          // Online Toggle
+          Card(
+            padding: EdgeInsets.all(16.w),
+            child: SwitchTile(
+              title: isOnline ? 'Online' : 'Offline',
+              subtitle: isOnline ? 'Available for orders' : 'Not available',
+              value: isOnline,
+              onChanged: isLoading ? null : onOnlineChanged,
+              enabled: !isLoading,
+            ),
+          ),
+          SizedBox(height: 16.h),
 
           // Order Taking Toggle (only show when online)
           if (isOnline) ...[
             Card(
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          isTakingOrders ? 'Taking Orders' : 'Paused',
-                          style: Theme.of(context).textTheme.titleSmall,
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          isTakingOrders
-                              ? 'Ready to accept orders'
-                              : 'Temporarily paused',
-                          style: Theme.of(
-                            context,
-                          ).textTheme.bodySmall?.copyWith(color: Colors.grey),
-                        ),
-                      ],
-                    ),
-                    Switch(
-                      value: isTakingOrders,
-                      onChanged: isLoading ? null : onOrderTakingChanged,
-                      activeThumbColor: Colors.green,
-                    ),
-                  ],
-                ),
+              padding: EdgeInsets.all(16.w),
+              child: SwitchTile(
+                title: isTakingOrders ? 'Taking Orders' : 'Paused',
+                subtitle: isTakingOrders
+                    ? 'Ready to accept orders'
+                    : 'Temporarily paused',
+                value: isTakingOrders,
+                onChanged: isLoading ? null : onOrderTakingChanged,
+                enabled: !isLoading,
               ),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16.h),
 
             // Operating Status Dropdown (only show when online)
             Card(
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Store Status',
-                      style: Theme.of(context).textTheme.titleSmall,
+              padding: EdgeInsets.all(16.w),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Store Status',
+                    style: context.typography.p.copyWith(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 14.sp,
                     ),
-                    const SizedBox(height: 12),
-                    DropdownButton<String>(
-                      isExpanded: true,
-                      value: operatingStatus,
-                      onChanged: isLoading
-                          ? null
-                          : (String? newValue) {
-                              if (newValue != null) {
-                                onOperatingStatusChanged(newValue);
-                              }
-                            },
-                      items: const [
-                        DropdownMenuItem(
-                          value: 'OPEN',
-                          child: Row(
-                            children: [
-                              CircleAvatar(
-                                radius: 6,
-                                backgroundColor: Colors.green,
-                              ),
-                              SizedBox(width: 8),
-                              Text('Open'),
-                            ],
-                          ),
-                        ),
-                        DropdownMenuItem(
-                          value: 'BREAK',
-                          child: Row(
-                            children: [
-                              CircleAvatar(
-                                radius: 6,
-                                backgroundColor: Colors.orange,
-                              ),
-                              SizedBox(width: 8),
-                              Text('On Break'),
-                            ],
-                          ),
-                        ),
-                        DropdownMenuItem(
-                          value: 'MAINTENANCE',
-                          child: Row(
-                            children: [
-                              CircleAvatar(
-                                radius: 6,
-                                backgroundColor: Colors.amber,
-                              ),
-                              SizedBox(width: 8),
-                              Text('Maintenance'),
-                            ],
-                          ),
-                        ),
-                        DropdownMenuItem(
-                          value: 'CLOSED',
-                          child: Row(
-                            children: [
-                              CircleAvatar(
-                                radius: 6,
-                                backgroundColor: Colors.red,
-                              ),
-                              SizedBox(width: 8),
-                              Text('Closed'),
-                            ],
-                          ),
-                        ),
-                      ],
+                  ),
+                  SizedBox(height: 12.h),
+                  Select<String>(
+                    itemBuilder: (context, item) => Text(_getStatusLabel(item)),
+                    value: operatingStatus,
+                    onChanged: isLoading
+                        ? null
+                        : (String? newValue) {
+                            if (newValue != null) {
+                              onOperatingStatusChanged(newValue);
+                            }
+                          },
+                    popup: SelectPopup(
+                      autoClose: true,
+                      items: SelectItemList(
+                        children: [
+                          _buildStatusItem(context, 'OPEN'),
+                          _buildStatusItem(context, 'BREAK'),
+                          _buildStatusItem(context, 'MAINTENANCE'),
+                          _buildStatusItem(context, 'CLOSED'),
+                        ],
+                      ),
                     ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'Let customers know your store status',
-                      style: Theme.of(
-                        context,
-                      ).textTheme.bodySmall?.copyWith(color: Colors.grey),
+                  ),
+                  SizedBox(height: 8.h),
+                  Text(
+                    'Let customers know your store status',
+                    style: context.typography.small.copyWith(
+                      color: context.colorScheme.mutedForeground,
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ],
         ],
       ),
     );
+  }
+
+  SelectItemButton<String> _buildStatusItem(
+    BuildContext context,
+    String status,
+  ) {
+    return SelectItemButton<String>(
+      value: status,
+      child: Row(
+        children: [
+          Container(
+            width: 12.w,
+            height: 12.w,
+            decoration: BoxDecoration(
+              color: _getStatusColor(status),
+              shape: BoxShape.circle,
+            ),
+          ),
+          SizedBox(width: 8.w),
+          Text(_getStatusLabel(status)),
+        ],
+      ),
+    );
+  }
+
+  Color _getStatusColor(String status) {
+    return switch (status) {
+      'OPEN' => Colors.green,
+      'BREAK' => Colors.orange,
+      'MAINTENANCE' => Colors.amber,
+      'CLOSED' => Colors.red,
+      _ => Colors.neutral,
+    };
+  }
+
+  String _getStatusLabel(String status) {
+    return switch (status) {
+      'OPEN' => 'Open',
+      'BREAK' => 'On Break',
+      'MAINTENANCE' => 'Maintenance',
+      'CLOSED' => 'Closed',
+      _ => status,
+    };
   }
 }
