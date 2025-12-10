@@ -11,6 +11,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart' hide Banner, TabItem;
+import 'package:url_launcher/url_launcher_string.dart';
 
 class _Route extends BottomNavBarItem {
   const _Route({
@@ -332,18 +333,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                 itemCount: validBanners.length,
                 itemBuilder: (context, index) {
                   final banner = validBanners[index];
-                  return SizedBox(
-                    width: context.mediaQuerySize.width,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(16.r),
-                      child: CachedNetworkImage(
-                        imageUrl: banner.imageUrl!,
-                        fit: BoxFit.cover,
-                        width: context.mediaQuerySize.width,
-                        height: context.mediaQuerySize.height,
-                      ),
-                    ),
-                  );
+                  return BannerCardWidget(banner: banner);
                 },
                 speed: const Duration(seconds: 10),
                 duration: const Duration(seconds: 10),
@@ -443,6 +433,49 @@ class _MerchantCardWidget extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class BannerCardWidget extends StatelessWidget {
+  const BannerCardWidget({super.key, required this.banner});
+  final BannerListPublic200ResponseDataInner banner;
+
+  Future<void> handlePress(BuildContext context) async {
+    if (banner.actionType ==
+        BannerListPublic200ResponseDataInnerActionTypeEnum.ROUTE) {
+      final route = banner.actionValue;
+      if (route != null) {
+        context.push(route);
+      }
+    }
+
+    if (banner.actionType ==
+        BannerListPublic200ResponseDataInnerActionTypeEnum.LINK) {
+      final url = banner.actionValue;
+      if (url != null && await canLaunchUrlString(url)) {
+        await launchUrlString(url, mode: LaunchMode.externalApplication);
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GhostButton(
+      density: ButtonDensity.compact,
+      onPressed: () => handlePress(context),
+      child: SizedBox(
+        width: context.mediaQuerySize.width,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(16.r),
+          child: CachedNetworkImage(
+            imageUrl: banner.imageUrl!,
+            fit: BoxFit.cover,
+            width: context.mediaQuerySize.width,
+            height: context.mediaQuerySize.height,
+          ),
+        ),
       ),
     );
   }
