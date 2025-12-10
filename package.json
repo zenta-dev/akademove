@@ -28,7 +28,7 @@
 		"seed:quick-messages": "bun run apps/server/scripts/seed-quick-messages.ts",
 		"deploy": "ALCHEMY_TELEMETRY_DISABLED=1 alchemy deploy --stage production --env-file .env.prod",
 		"destroy": "ALCHEMY_TELEMETRY_DISABLED=1 alchemy destroy --stage production --env-file .env.prod",
-		"gen": "bunx @openapitools/openapi-generator-cli generate -i http://localhost:3000/api/spec.json -o gen/dart/api_client -g dart-dio --additional-properties=pubName=api_client,serializationLibrary=json_serializable,stripEnumValueQuotes=true -t ./oapi-templates/dart-dio"
+		"gen": "bunx @openapitools/openapi-generator-cli generate -i https://dev-server.akademove.com/api/spec.json -o gen/dart/api_client -g dart-dio --additional-properties=pubName=api_client,serializationLibrary=json_serializable,stripEnumValueQuotes=true -t ./oapi-templates/dart-dio"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^2.3.8",
