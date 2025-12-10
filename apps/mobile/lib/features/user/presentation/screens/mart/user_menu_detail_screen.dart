@@ -4,7 +4,6 @@ import 'package:akademove/gen/assets.gen.dart';
 import 'package:akademove/l10n/l10n.dart';
 import 'package:api_client/api_client.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/material.dart' as material;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -30,7 +29,7 @@ class UserMenuDetailScreen extends StatefulWidget {
 }
 
 class _UserMenuDetailScreenState extends State<UserMenuDetailScreen> {
-  final _notesController = material.TextEditingController();
+  final _notesController = TextEditingController();
   int _quantity = 1;
 
   @override
