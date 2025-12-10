@@ -6,8 +6,12 @@ import { join } from "node:path";
 import * as readline from "node:readline";
 import { faker, fakerID_ID } from "@faker-js/faker";
 import type {
+	DeliveryPricingConfiguration,
+	FoodPricingConfiguration,
+	InsertConfiguration,
 	InsertQuickMessageTemplate,
 	Phone,
+	RidePricingConfiguration,
 	UserGender,
 	UserRole,
 } from "@repo/schema";
@@ -854,7 +858,7 @@ export async function seedConfigurations() {
 					minimumFare: 10_000,
 					platformFeeRate: 0.02,
 					taxRate: 0.11,
-				},
+				} satisfies RidePricingConfiguration,
 				description: "Ride service pricing structure",
 				updatedById: admin.id,
 				createdAt: now,
@@ -867,10 +871,10 @@ export async function seedConfigurations() {
 					baseFare: 8_000,
 					perKmRate: 3_000,
 					minimumFare: 12_000,
-					perKg: 2_000,
+					perKgRate: 2_000,
 					platformFeeRate: 0.02,
 					taxRate: 0.11,
-				},
+				} satisfies DeliveryPricingConfiguration,
 				description: "Delivery pricing per km/kg",
 				updatedById: admin.id,
 				createdAt: now,
@@ -886,7 +890,7 @@ export async function seedConfigurations() {
 					platformFeeRate: 0.02,
 					taxRate: 0.11,
 					merchantCommissionRate: 0.1, // 10% merchant commission
-				},
+				} satisfies FoodPricingConfiguration,
 				description: "Food delivery pricing",
 				updatedById: admin.id,
 				createdAt: now,
@@ -921,7 +925,7 @@ export async function seedConfigurations() {
 
 		await tx
 			.insert(configuration)
-			.values(CONFIGS)
+			.values(CONFIGS as any)
 			.onConflictDoUpdate({
 				target: configuration.key,
 				set: {
