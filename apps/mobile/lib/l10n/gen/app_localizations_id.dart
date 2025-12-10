@@ -120,13 +120,13 @@ class AppLocalizationsId extends AppLocalizations {
   String get total_weight => 'Total berat';
 
   @override
-  String get small => 'Small';
+  String get small => ' Kecil';
 
   @override
-  String get medium => 'Medium';
+  String get medium => 'Sedang';
 
   @override
-  String get large => 'Large';
+  String get large => 'Besar';
 
   @override
   String get add_delivery_detail => 'Tambah detail pengiriman';
@@ -2784,7 +2784,7 @@ class AppLocalizationsId extends AppLocalizations {
   String get text_your_current_location => 'Lokasi Anda saat ini';
 
   @override
-  String item_count(Object count) {
+  String item_count(int count) {
     return '$count item';
   }
 

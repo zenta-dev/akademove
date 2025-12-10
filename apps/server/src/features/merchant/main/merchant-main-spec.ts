@@ -349,7 +349,7 @@ export const MerchantMainSpec = {
 					id: z.string(),
 					isOnline: z.boolean(),
 					operatingStatus: MerchantOperatingStatusSchema,
-					activeOrderCount: z.number().int().nonnegative(),
+					activeOrderCount: z.coerce.number().int().nonnegative(),
 				}),
 				"Merchant availability status retrieved successfully",
 			),

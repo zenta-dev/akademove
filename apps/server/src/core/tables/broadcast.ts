@@ -89,9 +89,33 @@ export const BroadcastSchema = z.object({
 	targetIds: z.array(z.uuid()).optional(),
 	scheduledAt: z.date().optional(),
 	sentAt: z.date().optional(),
-	totalRecipients: z.coerce.number().int().min(0).default(0),
-	sentCount: z.coerce.number().int().min(0).default(0),
-	failedCount: z.coerce.number().int().min(0).default(0),
+	totalRecipients: z.coerce
+		.number()
+		.int()
+		.int()
+		.nonnegative()
+		.int()
+		.nonnegative()
+		.min(0)
+		.default(0),
+	sentCount: z.coerce
+		.number()
+		.int()
+		.int()
+		.nonnegative()
+		.int()
+		.nonnegative()
+		.min(0)
+		.default(0),
+	failedCount: z.coerce
+		.number()
+		.int()
+		.int()
+		.nonnegative()
+		.int()
+		.nonnegative()
+		.min(0)
+		.default(0),
 	createdBy: z.uuid(),
 	createdAt: z.date(),
 	updatedAt: z.date(),

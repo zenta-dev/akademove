@@ -4,7 +4,7 @@ import { z } from "zod";
 import { createSuccesSchema, FEATURE_TAGS } from "@/core/constants";
 
 const AuditLogSchema = z.object({
-	id: z.coerce.number(),
+	id: z.coerce.number().int().nonnegative(),
 	tableName: z.enum([
 		"configurations",
 		"contact",

@@ -43,11 +43,11 @@ export const UpdateBroadcastBodySchema = CreateBroadcastBodySchema.partial();
 
 // Response schemas
 export const BroadcastStatsResponseSchema = z.object({
-	total: z.coerce.number().int(),
-	pending: z.coerce.number().int(),
-	sending: z.coerce.number().int(),
-	sent: z.coerce.number().int(),
-	failed: z.coerce.number().int(),
+	total: z.coerce.number().int().nonnegative(),
+	pending: z.coerce.number().int().nonnegative(),
+	sending: z.coerce.number().int().nonnegative(),
+	sent: z.coerce.number().int().nonnegative(),
+	failed: z.coerce.number().int().nonnegative(),
 });
 
 // Contract

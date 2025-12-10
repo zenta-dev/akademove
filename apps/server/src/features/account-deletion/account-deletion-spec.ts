@@ -39,8 +39,14 @@ export const AccountDeletionSpec = {
 			z.object({
 				query: z
 					.object({
-						page: z.coerce.number().int().min(1).optional(),
-						limit: z.coerce.number().int().min(1).max(1000).optional(),
+						page: z.coerce.number().int().nonnegative().min(1).optional(),
+						limit: z.coerce
+							.number()
+							.int()
+							.nonnegative()
+							.min(1)
+							.max(1000)
+							.optional(),
 						status: z
 							.enum([
 								"PENDING",
@@ -62,7 +68,7 @@ export const AccountDeletionSpec = {
 						rows: z.array(AccountDeletionSchema),
 						pagination: z
 							.object({
-								totalPages: z.coerce.number().int().min(0),
+								totalPages: z.coerce.number().int().nonnegative().min(0),
 							})
 							.optional(),
 					}),

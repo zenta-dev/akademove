@@ -120,7 +120,13 @@ export const DriverQuizQuestionSpec = {
 			z.object({
 				query: z.object({
 					category: z.string().optional(),
-					limit: z.coerce.number().int().min(1).max(50).optional(),
+					limit: z.coerce
+						.number()
+						.int()
+						.nonnegative()
+						.min(1)
+						.max(50)
+						.optional(),
 				}),
 			}),
 		)

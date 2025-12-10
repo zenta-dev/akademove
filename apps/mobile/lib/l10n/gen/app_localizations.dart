@@ -5561,7 +5561,7 @@ abstract class AppLocalizations {
   ///
   /// In en, this message translates to:
   /// **'{count} item(s)'**
-  String item_count(Object count);
+  String item_count(int count);
 
   /// No description provided for @button_accept.
   ///

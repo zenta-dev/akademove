@@ -2784,7 +2784,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get text_your_current_location => 'Your current location';
 
   @override
-  String item_count(Object count) {
+  String item_count(int count) {
     return '$count item(s)';
   }
 

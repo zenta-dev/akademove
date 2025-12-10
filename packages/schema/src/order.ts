@@ -55,7 +55,7 @@ export const OrderNoteSchema = z.object({
 export type OrderNote = z.infer<typeof OrderNoteSchema>;
 
 export const OrderItemSchema = z.object({
-	quantity: z.coerce.number(),
+	quantity: z.coerce.number().int().nonnegative(),
 	item: MerchantMenuSchema.partial(),
 });
 
@@ -122,7 +122,7 @@ export const OrderSchema = z.object({
 	otpVerifiedAt: DateSchema.optional(),
 
 	// delivery, food
-	itemCount: z.coerce.number().optional(),
+	itemCount: z.coerce.number().int().nonnegative().optional(),
 	items: z.array(OrderItemSchema).optional(),
 	deliveryItemType: DeliveryItemTypeSchema.optional(),
 
@@ -137,7 +137,7 @@ export type Order = z.infer<typeof OrderSchema>;
  * Order Status History Schema - For audit trail API responses
  */
 export const OrderStatusHistorySchema = z.object({
-	id: z.coerce.number(),
+	id: z.coerce.number().int().nonnegative(),
 	orderId: z.uuid(),
 	previousStatus: OrderStatusSchema.nullable(),
 	newStatus: OrderStatusSchema,
@@ -236,8 +236,8 @@ export type UpdateOrder = z.infer<typeof UpdateOrderSchema>;
 export const EstimateOrderSchema = PlaceOrderSchema.omit({
 	payment: true,
 }).safeExtend({
-	discountIds: z.array(z.coerce.number()).optional(),
-	weight: z.coerce.number().positive().max(20).optional(),
+	discountIds: z.array(z.coerce.number().int().nonnegative()).optional(),
+	weight: z.coerce.number().int().nonnegative().positive().max(20).optional(),
 });
 export type EstimateOrder = z.infer<typeof EstimateOrderSchema>;
 

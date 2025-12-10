@@ -16,8 +16,8 @@ import { toOAPIRequestBody } from "@/utils/oapi";
 
 export const NearbyQuerySchema = z.object({
 	...CoordinateSchema.shape,
-	radiusKm: z.coerce.number(),
-	limit: z.coerce.number(),
+	radiusKm: z.coerce.number().int().nonnegative(),
+	limit: z.coerce.number().int().nonnegative(),
 	gender: UserGenderSchema.optional(),
 });
 
