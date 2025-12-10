@@ -4406,7 +4406,7 @@ async function seedBanners() {
 	}
 
 	const now = new Date();
-	const thirtyDaysFromNow = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
+	const _thirtyDaysFromNow = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
 	const sixtyDaysFromNow = new Date(now.getTime() + 60 * 24 * 60 * 60 * 1000);
 
 	// Indonesian banner content for campus mobility platform
