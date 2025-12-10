@@ -1,10 +1,11 @@
+import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/auth/presentation/cubits/_export.dart';
 import 'package:akademove/features/emergency/presentation/cubits/_export.dart';
 import 'package:akademove/features/emergency/presentation/states/_export.dart';
 import 'package:akademove/l10n/l10n.dart';
 import 'package:api_client/api_client.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shadcn_flutter/shadcn_flutter.dart';
 
 import 'emergency_trigger_dialog.dart';
 
@@ -25,32 +26,24 @@ class EmergencyButton extends StatelessWidget {
     return BlocListener<EmergencyCubit, EmergencyState>(
       listener: (context, state) {
         if (state.triggerEmergency.isSuccess) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(context.l10n.emergency_alert_sent_successfully),
-              backgroundColor: Colors.green,
-              duration: const Duration(seconds: 3),
-            ),
+          context.showMyToast(
+            context.l10n.emergency_alert_sent_successfully,
+            type: ToastType.success,
           );
         } else if (state.triggerEmergency.isFailure) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                'Failed to send alert: ${state.triggerEmergency.error?.message ?? 'Unknown error'}',
-              ),
-              backgroundColor: Colors.red,
-              duration: const Duration(seconds: 4),
-            ),
+          context.showMyToast(
+            'Failed to send alert: ${state.triggerEmergency.error?.message ?? 'Unknown error'}',
+            type: ToastType.failed,
           );
         }
       },
-      child: FloatingActionButton(
+      child: AppFloatingActionButton(
         onPressed: () => _showEmergencyDialog(context),
         backgroundColor: const Color(0xFFDC2626), // Red 600
         foregroundColor: Colors.white,
         elevation: 8,
-        heroTag: 'button',
-        child: const Icon(Icons.warning_rounded, size: 32),
+        heroTag: 'emergency_button',
+        child: const Icon(LucideIcons.triangleAlert, size: 32),
       ),
     );
   }
