@@ -63,7 +63,7 @@ class UserDeliveryCubit extends BaseCubit<UserDeliveryState> {
 
       final mergedList = isRefresh
           ? res.data
-          : [...state.nearbyPlaces.value?.data ?? [], ...res.data];
+          : [...state.nearbyPlaces.value?.data ?? <Place>[], ...res.data];
 
       emit(
         state.toSuccess(
@@ -101,14 +101,17 @@ class UserDeliveryCubit extends BaseCubit<UserDeliveryState> {
         nextPageToken: isRefresh ? null : state.searchPlaces.value?.token,
       );
 
-      final mergedList = (_searchQuery == query && !isRefresh)
+      final List<Place> mergedList = (_searchQuery == query && !isRefresh)
           ? [...state.searchPlaces.value?.data ?? [], ...res.data]
           : res.data;
 
       emit(
         state.toSuccess(
           searchPlaces: OperationResult.success(
-            PageTokenPaginationResult(data: mergedList, token: res.token),
+            PageTokenPaginationResult<List<Place>>(
+              data: mergedList,
+              token: res.token,
+            ),
           ),
         ),
       );
