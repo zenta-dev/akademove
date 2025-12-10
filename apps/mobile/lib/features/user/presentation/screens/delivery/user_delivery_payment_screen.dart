@@ -40,13 +40,8 @@ class _UserDeliveryPaymentScreenState extends State<UserDeliveryPaymentScreen> {
       ],
       body: BlocConsumer<UserDeliveryCubit, UserDeliveryState>(
         listener: (context, state) {
-          if (state.status.isFailure && state.status.error != null) {
-            context.showMyToast(
-              state.status.error?.message ??
-                  context.l10n.toast_failed_place_order,
-              type: ToastType.failed,
-            );
-          }
+          // Listener for any error that needs to be shown
+          // Can be extended to check specific fields if needed
         },
         builder: (context, deliveryState) {
           // final estimate = deliveryState.estimate.value;

@@ -4,35 +4,47 @@ import 'package:shadcn_flutter/shadcn_flutter.dart';
 
 class MerchantAvailabilityToggle extends StatelessWidget {
   final bool isOnline;
-  final bool isTakingOrders;
   final String operatingStatus;
+  final int activeOrderCount;
   final Function(bool) onOnlineChanged;
-  final Function(bool) onOrderTakingChanged;
   final Function(String) onOperatingStatusChanged;
   final bool isLoading;
 
   const MerchantAvailabilityToggle({
     super.key,
     required this.isOnline,
-    required this.isTakingOrders,
     required this.operatingStatus,
+    required this.activeOrderCount,
     required this.onOnlineChanged,
-    required this.onOrderTakingChanged,
     required this.onOperatingStatusChanged,
     this.isLoading = false,
   });
 
   Color get statusColor {
     if (!isOnline) return Colors.red;
-    if (!isTakingOrders) return Colors.orange;
+    if (operatingStatus == 'BREAK') return Colors.orange;
     if (operatingStatus == 'OPEN') return Colors.green;
-    return Colors.amber;
+    if (operatingStatus == 'MAINTENANCE') return Colors.amber;
+    return Colors.red; // CLOSED
   }
 
   String get statusText {
     if (!isOnline) return 'Offline';
-    if (!isTakingOrders) return 'Online (Paused)';
-    return 'Online - $operatingStatus';
+    return 'Online - ${_getStatusLabel(operatingStatus)}';
+  }
+
+  String get statusSubtitle {
+    if (!isOnline) return 'Not receiving orders';
+    if (operatingStatus == 'OPEN') {
+      if (activeOrderCount > 0) {
+        return 'Processing $activeOrderCount order${activeOrderCount > 1 ? 's' : ''}';
+      }
+      return 'Ready to receive orders';
+    }
+    if (operatingStatus == 'BREAK') {
+      return 'Temporarily not accepting new orders';
+    }
+    return 'Not receiving orders';
   }
 
   @override
@@ -74,9 +86,7 @@ class MerchantAvailabilityToggle extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        isOnline
-                            ? 'You can receive orders'
-                            : 'Not receiving orders',
+                        statusSubtitle,
                         style: context.typography.small.copyWith(
                           color: context.colorScheme.mutedForeground,
                         ),
@@ -84,6 +94,36 @@ class MerchantAvailabilityToggle extends StatelessWidget {
                     ],
                   ),
                 ),
+                // Active order count badge
+                if (isOnline && activeOrderCount > 0)
+                  Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 12.w,
+                      vertical: 6.h,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.blue.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(16.r),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          LucideIcons.shoppingBag,
+                          size: 14.sp,
+                          color: Colors.blue,
+                        ),
+                        SizedBox(width: 4.w),
+                        Text(
+                          '$activeOrderCount',
+                          style: context.typography.small.copyWith(
+                            color: Colors.blue,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
               ],
             ),
           ),
@@ -102,23 +142,9 @@ class MerchantAvailabilityToggle extends StatelessWidget {
           ),
           SizedBox(height: 16.h),
 
-          // Order Taking Toggle (only show when online)
+          // Operating Status (only show when online)
           if (isOnline) ...[
-            Card(
-              padding: EdgeInsets.all(16.w),
-              child: SwitchTile(
-                title: isTakingOrders ? 'Taking Orders' : 'Paused',
-                subtitle: isTakingOrders
-                    ? 'Ready to accept orders'
-                    : 'Temporarily paused',
-                value: isTakingOrders,
-                onChanged: isLoading ? null : onOrderTakingChanged,
-                enabled: !isLoading,
-              ),
-            ),
-            SizedBox(height: 16.h),
-
-            // Operating Status Dropdown (only show when online)
+            // Operating Status Dropdown
             Card(
               padding: EdgeInsets.all(16.w),
               child: Column(
@@ -156,7 +182,7 @@ class MerchantAvailabilityToggle extends StatelessWidget {
                   ),
                   SizedBox(height: 8.h),
                   Text(
-                    'Let customers know your store status',
+                    _getStatusDescription(operatingStatus),
                     style: context.typography.small.copyWith(
                       color: context.colorScheme.mutedForeground,
                     ),
@@ -210,6 +236,17 @@ class MerchantAvailabilityToggle extends StatelessWidget {
       'MAINTENANCE' => 'Maintenance',
       'CLOSED' => 'Closed',
       _ => status,
+    };
+  }
+
+  String _getStatusDescription(String status) {
+    return switch (status) {
+      'OPEN' => 'Accepting new orders from customers',
+      'BREAK' =>
+        'Temporarily not accepting new orders. Toggle when you\'re busy.',
+      'MAINTENANCE' => 'Store is under maintenance',
+      'CLOSED' => 'Store is closed, not accepting orders',
+      _ => 'Let customers know your store status',
     };
   }
 }

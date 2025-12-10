@@ -11,6 +11,8 @@ import { AuthHandler } from "./auth/auth-handler";
 import { AuthSpec } from "./auth/auth-spec";
 import { BadgeHandler } from "./badge/badge-handler";
 import { BadgeSpec } from "./badge/badge-spec";
+import { BankHandler } from "./bank/bank-handler";
+import { BankSpec } from "./bank/bank-spec";
 import { BannerHandler } from "./banner/banner-handler";
 import { BannerSpec } from "./banner/banner-spec";
 import { BroadcastHandler } from "./broadcast/broadcast-handler";
@@ -61,9 +63,10 @@ export const FetchServerSpec = oc.router({
 	analytics: oc.prefix("/analytics").router(AnalyticsSpec),
 	audit: oc.prefix("/audit-logs").router(AuditSpec),
 	auth: oc.prefix("/auth").router(AuthSpec),
+	badge: oc.prefix("/badges").router(BadgeSpec),
+	bank: oc.prefix("/bank").router(BankSpec),
 	banner: oc.prefix("/banners").router(BannerSpec),
 	broadcast: oc.prefix("/broadcasts").router(BroadcastSpec),
-	badge: oc.prefix("/badges").router(BadgeSpec),
 	chat: oc.prefix("/chat").router(ChatSpec),
 	configuration: oc.prefix("/configurations").router(ConfigurationSpec),
 	contact: oc.prefix("/contacts").router(ContactSpec),
@@ -96,9 +99,10 @@ export const FetchServerRouter = os.router({
 	analytics: AnalyticsHandler,
 	audit: AuditHandler,
 	auth: AuthHandler,
+	badge: BadgeHandler,
+	bank: BankHandler,
 	banner: BannerHandler,
 	broadcast: BroadcastHandler,
-	badge: BadgeHandler,
 	chat: ChatHandler,
 	configuration: ConfigurationHandler,
 	contact: ContactHandler,

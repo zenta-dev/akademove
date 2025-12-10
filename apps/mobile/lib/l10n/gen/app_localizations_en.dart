@@ -12,6 +12,42 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
+  String get transfer => 'Transfer';
+
+  @override
+  String get transfer_success => 'Transfer successful';
+
+  @override
+  String get transfer_failed => 'Transfer failed';
+
+  @override
+  String get recipient_user_id => 'Recipient User ID';
+
+  @override
+  String get enter_recipient_user_id => 'Enter recipient\'s user ID';
+
+  @override
+  String get enter_amount => 'Enter amount';
+
+  @override
+  String get enter_note => 'Enter note (optional)';
+
+  @override
+  String get error_recipient_required => 'Recipient user ID is required';
+
+  @override
+  String get error_transfer_minimum => 'Minimum transfer amount is Rp 1,000';
+
+  @override
+  String get confirm_transfer => 'Confirm Transfer';
+
+  @override
+  String get recipient => 'Recipient';
+
+  @override
+  String get confirm => 'Confirm';
+
+  @override
   String get select_bank => 'Select bank';
 
   @override

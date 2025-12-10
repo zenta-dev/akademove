@@ -74,15 +74,6 @@ class CartState extends Equatable {
   /// Computed: has merchant conflict
   bool get hasMerchantConflict => showMerchantConflict && pendingItem != null;
 
-  /// Computed: any operation is loading
-  bool get isLoading =>
-      cart.isLoading ||
-      addItemResult.isLoading ||
-      updateQuantityResult.isLoading ||
-      removeItemResult.isLoading ||
-      clearCartResult.isLoading ||
-      replaceCartResult.isLoading;
-
   @override
   List<Object?> get props => [
     cart,

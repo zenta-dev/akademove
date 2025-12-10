@@ -67,15 +67,16 @@ class _DeliveryProofUploadDialogState extends State<DeliveryProofUploadDialog> {
 
       final state = driverOrderCubit.state;
 
-      if (state.isSuccess) {
+      if (state.updateStatusResult.isSuccess) {
         Navigator.of(context).pop(true);
         context.showMyToast(
-          state.message ?? 'Delivery proof uploaded successfully',
+          'Delivery proof uploaded successfully',
           type: ToastType.success,
         );
-      } else if (state.isFailure) {
+      } else if (state.updateStatusResult.isFailure) {
         context.showMyToast(
-          state.error?.message ?? 'Failed to upload delivery proof',
+          state.updateStatusResult.error?.message ??
+              'Failed to upload delivery proof',
           type: ToastType.failed,
         );
       }

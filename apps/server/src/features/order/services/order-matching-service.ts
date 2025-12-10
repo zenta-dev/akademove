@@ -39,6 +39,9 @@ export interface MatchedDriver {
  * - Apply gender preference filters
  * - Apply rating-based prioritization
  * - Check driver schedule availability
+ * - Ensure driver's email is verified
+ * - Ensure driver has passed the quiz
+ * - Ensure driver is not currently taking another order
  */
 export class OrderMatchingService {
 	constructor(private readonly db: DatabaseService) {}
@@ -48,10 +51,13 @@ export class OrderMatchingService {
 	 *
 	 * Algorithm:
 	 * 1. Query drivers within radius using PostGIS
-	 * 2. Filter by online status and availability
-	 * 3. Apply gender preference if requested
-	 * 4. Sort by rating (highest first)
-	 * 5. Return top match
+	 * 2. Filter by online status and availability (not taking another order)
+	 * 3. Ensure driver status is ACTIVE
+	 * 4. Ensure driver has passed the quiz (quizStatus = PASSED)
+	 * 5. Ensure driver's email is verified
+	 * 6. Apply gender preference if requested
+	 * 7. Sort by rating (highest first)
+	 * 8. Return top match
 	 *
 	 * @param criteria - Matching criteria
 	 * @param opts - Transaction options
@@ -96,6 +102,10 @@ export class OrderMatchingService {
 						eq(tables.driver.isOnline, true),
 						eq(tables.driver.isTakingOrder, false),
 						eq(tables.driver.status, "ACTIVE"),
+						// Driver must have passed the quiz
+						eq(tables.driver.quizStatus, "PASSED"),
+						// Driver's email must be verified
+						eq(tables.user.emailVerified, true),
 						// Driver must be within radius
 						sql`ST_DWithin(
 							${tables.driver.currentLocation}::geography,
@@ -198,6 +208,10 @@ export class OrderMatchingService {
 						eq(tables.driver.isOnline, true),
 						eq(tables.driver.isTakingOrder, false),
 						eq(tables.driver.status, "ACTIVE"),
+						// Driver must have passed the quiz
+						eq(tables.driver.quizStatus, "PASSED"),
+						// Driver's email must be verified
+						eq(tables.user.emailVerified, true),
 						sql`ST_DWithin(
 							${tables.driver.currentLocation}::geography,
 							ST_SetSRID(ST_MakePoint(${criteria.pickupLocation.x}, ${criteria.pickupLocation.y}), 4326)::geography,

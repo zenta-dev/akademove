@@ -97,6 +97,78 @@ abstract class AppLocalizations {
     Locale('id')
   ];
 
+  /// No description provided for @transfer.
+  ///
+  /// In en, this message translates to:
+  /// **'Transfer'**
+  String get transfer;
+
+  /// No description provided for @transfer_success.
+  ///
+  /// In en, this message translates to:
+  /// **'Transfer successful'**
+  String get transfer_success;
+
+  /// No description provided for @transfer_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Transfer failed'**
+  String get transfer_failed;
+
+  /// No description provided for @recipient_user_id.
+  ///
+  /// In en, this message translates to:
+  /// **'Recipient User ID'**
+  String get recipient_user_id;
+
+  /// No description provided for @enter_recipient_user_id.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter recipient\'s user ID'**
+  String get enter_recipient_user_id;
+
+  /// No description provided for @enter_amount.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter amount'**
+  String get enter_amount;
+
+  /// No description provided for @enter_note.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter note (optional)'**
+  String get enter_note;
+
+  /// No description provided for @error_recipient_required.
+  ///
+  /// In en, this message translates to:
+  /// **'Recipient user ID is required'**
+  String get error_recipient_required;
+
+  /// No description provided for @error_transfer_minimum.
+  ///
+  /// In en, this message translates to:
+  /// **'Minimum transfer amount is Rp 1,000'**
+  String get error_transfer_minimum;
+
+  /// No description provided for @confirm_transfer.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Transfer'**
+  String get confirm_transfer;
+
+  /// No description provided for @recipient.
+  ///
+  /// In en, this message translates to:
+  /// **'Recipient'**
+  String get recipient;
+
+  /// No description provided for @confirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm'**
+  String get confirm;
+
   /// No description provided for @select_bank.
   ///
   /// In en, this message translates to:

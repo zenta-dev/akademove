@@ -18,22 +18,6 @@ class DriverReviewState extends Equatable {
   final bool hasMore;
   final String? cursor;
 
-  bool get isLoading =>
-      fetchReviewsResult.isLoading || submitReviewResult.isLoading;
-
-  bool get isFailure =>
-      fetchReviewsResult.isFailure || submitReviewResult.isFailure;
-
-  bool get isSuccess =>
-      fetchReviewsResult.isSuccess || submitReviewResult.isSuccess;
-
-  BaseError? get error => fetchReviewsResult.error ?? submitReviewResult.error;
-
-  String? get message {
-    if (submitReviewResult.isSuccess) return 'Review submitted';
-    return null;
-  }
-
   @override
   List<Object?> get props => [
     fetchReviewsResult,

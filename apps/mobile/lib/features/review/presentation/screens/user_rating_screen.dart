@@ -82,16 +82,17 @@ class _UserRatingScreenState extends State<UserRatingScreen> {
     if (!mounted) return;
 
     final state = cubit.state;
-    if (state.isSuccess) {
+    if (state.submittedReview.isSuccess) {
       context.showMyToast(
         context.l10n.text_thank_you_for_review,
         type: ToastType.success,
       );
       // Pop back to previous screen
       context.pop(true);
-    } else if (state.isFailure) {
+    } else if (state.submittedReview.isFailure) {
       context.showMyToast(
-        state.error?.message ?? context.l10n.toast_failed_submit_review,
+        state.submittedReview.error?.message ??
+            context.l10n.toast_failed_submit_review,
         type: ToastType.failed,
       );
     }
@@ -103,9 +104,10 @@ class _UserRatingScreenState extends State<UserRatingScreen> {
       headers: [DefaultAppBar(title: context.l10n.rate_your_driver)],
       body: BlocListener<UserReviewCubit, UserReviewState>(
         listener: (context, state) {
-          if (state.isFailure) {
+          if (state.submittedReview.isFailure) {
             context.showMyToast(
-              state.error?.message ?? context.l10n.toast_failed_submit_review,
+              state.submittedReview.error?.message ??
+                  context.l10n.toast_failed_submit_review,
               type: ToastType.failed,
             );
           }
@@ -324,12 +326,13 @@ class _UserRatingScreenState extends State<UserRatingScreen> {
   Widget _buildSubmitButton() {
     return BlocBuilder<UserReviewCubit, UserReviewState>(
       builder: (context, state) {
+        final isLoading = state.submittedReview.isLoading;
         return SizedBox(
           width: double.infinity,
           child: Button.primary(
-            enabled: _canSubmit && !state.isLoading,
-            onPressed: state.isLoading ? null : _submitReview,
-            child: state.isLoading
+            enabled: _canSubmit && !isLoading,
+            onPressed: isLoading ? null : _submitReview,
+            child: isLoading
                 ? const Submiting()
                 : Text(context.l10n.button_submit_review),
           ),

@@ -69,8 +69,22 @@ export type PayRequest = z.infer<typeof PayRequestSchema>;
 
 export const TransferRequestSchema = PaymentSchema.pick({
 	amount: true,
-}).safeExtend({ walletId: z.uuid() });
+}).safeExtend({
+	recipientUserId: z.string().describe("The user ID of the recipient"),
+	note: z.string().optional().describe("Optional note for the transfer"),
+});
 export type TransferRequest = z.infer<typeof TransferRequestSchema>;
+
+export const TransferResponseSchema = z.object({
+	transactionId: z.string(),
+	amount: z.coerce.number(),
+	status: TransactionStatusSchema,
+	recipientName: z.string(),
+	recipientUserId: z.string(),
+	note: z.string().optional(),
+	createdAt: DateSchema,
+});
+export type TransferResponse = z.infer<typeof TransferResponseSchema>;
 
 export const WithdrawRequestSchema = z.object({
 	amount: z.coerce.number().positive(),
@@ -80,8 +94,66 @@ export const WithdrawRequestSchema = z.object({
 });
 export type WithdrawRequest = z.infer<typeof WithdrawRequestSchema>;
 
+/**
+ * Payout status from Midtrans Iris
+ * @see https://iris-docs.midtrans.com/#payout-status
+ */
+export const PayoutStatusSchema = z.enum([
+	"queued",
+	"processed",
+	"completed",
+	"failed",
+]);
+export type PayoutStatus = z.infer<typeof PayoutStatusSchema>;
+
+/**
+ * Withdrawal response schema
+ * Returned after initiating a withdrawal to bank account
+ */
+export const WithdrawResponseSchema = z.object({
+	id: z.string().uuid(),
+	transactionId: z.string().uuid(),
+	provider: PaymentProviderSchema,
+	method: PaymentMethodSchema,
+	amount: z.coerce.number(),
+	status: TransactionStatusSchema,
+	bankProvider: BankProviderSchema,
+	payoutReferenceNo: z.string().optional(),
+	payoutStatus: PayoutStatusSchema.optional(),
+	metadata: z.record(z.string(), z.unknown()).optional(),
+	createdAt: DateSchema,
+	updatedAt: DateSchema,
+});
+export type WithdrawResponse = z.infer<typeof WithdrawResponseSchema>;
+
 export const WebhookRequestSchema = z.record(z.string(), z.any());
 export type WebhookRequest = z.infer<typeof WebhookRequestSchema>;
+
+// Bank Account Validation Schemas (for Midtrans Iris API)
+export const BankValidationRequestSchema = z.object({
+	bankProvider: BankProviderSchema,
+	accountNumber: z.string().min(5).max(20),
+});
+export type BankValidationRequest = z.infer<typeof BankValidationRequestSchema>;
+
+export const BankValidationResponseSchema = z.object({
+	isValid: z.boolean(),
+	accountName: z.string().nullable(),
+	bankCode: z.string(),
+	accountNumber: z.string(),
+});
+export type BankValidationResponse = z.infer<
+	typeof BankValidationResponseSchema
+>;
+
+// Saved Bank Account Schema (for pre-filling withdrawal forms)
+export const SavedBankAccountSchema = z.object({
+	hasSavedBank: z.boolean(),
+	bankProvider: BankProviderSchema.optional(),
+	accountNumber: z.string().optional(),
+	accountName: z.string().optional(),
+});
+export type SavedBankAccount = z.infer<typeof SavedBankAccountSchema>;
 
 export const PaymentSchemaRegistries = {
 	PaymentProvider: { schema: PaymentProviderSchema, strategy: "output" },
@@ -93,7 +165,22 @@ export const PaymentSchemaRegistries = {
 	TopUpRequest: { schema: TopUpRequestSchema, strategy: "input" },
 	PayRequest: { schema: PayRequestSchema, strategy: "input" },
 	TransferRequest: { schema: TransferRequestSchema, strategy: "input" },
+	TransferResponse: { schema: TransferResponseSchema, strategy: "output" },
 	WithdrawRequest: { schema: WithdrawRequestSchema, strategy: "input" },
+	WithdrawResponse: { schema: WithdrawResponseSchema, strategy: "output" },
+	PayoutStatus: { schema: PayoutStatusSchema, strategy: "output" },
 	WebhookRequest: { schema: WebhookRequestSchema, strategy: "input" },
 	PaymentKey: { schema: PaymentKeySchema, strategy: "input" },
+	BankValidationRequest: {
+		schema: BankValidationRequestSchema,
+		strategy: "input",
+	},
+	BankValidationResponse: {
+		schema: BankValidationResponseSchema,
+		strategy: "output",
+	},
+	SavedBankAccount: {
+		schema: SavedBankAccountSchema,
+		strategy: "output",
+	},
 } satisfies SchemaRegistries;

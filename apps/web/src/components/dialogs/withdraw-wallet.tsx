@@ -1,7 +1,7 @@
 import { m } from "@repo/i18n";
 import type { BankProvider } from "@repo/schema/common";
-import { useMutation } from "@tanstack/react-query";
-import { useState } from "react";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
@@ -48,6 +48,49 @@ export function WithdrawDialog({
 	const [bankProvider, setBankProvider] = useState<BankProvider>("BCA");
 	const [accountNumber, setAccountNumber] = useState("");
 	const [accountName, setAccountName] = useState("");
+	const [hasPrefilledBank, setHasPrefilledBank] = useState(false);
+
+	// Fetch saved bank account details
+	const savedBankQuery = useQuery({
+		queryKey: ["wallet", "savedBankAccount"],
+		queryFn: async () => {
+			const result = await orpcClient.wallet.getSavedBankAccount({});
+			if (result.status !== 200) {
+				throw new Error(result.body.message);
+			}
+			return result.body.data;
+		},
+		enabled: open,
+		staleTime: 5 * 60 * 1000, // 5 minutes
+	});
+
+	// Pre-fill form with saved bank details when dialog opens
+	useEffect(() => {
+		if (open && savedBankQuery.data?.hasSavedBank && !hasPrefilledBank) {
+			const {
+				bankProvider: savedBank,
+				accountNumber: savedAccount,
+				accountName: savedName,
+			} = savedBankQuery.data;
+			if (savedBank) {
+				setBankProvider(savedBank);
+			}
+			if (savedAccount) {
+				setAccountNumber(savedAccount);
+			}
+			if (savedName) {
+				setAccountName(savedName);
+			}
+			setHasPrefilledBank(true);
+		}
+	}, [open, savedBankQuery.data, hasPrefilledBank]);
+
+	// Reset prefilled flag when dialog closes
+	useEffect(() => {
+		if (!open) {
+			setHasPrefilledBank(false);
+		}
+	}, [open]);
 
 	const withdrawMutation = useMutation({
 		mutationFn: async () => {

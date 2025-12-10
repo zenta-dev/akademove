@@ -195,6 +195,26 @@ export const DashboardStatsQuerySchema = z.object({
 });
 export type DashboardStatsQuery = z.infer<typeof DashboardStatsQuerySchema>;
 
+// User Lookup Schemas (for wallet transfer recipient lookup)
+export const UserLookupQuerySchema = z.object({
+	phone: z.string().min(1, "Phone number is required"),
+});
+export type UserLookupQuery = z.infer<typeof UserLookupQuerySchema>;
+
+export const UserLookupResultSchema = z.object({
+	id: z.string(),
+	name: z.string(),
+	phone: z
+		.object({
+			countryCode: z.string(),
+			// Only show last 4 digits for privacy (e.g., "****5678")
+			maskedNumber: z.string(),
+		})
+		.optional(),
+	image: z.url().optional(),
+});
+export type UserLookupResult = z.infer<typeof UserLookupResultSchema>;
+
 export const UserSchemaRegistries = {
 	UserRole: { schema: UserRoleSchema, strategy: "output" },
 	UserGender: { schema: UserGenderSchema, strategy: "output" },
@@ -211,4 +231,6 @@ export const UserSchemaRegistries = {
 	UserKey: { schema: UserKeySchema, strategy: "input" },
 	DashboardStats: { schema: DashboardStatsSchema, strategy: "output" },
 	DashboardStatsQuery: { schema: DashboardStatsQuerySchema, strategy: "input" },
+	UserLookupQuery: { schema: UserLookupQuerySchema, strategy: "input" },
+	UserLookupResult: { schema: UserLookupResultSchema, strategy: "output" },
 } satisfies SchemaRegistries;

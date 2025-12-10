@@ -1,4 +1,5 @@
 import { m } from "@repo/i18n";
+import type { BankProvider } from "@repo/schema/common";
 import { unflattenData } from "@repo/schema/flatten.helper";
 import {
 	composeAuthCookieValue,
@@ -218,6 +219,30 @@ export const AuthHandler = pub.router({
 		async ({ context, input: { body } }) => {
 			const data = trimObjectValues(unflattenData(body));
 
+			// Validate bank account before creating driver
+			// This prevents registration with invalid bank accounts that would fail during withdrawals
+			if (data.detail?.bank?.provider && data.detail?.bank?.number) {
+				const bankValidation =
+					await context.svc.bankValidation.validateBankAccount({
+						bankProvider: data.detail.bank.provider as BankProvider,
+						accountNumber: String(data.detail.bank.number),
+					});
+
+				if (!bankValidation.isValid) {
+					throw new AuthError(m.server_bank_validation_failed(), {
+						code: "BAD_REQUEST",
+					});
+				}
+
+				logger.info(
+					{
+						bankProvider: data.detail.bank.provider,
+						accountName: bankValidation.accountName,
+					},
+					"[AuthHandler] Bank account validated for driver sign-up",
+				);
+			}
+
 			// Get IP for fraud detection
 			const ipAddress =
 				context.req.headers.get("x-forwarded-for") ??
@@ -403,6 +428,30 @@ export const AuthHandler = pub.router({
 	signUpMerchant: pub.signUpMerchant.handler(
 		async ({ context, input: { body } }) => {
 			const data = trimObjectValues(unflattenData(body));
+
+			// Validate bank account before creating merchant
+			// This prevents registration with invalid bank accounts that would fail during withdrawals
+			if (data.detail?.bank?.provider && data.detail?.bank?.number) {
+				const bankValidation =
+					await context.svc.bankValidation.validateBankAccount({
+						bankProvider: data.detail.bank.provider as BankProvider,
+						accountNumber: String(data.detail.bank.number),
+					});
+
+				if (!bankValidation.isValid) {
+					throw new AuthError(m.server_bank_validation_failed(), {
+						code: "BAD_REQUEST",
+					});
+				}
+
+				logger.info(
+					{
+						bankProvider: data.detail.bank.provider,
+						accountName: bankValidation.accountName,
+					},
+					"[AuthHandler] Bank account validated for merchant sign-up",
+				);
+			}
 
 			return await context.svc.db.transaction(async (tx) => {
 				try {

@@ -21,4 +21,23 @@ export const PaymentSpec = {
 		.output(
 			createSuccesSchema(EmptySchema, "Successfully retrieved users data"),
 		),
+	webhookMidtransPayout: oc
+		.route({
+			tags: [FEATURE_TAGS.PAYMENT],
+			method: "POST",
+			path: "/webhook/midtrans/payout",
+			summary: "Midtrans Iris Payout Webhook",
+			description:
+				"Webhook endpoint for Midtrans Iris payout/disbursement status updates",
+			inputStructure: "detailed",
+			outputStructure: "detailed",
+		})
+		.input(
+			z.object({
+				body: WebhookRequestSchema,
+			}),
+		)
+		.output(
+			createSuccesSchema(EmptySchema, "Payout webhook processed successfully"),
+		),
 };

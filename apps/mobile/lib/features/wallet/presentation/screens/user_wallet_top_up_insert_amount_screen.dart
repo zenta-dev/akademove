@@ -102,11 +102,12 @@ class _UserWalletTopUpInsertAmountScreenState
           ),
           BlocBuilder<UserWalletTopUpCubit, UserWalletTopUpState>(
             builder: (context, state) {
+              final isLoading = state.payment.isLoading;
               return SizedBox(
                 width: double.infinity,
                 child: Button.primary(
-                  enabled: !state.isLoading,
-                  onPressed: amount <= 0 || state.isLoading
+                  enabled: !isLoading,
+                  onPressed: amount <= 0 || isLoading
                       ? null
                       : () async {
                           final parsed = int.tryParse(
@@ -147,7 +148,7 @@ class _UserWalletTopUpInsertAmountScreenState
                             }
                           }
                         },
-                  child: state.isLoading
+                  child: isLoading
                       ? const Submiting()
                       : DefaultText(context.l10n.next),
                 ),

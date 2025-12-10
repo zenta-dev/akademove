@@ -70,7 +70,8 @@ class CouponRepository extends BaseRepository {
     });
   }
 
-  /// Get eligible coupons for an order with auto-selected best coupon
+  /// Get all eligible coupons for an order with auto-selected best coupon
+  /// Returns ALL eligible coupons without any limit
   Future<BaseResponse<EligibleCouponsResult>> getEligibleCoupons({
     required OrderType serviceType,
     required num totalAmount,

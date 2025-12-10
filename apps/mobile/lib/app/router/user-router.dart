@@ -287,6 +287,14 @@ final userRouter = StatefulShellRoute.indexedStack(
               const UserWalletTopUpBankTransferScreen(),
         ),
         GoRoute(
+          name: Routes.userWalletTransfer.name,
+          path: Routes.userWalletTransfer.path,
+          builder: (context, state) => BlocProvider(
+            create: (_) => sl<UserWalletTransferCubit>(),
+            child: const UserWalletTransferScreen(),
+          ),
+        ),
+        GoRoute(
           name: Routes.userVoucher.name,
           path: Routes.userVoucher.path,
           builder: (context, state) => BlocProvider(

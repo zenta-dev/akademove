@@ -4,6 +4,7 @@ import {
 	FlatUpdateMerchantSchema,
 	MerchantOperatingStatusSchema,
 	MerchantSchema,
+	MerchantStatusSchema,
 } from "@repo/schema/merchant";
 import { UnifiedPaginationQuerySchema } from "@repo/schema/pagination";
 import * as z from "zod";
@@ -34,6 +35,12 @@ const MerchantListQuerySchema = UnifiedPaginationQuerySchema.safeExtend({
 			return undefined;
 		}, z.boolean().optional())
 		.optional(),
+	status: MerchantStatusSchema.optional().describe(
+		"Filter by merchant approval status (e.g., APPROVED)",
+	),
+	operatingStatus: MerchantOperatingStatusSchema.optional().describe(
+		"Filter by merchant operating status (e.g., OPEN)",
+	),
 	minRating: z.coerce.number().min(0).max(5).optional(),
 	maxRating: z.coerce.number().min(0).max(5).optional(),
 	sortBy: z
@@ -302,27 +309,6 @@ export const MerchantMainSpec = {
 			),
 		),
 
-	setOrderTakingStatus: oc
-		.route({
-			tags: [FEATURE_TAGS.MERCHANT],
-			method: "PATCH",
-			path: "/{id}/availability/order-taking",
-			inputStructure: "detailed",
-			outputStructure: "detailed",
-		})
-		.input(
-			z.object({
-				params: z.object({ id: z.string() }),
-				body: z.object({ isTakingOrders: z.boolean() }),
-			}),
-		)
-		.output(
-			createSuccesSchema(
-				MerchantSchema,
-				"Merchant order-taking status updated successfully",
-			),
-		),
-
 	setOperatingStatus: oc
 		.route({
 			tags: [FEATURE_TAGS.MERCHANT],
@@ -362,8 +348,8 @@ export const MerchantMainSpec = {
 				z.object({
 					id: z.string(),
 					isOnline: z.boolean(),
-					isTakingOrders: z.boolean(),
 					operatingStatus: MerchantOperatingStatusSchema,
+					activeOrderCount: z.number().int().nonnegative(),
 				}),
 				"Merchant availability status retrieved successfully",
 			),

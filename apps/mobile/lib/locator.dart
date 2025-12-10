@@ -181,6 +181,9 @@ void _setupCubit() {
       ),
     )
     ..registerFactory(
+      () => UserWalletTransferCubit(walletRepository: sl<WalletRepository>()),
+    )
+    ..registerFactory(
       () => UserOrderCubit(
         orderRepository: sl<OrderRepository>(),
         webSocketService: sl<WebSocketService>(),

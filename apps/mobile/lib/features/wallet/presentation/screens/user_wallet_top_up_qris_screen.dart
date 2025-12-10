@@ -21,10 +21,10 @@ class UserWalletTopUpQRISScreen extends StatelessWidget {
         children: [
           BlocConsumer<UserWalletTopUpCubit, UserWalletTopUpState>(
             listener: (context, state) async {
-              if (state.isSuccess &&
-                  state.transactionResult != null &&
-                  state.transactionResult?.status ==
-                      TransactionStatus.SUCCESS) {
+              final transaction = state.transaction.value;
+              if (state.payment.isSuccess &&
+                  transaction != null &&
+                  transaction.status == TransactionStatus.SUCCESS) {
                 context.showMyToast(
                   context.l10n.top_up_success,
                   type: ToastType.success,
@@ -40,16 +40,16 @@ class UserWalletTopUpQRISScreen extends StatelessWidget {
                     ..pop();
                 });
               }
-              if (state.isFailure && context.mounted) {
+              if (state.payment.isFailure && context.mounted) {
                 context.showMyToast(
-                  state.error?.message ?? context.l10n.payment_expired,
+                  state.payment.error?.message ?? context.l10n.payment_expired,
                   type: ToastType.failed,
                 );
               }
             },
             builder: (context, state) {
               return QRISPaymentWidget(
-                payment: state.paymentResult ?? dummyPayment,
+                payment: state.payment.value ?? dummyPayment,
                 transactionType: TransactionType.TOPUP,
                 onExpired: () async {
                   context.showMyToast(
@@ -63,7 +63,7 @@ class UserWalletTopUpQRISScreen extends StatelessWidget {
                     context.pop();
                   });
                 },
-              ).asSkeleton(enabled: state.isLoading);
+              ).asSkeleton(enabled: state.payment.isLoading);
             },
           ),
           Card(
@@ -76,8 +76,8 @@ class UserWalletTopUpQRISScreen extends StatelessWidget {
                     BlocBuilder<UserWalletTopUpCubit, UserWalletTopUpState>(
                       builder: (context, state) {
                         return DefaultText(
-                          'Rp ${state.paymentResult?.amount ?? 50_000}',
-                        ).asSkeleton(enabled: state.isLoading);
+                          'Rp ${state.payment.value?.amount ?? 50_000}',
+                        ).asSkeleton(enabled: state.payment.isLoading);
                       },
                     ),
                   ],

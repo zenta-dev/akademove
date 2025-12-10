@@ -37,7 +37,7 @@ class _LeaderboardViewState extends State<_LeaderboardView> {
           scrollable: false,
           padding: EdgeInsets.zero,
           headers: [DefaultAppBar(title: context.l10n.leaderboard_title)],
-          onRefresh: state.isLoading
+          onRefresh: state.leaderboards.isLoading
               ? null
               : () => context.read<LeaderboardCubit>().refresh(),
           body: _buildBody(context, state),
@@ -47,17 +47,17 @@ class _LeaderboardViewState extends State<_LeaderboardView> {
   }
 
   Widget _buildBody(BuildContext context, LeaderboardState state) {
-    if (state.isLoading) {
+    if (state.leaderboards.isLoading) {
       return const Center(child: CircularProgressIndicator());
     }
 
-    if (state.isFailure) {
+    if (state.leaderboards.isFailure) {
       return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              state.message ?? 'Failed to load data',
+              state.leaderboards.error?.message ?? 'Failed to load data',
               style: TextStyle(color: context.colorScheme.destructive),
             ),
             SizedBox(height: 16.h),

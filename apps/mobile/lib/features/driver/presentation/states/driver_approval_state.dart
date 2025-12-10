@@ -85,14 +85,4 @@ class DriverApprovalState extends Equatable {
 
   /// Check if driver can be activated (all requirements met)
   bool get canBeActivated => allDocumentsApproved && quizPassed && quizVerified;
-
-  /// Check if data is loading
-  bool get isLoading => driver.isLoading || approvalReview.isLoading;
-
-  /// Check if there's an error
-  bool get hasError => driver.isFailure || approvalReview.isFailure;
-
-  /// Get error message
-  String? get errorMessage =>
-      driver.error?.message ?? approvalReview.error?.message;
 }

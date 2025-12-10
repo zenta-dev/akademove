@@ -52,15 +52,16 @@ class _DriverKrsScreenState extends State<DriverKrsScreen> {
         onRefresh: _onRefresh,
         child: BlocConsumer<DriverScheduleCubit, DriverScheduleState>(
           listener: (context, state) {
-            if (state.isFailure && state.error != null) {
+            if (state.fetchSchedulesResult.isFailure) {
               context.showMyToast(
-                state.error?.message ?? context.l10n.an_error_occurred,
+                state.fetchSchedulesResult.error?.message ??
+                    context.l10n.an_error_occurred,
                 type: ToastType.failed,
               );
             }
           },
           builder: (context, state) {
-            if (state.isLoading) {
+            if (state.fetchSchedulesResult.isLoading) {
               return ListView.separated(
                 padding: EdgeInsets.zero,
                 itemCount: 4,

@@ -2,8 +2,10 @@ import { oc } from "@orpc/contract";
 import {
 	PaymentSchema,
 	PayRequestSchema,
+	SavedBankAccountSchema,
 	TopUpRequestSchema,
 	TransferRequestSchema,
+	TransferResponseSchema,
 	WithdrawRequestSchema,
 } from "@repo/schema/payment";
 import {
@@ -88,7 +90,10 @@ export const WalletSpec = {
 			}),
 		)
 		.output(
-			createSuccesSchema(PaymentSchema, "Successfully retrieved users data"),
+			createSuccesSchema(
+				TransferResponseSchema,
+				"Transfer completed successfully",
+			),
 		),
 	withdraw: oc
 		.route({
@@ -104,4 +109,21 @@ export const WalletSpec = {
 			}),
 		)
 		.output(createSuccesSchema(PaymentSchema, "Withdrawal request submitted")),
+	getSavedBankAccount: oc
+		.route({
+			tags: [FEATURE_TAGS.wallet],
+			method: "GET",
+			path: "/bank",
+			inputStructure: "detailed",
+			outputStructure: "detailed",
+			description:
+				"Get saved bank account details from driver/merchant profile for pre-filling withdrawal forms",
+		})
+		.input(z.object())
+		.output(
+			createSuccesSchema(
+				SavedBankAccountSchema,
+				"Successfully retrieved saved bank account",
+			),
+		),
 };

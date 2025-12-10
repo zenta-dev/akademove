@@ -236,59 +236,6 @@ export const MerchantMainHandler = priv.router({
 				},
 			};
 		}),
-	setOrderTakingStatus: priv.setOrderTakingStatus
-
-		.use(requireRoles("MERCHANT", "SYSTEM"))
-		.handler(async ({ context, input: { params, body } }) => {
-			// IDOR Protection: Merchants can only update their own availability
-			if (context.user.role === "MERCHANT") {
-				const merchant = await context.repo.merchant.main.get(params.id);
-				if (merchant.userId !== context.user.id) {
-					throw new AuthError(m.error_only_update_own_merchant_profile(), {
-						code: "FORBIDDEN",
-					});
-				}
-			}
-
-			logger.info(
-				{ merchantId: params.id, isTakingOrders: body.isTakingOrders },
-				"[MerchantMainHandler] Setting order-taking status",
-			);
-
-			const result = await context.svc.db.transaction(async (tx) => {
-				// Validate merchant is online before allowing to take orders
-				const merchantBasic = await context.repo.merchant.main.getMerchantBasic(
-					params.id,
-					{ tx },
-				);
-
-				if (!merchantBasic) {
-					throw new AuthError("Merchant not found", {
-						code: "NOT_FOUND",
-					});
-				}
-
-				if (body.isTakingOrders && !merchantBasic.isOnline) {
-					throw new AuthError("Merchant must be online to take orders", {
-						code: "BAD_REQUEST",
-					});
-				}
-
-				return await context.repo.merchant.main.setOrderTakingStatus(
-					params.id,
-					body.isTakingOrders,
-					{ tx },
-				);
-			});
-
-			return {
-				status: 200,
-				body: {
-					message: "Merchant order-taking status updated",
-					data: result,
-				},
-			};
-		}),
 	setOperatingStatus: priv.setOperatingStatus
 
 		.use(requireRoles("MERCHANT", "SYSTEM"))

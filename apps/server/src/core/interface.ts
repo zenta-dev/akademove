@@ -57,6 +57,7 @@ import type { ReportRepository } from "@/features/report/report-repository";
 import type { ReviewRepository } from "@/features/review/review-repository";
 import type { TransactionRepository } from "@/features/transaction/transaction-repository";
 import type { UserAdminRepository } from "@/features/user/admin/user-admin-repository";
+import type { UserLookupRepository } from "@/features/user/lookup/user-lookup-repository";
 import type { UserMeRepository } from "@/features/user/me/user-me-repository";
 import type {
 	WalletBalanceService,
@@ -70,7 +71,11 @@ import type { FirebaseAdminService } from "./services/firebase";
 import type { KeyValueService } from "./services/kv";
 import type { MailService } from "./services/mail";
 import type { MapService } from "./services/map";
-import type { PaymentService } from "./services/payment";
+import type {
+	BankValidationService,
+	PaymentService,
+	PayoutService,
+} from "./services/payment";
 import type { StorageService } from "./services/storage";
 
 export interface ServiceContext {
@@ -80,6 +85,8 @@ export interface ServiceContext {
 	storage: StorageService;
 	map: MapService;
 	payment: PaymentService;
+	payout: PayoutService;
+	bankValidation: BankValidationService;
 	firebase: FirebaseAdminService;
 	authServices: {
 		session: SessionService;
@@ -148,6 +155,7 @@ export interface RepositoryContext {
 	user: {
 		admin: UserAdminRepository;
 		me: UserMeRepository;
+		lookup: UserLookupRepository;
 	};
 	wallet: WalletRepository;
 	notification: NotificationRepository;

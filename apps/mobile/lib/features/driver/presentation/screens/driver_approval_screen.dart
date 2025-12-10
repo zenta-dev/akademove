@@ -63,14 +63,14 @@ class _DriverApprovalScreenState extends State<DriverApprovalScreen> {
   }
 
   Widget _buildContent(BuildContext context, DriverApprovalState state) {
-    if (state.isLoading) {
+    if (state.driver.isLoading || state.approvalReview.isLoading) {
       return SizedBox(
         height: 400.h,
         child: const Center(child: CircularProgressIndicator()),
       );
     }
 
-    if (state.hasError) {
+    if (state.driver.isFailure || state.approvalReview.isFailure) {
       return _buildErrorState(context, state);
     }
 
@@ -124,7 +124,9 @@ class _DriverApprovalScreenState extends State<DriverApprovalScreen> {
             ),
             SizedBox(height: 16.h),
             Text(
-              state.errorMessage ?? context.l10n.an_error_occurred,
+              state.driver.error?.message ??
+                  state.approvalReview.error?.message ??
+                  context.l10n.an_error_occurred,
               style: context.typography.p.copyWith(
                 fontSize: 16.sp,
                 color: context.colorScheme.mutedForeground,

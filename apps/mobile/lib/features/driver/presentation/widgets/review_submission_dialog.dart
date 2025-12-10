@@ -57,15 +57,16 @@ class _ReviewSubmissionDialogState extends State<ReviewSubmissionDialog> {
 
       final state = reviewCubit.state;
 
-      if (state.isSuccess && state.submitted != null) {
+      if (state.submitReviewResult.isSuccess && state.submitted != null) {
         Navigator.of(context).pop(true);
         context.showMyToast(
-          state.message ?? context.l10n.toast_review_submitted,
+          context.l10n.toast_review_submitted,
           type: ToastType.success,
         );
-      } else if (state.isFailure) {
+      } else if (state.submitReviewResult.isFailure) {
         context.showMyToast(
-          state.error?.message ?? context.l10n.toast_review_failed,
+          state.submitReviewResult.error?.message ??
+              context.l10n.toast_review_failed,
           type: ToastType.failed,
         );
       }

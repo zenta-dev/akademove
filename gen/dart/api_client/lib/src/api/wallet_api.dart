@@ -15,6 +15,7 @@ import 'package:api_client/src/model/transfer_request.dart';
 import 'package:api_client/src/model/wallet_get200_response.dart';
 import 'package:api_client/src/model/wallet_get_monthly_summary200_response.dart';
 import 'package:api_client/src/model/wallet_top_up200_response.dart';
+import 'package:api_client/src/model/wallet_transfer200_response.dart';
 import 'package:api_client/src/model/withdraw_request.dart';
 
 class WalletApi {
@@ -374,9 +375,9 @@ class WalletApi {
   /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
   /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
   ///
-  /// Returns a [Future] containing a [Response] with a [WalletTopUp200Response] as data
+  /// Returns a [Future] containing a [Response] with a [WalletTransfer200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<WalletTopUp200Response>> walletTransfer({
+  Future<Response<WalletTransfer200Response>> walletTransfer({
     required TransferRequest transferRequest,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -421,15 +422,15 @@ class WalletApi {
       onReceiveProgress: onReceiveProgress,
     );
 
-    WalletTopUp200Response? _responseData;
+    WalletTransfer200Response? _responseData;
 
     try {
       final rawData = _response.data;
       _responseData = rawData == null
           ? null
-          : deserialize<WalletTopUp200Response, WalletTopUp200Response>(
+          : deserialize<WalletTransfer200Response, WalletTransfer200Response>(
               rawData,
-              'WalletTopUp200Response',
+              'WalletTransfer200Response',
               growable: true,
             );
     } catch (error, stackTrace) {
@@ -442,7 +443,7 @@ class WalletApi {
       );
     }
 
-    return Response<WalletTopUp200Response>(
+    return Response<WalletTransfer200Response>(
       data: _responseData,
       headers: _response.headers,
       isRedirect: _response.isRedirect,

@@ -67,4 +67,59 @@ class WalletRepository extends BaseRepository {
       return SuccessResponse(message: data.message ?? '', data: data.data);
     });
   }
+
+  Future<BaseResponse<TransferResponse>> transfer({
+    required String recipientUserId,
+    required int amount,
+    String? note,
+  }) {
+    return guard(() async {
+      final res = await _apiClient.getWalletApi().walletTransfer(
+        transferRequest: TransferRequest(
+          recipientUserId: recipientUserId,
+          amount: amount,
+          note: note,
+        ),
+      );
+      final data =
+          res.data ??
+          (throw const RepositoryError(
+            'Failed to transfer',
+            code: ErrorCode.unknown,
+          ));
+      return SuccessResponse(message: data.message ?? '', data: data.data);
+    });
+  }
+
+  Future<
+    BaseResponse<
+      ({
+        bool hasSavedBank,
+        BankProvider? bankProvider,
+        String? accountNumber,
+        String? accountName,
+      })
+    >
+  >
+  getSavedBankAccount() {
+    return guard(() async {
+      final res = await _apiClient.getWalletApi().walletGetSavedBankAccount();
+      final data =
+          res.data ??
+          (throw const RepositoryError(
+            'Failed to get saved bank account',
+            code: ErrorCode.unknown,
+          ));
+      final savedBank = data.data;
+      return SuccessResponse(
+        message: data.message ?? '',
+        data: (
+          hasSavedBank: savedBank.hasSavedBank,
+          bankProvider: savedBank.bankProvider,
+          accountNumber: savedBank.accountNumber,
+          accountName: savedBank.accountName,
+        ),
+      );
+    });
+  }
 }

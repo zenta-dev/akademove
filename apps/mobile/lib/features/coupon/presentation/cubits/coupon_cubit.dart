@@ -10,7 +10,8 @@ class CouponCubit extends BaseCubit<CouponState> {
 
   final CouponRepository _couponRepository;
 
-  /// Load eligible coupons for an order and auto-select the best one
+  /// Load all eligible coupons for an order and auto-select the best one
+  /// Returns ALL eligible coupons without any limit
   Future<void> loadEligibleCoupons({
     required OrderType serviceType,
     required num totalAmount,

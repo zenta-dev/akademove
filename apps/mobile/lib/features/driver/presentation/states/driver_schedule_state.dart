@@ -18,24 +18,6 @@ class DriverScheduleState extends Equatable {
   final List<DriverSchedule> schedules;
   final DriverSchedule? selectedSchedule;
 
-  bool get isLoading =>
-      fetchSchedulesResult.isLoading ||
-      createScheduleResult.isLoading ||
-      updateScheduleResult.isLoading ||
-      deleteScheduleResult.isLoading;
-
-  bool get isFailure =>
-      fetchSchedulesResult.isFailure ||
-      createScheduleResult.isFailure ||
-      updateScheduleResult.isFailure ||
-      deleteScheduleResult.isFailure;
-
-  BaseError? get error =>
-      fetchSchedulesResult.error ??
-      createScheduleResult.error ??
-      updateScheduleResult.error ??
-      deleteScheduleResult.error;
-
   @override
   List<Object?> get props => [
     fetchSchedulesResult,

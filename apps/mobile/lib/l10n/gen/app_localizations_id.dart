@@ -12,6 +12,42 @@ class AppLocalizationsId extends AppLocalizations {
   AppLocalizationsId([String locale = 'id']) : super(locale);
 
   @override
+  String get transfer => 'Transfer';
+
+  @override
+  String get transfer_success => 'Transfer berhasil';
+
+  @override
+  String get transfer_failed => 'Transfer gagal';
+
+  @override
+  String get recipient_user_id => 'ID Pengguna Penerima';
+
+  @override
+  String get enter_recipient_user_id => 'Masukkan ID pengguna penerima';
+
+  @override
+  String get enter_amount => 'Masukkan jumlah';
+
+  @override
+  String get enter_note => 'Masukkan catatan (opsional)';
+
+  @override
+  String get error_recipient_required => 'ID pengguna penerima wajib diisi';
+
+  @override
+  String get error_transfer_minimum => 'Jumlah transfer minimal Rp 1.000';
+
+  @override
+  String get confirm_transfer => 'Konfirmasi Transfer';
+
+  @override
+  String get recipient => 'Penerima';
+
+  @override
+  String get confirm => 'Konfirmasi';
+
+  @override
   String get select_bank => 'Pilih bank';
 
   @override

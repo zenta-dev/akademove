@@ -7,9 +7,9 @@ import { logger } from "@/utils/logger";
  *
  * Handles:
  * - Online/offline status toggling
- * - Order taking management (isOnline + isTakingOrders flags)
  * - Operating status management (OPEN, CLOSED, BREAK, MAINTENANCE)
  * - Availability state validation
+ * - Active order count tracking
  *
  * @example
  * ```typescript
@@ -26,12 +26,12 @@ export class MerchantAvailabilityService {
 	 * Sets merchant online/offline status
 	 *
 	 * When going offline:
-	 * - Also sets isTakingOrders = false
+	 * - Also sets operatingStatus = CLOSED
 	 * - Prevents merchant from being matched with new orders
 	 *
 	 * When going online:
 	 * - Sets isOnline = true
-	 * - Keeps isTakingOrders as-is (allows merchant to control)
+	 * - Keeps operatingStatus as-is (allows merchant to control)
 	 *
 	 * @param merchantId - Merchant ID
 	 * @param isOnline - Target online status
@@ -45,26 +45,32 @@ export class MerchantAvailabilityService {
 		deps: {
 			update: (
 				merchantId: string,
-				data: { isOnline: boolean; isTakingOrders?: boolean },
+				data: {
+					isOnline: boolean;
+					operatingStatus?: "OPEN" | "CLOSED" | "BREAK" | "MAINTENANCE";
+				},
 				opts?: PartialWithTx,
 			) => Promise<unknown>;
 		},
 		opts?: PartialWithTx,
 	): Promise<boolean> {
 		try {
-			// When going offline, also stop taking orders
-			const updateData: { isOnline: boolean; isTakingOrders?: boolean } = {
+			// When going offline, also set operating status to CLOSED
+			const updateData: {
+				isOnline: boolean;
+				operatingStatus?: "OPEN" | "CLOSED" | "BREAK" | "MAINTENANCE";
+			} = {
 				isOnline,
 			};
 
 			if (!isOnline) {
-				updateData.isTakingOrders = false;
+				updateData.operatingStatus = "CLOSED";
 			}
 
 			await deps.update(merchantId, updateData, opts);
 
 			logger.info(
-				{ merchantId, isOnline, isTakingOrders: updateData.isTakingOrders },
+				{ merchantId, isOnline, operatingStatus: updateData.operatingStatus },
 				"[MerchantAvailabilityService] Updated online status",
 			);
 
@@ -81,77 +87,13 @@ export class MerchantAvailabilityService {
 	}
 
 	/**
-	 * Sets merchant order-taking status
-	 *
-	 * Controls whether merchant accepts new order assignments.
-	 * Merchant must be online to take orders.
-	 *
-	 * @param merchantId - Merchant ID
-	 * @param isTakingOrders - Target order-taking status
-	 * @param deps - Dependency functions
-	 * @param opts - Optional transaction context
-	 * @returns Updated order-taking status
-	 * @throws RepositoryError if trying to take orders while offline
-	 */
-	async setOrderTakingStatus(
-		merchantId: string,
-		isTakingOrders: boolean,
-		deps: {
-			get: (
-				merchantId: string,
-				opts?: PartialWithTx,
-			) => Promise<{
-				isOnline: boolean;
-			}>;
-			update: (
-				merchantId: string,
-				data: { isTakingOrders: boolean },
-				opts?: PartialWithTx,
-			) => Promise<unknown>;
-		},
-		opts?: PartialWithTx,
-	): Promise<boolean> {
-		try {
-			// Validate: Cannot take orders while offline
-			if (isTakingOrders) {
-				const merchant = await deps.get(merchantId, opts);
-
-				if (!merchant.isOnline) {
-					throw new RepositoryError("Merchant must be online to take orders", {
-						code: "BAD_REQUEST",
-					});
-				}
-			}
-
-			await deps.update(merchantId, { isTakingOrders }, opts);
-
-			logger.info(
-				{ merchantId, isTakingOrders },
-				"[MerchantAvailabilityService] Updated order-taking status",
-			);
-
-			return isTakingOrders;
-		} catch (error) {
-			if (error instanceof RepositoryError) throw error;
-
-			logger.error(
-				{ error, merchantId, isTakingOrders },
-				"[MerchantAvailabilityService] Failed to set order-taking status",
-			);
-			throw new RepositoryError(
-				"Failed to update merchant order-taking status",
-				{
-					code: "INTERNAL_SERVER_ERROR",
-				},
-			);
-		}
-	}
-
-	/**
 	 * Sets merchant operating status
 	 *
 	 * Controls the merchant's operational state (OPEN, CLOSED, BREAK, MAINTENANCE).
-	 * This is distinct from online status and provides more granular control.
+	 * - OPEN: Accepting new orders
+	 * - BREAK: Temporarily not accepting new orders (merchant is busy)
+	 * - CLOSED: Not operating
+	 * - MAINTENANCE: Under maintenance
 	 *
 	 * @param merchantId - Merchant ID
 	 * @param operatingStatus - Target operating status
@@ -196,7 +138,6 @@ export class MerchantAvailabilityService {
 	 *
 	 * Available when:
 	 * - isOnline = true
-	 * - isTakingOrders = true
 	 * - operatingStatus = "OPEN"
 	 *
 	 * @param merchant - Merchant data
@@ -204,14 +145,9 @@ export class MerchantAvailabilityService {
 	 */
 	isAvailableForOrders(merchant: {
 		isOnline: boolean;
-		isTakingOrders: boolean;
 		operatingStatus: string;
 	}): boolean {
-		return (
-			merchant.isOnline &&
-			merchant.isTakingOrders &&
-			merchant.operatingStatus === "OPEN"
-		);
+		return merchant.isOnline && merchant.operatingStatus === "OPEN";
 	}
 
 	/**
@@ -225,16 +161,6 @@ export class MerchantAvailabilityService {
 	}
 
 	/**
-	 * Checks if merchant is taking orders
-	 *
-	 * @param merchant - Merchant data
-	 * @returns true if taking orders
-	 */
-	isTakingOrders(merchant: { isTakingOrders: boolean }): boolean {
-		return merchant.isTakingOrders;
-	}
-
-	/**
 	 * Checks if merchant is operating
 	 *
 	 * @param merchant - Merchant data
@@ -245,76 +171,77 @@ export class MerchantAvailabilityService {
 	}
 
 	/**
-	 * Marks merchant as taking orders (busy)
+	 * Marks merchant as on break (temporarily not accepting new orders)
 	 *
-	 * Sets isTakingOrders = true to indicate the merchant is actively serving orders
+	 * Sets operatingStatus = BREAK to indicate the merchant is busy
+	 * and not accepting new orders temporarily
 	 *
 	 * @param merchantId - Merchant ID
 	 * @param deps - Dependency functions
 	 * @param opts - Optional transaction context
 	 */
-	async markBusy(
+	async markOnBreak(
 		merchantId: string,
 		deps: {
 			update: (
 				merchantId: string,
-				data: { isTakingOrders: boolean },
+				data: { operatingStatus: "BREAK" },
 				opts?: PartialWithTx,
 			) => Promise<unknown>;
 		},
 		opts?: PartialWithTx,
 	): Promise<void> {
 		try {
-			await deps.update(merchantId, { isTakingOrders: true }, opts);
+			await deps.update(merchantId, { operatingStatus: "BREAK" }, opts);
 
 			logger.info(
 				{ merchantId },
-				"[MerchantAvailabilityService] Marked merchant as busy",
+				"[MerchantAvailabilityService] Marked merchant as on break",
 			);
 		} catch (error) {
 			logger.error(
 				{ error, merchantId },
-				"[MerchantAvailabilityService] Failed to mark merchant as busy",
+				"[MerchantAvailabilityService] Failed to mark merchant as on break",
 			);
-			throw new RepositoryError("Failed to mark merchant as busy", {
+			throw new RepositoryError("Failed to mark merchant as on break", {
 				code: "INTERNAL_SERVER_ERROR",
 			});
 		}
 	}
 
 	/**
-	 * Marks merchant as available (not taking orders)
+	 * Marks merchant as open (accepting orders)
 	 *
-	 * Sets isTakingOrders = false to allow order assignment
+	 * Sets operatingStatus = OPEN to allow order assignment
 	 *
 	 * @param merchantId - Merchant ID
 	 * @param deps - Dependency functions
 	 * @param opts - Optional transaction context
 	 */
-	async markAvailable(
+	async markOpen(
 		merchantId: string,
 		deps: {
 			update: (
 				merchantId: string,
-				data: { isTakingOrders: boolean },
+				data: { operatingStatus: "OPEN" },
 				opts?: PartialWithTx,
 			) => Promise<unknown>;
 		},
 		opts?: PartialWithTx,
 	): Promise<void> {
 		try {
-			await deps.update(merchantId, { isTakingOrders: false }, opts);
+			await deps.update(merchantId, { operatingStatus: "OPEN" }, opts);
 
 			logger.info(
 				{ merchantId },
-				"[MerchantAvailabilityService] Marked merchant as available",
+				"[MerchantAvailabilityService] Marked merchant as open",
 			);
 		} catch (error) {
 			logger.error(
 				{ error, merchantId },
-				"[MerchantAvailabilityService] Failed to mark merchant as available",
+				"[MerchantAvailabilityService] Failed to mark merchant as open",
 			);
-			throw new RepositoryError("Failed to mark merchant as available", {
+			throw new RepositoryError("Failed to mark merchant as open", {
 				code: "INTERNAL_SERVER_ERROR",
 			});
 		}

@@ -62,6 +62,7 @@ import { ReportRepository } from "@/features/report/report-repository";
 import { ReviewRepository } from "@/features/review/review-repository";
 import { TransactionRepository } from "@/features/transaction/transaction-repository";
 import { UserAdminRepository } from "@/features/user/admin/user-admin-repository";
+import { UserLookupRepository } from "@/features/user/lookup/user-lookup-repository";
 import { UserMeRepository } from "@/features/user/me/user-me-repository";
 import {
 	WalletBalanceService,
@@ -72,7 +73,11 @@ import { JwtManager } from "@/utils/jwt";
 import { PasswordManager } from "@/utils/password";
 import { FirebaseAdminService } from "./services/firebase";
 import { GoogleMapService } from "./services/map";
-import { MidtransPaymentService } from "./services/payment";
+import {
+	MidtransBankValidationService,
+	MidtransPaymentService,
+	MidtransPayoutService,
+} from "./services/payment";
 
 var _manager: ManagerContext | undefined;
 
@@ -124,6 +129,18 @@ export function getServices(): ServiceContext {
 	);
 	const paymentWebhookService = new PaymentWebhookService();
 
+	// Initialize bank validation service (Midtrans Iris API)
+	const bankValidationService = new MidtransBankValidationService({
+		isProduction,
+		serverKey: env.MIDTRANS_SERVER_KEY,
+	});
+
+	// Initialize payout/disbursement service (Midtrans Iris API)
+	const payoutService = new MidtransPayoutService({
+		isProduction,
+		serverKey: env.MIDTRANS_SERVER_KEY,
+	});
+
 	// Initialize order domain services
 	const orderPricingConfigProvider = new OrderPricingConfigProvider(db);
 	const orderPricingService = new OrderPricingService(
@@ -153,6 +170,8 @@ export function getServices(): ServiceContext {
 		storage,
 		map,
 		payment: midtransPaymentService,
+		payout: payoutService,
+		bankValidation: bankValidationService,
 		firebase,
 		authServices: {
 			session: sessionService,
@@ -297,6 +316,7 @@ export function getRepositories(
 				manager.pw,
 			),
 			me: new UserMeRepository(svc.db, svc.kv, svc.storage, manager.pw),
+			lookup: new UserLookupRepository(svc.db, svc.kv, svc.storage),
 		},
 		transaction,
 		notification,

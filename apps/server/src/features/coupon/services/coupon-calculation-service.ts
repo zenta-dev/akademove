@@ -120,6 +120,8 @@ export class CouponCalculationService {
 
 	/**
 	 * Calculate discounts for multiple coupons and rank by best discount
+	 * Returns ALL coupons with their calculated discounts, sorted by discount amount (highest first)
+	 * No limit is applied - all eligible coupons are returned
 	 */
 	static calculateBestCoupon(
 		coupons: Coupon[],

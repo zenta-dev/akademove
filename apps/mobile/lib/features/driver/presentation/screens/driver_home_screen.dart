@@ -26,7 +26,7 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
   Widget build(BuildContext context) {
     return BlocConsumer<DriverCubit, DriverState>(
       listener: (context, state) {
-        if (state.initResult.isFailure && state.error != null) {
+        if (state.initResult.isFailure) {
           context.showMyToast(
             state.initResult.error?.message ?? context.l10n.an_error_occurred,
             type: ToastType.failed,

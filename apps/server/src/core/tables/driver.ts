@@ -63,6 +63,13 @@ export const driver = pgTable(
 		index("driver_rating_idx").on(t.rating),
 		index("driver_status_online_idx").on(t.status, t.isOnline),
 		index("driver_status_quiz_idx").on(t.status, t.quizStatus),
+		// Composite index for driver matching queries (status, quizStatus, isOnline, isTakingOrder)
+		index("driver_matching_idx").on(
+			t.status,
+			t.quizStatus,
+			t.isOnline,
+			t.isTakingOrder,
+		),
 		index("driver_current_location_idx").using("gist", t.currentLocation),
 		index("driver_online_location_idx")
 			.using("gist", t.currentLocation)

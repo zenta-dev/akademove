@@ -59,6 +59,7 @@ enum Routes {
   userWalletTopUpInsertAmount('/user/home/wallet/topup/insert-amount'),
   userWalletTopUpQRIS('/user/home/wallet/topup/qris'),
   userWalletTopUpBankTransfer('/user/home/wallet/topup/bank-transfer'),
+  userWalletTransfer('/user/home/wallet/transfer'),
   userVoucher('/user/home/voucher'),
   userNotifications('/user/home/notifications'),
 

@@ -18,32 +18,6 @@ class DriverOrderState extends Equatable {
   final User? customer;
   final OrderStatus? orderStatus;
 
-  bool get isLoading =>
-      fetchOrderResult.isLoading ||
-      acceptOrderResult.isLoading ||
-      updateStatusResult.isLoading;
-
-  bool get isFailure =>
-      fetchOrderResult.isFailure ||
-      acceptOrderResult.isFailure ||
-      updateStatusResult.isFailure;
-
-  bool get isSuccess =>
-      fetchOrderResult.isSuccess ||
-      acceptOrderResult.isSuccess ||
-      updateStatusResult.isSuccess;
-
-  BaseError? get error =>
-      fetchOrderResult.error ??
-      acceptOrderResult.error ??
-      updateStatusResult.error;
-
-  String? get message {
-    if (acceptOrderResult.isSuccess) return 'Order accepted';
-    if (updateStatusResult.isSuccess) return 'Status updated';
-    return null;
-  }
-
   @override
   List<Object?> get props => [
     fetchOrderResult,

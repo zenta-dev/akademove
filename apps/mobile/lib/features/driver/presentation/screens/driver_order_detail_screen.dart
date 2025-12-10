@@ -58,7 +58,7 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
       child: BlocConsumer<DriverOrderCubit, DriverOrderState>(
         listener: (context, state) {
           // Show error messages
-          if (state.fetchOrderResult.isFailure && state.error != null) {
+          if (state.fetchOrderResult.isFailure) {
             context.showMyToast(
               state.fetchOrderResult.error?.message ??
                   context.l10n.an_error_occurred,

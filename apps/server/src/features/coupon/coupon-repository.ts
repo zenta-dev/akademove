@@ -310,6 +310,13 @@ export class CouponRepository extends BaseRepository {
 		}
 	}
 
+	/**
+	 * Get all eligible coupons for an order with auto-selected best coupon
+	 * Returns ALL eligible coupons without any limit
+	 *
+	 * @param params - Parameters including serviceType, totalAmount, userId, and optional merchantId
+	 * @returns Object containing all eligible coupons, best coupon, and best discount amount
+	 */
 	async getEligibleCoupons(params: {
 		serviceType: string;
 		totalAmount: number;
@@ -325,6 +332,7 @@ export class CouponRepository extends BaseRepository {
 			const now = new Date();
 
 			// Query active coupons within validity period
+			// No limit applied - return ALL eligible coupons
 			const coupons = await this.db.query.coupon.findMany({
 				where: (f, op) =>
 					op.and(
@@ -337,6 +345,8 @@ export class CouponRepository extends BaseRepository {
 							? op.or(op.isNull(f.merchantId), op.eq(f.merchantId, merchantId))
 							: op.isNull(f.merchantId), // Only platform-wide if no merchantId
 					),
+				// Explicitly no limit to return all eligible coupons
+				limit: undefined,
 			});
 
 			// Create validation callbacks

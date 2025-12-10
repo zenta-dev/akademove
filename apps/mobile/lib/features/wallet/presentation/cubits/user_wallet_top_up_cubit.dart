@@ -32,7 +32,7 @@ class UserWalletTopUpCubit extends BaseCubit<UserWalletTopUpState> {
   Future<void> topUp(int amount, TopUpRequestMethodEnum method) async =>
       await taskManager.execute('UWTPC-tU1', () async {
         try {
-          emit(state.toLoading());
+          emit(state.copyWith(payment: const OperationResult.loading()));
           final res = await _walletRepository.topUp(
             TopUpRequest(
               amount: amount,
@@ -44,14 +44,18 @@ class UserWalletTopUpCubit extends BaseCubit<UserWalletTopUpState> {
           _paymentId = res.data.id;
           await _setupPaymentWebsocket(paymentId: res.data.id);
 
-          emit(state.toSuccess(paymentResult: res.data));
+          emit(
+            state.copyWith(
+              payment: OperationResult.success(res.data, message: res.message),
+            ),
+          );
         } on BaseError catch (e, st) {
           logger.e(
             '[UserWalletTopUpCubit] - Error: ${e.message}',
             error: e,
             stackTrace: st,
           );
-          emit(state.toFailure(e));
+          emit(state.copyWith(payment: OperationResult.failed(e)));
         }
       });
 
@@ -63,10 +67,10 @@ class UserWalletTopUpCubit extends BaseCubit<UserWalletTopUpState> {
 
       if (data.e == PaymentEnvelopeEvent.TOP_UP_SUCCESS) {
         emit(
-          state.toSuccess(
-            paymentResult: data.p.payment,
-            transactionResult: data.p.transaction,
-            walletResult: data.p.wallet,
+          state.copyWith(
+            payment: OperationResult.success(data.p.payment),
+            transaction: OperationResult.success(data.p.transaction),
+            wallet: OperationResult.success(data.p.wallet),
           ),
         );
         return;
@@ -74,13 +78,14 @@ class UserWalletTopUpCubit extends BaseCubit<UserWalletTopUpState> {
 
       if (data.e == PaymentEnvelopeEvent.TOP_UP_FAILED) {
         emit(
-          state.toSuccess(
-            paymentResult: data.p.payment,
-            transactionResult: data.p.transaction,
-            walletResult: data.p.wallet,
+          state.copyWith(
+            payment: OperationResult.failed(
+              const UnknownError('Top up failed'),
+            ),
+            transaction: OperationResult.success(data.p.transaction),
+            wallet: OperationResult.success(data.p.wallet),
           ),
         );
-        emit(state.toFailure(const UnknownError('Top up failed')));
         return;
       }
     }

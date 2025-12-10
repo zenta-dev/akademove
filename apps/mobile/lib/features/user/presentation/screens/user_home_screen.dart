@@ -70,6 +70,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
             BlocBuilder<NotificationCubit, NotificationState>(
               bloc: _notificationCubit,
               builder: (context, state) {
+                final unreadCount = state.unreadCount.value ?? 0;
                 return IconButton(
                   variance: ButtonVariance.ghost,
                   onPressed: () async {
@@ -81,7 +82,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                     clipBehavior: Clip.none,
                     children: [
                       const Icon(LucideIcons.bell),
-                      if (state.unreadCount > 0)
+                      if (unreadCount > 0)
                         Positioned(
                           right: -4,
                           top: -4,
@@ -99,9 +100,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                               minHeight: 16.h,
                             ),
                             child: Text(
-                              state.unreadCount > 99
-                                  ? '99+'
-                                  : state.unreadCount.toString(),
+                              unreadCount > 99 ? '99+' : unreadCount.toString(),
                               style: TextStyle(
                                 fontSize: 10.sp,
                                 fontWeight: FontWeight.bold,

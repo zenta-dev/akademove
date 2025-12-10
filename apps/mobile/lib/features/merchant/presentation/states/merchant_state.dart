@@ -7,10 +7,6 @@ class MerchantState extends Equatable {
 
   final OperationResult<Merchant> mine;
 
-  bool get isLoading => mine.isLoading;
-  bool get isFailure => mine.isFailure;
-  BaseError? get error => mine.error;
-
   @override
   List<Object> get props => [mine];
 

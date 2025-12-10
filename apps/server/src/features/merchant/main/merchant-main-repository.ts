@@ -92,6 +92,14 @@ export class MerchantMainRepository extends BaseRepository {
 		filters?: {
 			categories?: string[];
 			isActive?: boolean;
+			status?:
+				| "PENDING"
+				| "APPROVED"
+				| "REJECTED"
+				| "ACTIVE"
+				| "INACTIVE"
+				| "SUSPENDED";
+			operatingStatus?: "OPEN" | "CLOSED" | "BREAK" | "MAINTENANCE";
 			minRating?: number;
 			maxRating?: number;
 			maxDistance?: number;
@@ -115,6 +123,14 @@ export class MerchantMainRepository extends BaseRepository {
 			}
 			if (filters?.isActive !== undefined) {
 				clauses.push(eq(tables.merchant.isActive, filters.isActive));
+			}
+			if (filters?.status) {
+				clauses.push(eq(tables.merchant.status, filters.status));
+			}
+			if (filters?.operatingStatus) {
+				clauses.push(
+					eq(tables.merchant.operatingStatus, filters.operatingStatus),
+				);
 			}
 			if (filters?.minRating !== undefined) {
 				clauses.push(gte(tables.merchant.rating, filters.minRating));
@@ -168,6 +184,8 @@ export class MerchantMainRepository extends BaseRepository {
 				maxDistance,
 				latitude,
 				longitude,
+				status,
+				operatingStatus,
 			} = query ?? {};
 
 			const orderBy = (
@@ -197,6 +215,12 @@ export class MerchantMainRepository extends BaseRepository {
 			}
 			if (isActive !== undefined) {
 				clauses.push(eq(tables.merchant.isActive, isActive));
+			}
+			if (status) {
+				clauses.push(eq(tables.merchant.status, status));
+			}
+			if (operatingStatus) {
+				clauses.push(eq(tables.merchant.operatingStatus, operatingStatus));
 			}
 			if (minRating !== undefined) {
 				clauses.push(gte(tables.merchant.rating, minRating));
@@ -264,6 +288,8 @@ export class MerchantMainRepository extends BaseRepository {
 					const totalCount = await this.#getQueryCount(search ?? "", {
 						categories,
 						isActive,
+						status,
+						operatingStatus,
 						minRating,
 						maxRating,
 						maxDistance,
@@ -312,6 +338,8 @@ export class MerchantMainRepository extends BaseRepository {
 				const hasFilters =
 					(categories && categories.length > 0) ||
 					isActive !== undefined ||
+					status !== undefined ||
+					operatingStatus !== undefined ||
 					minRating !== undefined ||
 					maxRating !== undefined;
 
@@ -320,6 +348,8 @@ export class MerchantMainRepository extends BaseRepository {
 						? await this.#getQueryCount(search ?? "", {
 								categories,
 								isActive,
+								status,
+								operatingStatus,
 								minRating,
 								maxRating,
 							})
@@ -408,6 +438,9 @@ export class MerchantMainRepository extends BaseRepository {
 				JOIN am_merchants m ON m.id = o.merchant_id
 				WHERE o.status = 'COMPLETED'
 					AND o.requested_at > NOW() - INTERVAL '30 days'
+					AND m.status = 'APPROVED'
+					AND m.is_active = true
+					AND m.operating_status = 'OPEN'
 				GROUP BY o.merchant_id, m.rating, m.created_at
 			),
 			normalized AS (
@@ -878,42 +911,6 @@ export class MerchantMainRepository extends BaseRepository {
 	}
 
 	/**
-	 * Updates merchant order-taking status
-	 * @param id - Merchant ID
-	 * @param isTakingOrders - Order-taking status
-	 * @param opts - Optional transaction context
-	 */
-	async setOrderTakingStatus(
-		id: string,
-		isTakingOrders: boolean,
-		opts?: WithTx,
-	): Promise<Merchant> {
-		try {
-			const db = opts?.tx ?? this.db;
-			const result = await db
-				.update(tables.merchant)
-				.set({ isTakingOrders, updatedAt: new Date() })
-				.where(eq(tables.merchant.id, id))
-				.returning();
-
-			if (result.length === 0) {
-				throw new RepositoryError(`Merchant with id "${id}" not found`, {
-					code: "NOT_FOUND",
-				});
-			}
-
-			const composed = await MerchantMainRepository.composeEntity(
-				result[0],
-				this.#storage,
-			);
-			await this.setCache(id, composed, { expirationTtl: CACHE_TTLS["1h"] });
-			return composed;
-		} catch (error) {
-			throw this.handleError(error, "setOrderTakingStatus");
-		}
-	}
-
-	/**
 	 * Updates merchant operating status
 	 * @param id - Merchant ID
 	 * @param operatingStatus - Operating status (OPEN, CLOSED, BREAK, MAINTENANCE)
@@ -960,8 +957,8 @@ export class MerchantMainRepository extends BaseRepository {
 	): Promise<{
 		id: string;
 		isOnline: boolean;
-		isTakingOrders: boolean;
 		operatingStatus: "OPEN" | "CLOSED" | "BREAK" | "MAINTENANCE";
+		activeOrderCount: number;
 	} | null> {
 		try {
 			const db = opts?.tx ?? this.db;
@@ -970,8 +967,8 @@ export class MerchantMainRepository extends BaseRepository {
 				columns: {
 					id: true,
 					isOnline: true,
-					isTakingOrders: true,
 					operatingStatus: true,
+					activeOrderCount: true,
 				},
 			});
 
@@ -979,16 +976,71 @@ export class MerchantMainRepository extends BaseRepository {
 				? {
 						id: result.id,
 						isOnline: result.isOnline,
-						isTakingOrders: result.isTakingOrders,
 						operatingStatus: result.operatingStatus as
 							| "OPEN"
 							| "CLOSED"
 							| "BREAK"
 							| "MAINTENANCE",
+						activeOrderCount: result.activeOrderCount,
 					}
 				: null;
 		} catch (error) {
 			throw this.handleError(error, "getMerchantBasic");
+		}
+	}
+
+	/**
+	 * Increments merchant active order count
+	 * Called when a new order is accepted by merchant
+	 * @param id - Merchant ID
+	 * @param opts - Optional transaction context
+	 */
+	async incrementActiveOrderCount(id: string, opts?: WithTx): Promise<void> {
+		try {
+			const db = opts?.tx ?? this.db;
+			await db
+				.update(tables.merchant)
+				.set({
+					activeOrderCount: sql`${tables.merchant.activeOrderCount} + 1`,
+					updatedAt: new Date(),
+				})
+				.where(eq(tables.merchant.id, id));
+
+			await this.deleteCache(id);
+			logger.debug(
+				{ merchantId: id },
+				"[MerchantMainRepository] Incremented active order count",
+			);
+		} catch (error) {
+			throw this.handleError(error, "incrementActiveOrderCount");
+		}
+	}
+
+	/**
+	 * Decrements merchant active order count
+	 * Called when an order is completed, cancelled, or rejected
+	 * @param id - Merchant ID
+	 * @param opts - Optional transaction context
+	 */
+	async decrementActiveOrderCount(id: string, opts?: WithTx): Promise<void> {
+		try {
+			const db = opts?.tx ?? this.db;
+			// Use GREATEST to ensure count doesn't go below 0
+			await db
+				.update(tables.merchant)
+				.set({
+					activeOrderCount: sql`GREATEST(${tables.merchant.activeOrderCount} - 1, 0)`,
+					updatedAt: new Date(),
+				})
+				.where(eq(tables.merchant.id, id));
+
+			await this.deleteCache(id);
+			logger.debug(
+				{ merchantId: id },
+				"[MerchantMainRepository] Decremented active order count",
+			);
+		} catch (error) {
+			throw this.handleError(error, "decrementActiveOrderCount");
 		}
 	}
 }

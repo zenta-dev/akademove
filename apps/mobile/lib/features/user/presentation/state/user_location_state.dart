@@ -7,28 +7,17 @@ class UserLocationState extends Equatable {
     this.polylines = const {},
   });
 
+  /// Current location with optional placemark
   final OperationResult<(Coordinate, Placemark?)> location;
 
-  /// Markers for displaying on map (pickup, dropoff, drivers, etc.)
   final Set<Marker> markers;
-
-  /// Polylines for displaying routes on map
   final Set<Polyline> polylines;
 
+  /// Convenience getter for coordinate
   Coordinate? get coordinate => location.value?.$1;
+
+  /// Convenience getter for placemark
   Placemark? get placemark => location.value?.$2;
-
-  /// Returns true if location data is available
-  bool get hasLocation => coordinate != null;
-
-  /// Returns true if location is currently being fetched
-  bool get isLoading => location.isLoading;
-
-  /// Returns true if location fetch failed
-  bool get hasError => location.isFailure;
-
-  /// Returns true if there are markers or polylines to display
-  bool get hasMapData => markers.isNotEmpty || polylines.isNotEmpty;
 
   @override
   List<Object> get props => [location, markers, polylines];

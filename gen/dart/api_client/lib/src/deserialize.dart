@@ -315,6 +315,8 @@ import 'package:api_client/src/model/transaction.dart';
 import 'package:api_client/src/model/transaction_get200_response.dart';
 import 'package:api_client/src/model/transaction_list200_response.dart';
 import 'package:api_client/src/model/transfer_request.dart';
+import 'package:api_client/src/model/transfer_response.dart';
+import 'package:api_client/src/model/wallet_transfer200_response.dart';
 import 'package:api_client/src/model/unban_user.dart';
 import 'package:api_client/src/model/update_account_deletion.dart';
 import 'package:api_client/src/model/update_broadcast.dart';
@@ -1563,6 +1565,12 @@ ReturnType deserialize<ReturnType, BaseType>(
     case 'TransactionType':
     case 'TransferRequest':
       return TransferRequest.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
+    case 'TransferResponse':
+      return TransferResponse.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
+    case 'WalletTransfer200Response':
+      return WalletTransfer200Response.fromJson(value as Map<String, dynamic>)
           as ReturnType;
     case 'UnbanUser':
       return UnbanUser.fromJson(value as Map<String, dynamic>) as ReturnType;

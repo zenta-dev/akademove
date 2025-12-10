@@ -40,12 +40,14 @@ export const MerchantSchema = z.object({
 	isOnline: z
 		.boolean()
 		.describe("Whether merchant is currently online/available"),
-	isTakingOrders: z
-		.boolean()
-		.describe("Whether merchant is actively taking orders (subset of online)"),
 	operatingStatus: MerchantOperatingStatusSchema.describe(
 		"Current operating status (OPEN, CLOSED, BREAK, MAINTENANCE)",
 	),
+	activeOrderCount: z
+		.number()
+		.int()
+		.nonnegative()
+		.describe("Number of active orders being processed by merchant"),
 	rating: z.coerce.number(),
 	document: z.url().optional(),
 	image: z.url().optional(),
@@ -66,8 +68,8 @@ export const InsertMerchantSchema = MerchantSchema.omit({
 	status: true,
 	isActive: true,
 	isOnline: true,
-	isTakingOrders: true,
 	operatingStatus: true,
+	activeOrderCount: true,
 	document: true,
 	image: true,
 	categories: true,
@@ -138,14 +140,6 @@ export const SetMerchantOnlineStatusSchema = z.object({
 });
 export type SetMerchantOnlineStatus = z.infer<
 	typeof SetMerchantOnlineStatusSchema
->;
-
-export const SetMerchantOrderTakingStatusSchema = z.object({
-	merchantId: z.uuid(),
-	isTakingOrders: z.boolean(),
-});
-export type SetMerchantOrderTakingStatus = z.infer<
-	typeof SetMerchantOrderTakingStatusSchema
 >;
 
 export const SetMerchantOperatingStatusSchema = z.object({

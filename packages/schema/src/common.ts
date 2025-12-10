@@ -15,6 +15,7 @@ export type BankProvider = z.infer<typeof BankProviderSchema>;
 export const BankSchema = z.object({
 	provider: BankProviderSchema,
 	number: z.coerce.number(),
+	accountName: z.string().optional(),
 });
 export type Bank = z.infer<typeof BankSchema>;
 

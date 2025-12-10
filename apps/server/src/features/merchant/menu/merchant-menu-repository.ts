@@ -463,6 +463,9 @@ export class MerchantMenuRepository extends BaseRepository {
 							and(
 								eq(tables.order.type, "FOOD"),
 								eq(tables.order.status, "COMPLETED"),
+								eq(tables.merchant.status, "APPROVED"),
+								eq(tables.merchant.isActive, true),
+								eq(tables.merchant.operatingStatus, "OPEN"),
 								categoryFilter,
 							),
 						)

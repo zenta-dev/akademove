@@ -460,170 +460,217 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
     final accountNumberController = TextEditingController();
     final accountNameController = TextEditingController();
     BankProvider selectedBank = BankProvider.BCA;
+    var isLoadingSavedBank = true;
 
+    // Fetch saved bank details and show dialog
     showDialog(
       context: context,
       builder: (dialogContext) => StatefulBuilder(
-        builder: (context, setState) => AlertDialog(
-          title: Text(context.l10n.withdraw_earnings),
-          content: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              spacing: 16.h,
-              children: [
-                // Available balance info
-                Container(
-                  padding: EdgeInsets.all(12.dg),
-                  decoration: BoxDecoration(
-                    color: context.colorScheme.primary.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(8.r),
-                    border: Border.all(color: context.colorScheme.primary),
-                  ),
-                  child: Row(
-                    spacing: 8.w,
-                    children: [
-                      Icon(
-                        LucideIcons.info,
-                        size: 20.sp,
-                        color: context.colorScheme.primary,
-                      ),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          spacing: 4.h,
-                          children: [
-                            Text(
-                              context.l10n.available_balance,
-                              style: context.typography.small.copyWith(
-                                fontSize: 12.sp,
-                                fontWeight: FontWeight.w600,
-                                color: context.colorScheme.primary,
-                              ),
-                            ),
-                            Text(
-                              context.formatCurrency(_wallet?.balance ?? 0),
-                              style: context.typography.h3.copyWith(
-                                fontSize: 18.sp,
-                                fontWeight: FontWeight.bold,
-                                color: context.colorScheme.primary,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                // Amount field
-                TextField(
-                  controller: amountController,
-                  placeholder: Text(context.l10n.enter_withdrawal_amount),
-                ),
-                // Bank provider dropdown
-                Select<BankProvider>(
-                  value: selectedBank,
-                  onChanged: (value) {
-                    if (value != null) {
-                      setState(() => selectedBank = value);
-                    }
-                  },
-                  placeholder: Text(context.l10n.select_bank),
-                  itemBuilder: (context, item) => Text(item.name),
-                  popupConstraints: const BoxConstraints(
-                    maxHeight: 300,
-                    maxWidth: 300,
-                  ),
-                  popup: SelectPopup(
-                    items: SelectItemList(
+        builder: (context, setState) {
+          // Load saved bank details on first build
+          if (isLoadingSavedBank) {
+            isLoadingSavedBank = false;
+            _loadSavedBankDetails().then((savedBank) {
+              if (savedBank != null && savedBank.hasSavedBank) {
+                setState(() {
+                  if (savedBank.bankProvider != null) {
+                    selectedBank = savedBank.bankProvider!;
+                  }
+                  if (savedBank.accountNumber != null) {
+                    accountNumberController.text = savedBank.accountNumber!;
+                  }
+                  if (savedBank.accountName != null) {
+                    accountNameController.text = savedBank.accountName!;
+                  }
+                });
+              }
+            });
+          }
+
+          return AlertDialog(
+            title: Text(context.l10n.withdraw_earnings),
+            content: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                spacing: 16.h,
+                children: [
+                  // Available balance info
+                  Container(
+                    padding: EdgeInsets.all(12.dg),
+                    decoration: BoxDecoration(
+                      color: context.colorScheme.primary.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(8.r),
+                      border: Border.all(color: context.colorScheme.primary),
+                    ),
+                    child: Row(
+                      spacing: 8.w,
                       children: [
-                        for (final bank in BankProvider.values)
-                          SelectItemButton(value: bank, child: Text(bank.name)),
+                        Icon(
+                          LucideIcons.info,
+                          size: 20.sp,
+                          color: context.colorScheme.primary,
+                        ),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            spacing: 4.h,
+                            children: [
+                              Text(
+                                context.l10n.available_balance,
+                                style: context.typography.small.copyWith(
+                                  fontSize: 12.sp,
+                                  fontWeight: FontWeight.w600,
+                                  color: context.colorScheme.primary,
+                                ),
+                              ),
+                              Text(
+                                context.formatCurrency(_wallet?.balance ?? 0),
+                                style: context.typography.h3.copyWith(
+                                  fontSize: 18.sp,
+                                  fontWeight: FontWeight.bold,
+                                  color: context.colorScheme.primary,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ],
                     ),
-                  ).call,
-                ),
-                // Account number field
-                TextField(
-                  controller: accountNumberController,
-                  placeholder: Text(context.l10n.hint_bank_account_number),
-                ),
-                TextField(
-                  controller: accountNameController,
-                  placeholder: Text(context.l10n.hint_account_name),
-                ),
-              ],
+                  ),
+                  // Amount field
+                  TextField(
+                    controller: amountController,
+                    placeholder: Text(context.l10n.enter_withdrawal_amount),
+                  ),
+                  // Bank provider dropdown
+                  Select<BankProvider>(
+                    value: selectedBank,
+                    onChanged: (value) {
+                      if (value != null) {
+                        setState(() => selectedBank = value);
+                      }
+                    },
+                    placeholder: Text(context.l10n.select_bank),
+                    itemBuilder: (context, item) => Text(item.name),
+                    popupConstraints: const BoxConstraints(
+                      maxHeight: 300,
+                      maxWidth: 300,
+                    ),
+                    popup: SelectPopup(
+                      items: SelectItemList(
+                        children: [
+                          for (final bank in BankProvider.values)
+                            SelectItemButton(
+                              value: bank,
+                              child: Text(bank.name),
+                            ),
+                        ],
+                      ),
+                    ).call,
+                  ),
+                  // Account number field
+                  TextField(
+                    controller: accountNumberController,
+                    placeholder: Text(context.l10n.hint_bank_account_number),
+                  ),
+                  TextField(
+                    controller: accountNameController,
+                    placeholder: Text(context.l10n.hint_account_name),
+                  ),
+                ],
+              ),
             ),
-          ),
-          actions: [
-            OutlineButton(
-              onPressed: () => Navigator.of(dialogContext).pop(),
-              child: Text(context.l10n.cancel),
-            ),
-            PrimaryButton(
-              onPressed: () async {
-                final amountText = amountController.text.trim();
-                final accountNumber = accountNumberController.text.trim();
-                final accountName = accountNameController.text.trim();
+            actions: [
+              OutlineButton(
+                onPressed: () => Navigator.of(dialogContext).pop(),
+                child: Text(context.l10n.cancel),
+              ),
+              PrimaryButton(
+                onPressed: () async {
+                  final amountText = amountController.text.trim();
+                  final accountNumber = accountNumberController.text.trim();
+                  final accountName = accountNameController.text.trim();
 
-                // Validate amount
-                if (amountText.isEmpty) {
-                  if (mounted) {
-                    context.showMyToast(
-                      context.l10n.enter_withdrawal_amount,
-                      type: ToastType.failed,
-                    );
+                  // Validate amount
+                  if (amountText.isEmpty) {
+                    if (mounted) {
+                      context.showMyToast(
+                        context.l10n.enter_withdrawal_amount,
+                        type: ToastType.failed,
+                      );
+                    }
+                    return;
                   }
-                  return;
-                }
 
-                final amount = num.tryParse(amountText);
-                if (amount == null || amount <= 0) {
-                  if (mounted) {
-                    context.showMyToast(
-                      context.l10n.invalid_amount,
-                      type: ToastType.failed,
-                    );
+                  final amount = num.tryParse(amountText);
+                  if (amount == null || amount <= 0) {
+                    if (mounted) {
+                      context.showMyToast(
+                        context.l10n.invalid_amount,
+                        type: ToastType.failed,
+                      );
+                    }
+                    return;
                   }
-                  return;
-                }
 
-                final balance = _wallet?.balance ?? 0;
-                if (amount > balance) {
-                  if (mounted) {
-                    context.showMyToast(
-                      context.l10n.insufficient_balance,
-                      type: ToastType.failed,
-                    );
+                  final balance = _wallet?.balance ?? 0;
+                  if (amount > balance) {
+                    if (mounted) {
+                      context.showMyToast(
+                        context.l10n.insufficient_balance,
+                        type: ToastType.failed,
+                      );
+                    }
+                    return;
                   }
-                  return;
-                }
 
-                // Validate account number
-                if (accountNumber.isEmpty) {
-                  if (mounted) {
-                    context.showMyToast(
-                      context.l10n.please_enter_bank_account_number,
-                      type: ToastType.failed,
-                    );
+                  // Validate account number
+                  if (accountNumber.isEmpty) {
+                    if (mounted) {
+                      context.showMyToast(
+                        context.l10n.please_enter_bank_account_number,
+                        type: ToastType.failed,
+                      );
+                    }
+                    return;
                   }
-                  return;
-                }
 
-                Navigator.of(dialogContext).pop();
-                await _processWithdrawal(
-                  amount: amount,
-                  bankProvider: selectedBank,
-                  accountNumber: accountNumber,
-                  accountName: accountName.isEmpty ? null : accountName,
-                );
-              },
-              child: Text(context.l10n.withdraw),
-            ),
-          ],
-        ),
+                  Navigator.of(dialogContext).pop();
+                  await _processWithdrawal(
+                    amount: amount,
+                    bankProvider: selectedBank,
+                    accountNumber: accountNumber,
+                    accountName: accountName.isEmpty ? null : accountName,
+                  );
+                },
+                child: Text(context.l10n.withdraw),
+              ),
+            ],
+          );
+        },
       ),
     );
+  }
+
+  Future<
+    ({
+      bool hasSavedBank,
+      BankProvider? bankProvider,
+      String? accountNumber,
+      String? accountName,
+    })?
+  >
+  _loadSavedBankDetails() async {
+    try {
+      final result = await context
+          .read<WalletRepository>()
+          .getSavedBankAccount();
+      return result.data;
+    } catch (e) {
+      // Silently fail - user can enter bank details manually
+      return null;
+    }
   }
 
   Future<void> _processWithdrawal({

@@ -22,24 +22,6 @@ class DriverState extends Equatable {
   final num? todayEarnings;
   final int? todayTrips;
 
-  bool get isLoading =>
-      initResult.isLoading ||
-      toggleOnlineResult.isLoading ||
-      refreshProfileResult.isLoading ||
-      refreshStatsResult.isLoading;
-
-  bool get isFailure =>
-      initResult.isFailure ||
-      toggleOnlineResult.isFailure ||
-      refreshProfileResult.isFailure ||
-      refreshStatsResult.isFailure;
-
-  BaseError? get error =>
-      initResult.error ??
-      toggleOnlineResult.error ??
-      refreshProfileResult.error ??
-      refreshStatsResult.error;
-
   @override
   List<Object?> get props => [
     initResult,

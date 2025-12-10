@@ -19,7 +19,7 @@ class UserReviewCubit extends BaseCubit<UserReviewState> {
     String? comment,
   }) async => await taskManager.execute('URC-sR1-$orderId', () async {
     try {
-      emit(state.toLoading());
+      emit(state.copyWith(submittedReview: const OperationResult.loading()));
 
       final res = await _reviewRepository.submitReview(
         orderId: orderId,
@@ -29,14 +29,21 @@ class UserReviewCubit extends BaseCubit<UserReviewState> {
         comment: comment,
       );
 
-      emit(state.toSuccess(submittedReview: res.data, message: res.message));
+      emit(
+        state.copyWith(
+          submittedReview: OperationResult.success(
+            res.data,
+            message: res.message,
+          ),
+        ),
+      );
     } on BaseError catch (e, st) {
       logger.e(
         '[UserReviewCubit] Failed to submit review: ${e.message}',
         error: e,
         stackTrace: st,
       );
-      emit(state.toFailure(e));
+      emit(state.copyWith(submittedReview: OperationResult.failed(e)));
     }
   });
 
@@ -45,18 +52,22 @@ class UserReviewCubit extends BaseCubit<UserReviewState> {
     String orderId,
   ) async => await taskManager.execute('URC-cCR1-$orderId', () async {
     try {
-      emit(state.toLoading());
+      emit(state.copyWith(canReview: const OperationResult.loading()));
 
       final res = await _reviewRepository.canReviewOrder(orderId: orderId);
 
-      emit(state.toSuccess(canReview: res.data, message: res.message));
+      emit(
+        state.copyWith(
+          canReview: OperationResult.success(res.data, message: res.message),
+        ),
+      );
     } on BaseError catch (e, st) {
       logger.e(
         '[UserReviewCubit] Failed to check review eligibility: ${e.message}',
         error: e,
         stackTrace: st,
       );
-      emit(state.toFailure(e));
+      emit(state.copyWith(canReview: OperationResult.failed(e)));
     }
   });
 
@@ -64,18 +75,25 @@ class UserReviewCubit extends BaseCubit<UserReviewState> {
   Future<void> loadOrderReviews(String orderId) async =>
       await taskManager.execute('URC-lOR1-$orderId', () async {
         try {
-          emit(state.toLoading());
+          emit(state.copyWith(orderReviews: const OperationResult.loading()));
 
           final res = await _reviewRepository.getOrderReviews(orderId: orderId);
 
-          emit(state.toSuccess(orderReviews: res.data, message: res.message));
+          emit(
+            state.copyWith(
+              orderReviews: OperationResult.success(
+                res.data,
+                message: res.message,
+              ),
+            ),
+          );
         } on BaseError catch (e, st) {
           logger.e(
             '[UserReviewCubit] Failed to load order reviews: ${e.message}',
             error: e,
             stackTrace: st,
           );
-          emit(state.toFailure(e));
+          emit(state.copyWith(orderReviews: OperationResult.failed(e)));
         }
       });
 

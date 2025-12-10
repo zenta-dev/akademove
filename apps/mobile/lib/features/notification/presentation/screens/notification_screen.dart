@@ -61,7 +61,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
             BlocBuilder<NotificationCubit, NotificationState>(
               bloc: _cubit,
               builder: (context, state) {
-                final hasUnread = state.notifications.any((n) => !n.isRead);
+                final items = state.notifications.value?.items ?? [];
+                final hasUnread = items.any((n) => !n.isRead);
                 if (!hasUnread) return const SizedBox.shrink();
 
                 return IconButton(
@@ -78,11 +79,14 @@ class _NotificationScreenState extends State<NotificationScreen> {
         value: _cubit,
         child: BlocBuilder<NotificationCubit, NotificationState>(
           builder: (context, state) {
-            if (state.status.isLoading && state.notifications.isEmpty) {
+            final notificationData = state.notifications.value;
+            final items = notificationData?.items ?? [];
+
+            if (state.notifications.isLoading && items.isEmpty) {
               return const Center(child: CircularProgressIndicator());
             }
 
-            if (state.status.isFailure && state.notifications.isEmpty) {
+            if (state.notifications.isFailure && items.isEmpty) {
               return Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -94,7 +98,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                       color: context.colorScheme.destructive,
                     ),
                     Text(
-                      state.status.error?.message ??
+                      state.notifications.error?.message ??
                           context.l10n.failed_to_load,
                       style: context.typography.small,
                       textAlign: TextAlign.center,
@@ -108,7 +112,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
               );
             }
 
-            if (state.notifications.isEmpty) {
+            if (items.isEmpty) {
               return Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -129,23 +133,25 @@ class _NotificationScreenState extends State<NotificationScreen> {
               );
             }
 
-            final hasMore = state.currentPage < state.totalPages;
+            final currentPage = notificationData?.currentPage ?? 1;
+            final totalPages = notificationData?.totalPages ?? 1;
+            final hasMore = currentPage < totalPages;
 
             return RefreshTrigger(
               onRefresh: _onRefresh,
               child: ListView.builder(
                 controller: _scrollController,
                 padding: EdgeInsets.all(16.dg),
-                itemCount: state.notifications.length + (hasMore ? 1 : 0),
+                itemCount: items.length + (hasMore ? 1 : 0),
                 itemBuilder: (context, index) {
-                  if (index >= state.notifications.length) {
+                  if (index >= items.length) {
                     return Padding(
                       padding: EdgeInsets.symmetric(vertical: 16.h),
                       child: const Center(child: CircularProgressIndicator()),
                     );
                   }
 
-                  final notification = state.notifications[index];
+                  final notification = items[index];
                   return NotificationListItem(
                     notification: notification,
                     onTap: () => _onNotificationTap(notification),

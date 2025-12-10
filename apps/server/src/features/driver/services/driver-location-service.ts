@@ -38,6 +38,9 @@ export class DriverLocationService {
 	 * Filters:
 	 * - isOnline = true
 	 * - isTakingOrder = false
+	 * - status = ACTIVE
+	 * - quizStatus = PASSED
+	 * - emailVerified = true
 	 * - currentLocation is not null
 	 * - Within radiusKm distance
 	 * - Optional gender match
@@ -78,6 +81,8 @@ export class DriverLocationService {
 				eq(tables.driver.isOnline, true),
 				eq(tables.driver.isTakingOrder, false),
 				eq(tables.driver.status, "ACTIVE"), // Only active drivers can accept orders
+				eq(tables.driver.quizStatus, "PASSED"), // Only drivers who passed the quiz can be matched
+				eq(tables.user.emailVerified, true), // Only drivers with verified email can be matched
 				isNotNull(tables.driver.currentLocation),
 				sql`ST_DWithin(
 					${tables.driver.currentLocation}::geography,

@@ -80,7 +80,7 @@ class _OrderChatWidgetState extends State<OrderChatWidget> {
           Expanded(
             child: BlocBuilder<OrderChatCubit, OrderChatState>(
               builder: (context, state) {
-                if (state.isInitial || state.messages.isLoading) {
+                if (state.messages.isIdle || state.messages.isLoading) {
                   return const Center(child: CircularProgressIndicator());
                 }
 
@@ -110,16 +110,8 @@ class _OrderChatWidgetState extends State<OrderChatWidget> {
                 return ListView.builder(
                   controller: _scrollController,
                   reverse: true,
-                  itemCount: messages.length + (state.hasMore ? 1 : 0),
+                  itemCount: messages.length,
                   itemBuilder: (context, index) {
-                    if (index == messages.length) {
-                      return const Center(
-                        child: Padding(
-                          padding: EdgeInsets.all(8),
-                          child: CircularProgressIndicator(),
-                        ),
-                      );
-                    }
                     final msg = messages[index];
                     return _ChatMessageBubble(message: msg);
                   },

@@ -15,30 +15,6 @@ class LeaderboardState extends Equatable {
   final OperationResult<List<UserBadge>> userBadges;
   final OperationResult<List<Leaderboard>> myRankings;
 
-  bool get isLoading =>
-      leaderboards.isLoading ||
-      badges.isLoading ||
-      userBadges.isLoading ||
-      myRankings.isLoading;
-
-  bool get isFailure =>
-      leaderboards.isFailure ||
-      badges.isFailure ||
-      userBadges.isFailure ||
-      myRankings.isFailure;
-
-  BaseError? get error =>
-      leaderboards.error ??
-      badges.error ??
-      userBadges.error ??
-      myRankings.error;
-
-  String? get message =>
-      leaderboards.message ??
-      badges.message ??
-      userBadges.message ??
-      myRankings.message;
-
   @override
   List<Object> get props => [leaderboards, badges, userBadges, myRankings];
 
