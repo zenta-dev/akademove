@@ -63,6 +63,53 @@ export const BusinessConfigurationSchema = z.object({
 
 	// Delivery verification
 	highValueOrderThreshold: z.coerce.number().positive(),
+
+	// ========================================================================
+	// Order Matching Configuration (Gojek-like resilient matching)
+	// ========================================================================
+
+	/**
+	 * Maximum duration in minutes for finding a driver (default: 15 minutes)
+	 * After this timeout, order is cancelled and user gets full refund
+	 * Configurable via admin/operator dashboard
+	 */
+	driverMatchingTimeoutMinutes: z.coerce.number().positive().default(15),
+
+	/**
+	 * Initial search radius in kilometers (default: 5km)
+	 * This is the starting radius for driver search
+	 */
+	driverMatchingInitialRadiusKm: z.coerce.number().positive().default(5),
+
+	/**
+	 * Maximum search radius in kilometers (default: 20km)
+	 * Radius will not expand beyond this limit
+	 */
+	driverMatchingMaxRadiusKm: z.coerce.number().positive().default(20),
+
+	/**
+	 * Radius expansion rate per attempt (as decimal, e.g., 0.2 = 20%)
+	 * Each failed attempt expands radius by this percentage
+	 */
+	driverMatchingRadiusExpansionRate: z.coerce.number().positive().default(0.2),
+
+	/**
+	 * Interval between matching attempts in seconds (default: 30s)
+	 * After each interval, system searches for drivers again with expanded radius
+	 */
+	driverMatchingIntervalSeconds: z.coerce.number().positive().default(30),
+
+	/**
+	 * Maximum number of drivers to broadcast order to (default: 10)
+	 * Limits concurrent order offers to prevent overwhelming the system
+	 */
+	driverMatchingBroadcastLimit: z.coerce.number().int().positive().default(10),
+
+	/**
+	 * Maximum driver cancellations per day before suspension (default: 3)
+	 * Drivers exceeding this limit get temporarily suspended
+	 */
+	driverMaxCancellationsPerDay: z.coerce.number().int().positive().default(3),
 });
 export type BusinessConfiguration = z.infer<typeof BusinessConfigurationSchema>;
 

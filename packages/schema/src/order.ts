@@ -21,6 +21,18 @@ import { UserGenderSchema, UserSchema } from "./user.js";
 export const OrderStatusSchema = z.enum(CONSTANTS.ORDER_STATUSES);
 export type OrderStatus = z.infer<typeof OrderStatusSchema>;
 
+export const OrderStatusHistoryRoleSchema = z.enum([
+	"USER",
+	"DRIVER",
+	"MERCHANT",
+	"OPERATOR",
+	"ADMIN",
+	"SYSTEM",
+]);
+export type OrderStatusHistoryRole = z.infer<
+	typeof OrderStatusHistoryRoleSchema
+>;
+
 export const OrderTypeSchema = z.enum(CONSTANTS.ORDER_TYPES);
 export type OrderType = z.infer<typeof OrderTypeSchema>;
 
@@ -112,6 +124,24 @@ export const OrderSchema = z.object({
 });
 export type Order = z.infer<typeof OrderSchema>;
 
+/**
+ * Order Status History Schema - For audit trail API responses
+ */
+export const OrderStatusHistorySchema = z.object({
+	id: z.number(),
+	orderId: z.string().uuid(),
+	previousStatus: OrderStatusSchema.nullable(),
+	newStatus: OrderStatusSchema,
+	changedBy: z.string().nullable(),
+	changedByRole: OrderStatusHistoryRoleSchema.nullable(),
+	reason: z.string().nullable(),
+	metadata: z.record(z.string(), z.unknown()).nullable(),
+	changedAt: DateSchema,
+	// Optional relation
+	changedByUser: UserSchema.partial().optional(),
+});
+export type OrderStatusHistory = z.infer<typeof OrderStatusHistorySchema>;
+
 export const OrderKeySchema = extractSchemaKeysAsEnum(OrderSchema).exclude([
 	"items",
 	"itemCount",
@@ -127,6 +157,7 @@ export const PlaceOrderSchema = OrderSchema.pick({
 	type: true,
 	items: true,
 	gender: true,
+	genderPreference: true,
 }).safeExtend({
 	couponCode: z.string().optional(),
 	payment: z.object({
@@ -205,10 +236,15 @@ export const FlatEstimateOrderSchema = flattenZodObject(EstimateOrderSchema);
 
 export const OrderSchemaRegistries = {
 	OrderStatus: { schema: OrderStatusSchema, strategy: "output" },
+	OrderStatusHistoryRole: {
+		schema: OrderStatusHistoryRoleSchema,
+		strategy: "output",
+	},
 	OrderType: { schema: OrderTypeSchema, strategy: "output" },
 	OrderNote: { schema: OrderNoteSchema, strategy: "output" },
 	OrderItem: { schema: OrderItemSchema, strategy: "output" },
 	Order: { schema: OrderSchema, strategy: "output" },
+	OrderStatusHistory: { schema: OrderStatusHistorySchema, strategy: "output" },
 	OrderSummary: { schema: OrderSummarySchema, strategy: "output" },
 	PlaceOrder: { schema: PlaceOrderSchema, strategy: "input" },
 	PlaceOrderResponse: { schema: PlaceOrderResponseSchema, strategy: "input" },

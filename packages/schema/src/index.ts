@@ -20,6 +20,7 @@ import { OrderSchemaRegistries } from "./order.js";
 import { PaginationSchemaRegistries } from "./pagination.js";
 import { PaymentSchemaRegistries } from "./payment.js";
 import { PositionSchemaRegistries } from "./position.js";
+import { QueueSchemaRegistries } from "./queue.js";
 import { QuickMessageSchemaRegistries } from "./quick-message.js";
 import { ReportSchemaRegistries } from "./report.js";
 import { ReviewSchemaRegistries } from "./review.js";
@@ -51,6 +52,7 @@ export const AllSchemaRegistries = {
 	...OrderSchemaRegistries,
 	...PaymentSchemaRegistries,
 	...PositionSchemaRegistries,
+	...QueueSchemaRegistries,
 	...QuickMessageSchemaRegistries,
 	...ReportSchemaRegistries,
 	...ReviewSchemaRegistries,
@@ -85,6 +87,7 @@ export * from "./order.js";
 export * from "./pagination.js";
 export * from "./payment.js";
 export * from "./position.js";
+export * from "./queue.js";
 export * from "./quick-message.js";
 export * from "./report.js";
 export * from "./review.js";
