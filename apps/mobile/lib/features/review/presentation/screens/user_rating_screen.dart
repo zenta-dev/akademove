@@ -1,7 +1,6 @@
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:api_client/api_client.dart';
-import 'package:flutter/material.dart' as material;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -268,20 +267,19 @@ class _UserRatingScreenState extends State<UserRatingScreen> {
               spacing: 12.w,
               children: List.generate(5, (index) {
                 final starValue = index + 1;
-                return material.GestureDetector(
+                return GestureDetector(
                   onTap: () {
                     setState(() {
                       _ratings[category] = starValue;
                     });
                   },
                   child: Icon(
-                    starValue <= rating
-                        ? material.Icons.star_rounded
-                        : material.Icons.star_border_rounded,
+                    starValue <= rating ? LucideIcons.star : LucideIcons.star,
                     size: 48.sp,
                     color: starValue <= rating
                         ? const Color(0xFFFFA000)
                         : context.colorScheme.mutedForeground,
+                    fill: starValue <= rating ? 1.0 : 0.0,
                   ),
                 );
               }),
@@ -312,14 +310,12 @@ class _UserRatingScreenState extends State<UserRatingScreen> {
             fontWeight: FontWeight.w600,
           ),
         ),
-        material.TextField(
+        TextArea(
           controller: _commentController,
+          minLines: 4,
           maxLines: 4,
           maxLength: 500,
-          decoration: material.InputDecoration(
-            hintText: context.l10n.placeholder_additional_comments,
-            border: const material.OutlineInputBorder(),
-          ),
+          placeholder: Text(context.l10n.placeholder_additional_comments),
         ),
       ],
     );
@@ -345,17 +341,17 @@ class _UserRatingScreenState extends State<UserRatingScreen> {
   IconData _getCategoryIcon(ReviewCategory category) {
     switch (category) {
       case ReviewCategory.CLEANLINESS:
-        return material.Icons.cleaning_services_rounded;
+        return LucideIcons.sparkles;
       case ReviewCategory.COURTESY:
-        return material.Icons.favorite_rounded;
+        return LucideIcons.heart;
       case ReviewCategory.PUNCTUALITY:
-        return material.Icons.schedule_rounded;
+        return LucideIcons.clock;
       case ReviewCategory.SAFETY:
-        return material.Icons.security_rounded;
+        return LucideIcons.shield;
       case ReviewCategory.COMMUNICATION:
-        return material.Icons.chat_bubble_rounded;
+        return LucideIcons.messageCircle;
       case ReviewCategory.OTHER:
-        return material.Icons.star_rounded;
+        return LucideIcons.star;
     }
   }
 
