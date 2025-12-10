@@ -16,6 +16,13 @@ void main() {
       // TODO
     });
 
+    // Lookup user by phone number for wallet transfer. Returns minimal user info with masked phone number for privacy.
+    //
+    //Future<UserLookupByPhone200Response> userLookupByPhone(String phone) async
+    test('test userLookupByPhone', () async {
+      // TODO
+    });
+
     //Future<AuthSignOut200Response> userMeChangePassword(UserMeChangePasswordRequest userMeChangePasswordRequest) async
     test('test userMeChangePassword', () async {
       // TODO

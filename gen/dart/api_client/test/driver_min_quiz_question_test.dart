@@ -37,7 +37,7 @@ void main() {
       // TODO
     });
 
-    // List<DriverMinQuizQuestionOptionsInner> options
+    // List<DriverQuizQuestionGetQuizQuestions200ResponseDataInnerOptionsInner> options
     test('to test the property `options`', () async {
       // TODO
     });

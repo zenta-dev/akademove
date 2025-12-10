@@ -12,8 +12,15 @@ void main() {
       // TODO
     });
 
-    // String walletId
-    test('to test the property `walletId`', () async {
+    // The user ID of the recipient
+    // String recipientUserId
+    test('to test the property `recipientUserId`', () async {
+      // TODO
+    });
+
+    // Optional note for the transfer
+    // String note
+    test('to test the property `note`', () async {
       // TODO
     });
   });

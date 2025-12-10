@@ -62,7 +62,7 @@ void main() {
       // TODO
     });
 
-    // List<DashboardStatsRevenueByDayInner> revenueByDay
+    // List<MerchantAnalytics200ResponseDataRevenueByDayInner> revenueByDay
     test('to test the property `revenueByDay`', () async {
       // TODO
     });

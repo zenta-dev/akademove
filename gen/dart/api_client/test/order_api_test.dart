@@ -21,7 +21,7 @@ void main() {
       // TODO
     });
 
-    //Future<MerchantOrderAccept200Response> orderCancelScheduledOrder(String id, OrderCancelScheduledOrderRequest orderCancelScheduledOrderRequest) async
+    //Future<MerchantOrderAccept200Response> orderCancelScheduledOrder(String id, OrderCancelRequest orderCancelRequest) async
     test('test orderCancelScheduledOrder', () async {
       // TODO
     });

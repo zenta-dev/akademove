@@ -23,6 +23,7 @@ class WithdrawRequest {
     required this.bankProvider,
     required this.accountNumber,
     this.accountName,
+    this.saveBank,
   });
   @JsonKey(name: r'amount', required: true, includeIfNull: false)
   final num amount;
@@ -36,6 +37,9 @@ class WithdrawRequest {
   @JsonKey(name: r'accountName', required: false, includeIfNull: false)
   final String? accountName;
 
+  @JsonKey(name: r'saveBank', required: false, includeIfNull: false)
+  final bool? saveBank;
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -43,14 +47,16 @@ class WithdrawRequest {
           other.amount == amount &&
           other.bankProvider == bankProvider &&
           other.accountNumber == accountNumber &&
-          other.accountName == accountName;
+          other.accountName == accountName &&
+          other.saveBank == saveBank;
 
   @override
   int get hashCode =>
       amount.hashCode +
       bankProvider.hashCode +
       accountNumber.hashCode +
-      accountName.hashCode;
+      accountName.hashCode +
+      saveBank.hashCode;
 
   factory WithdrawRequest.fromJson(Map<String, dynamic> json) =>
       _$WithdrawRequestFromJson(json);

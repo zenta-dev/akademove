@@ -127,6 +127,11 @@ void main() {
       // TODO
     });
 
+    // DeliveryItemType deliveryItemType
+    test('to test the property `deliveryItemType`', () async {
+      // TODO
+    });
+
     // DriverUser user
     test('to test the property `user`', () async {
       // TODO

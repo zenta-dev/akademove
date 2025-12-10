@@ -18,14 +18,14 @@ void main() {
       // TODO
     });
 
-    // bool isTakingOrders
-    test('to test the property `isTakingOrders`', () async {
-      // TODO
-    });
-
     // Merchant operating status
     // String operatingStatus
     test('to test the property `operatingStatus`', () async {
+      // TODO
+    });
+
+    // int activeOrderCount
+    test('to test the property `activeOrderCount`', () async {
       // TODO
     });
   });

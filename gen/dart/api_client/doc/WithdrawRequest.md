@@ -12,6 +12,7 @@ Name | Type | Description | Notes
 **bankProvider** | [**BankProvider**](BankProvider.md) |  | 
 **accountNumber** | **String** |  | 
 **accountName** | **String** |  | [optional] 
+**saveBank** | **bool** |  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

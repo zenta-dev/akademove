@@ -91,22 +91,22 @@ void main() {
       // TODO
     });
 
-    //Future<DriverGet200Response> driverActivate(String id) async
+    //Future<DriverGetMine200ResponseBody> driverActivate(String id) async
     test('test driverActivate', () async {
       // TODO
     });
 
-    //Future<DriverGet200Response> driverApprove(String id) async
+    //Future<DriverGetMine200ResponseBody> driverApprove(String id) async
     test('test driverApprove', () async {
       // TODO
     });
 
-    //Future<DriverGet200Response> driverReject(String id, DriverRejectRequest driverRejectRequest) async
+    //Future<DriverGetMine200ResponseBody> driverReject(String id, DriverRejectRequest driverRejectRequest) async
     test('test driverReject', () async {
       // TODO
     });
 
-    //Future<DriverGet200Response> driverSuspend(String id, DriverSuspendRequest driverSuspendRequest) async
+    //Future<DriverGetMine200ResponseBody> driverSuspend(String id, DriverSuspendRequest driverSuspendRequest) async
     test('test driverSuspend', () async {
       // TODO
     });

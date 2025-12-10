@@ -12,13 +12,38 @@ void main() {
       // TODO
     });
 
+    // String senderName
+    test('to test the property `senderName`', () async {
+      // TODO
+    });
+
+    // String senderPhone
+    test('to test the property `senderPhone`', () async {
+      // TODO
+    });
+
+    // String pickupInstructions
+    test('to test the property `pickupInstructions`', () async {
+      // TODO
+    });
+
     // String dropoff
     test('to test the property `dropoff`', () async {
       // TODO
     });
 
-    // String instructions
-    test('to test the property `instructions`', () async {
+    // String recevierName
+    test('to test the property `recevierName`', () async {
+      // TODO
+    });
+
+    // String recevierPhone
+    test('to test the property `recevierPhone`', () async {
+      // TODO
+    });
+
+    // String dropoffInstructions
+    test('to test the property `dropoffInstructions`', () async {
       // TODO
     });
   });

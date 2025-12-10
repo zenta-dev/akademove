@@ -59,15 +59,15 @@ void main() {
       // TODO
     });
 
-    // Whether merchant is actively taking orders (subset of online)
-    // bool isTakingOrders
-    test('to test the property `isTakingOrders`', () async {
-      // TODO
-    });
-
     // Current operating status (OPEN, CLOSED, BREAK, MAINTENANCE)
     // String operatingStatus
     test('to test the property `operatingStatus`', () async {
+      // TODO
+    });
+
+    // Number of active orders being processed by merchant
+    // int activeOrderCount
+    test('to test the property `activeOrderCount`', () async {
       // TODO
     });
 

@@ -15,6 +15,8 @@ abstract class _$WithdrawRequestCWProxy {
 
   WithdrawRequest accountName(String? accountName);
 
+  WithdrawRequest saveBank(bool? saveBank);
+
   /// Creates a new instance with the provided field values.
   /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `WithdrawRequest(...).copyWith.fieldName(value)`.
   ///
@@ -27,6 +29,7 @@ abstract class _$WithdrawRequestCWProxy {
     BankProvider bankProvider,
     String accountNumber,
     String? accountName,
+    bool? saveBank,
   });
 }
 
@@ -53,6 +56,9 @@ class _$WithdrawRequestCWProxyImpl implements _$WithdrawRequestCWProxy {
       call(accountName: accountName);
 
   @override
+  WithdrawRequest saveBank(bool? saveBank) => call(saveBank: saveBank);
+
+  @override
   /// Creates a new instance with the provided field values.
   /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `WithdrawRequest(...).copyWith.fieldName(value)`.
   ///
@@ -65,6 +71,7 @@ class _$WithdrawRequestCWProxyImpl implements _$WithdrawRequestCWProxy {
     Object? bankProvider = const $CopyWithPlaceholder(),
     Object? accountNumber = const $CopyWithPlaceholder(),
     Object? accountName = const $CopyWithPlaceholder(),
+    Object? saveBank = const $CopyWithPlaceholder(),
   }) {
     return WithdrawRequest(
       amount: amount == const $CopyWithPlaceholder() || amount == null
@@ -85,6 +92,10 @@ class _$WithdrawRequestCWProxyImpl implements _$WithdrawRequestCWProxy {
           ? _value.accountName
           // ignore: cast_nullable_to_non_nullable
           : accountName as String?,
+      saveBank: saveBank == const $CopyWithPlaceholder()
+          ? _value.saveBank
+          // ignore: cast_nullable_to_non_nullable
+          : saveBank as bool?,
     );
   }
 }
@@ -114,6 +125,7 @@ WithdrawRequest _$WithdrawRequestFromJson(Map<String, dynamic> json) =>
         ),
         accountNumber: $checkedConvert('accountNumber', (v) => v as String),
         accountName: $checkedConvert('accountName', (v) => v as String?),
+        saveBank: $checkedConvert('saveBank', (v) => v as bool?),
       );
       return val;
     });
@@ -124,6 +136,7 @@ Map<String, dynamic> _$WithdrawRequestToJson(WithdrawRequest instance) =>
       'bankProvider': _$BankProviderEnumMap[instance.bankProvider]!,
       'accountNumber': instance.accountNumber,
       'accountName': ?instance.accountName,
+      'saveBank': ?instance.saveBank,
     };
 
 const _$BankProviderEnumMap = {

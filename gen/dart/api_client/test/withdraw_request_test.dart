@@ -26,5 +26,10 @@ void main() {
     test('to test the property `accountName`', () async {
       // TODO
     });
+
+    // bool saveBank
+    test('to test the property `saveBank`', () async {
+      // TODO
+    });
   });
 }

@@ -11,7 +11,7 @@ void main() {
       // TODO
     });
 
-    //Future<MerchantGet200Response> merchantActivate(String id) async
+    //Future<MerchantGetMine200ResponseBody> merchantActivate(String id) async
     test('test merchantActivate', () async {
       // TODO
     });
@@ -26,12 +26,12 @@ void main() {
       // TODO
     });
 
-    //Future<MerchantGet200Response> merchantDeactivate(String id, MerchantDeactivateRequest merchantDeactivateRequest) async
+    //Future<MerchantGetMine200ResponseBody> merchantDeactivate(String id, MerchantDeactivateRequest merchantDeactivateRequest) async
     test('test merchantDeactivate', () async {
       // TODO
     });
 
-    //Future<MerchantGet200Response> merchantGet(String id) async
+    //Future<MerchantGetMine200ResponseBody> merchantGet(String id) async
     test('test merchantGet', () async {
       // TODO
     });
@@ -51,7 +51,7 @@ void main() {
       // TODO
     });
 
-    //Future<MerchantPopulars200Response> merchantList({ String cursor, Object limit, String direction, Object page, String query, String sortBy, PaginationOrder order, PaginationMode mode, Object categories, Object isActive, num minRating, num maxRating, num maxDistance, num latitude, num longitude }) async
+    //Future<MerchantPopulars200Response> merchantList({ String cursor, Object limit, String direction, Object page, String query, String sortBy, PaginationOrder order, PaginationMode mode, Object categories, Object isActive, MerchantStatus status, String operatingStatus, num minRating, num maxRating, num maxDistance, num latitude, num longitude }) async
     test('test merchantList', () async {
       // TODO
     });
@@ -111,22 +111,17 @@ void main() {
       // TODO
     });
 
-    //Future<MerchantGet200Response> merchantSetOnlineStatus(String id, DriverUpdateOnlineStatusRequest driverUpdateOnlineStatusRequest) async
+    //Future<MerchantGetMine200ResponseBody> merchantSetOnlineStatus(String id, DriverUpdateOnlineStatusRequest driverUpdateOnlineStatusRequest) async
     test('test merchantSetOnlineStatus', () async {
       // TODO
     });
 
-    //Future<MerchantGet200Response> merchantSetOperatingStatus(String id, MerchantSetOperatingStatusRequest merchantSetOperatingStatusRequest) async
+    //Future<MerchantGetMine200ResponseBody> merchantSetOperatingStatus(String id, MerchantSetOperatingStatusRequest merchantSetOperatingStatusRequest) async
     test('test merchantSetOperatingStatus', () async {
       // TODO
     });
 
-    //Future<MerchantGet200Response> merchantSetOrderTakingStatus(String id, MerchantSetOrderTakingStatusRequest merchantSetOrderTakingStatusRequest) async
-    test('test merchantSetOrderTakingStatus', () async {
-      // TODO
-    });
-
-    //Future<MerchantGetReview200Response> merchantSubmitApproval(String id, MerchantSubmitApprovalRequest merchantSubmitApprovalRequest) async
+    //Future<MerchantGetReview200Response> merchantSubmitApproval(String id, DriverSubmitApprovalRequest driverSubmitApprovalRequest) async
     test('test merchantSubmitApproval', () async {
       // TODO
     });
@@ -136,7 +131,7 @@ void main() {
       // TODO
     });
 
-    //Future<MerchantGet200Response> merchantUpdate(String id, String phoneCountryCode, int phoneNumber, num locationX, num locationY, String bankProvider, num bankNumber, { String name, String email, String address, String category, MultipartFile document, MultipartFile image }) async
+    //Future<MerchantGetMine200ResponseBody> merchantUpdate(String id, String phoneCountryCode, int phoneNumber, num locationX, num locationY, String bankProvider, num bankNumber, { String name, String email, String address, String category, String bankAccountName, MultipartFile document, MultipartFile image }) async
     test('test merchantUpdate', () async {
       // TODO
     });

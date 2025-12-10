@@ -36,13 +36,38 @@ void main() {
       // TODO
     });
 
+    // String noteSenderName
+    test('to test the property `noteSenderName`', () async {
+      // TODO
+    });
+
+    // String noteSenderPhone
+    test('to test the property `noteSenderPhone`', () async {
+      // TODO
+    });
+
+    // String notePickupInstructions
+    test('to test the property `notePickupInstructions`', () async {
+      // TODO
+    });
+
     // String noteDropoff
     test('to test the property `noteDropoff`', () async {
       // TODO
     });
 
-    // String noteInstructions
-    test('to test the property `noteInstructions`', () async {
+    // String noteRecevierName
+    test('to test the property `noteRecevierName`', () async {
+      // TODO
+    });
+
+    // String noteRecevierPhone
+    test('to test the property `noteRecevierPhone`', () async {
+      // TODO
+    });
+
+    // String noteDropoffInstructions
+    test('to test the property `noteDropoffInstructions`', () async {
       // TODO
     });
 

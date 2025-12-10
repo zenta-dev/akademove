@@ -46,7 +46,7 @@ void main() {
       // TODO
     });
 
-    //Future<NotificationSubscribeToTopic200Response> notificationUnsubscribeToTopic(NotificationUnsubscribeToTopicRequest notificationUnsubscribeToTopicRequest) async
+    //Future<NotificationSubscribeToTopic200Response> notificationUnsubscribeToTopic(NotificationSubscribeToTopicRequest notificationSubscribeToTopicRequest) async
     test('test notificationUnsubscribeToTopic', () async {
       // TODO
     });

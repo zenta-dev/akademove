@@ -16,6 +16,13 @@ void main() {
       // TODO
     });
 
+    // Get saved bank account details from driver/merchant profile for pre-filling withdrawal forms
+    //
+    //Future<WalletGetSavedBankAccount200Response> walletGetSavedBankAccount() async
+    test('test walletGetSavedBankAccount', () async {
+      // TODO
+    });
+
     //Future<WalletTopUp200Response> walletPay(PayRequest payRequest) async
     test('test walletPay', () async {
       // TODO
@@ -26,7 +33,7 @@ void main() {
       // TODO
     });
 
-    //Future<WalletTopUp200Response> walletTransfer(TransferRequest transferRequest) async
+    //Future<WalletTransfer200Response> walletTransfer(TransferRequest transferRequest) async
     test('test walletTransfer', () async {
       // TODO
     });

@@ -46,12 +46,12 @@ void main() {
       // TODO
     });
 
-    //Future<AuthSignUpUser201Response> authSignUpDriver(String name, String email, String phoneCountryCode, int phoneNumber, String password, String confirmPassword, MultipartFile photo, num detailStudentId, String detailLicensePlate, String detailBankProvider, num detailBankNumber, MultipartFile detailStudentCard, MultipartFile detailDriverLicense, MultipartFile detailVehicleCertificate, { String gender }) async
+    //Future<AuthSignUpUser201Response> authSignUpDriver(String name, String email, String phoneCountryCode, int phoneNumber, String password, String confirmPassword, MultipartFile photo, num detailStudentId, String detailLicensePlate, String detailBankProvider, num detailBankNumber, MultipartFile detailStudentCard, MultipartFile detailDriverLicense, MultipartFile detailVehicleCertificate, { String gender, String detailBankAccountName }) async
     test('test authSignUpDriver', () async {
       // TODO
     });
 
-    //Future<AuthSignUpUser201Response> authSignUpMerchant(String name, String email, String phoneCountryCode, int phoneNumber, String password, String confirmPassword, String detailName, String detailEmail, String detailPhoneCountryCode, int detailPhoneNumber, String detailAddress, num detailLocationX, num detailLocationY, String detailCategory, String detailBankProvider, num detailBankNumber, { MultipartFile photo, String gender, MultipartFile detailDocument, MultipartFile detailImage }) async
+    //Future<AuthSignUpUser201Response> authSignUpMerchant(String name, String email, String phoneCountryCode, int phoneNumber, String password, String confirmPassword, String detailName, String detailEmail, String detailPhoneCountryCode, int detailPhoneNumber, String detailAddress, num detailLocationX, num detailLocationY, String detailCategory, String detailBankProvider, num detailBankNumber, { MultipartFile photo, String gender, String detailBankAccountName, MultipartFile detailDocument, MultipartFile detailImage }) async
     test('test authSignUpMerchant', () async {
       // TODO
     });
