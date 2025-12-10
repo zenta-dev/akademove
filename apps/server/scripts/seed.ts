@@ -30,6 +30,7 @@ import postgres from "postgres";
 import { v7 } from "uuid";
 import { S3StorageService } from "@/core/services/storage";
 import { accountDeletion } from "@/core/tables/account-deletion";
+import { banner } from "@/core/tables/banner";
 import { broadcast } from "@/core/tables/broadcast";
 import { orderChatMessage } from "@/core/tables/chat";
 import {
@@ -403,12 +404,12 @@ const INDONESIAN_CONTACT_SUBJECTS = [
 
 // Seeding options type
 type SeedOptions = {
-	mode: "all" | "base" | "custom";
+	mode: "all" | "base" | "core" | "custom";
 	seeders: Set<string>;
 };
 
 // Parse command line arguments for non-interactive mode
-// Usage: bun scripts/seed.ts --mode=all|base|custom [--seeders=1,2,3] [--yes]
+// Usage: bun scripts/seed.ts --mode=all|base|core|custom [--seeders=1,2,3] [--yes]
 function parseCliArgs(): {
 	mode?: string;
 	seeders?: string;
@@ -448,7 +449,21 @@ async function promptSeedingOptions(): Promise<SeedOptions> {
 				seeders: new Set(["users", "badges", "userBadges", "configurations"]),
 			};
 		}
-		if (cliArgs.mode === "custom" || cliArgs.mode === "3") {
+		if (cliArgs.mode === "core" || cliArgs.mode === "3") {
+			console.log("📋 Mode: Core (from CLI)");
+			return {
+				mode: "core",
+				seeders: new Set([
+					"users",
+					"badges",
+					"configurations",
+					"banners",
+					"quickMessages",
+					"driverQuizQuestions",
+				]),
+			};
+		}
+		if (cliArgs.mode === "custom" || cliArgs.mode === "4") {
 			const seederMap: Record<string, string> = {
 				"1": "users",
 				"2": "badges",
@@ -480,6 +495,7 @@ async function promptSeedingOptions(): Promise<SeedOptions> {
 				"28": "fraudEvents",
 				"29": "userFraudProfiles",
 				"30": "quickMessages",
+				"31": "banners",
 			};
 			const selectedSeeders = new Set(
 				(cliArgs.seeders ?? "")
@@ -509,9 +525,12 @@ async function promptSeedingOptions(): Promise<SeedOptions> {
 		"1. All - Seed everything (users, badges, merchants, drivers, orders, etc.)",
 	);
 	console.log("2. Base - Seed only test users and badges");
-	console.log("3. Custom - Pick specific seeders to run");
+	console.log(
+		"3. Core - Seed essential tables for app to run (badges, configurations, banners, quickMessages, driverQuizQuestions)",
+	);
+	console.log("4. Custom - Pick specific seeders to run");
 
-	const choice = await question("\nSelect option (1-3): ");
+	const choice = await question("\nSelect option (1-4): ");
 
 	if (choice === "1") {
 		rl.close();
@@ -527,6 +546,21 @@ async function promptSeedingOptions(): Promise<SeedOptions> {
 	}
 
 	if (choice === "3") {
+		rl.close();
+		return {
+			mode: "core",
+			seeders: new Set([
+				"users",
+				"badges",
+				"configurations",
+				"banners",
+				"quickMessages",
+				"driverQuizQuestions",
+			]),
+		};
+	}
+
+	if (choice === "4") {
 		console.log("\n📦 Available seeders:");
 		console.log("1. users - Test users and random users");
 		console.log("2. badges - Badge definitions");
@@ -558,6 +592,7 @@ async function promptSeedingOptions(): Promise<SeedOptions> {
 		console.log("28. fraudEvents - Fraud detection events");
 		console.log("29. userFraudProfiles - User fraud risk profiles");
 		console.log("30. quickMessages - Quick message templates for chat");
+		console.log("31. banners - Promotional banners for app home screens");
 
 		const selections = await question(
 			"\nEnter seeder numbers separated by commas (e.g., 1,2,3): ",
@@ -594,6 +629,7 @@ async function promptSeedingOptions(): Promise<SeedOptions> {
 			"28": "fraudEvents",
 			"29": "userFraudProfiles",
 			"30": "quickMessages",
+			"31": "banners",
 		};
 
 		const selectedSeeders = new Set(
@@ -692,10 +728,10 @@ type InsertUser = {
 	phone: Phone;
 	gender?: UserGender;
 };
-async function seedUser(baseOnly = false) {
+async function seedUser(mode: "all" | "base" | "core" = "all") {
 	const pw = new PasswordManager();
 
-	const FIXED_USERS: InsertUser[] = [
+	const ADMIN_OPERATOR_USERS: InsertUser[] = [
 		{
 			name: "Test Admin 1",
 			email: "test-admin-1@akademove.com",
@@ -710,6 +746,9 @@ async function seedUser(baseOnly = false) {
 			password: "Ch@ngEThi5",
 			phone: { countryCode: "ID", number: 8573230852 },
 		},
+	] as const;
+
+	const OTHER_FIXED_USERS: InsertUser[] = [
 		{
 			name: "Test Merchant 1",
 			email: "test-merchant-1@akademove.com",
@@ -735,32 +774,44 @@ async function seedUser(baseOnly = false) {
 		},
 	] as const;
 
-	const RANDOM_USERS = baseOnly
-		? []
-		: Array.from({ length: 500 }).map(
-				() =>
-					({
-						name: faker.person.fullName(),
-						email: faker.internet.email().toLowerCase(),
-						role: faker.helpers.arrayElement(["USER", "DRIVER", "MERCHANT"]),
-						password: "Ch@ngEThi5",
-						phone: {
-							countryCode: "ID",
-							number: Number(
-								faker.phone.number({ style: "human" }).replace(/\D/g, ""),
-							),
-						},
-						gender: faker.helpers.arrayElement(["MALE", "FEMALE"]),
-					}) as const,
-			);
+	const FIXED_USERS: InsertUser[] = [
+		...ADMIN_OPERATOR_USERS,
+		...OTHER_FIXED_USERS,
+	];
 
-	const USERS = baseOnly
-		? FIXED_USERS
-		: [
-				...new Map(
-					[...FIXED_USERS, ...RANDOM_USERS].map((u) => [u.email, u]),
-				).values(),
-			];
+	const RANDOM_USERS =
+		mode !== "all"
+			? []
+			: Array.from({ length: 500 }).map(
+					() =>
+						({
+							name: faker.person.fullName(),
+							email: faker.internet.email().toLowerCase(),
+							role: faker.helpers.arrayElement(["USER", "DRIVER", "MERCHANT"]),
+							password: "Ch@ngEThi5",
+							phone: {
+								countryCode: "ID",
+								number: Number(
+									faker.phone.number({ style: "human" }).replace(/\D/g, ""),
+								),
+							},
+							gender: faker.helpers.arrayElement(["MALE", "FEMALE"]),
+						}) as const,
+				);
+
+	// Core mode: only admin and operator
+	// Base mode: all fixed users (admin, operator, merchant, driver, user)
+	// All mode: fixed users + random users
+	const USERS =
+		mode === "core"
+			? ADMIN_OPERATOR_USERS
+			: mode === "base"
+				? FIXED_USERS
+				: [
+						...new Map(
+							[...FIXED_USERS, ...RANDOM_USERS].map((u) => [u.email, u]),
+						).values(),
+					];
 
 	console.log("🔍 Checking existing users...");
 
@@ -4332,6 +4383,201 @@ async function seedUserFraudProfiles() {
 	console.log(`✅ Inserted ${profiles.length} user fraud profiles.`);
 }
 
+async function seedBanners() {
+	console.log("🖼️ Seeding Banners...");
+
+	// Check existing banners
+	const existing = await db.select({ id: banner.id }).from(banner).limit(1);
+
+	if (existing.length > 0) {
+		console.log("✅ Banners already exist.");
+		return;
+	}
+
+	const [admin] = await db
+		.select()
+		.from(tables.user)
+		.where(eq(tables.user.email, "test-admin-1@akademove.com"))
+		.limit(1);
+
+	if (!admin) {
+		console.warn("⚠️ Admin user not found. Skipping banners.");
+		return;
+	}
+
+	const now = new Date();
+	const thirtyDaysFromNow = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
+	const sixtyDaysFromNow = new Date(now.getTime() + 60 * 24 * 60 * 60 * 1000);
+
+	// Indonesian banner content for campus mobility platform
+	const BANNERS = [
+		// USER_HOME banners
+		{
+			title: "Selamat Datang di AkadeMove!",
+			description:
+				"Platform transportasi kampus terpercaya. Nikmati perjalanan aman dan nyaman bersama driver mahasiswa terverifikasi.",
+			imageUrl:
+				"https://placehold.co/800x400/2563eb/ffffff?text=Welcome+to+AkadeMove",
+			actionType: "NONE" as const,
+			actionValue: null,
+			placement: "USER_HOME" as const,
+			targetAudience: "ALL" as const,
+			isActive: true,
+			priority: 100,
+			startAt: now,
+			endAt: sixtyDaysFromNow,
+		},
+		{
+			title: "Promo Mahasiswa Baru!",
+			description:
+				"Diskon 50% untuk 3 perjalanan pertama! Gunakan kode MAHASISWABARU saat checkout.",
+			imageUrl:
+				"https://placehold.co/800x400/16a34a/ffffff?text=Promo+Mahasiswa+Baru",
+			actionType: "ROUTE" as const,
+			actionValue: "/promo",
+			placement: "USER_HOME" as const,
+			targetAudience: "USERS" as const,
+			isActive: true,
+			priority: 90,
+			startAt: now,
+			endAt: thirtyDaysFromNow,
+		},
+		{
+			title: "Pesan Makanan Kampus",
+			description:
+				"Lapar? Pesan makanan dari kantin dan warung kampus favoritmu. Antar langsung ke lokasi!",
+			imageUrl: "https://placehold.co/800x400/ea580c/ffffff?text=Food+Delivery",
+			actionType: "ROUTE" as const,
+			actionValue: "/food",
+			placement: "USER_HOME" as const,
+			targetAudience: "USERS" as const,
+			isActive: true,
+			priority: 80,
+			startAt: now,
+			endAt: sixtyDaysFromNow,
+		},
+		{
+			title: "Kirim Dokumen & Paket",
+			description:
+				"Perlu kirim tugas atau paket? Gunakan layanan delivery kami. Cepat, aman, terpercaya!",
+			imageUrl:
+				"https://placehold.co/800x400/7c3aed/ffffff?text=Delivery+Service",
+			actionType: "ROUTE" as const,
+			actionValue: "/delivery",
+			placement: "USER_HOME" as const,
+			targetAudience: "USERS" as const,
+			isActive: true,
+			priority: 70,
+			startAt: now,
+			endAt: sixtyDaysFromNow,
+		},
+
+		// DRIVER_HOME banners
+		{
+			title: "Tips Driver Bintang 5!",
+			description:
+				"Pelajari cara meningkatkan rating dan pendapatan sebagai driver AkadeMove.",
+			imageUrl: "https://placehold.co/800x400/0891b2/ffffff?text=Driver+Tips",
+			actionType: "LINK" as const,
+			actionValue: "https://akademove.com/driver-tips",
+			placement: "DRIVER_HOME" as const,
+			targetAudience: "DRIVERS" as const,
+			isActive: true,
+			priority: 100,
+			startAt: now,
+			endAt: sixtyDaysFromNow,
+		},
+		{
+			title: "Bonus Akhir Bulan!",
+			description:
+				"Selesaikan 50 trip bulan ini dan dapatkan bonus Rp100.000. Ayo semangat!",
+			imageUrl: "https://placehold.co/800x400/059669/ffffff?text=Monthly+Bonus",
+			actionType: "NONE" as const,
+			actionValue: null,
+			placement: "DRIVER_HOME" as const,
+			targetAudience: "DRIVERS" as const,
+			isActive: true,
+			priority: 90,
+			startAt: now,
+			endAt: thirtyDaysFromNow,
+		},
+		{
+			title: "Update Jadwal Kuliahmu",
+			description:
+				"Jangan lupa update jadwal kuliah di aplikasi agar tidak mengganggu waktu belajarmu.",
+			imageUrl:
+				"https://placehold.co/800x400/dc2626/ffffff?text=Update+Schedule",
+			actionType: "ROUTE" as const,
+			actionValue: "/schedule",
+			placement: "DRIVER_HOME" as const,
+			targetAudience: "DRIVERS" as const,
+			isActive: true,
+			priority: 80,
+			startAt: now,
+			endAt: sixtyDaysFromNow,
+		},
+
+		// MERCHANT_HOME banners
+		{
+			title: "Tingkatkan Penjualanmu!",
+			description:
+				"Pelajari cara meningkatkan penjualan dan menarik lebih banyak pelanggan.",
+			imageUrl: "https://placehold.co/800x400/ca8a04/ffffff?text=Boost+Sales",
+			actionType: "LINK" as const,
+			actionValue: "https://akademove.com/merchant-guide",
+			placement: "MERCHANT_HOME" as const,
+			targetAudience: "MERCHANTS" as const,
+			isActive: true,
+			priority: 100,
+			startAt: now,
+			endAt: sixtyDaysFromNow,
+		},
+		{
+			title: "Promo Gratis Ongkir",
+			description:
+				"Daftarkan menu favoritmu ke promo gratis ongkir dan tingkatkan orderan!",
+			imageUrl:
+				"https://placehold.co/800x400/be185d/ffffff?text=Free+Delivery+Promo",
+			actionType: "ROUTE" as const,
+			actionValue: "/merchant/promo",
+			placement: "MERCHANT_HOME" as const,
+			targetAudience: "MERCHANTS" as const,
+			isActive: true,
+			priority: 90,
+			startAt: now,
+			endAt: thirtyDaysFromNow,
+		},
+		{
+			title: "Update Menu & Harga",
+			description:
+				"Pastikan menu dan harga selalu up-to-date untuk pelayanan terbaik.",
+			imageUrl: "https://placehold.co/800x400/4f46e5/ffffff?text=Update+Menu",
+			actionType: "ROUTE" as const,
+			actionValue: "/merchant/menu",
+			placement: "MERCHANT_HOME" as const,
+			targetAudience: "MERCHANTS" as const,
+			isActive: true,
+			priority: 80,
+			startAt: now,
+			endAt: sixtyDaysFromNow,
+		},
+	];
+
+	const banners = BANNERS.map((b) => ({
+		...b,
+		id: v7(),
+		createdById: admin.id,
+		createdAt: now,
+		updatedAt: now,
+	}));
+
+	await db.insert(banner).values(banners);
+	console.log(`✅ Inserted ${banners.length} banners.`);
+	console.log("   - USER_HOME: 4 banners");
+	console.log("   - DRIVER_HOME: 3 banners");
+	console.log("   - MERCHANT_HOME: 3 banners");
+}
+
 async function main() {
 	try {
 		await confirmExecution();
@@ -4350,7 +4596,14 @@ async function main() {
 		const phase1: Promise<void>[] = [];
 
 		if (shouldRun("users")) {
-			phase1.push(seedUser(options.mode === "base"));
+			// Pass the mode to seedUser: "core" for admin/operator only, "base" for fixed users, "all" for all
+			const userMode =
+				options.mode === "core"
+					? "core"
+					: options.mode === "base"
+						? "base"
+						: "all";
+			phase1.push(seedUser(userMode));
 		}
 		if (shouldRun("badges")) {
 			phase1.push(seedBadges());
@@ -4374,6 +4627,9 @@ async function main() {
 		}
 		if (shouldRun("drivers")) {
 			phase2.push(seedDrivers());
+		}
+		if (shouldRun("banners")) {
+			phase2.push(seedBanners());
 		}
 
 		if (phase2.length > 0) {
