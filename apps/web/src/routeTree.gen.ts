@@ -51,6 +51,7 @@ import { Route as DashOperatorPricingRouteImport } from './routes/dash/operator/
 import { Route as DashOperatorOrdersRouteImport } from './routes/dash/operator/orders'
 import { Route as DashOperatorMerchantsRouteImport } from './routes/dash/operator/merchants'
 import { Route as DashOperatorDriversRouteImport } from './routes/dash/operator/drivers'
+import { Route as DashOperatorApprovalsRouteImport } from './routes/dash/operator/approvals'
 import { Route as DashMerchantWalletRouteImport } from './routes/dash/merchant/wallet'
 import { Route as DashMerchantSalesRouteImport } from './routes/dash/merchant/sales'
 import { Route as DashMerchantProfileRouteImport } from './routes/dash/merchant/profile'
@@ -69,6 +70,7 @@ import { Route as DashAdminOrdersRouteImport } from './routes/dash/admin/orders'
 import { Route as DashAdminMerchantsRouteImport } from './routes/dash/admin/merchants'
 import { Route as DashAdminDriversRouteImport } from './routes/dash/admin/drivers'
 import { Route as DashAdminAuditRouteImport } from './routes/dash/admin/audit'
+import { Route as DashAdminApprovalsRouteImport } from './routes/dash/admin/approvals'
 import { Route as DashAdminAnalyticsRouteImport } from './routes/dash/admin/analytics'
 import { Route as authSignUpUserRouteImport } from './routes/(auth)/sign-up/user'
 import { Route as authSignUpMerchantRouteImport } from './routes/(auth)/sign-up/merchant'
@@ -305,6 +307,11 @@ const DashOperatorDriversRoute = DashOperatorDriversRouteImport.update({
   path: '/drivers',
   getParentRoute: () => DashOperatorRouteRoute,
 } as any)
+const DashOperatorApprovalsRoute = DashOperatorApprovalsRouteImport.update({
+  id: '/approvals',
+  path: '/approvals',
+  getParentRoute: () => DashOperatorRouteRoute,
+} as any)
 const DashMerchantWalletRoute = DashMerchantWalletRouteImport.update({
   id: '/wallet',
   path: '/wallet',
@@ -394,6 +401,11 @@ const DashAdminDriversRoute = DashAdminDriversRouteImport.update({
 const DashAdminAuditRoute = DashAdminAuditRouteImport.update({
   id: '/audit',
   path: '/audit',
+  getParentRoute: () => DashAdminRouteRoute,
+} as any)
+const DashAdminApprovalsRoute = DashAdminApprovalsRouteImport.update({
+  id: '/approvals',
+  path: '/approvals',
   getParentRoute: () => DashAdminRouteRoute,
 } as any)
 const DashAdminAnalyticsRoute = DashAdminAnalyticsRouteImport.update({
@@ -572,6 +584,7 @@ export interface FileRoutesByFullPath {
   '/sign-up/merchant': typeof authSignUpMerchantRoute
   '/sign-up/user': typeof authSignUpUserRoute
   '/dash/admin/analytics': typeof DashAdminAnalyticsRoute
+  '/dash/admin/approvals': typeof DashAdminApprovalsRoute
   '/dash/admin/audit': typeof DashAdminAuditRoute
   '/dash/admin/drivers': typeof DashAdminDriversRoute
   '/dash/admin/merchants': typeof DashAdminMerchantsRoute
@@ -590,6 +603,7 @@ export interface FileRoutesByFullPath {
   '/dash/merchant/profile': typeof DashMerchantProfileRoute
   '/dash/merchant/sales': typeof DashMerchantSalesRoute
   '/dash/merchant/wallet': typeof DashMerchantWalletRoute
+  '/dash/operator/approvals': typeof DashOperatorApprovalsRoute
   '/dash/operator/drivers': typeof DashOperatorDriversRoute
   '/dash/operator/merchants': typeof DashOperatorMerchantsRoute
   '/dash/operator/orders': typeof DashOperatorOrdersRoute
@@ -654,6 +668,7 @@ export interface FileRoutesByTo {
   '/sign-up/merchant': typeof authSignUpMerchantRoute
   '/sign-up/user': typeof authSignUpUserRoute
   '/dash/admin/analytics': typeof DashAdminAnalyticsRoute
+  '/dash/admin/approvals': typeof DashAdminApprovalsRoute
   '/dash/admin/audit': typeof DashAdminAuditRoute
   '/dash/admin/drivers': typeof DashAdminDriversRoute
   '/dash/admin/merchants': typeof DashAdminMerchantsRoute
@@ -672,6 +687,7 @@ export interface FileRoutesByTo {
   '/dash/merchant/profile': typeof DashMerchantProfileRoute
   '/dash/merchant/sales': typeof DashMerchantSalesRoute
   '/dash/merchant/wallet': typeof DashMerchantWalletRoute
+  '/dash/operator/approvals': typeof DashOperatorApprovalsRoute
   '/dash/operator/drivers': typeof DashOperatorDriversRoute
   '/dash/operator/merchants': typeof DashOperatorMerchantsRoute
   '/dash/operator/orders': typeof DashOperatorOrdersRoute
@@ -744,6 +760,7 @@ export interface FileRoutesById {
   '/(auth)/sign-up/merchant': typeof authSignUpMerchantRoute
   '/(auth)/sign-up/user': typeof authSignUpUserRoute
   '/dash/admin/analytics': typeof DashAdminAnalyticsRoute
+  '/dash/admin/approvals': typeof DashAdminApprovalsRoute
   '/dash/admin/audit': typeof DashAdminAuditRoute
   '/dash/admin/drivers': typeof DashAdminDriversRoute
   '/dash/admin/merchants': typeof DashAdminMerchantsRoute
@@ -762,6 +779,7 @@ export interface FileRoutesById {
   '/dash/merchant/profile': typeof DashMerchantProfileRoute
   '/dash/merchant/sales': typeof DashMerchantSalesRoute
   '/dash/merchant/wallet': typeof DashMerchantWalletRoute
+  '/dash/operator/approvals': typeof DashOperatorApprovalsRoute
   '/dash/operator/drivers': typeof DashOperatorDriversRoute
   '/dash/operator/merchants': typeof DashOperatorMerchantsRoute
   '/dash/operator/orders': typeof DashOperatorOrdersRoute
@@ -833,6 +851,7 @@ export interface FileRouteTypes {
     | '/sign-up/merchant'
     | '/sign-up/user'
     | '/dash/admin/analytics'
+    | '/dash/admin/approvals'
     | '/dash/admin/audit'
     | '/dash/admin/drivers'
     | '/dash/admin/merchants'
@@ -851,6 +870,7 @@ export interface FileRouteTypes {
     | '/dash/merchant/profile'
     | '/dash/merchant/sales'
     | '/dash/merchant/wallet'
+    | '/dash/operator/approvals'
     | '/dash/operator/drivers'
     | '/dash/operator/merchants'
     | '/dash/operator/orders'
@@ -915,6 +935,7 @@ export interface FileRouteTypes {
     | '/sign-up/merchant'
     | '/sign-up/user'
     | '/dash/admin/analytics'
+    | '/dash/admin/approvals'
     | '/dash/admin/audit'
     | '/dash/admin/drivers'
     | '/dash/admin/merchants'
@@ -933,6 +954,7 @@ export interface FileRouteTypes {
     | '/dash/merchant/profile'
     | '/dash/merchant/sales'
     | '/dash/merchant/wallet'
+    | '/dash/operator/approvals'
     | '/dash/operator/drivers'
     | '/dash/operator/merchants'
     | '/dash/operator/orders'
@@ -1004,6 +1026,7 @@ export interface FileRouteTypes {
     | '/(auth)/sign-up/merchant'
     | '/(auth)/sign-up/user'
     | '/dash/admin/analytics'
+    | '/dash/admin/approvals'
     | '/dash/admin/audit'
     | '/dash/admin/drivers'
     | '/dash/admin/merchants'
@@ -1022,6 +1045,7 @@ export interface FileRouteTypes {
     | '/dash/merchant/profile'
     | '/dash/merchant/sales'
     | '/dash/merchant/wallet'
+    | '/dash/operator/approvals'
     | '/dash/operator/drivers'
     | '/dash/operator/merchants'
     | '/dash/operator/orders'
@@ -1379,6 +1403,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashOperatorDriversRouteImport
       parentRoute: typeof DashOperatorRouteRoute
     }
+    '/dash/operator/approvals': {
+      id: '/dash/operator/approvals'
+      path: '/approvals'
+      fullPath: '/dash/operator/approvals'
+      preLoaderRoute: typeof DashOperatorApprovalsRouteImport
+      parentRoute: typeof DashOperatorRouteRoute
+    }
     '/dash/merchant/wallet': {
       id: '/dash/merchant/wallet'
       path: '/wallet'
@@ -1503,6 +1534,13 @@ declare module '@tanstack/react-router' {
       path: '/audit'
       fullPath: '/dash/admin/audit'
       preLoaderRoute: typeof DashAdminAuditRouteImport
+      parentRoute: typeof DashAdminRouteRoute
+    }
+    '/dash/admin/approvals': {
+      id: '/dash/admin/approvals'
+      path: '/approvals'
+      fullPath: '/dash/admin/approvals'
+      preLoaderRoute: typeof DashAdminApprovalsRouteImport
       parentRoute: typeof DashAdminRouteRoute
     }
     '/dash/admin/analytics': {
@@ -1743,6 +1781,7 @@ const supportRouteRouteWithChildren = supportRouteRoute._addFileChildren(
 
 interface DashAdminRouteRouteChildren {
   DashAdminAnalyticsRoute: typeof DashAdminAnalyticsRoute
+  DashAdminApprovalsRoute: typeof DashAdminApprovalsRoute
   DashAdminAuditRoute: typeof DashAdminAuditRoute
   DashAdminDriversRoute: typeof DashAdminDriversRoute
   DashAdminMerchantsRoute: typeof DashAdminMerchantsRoute
@@ -1764,6 +1803,7 @@ interface DashAdminRouteRouteChildren {
 
 const DashAdminRouteRouteChildren: DashAdminRouteRouteChildren = {
   DashAdminAnalyticsRoute: DashAdminAnalyticsRoute,
+  DashAdminApprovalsRoute: DashAdminApprovalsRoute,
   DashAdminAuditRoute: DashAdminAuditRoute,
   DashAdminDriversRoute: DashAdminDriversRoute,
   DashAdminMerchantsRoute: DashAdminMerchantsRoute,
@@ -1834,6 +1874,7 @@ const DashMerchantRouteRouteWithChildren =
   DashMerchantRouteRoute._addFileChildren(DashMerchantRouteRouteChildren)
 
 interface DashOperatorRouteRouteChildren {
+  DashOperatorApprovalsRoute: typeof DashOperatorApprovalsRoute
   DashOperatorDriversRoute: typeof DashOperatorDriversRoute
   DashOperatorMerchantsRoute: typeof DashOperatorMerchantsRoute
   DashOperatorOrdersRoute: typeof DashOperatorOrdersRoute
@@ -1858,6 +1899,7 @@ interface DashOperatorRouteRouteChildren {
 }
 
 const DashOperatorRouteRouteChildren: DashOperatorRouteRouteChildren = {
+  DashOperatorApprovalsRoute: DashOperatorApprovalsRoute,
   DashOperatorDriversRoute: DashOperatorDriversRoute,
   DashOperatorMerchantsRoute: DashOperatorMerchantsRoute,
   DashOperatorOrdersRoute: DashOperatorOrdersRoute,
