@@ -1,8 +1,10 @@
 import { oc } from "@orpc/contract";
 import { UserAdminSpec } from "./admin/user-admin-spec";
+import { UserLookupSpec } from "./lookup/user-lookup-spec";
 import { UserMeSpec } from "./me/user-me-spec";
 
 export const UserSpec = oc.router({
 	admin: oc.prefix("/admin").router(UserAdminSpec),
 	me: oc.prefix("/me").router(UserMeSpec),
+	lookup: oc.prefix("/lookup").router(UserLookupSpec),
 });

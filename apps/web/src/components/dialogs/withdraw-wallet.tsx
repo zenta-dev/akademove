@@ -49,6 +49,7 @@ export function WithdrawDialog({
 	const [accountNumber, setAccountNumber] = useState("");
 	const [accountName, setAccountName] = useState("");
 	const [hasPrefilledBank, setHasPrefilledBank] = useState(false);
+	const [isValidated, setIsValidated] = useState(false);
 
 	// Fetch saved bank account details
 	const savedBankQuery = useQuery({
@@ -80,6 +81,8 @@ export function WithdrawDialog({
 			}
 			if (savedName) {
 				setAccountName(savedName);
+				// If we have saved account name, consider it pre-validated
+				setIsValidated(true);
 			}
 			setHasPrefilledBank(true);
 		}
@@ -89,8 +92,48 @@ export function WithdrawDialog({
 	useEffect(() => {
 		if (!open) {
 			setHasPrefilledBank(false);
+			setIsValidated(false);
 		}
 	}, [open]);
+
+	// Reset validation when bank provider or account number changes
+	useEffect(() => {
+		setIsValidated(false);
+	}, [bankProvider, accountNumber]);
+
+	// Bank validation mutation
+	const validateMutation = useMutation({
+		mutationFn: async () => {
+			if (!accountNumber.trim() || accountNumber.length < 5) {
+				throw new Error(m.withdraw_wallet_account_required());
+			}
+
+			const result = await orpcClient.bank.validateAccount({
+				body: {
+					bankProvider,
+					accountNumber: accountNumber.trim(),
+				},
+			});
+
+			if (result.status !== 200) {
+				throw new Error(result.body.message);
+			}
+
+			return result.body.data;
+		},
+		onSuccess: (data) => {
+			if (data.isValid && data.accountName) {
+				setAccountName(data.accountName);
+				setIsValidated(true);
+				toast.success(m.withdraw_wallet_account_validated());
+			} else {
+				toast.error(m.withdraw_wallet_account_invalid());
+			}
+		},
+		onError: (error: Error) => {
+			toast.error(error.message);
+		},
+	});
 
 	const withdrawMutation = useMutation({
 		mutationFn: async () => {
