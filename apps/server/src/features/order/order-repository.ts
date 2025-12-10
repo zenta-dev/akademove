@@ -2,6 +2,7 @@ import type { PricingConfiguration } from "@repo/schema/configuration";
 import type {
 	EstimateOrder,
 	Order,
+	OrderStatusHistory,
 	OrderSummary,
 	PlaceOrder,
 	PlaceOrderResponse,
@@ -260,5 +261,19 @@ export class OrderRepository {
 			reason,
 			opts,
 		);
+	}
+
+	// ============================================================
+	// Audit trail operations - delegated to OrderReadRepository
+	// ============================================================
+
+	/**
+	 * Get order status history (audit trail)
+	 */
+	async getStatusHistory(
+		orderId: string,
+		opts?: WithTx,
+	): Promise<OrderStatusHistory[]> {
+		return this.#readRepo.getStatusHistory(orderId, opts);
 	}
 }

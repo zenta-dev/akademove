@@ -1,6 +1,11 @@
 import { m } from "@repo/i18n";
 import type { PricingConfiguration } from "@repo/schema/configuration";
-import type { EstimateOrder, Order, OrderSummary } from "@repo/schema/order";
+import type {
+	EstimateOrder,
+	Order,
+	OrderStatusHistory,
+	OrderSummary,
+} from "@repo/schema/order";
 import {
 	OrderKeySchema,
 	type OrderStatus,
@@ -383,6 +388,46 @@ export class OrderReadRepository extends OrderBaseRepository {
 			return cached;
 		} catch (error) {
 			throw this.handleError(error, "estimate");
+		}
+	}
+
+	/**
+	 * Get order status history (audit trail)
+	 * Returns all status changes for an order sorted by changedAt descending (newest first)
+	 */
+	async getStatusHistory(
+		orderId: string,
+		opts?: WithTx,
+	): Promise<OrderStatusHistory[]> {
+		try {
+			const tx = opts?.tx ?? this.db;
+
+			const result = await tx.query.orderStatusHistory.findMany({
+				where: (f, op) => op.eq(f.orderId, orderId),
+				orderBy: (f, op) => op.desc(f.changedAt),
+				with: {
+					changedByUser: {
+						columns: { id: true, name: true },
+					},
+				},
+			});
+
+			return result.map((item) => ({
+				id: item.id,
+				orderId: item.orderId,
+				previousStatus: item.previousStatus,
+				newStatus: item.newStatus,
+				changedBy: item.changedBy,
+				changedByRole: item.changedByRole,
+				reason: item.reason,
+				metadata: item.metadata as Record<string, unknown> | null,
+				changedAt: item.changedAt,
+				changedByUser: item.changedByUser
+					? { id: item.changedByUser.id, name: item.changedByUser.name }
+					: undefined,
+			}));
+		} catch (error) {
+			throw this.handleError(error, "getStatusHistory");
 		}
 	}
 }

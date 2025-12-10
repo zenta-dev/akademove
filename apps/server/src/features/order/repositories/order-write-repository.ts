@@ -1,5 +1,5 @@
 import { m } from "@repo/i18n";
-import type { Order, UpdateOrder } from "@repo/schema/order";
+import type { Order, OrderStatus, UpdateOrder } from "@repo/schema/order";
 import { eq } from "drizzle-orm";
 import { CACHE_TTLS } from "@/core/constants";
 import { RepositoryError } from "@/core/error";
@@ -18,6 +18,7 @@ import { OrderBaseRepository } from "./order-base-repository";
  * - Remove orders
  * - Validate state transitions
  * - Generate delivery OTP when needed
+ * - Record status changes in audit trail
  */
 export class OrderWriteRepository extends OrderBaseRepository {
 	readonly #stateService: OrderStateService;
@@ -37,15 +38,31 @@ export class OrderWriteRepository extends OrderBaseRepository {
 	/**
 	 * Update an order with state transition validation
 	 */
-	async update(id: string, item: UpdateOrder, opts: WithTx): Promise<Order> {
+	async update(
+		id: string,
+		item: UpdateOrder,
+		opts: WithTx & {
+			changedBy?: string;
+			changedByRole?:
+				| "USER"
+				| "DRIVER"
+				| "MERCHANT"
+				| "OPERATOR"
+				| "ADMIN"
+				| "SYSTEM";
+			reason?: string;
+		},
+	): Promise<Order> {
 		try {
 			const existing = await this.getFromDB(id, opts);
 			if (!existing)
 				throw new RepositoryError(`Order with id "${id}" not found`);
 
 			// Validate status transition using OrderStateService
-			if (item.status && item.status !== existing.status) {
-				this.#stateService.validateTransition(existing.status, item.status);
+			const newStatus = item.status;
+			const isStatusChange = newStatus && newStatus !== existing.status;
+			if (isStatusChange) {
+				this.#stateService.validateTransition(existing.status, newStatus);
 			}
 
 			// Generate OTP for delivery proof if order is ARRIVING or IN_TRIP and requires OTP
@@ -99,6 +116,19 @@ export class OrderWriteRepository extends OrderBaseRepository {
 				.where(eq(tables.order.id, id))
 				.returning({ id: tables.order.id });
 
+			// Record status change in audit trail
+			if (isStatusChange && newStatus) {
+				await this.#recordStatusHistory(
+					id,
+					existing.status,
+					newStatus,
+					opts.changedBy,
+					opts.changedByRole,
+					opts.reason ?? item.cancelReason,
+					opts,
+				);
+			}
+
 			const result = await this.getFromDB(operation.id, opts);
 			if (!result) throw new RepositoryError(m.error_failed_update_order());
 
@@ -108,6 +138,48 @@ export class OrderWriteRepository extends OrderBaseRepository {
 			return result;
 		} catch (error) {
 			throw this.handleError(error, "update");
+		}
+	}
+
+	/**
+	 * Record a status change in the order status history table
+	 */
+	async #recordStatusHistory(
+		orderId: string,
+		previousStatus: OrderStatus,
+		newStatus: OrderStatus,
+		changedBy?: string,
+		changedByRole?:
+			| "USER"
+			| "DRIVER"
+			| "MERCHANT"
+			| "OPERATOR"
+			| "ADMIN"
+			| "SYSTEM",
+		reason?: string,
+		opts?: WithTx,
+	): Promise<void> {
+		try {
+			await (opts?.tx ?? this.db).insert(tables.orderStatusHistory).values({
+				orderId,
+				previousStatus,
+				newStatus,
+				changedBy,
+				changedByRole: changedByRole ?? "SYSTEM",
+				reason,
+				changedAt: new Date(),
+			});
+
+			log.debug(
+				{ orderId, previousStatus, newStatus, changedBy, changedByRole },
+				"[OrderWriteRepository] Status change recorded in audit trail",
+			);
+		} catch (error) {
+			// Log but don't fail the main operation if audit trail fails
+			log.error(
+				{ error, orderId, previousStatus, newStatus },
+				"[OrderWriteRepository] Failed to record status history",
+			);
 		}
 	}
 

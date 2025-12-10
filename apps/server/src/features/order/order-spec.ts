@@ -7,6 +7,7 @@ import {
 import {
 	FlatEstimateOrderSchema,
 	OrderSchema,
+	OrderStatusHistorySchema,
 	OrderStatusSchema,
 	OrderSummarySchema,
 	OrderTypeSchema,
@@ -300,5 +301,22 @@ export const OrderSpec = {
 		)
 		.output(
 			createSuccesSchema(OrderSchema, "Scheduled order cancelled successfully"),
+		),
+
+	// Order audit trail endpoint
+	getStatusHistory: oc
+		.route({
+			tags: [FEATURE_TAGS.ORDER],
+			method: "GET",
+			path: "/{id}/status-history",
+			inputStructure: "detailed",
+			outputStructure: "detailed",
+		})
+		.input(z.object({ params: z.object({ id: z.uuid() }) }))
+		.output(
+			createSuccesSchema(
+				z.array(OrderStatusHistorySchema),
+				"Successfully retrieved order status history",
+			),
 		),
 };

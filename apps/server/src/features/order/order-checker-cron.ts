@@ -1,10 +1,12 @@
 import type { ExecutionContext } from "@cloudflare/workers-types";
+import type { OrderStatus } from "@repo/schema/order";
 import Decimal from "decimal.js";
 import { and, eq, inArray, lte } from "drizzle-orm";
 import { getServices } from "@/core/factory";
 import { tables } from "@/core/services/db";
 import { OrderRefundService } from "@/features/order/services/order-refund-service";
 import { log, toNumberSafe } from "@/utils";
+import { OrderStateService } from "./services/order-state-service";
 
 /**
  * Scheduled handler for order status checking and cleanup
@@ -24,6 +26,7 @@ export async function handleOrderCheckerCron(
 		log.info({}, "[OrderCheckerCron] Starting scheduled order status checks");
 
 		const svc = getServices();
+		const stateService = new OrderStateService();
 
 		// Configuration timeouts (in minutes)
 		const MATCHING_TIMEOUT_MINUTES = 10; // Cancel orders stuck in matching for 10 minutes
@@ -45,6 +48,21 @@ export async function handleOrderCheckerCron(
 
 		for (const order of stuckMatchingOrders) {
 			try {
+				// Validate state transition
+				const currentStatus = order.status as OrderStatus;
+				if (currentStatus !== "MATCHING") {
+					log.warn(
+						{ orderId: order.id, currentStatus },
+						"[OrderCheckerCron] Order no longer in MATCHING status, skipping",
+					);
+					continue;
+				}
+
+				// Validate transition using state machine
+				stateService.validateTransition(currentStatus, "CANCELLED_BY_SYSTEM");
+
+				const cancelReason = `Order cancelled due to timeout: no drivers available within ${MATCHING_TIMEOUT_MINUTES} minutes`;
+
 				await svc.db.transaction(async (tx) => {
 					// Process full refund for system-cancelled orders
 					const refundAmount = new Decimal(order.totalPrice);
@@ -56,7 +74,7 @@ export async function handleOrderCheckerCron(
 						refundAmount,
 						penaltyAmount,
 						{ tx },
-						`Order cancelled due to timeout: no drivers available within ${MATCHING_TIMEOUT_MINUTES} minutes`,
+						cancelReason,
 					);
 
 					// Update order status
@@ -64,10 +82,21 @@ export async function handleOrderCheckerCron(
 						.update(tables.order)
 						.set({
 							status: "CANCELLED_BY_SYSTEM",
-							cancelReason: `Order cancelled due to timeout: no drivers available within ${MATCHING_TIMEOUT_MINUTES} minutes`,
+							cancelReason,
 							updatedAt: now,
 						})
 						.where(eq(tables.order.id, order.id));
+
+					// Record status change in audit trail
+					await tx.insert(tables.orderStatusHistory).values({
+						orderId: order.id,
+						previousStatus: currentStatus,
+						newStatus: "CANCELLED_BY_SYSTEM",
+						changedBy: undefined,
+						changedByRole: "SYSTEM",
+						reason: cancelReason,
+						changedAt: now,
+					});
 				});
 
 				log.info(
@@ -137,10 +166,21 @@ export async function handleOrderCheckerCron(
 
 		for (const order of noShowOrders) {
 			try {
+				// NO_SHOW is a terminal state - we only need to ensure refund is processed
+				const currentStatus = order.status as OrderStatus;
+				if (currentStatus !== "NO_SHOW") {
+					log.warn(
+						{ orderId: order.id, currentStatus },
+						"[OrderCheckerCron] Order no longer in NO_SHOW status, skipping",
+					);
+					continue;
+				}
+
 				await svc.db.transaction(async (tx) => {
 					// NO_SHOW orders should have already been processed with penalty logic
 					// by the WebSocket handler. This cron just ensures any stuck NO_SHOW orders
-					// are finalized and refunds are processed if not already done.
+					// have refunds processed if not already done.
+					// Note: NO_SHOW is a terminal state - we do NOT transition to CANCELLED_BY_SYSTEM
 
 					// Check if a refund has already been processed for this order
 					const existingRefund = await tx.query.transaction.findFirst({
@@ -163,16 +203,23 @@ export async function handleOrderCheckerCron(
 							{ tx },
 							`NO_SHOW penalty: 50% refund for order #${order.id.slice(0, 8)}`,
 						);
+
+						log.info(
+							{
+								orderId: order.id,
+								userId: order.userId,
+								refundAmount: refundAmount.toNumber(),
+								penaltyAmount: penaltyAmount.toNumber(),
+							},
+							"[OrderCheckerCron] Processed NO_SHOW refund",
+						);
 					}
 
-					// Update order status to finalized
+					// Update only the updatedAt timestamp to mark as processed
+					// NO_SHOW remains the final status
 					await tx
 						.update(tables.order)
-						.set({
-							status: "CANCELLED_BY_SYSTEM",
-							cancelReason: "Order finalized after NO_SHOW timeout",
-							updatedAt: now,
-						})
+						.set({ updatedAt: now })
 						.where(eq(tables.order.id, order.id));
 				});
 

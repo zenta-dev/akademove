@@ -6,6 +6,8 @@ import { RepositoryError } from "@/core/error";
 import type { WithTx, WithUserId } from "@/core/interface";
 import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
+import { OrderQueueService } from "@/core/services/queue";
+import { BusinessConfigurationService } from "@/features/configuration/services";
 import type {
 	ChargePayload,
 	PaymentRepository,
@@ -206,6 +208,8 @@ export class OrderPlacementRepository extends OrderBaseRepository {
 					couponId,
 					couponCode,
 					discountAmount: safeDiscountAmount,
+					gender: params.gender,
+					genderPreference: params.genderPreference ?? "ANY",
 					requestedAt: now,
 					createdAt: now,
 					updatedAt: now,
@@ -268,6 +272,44 @@ export class OrderPlacementRepository extends OrderBaseRepository {
 					},
 					"[OrderPlacementRepository] wallet payment successful - Order moved to MATCHING",
 				);
+
+				// Enqueue order timeout job for resilience
+				// This ensures the order will be cancelled if no driver accepts within the timeout period
+				try {
+					const businessConfig = await BusinessConfigurationService.getConfig(
+						this.db,
+						this.kv,
+					);
+
+					const timeoutMinutes = businessConfig.driverMatchingTimeoutMinutes;
+					const timeoutSeconds = timeoutMinutes * 60;
+
+					await OrderQueueService.enqueueOrderTimeout(
+						{
+							orderId: order.id,
+							userId: params.userId,
+							paymentId: payment.id,
+							totalPrice: finalTotalCost,
+							timeoutReason: `No driver found within ${timeoutMinutes} minutes`,
+							processRefund: true,
+						},
+						timeoutSeconds,
+					);
+
+					log.info(
+						{
+							orderId: order.id,
+							timeoutMinutes,
+						},
+						"[OrderPlacementRepository] Order timeout job enqueued",
+					);
+				} catch (queueError) {
+					// Log but don't fail the order - the cron fallback will handle stuck orders
+					log.error(
+						{ error: queueError, orderId: order.id },
+						"[OrderPlacementRepository] Failed to enqueue timeout job - cron will handle",
+					);
+				}
 			}
 
 			await Promise.allSettled([

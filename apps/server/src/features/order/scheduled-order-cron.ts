@@ -5,6 +5,7 @@ import { getManagers, getRepositories, getServices } from "@/core/factory";
 import { tables } from "@/core/services/db";
 import { log } from "@/utils";
 import { SCHEDULING_CONFIG } from "./services/order-scheduling-service";
+import { OrderStateService } from "./services/order-state-service";
 
 /**
  * Scheduled handler for processing scheduled orders
@@ -28,6 +29,7 @@ export async function handleScheduledOrderCron(
 		const svc = getServices();
 		const managers = getManagers();
 		const repo = getRepositories(svc, managers);
+		const stateService = new OrderStateService();
 
 		const now = new Date();
 		let processedOrders = 0;
@@ -56,6 +58,19 @@ export async function handleScheduledOrderCron(
 
 		for (const order of readyOrders) {
 			try {
+				// Validate state transition before updating
+				// This ensures we don't process orders that have already been updated
+				if (order.status !== "SCHEDULED") {
+					log.warn(
+						{ orderId: order.id, currentStatus: order.status },
+						"[ScheduledOrderCron] Order no longer in SCHEDULED status, skipping",
+					);
+					continue;
+				}
+
+				// Validate transition using state machine
+				stateService.validateTransition(order.status, "MATCHING");
+
 				await svc.db.transaction(async (tx) => {
 					// Update order status to MATCHING
 					await tx
@@ -65,6 +80,17 @@ export async function handleScheduledOrderCron(
 							updatedAt: now,
 						})
 						.where(eq(tables.order.id, order.id));
+
+					// Record status change in audit trail
+					await tx.insert(tables.orderStatusHistory).values({
+						orderId: order.id,
+						previousStatus: "SCHEDULED",
+						newStatus: "MATCHING",
+						changedBy: undefined,
+						changedByRole: "SYSTEM",
+						reason: "Scheduled order matching time reached",
+						changedAt: now,
+					});
 
 					log.info(
 						{

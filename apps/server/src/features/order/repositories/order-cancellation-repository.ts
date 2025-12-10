@@ -118,6 +118,20 @@ export class OrderCancellationRepository extends OrderBaseRepository {
 				await this.#handleDriverCancellation(order.driverId, order.id, opts);
 			}
 
+			// Reset driver's isTakingOrder flag if order had an assigned driver
+			// This allows the driver to accept new orders after cancellation
+			if (order.driverId) {
+				await opts.tx
+					.update(tables.driver)
+					.set({ isTakingOrder: false })
+					.where(eq(tables.driver.id, order.driverId));
+
+				log.info(
+					{ driverId: order.driverId, orderId: order.id },
+					"[OrderCancellationRepository] Reset driver isTakingOrder flag after order cancellation",
+				);
+			}
+
 			// Use OrderRefundService to process refund
 			await OrderRefundService.processRefund(
 				order.id,

@@ -166,7 +166,7 @@ export class OrderMatchingService {
 	 */
 	async findAvailableDrivers(
 		criteria: MatchingCriteria,
-		limit = 10,
+		limit = BUSINESS_CONSTANTS.DRIVER_MATCHING_BROADCAST_LIMIT,
 		opts?: { tx?: DatabaseTransaction },
 	): Promise<MatchedDriver[]> {
 		try {
@@ -233,7 +233,7 @@ export class OrderMatchingService {
 	 */
 	async findDriversWithTimeoutExpansion(
 		criteria: MatchingCriteria,
-		maxAttempts = 3,
+		maxAttempts = BUSINESS_CONSTANTS.DRIVER_MATCHING_MAX_EXPANSION_ATTEMPTS,
 		opts?: { tx?: DatabaseTransaction },
 	): Promise<MatchedDriver[]> {
 		try {
@@ -267,7 +267,7 @@ export class OrderMatchingService {
 				// Search for drivers with current radius
 				const drivers = await this.findAvailableDrivers(
 					{ ...criteria, radiusKm: currentRadius },
-					10, // Get multiple drivers
+					BUSINESS_CONSTANTS.DRIVER_MATCHING_BROADCAST_LIMIT, // Get multiple drivers
 					opts,
 				);
 

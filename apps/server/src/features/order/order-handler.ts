@@ -521,4 +521,55 @@ export const OrderHandler = priv.router({
 			});
 		},
 	),
+
+	// Order audit trail handler
+	getStatusHistory: priv.getStatusHistory.handler(
+		async ({ context, input: { params } }) => {
+			// FIX: Add IDOR protection - users can only view status history for orders they're involved in
+			const order = await context.repo.order.get(params.id);
+
+			if (context.user.role !== "ADMIN" && context.user.role !== "OPERATOR") {
+				const isOwner = order.userId === context.user.id;
+
+				// Check if driver is assigned to this order
+				let isAssignedDriver = false;
+				if (context.user.role === "DRIVER" && order.driverId) {
+					const driver = await context.repo.driver.main.getByUserId(
+						context.user.id,
+					);
+					isAssignedDriver = order.driverId === driver.id;
+				}
+
+				// Check if merchant owns this order
+				let isMerchantOwner = false;
+				if (context.user.role === "MERCHANT" && order.merchantId) {
+					const merchant = await context.repo.merchant.main.getByUserId(
+						context.user.id,
+					);
+					isMerchantOwner = order.merchantId === merchant.id;
+				}
+
+				if (!isOwner && !isAssignedDriver && !isMerchantOwner) {
+					throw new AuthError(m.error_only_update_own_orders(), {
+						code: "FORBIDDEN",
+					});
+				}
+			}
+
+			const result = await context.repo.order.getStatusHistory(params.id);
+
+			log.debug(
+				{ orderId: params.id, historyCount: result.length },
+				"[OrderHandler] Retrieved order status history",
+			);
+
+			return {
+				status: 200,
+				body: {
+					message: "Successfully retrieved order status history",
+					data: result,
+				},
+			};
+		},
+	),
 });

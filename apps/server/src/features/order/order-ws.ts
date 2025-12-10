@@ -141,7 +141,7 @@ export class OrderRoom extends BaseDurableObject {
 					userGender: findOrder.gender,
 					radiusKm: BUSINESS_CONSTANTS.DRIVER_MATCHING_RADIUS_KM, // Initial radius from constants
 				},
-				3, // Maximum 3 expansion attempts (5km → 6km → 7.2km)
+				BUSINESS_CONSTANTS.DRIVER_MATCHING_MAX_EXPANSION_ATTEMPTS, // Max expansion attempts from constants
 				opts,
 			);
 
@@ -415,10 +415,49 @@ export class OrderRoom extends BaseDurableObject {
 			}
 		}
 
-		// Now safe to update - we have the lock
+		// FIX: Atomically check and update driver's isTakingOrder status
+		// Use SELECT FOR UPDATE NOWAIT on driver to prevent race condition
+		// where driver could accept multiple orders simultaneously
+		const lockedDriverResult = await tx.execute(
+			sql`SELECT id, "isTakingOrder" FROM "driver" WHERE id = ${driverId} FOR UPDATE NOWAIT`,
+		);
+		const lockedDriver = lockedDriverResult[0] as
+			| { id: string; isTakingOrder: boolean }
+			| undefined;
+
+		if (!lockedDriver) {
+			log.warn({ orderId, driverId }, "[OrderRoom] Driver not found");
+			const errorPayload: OrderEnvelope = {
+				e: "UNAVAILABLE",
+				f: "s",
+				t: "c",
+				tg: "DRIVER",
+				p: { cancelReason: "Driver not found" },
+			};
+			ws.send(JSON.stringify(errorPayload));
+			return;
+		}
+
+		// Check if driver is already taking an order
+		if (lockedDriver.isTakingOrder) {
+			log.warn(
+				{ orderId, driverId },
+				"[OrderRoom] Driver is already taking another order",
+			);
+			const busyPayload: OrderEnvelope = {
+				e: "UNAVAILABLE",
+				f: "s",
+				t: "c",
+				tg: "DRIVER",
+				p: { cancelReason: "You are already taking another order" },
+			};
+			ws.send(JSON.stringify(busyPayload));
+			return;
+		}
+
+		// Now safe to update - we have locks on both order and driver
 		const [updatedOrder, updatedDriver] = await Promise.all([
 			this.#repo.order.update(orderId, { status: "ACCEPTED", driverId }, opts),
-			// FIX: Move driver update inside transaction to ensure atomicity
 			this.#repo.driver.main.update(driverId, { isTakingOrder: true }, opts),
 		]);
 		detail.order = updatedOrder;
@@ -576,7 +615,18 @@ export class OrderRoom extends BaseDurableObject {
 			opts,
 		);
 
+		// FIX: Perform atomic balance update FIRST to get correct balance values
+		// This prevents race condition where transaction records have incorrect balances
+		const driverBalanceResult = await this.#svc.walletServices.balance.add(
+			{
+				walletId: driverwallet.id,
+				amount: toNumberSafe(driverEarning.toString()),
+			},
+			{ tx: opts.tx },
+		);
+
 		// Create transaction records for driver earning and platform commission
+		// Now using correct balance values from the atomic update
 		await Promise.all([
 			// Update order with commission details
 			this.#repo.order.update(
@@ -590,15 +640,14 @@ export class OrderRoom extends BaseDurableObject {
 				opts,
 			),
 
-			// Credit driver wallet with earnings
+			// Credit driver wallet with earnings - using correct balance from atomic update
 			this.#repo.transaction.insert(
 				{
 					walletId: driverwallet.id,
 					type: "EARNING",
 					amount: toNumberSafe(driverEarning.toString()),
-					balanceBefore: driverwallet.balance,
-					balanceAfter:
-						driverwallet.balance + toNumberSafe(driverEarning.toString()),
+					balanceBefore: driverBalanceResult.balanceBefore,
+					balanceAfter: driverBalanceResult.balanceAfter,
 					status: "SUCCESS",
 					description: `Driver earning for order #${order.id.slice(0, 8)}`,
 					referenceId: order.id,
@@ -632,7 +681,6 @@ export class OrderRoom extends BaseDurableObject {
 			),
 
 			// Update driver availability
-			// FIX: Pass transaction context (opts) to ensure atomicity
 			this.#repo.driver.main.update(
 				done.driverId,
 				{
@@ -642,15 +690,6 @@ export class OrderRoom extends BaseDurableObject {
 				opts,
 			),
 		]);
-
-		// Update driver wallet balance atomically
-		await this.#svc.walletServices.balance.add(
-			{
-				walletId: driverwallet.id,
-				amount: toNumberSafe(driverEarning.toString()),
-			},
-			{ tx: opts.tx },
-		);
 
 		// Award badges to driver after order completion
 		if (order.driverId) {
