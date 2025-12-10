@@ -1,10 +1,11 @@
+import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/l10n/l10n.dart';
 import 'package:akademove/locator.dart';
 import 'package:api_client/api_client.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:akademove/core/_export.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:shadcn_flutter/shadcn_flutter.dart';
 
 class OrderChatWidget extends StatefulWidget {
   const OrderChatWidget({required this.orderId, super.key});
@@ -91,8 +92,8 @@ class _OrderChatWidgetState extends State<OrderChatWidget> {
                         Text(
                           'Error: ${state.messages.error?.message ?? "Unknown error"}',
                         ),
-                        const SizedBox(height: 16),
-                        ElevatedButton(
+                        SizedBox(height: 16.h),
+                        PrimaryButton(
                           onPressed: () => _cubit.loadMessages(),
                           child: Text(context.l10n.retry),
                         ),
@@ -126,7 +127,7 @@ class _OrderChatWidgetState extends State<OrderChatWidget> {
               },
             ),
           ),
-          const Divider(height: 1),
+          const Divider(),
           BlocProvider.value(
             value: _quickMessageCubit,
             child: _QuickMessageChips(
@@ -160,7 +161,7 @@ class _ChatMessageBubble extends StatelessWidget {
     final senderName = message.sender?.name ?? 'Unknown';
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
       child: Column(
         crossAxisAlignment: isCurrentUser
             ? CrossAxisAlignment.end
@@ -169,32 +170,34 @@ class _ChatMessageBubble extends StatelessWidget {
           if (!isCurrentUser)
             Text(
               senderName,
-              style: Theme.of(
-                context,
-              ).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.bold),
+              style: context.typography.small.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
             ),
-          const SizedBox(height: 4),
+          SizedBox(height: 4.h),
           Container(
-            padding: const EdgeInsets.all(12),
+            padding: EdgeInsets.all(12.w),
             decoration: BoxDecoration(
               color: isCurrentUser
-                  ? Theme.of(context).primaryColor
-                  : Colors.grey[200],
-              borderRadius: BorderRadius.circular(12),
+                  ? context.colorScheme.primary
+                  : context.colorScheme.muted,
+              borderRadius: BorderRadius.circular(12.r),
             ),
             child: Text(
               message.message,
               style: TextStyle(
-                color: isCurrentUser ? Colors.white : Colors.black,
+                color: isCurrentUser
+                    ? context.colorScheme.primaryForeground
+                    : context.colorScheme.foreground,
               ),
             ),
           ),
-          const SizedBox(height: 4),
+          SizedBox(height: 4.h),
           Text(
             _formatTimestamp(message.sentAt),
-            style: Theme.of(
-              context,
-            ).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
+            style: context.typography.small.copyWith(
+              color: context.colorScheme.mutedForeground,
+            ),
           ),
         ],
       ),
@@ -234,22 +237,19 @@ class _QuickMessageChips extends StatelessWidget {
           return const SizedBox.shrink();
         }
         return Container(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-          color: Colors.grey[100],
-          height: 50,
+          padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+          color: context.colorScheme.muted,
+          height: 50.h,
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
             itemCount: templates.length,
-            separatorBuilder: (context, index) => const SizedBox(width: 8),
+            separatorBuilder: (context, index) => SizedBox(width: 8.w),
             itemBuilder: (context, index) {
               final template = templates[index];
-              return ActionChip(
-                label: Text(template.message),
+              return Chip(
                 onPressed: () => onMessageSelected(template.message),
-                backgroundColor: Colors.white,
-                side: BorderSide(
-                  color: Theme.of(context).primaryColor.withValues(alpha: 0.3),
-                ),
+                style: const ButtonStyle.outline(),
+                child: Text(template.message),
               );
             },
           ),
@@ -268,31 +268,23 @@ class _MessageInputField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(8),
-      color: Colors.white,
+      padding: EdgeInsets.all(8.w),
+      color: context.colorScheme.background,
       child: Row(
         children: [
           Expanded(
             child: TextField(
               controller: controller,
-              decoration: InputDecoration(
-                hintText: context.l10n.placeholder_type_message,
-                border: const OutlineInputBorder(),
-                contentPadding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 12,
-                ),
-              ),
+              placeholder: Text(context.l10n.placeholder_type_message),
               maxLines: null,
-              textInputAction: TextInputAction.send,
               onSubmitted: (_) => onSend(),
             ),
           ),
-          const SizedBox(width: 8),
+          SizedBox(width: 8.w),
           IconButton(
             onPressed: onSend,
-            icon: const Icon(Icons.send),
-            color: Theme.of(context).primaryColor,
+            icon: const Icon(LucideIcons.send),
+            variance: const ButtonStyle.ghost(),
           ),
         ],
       ),
