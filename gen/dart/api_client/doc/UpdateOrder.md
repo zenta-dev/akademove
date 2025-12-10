@@ -30,7 +30,7 @@ Name | Type | Description | Notes
 **proofOfDeliveryUrl** | **String** |  | [optional] 
 **deliveryOtp** | **String** |  | [optional] 
 **otpVerifiedAt** | [**DateTime**](DateTime.md) |  | [optional] 
-**itemCount** | **num** |  | [optional] 
+**itemCount** | **int** |  | [optional] 
 **items** | [**List&lt;OrderItem&gt;**](OrderItem.md) |  | [optional] 
 **deliveryItemType** | [**DeliveryItemType**](DeliveryItemType.md) |  | [optional] 
 **user** | [**DriverUser**](DriverUser.md) |  | [optional] 

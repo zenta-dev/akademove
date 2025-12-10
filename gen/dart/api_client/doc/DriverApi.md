@@ -318,8 +318,8 @@ import 'package:api_client/api.dart';
 final api = ApiClient().getDriverApi();
 final num x = 8.14; // num | 
 final num y = 8.14; // num | 
-final num radiusKm = 8.14; // num | 
-final num limit = 8.14; // num | 
+final int radiusKm = 56; // int | 
+final int limit = 56; // int | 
 final UserGender gender = ; // UserGender | 
 
 try {
@@ -336,8 +336,8 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **x** | **num**|  | 
  **y** | **num**|  | 
- **radiusKm** | **num**|  | 
- **limit** | **num**|  | 
+ **radiusKm** | **int**|  | 
+ **limit** | **int**|  | 
  **gender** | [**UserGender**](.md)|  | [optional] 
 
 ### Return type

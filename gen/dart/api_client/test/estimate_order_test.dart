@@ -47,12 +47,12 @@ void main() {
       // TODO
     });
 
-    // List<num> discountIds
+    // List<int> discountIds
     test('to test the property `discountIds`', () async {
       // TODO
     });
 
-    // num weight
+    // int weight
     test('to test the property `weight`', () async {
       // TODO
     });

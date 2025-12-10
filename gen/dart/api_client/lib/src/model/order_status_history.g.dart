@@ -7,7 +7,7 @@ part of 'order_status_history.dart';
 // **************************************************************************
 
 abstract class _$OrderStatusHistoryCWProxy {
-  OrderStatusHistory id(num id);
+  OrderStatusHistory id(int id);
 
   OrderStatusHistory orderId(String orderId);
 
@@ -35,7 +35,7 @@ abstract class _$OrderStatusHistoryCWProxy {
   /// OrderStatusHistory(...).copyWith(id: 12, name: "My name")
   /// ```
   OrderStatusHistory call({
-    num id,
+    int id,
     String orderId,
     OrderStatus? previousStatus,
     OrderStatus newStatus,
@@ -56,7 +56,7 @@ class _$OrderStatusHistoryCWProxyImpl implements _$OrderStatusHistoryCWProxy {
   final OrderStatusHistory _value;
 
   @override
-  OrderStatusHistory id(num id) => call(id: id);
+  OrderStatusHistory id(int id) => call(id: id);
 
   @override
   OrderStatusHistory orderId(String orderId) => call(orderId: orderId);
@@ -115,7 +115,7 @@ class _$OrderStatusHistoryCWProxyImpl implements _$OrderStatusHistoryCWProxy {
       id: id == const $CopyWithPlaceholder() || id == null
           ? _value.id
           // ignore: cast_nullable_to_non_nullable
-          : id as num,
+          : id as int,
       orderId: orderId == const $CopyWithPlaceholder() || orderId == null
           ? _value.orderId
           // ignore: cast_nullable_to_non_nullable
@@ -186,7 +186,7 @@ OrderStatusHistory _$OrderStatusHistoryFromJson(
     ],
   );
   final val = OrderStatusHistory(
-    id: $checkedConvert('id', (v) => v as num),
+    id: $checkedConvert('id', (v) => (v as num).toInt()),
     orderId: $checkedConvert('orderId', (v) => v as String),
     previousStatus: $checkedConvert(
       'previousStatus',

@@ -122,8 +122,10 @@ class UpdateOrder {
   @JsonKey(name: r'otpVerifiedAt', required: false, includeIfNull: false)
   final DateTime? otpVerifiedAt;
 
+  // minimum: 0
+  // maximum: 9007199254740991
   @JsonKey(name: r'itemCount', required: false, includeIfNull: false)
-  final num? itemCount;
+  final int? itemCount;
 
   @JsonKey(name: r'items', required: false, includeIfNull: false)
   final List<OrderItem>? items;

@@ -32,8 +32,10 @@ class OrderStatusHistory {
     required this.changedAt,
     this.changedByUser,
   });
+  // minimum: 0
+  // maximum: 9007199254740991
   @JsonKey(name: r'id', required: true, includeIfNull: false)
-  final num id;
+  final int id;
 
   @JsonKey(name: r'orderId', required: true, includeIfNull: false)
   final String orderId;

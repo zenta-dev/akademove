@@ -8,7 +8,7 @@ import 'package:api_client/api.dart';
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**id** | **num** |  | 
+**id** | **int** |  | 
 **tableName** | **String** |  | 
 **recordId** | **String** |  | 
 **operation** | **String** |  | 

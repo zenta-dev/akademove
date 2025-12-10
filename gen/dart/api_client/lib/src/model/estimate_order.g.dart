@@ -25,9 +25,9 @@ abstract class _$EstimateOrderCWProxy {
 
   EstimateOrder couponCode(String? couponCode);
 
-  EstimateOrder discountIds(List<num>? discountIds);
+  EstimateOrder discountIds(List<int>? discountIds);
 
-  EstimateOrder weight(num? weight);
+  EstimateOrder weight(int? weight);
 
   /// Creates a new instance with the provided field values.
   /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `EstimateOrder(...).copyWith.fieldName(value)`.
@@ -45,8 +45,8 @@ abstract class _$EstimateOrderCWProxy {
     UserGender? gender,
     EstimateOrderGenderPreferenceEnum? genderPreference,
     String? couponCode,
-    List<num>? discountIds,
-    num? weight,
+    List<int>? discountIds,
+    int? weight,
   });
 }
 
@@ -86,11 +86,11 @@ class _$EstimateOrderCWProxyImpl implements _$EstimateOrderCWProxy {
   EstimateOrder couponCode(String? couponCode) => call(couponCode: couponCode);
 
   @override
-  EstimateOrder discountIds(List<num>? discountIds) =>
+  EstimateOrder discountIds(List<int>? discountIds) =>
       call(discountIds: discountIds);
 
   @override
-  EstimateOrder weight(num? weight) => call(weight: weight);
+  EstimateOrder weight(int? weight) => call(weight: weight);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -152,11 +152,11 @@ class _$EstimateOrderCWProxyImpl implements _$EstimateOrderCWProxy {
       discountIds: discountIds == const $CopyWithPlaceholder()
           ? _value.discountIds
           // ignore: cast_nullable_to_non_nullable
-          : discountIds as List<num>?,
+          : discountIds as List<int>?,
       weight: weight == const $CopyWithPlaceholder()
           ? _value.weight
           // ignore: cast_nullable_to_non_nullable
-          : weight as num?,
+          : weight as int?,
     );
   }
 }
@@ -210,9 +210,9 @@ EstimateOrder _$EstimateOrderFromJson(
     couponCode: $checkedConvert('couponCode', (v) => v as String?),
     discountIds: $checkedConvert(
       'discountIds',
-      (v) => (v as List<dynamic>?)?.map((e) => e as num).toList(),
+      (v) => (v as List<dynamic>?)?.map((e) => (e as num).toInt()).toList(),
     ),
-    weight: $checkedConvert('weight', (v) => v as num?),
+    weight: $checkedConvert('weight', (v) => (v as num?)?.toInt()),
   );
   return val;
 });

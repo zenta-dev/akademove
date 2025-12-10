@@ -7,7 +7,7 @@ part of 'order_item.dart';
 // **************************************************************************
 
 abstract class _$OrderItemCWProxy {
-  OrderItem quantity(num quantity);
+  OrderItem quantity(int quantity);
 
   OrderItem item(OrderItemItem item);
 
@@ -18,7 +18,7 @@ abstract class _$OrderItemCWProxy {
   /// ```dart
   /// OrderItem(...).copyWith(id: 12, name: "My name")
   /// ```
-  OrderItem call({num quantity, OrderItemItem item});
+  OrderItem call({int quantity, OrderItemItem item});
 }
 
 /// Callable proxy for `copyWith` functionality.
@@ -29,7 +29,7 @@ class _$OrderItemCWProxyImpl implements _$OrderItemCWProxy {
   final OrderItem _value;
 
   @override
-  OrderItem quantity(num quantity) => call(quantity: quantity);
+  OrderItem quantity(int quantity) => call(quantity: quantity);
 
   @override
   OrderItem item(OrderItemItem item) => call(item: item);
@@ -50,7 +50,7 @@ class _$OrderItemCWProxyImpl implements _$OrderItemCWProxy {
       quantity: quantity == const $CopyWithPlaceholder() || quantity == null
           ? _value.quantity
           // ignore: cast_nullable_to_non_nullable
-          : quantity as num,
+          : quantity as int,
       item: item == const $CopyWithPlaceholder() || item == null
           ? _value.item
           // ignore: cast_nullable_to_non_nullable
@@ -74,7 +74,7 @@ OrderItem _$OrderItemFromJson(Map<String, dynamic> json) =>
     $checkedCreate('OrderItem', json, ($checkedConvert) {
       $checkKeys(json, requiredKeys: const ['quantity', 'item']);
       final val = OrderItem(
-        quantity: $checkedConvert('quantity', (v) => v as num),
+        quantity: $checkedConvert('quantity', (v) => (v as num).toInt()),
         item: $checkedConvert(
           'item',
           (v) => OrderItemItem.fromJson(v as Map<String, dynamic>),

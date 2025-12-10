@@ -19,8 +19,10 @@ part 'order_item.g.dart';
 class OrderItem {
   /// Returns a new [OrderItem] instance.
   const OrderItem({required this.quantity, required this.item});
+  // minimum: 0
+  // maximum: 9007199254740991
   @JsonKey(name: r'quantity', required: true, includeIfNull: false)
-  final num quantity;
+  final int quantity;
 
   @JsonKey(name: r'item', required: true, includeIfNull: false)
   final OrderItemItem item;

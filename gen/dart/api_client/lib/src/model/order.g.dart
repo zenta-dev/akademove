@@ -75,7 +75,7 @@ abstract class _$OrderCWProxy {
 
   Order otpVerifiedAt(DateTime? otpVerifiedAt);
 
-  Order itemCount(num? itemCount);
+  Order itemCount(int? itemCount);
 
   Order items(List<OrderItem>? items);
 
@@ -129,7 +129,7 @@ abstract class _$OrderCWProxy {
     String? proofOfDeliveryUrl,
     String? deliveryOtp,
     DateTime? otpVerifiedAt,
-    num? itemCount,
+    int? itemCount,
     List<OrderItem>? items,
     DeliveryItemType? deliveryItemType,
     DriverUser? user,
@@ -257,7 +257,7 @@ class _$OrderCWProxyImpl implements _$OrderCWProxy {
       call(otpVerifiedAt: otpVerifiedAt);
 
   @override
-  Order itemCount(num? itemCount) => call(itemCount: itemCount);
+  Order itemCount(int? itemCount) => call(itemCount: itemCount);
 
   @override
   Order items(List<OrderItem>? items) => call(items: items);
@@ -472,7 +472,7 @@ class _$OrderCWProxyImpl implements _$OrderCWProxy {
       itemCount: itemCount == const $CopyWithPlaceholder()
           ? _value.itemCount
           // ignore: cast_nullable_to_non_nullable
-          : itemCount as num?,
+          : itemCount as int?,
       items: items == const $CopyWithPlaceholder()
           ? _value.items
           // ignore: cast_nullable_to_non_nullable
@@ -608,7 +608,7 @@ Order _$OrderFromJson(
       'otpVerifiedAt',
       (v) => v == null ? null : DateTime.parse(v as String),
     ),
-    itemCount: $checkedConvert('itemCount', (v) => v as num?),
+    itemCount: $checkedConvert('itemCount', (v) => (v as num?)?.toInt()),
     items: $checkedConvert(
       'items',
       (v) => (v as List<dynamic>?)

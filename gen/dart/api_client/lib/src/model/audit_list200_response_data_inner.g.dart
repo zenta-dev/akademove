@@ -7,7 +7,7 @@ part of 'audit_list200_response_data_inner.dart';
 // **************************************************************************
 
 abstract class _$AuditList200ResponseDataInnerCWProxy {
-  AuditList200ResponseDataInner id(num id);
+  AuditList200ResponseDataInner id(int id);
 
   AuditList200ResponseDataInner tableName(
     AuditList200ResponseDataInnerTableNameEnum tableName,
@@ -43,7 +43,7 @@ abstract class _$AuditList200ResponseDataInnerCWProxy {
   /// AuditList200ResponseDataInner(...).copyWith(id: 12, name: "My name")
   /// ```
   AuditList200ResponseDataInner call({
-    num id,
+    int id,
     AuditList200ResponseDataInnerTableNameEnum tableName,
     String recordId,
     AuditList200ResponseDataInnerOperationEnum operation,
@@ -67,7 +67,7 @@ class _$AuditList200ResponseDataInnerCWProxyImpl
   final AuditList200ResponseDataInner _value;
 
   @override
-  AuditList200ResponseDataInner id(num id) => call(id: id);
+  AuditList200ResponseDataInner id(int id) => call(id: id);
 
   @override
   AuditList200ResponseDataInner tableName(
@@ -140,7 +140,7 @@ class _$AuditList200ResponseDataInnerCWProxyImpl
       id: id == const $CopyWithPlaceholder() || id == null
           ? _value.id
           // ignore: cast_nullable_to_non_nullable
-          : id as num,
+          : id as int,
       tableName: tableName == const $CopyWithPlaceholder() || tableName == null
           ? _value.tableName
           // ignore: cast_nullable_to_non_nullable
@@ -216,7 +216,7 @@ AuditList200ResponseDataInner _$AuditList200ResponseDataInnerFromJson(
     ],
   );
   final val = AuditList200ResponseDataInner(
-    id: $checkedConvert('id', (v) => v as num),
+    id: $checkedConvert('id', (v) => (v as num).toInt()),
     tableName: $checkedConvert(
       'tableName',
       (v) =>

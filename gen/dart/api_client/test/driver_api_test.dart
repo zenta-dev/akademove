@@ -36,7 +36,7 @@ void main() {
       // TODO
     });
 
-    //Future<DriverList200Response> driverNearby(num x, num y, num radiusKm, num limit, { UserGender gender }) async
+    //Future<DriverList200Response> driverNearby(num x, num y, int radiusKm, int limit, { UserGender gender }) async
     test('test driverNearby', () async {
       // TODO
     });

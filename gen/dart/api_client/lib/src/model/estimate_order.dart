@@ -59,11 +59,12 @@ class EstimateOrder {
   final String? couponCode;
 
   @JsonKey(name: r'discountIds', required: false, includeIfNull: false)
-  final List<num>? discountIds;
+  final List<int>? discountIds;
 
+  // minimum: 0
   // maximum: 20
   @JsonKey(name: r'weight', required: false, includeIfNull: false)
-  final num? weight;
+  final int? weight;
 
   @override
   bool operator ==(Object other) =>

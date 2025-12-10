@@ -8,7 +8,7 @@ void main() {
   // TODO add properties to the entity
 
   group(AuditList200ResponseDataInner, () {
-    // num id
+    // int id
     test('to test the property `id`', () async {
       // TODO
     });

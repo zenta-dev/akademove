@@ -591,8 +591,8 @@ class DriverApi {
   Future<Response<DriverList200Response>> driverNearby({
     required num x,
     required num y,
-    required num radiusKm,
-    required num limit,
+    required int radiusKm,
+    required int limit,
     UserGender? gender,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,

@@ -25,8 +25,8 @@ Name | Type | Description | Notes
 **gender** | [**UserGender**](UserGender.md) |  | [optional] 
 **genderPreference** | **String** |  | [optional] 
 **couponCode** | **String** |  | [optional] 
-**discountIds** | **List&lt;num&gt;** |  | [optional] 
-**weight** | **num** |  | [optional] 
+**discountIds** | **List&lt;int&gt;** |  | [optional] 
+**weight** | **int** |  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

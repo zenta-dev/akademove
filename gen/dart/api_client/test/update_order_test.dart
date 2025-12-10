@@ -117,7 +117,7 @@ void main() {
       // TODO
     });
 
-    // num itemCount
+    // int itemCount
     test('to test the property `itemCount`', () async {
       // TODO
     });

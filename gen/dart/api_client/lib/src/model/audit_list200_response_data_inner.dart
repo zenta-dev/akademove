@@ -31,8 +31,10 @@ class AuditList200ResponseDataInner {
     this.reason,
     required this.updatedAt,
   });
+  // minimum: 0
+  // maximum: 9007199254740991
   @JsonKey(name: r'id', required: true, includeIfNull: false)
-  final num id;
+  final int id;
 
   @JsonKey(name: r'tableName', required: true, includeIfNull: false)
   final AuditList200ResponseDataInnerTableNameEnum tableName;

@@ -24,27 +24,27 @@ class BroadcastStats200ResponseData {
     required this.sent,
     required this.failed,
   });
-  // minimum: -9007199254740991
+  // minimum: 0
   // maximum: 9007199254740991
   @JsonKey(name: r'total', required: true, includeIfNull: false)
   final int total;
 
-  // minimum: -9007199254740991
+  // minimum: 0
   // maximum: 9007199254740991
   @JsonKey(name: r'pending', required: true, includeIfNull: false)
   final int pending;
 
-  // minimum: -9007199254740991
+  // minimum: 0
   // maximum: 9007199254740991
   @JsonKey(name: r'sending', required: true, includeIfNull: false)
   final int sending;
 
-  // minimum: -9007199254740991
+  // minimum: 0
   // maximum: 9007199254740991
   @JsonKey(name: r'sent', required: true, includeIfNull: false)
   final int sent;
 
-  // minimum: -9007199254740991
+  // minimum: 0
   // maximum: 9007199254740991
   @JsonKey(name: r'failed', required: true, includeIfNull: false)
   final int failed;
