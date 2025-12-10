@@ -137,7 +137,7 @@ export function hasRoles(userRole?: UserRole, ...roles: RoleAccess[]) {
 }
 
 export const requireRoles = (..._roles: RoleAccess[]) =>
-	base.middleware(async ({ context: _context, next }) => {
+	base.middleware(async ({ context, next }) => {
 		// const userRole = context.user?.role;
 		// if (!userRole) {
 		// 	throw new AuthError("Invalid session", {
