@@ -12,7 +12,8 @@ import type { WithTx } from "@/core/interface";
 import { tables } from "@/core/services/db";
 import type { PaymentDatabase } from "@/core/tables/payment";
 import { OrderStateService } from "@/features/order/services/order-state-service";
-import { delay, log, toNumberSafe, toStringNumberSafe } from "@/utils";
+import { delay, toNumberSafe, toStringNumberSafe } from "@/utils";
+import { logger } from "@/utils/logger";
 import { generateOrderCode } from "@/utils/uuid";
 import { PaymentChargeService } from "./payment-charge-service";
 
@@ -112,7 +113,7 @@ export class PaymentWebhookService {
 		try {
 			const { tx, updatePayment, updateTransaction, sendNotification } = deps;
 
-			log.debug({ body }, "[PaymentWebhookService] processWebhook");
+			logger.debug({ body }, "[PaymentWebhookService] processWebhook");
 
 			const paymentId = body.order_id;
 			const status = body.transaction_status;
@@ -137,7 +138,7 @@ export class PaymentWebhookService {
 				payment.status === "REFUNDED" ||
 				payment.status === "EXPIRED"
 			) {
-				log.warn(
+				logger.warn(
 					{ paymentId, currentStatus: payment.status, webhookStatus: status },
 					"[PaymentWebhookService] Webhook already processed - idempotent response",
 				);
@@ -185,7 +186,10 @@ export class PaymentWebhookService {
 				}
 			}
 		} catch (error) {
-			log.error({ error }, "[PaymentWebhookService] Failed to process webhook");
+			logger.error(
+				{ error },
+				"[PaymentWebhookService] Failed to process webhook",
+			);
 			if (error instanceof RepositoryError) throw error;
 			throw new RepositoryError(m.error_failed_process_webhook(), {
 				code: "INTERNAL_SERVER_ERROR",
@@ -489,7 +493,7 @@ export class PaymentWebhookService {
 
 		// Only proceed if order is in REQUESTED status (waiting for payment)
 		if (currentStatus !== "REQUESTED") {
-			log.warn(
+			logger.warn(
 				{ orderId, currentStatus },
 				"[PaymentWebhookService] Order not in REQUESTED status, skipping status update",
 			);

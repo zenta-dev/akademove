@@ -33,7 +33,7 @@ import {
 	UserRefreshService,
 	UserSearchService,
 } from "@/features/user/services";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 import type { PasswordManager } from "@/utils/password";
 
 const BUCKET = "user";
@@ -330,14 +330,14 @@ export class UserAdminRepository extends BaseRepository {
 				}),
 			]);
 
-			log.info(
+			logger.info(
 				{ userId: user.id, email: user.email, role: user.role },
 				m.server_user_created(),
 			);
 
 			return { ...composedUser, password };
 		} catch (error) {
-			log.error({ error }, "[UserAdminRepository] Failed to create user");
+			logger.error({ error }, "[UserAdminRepository] Failed to create user");
 			throw this.handleError(error, "create");
 		}
 	}
@@ -400,7 +400,7 @@ export class UserAdminRepository extends BaseRepository {
 						);
 					}
 
-					log.info(
+					logger.info(
 						{ userId: id, newRole: item.role },
 						"[UserAdminRepository] User role updated",
 					);
@@ -439,7 +439,7 @@ export class UserAdminRepository extends BaseRepository {
 						.set({ password: hashedPassword })
 						.where(eq(tables.account.id, account.id));
 
-					log.info(
+					logger.info(
 						{ userId: id },
 						"[UserAdminRepository] User password updated",
 					);
@@ -497,7 +497,7 @@ export class UserAdminRepository extends BaseRepository {
 						);
 					}
 
-					log.info(
+					logger.info(
 						{ userId: id, banReason: item.banReason },
 						"[UserAdminRepository] User banned",
 					);
@@ -553,7 +553,7 @@ export class UserAdminRepository extends BaseRepository {
 						);
 					}
 
-					log.info({ userId: id }, "[UserAdminRepository] User unbanned");
+					logger.info({ userId: id }, "[UserAdminRepository] User unbanned");
 				}
 
 				// Invalidate cache
@@ -562,7 +562,7 @@ export class UserAdminRepository extends BaseRepository {
 				return updatedUser;
 			});
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, userId: id },
 				"[UserAdminRepository] Failed to update user",
 			);
@@ -688,7 +688,7 @@ export class UserAdminRepository extends BaseRepository {
 				}
 
 				// Log raw database results for debugging
-				log.info(
+				logger.info(
 					{
 						basicStats,
 						revenueByDayCount: revenueByDayResult.length,
@@ -736,7 +736,7 @@ export class UserAdminRepository extends BaseRepository {
 
 			return await this.getCache(cacheKey, { fallback });
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error },
 				"[UserAdminRepository] Failed to get dashboard stats",
 			);

@@ -9,7 +9,7 @@
 import { count, ilike, type SQL } from "drizzle-orm";
 import type { DatabaseService } from "@/core/services/db";
 import { tables } from "@/core/services/db";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 
 /**
  * UserSearchService
@@ -39,7 +39,7 @@ export class UserSearchService {
 
 			return dbResult?.count ?? 0;
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ query, error },
 				"[UserSearchService] Failed to get query count",
 			);
@@ -72,7 +72,7 @@ export class UserSearchService {
 		// Limit length to prevent performance issues
 		const maxLength = 100;
 		if (trimmed.length > maxLength) {
-			log.warn(
+			logger.warn(
 				{ originalLength: trimmed.length, maxLength },
 				"[UserSearchService] Search query truncated",
 			);

@@ -1,6 +1,6 @@
 import { RepositoryError } from "@/core/error";
 import type { PartialWithTx } from "@/core/interface";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 
 /**
  * Service responsible for merchant availability management
@@ -63,14 +63,14 @@ export class MerchantAvailabilityService {
 
 			await deps.update(merchantId, updateData, opts);
 
-			log.info(
+			logger.info(
 				{ merchantId, isOnline, isTakingOrders: updateData.isTakingOrders },
 				"[MerchantAvailabilityService] Updated online status",
 			);
 
 			return isOnline;
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, merchantId, isOnline },
 				"[MerchantAvailabilityService] Failed to set online status",
 			);
@@ -125,7 +125,7 @@ export class MerchantAvailabilityService {
 
 			await deps.update(merchantId, { isTakingOrders }, opts);
 
-			log.info(
+			logger.info(
 				{ merchantId, isTakingOrders },
 				"[MerchantAvailabilityService] Updated order-taking status",
 			);
@@ -134,7 +134,7 @@ export class MerchantAvailabilityService {
 		} catch (error) {
 			if (error instanceof RepositoryError) throw error;
 
-			log.error(
+			logger.error(
 				{ error, merchantId, isTakingOrders },
 				"[MerchantAvailabilityService] Failed to set order-taking status",
 			);
@@ -174,14 +174,14 @@ export class MerchantAvailabilityService {
 		try {
 			await deps.update(merchantId, { operatingStatus }, opts);
 
-			log.info(
+			logger.info(
 				{ merchantId, operatingStatus },
 				"[MerchantAvailabilityService] Updated operating status",
 			);
 
 			return operatingStatus;
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, merchantId, operatingStatus },
 				"[MerchantAvailabilityService] Failed to set operating status",
 			);
@@ -267,12 +267,12 @@ export class MerchantAvailabilityService {
 		try {
 			await deps.update(merchantId, { isTakingOrders: true }, opts);
 
-			log.info(
+			logger.info(
 				{ merchantId },
 				"[MerchantAvailabilityService] Marked merchant as busy",
 			);
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, merchantId },
 				"[MerchantAvailabilityService] Failed to mark merchant as busy",
 			);
@@ -305,12 +305,12 @@ export class MerchantAvailabilityService {
 		try {
 			await deps.update(merchantId, { isTakingOrders: false }, opts);
 
-			log.info(
+			logger.info(
 				{ merchantId },
 				"[MerchantAvailabilityService] Marked merchant as available",
 			);
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, merchantId },
 				"[MerchantAvailabilityService] Failed to mark merchant as available",
 			);

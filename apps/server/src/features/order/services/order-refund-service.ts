@@ -4,7 +4,8 @@ import { eq, sql } from "drizzle-orm";
 import { v7 } from "uuid";
 import type { WithTx } from "@/core/interface";
 import { type DatabaseTransaction, tables } from "@/core/services/db";
-import { log, toNumberSafe, toStringNumberSafe } from "@/utils";
+import { toNumberSafe, toStringNumberSafe } from "@/utils";
+import { logger } from "@/utils/logger";
 
 /**
  * Service responsible for processing order refunds
@@ -171,7 +172,7 @@ export class OrderRefundService {
 
 		if (!paymentTransaction) {
 			// No payment transaction found - nothing to refund
-			log.debug(
+			logger.debug(
 				{ orderId, userId },
 				"[OrderRefundService] No payment transaction found - skipping refund",
 			);
@@ -191,7 +192,7 @@ export class OrderRefundService {
 		);
 
 		if (!wallet || !payment) {
-			log.warn(
+			logger.warn(
 				{ orderId, userId, transactionId: paymentTransaction.id },
 				"[OrderRefundService] Wallet or payment not found - cannot process refund",
 			);
@@ -226,7 +227,7 @@ export class OrderRefundService {
 			reason,
 		});
 
-		log.info(
+		logger.info(
 			{
 				orderId,
 				userId,

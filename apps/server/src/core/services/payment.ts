@@ -8,7 +8,7 @@ import {
 } from "@erhahahaa/midtrans-client-typescript";
 import type { BankProvider } from "@repo/schema/common";
 import type { PaymentMethod } from "@repo/schema/payment";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 import { PaymentError } from "../error";
 
 export interface PaymentChargePayload {
@@ -67,7 +67,7 @@ export class MidtransPaymentService implements PaymentService {
 
 	async charge(payload: PaymentChargePayload): Promise<ChargeResponse> {
 		try {
-			log.debug({ payload }, "[MidtransPayment] charge payload");
+			logger.debug({ payload }, "[MidtransPayment] charge payload");
 			const { method, bank } = payload;
 			const chargePayload: ChargeParameter = {
 				payment_type: "qris",
@@ -115,9 +115,12 @@ export class MidtransPaymentService implements PaymentService {
 			const res = await this.#client.charge(chargePayload);
 			return res;
 		} catch (error) {
-			log.error({ payload, detail: error }, "[MidtransPayment] charge failed");
+			logger.error(
+				{ payload, detail: error },
+				"[MidtransPayment] charge failed",
+			);
 			if (error instanceof MidtransError) {
-				log.info({ detail: error.rawHttpClientData }, "RAW");
+				logger.info({ detail: error.rawHttpClientData }, "RAW");
 			}
 			throw new PaymentError("Failed to charge", {
 				code: "INTERNAL_SERVER_ERROR",
@@ -129,11 +132,14 @@ export class MidtransPaymentService implements PaymentService {
 		payload: PaymentVerificationPayload,
 	): Promise<TransactionStatusResponse> {
 		try {
-			log.debug({ payload }, "[MidtransPayment] verify payload");
+			logger.debug({ payload }, "[MidtransPayment] verify payload");
 			const res = await this.#client.transaction.status(payload.externalId);
 			return res;
 		} catch (error) {
-			log.error({ payload, detail: error }, "[MidtransPayment] verify failed.");
+			logger.error(
+				{ payload, detail: error },
+				"[MidtransPayment] verify failed.",
+			);
 			throw new PaymentError("Failed to verify", {
 				code: "INTERNAL_SERVER_ERROR",
 			});
@@ -144,7 +150,7 @@ export class MidtransPaymentService implements PaymentService {
 		payload: PaymentWebhookPayload,
 	): Promise<PaymentWebhookResult> {
 		try {
-			log.debug({ payload }, "[MidtransPayment] handleWebhook payload");
+			logger.debug({ payload }, "[MidtransPayment] handleWebhook payload");
 			const body = payload.rawBody as {
 				transaction_status: string;
 				order_id: string;
@@ -158,7 +164,7 @@ export class MidtransPaymentService implements PaymentService {
 			};
 			return result;
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ payload, detail: error },
 				"[MidtransPayment] handleWebhook failed.",
 			);

@@ -6,7 +6,7 @@
  */
 
 import type { BatchNotificationJob } from "@repo/schema/queue";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 import type { QueueHandlerContext } from "../queue-handler";
 
 export async function handleBatchNotification(
@@ -16,13 +16,13 @@ export async function handleBatchNotification(
 	const { payload } = job;
 	const { orderId, driverUserIds, notification } = payload;
 
-	log.info(
+	logger.info(
 		{ orderId, driverCount: driverUserIds.length },
 		"[BatchNotificationHandler] Processing batch notification",
 	);
 
 	if (driverUserIds.length === 0) {
-		log.warn(
+		logger.warn(
 			{ orderId },
 			"[BatchNotificationHandler] No drivers to notify - skipping",
 		);
@@ -45,12 +45,12 @@ export async function handleBatchNotification(
 			},
 		});
 
-		log.info(
+		logger.info(
 			{ orderId, notifiedCount: driverUserIds.length },
 			"[BatchNotificationHandler] Batch notification sent",
 		);
 	} catch (error) {
-		log.error(
+		logger.error(
 			{ error, orderId, driverCount: driverUserIds.length },
 			"[BatchNotificationHandler] Failed to send batch notification",
 		);

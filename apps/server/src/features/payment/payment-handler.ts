@@ -4,7 +4,7 @@ import { m } from "@repo/i18n";
 import { RepositoryError } from "@/core/error";
 import { createORPCRouter } from "@/core/router/orpc";
 import { OrderQueueService } from "@/core/services/queue";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 import { PaymentSpec } from "./payment-spec";
 
 const { pub } = createORPCRouter(PaymentSpec);
@@ -21,7 +21,7 @@ function verifyMidtransSignature(payload: {
 }): boolean {
 	const serverKey = env.MIDTRANS_SERVER_KEY;
 	if (!serverKey) {
-		log.error("MIDTRANS_SERVER_KEY not configured");
+		logger.error("MIDTRANS_SERVER_KEY not configured");
 		return false;
 	}
 
@@ -36,7 +36,7 @@ function verifyMidtransSignature(payload: {
 	const isValid = calculatedSignature === signature_key;
 
 	if (!isValid) {
-		log.warn(
+		logger.warn(
 			{
 				received: signature_key,
 				calculated: calculatedSignature,
@@ -74,7 +74,7 @@ export const PaymentHandler = pub.router({
 			receivedAt: new Date(),
 		});
 
-		log.info(
+		logger.info(
 			{ orderId: body.order_id, status: body.transaction_status },
 			"[PaymentHandler] Payment webhook enqueued for processing",
 		);

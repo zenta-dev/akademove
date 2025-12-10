@@ -2,7 +2,7 @@ import { m } from "@repo/i18n";
 import { trimObjectValues } from "@repo/shared";
 import { AuthError } from "@/core/error";
 import { createORPCRouter } from "@/core/router/orpc";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 import { DriverApprovalSpec } from "./driver-approval-spec";
 
 const { priv } = createORPCRouter(DriverApprovalSpec);
@@ -131,7 +131,7 @@ export const DriverApprovalHandler = priv.router({
 						status: "APPROVED",
 					});
 				} catch (error) {
-					log.error(
+					logger.error(
 						{ error, driverId: params.id },
 						"[DriverApprovalHandler] Failed to send approval email",
 					);
@@ -212,7 +212,7 @@ export const DriverApprovalHandler = priv.router({
 						rejectionDetails,
 					});
 				} catch (error) {
-					log.error(
+					logger.error(
 						{ error, driverId: params.id },
 						"[DriverApprovalHandler] Failed to send rejection email",
 					);

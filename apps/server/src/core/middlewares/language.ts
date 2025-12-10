@@ -5,7 +5,7 @@ import {
 	overwriteServerAsyncLocalStorage,
 } from "@repo/i18n";
 import { createMiddleware } from "hono/factory";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 import type { HonoContext } from "../interface";
 
 export const localeMiddleware = createMiddleware<HonoContext>(
@@ -25,7 +25,7 @@ export const localeMiddleware = createMiddleware<HonoContext>(
 
 		if (acceptLanguage) {
 			const locale = locales.find((l) => acceptLanguage.includes(l));
-			log.info(`Locale set to ${locale} from Accept-Language header`);
+			logger.info(`Locale set to ${locale} from Accept-Language header`);
 			c.set("locale", locale ?? "en");
 			return asyncStorage.run(
 				{ locale: locale ?? "en", messageCalls: new Set() },

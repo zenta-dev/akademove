@@ -15,7 +15,7 @@ import {
 	type TargetAudience,
 	type UpdateBroadcast,
 } from "@/core/tables/broadcast";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 
 export class BroadcastRepository extends BaseRepository {
 	constructor(db: DatabaseService, kv: KeyValueService) {
@@ -44,7 +44,7 @@ export class BroadcastRepository extends BaseRepository {
 				expirationTtl: CACHE_TTLS["1h"],
 			});
 
-			log.info(
+			logger.info(
 				{ broadcastId: newBroadcast.id },
 				"[BroadcastRepository] Created broadcast",
 			);
@@ -181,7 +181,10 @@ export class BroadcastRepository extends BaseRepository {
 				expirationTtl: CACHE_TTLS["1h"],
 			});
 
-			log.info({ broadcastId: id }, "[BroadcastRepository] Updated broadcast");
+			logger.info(
+				{ broadcastId: id },
+				"[BroadcastRepository] Updated broadcast",
+			);
 			return BroadcastRepository.composeEntity(updatedBroadcast);
 		} catch (error) {
 			throw this.handleError(error, "update");
@@ -197,7 +200,10 @@ export class BroadcastRepository extends BaseRepository {
 			// Remove from cache
 			await this.deleteCache(`broadcast:${id}`);
 
-			log.info({ broadcastId: id }, "[BroadcastRepository] Deleted broadcast");
+			logger.info(
+				{ broadcastId: id },
+				"[BroadcastRepository] Deleted broadcast",
+			);
 		} catch (error) {
 			throw this.handleError(error, "delete");
 		}

@@ -1,7 +1,7 @@
 import { m } from "@repo/i18n";
 import { trimObjectValues } from "@repo/shared";
 import { createORPCRouter } from "@/core/router/orpc";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 import { QuickMessageSpec } from "./quick-message-spec";
 
 const { priv, pub } = createORPCRouter(QuickMessageSpec);
@@ -38,7 +38,7 @@ export const QuickMessageHandler = {
 			const data = trimObjectValues(body);
 			const template = await context.repo.quickMessage.create(data, { tx });
 
-			log.info(
+			logger.info(
 				{ templateId: template.id, role: template.role },
 				"[QuickMessageHandler] Template created",
 			);
@@ -60,7 +60,7 @@ export const QuickMessageHandler = {
 				tx,
 			});
 
-			log.info(
+			logger.info(
 				{ templateId: params.id },
 				"[QuickMessageHandler] Template updated",
 			);
@@ -79,7 +79,7 @@ export const QuickMessageHandler = {
 		return await context.svc.db.transaction(async (tx) => {
 			await context.repo.quickMessage.delete(params.id, { tx });
 
-			log.info(
+			logger.info(
 				{ templateId: params.id },
 				"[QuickMessageHandler] Template deleted",
 			);

@@ -3,7 +3,7 @@ import { RepositoryError } from "@/core/error";
 import type { PartialWithTx } from "@/core/interface";
 import type { DatabaseService } from "@/core/services/db";
 import type { StorageService } from "@/core/services/storage";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 
 const PRIV_BUCKET = "merchant-priv";
 const PUB_BUCKET = "merchant";
@@ -99,7 +99,7 @@ export class MerchantVerificationService {
 
 			return existing !== undefined && existing !== null;
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, name },
 				"[MerchantVerificationService] Failed to check duplicate name",
 			);
@@ -152,14 +152,14 @@ export class MerchantVerificationService {
 					: Promise.resolve(),
 			]);
 
-			log.info(
+			logger.info(
 				{ merchantId, docKey, imageKey },
 				"[MerchantVerificationService] Documents uploaded",
 			);
 
 			return { docKey, imageKey };
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, params },
 				"[MerchantVerificationService] Failed to upload documents",
 			);
@@ -214,14 +214,14 @@ export class MerchantVerificationService {
 					: Promise.resolve(),
 			]);
 
-			log.info(
+			logger.info(
 				{ merchantId, docKey, imageKey },
 				"[MerchantVerificationService] Documents updated",
 			);
 
 			return { docKey, imageKey };
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, params },
 				"[MerchantVerificationService] Failed to update documents",
 			);
@@ -258,12 +258,12 @@ export class MerchantVerificationService {
 					: Promise.resolve(),
 			]);
 
-			log.info(
+			logger.info(
 				{ docKey, imageKey },
 				"[MerchantVerificationService] Documents deleted",
 			);
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, params },
 				"[MerchantVerificationService] Failed to delete documents",
 			);
@@ -318,7 +318,7 @@ export class MerchantVerificationService {
 				image,
 			});
 
-			log.info(
+			logger.info(
 				{ merchantId, businessName },
 				"[MerchantVerificationService] Merchant documents validated and uploaded",
 			);
@@ -327,7 +327,7 @@ export class MerchantVerificationService {
 		} catch (error) {
 			if (error instanceof RepositoryError) throw error;
 
-			log.error(
+			logger.error(
 				{ error, params },
 				"[MerchantVerificationService] Failed to validate and upload documents",
 			);

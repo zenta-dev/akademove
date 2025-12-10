@@ -21,7 +21,7 @@ import type {
 } from "@repo/schema/queue";
 import { getManagers, getRepositories, getServices } from "@/core/factory";
 import type { RepositoryContext, ServiceContext } from "@/core/interface";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 import { handleAuditLog } from "./handlers/audit-log-handler";
 import { handleBadgeEvaluation } from "./handlers/badge-evaluation-handler";
 import { handleBatchNotification } from "./handlers/batch-notification-handler";
@@ -64,7 +64,7 @@ export async function handleOrderQueue(
 ): Promise<void> {
 	const context = getHandlerContext(env);
 
-	log.info(
+	logger.info(
 		{ batchSize: batch.messages.length, queue: batch.queue },
 		"[QueueHandler] Processing ORDER_QUEUE batch",
 	);
@@ -74,7 +74,7 @@ export async function handleOrderQueue(
 		const { body } = message;
 
 		try {
-			log.debug(
+			logger.debug(
 				{
 					type: body.type,
 					messageId: body.meta.messageId,
@@ -103,7 +103,7 @@ export async function handleOrderQueue(
 				default: {
 					// TypeScript exhaustive check
 					const _exhaustive: never = body;
-					log.error(
+					logger.error(
 						{ body: _exhaustive },
 						"[QueueHandler] Unknown message type",
 					);
@@ -112,7 +112,7 @@ export async function handleOrderQueue(
 
 			message.ack();
 
-			log.info(
+			logger.info(
 				{
 					type: body.type,
 					messageId: body.meta.messageId,
@@ -121,7 +121,7 @@ export async function handleOrderQueue(
 				"[QueueHandler] Order message processed successfully",
 			);
 		} catch (error) {
-			log.error(
+			logger.error(
 				{
 					error,
 					type: body.type,
@@ -148,7 +148,7 @@ export async function handleNotificationQueue(
 ): Promise<void> {
 	const context = getHandlerContext(env);
 
-	log.info(
+	logger.info(
 		{ batchSize: batch.messages.length, queue: batch.queue },
 		"[QueueHandler] Processing NOTIFICATION_QUEUE batch",
 	);
@@ -159,7 +159,7 @@ export async function handleNotificationQueue(
 			const { body } = message;
 
 			try {
-				log.debug(
+				logger.debug(
 					{
 						type: body.type,
 						messageId: body.meta.messageId,
@@ -176,7 +176,7 @@ export async function handleNotificationQueue(
 						break;
 					default: {
 						const _exhaustive: never = body;
-						log.error(
+						logger.error(
 							{ body: _exhaustive },
 							"[QueueHandler] Unknown notification type",
 						);
@@ -186,7 +186,7 @@ export async function handleNotificationQueue(
 				message.ack();
 				return { success: true, messageId: body.meta.messageId };
 			} catch (error) {
-				log.error(
+				logger.error(
 					{
 						error,
 						type: body.type,
@@ -206,7 +206,7 @@ export async function handleNotificationQueue(
 	).length;
 	const failed = results.length - successful;
 
-	log.info(
+	logger.info(
 		{ successful, failed, total: results.length },
 		"[QueueHandler] Notification batch completed",
 	);
@@ -222,7 +222,7 @@ export async function handleProcessingQueue(
 ): Promise<void> {
 	const context = getHandlerContext(env);
 
-	log.info(
+	logger.info(
 		{ batchSize: batch.messages.length, queue: batch.queue },
 		"[QueueHandler] Processing PROCESSING_QUEUE batch",
 	);
@@ -231,7 +231,7 @@ export async function handleProcessingQueue(
 		const { body } = message;
 
 		try {
-			log.debug(
+			logger.debug(
 				{
 					type: body.type,
 					messageId: body.meta.messageId,
@@ -260,7 +260,7 @@ export async function handleProcessingQueue(
 					break;
 				default: {
 					const _exhaustive: never = body;
-					log.error(
+					logger.error(
 						{ body: _exhaustive },
 						"[QueueHandler] Unknown processing type",
 					);
@@ -269,7 +269,7 @@ export async function handleProcessingQueue(
 
 			message.ack();
 
-			log.debug(
+			logger.debug(
 				{
 					type: body.type,
 					messageId: body.meta.messageId,
@@ -277,7 +277,7 @@ export async function handleProcessingQueue(
 				"[QueueHandler] Background task completed",
 			);
 		} catch (error) {
-			log.error(
+			logger.error(
 				{
 					error,
 					type: body.type,
@@ -302,7 +302,7 @@ export async function handleDeadLetterQueue(
 	_env: Env,
 	_ctx: ExecutionContext,
 ): Promise<void> {
-	log.warn(
+	logger.warn(
 		{ batchSize: batch.messages.length },
 		"[QueueHandler] Processing DLQ messages - these require manual review",
 	);
@@ -310,7 +310,7 @@ export async function handleDeadLetterQueue(
 	for (const message of batch.messages) {
 		const { body } = message;
 
-		log.error(
+		logger.error(
 			{
 				type: body.type,
 				messageId: body.meta.messageId,
@@ -346,7 +346,7 @@ export async function handleQueue(
 ): Promise<void> {
 	const queueName = batch.queue;
 
-	log.info(
+	logger.info(
 		{ queue: queueName, messageCount: batch.messages.length },
 		"[QueueHandler] Received queue batch",
 	);
@@ -369,7 +369,7 @@ export async function handleQueue(
 	} else if (queueName.includes("order-dlq")) {
 		await handleDeadLetterQueue(batch, env, ctx);
 	} else {
-		log.warn({ queue: queueName }, "[QueueHandler] Unknown queue");
+		logger.warn({ queue: queueName }, "[QueueHandler] Unknown queue");
 		// Acknowledge all messages to prevent infinite loop
 		for (const message of batch.messages) {
 			message.ack();

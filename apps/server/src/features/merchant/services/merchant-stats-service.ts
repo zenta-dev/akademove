@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 
 export interface MerchantStatsOptions {
 	startDate?: Date;
@@ -231,7 +231,7 @@ export class MerchantStatsService {
 		const totalCommission = Number.parseFloat(stats.total_commission);
 		const averageOrderValue = Number.parseFloat(stats.average_order_value);
 
-		log.info(
+		logger.info(
 			{
 				totalOrders: stats.total_orders,
 				totalRevenue,

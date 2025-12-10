@@ -2,7 +2,7 @@ import type { ReviewCategory } from "@repo/schema/review";
 import { RepositoryError } from "@/core/error";
 import type { PartialWithTx } from "@/core/interface";
 import type { DatabaseService } from "@/core/services/db";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 
 /**
  * Service responsible for review validation
@@ -166,7 +166,7 @@ export class ReviewValidationService {
 
 			return result !== undefined && result !== null;
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, params },
 				"[ReviewValidationService] Failed to check if user reviewed order",
 			);
@@ -242,7 +242,7 @@ export class ReviewValidationService {
 				reason = "User already reviewed this order";
 			}
 
-			log.info(
+			logger.info(
 				{ orderId, userId, canReview, reason },
 				"[ReviewValidationService] Review eligibility checked",
 			);
@@ -255,7 +255,7 @@ export class ReviewValidationService {
 				reason,
 			};
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, params },
 				"[ReviewValidationService] Failed to get review eligibility",
 			);
@@ -345,7 +345,7 @@ export class ReviewValidationService {
 				error: "fromUserId is not part of this order",
 			};
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, params },
 				"[ReviewValidationService] Failed to validate review target",
 			);

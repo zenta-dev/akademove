@@ -24,7 +24,8 @@ import type {
 	ChargePayload,
 	PaymentRepository,
 } from "@/features/payment/payment-repository";
-import { log, toStringNumberSafe } from "@/utils";
+import { toStringNumberSafe } from "@/utils";
+import { logger } from "@/utils/logger";
 import type { OrderListQuery } from "../order-spec";
 import {
 	OrderCouponService,
@@ -77,7 +78,7 @@ export class ScheduledOrderRepository extends OrderBaseRepository {
 				params.scheduledAt,
 			);
 
-			log.debug(
+			logger.debug(
 				{
 					userId: params.userId,
 					type: params.type,
@@ -277,7 +278,7 @@ export class ScheduledOrderRepository extends OrderBaseRepository {
 				);
 			}
 
-			log.info(
+			logger.info(
 				{
 					orderId: order.id,
 					userId: params.userId,
@@ -291,7 +292,7 @@ export class ScheduledOrderRepository extends OrderBaseRepository {
 
 			return { order, payment, transaction, autoAppliedCoupon };
 		} catch (err) {
-			log.error(
+			logger.error(
 				{
 					error: err,
 					userId: params.userId,
@@ -457,7 +458,7 @@ export class ScheduledOrderRepository extends OrderBaseRepository {
 				expirationTtl: CACHE_TTLS["1h"],
 			});
 
-			log.info(
+			logger.info(
 				{
 					orderId: id,
 					newScheduledAt: item.scheduledAt,
@@ -536,7 +537,7 @@ export class ScheduledOrderRepository extends OrderBaseRepository {
 				penaltyAmount = order.totalPrice * penaltyRate;
 				refundAmount = order.totalPrice - penaltyAmount;
 
-				log.info(
+				logger.info(
 					{
 						orderId,
 						totalPrice: order.totalPrice,
@@ -577,7 +578,7 @@ export class ScheduledOrderRepository extends OrderBaseRepository {
 				expirationTtl: CACHE_TTLS["1h"],
 			});
 
-			log.info(
+			logger.info(
 				{
 					orderId,
 					userId,
@@ -590,7 +591,7 @@ export class ScheduledOrderRepository extends OrderBaseRepository {
 
 			return result;
 		} catch (error) {
-			log.error(
+			logger.error(
 				{
 					error,
 					orderId,

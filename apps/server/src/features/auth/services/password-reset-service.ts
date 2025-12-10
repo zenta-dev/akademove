@@ -5,7 +5,7 @@ import { AuthError } from "@/core/error";
 import type { WithTx } from "@/core/interface";
 import { type DatabaseService, tables } from "@/core/services/db";
 import type { MailService } from "@/core/services/mail";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 import type { PasswordManager } from "@/utils/password";
 
 /**
@@ -129,14 +129,14 @@ export class PasswordResetService {
 				userName: user.name,
 			});
 
-			log.info(
+			logger.info(
 				{ userId: user.id, email: user.email },
 				"[PasswordResetService] Password reset OTP sent",
 			);
 
 			return true;
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, email: request.email },
 				"[PasswordResetService] Forgot password failed",
 			);
@@ -215,14 +215,14 @@ export class PasswordResetService {
 
 			await deps.deleteCache(user.id);
 
-			log.info(
+			logger.info(
 				{ userId: user.id, email: user.email },
 				"[PasswordResetService] Password reset successful",
 			);
 
 			return true;
 		} catch (error) {
-			log.error({ error }, "[PasswordResetService] Reset password failed");
+			logger.error({ error }, "[PasswordResetService] Reset password failed");
 			throw error;
 		}
 	}

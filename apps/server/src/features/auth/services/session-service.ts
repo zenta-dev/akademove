@@ -7,8 +7,8 @@ import { S3StorageService, type StorageService } from "@/core/services/storage";
 import type { UserDatabase } from "@/core/tables/auth";
 import type { DetailedUserBadgeDatabase } from "@/core/tables/badge";
 import { UserAdminRepository } from "@/features/user/admin/user-admin-repository";
-import { log } from "@/utils";
 import type { JwtManager, TokenPayload } from "@/utils/jwt";
+import { logger } from "@/utils/logger";
 import type { PasswordManager } from "@/utils/password";
 
 /**
@@ -161,7 +161,7 @@ export class SessionService {
 				deps.setCache(composedUser.id, composedUser),
 			]);
 
-			log.info(
+			logger.info(
 				{ userId: composedUser.id, email: composedUser.email },
 				"[SessionService] User signed in successfully",
 			);
@@ -171,7 +171,7 @@ export class SessionService {
 				user: composedUser,
 			};
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, email: request.email },
 				"[SessionService] Sign in failed",
 			);
@@ -221,7 +221,7 @@ export class SessionService {
 					role: user.role,
 					expiration: this.#JWT_EXPIRY,
 				});
-				log.debug(
+				logger.debug(
 					{ userId: user.id },
 					"[SessionService] Token rotated due to approaching expiry",
 				);
@@ -233,7 +233,7 @@ export class SessionService {
 				payload,
 			};
 		} catch (error) {
-			log.error({ error }, "[SessionService] Get session failed");
+			logger.error({ error }, "[SessionService] Get session failed");
 			throw error;
 		}
 	}
@@ -254,10 +254,10 @@ export class SessionService {
 			const payload = await this.#jwt.verify(token);
 			await deps.deleteCache(payload.id);
 
-			log.info({ userId: payload.id }, "[SessionService] User signed out");
+			logger.info({ userId: payload.id }, "[SessionService] User signed out");
 			return true;
 		} catch (error) {
-			log.error({ error }, "[SessionService] Sign out failed");
+			logger.error({ error }, "[SessionService] Sign out failed");
 			throw error;
 		}
 	}

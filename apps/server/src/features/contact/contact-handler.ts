@@ -1,7 +1,7 @@
 import { m } from "@repo/i18n";
 import { trimObjectValues } from "@repo/shared";
 import { createORPCRouter } from "@/core/router/orpc";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 import { ContactSpec } from "./contact-spec";
 
 const { pub, priv } = createORPCRouter(ContactSpec);
@@ -127,13 +127,13 @@ export const ContactHandler = pub.router({
 					response: data.response,
 					respondedBy: responder?.name ?? "AkadeMove Support",
 				});
-				log.info(
+				logger.info(
 					{ contactId: params.id, email: originalContact.email },
 					"[ContactHandler] Response email sent to user",
 				);
 			} catch (error) {
 				// Log error but don't fail the response operation
-				log.error(
+				logger.error(
 					{ error, contactId: params.id, email: originalContact.email },
 					"[ContactHandler] Failed to send response email",
 				);

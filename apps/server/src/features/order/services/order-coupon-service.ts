@@ -3,7 +3,8 @@ import { RepositoryError } from "@/core/error";
 import type { PartialWithTx } from "@/core/interface";
 import type { DatabaseService } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
-import { log, toStringNumberSafe } from "@/utils";
+import { toStringNumberSafe } from "@/utils";
+import { logger } from "@/utils/logger";
 
 /**
  * Service responsible for order coupon handling
@@ -55,7 +56,7 @@ export class OrderCouponService {
 		const discountAmount = couponValidation.discountAmount;
 		const finalTotalCost = Math.max(0, totalCost - discountAmount);
 
-		log.info(
+		logger.info(
 			{
 				userId,
 				couponCode,
@@ -108,7 +109,7 @@ export class OrderCouponService {
 				});
 
 			if (!bestCoupon || bestDiscountAmount <= 0) {
-				log.debug(
+				logger.debug(
 					{ userId, totalCost, serviceType },
 					"[OrderCouponService] No eligible coupons found for auto-apply",
 				);
@@ -121,7 +122,7 @@ export class OrderCouponService {
 
 			const finalTotalCost = Math.max(0, totalCost - bestDiscountAmount);
 
-			log.info(
+			logger.info(
 				{
 					userId,
 					couponCode: bestCoupon.code,
@@ -142,7 +143,7 @@ export class OrderCouponService {
 			};
 		} catch (error) {
 			// Don't fail the order if auto-apply fails, just log and continue without coupon
-			log.warn(
+			logger.warn(
 				{ error, userId, totalCost, serviceType },
 				"[OrderCouponService] Failed to auto-apply coupon, continuing without discount",
 			);
@@ -211,7 +212,7 @@ export class OrderCouponService {
 			// Increment the used count on the coupon
 			await couponRepo.incrementUsageCount(couponId);
 
-			log.info(
+			logger.info(
 				{
 					couponId,
 					orderId,
@@ -222,7 +223,7 @@ export class OrderCouponService {
 			);
 		} catch (error) {
 			// Log error but don't fail the order - usage recording is not critical
-			log.error(
+			logger.error(
 				{
 					error,
 					couponId,

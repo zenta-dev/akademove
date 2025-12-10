@@ -7,7 +7,7 @@
 
 import type { WebSocketBroadcastJob } from "@repo/schema/queue";
 import { OrderRepository } from "@/features/order/order-repository";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 import type { QueueHandlerContext } from "../queue-handler";
 
 export async function handleWebSocketBroadcast(
@@ -17,7 +17,7 @@ export async function handleWebSocketBroadcast(
 	const { payload } = job;
 	const { roomName, event, target, data, excludeUserIds } = payload;
 
-	log.debug(
+	logger.debug(
 		{ roomName, event, target },
 		"[WebSocketBroadcastHandler] Broadcasting message",
 	);
@@ -54,12 +54,12 @@ export async function handleWebSocketBroadcast(
 			throw new Error(`Broadcast failed: ${errorText}`);
 		}
 
-		log.debug(
+		logger.debug(
 			{ roomName, event },
 			"[WebSocketBroadcastHandler] Broadcast completed",
 		);
 	} catch (error) {
-		log.error(
+		logger.error(
 			{ error, roomName, event },
 			"[WebSocketBroadcastHandler] Failed to broadcast",
 		);

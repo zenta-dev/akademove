@@ -5,7 +5,7 @@ import { AuthError } from "@/core/error";
 import type { PartialWithTx, WithTx } from "@/core/interface";
 import { type DatabaseService, tables } from "@/core/services/db";
 import type { MailService } from "@/core/services/mail";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 
 /**
  * Send email verification request
@@ -135,14 +135,14 @@ export class EmailVerificationService {
 				userName: user.name,
 			});
 
-			log.info(
+			logger.info(
 				{ userId: user.id, email: user.email },
 				"[EmailVerificationService] Email verification OTP sent",
 			);
 
 			return true;
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, email: request.email },
 				"[EmailVerificationService] Send email verification failed",
 			);
@@ -218,14 +218,14 @@ export class EmailVerificationService {
 
 			await deps.deleteCache(user.id);
 
-			log.info(
+			logger.info(
 				{ userId: user.id, email: user.email },
 				"[EmailVerificationService] Email verification successful",
 			);
 
 			return true;
 		} catch (error) {
-			log.error({ error }, "[EmailVerificationService] Verify email failed");
+			logger.error({ error }, "[EmailVerificationService] Verify email failed");
 			throw error;
 		}
 	}

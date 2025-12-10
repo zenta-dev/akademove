@@ -2,7 +2,7 @@ import { RepositoryError } from "@/core/error";
 import type { RepositoryContext } from "@/core/interface";
 import type { DatabaseService, DatabaseTransaction } from "@/core/services/db";
 import { DriverMetricsService } from "@/features/driver/services/driver-metrics-service";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 import { BadgeCriteriaEvaluator } from "./badge-criteria-evaluator";
 
 export class BadgeAwardService {
@@ -84,13 +84,13 @@ export class BadgeAwardService {
 
 					newBadges.push(badge.code);
 
-					log.info(
+					logger.info(
 						{ driverId, badgeCode: badge.code },
 						"[BadgeAwardService] Badge awarded",
 					);
 
 					this.#sendBadgeNotification(driver.userId, badge).catch((error) => {
-						log.warn(
+						logger.warn(
 							{ error, driverId, badgeId: badge.id },
 							"[BadgeAwardService] Failed to send notification",
 						);
@@ -100,7 +100,7 @@ export class BadgeAwardService {
 
 			return { newBadges, alreadyEarned };
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, driverId },
 				"[BadgeAwardService] Failed to evaluate badges",
 			);
@@ -173,7 +173,7 @@ export class BadgeAwardService {
 
 			return { progress, qualified };
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, driverId, badgeId },
 				"[BadgeAwardService] Failed to check badge progress",
 			);

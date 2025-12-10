@@ -19,7 +19,7 @@ import type {
 	BannerDatabase,
 	PublicBanner,
 } from "@/core/tables/banner";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 import type { BannerListQuery } from "./banner-spec";
 
 export class BannerRepository extends BaseRepository {
@@ -204,7 +204,7 @@ export class BannerRepository extends BaseRepository {
 			// Invalidate public cache for this placement
 			await this.#invalidatePublicCache(data.placement);
 
-			log.info({ bannerId: id }, "[BannerRepository] Banner created");
+			logger.info({ bannerId: id }, "[BannerRepository] Banner created");
 			return banner;
 		} catch (error) {
 			throw this.handleError(error, "create banner");
@@ -254,7 +254,7 @@ export class BannerRepository extends BaseRepository {
 					: Promise.resolve(),
 			]);
 
-			log.info({ bannerId: id }, "[BannerRepository] Banner updated");
+			logger.info({ bannerId: id }, "[BannerRepository] Banner updated");
 			return banner;
 		} catch (error) {
 			throw this.handleError(error, "update banner");
@@ -286,7 +286,7 @@ export class BannerRepository extends BaseRepository {
 				this.#invalidatePublicCache(existing.placement),
 			]);
 
-			log.info({ bannerId: id }, "[BannerRepository] Banner deleted");
+			logger.info({ bannerId: id }, "[BannerRepository] Banner deleted");
 			return { ok: true };
 		} catch (error) {
 			throw this.handleError(error, "delete banner");
@@ -331,7 +331,7 @@ export class BannerRepository extends BaseRepository {
 				this.#invalidatePublicCache(existing.placement),
 			]);
 
-			log.info(
+			logger.info(
 				{ bannerId: id, isActive: banner.isActive },
 				"[BannerRepository] Banner status toggled",
 			);

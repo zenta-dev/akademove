@@ -1,6 +1,6 @@
 import { desc, eq } from "drizzle-orm";
 import type { DatabaseService, DatabaseTransaction } from "@/core/services/db";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 
 interface DriverWithPriority {
 	driverId: string;
@@ -48,14 +48,14 @@ export class DriverPriorityService {
 			// Sort by priority score descending (highest first)
 			driverPriorities.sort((a, b) => b.priorityScore - a.priorityScore);
 
-			log.info(
+			logger.info(
 				{ count: driverPriorities.length },
 				"[DriverPriorityService] Drivers sorted by priority",
 			);
 
 			return driverPriorities;
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, driverIds },
 				"[DriverPriorityService] Failed to sort drivers by priority",
 			);

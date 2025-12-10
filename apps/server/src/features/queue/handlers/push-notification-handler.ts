@@ -11,7 +11,7 @@ import type {
 	ApnsConfig,
 	WebpushConfig,
 } from "firebase-admin/messaging";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 import type { QueueHandlerContext } from "../queue-handler";
 
 /**
@@ -77,7 +77,7 @@ export async function handlePushNotification(
 ): Promise<void> {
 	const { payload } = job;
 
-	log.debug(
+	logger.debug(
 		{ toUserId: payload.toUserId, title: payload.title },
 		"[PushNotificationHandler] Processing notification",
 	);
@@ -94,12 +94,12 @@ export async function handlePushNotification(
 			webpush: buildWebpushConfig(payload.webpush),
 		});
 
-		log.info(
+		logger.info(
 			{ toUserId: payload.toUserId },
 			"[PushNotificationHandler] Notification sent successfully",
 		);
 	} catch (error) {
-		log.error(
+		logger.error(
 			{ error, toUserId: payload.toUserId },
 			"[PushNotificationHandler] Failed to send notification",
 		);

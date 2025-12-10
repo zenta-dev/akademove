@@ -22,7 +22,8 @@ import type { WithTx, WithUserId } from "@/core/interface";
 import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
 import type { PaymentDatabase } from "@/core/tables/payment";
-import { log, toNumberSafe, toStringNumberSafe } from "@/utils";
+import { toNumberSafe, toStringNumberSafe } from "@/utils";
+import { logger } from "@/utils/logger";
 import type { NotificationRepository } from "../notification/notification-repository";
 import type { TransactionRepository } from "../transaction/transaction-repository";
 import type { WalletRepository } from "../wallet/wallet-repository";
@@ -392,7 +393,7 @@ export class PaymentRepository extends BaseRepository {
 				sendNotification,
 			});
 		} catch (error) {
-			log.error({ error }, "[PaymentRepository] Failed to process webhook");
+			logger.error({ error }, "[PaymentRepository] Failed to process webhook");
 			if (error instanceof RepositoryError) throw error;
 			throw new RepositoryError(m.error_failed_process_webhook(), {
 				code: "INTERNAL_SERVER_ERROR",

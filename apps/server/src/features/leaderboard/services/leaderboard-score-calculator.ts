@@ -1,6 +1,6 @@
 import type { LEADERBOARD_CATEGORIES } from "@repo/schema/constants";
 import type { DriverMetrics } from "@/features/driver/services/driver-metrics-service";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 
 type LeaderboardCategory = (typeof LEADERBOARD_CATEGORIES)[number];
 
@@ -33,14 +33,14 @@ export class LeaderboardScoreCalculator {
 				case "STREAK":
 					return LeaderboardScoreCalculator.#calculateStreakScore(metrics);
 				default:
-					log.warn(
+					logger.warn(
 						{ category },
 						"[LeaderboardScoreCalculator] Unknown category, returning 0",
 					);
 					return 0;
 			}
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, category, driverId: metrics.driverId },
 				"[LeaderboardScoreCalculator] Failed to calculate score",
 			);

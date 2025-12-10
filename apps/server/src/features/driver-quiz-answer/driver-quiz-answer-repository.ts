@@ -15,7 +15,7 @@ import type { ListResult, PartialWithTx, WithTx } from "@/core/interface";
 import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
 import type { DriverQuizAnswerDatabase } from "@/core/tables/driver-quiz-answer";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 import type { DriverQuizQuestionRepository } from "../driver-quiz-question/driver-quiz-question-repository";
 
 const PASSING_SCORE_PERCENTAGE = 70;
@@ -69,7 +69,7 @@ export class DriverQuizAnswerRepository extends BaseRepository {
 
 			return await this.getCache(id, { fallback });
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, id },
 				"[DriverQuizAnswerRepository] Failed to get attempt",
 			);
@@ -109,7 +109,7 @@ export class DriverQuizAnswerRepository extends BaseRepository {
 
 			return { rows, totalPages };
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, query },
 				"[DriverQuizAnswerRepository] Failed to list attempts",
 			);
@@ -130,7 +130,7 @@ export class DriverQuizAnswerRepository extends BaseRepository {
 
 			return result ? DriverQuizAnswerRepository.composeEntity(result) : null;
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, driverId },
 				"[DriverQuizAnswerRepository] Failed to get latest attempt",
 			);
@@ -185,7 +185,7 @@ export class DriverQuizAnswerRepository extends BaseRepository {
 				updatedAt: now,
 			});
 
-			log.info(
+			logger.info(
 				{ attemptId: id, driverId, questionCount: questions.length },
 				"[DriverQuizAnswerRepository] Quiz started",
 			);
@@ -198,7 +198,7 @@ export class DriverQuizAnswerRepository extends BaseRepository {
 				passingScore: PASSING_SCORE_PERCENTAGE,
 			};
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, driverId },
 				"[DriverQuizAnswerRepository] Failed to start quiz",
 			);
@@ -278,7 +278,7 @@ export class DriverQuizAnswerRepository extends BaseRepository {
 
 			await this.deleteCache(attemptId);
 
-			log.info(
+			logger.info(
 				{ attemptId, questionId, isCorrect, pointsEarned },
 				"[DriverQuizAnswerRepository] Answer submitted",
 			);
@@ -290,7 +290,7 @@ export class DriverQuizAnswerRepository extends BaseRepository {
 				explanation: question.explanation,
 			};
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, attemptId, questionId },
 				"[DriverQuizAnswerRepository] Failed to submit answer",
 			);
@@ -333,7 +333,7 @@ export class DriverQuizAnswerRepository extends BaseRepository {
 
 			await this.deleteCache(attemptId);
 
-			log.info(
+			logger.info(
 				{ attemptId, status, scorePercentage, passed },
 				"[DriverQuizAnswerRepository] Quiz completed",
 			);
@@ -350,7 +350,7 @@ export class DriverQuizAnswerRepository extends BaseRepository {
 				completedAt: now,
 			};
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, attemptId },
 				"[DriverQuizAnswerRepository] Failed to complete quiz",
 			);
@@ -383,7 +383,7 @@ export class DriverQuizAnswerRepository extends BaseRepository {
 				completedAt: attempt.completedAt,
 			};
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, attemptId },
 				"[DriverQuizAnswerRepository] Failed to get result",
 			);

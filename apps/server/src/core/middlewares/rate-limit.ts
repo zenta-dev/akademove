@@ -1,6 +1,7 @@
 import { os } from "@orpc/server";
 import { createMiddleware } from "hono/factory";
-import { log, safeAsync } from "@/utils";
+import { safeAsync } from "@/utils";
+import { logger } from "@/utils/logger";
 import { MiddlewareError } from "../error";
 import type { HonoContext, ORPCContext } from "../interface";
 
@@ -94,7 +95,7 @@ export const honoRateLimit = (config: RateLimitConfig) =>
 			if (state.count > limit) {
 				const retryAfter = Math.ceil((state.resetAt - now) / 1000);
 
-				log.warn(
+				logger.warn(
 					{ key, count: state.count, limit, retryAfter },
 					"Rate limit exceeded",
 				);
@@ -130,7 +131,7 @@ export const honoRateLimit = (config: RateLimitConfig) =>
 			}
 
 			// Log error but don't block request if rate limiting fails
-			log.error({ error, key }, "Rate limiting error - allowing request");
+			logger.error({ error, key }, "Rate limiting error - allowing request");
 			return next();
 		}
 	});
@@ -192,7 +193,7 @@ export const orpcRateLimit = (config: RateLimitConfig) =>
 			if (state.count > limit) {
 				const retryAfter = Math.ceil((state.resetAt - now) / 1000);
 
-				log.warn(
+				logger.warn(
 					{ key, count: state.count, limit, retryAfter },
 					"Rate limit exceeded",
 				);
@@ -217,7 +218,7 @@ export const orpcRateLimit = (config: RateLimitConfig) =>
 			}
 
 			// Log error but don't block request if rate limiting fails
-			log.error({ error, key }, "Rate limiting error - allowing request");
+			logger.error({ error, key }, "Rate limiting error - allowing request");
 			return next();
 		}
 	});

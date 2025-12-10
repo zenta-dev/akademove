@@ -6,7 +6,7 @@ import { RepositoryError } from "@/core/error";
 import type { ORPCContext, WithTx } from "@/core/interface";
 import { AuditService } from "@/core/services/audit";
 import { tables } from "@/core/services/db";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 import type {
 	ApprovalDocumentStatus,
 	DriverApprovalReview,
@@ -110,7 +110,7 @@ export class DriverApprovalRepository extends BaseRepository {
 				opts,
 			);
 
-			log.info(
+			logger.info(
 				{ driverId, document, status },
 				"[DriverApprovalRepository] Document status updated",
 			);
@@ -167,7 +167,7 @@ export class DriverApprovalRepository extends BaseRepository {
 				opts,
 			);
 
-			log.info(
+			logger.info(
 				{ driverId, quizVerified },
 				"[DriverApprovalRepository] Quiz verification updated",
 			);
@@ -280,7 +280,7 @@ export class DriverApprovalRepository extends BaseRepository {
 				opts,
 			);
 
-			log.info(
+			logger.info(
 				{ driverId, reviewedBy: context.user.id },
 				"[DriverApprovalRepository] Driver approved",
 			);
@@ -365,7 +365,7 @@ export class DriverApprovalRepository extends BaseRepository {
 				opts,
 			);
 
-			log.info(
+			logger.info(
 				{ driverId, reason, reviewedBy: context.user.id },
 				"[DriverApprovalRepository] Driver rejected",
 			);

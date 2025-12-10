@@ -1,7 +1,7 @@
 import { BaseRepository } from "@/core/base";
 import type { DatabaseService } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 import { AnalyticsExportService } from "./services/analytics-export-service";
 import { AnalyticsQueryService } from "./services/analytics-query-service";
 
@@ -26,14 +26,14 @@ export class AnalyticsRepository extends BaseRepository {
 
 			const csv = AnalyticsExportService.exportDriverAnalytics(result);
 
-			log.info(
+			logger.info(
 				{ driverId: options.driverId, recordCount: result.length },
 				"[AnalyticsRepository] Driver analytics exported",
 			);
 
 			return csv;
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, options },
 				"[AnalyticsRepository] Failed to export driver analytics",
 			);
@@ -57,14 +57,14 @@ export class AnalyticsRepository extends BaseRepository {
 
 			const csv = AnalyticsExportService.exportMerchantAnalytics(result);
 
-			log.info(
+			logger.info(
 				{ merchantId: options.merchantId, recordCount: result.length },
 				"[AnalyticsRepository] Merchant analytics exported",
 			);
 
 			return csv;
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, options },
 				"[AnalyticsRepository] Failed to export merchant analytics",
 			);
@@ -87,14 +87,14 @@ export class AnalyticsRepository extends BaseRepository {
 
 			const csv = AnalyticsExportService.exportOperatorAnalytics(result);
 
-			log.info(
+			logger.info(
 				{ recordCount: result.length },
 				"[AnalyticsRepository] Operator analytics exported",
 			);
 
 			return csv;
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, options },
 				"[AnalyticsRepository] Failed to export operator analytics",
 			);

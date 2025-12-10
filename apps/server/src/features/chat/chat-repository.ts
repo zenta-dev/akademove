@@ -13,7 +13,7 @@ import type { PartialWithTx, WithTx, WithUserId } from "@/core/interface";
 import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
 import type { OrderChatMessageDatabase } from "@/core/tables/chat";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 import { ChatAuthorizationService, ChatCacheService } from "./services";
 
 export class ChatRepository extends BaseRepository {
@@ -86,7 +86,10 @@ export class ChatRepository extends BaseRepository {
 
 			return { rows, hasMore, nextCursor };
 		} catch (error) {
-			log.error({ error, query }, "[ChatRepository] Failed to list messages");
+			logger.error(
+				{ error, query },
+				"[ChatRepository] Failed to list messages",
+			);
 			throw this.handleError(error, "list");
 		}
 	}
@@ -146,7 +149,7 @@ export class ChatRepository extends BaseRepository {
 				ChatCacheService.generateMessagesCacheKey(params.orderId),
 			);
 
-			log.info(
+			logger.info(
 				{
 					messageId: message.id,
 					orderId: params.orderId,
@@ -157,7 +160,7 @@ export class ChatRepository extends BaseRepository {
 
 			return message;
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, params },
 				"[ChatRepository] Failed to create message - transaction will be rolled back",
 			);
@@ -189,7 +192,7 @@ export class ChatRepository extends BaseRepository {
 
 			return await this.getCache(cacheKey, { fallback });
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, orderId },
 				"[ChatRepository] Failed to get message count",
 			);

@@ -1,7 +1,7 @@
 import { env } from "cloudflare:workers";
 import type { Order, OrderStatus } from "@repo/schema/order";
 import { RepositoryError } from "@/core/error";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 
 /**
  * Service responsible for merchant order status management
@@ -186,12 +186,12 @@ export class MerchantOrderStatusService {
 				}),
 			});
 
-			log.info(
+			logger.info(
 				{ orderId, status },
 				"[MerchantOrderStatusService] WebSocket event emitted",
 			);
 		} catch (error) {
-			log.warn(
+			logger.warn(
 				{ error, orderId, status },
 				"[MerchantOrderStatusService] Failed to emit WebSocket event - non-critical",
 			);

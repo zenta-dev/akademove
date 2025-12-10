@@ -3,7 +3,7 @@ import type {
 	FraudSeverity,
 	FraudSignal,
 } from "@repo/schema/fraud";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 
 interface RegistrationContext {
 	userId: string;
@@ -91,7 +91,7 @@ export class DuplicateAccountService {
 				});
 				relatedUserIds.add(duplicateBank.userId);
 
-				log.warn(
+				logger.warn(
 					{ userId: context.userId, existingUserId: duplicateBank.userId },
 					"[DuplicateAccountService] Duplicate bank account detected",
 				);
@@ -124,7 +124,7 @@ export class DuplicateAccountService {
 					relatedUserIds.add(reg.userId);
 				}
 
-				log.warn(
+				logger.warn(
 					{
 						userId: context.userId,
 						ipAddress: input.ipAddress,
@@ -158,7 +158,7 @@ export class DuplicateAccountService {
 					});
 					relatedUserIds.add(match.userId);
 
-					log.warn(
+					logger.warn(
 						{
 							userId: context.userId,
 							matchedUserId: match.userId,

@@ -3,7 +3,7 @@ import { CACHE_TTLS, CONFIGURATION_KEYS } from "@/core/constants";
 import { RepositoryError } from "@/core/error";
 import type { DatabaseService } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 
 /**
  * BusinessConfigurationService - Provides typed access to business configuration values.
@@ -50,7 +50,7 @@ export class BusinessConfigurationService {
 			});
 
 			if (!result) {
-				log.error(
+				logger.error(
 					"[BusinessConfigurationService] Business configuration not found in database",
 				);
 				throw new RepositoryError(
@@ -71,7 +71,7 @@ export class BusinessConfigurationService {
 			if (error instanceof RepositoryError) {
 				throw error;
 			}
-			log.error(
+			logger.error(
 				{ error },
 				"[BusinessConfigurationService] Failed to get business configuration",
 			);
@@ -89,7 +89,7 @@ export class BusinessConfigurationService {
 	 */
 	static async invalidateCache(kv: KeyValueService): Promise<void> {
 		await kv.delete(BusinessConfigurationService.CACHE_KEY);
-		log.info(
+		logger.info(
 			"[BusinessConfigurationService] Business configuration cache invalidated",
 		);
 	}

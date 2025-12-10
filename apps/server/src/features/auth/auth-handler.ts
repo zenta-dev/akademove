@@ -9,7 +9,8 @@ import { AuthError, BaseError, RepositoryError } from "@/core/error";
 import { hasRoles } from "@/core/middlewares/auth";
 import { createORPCRouter } from "@/core/router/orpc";
 import { DuplicateAccountService } from "@/features/fraud/services";
-import { isDev, log } from "@/utils";
+import { isDev } from "@/utils";
+import { logger } from "@/utils/logger";
 import { AuthSpec } from "./auth-spec";
 
 const { pub, priv } = createORPCRouter(AuthSpec);
@@ -141,7 +142,7 @@ export const AuthHandler = pub.router({
 								opts,
 							);
 						} catch (error) {
-							log.error(
+							logger.error(
 								{ error, userId: result.user.id },
 								"[AuthHandler] Failed to log duplicate account fraud event",
 							);
@@ -158,7 +159,7 @@ export const AuthHandler = pub.router({
 								opts,
 							);
 						} catch (error) {
-							log.error(
+							logger.error(
 								{ error, userId: result.user.id },
 								"[AuthHandler] Failed to record registration IP",
 							);
@@ -203,7 +204,7 @@ export const AuthHandler = pub.router({
 					},
 				} as const;
 			} catch (error) {
-				log.error({ error }, "[AuthHandler] Failed to sign up user");
+				logger.error({ error }, "[AuthHandler] Failed to sign up user");
 				if (error instanceof BaseError) {
 					throw error;
 				}
@@ -315,7 +316,7 @@ export const AuthHandler = pub.router({
 									opts,
 								);
 							} catch (error) {
-								log.error(
+								logger.error(
 									{ error, userId: result.user.id },
 									"[AuthHandler] Failed to log driver duplicate account fraud event",
 								);
@@ -332,7 +333,7 @@ export const AuthHandler = pub.router({
 									opts,
 								);
 							} catch (error) {
-								log.error(
+								logger.error(
 									{ error, userId: result.user.id },
 									"[AuthHandler] Failed to record driver registration IP",
 								);
@@ -385,7 +386,7 @@ export const AuthHandler = pub.router({
 						},
 					} as const;
 				} catch (error) {
-					log.error(
+					logger.error(
 						{ error },
 						`[AuthHandler] Failed to sign up driver ${error}`,
 					);
@@ -453,7 +454,7 @@ export const AuthHandler = pub.router({
 						},
 					} as const;
 				} catch (error) {
-					log.error({ error }, "[AuthHandler] Failed to sign up merchant");
+					logger.error({ error }, "[AuthHandler] Failed to sign up merchant");
 					if (error instanceof BaseError) {
 						throw error;
 					}

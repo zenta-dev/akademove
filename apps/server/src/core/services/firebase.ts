@@ -8,7 +8,7 @@ import {
 	type Messaging,
 	type WebpushConfig,
 } from "firebase-admin/messaging";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 import { FirebaseError } from "../error";
 
 export interface NotificationPayload {
@@ -67,7 +67,7 @@ export class FirebaseAdminService {
 		try {
 			return await this.#messaging.send(message);
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error },
 				`[${this.constructor.name}] - send notification error`,
 			);
@@ -95,7 +95,10 @@ export class FirebaseAdminService {
 		try {
 			return await this.#messaging.send(message);
 		} catch (error) {
-			log.error({ error }, `[${this.constructor.name}] - send to topic error`);
+			logger.error(
+				{ error },
+				`[${this.constructor.name}] - send to topic error`,
+			);
 
 			const msg = error instanceof Error ? error.message : "Unknown error";
 
@@ -134,7 +137,10 @@ export class FirebaseAdminService {
 				failedTokens,
 			};
 		} catch (error) {
-			log.error({ error }, `[${this.constructor.name}] - send multicast error`);
+			logger.error(
+				{ error },
+				`[${this.constructor.name}] - send multicast error`,
+			);
 
 			const msg = error instanceof Error ? error.message : "Unknown error";
 
@@ -149,7 +155,7 @@ export class FirebaseAdminService {
 
 			return result;
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error },
 				`[${this.constructor.name}] - subscribe to topic error`,
 			);
@@ -170,7 +176,7 @@ export class FirebaseAdminService {
 
 			return result;
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error },
 				`[${this.constructor.name}] - unsubscribe to topic error`,
 			);
@@ -185,7 +191,7 @@ export class FirebaseAdminService {
 		try {
 			return await this.#messaging.send(message);
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error },
 				`[${this.constructor.name}] - send custom message error`,
 			);

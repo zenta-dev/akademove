@@ -1,7 +1,8 @@
 import { and, avg, count, eq, gte, sql } from "drizzle-orm";
 import type { DatabaseService, DatabaseTransaction } from "@/core/services/db";
 import { tables } from "@/core/services/db";
-import { log, toNumberSafe } from "@/utils";
+import { toNumberSafe } from "@/utils";
+import { logger } from "@/utils/logger";
 
 export interface DriverMetrics {
 	driverId: string;
@@ -54,14 +55,14 @@ export class DriverMetricsService {
 				lastActiveDate: orderStats.lastActiveDate,
 			};
 
-			log.info(
+			logger.info(
 				{ driverId, metrics },
 				"[DriverMetricsService] Metrics calculated",
 			);
 
 			return metrics;
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, driverId },
 				"[DriverMetricsService] Failed to calculate metrics",
 			);

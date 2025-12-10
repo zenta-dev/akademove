@@ -13,7 +13,8 @@ import type { WithTx, WithUserId } from "@/core/interface";
 import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
 import type { walletDatabase } from "@/core/tables/wallet";
-import { log, toNumberSafe, toStringNumberSafe } from "@/utils";
+import { toNumberSafe, toStringNumberSafe } from "@/utils";
+import { logger } from "@/utils/logger";
 import {
 	type WalletBalanceService,
 	WalletMonthlySummaryService,
@@ -170,7 +171,7 @@ export class WalletRepository extends BaseRepository {
 				{ tx },
 			);
 
-			log.info(
+			logger.info(
 				{
 					senderWalletId,
 					recipientWalletId,

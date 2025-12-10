@@ -1,6 +1,6 @@
 import { RepositoryError } from "@/core/error";
 import type { PartialWithTx } from "@/core/interface";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 
 /**
  * Service responsible for driver availability management
@@ -62,14 +62,14 @@ export class DriverAvailabilityService {
 
 			await deps.update(driverId, updateData, opts);
 
-			log.info(
+			logger.info(
 				{ driverId, isOnline, isTakingOrder: updateData.isTakingOrder },
 				"[DriverAvailabilityService] Updated online status",
 			);
 
 			return isOnline;
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, driverId, isOnline },
 				"[DriverAvailabilityService] Failed to set online status",
 			);
@@ -124,7 +124,7 @@ export class DriverAvailabilityService {
 
 			await deps.update(driverId, { isTakingOrder }, opts);
 
-			log.info(
+			logger.info(
 				{ driverId, isTakingOrder },
 				"[DriverAvailabilityService] Updated order-taking status",
 			);
@@ -133,7 +133,7 @@ export class DriverAvailabilityService {
 		} catch (error) {
 			if (error instanceof RepositoryError) throw error;
 
-			log.error(
+			logger.error(
 				{ error, driverId, isTakingOrder },
 				"[DriverAvailabilityService] Failed to set order-taking status",
 			);
@@ -231,12 +231,12 @@ export class DriverAvailabilityService {
 		try {
 			await deps.update(driverId, { isTakingOrder: true }, opts);
 
-			log.info(
+			logger.info(
 				{ driverId },
 				"[DriverAvailabilityService] Marked driver as busy",
 			);
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, driverId },
 				"[DriverAvailabilityService] Failed to mark driver as busy",
 			);
@@ -269,12 +269,12 @@ export class DriverAvailabilityService {
 		try {
 			await deps.update(driverId, { isTakingOrder: false }, opts);
 
-			log.info(
+			logger.info(
 				{ driverId },
 				"[DriverAvailabilityService] Marked driver as available",
 			);
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, driverId },
 				"[DriverAvailabilityService] Failed to mark driver as available",
 			);

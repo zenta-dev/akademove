@@ -1,7 +1,7 @@
 import { m } from "@repo/i18n";
 import { trimObjectValues } from "@repo/shared";
 import { createORPCRouter } from "@/core/router/orpc";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 import { EmergencySpec } from "./emergency-spec";
 
 const { priv } = createORPCRouter(EmergencySpec);
@@ -45,7 +45,7 @@ export const EmergencyHandler = priv.router({
 				{ tx },
 			);
 
-			log.info(
+			logger.info(
 				{
 					emergencyId: result.id,
 					orderId: result.orderId,
@@ -75,13 +75,13 @@ export const EmergencyHandler = priv.router({
 					{ tx },
 				);
 
-				log.info(
+				logger.info(
 					{ emergencyId: result.id },
 					"[EmergencyHandler] Emergency notification sent to operators",
 				);
 			} catch (notifError) {
 				// Log error but don't fail the emergency trigger
-				log.error(
+				logger.error(
 					{ error: notifError, emergencyId: result.id },
 					"[EmergencyHandler] Failed to send emergency notification",
 				);
@@ -181,7 +181,7 @@ export const EmergencyHandler = priv.router({
 					{ tx },
 				);
 
-				log.info(
+				logger.info(
 					{
 						emergencyId: params.id,
 						status: result.status,

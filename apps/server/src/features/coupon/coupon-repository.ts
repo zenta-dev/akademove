@@ -21,7 +21,8 @@ import { AuditService } from "@/core/services/audit";
 import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
 import type { CouponDatabase } from "@/core/tables/coupon";
-import { log, toNumberSafe, toStringNumberSafe } from "@/utils";
+import { toNumberSafe, toStringNumberSafe } from "@/utils";
+import { logger } from "@/utils/logger";
 import { CouponCalculationService } from "./services/coupon-calculation-service";
 import { CouponValidationService } from "./services/coupon-validation-service";
 
@@ -59,7 +60,7 @@ export class CouponRepository extends BaseRepository {
 
 			return dbResult?.count ?? 0;
 		} catch (error) {
-			log.error({ query, error }, "Failed to get query count");
+			logger.error({ query, error }, "Failed to get query count");
 			return 0;
 		}
 	}
@@ -198,7 +199,7 @@ export class CouponRepository extends BaseRepository {
 					opts,
 				);
 
-				log.info(
+				logger.info(
 					{ couponId: result.id, userId: item.userId },
 					"[CouponRepository] Coupon created and audited",
 				);
@@ -254,7 +255,7 @@ export class CouponRepository extends BaseRepository {
 					opts,
 				);
 
-				log.info(
+				logger.info(
 					{ couponId: id, userId: context.user.id },
 					"[CouponRepository] Coupon updated and audited",
 				);
@@ -298,7 +299,7 @@ export class CouponRepository extends BaseRepository {
 						opts,
 					);
 
-					log.info(
+					logger.info(
 						{ couponId: id, userId: context.user.id },
 						"[CouponRepository] Coupon deleted and audited",
 					);
@@ -373,7 +374,7 @@ export class CouponRepository extends BaseRepository {
 					totalAmount,
 				);
 
-			log.info(
+			logger.info(
 				{
 					userId,
 					merchantId,
@@ -391,7 +392,7 @@ export class CouponRepository extends BaseRepository {
 				bestDiscountAmount,
 			};
 		} catch (error) {
-			log.error({ params, error }, "Failed to get eligible coupons");
+			logger.error({ params, error }, "Failed to get eligible coupons");
 			throw this.handleError(error, "getEligibleCoupons");
 		}
 	}
@@ -467,7 +468,7 @@ export class CouponRepository extends BaseRepository {
 				finalAmount,
 			};
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ code, orderAmount, userId, error },
 				"Failed to validate coupon",
 			);
@@ -484,7 +485,10 @@ export class CouponRepository extends BaseRepository {
 
 			return usages.length;
 		} catch (error) {
-			log.error({ couponId, userId, error }, "Failed to get user usage count");
+			logger.error(
+				{ couponId, userId, error },
+				"Failed to get user usage count",
+			);
 			throw this.handleError(error, "getUserUsageCount");
 		}
 	}
@@ -501,7 +505,7 @@ export class CouponRepository extends BaseRepository {
 
 			await this.deleteCache(id);
 		} catch (error) {
-			log.error({ id, error }, "Failed to increment usage count");
+			logger.error({ id, error }, "Failed to increment usage count");
 			throw this.handleError(error, "incrementUsageCount");
 		}
 	}
@@ -521,7 +525,7 @@ export class CouponRepository extends BaseRepository {
 				discountApplied: toStringNumberSafe(discountApplied),
 			});
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ couponId, orderId, userId, discountApplied, error },
 				"Failed to record coupon usage",
 			);
@@ -535,7 +539,7 @@ export class CouponRepository extends BaseRepository {
 		context?: ORPCContext,
 	): Promise<Coupon> {
 		try {
-			log.info({ couponId: id }, "[CouponRepository] Activating coupon");
+			logger.info({ couponId: id }, "[CouponRepository] Activating coupon");
 
 			const coupon = await this.#getFromDB(id);
 			if (!coupon) {
@@ -575,7 +579,7 @@ export class CouponRepository extends BaseRepository {
 					opts,
 				);
 
-				log.info(
+				logger.info(
 					{ couponId: id, userId: context.user.id },
 					"[CouponRepository] Coupon activated and audited",
 				);
@@ -593,7 +597,7 @@ export class CouponRepository extends BaseRepository {
 		context?: ORPCContext,
 	): Promise<Coupon> {
 		try {
-			log.info({ couponId: id }, "[CouponRepository] Deactivating coupon");
+			logger.info({ couponId: id }, "[CouponRepository] Deactivating coupon");
 
 			const coupon = await this.#getFromDB(id);
 			if (!coupon) {
@@ -633,7 +637,7 @@ export class CouponRepository extends BaseRepository {
 					opts,
 				);
 
-				log.info(
+				logger.info(
 					{ couponId: id, userId: context.user.id },
 					"[CouponRepository] Coupon deactivated and audited",
 				);

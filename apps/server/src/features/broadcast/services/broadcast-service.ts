@@ -5,7 +5,7 @@ import type { MailService } from "@/core/services/mail";
 import type { Broadcast } from "@/core/tables/broadcast";
 import { TARGET_AUDIENCE } from "@/core/tables/broadcast";
 import type { NotificationRepository } from "@/features/notification/notification-repository";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 
 export class BroadcastService {
 	constructor(
@@ -16,7 +16,7 @@ export class BroadcastService {
 
 	async sendEmailBroadcast(broadcast: Broadcast, opts?: WithTx): Promise<void> {
 		try {
-			log.info(
+			logger.info(
 				{
 					broadcastId: broadcast.id,
 					targetAudience: broadcast.targetAudience,
@@ -32,7 +32,7 @@ export class BroadcastService {
 			);
 
 			if (targetUsers.length === 0) {
-				log.warn(
+				logger.warn(
 					{ broadcastId: broadcast.id },
 					"[BroadcastService] No target users found",
 				);
@@ -66,7 +66,7 @@ export class BroadcastService {
 						});
 						return { success: true, userId: targetUser.id };
 					} catch (error) {
-						log.error(
+						logger.error(
 							{
 								error,
 								userId: targetUser.id,
@@ -98,7 +98,7 @@ export class BroadcastService {
 				opts,
 			);
 
-			log.info(
+			logger.info(
 				{
 					broadcastId: broadcast.id,
 					totalRecipients: targetUsers.length,
@@ -108,7 +108,7 @@ export class BroadcastService {
 				"[BroadcastService] Email broadcast completed",
 			);
 		} catch (error) {
-			log.error(
+			logger.error(
 				{
 					error,
 					broadcastId: broadcast.id,
@@ -121,7 +121,7 @@ export class BroadcastService {
 
 	async sendInAppBroadcast(broadcast: Broadcast, opts?: WithTx): Promise<void> {
 		try {
-			log.info(
+			logger.info(
 				{
 					broadcastId: broadcast.id,
 					targetAudience: broadcast.targetAudience,
@@ -137,7 +137,7 @@ export class BroadcastService {
 			);
 
 			if (targetUsers.length === 0) {
-				log.warn(
+				logger.warn(
 					{ broadcastId: broadcast.id },
 					"[BroadcastService] No target users found",
 				);
@@ -164,7 +164,7 @@ export class BroadcastService {
 					);
 					createdCount++;
 				} catch (error) {
-					log.error(
+					logger.error(
 						{
 							error,
 							userId: targetUser.id,
@@ -174,7 +174,7 @@ export class BroadcastService {
 				}
 			}
 
-			log.info(
+			logger.info(
 				{
 					broadcastId: broadcast.id,
 					totalRecipients: targetUsers.length,
@@ -183,7 +183,7 @@ export class BroadcastService {
 				"[BroadcastService] In-app broadcast completed",
 			);
 		} catch (error) {
-			log.error(
+			logger.error(
 				{
 					error,
 					broadcastId: broadcast.id,

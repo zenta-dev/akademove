@@ -7,7 +7,7 @@ import { MerchantApprovalStatusEmail } from "emails/merchant-approval-status";
 import { ResetPasswordEmail } from "emails/reset-password";
 import * as React from "react";
 import { Resend } from "resend";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 import { MailError } from "../error";
 
 interface BaseSendMailProps {
@@ -175,7 +175,7 @@ export class ResendMailService implements MailService {
 
 	async sendContactResponse(props: SendContactResponseProps): Promise<void> {
 		try {
-			log.debug(
+			logger.debug(
 				{
 					to: props.to,
 					userName: props.userName,
@@ -200,9 +200,9 @@ export class ResendMailService implements MailService {
 					subject: `Re: ${props.subject}`,
 				},
 			);
-			log.debug({ res }, "[MailService] Contact response email sent");
+			logger.debug({ res }, "[MailService] Contact response email sent");
 		} catch (error) {
-			log.error({ error }, "[MailService] sendContactResponse error");
+			logger.error({ error }, "[MailService] sendContactResponse error");
 			if (error instanceof MailError) throw error;
 			throw new MailError("Failed to send contact response email");
 		}

@@ -16,7 +16,8 @@ import { BusinessConfigurationService } from "@/features/configuration/services"
 import { DriverPriorityService } from "@/features/driver/services/driver-priority-service";
 import { OrderCancellationService } from "@/features/order/services/order-cancellation-service";
 import { OrderRefundService } from "@/features/order/services/order-refund-service";
-import { log, safeSync, toNumberSafe } from "@/utils";
+import { safeSync, toNumberSafe } from "@/utils";
+import { logger } from "@/utils/logger";
 
 type OrderId = string;
 export class OrderRoom extends BaseDurableObject {
@@ -34,7 +35,7 @@ export class OrderRoom extends BaseDurableObject {
 	broadcast(message: OrderEnvelope, opts?: BroadcastOptions): void {
 		const parse = OrderEnvelopeSchema.safeParse(message);
 		if (!parse.success) {
-			log.warn(parse, "Invalid order WS message");
+			logger.warn(parse, "Invalid order WS message");
 			return;
 		}
 		super.broadcast(parse.data, opts);
@@ -49,7 +50,7 @@ export class OrderRoom extends BaseDurableObject {
 			JSON.parse(message.toString()),
 		);
 		if (!success) {
-			log.warn(data, "Invalid order WS message format");
+			logger.warn(data, "Invalid order WS message format");
 			return;
 		}
 
@@ -104,7 +105,7 @@ export class OrderRoom extends BaseDurableObject {
 					);
 				}
 			} catch (error) {
-				log.error(
+				logger.error(
 					{ error, action: data.a, userId: session },
 					"[OrderRoom] WebSocket message handler failed - transaction rolled back",
 				);
@@ -122,7 +123,7 @@ export class OrderRoom extends BaseDurableObject {
 		const opts = { tx };
 		const detail = data.p.detail;
 		if (!detail) {
-			log.warn(data, "Invalid order matching payload");
+			logger.warn(data, "Invalid order matching payload");
 			return;
 		}
 
@@ -166,7 +167,7 @@ export class OrderRoom extends BaseDurableObject {
 					(d): d is NonNullable<typeof d> => d !== null && d !== undefined,
 				);
 
-			log.info(
+			logger.info(
 				{
 					orderId: findOrder.id,
 					availableDrivers: nearbyDrivers.length,
@@ -176,7 +177,7 @@ export class OrderRoom extends BaseDurableObject {
 			);
 		}
 
-		log.info(
+		logger.info(
 			{
 				orderId: findOrder.id,
 				availableDrivers: nearbyDrivers.length,
@@ -185,7 +186,7 @@ export class OrderRoom extends BaseDurableObject {
 		);
 
 		if (nearbyDrivers.length === 0) {
-			log.warn(
+			logger.warn(
 				{ orderId: findOrder.id, userId: findOrder.userId },
 				"[OrderRoom] No nearby driver found — cancelling order and processing refund",
 			);
@@ -253,7 +254,7 @@ export class OrderRoom extends BaseDurableObject {
 						},
 					};
 
-					log.info(
+					logger.info(
 						{
 							orderId: updatedOrder.id,
 							userId: wallet.userId,
@@ -262,7 +263,7 @@ export class OrderRoom extends BaseDurableObject {
 						"[OrderRoom] Refund processed successfully",
 					);
 				} catch (refundError) {
-					log.error(
+					logger.error(
 						{
 							error: refundError,
 							orderId: updatedOrder.id,
@@ -293,7 +294,10 @@ export class OrderRoom extends BaseDurableObject {
 		for (const driver of nearbyDrivers) {
 			// Skip drivers without required fields
 			if (!driver.userId || !driver.id) {
-				log.warn({ driver }, "[OrderRoom] Skipping driver with missing fields");
+				logger.warn(
+					{ driver },
+					"[OrderRoom] Skipping driver with missing fields",
+				);
 				continue;
 			}
 
@@ -339,7 +343,7 @@ export class OrderRoom extends BaseDurableObject {
 		const detail = data.p.detail;
 
 		if (!detail) {
-			log.warn(data, "Invalid order accepted payload");
+			logger.warn(data, "Invalid order accepted payload");
 			return;
 		}
 
@@ -366,7 +370,7 @@ export class OrderRoom extends BaseDurableObject {
 			lockedOrder?.status !== "MATCHING" &&
 			lockedOrder?.status !== "REQUESTED"
 		) {
-			log.warn(
+			logger.warn(
 				{ orderId, currentStatus: lockedOrder?.status, driverId },
 				"[OrderRoom] Order already accepted by another driver",
 			);
@@ -392,7 +396,7 @@ export class OrderRoom extends BaseDurableObject {
 				);
 				await OrderValidationService.validateStockAvailability(orderId, tx);
 			} catch (stockError) {
-				log.warn(
+				logger.warn(
 					{ orderId, driverId, error: stockError },
 					"[OrderRoom] FOOD order rejected due to insufficient stock",
 				);
@@ -426,7 +430,7 @@ export class OrderRoom extends BaseDurableObject {
 			| undefined;
 
 		if (!lockedDriver) {
-			log.warn({ orderId, driverId }, "[OrderRoom] Driver not found");
+			logger.warn({ orderId, driverId }, "[OrderRoom] Driver not found");
 			const errorPayload: OrderEnvelope = {
 				e: "UNAVAILABLE",
 				f: "s",
@@ -440,7 +444,7 @@ export class OrderRoom extends BaseDurableObject {
 
 		// Check if driver is already taking an order
 		if (lockedDriver.isTakingOrder) {
-			log.warn(
+			logger.warn(
 				{ orderId, driverId },
 				"[OrderRoom] Driver is already taking another order",
 			);
@@ -518,7 +522,7 @@ export class OrderRoom extends BaseDurableObject {
 	) {
 		const done = data.p.done;
 		if (!done) {
-			log.warn(data, "Invalid order done payload");
+			logger.warn(data, "Invalid order done payload");
 			return;
 		}
 
@@ -579,7 +583,7 @@ export class OrderRoom extends BaseDurableObject {
 				if (maxReduction > 0) {
 					const originalRate = commissionRate;
 					commissionRate = commissionRate * (1 - maxReduction);
-					log.info(
+					logger.info(
 						{
 							driverId: order.driverId,
 							originalRate,
@@ -697,14 +701,14 @@ export class OrderRoom extends BaseDurableObject {
 			await badgeAwardService
 				.evaluateAndAwardBadges(order.driverId, opts)
 				.catch((error) => {
-					log.error(
+					logger.error(
 						{ error, driverId: order.driverId },
 						"[OrderRoom] Failed to award badges",
 					);
 				});
 		}
 
-		log.info(
+		logger.info(
 			{
 				orderId: order.id,
 				orderType: order.type,
@@ -732,13 +736,13 @@ export class OrderRoom extends BaseDurableObject {
 	) {
 		const userId = this.findUserIdBySocket(ws);
 		if (!userId) {
-			log.warn("[OrderRoom] No userId found for chat message sender");
+			logger.warn("[OrderRoom] No userId found for chat message sender");
 			return;
 		}
 
 		const messagePayload = data.p.message;
 		if (!messagePayload) {
-			log.warn(data, "Invalid chat message payload");
+			logger.warn(data, "Invalid chat message payload");
 			return;
 		}
 
@@ -755,7 +759,7 @@ export class OrderRoom extends BaseDurableObject {
 				opts,
 			);
 
-			log.info(
+			logger.info(
 				{ messageId: chatMessage.id, orderId: chatMessage.orderId, userId },
 				"[OrderRoom] Chat message created",
 			);
@@ -779,7 +783,7 @@ export class OrderRoom extends BaseDurableObject {
 
 			this.broadcast(broadcastPayload, { excludes: [ws] });
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, userId, orderId: messagePayload.orderId },
 				"[OrderRoom] Failed to handle chat message",
 			);
@@ -794,7 +798,7 @@ export class OrderRoom extends BaseDurableObject {
 	) {
 		const merchantAction = data.p.merchantAction;
 		if (!merchantAction) {
-			log.warn(data, "Invalid merchant accept payload");
+			logger.warn(data, "Invalid merchant accept payload");
 			return;
 		}
 
@@ -807,7 +811,7 @@ export class OrderRoom extends BaseDurableObject {
 				opts,
 			);
 
-			log.info(
+			logger.info(
 				{ orderId: updatedOrder.id, merchantId: merchantAction.merchantId },
 				"[OrderRoom] Merchant accepted order",
 			);
@@ -827,7 +831,7 @@ export class OrderRoom extends BaseDurableObject {
 
 			this.broadcast(response, { excludes: [ws] });
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, merchantAction },
 				"[OrderRoom] Failed to handle merchant accept",
 			);
@@ -842,7 +846,7 @@ export class OrderRoom extends BaseDurableObject {
 	) {
 		const merchantAction = data.p.merchantAction;
 		if (!merchantAction) {
-			log.warn(data, "Invalid merchant reject payload");
+			logger.warn(data, "Invalid merchant reject payload");
 			return;
 		}
 
@@ -857,7 +861,7 @@ export class OrderRoom extends BaseDurableObject {
 				opts,
 			);
 
-			log.info(
+			logger.info(
 				{
 					orderId: updatedOrder.id,
 					merchantId: merchantAction.merchantId,
@@ -882,7 +886,7 @@ export class OrderRoom extends BaseDurableObject {
 
 			this.broadcast(response, { excludes: [ws] });
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, merchantAction },
 				"[OrderRoom] Failed to handle merchant reject",
 			);
@@ -897,7 +901,7 @@ export class OrderRoom extends BaseDurableObject {
 	) {
 		const merchantAction = data.p.merchantAction;
 		if (!merchantAction) {
-			log.warn(data, "Invalid merchant mark preparing payload");
+			logger.warn(data, "Invalid merchant mark preparing payload");
 			return;
 		}
 
@@ -910,7 +914,7 @@ export class OrderRoom extends BaseDurableObject {
 				opts,
 			);
 
-			log.info(
+			logger.info(
 				{ orderId: updatedOrder.id, merchantId: merchantAction.merchantId },
 				"[OrderRoom] Merchant marked order as preparing",
 			);
@@ -930,7 +934,7 @@ export class OrderRoom extends BaseDurableObject {
 
 			this.broadcast(response, { excludes: [ws] });
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, merchantAction },
 				"[OrderRoom] Failed to handle merchant mark preparing",
 			);
@@ -945,7 +949,7 @@ export class OrderRoom extends BaseDurableObject {
 	) {
 		const merchantAction = data.p.merchantAction;
 		if (!merchantAction) {
-			log.warn(data, "Invalid merchant mark ready payload");
+			logger.warn(data, "Invalid merchant mark ready payload");
 			return;
 		}
 
@@ -958,7 +962,7 @@ export class OrderRoom extends BaseDurableObject {
 				opts,
 			);
 
-			log.info(
+			logger.info(
 				{ orderId: updatedOrder.id, merchantId: merchantAction.merchantId },
 				"[OrderRoom] Merchant marked order as ready",
 			);
@@ -978,7 +982,7 @@ export class OrderRoom extends BaseDurableObject {
 
 			this.broadcast(response, { excludes: [ws] });
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, merchantAction },
 				"[OrderRoom] Failed to handle merchant mark ready",
 			);
@@ -1003,7 +1007,7 @@ export class OrderRoom extends BaseDurableObject {
 	) {
 		const noShowPayload = data.p.noShow;
 		if (!noShowPayload) {
-			log.warn(data, "Invalid no-show payload");
+			logger.warn(data, "Invalid no-show payload");
 			return;
 		}
 
@@ -1016,7 +1020,7 @@ export class OrderRoom extends BaseDurableObject {
 
 			// Validate order status - can only report no-show when driver has arrived
 			if (!OrderCancellationService.canReportNoShow(order.status)) {
-				log.warn(
+				logger.warn(
 					{ orderId, currentStatus: order.status },
 					"[OrderRoom] Cannot report no-show - invalid order status",
 				);
@@ -1036,7 +1040,7 @@ export class OrderRoom extends BaseDurableObject {
 
 			// Validate that the driver reporting is the assigned driver
 			if (order.driverId !== driverId) {
-				log.warn(
+				logger.warn(
 					{
 						orderId,
 						requestingDriverId: driverId,
@@ -1169,7 +1173,7 @@ export class OrderRoom extends BaseDurableObject {
 						),
 					]);
 
-					log.info(
+					logger.info(
 						{
 							orderId,
 							driverId,
@@ -1233,7 +1237,7 @@ export class OrderRoom extends BaseDurableObject {
 				},
 			});
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, noShowPayload },
 				"[OrderRoom] Failed to handle no-show",
 			);

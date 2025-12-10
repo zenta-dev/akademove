@@ -3,7 +3,7 @@ import type { UnifiedPaginationQuery } from "@repo/schema/pagination";
 import { and, count, eq, gt, ilike, type SQL } from "drizzle-orm";
 import type { DatabaseService } from "@/core/services/db";
 import { tables } from "@/core/services/db";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 
 /**
  * Service responsible for building list queries for driver schedules
@@ -63,7 +63,7 @@ export class DriverScheduleListQueryService {
 
 			return dbResult?.count ?? 0;
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ search, error },
 				"[DriverScheduleListQueryService] Failed to get search count",
 			);
@@ -98,7 +98,7 @@ export class DriverScheduleListQueryService {
 
 			return dbResult?.count ?? 0;
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ filters, error },
 				"[DriverScheduleListQueryService] Failed to get filtered count",
 			);

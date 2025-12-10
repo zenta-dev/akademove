@@ -2,7 +2,8 @@ import { DurableObject } from "cloudflare:workers";
 import type { UnifiedPaginationQuery } from "@repo/schema/pagination";
 import { count } from "drizzle-orm";
 import type { PgColumn } from "drizzle-orm/pg-core";
-import { log, type PromiseFn, safeSync } from "@/utils";
+import { type PromiseFn, safeSync } from "@/utils";
+import { logger } from "@/utils/logger";
 import { CACHE_TTLS } from "./constants";
 import { BaseError, RepositoryError } from "./error";
 import type { CountCache, PartialWithTx } from "./interface";
@@ -51,7 +52,7 @@ export class BaseDurableObject extends DurableObject {
 
 	async webSocketMessage(ws: WebSocket, message: ArrayBuffer | string) {
 		const userId = this.findUserIdBySocket(ws);
-		log.debug(
+		logger.debug(
 			{ message, json: JSON.parse(message.toString()) },
 			`[${this.className}] | Received message from ${userId}`,
 		);
@@ -66,7 +67,7 @@ export class BaseDurableObject extends DurableObject {
 		const userId = this.findUserIdBySocket(ws);
 		if (userId) this.sessions.delete(userId);
 
-		log.debug(
+		logger.debug(
 			{ code, reason, wasClean },
 			`[${this.className}] | Someone with id -> ${userId} left room`,
 		);
@@ -102,7 +103,7 @@ export class BaseDurableObject extends DurableObject {
 	}
 
 	protected broadcast(msg: unknown, opts?: BroadcastOptions) {
-		log.debug(
+		logger.debug(
 			{ msg, opts },
 			`[${this.className}] | Broadcasting message to ${
 				this.sessions.size
@@ -183,7 +184,7 @@ export abstract class BaseRepository {
 				{ expirationTtl: CACHE_TTLS["24h"] },
 			);
 		} catch (error) {
-			log.error({ error }, "Failed to set total row cache");
+			logger.error({ error }, "Failed to set total row cache");
 		}
 	}
 
@@ -214,13 +215,13 @@ export abstract class BaseRepository {
 
 			return res.total;
 		} catch (error) {
-			log.error({ error }, "Failed to get total row count");
+			logger.error({ error }, "Failed to get total row count");
 			return 0;
 		}
 	}
 
 	protected handleError(error: unknown, action: string) {
-		log.error({ error }, `[${this.constructor.name}] - ${action} failed`);
+		logger.error({ error }, `[${this.constructor.name}] - ${action} failed`);
 		if (error instanceof BaseError) return error;
 		return new RepositoryError(
 			`Failed to ${action} ${this.#tableName.toLowerCase()}`,

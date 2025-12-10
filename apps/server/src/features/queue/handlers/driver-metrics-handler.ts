@@ -12,7 +12,7 @@
 
 import type { DriverMetricsJob } from "@repo/schema/queue";
 import { DriverMetricsService } from "@/features/driver/services/driver-metrics-service";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 import type { QueueHandlerContext } from "../queue-handler";
 
 export async function handleDriverMetrics(
@@ -22,7 +22,7 @@ export async function handleDriverMetrics(
 	const { payload } = job;
 	const { driverId, orderId, metricsType, value } = payload;
 
-	log.debug(
+	logger.debug(
 		{ driverId, orderId, metricsType },
 		"[DriverMetricsHandler] Updating driver metrics",
 	);
@@ -42,26 +42,26 @@ export async function handleDriverMetrics(
 			case "NO_SHOW_REPORTED": {
 				// Recalculate metrics to update any cached values
 				const metrics = await metricsService.calculateDriverMetrics(driverId);
-				log.debug(
+				logger.debug(
 					{ driverId, metricsType, metrics },
 					"[DriverMetricsHandler] Metrics recalculated",
 				);
 				break;
 			}
 			default: {
-				log.warn(
+				logger.warn(
 					{ driverId, metricsType },
 					"[DriverMetricsHandler] Unknown metrics type",
 				);
 			}
 		}
 
-		log.info(
+		logger.info(
 			{ driverId, metricsType, orderId, value },
 			"[DriverMetricsHandler] Metrics update processed",
 		);
 	} catch (error) {
-		log.error(
+		logger.error(
 			{ error, driverId, metricsType },
 			"[DriverMetricsHandler] Failed to update metrics",
 		);

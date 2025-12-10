@@ -4,7 +4,7 @@ import type { DatabaseService } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
 import type { StorageService } from "@/core/services/storage";
 import { BusinessConfigurationService } from "@/features/configuration/services";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 
 /**
  * DeliveryProofService - Handles proof of delivery operations
@@ -51,7 +51,7 @@ export class DeliveryProofService {
 		const max = 999999;
 		const otp = Math.floor(Math.random() * (max - min + 1)) + min;
 
-		log.debug("[DeliveryProofService] Generated OTP");
+		logger.debug("[DeliveryProofService] Generated OTP");
 
 		return otp.toString();
 	}
@@ -93,7 +93,7 @@ export class DeliveryProofService {
 			const extension = file.name.split(".").pop() || "jpg";
 			const key = `delivery-proofs/${orderId}/${timestamp}-${uniqueId}.${extension}`;
 
-			log.info(
+			logger.info(
 				{ orderId, userId, key, size: file.size },
 				"[DeliveryProofService] Uploading proof",
 			);
@@ -107,14 +107,14 @@ export class DeliveryProofService {
 				isPublic: false, // Private - only accessible via presigned URL
 			});
 
-			log.info(
+			logger.info(
 				{ orderId, url },
 				"[DeliveryProofService] Proof uploaded successfully",
 			);
 
 			return url;
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, orderId: params.orderId },
 				"[DeliveryProofService] Upload failed",
 			);
@@ -133,7 +133,7 @@ export class DeliveryProofService {
 	 */
 	verifyOTP(provided: string, expected: string): boolean {
 		if (!provided || !expected) {
-			log.warn("[DeliveryProofService] Missing OTP values");
+			logger.warn("[DeliveryProofService] Missing OTP values");
 			return false;
 		}
 
@@ -143,7 +143,10 @@ export class DeliveryProofService {
 
 		const isValid = normalizedProvided === normalizedExpected;
 
-		log.info({ isValid }, "[DeliveryProofService] OTP verification completed");
+		logger.info(
+			{ isValid },
+			"[DeliveryProofService] OTP verification completed",
+		);
 
 		return isValid;
 	}
@@ -168,11 +171,14 @@ export class DeliveryProofService {
 				expiresIn: 900, // 15 minutes
 			});
 
-			log.debug({ proofUrl }, "[DeliveryProofService] Generated presigned URL");
+			logger.debug(
+				{ proofUrl },
+				"[DeliveryProofService] Generated presigned URL",
+			);
 
 			return presignedUrl;
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, proofUrl },
 				"[DeliveryProofService] Failed to generate presigned URL",
 			);

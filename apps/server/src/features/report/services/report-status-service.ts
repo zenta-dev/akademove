@@ -1,4 +1,4 @@
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 
 export type ReportStatus =
 	| "PENDING"
@@ -30,7 +30,7 @@ export class ReportStatusService {
 	): Date | null {
 		// If explicitly setting to RESOLVED, set timestamp to now
 		if (newStatus === "RESOLVED") {
-			log.debug(
+			logger.debug(
 				{ newStatus },
 				"[ReportStatusService] Setting resolvedAt to current timestamp",
 			);
@@ -62,7 +62,7 @@ export class ReportStatusService {
 		// Once RESOLVED, can only move to INVESTIGATING (reopen)
 		if (currentStatus === "RESOLVED") {
 			if (newStatus === "INVESTIGATING") {
-				log.info(
+				logger.info(
 					{ currentStatus, newStatus },
 					"[ReportStatusService] Reopening resolved report",
 				);

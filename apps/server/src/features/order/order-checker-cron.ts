@@ -5,7 +5,8 @@ import { and, eq, inArray, lte } from "drizzle-orm";
 import { getServices } from "@/core/factory";
 import { tables } from "@/core/services/db";
 import { OrderRefundService } from "@/features/order/services/order-refund-service";
-import { log, toNumberSafe } from "@/utils";
+import { toNumberSafe } from "@/utils";
+import { logger } from "@/utils/logger";
 import { OrderStateService } from "./services/order-state-service";
 
 /**
@@ -23,7 +24,10 @@ export async function handleOrderCheckerCron(
 	_ctx: ExecutionContext,
 ): Promise<Response> {
 	try {
-		log.info({}, "[OrderCheckerCron] Starting scheduled order status checks");
+		logger.info(
+			{},
+			"[OrderCheckerCron] Starting scheduled order status checks",
+		);
 
 		const svc = getServices();
 		const stateService = new OrderStateService();
@@ -51,7 +55,7 @@ export async function handleOrderCheckerCron(
 				// Validate state transition
 				const currentStatus = order.status as OrderStatus;
 				if (currentStatus !== "MATCHING") {
-					log.warn(
+					logger.warn(
 						{ orderId: order.id, currentStatus },
 						"[OrderCheckerCron] Order no longer in MATCHING status, skipping",
 					);
@@ -99,7 +103,7 @@ export async function handleOrderCheckerCron(
 					});
 				});
 
-				log.info(
+				logger.info(
 					{
 						orderId: order.id,
 						userId: order.userId,
@@ -109,7 +113,7 @@ export async function handleOrderCheckerCron(
 				);
 				processedOrders++;
 			} catch (error) {
-				log.error(
+				logger.error(
 					{ error, orderId: order.id },
 					"[OrderCheckerCron] Failed to cancel stuck MATCHING order",
 				);
@@ -135,19 +139,19 @@ export async function handleOrderCheckerCron(
 				await svc.db.transaction(async (_tx) => {
 					// Mark as fully completed - this could update a flag or trigger cleanup
 					// For now, we'll just log that this order was processed
-					log.debug(
+					logger.debug(
 						{ orderId: order.id },
 						"[OrderCheckerCron] Processing completed order for auto-completion",
 					);
 				});
 
-				log.info(
+				logger.info(
 					{ orderId: order.id, userId: order.userId },
 					"[OrderCheckerCron] Auto-completed order without ratings",
 				);
 				processedOrders++;
 			} catch (error) {
-				log.error(
+				logger.error(
 					{ error, orderId: order.id },
 					"[OrderCheckerCron] Failed to auto-complete order",
 				);
@@ -169,7 +173,7 @@ export async function handleOrderCheckerCron(
 				// NO_SHOW is a terminal state - we only need to ensure refund is processed
 				const currentStatus = order.status as OrderStatus;
 				if (currentStatus !== "NO_SHOW") {
-					log.warn(
+					logger.warn(
 						{ orderId: order.id, currentStatus },
 						"[OrderCheckerCron] Order no longer in NO_SHOW status, skipping",
 					);
@@ -204,7 +208,7 @@ export async function handleOrderCheckerCron(
 							`NO_SHOW penalty: 50% refund for order #${order.id.slice(0, 8)}`,
 						);
 
-						log.info(
+						logger.info(
 							{
 								orderId: order.id,
 								userId: order.userId,
@@ -223,13 +227,13 @@ export async function handleOrderCheckerCron(
 						.where(eq(tables.order.id, order.id));
 				});
 
-				log.info(
+				logger.info(
 					{ orderId: order.id, userId: order.userId },
 					"[OrderCheckerCron] Finalized NO_SHOW order",
 				);
 				processedOrders++;
 			} catch (error) {
-				log.error(
+				logger.error(
 					{ error, orderId: order.id },
 					"[OrderCheckerCron] Failed to finalize NO_SHOW order",
 				);
@@ -257,19 +261,19 @@ export async function handleOrderCheckerCron(
 						.where(eq(tables.order.id, order.id));
 				});
 
-				log.debug(
+				logger.debug(
 					{ orderId: order.id },
 					"[OrderCheckerCron] Updated stale timestamp",
 				);
 			} catch (error) {
-				log.error(
+				logger.error(
 					{ error, orderId: order.id },
 					"[OrderCheckerCron] Failed to update timestamp",
 				);
 			}
 		}
 
-		log.info(
+		logger.info(
 			{
 				processedOrders,
 				stuckMatchingOrders: stuckMatchingOrders.length,
@@ -287,7 +291,7 @@ export async function handleOrderCheckerCron(
 			},
 		);
 	} catch (error) {
-		log.error({ error }, "[OrderCheckerCron] Failed to check orders");
+		logger.error({ error }, "[OrderCheckerCron] Failed to check orders");
 		return new Response("Order checker failed", { status: 500 });
 	}
 }

@@ -7,7 +7,7 @@
 
 import type { BadgeEvaluationJob } from "@repo/schema/queue";
 import { BadgeAwardService } from "@/features/badge/services/badge-award-service";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 import type { QueueHandlerContext } from "../queue-handler";
 
 export async function handleBadgeEvaluation(
@@ -17,7 +17,7 @@ export async function handleBadgeEvaluation(
 	const { payload } = job;
 	const { driverId, userId: _userId, orderId, orderType } = payload;
 
-	log.debug(
+	logger.debug(
 		{ driverId, orderId, orderType },
 		"[BadgeEvaluationHandler] Processing badge evaluation",
 	);
@@ -28,7 +28,7 @@ export async function handleBadgeEvaluation(
 		const result = await badgeService.evaluateAndAwardBadges(driverId);
 
 		if (result.newBadges.length > 0) {
-			log.info(
+			logger.info(
 				{
 					driverId,
 					orderId,
@@ -38,13 +38,13 @@ export async function handleBadgeEvaluation(
 				"[BadgeEvaluationHandler] New badges awarded",
 			);
 		} else {
-			log.debug(
+			logger.debug(
 				{ driverId, orderId },
 				"[BadgeEvaluationHandler] No new badges earned",
 			);
 		}
 	} catch (error) {
-		log.error(
+		logger.error(
 			{ error, driverId, orderId },
 			"[BadgeEvaluationHandler] Failed to evaluate badges",
 		);

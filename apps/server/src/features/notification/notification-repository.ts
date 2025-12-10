@@ -42,7 +42,7 @@ import type {
 	FCMTopicSubscriptionDatabase,
 	UserNotificationDatabase,
 } from "@/core/tables/notification";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 import type { ListNotificationQuery } from "./notification-spec";
 import {
 	NotificationTopicService,
@@ -109,14 +109,14 @@ export class NotificationRepository {
 					this.#userNotification.createBatch(result.userNotifications, opts),
 			]);
 
-			log.info(
+			logger.info(
 				{ toUserId, messageCount: result.messageIds.length },
 				"[NotificationRepository] Notification sent to user",
 			);
 
 			return result.messageIds;
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, toUserId },
 				"[NotificationRepository] Failed to send notification to user",
 			);
@@ -152,14 +152,14 @@ export class NotificationRepository {
 					this.#userNotification.createBatch(result.userNotifications, opts),
 			]);
 
-			log.info(
+			logger.info(
 				{ toUserIds, messageCount: result.messageIds.length },
 				"[NotificationRepository] Notification sent to users",
 			);
 
 			return result.messageIds;
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, toUserIds },
 				"[NotificationRepository] Failed to send notification to users",
 			);
@@ -210,14 +210,14 @@ export class NotificationRepository {
 					this.#userNotification.createBatch(userNotifications, opts),
 			]);
 
-			log.info(
+			logger.info(
 				{ topic, subscribers: topicUsers.length, messageId },
 				"[NotificationRepository] Notification sent to topic",
 			);
 
 			return messageId;
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, topic },
 				"[NotificationRepository] Failed to send notification to topic",
 			);
@@ -318,7 +318,7 @@ export class NotificationRepository {
 			this.#fcmTopic.subscribe(params, opts),
 		]);
 
-		log.info(
+		logger.info(
 			{ userId: params.userId, topic: params.topic },
 			"[NotificationRepository] Subscribed to topic",
 		);
@@ -345,7 +345,7 @@ export class NotificationRepository {
 			this.#fcmTopic.unsubscribe(params, opts),
 		]);
 
-		log.info(
+		logger.info(
 			{ userId: params.userId, topic: params.topic },
 			"[NotificationRepository] Unsubscribed from topic",
 		);

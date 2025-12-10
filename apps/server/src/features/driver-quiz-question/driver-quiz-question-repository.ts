@@ -14,7 +14,7 @@ import type { ListResult, PartialWithTx, WithTx } from "@/core/interface";
 import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
 import type { DriverQuizQuestionDatabase } from "@/core/tables/driver-quiz-question";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 
 export class DriverQuizQuestionRepository extends BaseRepository {
 	constructor(db: DatabaseService, kv: KeyValueService) {
@@ -92,7 +92,7 @@ export class DriverQuizQuestionRepository extends BaseRepository {
 
 			return { rows, totalPages };
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, query },
 				"[DriverQuizQuestionRepository] Failed to list questions",
 			);
@@ -118,7 +118,7 @@ export class DriverQuizQuestionRepository extends BaseRepository {
 
 			return await this.getCache(id, { fallback });
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, id },
 				"[DriverQuizQuestionRepository] Failed to get question",
 			);
@@ -151,14 +151,14 @@ export class DriverQuizQuestionRepository extends BaseRepository {
 				})
 				.returning();
 
-			log.info(
+			logger.info(
 				{ questionId: res.id },
 				"[DriverQuizQuestionRepository] Question created",
 			);
 
 			return DriverQuizQuestionRepository.composeEntity(res);
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, data },
 				"[DriverQuizQuestionRepository] Failed to create question",
 			);
@@ -191,14 +191,14 @@ export class DriverQuizQuestionRepository extends BaseRepository {
 
 			await this.deleteCache(id);
 
-			log.info(
+			logger.info(
 				{ questionId: id },
 				"[DriverQuizQuestionRepository] Question updated",
 			);
 
 			return DriverQuizQuestionRepository.composeEntity(res);
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, id, data },
 				"[DriverQuizQuestionRepository] Failed to update question",
 			);
@@ -221,12 +221,12 @@ export class DriverQuizQuestionRepository extends BaseRepository {
 
 			await this.deleteCache(id);
 
-			log.info(
+			logger.info(
 				{ questionId: id },
 				"[DriverQuizQuestionRepository] Question deleted",
 			);
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, id },
 				"[DriverQuizQuestionRepository] Failed to delete question",
 			);
@@ -276,7 +276,7 @@ export class DriverQuizQuestionRepository extends BaseRepository {
 				})),
 			}));
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, query },
 				"[DriverQuizQuestionRepository] Failed to get quiz questions",
 			);

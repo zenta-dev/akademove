@@ -4,7 +4,7 @@ import { RepositoryError } from "@/core/error";
 import type { PartialWithTx } from "@/core/interface";
 import type { DatabaseService } from "@/core/services/db";
 import type { StorageService } from "@/core/services/storage";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 import { DriverDocumentService } from "./driver-document-service";
 
 /**
@@ -83,7 +83,7 @@ export class DriverVerificationService {
 		} catch (error) {
 			if (error instanceof RepositoryError) throw error;
 
-			log.error(
+			logger.error(
 				{ error, data },
 				"[DriverVerificationService] Failed to validate uniqueness",
 			);
@@ -167,12 +167,12 @@ export class DriverVerificationService {
 				}),
 			]);
 
-			log.info(
+			logger.info(
 				{ fileKeys },
 				"[DriverVerificationService] Uploaded driver documents",
 			);
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, fileKeys },
 				"[DriverVerificationService] Failed to upload documents",
 			);
@@ -239,12 +239,12 @@ export class DriverVerificationService {
 
 			await Promise.all(uploads);
 
-			log.info(
+			logger.info(
 				{ driverId, updatedFields: Object.keys(files) },
 				"[DriverVerificationService] Updated driver documents",
 			);
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, driverId },
 				"[DriverVerificationService] Failed to update documents",
 			);
@@ -281,12 +281,12 @@ export class DriverVerificationService {
 				}),
 			]);
 
-			log.info(
+			logger.info(
 				{ fileKeys },
 				"[DriverVerificationService] Deleted driver documents",
 			);
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, fileKeys },
 				"[DriverVerificationService] Failed to delete documents",
 			);
@@ -349,7 +349,7 @@ export class DriverVerificationService {
 		} catch (error) {
 			if (error instanceof RepositoryError) throw error;
 
-			log.error(
+			logger.error(
 				{ error, data: { studentId: data.studentId } },
 				"[DriverVerificationService] Failed to validate and upload documents",
 			);

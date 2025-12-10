@@ -12,7 +12,8 @@ import type { PartialWithTx, WithUserId } from "@/core/interface";
 import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
 import type { ConfigurationDatabase } from "@/core/tables/configuration";
-import { log, safeAsync } from "@/utils";
+import { safeAsync } from "@/utils";
+import { logger } from "@/utils/logger";
 import {
 	BusinessConfigurationService,
 	ConfigurationAuditService,
@@ -142,7 +143,7 @@ export class ConfigurationRepository extends BaseRepository {
 			) {
 				// Delete the order repository's KV cache for this pricing config
 				await safeAsync(this.kv.delete(`order:${key}`));
-				log.info(
+				logger.info(
 					{ key },
 					"[ConfigurationRepository] Pricing config updated - invalidated order KV cache",
 				);
@@ -151,7 +152,7 @@ export class ConfigurationRepository extends BaseRepository {
 			// Invalidate business configuration cache when business config is updated
 			if (key === CONFIGURATION_KEYS.BUSINESS_CONFIGURATION) {
 				await BusinessConfigurationService.invalidateCache(this.kv);
-				log.info(
+				logger.info(
 					{ key },
 					"[ConfigurationRepository] Business config updated - invalidated cache",
 				);

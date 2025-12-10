@@ -17,7 +17,8 @@ import type { OrderCompletionJob } from "@repo/schema/queue";
 import Decimal from "decimal.js";
 import { CONFIGURATION_KEYS } from "@/core/constants";
 import { ProcessingQueueService } from "@/core/services/queue";
-import { log, toNumberSafe } from "@/utils";
+import { toNumberSafe } from "@/utils";
+import { logger } from "@/utils/logger";
 import type { QueueHandlerContext } from "../queue-handler";
 
 export async function handleOrderCompletion(
@@ -35,7 +36,7 @@ export async function handleOrderCompletion(
 		driverCurrentLocation,
 	} = payload;
 
-	log.info(
+	logger.info(
 		{ orderId, driverId, totalPrice, orderType },
 		"[OrderCompletionHandler] Processing completion job",
 	);
@@ -49,7 +50,7 @@ export async function handleOrderCompletion(
 
 			// Skip if order is not in a completable status
 			if (order.status === "COMPLETED") {
-				log.info(
+				logger.info(
 					{ orderId, currentStatus: order.status },
 					"[OrderCompletionHandler] Order already completed - skipping",
 				);
@@ -156,7 +157,7 @@ export async function handleOrderCompletion(
 				),
 			]);
 
-			log.info(
+			logger.info(
 				{
 					orderId,
 					driverId,
@@ -197,7 +198,7 @@ export async function handleOrderCompletion(
 			},
 		});
 	} catch (error) {
-		log.error(
+		logger.error(
 			{ error, orderId, driverId },
 			"[OrderCompletionHandler] Failed to process completion",
 		);

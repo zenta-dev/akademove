@@ -12,7 +12,8 @@ import type {
 	ChargePayload,
 	PaymentRepository,
 } from "@/features/payment/payment-repository";
-import { log, toStringNumberSafe } from "@/utils";
+import { toStringNumberSafe } from "@/utils";
+import { logger } from "@/utils/logger";
 import {
 	OrderCouponService,
 	OrderItemPreparationService,
@@ -61,7 +62,7 @@ export class OrderPlacementRepository extends OrderBaseRepository {
 			// Validate required parameters
 			OrderValidationService.validatePlaceOrderParams(params);
 
-			log.debug(
+			logger.debug(
 				{
 					userId: params.userId,
 					type: params.type,
@@ -117,7 +118,7 @@ export class OrderPlacementRepository extends OrderBaseRepository {
 			const merchantId = OrderValidationService.getMerchantId(menus);
 
 			if (menuItemsTotal > 0) {
-				log.info(
+				logger.info(
 					{
 						userId: params.userId,
 						deliveryFee: estimate.totalCost,
@@ -163,7 +164,7 @@ export class OrderPlacementRepository extends OrderBaseRepository {
 						discountAmount: autoCouponResult.discountAmount,
 					};
 
-					log.info(
+					logger.info(
 						{
 							userId: params.userId,
 							couponCode,
@@ -264,7 +265,7 @@ export class OrderPlacementRepository extends OrderBaseRepository {
 					opts,
 				);
 
-				log.info(
+				logger.info(
 					{
 						orderId: order.id,
 						userId: params.userId,
@@ -296,7 +297,7 @@ export class OrderPlacementRepository extends OrderBaseRepository {
 						timeoutSeconds,
 					);
 
-					log.info(
+					logger.info(
 						{
 							orderId: order.id,
 							timeoutMinutes,
@@ -305,7 +306,7 @@ export class OrderPlacementRepository extends OrderBaseRepository {
 					);
 				} catch (queueError) {
 					// Log but don't fail the order - the cron fallback will handle stuck orders
-					log.error(
+					logger.error(
 						{ error: queueError, orderId: order.id },
 						"[OrderPlacementRepository] Failed to enqueue timeout job - cron will handle",
 					);
@@ -332,7 +333,7 @@ export class OrderPlacementRepository extends OrderBaseRepository {
 				);
 			}
 
-			log.info(
+			logger.info(
 				{
 					orderId: order.id,
 					userId: params.userId,
@@ -361,7 +362,7 @@ export class OrderPlacementRepository extends OrderBaseRepository {
 
 			return { order, payment, transaction, autoAppliedCoupon };
 		} catch (err) {
-			log.error(
+			logger.error(
 				{
 					error: err,
 					userId: params.userId,

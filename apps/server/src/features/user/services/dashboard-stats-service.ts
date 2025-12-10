@@ -1,4 +1,4 @@
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 
 export interface DashboardStatsOptions {
 	startDate?: Date;
@@ -194,7 +194,7 @@ export class DashboardStatsService {
 			highCancellation,
 		} = params;
 
-		log.info(
+		logger.info(
 			{
 				revenueCount: revenueByDay.length,
 				ordersCount: ordersByDay.length,

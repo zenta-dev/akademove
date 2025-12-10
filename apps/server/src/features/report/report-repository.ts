@@ -16,7 +16,7 @@ import { AuditService } from "@/core/services/audit";
 import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
 import type { ReportDatabase } from "@/core/tables/report";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 import { ReportListQueryService, ReportStatusService } from "./services";
 
 export class ReportRepository extends BaseRepository {
@@ -199,7 +199,7 @@ export class ReportRepository extends BaseRepository {
 					opts,
 				);
 
-				log.info(
+				logger.info(
 					{ reportId: id, userId: context.user.id, status: item.status },
 					"[ReportRepository] Report updated and audited",
 				);
@@ -279,7 +279,7 @@ export class ReportRepository extends BaseRepository {
 				);
 			}
 
-			log.info(
+			logger.info(
 				{ reportId: id, handledById },
 				"[ReportRepository] Started investigation and audited",
 			);
@@ -344,7 +344,7 @@ export class ReportRepository extends BaseRepository {
 				);
 			}
 
-			log.info(
+			logger.info(
 				{ reportId: id, handledById },
 				"[ReportRepository] Resolved report and audited",
 			);
@@ -409,7 +409,7 @@ export class ReportRepository extends BaseRepository {
 				);
 			}
 
-			log.info(
+			logger.info(
 				{ reportId: id, handledById },
 				"[ReportRepository] Dismissed report and audited",
 			);

@@ -4,7 +4,7 @@ import { trimObjectValues } from "@repo/shared";
 import { AuthError } from "@/core/error";
 import { requireRoles } from "@/core/middlewares/auth";
 import { createORPCRouter } from "@/core/router/orpc";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 import { MerchantMainSpec } from "./merchant-main-spec";
 
 const { priv } = createORPCRouter(MerchantMainSpec);
@@ -39,7 +39,7 @@ export const MerchantMainHandler = priv.router({
 	populars: priv.populars
 		.use(requireRoles("ALL"))
 		.handler(async ({ context, input: { query } }) => {
-			log.debug(
+			logger.debug(
 				{ query, userId: context.user.id },
 				"[MerchantMainHandler] Getting popular merchants",
 			);
@@ -58,7 +58,7 @@ export const MerchantMainHandler = priv.router({
 
 		.use(requireRoles("ALL"))
 		.handler(async ({ context, input: { params } }) => {
-			log.debug(
+			logger.debug(
 				{ merchantId: params.id, userId: context.user.id },
 				"[MerchantMainHandler] Getting merchant",
 			);
@@ -162,7 +162,7 @@ export const MerchantMainHandler = priv.router({
 
 		.use(requireRoles("SYSTEM"))
 		.handler(async ({ context, input: { params } }) => {
-			log.info(
+			logger.info(
 				{ merchantId: params.id, userId: context.user.id },
 				"[MerchantMainHandler] Activating merchant",
 			);
@@ -182,7 +182,7 @@ export const MerchantMainHandler = priv.router({
 
 		.use(requireRoles("SYSTEM"))
 		.handler(async ({ context, input: { params, body } }) => {
-			log.info(
+			logger.info(
 				{ merchantId: params.id, userId: context.user.id, reason: body.reason },
 				"[MerchantMainHandler] Deactivating merchant",
 			);
@@ -215,7 +215,7 @@ export const MerchantMainHandler = priv.router({
 				}
 			}
 
-			log.info(
+			logger.info(
 				{ merchantId: params.id, isOnline: body.isOnline },
 				"[MerchantMainHandler] Setting online status",
 			);
@@ -250,7 +250,7 @@ export const MerchantMainHandler = priv.router({
 				}
 			}
 
-			log.info(
+			logger.info(
 				{ merchantId: params.id, isTakingOrders: body.isTakingOrders },
 				"[MerchantMainHandler] Setting order-taking status",
 			);
@@ -303,7 +303,7 @@ export const MerchantMainHandler = priv.router({
 				}
 			}
 
-			log.info(
+			logger.info(
 				{
 					merchantId: params.id,
 					operatingStatus: body.operatingStatus,

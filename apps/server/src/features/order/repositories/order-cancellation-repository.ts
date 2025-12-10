@@ -7,7 +7,8 @@ import type { WithTx } from "@/core/interface";
 import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
 import { BusinessConfigurationService } from "@/features/configuration/services";
-import { log, toNumberSafe } from "@/utils";
+import { toNumberSafe } from "@/utils";
+import { logger } from "@/utils/logger";
 import {
 	DriverCancellationService,
 	OrderCancellationService,
@@ -101,7 +102,7 @@ export class OrderCancellationRepository extends OrderBaseRepository {
 					order.driverId,
 				)
 			) {
-				log.info(
+				logger.info(
 					{
 						orderId: order.id,
 						userId: order.userId,
@@ -126,7 +127,7 @@ export class OrderCancellationRepository extends OrderBaseRepository {
 					.set({ isTakingOrder: false })
 					.where(eq(tables.driver.id, order.driverId));
 
-				log.info(
+				logger.info(
 					{ driverId: order.driverId, orderId: order.id },
 					"[OrderCancellationRepository] Reset driver isTakingOrder flag after order cancellation",
 				);
@@ -151,7 +152,7 @@ export class OrderCancellationRepository extends OrderBaseRepository {
 				opts,
 			);
 
-			log.info(
+			logger.info(
 				{
 					orderId: order.id,
 					status: cancelStatus,
@@ -163,7 +164,7 @@ export class OrderCancellationRepository extends OrderBaseRepository {
 
 			return updatedOrder;
 		} catch (error) {
-			log.error(
+			logger.error(
 				{
 					error,
 					orderId,
@@ -218,7 +219,7 @@ export class OrderCancellationRepository extends OrderBaseRepository {
 				.set(suspensionData)
 				.where(eq(tables.driver.id, driverId));
 
-			log.warn(
+			logger.warn(
 				{
 					driverId,
 					cancellationCount: cancellationUpdate.cancellationCount,
@@ -227,7 +228,7 @@ export class OrderCancellationRepository extends OrderBaseRepository {
 				"[OrderCancellationRepository] Driver suspended due to excessive cancellations (3/day)",
 			);
 		} else {
-			log.info(
+			logger.info(
 				{
 					driverId,
 					cancellationCount: cancellationUpdate.cancellationCount,

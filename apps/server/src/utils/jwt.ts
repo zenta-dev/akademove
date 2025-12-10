@@ -3,7 +3,7 @@ import type { ClientAgent } from "@repo/schema/common";
 import type { UserRole } from "@repo/schema/user";
 import { type JWTPayload, jwtVerify, SignJWT } from "jose";
 import { AuthError, BaseError } from "@/core/error";
-import { log } from "@/utils";
+import { logger } from "./logger";
 
 export interface CustomPayload {
 	id: string;
@@ -106,7 +106,7 @@ export class JwtManager {
 				shouldRotate: timeUntilExpiry < this.rotationThresholdMs,
 			};
 		} catch (error) {
-			log.error(error, `${this.verify.name} | Error => `);
+			logger.error(error, `${this.verify.name} | Error => `);
 			if (error instanceof BaseError) throw error;
 			throw new AuthError("Invalid or expired token", {
 				code: "UNAUTHORIZED",

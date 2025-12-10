@@ -16,7 +16,7 @@ import type { DriverMatchingJob } from "@repo/schema/queue";
 import { sql } from "drizzle-orm";
 import { BUSINESS_CONSTANTS } from "@/core/constants";
 import { OrderQueueService } from "@/core/services/queue";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 import type { QueueHandlerContext } from "../queue-handler";
 
 export async function handleDriverMatching(
@@ -39,7 +39,7 @@ export async function handleDriverMatching(
 		matchingIntervalSeconds,
 	} = payload;
 
-	log.info(
+	logger.info(
 		{
 			orderId,
 			attempt: currentAttempt,
@@ -65,7 +65,7 @@ export async function handleDriverMatching(
 
 			// If order not found or locked by another job, skip
 			if (!lockedOrder) {
-				log.info(
+				logger.info(
 					{ orderId },
 					"[DriverMatchingHandler] Order not found or locked by another job - skipping",
 				);
@@ -77,7 +77,7 @@ export async function handleDriverMatching(
 				lockedOrder.status !== "MATCHING" &&
 				lockedOrder.status !== "REQUESTED"
 			) {
-				log.info(
+				logger.info(
 					{ orderId, currentStatus: lockedOrder.status },
 					"[DriverMatchingHandler] Order no longer needs matching - skipping",
 				);
@@ -102,7 +102,7 @@ export async function handleDriverMatching(
 					BUSINESS_CONSTANTS.DRIVER_MATCHING_BROADCAST_LIMIT,
 				);
 
-			log.info(
+			logger.info(
 				{
 					orderId,
 					attempt: currentAttempt,
@@ -141,7 +141,7 @@ export async function handleDriverMatching(
 					});
 				}
 
-				log.info(
+				logger.info(
 					{ orderId, notifiedDrivers: driverUserIds.length },
 					"[DriverMatchingHandler] Broadcasted to nearby drivers",
 				);
@@ -162,7 +162,7 @@ export async function handleDriverMatching(
 					{ delaySeconds: matchingIntervalSeconds },
 				);
 
-				log.info(
+				logger.info(
 					{
 						orderId,
 						nextAttempt: currentAttempt + 1,
@@ -173,7 +173,7 @@ export async function handleDriverMatching(
 				);
 			} else if (matchedDrivers.length === 0) {
 				// No drivers found after all attempts - let the timeout handler deal with it
-				log.warn(
+				logger.warn(
 					{
 						orderId,
 						totalAttempts: currentAttempt,
@@ -185,7 +185,7 @@ export async function handleDriverMatching(
 			// If drivers were found, we just wait for them to accept
 		});
 	} catch (error) {
-		log.error(
+		logger.error(
 			{ error, orderId, attempt: currentAttempt },
 			"[DriverMatchingHandler] Failed to process matching",
 		);

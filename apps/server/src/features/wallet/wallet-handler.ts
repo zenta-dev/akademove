@@ -2,7 +2,7 @@ import { m } from "@repo/i18n";
 import { RepositoryError } from "@/core/error";
 import { createORPCRouter } from "@/core/router/orpc";
 import { BusinessConfigurationService } from "@/features/configuration/services";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 import { WalletSpec } from "./wallet-spec";
 
 const { pub, priv } = createORPCRouter(WalletSpec);
@@ -160,7 +160,7 @@ export const WalletHandler = pub.router({
 				),
 			]);
 
-			log.info(
+			logger.info(
 				{
 					userId: context.user.id,
 					senderWalletId: senderWallet.id,
@@ -241,7 +241,7 @@ export const WalletHandler = pub.router({
 				opts,
 			);
 
-			log.info(
+			logger.info(
 				{
 					userId: context.user.id,
 					walletId: wallet.id,

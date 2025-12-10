@@ -1,6 +1,6 @@
 import type { BadgeCriteria } from "@repo/schema/badge";
 import type { DriverMetrics } from "@/features/driver/services/driver-metrics-service";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 
 export class BadgeCriteriaEvaluator {
 	/**
@@ -43,7 +43,7 @@ export class BadgeCriteriaEvaluator {
 			const allCriteriaMet =
 				checks.length === 0 || checks.every((c) => c === true);
 
-			log.debug(
+			logger.debug(
 				{
 					driverId: metrics.driverId,
 					criteria,
@@ -62,7 +62,7 @@ export class BadgeCriteriaEvaluator {
 
 			return allCriteriaMet;
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, criteria, metrics },
 				"[BadgeCriteriaEvaluator] Failed to evaluate criteria",
 			);
@@ -129,7 +129,7 @@ export class BadgeCriteriaEvaluator {
 
 			return Math.round(avgProgress);
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, criteria, metrics },
 				"[BadgeCriteriaEvaluator] Failed to calculate progress",
 			);

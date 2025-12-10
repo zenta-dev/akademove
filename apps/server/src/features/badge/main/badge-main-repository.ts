@@ -17,7 +17,7 @@ import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
 import type { StorageService } from "@/core/services/storage";
 import type { BadgeDatabase } from "@/core/tables/badge";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 import { BadgeIconService } from "../services";
 
 export class BadgeRepository extends BaseRepository {
@@ -61,7 +61,7 @@ export class BadgeRepository extends BaseRepository {
 
 			return dbResult?.count ?? 0;
 		} catch (error) {
-			log.error({ query, error }, "Failed to get query count");
+			logger.error({ query, error }, "Failed to get query count");
 			return 0;
 		}
 	}

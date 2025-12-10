@@ -1,7 +1,7 @@
 import type { ChargeResponse } from "@erhahahaa/midtrans-client-typescript";
 import type { BankProvider } from "@repo/schema/common";
 import { type VANumber, VANumberSchema } from "@repo/schema/payment";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 
 /**
  * Parses VA number from Midtrans charge response
@@ -29,7 +29,7 @@ export function parseVANumber(
 			const first = va_numbers[0];
 			const parsed = VANumberSchema.safeParse(first);
 			if (parsed.success) {
-				log.debug(
+				logger.debug(
 					{ vaNumber: parsed.data },
 					"[parseVANumber] Parsed VA from va_numbers array",
 				);
@@ -45,7 +45,7 @@ export function parseVANumber(
 					bank: "permata",
 					va_number: permataVA,
 				};
-				log.debug(
+				logger.debug(
 					{ vaNumber },
 					"[parseVANumber] Parsed VA from permata_va_number field",
 				);
@@ -53,13 +53,13 @@ export function parseVANumber(
 			}
 		}
 
-		log.warn(
+		logger.warn(
 			{ response, bank },
 			"[parseVANumber] No VA number found in response",
 		);
 		return undefined;
 	} catch (error) {
-		log.error(
+		logger.error(
 			{ error, response, bank },
 			"[parseVANumber] Failed to parse VA number",
 		);

@@ -20,7 +20,7 @@ import { AuditService } from "@/core/services/audit";
 import type { DatabaseService } from "@/core/services/db";
 import { tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 import { ContactResponseService, ContactSearchService } from "./services";
 
 export class ContactRepository extends BaseRepository {
@@ -144,7 +144,7 @@ export class ContactRepository extends BaseRepository {
 
 			const composed = ContactRepository.composeEntity(contact);
 			await this.setCache(id, composed, { expirationTtl: CACHE_TTLS["1h"] });
-			log.info(
+			logger.info(
 				{ contactId: id, userId: data.userId },
 				"[ContactRepository] Contact created",
 			);
@@ -174,7 +174,7 @@ export class ContactRepository extends BaseRepository {
 			}
 
 			await this.deleteCache(id);
-			log.info({ contactId: id }, "[ContactRepository] Contact updated");
+			logger.info({ contactId: id }, "[ContactRepository] Contact updated");
 
 			return ContactRepository.composeEntity(updated);
 		} catch (error) {
@@ -196,7 +196,7 @@ export class ContactRepository extends BaseRepository {
 			}
 
 			await this.deleteCache(id);
-			log.info({ contactId: id }, "[ContactRepository] Contact deleted");
+			logger.info({ contactId: id }, "[ContactRepository] Contact deleted");
 
 			return true;
 		} catch (error) {
@@ -262,7 +262,7 @@ export class ContactRepository extends BaseRepository {
 				);
 			}
 
-			log.info(
+			logger.info(
 				{ contactId: id, respondedById: data.respondedById },
 				"[ContactRepository] Contact responded and audited",
 			);

@@ -28,7 +28,7 @@ import type {
 	WebSocketBroadcastJob,
 } from "@repo/schema/queue";
 import { v7 as uuid } from "uuid";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 
 /**
  * Creates queue message metadata with idempotency support
@@ -80,7 +80,7 @@ export const OrderQueueService = {
 			payload,
 		};
 
-		log.info(
+		logger.info(
 			{
 				orderId: payload.orderId,
 				attempt: payload.currentAttempt ?? 1,
@@ -119,7 +119,7 @@ export const OrderQueueService = {
 			payload,
 		};
 
-		log.info(
+		logger.info(
 			{
 				orderId: payload.orderId,
 				userId: payload.userId,
@@ -154,7 +154,7 @@ export const OrderQueueService = {
 			payload,
 		};
 
-		log.info(
+		logger.info(
 			{
 				orderId: payload.orderId,
 				driverId: payload.driverId,
@@ -186,7 +186,7 @@ export const OrderQueueService = {
 			payload,
 		};
 
-		log.info(
+		logger.info(
 			{
 				orderId: payload.orderId,
 				userId: payload.userId,
@@ -221,7 +221,7 @@ export const OrderQueueService = {
 			payload,
 		};
 
-		log.info(
+		logger.info(
 			{
 				orderId,
 				provider: payload.provider,
@@ -259,7 +259,7 @@ export const NotificationQueueService = {
 			payload,
 		};
 
-		log.debug(
+		logger.debug(
 			{
 				toUserId: payload.toUserId,
 				title: payload.title,
@@ -290,7 +290,7 @@ export const NotificationQueueService = {
 			payload,
 		};
 
-		log.info(
+		logger.info(
 			{
 				orderId: payload.orderId,
 				driverCount: payload.driverUserIds.length,
@@ -327,7 +327,7 @@ export const ProcessingQueueService = {
 			payload,
 		};
 
-		log.debug(
+		logger.debug(
 			{
 				driverId: payload.driverId,
 				orderId: payload.orderId,
@@ -355,7 +355,7 @@ export const ProcessingQueueService = {
 			payload,
 		};
 
-		log.debug(
+		logger.debug(
 			{
 				couponId: payload.couponId,
 				orderId: payload.orderId,
@@ -382,7 +382,7 @@ export const ProcessingQueueService = {
 			payload,
 		};
 
-		log.debug(
+		logger.debug(
 			{
 				action: payload.action,
 				entityType: payload.entityType,
@@ -413,7 +413,7 @@ export const ProcessingQueueService = {
 			payload,
 		};
 
-		log.debug(
+		logger.debug(
 			{
 				orderId: payload.orderId,
 				fromStatus: payload.fromStatus,
@@ -443,7 +443,7 @@ export const ProcessingQueueService = {
 			payload,
 		};
 
-		log.debug(
+		logger.debug(
 			{
 				driverId: payload.driverId,
 				metricsType: payload.metricsType,
@@ -472,7 +472,7 @@ export const ProcessingQueueService = {
 			payload,
 		};
 
-		log.debug(
+		logger.debug(
 			{
 				roomName: payload.roomName,
 				event: payload.event,

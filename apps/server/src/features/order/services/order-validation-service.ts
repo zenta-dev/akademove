@@ -4,7 +4,7 @@ import { eq } from "drizzle-orm";
 import { RepositoryError } from "@/core/error";
 import type { DatabaseTransaction } from "@/core/services/db";
 import { tables } from "@/core/services/db";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 
 /**
  * Service responsible for order placement validation
@@ -123,7 +123,7 @@ export class OrderValidationService {
 		});
 
 		if (orderItems.length === 0) {
-			log.debug({ orderId }, "[OrderValidation] No order items to validate");
+			logger.debug({ orderId }, "[OrderValidation] No order items to validate");
 			return;
 		}
 
@@ -151,7 +151,7 @@ export class OrderValidationService {
 		for (const orderItem of orderItems) {
 			const menuInfo = menuStockMap.get(orderItem.menuId);
 			if (!menuInfo) {
-				log.warn(
+				logger.warn(
 					{ orderId, menuId: orderItem.menuId },
 					"[OrderValidation] Menu item not found for order item",
 				);
@@ -169,7 +169,7 @@ export class OrderValidationService {
 
 		if (insufficientItems.length > 0) {
 			const itemNames = insufficientItems.map((i) => i.menuName).join(", ");
-			log.warn(
+			logger.warn(
 				{ orderId, insufficientItems },
 				"[OrderValidation] Insufficient stock for order items",
 			);
@@ -179,6 +179,6 @@ export class OrderValidationService {
 			);
 		}
 
-		log.debug({ orderId }, "[OrderValidation] Stock validation passed");
+		logger.debug({ orderId }, "[OrderValidation] Stock validation passed");
 	}
 }

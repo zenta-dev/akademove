@@ -8,7 +8,7 @@
  */
 
 import { RepositoryError } from "@/core/error";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 
 /**
  * Configuration for scheduled orders
@@ -55,7 +55,7 @@ export class OrderSchedulingService {
 				{ code: "BAD_REQUEST" },
 			);
 
-			log.warn(
+			logger.warn(
 				{ scheduledAt, minTime },
 				"[OrderSchedulingService] Scheduled time too soon",
 			);
@@ -69,7 +69,7 @@ export class OrderSchedulingService {
 				{ code: "BAD_REQUEST" },
 			);
 
-			log.warn(
+			logger.warn(
 				{ scheduledAt, maxTime },
 				"[OrderSchedulingService] Scheduled time too far in the future",
 			);
@@ -77,7 +77,10 @@ export class OrderSchedulingService {
 			throw error;
 		}
 
-		log.debug({ scheduledAt }, "[OrderSchedulingService] Scheduled time valid");
+		logger.debug(
+			{ scheduledAt },
+			"[OrderSchedulingService] Scheduled time valid",
+		);
 	}
 
 	/**
@@ -130,7 +133,7 @@ export class OrderSchedulingService {
 		// Validate the new time
 		OrderSchedulingService.validateScheduledTime(newScheduledAt);
 
-		log.info(
+		logger.info(
 			{ currentScheduledAt, newScheduledAt },
 			"[OrderSchedulingService] Reschedule validated",
 		);

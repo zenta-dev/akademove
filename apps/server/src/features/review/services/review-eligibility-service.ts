@@ -9,7 +9,7 @@
 
 import type { OrderStatus } from "@repo/schema/order";
 import type { DatabaseService } from "@/core/services/db";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 
 /**
  * Order review status result
@@ -62,7 +62,7 @@ export class ReviewEligibilityService {
 
 			return !!result;
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ orderId, userId, error },
 				"[ReviewEligibilityService] Failed to check if user reviewed order",
 			);
@@ -173,7 +173,7 @@ export class ReviewEligibilityService {
 				orderCompleted,
 			};
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ orderId, userId, error },
 				"[ReviewEligibilityService] Failed to get order review status",
 			);

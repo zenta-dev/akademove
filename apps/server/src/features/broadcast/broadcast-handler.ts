@@ -1,7 +1,7 @@
 import { trimObjectValues } from "@repo/shared";
 import { createORPCRouter } from "@/core/router/orpc";
 import { BROADCAST_STATUS, BROADCAST_TYPE } from "@/core/tables/broadcast";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 import { BroadcastSpec } from "./broadcast-spec";
 import { BroadcastService } from "./services/broadcast-service";
 
@@ -58,7 +58,7 @@ export const BroadcastHandler = priv.router({
 				{ tx },
 			);
 
-			log.info(
+			logger.info(
 				{
 					broadcastId: broadcast.id,
 					type: broadcast.type,
@@ -99,7 +99,7 @@ export const BroadcastHandler = priv.router({
 				tx,
 			});
 
-			log.info(
+			logger.info(
 				{ broadcastId: broadcast.id },
 				"[BroadcastHandler] Updated broadcast",
 			);
@@ -132,7 +132,7 @@ export const BroadcastHandler = priv.router({
 
 			await context.repo.broadcast.delete(params.id, { tx });
 
-			log.info(
+			logger.info(
 				{ broadcastId: params.id },
 				"[BroadcastHandler] Deleted broadcast",
 			);
@@ -196,7 +196,7 @@ export const BroadcastHandler = priv.router({
 					{ tx },
 				);
 
-				log.info(
+				logger.info(
 					{
 						broadcastId: params.id,
 						type: broadcast.type,
@@ -220,7 +220,7 @@ export const BroadcastHandler = priv.router({
 					{ tx },
 				);
 
-				log.error(
+				logger.error(
 					{
 						error,
 						broadcastId: params.id,

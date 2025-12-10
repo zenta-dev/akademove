@@ -8,7 +8,7 @@ import type { DatabaseService, DatabaseTransaction } from "@/core/services/db";
 import { tables } from "@/core/services/db";
 import type { DriverMetrics } from "@/features/driver/services/driver-metrics-service";
 import { DriverMetricsService } from "@/features/driver/services/driver-metrics-service";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 import { LeaderboardScoreCalculator } from "./leaderboard-score-calculator";
 
 type LeaderboardPeriod = (typeof LEADERBOARD_PERIODS)[number];
@@ -44,7 +44,7 @@ export class LeaderboardCalculationService {
 	 */
 	async calculateAllLeaderboards(): Promise<void> {
 		try {
-			log.info(
+			logger.info(
 				{},
 				"[LeaderboardCalculationService] Starting full leaderboard calculation",
 			);
@@ -81,12 +81,12 @@ export class LeaderboardCalculationService {
 				}
 			}
 
-			log.info(
+			logger.info(
 				{},
 				"[LeaderboardCalculationService] Completed full leaderboard calculation",
 			);
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error },
 				"[LeaderboardCalculationService] Failed to calculate leaderboards",
 			);
@@ -106,7 +106,7 @@ export class LeaderboardCalculationService {
 			const db = opts?.tx ?? this.#db;
 			const { periodStart, periodEnd } = this.#getPeriodDates(period);
 
-			log.info(
+			logger.info(
 				{ period, category, periodStart, periodEnd },
 				"[LeaderboardCalculationService] Calculating leaderboard",
 			);
@@ -117,7 +117,7 @@ export class LeaderboardCalculationService {
 			});
 
 			if (activeDrivers.length === 0) {
-				log.info(
+				logger.info(
 					{ period, category },
 					"[LeaderboardCalculationService] No active drivers found",
 				);
@@ -170,12 +170,12 @@ export class LeaderboardCalculationService {
 				db,
 			);
 
-			log.info(
+			logger.info(
 				{ period, category, entries: driverScores.length },
 				"[LeaderboardCalculationService] Leaderboard calculated successfully",
 			);
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, period, category },
 				"[LeaderboardCalculationService] Failed to calculate leaderboard",
 			);

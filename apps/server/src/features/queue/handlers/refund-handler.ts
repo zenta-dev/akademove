@@ -12,7 +12,8 @@
  */
 
 import type { RefundJob } from "@repo/schema/queue";
-import { log, toNumberSafe } from "@/utils";
+import { toNumberSafe } from "@/utils";
+import { logger } from "@/utils/logger";
 import type { QueueHandlerContext } from "../queue-handler";
 
 export async function handleRefund(
@@ -32,7 +33,7 @@ export async function handleRefund(
 		refundType,
 	} = payload;
 
-	log.info(
+	logger.info(
 		{ orderId, userId, refundAmount, refundType },
 		"[RefundHandler] Processing refund job",
 	);
@@ -47,7 +48,7 @@ export async function handleRefund(
 			});
 
 			if (existingTransaction?.status === "REFUNDED") {
-				log.info(
+				logger.info(
 					{ orderId, transactionId },
 					"[RefundHandler] Transaction already refunded - skipping",
 				);
@@ -65,7 +66,7 @@ export async function handleRefund(
 			];
 
 			if (!validRefundStatuses.includes(order.status)) {
-				log.warn(
+				logger.warn(
 					{ orderId, currentStatus: order.status },
 					"[RefundHandler] Order not in a refundable state - skipping",
 				);
@@ -118,7 +119,7 @@ export async function handleRefund(
 				);
 			}
 
-			log.info(
+			logger.info(
 				{
 					orderId,
 					userId,
@@ -151,7 +152,7 @@ export async function handleRefund(
 			},
 		});
 	} catch (error) {
-		log.error(
+		logger.error(
 			{ error, orderId, userId, refundType },
 			"[RefundHandler] Failed to process refund",
 		);

@@ -10,7 +10,7 @@ import type { PartialWithTx } from "@/core/interface";
 import { type DatabaseService, tables } from "@/core/services/db";
 import type { StorageService } from "@/core/services/storage";
 import { UserAdminRepository } from "@/features/user/admin/user-admin-repository";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 import type { PasswordManager } from "@/utils/password";
 
 /**
@@ -171,7 +171,7 @@ export class UserRegistrationService {
 						file: params.photo,
 					});
 				} catch (uploadError) {
-					log.error(
+					logger.error(
 						{ uploadError, userId: user.id, photoKey },
 						"[UserRegistrationService] Failed to upload profile photo, user will need to re-upload",
 					);
@@ -183,7 +183,7 @@ export class UserRegistrationService {
 				}
 			}
 
-			log.info(
+			logger.info(
 				{ userId: user.id, email: user.email, role: user.role },
 				"[UserRegistrationService] User registered successfully",
 			);
@@ -195,7 +195,7 @@ export class UserRegistrationService {
 				),
 			};
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, email: params.email },
 				"[UserRegistrationService] Sign up failed",
 			);

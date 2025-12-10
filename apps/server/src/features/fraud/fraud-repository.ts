@@ -26,7 +26,8 @@ import type {
 	FraudEventDatabase,
 	UserFraudProfileDatabase,
 } from "@/core/tables/fraud";
-import { log, toNumberSafe } from "@/utils";
+import { toNumberSafe } from "@/utils";
+import { logger } from "@/utils/logger";
 
 export class FraudRepository extends BaseRepository {
 	constructor(db: DatabaseService, kv: KeyValueService) {
@@ -268,7 +269,7 @@ export class FraudRepository extends BaseRepository {
 				await this.updateUserFraudProfile(item.userId, item, opts);
 			}
 
-			log.info(
+			logger.info(
 				{ eventId: id, eventType: item.eventType, severity: item.severity },
 				"[FraudRepository] Fraud event created",
 			);
@@ -336,7 +337,7 @@ export class FraudRepository extends BaseRepository {
 				await this.incrementConfirmedEvents(existing.userId, opts);
 			}
 
-			log.info(
+			logger.info(
 				{ eventId: id, newStatus: item.status },
 				"[FraudRepository] Fraud event updated",
 			);
@@ -418,7 +419,7 @@ export class FraudRepository extends BaseRepository {
 				});
 			}
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, userId },
 				"[FraudRepository] Failed to update fraud profile",
 			);
@@ -440,7 +441,7 @@ export class FraudRepository extends BaseRepository {
 				})
 				.where(eq(tables.userFraudProfile.userId, userId));
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, userId },
 				"[FraudRepository] Failed to increment confirmed events",
 			);
@@ -658,7 +659,7 @@ export class FraudRepository extends BaseRepository {
 					registeredAt: r.detectedAt,
 				}));
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, ipAddress },
 				"[FraudRepository] Failed to get IP registrations",
 			);
@@ -699,7 +700,7 @@ export class FraudRepository extends BaseRepository {
 
 			return matches;
 		} catch (error) {
-			log.error({ error }, "[FraudRepository] Failed to check bank account");
+			logger.error({ error }, "[FraudRepository] Failed to check bank account");
 			return [];
 		}
 	}
@@ -741,7 +742,7 @@ export class FraudRepository extends BaseRepository {
 
 			return registrations;
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, ipAddress },
 				"[FraudRepository] Failed to get registrations by IP",
 			);
@@ -776,7 +777,7 @@ export class FraudRepository extends BaseRepository {
 				threshold,
 			);
 		} catch (error) {
-			log.error({ error }, "[FraudRepository] Failed to find similar names");
+			logger.error({ error }, "[FraudRepository] Failed to find similar names");
 			return [];
 		}
 	}
@@ -819,12 +820,12 @@ export class FraudRepository extends BaseRepository {
 				});
 			}
 
-			log.info(
+			logger.info(
 				{ userId, ipAddress },
 				"[FraudRepository] Recorded registration IP",
 			);
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, userId, ipAddress },
 				"[FraudRepository] Failed to record registration IP",
 			);

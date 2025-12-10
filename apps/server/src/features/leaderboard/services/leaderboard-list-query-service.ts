@@ -3,7 +3,7 @@ import type { UnifiedPaginationQuery } from "@repo/schema/pagination";
 import { count, gt, ilike, type SQL } from "drizzle-orm";
 import type { DatabaseService } from "@/core/services/db";
 import { tables } from "@/core/services/db";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 
 /**
  * Service responsible for building list queries for leaderboards
@@ -57,7 +57,7 @@ export class LeaderboardListQueryService {
 
 			return dbResult?.count ?? 0;
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ search, error },
 				"[LeaderboardListQueryService] Failed to get search count",
 			);

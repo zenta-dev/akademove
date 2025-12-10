@@ -19,7 +19,7 @@ import { AuditService } from "@/core/services/audit";
 import type { DatabaseService } from "@/core/services/db";
 import { tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 
 export class AccountDeletionRepository extends BaseRepository {
 	constructor(db: DatabaseService, kv: KeyValueService) {
@@ -164,7 +164,7 @@ export class AccountDeletionRepository extends BaseRepository {
 
 			const composed = AccountDeletionRepository.composeEntity(accountDeletion);
 			await this.setCache(id, composed, { expirationTtl: CACHE_TTLS["1h"] });
-			log.info(
+			logger.info(
 				{ accountDeletionId: id, email: data.email },
 				"[AccountDeletionRepository] Account deletion request created",
 			);
@@ -223,7 +223,7 @@ export class AccountDeletionRepository extends BaseRepository {
 				);
 			}
 
-			log.info(
+			logger.info(
 				{ accountDeletionId: id },
 				"[AccountDeletionRepository] Account deletion request updated",
 			);
@@ -248,7 +248,7 @@ export class AccountDeletionRepository extends BaseRepository {
 			}
 
 			await this.deleteCache(id);
-			log.info(
+			logger.info(
 				{ accountDeletionId: id },
 				"[AccountDeletionRepository] Account deletion request deleted",
 			);
@@ -323,7 +323,7 @@ export class AccountDeletionRepository extends BaseRepository {
 				);
 			}
 
-			log.info(
+			logger.info(
 				{ accountDeletionId: id, reviewedById: data.reviewedById },
 				"[AccountDeletionRepository] Account deletion request reviewed and audited",
 			);

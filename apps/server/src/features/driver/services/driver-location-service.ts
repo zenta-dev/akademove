@@ -2,7 +2,7 @@ import type { Driver } from "@repo/schema/driver";
 import { and, eq, isNotNull, sql } from "drizzle-orm";
 import { RepositoryError } from "@/core/error";
 import { type DatabaseService, tables } from "@/core/services/db";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 
 /**
  * Service responsible for driver location tracking
@@ -90,7 +90,7 @@ export class DriverLocationService {
 				conditions.push(eq(tables.user.gender, gender));
 			}
 
-			log.info(
+			logger.info(
 				{ lat, lng, radiusKm, limit, gender },
 				"[DriverLocationService] Searching nearby drivers",
 			);
@@ -108,7 +108,7 @@ export class DriverLocationService {
 				.orderBy(distance)
 				.limit(limit);
 
-			log.info(
+			logger.info(
 				{ count: result.length },
 				"[DriverLocationService] Found nearby drivers",
 			);
@@ -123,7 +123,7 @@ export class DriverLocationService {
 				),
 			);
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, query },
 				"[DriverLocationService] Failed to find nearby drivers",
 			);
@@ -162,14 +162,14 @@ export class DriverLocationService {
 				WHERE id = ${driverId}
 			`);
 
-			log.info(
+			logger.info(
 				{ driverId, lat, lng },
 				"[DriverLocationService] Updated driver location",
 			);
 
 			return true;
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, driverId, lat, lng },
 				"[DriverLocationService] Failed to update location",
 			);

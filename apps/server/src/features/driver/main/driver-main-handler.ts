@@ -4,7 +4,7 @@ import { trimObjectValues } from "@repo/shared";
 import { AuthError } from "@/core/error";
 import { createORPCRouter } from "@/core/router/orpc";
 import { FraudDetectionService } from "@/features/fraud/services";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 import { DriverMainSpec } from "./driver-main-spec";
 
 const { priv } = createORPCRouter(DriverMainSpec);
@@ -145,7 +145,7 @@ export const DriverMainHandler = priv.router({
 						resolvedAt: null,
 					})
 					.catch((error) => {
-						log.error(
+						logger.error(
 							{ error, driverId: params.id },
 							"[DriverMainHandler] Failed to log fraud event",
 						);
@@ -284,7 +284,7 @@ export const DriverMainHandler = priv.router({
 				});
 			} catch (error) {
 				// Log but don't fail the request if notification sending fails
-				log.error(
+				logger.error(
 					{ error, userId: result.userId, driverId: result.id },
 					"[DriverHandler.approve] Failed to send approval notification",
 				);
@@ -324,7 +324,7 @@ export const DriverMainHandler = priv.router({
 				});
 			} catch (error) {
 				// Log but don't fail the request if notification sending fails
-				log.error(
+				logger.error(
 					{ error, userId: result.userId, driverId: result.id },
 					"[DriverHandler.reject] Failed to send rejection notification",
 				);

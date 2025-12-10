@@ -3,7 +3,8 @@ import { sql } from "drizzle-orm";
 import { RepositoryError } from "@/core/error";
 import type { PartialWithTx } from "@/core/interface";
 import { type DatabaseService, tables } from "@/core/services/db";
-import { log, toStringNumberSafe } from "@/utils";
+import { toStringNumberSafe } from "@/utils";
+import { logger } from "@/utils/logger";
 
 /**
  * Service responsible for wallet balance operations
@@ -65,7 +66,7 @@ export class WalletBalanceService {
 		} catch (error) {
 			if (error instanceof RepositoryError) throw error;
 
-			log.error(
+			logger.error(
 				{ error, walletId, amount },
 				"[WalletBalanceService] Failed to check balance",
 			);
@@ -131,7 +132,7 @@ export class WalletBalanceService {
 			const balanceBefore = new Decimal(wallet.balance).toNumber();
 			const balanceAfter = new Decimal(updatedWallet.balance).toNumber();
 
-			log.info(
+			logger.info(
 				{ walletId, amount, balanceBefore, balanceAfter },
 				"[WalletBalanceService] Deducted balance",
 			);
@@ -140,7 +141,7 @@ export class WalletBalanceService {
 		} catch (error) {
 			if (error instanceof RepositoryError) throw error;
 
-			log.error(
+			logger.error(
 				{ error, params },
 				"[WalletBalanceService] Failed to deduct balance",
 			);
@@ -200,7 +201,7 @@ export class WalletBalanceService {
 			const balanceBefore = new Decimal(wallet.balance).toNumber();
 			const balanceAfter = new Decimal(updatedWallet.balance).toNumber();
 
-			log.info(
+			logger.info(
 				{ walletId, amount, balanceBefore, balanceAfter },
 				"[WalletBalanceService] Added balance",
 			);
@@ -209,7 +210,7 @@ export class WalletBalanceService {
 		} catch (error) {
 			if (error instanceof RepositoryError) throw error;
 
-			log.error(
+			logger.error(
 				{ error, params },
 				"[WalletBalanceService] Failed to add balance",
 			);
@@ -243,7 +244,7 @@ export class WalletBalanceService {
 		} catch (error) {
 			if (error instanceof RepositoryError) throw error;
 
-			log.error(
+			logger.error(
 				{ error, walletId },
 				"[WalletBalanceService] Failed to get balance",
 			);

@@ -11,7 +11,7 @@
  */
 
 import type { OrderTimeoutJob } from "@repo/schema/queue";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 import type { QueueHandlerContext } from "../queue-handler";
 
 export async function handleOrderTimeout(
@@ -28,7 +28,7 @@ export async function handleOrderTimeout(
 		processRefund,
 	} = payload;
 
-	log.info(
+	logger.info(
 		{ orderId, userId, timeoutReason },
 		"[OrderTimeoutHandler] Processing timeout job",
 	);
@@ -44,7 +44,7 @@ export async function handleOrderTimeout(
 			// Check if order is still in a status that can timeout
 			// If order has been accepted, completed, or already cancelled, skip
 			if (order.status !== "MATCHING" && order.status !== "REQUESTED") {
-				log.info(
+				logger.info(
 					{ orderId, currentStatus: order.status },
 					"[OrderTimeoutHandler] Order no longer needs timeout - skipping",
 				);
@@ -61,7 +61,7 @@ export async function handleOrderTimeout(
 				opts,
 			);
 
-			log.info(
+			logger.info(
 				{ orderId, newStatus: updatedOrder.status },
 				"[OrderTimeoutHandler] Order cancelled due to timeout",
 			);
@@ -104,7 +104,7 @@ export async function handleOrderTimeout(
 						),
 					]);
 
-					log.info(
+					logger.info(
 						{
 							orderId,
 							userId: wallet.userId,
@@ -114,7 +114,7 @@ export async function handleOrderTimeout(
 						"[OrderTimeoutHandler] Refund processed successfully",
 					);
 				} else {
-					log.warn(
+					logger.warn(
 						{ orderId, paymentId },
 						"[OrderTimeoutHandler] Payment not found for refund",
 					);
@@ -143,7 +143,7 @@ export async function handleOrderTimeout(
 			});
 		});
 	} catch (error) {
-		log.error(
+		logger.error(
 			{ error, orderId, userId },
 			"[OrderTimeoutHandler] Failed to process timeout",
 		);

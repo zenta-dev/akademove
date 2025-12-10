@@ -20,7 +20,7 @@ import type {
 import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
 import type { EmergencyDatabase } from "@/core/tables/emergency";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 import { EmergencyLocationService, EmergencyStatusService } from "./services";
 
 export class EmergencyRepository extends BaseRepository {
@@ -65,7 +65,7 @@ export class EmergencyRepository extends BaseRepository {
 
 			return dbResult?.count ?? 0;
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ query, error },
 				"[EmergencyRepository] Failed to get query count",
 			);
@@ -144,7 +144,10 @@ export class EmergencyRepository extends BaseRepository {
 			const rows = result.map(EmergencyRepository.composeEntity);
 			return { rows };
 		} catch (error) {
-			log.error({ error }, "[EmergencyRepository] Failed to list emergencies");
+			logger.error(
+				{ error },
+				"[EmergencyRepository] Failed to list emergencies",
+			);
 			return { rows: [] };
 		}
 	}
@@ -161,7 +164,7 @@ export class EmergencyRepository extends BaseRepository {
 
 			return result.map(EmergencyRepository.composeEntity);
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ orderId, error },
 				"[EmergencyRepository] Failed to list emergencies by order",
 			);
@@ -178,7 +181,7 @@ export class EmergencyRepository extends BaseRepository {
 
 			return result.map(EmergencyRepository.composeEntity);
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ userId, error },
 				"[EmergencyRepository] Failed to list emergencies by user",
 			);
@@ -239,7 +242,7 @@ export class EmergencyRepository extends BaseRepository {
 
 			const result = EmergencyRepository.composeEntity(operation);
 
-			log.info(
+			logger.info(
 				{
 					emergencyId: result.id,
 					orderId: result.orderId,
@@ -256,7 +259,7 @@ export class EmergencyRepository extends BaseRepository {
 
 			return result;
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ item, error },
 				"[EmergencyRepository] Failed to create emergency",
 			);
@@ -304,7 +307,7 @@ export class EmergencyRepository extends BaseRepository {
 
 			const result = EmergencyRepository.composeEntity(operation);
 
-			log.info(
+			logger.info(
 				{ emergencyId: id, updates: item },
 				"[EmergencyRepository] Emergency updated",
 			);
@@ -314,7 +317,7 @@ export class EmergencyRepository extends BaseRepository {
 
 			return result;
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ id, item, error },
 				"[EmergencyRepository] Failed to update emergency",
 			);
@@ -335,13 +338,16 @@ export class EmergencyRepository extends BaseRepository {
 				});
 			}
 
-			log.info({ emergencyId: id }, "[EmergencyRepository] Emergency deleted");
+			logger.info(
+				{ emergencyId: id },
+				"[EmergencyRepository] Emergency deleted",
+			);
 
 			// Invalidate caches
 			await this.deleteCache(id);
 			await this.deleteCache("count"); // Invalidate count cache
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ id, error },
 				"[EmergencyRepository] Failed to delete emergency",
 			);

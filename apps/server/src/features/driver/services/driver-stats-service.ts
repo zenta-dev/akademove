@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 
 export interface DriverStatsOptions {
 	startDate?: Date;
@@ -230,7 +230,7 @@ export class DriverStatsService {
 			3,
 		);
 
-		log.info(
+		logger.info(
 			{
 				totalOrders: stats.total_orders,
 				totalEarnings,

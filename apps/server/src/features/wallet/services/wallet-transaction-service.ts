@@ -6,7 +6,8 @@ import { RepositoryError } from "@/core/error";
 import type { PartialWithTx } from "@/core/interface";
 import { tables } from "@/core/services/db";
 import { PaymentRepository } from "@/features/payment/payment-repository";
-import { log, toStringNumberSafe } from "@/utils";
+import { toStringNumberSafe } from "@/utils";
+import { logger } from "@/utils/logger";
 
 /**
  * Service responsible for wallet transaction recording
@@ -87,14 +88,14 @@ export class WalletTransactionService {
 				})
 				.returning();
 
-			log.info(
+			logger.info(
 				{ transactionId: transaction.id, walletId, type, amount },
 				"[WalletTransactionService] Recorded transaction",
 			);
 
 			return transaction.id;
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, params },
 				"[WalletTransactionService] Failed to record transaction",
 			);
@@ -165,14 +166,14 @@ export class WalletTransactionService {
 				})
 				.returning();
 
-			log.info(
+			logger.info(
 				{ paymentId: payment.id, transactionId, referenceId, amount },
 				"[WalletTransactionService] Recorded payment",
 			);
 
 			return PaymentRepository.composeEntity(payment);
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, params },
 				"[WalletTransactionService] Failed to record payment",
 			);

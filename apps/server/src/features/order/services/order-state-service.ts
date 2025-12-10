@@ -10,7 +10,7 @@
 import type { OrderStatus } from "@repo/schema/order";
 import { ERROR_MESSAGES } from "@/core/constants";
 import { RepositoryError } from "@/core/error";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 
 /**
  * Valid order state transitions
@@ -86,7 +86,7 @@ export class OrderStateService {
 				{ code: "BAD_REQUEST" },
 			);
 
-			log.error(
+			logger.error(
 				{ currentStatus, newStatus, allowedTransitions },
 				"[OrderStateService] Invalid transition",
 			);
@@ -94,7 +94,7 @@ export class OrderStateService {
 			throw error;
 		}
 
-		log.debug(
+		logger.debug(
 			{ currentStatus, newStatus },
 			"[OrderStateService] Valid transition",
 		);

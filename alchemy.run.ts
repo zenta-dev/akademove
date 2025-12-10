@@ -95,8 +95,6 @@ export const [server, web] = await Promise.all([
 			S3_ACCESS_KEY_ID: alchemy.secret.env.S3_ACCESS_KEY_ID,
 			S3_SECRET_ACCESS_KEY: alchemy.secret.env.S3_SECRET_ACCESS_KEY,
 			S3_PUBLIC_URL: alchemy.env.S3_PUBLIC_URL,
-			LOG_SOURCE_TOKEN: alchemy.secret.env.LOG_SOURCE_TOKEN,
-			LOG_ENDPOINT: alchemy.secret.env.LOG_ENDPOINT,
 			GOOGLE_MAPS_API_KEY: alchemy.secret.env.GOOGLE_MAPS_API_KEY,
 			RESEND_API_KEY: alchemy.secret.env.RESEND_API_KEY,
 			MIDTRANS_IS_PRODUCTION: alchemy.secret.env.MIDTRANS_IS_PRODUCTION,

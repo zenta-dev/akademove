@@ -1,6 +1,7 @@
 import { decode, encode } from "@msgpack/msgpack";
 import { KeyValueError } from "@/core/error";
-import { log, type PromiseFn } from "@/utils";
+import type { PromiseFn } from "@/utils";
+import { logger } from "@/utils/logger";
 
 export interface PutCacheOptions {
 	expirationTtl?: number;
@@ -35,12 +36,12 @@ export class CloudflareKVService implements KeyValueService {
 			const obj = decode(new Uint8Array(value)) as T;
 			return obj;
 		} catch (error) {
-			log.error({ error, key }, "[CloudflareKVService] Error getting value");
+			logger.error({ error, key }, "[CloudflareKVService] Error getting value");
 			if (options?.fallback) {
 				try {
 					return await options.fallback();
 				} catch (fallbackError) {
-					log.error(
+					logger.error(
 						{ error: fallbackError, key },
 						"[CloudflareKVService] Fallback error",
 					);

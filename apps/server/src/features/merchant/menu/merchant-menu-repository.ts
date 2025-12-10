@@ -27,7 +27,8 @@ import {
 	BestSellersService,
 	MenuImageService,
 } from "@/features/merchant/services";
-import { log, toNumberSafe, toStringNumberSafe } from "@/utils";
+import { toNumberSafe, toStringNumberSafe } from "@/utils";
+import { logger } from "@/utils/logger";
 
 interface MerchantMenuWithImage extends MerchantMenu {
 	imageId?: string;
@@ -74,7 +75,7 @@ export class MerchantMenuRepository extends BaseRepository {
 				? await MerchantMenuRepository.composeEntity(result, this.#storage)
 				: null;
 		} catch (error) {
-			log.error({ id, error }, "Failed to get from DB");
+			logger.error({ id, error }, "Failed to get from DB");
 			return null;
 		}
 	}
@@ -87,7 +88,7 @@ export class MerchantMenuRepository extends BaseRepository {
 				{ expirationTtl: CACHE_TTLS["24h"] },
 			);
 		} catch (error) {
-			log.error({ error }, "Failed to set total row cache");
+			logger.error({ error }, "Failed to set total row cache");
 		}
 	}
 
@@ -105,7 +106,7 @@ export class MerchantMenuRepository extends BaseRepository {
 
 			return res.total;
 		} catch (error) {
-			log.error({ error }, "Failed to get total row count");
+			logger.error({ error }, "Failed to get total row count");
 			return 0;
 		}
 	}
@@ -119,7 +120,7 @@ export class MerchantMenuRepository extends BaseRepository {
 
 			return dbResult?.count ?? 0;
 		} catch (error) {
-			log.error({ merchantId, error }, "Failed to get merchant menu count");
+			logger.error({ merchantId, error }, "Failed to get merchant menu count");
 			return 0;
 		}
 	}
@@ -138,7 +139,7 @@ export class MerchantMenuRepository extends BaseRepository {
 
 			return dbResult?.count ?? 0;
 		} catch (error) {
-			log.error({ query, error }, "Failed to get query count");
+			logger.error({ query, error }, "Failed to get query count");
 			return 0;
 		}
 	}
@@ -504,7 +505,7 @@ export class MerchantMenuRepository extends BaseRepository {
 						expirationTtl: CACHE_TTLS["1h"],
 					});
 
-					log.info(
+					logger.info(
 						{ category, limit, count: bestSellers.length },
 						"[MerchantMenuRepository] Retrieved best sellers",
 					);
@@ -514,7 +515,7 @@ export class MerchantMenuRepository extends BaseRepository {
 			});
 			return result;
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, params },
 				"[MerchantMenuRepository] getBestSellers failed",
 			);

@@ -8,7 +8,8 @@ import type { DatabaseService } from "@/core/services/db";
 import { tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
 import type { OrderDatabase } from "@/core/tables/order";
-import { log, toNumberSafe } from "@/utils";
+import { toNumberSafe } from "@/utils";
+import { logger } from "@/utils/logger";
 import { MerchantOrderStatusService } from "../services";
 
 export class MerchantOrderRepository extends BaseRepository {
@@ -109,7 +110,7 @@ export class MerchantOrderRepository extends BaseRepository {
 				throw new RepositoryError(m.error_failed_accept_order());
 			}
 
-			log.info(
+			logger.info(
 				{ orderId, merchantId, status: updated.status },
 				"[MerchantOrderRepository] Order accepted",
 			);
@@ -122,7 +123,7 @@ export class MerchantOrderRepository extends BaseRepository {
 
 			return this.composeEntity(updated);
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, orderId, merchantId },
 				"[MerchantOrderRepository] Failed to accept order",
 			);
@@ -183,7 +184,7 @@ export class MerchantOrderRepository extends BaseRepository {
 				throw new RepositoryError(m.error_failed_reject_order());
 			}
 
-			log.info(
+			logger.info(
 				{ orderId, merchantId, status: updated.status, reason },
 				"[MerchantOrderRepository] Order rejected",
 			);
@@ -197,7 +198,7 @@ export class MerchantOrderRepository extends BaseRepository {
 
 			return this.composeEntity(updated);
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, orderId, merchantId },
 				"[MerchantOrderRepository] Failed to reject order",
 			);
@@ -256,7 +257,7 @@ export class MerchantOrderRepository extends BaseRepository {
 				throw new RepositoryError(m.error_failed_mark_order_preparing());
 			}
 
-			log.info(
+			logger.info(
 				{ orderId, merchantId, status: updated.status },
 				"[MerchantOrderRepository] Order marked as preparing",
 			);
@@ -269,7 +270,7 @@ export class MerchantOrderRepository extends BaseRepository {
 
 			return this.composeEntity(updated);
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, orderId, merchantId },
 				"[MerchantOrderRepository] Failed to mark order as preparing",
 			);
@@ -325,7 +326,7 @@ export class MerchantOrderRepository extends BaseRepository {
 				throw new RepositoryError(m.error_failed_mark_order_ready());
 			}
 
-			log.info(
+			logger.info(
 				{ orderId, merchantId, status: updated.status },
 				"[MerchantOrderRepository] Order marked as ready",
 			);
@@ -339,7 +340,7 @@ export class MerchantOrderRepository extends BaseRepository {
 
 			return this.composeEntity(updated);
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, orderId, merchantId },
 				"[MerchantOrderRepository] Failed to mark order as ready",
 			);

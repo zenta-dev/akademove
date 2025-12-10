@@ -1,7 +1,7 @@
 import { m } from "@repo/i18n";
 import { trimObjectValues } from "@repo/shared";
 import { createORPCRouter } from "@/core/router/orpc";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 import { MerchantApprovalSpec } from "./merchant-approval-spec";
 
 const { priv } = createORPCRouter(MerchantApprovalSpec);
@@ -69,7 +69,7 @@ export const MerchantApprovalHandler = priv.router({
 						status: "APPROVED",
 					});
 				} catch (error) {
-					log.error(
+					logger.error(
 						{ error, merchantId: params.id },
 						"[MerchantApprovalHandler] Failed to send approval email",
 					);
@@ -129,7 +129,7 @@ export const MerchantApprovalHandler = priv.router({
 						rejectionDetails,
 					});
 				} catch (error) {
-					log.error(
+					logger.error(
 						{ error, merchantId: params.id },
 						"[MerchantApprovalHandler] Failed to send rejection email",
 					);

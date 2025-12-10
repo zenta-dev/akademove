@@ -1,5 +1,5 @@
 import type { Coupon } from "@repo/schema/coupon";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 
 export interface DiscountCalculationResult {
 	discountAmount: number;
@@ -36,7 +36,7 @@ export class CouponCalculationService {
 
 			return 0;
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, couponId: coupon.id, orderAmount },
 				"[CouponCalculationService] Failed to calculate base discount",
 			);
@@ -60,7 +60,7 @@ export class CouponCalculationService {
 
 			return discountAmount;
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, couponId: coupon.id, discountAmount },
 				"[CouponCalculationService] Failed to apply max discount cap",
 			);
@@ -91,7 +91,7 @@ export class CouponCalculationService {
 			// Calculate final amount (never negative)
 			const finalAmount = Math.max(0, orderAmount - discountAmount);
 
-			log.debug(
+			logger.debug(
 				{
 					couponId: coupon.id,
 					couponCode: coupon.code,
@@ -107,7 +107,7 @@ export class CouponCalculationService {
 				finalAmount,
 			};
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, couponId: coupon.id, orderAmount },
 				"[CouponCalculationService] Failed to calculate discount",
 			);
@@ -158,7 +158,7 @@ export class CouponCalculationService {
 				allDiscounts,
 			};
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, couponsCount: coupons.length, orderAmount },
 				"[CouponCalculationService] Failed to calculate best coupon",
 			);

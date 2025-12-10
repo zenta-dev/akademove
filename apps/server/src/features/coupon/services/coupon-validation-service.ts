@@ -2,7 +2,7 @@ import type { Coupon } from "@repo/schema/coupon";
 import { count, eq } from "drizzle-orm";
 import type { DatabaseService, DatabaseTransaction } from "@/core/services/db";
 import { tables } from "@/core/services/db";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 
 export interface CouponValidationResult {
 	valid: boolean;
@@ -300,7 +300,7 @@ export class CouponValidationService {
 
 			return { valid: true };
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, couponId: coupon.id, params },
 				"[CouponValidationService] Failed to validate eligibility",
 			);
@@ -399,7 +399,7 @@ export class CouponValidationService {
 
 			return { valid: true };
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, couponId: coupon.id, params },
 				"[CouponValidationService] Failed to validate coupon code",
 			);
@@ -426,7 +426,7 @@ export class CouponValidationService {
 
 				return result[0]?.count ?? 0;
 			} catch (error) {
-				log.error(
+				logger.error(
 					{ error, userId },
 					"[CouponValidationService] Failed to get user order count",
 				);
@@ -452,7 +452,7 @@ export class CouponValidationService {
 
 				return usages.length;
 			} catch (error) {
-				log.error(
+				logger.error(
 					{ error, couponId, userId },
 					"[CouponValidationService] Failed to get user usage count",
 				);

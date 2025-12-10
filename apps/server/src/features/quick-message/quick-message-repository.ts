@@ -13,7 +13,7 @@ import type { PartialWithTx, WithTx } from "@/core/interface";
 import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
 import type { QuickMessageTemplateDatabase } from "@/core/tables/quick-message";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 import { QuickMessageCacheService } from "./services";
 
 export class QuickMessageRepository extends BaseRepository {
@@ -68,7 +68,7 @@ export class QuickMessageRepository extends BaseRepository {
 
 			return res.map(QuickMessageRepository.composeEntity);
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, query },
 				"[QuickMessageRepository] Failed to list templates",
 			);
@@ -99,7 +99,7 @@ export class QuickMessageRepository extends BaseRepository {
 
 			return QuickMessageRepository.composeEntity(res);
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, id },
 				"[QuickMessageRepository] Failed to get template",
 			);
@@ -136,14 +136,14 @@ export class QuickMessageRepository extends BaseRepository {
 				invalidationPatterns.map((pattern) => this.deleteCache(pattern)),
 			);
 
-			log.info(
+			logger.info(
 				{ templateId: res.id, role: data.role },
 				"[QuickMessageRepository] Template created",
 			);
 
 			return QuickMessageRepository.composeEntity(res);
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, data },
 				"[QuickMessageRepository] Failed to create template",
 			);
@@ -175,11 +175,14 @@ export class QuickMessageRepository extends BaseRepository {
 				this.deleteCache(QuickMessageCacheService.generateWildcardPattern()),
 			]);
 
-			log.info({ templateId: id }, "[QuickMessageRepository] Template updated");
+			logger.info(
+				{ templateId: id },
+				"[QuickMessageRepository] Template updated",
+			);
 
 			return QuickMessageRepository.composeEntity(res);
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, id, data },
 				"[QuickMessageRepository] Failed to update template",
 			);
@@ -206,9 +209,12 @@ export class QuickMessageRepository extends BaseRepository {
 				this.deleteCache(QuickMessageCacheService.generateWildcardPattern()),
 			]);
 
-			log.info({ templateId: id }, "[QuickMessageRepository] Template deleted");
+			logger.info(
+				{ templateId: id },
+				"[QuickMessageRepository] Template deleted",
+			);
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, id },
 				"[QuickMessageRepository] Failed to delete template",
 			);

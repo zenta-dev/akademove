@@ -1,7 +1,7 @@
 import { eq } from "drizzle-orm";
 import { getManagers, getRepositories, getServices } from "@/core/factory";
 import { tables } from "@/core/services/db";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 
 /**
  * Auto-offline cron job handler
@@ -45,7 +45,7 @@ export async function handleAutoOfflineCron() {
 		};
 		const currentDay = dayMap[currentDayNumber];
 
-		log.info(
+		logger.info(
 			{ currentDay, currentHour, currentMinute },
 			"[AutoOfflineCron] Starting auto-offline check",
 		);
@@ -69,7 +69,7 @@ export async function handleAutoOfflineCron() {
 			},
 		});
 
-		log.info(
+		logger.info(
 			{ scheduleCount: schedules.length },
 			"[AutoOfflineCron] Found active schedules",
 		);
@@ -90,7 +90,7 @@ export async function handleAutoOfflineCron() {
 					currentTimeMinutes >= scheduleStart &&
 					currentTimeMinutes <= scheduleEnd;
 
-				log.debug(
+				logger.debug(
 					{
 						driverId: driver.id,
 						scheduleName: schedule.name,
@@ -121,7 +121,7 @@ export async function handleAutoOfflineCron() {
 
 					toggledCount++;
 
-					log.info(
+					logger.info(
 						{
 							driverId: driver.id,
 							userId: driver.userId,
@@ -133,7 +133,7 @@ export async function handleAutoOfflineCron() {
 					);
 				}
 			} catch (error) {
-				log.error(
+				logger.error(
 					{ error, scheduleId: schedule.id, driverId: schedule.driverId },
 					"[AutoOfflineCron] Failed to process schedule",
 				);
@@ -141,14 +141,17 @@ export async function handleAutoOfflineCron() {
 			}
 		}
 
-		log.info(
+		logger.info(
 			{ totalSchedules: schedules.length, toggledCount },
 			"[AutoOfflineCron] Completed auto-offline check",
 		);
 
 		return { success: true, toggledCount };
 	} catch (error) {
-		log.error({ error }, "[AutoOfflineCron] Fatal error during cron execution");
+		logger.error(
+			{ error },
+			"[AutoOfflineCron] Fatal error during cron execution",
+		);
 		throw error;
 	}
 }

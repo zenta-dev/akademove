@@ -1,5 +1,5 @@
 import type { Coordinate } from "@repo/schema/position";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 import type { IMapService } from "../abstractions/interfaces";
 import { MapError } from "../error";
 
@@ -186,7 +186,7 @@ export class GoogleMapService implements MapService, IMapService {
 				clearTimeout(timeoutId);
 			}
 		} catch (error) {
-			log.error({ error, address }, "[MapService] Geocoding failed");
+			logger.error({ error, address }, "[MapService] Geocoding failed");
 			if (error instanceof MapError) throw error;
 			throw new MapError(`Failed to geocode address: ${error}`);
 		}
@@ -233,7 +233,10 @@ export class GoogleMapService implements MapService, IMapService {
 				clearTimeout(timeoutId);
 			}
 		} catch (error) {
-			log.error({ error, lat, lng }, "[MapService] Reverse geocoding failed");
+			logger.error(
+				{ error, lat, lng },
+				"[MapService] Reverse geocoding failed",
+			);
 			if (error instanceof MapError) throw error;
 			throw new MapError(`Failed to reverse geocode coordinates: ${error}`);
 		}
@@ -452,7 +455,7 @@ export class GoogleMapService implements MapService, IMapService {
 		if (!data.routes?.length) return [];
 
 		const route = data.routes[0];
-		log.info(`Route: ${route.distanceMeters}m, ${route.duration}`);
+		logger.info(`Route: ${route.distanceMeters}m, ${route.duration}`);
 
 		return this.#decodePolyline(route.polyline.encodedPolyline);
 	}
@@ -509,7 +512,7 @@ export class GoogleMapService implements MapService, IMapService {
 
 			return await response.json();
 		} catch (error) {
-			log.error({ detail: error }, "[MapService] $post method");
+			logger.error({ detail: error }, "[MapService] $post method");
 			if (error instanceof MapError) throw error;
 			throw new MapError(`Failed to fetch: ${error}`);
 		} finally {

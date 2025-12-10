@@ -3,7 +3,8 @@ import type { RoleAccess } from "@repo/schema";
 import type { UserRole } from "@repo/schema/user";
 import { getAuthToken } from "@repo/shared";
 import { createMiddleware } from "hono/factory";
-import { isDev, log, safeAsync } from "@/utils";
+import { isDev, safeAsync } from "@/utils";
+import { logger } from "@/utils/logger";
 import { AuthError } from "../error";
 import type { HonoContext, ORPCContext } from "../interface";
 
@@ -60,7 +61,7 @@ export const honoRequireAuthMiddleware = createMiddleware<HonoContext>(
 			// Check if ban has expired
 			if (session.user.banExpires && new Date() > session.user.banExpires) {
 				// Ban expired - allow through but log for auto-unban process
-				log.info(
+				logger.info(
 					{ userId: session.user.id, banExpires: session.user.banExpires },
 					"User ban expired, allowing access",
 				);
@@ -81,7 +82,7 @@ export const honoRequireAuthMiddleware = createMiddleware<HonoContext>(
 
 export const orpcRequireAuthMiddleware = base.middleware(
 	async ({ context, path, next }) => {
-		log.debug(`${path} need to be authenticated`);
+		logger.debug(`${path} need to be authenticated`);
 		const { token, user } = context;
 		if (!token) {
 			throw new AuthError("Missing or invalid authentication token", {
@@ -99,7 +100,7 @@ export const orpcRequireAuthMiddleware = base.middleware(
 			// Check if ban has expired
 			if (user.banExpires && new Date() > user.banExpires) {
 				// Ban expired - allow through but log for auto-unban process
-				log.info(
+				logger.info(
 					{ userId: user.id, banExpires: user.banExpires },
 					"User ban expired, allowing access",
 				);

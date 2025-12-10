@@ -5,7 +5,7 @@ import type {
 } from "@repo/schema/fraud";
 import type { LocationSchema } from "@repo/schema/position";
 import type * as z from "zod";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 
 type Location = z.infer<typeof LocationSchema>;
 
@@ -74,7 +74,7 @@ export class FraudDetectionService {
 				},
 			});
 
-			log.warn(
+			logger.warn(
 				{ userId: context.userId, driverId: context.driverId },
 				"[FraudDetectionService] Mock location detected",
 			);
@@ -103,7 +103,7 @@ export class FraudDetectionService {
 					},
 				});
 
-				log.warn(
+				logger.warn(
 					{
 						userId: context.userId,
 						driverId: context.driverId,
@@ -134,7 +134,7 @@ export class FraudDetectionService {
 					},
 				});
 
-				log.warn(
+				logger.warn(
 					{
 						userId: context.userId,
 						driverId: context.driverId,

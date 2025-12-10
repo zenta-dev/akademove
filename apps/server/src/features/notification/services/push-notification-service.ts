@@ -17,7 +17,7 @@ import type {
 	FirebaseAdminService,
 	NotificationPayload,
 } from "@/core/services/firebase";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 
 export interface SendNotificationOptions extends NotificationPayload {
 	fromUserId: string;
@@ -75,12 +75,18 @@ export class PushNotificationService {
 		const { toUserId, fromUserId } = params;
 
 		try {
-			log.debug({ toUserId }, "[PushNotificationService] Fetching FCM tokens");
+			logger.debug(
+				{ toUserId },
+				"[PushNotificationService] Fetching FCM tokens",
+			);
 
 			const tokenResults = await tokenProvider.listByUserId(toUserId, opts);
 
 			if (!tokenResults.length) {
-				log.warn({ toUserId }, "[PushNotificationService] No FCM tokens found");
+				logger.warn(
+					{ toUserId },
+					"[PushNotificationService] No FCM tokens found",
+				);
 				return {
 					messageIds: [],
 					logs: [],
@@ -88,7 +94,7 @@ export class PushNotificationService {
 				};
 			}
 
-			log.info(
+			logger.info(
 				{ toUserId, tokenCount: tokenResults.length },
 				"[PushNotificationService] Sending notifications",
 			);
@@ -118,14 +124,14 @@ export class PushNotificationService {
 				}),
 			);
 
-			log.info(
+			logger.info(
 				{ toUserId, messageCount: messageIds.length },
 				"[PushNotificationService] Notifications sent successfully",
 			);
 
 			return { messageIds, logs, userNotifications };
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, toUserId },
 				"[PushNotificationService] Failed to send notification",
 			);
@@ -170,7 +176,7 @@ export class PushNotificationService {
 		const { toUserIds, fromUserId } = params;
 
 		try {
-			log.debug(
+			logger.debug(
 				{ userCount: toUserIds.length },
 				"[PushNotificationService] Fetching FCM tokens for multiple users",
 			);
@@ -178,7 +184,7 @@ export class PushNotificationService {
 			const tokenResults = await tokenProvider.listByUserIds(toUserIds, opts);
 
 			if (!tokenResults.length) {
-				log.warn(
+				logger.warn(
 					{ userCount: toUserIds.length },
 					"[PushNotificationService] No FCM tokens found",
 				);
@@ -189,7 +195,7 @@ export class PushNotificationService {
 				};
 			}
 
-			log.info(
+			logger.info(
 				{ userCount: toUserIds.length, tokenCount: tokenResults.length },
 				"[PushNotificationService] Sending notifications to multiple users",
 			);
@@ -220,14 +226,14 @@ export class PushNotificationService {
 					})),
 			);
 
-			log.info(
+			logger.info(
 				{ userCount: toUserIds.length, messageCount: messageIds.length },
 				"[PushNotificationService] Notifications sent successfully",
 			);
 
 			return { messageIds, logs, userNotifications };
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, userCount: toUserIds.length },
 				"[PushNotificationService] Failed to send notifications",
 			);
@@ -269,21 +275,21 @@ export class PushNotificationService {
 		params: NotificationPayload & { topic: string },
 	): Promise<string> {
 		try {
-			log.debug(
+			logger.debug(
 				{ topic: params.topic },
 				"[PushNotificationService] Sending to topic",
 			);
 
 			const messageId = await this.firebaseAdmin.sendToTopic(params);
 
-			log.info(
+			logger.info(
 				{ topic: params.topic, messageId },
 				"[PushNotificationService] Topic notification sent",
 			);
 
 			return messageId;
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, topic: params.topic },
 				"[PushNotificationService] Failed to send topic notification",
 			);
@@ -302,15 +308,15 @@ export class PushNotificationService {
 	 */
 	async subscribeToTopic(token: string, topic: string) {
 		try {
-			log.debug({ topic }, "[PushNotificationService] Subscribing to topic");
+			logger.debug({ topic }, "[PushNotificationService] Subscribing to topic");
 
 			const result = await this.firebaseAdmin.subscribeToTopic(token, topic);
 
-			log.info({ topic }, "[PushNotificationService] Subscribed to topic");
+			logger.info({ topic }, "[PushNotificationService] Subscribed to topic");
 
 			return result;
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, topic },
 				"[PushNotificationService] Failed to subscribe to topic",
 			);
@@ -329,7 +335,7 @@ export class PushNotificationService {
 	 */
 	async unsubscribeFromTopic(token: string, topic: string) {
 		try {
-			log.debug(
+			logger.debug(
 				{ topic },
 				"[PushNotificationService] Unsubscribing from topic",
 			);
@@ -339,11 +345,14 @@ export class PushNotificationService {
 				topic,
 			);
 
-			log.info({ topic }, "[PushNotificationService] Unsubscribed from topic");
+			logger.info(
+				{ topic },
+				"[PushNotificationService] Unsubscribed from topic",
+			);
 
 			return result;
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, topic },
 				"[PushNotificationService] Failed to unsubscribe from topic",
 			);

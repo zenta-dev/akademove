@@ -18,7 +18,8 @@ import type { WithTx } from "@/core/interface";
 import { type DatabaseService, tables } from "@/core/services/db";
 import type { PaymentService } from "@/core/services/payment";
 import type { PaymentDatabase } from "@/core/tables/payment";
-import { log, toNumberSafe, toStringNumberSafe } from "@/utils";
+import { toNumberSafe, toStringNumberSafe } from "@/utils";
+import { logger } from "@/utils/logger";
 import { parseVANumber } from "./va-number-parser";
 
 /**
@@ -188,7 +189,7 @@ export class PaymentChargeService {
 					va_number: request.va_number,
 				})) as ChargeResponse;
 			} catch (paymentError) {
-				log.error(
+				logger.error(
 					{ error: paymentError, transactionId: transaction.id },
 					"[PaymentChargeService] Payment gateway failed - transaction will be rolled back",
 				);
@@ -214,7 +215,7 @@ export class PaymentChargeService {
 			// Parse VA number
 			const va_number = parseVANumber(paymentResponse, request.bank);
 
-			log.debug(
+			logger.debug(
 				{ paymentResponse, actions, va_number },
 				"[PaymentChargeService] Charge result",
 			);
@@ -240,7 +241,7 @@ export class PaymentChargeService {
 
 			return { payment, transaction, wallet };
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, request },
 				"[PaymentChargeService] Failed to charge payment",
 			);
@@ -376,7 +377,7 @@ export class PaymentChargeService {
 				},
 			};
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, userId, amount, walletId: wallet.id },
 				"[PaymentChargeService] Failed to charge wallet - transaction will be rolled back",
 			);

@@ -8,7 +8,7 @@
 import type { OrderStatus } from "@repo/schema/order";
 import type { OrderStatusHistoryJob } from "@repo/schema/queue";
 import { tables } from "@/core/services/db";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 import type { QueueHandlerContext } from "../queue-handler";
 
 export async function handleOrderStatusHistory(
@@ -19,7 +19,7 @@ export async function handleOrderStatusHistory(
 	const { orderId, fromStatus, toStatus, changedBy, changedByRole, reason } =
 		payload;
 
-	log.debug(
+	logger.debug(
 		{ orderId, fromStatus, toStatus },
 		"[OrderStatusHistoryHandler] Recording status change",
 	);
@@ -37,12 +37,12 @@ export async function handleOrderStatusHistory(
 			changedAt: new Date(),
 		});
 
-		log.debug(
+		logger.debug(
 			{ orderId, fromStatus, toStatus, changedBy },
 			"[OrderStatusHistoryHandler] Status change recorded",
 		);
 	} catch (error) {
-		log.error(
+		logger.error(
 			{ error, orderId, fromStatus, toStatus },
 			"[OrderStatusHistoryHandler] Failed to record status change",
 		);

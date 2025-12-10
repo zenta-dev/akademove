@@ -3,7 +3,7 @@ import { and, asc, count, desc, eq, gte, lte, type SQL } from "drizzle-orm";
 import type { ListResult, PartialWithTx } from "@/core/interface";
 import { type DatabaseService, tables } from "@/core/services/db";
 import type { AllowedLoggedTable } from "@/core/tables/common";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 import type { AuditLog } from "./audit-spec";
 
 export interface AuditLogFilters {
@@ -155,7 +155,7 @@ export class AuditRepository {
 
 			return { rows: paginated, totalPages };
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, filters },
 				"[AuditRepository] Failed to list audit logs",
 			);
@@ -184,7 +184,7 @@ export class AuditRepository {
 
 			return result.map(AuditRepository.composeEntity);
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, tableName, recordId },
 				"[AuditRepository] Failed to get audit logs by record ID",
 			);

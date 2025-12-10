@@ -6,7 +6,7 @@
  */
 
 import type { CouponUsageJob } from "@repo/schema/queue";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 import type { QueueHandlerContext } from "../queue-handler";
 
 export async function handleCouponUsage(
@@ -16,7 +16,7 @@ export async function handleCouponUsage(
 	const { payload } = job;
 	const { couponId, userId, orderId, discountAmount } = payload;
 
-	log.debug(
+	logger.debug(
 		{ couponId, orderId, discountAmount },
 		"[CouponUsageHandler] Recording coupon usage",
 	);
@@ -30,12 +30,12 @@ export async function handleCouponUsage(
 			discountAmount,
 		);
 
-		log.info(
+		logger.info(
 			{ couponId, userId, orderId, discountAmount },
 			"[CouponUsageHandler] Coupon usage recorded",
 		);
 	} catch (error) {
-		log.error(
+		logger.error(
 			{ error, couponId, orderId },
 			"[CouponUsageHandler] Failed to record coupon usage",
 		);

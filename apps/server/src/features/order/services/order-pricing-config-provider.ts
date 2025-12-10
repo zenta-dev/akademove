@@ -19,7 +19,7 @@ import {
 import { CONFIGURATION_KEYS } from "@/core/constants";
 import { RepositoryError } from "@/core/error";
 import type { DatabaseService } from "@/core/services/db";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 import type { IPricingConfigProvider } from "./order-pricing-service";
 
 /**
@@ -37,7 +37,7 @@ export class OrderPricingConfigProvider implements IPricingConfigProvider {
 		// Preload pricing configs on first instantiation
 		if (!OrderPricingConfigProvider.cacheLoadedAt) {
 			this.preloadConfigs().catch((err) => {
-				log.error(
+				logger.error(
 					{ error: err },
 					"[OrderPricingConfigProvider] Failed to preload configs",
 				);
@@ -65,7 +65,7 @@ export class OrderPricingConfigProvider implements IPricingConfigProvider {
 			}
 
 			OrderPricingConfigProvider.cacheLoadedAt = new Date();
-			log.info(
+			logger.info(
 				{
 					count: configs.length,
 					loadedAt: OrderPricingConfigProvider.cacheLoadedAt,
@@ -73,7 +73,7 @@ export class OrderPricingConfigProvider implements IPricingConfigProvider {
 				"[OrderPricingConfigProvider] Pricing configs preloaded",
 			);
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error },
 				"[OrderPricingConfigProvider] Failed to preload configs",
 			);
@@ -87,7 +87,7 @@ export class OrderPricingConfigProvider implements IPricingConfigProvider {
 	static invalidateCache(): void {
 		OrderPricingConfigProvider.cache.clear();
 		OrderPricingConfigProvider.cacheLoadedAt = null;
-		log.info("[OrderPricingConfigProvider] Cache invalidated");
+		logger.info("[OrderPricingConfigProvider] Cache invalidated");
 	}
 
 	/**
@@ -119,7 +119,7 @@ export class OrderPricingConfigProvider implements IPricingConfigProvider {
 
 			return parsed;
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error },
 				"[OrderPricingConfigProvider] Get ride pricing failed",
 			);
@@ -156,7 +156,7 @@ export class OrderPricingConfigProvider implements IPricingConfigProvider {
 
 			return parsed;
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error },
 				"[OrderPricingConfigProvider] Get delivery pricing failed",
 			);
@@ -192,7 +192,7 @@ export class OrderPricingConfigProvider implements IPricingConfigProvider {
 
 			return parsed;
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error },
 				"[OrderPricingConfigProvider] Get food pricing failed",
 			);
@@ -229,7 +229,7 @@ export class OrderPricingConfigProvider implements IPricingConfigProvider {
 
 			return parsed;
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error },
 				"[OrderPricingConfigProvider] Get business config failed",
 			);

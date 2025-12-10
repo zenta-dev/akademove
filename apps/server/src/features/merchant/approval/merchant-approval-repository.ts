@@ -6,7 +6,7 @@ import { RepositoryError } from "@/core/error";
 import type { ORPCContext, WithTx } from "@/core/interface";
 import { AuditService } from "@/core/services/audit";
 import { tables } from "@/core/services/db";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 import type {
 	MerchantApprovalDocumentStatus,
 	MerchantApprovalReview,
@@ -102,7 +102,7 @@ export class MerchantApprovalRepository extends BaseRepository {
 				opts,
 			);
 
-			log.info(
+			logger.info(
 				{ merchantId, document, status },
 				"[MerchantApprovalRepository] Document status updated",
 			);
@@ -197,7 +197,7 @@ export class MerchantApprovalRepository extends BaseRepository {
 				opts,
 			);
 
-			log.info(
+			logger.info(
 				{ merchantId, reviewedBy: context.user.id },
 				"[MerchantApprovalRepository] Merchant approved",
 			);
@@ -284,7 +284,7 @@ export class MerchantApprovalRepository extends BaseRepository {
 				opts,
 			);
 
-			log.info(
+			logger.info(
 				{ merchantId, reason, reviewedBy: context.user.id },
 				"[MerchantApprovalRepository] Merchant rejected",
 			);

@@ -1,5 +1,5 @@
 import { stringify } from "csv-stringify/sync";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 
 export interface DriverAnalyticsRecord {
 	id: string;
@@ -59,7 +59,7 @@ export class AnalyticsExportService {
 		try {
 			return Number.parseFloat(totalPrice) - Number.parseFloat(commission);
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, totalPrice, commission },
 				"[AnalyticsExportService] Failed to calculate net earnings",
 			);
@@ -79,7 +79,7 @@ export class AnalyticsExportService {
 			const merchant = Number.parseFloat(merchantCommission ?? "0");
 			return driver + merchant;
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, driverCommission, merchantCommission },
 				"[AnalyticsExportService] Failed to calculate platform revenue",
 			);
@@ -107,7 +107,7 @@ export class AnalyticsExportService {
 				"Completed At": row.completed_at ?? "N/A",
 			}));
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, recordCount: records.length },
 				"[AnalyticsExportService] Failed to format driver records",
 			);
@@ -138,7 +138,7 @@ export class AnalyticsExportService {
 				"Completed At": row.completed_at ?? "N/A",
 			}));
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, recordCount: records.length },
 				"[AnalyticsExportService] Failed to format merchant records",
 			);
@@ -174,7 +174,7 @@ export class AnalyticsExportService {
 				"Completed At": row.completed_at ?? "N/A",
 			}));
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, recordCount: records.length },
 				"[AnalyticsExportService] Failed to format operator records",
 			);
@@ -205,14 +205,14 @@ export class AnalyticsExportService {
 				],
 			});
 
-			log.info(
+			logger.info(
 				{ recordCount: records.length },
 				"[AnalyticsExportService] Driver analytics exported to CSV",
 			);
 
 			return csv;
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, recordCount: records.length },
 				"[AnalyticsExportService] Failed to export driver analytics",
 			);
@@ -243,14 +243,14 @@ export class AnalyticsExportService {
 				],
 			});
 
-			log.info(
+			logger.info(
 				{ recordCount: records.length },
 				"[AnalyticsExportService] Merchant analytics exported to CSV",
 			);
 
 			return csv;
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, recordCount: records.length },
 				"[AnalyticsExportService] Failed to export merchant analytics",
 			);
@@ -286,14 +286,14 @@ export class AnalyticsExportService {
 				],
 			});
 
-			log.info(
+			logger.info(
 				{ recordCount: records.length },
 				"[AnalyticsExportService] Operator analytics exported to CSV",
 			);
 
 			return csv;
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, recordCount: records.length },
 				"[AnalyticsExportService] Failed to export operator analytics",
 			);

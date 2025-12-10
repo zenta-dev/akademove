@@ -15,7 +15,7 @@ import { BUSINESS_CONSTANTS, ERROR_MESSAGES } from "@/core/constants";
 import { RepositoryError } from "@/core/error";
 import type { DatabaseService, DatabaseTransaction } from "@/core/services/db";
 import { tables } from "@/core/services/db";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 
 export interface MatchingCriteria {
 	pickupLocation: { x: number; y: number };
@@ -66,7 +66,7 @@ export class OrderMatchingService {
 				criteria.radiusKm ?? BUSINESS_CONSTANTS.DRIVER_MATCHING_RADIUS_KM;
 			const radiusMeters = radiusKm * 1000;
 
-			log.debug(
+			logger.debug(
 				{ criteria, radiusKm },
 				"[OrderMatchingService] Finding best driver",
 			);
@@ -125,7 +125,7 @@ export class OrderMatchingService {
 				.limit(1);
 
 			if (drivers.length === 0) {
-				log.warn(
+				logger.warn(
 					{ criteria, radiusKm },
 					"[OrderMatchingService] No drivers found",
 				);
@@ -135,7 +135,7 @@ export class OrderMatchingService {
 			const matchedDriver = drivers[0];
 			const distanceKm = Number((matchedDriver.distance / 1000).toFixed(2));
 
-			log.info(
+			logger.info(
 				{
 					driverId: matchedDriver.id,
 					distanceKm,
@@ -149,7 +149,10 @@ export class OrderMatchingService {
 				distance: distanceKm,
 			};
 		} catch (error) {
-			log.error({ error, criteria }, "[OrderMatchingService] Matching failed");
+			logger.error(
+				{ error, criteria },
+				"[OrderMatchingService] Matching failed",
+			);
 			throw new RepositoryError(ERROR_MESSAGES.DRIVER_NOT_AVAILABLE, {
 				code: "NOT_FOUND",
 			});
@@ -211,7 +214,7 @@ export class OrderMatchingService {
 				distance: Number((d.distance / 1000).toFixed(2)),
 			}));
 		} catch (error) {
-			log.error({ error, criteria }, "[OrderMatchingService] Search failed");
+			logger.error({ error, criteria }, "[OrderMatchingService] Search failed");
 			throw new RepositoryError("Failed to find available drivers", {
 				code: "INTERNAL_SERVER_ERROR",
 			});
@@ -242,7 +245,7 @@ export class OrderMatchingService {
 			const expansionRate = BUSINESS_CONSTANTS.DRIVER_MATCHING_RADIUS_EXPANSION;
 			const timeoutMs = BUSINESS_CONSTANTS.DRIVER_MATCHING_TIMEOUT_MS;
 
-			log.debug(
+			logger.debug(
 				{ criteria, initialRadius, expansionRate, timeoutMs, maxAttempts },
 				"[OrderMatchingService] Starting timeout expansion matching",
 			);
@@ -254,7 +257,7 @@ export class OrderMatchingService {
 				attempt++;
 				const startTime = Date.now();
 
-				log.info(
+				logger.info(
 					{
 						orderId: criteria.orderId || "unknown",
 						attempt,
@@ -274,7 +277,7 @@ export class OrderMatchingService {
 				const elapsedTime = Date.now() - startTime;
 
 				if (drivers.length > 0) {
-					log.info(
+					logger.info(
 						{
 							orderId: criteria.orderId || "unknown",
 							attempt,
@@ -292,7 +295,7 @@ export class OrderMatchingService {
 				const remainingTime = timeoutMs - elapsedTime;
 
 				if (remainingTime > 0 && attempt < maxAttempts) {
-					log.info(
+					logger.info(
 						{
 							orderId: criteria.orderId || "unknown",
 							attempt,
@@ -310,7 +313,7 @@ export class OrderMatchingService {
 				if (attempt < maxAttempts) {
 					currentRadius = currentRadius * (1 + expansionRate);
 
-					log.info(
+					logger.info(
 						{
 							orderId: criteria.orderId || "unknown",
 							attempt,
@@ -324,7 +327,7 @@ export class OrderMatchingService {
 			}
 
 			// No drivers found after all attempts
-			log.warn(
+			logger.warn(
 				{
 					orderId: criteria.orderId || "unknown",
 					initialRadius,
@@ -337,7 +340,7 @@ export class OrderMatchingService {
 
 			return [];
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, criteria },
 				"[OrderMatchingService] Timeout expansion matching failed",
 			);

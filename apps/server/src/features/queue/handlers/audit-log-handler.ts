@@ -9,7 +9,7 @@
  */
 
 import type { AuditLogJob } from "@repo/schema/queue";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 import type { QueueHandlerContext } from "../queue-handler";
 
 export async function handleAuditLog(
@@ -18,7 +18,7 @@ export async function handleAuditLog(
 ): Promise<void> {
 	const { payload } = job;
 
-	log.debug(
+	logger.debug(
 		{ action: payload.action, entityType: payload.entityType },
 		"[AuditLogHandler] Recording audit log",
 	);
@@ -27,7 +27,7 @@ export async function handleAuditLog(
 		// For now, just log the audit event since the AuditRepository
 		// doesn't have a generic create method - audit logs are created
 		// via AuditService.logChange which is called directly in handlers
-		log.info(
+		logger.info(
 			{
 				action: payload.action,
 				entityType: payload.entityType,
@@ -38,7 +38,7 @@ export async function handleAuditLog(
 			"[AuditLogHandler] Audit log event recorded",
 		);
 	} catch (error) {
-		log.error(
+		logger.error(
 			{ error, action: payload.action, entityId: payload.entityId },
 			"[AuditLogHandler] Failed to record audit log",
 		);

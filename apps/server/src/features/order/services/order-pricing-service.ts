@@ -25,7 +25,7 @@ import type {
 import Decimal from "decimal.js";
 import type { IMapService } from "@/core/abstractions/interfaces";
 import { RepositoryError } from "@/core/error";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 import { PricingCalculator } from "@/utils/pricing";
 
 export interface IPricingConfigProvider {
@@ -59,7 +59,7 @@ export class OrderPricingService {
 	 */
 	async estimateOrder(input: EstimateOrder): Promise<OrderSummary> {
 		try {
-			log.debug({ input }, "[OrderPricingService] Estimating order");
+			logger.debug({ input }, "[OrderPricingService] Estimating order");
 
 			// Calculate distance using map service
 			const distanceKm = await this.mapService.getDistance(
@@ -67,7 +67,7 @@ export class OrderPricingService {
 				{ lat: input.dropoffLocation.y, lng: input.dropoffLocation.x },
 			);
 
-			log.debug({ distanceKm }, "[OrderPricingService] Distance calculated");
+			logger.debug({ distanceKm }, "[OrderPricingService] Distance calculated");
 
 			// Get pricing based on order type
 			const pricing = await this.#getPricingForType(input.type);
@@ -80,14 +80,14 @@ export class OrderPricingService {
 				input.weight,
 			);
 
-			log.info(
+			logger.info(
 				{ type: input.type, distanceKm, totalCost: summary.totalCost },
 				"[OrderPricingService] Order estimated",
 			);
 
 			return summary;
 		} catch (error) {
-			log.error({ error, input }, "[OrderPricingService] Estimation failed");
+			logger.error({ error, input }, "[OrderPricingService] Estimation failed");
 			throw this.#handleError(error, "estimate order");
 		}
 	}
@@ -122,7 +122,7 @@ export class OrderPricingService {
 		if (badgeCommissionReduction > 0) {
 			const reduction = Math.min(badgeCommissionReduction, 0.5);
 			platformRate = platformRate.mul(1 - reduction);
-			log.info(
+			logger.info(
 				{
 					orderType,
 					originalRate: config.platformFeeRate,

@@ -25,7 +25,7 @@ import { TRUSTED_ORIGINS } from "@/core/constants";
 import { BaseError, UnknownError } from "@/core/error";
 import type { HonoContext, ORPCContext, UserInContext } from "@/core/interface";
 import { FetchServerRouter } from "@/features";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 import {
 	orpcAuthMiddleware,
 	orpcRequireAuthMiddleware,
@@ -37,22 +37,22 @@ const _sharedInterceptor: Interceptor<
 	Promise<StandardHandleResult>
 > = async (opts) => {
 	const path = opts.request.url.pathname;
-	log.debug({ path }, "Incoming Request");
+	logger.debug({ path }, "Incoming Request");
 	try {
 		const body = (await opts.request.body) ?? {};
-		log.debug({ body }, "Incoming request body");
+		logger.debug({ body }, "Incoming request body");
 		const res = await opts.next();
 		const { response } = res;
-		log.debug(response, "Outcoming response");
+		logger.debug(response, "Outcoming response");
 		return res;
 	} catch (error) {
-		log.error({ error }, "ORPC Error Interceptor");
+		logger.error({ error }, "ORPC Error Interceptor");
 
 		if (error instanceof ORPCError) {
 			const { cause } = error;
 			if (cause instanceof ValidationError) {
 				for (const iss of cause.issues) {
-					log.error({ issue: iss }, "ORPC Validation Error");
+					logger.error({ issue: iss }, "ORPC Validation Error");
 				}
 			}
 		}

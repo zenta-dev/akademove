@@ -1,5 +1,5 @@
 import type { EmergencyStatus } from "@repo/schema/emergency";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 
 export interface StatusTimestamps {
 	acknowledgedAt?: Date;
@@ -40,14 +40,14 @@ export class EmergencyStatusService {
 					break;
 			}
 
-			log.debug(
+			logger.debug(
 				{ newStatus, timestamps },
 				"[EmergencyStatusService] Status timestamps calculated",
 			);
 
 			return timestamps;
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, newStatus },
 				"[EmergencyStatusService] Failed to calculate timestamps",
 			);
@@ -82,7 +82,7 @@ export class EmergencyStatusService {
 
 			return { valid: true };
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, currentStatus, newStatus },
 				"[EmergencyStatusService] Failed to validate transition",
 			);
@@ -108,7 +108,7 @@ export class EmergencyStatusService {
 
 			return diffMinutes;
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, reportedAt, acknowledgedAt },
 				"[EmergencyStatusService] Failed to calculate response time",
 			);
@@ -131,7 +131,7 @@ export class EmergencyStatusService {
 
 			return diffMinutes;
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, reportedAt, resolvedAt },
 				"[EmergencyStatusService] Failed to calculate resolution time",
 			);
@@ -157,7 +157,7 @@ export class EmergencyStatusService {
 
 			return diffMinutes >= escalationThresholdMinutes;
 		} catch (error) {
-			log.error(
+			logger.error(
 				{ error, reportedAt, status },
 				"[EmergencyStatusService] Failed to check escalation",
 			);

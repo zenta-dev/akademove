@@ -27,7 +27,7 @@ import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
 import type { StorageService } from "@/core/services/storage";
 import type { MerchantDatabase } from "@/core/tables/merchant";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 import { MerchantDocumentService, MerchantStatsService } from "../services";
 import type { MerchantListQuery } from "./merchant-main-spec";
 
@@ -145,7 +145,7 @@ export class MerchantMainRepository extends BaseRepository {
 
 			return dbResult?.count ?? 0;
 		} catch (error) {
-			log.error({ query, filters, error }, "Failed to get query count");
+			logger.error({ query, filters, error }, "Failed to get query count");
 			return 0;
 		}
 	}
@@ -506,7 +506,7 @@ export class MerchantMainRepository extends BaseRepository {
 							file: doc,
 						})
 						.catch(async (uploadError) => {
-							log.error(
+							logger.error(
 								{ uploadError, merchantId: id, docKey },
 								"[MerchantMainRepository] Failed to upload document",
 							);
@@ -526,7 +526,7 @@ export class MerchantMainRepository extends BaseRepository {
 							file: image,
 						})
 						.catch(async (uploadError) => {
-							log.error(
+							logger.error(
 								{ uploadError, merchantId: id, imageKey },
 								"[MerchantMainRepository] Failed to upload image",
 							);
@@ -754,7 +754,7 @@ export class MerchantMainRepository extends BaseRepository {
 	async activate(id: string, opts?: WithTx): Promise<Merchant> {
 		try {
 			const tx = opts?.tx ?? this.db;
-			log.info(
+			logger.info(
 				{ merchantId: id },
 				"[MerchantMainRepository] Activating merchant",
 			);
@@ -784,7 +784,7 @@ export class MerchantMainRepository extends BaseRepository {
 			);
 			await this.setCache(id, result, { expirationTtl: CACHE_TTLS["24h"] });
 
-			log.info(
+			logger.info(
 				{ merchantId: id },
 				"[MerchantMainRepository] Merchant activated",
 			);
@@ -801,7 +801,7 @@ export class MerchantMainRepository extends BaseRepository {
 	): Promise<Merchant> {
 		try {
 			const tx = opts?.tx ?? this.db;
-			log.info(
+			logger.info(
 				{ merchantId: id, reason },
 				"[MerchantMainRepository] Deactivating merchant",
 			);
@@ -831,7 +831,7 @@ export class MerchantMainRepository extends BaseRepository {
 			);
 			await this.setCache(id, result, { expirationTtl: CACHE_TTLS["24h"] });
 
-			log.info(
+			logger.info(
 				{ merchantId: id, reason },
 				"[MerchantMainRepository] Merchant deactivated",
 			);

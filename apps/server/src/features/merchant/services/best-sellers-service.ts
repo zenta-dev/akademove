@@ -1,5 +1,5 @@
 import type { Merchant, MerchantMenu } from "@repo/schema/merchant";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 
 export interface BestSellerParams {
 	limit?: number;
@@ -55,7 +55,7 @@ export class BestSellersService {
 			toNumberSafe: (value: string | number) => number;
 		},
 	): Promise<BestSellerResult[]> {
-		log.info(
+		logger.info(
 			{ count: rawResults.length },
 			"[BestSellersService] Transforming best sellers",
 		);

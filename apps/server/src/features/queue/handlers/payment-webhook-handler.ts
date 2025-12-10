@@ -18,7 +18,7 @@
  */
 
 import type { PaymentWebhookJob } from "@repo/schema/queue";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 import type { QueueHandlerContext } from "../queue-handler";
 
 export async function handlePaymentWebhook(
@@ -33,7 +33,7 @@ export async function handlePaymentWebhook(
 		| string
 		| undefined;
 
-	log.info(
+	logger.info(
 		{
 			orderId,
 			transactionStatus,
@@ -47,7 +47,7 @@ export async function handlePaymentWebhook(
 	try {
 		// Skip pending status (no action needed)
 		if (transactionStatus === "pending") {
-			log.debug(
+			logger.debug(
 				{ orderId },
 				"[PaymentWebhookHandler] Skipping pending status - no action needed",
 			);
@@ -62,7 +62,7 @@ export async function handlePaymentWebhook(
 				tx,
 			});
 
-			log.info(
+			logger.info(
 				{
 					orderId,
 					transactionStatus,
@@ -72,7 +72,7 @@ export async function handlePaymentWebhook(
 			);
 		});
 	} catch (error) {
-		log.error(
+		logger.error(
 			{
 				error,
 				orderId,

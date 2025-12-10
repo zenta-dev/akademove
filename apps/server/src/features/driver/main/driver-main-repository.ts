@@ -31,7 +31,7 @@ import type { UserDatabase } from "@/core/tables/auth";
 import type { DetailedUserBadgeDatabase } from "@/core/tables/badge";
 import type { DriverDatabase } from "@/core/tables/driver";
 import { UserAdminRepository } from "@/features/user/admin/user-admin-repository";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 import {
 	DriverDocumentService,
 	DriverLocationService,
@@ -162,7 +162,7 @@ export class DriverMainRepository extends BaseRepository {
 
 			return dbResult?.count ?? 0;
 		} catch (error) {
-			log.error({ query, filters, error }, "Failed to get query count");
+			logger.error({ query, filters, error }, "Failed to get query count");
 			return 0;
 		}
 	}
@@ -753,7 +753,7 @@ export class DriverMainRepository extends BaseRepository {
 			);
 
 			await this.deleteCache(id);
-			log.info({ driverId: id }, "[DriverMainRepository] Driver approved");
+			logger.info({ driverId: id }, "[DriverMainRepository] Driver approved");
 
 			return result;
 		} catch (error) {
@@ -797,7 +797,7 @@ export class DriverMainRepository extends BaseRepository {
 			);
 
 			await this.deleteCache(id);
-			log.info(
+			logger.info(
 				{ driverId: id, reason },
 				"[DriverMainRepository] Driver rejected",
 			);
@@ -849,7 +849,7 @@ export class DriverMainRepository extends BaseRepository {
 			);
 
 			await this.deleteCache(id);
-			log.info(
+			logger.info(
 				{ driverId: id, reason, suspendUntil },
 				"[DriverMainRepository] Driver suspended",
 			);
@@ -900,7 +900,7 @@ export class DriverMainRepository extends BaseRepository {
 			);
 
 			await this.deleteCache(id);
-			log.info({ driverId: id }, "[DriverMainRepository] Driver activated");
+			logger.info({ driverId: id }, "[DriverMainRepository] Driver activated");
 
 			return result;
 		} catch (error) {
@@ -955,7 +955,7 @@ export class DriverMainRepository extends BaseRepository {
 			);
 
 			await this.deleteCache(id);
-			log.info(
+			logger.info(
 				{
 					driverId: id,
 					quizStatus: data.quizStatus,

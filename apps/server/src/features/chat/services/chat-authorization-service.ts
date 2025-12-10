@@ -1,6 +1,6 @@
 import { RepositoryError } from "@/core/error";
 import type { OrderDatabase } from "@/core/tables/order";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 
 /**
  * Chat Authorization Service
@@ -25,7 +25,7 @@ export class ChatAuthorizationService {
 	}> {
 		// Check if user is the customer
 		if (order.userId === userId) {
-			log.debug(
+			logger.debug(
 				{ userId, orderId: order.id },
 				"[ChatAuthorizationService] User authorized as customer",
 			);
@@ -34,7 +34,7 @@ export class ChatAuthorizationService {
 
 		// Check if user is the driver
 		if (order.driverId === userId) {
-			log.debug(
+			logger.debug(
 				{ userId, orderId: order.id },
 				"[ChatAuthorizationService] User authorized as driver",
 			);
@@ -47,7 +47,7 @@ export class ChatAuthorizationService {
 				order.merchantId,
 			);
 			if (merchantUserId === userId) {
-				log.debug(
+				logger.debug(
 					{ userId, orderId: order.id, merchantId: order.merchantId },
 					"[ChatAuthorizationService] User authorized as merchant",
 				);
@@ -55,7 +55,7 @@ export class ChatAuthorizationService {
 			}
 		}
 
-		log.warn(
+		logger.warn(
 			{
 				userId,
 				orderId: order.id,

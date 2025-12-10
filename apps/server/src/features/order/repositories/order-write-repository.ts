@@ -6,7 +6,8 @@ import { RepositoryError } from "@/core/error";
 import type { WithTx } from "@/core/interface";
 import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
-import { log, toStringNumberSafe } from "@/utils";
+import { toStringNumberSafe } from "@/utils";
+import { logger } from "@/utils/logger";
 import type { DeliveryProofService, OrderStateService } from "../services";
 import { OrderBaseRepository } from "./order-base-repository";
 
@@ -76,7 +77,7 @@ export class OrderWriteRepository extends OrderBaseRepository {
 				(await this.#deliveryProofService.requiresOTP(existing.totalPrice));
 			if (shouldGenerateOtp) {
 				deliveryOtp = this.#deliveryProofService.generateOTP();
-				log.info(
+				logger.info(
 					{ orderId: id, totalPrice: existing.totalPrice },
 					"[OrderWriteRepository] Generated OTP for high-value delivery order",
 				);
@@ -170,13 +171,13 @@ export class OrderWriteRepository extends OrderBaseRepository {
 				changedAt: new Date(),
 			});
 
-			log.debug(
+			logger.debug(
 				{ orderId, previousStatus, newStatus, changedBy, changedByRole },
 				"[OrderWriteRepository] Status change recorded in audit trail",
 			);
 		} catch (error) {
 			// Log but don't fail the main operation if audit trail fails
-			log.error(
+			logger.error(
 				{ error, orderId, previousStatus, newStatus },
 				"[OrderWriteRepository] Failed to record status history",
 			);

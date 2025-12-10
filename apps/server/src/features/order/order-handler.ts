@@ -2,7 +2,7 @@ import { m } from "@repo/i18n";
 import { trimObjectValues } from "@repo/shared";
 import { AuthError } from "@/core/error";
 import { createORPCRouter } from "@/core/router/orpc";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 import { OrderSpec } from "./order-spec";
 
 const { priv } = createORPCRouter(OrderSpec);
@@ -12,7 +12,7 @@ export const OrderHandler = priv.router({
 		let id: string | undefined;
 		const role = context.user.role;
 
-		log.debug(
+		logger.debug(
 			{ query, role, userId: context.user.id },
 			"[OrderHandler] Listing orders",
 		);
@@ -299,7 +299,7 @@ export const OrderHandler = priv.router({
 					{ tx },
 				);
 
-				log.info(
+				logger.info(
 					{ orderId, proofUrl },
 					"[OrderHandler] Delivery proof uploaded",
 				);
@@ -344,7 +344,7 @@ export const OrderHandler = priv.router({
 				);
 
 				if (!isValid) {
-					log.warn(
+					logger.warn(
 						{ orderId, userId: context.user.id },
 						"[OrderHandler] Invalid OTP",
 					);
@@ -358,7 +358,7 @@ export const OrderHandler = priv.router({
 					{ tx },
 				);
 
-				log.info(
+				logger.info(
 					{ orderId, userId: context.user.id },
 					"[OrderHandler] OTP verified successfully",
 				);
@@ -384,7 +384,7 @@ export const OrderHandler = priv.router({
 					{ tx },
 				);
 
-				log.info(
+				logger.info(
 					{
 						orderId: result.order.id,
 						userId: context.user.id,
@@ -406,7 +406,7 @@ export const OrderHandler = priv.router({
 
 	listScheduledOrders: priv.listScheduledOrders.handler(
 		async ({ context, input: { query } }) => {
-			log.debug(
+			logger.debug(
 				{ query, userId: context.user.id },
 				"[OrderHandler] Listing scheduled orders",
 			);
@@ -458,7 +458,7 @@ export const OrderHandler = priv.router({
 					{ tx },
 				);
 
-				log.info(
+				logger.info(
 					{
 						orderId: params.id,
 						userId: context.user.id,
@@ -505,7 +505,7 @@ export const OrderHandler = priv.router({
 					{ tx },
 				);
 
-				log.info(
+				logger.info(
 					{
 						orderId: params.id,
 						userId: context.user.id,
@@ -558,7 +558,7 @@ export const OrderHandler = priv.router({
 
 			const result = await context.repo.order.getStatusHistory(params.id);
 
-			log.debug(
+			logger.debug(
 				{ orderId: params.id, historyCount: result.length },
 				"[OrderHandler] Retrieved order status history",
 			);

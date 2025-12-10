@@ -33,7 +33,7 @@ import type {
 } from "@/core/interface";
 import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 import type { OrderListQuery } from "../order-spec";
 import type { OrderPricingService } from "../services";
 import { OrderBaseRepository } from "./order-base-repository";
@@ -155,7 +155,7 @@ export class OrderReadRepository extends OrderBaseRepository {
 
 			return dbResult?.count ?? 0;
 		} catch (error) {
-			log.error({ query, filters, error }, "Failed to get query count");
+			logger.error({ query, filters, error }, "Failed to get query count");
 			return 0;
 		}
 	}
@@ -376,7 +376,7 @@ export class OrderReadRepository extends OrderBaseRepository {
 						expirationTtl: CACHE_TTLS["24h"],
 					});
 
-					log.debug(
+					logger.debug(
 						{ cacheKey, distanceKm: pricing.distanceKm },
 						"[OrderReadRepository] Cached new estimate",
 					);

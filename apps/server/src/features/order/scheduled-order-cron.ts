@@ -3,7 +3,7 @@ import type { ExecutionContext } from "@cloudflare/workers-types";
 import { and, eq, lte } from "drizzle-orm";
 import { getManagers, getRepositories, getServices } from "@/core/factory";
 import { tables } from "@/core/services/db";
-import { log } from "@/utils";
+import { logger } from "@/utils/logger";
 import { SCHEDULING_CONFIG } from "./services/order-scheduling-service";
 import { OrderStateService } from "./services/order-state-service";
 
@@ -24,7 +24,7 @@ export async function handleScheduledOrderCron(
 	_ctx: ExecutionContext,
 ): Promise<Response> {
 	try {
-		log.info({}, "[ScheduledOrderCron] Starting scheduled order processing");
+		logger.info({}, "[ScheduledOrderCron] Starting scheduled order processing");
 
 		const svc = getServices();
 		const managers = getManagers();
@@ -51,7 +51,7 @@ export async function handleScheduledOrderCron(
 			limit: 100, // Process in batches to avoid timeout
 		});
 
-		log.info(
+		logger.info(
 			{ orderCount: readyOrders.length },
 			"[ScheduledOrderCron] Found scheduled orders ready for matching",
 		);
@@ -61,7 +61,7 @@ export async function handleScheduledOrderCron(
 				// Validate state transition before updating
 				// This ensures we don't process orders that have already been updated
 				if (order.status !== "SCHEDULED") {
-					log.warn(
+					logger.warn(
 						{ orderId: order.id, currentStatus: order.status },
 						"[ScheduledOrderCron] Order no longer in SCHEDULED status, skipping",
 					);
@@ -92,7 +92,7 @@ export async function handleScheduledOrderCron(
 						changedAt: now,
 					});
 
-					log.info(
+					logger.info(
 						{
 							orderId: order.id,
 							userId: order.userId,
@@ -150,19 +150,19 @@ export async function handleScheduledOrderCron(
 
 					notifiedOrders++;
 
-					log.info(
+					logger.info(
 						{ orderId: order.id, userId: order.userId },
 						"[ScheduledOrderCron] Sent matching notification to user",
 					);
 				} catch (notificationError) {
 					// Don't fail the order processing if notification fails
-					log.error(
+					logger.error(
 						{ error: notificationError, orderId: order.id },
 						"[ScheduledOrderCron] Failed to send notification, but order was updated",
 					);
 				}
 			} catch (error) {
-				log.error(
+				logger.error(
 					{ error, orderId: order.id },
 					"[ScheduledOrderCron] Failed to process scheduled order",
 				);
@@ -222,19 +222,19 @@ export async function handleScheduledOrderCron(
 
 				remindersSent++;
 
-				log.debug(
+				logger.debug(
 					{ orderId: order.id, minutesUntil },
 					"[ScheduledOrderCron] Sent reminder notification",
 				);
 			} catch (reminderError) {
-				log.warn(
+				logger.warn(
 					{ error: reminderError, orderId: order.id },
 					"[ScheduledOrderCron] Failed to send reminder notification",
 				);
 			}
 		}
 
-		log.info(
+		logger.info(
 			{
 				processedOrders,
 				notifiedOrders,
@@ -250,7 +250,7 @@ export async function handleScheduledOrderCron(
 			{ status: 200 },
 		);
 	} catch (error) {
-		log.error(
+		logger.error(
 			{ error },
 			"[ScheduledOrderCron] Failed to process scheduled orders",
 		);
