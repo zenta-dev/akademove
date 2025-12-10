@@ -9,7 +9,7 @@ import { AuthError, BaseError, RepositoryError } from "@/core/error";
 import { hasRoles } from "@/core/middlewares/auth";
 import { createORPCRouter } from "@/core/router/orpc";
 import { DuplicateAccountService } from "@/features/fraud/services";
-import { isDev, safeAsync } from "@/utils";
+import { isDev } from "@/utils";
 import { logger } from "@/utils/logger";
 import { AuthSpec } from "./auth-spec";
 
