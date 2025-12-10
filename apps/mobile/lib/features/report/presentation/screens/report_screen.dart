@@ -2,7 +2,6 @@ import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/l10n/l10n.dart';
 import 'package:api_client/api_client.dart';
-import 'package:flutter/material.dart' as material;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -215,15 +214,19 @@ class _ReportUserScreenState extends State<ReportUserScreen> {
             fontWeight: FontWeight.w600,
           ),
         ),
-        material.TextField(
+        TextArea(
           controller: _descriptionController,
+          minLines: 5,
           maxLines: 5,
           maxLength: 1000,
           onChanged: (_) => setState(() {}),
-          decoration: material.InputDecoration(
-            hintText: context.l10n.report_description_hint,
-            border: const material.OutlineInputBorder(),
-            helperText: context.l10n.report_description_helper,
+          placeholder: Text(context.l10n.report_description_hint),
+        ),
+        Text(
+          context.l10n.report_description_helper,
+          style: context.typography.small.copyWith(
+            fontSize: 12.sp,
+            color: context.colorScheme.mutedForeground,
           ),
         ),
       ],
@@ -242,7 +245,7 @@ class _ReportUserScreenState extends State<ReportUserScreen> {
               spacing: 8.w,
               children: [
                 Icon(
-                  material.Icons.info_outline_rounded,
+                  LucideIcons.info,
                   size: 20.sp,
                   color: context.colorScheme.primary,
                 ),
@@ -285,16 +288,16 @@ class _ReportUserScreenState extends State<ReportUserScreen> {
     );
   }
 
-  material.IconData _getCategoryIcon(ReportCategory category) {
+  IconData _getCategoryIcon(ReportCategory category) {
     switch (category) {
       case ReportCategory.BEHAVIOR:
-        return material.Icons.sentiment_dissatisfied_rounded;
+        return LucideIcons.frown;
       case ReportCategory.SAFETY:
-        return material.Icons.warning_rounded;
+        return LucideIcons.triangleAlert;
       case ReportCategory.FRAUD:
-        return material.Icons.gpp_bad_rounded;
+        return LucideIcons.shieldOff;
       case ReportCategory.OTHER:
-        return material.Icons.more_horiz_rounded;
+        return LucideIcons.ellipsis;
     }
   }
 
