@@ -17,25 +17,23 @@ part 'dashboard_stats_query.g.dart';
 )
 class DashboardStatsQuery {
   /// Returns a new [DashboardStatsQuery] instance.
-  const DashboardStatsQuery({
-     this.startDate,
-     this.endDate,
-     this.period,
-  });
+  const DashboardStatsQuery({this.startDate, this.endDate, this.period});
   @JsonKey(name: r'startDate', required: false, includeIfNull: false)
   final DateTime? startDate;
-  
+
   @JsonKey(name: r'endDate', required: false, includeIfNull: false)
   final DateTime? endDate;
-  
+
   @JsonKey(name: r'period', required: false, includeIfNull: false)
   final DashboardStatsQueryPeriodEnum? period;
-  
+
   @override
-  bool operator ==(Object other) => identical(this, other) || other is DashboardStatsQuery &&
-    other.startDate == startDate &&
-    other.endDate == endDate &&
-    other.period == period;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is DashboardStatsQuery &&
+          other.startDate == startDate &&
+          other.endDate == endDate &&
+          other.period == period;
 
   @override
   int get hashCode =>
@@ -43,7 +41,8 @@ class DashboardStatsQuery {
       (endDate == null ? 0 : endDate.hashCode) +
       period.hashCode;
 
-  factory DashboardStatsQuery.fromJson(Map<String, dynamic> json) => _$DashboardStatsQueryFromJson(json);
+  factory DashboardStatsQuery.fromJson(Map<String, dynamic> json) =>
+      _$DashboardStatsQueryFromJson(json);
 
   Map<String, dynamic> toJson() => _$DashboardStatsQueryToJson(this);
 
@@ -51,7 +50,6 @@ class DashboardStatsQuery {
   String toString() {
     return toJson().toString();
   }
-
 }
 
 enum DashboardStatsQueryPeriodEnum {
@@ -63,12 +61,11 @@ enum DashboardStatsQueryPeriodEnum {
   month(r'month'),
   @JsonValue(r'year')
   year(r'year');
-  
+
   const DashboardStatsQueryPeriodEnum(this.value);
-  
+
   final String value;
-  
+
   @override
   String toString() => value;
 }
-

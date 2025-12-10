@@ -20,33 +20,29 @@ part 'coupon_rules.g.dart';
 )
 class CouponRules {
   /// Returns a new [CouponRules] instance.
-  const CouponRules({
-     this.general,
-     this.user,
-     this.time,
-  });
+  const CouponRules({this.general, this.user, this.time});
   @JsonKey(name: r'general', required: false, includeIfNull: false)
   final GeneralRules? general;
-  
+
   @JsonKey(name: r'user', required: false, includeIfNull: false)
   final UserRules? user;
-  
+
   @JsonKey(name: r'time', required: false, includeIfNull: false)
   final TimeRules? time;
-  
-  @override
-  bool operator ==(Object other) => identical(this, other) || other is CouponRules &&
-    other.general == general &&
-    other.user == user &&
-    other.time == time;
 
   @override
-  int get hashCode =>
-      general.hashCode +
-      user.hashCode +
-      time.hashCode;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is CouponRules &&
+          other.general == general &&
+          other.user == user &&
+          other.time == time;
 
-  factory CouponRules.fromJson(Map<String, dynamic> json) => _$CouponRulesFromJson(json);
+  @override
+  int get hashCode => general.hashCode + user.hashCode + time.hashCode;
+
+  factory CouponRules.fromJson(Map<String, dynamic> json) =>
+      _$CouponRulesFromJson(json);
 
   Map<String, dynamic> toJson() => _$CouponRulesToJson(this);
 
@@ -54,6 +50,4 @@ class CouponRules {
   String toString() {
     return toJson().toString();
   }
-
 }
-

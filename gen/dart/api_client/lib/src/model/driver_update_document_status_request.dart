@@ -20,22 +20,24 @@ class DriverUpdateDocumentStatusRequest {
   const DriverUpdateDocumentStatusRequest({
     required this.document,
     required this.status,
-     this.reason,
+    this.reason,
   });
   @JsonKey(name: r'document', required: true, includeIfNull: false)
   final DriverUpdateDocumentStatusRequestDocumentEnum document;
-  
+
   @JsonKey(name: r'status', required: true, includeIfNull: false)
   final DriverUpdateDocumentStatusRequestStatusEnum status;
-  
+
   @JsonKey(name: r'reason', required: false, includeIfNull: false)
   final String? reason;
-  
+
   @override
-  bool operator ==(Object other) => identical(this, other) || other is DriverUpdateDocumentStatusRequest &&
-    other.document == document &&
-    other.status == status &&
-    other.reason == reason;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is DriverUpdateDocumentStatusRequest &&
+          other.document == document &&
+          other.status == status &&
+          other.reason == reason;
 
   @override
   int get hashCode =>
@@ -43,15 +45,17 @@ class DriverUpdateDocumentStatusRequest {
       status.hashCode +
       (reason == null ? 0 : reason.hashCode);
 
-  factory DriverUpdateDocumentStatusRequest.fromJson(Map<String, dynamic> json) => _$DriverUpdateDocumentStatusRequestFromJson(json);
+  factory DriverUpdateDocumentStatusRequest.fromJson(
+    Map<String, dynamic> json,
+  ) => _$DriverUpdateDocumentStatusRequestFromJson(json);
 
-  Map<String, dynamic> toJson() => _$DriverUpdateDocumentStatusRequestToJson(this);
+  Map<String, dynamic> toJson() =>
+      _$DriverUpdateDocumentStatusRequestToJson(this);
 
   @override
   String toString() {
     return toJson().toString();
   }
-
 }
 
 enum DriverUpdateDocumentStatusRequestDocumentEnum {
@@ -61,11 +65,11 @@ enum DriverUpdateDocumentStatusRequestDocumentEnum {
   driverLicense(r'driverLicense'),
   @JsonValue(r'vehicleRegistration')
   vehicleRegistration(r'vehicleRegistration');
-  
+
   const DriverUpdateDocumentStatusRequestDocumentEnum(this.value);
-  
+
   final String value;
-  
+
   @override
   String toString() => value;
 }
@@ -75,12 +79,11 @@ enum DriverUpdateDocumentStatusRequestStatusEnum {
   APPROVED(r'APPROVED'),
   @JsonValue(r'REJECTED')
   REJECTED(r'REJECTED');
-  
+
   const DriverUpdateDocumentStatusRequestStatusEnum(this.value);
-  
+
   final String value;
-  
+
   @override
   String toString() => value;
 }
-

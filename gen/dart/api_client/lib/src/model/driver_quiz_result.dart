@@ -31,50 +31,52 @@ class DriverQuizResult {
   });
   @JsonKey(name: r'attemptId', required: true, includeIfNull: false)
   final String attemptId;
-  
+
   @JsonKey(name: r'status', required: true, includeIfNull: false)
   final DriverQuizAnswerStatus status;
-  
-          // minimum: -9007199254740991
-          // maximum: 9007199254740991
+
+  // minimum: -9007199254740991
+  // maximum: 9007199254740991
   @JsonKey(name: r'totalQuestions', required: true, includeIfNull: false)
   final int totalQuestions;
-  
-          // minimum: -9007199254740991
-          // maximum: 9007199254740991
+
+  // minimum: -9007199254740991
+  // maximum: 9007199254740991
   @JsonKey(name: r'correctAnswers', required: true, includeIfNull: false)
   final int correctAnswers;
-  
+
   @JsonKey(name: r'scorePercentage', required: true, includeIfNull: false)
   final num scorePercentage;
-  
+
   @JsonKey(name: r'passed', required: true, includeIfNull: false)
   final bool passed;
-  
-          // minimum: -9007199254740991
-          // maximum: 9007199254740991
+
+  // minimum: -9007199254740991
+  // maximum: 9007199254740991
   @JsonKey(name: r'earnedPoints', required: true, includeIfNull: false)
   final int earnedPoints;
-  
-          // minimum: -9007199254740991
-          // maximum: 9007199254740991
+
+  // minimum: -9007199254740991
+  // maximum: 9007199254740991
   @JsonKey(name: r'totalPoints', required: true, includeIfNull: false)
   final int totalPoints;
-  
+
   @JsonKey(name: r'completedAt', required: true, includeIfNull: true)
   final DateTime? completedAt;
-  
+
   @override
-  bool operator ==(Object other) => identical(this, other) || other is DriverQuizResult &&
-    other.attemptId == attemptId &&
-    other.status == status &&
-    other.totalQuestions == totalQuestions &&
-    other.correctAnswers == correctAnswers &&
-    other.scorePercentage == scorePercentage &&
-    other.passed == passed &&
-    other.earnedPoints == earnedPoints &&
-    other.totalPoints == totalPoints &&
-    other.completedAt == completedAt;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is DriverQuizResult &&
+          other.attemptId == attemptId &&
+          other.status == status &&
+          other.totalQuestions == totalQuestions &&
+          other.correctAnswers == correctAnswers &&
+          other.scorePercentage == scorePercentage &&
+          other.passed == passed &&
+          other.earnedPoints == earnedPoints &&
+          other.totalPoints == totalPoints &&
+          other.completedAt == completedAt;
 
   @override
   int get hashCode =>
@@ -88,7 +90,8 @@ class DriverQuizResult {
       totalPoints.hashCode +
       (completedAt == null ? 0 : completedAt.hashCode);
 
-  factory DriverQuizResult.fromJson(Map<String, dynamic> json) => _$DriverQuizResultFromJson(json);
+  factory DriverQuizResult.fromJson(Map<String, dynamic> json) =>
+      _$DriverQuizResultFromJson(json);
 
   Map<String, dynamic> toJson() => _$DriverQuizResultToJson(this);
 
@@ -96,6 +99,4 @@ class DriverQuizResult {
   String toString() {
     return toJson().toString();
   }
-
 }
-

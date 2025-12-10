@@ -20,39 +20,41 @@ part 'support_chat_envelope_payload.g.dart';
 class SupportChatEnvelopePayload {
   /// Returns a new [SupportChatEnvelopePayload] instance.
   const SupportChatEnvelopePayload({
-     this.message,
-     this.ticket,
-     this.ticketId,
-     this.messageId,
-     this.isTyping,
-     this.userId,
+    this.message,
+    this.ticket,
+    this.ticketId,
+    this.messageId,
+    this.isTyping,
+    this.userId,
   });
   @JsonKey(name: r'message', required: false, includeIfNull: false)
   final SupportChatMessage? message;
-  
+
   @JsonKey(name: r'ticket', required: false, includeIfNull: false)
   final SupportTicket? ticket;
-  
+
   @JsonKey(name: r'ticketId', required: false, includeIfNull: false)
   final String? ticketId;
-  
+
   @JsonKey(name: r'messageId', required: false, includeIfNull: false)
   final String? messageId;
-  
+
   @JsonKey(name: r'isTyping', required: false, includeIfNull: false)
   final bool? isTyping;
-  
+
   @JsonKey(name: r'userId', required: false, includeIfNull: false)
   final String? userId;
-  
+
   @override
-  bool operator ==(Object other) => identical(this, other) || other is SupportChatEnvelopePayload &&
-    other.message == message &&
-    other.ticket == ticket &&
-    other.ticketId == ticketId &&
-    other.messageId == messageId &&
-    other.isTyping == isTyping &&
-    other.userId == userId;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is SupportChatEnvelopePayload &&
+          other.message == message &&
+          other.ticket == ticket &&
+          other.ticketId == ticketId &&
+          other.messageId == messageId &&
+          other.isTyping == isTyping &&
+          other.userId == userId;
 
   @override
   int get hashCode =>
@@ -63,7 +65,8 @@ class SupportChatEnvelopePayload {
       isTyping.hashCode +
       (userId == null ? 0 : userId.hashCode);
 
-  factory SupportChatEnvelopePayload.fromJson(Map<String, dynamic> json) => _$SupportChatEnvelopePayloadFromJson(json);
+  factory SupportChatEnvelopePayload.fromJson(Map<String, dynamic> json) =>
+      _$SupportChatEnvelopePayloadFromJson(json);
 
   Map<String, dynamic> toJson() => _$SupportChatEnvelopePayloadToJson(this);
 
@@ -71,6 +74,4 @@ class SupportChatEnvelopePayload {
   String toString() {
     return toJson().toString();
   }
-
 }
-

@@ -18,30 +18,27 @@ part 'update_wallet.g.dart';
 )
 class UpdateWallet {
   /// Returns a new [UpdateWallet] instance.
-  const UpdateWallet({
-     this.userId,
-     this.balance,
-     this.currency,
-     this.isActive,
-  });
+  const UpdateWallet({this.userId, this.balance, this.currency, this.isActive});
   @JsonKey(name: r'userId', required: false, includeIfNull: false)
   final String? userId;
-  
+
   @JsonKey(name: r'balance', required: false, includeIfNull: false)
   final num? balance;
-  
+
   @JsonKey(name: r'currency', required: false, includeIfNull: false)
   final Currency? currency;
-  
+
   @JsonKey(name: r'isActive', required: false, includeIfNull: false)
   final bool? isActive;
-  
+
   @override
-  bool operator ==(Object other) => identical(this, other) || other is UpdateWallet &&
-    other.userId == userId &&
-    other.balance == balance &&
-    other.currency == currency &&
-    other.isActive == isActive;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is UpdateWallet &&
+          other.userId == userId &&
+          other.balance == balance &&
+          other.currency == currency &&
+          other.isActive == isActive;
 
   @override
   int get hashCode =>
@@ -50,7 +47,8 @@ class UpdateWallet {
       currency.hashCode +
       isActive.hashCode;
 
-  factory UpdateWallet.fromJson(Map<String, dynamic> json) => _$UpdateWalletFromJson(json);
+  factory UpdateWallet.fromJson(Map<String, dynamic> json) =>
+      _$UpdateWalletFromJson(json);
 
   Map<String, dynamic> toJson() => _$UpdateWalletToJson(this);
 
@@ -58,6 +56,4 @@ class UpdateWallet {
   String toString() {
     return toJson().toString();
   }
-
 }
-

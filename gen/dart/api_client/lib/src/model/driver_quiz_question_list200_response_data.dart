@@ -18,28 +18,27 @@ part 'driver_quiz_question_list200_response_data.g.dart';
 )
 class DriverQuizQuestionList200ResponseData {
   /// Returns a new [DriverQuizQuestionList200ResponseData] instance.
-  const DriverQuizQuestionList200ResponseData({
-    required this.rows,
-  });
+  const DriverQuizQuestionList200ResponseData({required this.rows});
   @JsonKey(name: r'rows', required: true, includeIfNull: false)
   final List<DriverQuizQuestion> rows;
-  
-  @override
-  bool operator ==(Object other) => identical(this, other) || other is DriverQuizQuestionList200ResponseData &&
-    other.rows == rows;
 
   @override
-  int get hashCode =>
-      rows.hashCode;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is DriverQuizQuestionList200ResponseData && other.rows == rows;
 
-  factory DriverQuizQuestionList200ResponseData.fromJson(Map<String, dynamic> json) => _$DriverQuizQuestionList200ResponseDataFromJson(json);
+  @override
+  int get hashCode => rows.hashCode;
 
-  Map<String, dynamic> toJson() => _$DriverQuizQuestionList200ResponseDataToJson(this);
+  factory DriverQuizQuestionList200ResponseData.fromJson(
+    Map<String, dynamic> json,
+  ) => _$DriverQuizQuestionList200ResponseDataFromJson(json);
+
+  Map<String, dynamic> toJson() =>
+      _$DriverQuizQuestionList200ResponseDataToJson(this);
 
   @override
   String toString() {
     return toJson().toString();
   }
-
 }
-

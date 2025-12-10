@@ -20,37 +20,38 @@ class CoordinateWithMeta {
   const CoordinateWithMeta({
     required this.x,
     required this.y,
-     this.isMockLocation,
+    this.isMockLocation,
   });
-      /// Longitude (X-axis, East-West)
-          // minimum: -180
-          // maximum: 180
+
+  /// Longitude (X-axis, East-West)
+  // minimum: -180
+  // maximum: 180
   @JsonKey(name: r'x', required: true, includeIfNull: false)
   final num x;
-  
-      /// Latitude (Y-axis, North-South)
-          // minimum: -90
-          // maximum: 90
+
+  /// Latitude (Y-axis, North-South)
+  // minimum: -90
+  // maximum: 90
   @JsonKey(name: r'y', required: true, includeIfNull: false)
   final num y;
-  
-      /// Whether the location is from a mock provider (Android only)
+
+  /// Whether the location is from a mock provider (Android only)
   @JsonKey(name: r'isMockLocation', required: false, includeIfNull: false)
   final bool? isMockLocation;
-  
-  @override
-  bool operator ==(Object other) => identical(this, other) || other is CoordinateWithMeta &&
-    other.x == x &&
-    other.y == y &&
-    other.isMockLocation == isMockLocation;
 
   @override
-  int get hashCode =>
-      x.hashCode +
-      y.hashCode +
-      isMockLocation.hashCode;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is CoordinateWithMeta &&
+          other.x == x &&
+          other.y == y &&
+          other.isMockLocation == isMockLocation;
 
-  factory CoordinateWithMeta.fromJson(Map<String, dynamic> json) => _$CoordinateWithMetaFromJson(json);
+  @override
+  int get hashCode => x.hashCode + y.hashCode + isMockLocation.hashCode;
+
+  factory CoordinateWithMeta.fromJson(Map<String, dynamic> json) =>
+      _$CoordinateWithMetaFromJson(json);
 
   Map<String, dynamic> toJson() => _$CoordinateWithMetaToJson(this);
 
@@ -58,6 +59,4 @@ class CoordinateWithMeta {
   String toString() {
     return toJson().toString();
   }
-
 }
-

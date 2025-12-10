@@ -19,25 +19,23 @@ part 'update_support_ticket.g.dart';
 )
 class UpdateSupportTicket {
   /// Returns a new [UpdateSupportTicket] instance.
-  const UpdateSupportTicket({
-     this.assignedToId,
-     this.priority,
-     this.status,
-  });
+  const UpdateSupportTicket({this.assignedToId, this.priority, this.status});
   @JsonKey(name: r'assignedToId', required: false, includeIfNull: false)
   final String? assignedToId;
-  
+
   @JsonKey(name: r'priority', required: false, includeIfNull: false)
   final SupportTicketPriority? priority;
-  
+
   @JsonKey(name: r'status', required: false, includeIfNull: false)
   final SupportTicketStatus? status;
-  
+
   @override
-  bool operator ==(Object other) => identical(this, other) || other is UpdateSupportTicket &&
-    other.assignedToId == assignedToId &&
-    other.priority == priority &&
-    other.status == status;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is UpdateSupportTicket &&
+          other.assignedToId == assignedToId &&
+          other.priority == priority &&
+          other.status == status;
 
   @override
   int get hashCode =>
@@ -45,7 +43,8 @@ class UpdateSupportTicket {
       priority.hashCode +
       status.hashCode;
 
-  factory UpdateSupportTicket.fromJson(Map<String, dynamic> json) => _$UpdateSupportTicketFromJson(json);
+  factory UpdateSupportTicket.fromJson(Map<String, dynamic> json) =>
+      _$UpdateSupportTicketFromJson(json);
 
   Map<String, dynamic> toJson() => _$UpdateSupportTicketToJson(this);
 
@@ -53,6 +52,4 @@ class UpdateSupportTicket {
   String toString() {
     return toJson().toString();
   }
-
 }
-

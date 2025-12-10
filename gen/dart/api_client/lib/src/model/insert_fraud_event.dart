@@ -45,86 +45,88 @@ class InsertFraudEvent {
   });
   @JsonKey(name: r'eventType', required: true, includeIfNull: false)
   final FraudEventType eventType;
-  
+
   @JsonKey(name: r'severity', required: true, includeIfNull: false)
   final FraudSeverity severity;
-  
+
   @JsonKey(name: r'status', required: true, includeIfNull: false)
   final FraudStatus status;
-  
+
   @JsonKey(name: r'userId', required: true, includeIfNull: true)
   final String? userId;
-  
+
   @JsonKey(name: r'driverId', required: true, includeIfNull: true)
   final String? driverId;
-  
+
   @JsonKey(name: r'signals', required: true, includeIfNull: false)
   final List<FraudSignal> signals;
-  
-          // minimum: 0
-          // maximum: 100
+
+  // minimum: 0
+  // maximum: 100
   @JsonKey(name: r'score', required: true, includeIfNull: false)
   final num score;
-  
+
   @JsonKey(name: r'location', required: true, includeIfNull: true)
   final Location? location;
-  
+
   @JsonKey(name: r'previousLocation', required: true, includeIfNull: true)
   final Location? previousLocation;
-  
+
   @JsonKey(name: r'distanceKm', required: true, includeIfNull: true)
   final num? distanceKm;
-  
-          // minimum: -9007199254740991
-          // maximum: 9007199254740991
+
+  // minimum: -9007199254740991
+  // maximum: 9007199254740991
   @JsonKey(name: r'timeDeltaSeconds', required: true, includeIfNull: true)
   final int? timeDeltaSeconds;
-  
+
   @JsonKey(name: r'velocityKmh', required: true, includeIfNull: true)
   final num? velocityKmh;
-  
+
   @JsonKey(name: r'ipAddress', required: true, includeIfNull: true)
   final String? ipAddress;
-  
+
   @JsonKey(name: r'userAgent', required: true, includeIfNull: true)
   final String? userAgent;
-  
+
   @JsonKey(name: r'handledById', required: true, includeIfNull: true)
   final String? handledById;
-  
+
   @JsonKey(name: r'resolution', required: true, includeIfNull: true)
   final String? resolution;
-  
+
   @JsonKey(name: r'actionTaken', required: true, includeIfNull: true)
   final String? actionTaken;
-  
+
   @JsonKey(name: r'detectedAt', required: true, includeIfNull: true)
   final DateTime? detectedAt;
-  
+
   @JsonKey(name: r'resolvedAt', required: true, includeIfNull: true)
   final DateTime? resolvedAt;
-  
+
   @override
-  bool operator ==(Object other) => identical(this, other) || other is InsertFraudEvent &&
-    other.eventType == eventType &&
-    other.severity == severity &&
-    other.status == status &&
-    other.userId == userId &&
-    other.driverId == driverId &&
-    other.signals == signals &&
-    other.score == score &&
-    other.location == location &&
-    other.previousLocation == previousLocation &&
-    other.distanceKm == distanceKm &&
-    other.timeDeltaSeconds == timeDeltaSeconds &&
-    other.velocityKmh == velocityKmh &&
-    other.ipAddress == ipAddress &&
-    other.userAgent == userAgent &&
-    other.handledById == handledById &&
-    other.resolution == resolution &&
-    other.actionTaken == actionTaken &&
-    other.detectedAt == detectedAt &&
-    other.resolvedAt == resolvedAt;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is InsertFraudEvent &&
+          other.eventType == eventType &&
+          other.severity == severity &&
+          other.status == status &&
+          other.userId == userId &&
+          other.driverId == driverId &&
+          other.signals == signals &&
+          other.score == score &&
+          other.location == location &&
+          other.previousLocation == previousLocation &&
+          other.distanceKm == distanceKm &&
+          other.timeDeltaSeconds == timeDeltaSeconds &&
+          other.velocityKmh == velocityKmh &&
+          other.ipAddress == ipAddress &&
+          other.userAgent == userAgent &&
+          other.handledById == handledById &&
+          other.resolution == resolution &&
+          other.actionTaken == actionTaken &&
+          other.detectedAt == detectedAt &&
+          other.resolvedAt == resolvedAt;
 
   @override
   int get hashCode =>
@@ -148,7 +150,8 @@ class InsertFraudEvent {
       (detectedAt == null ? 0 : detectedAt.hashCode) +
       (resolvedAt == null ? 0 : resolvedAt.hashCode);
 
-  factory InsertFraudEvent.fromJson(Map<String, dynamic> json) => _$InsertFraudEventFromJson(json);
+  factory InsertFraudEvent.fromJson(Map<String, dynamic> json) =>
+      _$InsertFraudEventFromJson(json);
 
   Map<String, dynamic> toJson() => _$InsertFraudEventToJson(this);
 
@@ -156,6 +159,4 @@ class InsertFraudEvent {
   String toString() {
     return toJson().toString();
   }
-
 }
-

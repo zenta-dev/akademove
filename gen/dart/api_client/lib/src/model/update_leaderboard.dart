@@ -18,58 +18,60 @@ part 'update_leaderboard.g.dart';
 class UpdateLeaderboard {
   /// Returns a new [UpdateLeaderboard] instance.
   const UpdateLeaderboard({
-     this.userId,
-     this.driverId,
-     this.merchantId,
-     this.category,
-     this.period,
-     this.rank,
-     this.score,
-     this.periodStart,
-     this.periodEnd,
+    this.userId,
+    this.driverId,
+    this.merchantId,
+    this.category,
+    this.period,
+    this.rank,
+    this.score,
+    this.periodStart,
+    this.periodEnd,
   });
   @JsonKey(name: r'userId', required: false, includeIfNull: false)
   final String? userId;
-  
+
   @JsonKey(name: r'driverId', required: false, includeIfNull: false)
   final String? driverId;
-  
+
   @JsonKey(name: r'merchantId', required: false, includeIfNull: false)
   final String? merchantId;
-  
+
   @JsonKey(name: r'category', required: false, includeIfNull: false)
   final UpdateLeaderboardCategoryEnum? category;
-  
+
   @JsonKey(name: r'period', required: false, includeIfNull: false)
   final UpdateLeaderboardPeriodEnum? period;
-  
-          // minimum: 1
-          // maximum: 9007199254740991
+
+  // minimum: 1
+  // maximum: 9007199254740991
   @JsonKey(name: r'rank', required: false, includeIfNull: false)
   final int? rank;
-  
-          // minimum: 0
-          // maximum: 9007199254740991
+
+  // minimum: 0
+  // maximum: 9007199254740991
   @JsonKey(name: r'score', required: false, includeIfNull: false)
   final int? score;
-  
+
   @JsonKey(name: r'periodStart', required: false, includeIfNull: false)
   final DateTime? periodStart;
-  
+
   @JsonKey(name: r'periodEnd', required: false, includeIfNull: false)
   final DateTime? periodEnd;
-  
+
   @override
-  bool operator ==(Object other) => identical(this, other) || other is UpdateLeaderboard &&
-    other.userId == userId &&
-    other.driverId == driverId &&
-    other.merchantId == merchantId &&
-    other.category == category &&
-    other.period == period &&
-    other.rank == rank &&
-    other.score == score &&
-    other.periodStart == periodStart &&
-    other.periodEnd == periodEnd;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is UpdateLeaderboard &&
+          other.userId == userId &&
+          other.driverId == driverId &&
+          other.merchantId == merchantId &&
+          other.category == category &&
+          other.period == period &&
+          other.rank == rank &&
+          other.score == score &&
+          other.periodStart == periodStart &&
+          other.periodEnd == periodEnd;
 
   @override
   int get hashCode =>
@@ -83,7 +85,8 @@ class UpdateLeaderboard {
       (periodStart == null ? 0 : periodStart.hashCode) +
       (periodEnd == null ? 0 : periodEnd.hashCode);
 
-  factory UpdateLeaderboard.fromJson(Map<String, dynamic> json) => _$UpdateLeaderboardFromJson(json);
+  factory UpdateLeaderboard.fromJson(Map<String, dynamic> json) =>
+      _$UpdateLeaderboardFromJson(json);
 
   Map<String, dynamic> toJson() => _$UpdateLeaderboardToJson(this);
 
@@ -91,7 +94,6 @@ class UpdateLeaderboard {
   String toString() {
     return toJson().toString();
   }
-
 }
 
 enum UpdateLeaderboardCategoryEnum {
@@ -107,11 +109,11 @@ enum UpdateLeaderboardCategoryEnum {
   ON_TIME(r'ON-TIME'),
   @JsonValue(r'COMPLETION-RATE')
   COMPLETION_RATE(r'COMPLETION-RATE');
-  
+
   const UpdateLeaderboardCategoryEnum(this.value);
-  
+
   final String value;
-  
+
   @override
   String toString() => value;
 }
@@ -129,12 +131,11 @@ enum UpdateLeaderboardPeriodEnum {
   YEARLY(r'YEARLY'),
   @JsonValue(r'ALL-TIME')
   ALL_TIME(r'ALL-TIME');
-  
+
   const UpdateLeaderboardPeriodEnum(this.value);
-  
+
   final String value;
-  
+
   @override
   String toString() => value;
 }
-

@@ -17,27 +17,25 @@ part 'ban_user.g.dart';
 )
 class BanUser {
   /// Returns a new [BanUser] instance.
-  const BanUser({
-    required this.banReason,
-     this.banExpiresIn,
-  });
+  const BanUser({required this.banReason, this.banExpiresIn});
   @JsonKey(name: r'banReason', required: true, includeIfNull: false)
   final String banReason;
-  
+
   @JsonKey(name: r'banExpiresIn', required: false, includeIfNull: false)
   final num? banExpiresIn;
-  
-  @override
-  bool operator ==(Object other) => identical(this, other) || other is BanUser &&
-    other.banReason == banReason &&
-    other.banExpiresIn == banExpiresIn;
 
   @override
-  int get hashCode =>
-      banReason.hashCode +
-      banExpiresIn.hashCode;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is BanUser &&
+          other.banReason == banReason &&
+          other.banExpiresIn == banExpiresIn;
 
-  factory BanUser.fromJson(Map<String, dynamic> json) => _$BanUserFromJson(json);
+  @override
+  int get hashCode => banReason.hashCode + banExpiresIn.hashCode;
+
+  factory BanUser.fromJson(Map<String, dynamic> json) =>
+      _$BanUserFromJson(json);
 
   Map<String, dynamic> toJson() => _$BanUserToJson(this);
 
@@ -45,6 +43,4 @@ class BanUser {
   String toString() {
     return toJson().toString();
   }
-
 }
-

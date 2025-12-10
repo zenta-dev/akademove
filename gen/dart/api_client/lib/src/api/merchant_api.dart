@@ -31,18 +31,17 @@ import 'package:api_client/src/model/pagination_mode.dart';
 import 'package:api_client/src/model/pagination_order.dart';
 
 class MerchantApi {
-
   final Dio _dio;
 
   const MerchantApi(this._dio);
 
   /// analyticsExportMerchantAnalytics
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [merchantId] 
-  /// * [startDate] 
-  /// * [endDate] 
+  /// * [merchantId]
+  /// * [startDate]
+  /// * [endDate]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -52,7 +51,7 @@ class MerchantApi {
   ///
   /// Returns a [Future] containing a [Response] with a [String] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<String>> analyticsExportMerchantAnalytics({ 
+  Future<Response<String>> analyticsExportMerchantAnalytics({
     required String merchantId,
     required DateTime startDate,
     required DateTime endDate,
@@ -63,19 +62,18 @@ class MerchantApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/analytics/merchant/{merchantId}/export'.replaceAll('{' r'merchantId' '}', merchantId.toString());
+    final _path = r'/analytics/merchant/{merchantId}/export'.replaceAll(
+      '{'
+      r'merchantId'
+      '}',
+      merchantId.toString(),
+    );
     final _options = Options(
       method: r'GET',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -100,7 +98,9 @@ class MerchantApi {
 
     try {
       final rawData = _response.data;
-_responseData = rawData == null ? null : deserialize<String, String>(rawData, 'String', growable: true);
+      _responseData = rawData == null
+          ? null
+          : deserialize<String, String>(rawData, 'String', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -124,10 +124,10 @@ _responseData = rawData == null ? null : deserialize<String, String>(rawData, 'S
   }
 
   /// merchantActivate
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [id] 
+  /// * [id]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -137,7 +137,7 @@ _responseData = rawData == null ? null : deserialize<String, String>(rawData, 'S
   ///
   /// Returns a [Future] containing a [Response] with a [MerchantGet200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<MerchantGet200Response>> merchantActivate({ 
+  Future<Response<MerchantGet200Response>> merchantActivate({
     required String id,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -146,19 +146,18 @@ _responseData = rawData == null ? null : deserialize<String, String>(rawData, 'S
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/merchants/{id}/activate'.replaceAll('{' r'id' '}', id.toString());
+    final _path = r'/merchants/{id}/activate'.replaceAll(
+      '{'
+      r'id'
+      '}',
+      id.toString(),
+    );
     final _options = Options(
       method: r'POST',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -177,7 +176,13 @@ _responseData = rawData == null ? null : deserialize<String, String>(rawData, 'S
 
     try {
       final rawData = _response.data;
-_responseData = rawData == null ? null : deserialize<MerchantGet200Response, MerchantGet200Response>(rawData, 'MerchantGet200Response', growable: true);
+      _responseData = rawData == null
+          ? null
+          : deserialize<MerchantGet200Response, MerchantGet200Response>(
+              rawData,
+              'MerchantGet200Response',
+              growable: true,
+            );
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -201,13 +206,13 @@ _responseData = rawData == null ? null : deserialize<MerchantGet200Response, Mer
   }
 
   /// merchantAnalytics
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [id] 
-  /// * [period] 
-  /// * [startDate] 
-  /// * [endDate] 
+  /// * [id]
+  /// * [period]
+  /// * [startDate]
+  /// * [endDate]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -217,7 +222,7 @@ _responseData = rawData == null ? null : deserialize<MerchantGet200Response, Mer
   ///
   /// Returns a [Future] containing a [Response] with a [MerchantAnalytics200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<MerchantAnalytics200Response>> merchantAnalytics({ 
+  Future<Response<MerchantAnalytics200Response>> merchantAnalytics({
     required String id,
     String? period,
     DateTime? startDate,
@@ -229,19 +234,18 @@ _responseData = rawData == null ? null : deserialize<MerchantGet200Response, Mer
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/merchants/{id}/analytics'.replaceAll('{' r'id' '}', id.toString());
+    final _path = r'/merchants/{id}/analytics'.replaceAll(
+      '{'
+      r'id'
+      '}',
+      id.toString(),
+    );
     final _options = Options(
       method: r'GET',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -267,7 +271,12 @@ _responseData = rawData == null ? null : deserialize<MerchantGet200Response, Mer
 
     try {
       final rawData = _response.data;
-_responseData = rawData == null ? null : deserialize<MerchantAnalytics200Response, MerchantAnalytics200Response>(rawData, 'MerchantAnalytics200Response', growable: true);
+      _responseData = rawData == null
+          ? null
+          : deserialize<
+              MerchantAnalytics200Response,
+              MerchantAnalytics200Response
+            >(rawData, 'MerchantAnalytics200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -291,11 +300,11 @@ _responseData = rawData == null ? null : deserialize<MerchantAnalytics200Respons
   }
 
   /// merchantBestSellers
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [limit] 
-  /// * [category] 
+  /// * [limit]
+  /// * [category]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -305,7 +314,7 @@ _responseData = rawData == null ? null : deserialize<MerchantAnalytics200Respons
   ///
   /// Returns a [Future] containing a [Response] with a [MerchantBestSellers200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<MerchantBestSellers200Response>> merchantBestSellers({ 
+  Future<Response<MerchantBestSellers200Response>> merchantBestSellers({
     required num limit,
     String? category,
     CancelToken? cancelToken,
@@ -318,16 +327,10 @@ _responseData = rawData == null ? null : deserialize<MerchantAnalytics200Respons
     final _path = r'/merchants/best-sellers';
     final _options = Options(
       method: r'GET',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -352,7 +355,12 @@ _responseData = rawData == null ? null : deserialize<MerchantAnalytics200Respons
 
     try {
       final rawData = _response.data;
-_responseData = rawData == null ? null : deserialize<MerchantBestSellers200Response, MerchantBestSellers200Response>(rawData, 'MerchantBestSellers200Response', growable: true);
+      _responseData = rawData == null
+          ? null
+          : deserialize<
+              MerchantBestSellers200Response,
+              MerchantBestSellers200Response
+            >(rawData, 'MerchantBestSellers200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -376,11 +384,11 @@ _responseData = rawData == null ? null : deserialize<MerchantBestSellers200Respo
   }
 
   /// merchantDeactivate
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [id] 
-  /// * [merchantDeactivateRequest] 
+  /// * [id]
+  /// * [merchantDeactivateRequest]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -390,7 +398,7 @@ _responseData = rawData == null ? null : deserialize<MerchantBestSellers200Respo
   ///
   /// Returns a [Future] containing a [Response] with a [MerchantGet200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<MerchantGet200Response>> merchantDeactivate({ 
+  Future<Response<MerchantGet200Response>> merchantDeactivate({
     required String id,
     required MerchantDeactivateRequest merchantDeactivateRequest,
     CancelToken? cancelToken,
@@ -400,19 +408,18 @@ _responseData = rawData == null ? null : deserialize<MerchantBestSellers200Respo
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/merchants/{id}/deactivate'.replaceAll('{' r'id' '}', id.toString());
+    final _path = r'/merchants/{id}/deactivate'.replaceAll(
+      '{'
+      r'id'
+      '}',
+      id.toString(),
+    );
     final _options = Options(
       method: r'PATCH',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -423,13 +430,10 @@ _responseData = rawData == null ? null : deserialize<MerchantBestSellers200Respo
     dynamic _bodyData;
 
     try {
-        _bodyData=jsonEncode(merchantDeactivateRequest);
-    } catch(error, stackTrace) {
+      _bodyData = jsonEncode(merchantDeactivateRequest);
+    } catch (error, stackTrace) {
       throw DioException(
-         requestOptions: _options.compose(
-          _dio.options,
-          _path,
-        ),
+        requestOptions: _options.compose(_dio.options, _path),
         type: DioExceptionType.unknown,
         error: error,
         stackTrace: stackTrace,
@@ -449,7 +453,13 @@ _responseData = rawData == null ? null : deserialize<MerchantBestSellers200Respo
 
     try {
       final rawData = _response.data;
-_responseData = rawData == null ? null : deserialize<MerchantGet200Response, MerchantGet200Response>(rawData, 'MerchantGet200Response', growable: true);
+      _responseData = rawData == null
+          ? null
+          : deserialize<MerchantGet200Response, MerchantGet200Response>(
+              rawData,
+              'MerchantGet200Response',
+              growable: true,
+            );
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -473,10 +483,10 @@ _responseData = rawData == null ? null : deserialize<MerchantGet200Response, Mer
   }
 
   /// merchantGet
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [id] 
+  /// * [id]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -486,7 +496,7 @@ _responseData = rawData == null ? null : deserialize<MerchantGet200Response, Mer
   ///
   /// Returns a [Future] containing a [Response] with a [MerchantGet200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<MerchantGet200Response>> merchantGet({ 
+  Future<Response<MerchantGet200Response>> merchantGet({
     required String id,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -495,19 +505,18 @@ _responseData = rawData == null ? null : deserialize<MerchantGet200Response, Mer
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/merchants/{id}'.replaceAll('{' r'id' '}', id.toString());
+    final _path = r'/merchants/{id}'.replaceAll(
+      '{'
+      r'id'
+      '}',
+      id.toString(),
+    );
     final _options = Options(
       method: r'GET',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -526,7 +535,13 @@ _responseData = rawData == null ? null : deserialize<MerchantGet200Response, Mer
 
     try {
       final rawData = _response.data;
-_responseData = rawData == null ? null : deserialize<MerchantGet200Response, MerchantGet200Response>(rawData, 'MerchantGet200Response', growable: true);
+      _responseData = rawData == null
+          ? null
+          : deserialize<MerchantGet200Response, MerchantGet200Response>(
+              rawData,
+              'MerchantGet200Response',
+              growable: true,
+            );
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -550,10 +565,10 @@ _responseData = rawData == null ? null : deserialize<MerchantGet200Response, Mer
   }
 
   /// merchantGetAvailabilityStatus
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [id] 
+  /// * [id]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -563,7 +578,8 @@ _responseData = rawData == null ? null : deserialize<MerchantGet200Response, Mer
   ///
   /// Returns a [Future] containing a [Response] with a [MerchantGetAvailabilityStatus200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<MerchantGetAvailabilityStatus200Response>> merchantGetAvailabilityStatus({ 
+  Future<Response<MerchantGetAvailabilityStatus200Response>>
+  merchantGetAvailabilityStatus({
     required String id,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -572,19 +588,18 @@ _responseData = rawData == null ? null : deserialize<MerchantGet200Response, Mer
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/merchants/{id}/availability/status'.replaceAll('{' r'id' '}', id.toString());
+    final _path = r'/merchants/{id}/availability/status'.replaceAll(
+      '{'
+      r'id'
+      '}',
+      id.toString(),
+    );
     final _options = Options(
       method: r'GET',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -603,7 +618,16 @@ _responseData = rawData == null ? null : deserialize<MerchantGet200Response, Mer
 
     try {
       final rawData = _response.data;
-_responseData = rawData == null ? null : deserialize<MerchantGetAvailabilityStatus200Response, MerchantGetAvailabilityStatus200Response>(rawData, 'MerchantGetAvailabilityStatus200Response', growable: true);
+      _responseData = rawData == null
+          ? null
+          : deserialize<
+              MerchantGetAvailabilityStatus200Response,
+              MerchantGetAvailabilityStatus200Response
+            >(
+              rawData,
+              'MerchantGetAvailabilityStatus200Response',
+              growable: true,
+            );
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -627,7 +651,7 @@ _responseData = rawData == null ? null : deserialize<MerchantGetAvailabilityStat
   }
 
   /// merchantGetMine
-  /// 
+  ///
   ///
   /// Parameters:
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
@@ -639,7 +663,7 @@ _responseData = rawData == null ? null : deserialize<MerchantGetAvailabilityStat
   ///
   /// Returns a [Future] containing a [Response] with a [MerchantGetMine200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<MerchantGetMine200Response>> merchantGetMine({ 
+  Future<Response<MerchantGetMine200Response>> merchantGetMine({
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -650,16 +674,10 @@ _responseData = rawData == null ? null : deserialize<MerchantGetAvailabilityStat
     final _path = r'/merchants/mine';
     final _options = Options(
       method: r'GET',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -678,7 +696,13 @@ _responseData = rawData == null ? null : deserialize<MerchantGetAvailabilityStat
 
     try {
       final rawData = _response.data;
-_responseData = rawData == null ? null : deserialize<MerchantGetMine200Response, MerchantGetMine200Response>(rawData, 'MerchantGetMine200Response', growable: true);
+      _responseData = rawData == null
+          ? null
+          : deserialize<MerchantGetMine200Response, MerchantGetMine200Response>(
+              rawData,
+              'MerchantGetMine200Response',
+              growable: true,
+            );
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -702,10 +726,10 @@ _responseData = rawData == null ? null : deserialize<MerchantGetMine200Response,
   }
 
   /// merchantGetReview
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [id] 
+  /// * [id]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -715,7 +739,7 @@ _responseData = rawData == null ? null : deserialize<MerchantGetMine200Response,
   ///
   /// Returns a [Future] containing a [Response] with a [MerchantGetReview200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<MerchantGetReview200Response>> merchantGetReview({ 
+  Future<Response<MerchantGetReview200Response>> merchantGetReview({
     required String id,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -724,19 +748,18 @@ _responseData = rawData == null ? null : deserialize<MerchantGetMine200Response,
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/merchants/{id}/approval-review'.replaceAll('{' r'id' '}', id.toString());
+    final _path = r'/merchants/{id}/approval-review'.replaceAll(
+      '{'
+      r'id'
+      '}',
+      id.toString(),
+    );
     final _options = Options(
       method: r'GET',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -755,7 +778,12 @@ _responseData = rawData == null ? null : deserialize<MerchantGetMine200Response,
 
     try {
       final rawData = _response.data;
-_responseData = rawData == null ? null : deserialize<MerchantGetReview200Response, MerchantGetReview200Response>(rawData, 'MerchantGetReview200Response', growable: true);
+      _responseData = rawData == null
+          ? null
+          : deserialize<
+              MerchantGetReview200Response,
+              MerchantGetReview200Response
+            >(rawData, 'MerchantGetReview200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -779,24 +807,24 @@ _responseData = rawData == null ? null : deserialize<MerchantGetReview200Respons
   }
 
   /// merchantList
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [cursor] 
-  /// * [limit] 
-  /// * [direction] 
-  /// * [page] 
-  /// * [query] 
-  /// * [sortBy] 
-  /// * [order] 
-  /// * [mode] 
-  /// * [categories] 
-  /// * [isActive] 
-  /// * [minRating] 
-  /// * [maxRating] 
-  /// * [maxDistance] 
-  /// * [latitude] 
-  /// * [longitude] 
+  /// * [cursor]
+  /// * [limit]
+  /// * [direction]
+  /// * [page]
+  /// * [query]
+  /// * [sortBy]
+  /// * [order]
+  /// * [mode]
+  /// * [categories]
+  /// * [isActive]
+  /// * [minRating]
+  /// * [maxRating]
+  /// * [maxDistance]
+  /// * [latitude]
+  /// * [longitude]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -806,7 +834,7 @@ _responseData = rawData == null ? null : deserialize<MerchantGetReview200Respons
   ///
   /// Returns a [Future] containing a [Response] with a [MerchantPopulars200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<MerchantPopulars200Response>> merchantList({ 
+  Future<Response<MerchantPopulars200Response>> merchantList({
     String? cursor,
     Object? limit,
     String? direction,
@@ -832,16 +860,10 @@ _responseData = rawData == null ? null : deserialize<MerchantGetReview200Respons
     final _path = r'/merchants';
     final _options = Options(
       method: r'GET',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -879,7 +901,12 @@ _responseData = rawData == null ? null : deserialize<MerchantGetReview200Respons
 
     try {
       final rawData = _response.data;
-_responseData = rawData == null ? null : deserialize<MerchantPopulars200Response, MerchantPopulars200Response>(rawData, 'MerchantPopulars200Response', growable: true);
+      _responseData = rawData == null
+          ? null
+          : deserialize<
+              MerchantPopulars200Response,
+              MerchantPopulars200Response
+            >(rawData, 'MerchantPopulars200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -903,15 +930,15 @@ _responseData = rawData == null ? null : deserialize<MerchantPopulars200Response
   }
 
   /// merchantMenuCreate
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [merchantId] 
-  /// * [name] 
-  /// * [price] 
-  /// * [stock] 
-  /// * [category] 
-  /// * [image] 
+  /// * [merchantId]
+  /// * [name]
+  /// * [price]
+  /// * [stock]
+  /// * [category]
+  /// * [image]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -921,7 +948,7 @@ _responseData = rawData == null ? null : deserialize<MerchantPopulars200Response
   ///
   /// Returns a [Future] containing a [Response] with a [MerchantMenuCreate200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<MerchantMenuCreate200Response>> merchantMenuCreate({ 
+  Future<Response<MerchantMenuCreate200Response>> merchantMenuCreate({
     required String merchantId,
     String? name,
     required num price,
@@ -935,19 +962,18 @@ _responseData = rawData == null ? null : deserialize<MerchantPopulars200Response
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/merchants/{merchantId}/menus'.replaceAll('{' r'merchantId' '}', merchantId.toString());
+    final _path = r'/merchants/{merchantId}/menus'.replaceAll(
+      '{'
+      r'merchantId'
+      '}',
+      merchantId.toString(),
+    );
     final _options = Options(
       method: r'POST',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -958,20 +984,16 @@ _responseData = rawData == null ? null : deserialize<MerchantPopulars200Response
     dynamic _bodyData;
 
     try {
-        _bodyData = FormData.fromMap(<String, dynamic>{
-    r'name': name,
-    r'category': category,
-    r'price': price,
-    r'stock': stock,
-    if (image != null) r'image':  image ,
-  });
-  
-    } catch(error, stackTrace) {
+      _bodyData = FormData.fromMap(<String, dynamic>{
+        r'name': name,
+        r'category': category,
+        r'price': price,
+        r'stock': stock,
+        if (image != null) r'image': image,
+      });
+    } catch (error, stackTrace) {
       throw DioException(
-         requestOptions: _options.compose(
-          _dio.options,
-          _path,
-        ),
+        requestOptions: _options.compose(_dio.options, _path),
         type: DioExceptionType.unknown,
         error: error,
         stackTrace: stackTrace,
@@ -991,7 +1013,12 @@ _responseData = rawData == null ? null : deserialize<MerchantPopulars200Response
 
     try {
       final rawData = _response.data;
-_responseData = rawData == null ? null : deserialize<MerchantMenuCreate200Response, MerchantMenuCreate200Response>(rawData, 'MerchantMenuCreate200Response', growable: true);
+      _responseData = rawData == null
+          ? null
+          : deserialize<
+              MerchantMenuCreate200Response,
+              MerchantMenuCreate200Response
+            >(rawData, 'MerchantMenuCreate200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -1015,11 +1042,11 @@ _responseData = rawData == null ? null : deserialize<MerchantMenuCreate200Respon
   }
 
   /// merchantMenuGet
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [merchantId] 
-  /// * [id] 
+  /// * [merchantId]
+  /// * [id]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -1029,7 +1056,7 @@ _responseData = rawData == null ? null : deserialize<MerchantMenuCreate200Respon
   ///
   /// Returns a [Future] containing a [Response] with a [MerchantMenuCreate200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<MerchantMenuCreate200Response>> merchantMenuGet({ 
+  Future<Response<MerchantMenuCreate200Response>> merchantMenuGet({
     required String merchantId,
     required String id,
     CancelToken? cancelToken,
@@ -1039,19 +1066,25 @@ _responseData = rawData == null ? null : deserialize<MerchantMenuCreate200Respon
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/merchants/{merchantId}/menus/{id}'.replaceAll('{' r'merchantId' '}', merchantId.toString()).replaceAll('{' r'id' '}', id.toString());
+    final _path = r'/merchants/{merchantId}/menus/{id}'
+        .replaceAll(
+          '{'
+          r'merchantId'
+          '}',
+          merchantId.toString(),
+        )
+        .replaceAll(
+          '{'
+          r'id'
+          '}',
+          id.toString(),
+        );
     final _options = Options(
       method: r'GET',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -1070,7 +1103,12 @@ _responseData = rawData == null ? null : deserialize<MerchantMenuCreate200Respon
 
     try {
       final rawData = _response.data;
-_responseData = rawData == null ? null : deserialize<MerchantMenuCreate200Response, MerchantMenuCreate200Response>(rawData, 'MerchantMenuCreate200Response', growable: true);
+      _responseData = rawData == null
+          ? null
+          : deserialize<
+              MerchantMenuCreate200Response,
+              MerchantMenuCreate200Response
+            >(rawData, 'MerchantMenuCreate200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -1094,18 +1132,18 @@ _responseData = rawData == null ? null : deserialize<MerchantMenuCreate200Respon
   }
 
   /// merchantMenuList
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [merchantId] 
-  /// * [cursor] 
-  /// * [limit] 
-  /// * [direction] 
-  /// * [page] 
-  /// * [query] 
-  /// * [sortBy] 
-  /// * [order] 
-  /// * [mode] 
+  /// * [merchantId]
+  /// * [cursor]
+  /// * [limit]
+  /// * [direction]
+  /// * [page]
+  /// * [query]
+  /// * [sortBy]
+  /// * [order]
+  /// * [mode]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -1115,7 +1153,7 @@ _responseData = rawData == null ? null : deserialize<MerchantMenuCreate200Respon
   ///
   /// Returns a [Future] containing a [Response] with a [MerchantMenuList200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<MerchantMenuList200Response>> merchantMenuList({ 
+  Future<Response<MerchantMenuList200Response>> merchantMenuList({
     required String merchantId,
     String? cursor,
     Object? limit,
@@ -1132,19 +1170,18 @@ _responseData = rawData == null ? null : deserialize<MerchantMenuCreate200Respon
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/merchants/{merchantId}/menus'.replaceAll('{' r'merchantId' '}', merchantId.toString());
+    final _path = r'/merchants/{merchantId}/menus'.replaceAll(
+      '{'
+      r'merchantId'
+      '}',
+      merchantId.toString(),
+    );
     final _options = Options(
       method: r'GET',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -1175,7 +1212,12 @@ _responseData = rawData == null ? null : deserialize<MerchantMenuCreate200Respon
 
     try {
       final rawData = _response.data;
-_responseData = rawData == null ? null : deserialize<MerchantMenuList200Response, MerchantMenuList200Response>(rawData, 'MerchantMenuList200Response', growable: true);
+      _responseData = rawData == null
+          ? null
+          : deserialize<
+              MerchantMenuList200Response,
+              MerchantMenuList200Response
+            >(rawData, 'MerchantMenuList200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -1199,11 +1241,11 @@ _responseData = rawData == null ? null : deserialize<MerchantMenuList200Response
   }
 
   /// merchantMenuRemove
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [merchantId] 
-  /// * [id] 
+  /// * [merchantId]
+  /// * [id]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -1213,7 +1255,7 @@ _responseData = rawData == null ? null : deserialize<MerchantMenuList200Response
   ///
   /// Returns a [Future] containing a [Response] with a [BadgeRemove200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<BadgeRemove200Response>> merchantMenuRemove({ 
+  Future<Response<BadgeRemove200Response>> merchantMenuRemove({
     required String merchantId,
     required String id,
     CancelToken? cancelToken,
@@ -1223,19 +1265,25 @@ _responseData = rawData == null ? null : deserialize<MerchantMenuList200Response
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/merchants/{merchantId}/menus/{id}'.replaceAll('{' r'merchantId' '}', merchantId.toString()).replaceAll('{' r'id' '}', id.toString());
+    final _path = r'/merchants/{merchantId}/menus/{id}'
+        .replaceAll(
+          '{'
+          r'merchantId'
+          '}',
+          merchantId.toString(),
+        )
+        .replaceAll(
+          '{'
+          r'id'
+          '}',
+          id.toString(),
+        );
     final _options = Options(
       method: r'DELETE',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -1254,7 +1302,13 @@ _responseData = rawData == null ? null : deserialize<MerchantMenuList200Response
 
     try {
       final rawData = _response.data;
-_responseData = rawData == null ? null : deserialize<BadgeRemove200Response, BadgeRemove200Response>(rawData, 'BadgeRemove200Response', growable: true);
+      _responseData = rawData == null
+          ? null
+          : deserialize<BadgeRemove200Response, BadgeRemove200Response>(
+              rawData,
+              'BadgeRemove200Response',
+              growable: true,
+            );
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -1278,16 +1332,16 @@ _responseData = rawData == null ? null : deserialize<BadgeRemove200Response, Bad
   }
 
   /// merchantMenuUpdate
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [merchantId] 
-  /// * [id] 
-  /// * [name] 
-  /// * [category] 
-  /// * [price] 
-  /// * [stock] 
-  /// * [image] 
+  /// * [merchantId]
+  /// * [id]
+  /// * [name]
+  /// * [category]
+  /// * [price]
+  /// * [stock]
+  /// * [image]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -1297,7 +1351,7 @@ _responseData = rawData == null ? null : deserialize<BadgeRemove200Response, Bad
   ///
   /// Returns a [Future] containing a [Response] with a [MerchantMenuCreate200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<MerchantMenuCreate200Response>> merchantMenuUpdate({ 
+  Future<Response<MerchantMenuCreate200Response>> merchantMenuUpdate({
     required String merchantId,
     required String id,
     String? name,
@@ -1312,19 +1366,25 @@ _responseData = rawData == null ? null : deserialize<BadgeRemove200Response, Bad
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/merchants/{merchantId}/menus/{id}'.replaceAll('{' r'merchantId' '}', merchantId.toString()).replaceAll('{' r'id' '}', id.toString());
+    final _path = r'/merchants/{merchantId}/menus/{id}'
+        .replaceAll(
+          '{'
+          r'merchantId'
+          '}',
+          merchantId.toString(),
+        )
+        .replaceAll(
+          '{'
+          r'id'
+          '}',
+          id.toString(),
+        );
     final _options = Options(
       method: r'PUT',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -1335,20 +1395,16 @@ _responseData = rawData == null ? null : deserialize<BadgeRemove200Response, Bad
     dynamic _bodyData;
 
     try {
-        _bodyData = FormData.fromMap(<String, dynamic>{
-    r'name': name,
-    r'category': category,
-    if (price != null) r'price': price,
-    if (stock != null) r'stock': stock,
-    if (image != null) r'image':  image ,
-  });
-  
-    } catch(error, stackTrace) {
+      _bodyData = FormData.fromMap(<String, dynamic>{
+        r'name': name,
+        r'category': category,
+        if (price != null) r'price': price,
+        if (stock != null) r'stock': stock,
+        if (image != null) r'image': image,
+      });
+    } catch (error, stackTrace) {
       throw DioException(
-         requestOptions: _options.compose(
-          _dio.options,
-          _path,
-        ),
+        requestOptions: _options.compose(_dio.options, _path),
         type: DioExceptionType.unknown,
         error: error,
         stackTrace: stackTrace,
@@ -1368,7 +1424,12 @@ _responseData = rawData == null ? null : deserialize<BadgeRemove200Response, Bad
 
     try {
       final rawData = _response.data;
-_responseData = rawData == null ? null : deserialize<MerchantMenuCreate200Response, MerchantMenuCreate200Response>(rawData, 'MerchantMenuCreate200Response', growable: true);
+      _responseData = rawData == null
+          ? null
+          : deserialize<
+              MerchantMenuCreate200Response,
+              MerchantMenuCreate200Response
+            >(rawData, 'MerchantMenuCreate200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -1392,11 +1453,11 @@ _responseData = rawData == null ? null : deserialize<MerchantMenuCreate200Respon
   }
 
   /// merchantOrderAccept
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [merchantId] 
-  /// * [id] 
+  /// * [merchantId]
+  /// * [id]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -1406,7 +1467,7 @@ _responseData = rawData == null ? null : deserialize<MerchantMenuCreate200Respon
   ///
   /// Returns a [Future] containing a [Response] with a [MerchantOrderAccept200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<MerchantOrderAccept200Response>> merchantOrderAccept({ 
+  Future<Response<MerchantOrderAccept200Response>> merchantOrderAccept({
     required String merchantId,
     required String id,
     CancelToken? cancelToken,
@@ -1416,19 +1477,25 @@ _responseData = rawData == null ? null : deserialize<MerchantMenuCreate200Respon
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/merchants/{merchantId}/orders/{id}/accept'.replaceAll('{' r'merchantId' '}', merchantId.toString()).replaceAll('{' r'id' '}', id.toString());
+    final _path = r'/merchants/{merchantId}/orders/{id}/accept'
+        .replaceAll(
+          '{'
+          r'merchantId'
+          '}',
+          merchantId.toString(),
+        )
+        .replaceAll(
+          '{'
+          r'id'
+          '}',
+          id.toString(),
+        );
     final _options = Options(
       method: r'POST',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -1447,7 +1514,12 @@ _responseData = rawData == null ? null : deserialize<MerchantMenuCreate200Respon
 
     try {
       final rawData = _response.data;
-_responseData = rawData == null ? null : deserialize<MerchantOrderAccept200Response, MerchantOrderAccept200Response>(rawData, 'MerchantOrderAccept200Response', growable: true);
+      _responseData = rawData == null
+          ? null
+          : deserialize<
+              MerchantOrderAccept200Response,
+              MerchantOrderAccept200Response
+            >(rawData, 'MerchantOrderAccept200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -1471,11 +1543,11 @@ _responseData = rawData == null ? null : deserialize<MerchantOrderAccept200Respo
   }
 
   /// merchantOrderMarkPreparing
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [merchantId] 
-  /// * [id] 
+  /// * [merchantId]
+  /// * [id]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -1485,7 +1557,7 @@ _responseData = rawData == null ? null : deserialize<MerchantOrderAccept200Respo
   ///
   /// Returns a [Future] containing a [Response] with a [MerchantOrderAccept200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<MerchantOrderAccept200Response>> merchantOrderMarkPreparing({ 
+  Future<Response<MerchantOrderAccept200Response>> merchantOrderMarkPreparing({
     required String merchantId,
     required String id,
     CancelToken? cancelToken,
@@ -1495,19 +1567,25 @@ _responseData = rawData == null ? null : deserialize<MerchantOrderAccept200Respo
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/merchants/{merchantId}/orders/{id}/preparing'.replaceAll('{' r'merchantId' '}', merchantId.toString()).replaceAll('{' r'id' '}', id.toString());
+    final _path = r'/merchants/{merchantId}/orders/{id}/preparing'
+        .replaceAll(
+          '{'
+          r'merchantId'
+          '}',
+          merchantId.toString(),
+        )
+        .replaceAll(
+          '{'
+          r'id'
+          '}',
+          id.toString(),
+        );
     final _options = Options(
       method: r'PUT',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -1526,7 +1604,12 @@ _responseData = rawData == null ? null : deserialize<MerchantOrderAccept200Respo
 
     try {
       final rawData = _response.data;
-_responseData = rawData == null ? null : deserialize<MerchantOrderAccept200Response, MerchantOrderAccept200Response>(rawData, 'MerchantOrderAccept200Response', growable: true);
+      _responseData = rawData == null
+          ? null
+          : deserialize<
+              MerchantOrderAccept200Response,
+              MerchantOrderAccept200Response
+            >(rawData, 'MerchantOrderAccept200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -1550,11 +1633,11 @@ _responseData = rawData == null ? null : deserialize<MerchantOrderAccept200Respo
   }
 
   /// merchantOrderMarkReady
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [merchantId] 
-  /// * [id] 
+  /// * [merchantId]
+  /// * [id]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -1564,7 +1647,7 @@ _responseData = rawData == null ? null : deserialize<MerchantOrderAccept200Respo
   ///
   /// Returns a [Future] containing a [Response] with a [MerchantOrderAccept200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<MerchantOrderAccept200Response>> merchantOrderMarkReady({ 
+  Future<Response<MerchantOrderAccept200Response>> merchantOrderMarkReady({
     required String merchantId,
     required String id,
     CancelToken? cancelToken,
@@ -1574,19 +1657,25 @@ _responseData = rawData == null ? null : deserialize<MerchantOrderAccept200Respo
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/merchants/{merchantId}/orders/{id}/ready'.replaceAll('{' r'merchantId' '}', merchantId.toString()).replaceAll('{' r'id' '}', id.toString());
+    final _path = r'/merchants/{merchantId}/orders/{id}/ready'
+        .replaceAll(
+          '{'
+          r'merchantId'
+          '}',
+          merchantId.toString(),
+        )
+        .replaceAll(
+          '{'
+          r'id'
+          '}',
+          id.toString(),
+        );
     final _options = Options(
       method: r'PUT',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -1605,7 +1694,12 @@ _responseData = rawData == null ? null : deserialize<MerchantOrderAccept200Respo
 
     try {
       final rawData = _response.data;
-_responseData = rawData == null ? null : deserialize<MerchantOrderAccept200Response, MerchantOrderAccept200Response>(rawData, 'MerchantOrderAccept200Response', growable: true);
+      _responseData = rawData == null
+          ? null
+          : deserialize<
+              MerchantOrderAccept200Response,
+              MerchantOrderAccept200Response
+            >(rawData, 'MerchantOrderAccept200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -1629,13 +1723,13 @@ _responseData = rawData == null ? null : deserialize<MerchantOrderAccept200Respo
   }
 
   /// merchantOrderReject
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [merchantId] 
-  /// * [id] 
-  /// * [reason] 
-  /// * [note] 
+  /// * [merchantId]
+  /// * [id]
+  /// * [reason]
+  /// * [note]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -1645,7 +1739,7 @@ _responseData = rawData == null ? null : deserialize<MerchantOrderAccept200Respo
   ///
   /// Returns a [Future] containing a [Response] with a [MerchantOrderAccept200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<MerchantOrderAccept200Response>> merchantOrderReject({ 
+  Future<Response<MerchantOrderAccept200Response>> merchantOrderReject({
     required String merchantId,
     required String id,
     required String reason,
@@ -1657,19 +1751,25 @@ _responseData = rawData == null ? null : deserialize<MerchantOrderAccept200Respo
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/merchants/{merchantId}/orders/{id}/reject'.replaceAll('{' r'merchantId' '}', merchantId.toString()).replaceAll('{' r'id' '}', id.toString());
+    final _path = r'/merchants/{merchantId}/orders/{id}/reject'
+        .replaceAll(
+          '{'
+          r'merchantId'
+          '}',
+          merchantId.toString(),
+        )
+        .replaceAll(
+          '{'
+          r'id'
+          '}',
+          id.toString(),
+        );
     final _options = Options(
       method: r'POST',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -1680,17 +1780,13 @@ _responseData = rawData == null ? null : deserialize<MerchantOrderAccept200Respo
     dynamic _bodyData;
 
     try {
-        _bodyData = FormData.fromMap(<String, dynamic>{
-    r'reason': reason,
-    r'note': note,
-  });
-  
-    } catch(error, stackTrace) {
+      _bodyData = FormData.fromMap(<String, dynamic>{
+        r'reason': reason,
+        r'note': note,
+      });
+    } catch (error, stackTrace) {
       throw DioException(
-         requestOptions: _options.compose(
-          _dio.options,
-          _path,
-        ),
+        requestOptions: _options.compose(_dio.options, _path),
         type: DioExceptionType.unknown,
         error: error,
         stackTrace: stackTrace,
@@ -1710,7 +1806,12 @@ _responseData = rawData == null ? null : deserialize<MerchantOrderAccept200Respo
 
     try {
       final rawData = _response.data;
-_responseData = rawData == null ? null : deserialize<MerchantOrderAccept200Response, MerchantOrderAccept200Response>(rawData, 'MerchantOrderAccept200Response', growable: true);
+      _responseData = rawData == null
+          ? null
+          : deserialize<
+              MerchantOrderAccept200Response,
+              MerchantOrderAccept200Response
+            >(rawData, 'MerchantOrderAccept200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -1734,17 +1835,17 @@ _responseData = rawData == null ? null : deserialize<MerchantOrderAccept200Respo
   }
 
   /// merchantPopulars
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [cursor] 
-  /// * [limit] 
-  /// * [direction] 
-  /// * [page] 
-  /// * [query] 
-  /// * [sortBy] 
-  /// * [order] 
-  /// * [mode] 
+  /// * [cursor]
+  /// * [limit]
+  /// * [direction]
+  /// * [page]
+  /// * [query]
+  /// * [sortBy]
+  /// * [order]
+  /// * [mode]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -1754,7 +1855,7 @@ _responseData = rawData == null ? null : deserialize<MerchantOrderAccept200Respo
   ///
   /// Returns a [Future] containing a [Response] with a [MerchantPopulars200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<MerchantPopulars200Response>> merchantPopulars({ 
+  Future<Response<MerchantPopulars200Response>> merchantPopulars({
     String? cursor,
     Object? limit,
     String? direction,
@@ -1773,16 +1874,10 @@ _responseData = rawData == null ? null : deserialize<MerchantOrderAccept200Respo
     final _path = r'/merchants/populars';
     final _options = Options(
       method: r'GET',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -1813,7 +1908,12 @@ _responseData = rawData == null ? null : deserialize<MerchantOrderAccept200Respo
 
     try {
       final rawData = _response.data;
-_responseData = rawData == null ? null : deserialize<MerchantPopulars200Response, MerchantPopulars200Response>(rawData, 'MerchantPopulars200Response', growable: true);
+      _responseData = rawData == null
+          ? null
+          : deserialize<
+              MerchantPopulars200Response,
+              MerchantPopulars200Response
+            >(rawData, 'MerchantPopulars200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -1837,10 +1937,10 @@ _responseData = rawData == null ? null : deserialize<MerchantPopulars200Response
   }
 
   /// merchantRemove
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [id] 
+  /// * [id]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -1850,7 +1950,7 @@ _responseData = rawData == null ? null : deserialize<MerchantPopulars200Response
   ///
   /// Returns a [Future] containing a [Response] with a [BadgeRemove200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<BadgeRemove200Response>> merchantRemove({ 
+  Future<Response<BadgeRemove200Response>> merchantRemove({
     required String id,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -1859,19 +1959,18 @@ _responseData = rawData == null ? null : deserialize<MerchantPopulars200Response
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/merchants/{id}'.replaceAll('{' r'id' '}', id.toString());
+    final _path = r'/merchants/{id}'.replaceAll(
+      '{'
+      r'id'
+      '}',
+      id.toString(),
+    );
     final _options = Options(
       method: r'DELETE',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -1890,7 +1989,13 @@ _responseData = rawData == null ? null : deserialize<MerchantPopulars200Response
 
     try {
       final rawData = _response.data;
-_responseData = rawData == null ? null : deserialize<BadgeRemove200Response, BadgeRemove200Response>(rawData, 'BadgeRemove200Response', growable: true);
+      _responseData = rawData == null
+          ? null
+          : deserialize<BadgeRemove200Response, BadgeRemove200Response>(
+              rawData,
+              'BadgeRemove200Response',
+              growable: true,
+            );
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -1914,11 +2019,11 @@ _responseData = rawData == null ? null : deserialize<BadgeRemove200Response, Bad
   }
 
   /// merchantSetOnlineStatus
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [id] 
-  /// * [driverUpdateOnlineStatusRequest] 
+  /// * [id]
+  /// * [driverUpdateOnlineStatusRequest]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -1928,7 +2033,7 @@ _responseData = rawData == null ? null : deserialize<BadgeRemove200Response, Bad
   ///
   /// Returns a [Future] containing a [Response] with a [MerchantGet200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<MerchantGet200Response>> merchantSetOnlineStatus({ 
+  Future<Response<MerchantGet200Response>> merchantSetOnlineStatus({
     required String id,
     required DriverUpdateOnlineStatusRequest driverUpdateOnlineStatusRequest,
     CancelToken? cancelToken,
@@ -1938,19 +2043,18 @@ _responseData = rawData == null ? null : deserialize<BadgeRemove200Response, Bad
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/merchants/{id}/availability/online'.replaceAll('{' r'id' '}', id.toString());
+    final _path = r'/merchants/{id}/availability/online'.replaceAll(
+      '{'
+      r'id'
+      '}',
+      id.toString(),
+    );
     final _options = Options(
       method: r'PATCH',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -1961,13 +2065,10 @@ _responseData = rawData == null ? null : deserialize<BadgeRemove200Response, Bad
     dynamic _bodyData;
 
     try {
-        _bodyData=jsonEncode(driverUpdateOnlineStatusRequest);
-    } catch(error, stackTrace) {
+      _bodyData = jsonEncode(driverUpdateOnlineStatusRequest);
+    } catch (error, stackTrace) {
       throw DioException(
-         requestOptions: _options.compose(
-          _dio.options,
-          _path,
-        ),
+        requestOptions: _options.compose(_dio.options, _path),
         type: DioExceptionType.unknown,
         error: error,
         stackTrace: stackTrace,
@@ -1987,7 +2088,13 @@ _responseData = rawData == null ? null : deserialize<BadgeRemove200Response, Bad
 
     try {
       final rawData = _response.data;
-_responseData = rawData == null ? null : deserialize<MerchantGet200Response, MerchantGet200Response>(rawData, 'MerchantGet200Response', growable: true);
+      _responseData = rawData == null
+          ? null
+          : deserialize<MerchantGet200Response, MerchantGet200Response>(
+              rawData,
+              'MerchantGet200Response',
+              growable: true,
+            );
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -2011,11 +2118,11 @@ _responseData = rawData == null ? null : deserialize<MerchantGet200Response, Mer
   }
 
   /// merchantSetOperatingStatus
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [id] 
-  /// * [merchantSetOperatingStatusRequest] 
+  /// * [id]
+  /// * [merchantSetOperatingStatusRequest]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -2025,9 +2132,10 @@ _responseData = rawData == null ? null : deserialize<MerchantGet200Response, Mer
   ///
   /// Returns a [Future] containing a [Response] with a [MerchantGet200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<MerchantGet200Response>> merchantSetOperatingStatus({ 
+  Future<Response<MerchantGet200Response>> merchantSetOperatingStatus({
     required String id,
-    required MerchantSetOperatingStatusRequest merchantSetOperatingStatusRequest,
+    required MerchantSetOperatingStatusRequest
+    merchantSetOperatingStatusRequest,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -2035,19 +2143,18 @@ _responseData = rawData == null ? null : deserialize<MerchantGet200Response, Mer
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/merchants/{id}/availability/operating-status'.replaceAll('{' r'id' '}', id.toString());
+    final _path = r'/merchants/{id}/availability/operating-status'.replaceAll(
+      '{'
+      r'id'
+      '}',
+      id.toString(),
+    );
     final _options = Options(
       method: r'PATCH',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -2058,13 +2165,10 @@ _responseData = rawData == null ? null : deserialize<MerchantGet200Response, Mer
     dynamic _bodyData;
 
     try {
-        _bodyData=jsonEncode(merchantSetOperatingStatusRequest);
-    } catch(error, stackTrace) {
+      _bodyData = jsonEncode(merchantSetOperatingStatusRequest);
+    } catch (error, stackTrace) {
       throw DioException(
-         requestOptions: _options.compose(
-          _dio.options,
-          _path,
-        ),
+        requestOptions: _options.compose(_dio.options, _path),
         type: DioExceptionType.unknown,
         error: error,
         stackTrace: stackTrace,
@@ -2084,7 +2188,13 @@ _responseData = rawData == null ? null : deserialize<MerchantGet200Response, Mer
 
     try {
       final rawData = _response.data;
-_responseData = rawData == null ? null : deserialize<MerchantGet200Response, MerchantGet200Response>(rawData, 'MerchantGet200Response', growable: true);
+      _responseData = rawData == null
+          ? null
+          : deserialize<MerchantGet200Response, MerchantGet200Response>(
+              rawData,
+              'MerchantGet200Response',
+              growable: true,
+            );
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -2108,11 +2218,11 @@ _responseData = rawData == null ? null : deserialize<MerchantGet200Response, Mer
   }
 
   /// merchantSetOrderTakingStatus
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [id] 
-  /// * [merchantSetOrderTakingStatusRequest] 
+  /// * [id]
+  /// * [merchantSetOrderTakingStatusRequest]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -2122,9 +2232,10 @@ _responseData = rawData == null ? null : deserialize<MerchantGet200Response, Mer
   ///
   /// Returns a [Future] containing a [Response] with a [MerchantGet200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<MerchantGet200Response>> merchantSetOrderTakingStatus({ 
+  Future<Response<MerchantGet200Response>> merchantSetOrderTakingStatus({
     required String id,
-    required MerchantSetOrderTakingStatusRequest merchantSetOrderTakingStatusRequest,
+    required MerchantSetOrderTakingStatusRequest
+    merchantSetOrderTakingStatusRequest,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -2132,19 +2243,18 @@ _responseData = rawData == null ? null : deserialize<MerchantGet200Response, Mer
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/merchants/{id}/availability/order-taking'.replaceAll('{' r'id' '}', id.toString());
+    final _path = r'/merchants/{id}/availability/order-taking'.replaceAll(
+      '{'
+      r'id'
+      '}',
+      id.toString(),
+    );
     final _options = Options(
       method: r'PATCH',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -2155,13 +2265,10 @@ _responseData = rawData == null ? null : deserialize<MerchantGet200Response, Mer
     dynamic _bodyData;
 
     try {
-        _bodyData=jsonEncode(merchantSetOrderTakingStatusRequest);
-    } catch(error, stackTrace) {
+      _bodyData = jsonEncode(merchantSetOrderTakingStatusRequest);
+    } catch (error, stackTrace) {
       throw DioException(
-         requestOptions: _options.compose(
-          _dio.options,
-          _path,
-        ),
+        requestOptions: _options.compose(_dio.options, _path),
         type: DioExceptionType.unknown,
         error: error,
         stackTrace: stackTrace,
@@ -2181,7 +2288,13 @@ _responseData = rawData == null ? null : deserialize<MerchantGet200Response, Mer
 
     try {
       final rawData = _response.data;
-_responseData = rawData == null ? null : deserialize<MerchantGet200Response, MerchantGet200Response>(rawData, 'MerchantGet200Response', growable: true);
+      _responseData = rawData == null
+          ? null
+          : deserialize<MerchantGet200Response, MerchantGet200Response>(
+              rawData,
+              'MerchantGet200Response',
+              growable: true,
+            );
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -2205,11 +2318,11 @@ _responseData = rawData == null ? null : deserialize<MerchantGet200Response, Mer
   }
 
   /// merchantSubmitApproval
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [id] 
-  /// * [merchantSubmitApprovalRequest] 
+  /// * [id]
+  /// * [merchantSubmitApprovalRequest]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -2219,7 +2332,7 @@ _responseData = rawData == null ? null : deserialize<MerchantGet200Response, Mer
   ///
   /// Returns a [Future] containing a [Response] with a [MerchantGetReview200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<MerchantGetReview200Response>> merchantSubmitApproval({ 
+  Future<Response<MerchantGetReview200Response>> merchantSubmitApproval({
     required String id,
     required MerchantSubmitApprovalRequest merchantSubmitApprovalRequest,
     CancelToken? cancelToken,
@@ -2229,19 +2342,18 @@ _responseData = rawData == null ? null : deserialize<MerchantGet200Response, Mer
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/merchants/{id}/approval-review/submit-approval'.replaceAll('{' r'id' '}', id.toString());
+    final _path = r'/merchants/{id}/approval-review/submit-approval'.replaceAll(
+      '{'
+      r'id'
+      '}',
+      id.toString(),
+    );
     final _options = Options(
       method: r'POST',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -2252,13 +2364,10 @@ _responseData = rawData == null ? null : deserialize<MerchantGet200Response, Mer
     dynamic _bodyData;
 
     try {
-        _bodyData=jsonEncode(merchantSubmitApprovalRequest);
-    } catch(error, stackTrace) {
+      _bodyData = jsonEncode(merchantSubmitApprovalRequest);
+    } catch (error, stackTrace) {
       throw DioException(
-         requestOptions: _options.compose(
-          _dio.options,
-          _path,
-        ),
+        requestOptions: _options.compose(_dio.options, _path),
         type: DioExceptionType.unknown,
         error: error,
         stackTrace: stackTrace,
@@ -2278,7 +2387,12 @@ _responseData = rawData == null ? null : deserialize<MerchantGet200Response, Mer
 
     try {
       final rawData = _response.data;
-_responseData = rawData == null ? null : deserialize<MerchantGetReview200Response, MerchantGetReview200Response>(rawData, 'MerchantGetReview200Response', growable: true);
+      _responseData = rawData == null
+          ? null
+          : deserialize<
+              MerchantGetReview200Response,
+              MerchantGetReview200Response
+            >(rawData, 'MerchantGetReview200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -2302,11 +2416,11 @@ _responseData = rawData == null ? null : deserialize<MerchantGetReview200Respons
   }
 
   /// merchantSubmitRejection
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [id] 
-  /// * [driverSubmitRejectionRequest] 
+  /// * [id]
+  /// * [driverSubmitRejectionRequest]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -2316,7 +2430,7 @@ _responseData = rawData == null ? null : deserialize<MerchantGetReview200Respons
   ///
   /// Returns a [Future] containing a [Response] with a [MerchantGetReview200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<MerchantGetReview200Response>> merchantSubmitRejection({ 
+  Future<Response<MerchantGetReview200Response>> merchantSubmitRejection({
     required String id,
     required DriverSubmitRejectionRequest driverSubmitRejectionRequest,
     CancelToken? cancelToken,
@@ -2326,19 +2440,19 @@ _responseData = rawData == null ? null : deserialize<MerchantGetReview200Respons
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/merchants/{id}/approval-review/submit-rejection'.replaceAll('{' r'id' '}', id.toString());
+    final _path = r'/merchants/{id}/approval-review/submit-rejection'
+        .replaceAll(
+          '{'
+          r'id'
+          '}',
+          id.toString(),
+        );
     final _options = Options(
       method: r'POST',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -2349,13 +2463,10 @@ _responseData = rawData == null ? null : deserialize<MerchantGetReview200Respons
     dynamic _bodyData;
 
     try {
-        _bodyData=jsonEncode(driverSubmitRejectionRequest);
-    } catch(error, stackTrace) {
+      _bodyData = jsonEncode(driverSubmitRejectionRequest);
+    } catch (error, stackTrace) {
       throw DioException(
-         requestOptions: _options.compose(
-          _dio.options,
-          _path,
-        ),
+        requestOptions: _options.compose(_dio.options, _path),
         type: DioExceptionType.unknown,
         error: error,
         stackTrace: stackTrace,
@@ -2375,7 +2486,12 @@ _responseData = rawData == null ? null : deserialize<MerchantGetReview200Respons
 
     try {
       final rawData = _response.data;
-_responseData = rawData == null ? null : deserialize<MerchantGetReview200Response, MerchantGetReview200Response>(rawData, 'MerchantGetReview200Response', growable: true);
+      _responseData = rawData == null
+          ? null
+          : deserialize<
+              MerchantGetReview200Response,
+              MerchantGetReview200Response
+            >(rawData, 'MerchantGetReview200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -2399,22 +2515,22 @@ _responseData = rawData == null ? null : deserialize<MerchantGetReview200Respons
   }
 
   /// merchantUpdate
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [id] 
-  /// * [phoneCountryCode] 
-  /// * [phoneNumber] 
+  /// * [id]
+  /// * [phoneCountryCode]
+  /// * [phoneNumber]
   /// * [locationX] - Longitude (X-axis, East-West)
   /// * [locationY] - Latitude (Y-axis, North-South)
-  /// * [bankProvider] 
-  /// * [bankNumber] 
-  /// * [name] 
-  /// * [email] 
-  /// * [address] 
+  /// * [bankProvider]
+  /// * [bankNumber]
+  /// * [name]
+  /// * [email]
+  /// * [address]
   /// * [category] - Primary merchant category
-  /// * [document] 
-  /// * [image] 
+  /// * [document]
+  /// * [image]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -2424,7 +2540,7 @@ _responseData = rawData == null ? null : deserialize<MerchantGetReview200Respons
   ///
   /// Returns a [Future] containing a [Response] with a [MerchantGet200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<MerchantGet200Response>> merchantUpdate({ 
+  Future<Response<MerchantGet200Response>> merchantUpdate({
     required String id,
     required String phoneCountryCode,
     required int phoneNumber,
@@ -2445,19 +2561,18 @@ _responseData = rawData == null ? null : deserialize<MerchantGetReview200Respons
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/merchants/{id}'.replaceAll('{' r'id' '}', id.toString());
+    final _path = r'/merchants/{id}'.replaceAll(
+      '{'
+      r'id'
+      '}',
+      id.toString(),
+    );
     final _options = Options(
       method: r'PUT',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -2468,27 +2583,23 @@ _responseData = rawData == null ? null : deserialize<MerchantGetReview200Respons
     dynamic _bodyData;
 
     try {
-        _bodyData = FormData.fromMap(<String, dynamic>{
-    if (name != null) r'name': name,
-    if (email != null) r'email': email,
-    r'phone_countryCode': phoneCountryCode,
-    r'phone_number': phoneNumber,
-    r'address': address,
-    r'location_x': locationX,
-    r'location_y': locationY,
-    if (category != null) r'category': category,
-    r'bank_provider': bankProvider,
-    r'bank_number': bankNumber,
-    if (document != null) r'document':  document ,
-    if (image != null) r'image':  image ,
-  });
-  
-    } catch(error, stackTrace) {
+      _bodyData = FormData.fromMap(<String, dynamic>{
+        if (name != null) r'name': name,
+        if (email != null) r'email': email,
+        r'phone_countryCode': phoneCountryCode,
+        r'phone_number': phoneNumber,
+        r'address': address,
+        r'location_x': locationX,
+        r'location_y': locationY,
+        if (category != null) r'category': category,
+        r'bank_provider': bankProvider,
+        r'bank_number': bankNumber,
+        if (document != null) r'document': document,
+        if (image != null) r'image': image,
+      });
+    } catch (error, stackTrace) {
       throw DioException(
-         requestOptions: _options.compose(
-          _dio.options,
-          _path,
-        ),
+        requestOptions: _options.compose(_dio.options, _path),
         type: DioExceptionType.unknown,
         error: error,
         stackTrace: stackTrace,
@@ -2508,7 +2619,13 @@ _responseData = rawData == null ? null : deserialize<MerchantGetReview200Respons
 
     try {
       final rawData = _response.data;
-_responseData = rawData == null ? null : deserialize<MerchantGet200Response, MerchantGet200Response>(rawData, 'MerchantGet200Response', growable: true);
+      _responseData = rawData == null
+          ? null
+          : deserialize<MerchantGet200Response, MerchantGet200Response>(
+              rawData,
+              'MerchantGet200Response',
+              growable: true,
+            );
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -2532,11 +2649,11 @@ _responseData = rawData == null ? null : deserialize<MerchantGet200Response, Mer
   }
 
   /// merchantUpdateDocumentStatus
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [id] 
-  /// * [merchantUpdateDocumentStatusRequest] 
+  /// * [id]
+  /// * [merchantUpdateDocumentStatusRequest]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -2546,9 +2663,10 @@ _responseData = rawData == null ? null : deserialize<MerchantGet200Response, Mer
   ///
   /// Returns a [Future] containing a [Response] with a [MerchantGetReview200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<MerchantGetReview200Response>> merchantUpdateDocumentStatus({ 
+  Future<Response<MerchantGetReview200Response>> merchantUpdateDocumentStatus({
     required String id,
-    required MerchantUpdateDocumentStatusRequest merchantUpdateDocumentStatusRequest,
+    required MerchantUpdateDocumentStatusRequest
+    merchantUpdateDocumentStatusRequest,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -2556,19 +2674,18 @@ _responseData = rawData == null ? null : deserialize<MerchantGet200Response, Mer
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/merchants/{id}/approval-review/update-document'.replaceAll('{' r'id' '}', id.toString());
+    final _path = r'/merchants/{id}/approval-review/update-document'.replaceAll(
+      '{'
+      r'id'
+      '}',
+      id.toString(),
+    );
     final _options = Options(
       method: r'POST',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -2579,13 +2696,10 @@ _responseData = rawData == null ? null : deserialize<MerchantGet200Response, Mer
     dynamic _bodyData;
 
     try {
-        _bodyData=jsonEncode(merchantUpdateDocumentStatusRequest);
-    } catch(error, stackTrace) {
+      _bodyData = jsonEncode(merchantUpdateDocumentStatusRequest);
+    } catch (error, stackTrace) {
       throw DioException(
-         requestOptions: _options.compose(
-          _dio.options,
-          _path,
-        ),
+        requestOptions: _options.compose(_dio.options, _path),
         type: DioExceptionType.unknown,
         error: error,
         stackTrace: stackTrace,
@@ -2605,7 +2719,12 @@ _responseData = rawData == null ? null : deserialize<MerchantGet200Response, Mer
 
     try {
       final rawData = _response.data;
-_responseData = rawData == null ? null : deserialize<MerchantGetReview200Response, MerchantGetReview200Response>(rawData, 'MerchantGetReview200Response', growable: true);
+      _responseData = rawData == null
+          ? null
+          : deserialize<
+              MerchantGetReview200Response,
+              MerchantGetReview200Response
+            >(rawData, 'MerchantGetReview200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -2627,5 +2746,4 @@ _responseData = rawData == null ? null : deserialize<MerchantGetReview200Respons
       extra: _response.extra,
     );
   }
-
 }

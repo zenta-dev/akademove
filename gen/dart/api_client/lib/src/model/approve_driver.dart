@@ -17,21 +17,19 @@ part 'approve_driver.g.dart';
 )
 class ApproveDriver {
   /// Returns a new [ApproveDriver] instance.
-  const ApproveDriver({
-    required this.id,
-  });
+  const ApproveDriver({required this.id});
   @JsonKey(name: r'id', required: true, includeIfNull: false)
   final String id;
-  
-  @override
-  bool operator ==(Object other) => identical(this, other) || other is ApproveDriver &&
-    other.id == id;
 
   @override
-  int get hashCode =>
-      id.hashCode;
+  bool operator ==(Object other) =>
+      identical(this, other) || other is ApproveDriver && other.id == id;
 
-  factory ApproveDriver.fromJson(Map<String, dynamic> json) => _$ApproveDriverFromJson(json);
+  @override
+  int get hashCode => id.hashCode;
+
+  factory ApproveDriver.fromJson(Map<String, dynamic> json) =>
+      _$ApproveDriverFromJson(json);
 
   Map<String, dynamic> toJson() => _$ApproveDriverToJson(this);
 
@@ -39,6 +37,4 @@ class ApproveDriver {
   String toString() {
     return toJson().toString();
   }
-
 }
-

@@ -15,12 +15,6 @@ const app = setupHonoRouter();
 setupOrpcRouter(app);
 setupWebsocketRouter(app);
 
-/**
- * Cron schedule patterns:
- * - "* * * * *"      = Every minute (auto-offline, scheduled orders)
- * - "*/5 * * * *"    = Every 5 minutes (order checker)
- * - "*/15 * * * *"   = Every 15 minutes (leaderboard)
- */
 export default {
 	fetch: app.fetch,
 	async scheduled(event: ScheduledEvent, env: Env, ctx: ExecutionContext) {

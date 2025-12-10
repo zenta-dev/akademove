@@ -17,21 +17,20 @@ part 'driver_reject_request.g.dart';
 )
 class DriverRejectRequest {
   /// Returns a new [DriverRejectRequest] instance.
-  const DriverRejectRequest({
-    required this.reason,
-  });
+  const DriverRejectRequest({required this.reason});
   @JsonKey(name: r'reason', required: true, includeIfNull: true)
   final String? reason;
-  
-  @override
-  bool operator ==(Object other) => identical(this, other) || other is DriverRejectRequest &&
-    other.reason == reason;
 
   @override
-  int get hashCode =>
-      (reason == null ? 0 : reason.hashCode);
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is DriverRejectRequest && other.reason == reason;
 
-  factory DriverRejectRequest.fromJson(Map<String, dynamic> json) => _$DriverRejectRequestFromJson(json);
+  @override
+  int get hashCode => (reason == null ? 0 : reason.hashCode);
+
+  factory DriverRejectRequest.fromJson(Map<String, dynamic> json) =>
+      _$DriverRejectRequestFromJson(json);
 
   Map<String, dynamic> toJson() => _$DriverRejectRequestToJson(this);
 
@@ -39,6 +38,4 @@ class DriverRejectRequest {
   String toString() {
     return toJson().toString();
   }
-
 }
-

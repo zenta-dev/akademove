@@ -19,24 +19,26 @@ part 'emergency_update_status_request.g.dart';
 class EmergencyUpdateStatusRequest {
   /// Returns a new [EmergencyUpdateStatusRequest] instance.
   const EmergencyUpdateStatusRequest({
-     this.status,
-     this.resolution,
-     this.respondedById,
+    this.status,
+    this.resolution,
+    this.respondedById,
   });
   @JsonKey(name: r'status', required: false, includeIfNull: false)
   final EmergencyStatus? status;
-  
+
   @JsonKey(name: r'resolution', required: false, includeIfNull: false)
   final String? resolution;
-  
+
   @JsonKey(name: r'respondedById', required: false, includeIfNull: false)
   final String? respondedById;
-  
+
   @override
-  bool operator ==(Object other) => identical(this, other) || other is EmergencyUpdateStatusRequest &&
-    other.status == status &&
-    other.resolution == resolution &&
-    other.respondedById == respondedById;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is EmergencyUpdateStatusRequest &&
+          other.status == status &&
+          other.resolution == resolution &&
+          other.respondedById == respondedById;
 
   @override
   int get hashCode =>
@@ -44,7 +46,8 @@ class EmergencyUpdateStatusRequest {
       (resolution == null ? 0 : resolution.hashCode) +
       (respondedById == null ? 0 : respondedById.hashCode);
 
-  factory EmergencyUpdateStatusRequest.fromJson(Map<String, dynamic> json) => _$EmergencyUpdateStatusRequestFromJson(json);
+  factory EmergencyUpdateStatusRequest.fromJson(Map<String, dynamic> json) =>
+      _$EmergencyUpdateStatusRequestFromJson(json);
 
   Map<String, dynamic> toJson() => _$EmergencyUpdateStatusRequestToJson(this);
 
@@ -52,6 +55,4 @@ class EmergencyUpdateStatusRequest {
   String toString() {
     return toJson().toString();
   }
-
 }
-

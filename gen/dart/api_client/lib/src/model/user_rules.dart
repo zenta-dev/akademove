@@ -17,29 +17,27 @@ part 'user_rules.g.dart';
 )
 class UserRules {
   /// Returns a new [UserRules] instance.
-  const UserRules({
-     this.newUserOnly,
-     this.perUserLimit,
-  });
+  const UserRules({this.newUserOnly, this.perUserLimit});
   @JsonKey(name: r'newUserOnly', required: false, includeIfNull: false)
   final bool? newUserOnly;
-  
-          // minimum: -9007199254740991
-          // maximum: 9007199254740991
+
+  // minimum: -9007199254740991
+  // maximum: 9007199254740991
   @JsonKey(name: r'perUserLimit', required: false, includeIfNull: false)
   final int? perUserLimit;
-  
-  @override
-  bool operator ==(Object other) => identical(this, other) || other is UserRules &&
-    other.newUserOnly == newUserOnly &&
-    other.perUserLimit == perUserLimit;
 
   @override
-  int get hashCode =>
-      newUserOnly.hashCode +
-      perUserLimit.hashCode;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is UserRules &&
+          other.newUserOnly == newUserOnly &&
+          other.perUserLimit == perUserLimit;
 
-  factory UserRules.fromJson(Map<String, dynamic> json) => _$UserRulesFromJson(json);
+  @override
+  int get hashCode => newUserOnly.hashCode + perUserLimit.hashCode;
+
+  factory UserRules.fromJson(Map<String, dynamic> json) =>
+      _$UserRulesFromJson(json);
 
   Map<String, dynamic> toJson() => _$UserRulesToJson(this);
 
@@ -47,6 +45,4 @@ class UserRules {
   String toString() {
     return toJson().toString();
   }
-
 }
-

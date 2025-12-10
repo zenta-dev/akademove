@@ -17,28 +17,27 @@ part 'order_cancel_scheduled_order_request.g.dart';
 )
 class OrderCancelScheduledOrderRequest {
   /// Returns a new [OrderCancelScheduledOrderRequest] instance.
-  const OrderCancelScheduledOrderRequest({
-     this.reason,
-  });
+  const OrderCancelScheduledOrderRequest({this.reason});
   @JsonKey(name: r'reason', required: false, includeIfNull: false)
   final String? reason;
-  
-  @override
-  bool operator ==(Object other) => identical(this, other) || other is OrderCancelScheduledOrderRequest &&
-    other.reason == reason;
 
   @override
-  int get hashCode =>
-      reason.hashCode;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is OrderCancelScheduledOrderRequest && other.reason == reason;
 
-  factory OrderCancelScheduledOrderRequest.fromJson(Map<String, dynamic> json) => _$OrderCancelScheduledOrderRequestFromJson(json);
+  @override
+  int get hashCode => reason.hashCode;
 
-  Map<String, dynamic> toJson() => _$OrderCancelScheduledOrderRequestToJson(this);
+  factory OrderCancelScheduledOrderRequest.fromJson(
+    Map<String, dynamic> json,
+  ) => _$OrderCancelScheduledOrderRequestFromJson(json);
+
+  Map<String, dynamic> toJson() =>
+      _$OrderCancelScheduledOrderRequestToJson(this);
 
   @override
   String toString() {
     return toJson().toString();
   }
-
 }
-

@@ -23,25 +23,28 @@ class WalletMonthlySummaryResponse {
     required this.totalExpense,
     required this.net,
   });
-      /// YYYY-MM
+
+  /// YYYY-MM
   @JsonKey(name: r'month', required: true, includeIfNull: false)
   final String month;
-  
+
   @JsonKey(name: r'totalIncome', required: true, includeIfNull: false)
   final num totalIncome;
-  
+
   @JsonKey(name: r'totalExpense', required: true, includeIfNull: false)
   final num totalExpense;
-  
+
   @JsonKey(name: r'net', required: true, includeIfNull: false)
   final num net;
-  
+
   @override
-  bool operator ==(Object other) => identical(this, other) || other is WalletMonthlySummaryResponse &&
-    other.month == month &&
-    other.totalIncome == totalIncome &&
-    other.totalExpense == totalExpense &&
-    other.net == net;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is WalletMonthlySummaryResponse &&
+          other.month == month &&
+          other.totalIncome == totalIncome &&
+          other.totalExpense == totalExpense &&
+          other.net == net;
 
   @override
   int get hashCode =>
@@ -50,7 +53,8 @@ class WalletMonthlySummaryResponse {
       totalExpense.hashCode +
       net.hashCode;
 
-  factory WalletMonthlySummaryResponse.fromJson(Map<String, dynamic> json) => _$WalletMonthlySummaryResponseFromJson(json);
+  factory WalletMonthlySummaryResponse.fromJson(Map<String, dynamic> json) =>
+      _$WalletMonthlySummaryResponseFromJson(json);
 
   Map<String, dynamic> toJson() => _$WalletMonthlySummaryResponseToJson(this);
 
@@ -58,6 +62,4 @@ class WalletMonthlySummaryResponse {
   String toString() {
     return toJson().toString();
   }
-
 }
-

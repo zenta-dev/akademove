@@ -20,22 +20,24 @@ class SuspendDriver {
   const SuspendDriver({
     required this.id,
     required this.reason,
-     this.suspendUntil,
+    this.suspendUntil,
   });
   @JsonKey(name: r'id', required: true, includeIfNull: true)
   final String? id;
-  
+
   @JsonKey(name: r'reason', required: true, includeIfNull: false)
   final String reason;
-  
+
   @JsonKey(name: r'suspendUntil', required: false, includeIfNull: false)
   final DateTime? suspendUntil;
-  
+
   @override
-  bool operator ==(Object other) => identical(this, other) || other is SuspendDriver &&
-    other.id == id &&
-    other.reason == reason &&
-    other.suspendUntil == suspendUntil;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is SuspendDriver &&
+          other.id == id &&
+          other.reason == reason &&
+          other.suspendUntil == suspendUntil;
 
   @override
   int get hashCode =>
@@ -43,7 +45,8 @@ class SuspendDriver {
       reason.hashCode +
       (suspendUntil == null ? 0 : suspendUntil.hashCode);
 
-  factory SuspendDriver.fromJson(Map<String, dynamic> json) => _$SuspendDriverFromJson(json);
+  factory SuspendDriver.fromJson(Map<String, dynamic> json) =>
+      _$SuspendDriverFromJson(json);
 
   Map<String, dynamic> toJson() => _$SuspendDriverToJson(this);
 
@@ -51,6 +54,4 @@ class SuspendDriver {
   String toString() {
     return toJson().toString();
   }
-
 }
-

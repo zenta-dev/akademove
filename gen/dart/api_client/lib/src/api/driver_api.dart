@@ -31,18 +31,17 @@ import 'package:api_client/src/model/pagination_order.dart';
 import 'package:api_client/src/model/user_gender.dart';
 
 class DriverApi {
-
   final Dio _dio;
 
   const DriverApi(this._dio);
 
   /// analyticsExportDriverAnalytics
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [driverId] 
-  /// * [startDate] 
-  /// * [endDate] 
+  /// * [driverId]
+  /// * [startDate]
+  /// * [endDate]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -52,7 +51,7 @@ class DriverApi {
   ///
   /// Returns a [Future] containing a [Response] with a [String] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<String>> analyticsExportDriverAnalytics({ 
+  Future<Response<String>> analyticsExportDriverAnalytics({
     required String driverId,
     DateTime? startDate,
     DateTime? endDate,
@@ -63,19 +62,18 @@ class DriverApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/analytics/driver/{driverId}/export'.replaceAll('{' r'driverId' '}', driverId.toString());
+    final _path = r'/analytics/driver/{driverId}/export'.replaceAll(
+      '{'
+      r'driverId'
+      '}',
+      driverId.toString(),
+    );
     final _options = Options(
       method: r'GET',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -100,7 +98,9 @@ class DriverApi {
 
     try {
       final rawData = _response.data;
-_responseData = rawData == null ? null : deserialize<String, String>(rawData, 'String', growable: true);
+      _responseData = rawData == null
+          ? null
+          : deserialize<String, String>(rawData, 'String', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -124,10 +124,10 @@ _responseData = rawData == null ? null : deserialize<String, String>(rawData, 'S
   }
 
   /// driverGet
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [id] 
+  /// * [id]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -137,7 +137,7 @@ _responseData = rawData == null ? null : deserialize<String, String>(rawData, 'S
   ///
   /// Returns a [Future] containing a [Response] with a [DriverGet200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<DriverGet200Response>> driverGet({ 
+  Future<Response<DriverGet200Response>> driverGet({
     required String id,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -146,19 +146,18 @@ _responseData = rawData == null ? null : deserialize<String, String>(rawData, 'S
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/drivers/{id}'.replaceAll('{' r'id' '}', id.toString());
+    final _path = r'/drivers/{id}'.replaceAll(
+      '{'
+      r'id'
+      '}',
+      id.toString(),
+    );
     final _options = Options(
       method: r'GET',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -177,7 +176,13 @@ _responseData = rawData == null ? null : deserialize<String, String>(rawData, 'S
 
     try {
       final rawData = _response.data;
-_responseData = rawData == null ? null : deserialize<DriverGet200Response, DriverGet200Response>(rawData, 'DriverGet200Response', growable: true);
+      _responseData = rawData == null
+          ? null
+          : deserialize<DriverGet200Response, DriverGet200Response>(
+              rawData,
+              'DriverGet200Response',
+              growable: true,
+            );
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -201,13 +206,13 @@ _responseData = rawData == null ? null : deserialize<DriverGet200Response, Drive
   }
 
   /// driverGetAnalytics
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [id] 
-  /// * [period] 
-  /// * [startDate] 
-  /// * [endDate] 
+  /// * [id]
+  /// * [period]
+  /// * [startDate]
+  /// * [endDate]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -217,7 +222,7 @@ _responseData = rawData == null ? null : deserialize<DriverGet200Response, Drive
   ///
   /// Returns a [Future] containing a [Response] with a [DriverGetAnalytics200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<DriverGetAnalytics200Response>> driverGetAnalytics({ 
+  Future<Response<DriverGetAnalytics200Response>> driverGetAnalytics({
     required String id,
     String? period,
     DateTime? startDate,
@@ -229,19 +234,18 @@ _responseData = rawData == null ? null : deserialize<DriverGet200Response, Drive
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/drivers/{id}/analytics'.replaceAll('{' r'id' '}', id.toString());
+    final _path = r'/drivers/{id}/analytics'.replaceAll(
+      '{'
+      r'id'
+      '}',
+      id.toString(),
+    );
     final _options = Options(
       method: r'GET',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -267,7 +271,12 @@ _responseData = rawData == null ? null : deserialize<DriverGet200Response, Drive
 
     try {
       final rawData = _response.data;
-_responseData = rawData == null ? null : deserialize<DriverGetAnalytics200Response, DriverGetAnalytics200Response>(rawData, 'DriverGetAnalytics200Response', growable: true);
+      _responseData = rawData == null
+          ? null
+          : deserialize<
+              DriverGetAnalytics200Response,
+              DriverGetAnalytics200Response
+            >(rawData, 'DriverGetAnalytics200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -291,7 +300,7 @@ _responseData = rawData == null ? null : deserialize<DriverGetAnalytics200Respon
   }
 
   /// driverGetMine
-  /// 
+  ///
   ///
   /// Parameters:
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
@@ -303,7 +312,7 @@ _responseData = rawData == null ? null : deserialize<DriverGetAnalytics200Respon
   ///
   /// Returns a [Future] containing a [Response] with a [DriverGetMine200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<DriverGetMine200Response>> driverGetMine({ 
+  Future<Response<DriverGetMine200Response>> driverGetMine({
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -314,16 +323,10 @@ _responseData = rawData == null ? null : deserialize<DriverGetAnalytics200Respon
     final _path = r'/drivers/mine';
     final _options = Options(
       method: r'GET',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -342,7 +345,13 @@ _responseData = rawData == null ? null : deserialize<DriverGetAnalytics200Respon
 
     try {
       final rawData = _response.data;
-_responseData = rawData == null ? null : deserialize<DriverGetMine200Response, DriverGetMine200Response>(rawData, 'DriverGetMine200Response', growable: true);
+      _responseData = rawData == null
+          ? null
+          : deserialize<DriverGetMine200Response, DriverGetMine200Response>(
+              rawData,
+              'DriverGetMine200Response',
+              growable: true,
+            );
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -366,10 +375,10 @@ _responseData = rawData == null ? null : deserialize<DriverGetMine200Response, D
   }
 
   /// driverGetReview
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [id] 
+  /// * [id]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -379,7 +388,7 @@ _responseData = rawData == null ? null : deserialize<DriverGetMine200Response, D
   ///
   /// Returns a [Future] containing a [Response] with a [DriverGetReview200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<DriverGetReview200Response>> driverGetReview({ 
+  Future<Response<DriverGetReview200Response>> driverGetReview({
     required String id,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -388,19 +397,18 @@ _responseData = rawData == null ? null : deserialize<DriverGetMine200Response, D
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/drivers/{id}/approval-review'.replaceAll('{' r'id' '}', id.toString());
+    final _path = r'/drivers/{id}/approval-review'.replaceAll(
+      '{'
+      r'id'
+      '}',
+      id.toString(),
+    );
     final _options = Options(
       method: r'GET',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -419,7 +427,13 @@ _responseData = rawData == null ? null : deserialize<DriverGetMine200Response, D
 
     try {
       final rawData = _response.data;
-_responseData = rawData == null ? null : deserialize<DriverGetReview200Response, DriverGetReview200Response>(rawData, 'DriverGetReview200Response', growable: true);
+      _responseData = rawData == null
+          ? null
+          : deserialize<DriverGetReview200Response, DriverGetReview200Response>(
+              rawData,
+              'DriverGetReview200Response',
+              growable: true,
+            );
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -443,21 +457,21 @@ _responseData = rawData == null ? null : deserialize<DriverGetReview200Response,
   }
 
   /// driverList
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [cursor] 
-  /// * [limit] 
-  /// * [direction] 
-  /// * [page] 
-  /// * [query] 
-  /// * [sortBy] 
-  /// * [order] 
-  /// * [mode] 
-  /// * [statuses] 
-  /// * [isOnline] 
-  /// * [minRating] 
-  /// * [maxRating] 
+  /// * [cursor]
+  /// * [limit]
+  /// * [direction]
+  /// * [page]
+  /// * [query]
+  /// * [sortBy]
+  /// * [order]
+  /// * [mode]
+  /// * [statuses]
+  /// * [isOnline]
+  /// * [minRating]
+  /// * [maxRating]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -467,7 +481,7 @@ _responseData = rawData == null ? null : deserialize<DriverGetReview200Response,
   ///
   /// Returns a [Future] containing a [Response] with a [DriverList200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<DriverList200Response>> driverList({ 
+  Future<Response<DriverList200Response>> driverList({
     String? cursor,
     Object? limit,
     String? direction,
@@ -490,16 +504,10 @@ _responseData = rawData == null ? null : deserialize<DriverGetReview200Response,
     final _path = r'/drivers';
     final _options = Options(
       method: r'GET',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -534,7 +542,13 @@ _responseData = rawData == null ? null : deserialize<DriverGetReview200Response,
 
     try {
       final rawData = _response.data;
-_responseData = rawData == null ? null : deserialize<DriverList200Response, DriverList200Response>(rawData, 'DriverList200Response', growable: true);
+      _responseData = rawData == null
+          ? null
+          : deserialize<DriverList200Response, DriverList200Response>(
+              rawData,
+              'DriverList200Response',
+              growable: true,
+            );
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -558,14 +572,14 @@ _responseData = rawData == null ? null : deserialize<DriverList200Response, Driv
   }
 
   /// driverNearby
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [x] 
-  /// * [y] 
-  /// * [radiusKm] 
-  /// * [limit] 
-  /// * [gender] 
+  /// * [x]
+  /// * [y]
+  /// * [radiusKm]
+  /// * [limit]
+  /// * [gender]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -575,7 +589,7 @@ _responseData = rawData == null ? null : deserialize<DriverList200Response, Driv
   ///
   /// Returns a [Future] containing a [Response] with a [DriverList200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<DriverList200Response>> driverNearby({ 
+  Future<Response<DriverList200Response>> driverNearby({
     required num x,
     required num y,
     required num radiusKm,
@@ -591,16 +605,10 @@ _responseData = rawData == null ? null : deserialize<DriverList200Response, Driv
     final _path = r'/drivers/nearby';
     final _options = Options(
       method: r'GET',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -628,7 +636,13 @@ _responseData = rawData == null ? null : deserialize<DriverList200Response, Driv
 
     try {
       final rawData = _response.data;
-_responseData = rawData == null ? null : deserialize<DriverList200Response, DriverList200Response>(rawData, 'DriverList200Response', growable: true);
+      _responseData = rawData == null
+          ? null
+          : deserialize<DriverList200Response, DriverList200Response>(
+              rawData,
+              'DriverList200Response',
+              growable: true,
+            );
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -652,10 +666,10 @@ _responseData = rawData == null ? null : deserialize<DriverList200Response, Driv
   }
 
   /// driverRemove
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [id] 
+  /// * [id]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -665,7 +679,7 @@ _responseData = rawData == null ? null : deserialize<DriverList200Response, Driv
   ///
   /// Returns a [Future] containing a [Response] with a [BadgeRemove200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<BadgeRemove200Response>> driverRemove({ 
+  Future<Response<BadgeRemove200Response>> driverRemove({
     required String id,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -674,19 +688,18 @@ _responseData = rawData == null ? null : deserialize<DriverList200Response, Driv
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/drivers/{id}'.replaceAll('{' r'id' '}', id.toString());
+    final _path = r'/drivers/{id}'.replaceAll(
+      '{'
+      r'id'
+      '}',
+      id.toString(),
+    );
     final _options = Options(
       method: r'DELETE',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -705,7 +718,13 @@ _responseData = rawData == null ? null : deserialize<DriverList200Response, Driv
 
     try {
       final rawData = _response.data;
-_responseData = rawData == null ? null : deserialize<BadgeRemove200Response, BadgeRemove200Response>(rawData, 'BadgeRemove200Response', growable: true);
+      _responseData = rawData == null
+          ? null
+          : deserialize<BadgeRemove200Response, BadgeRemove200Response>(
+              rawData,
+              'BadgeRemove200Response',
+              growable: true,
+            );
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -729,11 +748,11 @@ _responseData = rawData == null ? null : deserialize<BadgeRemove200Response, Bad
   }
 
   /// driverScheduleCreate
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [driverId] 
-  /// * [driverScheduleCreateRequest] 
+  /// * [driverId]
+  /// * [driverScheduleCreateRequest]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -743,7 +762,7 @@ _responseData = rawData == null ? null : deserialize<BadgeRemove200Response, Bad
   ///
   /// Returns a [Future] containing a [Response] with a [DriverScheduleCreate200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<DriverScheduleCreate200Response>> driverScheduleCreate({ 
+  Future<Response<DriverScheduleCreate200Response>> driverScheduleCreate({
     required String driverId,
     required DriverScheduleCreateRequest driverScheduleCreateRequest,
     CancelToken? cancelToken,
@@ -753,19 +772,18 @@ _responseData = rawData == null ? null : deserialize<BadgeRemove200Response, Bad
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/drivers/{driverId}/schedules'.replaceAll('{' r'driverId' '}', driverId.toString());
+    final _path = r'/drivers/{driverId}/schedules'.replaceAll(
+      '{'
+      r'driverId'
+      '}',
+      driverId.toString(),
+    );
     final _options = Options(
       method: r'POST',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -776,13 +794,10 @@ _responseData = rawData == null ? null : deserialize<BadgeRemove200Response, Bad
     dynamic _bodyData;
 
     try {
-        _bodyData=jsonEncode(driverScheduleCreateRequest);
-    } catch(error, stackTrace) {
+      _bodyData = jsonEncode(driverScheduleCreateRequest);
+    } catch (error, stackTrace) {
       throw DioException(
-         requestOptions: _options.compose(
-          _dio.options,
-          _path,
-        ),
+        requestOptions: _options.compose(_dio.options, _path),
         type: DioExceptionType.unknown,
         error: error,
         stackTrace: stackTrace,
@@ -802,7 +817,12 @@ _responseData = rawData == null ? null : deserialize<BadgeRemove200Response, Bad
 
     try {
       final rawData = _response.data;
-_responseData = rawData == null ? null : deserialize<DriverScheduleCreate200Response, DriverScheduleCreate200Response>(rawData, 'DriverScheduleCreate200Response', growable: true);
+      _responseData = rawData == null
+          ? null
+          : deserialize<
+              DriverScheduleCreate200Response,
+              DriverScheduleCreate200Response
+            >(rawData, 'DriverScheduleCreate200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -826,11 +846,11 @@ _responseData = rawData == null ? null : deserialize<DriverScheduleCreate200Resp
   }
 
   /// driverScheduleGet
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [driverId] 
-  /// * [id] 
+  /// * [driverId]
+  /// * [id]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -840,7 +860,7 @@ _responseData = rawData == null ? null : deserialize<DriverScheduleCreate200Resp
   ///
   /// Returns a [Future] containing a [Response] with a [DriverScheduleCreate200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<DriverScheduleCreate200Response>> driverScheduleGet({ 
+  Future<Response<DriverScheduleCreate200Response>> driverScheduleGet({
     required String driverId,
     required String id,
     CancelToken? cancelToken,
@@ -850,19 +870,25 @@ _responseData = rawData == null ? null : deserialize<DriverScheduleCreate200Resp
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/drivers/{driverId}/schedules/{id}'.replaceAll('{' r'driverId' '}', driverId.toString()).replaceAll('{' r'id' '}', id.toString());
+    final _path = r'/drivers/{driverId}/schedules/{id}'
+        .replaceAll(
+          '{'
+          r'driverId'
+          '}',
+          driverId.toString(),
+        )
+        .replaceAll(
+          '{'
+          r'id'
+          '}',
+          id.toString(),
+        );
     final _options = Options(
       method: r'GET',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -881,7 +907,12 @@ _responseData = rawData == null ? null : deserialize<DriverScheduleCreate200Resp
 
     try {
       final rawData = _response.data;
-_responseData = rawData == null ? null : deserialize<DriverScheduleCreate200Response, DriverScheduleCreate200Response>(rawData, 'DriverScheduleCreate200Response', growable: true);
+      _responseData = rawData == null
+          ? null
+          : deserialize<
+              DriverScheduleCreate200Response,
+              DriverScheduleCreate200Response
+            >(rawData, 'DriverScheduleCreate200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -905,18 +936,18 @@ _responseData = rawData == null ? null : deserialize<DriverScheduleCreate200Resp
   }
 
   /// driverScheduleList
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [driverId] 
-  /// * [cursor] 
-  /// * [limit] 
-  /// * [direction] 
-  /// * [page] 
-  /// * [query] 
-  /// * [sortBy] 
-  /// * [order] 
-  /// * [mode] 
+  /// * [driverId]
+  /// * [cursor]
+  /// * [limit]
+  /// * [direction]
+  /// * [page]
+  /// * [query]
+  /// * [sortBy]
+  /// * [order]
+  /// * [mode]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -926,7 +957,7 @@ _responseData = rawData == null ? null : deserialize<DriverScheduleCreate200Resp
   ///
   /// Returns a [Future] containing a [Response] with a [DriverScheduleList200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<DriverScheduleList200Response>> driverScheduleList({ 
+  Future<Response<DriverScheduleList200Response>> driverScheduleList({
     required String driverId,
     String? cursor,
     Object? limit,
@@ -943,19 +974,18 @@ _responseData = rawData == null ? null : deserialize<DriverScheduleCreate200Resp
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/drivers/{driverId}/schedules'.replaceAll('{' r'driverId' '}', driverId.toString());
+    final _path = r'/drivers/{driverId}/schedules'.replaceAll(
+      '{'
+      r'driverId'
+      '}',
+      driverId.toString(),
+    );
     final _options = Options(
       method: r'GET',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -986,7 +1016,12 @@ _responseData = rawData == null ? null : deserialize<DriverScheduleCreate200Resp
 
     try {
       final rawData = _response.data;
-_responseData = rawData == null ? null : deserialize<DriverScheduleList200Response, DriverScheduleList200Response>(rawData, 'DriverScheduleList200Response', growable: true);
+      _responseData = rawData == null
+          ? null
+          : deserialize<
+              DriverScheduleList200Response,
+              DriverScheduleList200Response
+            >(rawData, 'DriverScheduleList200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -1010,11 +1045,11 @@ _responseData = rawData == null ? null : deserialize<DriverScheduleList200Respon
   }
 
   /// driverScheduleRemove
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [driverId] 
-  /// * [id] 
+  /// * [driverId]
+  /// * [id]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -1024,7 +1059,7 @@ _responseData = rawData == null ? null : deserialize<DriverScheduleList200Respon
   ///
   /// Returns a [Future] containing a [Response] with a [BadgeRemove200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<BadgeRemove200Response>> driverScheduleRemove({ 
+  Future<Response<BadgeRemove200Response>> driverScheduleRemove({
     required String driverId,
     required String id,
     CancelToken? cancelToken,
@@ -1034,19 +1069,25 @@ _responseData = rawData == null ? null : deserialize<DriverScheduleList200Respon
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/drivers/{driverId}/schedules/{id}'.replaceAll('{' r'driverId' '}', driverId.toString()).replaceAll('{' r'id' '}', id.toString());
+    final _path = r'/drivers/{driverId}/schedules/{id}'
+        .replaceAll(
+          '{'
+          r'driverId'
+          '}',
+          driverId.toString(),
+        )
+        .replaceAll(
+          '{'
+          r'id'
+          '}',
+          id.toString(),
+        );
     final _options = Options(
       method: r'DELETE',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -1065,7 +1106,13 @@ _responseData = rawData == null ? null : deserialize<DriverScheduleList200Respon
 
     try {
       final rawData = _response.data;
-_responseData = rawData == null ? null : deserialize<BadgeRemove200Response, BadgeRemove200Response>(rawData, 'BadgeRemove200Response', growable: true);
+      _responseData = rawData == null
+          ? null
+          : deserialize<BadgeRemove200Response, BadgeRemove200Response>(
+              rawData,
+              'BadgeRemove200Response',
+              growable: true,
+            );
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -1089,12 +1136,12 @@ _responseData = rawData == null ? null : deserialize<BadgeRemove200Response, Bad
   }
 
   /// driverScheduleUpdate
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [driverId] 
-  /// * [id] 
-  /// * [driverScheduleUpdateRequest] 
+  /// * [driverId]
+  /// * [id]
+  /// * [driverScheduleUpdateRequest]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -1104,7 +1151,7 @@ _responseData = rawData == null ? null : deserialize<BadgeRemove200Response, Bad
   ///
   /// Returns a [Future] containing a [Response] with a [DriverScheduleCreate200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<DriverScheduleCreate200Response>> driverScheduleUpdate({ 
+  Future<Response<DriverScheduleCreate200Response>> driverScheduleUpdate({
     required String driverId,
     required String id,
     required DriverScheduleUpdateRequest driverScheduleUpdateRequest,
@@ -1115,19 +1162,25 @@ _responseData = rawData == null ? null : deserialize<BadgeRemove200Response, Bad
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/drivers/{driverId}/schedules/{id}'.replaceAll('{' r'driverId' '}', driverId.toString()).replaceAll('{' r'id' '}', id.toString());
+    final _path = r'/drivers/{driverId}/schedules/{id}'
+        .replaceAll(
+          '{'
+          r'driverId'
+          '}',
+          driverId.toString(),
+        )
+        .replaceAll(
+          '{'
+          r'id'
+          '}',
+          id.toString(),
+        );
     final _options = Options(
       method: r'PUT',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -1138,13 +1191,10 @@ _responseData = rawData == null ? null : deserialize<BadgeRemove200Response, Bad
     dynamic _bodyData;
 
     try {
-        _bodyData=jsonEncode(driverScheduleUpdateRequest);
-    } catch(error, stackTrace) {
+      _bodyData = jsonEncode(driverScheduleUpdateRequest);
+    } catch (error, stackTrace) {
       throw DioException(
-         requestOptions: _options.compose(
-          _dio.options,
-          _path,
-        ),
+        requestOptions: _options.compose(_dio.options, _path),
         type: DioExceptionType.unknown,
         error: error,
         stackTrace: stackTrace,
@@ -1164,7 +1214,12 @@ _responseData = rawData == null ? null : deserialize<BadgeRemove200Response, Bad
 
     try {
       final rawData = _response.data;
-_responseData = rawData == null ? null : deserialize<DriverScheduleCreate200Response, DriverScheduleCreate200Response>(rawData, 'DriverScheduleCreate200Response', growable: true);
+      _responseData = rawData == null
+          ? null
+          : deserialize<
+              DriverScheduleCreate200Response,
+              DriverScheduleCreate200Response
+            >(rawData, 'DriverScheduleCreate200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -1188,11 +1243,11 @@ _responseData = rawData == null ? null : deserialize<DriverScheduleCreate200Resp
   }
 
   /// driverSubmitApproval
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [id] 
-  /// * [driverSubmitApprovalRequest] 
+  /// * [id]
+  /// * [driverSubmitApprovalRequest]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -1202,7 +1257,7 @@ _responseData = rawData == null ? null : deserialize<DriverScheduleCreate200Resp
   ///
   /// Returns a [Future] containing a [Response] with a [DriverGetReview200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<DriverGetReview200Response>> driverSubmitApproval({ 
+  Future<Response<DriverGetReview200Response>> driverSubmitApproval({
     required String id,
     required DriverSubmitApprovalRequest driverSubmitApprovalRequest,
     CancelToken? cancelToken,
@@ -1212,19 +1267,18 @@ _responseData = rawData == null ? null : deserialize<DriverScheduleCreate200Resp
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/drivers/{id}/approval-review/submit-approval'.replaceAll('{' r'id' '}', id.toString());
+    final _path = r'/drivers/{id}/approval-review/submit-approval'.replaceAll(
+      '{'
+      r'id'
+      '}',
+      id.toString(),
+    );
     final _options = Options(
       method: r'POST',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -1235,13 +1289,10 @@ _responseData = rawData == null ? null : deserialize<DriverScheduleCreate200Resp
     dynamic _bodyData;
 
     try {
-        _bodyData=jsonEncode(driverSubmitApprovalRequest);
-    } catch(error, stackTrace) {
+      _bodyData = jsonEncode(driverSubmitApprovalRequest);
+    } catch (error, stackTrace) {
       throw DioException(
-         requestOptions: _options.compose(
-          _dio.options,
-          _path,
-        ),
+        requestOptions: _options.compose(_dio.options, _path),
         type: DioExceptionType.unknown,
         error: error,
         stackTrace: stackTrace,
@@ -1261,7 +1312,13 @@ _responseData = rawData == null ? null : deserialize<DriverScheduleCreate200Resp
 
     try {
       final rawData = _response.data;
-_responseData = rawData == null ? null : deserialize<DriverGetReview200Response, DriverGetReview200Response>(rawData, 'DriverGetReview200Response', growable: true);
+      _responseData = rawData == null
+          ? null
+          : deserialize<DriverGetReview200Response, DriverGetReview200Response>(
+              rawData,
+              'DriverGetReview200Response',
+              growable: true,
+            );
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -1285,11 +1342,11 @@ _responseData = rawData == null ? null : deserialize<DriverGetReview200Response,
   }
 
   /// driverSubmitRejection
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [id] 
-  /// * [driverSubmitRejectionRequest] 
+  /// * [id]
+  /// * [driverSubmitRejectionRequest]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -1299,7 +1356,7 @@ _responseData = rawData == null ? null : deserialize<DriverGetReview200Response,
   ///
   /// Returns a [Future] containing a [Response] with a [DriverGetReview200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<DriverGetReview200Response>> driverSubmitRejection({ 
+  Future<Response<DriverGetReview200Response>> driverSubmitRejection({
     required String id,
     required DriverSubmitRejectionRequest driverSubmitRejectionRequest,
     CancelToken? cancelToken,
@@ -1309,19 +1366,18 @@ _responseData = rawData == null ? null : deserialize<DriverGetReview200Response,
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/drivers/{id}/approval-review/submit-rejection'.replaceAll('{' r'id' '}', id.toString());
+    final _path = r'/drivers/{id}/approval-review/submit-rejection'.replaceAll(
+      '{'
+      r'id'
+      '}',
+      id.toString(),
+    );
     final _options = Options(
       method: r'POST',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -1332,13 +1388,10 @@ _responseData = rawData == null ? null : deserialize<DriverGetReview200Response,
     dynamic _bodyData;
 
     try {
-        _bodyData=jsonEncode(driverSubmitRejectionRequest);
-    } catch(error, stackTrace) {
+      _bodyData = jsonEncode(driverSubmitRejectionRequest);
+    } catch (error, stackTrace) {
       throw DioException(
-         requestOptions: _options.compose(
-          _dio.options,
-          _path,
-        ),
+        requestOptions: _options.compose(_dio.options, _path),
         type: DioExceptionType.unknown,
         error: error,
         stackTrace: stackTrace,
@@ -1358,7 +1411,13 @@ _responseData = rawData == null ? null : deserialize<DriverGetReview200Response,
 
     try {
       final rawData = _response.data;
-_responseData = rawData == null ? null : deserialize<DriverGetReview200Response, DriverGetReview200Response>(rawData, 'DriverGetReview200Response', growable: true);
+      _responseData = rawData == null
+          ? null
+          : deserialize<DriverGetReview200Response, DriverGetReview200Response>(
+              rawData,
+              'DriverGetReview200Response',
+              growable: true,
+            );
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -1382,20 +1441,20 @@ _responseData = rawData == null ? null : deserialize<DriverGetReview200Response,
   }
 
   /// driverUpdate
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [id] 
-  /// * [studentId] 
-  /// * [licensePlate] 
-  /// * [bankProvider] 
-  /// * [bankNumber] 
-  /// * [isTakingOrder] 
+  /// * [id]
+  /// * [studentId]
+  /// * [licensePlate]
+  /// * [bankProvider]
+  /// * [bankNumber]
+  /// * [isTakingOrder]
   /// * [currentLocationX] - Longitude (X-axis, East-West)
   /// * [currentLocationY] - Latitude (Y-axis, North-South)
-  /// * [studentCard] 
-  /// * [driverLicense] 
-  /// * [vehicleCertificate] 
+  /// * [studentCard]
+  /// * [driverLicense]
+  /// * [vehicleCertificate]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -1405,7 +1464,7 @@ _responseData = rawData == null ? null : deserialize<DriverGetReview200Response,
   ///
   /// Returns a [Future] containing a [Response] with a [DriverGet200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<DriverGet200Response>> driverUpdate({ 
+  Future<Response<DriverGet200Response>> driverUpdate({
     required String id,
     num? studentId,
     String? licensePlate,
@@ -1424,19 +1483,18 @@ _responseData = rawData == null ? null : deserialize<DriverGetReview200Response,
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/drivers/{id}'.replaceAll('{' r'id' '}', id.toString());
+    final _path = r'/drivers/{id}'.replaceAll(
+      '{'
+      r'id'
+      '}',
+      id.toString(),
+    );
     final _options = Options(
       method: r'PUT',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -1447,25 +1505,22 @@ _responseData = rawData == null ? null : deserialize<DriverGetReview200Response,
     dynamic _bodyData;
 
     try {
-        _bodyData = FormData.fromMap(<String, dynamic>{
-    if (studentId != null) r'studentId': studentId,
-    if (licensePlate != null) r'licensePlate': licensePlate,
-    if (bankProvider != null) r'bank_provider': bankProvider,
-    if (bankNumber != null) r'bank_number': bankNumber,
-    if (isTakingOrder != null) r'isTakingOrder': isTakingOrder,
-    if (currentLocationX != null) r'currentLocation_x': currentLocationX,
-    if (currentLocationY != null) r'currentLocation_y': currentLocationY,
-    if (studentCard != null) r'studentCard':  studentCard ,
-    if (driverLicense != null) r'driverLicense':  driverLicense ,
-    if (vehicleCertificate != null) r'vehicleCertificate':  vehicleCertificate ,
-  });
-  
-    } catch(error, stackTrace) {
+      _bodyData = FormData.fromMap(<String, dynamic>{
+        if (studentId != null) r'studentId': studentId,
+        if (licensePlate != null) r'licensePlate': licensePlate,
+        if (bankProvider != null) r'bank_provider': bankProvider,
+        if (bankNumber != null) r'bank_number': bankNumber,
+        if (isTakingOrder != null) r'isTakingOrder': isTakingOrder,
+        if (currentLocationX != null) r'currentLocation_x': currentLocationX,
+        if (currentLocationY != null) r'currentLocation_y': currentLocationY,
+        if (studentCard != null) r'studentCard': studentCard,
+        if (driverLicense != null) r'driverLicense': driverLicense,
+        if (vehicleCertificate != null)
+          r'vehicleCertificate': vehicleCertificate,
+      });
+    } catch (error, stackTrace) {
       throw DioException(
-         requestOptions: _options.compose(
-          _dio.options,
-          _path,
-        ),
+        requestOptions: _options.compose(_dio.options, _path),
         type: DioExceptionType.unknown,
         error: error,
         stackTrace: stackTrace,
@@ -1485,7 +1540,13 @@ _responseData = rawData == null ? null : deserialize<DriverGetReview200Response,
 
     try {
       final rawData = _response.data;
-_responseData = rawData == null ? null : deserialize<DriverGet200Response, DriverGet200Response>(rawData, 'DriverGet200Response', growable: true);
+      _responseData = rawData == null
+          ? null
+          : deserialize<DriverGet200Response, DriverGet200Response>(
+              rawData,
+              'DriverGet200Response',
+              growable: true,
+            );
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -1509,11 +1570,11 @@ _responseData = rawData == null ? null : deserialize<DriverGet200Response, Drive
   }
 
   /// driverUpdateDocumentStatus
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [id] 
-  /// * [driverUpdateDocumentStatusRequest] 
+  /// * [id]
+  /// * [driverUpdateDocumentStatusRequest]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -1523,9 +1584,10 @@ _responseData = rawData == null ? null : deserialize<DriverGet200Response, Drive
   ///
   /// Returns a [Future] containing a [Response] with a [DriverGetReview200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<DriverGetReview200Response>> driverUpdateDocumentStatus({ 
+  Future<Response<DriverGetReview200Response>> driverUpdateDocumentStatus({
     required String id,
-    required DriverUpdateDocumentStatusRequest driverUpdateDocumentStatusRequest,
+    required DriverUpdateDocumentStatusRequest
+    driverUpdateDocumentStatusRequest,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -1533,19 +1595,18 @@ _responseData = rawData == null ? null : deserialize<DriverGet200Response, Drive
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/drivers/{id}/approval-review/update-document'.replaceAll('{' r'id' '}', id.toString());
+    final _path = r'/drivers/{id}/approval-review/update-document'.replaceAll(
+      '{'
+      r'id'
+      '}',
+      id.toString(),
+    );
     final _options = Options(
       method: r'POST',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -1556,13 +1617,10 @@ _responseData = rawData == null ? null : deserialize<DriverGet200Response, Drive
     dynamic _bodyData;
 
     try {
-        _bodyData=jsonEncode(driverUpdateDocumentStatusRequest);
-    } catch(error, stackTrace) {
+      _bodyData = jsonEncode(driverUpdateDocumentStatusRequest);
+    } catch (error, stackTrace) {
       throw DioException(
-         requestOptions: _options.compose(
-          _dio.options,
-          _path,
-        ),
+        requestOptions: _options.compose(_dio.options, _path),
         type: DioExceptionType.unknown,
         error: error,
         stackTrace: stackTrace,
@@ -1582,7 +1640,13 @@ _responseData = rawData == null ? null : deserialize<DriverGet200Response, Drive
 
     try {
       final rawData = _response.data;
-_responseData = rawData == null ? null : deserialize<DriverGetReview200Response, DriverGetReview200Response>(rawData, 'DriverGetReview200Response', growable: true);
+      _responseData = rawData == null
+          ? null
+          : deserialize<DriverGetReview200Response, DriverGetReview200Response>(
+              rawData,
+              'DriverGetReview200Response',
+              growable: true,
+            );
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -1606,11 +1670,11 @@ _responseData = rawData == null ? null : deserialize<DriverGetReview200Response,
   }
 
   /// driverUpdateLocation
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [id] 
-  /// * [coordinateWithMeta] 
+  /// * [id]
+  /// * [coordinateWithMeta]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -1620,7 +1684,7 @@ _responseData = rawData == null ? null : deserialize<DriverGetReview200Response,
   ///
   /// Returns a [Future] containing a [Response] with a [DriverGet200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<DriverGet200Response>> driverUpdateLocation({ 
+  Future<Response<DriverGet200Response>> driverUpdateLocation({
     required String id,
     required CoordinateWithMeta coordinateWithMeta,
     CancelToken? cancelToken,
@@ -1630,19 +1694,18 @@ _responseData = rawData == null ? null : deserialize<DriverGetReview200Response,
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/drivers/{id}/location'.replaceAll('{' r'id' '}', id.toString());
+    final _path = r'/drivers/{id}/location'.replaceAll(
+      '{'
+      r'id'
+      '}',
+      id.toString(),
+    );
     final _options = Options(
       method: r'PUT',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -1653,13 +1716,10 @@ _responseData = rawData == null ? null : deserialize<DriverGetReview200Response,
     dynamic _bodyData;
 
     try {
-        _bodyData=jsonEncode(coordinateWithMeta);
-    } catch(error, stackTrace) {
+      _bodyData = jsonEncode(coordinateWithMeta);
+    } catch (error, stackTrace) {
       throw DioException(
-         requestOptions: _options.compose(
-          _dio.options,
-          _path,
-        ),
+        requestOptions: _options.compose(_dio.options, _path),
         type: DioExceptionType.unknown,
         error: error,
         stackTrace: stackTrace,
@@ -1679,7 +1739,13 @@ _responseData = rawData == null ? null : deserialize<DriverGetReview200Response,
 
     try {
       final rawData = _response.data;
-_responseData = rawData == null ? null : deserialize<DriverGet200Response, DriverGet200Response>(rawData, 'DriverGet200Response', growable: true);
+      _responseData = rawData == null
+          ? null
+          : deserialize<DriverGet200Response, DriverGet200Response>(
+              rawData,
+              'DriverGet200Response',
+              growable: true,
+            );
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -1703,11 +1769,11 @@ _responseData = rawData == null ? null : deserialize<DriverGet200Response, Drive
   }
 
   /// driverUpdateOnlineStatus
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [id] 
-  /// * [driverUpdateOnlineStatusRequest] 
+  /// * [id]
+  /// * [driverUpdateOnlineStatusRequest]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -1717,7 +1783,7 @@ _responseData = rawData == null ? null : deserialize<DriverGet200Response, Drive
   ///
   /// Returns a [Future] containing a [Response] with a [DriverGet200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<DriverGet200Response>> driverUpdateOnlineStatus({ 
+  Future<Response<DriverGet200Response>> driverUpdateOnlineStatus({
     required String id,
     required DriverUpdateOnlineStatusRequest driverUpdateOnlineStatusRequest,
     CancelToken? cancelToken,
@@ -1727,19 +1793,18 @@ _responseData = rawData == null ? null : deserialize<DriverGet200Response, Drive
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/drivers/{id}/update-online-status'.replaceAll('{' r'id' '}', id.toString());
+    final _path = r'/drivers/{id}/update-online-status'.replaceAll(
+      '{'
+      r'id'
+      '}',
+      id.toString(),
+    );
     final _options = Options(
       method: r'POST',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -1750,13 +1815,10 @@ _responseData = rawData == null ? null : deserialize<DriverGet200Response, Drive
     dynamic _bodyData;
 
     try {
-        _bodyData=jsonEncode(driverUpdateOnlineStatusRequest);
-    } catch(error, stackTrace) {
+      _bodyData = jsonEncode(driverUpdateOnlineStatusRequest);
+    } catch (error, stackTrace) {
       throw DioException(
-         requestOptions: _options.compose(
-          _dio.options,
-          _path,
-        ),
+        requestOptions: _options.compose(_dio.options, _path),
         type: DioExceptionType.unknown,
         error: error,
         stackTrace: stackTrace,
@@ -1776,7 +1838,13 @@ _responseData = rawData == null ? null : deserialize<DriverGet200Response, Drive
 
     try {
       final rawData = _response.data;
-_responseData = rawData == null ? null : deserialize<DriverGet200Response, DriverGet200Response>(rawData, 'DriverGet200Response', growable: true);
+      _responseData = rawData == null
+          ? null
+          : deserialize<DriverGet200Response, DriverGet200Response>(
+              rawData,
+              'DriverGet200Response',
+              growable: true,
+            );
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -1800,11 +1868,11 @@ _responseData = rawData == null ? null : deserialize<DriverGet200Response, Drive
   }
 
   /// driverUpdateTakingOrderStatus
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [id] 
-  /// * [driverUpdateTakingOrderStatusRequest] 
+  /// * [id]
+  /// * [driverUpdateTakingOrderStatusRequest]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -1814,9 +1882,10 @@ _responseData = rawData == null ? null : deserialize<DriverGet200Response, Drive
   ///
   /// Returns a [Future] containing a [Response] with a [DriverGet200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<DriverGet200Response>> driverUpdateTakingOrderStatus({ 
+  Future<Response<DriverGet200Response>> driverUpdateTakingOrderStatus({
     required String id,
-    required DriverUpdateTakingOrderStatusRequest driverUpdateTakingOrderStatusRequest,
+    required DriverUpdateTakingOrderStatusRequest
+    driverUpdateTakingOrderStatusRequest,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -1824,19 +1893,18 @@ _responseData = rawData == null ? null : deserialize<DriverGet200Response, Drive
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/drivers/{id}/update-taking-order-status'.replaceAll('{' r'id' '}', id.toString());
+    final _path = r'/drivers/{id}/update-taking-order-status'.replaceAll(
+      '{'
+      r'id'
+      '}',
+      id.toString(),
+    );
     final _options = Options(
       method: r'POST',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -1847,13 +1915,10 @@ _responseData = rawData == null ? null : deserialize<DriverGet200Response, Drive
     dynamic _bodyData;
 
     try {
-        _bodyData=jsonEncode(driverUpdateTakingOrderStatusRequest);
-    } catch(error, stackTrace) {
+      _bodyData = jsonEncode(driverUpdateTakingOrderStatusRequest);
+    } catch (error, stackTrace) {
       throw DioException(
-         requestOptions: _options.compose(
-          _dio.options,
-          _path,
-        ),
+        requestOptions: _options.compose(_dio.options, _path),
         type: DioExceptionType.unknown,
         error: error,
         stackTrace: stackTrace,
@@ -1873,7 +1938,13 @@ _responseData = rawData == null ? null : deserialize<DriverGet200Response, Drive
 
     try {
       final rawData = _response.data;
-_responseData = rawData == null ? null : deserialize<DriverGet200Response, DriverGet200Response>(rawData, 'DriverGet200Response', growable: true);
+      _responseData = rawData == null
+          ? null
+          : deserialize<DriverGet200Response, DriverGet200Response>(
+              rawData,
+              'DriverGet200Response',
+              growable: true,
+            );
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -1897,11 +1968,11 @@ _responseData = rawData == null ? null : deserialize<DriverGet200Response, Drive
   }
 
   /// driverVerifyQuiz
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [id] 
-  /// * [driverVerifyQuizRequest] 
+  /// * [id]
+  /// * [driverVerifyQuizRequest]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -1911,7 +1982,7 @@ _responseData = rawData == null ? null : deserialize<DriverGet200Response, Drive
   ///
   /// Returns a [Future] containing a [Response] with a [DriverGetReview200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<DriverGetReview200Response>> driverVerifyQuiz({ 
+  Future<Response<DriverGetReview200Response>> driverVerifyQuiz({
     required String id,
     required DriverVerifyQuizRequest driverVerifyQuizRequest,
     CancelToken? cancelToken,
@@ -1921,19 +1992,18 @@ _responseData = rawData == null ? null : deserialize<DriverGet200Response, Drive
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/drivers/{id}/approval-review/verify-quiz'.replaceAll('{' r'id' '}', id.toString());
+    final _path = r'/drivers/{id}/approval-review/verify-quiz'.replaceAll(
+      '{'
+      r'id'
+      '}',
+      id.toString(),
+    );
     final _options = Options(
       method: r'POST',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -1944,13 +2014,10 @@ _responseData = rawData == null ? null : deserialize<DriverGet200Response, Drive
     dynamic _bodyData;
 
     try {
-        _bodyData=jsonEncode(driverVerifyQuizRequest);
-    } catch(error, stackTrace) {
+      _bodyData = jsonEncode(driverVerifyQuizRequest);
+    } catch (error, stackTrace) {
       throw DioException(
-         requestOptions: _options.compose(
-          _dio.options,
-          _path,
-        ),
+        requestOptions: _options.compose(_dio.options, _path),
         type: DioExceptionType.unknown,
         error: error,
         stackTrace: stackTrace,
@@ -1970,7 +2037,13 @@ _responseData = rawData == null ? null : deserialize<DriverGet200Response, Drive
 
     try {
       final rawData = _response.data;
-_responseData = rawData == null ? null : deserialize<DriverGetReview200Response, DriverGetReview200Response>(rawData, 'DriverGetReview200Response', growable: true);
+      _responseData = rawData == null
+          ? null
+          : deserialize<DriverGetReview200Response, DriverGetReview200Response>(
+              rawData,
+              'DriverGetReview200Response',
+              growable: true,
+            );
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -1992,5 +2065,4 @@ _responseData = rawData == null ? null : deserialize<DriverGetReview200Response,
       extra: _response.extra,
     );
   }
-
 }

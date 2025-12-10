@@ -1,6 +1,5 @@
 /** biome-ignore-all lint/suspicious/noExplicitAny: cant cast */
 import pino from "pino";
- 
 
 export function createLogger() {
 	return pino({

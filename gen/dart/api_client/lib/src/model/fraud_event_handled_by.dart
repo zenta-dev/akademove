@@ -17,27 +17,23 @@ part 'fraud_event_handled_by.g.dart';
 )
 class FraudEventHandledBy {
   /// Returns a new [FraudEventHandledBy] instance.
-  const FraudEventHandledBy({
-    required this.id,
-    required this.name,
-  });
+  const FraudEventHandledBy({required this.id, required this.name});
   @JsonKey(name: r'id', required: true, includeIfNull: false)
   final String id;
-  
+
   @JsonKey(name: r'name', required: true, includeIfNull: false)
   final String name;
-  
-  @override
-  bool operator ==(Object other) => identical(this, other) || other is FraudEventHandledBy &&
-    other.id == id &&
-    other.name == name;
 
   @override
-  int get hashCode =>
-      id.hashCode +
-      name.hashCode;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is FraudEventHandledBy && other.id == id && other.name == name;
 
-  factory FraudEventHandledBy.fromJson(Map<String, dynamic> json) => _$FraudEventHandledByFromJson(json);
+  @override
+  int get hashCode => id.hashCode + name.hashCode;
+
+  factory FraudEventHandledBy.fromJson(Map<String, dynamic> json) =>
+      _$FraudEventHandledByFromJson(json);
 
   Map<String, dynamic> toJson() => _$FraudEventHandledByToJson(this);
 
@@ -45,6 +41,4 @@ class FraudEventHandledBy {
   String toString() {
     return toJson().toString();
   }
-
 }
-

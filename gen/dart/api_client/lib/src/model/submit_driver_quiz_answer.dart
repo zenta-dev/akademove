@@ -24,26 +24,27 @@ class SubmitDriverQuizAnswer {
   });
   @JsonKey(name: r'attemptId', required: true, includeIfNull: false)
   final String attemptId;
-  
+
   @JsonKey(name: r'questionId', required: true, includeIfNull: false)
   final String questionId;
-  
+
   @JsonKey(name: r'selectedOptionId', required: true, includeIfNull: false)
   final String selectedOptionId;
-  
+
   @override
-  bool operator ==(Object other) => identical(this, other) || other is SubmitDriverQuizAnswer &&
-    other.attemptId == attemptId &&
-    other.questionId == questionId &&
-    other.selectedOptionId == selectedOptionId;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is SubmitDriverQuizAnswer &&
+          other.attemptId == attemptId &&
+          other.questionId == questionId &&
+          other.selectedOptionId == selectedOptionId;
 
   @override
   int get hashCode =>
-      attemptId.hashCode +
-      questionId.hashCode +
-      selectedOptionId.hashCode;
+      attemptId.hashCode + questionId.hashCode + selectedOptionId.hashCode;
 
-  factory SubmitDriverQuizAnswer.fromJson(Map<String, dynamic> json) => _$SubmitDriverQuizAnswerFromJson(json);
+  factory SubmitDriverQuizAnswer.fromJson(Map<String, dynamic> json) =>
+      _$SubmitDriverQuizAnswerFromJson(json);
 
   Map<String, dynamic> toJson() => _$SubmitDriverQuizAnswerToJson(this);
 
@@ -51,6 +52,4 @@ class SubmitDriverQuizAnswer {
   String toString() {
     return toJson().toString();
   }
-
 }
-

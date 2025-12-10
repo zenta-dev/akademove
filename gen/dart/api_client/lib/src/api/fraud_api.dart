@@ -20,16 +20,15 @@ import 'package:api_client/src/model/fraud_status.dart';
 import 'package:api_client/src/model/review_fraud_event.dart';
 
 class FraudApi {
-
   final Dio _dio;
 
   const FraudApi(this._dio);
 
   /// fraudGetEvent
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [id] 
+  /// * [id]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -39,7 +38,7 @@ class FraudApi {
   ///
   /// Returns a [Future] containing a [Response] with a [FraudGetEvent200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<FraudGetEvent200Response>> fraudGetEvent({ 
+  Future<Response<FraudGetEvent200Response>> fraudGetEvent({
     required String id,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -48,19 +47,18 @@ class FraudApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/fraud/events/{id}'.replaceAll('{' r'id' '}', id.toString());
+    final _path = r'/fraud/events/{id}'.replaceAll(
+      '{'
+      r'id'
+      '}',
+      id.toString(),
+    );
     final _options = Options(
       method: r'GET',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -79,7 +77,13 @@ class FraudApi {
 
     try {
       final rawData = _response.data;
-_responseData = rawData == null ? null : deserialize<FraudGetEvent200Response, FraudGetEvent200Response>(rawData, 'FraudGetEvent200Response', growable: true);
+      _responseData = rawData == null
+          ? null
+          : deserialize<FraudGetEvent200Response, FraudGetEvent200Response>(
+              rawData,
+              'FraudGetEvent200Response',
+              growable: true,
+            );
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -103,12 +107,12 @@ _responseData = rawData == null ? null : deserialize<FraudGetEvent200Response, F
   }
 
   /// fraudGetStats
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [startDate] 
-  /// * [endDate] 
-  /// * [trendDays] 
+  /// * [startDate]
+  /// * [endDate]
+  /// * [trendDays]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -118,7 +122,7 @@ _responseData = rawData == null ? null : deserialize<FraudGetEvent200Response, F
   ///
   /// Returns a [Future] containing a [Response] with a [FraudGetStats200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<FraudGetStats200Response>> fraudGetStats({ 
+  Future<Response<FraudGetStats200Response>> fraudGetStats({
     DateTime? startDate,
     DateTime? endDate,
     int? trendDays,
@@ -132,16 +136,10 @@ _responseData = rawData == null ? null : deserialize<FraudGetEvent200Response, F
     final _path = r'/fraud/stats';
     final _options = Options(
       method: r'GET',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -167,7 +165,13 @@ _responseData = rawData == null ? null : deserialize<FraudGetEvent200Response, F
 
     try {
       final rawData = _response.data;
-_responseData = rawData == null ? null : deserialize<FraudGetStats200Response, FraudGetStats200Response>(rawData, 'FraudGetStats200Response', growable: true);
+      _responseData = rawData == null
+          ? null
+          : deserialize<FraudGetStats200Response, FraudGetStats200Response>(
+              rawData,
+              'FraudGetStats200Response',
+              growable: true,
+            );
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -191,12 +195,12 @@ _responseData = rawData == null ? null : deserialize<FraudGetStats200Response, F
   }
 
   /// fraudGetUserEvents
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [userId] 
-  /// * [page] 
-  /// * [limit] 
+  /// * [userId]
+  /// * [page]
+  /// * [limit]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -206,7 +210,7 @@ _responseData = rawData == null ? null : deserialize<FraudGetStats200Response, F
   ///
   /// Returns a [Future] containing a [Response] with a [FraudListEvents200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<FraudListEvents200Response>> fraudGetUserEvents({ 
+  Future<Response<FraudListEvents200Response>> fraudGetUserEvents({
     required String userId,
     int? page,
     int? limit,
@@ -217,19 +221,18 @@ _responseData = rawData == null ? null : deserialize<FraudGetStats200Response, F
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/fraud/users/{userId}/events'.replaceAll('{' r'userId' '}', userId.toString());
+    final _path = r'/fraud/users/{userId}/events'.replaceAll(
+      '{'
+      r'userId'
+      '}',
+      userId.toString(),
+    );
     final _options = Options(
       method: r'GET',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -254,7 +257,13 @@ _responseData = rawData == null ? null : deserialize<FraudGetStats200Response, F
 
     try {
       final rawData = _response.data;
-_responseData = rawData == null ? null : deserialize<FraudListEvents200Response, FraudListEvents200Response>(rawData, 'FraudListEvents200Response', growable: true);
+      _responseData = rawData == null
+          ? null
+          : deserialize<FraudListEvents200Response, FraudListEvents200Response>(
+              rawData,
+              'FraudListEvents200Response',
+              growable: true,
+            );
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -278,10 +287,10 @@ _responseData = rawData == null ? null : deserialize<FraudListEvents200Response,
   }
 
   /// fraudGetUserProfile
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [userId] 
+  /// * [userId]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -291,7 +300,7 @@ _responseData = rawData == null ? null : deserialize<FraudListEvents200Response,
   ///
   /// Returns a [Future] containing a [Response] with a [FraudGetUserProfile200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<FraudGetUserProfile200Response>> fraudGetUserProfile({ 
+  Future<Response<FraudGetUserProfile200Response>> fraudGetUserProfile({
     required String userId,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -300,19 +309,18 @@ _responseData = rawData == null ? null : deserialize<FraudListEvents200Response,
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/fraud/users/{userId}/profile'.replaceAll('{' r'userId' '}', userId.toString());
+    final _path = r'/fraud/users/{userId}/profile'.replaceAll(
+      '{'
+      r'userId'
+      '}',
+      userId.toString(),
+    );
     final _options = Options(
       method: r'GET',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -331,7 +339,12 @@ _responseData = rawData == null ? null : deserialize<FraudListEvents200Response,
 
     try {
       final rawData = _response.data;
-_responseData = rawData == null ? null : deserialize<FraudGetUserProfile200Response, FraudGetUserProfile200Response>(rawData, 'FraudGetUserProfile200Response', growable: true);
+      _responseData = rawData == null
+          ? null
+          : deserialize<
+              FraudGetUserProfile200Response,
+              FraudGetUserProfile200Response
+            >(rawData, 'FraudGetUserProfile200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -355,20 +368,20 @@ _responseData = rawData == null ? null : deserialize<FraudGetUserProfile200Respo
   }
 
   /// fraudListEvents
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [page] 
-  /// * [limit] 
-  /// * [status] 
-  /// * [severity] 
-  /// * [eventType] 
-  /// * [userId] 
-  /// * [driverId] 
-  /// * [startDate] 
-  /// * [endDate] 
-  /// * [sortBy] 
-  /// * [order] 
+  /// * [page]
+  /// * [limit]
+  /// * [status]
+  /// * [severity]
+  /// * [eventType]
+  /// * [userId]
+  /// * [driverId]
+  /// * [startDate]
+  /// * [endDate]
+  /// * [sortBy]
+  /// * [order]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -378,7 +391,7 @@ _responseData = rawData == null ? null : deserialize<FraudGetUserProfile200Respo
   ///
   /// Returns a [Future] containing a [Response] with a [FraudListEvents200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<FraudListEvents200Response>> fraudListEvents({ 
+  Future<Response<FraudListEvents200Response>> fraudListEvents({
     Object? page,
     Object? limit,
     FraudStatus? status,
@@ -400,16 +413,10 @@ _responseData = rawData == null ? null : deserialize<FraudGetUserProfile200Respo
     final _path = r'/fraud/events';
     final _options = Options(
       method: r'GET',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -443,7 +450,13 @@ _responseData = rawData == null ? null : deserialize<FraudGetUserProfile200Respo
 
     try {
       final rawData = _response.data;
-_responseData = rawData == null ? null : deserialize<FraudListEvents200Response, FraudListEvents200Response>(rawData, 'FraudListEvents200Response', growable: true);
+      _responseData = rawData == null
+          ? null
+          : deserialize<FraudListEvents200Response, FraudListEvents200Response>(
+              rawData,
+              'FraudListEvents200Response',
+              growable: true,
+            );
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -467,11 +480,11 @@ _responseData = rawData == null ? null : deserialize<FraudListEvents200Response,
   }
 
   /// fraudListHighRiskUsers
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [page] 
-  /// * [limit] 
+  /// * [page]
+  /// * [limit]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -481,7 +494,7 @@ _responseData = rawData == null ? null : deserialize<FraudListEvents200Response,
   ///
   /// Returns a [Future] containing a [Response] with a [FraudListHighRiskUsers200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<FraudListHighRiskUsers200Response>> fraudListHighRiskUsers({ 
+  Future<Response<FraudListHighRiskUsers200Response>> fraudListHighRiskUsers({
     int? page,
     int? limit,
     CancelToken? cancelToken,
@@ -494,16 +507,10 @@ _responseData = rawData == null ? null : deserialize<FraudListEvents200Response,
     final _path = r'/fraud/users/high-risk';
     final _options = Options(
       method: r'GET',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -528,7 +535,12 @@ _responseData = rawData == null ? null : deserialize<FraudListEvents200Response,
 
     try {
       final rawData = _response.data;
-_responseData = rawData == null ? null : deserialize<FraudListHighRiskUsers200Response, FraudListHighRiskUsers200Response>(rawData, 'FraudListHighRiskUsers200Response', growable: true);
+      _responseData = rawData == null
+          ? null
+          : deserialize<
+              FraudListHighRiskUsers200Response,
+              FraudListHighRiskUsers200Response
+            >(rawData, 'FraudListHighRiskUsers200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -552,11 +564,11 @@ _responseData = rawData == null ? null : deserialize<FraudListHighRiskUsers200Re
   }
 
   /// fraudReviewEvent
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [id] 
-  /// * [reviewFraudEvent] 
+  /// * [id]
+  /// * [reviewFraudEvent]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -566,7 +578,7 @@ _responseData = rawData == null ? null : deserialize<FraudListHighRiskUsers200Re
   ///
   /// Returns a [Future] containing a [Response] with a [FraudGetEvent200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<FraudGetEvent200Response>> fraudReviewEvent({ 
+  Future<Response<FraudGetEvent200Response>> fraudReviewEvent({
     required String id,
     required ReviewFraudEvent reviewFraudEvent,
     CancelToken? cancelToken,
@@ -576,19 +588,18 @@ _responseData = rawData == null ? null : deserialize<FraudListHighRiskUsers200Re
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/fraud/events/{id}/review'.replaceAll('{' r'id' '}', id.toString());
+    final _path = r'/fraud/events/{id}/review'.replaceAll(
+      '{'
+      r'id'
+      '}',
+      id.toString(),
+    );
     final _options = Options(
       method: r'POST',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -599,13 +610,10 @@ _responseData = rawData == null ? null : deserialize<FraudListHighRiskUsers200Re
     dynamic _bodyData;
 
     try {
-        _bodyData=jsonEncode(reviewFraudEvent);
-    } catch(error, stackTrace) {
+      _bodyData = jsonEncode(reviewFraudEvent);
+    } catch (error, stackTrace) {
       throw DioException(
-         requestOptions: _options.compose(
-          _dio.options,
-          _path,
-        ),
+        requestOptions: _options.compose(_dio.options, _path),
         type: DioExceptionType.unknown,
         error: error,
         stackTrace: stackTrace,
@@ -625,7 +633,13 @@ _responseData = rawData == null ? null : deserialize<FraudListHighRiskUsers200Re
 
     try {
       final rawData = _response.data;
-_responseData = rawData == null ? null : deserialize<FraudGetEvent200Response, FraudGetEvent200Response>(rawData, 'FraudGetEvent200Response', growable: true);
+      _responseData = rawData == null
+          ? null
+          : deserialize<FraudGetEvent200Response, FraudGetEvent200Response>(
+              rawData,
+              'FraudGetEvent200Response',
+              growable: true,
+            );
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -647,5 +661,4 @@ _responseData = rawData == null ? null : deserialize<FraudGetEvent200Response, F
       extra: _response.extra,
     );
   }
-
 }

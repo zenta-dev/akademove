@@ -22,29 +22,31 @@ class DriverQuizQuestionGetQuizQuestions200Response {
   const DriverQuizQuestionGetQuizQuestions200Response({
     required this.message,
     required this.data,
-     this.pagination,
-     this.totalPages,
+    this.pagination,
+    this.totalPages,
   });
   @JsonKey(name: r'message', required: true, includeIfNull: true)
   final String? message;
-  
+
   @JsonKey(name: r'data', required: true, includeIfNull: false)
   final List<DriverQuizQuestionGetQuizQuestions200ResponseDataInner> data;
-  
+
   @JsonKey(name: r'pagination', required: false, includeIfNull: false)
   final PaginationResult? pagination;
-  
-          // minimum: 0
-          // maximum: 9007199254740991
+
+  // minimum: 0
+  // maximum: 9007199254740991
   @JsonKey(name: r'totalPages', required: false, includeIfNull: false)
   final int? totalPages;
-  
+
   @override
-  bool operator ==(Object other) => identical(this, other) || other is DriverQuizQuestionGetQuizQuestions200Response &&
-    other.message == message &&
-    other.data == data &&
-    other.pagination == pagination &&
-    other.totalPages == totalPages;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is DriverQuizQuestionGetQuizQuestions200Response &&
+          other.message == message &&
+          other.data == data &&
+          other.pagination == pagination &&
+          other.totalPages == totalPages;
 
   @override
   int get hashCode =>
@@ -53,14 +55,15 @@ class DriverQuizQuestionGetQuizQuestions200Response {
       pagination.hashCode +
       totalPages.hashCode;
 
-  factory DriverQuizQuestionGetQuizQuestions200Response.fromJson(Map<String, dynamic> json) => _$DriverQuizQuestionGetQuizQuestions200ResponseFromJson(json);
+  factory DriverQuizQuestionGetQuizQuestions200Response.fromJson(
+    Map<String, dynamic> json,
+  ) => _$DriverQuizQuestionGetQuizQuestions200ResponseFromJson(json);
 
-  Map<String, dynamic> toJson() => _$DriverQuizQuestionGetQuizQuestions200ResponseToJson(this);
+  Map<String, dynamic> toJson() =>
+      _$DriverQuizQuestionGetQuizQuestions200ResponseToJson(this);
 
   @override
   String toString() {
     return toJson().toString();
   }
-
 }
-

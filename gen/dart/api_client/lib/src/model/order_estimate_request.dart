@@ -25,113 +25,124 @@ class OrderEstimateRequest {
     required this.dropoffLocationY,
     required this.pickupLocationX,
     required this.pickupLocationY,
-     this.notePickup,
-     this.noteSenderName,
-     this.noteSenderPhone,
-     this.notePickupInstructions,
-     this.noteDropoff,
-     this.noteRecevierName,
-     this.noteRecevierPhone,
-     this.noteDropoffInstructions,
+    this.notePickup,
+    this.noteSenderName,
+    this.noteSenderPhone,
+    this.notePickupInstructions,
+    this.noteDropoff,
+    this.noteRecevierName,
+    this.noteRecevierPhone,
+    this.noteDropoffInstructions,
     required this.type,
-     this.items,
-     this.gender,
-     this.genderPreference,
-     this.couponCode,
-     this.discountIds,
-     this.weight,
+    this.items,
+    this.gender,
+    this.genderPreference,
+    this.couponCode,
+    this.discountIds,
+    this.weight,
   });
-      /// Longitude (X-axis, East-West)
-          // minimum: -180
-          // maximum: 180
+
+  /// Longitude (X-axis, East-West)
+  // minimum: -180
+  // maximum: 180
   @JsonKey(name: r'dropoffLocation_x', required: true, includeIfNull: false)
   final num dropoffLocationX;
-  
-      /// Latitude (Y-axis, North-South)
-          // minimum: -90
-          // maximum: 90
+
+  /// Latitude (Y-axis, North-South)
+  // minimum: -90
+  // maximum: 90
   @JsonKey(name: r'dropoffLocation_y', required: true, includeIfNull: false)
   final num dropoffLocationY;
-  
-      /// Longitude (X-axis, East-West)
-          // minimum: -180
-          // maximum: 180
+
+  /// Longitude (X-axis, East-West)
+  // minimum: -180
+  // maximum: 180
   @JsonKey(name: r'pickupLocation_x', required: true, includeIfNull: false)
   final num pickupLocationX;
-  
-      /// Latitude (Y-axis, North-South)
-          // minimum: -90
-          // maximum: 90
+
+  /// Latitude (Y-axis, North-South)
+  // minimum: -90
+  // maximum: 90
   @JsonKey(name: r'pickupLocation_y', required: true, includeIfNull: false)
   final num pickupLocationY;
-  
+
   @JsonKey(name: r'note_pickup', required: false, includeIfNull: false)
   final String? notePickup;
-  
+
   @JsonKey(name: r'note_senderName', required: false, includeIfNull: false)
   final String? noteSenderName;
-  
+
   @JsonKey(name: r'note_senderPhone', required: false, includeIfNull: false)
   final String? noteSenderPhone;
-  
-  @JsonKey(name: r'note_pickupInstructions', required: false, includeIfNull: false)
+
+  @JsonKey(
+    name: r'note_pickupInstructions',
+    required: false,
+    includeIfNull: false,
+  )
   final String? notePickupInstructions;
-  
+
   @JsonKey(name: r'note_dropoff', required: false, includeIfNull: false)
   final String? noteDropoff;
-  
+
   @JsonKey(name: r'note_recevierName', required: false, includeIfNull: false)
   final String? noteRecevierName;
-  
+
   @JsonKey(name: r'note_recevierPhone', required: false, includeIfNull: false)
   final String? noteRecevierPhone;
-  
-  @JsonKey(name: r'note_dropoffInstructions', required: false, includeIfNull: false)
+
+  @JsonKey(
+    name: r'note_dropoffInstructions',
+    required: false,
+    includeIfNull: false,
+  )
   final String? noteDropoffInstructions;
-  
+
   @JsonKey(name: r'type', required: true, includeIfNull: false)
   final OrderType type;
-  
+
   @JsonKey(name: r'items', required: false, includeIfNull: false)
   final List<OrderItem>? items;
-  
+
   @JsonKey(name: r'gender', required: false, includeIfNull: false)
   final UserGender? gender;
-  
+
   @JsonKey(name: r'genderPreference', required: false, includeIfNull: false)
   final OrderEstimateRequestGenderPreferenceEnum? genderPreference;
-  
+
   @JsonKey(name: r'couponCode', required: false, includeIfNull: false)
   final String? couponCode;
-  
+
   @JsonKey(name: r'discountIds', required: false, includeIfNull: false)
   final List<num>? discountIds;
-  
-          // maximum: 20
+
+  // maximum: 20
   @JsonKey(name: r'weight', required: false, includeIfNull: false)
   final num? weight;
-  
+
   @override
-  bool operator ==(Object other) => identical(this, other) || other is OrderEstimateRequest &&
-    other.dropoffLocationX == dropoffLocationX &&
-    other.dropoffLocationY == dropoffLocationY &&
-    other.pickupLocationX == pickupLocationX &&
-    other.pickupLocationY == pickupLocationY &&
-    other.notePickup == notePickup &&
-    other.noteSenderName == noteSenderName &&
-    other.noteSenderPhone == noteSenderPhone &&
-    other.notePickupInstructions == notePickupInstructions &&
-    other.noteDropoff == noteDropoff &&
-    other.noteRecevierName == noteRecevierName &&
-    other.noteRecevierPhone == noteRecevierPhone &&
-    other.noteDropoffInstructions == noteDropoffInstructions &&
-    other.type == type &&
-    other.items == items &&
-    other.gender == gender &&
-    other.genderPreference == genderPreference &&
-    other.couponCode == couponCode &&
-    other.discountIds == discountIds &&
-    other.weight == weight;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is OrderEstimateRequest &&
+          other.dropoffLocationX == dropoffLocationX &&
+          other.dropoffLocationY == dropoffLocationY &&
+          other.pickupLocationX == pickupLocationX &&
+          other.pickupLocationY == pickupLocationY &&
+          other.notePickup == notePickup &&
+          other.noteSenderName == noteSenderName &&
+          other.noteSenderPhone == noteSenderPhone &&
+          other.notePickupInstructions == notePickupInstructions &&
+          other.noteDropoff == noteDropoff &&
+          other.noteRecevierName == noteRecevierName &&
+          other.noteRecevierPhone == noteRecevierPhone &&
+          other.noteDropoffInstructions == noteDropoffInstructions &&
+          other.type == type &&
+          other.items == items &&
+          other.gender == gender &&
+          other.genderPreference == genderPreference &&
+          other.couponCode == couponCode &&
+          other.discountIds == discountIds &&
+          other.weight == weight;
 
   @override
   int get hashCode =>
@@ -155,7 +166,8 @@ class OrderEstimateRequest {
       discountIds.hashCode +
       weight.hashCode;
 
-  factory OrderEstimateRequest.fromJson(Map<String, dynamic> json) => _$OrderEstimateRequestFromJson(json);
+  factory OrderEstimateRequest.fromJson(Map<String, dynamic> json) =>
+      _$OrderEstimateRequestFromJson(json);
 
   Map<String, dynamic> toJson() => _$OrderEstimateRequestToJson(this);
 
@@ -163,7 +175,6 @@ class OrderEstimateRequest {
   String toString() {
     return toJson().toString();
   }
-
 }
 
 enum OrderEstimateRequestGenderPreferenceEnum {
@@ -171,12 +182,11 @@ enum OrderEstimateRequestGenderPreferenceEnum {
   SAME(r'SAME'),
   @JsonValue(r'ANY')
   ANY(r'ANY');
-  
+
   const OrderEstimateRequestGenderPreferenceEnum(this.value);
-  
+
   final String value;
-  
+
   @override
   String toString() => value;
 }
-

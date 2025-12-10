@@ -3,7 +3,5 @@ import 'package:api_client/api_client.dart';
 
 // tests for WeightSize
 void main() {
-
-  group(WeightSize, () {
-  });
+  group(WeightSize, () {});
 }

@@ -29,34 +29,37 @@ class DriverQuizQuestionGetQuizQuestions200ResponseDataInner {
   });
   @JsonKey(name: r'id', required: true, includeIfNull: true)
   final String? id;
-  
+
   @JsonKey(name: r'question', required: true, includeIfNull: true)
   final String? question;
-  
+
   @JsonKey(name: r'type', required: true, includeIfNull: true)
   final String? type;
-  
+
   @JsonKey(name: r'category', required: true, includeIfNull: true)
   final String? category;
-  
+
   @JsonKey(name: r'points', required: true, includeIfNull: false)
   final num points;
-  
+
   @JsonKey(name: r'displayOrder', required: true, includeIfNull: false)
   final num displayOrder;
-  
+
   @JsonKey(name: r'options', required: true, includeIfNull: false)
-  final List<DriverQuizQuestionGetQuizQuestions200ResponseDataInnerOptionsInner> options;
-  
+  final List<DriverQuizQuestionGetQuizQuestions200ResponseDataInnerOptionsInner>
+  options;
+
   @override
-  bool operator ==(Object other) => identical(this, other) || other is DriverQuizQuestionGetQuizQuestions200ResponseDataInner &&
-    other.id == id &&
-    other.question == question &&
-    other.type == type &&
-    other.category == category &&
-    other.points == points &&
-    other.displayOrder == displayOrder &&
-    other.options == options;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is DriverQuizQuestionGetQuizQuestions200ResponseDataInner &&
+          other.id == id &&
+          other.question == question &&
+          other.type == type &&
+          other.category == category &&
+          other.points == points &&
+          other.displayOrder == displayOrder &&
+          other.options == options;
 
   @override
   int get hashCode =>
@@ -68,14 +71,15 @@ class DriverQuizQuestionGetQuizQuestions200ResponseDataInner {
       displayOrder.hashCode +
       options.hashCode;
 
-  factory DriverQuizQuestionGetQuizQuestions200ResponseDataInner.fromJson(Map<String, dynamic> json) => _$DriverQuizQuestionGetQuizQuestions200ResponseDataInnerFromJson(json);
+  factory DriverQuizQuestionGetQuizQuestions200ResponseDataInner.fromJson(
+    Map<String, dynamic> json,
+  ) => _$DriverQuizQuestionGetQuizQuestions200ResponseDataInnerFromJson(json);
 
-  Map<String, dynamic> toJson() => _$DriverQuizQuestionGetQuizQuestions200ResponseDataInnerToJson(this);
+  Map<String, dynamic> toJson() =>
+      _$DriverQuizQuestionGetQuizQuestions200ResponseDataInnerToJson(this);
 
   @override
   String toString() {
     return toJson().toString();
   }
-
 }
-

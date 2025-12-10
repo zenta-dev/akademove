@@ -1,8 +1,6 @@
 import 'dart:async';
 import 'dart:isolate';
 
-import 'package:shadcn_flutter/shadcn_flutter.dart';
-
 /// A manager that prevents duplicate execution of tasks with the same key.
 /// If multiple requests come in for the same task, they all wait for and share
 /// the result of a single execution.

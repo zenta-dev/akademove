@@ -23,28 +23,29 @@ class DriverMinQuizQuestionOptionsInner {
   });
   @JsonKey(name: r'id', required: true, includeIfNull: false)
   final String id;
-  
+
   @JsonKey(name: r'text', required: true, includeIfNull: false)
   final String text;
-  
-  @override
-  bool operator ==(Object other) => identical(this, other) || other is DriverMinQuizQuestionOptionsInner &&
-    other.id == id &&
-    other.text == text;
 
   @override
-  int get hashCode =>
-      id.hashCode +
-      text.hashCode;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is DriverMinQuizQuestionOptionsInner &&
+          other.id == id &&
+          other.text == text;
 
-  factory DriverMinQuizQuestionOptionsInner.fromJson(Map<String, dynamic> json) => _$DriverMinQuizQuestionOptionsInnerFromJson(json);
+  @override
+  int get hashCode => id.hashCode + text.hashCode;
 
-  Map<String, dynamic> toJson() => _$DriverMinQuizQuestionOptionsInnerToJson(this);
+  factory DriverMinQuizQuestionOptionsInner.fromJson(
+    Map<String, dynamic> json,
+  ) => _$DriverMinQuizQuestionOptionsInnerFromJson(json);
+
+  Map<String, dynamic> toJson() =>
+      _$DriverMinQuizQuestionOptionsInnerToJson(this);
 
   @override
   String toString() {
     return toJson().toString();
   }
-
 }
-

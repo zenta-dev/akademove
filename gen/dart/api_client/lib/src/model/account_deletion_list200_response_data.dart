@@ -21,32 +21,33 @@ class AccountDeletionList200ResponseData {
   /// Returns a new [AccountDeletionList200ResponseData] instance.
   const AccountDeletionList200ResponseData({
     required this.rows,
-     this.pagination,
+    this.pagination,
   });
   @JsonKey(name: r'rows', required: true, includeIfNull: false)
   final List<AccountDeletion> rows;
-  
+
   @JsonKey(name: r'pagination', required: false, includeIfNull: false)
   final AccountDeletionList200ResponseDataPagination? pagination;
-  
-  @override
-  bool operator ==(Object other) => identical(this, other) || other is AccountDeletionList200ResponseData &&
-    other.rows == rows &&
-    other.pagination == pagination;
 
   @override
-  int get hashCode =>
-      rows.hashCode +
-      pagination.hashCode;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is AccountDeletionList200ResponseData &&
+          other.rows == rows &&
+          other.pagination == pagination;
 
-  factory AccountDeletionList200ResponseData.fromJson(Map<String, dynamic> json) => _$AccountDeletionList200ResponseDataFromJson(json);
+  @override
+  int get hashCode => rows.hashCode + pagination.hashCode;
 
-  Map<String, dynamic> toJson() => _$AccountDeletionList200ResponseDataToJson(this);
+  factory AccountDeletionList200ResponseData.fromJson(
+    Map<String, dynamic> json,
+  ) => _$AccountDeletionList200ResponseDataFromJson(json);
+
+  Map<String, dynamic> toJson() =>
+      _$AccountDeletionList200ResponseDataToJson(this);
 
   @override
   String toString() {
     return toJson().toString();
   }
-
 }
-

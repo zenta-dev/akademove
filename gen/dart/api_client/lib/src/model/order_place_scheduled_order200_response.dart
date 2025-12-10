@@ -22,29 +22,31 @@ class OrderPlaceScheduledOrder200Response {
   const OrderPlaceScheduledOrder200Response({
     required this.message,
     required this.data,
-     this.pagination,
-     this.totalPages,
+    this.pagination,
+    this.totalPages,
   });
   @JsonKey(name: r'message', required: true, includeIfNull: true)
   final String? message;
-  
+
   @JsonKey(name: r'data', required: true, includeIfNull: false)
   final PlaceScheduledOrderResponse data;
-  
+
   @JsonKey(name: r'pagination', required: false, includeIfNull: false)
   final PaginationResult? pagination;
-  
-          // minimum: 0
-          // maximum: 9007199254740991
+
+  // minimum: 0
+  // maximum: 9007199254740991
   @JsonKey(name: r'totalPages', required: false, includeIfNull: false)
   final int? totalPages;
-  
+
   @override
-  bool operator ==(Object other) => identical(this, other) || other is OrderPlaceScheduledOrder200Response &&
-    other.message == message &&
-    other.data == data &&
-    other.pagination == pagination &&
-    other.totalPages == totalPages;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is OrderPlaceScheduledOrder200Response &&
+          other.message == message &&
+          other.data == data &&
+          other.pagination == pagination &&
+          other.totalPages == totalPages;
 
   @override
   int get hashCode =>
@@ -53,14 +55,15 @@ class OrderPlaceScheduledOrder200Response {
       pagination.hashCode +
       totalPages.hashCode;
 
-  factory OrderPlaceScheduledOrder200Response.fromJson(Map<String, dynamic> json) => _$OrderPlaceScheduledOrder200ResponseFromJson(json);
+  factory OrderPlaceScheduledOrder200Response.fromJson(
+    Map<String, dynamic> json,
+  ) => _$OrderPlaceScheduledOrder200ResponseFromJson(json);
 
-  Map<String, dynamic> toJson() => _$OrderPlaceScheduledOrder200ResponseToJson(this);
+  Map<String, dynamic> toJson() =>
+      _$OrderPlaceScheduledOrder200ResponseToJson(this);
 
   @override
   String toString() {
     return toJson().toString();
   }
-
 }
-

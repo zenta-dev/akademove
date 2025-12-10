@@ -21,22 +21,24 @@ class BadgeUserCreateRequest {
   const BadgeUserCreateRequest({
     required this.userId,
     required this.badgeId,
-     this.metadata,
+    this.metadata,
   });
   @JsonKey(name: r'userId', required: true, includeIfNull: true)
   final String? userId;
-  
+
   @JsonKey(name: r'badgeId', required: true, includeIfNull: false)
   final String badgeId;
-  
+
   @JsonKey(name: r'metadata', required: false, includeIfNull: false)
   final UserBadgeMetadata? metadata;
-  
+
   @override
-  bool operator ==(Object other) => identical(this, other) || other is BadgeUserCreateRequest &&
-    other.userId == userId &&
-    other.badgeId == badgeId &&
-    other.metadata == metadata;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is BadgeUserCreateRequest &&
+          other.userId == userId &&
+          other.badgeId == badgeId &&
+          other.metadata == metadata;
 
   @override
   int get hashCode =>
@@ -44,7 +46,8 @@ class BadgeUserCreateRequest {
       badgeId.hashCode +
       metadata.hashCode;
 
-  factory BadgeUserCreateRequest.fromJson(Map<String, dynamic> json) => _$BadgeUserCreateRequestFromJson(json);
+  factory BadgeUserCreateRequest.fromJson(Map<String, dynamic> json) =>
+      _$BadgeUserCreateRequestFromJson(json);
 
   Map<String, dynamic> toJson() => _$BadgeUserCreateRequestToJson(this);
 
@@ -52,6 +55,4 @@ class BadgeUserCreateRequest {
   String toString() {
     return toJson().toString();
   }
-
 }
-
