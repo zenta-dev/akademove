@@ -5,7 +5,6 @@ import {
 	overwriteServerAsyncLocalStorage,
 } from "@repo/i18n";
 import { createMiddleware } from "hono/factory";
-import { logger } from "@/utils/logger";
 import type { HonoContext } from "../interface";
 
 export const localeMiddleware = createMiddleware<HonoContext>(
