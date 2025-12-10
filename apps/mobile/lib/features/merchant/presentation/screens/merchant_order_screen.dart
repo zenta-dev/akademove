@@ -3,7 +3,6 @@ import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/l10n/l10n.dart';
 import 'package:api_client/api_client.dart';
-import 'package:flutter/material.dart' as material;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -174,7 +173,7 @@ class _MerchantOrderScreenState extends State<MerchantOrderScreen> {
   Widget _buildTab({required List<OrderStatus> statuses}) {
     return BlocBuilder<MerchantOrderCubit, MerchantOrderState>(
       builder: (context, state) {
-        return material.RefreshIndicator(
+        return RefreshTrigger(
           onRefresh: () async {
             await context.read<MerchantOrderCubit>().getMine(
               statuses: statuses,

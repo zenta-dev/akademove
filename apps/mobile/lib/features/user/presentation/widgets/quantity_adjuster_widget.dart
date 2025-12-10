@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart' as flutter_material;
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 
@@ -85,7 +84,7 @@ class _QuantityAdjusterWidgetState extends State<QuantityAdjusterWidget> {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
       decoration: BoxDecoration(
-        border: Border.all(color: flutter_material.Colors.grey[300]!),
+        border: Border.all(color: Colors.neutral.shade300),
         borderRadius: BorderRadius.circular(6.r),
       ),
       child: Row(
@@ -97,11 +96,9 @@ class _QuantityAdjusterWidgetState extends State<QuantityAdjusterWidget> {
             child: Opacity(
               opacity: canDecrease ? 1.0 : 0.5,
               child: Icon(
-                flutter_material.Icons.remove,
+                LucideIcons.minus,
                 size: 16.sp,
-                color: canDecrease
-                    ? flutter_material.Colors.black
-                    : flutter_material.Colors.grey[500],
+                color: canDecrease ? Colors.black : Colors.neutral.shade500,
               ),
             ),
           ),
@@ -124,11 +121,9 @@ class _QuantityAdjusterWidgetState extends State<QuantityAdjusterWidget> {
             child: Opacity(
               opacity: canIncrease ? 1.0 : 0.5,
               child: Icon(
-                flutter_material.Icons.add,
+                LucideIcons.plus,
                 size: 16.sp,
-                color: canIncrease
-                    ? flutter_material.Colors.black
-                    : flutter_material.Colors.grey[500],
+                color: canIncrease ? Colors.black : Colors.neutral.shade500,
               ),
             ),
           ),

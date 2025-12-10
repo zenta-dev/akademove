@@ -3,7 +3,7 @@ import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/l10n/l10n.dart';
 import 'package:api_client/api_client.dart';
-import 'package:flutter/material.dart' show showModalBottomSheet;
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -128,10 +128,10 @@ class _UserDeliverySummaryScreenState extends State<UserDeliverySummaryScreen> {
                   builder: (context, couponState) {
                     return OutlineButton(
                       onPressed: () {
-                        showModalBottomSheet(
+                        openDrawer(
                           context: context,
-                          isScrollControlled: true,
-                          builder: (_) => BlocProvider.value(
+                          position: OverlayPosition.bottom,
+                          builder: (drawerContext) => BlocProvider.value(
                             value: context.read<CouponCubit>(),
                             child: SizedBox(
                               height: MediaQuery.of(context).size.height * 0.7,
@@ -152,6 +152,7 @@ class _UserDeliverySummaryScreenState extends State<UserDeliverySummaryScreen> {
                                       discountAmount = 0;
                                     }
                                   });
+                                  closeDrawer(drawerContext);
                                 },
                               ),
                             ),

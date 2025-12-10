@@ -1,6 +1,5 @@
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
-import 'package:flutter/material.dart' as material;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
@@ -140,55 +139,118 @@ class DeleteAccountButtonWidget extends StatelessWidget {
               SizedBox(height: 16.h),
 
               // Method 1: Web Form (Recommended)
-              material.Card(
-                child: material.ListTile(
-                  leading: const Icon(
-                    LucideIcons.globe,
-                    color: material.Colors.blue,
-                  ),
-                  title: const Text('Online Form (Recommended)'),
-                  subtitle: const Text('Complete form on our website'),
-                  trailing: const Icon(LucideIcons.arrowRight),
+              Card(
+                child: GestureDetector(
                   onTap: () {
                     Navigator.pop(context);
                     _openWebDeletionForm(context);
                   },
+                  child: Padding(
+                    padding: EdgeInsets.all(12.dg),
+                    child: Row(
+                      children: [
+                        Icon(
+                          LucideIcons.globe,
+                          color: const Color(0xFF2196F3),
+                          size: 24.sp,
+                        ),
+                        Gap(12.w),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text('Online Form (Recommended)'),
+                              Text(
+                                'Complete form on our website',
+                                style: context.typography.small.copyWith(
+                                  color: context.colorScheme.mutedForeground,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const Icon(LucideIcons.arrowRight),
+                      ],
+                    ),
+                  ),
                 ),
               ),
               SizedBox(height: 8.h),
 
               // Method 2: Email
-              material.Card(
-                child: material.ListTile(
-                  leading: const Icon(
-                    LucideIcons.mail,
-                    color: material.Colors.orange,
-                  ),
-                  title: const Text('Email Request'),
-                  subtitle: const Text('Send request via email'),
-                  trailing: const Icon(LucideIcons.arrowRight),
+              Card(
+                child: GestureDetector(
                   onTap: () {
                     Navigator.pop(context);
                     _sendDeletionEmail(context);
                   },
+                  child: Padding(
+                    padding: EdgeInsets.all(12.dg),
+                    child: Row(
+                      children: [
+                        Icon(
+                          LucideIcons.mail,
+                          color: const Color(0xFFFF9800),
+                          size: 24.sp,
+                        ),
+                        Gap(12.w),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text('Email Request'),
+                              Text(
+                                'Send request via email',
+                                style: context.typography.small.copyWith(
+                                  color: context.colorScheme.mutedForeground,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const Icon(LucideIcons.arrowRight),
+                      ],
+                    ),
+                  ),
                 ),
               ),
               SizedBox(height: 8.h),
 
               // Method 3: WhatsApp
-              material.Card(
-                child: material.ListTile(
-                  leading: const Icon(
-                    LucideIcons.messageCircle,
-                    color: material.Colors.green,
-                  ),
-                  title: const Text('WhatsApp Support'),
-                  subtitle: const Text('Chat with support team'),
-                  trailing: const Icon(LucideIcons.arrowRight),
+              Card(
+                child: GestureDetector(
                   onTap: () {
                     Navigator.pop(context);
                     _openWhatsAppSupport(context);
                   },
+                  child: Padding(
+                    padding: EdgeInsets.all(12.dg),
+                    child: Row(
+                      children: [
+                        Icon(
+                          LucideIcons.messageCircle,
+                          color: const Color(0xFF4CAF50),
+                          size: 24.sp,
+                        ),
+                        Gap(12.w),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text('WhatsApp Support'),
+                              Text(
+                                'Chat with support team',
+                                style: context.typography.small.copyWith(
+                                  color: context.colorScheme.mutedForeground,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const Icon(LucideIcons.arrowRight),
+                      ],
+                    ),
+                  ),
                 ),
               ),
             ],

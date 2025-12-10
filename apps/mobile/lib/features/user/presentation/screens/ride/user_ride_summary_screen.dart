@@ -3,9 +3,6 @@ import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/l10n/l10n.dart';
 import 'package:api_client/api_client.dart';
-import 'package:flutter/material.dart'
-    as material
-    show TimeOfDay, showDatePicker, showTimePicker;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -177,50 +174,188 @@ class _UserRideSummaryScreenState extends State<UserRideSummaryScreen> {
     context.pushNamed(Routes.userScheduledOrders.name);
   }
 
-  Future<void> _selectScheduleDateTime() async {
+  void _selectScheduleDateTime() {
     final now = DateTime.now();
     final minDate = now.add(const Duration(minutes: 30));
     final maxDate = now.add(const Duration(days: 7));
     final currentScheduled = scheduledAt;
 
-    final pickedDate = await material.showDatePicker(
-      context: context,
-      initialDate: currentScheduled ?? minDate,
-      firstDate: minDate,
-      lastDate: maxDate,
-    );
+    var tempDate = currentScheduled ?? minDate;
+    var tempTime = currentScheduled != null
+        ? TimeOfDay.fromDateTime(currentScheduled)
+        : TimeOfDay.fromDateTime(minDate);
 
-    if (pickedDate == null || !mounted) return;
+    DateState dateStateBuilder(DateTime date) {
+      final dateOnly = DateTime(date.year, date.month, date.day);
+      final minDateOnly = DateTime(minDate.year, minDate.month, minDate.day);
+      final maxDateOnly = DateTime(maxDate.year, maxDate.month, maxDate.day);
 
-    final pickedTime = await material.showTimePicker(
-      context: context,
-      initialTime: currentScheduled != null
-          ? material.TimeOfDay.fromDateTime(currentScheduled)
-          : material.TimeOfDay.fromDateTime(minDate),
-    );
-
-    if (pickedTime == null || !mounted) return;
-
-    final newDateTime = DateTime(
-      pickedDate.year,
-      pickedDate.month,
-      pickedDate.day,
-      pickedTime.hour,
-      pickedTime.minute,
-    );
-
-    // Validate
-    final validMinTime = DateTime.now().add(const Duration(minutes: 30));
-    if (newDateTime.isBefore(validMinTime)) {
-      if (mounted) {
-        context.showMyToast(context.l10n.schedule_time_too_soon);
+      if (dateOnly.isBefore(minDateOnly) || dateOnly.isAfter(maxDateOnly)) {
+        return DateState.disabled;
       }
-      return;
+      return DateState.enabled;
     }
 
-    setState(() {
-      scheduledAt = newDateTime;
-    });
+    openDrawer(
+      context: context,
+      position: OverlayPosition.bottom,
+      builder: (drawerContext) => StatefulBuilder(
+        builder: (context, setDrawerState) => Container(
+          padding: EdgeInsets.all(16.r),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: 16.h,
+            children: [
+              Text(
+                this.context.l10n.schedule_for_later,
+                style: this.context.typography.h3.copyWith(
+                  fontSize: 18.sp,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const Divider(),
+
+              // Date picker
+              Row(
+                children: [
+                  Icon(LucideIcons.calendar, size: 20.sp),
+                  SizedBox(width: 12.w),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          this.context.l10n.schedule_date,
+                          style: this.context.typography.small.copyWith(
+                            fontSize: 12.sp,
+                            color: this.context.colorScheme.mutedForeground,
+                          ),
+                        ),
+                        DatePicker(
+                          value: tempDate,
+                          mode: PromptMode.dialog,
+                          dialogTitle: Text(this.context.l10n.schedule_date),
+                          stateBuilder: dateStateBuilder,
+                          onChanged: (value) {
+                            if (value != null) {
+                              setDrawerState(() => tempDate = value);
+                            }
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+
+              // Time picker
+              Row(
+                children: [
+                  Icon(LucideIcons.clock, size: 20.sp),
+                  SizedBox(width: 12.w),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          this.context.l10n.schedule_time,
+                          style: this.context.typography.small.copyWith(
+                            fontSize: 12.sp,
+                            color: this.context.colorScheme.mutedForeground,
+                          ),
+                        ),
+                        TimePicker(
+                          value: tempTime,
+                          mode: PromptMode.dialog,
+                          dialogTitle: Text(this.context.l10n.schedule_time),
+                          onChanged: (value) {
+                            setDrawerState(() {
+                              tempTime = value ?? TimeOfDay.now();
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+
+              // Info text
+              Container(
+                padding: EdgeInsets.all(12.r),
+                decoration: BoxDecoration(
+                  color: this.context.colorScheme.muted.withValues(alpha: 0.3),
+                  borderRadius: BorderRadius.circular(8.r),
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      LucideIcons.info,
+                      size: 16.sp,
+                      color: this.context.colorScheme.mutedForeground,
+                    ),
+                    SizedBox(width: 8.w),
+                    Expanded(
+                      child: Text(
+                        this.context.l10n.min_schedule_time,
+                        style: this.context.typography.small.copyWith(
+                          fontSize: 12.sp,
+                          color: this.context.colorScheme.mutedForeground,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              // Action buttons
+              Row(
+                spacing: 12.w,
+                children: [
+                  Expanded(
+                    child: OutlineButton(
+                      onPressed: () => closeDrawer(drawerContext),
+                      child: Text(this.context.l10n.cancel),
+                    ),
+                  ),
+                  Expanded(
+                    child: PrimaryButton(
+                      onPressed: () {
+                        final newDateTime = DateTime(
+                          tempDate.year,
+                          tempDate.month,
+                          tempDate.day,
+                          tempTime.hour,
+                          tempTime.minute,
+                        );
+
+                        // Validate
+                        final validMinTime = DateTime.now().add(
+                          const Duration(minutes: 30),
+                        );
+                        if (newDateTime.isBefore(validMinTime)) {
+                          this.context.showMyToast(
+                            this.context.l10n.schedule_time_too_soon,
+                          );
+                          return;
+                        }
+
+                        setState(() {
+                          scheduledAt = newDateTime;
+                        });
+                        closeDrawer(drawerContext);
+                      },
+                      child: Text(this.context.l10n.confirm_schedule),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   String _formatScheduledAt(DateTime dt) {

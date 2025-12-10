@@ -2,7 +2,6 @@ import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/l10n/l10n.dart';
 import 'package:api_client/api_client.dart';
-import 'package:flutter/material.dart' as material;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
@@ -51,10 +50,10 @@ class _ScheduledOrderListScreenState extends State<ScheduledOrderListScreen> {
   void _showEditScheduleBottomSheet(BuildContext context, Order order) {
     final cubit = context.read<UserOrderCubit>();
     final successMessage = context.l10n.scheduled_order_updated;
-    material.showModalBottomSheet<void>(
+    openDrawer(
       context: context,
-      isScrollControlled: true,
-      builder: (sheetContext) => ScheduledOrderEditBottomSheet(
+      position: OverlayPosition.bottom,
+      builder: (drawerContext) => ScheduledOrderEditBottomSheet(
         order: order,
         onSave: (newDateTime) async {
           final result = await cubit.updateScheduledOrder(
@@ -65,6 +64,7 @@ class _ScheduledOrderListScreenState extends State<ScheduledOrderListScreen> {
             this.context.showMyToast(successMessage);
           }
         },
+        onClose: () => closeDrawer(drawerContext),
       ),
     );
   }
@@ -186,11 +186,13 @@ class ScheduledOrderEditBottomSheet extends StatefulWidget {
   const ScheduledOrderEditBottomSheet({
     required this.order,
     required this.onSave,
+    required this.onClose,
     super.key,
   });
 
   final Order order;
   final Future<void> Function(DateTime newDateTime) onSave;
+  final VoidCallback onClose;
 
   @override
   State<ScheduledOrderEditBottomSheet> createState() =>
@@ -200,7 +202,7 @@ class ScheduledOrderEditBottomSheet extends StatefulWidget {
 class _ScheduledOrderEditBottomSheetState
     extends State<ScheduledOrderEditBottomSheet> {
   late DateTime _selectedDate;
-  late material.TimeOfDay _selectedTime;
+  late TimeOfDay _selectedTime;
   bool _isSaving = false;
 
   @override
@@ -210,35 +212,21 @@ class _ScheduledOrderEditBottomSheetState
         widget.order.scheduledAt ??
         DateTime.now().add(const Duration(hours: 1));
     _selectedDate = scheduledAt;
-    _selectedTime = material.TimeOfDay.fromDateTime(scheduledAt);
+    _selectedTime = TimeOfDay.fromDateTime(scheduledAt);
   }
 
-  Future<void> _selectDate() async {
-    final now = DateTime.now();
-    final minDate = now.add(const Duration(minutes: 30));
-    final maxDate = now.add(const Duration(days: 7));
+  DateTime get _minDate => DateTime.now().add(const Duration(minutes: 30));
+  DateTime get _maxDate => DateTime.now().add(const Duration(days: 7));
 
-    final picked = await material.showDatePicker(
-      context: context,
-      initialDate: _selectedDate.isBefore(minDate) ? minDate : _selectedDate,
-      firstDate: minDate,
-      lastDate: maxDate,
-    );
+  DateState _dateStateBuilder(DateTime date) {
+    final dateOnly = DateTime(date.year, date.month, date.day);
+    final minDateOnly = DateTime(_minDate.year, _minDate.month, _minDate.day);
+    final maxDateOnly = DateTime(_maxDate.year, _maxDate.month, _maxDate.day);
 
-    if (picked != null) {
-      setState(() => _selectedDate = picked);
+    if (dateOnly.isBefore(minDateOnly) || dateOnly.isAfter(maxDateOnly)) {
+      return DateState.disabled;
     }
-  }
-
-  Future<void> _selectTime() async {
-    final picked = await material.showTimePicker(
-      context: context,
-      initialTime: _selectedTime,
-    );
-
-    if (picked != null) {
-      setState(() => _selectedTime = picked);
-    }
+    return DateState.enabled;
   }
 
   Future<void> _onSave() async {
@@ -269,18 +257,12 @@ class _ScheduledOrderEditBottomSheetState
 
     try {
       await widget.onSave(newDateTime);
-      if (mounted) {
-        Navigator.of(context).pop();
-      }
+      widget.onClose();
     } finally {
       if (mounted) {
         setState(() => _isSaving = false);
       }
     }
-  }
-
-  String _formatTimeOfDay(material.TimeOfDay t) {
-    return '${t.hour.toString().padLeft(2, '0')}:${t.minute.toString().padLeft(2, '0')}';
   }
 
   @override
@@ -303,83 +285,68 @@ class _ScheduledOrderEditBottomSheetState
           const Divider(),
 
           // Date picker
-          GhostButton(
-            onPressed: _selectDate,
-            child: Container(
-              padding: EdgeInsets.all(12.r),
-              decoration: BoxDecoration(
-                border: Border.all(color: context.colorScheme.border),
-                borderRadius: BorderRadius.circular(8.r),
-              ),
-              child: Row(
-                children: [
-                  Icon(LucideIcons.calendar, size: 20.sp),
-                  SizedBox(width: 12.w),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          context.l10n.schedule_date,
-                          style: context.typography.small.copyWith(
-                            fontSize: 12.sp,
-                            color: context.colorScheme.mutedForeground,
-                          ),
-                        ),
-                        Text(
-                          '${_selectedDate.day}/${_selectedDate.month}/${_selectedDate.year}',
-                          style: context.typography.p.copyWith(
-                            fontSize: 16.sp,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ],
+          Row(
+            children: [
+              Icon(LucideIcons.calendar, size: 20.sp),
+              SizedBox(width: 12.w),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      context.l10n.schedule_date,
+                      style: context.typography.small.copyWith(
+                        fontSize: 12.sp,
+                        color: context.colorScheme.mutedForeground,
+                      ),
                     ),
-                  ),
-                  Icon(LucideIcons.chevronRight, size: 20.sp),
-                ],
+                    DatePicker(
+                      value: _selectedDate,
+                      mode: PromptMode.dialog,
+                      dialogTitle: Text(context.l10n.schedule_date),
+                      stateBuilder: _dateStateBuilder,
+                      onChanged: (value) {
+                        if (value != null) {
+                          setState(() => _selectedDate = value);
+                        }
+                      },
+                    ),
+                  ],
+                ),
               ),
-            ),
+            ],
           ),
 
           // Time picker
-          GhostButton(
-            onPressed: _selectTime,
-            child: Container(
-              padding: EdgeInsets.all(12.r),
-              decoration: BoxDecoration(
-                border: Border.all(color: context.colorScheme.border),
-                borderRadius: BorderRadius.circular(8.r),
-              ),
-              child: Row(
-                children: [
-                  Icon(LucideIcons.clock, size: 20.sp),
-                  SizedBox(width: 12.w),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          context.l10n.schedule_time,
-                          style: context.typography.small.copyWith(
-                            fontSize: 12.sp,
-                            color: context.colorScheme.mutedForeground,
-                          ),
-                        ),
-                        Text(
-                          _formatTimeOfDay(_selectedTime),
-                          style: context.typography.p.copyWith(
-                            fontSize: 16.sp,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ],
+          Row(
+            children: [
+              Icon(LucideIcons.clock, size: 20.sp),
+              SizedBox(width: 12.w),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      context.l10n.schedule_time,
+                      style: context.typography.small.copyWith(
+                        fontSize: 12.sp,
+                        color: context.colorScheme.mutedForeground,
+                      ),
                     ),
-                  ),
-                  Icon(LucideIcons.chevronRight, size: 20.sp),
-                ],
+                    TimePicker(
+                      value: _selectedTime,
+                      mode: PromptMode.dialog,
+                      dialogTitle: Text(context.l10n.schedule_time),
+                      onChanged: (value) {
+                        setState(() {
+                          _selectedTime = value ?? TimeOfDay.now();
+                        });
+                      },
+                    ),
+                  ],
+                ),
               ),
-            ),
+            ],
           ),
 
           // Info text
@@ -418,9 +385,7 @@ class _ScheduledOrderEditBottomSheetState
             children: [
               Expanded(
                 child: OutlineButton(
-                  onPressed: _isSaving
-                      ? null
-                      : () => Navigator.of(context).pop(),
+                  onPressed: _isSaving ? null : widget.onClose,
                   child: Text(context.l10n.cancel),
                 ),
               ),

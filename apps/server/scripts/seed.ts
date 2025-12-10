@@ -34,6 +34,7 @@ import { banner } from "@/core/tables/banner";
 import { broadcast } from "@/core/tables/broadcast";
 import { orderChatMessage } from "@/core/tables/chat";
 import {
+	type ConfigurationDatabase,
 	configuration,
 	configurationAuditLog,
 } from "@/core/tables/configuration";
@@ -975,8 +976,7 @@ export async function seedConfigurations() {
 
 		await tx
 			.insert(configuration)
-			// biome-ignore lint/suspicious/noExplicitAny: it just works
-			.values(CONFIGS as any)
+			.values(CONFIGS as ConfigurationDatabase[])
 			.onConflictDoUpdate({
 				target: configuration.key,
 				set: {

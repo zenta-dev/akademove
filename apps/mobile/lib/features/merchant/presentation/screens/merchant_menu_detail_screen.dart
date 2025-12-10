@@ -3,7 +3,6 @@ import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/l10n/l10n.dart';
 import 'package:api_client/api_client.dart';
-import 'package:flutter/material.dart' as material;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -64,7 +63,7 @@ class MerchantMenuDetailScreen extends StatelessWidget {
                               height: 200.h,
                               color: const Color(0xFFEEEEEE),
                               child: const Center(
-                                child: material.CircularProgressIndicator(),
+                                child: CircularProgressIndicator(),
                               ),
                             );
                           },
@@ -130,7 +129,7 @@ class MerchantMenuDetailScreen extends StatelessWidget {
 
                 // Action Buttons
                 if (state.menu.isLoading)
-                  const Center(child: material.CircularProgressIndicator())
+                  const Center(child: CircularProgressIndicator())
                 else
                   Row(
                     spacing: 16.w,
@@ -260,7 +259,7 @@ class MerchantMenuDetailScreen extends StatelessWidget {
     BuildContext context,
     String label,
     String value, {
-    material.Color? valueColor,
+    Color? valueColor,
   }) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,

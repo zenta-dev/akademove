@@ -3,7 +3,6 @@ import 'package:akademove/features/features.dart';
 import 'package:akademove/l10n/l10n.dart';
 import 'package:akademove/locator.dart';
 import 'package:api_client/api_client.dart';
-import 'package:flutter/material.dart' as material;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
@@ -105,7 +104,7 @@ class _DriverReviewsScreenState extends State<DriverReviewsScreen> {
               );
             }
 
-            return material.RefreshIndicator(
+            return RefreshTrigger(
               onRefresh: _onRefresh,
               child: ListView.builder(
                 controller: _scrollController,

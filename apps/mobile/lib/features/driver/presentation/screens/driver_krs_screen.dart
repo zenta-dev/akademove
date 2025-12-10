@@ -2,7 +2,6 @@ import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/l10n/l10n.dart';
 import 'package:api_client/api_client.dart';
-import 'package:flutter/material.dart' as material;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
@@ -93,10 +92,10 @@ class _DriverKrsScreenState extends State<DriverKrsScreen> {
   // EMPTY STATE
   // -------------------------
   Widget _buildEmptyState() {
-    return material.CustomScrollView(
-      physics: const material.AlwaysScrollableScrollPhysics(),
+    return CustomScrollView(
+      physics: const AlwaysScrollableScrollPhysics(),
       slivers: [
-        material.SliverFillRemaining(
+        SliverFillRemaining(
           hasScrollBody: false,
           child: Center(
             child: Padding(
@@ -114,7 +113,7 @@ class _DriverKrsScreenState extends State<DriverKrsScreen> {
                     context.l10n.no_schedules_yet,
                     style: context.typography.h3.copyWith(
                       fontSize: 20.sp,
-                      fontWeight: material.FontWeight.bold,
+                      fontWeight: FontWeight.bold,
                     ),
                     textAlign: TextAlign.center,
                   ),
@@ -169,7 +168,7 @@ class _DriverKrsScreenState extends State<DriverKrsScreen> {
                     schedule.name,
                     style: context.typography.h4.copyWith(
                       fontSize: 16.sp,
-                      fontWeight: material.FontWeight.bold,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
@@ -184,7 +183,7 @@ class _DriverKrsScreenState extends State<DriverKrsScreen> {
                     _getDayText(schedule.dayOfWeek),
                     style: context.typography.small.copyWith(
                       fontSize: 12.sp,
-                      fontWeight: material.FontWeight.w600,
+                      fontWeight: FontWeight.w600,
                       color: dayColor,
                     ),
                   ),
@@ -230,7 +229,7 @@ class _DriverKrsScreenState extends State<DriverKrsScreen> {
                       context.l10n.recurring,
                       style: context.typography.small.copyWith(
                         fontSize: 10.sp,
-                        fontWeight: material.FontWeight.w600,
+                        fontWeight: FontWeight.w600,
                         color: context.colorScheme.primary,
                       ),
                     ),
@@ -271,19 +270,19 @@ class _DriverKrsScreenState extends State<DriverKrsScreen> {
     final nameController = TextEditingController(text: schedule?.name);
     DayOfWeek selectedDay = schedule?.dayOfWeek ?? DayOfWeek.MONDAY;
 
-    material.TimeOfDay startTime = schedule != null
-        ? material.TimeOfDay(
+    TimeOfDay startTime = schedule != null
+        ? TimeOfDay(
             hour: schedule.startTime.h.toInt(),
             minute: schedule.startTime.m.toInt(),
           )
-        : const material.TimeOfDay(hour: 8, minute: 0);
+        : const TimeOfDay(hour: 8, minute: 0);
 
-    material.TimeOfDay endTime = schedule != null
-        ? material.TimeOfDay(
+    TimeOfDay endTime = schedule != null
+        ? TimeOfDay(
             hour: schedule.endTime.h.toInt(),
             minute: schedule.endTime.m.toInt(),
           )
-        : const material.TimeOfDay(hour: 10, minute: 0);
+        : const TimeOfDay(hour: 10, minute: 0);
 
     bool isRecurring = schedule?.isRecurring ?? true;
     bool isActive = schedule?.isActive ?? true;
@@ -293,168 +292,199 @@ class _DriverKrsScreenState extends State<DriverKrsScreen> {
       builder: (dialogContext) {
         return StatefulBuilder(
           builder: (context, setState) {
-            return material.Dialog(
-              insetPadding: EdgeInsets.all(16.dg),
-              child: ConstrainedBox(
+            return AlertDialog(
+              title: Text(
+                isEditing
+                    ? context.l10n.title_edit_schedule
+                    : context.l10n.title_add_schedule,
+              ),
+              content: ConstrainedBox(
                 constraints: BoxConstraints(
-                  maxHeight: MediaQuery.of(context).size.height * 0.8,
+                  maxHeight: MediaQuery.of(context).size.height * 0.6,
                 ),
-                child: Padding(
-                  padding: EdgeInsets.all(16.dg),
+                child: SingleChildScrollView(
                   child: Column(
-                    mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      // Title
-                      Text(
-                        isEditing
-                            ? context.l10n.title_edit_schedule
-                            : context.l10n.title_add_schedule,
-                        style: context.typography.h3.copyWith(
-                          fontSize: 18.sp,
-                          fontWeight: material.FontWeight.bold,
-                        ),
+                      TextField(
+                        controller: nameController,
+                        placeholder: Text(context.l10n.placeholder_course_name),
                       ),
-                      SizedBox(height: 24.h),
+                      SizedBox(height: 16.h),
 
-                      // Content - using Expanded with SingleChildScrollView
-                      Expanded(
-                        child: material.SingleChildScrollView(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
+                      Select<DayOfWeek>(
+                        value: selectedDay,
+                        onChanged: (value) {
+                          if (value != null) {
+                            setState(() => selectedDay = value);
+                          }
+                        },
+                        placeholder: Text(context.l10n.day_of_week),
+                        itemBuilder: (context, item) {
+                          return Text(_getDayFullText(context, item));
+                        },
+                        popupConstraints: BoxConstraints(
+                          maxHeight: 300.h,
+                          maxWidth: 300.w,
+                        ),
+                        popup: SelectPopup(
+                          items: SelectItemList(
                             children: [
-                              TextField(
-                                controller: nameController,
-                                placeholder: Text(
-                                  context.l10n.placeholder_course_name,
+                              for (final day in DayOfWeek.values)
+                                SelectItemButton(
+                                  value: day,
+                                  child: Text(_getDayFullText(context, day)),
                                 ),
-                              ),
-                              SizedBox(height: 16.h),
-
-                              material.DropdownButtonFormField<DayOfWeek>(
-                                initialValue: selectedDay,
-                                decoration: const material.InputDecoration(
-                                  border: material.OutlineInputBorder(),
-                                ),
-                                items: DayOfWeek.values.map((day) {
-                                  return material.DropdownMenuItem(
-                                    value: day,
-                                    child: Text(_getDayFullText(context, day)),
-                                  );
-                                }).toList(),
-                                onChanged: (value) {
-                                  if (value != null) {
-                                    setState(() => selectedDay = value);
-                                  }
-                                },
-                              ),
-                              SizedBox(height: 16.h),
-
-                              _buildTimePicker(
-                                label: context.l10n.start_time,
-                                time: startTime,
-                                onTap: () async {
-                                  final picked = await material.showTimePicker(
-                                    context: context,
-                                    initialTime: startTime,
-                                  );
-                                  if (picked != null) {
-                                    setState(() => startTime = picked);
-                                  }
-                                },
-                              ),
-                              SizedBox(height: 16.h),
-
-                              _buildTimePicker(
-                                label: context.l10n.end_time,
-                                time: endTime,
-                                onTap: () async {
-                                  final picked = await material.showTimePicker(
-                                    context: context,
-                                    initialTime: endTime,
-                                  );
-                                  if (picked != null) {
-                                    setState(() => endTime = picked);
-                                  }
-                                },
-                              ),
-                              SizedBox(height: 16.h),
-
-                              material.SwitchListTile(
-                                contentPadding: EdgeInsets.zero,
-                                title: Text(context.l10n.recurring),
-                                subtitle: Text(context.l10n.repeat_every_week),
-                                value: isRecurring,
-                                onChanged: (value) =>
-                                    setState(() => isRecurring = value),
-                              ),
-                              SizedBox(height: 8.h),
-
-                              material.SwitchListTile(
-                                contentPadding: EdgeInsets.zero,
-                                title: Text(context.l10n.active),
-                                subtitle: Text(
-                                  context.l10n.disable_orders_during_this_time,
-                                ),
-                                value: isActive,
-                                onChanged: (value) =>
-                                    setState(() => isActive = value),
-                              ),
                             ],
                           ),
-                        ),
+                        ).call,
                       ),
-                      SizedBox(height: 24.h),
+                      SizedBox(height: 16.h),
 
-                      // Actions
-                      Row(
-                        spacing: 8.w,
-                        children: [
-                          Expanded(
-                            child: OutlineButton(
-                              onPressed: () =>
-                                  Navigator.of(dialogContext).pop(),
-                              child: Text(context.l10n.cancel),
-                            ),
-                          ),
-                          Expanded(
-                            child: PrimaryButton(
-                              onPressed: () async {
-                                final name = nameController.text.trim();
-                                if (name.isEmpty) {
-                                  context.showMyToast(
-                                    context.l10n.please_enter_a_schedule_name,
-                                    type: ToastType.failed,
-                                  );
-                                  return;
-                                }
+                      // _buildTimePicker(
+                      //   label: context.l10n.start_time,
+                      //   time: startTime,
+                      //   onTap: () async {
+                      //     final picked = await showTimePicker(
+                      //       context: context,
+                      //       initialTime: startTime,
+                      //     );
+                      //     if (picked != null) {
+                      //       setState(() => startTime = picked);
+                      //     }
+                      //   },
+                      // ),
+                      SizedBox(height: 16.h),
 
-                                Navigator.of(dialogContext).pop();
+                      // _buildTimePicker(
+                      //   label: context.l10n.end_time,
+                      //   time: endTime,
+                      //   onTap: () async {
+                      //     final picked = await showTimePicker(
+                      //       context: context,
+                      //       initialTime: endTime,
+                      //     );
+                      //     if (picked != null) {
+                      //       setState(() => endTime = picked);
+                      //     }
+                      //   },
+                      // ),
+                      SizedBox(height: 16.h),
 
-                                await _saveSchedule(
-                                  name: name,
-                                  dayOfWeek: selectedDay,
-                                  startTime: startTime,
-                                  endTime: endTime,
-                                  isRecurring: isRecurring,
-                                  isActive: isActive,
-                                  scheduleId: schedule?.id,
-                                );
-                              },
-                              child: Text(
-                                isEditing
-                                    ? context.l10n.update
-                                    : context.l10n.add,
+                      // Recurring switch
+                      GestureDetector(
+                        onTap: () => setState(() => isRecurring = !isRecurring),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    context.l10n.recurring,
+                                    style: context.typography.p.copyWith(
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  SizedBox(height: 4.h),
+                                  Text(
+                                    context.l10n.repeat_every_week,
+                                    style: context.typography.small.copyWith(
+                                      fontSize: 12.sp,
+                                      color:
+                                          context.colorScheme.mutedForeground,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                          ),
-                        ],
+                            Switch(
+                              value: isRecurring,
+                              onChanged: (value) =>
+                                  setState(() => isRecurring = value),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 8.h),
+
+                      // Active switch
+                      GestureDetector(
+                        onTap: () => setState(() => isActive = !isActive),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    context.l10n.active,
+                                    style: context.typography.p.copyWith(
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  SizedBox(height: 4.h),
+                                  Text(
+                                    context
+                                        .l10n
+                                        .disable_orders_during_this_time,
+                                    style: context.typography.small.copyWith(
+                                      fontSize: 12.sp,
+                                      color:
+                                          context.colorScheme.mutedForeground,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Switch(
+                              value: isActive,
+                              onChanged: (value) =>
+                                  setState(() => isActive = value),
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),
                 ),
               ),
+              actions: [
+                OutlineButton(
+                  onPressed: () => Navigator.of(dialogContext).pop(),
+                  child: Text(context.l10n.cancel),
+                ),
+                PrimaryButton(
+                  onPressed: () async {
+                    final name = nameController.text.trim();
+                    if (name.isEmpty) {
+                      context.showMyToast(
+                        context.l10n.please_enter_a_schedule_name,
+                        type: ToastType.failed,
+                      );
+                      return;
+                    }
+
+                    Navigator.of(dialogContext).pop();
+
+                    await _saveSchedule(
+                      name: name,
+                      dayOfWeek: selectedDay,
+                      startTime: startTime,
+                      endTime: endTime,
+                      isRecurring: isRecurring,
+                      isActive: isActive,
+                      scheduleId: schedule?.id,
+                    );
+                  },
+                  child: Text(
+                    isEditing ? context.l10n.update : context.l10n.add,
+                  ),
+                ),
+              ],
             );
           },
         );
@@ -467,7 +497,7 @@ class _DriverKrsScreenState extends State<DriverKrsScreen> {
   // -------------------------
   Widget _buildTimePicker({
     required String label,
-    required material.TimeOfDay time,
+    required TimeOfDay time,
     required VoidCallback onTap,
   }) {
     return GestureDetector(
@@ -486,7 +516,7 @@ class _DriverKrsScreenState extends State<DriverKrsScreen> {
                       label,
                       style: context.typography.p.copyWith(
                         fontSize: 14.sp,
-                        fontWeight: material.FontWeight.w600,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                     Text(
@@ -513,8 +543,8 @@ class _DriverKrsScreenState extends State<DriverKrsScreen> {
   Future<void> _saveSchedule({
     required String name,
     required DayOfWeek dayOfWeek,
-    required material.TimeOfDay startTime,
-    required material.TimeOfDay endTime,
+    required TimeOfDay startTime,
+    required TimeOfDay endTime,
     required bool isRecurring,
     required bool isActive,
     String? scheduleId,
@@ -612,7 +642,7 @@ class _DriverKrsScreenState extends State<DriverKrsScreen> {
     return '$h:$m';
   }
 
-  String _formatTimeOfDay(material.TimeOfDay t) {
+  String _formatTimeOfDay(TimeOfDay t) {
     return '${t.hour.toString().padLeft(2, '0')}:${t.minute.toString().padLeft(2, '0')}';
   }
 

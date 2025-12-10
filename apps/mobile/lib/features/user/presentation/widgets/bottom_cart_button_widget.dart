@@ -1,5 +1,4 @@
 import 'package:akademove/core/_export.dart';
-import 'package:flutter/material.dart' as flutter_material;
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 
@@ -35,7 +34,7 @@ class BottomCartButtonWidget extends StatelessWidget {
         color: context.colorScheme.primary,
         boxShadow: [
           BoxShadow(
-            color: flutter_material.Colors.black.withValues(alpha: 0.1),
+            color: Colors.black.withValues(alpha: 0.1),
             blurRadius: 8.r,
             offset: Offset(0, -2),
           ),
@@ -51,8 +50,8 @@ class BottomCartButtonWidget extends StatelessWidget {
             Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                flutter_material.Icon(
-                  flutter_material.Icons.shopping_cart_rounded,
+                Icon(
+                  LucideIcons.shoppingCart,
                   color: context.colorScheme.primaryForeground,
                   size: 20.sp,
                 ),

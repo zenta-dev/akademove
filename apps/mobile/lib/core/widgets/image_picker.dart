@@ -4,9 +4,7 @@ import 'package:akademove/core/_export.dart';
 import 'package:akademove/l10n/l10n.dart';
 import 'package:akademove/locator.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/material.dart'
-    as material
-    show ListTile, showModalBottomSheet;
+
 import 'package:image_picker/image_picker.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 
@@ -65,41 +63,76 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
   }
 
   void _showSourceOptions() {
-    material.showModalBottomSheet<void>(
+    openSheet<void>(
       context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-      ),
-      builder: (builderContext) => SafeArea(
-        child: Wrap(
-          children: [
-            material.ListTile(
-              leading: const Icon(Icons.photo_camera),
-              title: Text(context.l10n.action_take_photo),
-              onTap: () {
-                Navigator.pop(context);
-                _pickImage(ImageSource.camera);
-              },
-            ),
-            material.ListTile(
-              leading: const Icon(Icons.photo_library),
-              title: Text(context.l10n.action_choose_gallery),
-              onTap: () {
-                Navigator.pop(context);
-                _pickImage(ImageSource.gallery);
-              },
-            ),
-            if (_selectedImage != null)
-              material.ListTile(
-                leading: const Icon(Icons.delete),
-                title: Text(context.l10n.action_remove_image),
+      position: OverlayPosition.bottom,
+      builder: (sheetContext) => SafeArea(
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 8),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              GestureDetector(
                 onTap: () {
-                  Navigator.pop(context);
-                  setState(() => _selectedImage = null);
-                  widget.onValueChanged?.call(File(''));
+                  closeOverlay<void>(sheetContext);
+                  _pickImage(ImageSource.camera);
                 },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 12,
+                  ),
+                  child: Row(
+                    children: [
+                      const Icon(LucideIcons.camera),
+                      const SizedBox(width: 16),
+                      Text(context.l10n.action_take_photo),
+                    ],
+                  ),
+                ),
               ),
-          ],
+              GestureDetector(
+                onTap: () {
+                  closeOverlay<void>(sheetContext);
+                  _pickImage(ImageSource.gallery);
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 12,
+                  ),
+                  child: Row(
+                    children: [
+                      const Icon(LucideIcons.image),
+                      const SizedBox(width: 16),
+                      Text(context.l10n.action_choose_gallery),
+                    ],
+                  ),
+                ),
+              ),
+              if (_selectedImage != null)
+                GestureDetector(
+                  onTap: () {
+                    closeOverlay<void>(sheetContext);
+                    setState(() => _selectedImage = null);
+                    widget.onValueChanged?.call(File(''));
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 12,
+                    ),
+                    child: Row(
+                      children: [
+                        const Icon(LucideIcons.trash2),
+                        const SizedBox(width: 16),
+                        Text(context.l10n.action_remove_image),
+                      ],
+                    ),
+                  ),
+                ),
+            ],
+          ),
         ),
       ),
     );
@@ -111,7 +144,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
     final selectedImage = _selectedImage;
     final hasImage = selectedImage != null && selectedImage.existsSync();
 
-    const placeholder = Center(
+    final placeholder = Center(
       child: Icon(LucideIcons.camera, color: Colors.neutral, size: 36),
     );
 

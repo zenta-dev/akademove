@@ -12,6 +12,9 @@ class AppLocalizationsId extends AppLocalizations {
   AppLocalizationsId([String locale = 'id']) : super(locale);
 
   @override
+  String get select_bank => 'Pilih bank';
+
+  @override
   String get edit_detail => 'Ubah Detail';
 
   @override

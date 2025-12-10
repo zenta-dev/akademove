@@ -152,7 +152,7 @@ class MerchantAvailabilityToggle extends StatelessWidget {
                           _buildStatusItem(context, 'CLOSED'),
                         ],
                       ),
-                    ),
+                    ).call,
                   ),
                   SizedBox(height: 8.h),
                   Text(

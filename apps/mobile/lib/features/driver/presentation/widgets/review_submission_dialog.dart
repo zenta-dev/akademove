@@ -2,7 +2,6 @@ import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/driver/presentation/cubits/_export.dart';
 import 'package:akademove/l10n/l10n.dart';
 import 'package:api_client/api_client.dart';
-import 'package:flutter/material.dart' as material show Slider;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
@@ -149,14 +148,14 @@ class _ReviewSubmissionDialogState extends State<ReviewSubmissionDialog> {
                 children: [
                   Icon(LucideIcons.star, size: 16.sp),
                   Expanded(
-                    child: material.Slider(
-                      value: _score,
+                    child: Slider(
+                      value: SliderValue.single(_score),
                       min: 1.0,
                       max: 5.0,
                       divisions: 8,
-                      label: _score.toStringAsFixed(1),
+                      // label: _score.toStringAsFixed(1),
                       onChanged: (value) {
-                        setState(() => _score = value);
+                        setState(() => _score = value.value);
                       },
                     ),
                   ),

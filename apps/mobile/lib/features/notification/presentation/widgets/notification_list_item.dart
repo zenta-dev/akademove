@@ -1,7 +1,6 @@
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/notification/data/models/notification_models.dart';
 import 'package:akademove/l10n/l10n.dart';
-import 'package:flutter/material.dart' as material;
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
@@ -20,9 +19,9 @@ class NotificationListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return material.Dismissible(
+    return Dismissible(
       key: Key(notification.id),
-      direction: material.DismissDirection.endToStart,
+      direction: DismissDirection.endToStart,
       onDismissed: (_) => onDismiss(),
       background: Container(
         alignment: Alignment.centerRight,
@@ -39,9 +38,8 @@ class NotificationListItem extends StatelessWidget {
       ),
       child: Card(
         padding: EdgeInsets.zero,
-        child: material.InkWell(
+        child: GestureDetector(
           onTap: onTap,
-          borderRadius: BorderRadius.circular(12.r),
           child: Container(
             padding: EdgeInsets.all(16.dg),
             decoration: BoxDecoration(

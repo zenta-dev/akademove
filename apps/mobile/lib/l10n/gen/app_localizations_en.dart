@@ -12,6 +12,9 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
+  String get select_bank => 'Select bank';
+
+  @override
   String get edit_detail => 'Edit Detail';
 
   @override

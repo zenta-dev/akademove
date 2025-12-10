@@ -3,7 +3,6 @@ import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/l10n/l10n.dart';
 import 'package:api_client/api_client.dart';
-import 'package:flutter/material.dart' as material;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -93,9 +92,7 @@ class _MerchantMenuScreenState extends State<MerchantMenuScreen> {
             child: BlocBuilder<MerchantMenuCubit, MerchantMenuState>(
               builder: (context, state) {
                 if (state.menus.isLoading) {
-                  return const Center(
-                    child: material.CircularProgressIndicator(),
-                  );
+                  return const Center(child: CircularProgressIndicator());
                 }
 
                 if (state.menus.isFailure) {
@@ -201,7 +198,7 @@ class _MenuCard extends StatelessWidget {
                           height: 95.h,
                           color: const Color(0xFFEEEEEE),
                           child: const Center(
-                            child: material.CircularProgressIndicator(),
+                            child: CircularProgressIndicator(),
                           ),
                         );
                       },

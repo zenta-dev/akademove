@@ -79,8 +79,8 @@ class _LeaderboardViewState extends State<_LeaderboardView> {
             index: _tabIndex,
             onChanged: (index) => setState(() => _tabIndex = index),
             children: [
-              TabChild(child: Text(context.l10n.tab_rankings)),
-              TabChild(child: Text(context.l10n.tab_badges)),
+              TabItem(child: Text(context.l10n.tab_rankings)),
+              TabItem(child: Text(context.l10n.tab_badges)),
             ],
           ),
         ),

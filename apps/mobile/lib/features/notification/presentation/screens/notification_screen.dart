@@ -2,7 +2,6 @@ import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/l10n/l10n.dart';
 import 'package:akademove/locator.dart';
-import 'package:flutter/material.dart' as material;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -132,7 +131,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
 
             final hasMore = state.currentPage < state.totalPages;
 
-            return material.RefreshIndicator(
+            return RefreshTrigger(
               onRefresh: _onRefresh,
               child: ListView.builder(
                 controller: _scrollController,

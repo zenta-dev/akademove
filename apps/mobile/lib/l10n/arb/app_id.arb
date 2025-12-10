@@ -1,5 +1,6 @@
 {
 	"@@locale": "id",
+	"select_bank": "Pilih bank",
 	"edit_detail": "Ubah Detail",
 	"total_delivery_distance": "Total jarak pengiriman",
 	"choose_item_type": "Pilih jenis item Anda",
@@ -7,7 +8,6 @@
 	"cloth": "Pakaian",
 	"medicine": "Obat",
 	"book": "Buku",
-	"other": "Lainnya",
 	"max": "Maks",
 	"choose_your_items_size": "Pilih ukuran item Anda",
 	"choose": "Pilih",

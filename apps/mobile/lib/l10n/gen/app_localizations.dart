@@ -97,6 +97,12 @@ abstract class AppLocalizations {
     Locale('id')
   ];
 
+  /// No description provided for @select_bank.
+  ///
+  /// In en, this message translates to:
+  /// **'Select bank'**
+  String get select_bank;
+
   /// No description provided for @edit_detail.
   ///
   /// In en, this message translates to:

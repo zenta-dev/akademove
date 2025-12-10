@@ -2,7 +2,6 @@ import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/l10n/l10n.dart';
 import 'package:api_client/api_client.dart';
-import 'package:flutter/material.dart' as material;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -102,7 +101,7 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
       ],
       body: _isLoading && _wallet == null
           ? const Center(child: CircularProgressIndicator())
-          : material.RefreshIndicator(
+          : RefreshTrigger(
               onRefresh: _onRefresh,
               child: SingleChildScrollView(
                 padding: EdgeInsets.all(16.dg),
@@ -522,23 +521,27 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
                   placeholder: Text(context.l10n.enter_withdrawal_amount),
                 ),
                 // Bank provider dropdown
-                material.DropdownButtonFormField<BankProvider>(
-                  initialValue: selectedBank,
-                  decoration: const material.InputDecoration(
-                    labelText: 'Bank',
-                    border: material.OutlineInputBorder(),
-                  ),
-                  items: BankProvider.values.map((bank) {
-                    return material.DropdownMenuItem(
-                      value: bank,
-                      child: Text(bank.name),
-                    );
-                  }).toList(),
+                Select<BankProvider>(
+                  value: selectedBank,
                   onChanged: (value) {
                     if (value != null) {
                       setState(() => selectedBank = value);
                     }
                   },
+                  placeholder: Text(context.l10n.select_bank),
+                  itemBuilder: (context, item) => Text(item.name),
+                  popupConstraints: const BoxConstraints(
+                    maxHeight: 300,
+                    maxWidth: 300,
+                  ),
+                  popup: SelectPopup(
+                    items: SelectItemList(
+                      children: [
+                        for (final bank in BankProvider.values)
+                          SelectItemButton(value: bank, child: Text(bank.name)),
+                      ],
+                    ),
+                  ).call,
                 ),
                 // Account number field
                 TextField(
@@ -697,133 +700,146 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
   }
 
   void _showAllTransactionsDialog(List<Transaction> transactions) {
-    material.showModalBottomSheet(
+    openDrawer(
       context: context,
-      isScrollControlled: true,
-      builder: (bottomSheetContext) => material.DraggableScrollableSheet(
-        initialChildSize: 0.9,
-        minChildSize: 0.5,
-        maxChildSize: 0.95,
-        expand: false,
-        builder: (context, scrollController) => Container(
-          decoration: BoxDecoration(
-            color: material.Theme.of(context).scaffoldBackgroundColor,
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(16),
-              topRight: Radius.circular(16),
-            ),
+      position: OverlayPosition.bottom,
+      builder: (drawerContext) => Container(
+        constraints: BoxConstraints(
+          maxHeight: MediaQuery.of(context).size.height * 0.9,
+        ),
+        decoration: BoxDecoration(
+          color: context.colorScheme.background,
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(16),
+            topRight: Radius.circular(16),
           ),
-          child: Column(
-            children: [
-              Container(
-                padding: EdgeInsets.all(16.w),
-                decoration: BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(
-                      color: context.colorScheme.border,
-                      width: 1,
-                    ),
+        ),
+        child: Column(
+          children: [
+            Container(
+              padding: EdgeInsets.all(16.w),
+              decoration: BoxDecoration(
+                border: Border(
+                  bottom: BorderSide(
+                    color: context.colorScheme.border,
+                    width: 1,
                   ),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'All Transactions',
-                      style: TextStyle(
-                        fontSize: 18.sp,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    IconButton(
-                      icon: const Icon(material.Icons.close),
-                      onPressed: () => Navigator.of(bottomSheetContext).pop(),
-                      variance: ButtonVariance.ghost,
-                    ),
-                  ],
                 ),
               ),
-              if (transactions.isEmpty)
-                Expanded(
-                  child: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(LucideIcons.receipt, size: 64.sp),
-                        SizedBox(height: 16.h),
-                        Text(
-                          'No transactions found',
-                          style: TextStyle(
-                            fontSize: 16.sp,
-                            color: context.colorScheme.mutedForeground,
-                          ),
-                        ),
-                      ],
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'All Transactions',
+                    style: TextStyle(
+                      fontSize: 18.sp,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                )
-              else
-                Expanded(
-                  child: ListView.separated(
-                    controller: scrollController,
-                    padding: EdgeInsets.all(16.w),
-                    itemCount: transactions.length,
-                    separatorBuilder: (context, index) =>
-                        SizedBox(height: 12.h),
-                    itemBuilder: (context, index) {
-                      final transaction = transactions[index];
-                      final isIncome =
-                          transaction.type == TransactionType.TOPUP ||
-                          transaction.type == TransactionType.REFUND ||
-                          transaction.type == TransactionType.EARNING;
-                      final amountColor = isIncome
-                          ? const Color(0xFF4CAF50)
-                          : const Color(0xFFF44336);
-                      final amountPrefix = isIncome ? '+' : '-';
+                  IconButton(
+                    icon: const Icon(LucideIcons.x),
+                    onPressed: () => closeDrawer(drawerContext),
+                    variance: ButtonVariance.ghost,
+                  ),
+                ],
+              ),
+            ),
+            if (transactions.isEmpty)
+              Expanded(
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(LucideIcons.receipt, size: 64.sp),
+                      SizedBox(height: 16.h),
+                      Text(
+                        'No transactions found',
+                        style: TextStyle(
+                          fontSize: 16.sp,
+                          color: context.colorScheme.mutedForeground,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              )
+            else
+              Expanded(
+                child: ListView.separated(
+                  padding: EdgeInsets.all(16.w),
+                  itemCount: transactions.length,
+                  separatorBuilder: (context, index) => SizedBox(height: 12.h),
+                  itemBuilder: (context, index) {
+                    final transaction = transactions[index];
+                    final isIncome =
+                        transaction.type == TransactionType.TOPUP ||
+                        transaction.type == TransactionType.REFUND ||
+                        transaction.type == TransactionType.EARNING;
+                    final amountColor = isIncome
+                        ? const Color(0xFF4CAF50)
+                        : const Color(0xFFF44336);
+                    final amountPrefix = isIncome ? '+' : '-';
 
-                      return material.Card(
-                        child: material.ListTile(
-                          leading: material.CircleAvatar(
-                            backgroundColor: amountColor.withValues(alpha: 0.1),
-                            child: Icon(
-                              _getTransactionIcon(transaction.type),
-                              color: amountColor,
-                              size: 20.sp,
-                            ),
-                          ),
-                          title: Text(
-                            _getTransactionTypeText(context, transaction.type),
-                            style: TextStyle(
-                              fontSize: 14.sp,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          subtitle: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(height: 4.h),
-                              if (transaction.description != null)
-                                Text(
-                                  transaction.description!,
-                                  style: TextStyle(
-                                    fontSize: 12.sp,
-                                    color: context.colorScheme.mutedForeground,
-                                  ),
-                                ),
-                              SizedBox(height: 4.h),
-                              Text(
-                                DateFormat(
-                                  'MMM dd, yyyy HH:mm',
-                                ).format(transaction.createdAt),
-                                style: TextStyle(
-                                  fontSize: 11.sp,
-                                  color: context.colorScheme.mutedForeground,
+                    return Card(
+                      child: Padding(
+                        padding: EdgeInsets.all(12.dg),
+                        child: Row(
+                          spacing: 12.w,
+                          children: [
+                            Container(
+                              width: 40.sp,
+                              height: 40.sp,
+                              decoration: BoxDecoration(
+                                color: amountColor.withValues(alpha: 0.1),
+                                shape: BoxShape.circle,
+                              ),
+                              child: Center(
+                                child: Icon(
+                                  _getTransactionIcon(transaction.type),
+                                  color: amountColor,
+                                  size: 20.sp,
                                 ),
                               ),
-                            ],
-                          ),
-                          trailing: Builder(
-                            builder: (context) => Text(
+                            ),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    _getTransactionTypeText(
+                                      context,
+                                      transaction.type,
+                                    ),
+                                    style: TextStyle(
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                  SizedBox(height: 4.h),
+                                  if (transaction.description != null)
+                                    Text(
+                                      transaction.description!,
+                                      style: TextStyle(
+                                        fontSize: 12.sp,
+                                        color:
+                                            context.colorScheme.mutedForeground,
+                                      ),
+                                    ),
+                                  SizedBox(height: 4.h),
+                                  Text(
+                                    DateFormat(
+                                      'MMM dd, yyyy HH:mm',
+                                    ).format(transaction.createdAt),
+                                    style: TextStyle(
+                                      fontSize: 11.sp,
+                                      color:
+                                          context.colorScheme.mutedForeground,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Text(
                               '$amountPrefix${context.formatCurrency(transaction.amount)}',
                               style: TextStyle(
                                 fontSize: 16.sp,
@@ -831,14 +847,14 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
                                 color: amountColor,
                               ),
                             ),
-                          ),
+                          ],
                         ),
-                      );
-                    },
-                  ),
+                      ),
+                    );
+                  },
                 ),
-            ],
-          ),
+              ),
+          ],
         ),
       ),
     );

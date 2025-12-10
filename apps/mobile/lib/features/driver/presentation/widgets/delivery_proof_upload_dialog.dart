@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/driver/presentation/cubits/_export.dart';
 import 'package:akademove/l10n/l10n.dart';
-import 'package:flutter/material.dart' as material;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
@@ -90,7 +89,7 @@ class _DeliveryProofUploadDialogState extends State<DeliveryProofUploadDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return material.AlertDialog(
+    return AlertDialog(
       title: const Text('Upload Delivery Proof'),
       content: SingleChildScrollView(
         child: SizedBox(
@@ -128,13 +127,19 @@ class _DeliveryProofUploadDialogState extends State<DeliveryProofUploadDialog> {
                         Positioned(
                           top: 8,
                           right: 8,
-                          child: material.IconButton(
-                            icon: const Icon(LucideIcons.x),
-                            onPressed: () =>
-                                setState(() => _selectedImage = null),
-                            style: material.IconButton.styleFrom(
-                              backgroundColor: material.Colors.black54,
-                              foregroundColor: material.Colors.white,
+                          child: GestureDetector(
+                            onTap: () => setState(() => _selectedImage = null),
+                            child: Container(
+                              padding: EdgeInsets.all(4.dg),
+                              decoration: BoxDecoration(
+                                color: Colors.black.withValues(alpha: 0.54),
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(
+                                LucideIcons.x,
+                                size: 16.sp,
+                                color: Colors.white,
+                              ),
                             ),
                           ),
                         ),
@@ -223,9 +228,7 @@ class _DeliveryProofUploadDialogState extends State<DeliveryProofUploadDialog> {
               ? SizedBox(
                   width: 16.w,
                   height: 16.h,
-                  child: const material.CircularProgressIndicator(
-                    strokeWidth: 2,
-                  ),
+                  child: const CircularProgressIndicator(size: 16),
                 )
               : const Text('Upload'),
         ),

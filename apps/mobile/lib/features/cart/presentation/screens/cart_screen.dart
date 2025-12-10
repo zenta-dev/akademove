@@ -5,7 +5,6 @@ import 'package:akademove/features/cart/presentation/cubits/cart_cubit.dart';
 import 'package:akademove/features/cart/presentation/states/_export.dart';
 import 'package:akademove/l10n/l10n.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/material.dart' as material;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -311,7 +310,7 @@ class _CartItemCard extends StatelessWidget {
                   errorWidget: (context, url, error) => Container(
                     color: mutedColor.withValues(alpha: 0.1),
                     child: Icon(
-                      material.Icons.fastfood,
+                      LucideIcons.utensilsCrossed,
                       size: 32.sp,
                       color: mutedColor.withValues(alpha: 0.5),
                     ),
@@ -322,7 +321,7 @@ class _CartItemCard extends StatelessWidget {
                   height: 80.w,
                   color: mutedColor.withValues(alpha: 0.1),
                   child: Icon(
-                    material.Icons.fastfood,
+                    LucideIcons.utensilsCrossed,
                     size: 32.sp,
                     color: mutedColor.withValues(alpha: 0.5),
                   ),
@@ -384,25 +383,24 @@ class _QuantityControls extends StatelessWidget {
 
     return Row(
       children: [
-        material.Material(
-          color: mutedColor.withValues(alpha: 0.1),
-          borderRadius: BorderRadius.circular(4),
-          child: material.InkWell(
-            onTap: () {
-              context.read<CartCubit>().updateQuantity(
-                menuId: item.menuId,
-                quantity: item.quantity - 1,
-              );
-            },
-            borderRadius: BorderRadius.circular(4),
-            child: Container(
-              width: 32.w,
-              height: 32.w,
-              alignment: Alignment.center,
-              child: Icon(
-                item.quantity == 1 ? LucideIcons.trash2 : LucideIcons.minus,
-                size: 16.sp,
-              ),
+        GestureDetector(
+          onTap: () {
+            context.read<CartCubit>().updateQuantity(
+              menuId: item.menuId,
+              quantity: item.quantity - 1,
+            );
+          },
+          child: Container(
+            width: 32.w,
+            height: 32.w,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: mutedColor.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(4),
+            ),
+            child: Icon(
+              item.quantity == 1 ? LucideIcons.trash2 : LucideIcons.minus,
+              size: 16.sp,
             ),
           ),
         ),
@@ -412,23 +410,22 @@ class _QuantityControls extends StatelessWidget {
           style: context.typography.semiBold.copyWith(fontSize: 14.sp),
         ),
         Gap(12.w),
-        material.Material(
-          color: context.colorScheme.primary,
-          borderRadius: BorderRadius.circular(4),
-          child: material.InkWell(
-            onTap: () {
-              context.read<CartCubit>().updateQuantity(
-                menuId: item.menuId,
-                quantity: item.quantity + 1,
-              );
-            },
-            borderRadius: BorderRadius.circular(4),
-            child: Container(
-              width: 32.w,
-              height: 32.w,
-              alignment: Alignment.center,
-              child: Icon(LucideIcons.plus, size: 16.sp, color: Colors.white),
+        GestureDetector(
+          onTap: () {
+            context.read<CartCubit>().updateQuantity(
+              menuId: item.menuId,
+              quantity: item.quantity + 1,
+            );
+          },
+          child: Container(
+            width: 32.w,
+            height: 32.w,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: context.colorScheme.primary,
+              borderRadius: BorderRadius.circular(4),
             ),
+            child: Icon(LucideIcons.plus, size: 16.sp, color: Colors.white),
           ),
         ),
       ],
