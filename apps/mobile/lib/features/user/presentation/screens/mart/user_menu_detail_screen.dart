@@ -243,14 +243,9 @@ class _UserMenuDetailScreenState extends State<UserMenuDetailScreen> {
                         style: context.typography.h4.copyWith(fontSize: 16.sp),
                       ),
                       Gap(12.h),
-                      material.TextField(
+                      TextField(
                         controller: _notesController,
-                        decoration: material.InputDecoration(
-                          hintText: 'e.g., No ice, extra spicy',
-                          border: material.OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8.r),
-                          ),
-                        ),
+                        placeholder: const Text('e.g., No ice, extra spicy'),
                         maxLines: 3,
                       ),
 
@@ -275,23 +270,22 @@ class _UserMenuDetailScreenState extends State<UserMenuDetailScreen> {
 
     return Row(
       children: [
-        material.Material(
-          color: _quantity > 1
-              ? mutedColor.withValues(alpha: 0.1)
-              : mutedColor.withValues(alpha: 0.05),
-          borderRadius: BorderRadius.circular(8.r),
-          child: material.InkWell(
-            onTap: _quantity > 1 ? () => setState(() => _quantity--) : null,
-            borderRadius: BorderRadius.circular(8.r),
-            child: Container(
-              width: 48.w,
-              height: 48.w,
-              alignment: Alignment.center,
-              child: Icon(
-                LucideIcons.minus,
-                size: 20.sp,
-                color: _quantity > 1 ? null : mutedColor.withValues(alpha: 0.3),
-              ),
+        GestureDetector(
+          onTap: _quantity > 1 ? () => setState(() => _quantity--) : null,
+          child: Container(
+            width: 48.w,
+            height: 48.w,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: _quantity > 1
+                  ? mutedColor.withValues(alpha: 0.1)
+                  : mutedColor.withValues(alpha: 0.05),
+              borderRadius: BorderRadius.circular(8.r),
+            ),
+            child: Icon(
+              LucideIcons.minus,
+              size: 20.sp,
+              color: _quantity > 1 ? null : mutedColor.withValues(alpha: 0.3),
             ),
           ),
         ),
@@ -304,27 +298,26 @@ class _UserMenuDetailScreenState extends State<UserMenuDetailScreen> {
           ),
         ),
         Gap(16.w),
-        material.Material(
-          color: _quantity < menu.stock
-              ? context.colorScheme.primary
-              : mutedColor.withValues(alpha: 0.1),
-          borderRadius: BorderRadius.circular(8.r),
-          child: material.InkWell(
-            onTap: _quantity < menu.stock
-                ? () => setState(() => _quantity++)
-                : null,
-            borderRadius: BorderRadius.circular(8.r),
-            child: Container(
-              width: 48.w,
-              height: 48.w,
-              alignment: Alignment.center,
-              child: Icon(
-                LucideIcons.plus,
-                size: 20.sp,
-                color: _quantity < menu.stock
-                    ? Colors.white
-                    : mutedColor.withValues(alpha: 0.3),
-              ),
+        GestureDetector(
+          onTap: _quantity < menu.stock
+              ? () => setState(() => _quantity++)
+              : null,
+          child: Container(
+            width: 48.w,
+            height: 48.w,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: _quantity < menu.stock
+                  ? context.colorScheme.primary
+                  : mutedColor.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(8.r),
+            ),
+            child: Icon(
+              LucideIcons.plus,
+              size: 20.sp,
+              color: _quantity < menu.stock
+                  ? Colors.white
+                  : mutedColor.withValues(alpha: 0.3),
             ),
           ),
         ),
