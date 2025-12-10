@@ -181,7 +181,10 @@ void _setupCubit() {
       ),
     )
     ..registerFactory(
-      () => UserWalletTransferCubit(walletRepository: sl<WalletRepository>()),
+      () => UserWalletTransferCubit(
+        walletRepository: sl<WalletRepository>(),
+        userRepository: sl<UserRepository>(),
+      ),
     )
     ..registerFactory(
       () => UserOrderCubit(
