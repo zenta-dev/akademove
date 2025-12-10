@@ -58,4 +58,20 @@ class UserRepository extends BaseRepository {
 
         return SuccessResponse(message: data.message ?? '', data: data.data);
       });
+
+  /// Lookup user by phone number for wallet transfer
+  /// Returns null if user not found
+  Future<BaseResponse<UserLookupResult?>> lookupByPhone(String phone) => guard(
+    () async {
+      final res = await _apiClient.getUserApi().userLookupByPhone(phone: phone);
+      final data =
+          res.data ??
+          (throw const RepositoryError(
+            'An error occured',
+            code: ErrorCode.internalServerError,
+          ));
+
+      return SuccessResponse(message: data.message ?? '', data: data.data);
+    },
+  );
 }

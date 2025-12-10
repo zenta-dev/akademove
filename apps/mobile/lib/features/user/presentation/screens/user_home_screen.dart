@@ -469,7 +469,7 @@ class BannerCardWidget extends StatelessWidget {
         child: ClipRRect(
           borderRadius: BorderRadius.circular(16.r),
           child: CachedNetworkImage(
-            imageUrl: banner.imageUrl!,
+            imageUrl: banner.imageUrl,
             fit: BoxFit.cover,
             width: context.mediaQuerySize.width,
             height: context.mediaQuerySize.height,
