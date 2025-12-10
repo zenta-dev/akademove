@@ -26,28 +26,26 @@ class DashboardStatsTopMerchantsInner {
   });
   @JsonKey(name: r'id', required: true, includeIfNull: false)
   final String id;
-
+  
   @JsonKey(name: r'name', required: true, includeIfNull: false)
   final String name;
-
+  
   @JsonKey(name: r'revenue', required: true, includeIfNull: false)
   final num revenue;
-
+  
   @JsonKey(name: r'orders', required: true, includeIfNull: false)
   final num orders;
-
+  
   @JsonKey(name: r'rating', required: true, includeIfNull: false)
   final num rating;
-
+  
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is DashboardStatsTopMerchantsInner &&
-          other.id == id &&
-          other.name == name &&
-          other.revenue == revenue &&
-          other.orders == orders &&
-          other.rating == rating;
+  bool operator ==(Object other) => identical(this, other) || other is DashboardStatsTopMerchantsInner &&
+    other.id == id &&
+    other.name == name &&
+    other.revenue == revenue &&
+    other.orders == orders &&
+    other.rating == rating;
 
   @override
   int get hashCode =>
@@ -57,14 +55,14 @@ class DashboardStatsTopMerchantsInner {
       orders.hashCode +
       rating.hashCode;
 
-  factory DashboardStatsTopMerchantsInner.fromJson(Map<String, dynamic> json) =>
-      _$DashboardStatsTopMerchantsInnerFromJson(json);
+  factory DashboardStatsTopMerchantsInner.fromJson(Map<String, dynamic> json) => _$DashboardStatsTopMerchantsInnerFromJson(json);
 
-  Map<String, dynamic> toJson() =>
-      _$DashboardStatsTopMerchantsInnerToJson(this);
+  Map<String, dynamic> toJson() => _$DashboardStatsTopMerchantsInnerToJson(this);
 
   @override
   String toString() {
     return toJson().toString();
   }
+
 }
+

@@ -66,7 +66,7 @@ void main() {
       // TODO
     });
 
-    //Future<AuthSignOut200Response> contactDelete(String id) async
+    //Future<ContactDelete200Response> contactDelete(String id) async
     test('test contactDelete', () async {
       // TODO
     });

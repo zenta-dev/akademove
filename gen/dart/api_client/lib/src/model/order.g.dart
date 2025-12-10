@@ -79,6 +79,8 @@ abstract class _$OrderCWProxy {
 
   Order items(List<OrderItem>? items);
 
+  Order deliveryItemType(DeliveryItemType? deliveryItemType);
+
   Order user(DriverUser? user);
 
   Order driver(OrderDriver? driver);
@@ -129,6 +131,7 @@ abstract class _$OrderCWProxy {
     DateTime? otpVerifiedAt,
     num? itemCount,
     List<OrderItem>? items,
+    DeliveryItemType? deliveryItemType,
     DriverUser? user,
     OrderDriver? driver,
     OrderMerchant? merchant,
@@ -260,6 +263,10 @@ class _$OrderCWProxyImpl implements _$OrderCWProxy {
   Order items(List<OrderItem>? items) => call(items: items);
 
   @override
+  Order deliveryItemType(DeliveryItemType? deliveryItemType) =>
+      call(deliveryItemType: deliveryItemType);
+
+  @override
   Order user(DriverUser? user) => call(user: user);
 
   @override
@@ -313,6 +320,7 @@ class _$OrderCWProxyImpl implements _$OrderCWProxy {
     Object? otpVerifiedAt = const $CopyWithPlaceholder(),
     Object? itemCount = const $CopyWithPlaceholder(),
     Object? items = const $CopyWithPlaceholder(),
+    Object? deliveryItemType = const $CopyWithPlaceholder(),
     Object? user = const $CopyWithPlaceholder(),
     Object? driver = const $CopyWithPlaceholder(),
     Object? merchant = const $CopyWithPlaceholder(),
@@ -469,6 +477,10 @@ class _$OrderCWProxyImpl implements _$OrderCWProxy {
           ? _value.items
           // ignore: cast_nullable_to_non_nullable
           : items as List<OrderItem>?,
+      deliveryItemType: deliveryItemType == const $CopyWithPlaceholder()
+          ? _value.deliveryItemType
+          // ignore: cast_nullable_to_non_nullable
+          : deliveryItemType as DeliveryItemType?,
       user: user == const $CopyWithPlaceholder()
           ? _value.user
           // ignore: cast_nullable_to_non_nullable
@@ -603,6 +615,10 @@ Order _$OrderFromJson(
           ?.map((e) => OrderItem.fromJson(e as Map<String, dynamic>))
           .toList(),
     ),
+    deliveryItemType: $checkedConvert(
+      'deliveryItemType',
+      (v) => $enumDecodeNullable(_$DeliveryItemTypeEnumMap, v),
+    ),
     user: $checkedConvert(
       'user',
       (v) => v == null ? null : DriverUser.fromJson(v as Map<String, dynamic>),
@@ -658,6 +674,7 @@ Map<String, dynamic> _$OrderToJson(Order instance) => <String, dynamic>{
   'otpVerifiedAt': ?instance.otpVerifiedAt?.toIso8601String(),
   'itemCount': ?instance.itemCount,
   'items': ?instance.items?.map((e) => e.toJson()).toList(),
+  'deliveryItemType': ?_$DeliveryItemTypeEnumMap[instance.deliveryItemType],
   'user': ?instance.user?.toJson(),
   'driver': ?instance.driver?.toJson(),
   'merchant': ?instance.merchant?.toJson(),
@@ -694,4 +711,13 @@ const _$UserGenderEnumMap = {
 const _$OrderGenderPreferenceEnumEnumMap = {
   OrderGenderPreferenceEnum.SAME: 'SAME',
   OrderGenderPreferenceEnum.ANY: 'ANY',
+};
+
+const _$DeliveryItemTypeEnumMap = {
+  DeliveryItemType.FOOD: 'FOOD',
+  DeliveryItemType.CLOTH: 'CLOTH',
+  DeliveryItemType.DOCUMENT: 'DOCUMENT',
+  DeliveryItemType.MEDICINE: 'MEDICINE',
+  DeliveryItemType.BOOK: 'BOOK',
+  DeliveryItemType.OTHER: 'OTHER',
 };

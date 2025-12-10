@@ -5,7 +5,7 @@
 import 'package:api_client/api.dart';
 ```
 
-All URIs are relative to *http://localhost:3000/api*
+All URIs are relative to *http://10.86.19.105:3000/api*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
@@ -139,7 +139,7 @@ This endpoint does not need any parameter.
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **authHasAccess**
-> AuthHasAccess200Response authHasAccess(authHasAccessRequest)
+> AuthSignOut200Response authHasAccess(authHasAccessRequest)
 
 
 
@@ -166,7 +166,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**AuthHasAccess200Response**](AuthHasAccess200Response.md)
+[**AuthSignOut200Response**](AuthSignOut200Response.md)
 
 ### Authorization
 

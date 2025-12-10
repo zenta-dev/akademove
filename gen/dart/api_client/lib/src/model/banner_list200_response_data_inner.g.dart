@@ -7,7 +7,7 @@ part of 'banner_list200_response_data_inner.dart';
 // **************************************************************************
 
 abstract class _$BannerList200ResponseDataInnerCWProxy {
-  BannerList200ResponseDataInner id(String? id);
+  BannerList200ResponseDataInner id(String id);
 
   BannerList200ResponseDataInner title(String title);
 
@@ -53,7 +53,7 @@ abstract class _$BannerList200ResponseDataInnerCWProxy {
   /// BannerList200ResponseDataInner(...).copyWith(id: 12, name: "My name")
   /// ```
   BannerList200ResponseDataInner call({
-    String? id,
+    String id,
     String title,
     String? description,
     String imageUrl,
@@ -81,7 +81,7 @@ class _$BannerList200ResponseDataInnerCWProxyImpl
   final BannerList200ResponseDataInner _value;
 
   @override
-  BannerList200ResponseDataInner id(String? id) => call(id: id);
+  BannerList200ResponseDataInner id(String id) => call(id: id);
 
   @override
   BannerList200ResponseDataInner title(String title) => call(title: title);
@@ -171,10 +171,10 @@ class _$BannerList200ResponseDataInnerCWProxyImpl
     Object? updatedAt = const $CopyWithPlaceholder(),
   }) {
     return BannerList200ResponseDataInner(
-      id: id == const $CopyWithPlaceholder()
+      id: id == const $CopyWithPlaceholder() || id == null
           ? _value.id
           // ignore: cast_nullable_to_non_nullable
-          : id as String?,
+          : id as String,
       title: title == const $CopyWithPlaceholder() || title == null
           ? _value.title
           // ignore: cast_nullable_to_non_nullable
@@ -274,7 +274,7 @@ BannerList200ResponseDataInner _$BannerList200ResponseDataInnerFromJson(
     ],
   );
   final val = BannerList200ResponseDataInner(
-    id: $checkedConvert('id', (v) => v as String?),
+    id: $checkedConvert('id', (v) => v as String),
     title: $checkedConvert('title', (v) => v as String),
     description: $checkedConvert('description', (v) => v as String?),
     imageUrl: $checkedConvert('imageUrl', (v) => v as String),

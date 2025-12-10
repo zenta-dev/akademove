@@ -17,20 +17,21 @@ part 'notification_save_token_request.g.dart';
 )
 class NotificationSaveTokenRequest {
   /// Returns a new [NotificationSaveTokenRequest] instance.
-  const NotificationSaveTokenRequest({required this.token});
+  const NotificationSaveTokenRequest({
+    required this.token,
+  });
   @JsonKey(name: r'token', required: true, includeIfNull: true)
   final String? token;
+  
+  @override
+  bool operator ==(Object other) => identical(this, other) || other is NotificationSaveTokenRequest &&
+    other.token == token;
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is NotificationSaveTokenRequest && other.token == token;
+  int get hashCode =>
+      (token == null ? 0 : token.hashCode);
 
-  @override
-  int get hashCode => (token == null ? 0 : token.hashCode);
-
-  factory NotificationSaveTokenRequest.fromJson(Map<String, dynamic> json) =>
-      _$NotificationSaveTokenRequestFromJson(json);
+  factory NotificationSaveTokenRequest.fromJson(Map<String, dynamic> json) => _$NotificationSaveTokenRequestFromJson(json);
 
   Map<String, dynamic> toJson() => _$NotificationSaveTokenRequestToJson(this);
 
@@ -38,4 +39,6 @@ class NotificationSaveTokenRequest {
   String toString() {
     return toJson().toString();
   }
+
 }
+

@@ -9,7 +9,7 @@ part of 'driver_schedule_create_request.dart';
 abstract class _$DriverScheduleCreateRequestCWProxy {
   DriverScheduleCreateRequest name(String? name);
 
-  DriverScheduleCreateRequest driverId(String? driverId);
+  DriverScheduleCreateRequest driverId(String driverId);
 
   DriverScheduleCreateRequest dayOfWeek(DayOfWeek dayOfWeek);
 
@@ -32,7 +32,7 @@ abstract class _$DriverScheduleCreateRequestCWProxy {
   /// ```
   DriverScheduleCreateRequest call({
     String? name,
-    String? driverId,
+    String driverId,
     DayOfWeek dayOfWeek,
     Time startTime,
     Time endTime,
@@ -54,7 +54,7 @@ class _$DriverScheduleCreateRequestCWProxyImpl
   DriverScheduleCreateRequest name(String? name) => call(name: name);
 
   @override
-  DriverScheduleCreateRequest driverId(String? driverId) =>
+  DriverScheduleCreateRequest driverId(String driverId) =>
       call(driverId: driverId);
 
   @override
@@ -103,10 +103,10 @@ class _$DriverScheduleCreateRequestCWProxyImpl
           ? _value.name
           // ignore: cast_nullable_to_non_nullable
           : name as String?,
-      driverId: driverId == const $CopyWithPlaceholder()
+      driverId: driverId == const $CopyWithPlaceholder() || driverId == null
           ? _value.driverId
           // ignore: cast_nullable_to_non_nullable
-          : driverId as String?,
+          : driverId as String,
       dayOfWeek: dayOfWeek == const $CopyWithPlaceholder() || dayOfWeek == null
           ? _value.dayOfWeek
           // ignore: cast_nullable_to_non_nullable
@@ -162,7 +162,7 @@ DriverScheduleCreateRequest _$DriverScheduleCreateRequestFromJson(
   );
   final val = DriverScheduleCreateRequest(
     name: $checkedConvert('name', (v) => v as String?),
-    driverId: $checkedConvert('driverId', (v) => v as String?),
+    driverId: $checkedConvert('driverId', (v) => v as String),
     dayOfWeek: $checkedConvert(
       'dayOfWeek',
       (v) => $enumDecode(_$DayOfWeekEnumMap, v),

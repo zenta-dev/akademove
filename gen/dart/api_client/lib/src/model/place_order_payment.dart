@@ -23,31 +23,30 @@ class PlaceOrderPayment {
   const PlaceOrderPayment({
     required this.method,
     required this.provider,
-    this.bankProvider,
+     this.bankProvider,
   });
   @JsonKey(name: r'method', required: true, includeIfNull: false)
   final PaymentMethod method;
-
+  
   @JsonKey(name: r'provider', required: true, includeIfNull: false)
   final PaymentProvider provider;
-
+  
   @JsonKey(name: r'bankProvider', required: false, includeIfNull: false)
   final BankProvider? bankProvider;
-
+  
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is PlaceOrderPayment &&
-          other.method == method &&
-          other.provider == provider &&
-          other.bankProvider == bankProvider;
+  bool operator ==(Object other) => identical(this, other) || other is PlaceOrderPayment &&
+    other.method == method &&
+    other.provider == provider &&
+    other.bankProvider == bankProvider;
 
   @override
   int get hashCode =>
-      method.hashCode + provider.hashCode + bankProvider.hashCode;
+      method.hashCode +
+      provider.hashCode +
+      bankProvider.hashCode;
 
-  factory PlaceOrderPayment.fromJson(Map<String, dynamic> json) =>
-      _$PlaceOrderPaymentFromJson(json);
+  factory PlaceOrderPayment.fromJson(Map<String, dynamic> json) => _$PlaceOrderPaymentFromJson(json);
 
   Map<String, dynamic> toJson() => _$PlaceOrderPaymentToJson(this);
 
@@ -55,4 +54,6 @@ class PlaceOrderPayment {
   String toString() {
     return toJson().toString();
   }
+
 }
+

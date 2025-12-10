@@ -24,32 +24,33 @@ class DashboardStatsRevenueByDayInner {
   });
   @JsonKey(name: r'date', required: true, includeIfNull: false)
   final String date;
-
+  
   @JsonKey(name: r'revenue', required: true, includeIfNull: false)
   final num revenue;
-
+  
   @JsonKey(name: r'orders', required: true, includeIfNull: false)
   final num orders;
+  
+  @override
+  bool operator ==(Object other) => identical(this, other) || other is DashboardStatsRevenueByDayInner &&
+    other.date == date &&
+    other.revenue == revenue &&
+    other.orders == orders;
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is DashboardStatsRevenueByDayInner &&
-          other.date == date &&
-          other.revenue == revenue &&
-          other.orders == orders;
+  int get hashCode =>
+      date.hashCode +
+      revenue.hashCode +
+      orders.hashCode;
 
-  @override
-  int get hashCode => date.hashCode + revenue.hashCode + orders.hashCode;
+  factory DashboardStatsRevenueByDayInner.fromJson(Map<String, dynamic> json) => _$DashboardStatsRevenueByDayInnerFromJson(json);
 
-  factory DashboardStatsRevenueByDayInner.fromJson(Map<String, dynamic> json) =>
-      _$DashboardStatsRevenueByDayInnerFromJson(json);
-
-  Map<String, dynamic> toJson() =>
-      _$DashboardStatsRevenueByDayInnerToJson(this);
+  Map<String, dynamic> toJson() => _$DashboardStatsRevenueByDayInnerToJson(this);
 
   @override
   String toString() {
     return toJson().toString();
   }
+
 }
+

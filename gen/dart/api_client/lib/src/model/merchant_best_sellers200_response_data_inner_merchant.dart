@@ -20,29 +20,27 @@ class MerchantBestSellers200ResponseDataInnerMerchant {
   const MerchantBestSellers200ResponseDataInnerMerchant({
     required this.id,
     required this.name,
-    this.image,
+     this.image,
     required this.rating,
   });
   @JsonKey(name: r'id', required: true, includeIfNull: true)
   final String? id;
-
+  
   @JsonKey(name: r'name', required: true, includeIfNull: true)
   final String? name;
-
+  
   @JsonKey(name: r'image', required: false, includeIfNull: false)
   final String? image;
-
+  
   @JsonKey(name: r'rating', required: true, includeIfNull: false)
   final num rating;
-
+  
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is MerchantBestSellers200ResponseDataInnerMerchant &&
-          other.id == id &&
-          other.name == name &&
-          other.image == image &&
-          other.rating == rating;
+  bool operator ==(Object other) => identical(this, other) || other is MerchantBestSellers200ResponseDataInnerMerchant &&
+    other.id == id &&
+    other.name == name &&
+    other.image == image &&
+    other.rating == rating;
 
   @override
   int get hashCode =>
@@ -51,15 +49,14 @@ class MerchantBestSellers200ResponseDataInnerMerchant {
       (image == null ? 0 : image.hashCode) +
       rating.hashCode;
 
-  factory MerchantBestSellers200ResponseDataInnerMerchant.fromJson(
-    Map<String, dynamic> json,
-  ) => _$MerchantBestSellers200ResponseDataInnerMerchantFromJson(json);
+  factory MerchantBestSellers200ResponseDataInnerMerchant.fromJson(Map<String, dynamic> json) => _$MerchantBestSellers200ResponseDataInnerMerchantFromJson(json);
 
-  Map<String, dynamic> toJson() =>
-      _$MerchantBestSellers200ResponseDataInnerMerchantToJson(this);
+  Map<String, dynamic> toJson() => _$MerchantBestSellers200ResponseDataInnerMerchantToJson(this);
 
   @override
   String toString() {
     return toJson().toString();
   }
+
 }
+

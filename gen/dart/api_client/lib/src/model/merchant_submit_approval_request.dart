@@ -17,21 +17,21 @@ part 'merchant_submit_approval_request.g.dart';
 )
 class MerchantSubmitApprovalRequest {
   /// Returns a new [MerchantSubmitApprovalRequest] instance.
-  const MerchantSubmitApprovalRequest({this.reviewNotes});
+  const MerchantSubmitApprovalRequest({
+     this.reviewNotes,
+  });
   @JsonKey(name: r'reviewNotes', required: false, includeIfNull: false)
   final String? reviewNotes;
+  
+  @override
+  bool operator ==(Object other) => identical(this, other) || other is MerchantSubmitApprovalRequest &&
+    other.reviewNotes == reviewNotes;
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is MerchantSubmitApprovalRequest &&
-          other.reviewNotes == reviewNotes;
+  int get hashCode =>
+      reviewNotes.hashCode;
 
-  @override
-  int get hashCode => reviewNotes.hashCode;
-
-  factory MerchantSubmitApprovalRequest.fromJson(Map<String, dynamic> json) =>
-      _$MerchantSubmitApprovalRequestFromJson(json);
+  factory MerchantSubmitApprovalRequest.fromJson(Map<String, dynamic> json) => _$MerchantSubmitApprovalRequestFromJson(json);
 
   Map<String, dynamic> toJson() => _$MerchantSubmitApprovalRequestToJson(this);
 
@@ -39,4 +39,6 @@ class MerchantSubmitApprovalRequest {
   String toString() {
     return toJson().toString();
   }
+
 }
+

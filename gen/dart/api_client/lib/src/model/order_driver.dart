@@ -23,141 +23,129 @@ part 'order_driver.g.dart';
 class OrderDriver {
   /// Returns a new [OrderDriver] instance.
   const OrderDriver({
-    this.id,
-    this.userId,
-    this.studentId,
-    this.licensePlate,
-    this.status,
-    this.quizStatus = DriverQuizStatus.NOT_STARTED,
-    this.quizAttemptId,
-    this.quizScore,
-    this.quizCompletedAt,
-    this.rating,
-    this.isTakingOrder,
-    this.isOnline,
-    this.currentLocation,
-    this.lastLocationUpdate,
-    this.cancellationCount = 0,
-    this.lastCancellationDate,
-    this.createdAt,
-    this.studentCard,
-    this.driverLicense,
-    this.vehicleCertificate,
-    this.bank,
-    this.user,
-    this.distance,
+     this.id,
+     this.userId,
+     this.studentId,
+     this.licensePlate,
+     this.status,
+     this.quizStatus = DriverQuizStatus.NOT_STARTED,
+     this.quizAttemptId,
+     this.quizScore,
+     this.quizCompletedAt,
+     this.rating,
+     this.isTakingOrder,
+     this.isOnline,
+     this.currentLocation,
+     this.lastLocationUpdate,
+     this.cancellationCount = 0,
+     this.lastCancellationDate,
+     this.createdAt,
+     this.studentCard,
+     this.driverLicense,
+     this.vehicleCertificate,
+     this.bank,
+     this.user,
+     this.distance,
   });
   @JsonKey(name: r'id', required: false, includeIfNull: false)
   final String? id;
-
+  
   @JsonKey(name: r'userId', required: false, includeIfNull: false)
   final String? userId;
-
+  
   @JsonKey(name: r'studentId', required: false, includeIfNull: false)
   final num? studentId;
-
+  
   @JsonKey(name: r'licensePlate', required: false, includeIfNull: false)
   final String? licensePlate;
-
+  
   @JsonKey(name: r'status', required: false, includeIfNull: false)
   final DriverStatus? status;
-
-  @JsonKey(
-    defaultValue: DriverQuizStatus.NOT_STARTED,
-    name: r'quizStatus',
-    required: false,
-    includeIfNull: false,
-  )
+  
+  @JsonKey(defaultValue: DriverQuizStatus.NOT_STARTED,name: r'quizStatus', required: false, includeIfNull: false)
   final DriverQuizStatus? quizStatus;
-
+  
   @JsonKey(name: r'quizAttemptId', required: false, includeIfNull: false)
   final String? quizAttemptId;
-
-  // minimum: 0
-  // maximum: 1000
+  
+          // minimum: 0
+          // maximum: 1000
   @JsonKey(name: r'quizScore', required: false, includeIfNull: false)
   final int? quizScore;
-
+  
   @JsonKey(name: r'quizCompletedAt', required: false, includeIfNull: false)
   final DateTime? quizCompletedAt;
-
+  
   @JsonKey(name: r'rating', required: false, includeIfNull: false)
   final num? rating;
-
+  
   @JsonKey(name: r'isTakingOrder', required: false, includeIfNull: false)
   final bool? isTakingOrder;
-
+  
   @JsonKey(name: r'isOnline', required: false, includeIfNull: false)
   final bool? isOnline;
-
+  
   @JsonKey(name: r'currentLocation', required: false, includeIfNull: false)
   final Coordinate? currentLocation;
-
+  
   @JsonKey(name: r'lastLocationUpdate', required: false, includeIfNull: false)
   final DateTime? lastLocationUpdate;
-
-  // minimum: -9007199254740991
-  // maximum: 9007199254740991
-  @JsonKey(
-    defaultValue: 0,
-    name: r'cancellationCount',
-    required: false,
-    includeIfNull: false,
-  )
+  
+          // minimum: -9007199254740991
+          // maximum: 9007199254740991
+  @JsonKey(defaultValue: 0,name: r'cancellationCount', required: false, includeIfNull: false)
   final int? cancellationCount;
-
+  
   @JsonKey(name: r'lastCancellationDate', required: false, includeIfNull: false)
   final DateTime? lastCancellationDate;
-
+  
   @JsonKey(name: r'createdAt', required: false, includeIfNull: false)
   final DateTime? createdAt;
-
+  
   @JsonKey(name: r'studentCard', required: false, includeIfNull: false)
   final String? studentCard;
-
+  
   @JsonKey(name: r'driverLicense', required: false, includeIfNull: false)
   final String? driverLicense;
-
+  
   @JsonKey(name: r'vehicleCertificate', required: false, includeIfNull: false)
   final String? vehicleCertificate;
-
+  
   @JsonKey(name: r'bank', required: false, includeIfNull: false)
   final Bank? bank;
-
+  
   @JsonKey(name: r'user', required: false, includeIfNull: false)
   final DriverUser? user;
-
-  /// Each user has different result since it calculated value
+  
+      /// Each user has different result since it calculated value
   @JsonKey(name: r'distance', required: false, includeIfNull: false)
   final num? distance;
-
+  
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is OrderDriver &&
-          other.id == id &&
-          other.userId == userId &&
-          other.studentId == studentId &&
-          other.licensePlate == licensePlate &&
-          other.status == status &&
-          other.quizStatus == quizStatus &&
-          other.quizAttemptId == quizAttemptId &&
-          other.quizScore == quizScore &&
-          other.quizCompletedAt == quizCompletedAt &&
-          other.rating == rating &&
-          other.isTakingOrder == isTakingOrder &&
-          other.isOnline == isOnline &&
-          other.currentLocation == currentLocation &&
-          other.lastLocationUpdate == lastLocationUpdate &&
-          other.cancellationCount == cancellationCount &&
-          other.lastCancellationDate == lastCancellationDate &&
-          other.createdAt == createdAt &&
-          other.studentCard == studentCard &&
-          other.driverLicense == driverLicense &&
-          other.vehicleCertificate == vehicleCertificate &&
-          other.bank == bank &&
-          other.user == user &&
-          other.distance == distance;
+  bool operator ==(Object other) => identical(this, other) || other is OrderDriver &&
+    other.id == id &&
+    other.userId == userId &&
+    other.studentId == studentId &&
+    other.licensePlate == licensePlate &&
+    other.status == status &&
+    other.quizStatus == quizStatus &&
+    other.quizAttemptId == quizAttemptId &&
+    other.quizScore == quizScore &&
+    other.quizCompletedAt == quizCompletedAt &&
+    other.rating == rating &&
+    other.isTakingOrder == isTakingOrder &&
+    other.isOnline == isOnline &&
+    other.currentLocation == currentLocation &&
+    other.lastLocationUpdate == lastLocationUpdate &&
+    other.cancellationCount == cancellationCount &&
+    other.lastCancellationDate == lastCancellationDate &&
+    other.createdAt == createdAt &&
+    other.studentCard == studentCard &&
+    other.driverLicense == driverLicense &&
+    other.vehicleCertificate == vehicleCertificate &&
+    other.bank == bank &&
+    other.user == user &&
+    other.distance == distance;
 
   @override
   int get hashCode =>
@@ -185,8 +173,7 @@ class OrderDriver {
       user.hashCode +
       distance.hashCode;
 
-  factory OrderDriver.fromJson(Map<String, dynamic> json) =>
-      _$OrderDriverFromJson(json);
+  factory OrderDriver.fromJson(Map<String, dynamic> json) => _$OrderDriverFromJson(json);
 
   Map<String, dynamic> toJson() => _$OrderDriverToJson(this);
 
@@ -194,4 +181,6 @@ class OrderDriver {
   String toString() {
     return toJson().toString();
   }
+
 }
+

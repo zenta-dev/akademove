@@ -22,116 +22,114 @@ part 'order_merchant.g.dart';
 class OrderMerchant {
   /// Returns a new [OrderMerchant] instance.
   const OrderMerchant({
-    this.id,
-    this.userId,
-    this.name,
-    this.email,
-    this.phone,
-    this.address,
-    this.location,
-    this.status,
-    this.isActive,
-    this.isOnline,
-    this.isTakingOrders,
-    this.operatingStatus,
-    this.rating,
-    this.document,
-    this.image,
-    this.category,
-    this.categories,
-    this.bank,
-    this.createdAt,
-    this.updatedAt,
+     this.id,
+     this.userId,
+     this.name,
+     this.email,
+     this.phone,
+     this.address,
+     this.location,
+     this.status,
+     this.isActive,
+     this.isOnline,
+     this.isTakingOrders,
+     this.operatingStatus,
+     this.rating,
+     this.document,
+     this.image,
+     this.category,
+     this.categories,
+     this.bank,
+     this.createdAt,
+     this.updatedAt,
   });
   @JsonKey(name: r'id', required: false, includeIfNull: false)
   final String? id;
-
+  
   @JsonKey(name: r'userId', required: false, includeIfNull: false)
   final String? userId;
-
+  
   @JsonKey(name: r'name', required: false, includeIfNull: false)
   final String? name;
-
+  
   @JsonKey(name: r'email', required: false, includeIfNull: false)
   final String? email;
-
+  
   @JsonKey(name: r'phone', required: false, includeIfNull: false)
   final Phone? phone;
-
+  
   @JsonKey(name: r'address', required: false, includeIfNull: false)
   final String? address;
-
+  
   @JsonKey(name: r'location', required: false, includeIfNull: false)
   final Coordinate? location;
-
-  /// Merchant approval status
+  
+      /// Merchant approval status
   @JsonKey(name: r'status', required: false, includeIfNull: false)
   final OrderMerchantStatusEnum? status;
-
+  
   @JsonKey(name: r'isActive', required: false, includeIfNull: false)
   final bool? isActive;
-
-  /// Whether merchant is currently online/available
+  
+      /// Whether merchant is currently online/available
   @JsonKey(name: r'isOnline', required: false, includeIfNull: false)
   final bool? isOnline;
-
-  /// Whether merchant is actively taking orders (subset of online)
+  
+      /// Whether merchant is actively taking orders (subset of online)
   @JsonKey(name: r'isTakingOrders', required: false, includeIfNull: false)
   final bool? isTakingOrders;
-
-  /// Current operating status (OPEN, CLOSED, BREAK, MAINTENANCE)
+  
+      /// Current operating status (OPEN, CLOSED, BREAK, MAINTENANCE)
   @JsonKey(name: r'operatingStatus', required: false, includeIfNull: false)
   final OrderMerchantOperatingStatusEnum? operatingStatus;
-
+  
   @JsonKey(name: r'rating', required: false, includeIfNull: false)
   final num? rating;
-
+  
   @JsonKey(name: r'document', required: false, includeIfNull: false)
   final String? document;
-
+  
   @JsonKey(name: r'image', required: false, includeIfNull: false)
   final String? image;
-
+  
   @JsonKey(name: r'category', required: false, includeIfNull: false)
   final MerchantCategory? category;
-
-  /// List of merchant item categories
+  
+      /// List of merchant item categories
   @JsonKey(name: r'categories', required: false, includeIfNull: false)
   final List<String>? categories;
-
+  
   @JsonKey(name: r'bank', required: false, includeIfNull: false)
   final Bank? bank;
-
+  
   @JsonKey(name: r'createdAt', required: false, includeIfNull: false)
   final DateTime? createdAt;
-
+  
   @JsonKey(name: r'updatedAt', required: false, includeIfNull: false)
   final DateTime? updatedAt;
-
+  
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is OrderMerchant &&
-          other.id == id &&
-          other.userId == userId &&
-          other.name == name &&
-          other.email == email &&
-          other.phone == phone &&
-          other.address == address &&
-          other.location == location &&
-          other.status == status &&
-          other.isActive == isActive &&
-          other.isOnline == isOnline &&
-          other.isTakingOrders == isTakingOrders &&
-          other.operatingStatus == operatingStatus &&
-          other.rating == rating &&
-          other.document == document &&
-          other.image == image &&
-          other.category == category &&
-          other.categories == categories &&
-          other.bank == bank &&
-          other.createdAt == createdAt &&
-          other.updatedAt == updatedAt;
+  bool operator ==(Object other) => identical(this, other) || other is OrderMerchant &&
+    other.id == id &&
+    other.userId == userId &&
+    other.name == name &&
+    other.email == email &&
+    other.phone == phone &&
+    other.address == address &&
+    other.location == location &&
+    other.status == status &&
+    other.isActive == isActive &&
+    other.isOnline == isOnline &&
+    other.isTakingOrders == isTakingOrders &&
+    other.operatingStatus == operatingStatus &&
+    other.rating == rating &&
+    other.document == document &&
+    other.image == image &&
+    other.category == category &&
+    other.categories == categories &&
+    other.bank == bank &&
+    other.createdAt == createdAt &&
+    other.updatedAt == updatedAt;
 
   @override
   int get hashCode =>
@@ -156,8 +154,7 @@ class OrderMerchant {
       createdAt.hashCode +
       updatedAt.hashCode;
 
-  factory OrderMerchant.fromJson(Map<String, dynamic> json) =>
-      _$OrderMerchantFromJson(json);
+  factory OrderMerchant.fromJson(Map<String, dynamic> json) => _$OrderMerchantFromJson(json);
 
   Map<String, dynamic> toJson() => _$OrderMerchantToJson(this);
 
@@ -165,64 +162,56 @@ class OrderMerchant {
   String toString() {
     return toJson().toString();
   }
-}
 
+}
 /// Merchant approval status
 enum OrderMerchantStatusEnum {
-  /// Merchant approval status
+      /// Merchant approval status
   @JsonValue(r'PENDING')
   PENDING(r'PENDING'),
-
-  /// Merchant approval status
+      /// Merchant approval status
   @JsonValue(r'APPROVED')
   APPROVED(r'APPROVED'),
-
-  /// Merchant approval status
+      /// Merchant approval status
   @JsonValue(r'REJECTED')
   REJECTED(r'REJECTED'),
-
-  /// Merchant approval status
+      /// Merchant approval status
   @JsonValue(r'ACTIVE')
   ACTIVE(r'ACTIVE'),
-
-  /// Merchant approval status
+      /// Merchant approval status
   @JsonValue(r'INACTIVE')
   INACTIVE(r'INACTIVE'),
-
-  /// Merchant approval status
+      /// Merchant approval status
   @JsonValue(r'SUSPENDED')
   SUSPENDED(r'SUSPENDED');
-
+  
   const OrderMerchantStatusEnum(this.value);
-
+  
   final String value;
-
+  
   @override
   String toString() => value;
 }
-
 /// Current operating status (OPEN, CLOSED, BREAK, MAINTENANCE)
 enum OrderMerchantOperatingStatusEnum {
-  /// Current operating status (OPEN, CLOSED, BREAK, MAINTENANCE)
+      /// Current operating status (OPEN, CLOSED, BREAK, MAINTENANCE)
   @JsonValue(r'OPEN')
   OPEN(r'OPEN'),
-
-  /// Current operating status (OPEN, CLOSED, BREAK, MAINTENANCE)
+      /// Current operating status (OPEN, CLOSED, BREAK, MAINTENANCE)
   @JsonValue(r'CLOSED')
   CLOSED(r'CLOSED'),
-
-  /// Current operating status (OPEN, CLOSED, BREAK, MAINTENANCE)
+      /// Current operating status (OPEN, CLOSED, BREAK, MAINTENANCE)
   @JsonValue(r'BREAK')
   BREAK(r'BREAK'),
-
-  /// Current operating status (OPEN, CLOSED, BREAK, MAINTENANCE)
+      /// Current operating status (OPEN, CLOSED, BREAK, MAINTENANCE)
   @JsonValue(r'MAINTENANCE')
   MAINTENANCE(r'MAINTENANCE');
-
+  
   const OrderMerchantOperatingStatusEnum(this.value);
-
+  
   final String value;
-
+  
   @override
   String toString() => value;
 }
+

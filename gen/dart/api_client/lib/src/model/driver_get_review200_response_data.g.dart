@@ -7,9 +7,9 @@ part of 'driver_get_review200_response_data.dart';
 // **************************************************************************
 
 abstract class _$DriverGetReview200ResponseDataCWProxy {
-  DriverGetReview200ResponseData id(String? id);
+  DriverGetReview200ResponseData id(String id);
 
-  DriverGetReview200ResponseData driverId(String? driverId);
+  DriverGetReview200ResponseData driverId(String driverId);
 
   DriverGetReview200ResponseData status(
     DriverGetReview200ResponseDataStatusEnum status,
@@ -60,8 +60,8 @@ abstract class _$DriverGetReview200ResponseDataCWProxy {
   /// DriverGetReview200ResponseData(...).copyWith(id: 12, name: "My name")
   /// ```
   DriverGetReview200ResponseData call({
-    String? id,
-    String? driverId,
+    String id,
+    String driverId,
     DriverGetReview200ResponseDataStatusEnum status,
     DriverGetReview200ResponseDataStudentCardStatusEnum studentCardStatus,
     String? studentCardReason,
@@ -89,10 +89,10 @@ class _$DriverGetReview200ResponseDataCWProxyImpl
   final DriverGetReview200ResponseData _value;
 
   @override
-  DriverGetReview200ResponseData id(String? id) => call(id: id);
+  DriverGetReview200ResponseData id(String id) => call(id: id);
 
   @override
-  DriverGetReview200ResponseData driverId(String? driverId) =>
+  DriverGetReview200ResponseData driverId(String driverId) =>
       call(driverId: driverId);
 
   @override
@@ -185,14 +185,14 @@ class _$DriverGetReview200ResponseDataCWProxyImpl
     Object? updatedAt = const $CopyWithPlaceholder(),
   }) {
     return DriverGetReview200ResponseData(
-      id: id == const $CopyWithPlaceholder()
+      id: id == const $CopyWithPlaceholder() || id == null
           ? _value.id
           // ignore: cast_nullable_to_non_nullable
-          : id as String?,
-      driverId: driverId == const $CopyWithPlaceholder()
+          : id as String,
+      driverId: driverId == const $CopyWithPlaceholder() || driverId == null
           ? _value.driverId
           // ignore: cast_nullable_to_non_nullable
-          : driverId as String?,
+          : driverId as String,
       status: status == const $CopyWithPlaceholder() || status == null
           ? _value.status
           // ignore: cast_nullable_to_non_nullable
@@ -302,8 +302,8 @@ DriverGetReview200ResponseData _$DriverGetReview200ResponseDataFromJson(
     ],
   );
   final val = DriverGetReview200ResponseData(
-    id: $checkedConvert('id', (v) => v as String?),
-    driverId: $checkedConvert('driverId', (v) => v as String?),
+    id: $checkedConvert('id', (v) => v as String),
+    driverId: $checkedConvert('driverId', (v) => v as String),
     status: $checkedConvert(
       'status',
       (v) => $enumDecode(_$DriverGetReview200ResponseDataStatusEnumEnumMap, v),

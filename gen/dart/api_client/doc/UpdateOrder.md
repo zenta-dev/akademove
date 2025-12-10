@@ -32,6 +32,7 @@ Name | Type | Description | Notes
 **otpVerifiedAt** | [**DateTime**](DateTime.md) |  | [optional] 
 **itemCount** | **num** |  | [optional] 
 **items** | [**List&lt;OrderItem&gt;**](OrderItem.md) |  | [optional] 
+**deliveryItemType** | [**DeliveryItemType**](DeliveryItemType.md) |  | [optional] 
 **user** | [**DriverUser**](DriverUser.md) |  | [optional] 
 **driver** | [**OrderDriver**](OrderDriver.md) |  | [optional] 
 **merchant** | [**OrderMerchant**](OrderMerchant.md) |  | [optional] 

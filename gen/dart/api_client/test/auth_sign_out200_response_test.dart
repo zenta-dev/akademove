@@ -13,7 +13,7 @@ void main() {
       // TODO
     });
 
-    // Object data
+    // bool data
     test('to test the property `data`', () async {
       // TODO
     });

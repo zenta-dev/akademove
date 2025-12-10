@@ -7,7 +7,7 @@ part of 'notification_list200_response_data_inner.dart';
 // **************************************************************************
 
 abstract class _$NotificationList200ResponseDataInnerCWProxy {
-  NotificationList200ResponseDataInner id(String? id);
+  NotificationList200ResponseDataInner id(String id);
 
   NotificationList200ResponseDataInner userId(String? userId);
 
@@ -33,7 +33,7 @@ abstract class _$NotificationList200ResponseDataInnerCWProxy {
   /// NotificationList200ResponseDataInner(...).copyWith(id: 12, name: "My name")
   /// ```
   NotificationList200ResponseDataInner call({
-    String? id,
+    String id,
     String? userId,
     String? title,
     String? body,
@@ -54,7 +54,7 @@ class _$NotificationList200ResponseDataInnerCWProxyImpl
   final NotificationList200ResponseDataInner _value;
 
   @override
-  NotificationList200ResponseDataInner id(String? id) => call(id: id);
+  NotificationList200ResponseDataInner id(String id) => call(id: id);
 
   @override
   NotificationList200ResponseDataInner userId(String? userId) =>
@@ -106,10 +106,10 @@ class _$NotificationList200ResponseDataInnerCWProxyImpl
     Object? readAt = const $CopyWithPlaceholder(),
   }) {
     return NotificationList200ResponseDataInner(
-      id: id == const $CopyWithPlaceholder()
+      id: id == const $CopyWithPlaceholder() || id == null
           ? _value.id
           // ignore: cast_nullable_to_non_nullable
-          : id as String?,
+          : id as String,
       userId: userId == const $CopyWithPlaceholder()
           ? _value.userId
           // ignore: cast_nullable_to_non_nullable
@@ -176,7 +176,7 @@ _$NotificationList200ResponseDataInnerFromJson(Map<String, dynamic> json) =>
         ],
       );
       final val = NotificationList200ResponseDataInner(
-        id: $checkedConvert('id', (v) => v as String?),
+        id: $checkedConvert('id', (v) => v as String),
         userId: $checkedConvert('userId', (v) => v as String?),
         title: $checkedConvert('title', (v) => v as String?),
         body: $checkedConvert('body', (v) => v as String?),

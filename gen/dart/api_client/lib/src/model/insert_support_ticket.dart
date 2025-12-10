@@ -23,44 +23,41 @@ class InsertSupportTicket {
     required this.subject,
     required this.category,
     required this.priority,
-    this.orderId,
+     this.orderId,
     required this.message,
   });
   @JsonKey(name: r'subject', required: true, includeIfNull: false)
   final String subject;
-
+  
   @JsonKey(name: r'category', required: true, includeIfNull: false)
   final SupportTicketCategory category;
-
+  
   @JsonKey(name: r'priority', required: true, includeIfNull: false)
   final SupportTicketPriority priority;
-
+  
   @JsonKey(name: r'orderId', required: false, includeIfNull: false)
   final String? orderId;
-
+  
   @JsonKey(name: r'message', required: true, includeIfNull: false)
   final String message;
-
+  
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is InsertSupportTicket &&
-          other.subject == subject &&
-          other.category == category &&
-          other.priority == priority &&
-          other.orderId == orderId &&
-          other.message == message;
+  bool operator ==(Object other) => identical(this, other) || other is InsertSupportTicket &&
+    other.subject == subject &&
+    other.category == category &&
+    other.priority == priority &&
+    other.orderId == orderId &&
+    other.message == message;
 
   @override
   int get hashCode =>
       subject.hashCode +
       category.hashCode +
       priority.hashCode +
-      (orderId == null ? 0 : orderId.hashCode) +
+      orderId.hashCode +
       message.hashCode;
 
-  factory InsertSupportTicket.fromJson(Map<String, dynamic> json) =>
-      _$InsertSupportTicketFromJson(json);
+  factory InsertSupportTicket.fromJson(Map<String, dynamic> json) => _$InsertSupportTicketFromJson(json);
 
   Map<String, dynamic> toJson() => _$InsertSupportTicketToJson(this);
 
@@ -68,4 +65,6 @@ class InsertSupportTicket {
   String toString() {
     return toJson().toString();
   }
+
 }
+

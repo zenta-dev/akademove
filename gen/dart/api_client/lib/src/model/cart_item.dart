@@ -25,51 +25,49 @@ class CartItem {
     required this.menuImage,
     required this.unitPrice,
     required this.quantity,
-    this.notes,
+     this.notes,
   });
-  @JsonKey(name: r'menuId', required: true, includeIfNull: true)
-  final String? menuId;
-
-  @JsonKey(name: r'merchantId', required: true, includeIfNull: true)
-  final String? merchantId;
-
+  @JsonKey(name: r'menuId', required: true, includeIfNull: false)
+  final String menuId;
+  
+  @JsonKey(name: r'merchantId', required: true, includeIfNull: false)
+  final String merchantId;
+  
   @JsonKey(name: r'merchantName', required: true, includeIfNull: true)
   final String? merchantName;
-
+  
   @JsonKey(name: r'menuName', required: true, includeIfNull: true)
   final String? menuName;
-
+  
   @JsonKey(name: r'menuImage', required: true, includeIfNull: true)
   final String? menuImage;
-
+  
   @JsonKey(name: r'unitPrice', required: true, includeIfNull: false)
   final num unitPrice;
-
-  // minimum: 1
-  // maximum: 99
+  
+          // minimum: 1
+          // maximum: 99
   @JsonKey(name: r'quantity', required: true, includeIfNull: false)
   final int quantity;
-
+  
   @JsonKey(name: r'notes', required: false, includeIfNull: false)
   final String? notes;
-
+  
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is CartItem &&
-          other.menuId == menuId &&
-          other.merchantId == merchantId &&
-          other.merchantName == merchantName &&
-          other.menuName == menuName &&
-          other.menuImage == menuImage &&
-          other.unitPrice == unitPrice &&
-          other.quantity == quantity &&
-          other.notes == notes;
+  bool operator ==(Object other) => identical(this, other) || other is CartItem &&
+    other.menuId == menuId &&
+    other.merchantId == merchantId &&
+    other.merchantName == merchantName &&
+    other.menuName == menuName &&
+    other.menuImage == menuImage &&
+    other.unitPrice == unitPrice &&
+    other.quantity == quantity &&
+    other.notes == notes;
 
   @override
   int get hashCode =>
-      (menuId == null ? 0 : menuId.hashCode) +
-      (merchantId == null ? 0 : merchantId.hashCode) +
+      menuId.hashCode +
+      merchantId.hashCode +
       (merchantName == null ? 0 : merchantName.hashCode) +
       (menuName == null ? 0 : menuName.hashCode) +
       (menuImage == null ? 0 : menuImage.hashCode) +
@@ -77,8 +75,7 @@ class CartItem {
       quantity.hashCode +
       (notes == null ? 0 : notes.hashCode);
 
-  factory CartItem.fromJson(Map<String, dynamic> json) =>
-      _$CartItemFromJson(json);
+  factory CartItem.fromJson(Map<String, dynamic> json) => _$CartItemFromJson(json);
 
   Map<String, dynamic> toJson() => _$CartItemToJson(this);
 
@@ -86,4 +83,6 @@ class CartItem {
   String toString() {
     return toJson().toString();
   }
+
 }
+

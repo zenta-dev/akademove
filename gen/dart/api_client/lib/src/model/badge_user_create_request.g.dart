@@ -9,7 +9,7 @@ part of 'badge_user_create_request.dart';
 abstract class _$BadgeUserCreateRequestCWProxy {
   BadgeUserCreateRequest userId(String? userId);
 
-  BadgeUserCreateRequest badgeId(String? badgeId);
+  BadgeUserCreateRequest badgeId(String badgeId);
 
   BadgeUserCreateRequest metadata(UserBadgeMetadata? metadata);
 
@@ -22,7 +22,7 @@ abstract class _$BadgeUserCreateRequestCWProxy {
   /// ```
   BadgeUserCreateRequest call({
     String? userId,
-    String? badgeId,
+    String badgeId,
     UserBadgeMetadata? metadata,
   });
 }
@@ -39,7 +39,7 @@ class _$BadgeUserCreateRequestCWProxyImpl
   BadgeUserCreateRequest userId(String? userId) => call(userId: userId);
 
   @override
-  BadgeUserCreateRequest badgeId(String? badgeId) => call(badgeId: badgeId);
+  BadgeUserCreateRequest badgeId(String badgeId) => call(badgeId: badgeId);
 
   @override
   BadgeUserCreateRequest metadata(UserBadgeMetadata? metadata) =>
@@ -63,10 +63,10 @@ class _$BadgeUserCreateRequestCWProxyImpl
           ? _value.userId
           // ignore: cast_nullable_to_non_nullable
           : userId as String?,
-      badgeId: badgeId == const $CopyWithPlaceholder()
+      badgeId: badgeId == const $CopyWithPlaceholder() || badgeId == null
           ? _value.badgeId
           // ignore: cast_nullable_to_non_nullable
-          : badgeId as String?,
+          : badgeId as String,
       metadata: metadata == const $CopyWithPlaceholder()
           ? _value.metadata
           // ignore: cast_nullable_to_non_nullable
@@ -93,7 +93,7 @@ BadgeUserCreateRequest _$BadgeUserCreateRequestFromJson(
   $checkKeys(json, requiredKeys: const ['userId', 'badgeId']);
   final val = BadgeUserCreateRequest(
     userId: $checkedConvert('userId', (v) => v as String?),
-    badgeId: $checkedConvert('badgeId', (v) => v as String?),
+    badgeId: $checkedConvert('badgeId', (v) => v as String),
     metadata: $checkedConvert(
       'metadata',
       (v) => v == null

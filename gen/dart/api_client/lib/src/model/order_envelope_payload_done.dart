@@ -26,24 +26,22 @@ class OrderEnvelopePayloadDone {
   });
   @JsonKey(name: r'by', required: true, includeIfNull: false)
   final OrderEnvelopePayloadDoneByEnum by;
-
+  
   @JsonKey(name: r'orderId', required: true, includeIfNull: false)
   final String orderId;
-
+  
   @JsonKey(name: r'driverId', required: true, includeIfNull: false)
   final String driverId;
-
+  
   @JsonKey(name: r'driverCurrentLocation', required: true, includeIfNull: false)
   final Coordinate driverCurrentLocation;
-
+  
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is OrderEnvelopePayloadDone &&
-          other.by == by &&
-          other.orderId == orderId &&
-          other.driverId == driverId &&
-          other.driverCurrentLocation == driverCurrentLocation;
+  bool operator ==(Object other) => identical(this, other) || other is OrderEnvelopePayloadDone &&
+    other.by == by &&
+    other.orderId == orderId &&
+    other.driverId == driverId &&
+    other.driverCurrentLocation == driverCurrentLocation;
 
   @override
   int get hashCode =>
@@ -52,8 +50,7 @@ class OrderEnvelopePayloadDone {
       driverId.hashCode +
       driverCurrentLocation.hashCode;
 
-  factory OrderEnvelopePayloadDone.fromJson(Map<String, dynamic> json) =>
-      _$OrderEnvelopePayloadDoneFromJson(json);
+  factory OrderEnvelopePayloadDone.fromJson(Map<String, dynamic> json) => _$OrderEnvelopePayloadDoneFromJson(json);
 
   Map<String, dynamic> toJson() => _$OrderEnvelopePayloadDoneToJson(this);
 
@@ -61,6 +58,7 @@ class OrderEnvelopePayloadDone {
   String toString() {
     return toJson().toString();
   }
+
 }
 
 enum OrderEnvelopePayloadDoneByEnum {
@@ -68,11 +66,12 @@ enum OrderEnvelopePayloadDoneByEnum {
   USER(r'USER'),
   @JsonValue(r'DRIVER')
   DRIVER(r'DRIVER');
-
+  
   const OrderEnvelopePayloadDoneByEnum(this.value);
-
+  
   final String value;
-
+  
   @override
   String toString() => value;
 }
+

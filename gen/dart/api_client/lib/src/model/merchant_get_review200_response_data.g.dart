@@ -7,9 +7,9 @@ part of 'merchant_get_review200_response_data.dart';
 // **************************************************************************
 
 abstract class _$MerchantGetReview200ResponseDataCWProxy {
-  MerchantGetReview200ResponseData id(String? id);
+  MerchantGetReview200ResponseData id(String id);
 
-  MerchantGetReview200ResponseData merchantId(String? merchantId);
+  MerchantGetReview200ResponseData merchantId(String merchantId);
 
   MerchantGetReview200ResponseData status(
     MerchantGetReview200ResponseDataStatusEnum status,
@@ -42,8 +42,8 @@ abstract class _$MerchantGetReview200ResponseDataCWProxy {
   /// MerchantGetReview200ResponseData(...).copyWith(id: 12, name: "My name")
   /// ```
   MerchantGetReview200ResponseData call({
-    String? id,
-    String? merchantId,
+    String id,
+    String merchantId,
     MerchantGetReview200ResponseDataStatusEnum status,
     MerchantGetReview200ResponseDataBusinessDocumentStatusEnum
     businessDocumentStatus,
@@ -65,10 +65,10 @@ class _$MerchantGetReview200ResponseDataCWProxyImpl
   final MerchantGetReview200ResponseData _value;
 
   @override
-  MerchantGetReview200ResponseData id(String? id) => call(id: id);
+  MerchantGetReview200ResponseData id(String id) => call(id: id);
 
   @override
-  MerchantGetReview200ResponseData merchantId(String? merchantId) =>
+  MerchantGetReview200ResponseData merchantId(String merchantId) =>
       call(merchantId: merchantId);
 
   @override
@@ -128,14 +128,15 @@ class _$MerchantGetReview200ResponseDataCWProxyImpl
     Object? updatedAt = const $CopyWithPlaceholder(),
   }) {
     return MerchantGetReview200ResponseData(
-      id: id == const $CopyWithPlaceholder()
+      id: id == const $CopyWithPlaceholder() || id == null
           ? _value.id
           // ignore: cast_nullable_to_non_nullable
-          : id as String?,
-      merchantId: merchantId == const $CopyWithPlaceholder()
+          : id as String,
+      merchantId:
+          merchantId == const $CopyWithPlaceholder() || merchantId == null
           ? _value.merchantId
           // ignore: cast_nullable_to_non_nullable
-          : merchantId as String?,
+          : merchantId as String,
       status: status == const $CopyWithPlaceholder() || status == null
           ? _value.status
           // ignore: cast_nullable_to_non_nullable
@@ -210,8 +211,8 @@ MerchantGetReview200ResponseData _$MerchantGetReview200ResponseDataFromJson(
     ],
   );
   final val = MerchantGetReview200ResponseData(
-    id: $checkedConvert('id', (v) => v as String?),
-    merchantId: $checkedConvert('merchantId', (v) => v as String?),
+    id: $checkedConvert('id', (v) => v as String),
+    merchantId: $checkedConvert('merchantId', (v) => v as String),
     status: $checkedConvert(
       'status',
       (v) =>

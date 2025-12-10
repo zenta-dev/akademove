@@ -18,31 +18,29 @@ part 'list_quick_message_query.g.dart';
 class ListQuickMessageQuery {
   /// Returns a new [ListQuickMessageQuery] instance.
   const ListQuickMessageQuery({
-    this.role,
-    this.orderType,
-    this.locale,
-    this.isActive,
+     this.role,
+     this.orderType,
+     this.locale,
+     this.isActive,
   });
   @JsonKey(name: r'role', required: false, includeIfNull: false)
   final ListQuickMessageQueryRoleEnum? role;
-
+  
   @JsonKey(name: r'orderType', required: false, includeIfNull: false)
   final ListQuickMessageQueryOrderTypeEnum? orderType;
-
+  
   @JsonKey(name: r'locale', required: false, includeIfNull: false)
   final String? locale;
-
+  
   @JsonKey(name: r'isActive', required: false, includeIfNull: false)
   final bool? isActive;
-
+  
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is ListQuickMessageQuery &&
-          other.role == role &&
-          other.orderType == orderType &&
-          other.locale == locale &&
-          other.isActive == isActive;
+  bool operator ==(Object other) => identical(this, other) || other is ListQuickMessageQuery &&
+    other.role == role &&
+    other.orderType == orderType &&
+    other.locale == locale &&
+    other.isActive == isActive;
 
   @override
   int get hashCode =>
@@ -51,8 +49,7 @@ class ListQuickMessageQuery {
       (locale == null ? 0 : locale.hashCode) +
       isActive.hashCode;
 
-  factory ListQuickMessageQuery.fromJson(Map<String, dynamic> json) =>
-      _$ListQuickMessageQueryFromJson(json);
+  factory ListQuickMessageQuery.fromJson(Map<String, dynamic> json) => _$ListQuickMessageQueryFromJson(json);
 
   Map<String, dynamic> toJson() => _$ListQuickMessageQueryToJson(this);
 
@@ -60,6 +57,7 @@ class ListQuickMessageQuery {
   String toString() {
     return toJson().toString();
   }
+
 }
 
 enum ListQuickMessageQueryRoleEnum {
@@ -73,11 +71,11 @@ enum ListQuickMessageQueryRoleEnum {
   DRIVER(r'DRIVER'),
   @JsonValue(r'USER')
   USER(r'USER');
-
+  
   const ListQuickMessageQueryRoleEnum(this.value);
-
+  
   final String value;
-
+  
   @override
   String toString() => value;
 }
@@ -89,11 +87,12 @@ enum ListQuickMessageQueryOrderTypeEnum {
   DELIVERY(r'DELIVERY'),
   @JsonValue(r'FOOD')
   FOOD(r'FOOD');
-
+  
   const ListQuickMessageQueryOrderTypeEnum(this.value);
-
+  
   final String value;
-
+  
   @override
   String toString() => value;
 }
+

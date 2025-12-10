@@ -25,40 +25,39 @@ class DriverGetAnalytics200ResponseDataEarningsByTypeInner {
   });
   @JsonKey(name: r'type', required: true, includeIfNull: false)
   final DriverGetAnalytics200ResponseDataEarningsByTypeInnerTypeEnum type;
-
+  
   @JsonKey(name: r'orders', required: true, includeIfNull: false)
   final num orders;
-
+  
   @JsonKey(name: r'earnings', required: true, includeIfNull: false)
   final num earnings;
-
+  
   @JsonKey(name: r'commission', required: true, includeIfNull: false)
   final num commission;
-
+  
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is DriverGetAnalytics200ResponseDataEarningsByTypeInner &&
-          other.type == type &&
-          other.orders == orders &&
-          other.earnings == earnings &&
-          other.commission == commission;
+  bool operator ==(Object other) => identical(this, other) || other is DriverGetAnalytics200ResponseDataEarningsByTypeInner &&
+    other.type == type &&
+    other.orders == orders &&
+    other.earnings == earnings &&
+    other.commission == commission;
 
   @override
   int get hashCode =>
-      type.hashCode + orders.hashCode + earnings.hashCode + commission.hashCode;
+      type.hashCode +
+      orders.hashCode +
+      earnings.hashCode +
+      commission.hashCode;
 
-  factory DriverGetAnalytics200ResponseDataEarningsByTypeInner.fromJson(
-    Map<String, dynamic> json,
-  ) => _$DriverGetAnalytics200ResponseDataEarningsByTypeInnerFromJson(json);
+  factory DriverGetAnalytics200ResponseDataEarningsByTypeInner.fromJson(Map<String, dynamic> json) => _$DriverGetAnalytics200ResponseDataEarningsByTypeInnerFromJson(json);
 
-  Map<String, dynamic> toJson() =>
-      _$DriverGetAnalytics200ResponseDataEarningsByTypeInnerToJson(this);
+  Map<String, dynamic> toJson() => _$DriverGetAnalytics200ResponseDataEarningsByTypeInnerToJson(this);
 
   @override
   String toString() {
     return toJson().toString();
   }
+
 }
 
 enum DriverGetAnalytics200ResponseDataEarningsByTypeInnerTypeEnum {
@@ -68,13 +67,12 @@ enum DriverGetAnalytics200ResponseDataEarningsByTypeInnerTypeEnum {
   DELIVERY(r'DELIVERY'),
   @JsonValue(r'FOOD')
   FOOD(r'FOOD');
-
-  const DriverGetAnalytics200ResponseDataEarningsByTypeInnerTypeEnum(
-    this.value,
-  );
-
+  
+  const DriverGetAnalytics200ResponseDataEarningsByTypeInnerTypeEnum(this.value);
+  
   final String value;
-
+  
   @override
   String toString() => value;
 }
+

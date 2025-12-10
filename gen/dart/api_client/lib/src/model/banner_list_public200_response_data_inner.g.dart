@@ -7,7 +7,7 @@ part of 'banner_list_public200_response_data_inner.dart';
 // **************************************************************************
 
 abstract class _$BannerListPublic200ResponseDataInnerCWProxy {
-  BannerListPublic200ResponseDataInner id(String? id);
+  BannerListPublic200ResponseDataInner id(String id);
 
   BannerListPublic200ResponseDataInner title(String? title);
 
@@ -45,7 +45,7 @@ abstract class _$BannerListPublic200ResponseDataInnerCWProxy {
   /// BannerListPublic200ResponseDataInner(...).copyWith(id: 12, name: "My name")
   /// ```
   BannerListPublic200ResponseDataInner call({
-    String? id,
+    String id,
     String? title,
     String? description,
     String? imageUrl,
@@ -69,7 +69,7 @@ class _$BannerListPublic200ResponseDataInnerCWProxyImpl
   final BannerListPublic200ResponseDataInner _value;
 
   @override
-  BannerListPublic200ResponseDataInner id(String? id) => call(id: id);
+  BannerListPublic200ResponseDataInner id(String id) => call(id: id);
 
   @override
   BannerListPublic200ResponseDataInner title(String? title) =>
@@ -141,10 +141,10 @@ class _$BannerListPublic200ResponseDataInnerCWProxyImpl
     Object? endAt = const $CopyWithPlaceholder(),
   }) {
     return BannerListPublic200ResponseDataInner(
-      id: id == const $CopyWithPlaceholder()
+      id: id == const $CopyWithPlaceholder() || id == null
           ? _value.id
           // ignore: cast_nullable_to_non_nullable
-          : id as String?,
+          : id as String,
       title: title == const $CopyWithPlaceholder()
           ? _value.title
           // ignore: cast_nullable_to_non_nullable
@@ -229,7 +229,7 @@ _$BannerListPublic200ResponseDataInnerFromJson(Map<String, dynamic> json) =>
         ],
       );
       final val = BannerListPublic200ResponseDataInner(
-        id: $checkedConvert('id', (v) => v as String?),
+        id: $checkedConvert('id', (v) => v as String),
         title: $checkedConvert('title', (v) => v as String?),
         description: $checkedConvert('description', (v) => v as String?),
         imageUrl: $checkedConvert('imageUrl', (v) => v as String?),

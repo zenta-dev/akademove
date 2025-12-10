@@ -348,6 +348,7 @@ const _$ListDriverQuizQuestionQuerySortByEnumEnumMap = {
       'proofOfDeliveryUrl',
   ListDriverQuizQuestionQuerySortByEnum.deliveryOtp: 'deliveryOtp',
   ListDriverQuizQuestionQuerySortByEnum.otpVerifiedAt: 'otpVerifiedAt',
+  ListDriverQuizQuestionQuerySortByEnum.deliveryItemType: 'deliveryItemType',
   ListDriverQuizQuestionQuerySortByEnum.transactionId: 'transactionId',
   ListDriverQuizQuestionQuerySortByEnum.provider: 'provider',
   ListDriverQuizQuestionQuerySortByEnum.method: 'method',

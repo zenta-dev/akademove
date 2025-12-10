@@ -7,7 +7,7 @@ part of 'broadcast_list200_response_data_inner.dart';
 // **************************************************************************
 
 abstract class _$BroadcastList200ResponseDataInnerCWProxy {
-  BroadcastList200ResponseDataInner id(String? id);
+  BroadcastList200ResponseDataInner id(String id);
 
   BroadcastList200ResponseDataInner title(String title);
 
@@ -37,7 +37,7 @@ abstract class _$BroadcastList200ResponseDataInnerCWProxy {
 
   BroadcastList200ResponseDataInner failedCount(int? failedCount);
 
-  BroadcastList200ResponseDataInner createdBy(String? createdBy);
+  BroadcastList200ResponseDataInner createdBy(String createdBy);
 
   BroadcastList200ResponseDataInner createdAt(DateTime? createdAt);
 
@@ -51,7 +51,7 @@ abstract class _$BroadcastList200ResponseDataInnerCWProxy {
   /// BroadcastList200ResponseDataInner(...).copyWith(id: 12, name: "My name")
   /// ```
   BroadcastList200ResponseDataInner call({
-    String? id,
+    String id,
     String title,
     String message,
     BroadcastList200ResponseDataInnerTypeEnum type,
@@ -63,7 +63,7 @@ abstract class _$BroadcastList200ResponseDataInnerCWProxy {
     int? totalRecipients,
     int? sentCount,
     int? failedCount,
-    String? createdBy,
+    String createdBy,
     DateTime? createdAt,
     DateTime? updatedAt,
   });
@@ -78,7 +78,7 @@ class _$BroadcastList200ResponseDataInnerCWProxyImpl
   final BroadcastList200ResponseDataInner _value;
 
   @override
-  BroadcastList200ResponseDataInner id(String? id) => call(id: id);
+  BroadcastList200ResponseDataInner id(String id) => call(id: id);
 
   @override
   BroadcastList200ResponseDataInner title(String title) => call(title: title);
@@ -127,7 +127,7 @@ class _$BroadcastList200ResponseDataInnerCWProxyImpl
       call(failedCount: failedCount);
 
   @override
-  BroadcastList200ResponseDataInner createdBy(String? createdBy) =>
+  BroadcastList200ResponseDataInner createdBy(String createdBy) =>
       call(createdBy: createdBy);
 
   @override
@@ -164,10 +164,10 @@ class _$BroadcastList200ResponseDataInnerCWProxyImpl
     Object? updatedAt = const $CopyWithPlaceholder(),
   }) {
     return BroadcastList200ResponseDataInner(
-      id: id == const $CopyWithPlaceholder()
+      id: id == const $CopyWithPlaceholder() || id == null
           ? _value.id
           // ignore: cast_nullable_to_non_nullable
-          : id as String?,
+          : id as String,
       title: title == const $CopyWithPlaceholder() || title == null
           ? _value.title
           // ignore: cast_nullable_to_non_nullable
@@ -215,10 +215,10 @@ class _$BroadcastList200ResponseDataInnerCWProxyImpl
           ? _value.failedCount
           // ignore: cast_nullable_to_non_nullable
           : failedCount as int?,
-      createdBy: createdBy == const $CopyWithPlaceholder()
+      createdBy: createdBy == const $CopyWithPlaceholder() || createdBy == null
           ? _value.createdBy
           // ignore: cast_nullable_to_non_nullable
-          : createdBy as String?,
+          : createdBy as String,
       createdAt: createdAt == const $CopyWithPlaceholder()
           ? _value.createdAt
           // ignore: cast_nullable_to_non_nullable
@@ -264,7 +264,7 @@ BroadcastList200ResponseDataInner _$BroadcastList200ResponseDataInnerFromJson(
     ],
   );
   final val = BroadcastList200ResponseDataInner(
-    id: $checkedConvert('id', (v) => v as String?),
+    id: $checkedConvert('id', (v) => v as String),
     title: $checkedConvert('title', (v) => v as String),
     message: $checkedConvert('message', (v) => v as String),
     type: $checkedConvert(
@@ -304,7 +304,7 @@ BroadcastList200ResponseDataInner _$BroadcastList200ResponseDataInnerFromJson(
       'failedCount',
       (v) => (v as num?)?.toInt() ?? 0,
     ),
-    createdBy: $checkedConvert('createdBy', (v) => v as String?),
+    createdBy: $checkedConvert('createdBy', (v) => v as String),
     createdAt: $checkedConvert(
       'createdAt',
       (v) => v == null ? null : DateTime.parse(v as String),

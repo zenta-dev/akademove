@@ -25,60 +25,58 @@ class EstimateOrder {
   const EstimateOrder({
     required this.dropoffLocation,
     required this.pickupLocation,
-    this.note,
+     this.note,
     required this.type,
-    this.items,
-    this.gender,
-    this.genderPreference,
-    this.couponCode,
-    this.discountIds,
-    this.weight,
+     this.items,
+     this.gender,
+     this.genderPreference,
+     this.couponCode,
+     this.discountIds,
+     this.weight,
   });
   @JsonKey(name: r'dropoffLocation', required: true, includeIfNull: false)
   final Coordinate dropoffLocation;
-
+  
   @JsonKey(name: r'pickupLocation', required: true, includeIfNull: false)
   final Coordinate pickupLocation;
-
+  
   @JsonKey(name: r'note', required: false, includeIfNull: false)
   final OrderNote? note;
-
+  
   @JsonKey(name: r'type', required: true, includeIfNull: false)
   final OrderType type;
-
+  
   @JsonKey(name: r'items', required: false, includeIfNull: false)
   final List<OrderItem>? items;
-
+  
   @JsonKey(name: r'gender', required: false, includeIfNull: false)
   final UserGender? gender;
-
+  
   @JsonKey(name: r'genderPreference', required: false, includeIfNull: false)
   final EstimateOrderGenderPreferenceEnum? genderPreference;
-
+  
   @JsonKey(name: r'couponCode', required: false, includeIfNull: false)
   final String? couponCode;
-
+  
   @JsonKey(name: r'discountIds', required: false, includeIfNull: false)
   final List<num>? discountIds;
-
-  // maximum: 20
+  
+          // maximum: 20
   @JsonKey(name: r'weight', required: false, includeIfNull: false)
   final num? weight;
-
+  
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is EstimateOrder &&
-          other.dropoffLocation == dropoffLocation &&
-          other.pickupLocation == pickupLocation &&
-          other.note == note &&
-          other.type == type &&
-          other.items == items &&
-          other.gender == gender &&
-          other.genderPreference == genderPreference &&
-          other.couponCode == couponCode &&
-          other.discountIds == discountIds &&
-          other.weight == weight;
+  bool operator ==(Object other) => identical(this, other) || other is EstimateOrder &&
+    other.dropoffLocation == dropoffLocation &&
+    other.pickupLocation == pickupLocation &&
+    other.note == note &&
+    other.type == type &&
+    other.items == items &&
+    other.gender == gender &&
+    other.genderPreference == genderPreference &&
+    other.couponCode == couponCode &&
+    other.discountIds == discountIds &&
+    other.weight == weight;
 
   @override
   int get hashCode =>
@@ -93,8 +91,7 @@ class EstimateOrder {
       discountIds.hashCode +
       weight.hashCode;
 
-  factory EstimateOrder.fromJson(Map<String, dynamic> json) =>
-      _$EstimateOrderFromJson(json);
+  factory EstimateOrder.fromJson(Map<String, dynamic> json) => _$EstimateOrderFromJson(json);
 
   Map<String, dynamic> toJson() => _$EstimateOrderToJson(this);
 
@@ -102,6 +99,7 @@ class EstimateOrder {
   String toString() {
     return toJson().toString();
   }
+
 }
 
 enum EstimateOrderGenderPreferenceEnum {
@@ -109,11 +107,12 @@ enum EstimateOrderGenderPreferenceEnum {
   SAME(r'SAME'),
   @JsonValue(r'ANY')
   ANY(r'ANY');
-
+  
   const EstimateOrderGenderPreferenceEnum(this.value);
-
+  
   final String value;
-
+  
   @override
   String toString() => value;
 }
+

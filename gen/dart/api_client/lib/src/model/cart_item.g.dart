@@ -7,9 +7,9 @@ part of 'cart_item.dart';
 // **************************************************************************
 
 abstract class _$CartItemCWProxy {
-  CartItem menuId(String? menuId);
+  CartItem menuId(String menuId);
 
-  CartItem merchantId(String? merchantId);
+  CartItem merchantId(String merchantId);
 
   CartItem merchantName(String? merchantName);
 
@@ -31,8 +31,8 @@ abstract class _$CartItemCWProxy {
   /// CartItem(...).copyWith(id: 12, name: "My name")
   /// ```
   CartItem call({
-    String? menuId,
-    String? merchantId,
+    String menuId,
+    String merchantId,
     String? merchantName,
     String? menuName,
     String? menuImage,
@@ -50,10 +50,10 @@ class _$CartItemCWProxyImpl implements _$CartItemCWProxy {
   final CartItem _value;
 
   @override
-  CartItem menuId(String? menuId) => call(menuId: menuId);
+  CartItem menuId(String menuId) => call(menuId: menuId);
 
   @override
-  CartItem merchantId(String? merchantId) => call(merchantId: merchantId);
+  CartItem merchantId(String merchantId) => call(merchantId: merchantId);
 
   @override
   CartItem merchantName(String? merchantName) =>
@@ -93,14 +93,15 @@ class _$CartItemCWProxyImpl implements _$CartItemCWProxy {
     Object? notes = const $CopyWithPlaceholder(),
   }) {
     return CartItem(
-      menuId: menuId == const $CopyWithPlaceholder()
+      menuId: menuId == const $CopyWithPlaceholder() || menuId == null
           ? _value.menuId
           // ignore: cast_nullable_to_non_nullable
-          : menuId as String?,
-      merchantId: merchantId == const $CopyWithPlaceholder()
+          : menuId as String,
+      merchantId:
+          merchantId == const $CopyWithPlaceholder() || merchantId == null
           ? _value.merchantId
           // ignore: cast_nullable_to_non_nullable
-          : merchantId as String?,
+          : merchantId as String,
       merchantName: merchantName == const $CopyWithPlaceholder()
           ? _value.merchantName
           // ignore: cast_nullable_to_non_nullable
@@ -155,8 +156,8 @@ CartItem _$CartItemFromJson(Map<String, dynamic> json) =>
         ],
       );
       final val = CartItem(
-        menuId: $checkedConvert('menuId', (v) => v as String?),
-        merchantId: $checkedConvert('merchantId', (v) => v as String?),
+        menuId: $checkedConvert('menuId', (v) => v as String),
+        merchantId: $checkedConvert('merchantId', (v) => v as String),
         merchantName: $checkedConvert('merchantName', (v) => v as String?),
         menuName: $checkedConvert('menuName', (v) => v as String?),
         menuImage: $checkedConvert('menuImage', (v) => v as String?),

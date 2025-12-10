@@ -26,28 +26,26 @@ class DashboardStatsTopDriversInner {
   });
   @JsonKey(name: r'id', required: true, includeIfNull: false)
   final String id;
-
+  
   @JsonKey(name: r'name', required: true, includeIfNull: false)
   final String name;
-
+  
   @JsonKey(name: r'earnings', required: true, includeIfNull: false)
   final num earnings;
-
+  
   @JsonKey(name: r'orders', required: true, includeIfNull: false)
   final num orders;
-
+  
   @JsonKey(name: r'rating', required: true, includeIfNull: false)
   final num rating;
-
+  
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is DashboardStatsTopDriversInner &&
-          other.id == id &&
-          other.name == name &&
-          other.earnings == earnings &&
-          other.orders == orders &&
-          other.rating == rating;
+  bool operator ==(Object other) => identical(this, other) || other is DashboardStatsTopDriversInner &&
+    other.id == id &&
+    other.name == name &&
+    other.earnings == earnings &&
+    other.orders == orders &&
+    other.rating == rating;
 
   @override
   int get hashCode =>
@@ -57,8 +55,7 @@ class DashboardStatsTopDriversInner {
       orders.hashCode +
       rating.hashCode;
 
-  factory DashboardStatsTopDriversInner.fromJson(Map<String, dynamic> json) =>
-      _$DashboardStatsTopDriversInnerFromJson(json);
+  factory DashboardStatsTopDriversInner.fromJson(Map<String, dynamic> json) => _$DashboardStatsTopDriversInnerFromJson(json);
 
   Map<String, dynamic> toJson() => _$DashboardStatsTopDriversInnerToJson(this);
 
@@ -66,4 +63,6 @@ class DashboardStatsTopDriversInner {
   String toString() {
     return toJson().toString();
   }
+
 }
+

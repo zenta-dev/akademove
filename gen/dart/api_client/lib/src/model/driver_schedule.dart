@@ -26,70 +26,58 @@ class DriverSchedule {
     required this.dayOfWeek,
     required this.startTime,
     required this.endTime,
-    this.isRecurring = true,
-    this.specificDate,
-    this.isActive = true,
+     this.isRecurring = true,
+     this.specificDate,
+     this.isActive = true,
     required this.createdAt,
     required this.updatedAt,
   });
   @JsonKey(name: r'id', required: true, includeIfNull: false)
   final String id;
-
+  
   @JsonKey(name: r'name', required: true, includeIfNull: false)
   final String name;
-
+  
   @JsonKey(name: r'driverId', required: true, includeIfNull: false)
   final String driverId;
-
+  
   @JsonKey(name: r'dayOfWeek', required: true, includeIfNull: false)
   final DayOfWeek dayOfWeek;
-
+  
   @JsonKey(name: r'startTime', required: true, includeIfNull: false)
   final Time startTime;
-
+  
   @JsonKey(name: r'endTime', required: true, includeIfNull: false)
   final Time endTime;
-
-  @JsonKey(
-    defaultValue: true,
-    name: r'isRecurring',
-    required: false,
-    includeIfNull: false,
-  )
+  
+  @JsonKey(defaultValue: true,name: r'isRecurring', required: false, includeIfNull: false)
   final bool? isRecurring;
-
+  
   @JsonKey(name: r'specificDate', required: false, includeIfNull: false)
   final DateTime? specificDate;
-
-  @JsonKey(
-    defaultValue: true,
-    name: r'isActive',
-    required: false,
-    includeIfNull: false,
-  )
+  
+  @JsonKey(defaultValue: true,name: r'isActive', required: false, includeIfNull: false)
   final bool? isActive;
-
+  
   @JsonKey(name: r'createdAt', required: true, includeIfNull: false)
   final DateTime createdAt;
-
+  
   @JsonKey(name: r'updatedAt', required: true, includeIfNull: false)
   final DateTime updatedAt;
-
+  
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is DriverSchedule &&
-          other.id == id &&
-          other.name == name &&
-          other.driverId == driverId &&
-          other.dayOfWeek == dayOfWeek &&
-          other.startTime == startTime &&
-          other.endTime == endTime &&
-          other.isRecurring == isRecurring &&
-          other.specificDate == specificDate &&
-          other.isActive == isActive &&
-          other.createdAt == createdAt &&
-          other.updatedAt == updatedAt;
+  bool operator ==(Object other) => identical(this, other) || other is DriverSchedule &&
+    other.id == id &&
+    other.name == name &&
+    other.driverId == driverId &&
+    other.dayOfWeek == dayOfWeek &&
+    other.startTime == startTime &&
+    other.endTime == endTime &&
+    other.isRecurring == isRecurring &&
+    other.specificDate == specificDate &&
+    other.isActive == isActive &&
+    other.createdAt == createdAt &&
+    other.updatedAt == updatedAt;
 
   @override
   int get hashCode =>
@@ -105,8 +93,7 @@ class DriverSchedule {
       createdAt.hashCode +
       updatedAt.hashCode;
 
-  factory DriverSchedule.fromJson(Map<String, dynamic> json) =>
-      _$DriverScheduleFromJson(json);
+  factory DriverSchedule.fromJson(Map<String, dynamic> json) => _$DriverScheduleFromJson(json);
 
   Map<String, dynamic> toJson() => _$DriverScheduleToJson(this);
 
@@ -114,4 +101,6 @@ class DriverSchedule {
   String toString() {
     return toJson().toString();
   }
+
 }
+

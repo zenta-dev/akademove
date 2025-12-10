@@ -7,7 +7,7 @@ part of 'broadcast.dart';
 // **************************************************************************
 
 abstract class _$BroadcastCWProxy {
-  Broadcast id(String? id);
+  Broadcast id(String id);
 
   Broadcast title(String title);
 
@@ -47,7 +47,7 @@ abstract class _$BroadcastCWProxy {
   /// Broadcast(...).copyWith(id: 12, name: "My name")
   /// ```
   Broadcast call({
-    String? id,
+    String id,
     String title,
     String message,
     BroadcastType type,
@@ -74,7 +74,7 @@ class _$BroadcastCWProxyImpl implements _$BroadcastCWProxy {
   final Broadcast _value;
 
   @override
-  Broadcast id(String? id) => call(id: id);
+  Broadcast id(String id) => call(id: id);
 
   @override
   Broadcast title(String title) => call(title: title);
@@ -151,10 +151,10 @@ class _$BroadcastCWProxyImpl implements _$BroadcastCWProxy {
     Object? updatedAt = const $CopyWithPlaceholder(),
   }) {
     return Broadcast(
-      id: id == const $CopyWithPlaceholder()
+      id: id == const $CopyWithPlaceholder() || id == null
           ? _value.id
           // ignore: cast_nullable_to_non_nullable
-          : id as String?,
+          : id as String,
       title: title == const $CopyWithPlaceholder() || title == null
           ? _value.title
           // ignore: cast_nullable_to_non_nullable
@@ -248,7 +248,7 @@ Broadcast _$BroadcastFromJson(Map<String, dynamic> json) =>
         ],
       );
       final val = Broadcast(
-        id: $checkedConvert('id', (v) => v as String?),
+        id: $checkedConvert('id', (v) => v as String),
         title: $checkedConvert('title', (v) => v as String),
         message: $checkedConvert('message', (v) => v as String),
         type: $checkedConvert(

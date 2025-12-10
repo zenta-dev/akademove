@@ -7,7 +7,7 @@ part of 'newsletter.dart';
 // **************************************************************************
 
 abstract class _$NewsletterCWProxy {
-  Newsletter id(String? id);
+  Newsletter id(String id);
 
   Newsletter email(String email);
 
@@ -27,7 +27,7 @@ abstract class _$NewsletterCWProxy {
   /// Newsletter(...).copyWith(id: 12, name: "My name")
   /// ```
   Newsletter call({
-    String? id,
+    String id,
     String email,
     NewsletterStatus status,
     String? userId,
@@ -44,7 +44,7 @@ class _$NewsletterCWProxyImpl implements _$NewsletterCWProxy {
   final Newsletter _value;
 
   @override
-  Newsletter id(String? id) => call(id: id);
+  Newsletter id(String id) => call(id: id);
 
   @override
   Newsletter email(String email) => call(email: email);
@@ -78,10 +78,10 @@ class _$NewsletterCWProxyImpl implements _$NewsletterCWProxy {
     Object? updatedAt = const $CopyWithPlaceholder(),
   }) {
     return Newsletter(
-      id: id == const $CopyWithPlaceholder()
+      id: id == const $CopyWithPlaceholder() || id == null
           ? _value.id
           // ignore: cast_nullable_to_non_nullable
-          : id as String?,
+          : id as String,
       email: email == const $CopyWithPlaceholder() || email == null
           ? _value.email
           // ignore: cast_nullable_to_non_nullable
@@ -124,7 +124,7 @@ Newsletter _$NewsletterFromJson(Map<String, dynamic> json) =>
         requiredKeys: const ['id', 'email', 'status', 'createdAt', 'updatedAt'],
       );
       final val = Newsletter(
-        id: $checkedConvert('id', (v) => v as String?),
+        id: $checkedConvert('id', (v) => v as String),
         email: $checkedConvert('email', (v) => v as String),
         status: $checkedConvert(
           'status',

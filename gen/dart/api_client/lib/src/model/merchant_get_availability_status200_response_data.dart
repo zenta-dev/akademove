@@ -25,26 +25,23 @@ class MerchantGetAvailabilityStatus200ResponseData {
   });
   @JsonKey(name: r'id', required: true, includeIfNull: true)
   final String? id;
-
+  
   @JsonKey(name: r'isOnline', required: true, includeIfNull: false)
   final bool isOnline;
-
+  
   @JsonKey(name: r'isTakingOrders', required: true, includeIfNull: false)
   final bool isTakingOrders;
-
-  /// Merchant operating status
+  
+      /// Merchant operating status
   @JsonKey(name: r'operatingStatus', required: true, includeIfNull: false)
-  final MerchantGetAvailabilityStatus200ResponseDataOperatingStatusEnum
-  operatingStatus;
-
+  final MerchantGetAvailabilityStatus200ResponseDataOperatingStatusEnum operatingStatus;
+  
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is MerchantGetAvailabilityStatus200ResponseData &&
-          other.id == id &&
-          other.isOnline == isOnline &&
-          other.isTakingOrders == isTakingOrders &&
-          other.operatingStatus == operatingStatus;
+  bool operator ==(Object other) => identical(this, other) || other is MerchantGetAvailabilityStatus200ResponseData &&
+    other.id == id &&
+    other.isOnline == isOnline &&
+    other.isTakingOrders == isTakingOrders &&
+    other.operatingStatus == operatingStatus;
 
   @override
   int get hashCode =>
@@ -53,43 +50,36 @@ class MerchantGetAvailabilityStatus200ResponseData {
       isTakingOrders.hashCode +
       operatingStatus.hashCode;
 
-  factory MerchantGetAvailabilityStatus200ResponseData.fromJson(
-    Map<String, dynamic> json,
-  ) => _$MerchantGetAvailabilityStatus200ResponseDataFromJson(json);
+  factory MerchantGetAvailabilityStatus200ResponseData.fromJson(Map<String, dynamic> json) => _$MerchantGetAvailabilityStatus200ResponseDataFromJson(json);
 
-  Map<String, dynamic> toJson() =>
-      _$MerchantGetAvailabilityStatus200ResponseDataToJson(this);
+  Map<String, dynamic> toJson() => _$MerchantGetAvailabilityStatus200ResponseDataToJson(this);
 
   @override
   String toString() {
     return toJson().toString();
   }
-}
 
+}
 /// Merchant operating status
 enum MerchantGetAvailabilityStatus200ResponseDataOperatingStatusEnum {
-  /// Merchant operating status
+      /// Merchant operating status
   @JsonValue(r'OPEN')
   OPEN(r'OPEN'),
-
-  /// Merchant operating status
+      /// Merchant operating status
   @JsonValue(r'CLOSED')
   CLOSED(r'CLOSED'),
-
-  /// Merchant operating status
+      /// Merchant operating status
   @JsonValue(r'BREAK')
   BREAK(r'BREAK'),
-
-  /// Merchant operating status
+      /// Merchant operating status
   @JsonValue(r'MAINTENANCE')
   MAINTENANCE(r'MAINTENANCE');
-
-  const MerchantGetAvailabilityStatus200ResponseDataOperatingStatusEnum(
-    this.value,
-  );
-
+  
+  const MerchantGetAvailabilityStatus200ResponseDataOperatingStatusEnum(this.value);
+  
   final String value;
-
+  
   @override
   String toString() => value;
 }
+

@@ -21,39 +21,36 @@ class CouponValidateRequest {
   const CouponValidateRequest({
     required this.code,
     required this.orderAmount,
-    this.serviceType,
-    this.merchantId,
+     this.serviceType,
+     this.merchantId,
   });
   @JsonKey(name: r'code', required: true, includeIfNull: true)
   final String? code;
-
+  
   @JsonKey(name: r'orderAmount', required: true, includeIfNull: false)
   final num orderAmount;
-
+  
   @JsonKey(name: r'serviceType', required: false, includeIfNull: false)
   final OrderType? serviceType;
-
+  
   @JsonKey(name: r'merchantId', required: false, includeIfNull: false)
   final String? merchantId;
-
+  
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is CouponValidateRequest &&
-          other.code == code &&
-          other.orderAmount == orderAmount &&
-          other.serviceType == serviceType &&
-          other.merchantId == merchantId;
+  bool operator ==(Object other) => identical(this, other) || other is CouponValidateRequest &&
+    other.code == code &&
+    other.orderAmount == orderAmount &&
+    other.serviceType == serviceType &&
+    other.merchantId == merchantId;
 
   @override
   int get hashCode =>
       (code == null ? 0 : code.hashCode) +
       orderAmount.hashCode +
       serviceType.hashCode +
-      (merchantId == null ? 0 : merchantId.hashCode);
+      merchantId.hashCode;
 
-  factory CouponValidateRequest.fromJson(Map<String, dynamic> json) =>
-      _$CouponValidateRequestFromJson(json);
+  factory CouponValidateRequest.fromJson(Map<String, dynamic> json) => _$CouponValidateRequestFromJson(json);
 
   Map<String, dynamic> toJson() => _$CouponValidateRequestToJson(this);
 
@@ -61,4 +58,6 @@ class CouponValidateRequest {
   String toString() {
     return toJson().toString();
   }
+
 }
+

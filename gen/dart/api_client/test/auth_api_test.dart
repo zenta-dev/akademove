@@ -21,7 +21,7 @@ void main() {
       // TODO
     });
 
-    //Future<AuthHasAccess200Response> authHasAccess(AuthHasAccessRequest authHasAccessRequest) async
+    //Future<AuthSignOut200Response> authHasAccess(AuthHasAccessRequest authHasAccessRequest) async
     test('test authHasAccess', () async {
       // TODO
     });

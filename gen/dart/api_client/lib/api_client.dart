@@ -8,6 +8,7 @@ export 'package:api_client/src/auth/basic_auth.dart';
 export 'package:api_client/src/auth/bearer_auth.dart';
 export 'package:api_client/src/auth/oauth.dart';
 
+
 export 'package:api_client/src/api/admin_api.dart';
 export 'package:api_client/src/api/auth_api.dart';
 export 'package:api_client/src/api/badge_api.dart';
@@ -51,7 +52,6 @@ export 'package:api_client/src/model/audit_list200_response_data_inner.dart';
 export 'package:api_client/src/model/auth_exchange_token200_response.dart';
 export 'package:api_client/src/model/auth_forgot_password_request.dart';
 export 'package:api_client/src/model/auth_get_session200_response.dart';
-export 'package:api_client/src/model/auth_has_access200_response.dart';
 export 'package:api_client/src/model/auth_has_access_request.dart';
 export 'package:api_client/src/model/auth_sign_in200_response.dart';
 export 'package:api_client/src/model/auth_sign_out200_response.dart';
@@ -108,6 +108,7 @@ export 'package:api_client/src/model/configuration_get_business_config200_respon
 export 'package:api_client/src/model/configuration_key.dart';
 export 'package:api_client/src/model/configuration_list200_response.dart';
 export 'package:api_client/src/model/contact.dart';
+export 'package:api_client/src/model/contact_delete200_response.dart';
 export 'package:api_client/src/model/contact_key.dart';
 export 'package:api_client/src/model/contact_list200_response.dart';
 export 'package:api_client/src/model/contact_list200_response_data.dart';
@@ -139,6 +140,7 @@ export 'package:api_client/src/model/dashboard_stats_revenue_by_day_inner.dart';
 export 'package:api_client/src/model/dashboard_stats_top_drivers_inner.dart';
 export 'package:api_client/src/model/dashboard_stats_top_merchants_inner.dart';
 export 'package:api_client/src/model/day_of_week.dart';
+export 'package:api_client/src/model/delivery_item_type.dart';
 export 'package:api_client/src/model/delivery_pricing_configuration.dart';
 export 'package:api_client/src/model/dismiss_report.dart';
 export 'package:api_client/src/model/driver.dart';
@@ -317,6 +319,7 @@ export 'package:api_client/src/model/order_envelope_payload_merchant_action.dart
 export 'package:api_client/src/model/order_envelope_payload_message.dart';
 export 'package:api_client/src/model/order_envelope_payload_no_show.dart';
 export 'package:api_client/src/model/order_estimate200_response.dart';
+export 'package:api_client/src/model/order_estimate_request.dart';
 export 'package:api_client/src/model/order_get_status_history200_response.dart';
 export 'package:api_client/src/model/order_item.dart';
 export 'package:api_client/src/model/order_item_item.dart';
@@ -460,4 +463,6 @@ export 'package:api_client/src/model/wallet_key.dart';
 export 'package:api_client/src/model/wallet_monthly_summary_query.dart';
 export 'package:api_client/src/model/wallet_monthly_summary_response.dart';
 export 'package:api_client/src/model/wallet_top_up200_response.dart';
+export 'package:api_client/src/model/weight_size.dart';
 export 'package:api_client/src/model/withdraw_request.dart';
+

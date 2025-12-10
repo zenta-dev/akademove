@@ -17,19 +17,21 @@ part 'unban_user.g.dart';
 )
 class UnbanUser {
   /// Returns a new [UnbanUser] instance.
-  const UnbanUser({required this.id});
+  const UnbanUser({
+    required this.id,
+  });
   @JsonKey(name: r'id', required: true, includeIfNull: false)
   final String id;
+  
+  @override
+  bool operator ==(Object other) => identical(this, other) || other is UnbanUser &&
+    other.id == id;
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) || other is UnbanUser && other.id == id;
+  int get hashCode =>
+      id.hashCode;
 
-  @override
-  int get hashCode => id.hashCode;
-
-  factory UnbanUser.fromJson(Map<String, dynamic> json) =>
-      _$UnbanUserFromJson(json);
+  factory UnbanUser.fromJson(Map<String, dynamic> json) => _$UnbanUserFromJson(json);
 
   Map<String, dynamic> toJson() => _$UnbanUserToJson(this);
 
@@ -37,4 +39,6 @@ class UnbanUser {
   String toString() {
     return toJson().toString();
   }
+
 }
+

@@ -18,23 +18,25 @@ part 'update_fraud_event.g.dart';
 )
 class UpdateFraudEvent {
   /// Returns a new [UpdateFraudEvent] instance.
-  const UpdateFraudEvent({this.status, this.resolution, this.actionTaken});
+  const UpdateFraudEvent({
+     this.status,
+     this.resolution,
+     this.actionTaken,
+  });
   @JsonKey(name: r'status', required: false, includeIfNull: false)
   final FraudStatus? status;
-
+  
   @JsonKey(name: r'resolution', required: false, includeIfNull: false)
   final String? resolution;
-
+  
   @JsonKey(name: r'actionTaken', required: false, includeIfNull: false)
   final String? actionTaken;
-
+  
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is UpdateFraudEvent &&
-          other.status == status &&
-          other.resolution == resolution &&
-          other.actionTaken == actionTaken;
+  bool operator ==(Object other) => identical(this, other) || other is UpdateFraudEvent &&
+    other.status == status &&
+    other.resolution == resolution &&
+    other.actionTaken == actionTaken;
 
   @override
   int get hashCode =>
@@ -42,8 +44,7 @@ class UpdateFraudEvent {
       (resolution == null ? 0 : resolution.hashCode) +
       (actionTaken == null ? 0 : actionTaken.hashCode);
 
-  factory UpdateFraudEvent.fromJson(Map<String, dynamic> json) =>
-      _$UpdateFraudEventFromJson(json);
+  factory UpdateFraudEvent.fromJson(Map<String, dynamic> json) => _$UpdateFraudEventFromJson(json);
 
   Map<String, dynamic> toJson() => _$UpdateFraudEventToJson(this);
 
@@ -51,4 +52,6 @@ class UpdateFraudEvent {
   String toString() {
     return toJson().toString();
   }
+
 }
+

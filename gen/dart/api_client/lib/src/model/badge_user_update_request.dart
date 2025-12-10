@@ -18,32 +18,33 @@ part 'badge_user_update_request.g.dart';
 )
 class BadgeUserUpdateRequest {
   /// Returns a new [BadgeUserUpdateRequest] instance.
-  const BadgeUserUpdateRequest({this.userId, this.badgeId, this.metadata});
+  const BadgeUserUpdateRequest({
+     this.userId,
+     this.badgeId,
+     this.metadata,
+  });
   @JsonKey(name: r'userId', required: false, includeIfNull: false)
   final String? userId;
-
+  
   @JsonKey(name: r'badgeId', required: false, includeIfNull: false)
   final String? badgeId;
-
+  
   @JsonKey(name: r'metadata', required: false, includeIfNull: false)
   final UserBadgeMetadata? metadata;
-
+  
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is BadgeUserUpdateRequest &&
-          other.userId == userId &&
-          other.badgeId == badgeId &&
-          other.metadata == metadata;
+  bool operator ==(Object other) => identical(this, other) || other is BadgeUserUpdateRequest &&
+    other.userId == userId &&
+    other.badgeId == badgeId &&
+    other.metadata == metadata;
 
   @override
   int get hashCode =>
       (userId == null ? 0 : userId.hashCode) +
-      (badgeId == null ? 0 : badgeId.hashCode) +
+      badgeId.hashCode +
       metadata.hashCode;
 
-  factory BadgeUserUpdateRequest.fromJson(Map<String, dynamic> json) =>
-      _$BadgeUserUpdateRequestFromJson(json);
+  factory BadgeUserUpdateRequest.fromJson(Map<String, dynamic> json) => _$BadgeUserUpdateRequestFromJson(json);
 
   Map<String, dynamic> toJson() => _$BadgeUserUpdateRequestToJson(this);
 
@@ -51,4 +52,6 @@ class BadgeUserUpdateRequest {
   String toString() {
     return toJson().toString();
   }
+
 }
+

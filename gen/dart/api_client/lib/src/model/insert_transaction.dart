@@ -23,57 +23,55 @@ class InsertTransaction {
     required this.walletId,
     required this.type,
     required this.amount,
-    this.balanceBefore,
-    this.balanceAfter,
+     this.balanceBefore,
+     this.balanceAfter,
     required this.status,
-    this.description,
-    this.referenceId,
-    this.metadata,
+     this.description,
+     this.referenceId,
+     this.metadata,
   });
-  @JsonKey(name: r'walletId', required: true, includeIfNull: true)
-  final String? walletId;
-
+  @JsonKey(name: r'walletId', required: true, includeIfNull: false)
+  final String walletId;
+  
   @JsonKey(name: r'type', required: true, includeIfNull: false)
   final TransactionType type;
-
+  
   @JsonKey(name: r'amount', required: true, includeIfNull: false)
   final num amount;
-
+  
   @JsonKey(name: r'balanceBefore', required: false, includeIfNull: false)
   final num? balanceBefore;
-
+  
   @JsonKey(name: r'balanceAfter', required: false, includeIfNull: false)
   final num? balanceAfter;
-
+  
   @JsonKey(name: r'status', required: true, includeIfNull: false)
   final TransactionStatus status;
-
+  
   @JsonKey(name: r'description', required: false, includeIfNull: false)
   final String? description;
-
+  
   @JsonKey(name: r'referenceId', required: false, includeIfNull: false)
   final String? referenceId;
-
+  
   @JsonKey(name: r'metadata', required: false, includeIfNull: false)
   final Object? metadata;
-
+  
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is InsertTransaction &&
-          other.walletId == walletId &&
-          other.type == type &&
-          other.amount == amount &&
-          other.balanceBefore == balanceBefore &&
-          other.balanceAfter == balanceAfter &&
-          other.status == status &&
-          other.description == description &&
-          other.referenceId == referenceId &&
-          other.metadata == metadata;
+  bool operator ==(Object other) => identical(this, other) || other is InsertTransaction &&
+    other.walletId == walletId &&
+    other.type == type &&
+    other.amount == amount &&
+    other.balanceBefore == balanceBefore &&
+    other.balanceAfter == balanceAfter &&
+    other.status == status &&
+    other.description == description &&
+    other.referenceId == referenceId &&
+    other.metadata == metadata;
 
   @override
   int get hashCode =>
-      (walletId == null ? 0 : walletId.hashCode) +
+      walletId.hashCode +
       type.hashCode +
       amount.hashCode +
       balanceBefore.hashCode +
@@ -83,8 +81,7 @@ class InsertTransaction {
       (referenceId == null ? 0 : referenceId.hashCode) +
       (metadata == null ? 0 : metadata.hashCode);
 
-  factory InsertTransaction.fromJson(Map<String, dynamic> json) =>
-      _$InsertTransactionFromJson(json);
+  factory InsertTransaction.fromJson(Map<String, dynamic> json) => _$InsertTransactionFromJson(json);
 
   Map<String, dynamic> toJson() => _$InsertTransactionToJson(this);
 
@@ -92,4 +89,6 @@ class InsertTransaction {
   String toString() {
     return toJson().toString();
   }
+
 }
+

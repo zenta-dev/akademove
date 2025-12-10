@@ -62,7 +62,7 @@ try {
 
 ## Documentation for API Endpoints
 
-All URIs are relative to *http://localhost:3000/api*
+All URIs are relative to *http://10.86.19.105:3000/api*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
@@ -229,7 +229,7 @@ Class | Method | HTTP request | Description
 [*OrderApi*](doc/OrderApi.md) | [**chatSend**](doc/OrderApi.md#chatsend) | **POST** /chat | 
 [*OrderApi*](doc/OrderApi.md) | [**orderCancel**](doc/OrderApi.md#ordercancel) | **POST** /orders/{id}/cancel | 
 [*OrderApi*](doc/OrderApi.md) | [**orderCancelScheduledOrder**](doc/OrderApi.md#ordercancelscheduledorder) | **POST** /orders/scheduled/{id}/cancel | 
-[*OrderApi*](doc/OrderApi.md) | [**orderEstimate**](doc/OrderApi.md#orderestimate) | **GET** /orders/estimate | 
+[*OrderApi*](doc/OrderApi.md) | [**orderEstimate**](doc/OrderApi.md#orderestimate) | **POST** /orders/estimate | 
 [*OrderApi*](doc/OrderApi.md) | [**orderGet**](doc/OrderApi.md#orderget) | **GET** /orders/{id} | 
 [*OrderApi*](doc/OrderApi.md) | [**orderGetStatusHistory**](doc/OrderApi.md#ordergetstatushistory) | **GET** /orders/{id}/status-history | 
 [*OrderApi*](doc/OrderApi.md) | [**orderList**](doc/OrderApi.md#orderlist) | **GET** /orders | 
@@ -295,7 +295,6 @@ Class | Method | HTTP request | Description
  - [AuthExchangeToken200Response](doc/AuthExchangeToken200Response.md)
  - [AuthForgotPasswordRequest](doc/AuthForgotPasswordRequest.md)
  - [AuthGetSession200Response](doc/AuthGetSession200Response.md)
- - [AuthHasAccess200Response](doc/AuthHasAccess200Response.md)
  - [AuthHasAccessRequest](doc/AuthHasAccessRequest.md)
  - [AuthSignIn200Response](doc/AuthSignIn200Response.md)
  - [AuthSignOut200Response](doc/AuthSignOut200Response.md)
@@ -352,6 +351,7 @@ Class | Method | HTTP request | Description
  - [ConfigurationKey](doc/ConfigurationKey.md)
  - [ConfigurationList200Response](doc/ConfigurationList200Response.md)
  - [Contact](doc/Contact.md)
+ - [ContactDelete200Response](doc/ContactDelete200Response.md)
  - [ContactKey](doc/ContactKey.md)
  - [ContactList200Response](doc/ContactList200Response.md)
  - [ContactList200ResponseData](doc/ContactList200ResponseData.md)
@@ -383,6 +383,7 @@ Class | Method | HTTP request | Description
  - [DashboardStatsTopDriversInner](doc/DashboardStatsTopDriversInner.md)
  - [DashboardStatsTopMerchantsInner](doc/DashboardStatsTopMerchantsInner.md)
  - [DayOfWeek](doc/DayOfWeek.md)
+ - [DeliveryItemType](doc/DeliveryItemType.md)
  - [DeliveryPricingConfiguration](doc/DeliveryPricingConfiguration.md)
  - [DismissReport](doc/DismissReport.md)
  - [Driver](doc/Driver.md)
@@ -561,6 +562,7 @@ Class | Method | HTTP request | Description
  - [OrderEnvelopePayloadMessage](doc/OrderEnvelopePayloadMessage.md)
  - [OrderEnvelopePayloadNoShow](doc/OrderEnvelopePayloadNoShow.md)
  - [OrderEstimate200Response](doc/OrderEstimate200Response.md)
+ - [OrderEstimateRequest](doc/OrderEstimateRequest.md)
  - [OrderGetStatusHistory200Response](doc/OrderGetStatusHistory200Response.md)
  - [OrderItem](doc/OrderItem.md)
  - [OrderItemItem](doc/OrderItemItem.md)
@@ -704,6 +706,7 @@ Class | Method | HTTP request | Description
  - [WalletMonthlySummaryQuery](doc/WalletMonthlySummaryQuery.md)
  - [WalletMonthlySummaryResponse](doc/WalletMonthlySummaryResponse.md)
  - [WalletTopUp200Response](doc/WalletTopUp200Response.md)
+ - [WeightSize](doc/WeightSize.md)
  - [WithdrawRequest](doc/WithdrawRequest.md)
 
 

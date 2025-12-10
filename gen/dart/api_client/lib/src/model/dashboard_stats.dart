@@ -44,81 +44,74 @@ class DashboardStats {
   });
   @JsonKey(name: r'totalUsers', required: true, includeIfNull: false)
   final num totalUsers;
-
+  
   @JsonKey(name: r'totalDrivers', required: true, includeIfNull: false)
   final num totalDrivers;
-
+  
   @JsonKey(name: r'totalMerchants', required: true, includeIfNull: false)
   final num totalMerchants;
-
+  
   @JsonKey(name: r'activeOrders', required: true, includeIfNull: false)
   final num activeOrders;
-
+  
   @JsonKey(name: r'totalOrders', required: true, includeIfNull: false)
   final num totalOrders;
-
+  
   @JsonKey(name: r'completedOrders', required: true, includeIfNull: false)
   final num completedOrders;
-
+  
   @JsonKey(name: r'cancelledOrders', required: true, includeIfNull: false)
   final num cancelledOrders;
-
+  
   @JsonKey(name: r'totalRevenue', required: true, includeIfNull: false)
   final num totalRevenue;
-
+  
   @JsonKey(name: r'todayRevenue', required: true, includeIfNull: false)
   final num todayRevenue;
-
+  
   @JsonKey(name: r'todayOrders', required: true, includeIfNull: false)
   final num todayOrders;
-
+  
   @JsonKey(name: r'onlineDrivers', required: true, includeIfNull: false)
   final num onlineDrivers;
-
+  
   @JsonKey(name: r'revenueByDay', required: true, includeIfNull: false)
   final List<DashboardStatsRevenueByDayInner> revenueByDay;
-
+  
   @JsonKey(name: r'ordersByDay', required: true, includeIfNull: false)
   final List<DashboardStatsOrdersByDayInner> ordersByDay;
-
+  
   @JsonKey(name: r'ordersByType', required: true, includeIfNull: false)
   final List<DashboardStatsOrdersByTypeInner> ordersByType;
-
+  
   @JsonKey(name: r'topDrivers', required: true, includeIfNull: false)
   final List<DashboardStatsTopDriversInner> topDrivers;
-
+  
   @JsonKey(name: r'topMerchants', required: true, includeIfNull: false)
   final List<DashboardStatsTopMerchantsInner> topMerchants;
-
-  @JsonKey(
-    name: r'highCancellationDrivers',
-    required: true,
-    includeIfNull: false,
-  )
-  final List<DashboardStatsHighCancellationDriversInner>
-  highCancellationDrivers;
-
+  
+  @JsonKey(name: r'highCancellationDrivers', required: true, includeIfNull: false)
+  final List<DashboardStatsHighCancellationDriversInner> highCancellationDrivers;
+  
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is DashboardStats &&
-          other.totalUsers == totalUsers &&
-          other.totalDrivers == totalDrivers &&
-          other.totalMerchants == totalMerchants &&
-          other.activeOrders == activeOrders &&
-          other.totalOrders == totalOrders &&
-          other.completedOrders == completedOrders &&
-          other.cancelledOrders == cancelledOrders &&
-          other.totalRevenue == totalRevenue &&
-          other.todayRevenue == todayRevenue &&
-          other.todayOrders == todayOrders &&
-          other.onlineDrivers == onlineDrivers &&
-          other.revenueByDay == revenueByDay &&
-          other.ordersByDay == ordersByDay &&
-          other.ordersByType == ordersByType &&
-          other.topDrivers == topDrivers &&
-          other.topMerchants == topMerchants &&
-          other.highCancellationDrivers == highCancellationDrivers;
+  bool operator ==(Object other) => identical(this, other) || other is DashboardStats &&
+    other.totalUsers == totalUsers &&
+    other.totalDrivers == totalDrivers &&
+    other.totalMerchants == totalMerchants &&
+    other.activeOrders == activeOrders &&
+    other.totalOrders == totalOrders &&
+    other.completedOrders == completedOrders &&
+    other.cancelledOrders == cancelledOrders &&
+    other.totalRevenue == totalRevenue &&
+    other.todayRevenue == todayRevenue &&
+    other.todayOrders == todayOrders &&
+    other.onlineDrivers == onlineDrivers &&
+    other.revenueByDay == revenueByDay &&
+    other.ordersByDay == ordersByDay &&
+    other.ordersByType == ordersByType &&
+    other.topDrivers == topDrivers &&
+    other.topMerchants == topMerchants &&
+    other.highCancellationDrivers == highCancellationDrivers;
 
   @override
   int get hashCode =>
@@ -140,8 +133,7 @@ class DashboardStats {
       topMerchants.hashCode +
       highCancellationDrivers.hashCode;
 
-  factory DashboardStats.fromJson(Map<String, dynamic> json) =>
-      _$DashboardStatsFromJson(json);
+  factory DashboardStats.fromJson(Map<String, dynamic> json) => _$DashboardStatsFromJson(json);
 
   Map<String, dynamic> toJson() => _$DashboardStatsToJson(this);
 
@@ -149,4 +141,6 @@ class DashboardStats {
   String toString() {
     return toJson().toString();
   }
+
 }
+

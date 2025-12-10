@@ -7,9 +7,9 @@ part of 'support_chat_message.dart';
 // **************************************************************************
 
 abstract class _$SupportChatMessageCWProxy {
-  SupportChatMessage id(String? id);
+  SupportChatMessage id(String id);
 
-  SupportChatMessage ticketId(String? ticketId);
+  SupportChatMessage ticketId(String ticketId);
 
   SupportChatMessage senderId(String? senderId);
 
@@ -35,8 +35,8 @@ abstract class _$SupportChatMessageCWProxy {
   /// SupportChatMessage(...).copyWith(id: 12, name: "My name")
   /// ```
   SupportChatMessage call({
-    String? id,
-    String? ticketId,
+    String id,
+    String ticketId,
     String? senderId,
     String? message,
     bool isFromSupport,
@@ -56,10 +56,10 @@ class _$SupportChatMessageCWProxyImpl implements _$SupportChatMessageCWProxy {
   final SupportChatMessage _value;
 
   @override
-  SupportChatMessage id(String? id) => call(id: id);
+  SupportChatMessage id(String id) => call(id: id);
 
   @override
-  SupportChatMessage ticketId(String? ticketId) => call(ticketId: ticketId);
+  SupportChatMessage ticketId(String ticketId) => call(ticketId: ticketId);
 
   @override
   SupportChatMessage senderId(String? senderId) => call(senderId: senderId);
@@ -110,14 +110,14 @@ class _$SupportChatMessageCWProxyImpl implements _$SupportChatMessageCWProxy {
     Object? sender = const $CopyWithPlaceholder(),
   }) {
     return SupportChatMessage(
-      id: id == const $CopyWithPlaceholder()
+      id: id == const $CopyWithPlaceholder() || id == null
           ? _value.id
           // ignore: cast_nullable_to_non_nullable
-          : id as String?,
-      ticketId: ticketId == const $CopyWithPlaceholder()
+          : id as String,
+      ticketId: ticketId == const $CopyWithPlaceholder() || ticketId == null
           ? _value.ticketId
           // ignore: cast_nullable_to_non_nullable
-          : ticketId as String?,
+          : ticketId as String,
       senderId: senderId == const $CopyWithPlaceholder()
           ? _value.senderId
           // ignore: cast_nullable_to_non_nullable
@@ -183,8 +183,8 @@ SupportChatMessage _$SupportChatMessageFromJson(Map<String, dynamic> json) =>
         ],
       );
       final val = SupportChatMessage(
-        id: $checkedConvert('id', (v) => v as String?),
-        ticketId: $checkedConvert('ticketId', (v) => v as String?),
+        id: $checkedConvert('id', (v) => v as String),
+        ticketId: $checkedConvert('ticketId', (v) => v as String),
         senderId: $checkedConvert('senderId', (v) => v as String?),
         message: $checkedConvert('message', (v) => v as String?),
         isFromSupport: $checkedConvert('isFromSupport', (v) => v as bool),

@@ -19,32 +19,31 @@ class ReviewFraudEvent {
   /// Returns a new [ReviewFraudEvent] instance.
   const ReviewFraudEvent({
     required this.status,
-    this.resolution,
-    this.actionTaken,
+     this.resolution,
+     this.actionTaken,
   });
   @JsonKey(name: r'status', required: true, includeIfNull: false)
   final ReviewFraudEventStatusEnum status;
-
+  
   @JsonKey(name: r'resolution', required: false, includeIfNull: false)
   final String? resolution;
-
+  
   @JsonKey(name: r'actionTaken', required: false, includeIfNull: false)
   final String? actionTaken;
-
+  
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is ReviewFraudEvent &&
-          other.status == status &&
-          other.resolution == resolution &&
-          other.actionTaken == actionTaken;
+  bool operator ==(Object other) => identical(this, other) || other is ReviewFraudEvent &&
+    other.status == status &&
+    other.resolution == resolution &&
+    other.actionTaken == actionTaken;
 
   @override
   int get hashCode =>
-      status.hashCode + resolution.hashCode + actionTaken.hashCode;
+      status.hashCode +
+      resolution.hashCode +
+      actionTaken.hashCode;
 
-  factory ReviewFraudEvent.fromJson(Map<String, dynamic> json) =>
-      _$ReviewFraudEventFromJson(json);
+  factory ReviewFraudEvent.fromJson(Map<String, dynamic> json) => _$ReviewFraudEventFromJson(json);
 
   Map<String, dynamic> toJson() => _$ReviewFraudEventToJson(this);
 
@@ -52,6 +51,7 @@ class ReviewFraudEvent {
   String toString() {
     return toJson().toString();
   }
+
 }
 
 enum ReviewFraudEventStatusEnum {
@@ -61,11 +61,12 @@ enum ReviewFraudEventStatusEnum {
   CONFIRMED(r'CONFIRMED'),
   @JsonValue(r'DISMISSED')
   DISMISSED(r'DISMISSED');
-
+  
   const ReviewFraudEventStatusEnum(this.value);
-
+  
   final String value;
-
+  
   @override
   String toString() => value;
 }
+

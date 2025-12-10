@@ -9,7 +9,7 @@ part of 'auth_sign_out200_response.dart';
 abstract class _$AuthSignOut200ResponseCWProxy {
   AuthSignOut200Response message(String? message);
 
-  AuthSignOut200Response data(Object? data);
+  AuthSignOut200Response data(bool data);
 
   AuthSignOut200Response pagination(PaginationResult? pagination);
 
@@ -24,7 +24,7 @@ abstract class _$AuthSignOut200ResponseCWProxy {
   /// ```
   AuthSignOut200Response call({
     String? message,
-    Object? data,
+    bool data,
     PaginationResult? pagination,
     int? totalPages,
   });
@@ -42,7 +42,7 @@ class _$AuthSignOut200ResponseCWProxyImpl
   AuthSignOut200Response message(String? message) => call(message: message);
 
   @override
-  AuthSignOut200Response data(Object? data) => call(data: data);
+  AuthSignOut200Response data(bool data) => call(data: data);
 
   @override
   AuthSignOut200Response pagination(PaginationResult? pagination) =>
@@ -71,10 +71,10 @@ class _$AuthSignOut200ResponseCWProxyImpl
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
           : message as String?,
-      data: data == const $CopyWithPlaceholder()
+      data: data == const $CopyWithPlaceholder() || data == null
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
-          : data as Object?,
+          : data as bool,
       pagination: pagination == const $CopyWithPlaceholder()
           ? _value.pagination
           // ignore: cast_nullable_to_non_nullable
@@ -105,7 +105,7 @@ AuthSignOut200Response _$AuthSignOut200ResponseFromJson(
   $checkKeys(json, requiredKeys: const ['message', 'data']);
   final val = AuthSignOut200Response(
     message: $checkedConvert('message', (v) => v as String?),
-    data: $checkedConvert('data', (v) => v),
+    data: $checkedConvert('data', (v) => v as bool),
     pagination: $checkedConvert(
       'pagination',
       (v) => v == null

@@ -7,7 +7,7 @@ part of 'support_ticket.dart';
 // **************************************************************************
 
 abstract class _$SupportTicketCWProxy {
-  SupportTicket id(String? id);
+  SupportTicket id(String id);
 
   SupportTicket userId(String? userId);
 
@@ -43,7 +43,7 @@ abstract class _$SupportTicketCWProxy {
   /// SupportTicket(...).copyWith(id: 12, name: "My name")
   /// ```
   SupportTicket call({
-    String? id,
+    String id,
     String? userId,
     String? assignedToId,
     String subject,
@@ -68,7 +68,7 @@ class _$SupportTicketCWProxyImpl implements _$SupportTicketCWProxy {
   final SupportTicket _value;
 
   @override
-  SupportTicket id(String? id) => call(id: id);
+  SupportTicket id(String id) => call(id: id);
 
   @override
   SupportTicket userId(String? userId) => call(userId: userId);
@@ -140,10 +140,10 @@ class _$SupportTicketCWProxyImpl implements _$SupportTicketCWProxy {
     Object? assignedTo = const $CopyWithPlaceholder(),
   }) {
     return SupportTicket(
-      id: id == const $CopyWithPlaceholder()
+      id: id == const $CopyWithPlaceholder() || id == null
           ? _value.id
           // ignore: cast_nullable_to_non_nullable
-          : id as String?,
+          : id as String,
       userId: userId == const $CopyWithPlaceholder()
           ? _value.userId
           // ignore: cast_nullable_to_non_nullable
@@ -227,7 +227,7 @@ SupportTicket _$SupportTicketFromJson(Map<String, dynamic> json) =>
         ],
       );
       final val = SupportTicket(
-        id: $checkedConvert('id', (v) => v as String?),
+        id: $checkedConvert('id', (v) => v as String),
         userId: $checkedConvert('userId', (v) => v as String?),
         assignedToId: $checkedConvert('assignedToId', (v) => v as String?),
         subject: $checkedConvert('subject', (v) => v as String),
