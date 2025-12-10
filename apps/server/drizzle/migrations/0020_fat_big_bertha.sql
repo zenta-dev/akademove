@@ -1,0 +1,2 @@
+CREATE TYPE "public"."am_delivery_item_type" AS ENUM('FOOD', 'CLOTH', 'DOCUMENT', 'MEDICINE', 'BOOK', 'OTHER');--> statement-breakpoint
+ALTER TABLE "am_orders" ADD COLUMN "deliveryItemType" "am_delivery_item_type";
