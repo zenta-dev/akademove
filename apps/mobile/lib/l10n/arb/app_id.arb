@@ -1483,5 +1483,8 @@
 			}
 		}
 	},
-	"tap_to_change_schedule": "Ketuk untuk mengubah"
+	"tap_to_change_schedule": "Ketuk untuk mengubah",
+	"error_occurred": "Terjadi kesalahan",
+	"scan_to_send_money": "Scan QR code ini untuk mengirim uang ke saya",
+	"share_qr_instruction": "Bagikan QR code ini kepada orang lain agar mereka dapat dengan mudah mentransfer uang kepada Anda"
 }

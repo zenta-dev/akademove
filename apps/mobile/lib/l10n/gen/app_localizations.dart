@@ -6936,6 +6936,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Tap to change'**
   String get tap_to_change_schedule;
+
+  /// No description provided for @error_occurred.
+  ///
+  /// In en, this message translates to:
+  /// **'An error occurred'**
+  String get error_occurred;
+
+  /// No description provided for @scan_to_send_money.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan this QR code to send money to me'**
+  String get scan_to_send_money;
+
+  /// No description provided for @share_qr_instruction.
+  ///
+  /// In en, this message translates to:
+  /// **'Share this QR code with others so they can easily transfer money to you'**
+  String get share_qr_instruction;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

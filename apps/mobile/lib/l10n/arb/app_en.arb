@@ -1485,5 +1485,8 @@
 			}
 		}
 	},
-	"tap_to_change_schedule": "Tap to change"
+	"tap_to_change_schedule": "Tap to change",
+	"error_occurred": "An error occurred",
+	"scan_to_send_money": "Scan this QR code to send money to me",
+	"share_qr_instruction": "Share this QR code with others so they can easily transfer money to you"
 }

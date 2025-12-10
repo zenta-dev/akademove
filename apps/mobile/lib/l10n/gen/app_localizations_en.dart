@@ -3510,4 +3510,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tap_to_change_schedule => 'Tap to change';
+
+  @override
+  String get error_occurred => 'An error occurred';
+
+  @override
+  String get scan_to_send_money => 'Scan this QR code to send money to me';
+
+  @override
+  String get share_qr_instruction => 'Share this QR code with others so they can easily transfer money to you';
 }
