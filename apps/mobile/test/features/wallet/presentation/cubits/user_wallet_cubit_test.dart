@@ -114,7 +114,7 @@ void main() {
               .having((s) => s.isSuccess, 'isSuccess', true)
               .having((s) => s.myWallet, 'myWallet', isNotNull)
               .having(
-                (s) => s.myWallet?.id,
+                (s) => s.myWallet.id,
                 'myWallet.id',
                 TestConstants.testWalletId,
               ),
@@ -270,11 +270,11 @@ void main() {
               .having((s) => s.isSuccess, 'isSuccess', true)
               .having((s) => s.thisMonthSummary, 'thisMonthSummary', isNotNull)
               .having(
-                (s) => s.thisMonthSummary?.totalIncome,
+                (s) => s.thisMonthSummary.totalIncome,
                 'totalIncome',
                 500000,
               )
-              .having((s) => s.thisMonthSummary?.net, 'net', 400000),
+              .having((s) => s.thisMonthSummary.net, 'net', 400000),
         ],
         verify: (_) {
           verify(
