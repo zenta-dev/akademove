@@ -4,7 +4,6 @@ import 'package:akademove/features/features.dart';
 import 'package:akademove/l10n/l10n.dart';
 import 'package:akademove/locator.dart';
 import 'package:api_client/api_client.dart';
-import 'package:flutter/material.dart' as material;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -375,24 +374,6 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
               context.l10n.fare,
               context.formatCurrency(order.totalPrice),
             ),
-            // if (order.note?.instructions != null)
-            //   Builder(
-            //     builder: (context) {
-            //       final instructions = order.note?.instructions;
-            //       if (instructions == null) return const SizedBox.shrink();
-
-            //       return Column(
-            //         children: [
-            //           const Divider(),
-            //           _buildInfoRow(
-            //             LucideIcons.messageSquare,
-            //             context.l10n.label_notes,
-            //             instructions,
-            //           ),
-            //         ],
-            //       );
-            //     },
-            //   ),
           ],
         ),
       ),
@@ -528,7 +509,7 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
                         order.id,
                       ),
                 child: isLoading
-                    ? CircularProgressIndicator()
+                    ? const CircularProgressIndicator()
                     : Text(context.l10n.accept_order),
               ),
             ),
@@ -748,7 +729,7 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
               context.l10n.customer_phone_number,
               style: context.typography.p.copyWith(fontSize: 14.sp),
             ),
-            material.SelectableText(
+            SelectableText(
               phoneNumber,
               style: context.typography.h3.copyWith(
                 fontSize: 18.sp,
@@ -777,55 +758,35 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
   }
 
   void _showChatDialog(BuildContext context, String orderId) {
-    material.showModalBottomSheet(
+    openDrawer(
       context: context,
-      isScrollControlled: true,
-      builder: (bottomSheetContext) => material.DraggableScrollableSheet(
-        initialChildSize: 0.9,
-        minChildSize: 0.5,
-        maxChildSize: 0.95,
-        expand: false,
-        builder: (context, scrollController) => Container(
-          decoration: BoxDecoration(
-            color: material.Theme.of(context).scaffoldBackgroundColor,
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(16),
-              topRight: Radius.circular(16),
-            ),
-          ),
-          child: Column(
-            children: [
-              Container(
-                padding: EdgeInsets.all(16.w),
-                decoration: BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(
-                      color: context.colorScheme.border,
-                      width: 1,
-                    ),
+      position: OverlayPosition.bottom,
+      expands: true,
+      builder: (drawerContext) => Container(
+        padding: EdgeInsets.all(16.w),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  context.l10n.chat_with_customer,
+                  style: TextStyle(
+                    fontSize: 18.sp,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      context.l10n.chat_with_customer,
-                      style: TextStyle(
-                        fontSize: 18.sp,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    IconButton(
-                      icon: const Icon(material.Icons.close),
-                      onPressed: () => Navigator.of(bottomSheetContext).pop(),
-                      variance: ButtonVariance.ghost,
-                    ),
-                  ],
+                IconButton(
+                  icon: const Icon(LucideIcons.x),
+                  onPressed: () => closeDrawer(drawerContext),
+                  variance: ButtonVariance.ghost,
                 ),
-              ),
-              Expanded(child: OrderChatWidget(orderId: orderId)),
-            ],
-          ),
+              ],
+            ),
+            SizedBox(height: 16.h),
+            Expanded(child: OrderChatWidget(orderId: orderId)),
+          ],
         ),
       ),
     );

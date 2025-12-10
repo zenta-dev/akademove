@@ -2,7 +2,6 @@ import 'package:akademove/app/router/router.dart';
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:api_client/api_client.dart';
-import 'package:flutter/material.dart' as material;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -24,209 +23,188 @@ class IncomingOrderDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return material.Dialog(
-      shape: material.RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16.r),
-      ),
-      child: Container(
-        constraints: BoxConstraints(maxWidth: 400.w),
-        padding: EdgeInsets.all(20.dg),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            // Header
-            Row(
+    return AlertDialog(
+      title: Row(
+        children: [
+          Container(
+            padding: EdgeInsets.all(8.dg),
+            decoration: BoxDecoration(
+              color: context.colorScheme.primary.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(8.r),
+            ),
+            child: Icon(
+              _getOrderTypeIcon(order.type),
+              color: context.colorScheme.primary,
+              size: 24.sp,
+            ),
+          ),
+          SizedBox(width: 12.w),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  padding: EdgeInsets.all(8.dg),
-                  decoration: BoxDecoration(
-                    color: context.colorScheme.primary.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(8.r),
-                  ),
-                  child: Icon(
-                    _getOrderTypeIcon(order.type),
-                    color: context.colorScheme.primary,
-                    size: 24.sp,
-                  ),
+                Text(
+                  'New ${_getOrderTypeLabel(order.type)} Order',
+                  style: context.typography.h4.copyWith(fontSize: 18.sp),
                 ),
-                SizedBox(width: 12.w),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'New ${_getOrderTypeLabel(order.type)} Order',
-                        style: context.typography.h4.copyWith(fontSize: 18.sp),
-                      ),
-                      SizedBox(height: 4.h),
-                      Text(
-                        'Order #${order.id.substring(0, 8)}',
-                        style: context.typography.small.copyWith(
-                          color: context.colorScheme.mutedForeground,
-                        ),
-                      ),
-                    ],
+                SizedBox(height: 4.h),
+                Text(
+                  'Order #${order.id.substring(0, 8)}',
+                  style: context.typography.small.copyWith(
+                    color: context.colorScheme.mutedForeground,
                   ),
                 ),
               ],
             ),
-            SizedBox(height: 20.h),
+          ),
+        ],
+      ),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // Order Details
+          _buildDetailRow(
+            context,
+            icon: LucideIcons.mapPin,
+            label: 'Pickup',
+            value:
+                '${order.pickupLocation.y.toStringAsFixed(5)}, ${order.pickupLocation.x.toStringAsFixed(5)}',
+          ),
+          SizedBox(height: 12.h),
+          _buildDetailRow(
+            context,
+            icon: LucideIcons.navigation,
+            label: 'Dropoff',
+            value:
+                '${order.dropoffLocation.y.toStringAsFixed(5)}, ${order.dropoffLocation.x.toStringAsFixed(5)}',
+          ),
+          SizedBox(height: 12.h),
+          _buildDetailRow(
+            context,
+            icon: LucideIcons.ruler,
+            label: 'Distance',
+            value: '${order.distanceKm.toStringAsFixed(1)} km',
+          ),
+          SizedBox(height: 12.h),
+          _buildDetailRow(
+            context,
+            icon: LucideIcons.dollarSign,
+            label: 'Earnings',
+            value: 'Rp ${_formatMoney(order.totalPrice * 0.85)}',
+          ),
 
-            // Order Details
-            _buildDetailRow(
-              context,
-              icon: material.Icons.location_on,
-              label: 'Pickup',
-              value:
-                  '${order.pickupLocation.y.toStringAsFixed(5)}, ${order.pickupLocation.x.toStringAsFixed(5)}',
-            ),
+          // Gender preference if specified
+          if (order.gender != null) ...[
             SizedBox(height: 12.h),
-            _buildDetailRow(
-              context,
-              icon: material.Icons.place,
-              label: 'Dropoff',
-              value:
-                  '${order.dropoffLocation.y.toStringAsFixed(5)}, ${order.dropoffLocation.x.toStringAsFixed(5)}',
-            ),
-            SizedBox(height: 12.h),
-            _buildDetailRow(
-              context,
-              icon: material.Icons.straighten,
-              label: 'Distance',
-              value: '${order.distanceKm.toStringAsFixed(1)} km',
-            ),
-            SizedBox(height: 12.h),
-            _buildDetailRow(
-              context,
-              icon: material.Icons.attach_money,
-              label: 'Earnings',
-              value: 'Rp ${_formatMoney(order.totalPrice * 0.85)}',
-            ),
-
-            // Gender preference if specified
-            if (order.gender != null) ...[
-              SizedBox(height: 12.h),
-              Container(
-                padding: EdgeInsets.all(12.dg),
-                decoration: BoxDecoration(
-                  color: context.colorScheme.muted,
-                  borderRadius: BorderRadius.circular(8.r),
-                ),
-                child: Row(
-                  children: [
-                    Icon(
-                      material.Icons.person,
-                      size: 16.sp,
+            Container(
+              padding: EdgeInsets.all(12.dg),
+              decoration: BoxDecoration(
+                color: context.colorScheme.muted,
+                borderRadius: BorderRadius.circular(8.r),
+              ),
+              child: Row(
+                children: [
+                  Icon(
+                    LucideIcons.user,
+                    size: 16.sp,
+                    color: context.colorScheme.mutedForeground,
+                  ),
+                  SizedBox(width: 8.w),
+                  Text(
+                    'Gender preference: ${order.gender?.value}',
+                    style: context.typography.small.copyWith(
                       color: context.colorScheme.mutedForeground,
                     ),
-                    SizedBox(width: 8.w),
-                    Text(
-                      'Gender preference: ${order.gender?.value}',
-                      style: context.typography.small.copyWith(
-                        color: context.colorScheme.mutedForeground,
+                  ),
+                ],
+              ),
+            ),
+          ],
+
+          // Note if provided
+          if (order.note != null) ...[
+            Builder(
+              builder: (context) {
+                final note = order.note;
+                if (note == null || !_hasNoteContent(note)) {
+                  return const SizedBox.shrink();
+                }
+
+                return Column(
+                  children: [
+                    SizedBox(height: 12.h),
+                    Container(
+                      padding: EdgeInsets.all(12.dg),
+                      decoration: BoxDecoration(
+                        color: context.colorScheme.muted,
+                        borderRadius: BorderRadius.circular(8.r),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Icon(
+                                LucideIcons.stickyNote,
+                                size: 16.sp,
+                                color: context.colorScheme.mutedForeground,
+                              ),
+                              SizedBox(width: 8.w),
+                              Text(
+                                'Note:',
+                                style: context.typography.small.copyWith(
+                                  color: context.colorScheme.mutedForeground,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 4.h),
+                          Text(
+                            _getNoteText(note),
+                            style: context.typography.small.copyWith(
+                              color: context.colorScheme.mutedForeground,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
-                ),
-              ),
-            ],
-
-            // Note if provided
-            if (order.note != null) ...[
-              Builder(
-                builder: (context) {
-                  final note = order.note;
-                  if (note == null || !_hasNoteContent(note)) {
-                    return const SizedBox.shrink();
-                  }
-
-                  return Column(
-                    children: [
-                      SizedBox(height: 12.h),
-                      Container(
-                        padding: EdgeInsets.all(12.dg),
-                        decoration: BoxDecoration(
-                          color: context.colorScheme.muted,
-                          borderRadius: BorderRadius.circular(8.r),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                Icon(
-                                  material.Icons.note,
-                                  size: 16.sp,
-                                  color: context.colorScheme.mutedForeground,
-                                ),
-                                SizedBox(width: 8.w),
-                                Text(
-                                  'Note:',
-                                  style: context.typography.small.copyWith(
-                                    color: context.colorScheme.mutedForeground,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 4.h),
-                            Text(
-                              _getNoteText(note),
-                              style: context.typography.small.copyWith(
-                                color: context.colorScheme.mutedForeground,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  );
-                },
-              ),
-            ],
-
-            SizedBox(height: 24.h),
-
-            // Action Buttons
-            Row(
-              children: [
-                Expanded(
-                  child: DestructiveButton(
-                    onPressed: onReject,
-                    child: Text(
-                      'Reject',
-                      style: context.typography.p.copyWith(
-                        fontSize: 15.sp,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(width: 12.w),
-                Expanded(
-                  child: PrimaryButton(
-                    onPressed: onAccept,
-                    child: Text(
-                      'Accept',
-                      style: context.typography.p.copyWith(
-                        fontSize: 15.sp,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+                );
+              },
             ),
           ],
-        ),
+        ],
       ),
+      actions: [
+        DestructiveButton(
+          onPressed: onReject,
+          child: Text(
+            'Reject',
+            style: context.typography.p.copyWith(
+              fontSize: 15.sp,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+        PrimaryButton(
+          onPressed: onAccept,
+          child: Text(
+            'Accept',
+            style: context.typography.p.copyWith(
+              fontSize: 15.sp,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+      ],
     );
   }
 
   Widget _buildDetailRow(
     BuildContext context, {
-    required material.IconData icon,
+    required IconData icon,
     required String label,
     required String value,
   }) {
@@ -263,18 +241,15 @@ class IncomingOrderDialog extends StatelessWidget {
   bool _hasNoteContent(OrderNote note) {
     final pickup = note.pickup;
     final dropoff = note.dropoff;
-    // final instructions = note.instructions;
 
     return (pickup != null && pickup.isNotEmpty) ||
         (dropoff != null && dropoff.isNotEmpty);
-    // ||   (instructions != null && instructions.isNotEmpty);
   }
 
   String _getNoteText(OrderNote note) {
     final parts = <String>[];
     final pickup = note.pickup;
     final dropoff = note.dropoff;
-    // final instructions = note.instructions;
 
     if (pickup != null && pickup.isNotEmpty) {
       parts.add('Pickup: $pickup');
@@ -282,9 +257,6 @@ class IncomingOrderDialog extends StatelessWidget {
     if (dropoff != null && dropoff.isNotEmpty) {
       parts.add('Dropoff: $dropoff');
     }
-    // if (instructions != null && instructions.isNotEmpty) {
-    //   parts.add('Instructions: $instructions');
-    // }
     return parts.join('\n');
   }
 
@@ -299,14 +271,14 @@ class IncomingOrderDialog extends StatelessWidget {
     }
   }
 
-  material.IconData _getOrderTypeIcon(OrderType type) {
+  IconData _getOrderTypeIcon(OrderType type) {
     switch (type) {
       case OrderType.RIDE:
-        return material.Icons.directions_car;
+        return LucideIcons.car;
       case OrderType.DELIVERY:
-        return material.Icons.local_shipping;
+        return LucideIcons.truck;
       case OrderType.FOOD:
-        return material.Icons.restaurant;
+        return LucideIcons.utensils;
     }
   }
 
