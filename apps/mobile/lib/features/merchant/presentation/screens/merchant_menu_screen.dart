@@ -34,13 +34,13 @@ class _MerchantMenuScreenState extends State<MerchantMenuScreen> {
     final menuCubit = context.read<MerchantMenuCubit>();
 
     // Get merchant data if not already loaded
-    if (merchantCubit.state.mine == null) {
+    if (merchantCubit.state.mine.value == null) {
       await merchantCubit.getMine();
     }
 
     if (!mounted) return;
 
-    final merchantId = merchantCubit.state.mine?.id;
+    final merchantId = merchantCubit.state.mine.value?.id;
 
     if (merchantId != null) {
       await menuCubit.init(merchantId: merchantId);

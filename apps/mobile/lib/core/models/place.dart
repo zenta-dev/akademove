@@ -1,7 +1,6 @@
 part of '_export.dart';
 
-@MappableClass()
-class Place with PlaceMappable {
+class Place extends Equatable {
   const Place({
     required this.name,
     required this.vicinity,
@@ -35,4 +34,28 @@ class Place with PlaceMappable {
   Coordinate toCoordinate() {
     return Coordinate(x: lng, y: lat);
   }
+
+  Place copyWith({
+    String? name,
+    String? vicinity,
+    double? lat,
+    double? lng,
+    String? icon,
+    Distance? distance,
+  }) {
+    return Place(
+      name: name ?? this.name,
+      vicinity: vicinity ?? this.vicinity,
+      lat: lat ?? this.lat,
+      lng: lng ?? this.lng,
+      icon: icon ?? this.icon,
+      distance: distance ?? this.distance,
+    );
+  }
+
+  @override
+  List<Object?> get props => [name, vicinity, lat, lng, icon, distance];
+
+  @override
+  bool get stringify => true;
 }

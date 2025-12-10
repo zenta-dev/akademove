@@ -1,47 +1,77 @@
 part of '_export.dart';
 
-@MappableClass(
-  generateMethods:
-      GenerateMethods.stringify | GenerateMethods.equals | GenerateMethods.copy,
-)
-class DriverOrderState extends BaseState2 with DriverOrderStateMappable {
-  DriverOrderState({
-    super.state,
-    super.message,
-    super.error,
+class DriverOrderState extends Equatable {
+  const DriverOrderState({
+    this.fetchOrderResult = const OperationResult.idle(),
+    this.acceptOrderResult = const OperationResult.idle(),
+    this.updateStatusResult = const OperationResult.idle(),
     this.currentOrder,
     this.customer,
     this.orderStatus,
   });
 
+  final OperationResult<Order> fetchOrderResult;
+  final OperationResult<Order> acceptOrderResult;
+  final OperationResult<Order> updateStatusResult;
+
   final Order? currentOrder;
   final User? customer;
   final OrderStatus? orderStatus;
 
-  @override
-  DriverOrderState toInitial() => DriverOrderState();
+  bool get isLoading =>
+      fetchOrderResult.isLoading ||
+      acceptOrderResult.isLoading ||
+      updateStatusResult.isLoading;
+
+  bool get isFailure =>
+      fetchOrderResult.isFailure ||
+      acceptOrderResult.isFailure ||
+      updateStatusResult.isFailure;
+
+  bool get isSuccess =>
+      fetchOrderResult.isSuccess ||
+      acceptOrderResult.isSuccess ||
+      updateStatusResult.isSuccess;
+
+  BaseError? get error =>
+      fetchOrderResult.error ??
+      acceptOrderResult.error ??
+      updateStatusResult.error;
+
+  String? get message {
+    if (acceptOrderResult.isSuccess) return 'Order accepted';
+    if (updateStatusResult.isSuccess) return 'Status updated';
+    return null;
+  }
 
   @override
-  DriverOrderState toLoading() => copyWith(state: CubitState.loading);
+  List<Object?> get props => [
+    fetchOrderResult,
+    acceptOrderResult,
+    updateStatusResult,
+    currentOrder,
+    customer,
+    orderStatus,
+  ];
 
   @override
-  DriverOrderState toSuccess({
-    String? message,
+  bool get stringify => true;
+
+  DriverOrderState copyWith({
+    OperationResult<Order>? fetchOrderResult,
+    OperationResult<Order>? acceptOrderResult,
+    OperationResult<Order>? updateStatusResult,
     Order? currentOrder,
     User? customer,
     OrderStatus? orderStatus,
-  }) => copyWith(
-    state: CubitState.success,
-    message: message,
-    currentOrder: currentOrder ?? this.currentOrder,
-    customer: customer ?? this.customer,
-    orderStatus: orderStatus ?? this.orderStatus,
-  );
-
-  @override
-  DriverOrderState toFailure(BaseError error, {String? message}) => copyWith(
-    state: CubitState.failure,
-    error: error,
-    message: message ?? error.message,
-  );
+  }) {
+    return DriverOrderState(
+      fetchOrderResult: fetchOrderResult ?? this.fetchOrderResult,
+      acceptOrderResult: acceptOrderResult ?? this.acceptOrderResult,
+      updateStatusResult: updateStatusResult ?? this.updateStatusResult,
+      currentOrder: currentOrder ?? this.currentOrder,
+      customer: customer ?? this.customer,
+      orderStatus: orderStatus ?? this.orderStatus,
+    );
+  }
 }

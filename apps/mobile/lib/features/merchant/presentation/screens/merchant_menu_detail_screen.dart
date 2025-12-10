@@ -213,7 +213,7 @@ class MerchantMenuDetailScreen extends StatelessWidget {
     final merchantCubit = context.read<MerchantCubit>();
     final menuCubit = context.read<MerchantMenuCubit>();
 
-    final merchantId = merchantCubit.state.mine?.id;
+    final merchantId = merchantCubit.state.mine.value?.id;
 
     if (merchantId == null) {
       logger.e('[MerchantMenuDetailScreen] - No merchant ID found');

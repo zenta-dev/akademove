@@ -1,4 +1,3 @@
-import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/coupon/presentation/cubits/_export.dart';
 import 'package:akademove/features/coupon/presentation/states/_export.dart';
 import 'package:akademove/l10n/l10n.dart';
@@ -17,11 +16,11 @@ class CouponSelectorWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<CouponCubit, CouponState>(
       builder: (context, state) {
-        if (state.state == CubitState.loading) {
+        if (state.eligibleCoupons.isLoading) {
           return const Center(child: CircularProgressIndicator());
         }
 
-        if (state.state == CubitState.failure) {
+        if (state.eligibleCoupons.isFailure) {
           return Center(
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -29,7 +28,8 @@ class CouponSelectorWidget extends StatelessWidget {
                 Icon(LucideIcons.triangleAlert, size: 48),
                 const SizedBox(height: 16),
                 Text(
-                  state.error?.message ?? 'Failed to load coupons',
+                  state.eligibleCoupons.error?.message ??
+                      'Failed to load coupons',
                   textAlign: TextAlign.center,
                 ),
               ],
@@ -37,7 +37,7 @@ class CouponSelectorWidget extends StatelessWidget {
           );
         }
 
-        final data = state.data;
+        final data = state.eligibleCoupons.value;
         if (data == null || data.coupons.isEmpty) {
           return Center(
             child: Column(

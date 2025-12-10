@@ -11,7 +11,7 @@ class DriverCubit extends BaseCubit<DriverState> {
   }) : _driverRepository = driverRepository,
        _orderRepository = orderRepository,
        _configurationRepository = configurationRepository,
-       super(DriverState());
+       super(const DriverState());
 
   final DriverRepository _driverRepository;
   final OrderRepository _orderRepository;
@@ -22,7 +22,7 @@ class DriverCubit extends BaseCubit<DriverState> {
 
   Future<void> init() async {
     try {
-      emit(state.toLoading());
+      emit(state.copyWith(initResult: const OperationResult.loading()));
 
       // Get driver profile
       final driverRes = await _driverRepository.getMine();
@@ -47,10 +47,9 @@ class DriverCubit extends BaseCubit<DriverState> {
       final todayEarnings = await _calculateDriverEarnings(todayOrders);
 
       emit(
-        state.toSuccess(
-          message: driverRes.message,
+        state.copyWith(
+          initResult: OperationResult.success(driverRes.data),
           driver: driverRes.data,
-          isOnline: driverRes.data.isTakingOrder,
           todayEarnings: todayEarnings,
           todayTrips: todayOrders.length,
         ),
@@ -61,7 +60,7 @@ class DriverCubit extends BaseCubit<DriverState> {
         error: e,
         stackTrace: st,
       );
-      emit(state.toFailure(e));
+      emit(state.copyWith(initResult: OperationResult.failed(e)));
     }
   }
 
@@ -71,6 +70,10 @@ class DriverCubit extends BaseCubit<DriverState> {
 
         try {
           final newStatus = !(state.driver?.isOnline ?? false);
+
+          emit(
+            state.copyWith(toggleOnlineResult: const OperationResult.loading()),
+          );
 
           // Optimistic update
           emit(
@@ -88,10 +91,9 @@ class DriverCubit extends BaseCubit<DriverState> {
           );
 
           emit(
-            state.toSuccess(
-              message: newStatus ? 'You are now online' : 'You are now offline',
+            state.copyWith(
+              toggleOnlineResult: OperationResult.success(res.data),
               driver: res.data,
-              isOnline: res.data.isOnline,
             ),
           );
         } on BaseError catch (e, st) {
@@ -109,32 +111,45 @@ class DriverCubit extends BaseCubit<DriverState> {
               ),
             );
           }
-          emit(state.toFailure(e));
+          emit(state.copyWith(toggleOnlineResult: OperationResult.failed(e)));
         }
       });
 
-  Future<void> refreshProfile() async =>
-      await taskManager.execute('DC-rP1', () async {
-        try {
-          final res = await _driverRepository.getMine();
-          _driverId = res.data.id;
+  Future<void> refreshProfile() async => await taskManager.execute(
+    'DC-rP1',
+    () async {
+      try {
+        emit(
+          state.copyWith(refreshProfileResult: const OperationResult.loading()),
+        );
 
-          emit(
-            state.toSuccess(driver: res.data, isOnline: res.data.isTakingOrder),
-          );
-        } on BaseError catch (e, st) {
-          logger.e(
-            '[DriverCubit] - refreshProfile error: ${e.message}',
-            error: e,
-            stackTrace: st,
-          );
-          emit(state.toFailure(e));
-        }
-      });
+        final res = await _driverRepository.getMine();
+        _driverId = res.data.id;
+
+        emit(
+          state.copyWith(
+            refreshProfileResult: OperationResult.success(res.data),
+            driver: res.data,
+          ),
+        );
+      } on BaseError catch (e, st) {
+        logger.e(
+          '[DriverCubit] - refreshProfile error: ${e.message}',
+          error: e,
+          stackTrace: st,
+        );
+        emit(state.copyWith(refreshProfileResult: OperationResult.failed(e)));
+      }
+    },
+  );
 
   Future<void> refreshStats() async =>
       await taskManager.execute('DC-rS1', () async {
         try {
+          emit(
+            state.copyWith(refreshStatsResult: const OperationResult.loading()),
+          );
+
           final orders = await _orderRepository.list(
             const ListOrderQuery(statuses: [OrderStatus.COMPLETED]),
           );
@@ -152,7 +167,8 @@ class DriverCubit extends BaseCubit<DriverState> {
           final todayEarnings = await _calculateDriverEarnings(todayOrders);
 
           emit(
-            state.toSuccess(
+            state.copyWith(
+              refreshStatsResult: OperationResult.success(true),
               todayEarnings: todayEarnings,
               todayTrips: todayOrders.length,
             ),
@@ -219,5 +235,5 @@ class DriverCubit extends BaseCubit<DriverState> {
     );
   }
 
-  void reset() => emit(DriverState());
+  void reset() => emit(const DriverState());
 }

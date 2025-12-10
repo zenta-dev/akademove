@@ -1,18 +1,23 @@
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/coupon/data/repositories/coupon_repository.dart';
-import 'package:dart_mappable/dart_mappable.dart';
+import 'package:equatable/equatable.dart';
 
-part 'coupon_state.mapper.dart';
+class CouponState extends Equatable {
+  const CouponState({this.eligibleCoupons = const OperationResult.idle()});
 
-@MappableClass()
-class CouponState extends BaseState<EligibleCouponsResult?>
-    with CouponStateMappable {
-  const CouponState({super.data, super.error, super.state, super.message});
+  final OperationResult<EligibleCouponsResult> eligibleCoupons;
 
-  factory CouponState.initial() => const CouponState();
-  factory CouponState.loading() => const CouponState(state: CubitState.loading);
-  factory CouponState.success(EligibleCouponsResult data, {String? message}) =>
-      CouponState(data: data, state: CubitState.success, message: message);
-  factory CouponState.failure(BaseError error) =>
-      CouponState(error: error, state: CubitState.failure);
+  @override
+  List<Object> get props => [eligibleCoupons];
+
+  CouponState copyWith({
+    OperationResult<EligibleCouponsResult>? eligibleCoupons,
+  }) {
+    return CouponState(
+      eligibleCoupons: eligibleCoupons ?? this.eligibleCoupons,
+    );
+  }
+
+  @override
+  bool get stringify => true;
 }

@@ -1,41 +1,17 @@
 part of '_export.dart';
 
-@MappableClass(
-  generateMethods:
-      GenerateMethods.stringify | GenerateMethods.equals | GenerateMethods.copy,
-)
-class ReportState extends BaseState2 with ReportStateMappable {
-  ReportState({
-    this.submittedReport,
-    this.reports = const [],
-    super.state,
-    super.message,
-    super.error,
-  });
+class ReportState extends Equatable {
+  const ReportState({this.status = const OperationResult.idle()});
 
-  final Report? submittedReport;
-  final List<Report> reports;
+  final OperationResult<void> status;
 
   @override
-  ReportState toInitial() => ReportState(state: CubitState.initial);
+  List<Object> get props => [status];
+
+  ReportState copyWith({OperationResult<void>? status}) {
+    return ReportState(status: status ?? this.status);
+  }
 
   @override
-  ReportState toLoading() => copyWith(state: CubitState.loading);
-
-  @override
-  ReportState toSuccess({
-    Report? submittedReport,
-    List<Report>? reports,
-    String? message,
-  }) => copyWith(
-    state: CubitState.success,
-    submittedReport: submittedReport ?? this.submittedReport,
-    reports: reports ?? this.reports,
-    message: message,
-    error: null,
-  );
-
-  @override
-  ReportState toFailure(BaseError error, {String? message}) =>
-      copyWith(state: CubitState.failure, error: error, message: message);
+  bool get stringify => true;
 }

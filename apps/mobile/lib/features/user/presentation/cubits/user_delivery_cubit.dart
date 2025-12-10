@@ -12,7 +12,7 @@ class UserDeliveryCubit extends BaseCubit<UserDeliveryState> {
   }) : _orderRepository = orderRepository,
        _driverRepository = driverRepository,
        _mapService = mapService,
-       super(UserDeliveryState());
+       super(const UserDeliveryState());
 
   final OrderRepository _orderRepository;
   final DriverRepository _driverRepository;
@@ -24,11 +24,15 @@ class UserDeliveryCubit extends BaseCubit<UserDeliveryState> {
 
   void reset() {
     _selectedCouponCode = null;
-    emit(UserDeliveryState());
+    emit(const UserDeliveryState());
   }
 
   void clearSearchPlaces() => emit(
-    state.toSuccess(searchPlaces: const PageTokenPaginationResult(data: [])),
+    state.toSuccess(
+      searchPlaces: OperationResult.success(
+        const PageTokenPaginationResult(data: []),
+      ),
+    ),
   );
 
   void setPickupLocation(Place pickup) {
@@ -48,24 +52,23 @@ class UserDeliveryCubit extends BaseCubit<UserDeliveryState> {
     bool isRefresh = false,
   }) async => await taskManager.execute('UDC-gNP-${coord.hashCode}', () async {
     try {
-      if (isRefresh && state.nearbyPlaces.token == null) {
+      if (isRefresh && state.nearbyPlaces.value?.token == null) {
         emit(state.toLoading());
       }
 
       final res = await _mapService.nearbyLocation(
         coord,
-        nextPageToken: isRefresh ? null : state.nearbyPlaces.token,
+        nextPageToken: isRefresh ? null : state.nearbyPlaces.value?.token,
       );
 
       final mergedList = isRefresh
           ? res.data
-          : [...state.nearbyPlaces.data, ...res.data];
+          : [...state.nearbyPlaces.value?.data ?? [], ...res.data];
 
       emit(
         state.toSuccess(
-          nearbyPlaces: PageTokenPaginationResult(
-            data: mergedList,
-            token: res.token,
+          nearbyPlaces: OperationResult.success(
+            PageTokenPaginationResult(data: mergedList, token: res.token),
           ),
         ),
       );
@@ -86,7 +89,7 @@ class UserDeliveryCubit extends BaseCubit<UserDeliveryState> {
     bool isRefresh = false,
   }) async => await taskManager.execute('UDC-sP-$query', () async {
     try {
-      if (isRefresh && state.searchPlaces.token == null) {
+      if (isRefresh && state.searchPlaces.value?.token == null) {
         emit(state.toLoading());
       }
 
@@ -95,18 +98,17 @@ class UserDeliveryCubit extends BaseCubit<UserDeliveryState> {
       final res = await _mapService.searchPlace(
         query,
         coordinate: coordinate,
-        nextPageToken: isRefresh ? null : state.searchPlaces.token,
+        nextPageToken: isRefresh ? null : state.searchPlaces.value?.token,
       );
 
       final mergedList = (_searchQuery == query && !isRefresh)
-          ? [...state.searchPlaces.data, ...res.data]
+          ? [...state.searchPlaces.value?.data ?? [], ...res.data]
           : res.data;
 
       emit(
         state.toSuccess(
-          searchPlaces: PageTokenPaginationResult(
-            data: mergedList,
-            token: res.token,
+          searchPlaces: OperationResult.success(
+            PageTokenPaginationResult(data: mergedList, token: res.token),
           ),
         ),
       );
@@ -211,11 +213,13 @@ class UserDeliveryCubit extends BaseCubit<UserDeliveryState> {
 
       emit(
         state.toSuccess(
-          estimate: DeliveryEstimateResult(
-            summary: res.data,
-            pickup: pickup,
-            dropoff: dropoff,
-            details: details,
+          estimate: OperationResult.success(
+            DeliveryEstimateResult(
+              summary: res.data,
+              pickup: pickup,
+              dropoff: dropoff,
+              details: details,
+            ),
           ),
         ),
       );
@@ -235,7 +239,7 @@ class UserDeliveryCubit extends BaseCubit<UserDeliveryState> {
     String? couponCode,
   }) async => await taskManager.execute('UDC-pDO-${method.hashCode}', () async {
     try {
-      final estimate = state.estimate;
+      final estimate = state.estimate.value;
       if (estimate == null) {
         emit(
           state.toFailure(const RepositoryError('Please get estimate first')),
@@ -285,12 +289,19 @@ class UserDeliveryCubit extends BaseCubit<UserDeliveryState> {
           final res = await _driverRepository.getDriverNearby(req);
 
           final mergedList = {
-            for (final item in state.nearbyDrivers) item.id: item,
+            for (final item in state.nearbyDrivers.value ?? <Driver>[])
+              item.id: item,
             for (final item in res.data) item.id: item,
           }.values.toList();
 
           emit(
-            state.toSuccess(nearbyDrivers: mergedList, message: res.message),
+            state.toSuccess(
+              nearbyDrivers: OperationResult.success(
+                mergedList,
+                message: res.message,
+              ),
+              message: res.message,
+            ),
           );
         } on BaseError catch (e, st) {
           logger.e(

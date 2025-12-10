@@ -7,24 +7,28 @@ import 'package:api_client/api_client.dart' hide Cart, CartItem;
 class CartCubit extends BaseCubit<CartState> {
   CartCubit({required CartRepository cartRepository})
     : _cartRepository = cartRepository,
-      super(CartState());
+      super(const CartState());
 
   final CartRepository _cartRepository;
 
   /// Load cart from storage on init
   Future<void> loadCart() async => await taskManager.execute('CC-lC', () async {
     try {
-      emit(state.toLoading());
+      emit(state.copyWith(cart: const OperationResult.loading()));
 
       final cart = await _cartRepository.getCart();
-      emit(state.toSuccess(cart: cart, message: 'Cart loaded'));
+      emit(
+        state.copyWith(
+          cart: OperationResult.success(cart, message: 'Cart loaded'),
+        ),
+      );
     } on BaseError catch (e, st) {
       logger.e(
         '[CartCubit] - loadCart Error: ${e.message}',
         error: e,
         stackTrace: st,
       );
-      emit(state.toFailure(e, message: e.message));
+      emit(state.copyWith(cart: OperationResult.failed(e)));
     }
   });
 
@@ -47,7 +51,12 @@ class CartCubit extends BaseCubit<CartState> {
 
       result.when(
         success: (cart, message) {
-          emit(state.toSuccess(cart: cart, message: message));
+          emit(
+            state.copyWith(
+              addItemResult: OperationResult.success(cart, message: message),
+              cart: OperationResult.success(cart),
+            ),
+          );
         },
         failed: (code, message) {
           // Check if it's a merchant conflict error
@@ -66,14 +75,15 @@ class CartCubit extends BaseCubit<CartState> {
 
             // Show merchant conflict dialog
             emit(
-              state.toMerchantConflict(
+              state.copyWith(
                 pendingItem: item,
                 pendingMerchantName: merchantName,
+                showMerchantConflict: true,
               ),
             );
           } else {
             final error = RepositoryError(message, code: code);
-            emit(state.toFailure(error, message: message));
+            emit(state.copyWith(addItemResult: OperationResult.failed(error)));
           }
         },
       );
@@ -83,7 +93,7 @@ class CartCubit extends BaseCubit<CartState> {
         error: e,
         stackTrace: st,
       );
-      emit(state.toFailure(e, message: e.message));
+      emit(state.copyWith(addItemResult: OperationResult.failed(e)));
     }
   });
 
@@ -95,11 +105,13 @@ class CartCubit extends BaseCubit<CartState> {
           final pendingMerchantName = state.pendingMerchantName;
 
           if (pendingItem == null || pendingMerchantName == null) {
-            emit(state.clearConflict());
+            emit(state.copyWith(clearPending: true));
             return;
           }
 
-          emit(state.toLoading());
+          emit(
+            state.copyWith(replaceCartResult: const OperationResult.loading()),
+          );
 
           // Need to convert back to MerchantMenu for replaceCart
           final menu = MerchantMenu(
@@ -122,11 +134,25 @@ class CartCubit extends BaseCubit<CartState> {
 
           result.when(
             success: (cart, message) {
-              emit(state.toSuccess(cart: cart, message: message));
+              emit(
+                state.copyWith(
+                  replaceCartResult: OperationResult.success(
+                    cart,
+                    message: message,
+                  ),
+                  cart: OperationResult.success(cart),
+                  clearPending: true,
+                ),
+              );
             },
             failed: (code, message) {
               final error = RepositoryError(message, code: code);
-              emit(state.toFailure(error, message: message));
+              emit(
+                state.copyWith(
+                  replaceCartResult: OperationResult.failed(error),
+                  clearPending: true,
+                ),
+              );
             },
           );
         } on BaseError catch (e, st) {
@@ -135,13 +161,18 @@ class CartCubit extends BaseCubit<CartState> {
             error: e,
             stackTrace: st,
           );
-          emit(state.toFailure(e, message: e.message));
+          emit(
+            state.copyWith(
+              replaceCartResult: OperationResult.failed(e),
+              clearPending: true,
+            ),
+          );
         }
       });
 
   /// User cancels cart replacement
   void cancelReplaceCart() {
-    emit(state.clearConflict());
+    emit(state.copyWith(clearPending: true));
   }
 
   /// Update item quantity (or remove if quantity <= 0)
@@ -157,11 +188,21 @@ class CartCubit extends BaseCubit<CartState> {
 
       result.when(
         success: (cart, message) {
-          emit(state.toSuccess(cart: cart, message: message));
+          emit(
+            state.copyWith(
+              updateQuantityResult: OperationResult.success(
+                cart,
+                message: message,
+              ),
+              cart: OperationResult.success(cart),
+            ),
+          );
         },
         failed: (code, message) {
           final error = RepositoryError(message, code: code);
-          emit(state.toFailure(error, message: message));
+          emit(
+            state.copyWith(updateQuantityResult: OperationResult.failed(error)),
+          );
         },
       );
     } on BaseError catch (e, st) {
@@ -170,52 +211,68 @@ class CartCubit extends BaseCubit<CartState> {
         error: e,
         stackTrace: st,
       );
-      emit(state.toFailure(e, message: e.message));
+      emit(state.copyWith(updateQuantityResult: OperationResult.failed(e)));
     }
   });
 
   /// Remove item from cart
-  Future<void> removeItem(String menuId) async =>
-      await taskManager.execute('CC-rI-$menuId', () async {
-        try {
-          final result = await _cartRepository.removeItem(menuId);
+  Future<void> removeItem(
+    String menuId,
+  ) async => await taskManager.execute('CC-rI-$menuId', () async {
+    try {
+      final result = await _cartRepository.removeItem(menuId);
 
-          result.when(
-            success: (cart, message) {
-              emit(state.toSuccess(cart: cart, message: message));
-            },
-            failed: (code, message) {
-              final error = RepositoryError(message, code: code);
-              emit(state.toFailure(error, message: message));
-            },
+      result.when(
+        success: (cart, message) {
+          emit(
+            state.copyWith(
+              removeItemResult: OperationResult.success(cart, message: message),
+              cart: OperationResult.success(cart),
+            ),
           );
-        } on BaseError catch (e, st) {
-          logger.e(
-            '[CartCubit] - removeItem Error: ${e.message}',
-            error: e,
-            stackTrace: st,
-          );
-          emit(state.toFailure(e, message: e.message));
-        }
-      });
+        },
+        failed: (code, message) {
+          final error = RepositoryError(message, code: code);
+          emit(state.copyWith(removeItemResult: OperationResult.failed(error)));
+        },
+      );
+    } on BaseError catch (e, st) {
+      logger.e(
+        '[CartCubit] - removeItem Error: ${e.message}',
+        error: e,
+        stackTrace: st,
+      );
+      emit(state.copyWith(removeItemResult: OperationResult.failed(e)));
+    }
+  });
 
   /// Clear entire cart
-  Future<void> clearCart() async =>
-      await taskManager.execute('CC-cC', () async {
-        try {
-          emit(state.toLoading());
+  Future<void> clearCart() async => await taskManager.execute(
+    'CC-cC',
+    () async {
+      try {
+        emit(state.copyWith(clearCartResult: const OperationResult.loading()));
 
-          await _cartRepository.clearCart();
-          emit(state.toSuccess(cart: null, message: 'Cart cleared'));
-        } on BaseError catch (e, st) {
-          logger.e(
-            '[CartCubit] - clearCart Error: ${e.message}',
-            error: e,
-            stackTrace: st,
-          );
-          emit(state.toFailure(e, message: e.message));
-        }
-      });
+        await _cartRepository.clearCart();
+        emit(
+          state.copyWith(
+            clearCartResult: OperationResult.success(
+              true,
+              message: 'Cart cleared',
+            ),
+            cart: OperationResult.success(null),
+          ),
+        );
+      } on BaseError catch (e, st) {
+        logger.e(
+          '[CartCubit] - clearCart Error: ${e.message}',
+          error: e,
+          stackTrace: st,
+        );
+        emit(state.copyWith(clearCartResult: OperationResult.failed(e)));
+      }
+    },
+  );
 
   /// Get order items for API submission
   /// Returns empty list if cart is empty
@@ -229,5 +286,5 @@ class CartCubit extends BaseCubit<CartState> {
   }
 
   /// Reset to initial state
-  void reset() => emit(CartState());
+  void reset() => emit(const CartState());
 }

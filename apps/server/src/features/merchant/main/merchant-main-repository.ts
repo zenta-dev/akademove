@@ -74,10 +74,12 @@ export class MerchantMainRepository extends BaseRepository {
 
 	async #getFromDB(
 		id: string,
+		opts?: Partial<WithTx>,
 	): Promise<
 		(Merchant & { documentId?: string; imageId?: string }) | undefined
 	> {
-		const result = await this.db.query.merchant.findFirst({
+		const tx = opts?.tx ?? this.db;
+		const result = await tx.query.merchant.findFirst({
 			where: (f, op) => op.eq(f.id, id),
 		});
 		return result
@@ -550,9 +552,14 @@ export class MerchantMainRepository extends BaseRepository {
 		}
 	}
 
-	async update(id: string, item: UpdateMerchant): Promise<Merchant> {
+	async update(
+		id: string,
+		item: UpdateMerchant,
+		opts?: Partial<WithTx>,
+	): Promise<Merchant> {
 		try {
-			const existing = await this.#getFromDB(id);
+			const tx = opts?.tx ?? this.db;
+			const existing = await this.#getFromDB(id, opts);
 			if (!existing)
 				throw new RepositoryError(`Merchant with id "${id}" not found`);
 
@@ -570,7 +577,7 @@ export class MerchantMainRepository extends BaseRepository {
 			);
 
 			const [operation] = await Promise.all([
-				this.db
+				tx
 					.update(tables.merchant)
 					.set({
 						...existing,
@@ -609,16 +616,17 @@ export class MerchantMainRepository extends BaseRepository {
 		}
 	}
 
-	async remove(id: string): Promise<void> {
+	async remove(id: string, opts?: Partial<WithTx>): Promise<void> {
 		try {
-			const find = await this.#getFromDB(id);
+			const tx = opts?.tx ?? this.db;
+			const find = await this.#getFromDB(id, opts);
 			if (!find)
 				throw new RepositoryError(m.error_merchant_not_found(), {
 					code: "NOT_FOUND",
 				});
 
 			const [result] = await Promise.all([
-				this.db
+				tx
 					.delete(tables.merchant)
 					.where(eq(tables.merchant.id, id))
 					.returning({ id: tables.merchant.id }),
@@ -743,14 +751,15 @@ export class MerchantMainRepository extends BaseRepository {
 		}
 	}
 
-	async activate(id: string): Promise<Merchant> {
+	async activate(id: string, opts?: WithTx): Promise<Merchant> {
 		try {
+			const tx = opts?.tx ?? this.db;
 			log.info(
 				{ merchantId: id },
 				"[MerchantMainRepository] Activating merchant",
 			);
 
-			const merchant = await this.#getFromDB(id);
+			const merchant = await this.#getFromDB(id, opts);
 			if (!merchant) {
 				throw new RepositoryError(m.error_merchant_not_found(), {
 					code: "NOT_FOUND",
@@ -763,7 +772,7 @@ export class MerchantMainRepository extends BaseRepository {
 				});
 			}
 
-			const [updated] = await this.db
+			const [updated] = await tx
 				.update(tables.merchant)
 				.set({ isActive: true, updatedAt: new Date() })
 				.where(eq(tables.merchant.id, id))
@@ -785,14 +794,19 @@ export class MerchantMainRepository extends BaseRepository {
 		}
 	}
 
-	async deactivate(id: string, reason: string): Promise<Merchant> {
+	async deactivate(
+		id: string,
+		reason: string,
+		opts?: WithTx,
+	): Promise<Merchant> {
 		try {
+			const tx = opts?.tx ?? this.db;
 			log.info(
 				{ merchantId: id, reason },
 				"[MerchantMainRepository] Deactivating merchant",
 			);
 
-			const merchant = await this.#getFromDB(id);
+			const merchant = await this.#getFromDB(id, opts);
 			if (!merchant) {
 				throw new RepositoryError(m.error_merchant_not_found(), {
 					code: "NOT_FOUND",
@@ -805,7 +819,7 @@ export class MerchantMainRepository extends BaseRepository {
 				});
 			}
 
-			const [updated] = await this.db
+			const [updated] = await tx
 				.update(tables.merchant)
 				.set({ isActive: false, updatedAt: new Date() })
 				.where(eq(tables.merchant.id, id))

@@ -32,33 +32,41 @@ export const BadgeMainHandler = priv.router({
 	create: priv.create
 		.use(roleMiddleware)
 		.handler(async ({ context, input: { body } }) => {
-			const data = trimObjectValues(unflattenData(body));
-			const result = await context.repo.badge.main.create(data);
+			return await context.svc.db.transaction(async (tx) => {
+				const data = trimObjectValues(unflattenData(body));
+				const result = await context.repo.badge.main.create(data, { tx });
 
-			return {
-				status: 200,
-				body: { message: m.server_badge_created(), data: result },
-			};
+				return {
+					status: 200,
+					body: { message: m.server_badge_created(), data: result },
+				};
+			});
 		}),
 	update: priv.update
 		.use(roleMiddleware)
 		.handler(async ({ context, input: { params, body } }) => {
-			const data = trimObjectValues(unflattenData(body));
-			const result = await context.repo.badge.main.update(params.id, data);
+			return await context.svc.db.transaction(async (tx) => {
+				const data = trimObjectValues(unflattenData(body));
+				const result = await context.repo.badge.main.update(params.id, data, {
+					tx,
+				});
 
-			return {
-				status: 200,
-				body: { message: m.server_badge_updated(), data: result },
-			};
+				return {
+					status: 200,
+					body: { message: m.server_badge_updated(), data: result },
+				};
+			});
 		}),
 	remove: priv.remove
 		.use(roleMiddleware)
 		.handler(async ({ context, input: { params } }) => {
-			await context.repo.badge.main.remove(params.id);
+			return await context.svc.db.transaction(async (tx) => {
+				await context.repo.badge.main.remove(params.id, { tx });
 
-			return {
-				status: 200,
-				body: { message: m.server_badge_deleted(), data: null },
-			};
+				return {
+					status: 200,
+					body: { message: m.server_badge_deleted(), data: null },
+				};
+			});
 		}),
 });

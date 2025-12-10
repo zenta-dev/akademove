@@ -8,7 +8,7 @@ class UserWalletTopUpCubit extends BaseCubit<UserWalletTopUpState> {
     required WebSocketService webSocketService,
   }) : _walletRepository = walletRepository,
        _webSocketService = webSocketService,
-       super(UserWalletTopUpState());
+       super(const UserWalletTopUpState());
 
   final WalletRepository _walletRepository;
   final WebSocketService _webSocketService;
@@ -20,7 +20,7 @@ class UserWalletTopUpCubit extends BaseCubit<UserWalletTopUpState> {
 
   void reset() {
     _paymentId = null;
-    emit(UserWalletTopUpState());
+    emit(const UserWalletTopUpState());
   }
 
   @override
@@ -47,10 +47,11 @@ class UserWalletTopUpCubit extends BaseCubit<UserWalletTopUpState> {
           emit(state.toSuccess(paymentResult: res.data));
         } on BaseError catch (e, st) {
           logger.e(
-            '[UserRideCubit] - Error: ${e.message}',
+            '[UserWalletTopUpCubit] - Error: ${e.message}',
             error: e,
             stackTrace: st,
           );
+          emit(state.toFailure(e));
         }
       });
 
@@ -98,7 +99,7 @@ class UserWalletTopUpCubit extends BaseCubit<UserWalletTopUpState> {
     if (_paymentId != null) {
       await _webSocketService.disconnect(_paymentId ?? '');
     }
-    emit(state.toSuccess());
+    // Just reset, don't emit success with no args as it might confuse state
     reset();
   }
 }

@@ -1,7 +1,5 @@
 import 'package:api_client/api_client.dart';
-import 'package:dart_mappable/dart_mappable.dart';
-
-part '_export.mapper.dart';
+import 'package:equatable/equatable.dart';
 
 part 'place.dart';
 part 'distance.dart';

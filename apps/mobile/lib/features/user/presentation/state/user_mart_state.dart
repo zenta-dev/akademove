@@ -12,56 +12,46 @@ class BestSellerItem with BestSellerItemMappable {
   final String merchantName;
 }
 
-@MappableClass(
-  generateMethods:
-      GenerateMethods.stringify | GenerateMethods.equals | GenerateMethods.copy,
-)
-class UserMartState extends BaseState2 with UserMartStateMappable {
-  UserMartState({
+class UserMartState extends Equatable {
+  const UserMartState({
     this.categories = const ['ATK', 'Printing', 'Food'],
-    this.bestSellers = const [],
-    this.recentOrders = const [],
-    this.categoryMerchants = const [],
+    this.bestSellers = const OperationResult.idle(),
+    this.recentOrders = const OperationResult.idle(),
+    this.categoryMerchants = const OperationResult.idle(),
     this.selectedCategory,
-    super.state,
-    super.message,
-    super.error,
   });
 
   final List<String> categories;
-  final List<BestSellerItem> bestSellers;
-  final List<Order> recentOrders;
-  final List<Merchant> categoryMerchants;
+  final OperationResult<List<BestSellerItem>> bestSellers;
+  final OperationResult<List<Order>> recentOrders;
+  final OperationResult<List<Merchant>> categoryMerchants;
   final String? selectedCategory;
 
   @override
-  UserMartState toInitial() =>
-      copyWith(state: CubitState.initial, message: null, error: null);
+  List<Object?> get props => [
+    categories,
+    bestSellers,
+    recentOrders,
+    categoryMerchants,
+    selectedCategory,
+  ];
 
-  @override
-  UserMartState toLoading() =>
-      copyWith(state: CubitState.loading, message: null, error: null);
-
-  @override
-  UserMartState toSuccess({
+  UserMartState copyWith({
     List<String>? categories,
-    List<BestSellerItem>? bestSellers,
-    List<Order>? recentOrders,
-    List<Merchant>? categoryMerchants,
+    OperationResult<List<BestSellerItem>>? bestSellers,
+    OperationResult<List<Order>>? recentOrders,
+    OperationResult<List<Merchant>>? categoryMerchants,
     String? selectedCategory,
-    String? message,
-  }) => copyWith(
-    state: CubitState.success,
-    categories: categories ?? this.categories,
-    bestSellers: bestSellers ?? this.bestSellers,
-    recentOrders: recentOrders ?? this.recentOrders,
-    categoryMerchants: categoryMerchants ?? this.categoryMerchants,
-    selectedCategory: selectedCategory ?? this.selectedCategory,
-    message: message,
-    error: null,
-  );
+  }) {
+    return UserMartState(
+      categories: categories ?? this.categories,
+      bestSellers: bestSellers ?? this.bestSellers,
+      recentOrders: recentOrders ?? this.recentOrders,
+      categoryMerchants: categoryMerchants ?? this.categoryMerchants,
+      selectedCategory: selectedCategory ?? this.selectedCategory,
+    );
+  }
 
   @override
-  UserMartState toFailure(BaseError error, {String? message}) =>
-      copyWith(state: CubitState.failure, error: error, message: message);
+  bool get stringify => true;
 }

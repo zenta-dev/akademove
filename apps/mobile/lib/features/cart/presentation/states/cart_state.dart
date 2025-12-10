@@ -1,22 +1,35 @@
 part of '_export.dart';
 
-@MappableClass(
-  generateMethods:
-      GenerateMethods.stringify | GenerateMethods.equals | GenerateMethods.copy,
-)
-class CartState extends BaseState2 with CartStateMappable {
-  CartState({
-    this.cart,
+class CartState extends Equatable {
+  const CartState({
+    this.cart = const OperationResult.idle(),
+    this.addItemResult = const OperationResult.idle(),
+    this.updateQuantityResult = const OperationResult.idle(),
+    this.removeItemResult = const OperationResult.idle(),
+    this.clearCartResult = const OperationResult.idle(),
+    this.replaceCartResult = const OperationResult.idle(),
     this.pendingItem,
     this.pendingMerchantName,
     this.showMerchantConflict = false,
-    super.state,
-    super.message,
-    super.error,
   });
 
-  /// Current cart (null if empty)
-  final Cart? cart;
+  /// Current cart (loaded from storage)
+  final OperationResult<Cart?> cart;
+
+  /// Add item operation result
+  final OperationResult<Cart> addItemResult;
+
+  /// Update quantity operation result
+  final OperationResult<Cart?> updateQuantityResult;
+
+  /// Remove item operation result
+  final OperationResult<Cart?> removeItemResult;
+
+  /// Clear cart operation result
+  final OperationResult<bool> clearCartResult;
+
+  /// Replace cart operation result (when merchant conflict resolved)
+  final OperationResult<Cart> replaceCartResult;
 
   /// Pending item to add (when merchant conflict detected)
   final CartItem? pendingItem;
@@ -27,63 +40,91 @@ class CartState extends BaseState2 with CartStateMappable {
   /// Whether to show merchant conflict dialog
   final bool showMerchantConflict;
 
+  /// Get the current cart data from any successful operation
+  Cart? get currentCart {
+    // Return from the most recently successful operation
+    if (replaceCartResult.isSuccess && replaceCartResult.value != null) {
+      return replaceCartResult.value;
+    }
+    if (addItemResult.isSuccess && addItemResult.value != null) {
+      return addItemResult.value;
+    }
+    if (updateQuantityResult.isSuccess && updateQuantityResult.value != null) {
+      return updateQuantityResult.value;
+    }
+    if (removeItemResult.isSuccess) {
+      return removeItemResult.value;
+    }
+    if (clearCartResult.isSuccess) {
+      return null;
+    }
+    return cart.value;
+  }
+
   /// Computed: total number of items in cart
-  int get totalItems => cart?.totalItems ?? 0;
+  int get totalItems => currentCart?.totalItems ?? 0;
 
   /// Computed: cart subtotal
-  double get subtotal => (cart?.subtotal ?? 0).toDouble();
+  double get subtotal => (currentCart?.subtotal ?? 0).toDouble();
 
   /// Computed: is cart empty
-  bool get isEmpty => cart == null || (cart?.items.isEmpty ?? true);
+  bool get isEmpty =>
+      currentCart == null || (currentCart?.items.isEmpty ?? true);
 
   /// Computed: has merchant conflict
   bool get hasMerchantConflict => showMerchantConflict && pendingItem != null;
 
-  @override
-  CartState toInitial() =>
-      copyWith(state: CubitState.initial, message: null, error: null);
+  /// Computed: any operation is loading
+  bool get isLoading =>
+      cart.isLoading ||
+      addItemResult.isLoading ||
+      updateQuantityResult.isLoading ||
+      removeItemResult.isLoading ||
+      clearCartResult.isLoading ||
+      replaceCartResult.isLoading;
 
   @override
-  CartState toLoading() =>
-      copyWith(state: CubitState.loading, message: null, error: null);
+  List<Object?> get props => [
+    cart,
+    addItemResult,
+    updateQuantityResult,
+    removeItemResult,
+    clearCartResult,
+    replaceCartResult,
+    pendingItem,
+    pendingMerchantName,
+    showMerchantConflict,
+  ];
 
-  @override
-  CartState toSuccess({
-    Cart? cart,
+  CartState copyWith({
+    OperationResult<Cart?>? cart,
+    OperationResult<Cart>? addItemResult,
+    OperationResult<Cart?>? updateQuantityResult,
+    OperationResult<Cart?>? removeItemResult,
+    OperationResult<bool>? clearCartResult,
+    OperationResult<Cart>? replaceCartResult,
     CartItem? pendingItem,
     String? pendingMerchantName,
     bool? showMerchantConflict,
-    String? message,
-  }) => copyWith(
-    state: CubitState.success,
-    cart: cart,
-    pendingItem: pendingItem,
-    pendingMerchantName: pendingMerchantName,
-    showMerchantConflict: showMerchantConflict ?? false,
-    message: message,
-    error: null,
-  );
+    bool clearPending = false,
+  }) {
+    return CartState(
+      cart: cart ?? this.cart,
+      addItemResult: addItemResult ?? this.addItemResult,
+      updateQuantityResult: updateQuantityResult ?? this.updateQuantityResult,
+      removeItemResult: removeItemResult ?? this.removeItemResult,
+      clearCartResult: clearCartResult ?? this.clearCartResult,
+      replaceCartResult: replaceCartResult ?? this.replaceCartResult,
+      pendingItem: clearPending ? null : (pendingItem ?? this.pendingItem),
+      pendingMerchantName: clearPending
+          ? null
+          : (pendingMerchantName ?? this.pendingMerchantName),
+      showMerchantConflict: clearPending
+          ? false
+          : (showMerchantConflict ?? this.showMerchantConflict),
+    );
+  }
 
   @override
-  CartState toFailure(BaseError error, {String? message}) =>
-      copyWith(state: CubitState.failure, error: error, message: message);
-
-  /// Helper: Create merchant conflict state
-  CartState toMerchantConflict({
-    required CartItem pendingItem,
-    required String pendingMerchantName,
-  }) => copyWith(
-    state: CubitState.success,
-    pendingItem: pendingItem,
-    pendingMerchantName: pendingMerchantName,
-    showMerchantConflict: true,
-    error: null,
-  );
-
-  /// Helper: Clear merchant conflict
-  CartState clearConflict() => copyWith(
-    pendingItem: null,
-    pendingMerchantName: null,
-    showMerchantConflict: false,
-  );
+  bool get stringify => true;
 }

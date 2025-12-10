@@ -1,31 +1,36 @@
 part of '_export.dart';
 
-@MappableClass(
-  generateMethods:
-      GenerateMethods.stringify | GenerateMethods.equals | GenerateMethods.copy,
-)
-class DriverProfileState extends BaseState2 with DriverProfileStateMappable {
-  DriverProfileState({super.state, super.message, super.error, this.myDriver});
+class DriverProfileState extends Equatable {
+  const DriverProfileState({
+    this.fetchProfileResult = const OperationResult.idle(),
+    this.updateProfileResult = const OperationResult.idle(),
+    this.myDriver,
+  });
+
+  final OperationResult<Driver> fetchProfileResult;
+  final OperationResult<Driver> updateProfileResult;
 
   final Driver? myDriver;
 
   @override
-  DriverProfileState toInitial() => DriverProfileState();
+  List<Object?> get props => [
+    fetchProfileResult,
+    updateProfileResult,
+    myDriver,
+  ];
 
   @override
-  DriverProfileState toLoading() => copyWith(state: CubitState.loading);
+  bool get stringify => true;
 
-  @override
-  DriverProfileState toSuccess({String? message, Driver? myDriver}) => copyWith(
-    state: CubitState.success,
-    message: message,
-    myDriver: myDriver ?? this.myDriver,
-  );
-
-  @override
-  DriverProfileState toFailure(BaseError error, {String? message}) => copyWith(
-    state: CubitState.failure,
-    error: error,
-    message: message ?? error.message,
-  );
+  DriverProfileState copyWith({
+    OperationResult<Driver>? fetchProfileResult,
+    OperationResult<Driver>? updateProfileResult,
+    Driver? myDriver,
+  }) {
+    return DriverProfileState(
+      fetchProfileResult: fetchProfileResult ?? this.fetchProfileResult,
+      updateProfileResult: updateProfileResult ?? this.updateProfileResult,
+      myDriver: myDriver ?? this.myDriver,
+    );
+  }
 }

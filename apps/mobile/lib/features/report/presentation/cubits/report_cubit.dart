@@ -5,16 +5,16 @@ import 'package:api_client/api_client.dart';
 class ReportCubit extends BaseCubit<ReportState> {
   ReportCubit({required ReportRepository repository})
     : _repository = repository,
-      super(ReportState());
+      super(const ReportState());
 
   final ReportRepository _repository;
 
   Future<void> init() async {
-    emit(ReportState());
+    emit(const ReportState());
   }
 
   void reset() {
-    emit(ReportState());
+    emit(const ReportState());
   }
 
   /// Submit a report for a user (driver or rider)
@@ -24,11 +24,11 @@ class ReportCubit extends BaseCubit<ReportState> {
     required String description,
     String? orderId,
     String? evidenceUrl,
-  }) async => await taskManager.execute('RC-sr1-$targetUserId', () async {
+  }) async => await taskManager.execute('RC-sr1-', () async {
     try {
-      emit(state.toLoading());
+      emit(state.copyWith(status: const OperationResult.loading()));
 
-      final res = await _repository.submitReport(
+      await _repository.submitReport(
         targetUserId: targetUserId,
         category: category,
         description: description,
@@ -36,49 +36,14 @@ class ReportCubit extends BaseCubit<ReportState> {
         evidenceUrl: evidenceUrl,
       );
 
-      emit(state.toSuccess(submittedReport: res.data, message: res.message));
+      emit(state.copyWith(status: OperationResult.success(null)));
     } on BaseError catch (e, st) {
       logger.e(
         '[ReportCubit] Failed to submit report',
         error: e,
         stackTrace: st,
       );
-      emit(state.toFailure(e));
+      emit(state.copyWith(status: OperationResult.failed(e)));
     }
   });
-
-  /// Get a single report by ID
-  Future<void> getReport(
-    String id,
-  ) async => await taskManager.execute('RC-gr2-$id', () async {
-    try {
-      emit(state.toLoading());
-
-      final res = await _repository.getReport(id);
-
-      emit(state.toSuccess(submittedReport: res.data, message: res.message));
-    } on BaseError catch (e, st) {
-      logger.e('[ReportCubit] Failed to get report', error: e, stackTrace: st);
-      emit(state.toFailure(e));
-    }
-  });
-
-  /// Load list of user's reports
-  Future<void> loadMyReports({int? page, int? limit}) async =>
-      await taskManager.execute('RC-lmr3', () async {
-        try {
-          emit(state.toLoading());
-
-          final res = await _repository.getMyReports(page: page, limit: limit);
-
-          emit(state.toSuccess(reports: res.data, message: res.message));
-        } on BaseError catch (e, st) {
-          logger.e(
-            '[ReportCubit] Failed to load reports',
-            error: e,
-            stackTrace: st,
-          );
-          emit(state.toFailure(e));
-        }
-      });
 }

@@ -86,7 +86,7 @@ class _PickLocationWidgetState extends State<PickLocationWidget> {
       final state = cubit.state;
       if (pickupController.text.isNotEmpty ||
           dropoffController.text.isNotEmpty) {
-        if (state.searchPlaces.token != null) {
+        if (state.searchPlaces.value?.token != null) {
           final coord = context.read<UserLocationCubit>().state.coordinate;
           await cubit.searchPlaces(
             (widget.type.isPickup ? pickupController : dropoffController).text,
@@ -95,7 +95,7 @@ class _PickLocationWidgetState extends State<PickLocationWidget> {
         }
       } else {
         final coord = context.read<UserLocationCubit>().state.coordinate;
-        if (state.nearbyPlaces.token != null && coord != null) {
+        if (state.nearbyPlaces.value?.token != null && coord != null) {
           await cubit.getNearbyPlaces(coord);
         }
       }
@@ -160,7 +160,7 @@ class _PickLocationWidgetState extends State<PickLocationWidget> {
         ),
         BlocBuilder<UserRideCubit, UserRideState>(
           builder: (context, state) {
-            if (state.isLoading) {
+            if (state.searchPlaces.isLoading) {
               return Expanded(
                 child: ListPlacesWidget(
                   places: List.generate(10, (_) => dummyPlace),
@@ -174,10 +174,10 @@ class _PickLocationWidgetState extends State<PickLocationWidget> {
                     .text
                     .isNotEmpty;
             final places = isSearchMode
-                ? state.searchPlaces.data
-                : state.nearbyPlaces.data;
+                ? state.searchPlaces.value?.data ?? []
+                : state.nearbyPlaces.value?.data ?? [];
 
-            if (places.isEmpty && !state.isLoading) {
+            if (places.isEmpty && !state.searchPlaces.isLoading) {
               return SizedBox(
                 width: double.infinity,
                 child: Alert.destructive(
@@ -193,8 +193,8 @@ class _PickLocationWidgetState extends State<PickLocationWidget> {
             }
 
             final hasMore = isSearchMode
-                ? state.searchPlaces.token != null
-                : state.nearbyPlaces.token != null;
+                ? state.searchPlaces.value?.token != null
+                : state.nearbyPlaces.value?.token != null;
 
             return Expanded(
               child: RefreshTrigger(

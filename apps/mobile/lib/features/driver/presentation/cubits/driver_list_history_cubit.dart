@@ -5,21 +5,23 @@ import 'package:api_client/api_client.dart';
 class DriverListHistoryCubit extends BaseCubit<DriverListHistoryState> {
   DriverListHistoryCubit({required OrderRepository orderRepository})
     : _orderRepository = orderRepository,
-      super(DriverListHistoryState());
+      super(const DriverListHistoryState());
 
   final OrderRepository _orderRepository;
 
   Future<void> getOrders({required ListOrderQuery query}) async =>
       await taskManager.execute('DHC-lO1', () async {
         try {
-          emit(state.toLoading());
+          emit(
+            state.copyWith(fetchHistoryResult: const OperationResult.loading()),
+          );
 
           final orderRes = await _orderRepository.list(query);
 
           emit(
-            state.toSuccess(
+            state.copyWith(
+              fetchHistoryResult: OperationResult.success(orderRes.data),
               orders: orderRes.data,
-              message: orderRes.message,
               paginationResult: orderRes.paginationResult,
             ),
           );
@@ -29,7 +31,7 @@ class DriverListHistoryCubit extends BaseCubit<DriverListHistoryState> {
             error: e,
             stackTrace: st,
           );
-          emit(state.toFailure(e));
+          emit(state.copyWith(fetchHistoryResult: OperationResult.failed(e)));
         }
       });
 
@@ -39,10 +41,14 @@ class DriverListHistoryCubit extends BaseCubit<DriverListHistoryState> {
         () async {
           try {
             if (!(state.paginationResult?.hasMore ?? false) ||
-                state.isLoading) {
+                state.fetchHistoryResult.isLoading) {
               return;
             }
-            emit(state.toLoading());
+            emit(
+              state.copyWith(
+                fetchHistoryResult: const OperationResult.loading(),
+              ),
+            );
 
             final orderRes = await _orderRepository.list(
               ListOrderQuery(
@@ -52,12 +58,12 @@ class DriverListHistoryCubit extends BaseCubit<DriverListHistoryState> {
               ),
             );
 
-            final updatedOrders = [...?state.orders, ...orderRes.data];
+            final updatedOrders = [...state.orders, ...orderRes.data];
 
             emit(
-              state.toSuccess(
+              state.copyWith(
+                fetchHistoryResult: OperationResult.success(updatedOrders),
                 orders: updatedOrders,
-                message: orderRes.message,
                 paginationResult: orderRes.paginationResult,
               ),
             );
@@ -67,7 +73,7 @@ class DriverListHistoryCubit extends BaseCubit<DriverListHistoryState> {
               error: e,
               stackTrace: st,
             );
-            emit(state.toFailure(e));
+            emit(state.copyWith(fetchHistoryResult: OperationResult.failed(e)));
           }
         },
       );

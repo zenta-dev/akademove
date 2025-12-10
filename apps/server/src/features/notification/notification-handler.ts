@@ -36,46 +36,59 @@ export const NotificationHandler = priv.router({
 	}),
 	markAsRead: priv.markAsRead.handler(
 		async ({ context, input: { params } }) => {
-			const notification = await context.repo.notification.markAsRead({
-				id: params.id,
-				userId: context.user.id,
+			return await context.svc.db.transaction(async (tx) => {
+				const notification = await context.repo.notification.markAsRead(
+					{
+						id: params.id,
+						userId: context.user.id,
+					},
+					{ tx },
+				);
+
+				return {
+					status: 200,
+					body: {
+						message: m.server_notifications_retrieved(),
+						data: notification,
+					},
+				};
 			});
+		},
+	),
+	markAllAsRead: priv.markAllAsRead.handler(async ({ context }) => {
+		return await context.svc.db.transaction(async (tx) => {
+			const count = await context.repo.notification.markAllAsRead(
+				context.user.id,
+				{ tx },
+			);
 
 			return {
 				status: 200,
 				body: {
 					message: m.server_notifications_retrieved(),
-					data: notification,
+					data: { count },
 				},
 			};
-		},
-	),
-	markAllAsRead: priv.markAllAsRead.handler(async ({ context }) => {
-		const count = await context.repo.notification.markAllAsRead(
-			context.user.id,
-		);
-
-		return {
-			status: 200,
-			body: {
-				message: m.server_notifications_retrieved(),
-				data: { count },
-			},
-		};
+		});
 	}),
 	delete: priv.delete.handler(async ({ context, input: { params } }) => {
-		await context.repo.notification.deleteNotification({
-			id: params.id,
-			userId: context.user.id,
-		});
+		return await context.svc.db.transaction(async (tx) => {
+			await context.repo.notification.deleteNotification(
+				{
+					id: params.id,
+					userId: context.user.id,
+				},
+				{ tx },
+			);
 
-		return {
-			status: 200,
-			body: {
-				message: m.server_notifications_retrieved(),
-				data: { ok: true },
-			},
-		};
+			return {
+				status: 200,
+				body: {
+					message: m.server_notifications_retrieved(),
+					data: { ok: true },
+				},
+			};
+		});
 	}),
 	subscribeToTopic: priv.subscribeToTopic.handler(
 		async ({ context, input: { body } }) => {
@@ -120,31 +133,38 @@ export const NotificationHandler = priv.router({
 		},
 	),
 	saveToken: priv.saveToken.handler(async ({ context, input: { body } }) => {
-		const data = trimObjectValues(body);
-		await context.repo.notification.saveToken({
-			...data,
-			userId: context.user.id,
-		});
-
-		return {
-			status: 200,
-			body: {
-				message: m.server_notification_token_saved(),
-				data: { ok: true },
-			},
-		};
-	}),
-	removeToken: priv.removeToken.handler(
-		async ({ context, input: { params } }) => {
-			await context.repo.notification.removeByToken(params);
+		return await context.svc.db.transaction(async (tx) => {
+			const data = trimObjectValues(body);
+			await context.repo.notification.saveToken(
+				{
+					...data,
+					userId: context.user.id,
+				},
+				{ tx },
+			);
 
 			return {
 				status: 200,
 				body: {
-					message: m.server_notification_token_removed(),
+					message: m.server_notification_token_saved(),
 					data: { ok: true },
 				},
 			};
+		});
+	}),
+	removeToken: priv.removeToken.handler(
+		async ({ context, input: { params } }) => {
+			return await context.svc.db.transaction(async (tx) => {
+				await context.repo.notification.removeByToken(params, { tx });
+
+				return {
+					status: 200,
+					body: {
+						message: m.server_notification_token_removed(),
+						data: { ok: true },
+					},
+				};
+			});
 		},
 	),
 });

@@ -30,7 +30,8 @@ class _UserRideSummaryScreenState extends State<UserRideSummaryScreen> {
     // Load eligible coupons when screen loads
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final orderState = context.read<UserOrderCubit>().state;
-      final totalAmount = orderState.estimateOrder?.summary.totalCost ?? 0;
+      final totalAmount =
+          orderState.estimateOrder.value?.summary.totalCost ?? 0;
       if (totalAmount > 0) {
         context.read<CouponCubit>().loadEligibleCoupons(
           serviceType: OrderType.RIDE,
@@ -46,8 +47,8 @@ class _UserRideSummaryScreenState extends State<UserRideSummaryScreen> {
   }
 
   Future<void> placeOrder(UserOrderState state) async {
-    final pickup = state.estimateOrder?.pickup;
-    final dropoff = state.estimateOrder?.dropoff;
+    final pickup = state.estimateOrder.value?.pickup;
+    final dropoff = state.estimateOrder.value?.dropoff;
     if (pickup == null || dropoff == null) {
       context.showMyToast(
         context.l10n.toast_app_state_corrupted,
@@ -69,8 +70,8 @@ class _UserRideSummaryScreenState extends State<UserRideSummaryScreen> {
 
     if (!mounted || !context.mounted) return;
 
-    final order = orderCubit.state.currentOrder;
-    final payment = orderCubit.state.currentPayment;
+    final order = orderCubit.state.currentOrder.value;
+    final payment = orderCubit.state.currentPayment.value;
 
     if (order == null) {
       context.showMyToast(
@@ -122,8 +123,8 @@ class _UserRideSummaryScreenState extends State<UserRideSummaryScreen> {
   }
 
   Future<void> placeScheduledOrder(UserOrderState state) async {
-    final pickup = state.estimateOrder?.pickup;
-    final dropoff = state.estimateOrder?.dropoff;
+    final pickup = state.estimateOrder.value?.pickup;
+    final dropoff = state.estimateOrder.value?.dropoff;
     if (pickup == null || dropoff == null) {
       context.showMyToast(
         context.l10n.toast_app_state_corrupted,
@@ -237,11 +238,11 @@ class _UserRideSummaryScreenState extends State<UserRideSummaryScreen> {
               return PickLocationCardWidget(
                 pickup: PickLocationParameters(
                   enabled: false,
-                  text: state.estimateOrder?.pickup.vicinity,
+                  text: state.estimateOrder.value?.pickup.vicinity,
                 ),
                 dropoff: PickLocationParameters(
                   enabled: false,
-                  text: state.estimateOrder?.dropoff.vicinity,
+                  text: state.estimateOrder.value?.dropoff.vicinity,
                 ),
               ).asSkeleton(enabled: state.isLoading);
             },
@@ -274,9 +275,10 @@ class _UserRideSummaryScreenState extends State<UserRideSummaryScreen> {
                               }),
                           bankProvider: bankProvider,
                           walletBalance:
-                              walletState.myWallet?.balance.toDouble() ?? 0,
+                              walletState.myWallet.value?.balance.toDouble() ??
+                              0,
                           totalCost:
-                              orderState.estimateOrder?.summary.totalCost
+                              orderState.estimateOrder.value?.summary.totalCost
                                   .toDouble() ??
                               0,
                         ),
@@ -306,7 +308,12 @@ class _UserRideSummaryScreenState extends State<UserRideSummaryScreen> {
                               if (coupon != null) {
                                 final cubit = context.read<CouponCubit>();
                                 discountAmount =
-                                    cubit.state.data?.bestDiscountAmount ?? 0;
+                                    cubit
+                                        .state
+                                        .eligibleCoupons
+                                        .value
+                                        ?.bestDiscountAmount ??
+                                    0;
                               } else {
                                 discountAmount = 0;
                               }
@@ -396,7 +403,7 @@ class _UserRideSummaryScreenState extends State<UserRideSummaryScreen> {
           BlocBuilder<UserOrderCubit, UserOrderState>(
             builder: (context, state) {
               return RideSummaryWidget(
-                summary: state.estimateOrder?.summary,
+                summary: state.estimateOrder.value?.summary,
                 discountAmount: discountAmount,
               ).asSkeleton(enabled: state.isLoading);
             },
@@ -404,9 +411,11 @@ class _UserRideSummaryScreenState extends State<UserRideSummaryScreen> {
 
           BlocBuilder<UserOrderCubit, UserOrderState>(
             builder: (context, state) {
-              final hasEstimate = state.estimateOrder != null;
+              final hasEstimate = state.estimateOrder.value != null;
               final canProceed =
-                  state.isSuccess && hasEstimate && !state.isLoading;
+                  state.estimateOrder.isSuccess &&
+                  hasEstimate &&
+                  !state.isLoading;
 
               // If scheduled, show schedule button, otherwise show proceed button
               if (scheduledAt != null) {

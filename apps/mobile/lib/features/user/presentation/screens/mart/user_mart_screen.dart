@@ -54,17 +54,20 @@ class _UserMartScreenState extends State<UserMartScreen> {
       padding: EdgeInsets.zero,
       body: BlocBuilder<UserMartCubit, UserMartState>(
         builder: (context, state) {
-          return state.whenOr(
-            success: (_) => _buildContent(context, state),
-            failure: (error) => Center(
+          if (state.bestSellers.isLoading) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (state.bestSellers.isFailure) {
+            return Center(
               child: OopsAlertWidget(
                 message:
-                    error.message ?? context.l10n.toast_failed_load_mart_data,
+                    state.bestSellers.message ??
+                    context.l10n.toast_failed_load_mart_data,
                 onRefresh: () => context.read<UserMartCubit>().loadMartHome(),
               ),
-            ),
-            orElse: () => const Center(child: CircularProgressIndicator()),
-          );
+            );
+          }
+          return _buildContent(context, state);
         },
       ),
     );
@@ -77,9 +80,11 @@ class _UserMartScreenState extends State<UserMartScreen> {
         children: [
           _buildCategoryNavigator(context, state.categories),
           Gap(16.h),
-          _buildRecentOrders(context, state.recentOrders),
+          if (state.recentOrders.hasData)
+            _buildRecentOrders(context, state.recentOrders.value!),
           Gap(16.h),
-          _buildBestSellers(context, state.bestSellers),
+          if (state.bestSellers.hasData)
+            _buildBestSellers(context, state.bestSellers.value!),
           Gap(16.h),
         ],
       ),

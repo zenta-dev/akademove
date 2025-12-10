@@ -71,17 +71,22 @@ export const DriverScheduleHandler = priv.router({
 		// FIX: Get the driver ID from the user to set as driverId
 		const driver = await context.repo.driver.main.getByUserId(context.user.id);
 
-		const data = trimObjectValues(body);
-		const result = await context.repo.driver.schedule.create({
-			...data,
-			driverId: driver.id,
-			userId: context.user.id,
-		});
+		return await context.svc.db.transaction(async (tx) => {
+			const data = trimObjectValues(body);
+			const result = await context.repo.driver.schedule.create(
+				{
+					...data,
+					driverId: driver.id,
+					userId: context.user.id,
+				},
+				{ tx },
+			);
 
-		return {
-			status: 200,
-			body: { message: m.server_schedule_created(), data: result },
-		};
+			return {
+				status: 200,
+				body: { message: m.server_schedule_created(), data: result },
+			};
+		});
 	}),
 	update: priv.update.handler(async ({ context, input: { params, body } }) => {
 		// FIX: Drivers can only update their own schedules
@@ -100,13 +105,19 @@ export const DriverScheduleHandler = priv.router({
 			}
 		}
 
-		const data = trimObjectValues(body);
-		const result = await context.repo.driver.schedule.update(params.id, data);
+		return await context.svc.db.transaction(async (tx) => {
+			const data = trimObjectValues(body);
+			const result = await context.repo.driver.schedule.update(
+				params.id,
+				data,
+				{ tx },
+			);
 
-		return {
-			status: 200,
-			body: { message: m.server_schedule_updated(), data: result },
-		};
+			return {
+				status: 200,
+				body: { message: m.server_schedule_updated(), data: result },
+			};
+		});
 	}),
 	remove: priv.remove.handler(async ({ context, input: { params } }) => {
 		// FIX: Drivers can only remove their own schedules
@@ -125,11 +136,13 @@ export const DriverScheduleHandler = priv.router({
 			}
 		}
 
-		await context.repo.driver.schedule.remove(params.id);
+		return await context.svc.db.transaction(async (tx) => {
+			await context.repo.driver.schedule.remove(params.id, { tx });
 
-		return {
-			status: 200,
-			body: { message: m.server_schedule_deleted(), data: null },
-		};
+			return {
+				status: 200,
+				body: { message: m.server_schedule_deleted(), data: null },
+			};
+		});
 	}),
 });

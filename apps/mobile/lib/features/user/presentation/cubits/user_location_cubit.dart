@@ -7,7 +7,7 @@ import 'package:shadcn_flutter/shadcn_flutter.dart';
 class UserLocationCubit extends BaseCubit<UserLocationState> {
   UserLocationCubit({required LocationService locationService})
     : _locationService = locationService,
-      super(UserLocationState());
+      super(const UserLocationState());
 
   final LocationService _locationService;
 
@@ -21,26 +21,40 @@ class UserLocationCubit extends BaseCubit<UserLocationState> {
       try {
         await _locationService.ensureInitialized();
 
+        // Initial loading state? Maybe not needed if we want to keep previous location while fetching.
+        // But let's assume we want to show loading indicator if it takes time.
+        // emit(state.copyWith(location: const OperationResult.loading()));
+
         final loc = await _locationService.getMyLocation(
           accuracy: accuracy,
           fromCache: fromCache,
           forceLocationManager: forceLocationManager,
         );
 
-        emit(state.toSuccess(coordinate: loc));
-        if (loc != null) {
-          final placemark = await _locationService.getPlacemark(
-            lat: loc.y.toDouble(),
-            lng: loc.x.toDouble(),
-          );
-          emit(state.toSuccess(coordinate: loc, placemark: placemark));
-          return loc;
+        if (loc == null) {
+          emit(state.copyWith(location: const OperationResult.idle()));
+          return null;
         }
 
-        emit(state.toSuccess(coordinate: loc));
+        // First emit with coordinate only
+        emit(state.copyWith(location: OperationResult.success((loc, null))));
+
+        final placemark = await _locationService.getPlacemark(
+          lat: loc.y.toDouble(),
+          lng: loc.x.toDouble(),
+        );
+
+        // Second emit with coordinate and placemark
+        emit(
+          state.copyWith(location: OperationResult.success((loc, placemark))),
+        );
         return loc;
       } catch (e) {
-        emit(state.toSuccess());
+        // Wrap generic error in BaseError if possible, or create a generic one
+        final error = e is BaseError
+            ? e
+            : UnknownError(e.toString(), code: ErrorCode.unknown);
+        emit(state.copyWith(location: OperationResult.failed(error)));
         return null;
       }
     }

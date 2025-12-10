@@ -35,25 +35,38 @@ class UserMartCategoryScreen extends StatelessWidget {
               ],
             ),
           ],
-          body: state.whenOr(
-            success: (_) =>
-                _buildMerchantList(context, state.categoryMerchants),
-            failure: (error) => Center(
-              child: OopsAlertWidget(
-                message:
-                    error.message ?? context.l10n.toast_failed_load_merchants,
-                onRefresh: () {
-                  final category = state.selectedCategory;
-                  if (category != null) {
-                    context.read<UserMartCubit>().loadCategoryMerchants(
-                      category: category,
-                    );
-                  }
-                },
-              ),
-            ),
-            orElse: () => const Center(child: CircularProgressIndicator()),
-          ),
+          body: () {
+            final result = state.categoryMerchants;
+
+            if (result.isLoading) {
+              return const Center(child: CircularProgressIndicator());
+            }
+
+            if (result.isFailure) {
+              return Center(
+                child: OopsAlertWidget(
+                  message:
+                      result.error?.message ??
+                      context.l10n.toast_failed_load_merchants,
+                  onRefresh: () {
+                    final category = state.selectedCategory;
+                    if (category != null) {
+                      context.read<UserMartCubit>().loadCategoryMerchants(
+                        category: category,
+                      );
+                    }
+                  },
+                ),
+              );
+            }
+
+            if (result.isSuccess) {
+              return _buildMerchantList(context, result.value ?? []);
+            }
+
+            // Fallback for idle or other states
+            return const Center(child: CircularProgressIndicator());
+          }(),
         );
       },
     );

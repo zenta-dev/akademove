@@ -352,8 +352,8 @@ class _UserRideScreenState extends State<UserRideScreen> {
                               final orderState = context
                                   .read<UserOrderCubit>()
                                   .state;
-                              if (orderState.isSuccess &&
-                                  orderState.estimateOrder != null) {
+                              if (orderState.estimateOrder.isSuccess &&
+                                  orderState.estimateOrder.hasData) {
                                 await context.pushNamed(
                                   Routes.userRideSummary.name,
                                 );

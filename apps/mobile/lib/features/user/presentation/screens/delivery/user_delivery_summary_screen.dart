@@ -27,7 +27,7 @@ class _UserDeliverySummaryScreenState extends State<UserDeliverySummaryScreen> {
     // Load eligible coupons when screen loads
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final deliveryState = context.read<UserDeliveryCubit>().state;
-      final totalAmount = deliveryState.estimate?.summary.totalCost ?? 0;
+      final totalAmount = deliveryState.estimate.value?.summary.totalCost ?? 0;
       if (totalAmount > 0) {
         context.read<CouponCubit>().loadEligibleCoupons(
           serviceType: OrderType.DELIVERY,
@@ -58,11 +58,11 @@ class _UserDeliverySummaryScreenState extends State<UserDeliverySummaryScreen> {
       ],
       body: BlocBuilder<UserDeliveryCubit, UserDeliveryState>(
         builder: (context, state) {
-          if (state.state == CubitState.loading) {
+          if (state.status.isLoading) {
             return const Center(child: CircularProgressIndicator());
           }
 
-          final estimate = state.estimate;
+          final estimate = state.estimate.value;
           if (estimate == null) {
             return Center(
               child: DefaultText(
@@ -143,7 +143,8 @@ class _UserDeliverySummaryScreenState extends State<UserDeliverySummaryScreen> {
                                       discountAmount =
                                           cubit
                                               .state
-                                              .data
+                                              .eligibleCoupons
+                                              .value
                                               ?.bestDiscountAmount ??
                                           0;
                                     } else {

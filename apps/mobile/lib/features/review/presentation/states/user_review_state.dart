@@ -1,45 +1,61 @@
 part of '_export.dart';
 
-@MappableClass(
-  generateMethods:
-      GenerateMethods.stringify | GenerateMethods.equals | GenerateMethods.copy,
-)
-class UserReviewState extends BaseState2 with UserReviewStateMappable {
-  UserReviewState({
+class UserReviewState extends Equatable {
+  const UserReviewState({
+    this.status = const OperationResult.idle(),
     this.submittedReview,
     this.orderReviews = const [],
     this.canReview = false,
-    super.state,
-    super.message,
-    super.error,
   });
 
+  final OperationResult<void> status;
   final Review? submittedReview;
   final List<Review> orderReviews;
   final bool canReview;
 
-  @override
-  UserReviewState toInitial() => UserReviewState(state: CubitState.initial);
+  bool get isLoading => status.isLoading;
+  bool get isFailure => status.isFailure;
+  bool get isSuccess => status.isSuccess;
+  BaseError? get error => status.error;
+  String? get message => status.message;
 
   @override
-  UserReviewState toLoading() => copyWith(state: CubitState.loading);
+  List<Object?> get props => [status, submittedReview, orderReviews, canReview];
 
-  @override
-  UserReviewState toSuccess({
+  UserReviewState copyWith({
+    OperationResult<void>? status,
     Review? submittedReview,
     List<Review>? orderReviews,
     bool? canReview,
+  }) {
+    return UserReviewState(
+      status: status ?? this.status,
+      submittedReview: submittedReview ?? this.submittedReview,
+      orderReviews: orderReviews ?? this.orderReviews,
+      canReview: canReview ?? this.canReview,
+    );
+  }
+
+  UserReviewState toLoading() =>
+      copyWith(status: const OperationResult.loading());
+
+  UserReviewState toSuccess({
     String? message,
-  }) => copyWith(
-    state: CubitState.success,
-    submittedReview: submittedReview ?? this.submittedReview,
-    orderReviews: orderReviews ?? this.orderReviews,
-    canReview: canReview ?? this.canReview,
-    message: message,
-    error: null,
-  );
+    Review? submittedReview,
+    List<Review>? orderReviews,
+    bool? canReview,
+  }) {
+    return copyWith(
+      status: OperationResult.success(null, message: message),
+      submittedReview: submittedReview,
+      orderReviews: orderReviews,
+      canReview: canReview,
+    );
+  }
+
+  UserReviewState toFailure(BaseError error) =>
+      copyWith(status: OperationResult.failed(error));
 
   @override
-  UserReviewState toFailure(BaseError error, {String? message}) =>
-      copyWith(state: CubitState.failure, error: error, message: message);
+  bool get stringify => true;
 }

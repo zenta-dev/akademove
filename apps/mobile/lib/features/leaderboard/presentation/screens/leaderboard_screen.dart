@@ -54,7 +54,7 @@ class _LeaderboardViewState extends State<_LeaderboardView>
       ),
       body: BlocBuilder<LeaderboardCubit, LeaderboardState>(
         builder: (context, state) {
-          if (state.isLoading && state.leaderboards.isEmpty) {
+          if (state.isLoading) {
             return const Center(child: CircularProgressIndicator());
           }
 
@@ -109,22 +109,27 @@ class _LeaderboardViewState extends State<_LeaderboardView>
   }
 
   Widget _buildLeaderboardTab(LeaderboardState state) {
-    if (state.leaderboards.isEmpty) {
+    final leaderboards = state.leaderboards.value ?? [];
+
+    if (leaderboards.isEmpty) {
       return Center(child: Text(context.l10n.text_no_rankings_yet));
     }
 
     return ListView.builder(
       padding: EdgeInsets.all(16.w),
-      itemCount: state.leaderboards.length,
+      itemCount: leaderboards.length,
       itemBuilder: (context, index) {
-        final leaderboard = state.leaderboards[index];
+        final leaderboard = leaderboards[index];
         return _LeaderboardCard(leaderboard: leaderboard);
       },
     );
   }
 
   Widget _buildBadgesTab(LeaderboardState state) {
-    if (state.badges.isEmpty) {
+    final badges = state.badges.value ?? [];
+    final userBadges = state.userBadges.value ?? [];
+
+    if (badges.isEmpty) {
       return Center(child: Text(context.l10n.leaderboard_no_badges));
     }
 
@@ -136,10 +141,10 @@ class _LeaderboardViewState extends State<_LeaderboardView>
         mainAxisSpacing: 12.h,
         childAspectRatio: 0.85,
       ),
-      itemCount: state.badges.length,
+      itemCount: badges.length,
       itemBuilder: (context, index) {
-        final badge = state.badges[index];
-        final isEarned = state.userBadges.any((ub) => ub.badgeId == badge.id);
+        final badge = badges[index];
+        final isEarned = userBadges.any((ub) => ub.badgeId == badge.id);
         return _BadgeCard(badge: badge, isEarned: isEarned);
       },
     );

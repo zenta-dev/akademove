@@ -56,15 +56,15 @@ class _ReportUserScreenState extends State<ReportUserScreen> {
     if (!mounted) return;
 
     final state = cubit.state;
-    if (state.isSuccess) {
+    if (state.status.isSuccess) {
       context.showMyToast(
         context.l10n.toast_report_submitted,
         type: ToastType.success,
       );
       context.pop(true);
-    } else if (state.isFailure) {
+    } else if (state.status.isFailure) {
       context.showMyToast(
-        state.error?.message ?? context.l10n.toast_failed_submit_report,
+        state.status.error?.message ?? context.l10n.toast_failed_submit_report,
         type: ToastType.failed,
       );
     }
@@ -76,9 +76,10 @@ class _ReportUserScreenState extends State<ReportUserScreen> {
       headers: [DefaultAppBar(title: context.l10n.report_user)],
       body: BlocListener<ReportCubit, ReportState>(
         listener: (context, state) {
-          if (state.isFailure) {
+          if (state.status.isFailure) {
             context.showMyToast(
-              state.error?.message ?? context.l10n.toast_failed_submit_report,
+              state.status.error?.message ??
+                  context.l10n.toast_failed_submit_report,
               type: ToastType.failed,
             );
           }
@@ -273,9 +274,9 @@ class _ReportUserScreenState extends State<ReportUserScreen> {
         return SizedBox(
           width: double.infinity,
           child: Button.primary(
-            enabled: _canSubmit && !state.isLoading,
-            onPressed: state.isLoading ? null : _submitReport,
-            child: state.isLoading
+            enabled: _canSubmit && !state.status.isLoading,
+            onPressed: state.status.isLoading ? null : _submitReport,
+            child: state.status.isLoading
                 ? const Submiting()
                 : Text(context.l10n.button_submit_report),
           ),

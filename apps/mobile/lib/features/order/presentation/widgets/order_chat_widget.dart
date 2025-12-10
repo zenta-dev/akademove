@@ -4,6 +4,7 @@ import 'package:akademove/locator.dart';
 import 'package:api_client/api_client.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:akademove/core/_export.dart';
 
 class OrderChatWidget extends StatefulWidget {
   const OrderChatWidget({required this.orderId, super.key});
@@ -78,17 +79,17 @@ class _OrderChatWidgetState extends State<OrderChatWidget> {
           Expanded(
             child: BlocBuilder<OrderChatCubit, OrderChatState>(
               builder: (context, state) {
-                if (state.isInitial || state.isLoading) {
+                if (state.isInitial || state.messages.isLoading) {
                   return const Center(child: CircularProgressIndicator());
                 }
 
-                if (state.isFailure) {
+                if (state.messages.isFailure) {
                   return Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          'Error: ${state.error?.message ?? "Unknown error"}',
+                          'Error: ${state.messages.error?.message ?? "Unknown error"}',
                         ),
                         const SizedBox(height: 16),
                         ElevatedButton(
@@ -100,7 +101,7 @@ class _OrderChatWidgetState extends State<OrderChatWidget> {
                   );
                 }
 
-                final messages = state.messages ?? [];
+                final messages = state.messages.value ?? [];
                 if (messages.isEmpty) {
                   return Center(child: Text(context.l10n.chat_no_messages));
                 }
@@ -223,9 +224,12 @@ class _QuickMessageChips extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<QuickMessageCubit, QuickMessageState>(
+    return BlocBuilder<
+      QuickMessageCubit,
+      OperationResult<List<QuickMessageTemplate>>
+    >(
       builder: (context, state) {
-        final templates = state.templates;
+        final templates = state.value;
         if (!state.isSuccess || templates == null || templates.isEmpty) {
           return const SizedBox.shrink();
         }

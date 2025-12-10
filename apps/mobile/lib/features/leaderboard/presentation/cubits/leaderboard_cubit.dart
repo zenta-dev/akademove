@@ -8,7 +8,7 @@ class LeaderboardCubit extends BaseCubit<LeaderboardState> {
     required BadgeRepository badgeRepository,
   }) : _leaderboardRepository = leaderboardRepository,
        _badgeRepository = badgeRepository,
-       super(LeaderboardState());
+       super(const LeaderboardState());
 
   final LeaderboardRepository _leaderboardRepository;
   final BadgeRepository _badgeRepository;
@@ -16,7 +16,13 @@ class LeaderboardCubit extends BaseCubit<LeaderboardState> {
   /// Initialize the leaderboard feature by loading all data
   Future<void> init() async {
     try {
-      emit(state.toLoading());
+      emit(
+        state.copyWith(
+          leaderboards: const OperationResult.loading(),
+          badges: const OperationResult.loading(),
+          userBadges: const OperationResult.loading(),
+        ),
+      );
 
       // Load all data in parallel
       final results = await Future.wait([
@@ -30,11 +36,10 @@ class LeaderboardCubit extends BaseCubit<LeaderboardState> {
       final userBadgesRes = results[2] as BaseResponse<List<UserBadge>>;
 
       emit(
-        state.toSuccess(
-          message: 'Loaded successfully',
-          leaderboards: leaderboardsRes.data,
-          badges: badgesRes.data,
-          userBadges: userBadgesRes.data,
+        state.copyWith(
+          leaderboards: OperationResult.success(leaderboardsRes.data),
+          badges: OperationResult.success(badgesRes.data),
+          userBadges: OperationResult.success(userBadgesRes.data),
         ),
       );
     } on BaseError catch (e, st) {
@@ -43,7 +48,13 @@ class LeaderboardCubit extends BaseCubit<LeaderboardState> {
         error: e,
         stackTrace: st,
       );
-      emit(state.toFailure(e));
+      emit(
+        state.copyWith(
+          leaderboards: OperationResult.failed(e),
+          badges: OperationResult.failed(e),
+          userBadges: OperationResult.failed(e),
+        ),
+      );
     }
   }
 
@@ -54,7 +65,7 @@ class LeaderboardCubit extends BaseCubit<LeaderboardState> {
     PaginationOrder? order,
   }) async => await taskManager.execute('LC-loadLeaderboards', () async {
     try {
-      emit(state.toLoading());
+      emit(state.copyWith(leaderboards: const OperationResult.loading()));
 
       final res = await _leaderboardRepository.list(
         limit: limit,
@@ -62,14 +73,18 @@ class LeaderboardCubit extends BaseCubit<LeaderboardState> {
         order: order,
       );
 
-      emit(state.toSuccess(message: res.message, leaderboards: res.data));
+      emit(
+        state.copyWith(
+          leaderboards: OperationResult.success(res.data, message: res.message),
+        ),
+      );
     } on BaseError catch (e, st) {
       logger.e(
         '[LeaderboardCubit] - loadLeaderboards error: ${e.message}',
         error: e,
         stackTrace: st,
       );
-      emit(state.toFailure(e));
+      emit(state.copyWith(leaderboards: OperationResult.failed(e)));
     }
   });
 
@@ -80,7 +95,7 @@ class LeaderboardCubit extends BaseCubit<LeaderboardState> {
     PaginationOrder? order,
   }) async => await taskManager.execute('LC-loadBadges', () async {
     try {
-      emit(state.toLoading());
+      emit(state.copyWith(badges: const OperationResult.loading()));
 
       final res = await _badgeRepository.listBadges(
         limit: limit,
@@ -88,14 +103,18 @@ class LeaderboardCubit extends BaseCubit<LeaderboardState> {
         order: order,
       );
 
-      emit(state.toSuccess(message: res.message, badges: res.data));
+      emit(
+        state.copyWith(
+          badges: OperationResult.success(res.data, message: res.message),
+        ),
+      );
     } on BaseError catch (e, st) {
       logger.e(
         '[LeaderboardCubit] - loadBadges error: ${e.message}',
         error: e,
         stackTrace: st,
       );
-      emit(state.toFailure(e));
+      emit(state.copyWith(badges: OperationResult.failed(e)));
     }
   });
 
@@ -106,7 +125,7 @@ class LeaderboardCubit extends BaseCubit<LeaderboardState> {
     PaginationOrder? order,
   }) async => await taskManager.execute('LC-loadUserBadges', () async {
     try {
-      emit(state.toLoading());
+      emit(state.copyWith(userBadges: const OperationResult.loading()));
 
       final res = await _badgeRepository.listUserBadges(
         limit: limit,
@@ -114,14 +133,18 @@ class LeaderboardCubit extends BaseCubit<LeaderboardState> {
         order: order,
       );
 
-      emit(state.toSuccess(message: res.message, userBadges: res.data));
+      emit(
+        state.copyWith(
+          userBadges: OperationResult.success(res.data, message: res.message),
+        ),
+      );
     } on BaseError catch (e, st) {
       logger.e(
         '[LeaderboardCubit] - loadUserBadges error: ${e.message}',
         error: e,
         stackTrace: st,
       );
-      emit(state.toFailure(e));
+      emit(state.copyWith(userBadges: OperationResult.failed(e)));
     }
   });
 
@@ -129,21 +152,28 @@ class LeaderboardCubit extends BaseCubit<LeaderboardState> {
   Future<void> loadMyRankings({required String userId, int? limit}) async =>
       await taskManager.execute('LC-loadMyRankings', () async {
         try {
-          emit(state.toLoading());
+          emit(state.copyWith(myRankings: const OperationResult.loading()));
 
           final res = await _leaderboardRepository.getMyRankings(
             userId: userId,
             limit: limit,
           );
 
-          emit(state.toSuccess(message: res.message, myRankings: res.data));
+          emit(
+            state.copyWith(
+              myRankings: OperationResult.success(
+                res.data,
+                message: res.message,
+              ),
+            ),
+          );
         } on BaseError catch (e, st) {
           logger.e(
             '[LeaderboardCubit] - loadMyRankings error: ${e.message}',
             error: e,
             stackTrace: st,
           );
-          emit(state.toFailure(e));
+          emit(state.copyWith(myRankings: OperationResult.failed(e)));
         }
       });
 

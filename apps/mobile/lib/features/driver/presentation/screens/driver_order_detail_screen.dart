@@ -59,15 +59,18 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
       child: BlocConsumer<DriverOrderCubit, DriverOrderState>(
         listener: (context, state) {
           // Show error messages
-          if (state.isFailure && state.error != null) {
+          if (state.fetchOrderResult.isFailure && state.error != null) {
             context.showMyToast(
-              state.error?.message ?? context.l10n.an_error_occurred,
+              state.fetchOrderResult.error?.message ??
+                  context.l10n.an_error_occurred,
               type: ToastType.failed,
             );
           }
 
           // Show success messages
-          final message = state.message;
+          final message = state.updateStatusResult.data != null
+              ? "Status updated"
+              : null;
           if (message != null && message.isNotEmpty) {
             context.showMyToast(message, type: ToastType.success);
           }
@@ -497,7 +500,7 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
 
   Widget _buildActionButtons(DriverOrderState state, Order order) {
     final status = state.orderStatus;
-    final isLoading = state.isLoading;
+    final isLoading = state.fetchOrderResult.isLoading;
 
     // Pending order - show accept/reject
     if (status == OrderStatus.REQUESTED || status == OrderStatus.MATCHING) {

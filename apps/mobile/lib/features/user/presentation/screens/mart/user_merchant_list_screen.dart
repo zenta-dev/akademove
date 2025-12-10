@@ -72,9 +72,9 @@ class _UserMerchantListScreenState extends State<UserMerchantListScreen> {
       body: BlocBuilder<UserMerchantListCubit, UserMerchantListState>(
         builder: (context, state) {
           // Error state
-          if (state.isFailure) {
+          if (state.merchants.isFailure) {
             return _ErrorView(
-              error: state.error?.message ?? 'Failed to load merchants',
+              error: state.merchants.message ?? 'Failed to load merchants',
               onRetry: () =>
                   context.read<UserMerchantListCubit>().loadMerchants(),
             );
@@ -104,13 +104,15 @@ class _UserMerchantListScreenState extends State<UserMerchantListScreen> {
 
   /// Build merchant list view
   Widget _buildMerchantList(BuildContext context, UserMerchantListState state) {
+    final merchants = state.merchants.value ?? [];
+
     // Loading state - show initial loading
-    if (state.isLoading && state.merchants.isEmpty) {
+    if (state.merchants.isLoading && merchants.isEmpty) {
       return const _LoadingView();
     }
 
     // Empty state
-    if (state.isEmpty) {
+    if (state.isEmpty && !state.merchants.isLoading) {
       return _EmptyView(
         onRetry: () => context.read<UserMerchantListCubit>().loadMerchants(),
       );
@@ -121,15 +123,15 @@ class _UserMerchantListScreenState extends State<UserMerchantListScreen> {
       controller: _scrollController,
       padding: EdgeInsets.only(bottom: 16.h),
       itemCount:
-          state.merchants.length +
-          (state.isLoading && state.merchants.isNotEmpty ? 1 : 0),
+          merchants.length +
+          (state.merchants.isLoading && merchants.isNotEmpty ? 1 : 0),
       itemBuilder: (context, index) {
         // Loading indicator at the end
-        if (index == state.merchants.length) {
+        if (index == merchants.length) {
           return const _PaginationLoadingView();
         }
 
-        final merchant = state.merchants[index];
+        final merchant = merchants[index];
         return MerchantCardWidget(
           merchant: merchant,
           onTap: () {

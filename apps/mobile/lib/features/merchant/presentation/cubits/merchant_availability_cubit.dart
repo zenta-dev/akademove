@@ -4,7 +4,7 @@ import 'package:akademove/features/features.dart';
 class MerchantAvailabilityCubit extends BaseCubit<MerchantAvailabilityState> {
   MerchantAvailabilityCubit({required MerchantRepository merchantRepository})
     : _merchantRepository = merchantRepository,
-      super(MerchantAvailabilityState.initial());
+      super(const MerchantAvailabilityState());
 
   final MerchantRepository _merchantRepository;
 
@@ -12,12 +12,16 @@ class MerchantAvailabilityCubit extends BaseCubit<MerchantAvailabilityState> {
   Future<void> setOnlineStatus(bool isOnline) async =>
       await taskManager.execute('MAC-sOS', () async {
         try {
-          emit(MerchantAvailabilityState.loading());
+          emit(state.copyWith(availability: const OperationResult.loading()));
           final response = await _merchantRepository.setOnlineStatus(isOnline);
           emit(
-            MerchantAvailabilityState.success(
-              response.data,
-              message: isOnline ? 'You are now online' : 'You are now offline',
+            state.copyWith(
+              availability: OperationResult.success(
+                response.data,
+                message: isOnline
+                    ? 'You are now online'
+                    : 'You are now offline',
+              ),
             ),
           );
         } on BaseError catch (e, st) {
@@ -26,7 +30,7 @@ class MerchantAvailabilityCubit extends BaseCubit<MerchantAvailabilityState> {
             error: e,
             stackTrace: st,
           );
-          emit(MerchantAvailabilityState.failure(e));
+          emit(state.copyWith(availability: OperationResult.failed(e)));
         }
       });
 
@@ -34,16 +38,18 @@ class MerchantAvailabilityCubit extends BaseCubit<MerchantAvailabilityState> {
   Future<void> setOrderTakingStatus(bool isTakingOrders) async =>
       await taskManager.execute('MAC-sOT', () async {
         try {
-          emit(MerchantAvailabilityState.loading());
+          emit(state.copyWith(availability: const OperationResult.loading()));
           final response = await _merchantRepository.setOrderTakingStatus(
             isTakingOrders,
           );
           emit(
-            MerchantAvailabilityState.success(
-              response.data,
-              message: isTakingOrders
-                  ? 'You are now taking orders'
-                  : 'You have stopped taking orders',
+            state.copyWith(
+              availability: OperationResult.success(
+                response.data,
+                message: isTakingOrders
+                    ? 'You are now taking orders'
+                    : 'You have stopped taking orders',
+              ),
             ),
           );
         } on BaseError catch (e, st) {
@@ -52,7 +58,7 @@ class MerchantAvailabilityCubit extends BaseCubit<MerchantAvailabilityState> {
             error: e,
             stackTrace: st,
           );
-          emit(MerchantAvailabilityState.failure(e));
+          emit(state.copyWith(availability: OperationResult.failed(e)));
         }
       });
 
@@ -60,14 +66,16 @@ class MerchantAvailabilityCubit extends BaseCubit<MerchantAvailabilityState> {
   Future<void> setOperatingStatus(String operatingStatus) async =>
       await taskManager.execute('MAC-sStatus', () async {
         try {
-          emit(MerchantAvailabilityState.loading());
+          emit(state.copyWith(availability: const OperationResult.loading()));
           final response = await _merchantRepository.setOperatingStatus(
             operatingStatus,
           );
           emit(
-            MerchantAvailabilityState.success(
-              response.data,
-              message: 'Store status updated to $operatingStatus',
+            state.copyWith(
+              availability: OperationResult.success(
+                response.data,
+                message: 'Store status updated to $operatingStatus',
+              ),
             ),
           );
         } on BaseError catch (e, st) {
@@ -76,7 +84,7 @@ class MerchantAvailabilityCubit extends BaseCubit<MerchantAvailabilityState> {
             error: e,
             stackTrace: st,
           );
-          emit(MerchantAvailabilityState.failure(e));
+          emit(state.copyWith(availability: OperationResult.failed(e)));
         }
       });
 
@@ -84,12 +92,14 @@ class MerchantAvailabilityCubit extends BaseCubit<MerchantAvailabilityState> {
   Future<void> getAvailabilityStatus() async =>
       await taskManager.execute('MAC-gAS', () async {
         try {
-          emit(MerchantAvailabilityState.loading());
+          emit(state.copyWith(availability: const OperationResult.loading()));
           final response = await _merchantRepository.getAvailabilityStatus();
           emit(
-            MerchantAvailabilityState.success(
-              response.data,
-              message: 'Availability status loaded',
+            state.copyWith(
+              availability: OperationResult.success(
+                response.data,
+                message: 'Availability status loaded',
+              ),
             ),
           );
         } on BaseError catch (e, st) {
@@ -98,9 +108,9 @@ class MerchantAvailabilityCubit extends BaseCubit<MerchantAvailabilityState> {
             error: e,
             stackTrace: st,
           );
-          emit(MerchantAvailabilityState.failure(e));
+          emit(state.copyWith(availability: OperationResult.failed(e)));
         }
       });
 
-  void reset() => emit(MerchantAvailabilityState.initial());
+  void reset() => emit(const MerchantAvailabilityState());
 }

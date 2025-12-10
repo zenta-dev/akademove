@@ -265,9 +265,11 @@ class _UserDeliveryScreenState extends State<UserDeliveryScreen> {
       ],
       body: BlocListener<UserOrderCubit, UserOrderState>(
         listener: (context, state) {
-          if (state.isFailure && state.error != null) {
+          if (state.estimateOrder.isFailure &&
+              state.estimateOrder.error != null) {
             context.showMyToast(
-              state.error?.message ?? context.l10n.toast_failed_estimate_order,
+              state.estimateOrder.error?.message ??
+                  context.l10n.toast_failed_estimate_order,
               type: ToastType.failed,
             );
           }
@@ -348,8 +350,8 @@ class _UserDeliveryScreenState extends State<UserDeliveryScreen> {
                               final orderState = context
                                   .read<UserOrderCubit>()
                                   .state;
-                              if (orderState.isSuccess &&
-                                  orderState.estimateOrder != null) {
+                              if (orderState.estimateOrder.isSuccess &&
+                                  orderState.estimateOrder.value != null) {
                                 await context.pushNamed(
                                   Routes.userDeliverySummary.name,
                                 );

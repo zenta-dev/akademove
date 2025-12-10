@@ -136,7 +136,7 @@ export function hasRoles(userRole?: UserRole, ...roles: RoleAccess[]) {
 	return hasRole;
 }
 
-export const requireRoles = (...roles: RoleAccess[]) =>
+export const requireRoles = (..._roles: RoleAccess[]) =>
 	base.middleware(async ({ context, next }) => {
 		// const userRole = context.user?.role;
 		// if (!userRole) {

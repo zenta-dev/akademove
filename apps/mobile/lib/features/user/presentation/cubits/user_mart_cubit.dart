@@ -5,7 +5,7 @@ import 'package:api_client/api_client.dart';
 class UserMartCubit extends BaseCubit<UserMartState> {
   UserMartCubit({required MerchantRepository merchantRepository})
     : _merchantRepository = merchantRepository,
-      super(UserMartState());
+      super(const UserMartState());
 
   final MerchantRepository _merchantRepository;
 
@@ -13,7 +13,12 @@ class UserMartCubit extends BaseCubit<UserMartState> {
   Future<void>
   loadMartHome() async => await taskManager.execute('UMC-lMH', () async {
     try {
-      emit(state.toLoading());
+      emit(
+        state.copyWith(
+          bestSellers: const OperationResult.loading(),
+          // recentOrders: const OperationResult.loading(), // Optional: load separately or together
+        ),
+      );
 
       // Load best sellers from API
       final bestSellersRes = await _merchantRepository.getBestSellers(
@@ -44,10 +49,12 @@ class UserMartCubit extends BaseCubit<UserMartState> {
       final recentOrders = <Order>[];
 
       emit(
-        state.toSuccess(
-          bestSellers: bestSellers,
-          recentOrders: recentOrders,
-          message: bestSellersRes.message,
+        state.copyWith(
+          bestSellers: OperationResult.success(
+            bestSellers,
+            message: bestSellersRes.message,
+          ),
+          recentOrders: OperationResult.success(recentOrders),
         ),
       );
     } on BaseError catch (e, st) {
@@ -56,7 +63,7 @@ class UserMartCubit extends BaseCubit<UserMartState> {
         error: e,
         stackTrace: st,
       );
-      emit(state.toFailure(e));
+      emit(state.copyWith(bestSellers: OperationResult.failed(e)));
     }
   });
 
@@ -65,7 +72,12 @@ class UserMartCubit extends BaseCubit<UserMartState> {
   Future<void> loadCategoryMerchants({required String category}) async =>
       await taskManager.execute('UMC-lCM-$category', () async {
         try {
-          emit(state.toLoading());
+          emit(
+            state.copyWith(
+              categoryMerchants: const OperationResult.loading(),
+              selectedCategory: category,
+            ),
+          );
 
           // Use list() with category filter
           final res = await _merchantRepository.list(
@@ -74,10 +86,12 @@ class UserMartCubit extends BaseCubit<UserMartState> {
           );
 
           emit(
-            state.toSuccess(
+            state.copyWith(
               selectedCategory: category,
-              categoryMerchants: res.data,
-              message: res.message,
+              categoryMerchants: OperationResult.success(
+                res.data,
+                message: res.message,
+              ),
             ),
           );
         } on BaseError catch (e, st) {
@@ -86,10 +100,10 @@ class UserMartCubit extends BaseCubit<UserMartState> {
             error: e,
             stackTrace: st,
           );
-          emit(state.toFailure(e));
+          emit(state.copyWith(categoryMerchants: OperationResult.failed(e)));
         }
       });
 
   /// Reset to initial state
-  void reset() => emit(UserMartState());
+  void reset() => emit(const UserMartState());
 }

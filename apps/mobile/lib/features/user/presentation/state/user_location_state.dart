@@ -1,43 +1,22 @@
 part of '_export.dart';
 
-@MappableClass(
-  generateMethods:
-      GenerateMethods.stringify | GenerateMethods.equals | GenerateMethods.copy,
-)
-class UserLocationState extends BaseState2 with UserLocationStateMappable {
-  UserLocationState({
-    this.coordinate,
-    this.placemark,
-    super.state,
-    super.message,
-    super.error,
-  });
+class UserLocationState extends Equatable {
+  const UserLocationState({this.location = const OperationResult.idle()});
 
-  final Coordinate? coordinate;
-  final Placemark? placemark;
+  final OperationResult<(Coordinate, Placemark?)> location;
+
+  Coordinate? get coordinate => location.value?.$1;
+  Placemark? get placemark => location.value?.$2;
 
   @override
-  UserLocationState toInitial() =>
-      copyWith(state: CubitState.initial, message: null, error: null);
+  List<Object> get props => [location];
+
+  UserLocationState copyWith({
+    OperationResult<(Coordinate, Placemark?)>? location,
+  }) {
+    return UserLocationState(location: location ?? this.location);
+  }
 
   @override
-  UserLocationState toLoading() =>
-      copyWith(state: CubitState.loading, message: null, error: null);
-
-  @override
-  UserLocationState toSuccess({
-    Coordinate? coordinate,
-    Placemark? placemark,
-    String? message,
-  }) => copyWith(
-    state: CubitState.success,
-    coordinate: coordinate ?? this.coordinate,
-    placemark: placemark ?? this.placemark,
-    message: message,
-    error: null,
-  );
-
-  @override
-  UserLocationState toFailure(BaseError error, {String? message}) =>
-      copyWith(state: CubitState.failure, error: error, message: message);
+  bool get stringify => true;
 }

@@ -6,7 +6,7 @@ import 'package:api_client/api_client.dart';
 class UserMerchantDetailCubit extends BaseCubit<UserMerchantDetailState> {
   UserMerchantDetailCubit({required MerchantRepository merchantRepository})
     : _merchantRepository = merchantRepository,
-      super(UserMerchantDetailState());
+      super(const UserMerchantDetailState());
 
   final MerchantRepository _merchantRepository;
   String? _currentMerchantId; // Track current merchant for switching detection
@@ -19,7 +19,12 @@ class UserMerchantDetailCubit extends BaseCubit<UserMerchantDetailState> {
     required Merchant merchant,
   }) async => await taskManager.execute('UMDC-gMD-$merchantId', () async {
     try {
-      emit(state.toLoading());
+      emit(
+        state.copyWith(
+          merchant: const OperationResult.loading(),
+          menuByCategory: const OperationResult.loading(),
+        ),
+      );
       _currentMerchantId = merchantId;
 
       // Fetch menu items for specific merchant
@@ -33,10 +38,14 @@ class UserMerchantDetailCubit extends BaseCubit<UserMerchantDetailState> {
       final groupedMenus = _groupByCategory(menuItems);
 
       emit(
-        state.toSuccess(
-          merchant: merchant, // 👈 Use passed merchant instead of fetching
-          menuByCategory: groupedMenus,
-          message: 'Menu items loaded',
+        state.copyWith(
+          merchant: OperationResult.success(
+            merchant,
+          ), // 👈 Use passed merchant instead of fetching
+          menuByCategory: OperationResult.success(
+            groupedMenus,
+            message: 'Menu items loaded',
+          ),
         ),
       );
     } on BaseError catch (e, st) {
@@ -45,7 +54,12 @@ class UserMerchantDetailCubit extends BaseCubit<UserMerchantDetailState> {
         error: e,
         stackTrace: st,
       );
-      emit(state.toFailure(e, message: e.message));
+      emit(
+        state.copyWith(
+          merchant: OperationResult.failed(e),
+          menuByCategory: OperationResult.failed(e),
+        ),
+      );
     }
   });
 
@@ -75,7 +89,7 @@ class UserMerchantDetailCubit extends BaseCubit<UserMerchantDetailState> {
             state.copyWith(
               warningToast:
                   '${freshItem.name} stock reduced to ${freshItem.stock}',
-              menuByCategory: freshGrouped,
+              menuByCategory: OperationResult.success(freshGrouped),
             ),
           );
           break;
@@ -84,7 +98,10 @@ class UserMerchantDetailCubit extends BaseCubit<UserMerchantDetailState> {
 
       if (!hasStockIssue) {
         // Update menu in case of other changes
-        emit(state.copyWith(menuByCategory: freshGrouped));
+        // Use existing state message if available, or default
+        emit(
+          state.copyWith(menuByCategory: OperationResult.success(freshGrouped)),
+        );
       }
     } catch (e, st) {
       logger.e('Error checking stock changes', error: e, stackTrace: st);
@@ -108,7 +125,7 @@ class UserMerchantDetailCubit extends BaseCubit<UserMerchantDetailState> {
 
   /// Get item from grouped menus by ID
   MerchantMenu? _getItemFromMenus(String itemId) {
-    final menuByCategory = state.menuByCategory;
+    final menuByCategory = state.menuByCategory.value;
     if (menuByCategory == null) return null;
 
     for (var categoryItems in menuByCategory.values) {
@@ -128,6 +145,6 @@ class UserMerchantDetailCubit extends BaseCubit<UserMerchantDetailState> {
   /// Reset to initial state
   void reset() {
     _currentMerchantId = null;
-    emit(state.reset());
+    emit(const UserMerchantDetailState());
   }
 }

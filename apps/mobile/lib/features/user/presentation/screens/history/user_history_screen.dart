@@ -48,38 +48,41 @@ class UserHistoryScreen extends StatelessWidget {
       scrollable: false,
       body: BlocBuilder<UserOrderCubit, UserOrderState>(
         builder: (context, state) {
-          return state.whenOr(
-            success: (message) {
-              final orders = state.orderHistories;
+          final result = state.orderHistories;
 
-              if (orders == null || orders.isEmpty) {
-                return _buildFail(
-                  context,
-                  message: context.l10n.text_no_order_history,
-                );
-              }
-
-              return ListView.separated(
-                padding: EdgeInsets.zero,
-                separatorBuilder: (context, index) => Gap(16.h),
-                itemCount: orders.length,
-                itemBuilder: (context, index) => UserOrderCardWidget(
-                  order: orders[index],
-                ).sized(width: 1.sw),
-              );
-            },
-            failure: (error) => _buildFail(
-              context,
-              message: error.message ?? 'An unexpected error occurred',
-            ),
-            orElse: () => ListView.separated(
+          if (result.isLoading) {
+            return ListView.separated(
               padding: EdgeInsets.zero,
               separatorBuilder: (context, index) => Gap(16.h),
               itemCount: 10,
               itemBuilder: (context, index) => const UserOrderCardWidget(
                 order: dummyOrder,
               ).sized(width: double.infinity).asSkeleton(),
-            ),
+            );
+          }
+
+          if (result.isFailure) {
+            return _buildFail(
+              context,
+              message: result.error?.message ?? 'An unexpected error occurred',
+            );
+          }
+
+          final orders = result.value;
+
+          if (orders == null || orders.isEmpty) {
+            return _buildFail(
+              context,
+              message: context.l10n.text_no_order_history,
+            );
+          }
+
+          return ListView.separated(
+            padding: EdgeInsets.zero,
+            separatorBuilder: (context, index) => Gap(16.h),
+            itemCount: orders.length,
+            itemBuilder: (context, index) =>
+                UserOrderCardWidget(order: orders[index]).sized(width: 1.sw),
           );
         },
       ),

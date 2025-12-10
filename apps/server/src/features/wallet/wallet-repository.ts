@@ -13,7 +13,7 @@ import type { WithTx, WithUserId } from "@/core/interface";
 import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
 import type { walletDatabase } from "@/core/tables/wallet";
-import { toNumberSafe, toStringNumberSafe } from "@/utils";
+import { log, toNumberSafe, toStringNumberSafe } from "@/utils";
 import {
 	type WalletBalanceService,
 	WalletMonthlySummaryService,
@@ -72,7 +72,7 @@ export class WalletRepository extends BaseRepository {
 		try {
 			const { year, month, userId } = params;
 			const tx = opts?.tx ?? this.db;
-			const wallet = await this.#ensurewallet(userId);
+			const wallet = await this.#ensurewallet(userId, opts);
 
 			// Delegate monthly summary calculation to WalletMonthlySummaryService
 			return await WalletMonthlySummaryService.getMonthlySummary(tx, {
@@ -134,6 +134,112 @@ export class WalletRepository extends BaseRepository {
 		}
 	}
 
+	/**
+	 * Transfers amount between wallets atomically
+	 *
+	 * Uses atomic balance operations to prevent race conditions.
+	 * Both sender deduction and recipient addition are performed
+	 * using database-level atomic updates.
+	 */
+	async transfer(
+		params: {
+			senderWalletId: string;
+			recipientWalletId: string;
+			amount: number;
+		},
+		opts: WithTx,
+	): Promise<{
+		senderBalanceBefore: number;
+		senderBalanceAfter: number;
+		recipientBalanceBefore: number;
+		recipientBalanceAfter: number;
+	}> {
+		try {
+			const { senderWalletId, recipientWalletId, amount } = params;
+			const { tx } = opts;
+
+			// Atomic deduction from sender (will fail if insufficient balance)
+			const senderResult = await this.balanceService.deduct(
+				{ walletId: senderWalletId, amount },
+				{ tx },
+			);
+
+			// Atomic addition to recipient
+			const recipientResult = await this.balanceService.add(
+				{ walletId: recipientWalletId, amount },
+				{ tx },
+			);
+
+			log.info(
+				{
+					senderWalletId,
+					recipientWalletId,
+					amount,
+					senderBalanceBefore: senderResult.balanceBefore,
+					senderBalanceAfter: senderResult.balanceAfter,
+					recipientBalanceBefore: recipientResult.balanceBefore,
+					recipientBalanceAfter: recipientResult.balanceAfter,
+				},
+				"[WalletRepository] Transfer completed",
+			);
+
+			// Invalidate cache for both wallets
+			await Promise.all([
+				this.deleteCache(senderWalletId),
+				this.deleteCache(recipientWalletId),
+			]);
+
+			return {
+				senderBalanceBefore: senderResult.balanceBefore,
+				senderBalanceAfter: senderResult.balanceAfter,
+				recipientBalanceBefore: recipientResult.balanceBefore,
+				recipientBalanceAfter: recipientResult.balanceAfter,
+			};
+		} catch (error) {
+			throw this.handleError(error, "transfer");
+		}
+	}
+
+	/**
+	 * Atomically deducts amount from wallet balance
+	 *
+	 * Uses database-level atomic update with WHERE clause check
+	 * to prevent race conditions and negative balances.
+	 *
+	 * @param params - Deduction parameters
+	 * @param opts - Transaction context (REQUIRED)
+	 * @returns Balance before and after deduction
+	 * @throws RepositoryError if insufficient balance
+	 */
+	async atomicDeduct(
+		params: { walletId: string; amount: number },
+		opts: WithTx,
+	): Promise<{ balanceBefore: number; balanceAfter: number }> {
+		try {
+			return await this.balanceService.deduct(params, { tx: opts.tx });
+		} catch (error) {
+			throw this.handleError(error, "atomicDeduct");
+		}
+	}
+
+	/**
+	 * Atomically adds amount to wallet balance
+	 *
+	 * @param params - Addition parameters
+	 * @param opts - Transaction context (REQUIRED)
+	 * @returns Balance before and after addition
+	 */
+	async atomicAdd(
+		params: { walletId: string; amount: number },
+		opts: WithTx,
+	): Promise<{ balanceBefore: number; balanceAfter: number }> {
+		try {
+			return await this.balanceService.add(params, { tx: opts.tx });
+		} catch (error) {
+			throw this.handleError(error, "atomicAdd");
+		}
+	}
+
 	async update(
 		id: string,
 		params: UpdateWallet,
@@ -183,6 +289,9 @@ export class WalletRepository extends BaseRepository {
 					opts,
 				);
 			}
+
+			// Invalidate cache after wallet update to prevent stale balance reads
+			await this.deleteCache(id);
 
 			return WalletRepository.composeEntity(wallet);
 		} catch (error) {

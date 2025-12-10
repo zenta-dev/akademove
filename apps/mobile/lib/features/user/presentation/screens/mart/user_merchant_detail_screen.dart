@@ -106,23 +106,28 @@ class _UserMerchantDetailScreenState extends State<UserMerchantDetailScreen> {
         body: BlocConsumer<UserMerchantDetailCubit, UserMerchantDetailState>(
           listener: (context, state) {
             // Show error toast if failed
-            if (state.state == CubitState.failure && state.message != null) {
+            if (state.menuByCategory.isFailure &&
+                state.menuByCategory.message != null) {
               showToast(
                 context: context,
                 location: ToastLocation.bottomCenter,
-                builder: (context, overlay) =>
-                    context.buildToast(title: 'Error', message: state.message!),
+                builder: (context, overlay) => context.buildToast(
+                  title: 'Error',
+                  message: state.menuByCategory.message!,
+                ),
               );
             }
           },
           builder: (context, state) {
             // Loading state
-            if (state.state == CubitState.loading) {
+            if (state.menuByCategory.isLoading &&
+                state.menuByCategory.value == null) {
               return const Center(child: CircularProgressIndicator());
             }
 
             // Error state
-            if (state.state == CubitState.failure) {
+            if (state.menuByCategory.isFailure &&
+                state.menuByCategory.value == null) {
               return Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -130,7 +135,8 @@ class _UserMerchantDetailScreenState extends State<UserMerchantDetailScreen> {
                     Icon(Icons.error_outline, size: 64.sp, color: Colors.red),
                     SizedBox(height: 16.h),
                     Text(
-                      state.message ?? 'Failed to load merchant details',
+                      state.menuByCategory.message ??
+                          'Failed to load merchant details',
                       style: context.typography.base,
                       textAlign: TextAlign.center,
                     ),
@@ -150,7 +156,7 @@ class _UserMerchantDetailScreenState extends State<UserMerchantDetailScreen> {
             }
 
             // Empty state
-            if (state.merchant == null || state.isEmpty) {
+            if (state.isEmpty) {
               return Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -181,6 +187,11 @@ class _UserMerchantDetailScreenState extends State<UserMerchantDetailScreen> {
         final itemCount = cartState.totalItems;
         final totalPrice = cartState.subtotal;
 
+        // Use merchant from state if available, otherwise fallback to widget.merchant
+        // But state.merchant is OperationResult, so we check value.
+        // Also widget.merchant is passed to cubit so it should be in state.
+        final merchant = detailState.merchant.value ?? widget.merchant;
+
         return Stack(
           children: [
             // Main content - scrollable
@@ -188,7 +199,7 @@ class _UserMerchantDetailScreenState extends State<UserMerchantDetailScreen> {
               padding: EdgeInsets.only(bottom: itemCount > 0 ? 80.h : 16.h),
               children: [
                 // Merchant header
-                MerchantDetailHeaderWidget(merchant: detailState.merchant!),
+                MerchantDetailHeaderWidget(merchant: merchant),
 
                 SizedBox(height: 8.h),
 
@@ -227,71 +238,72 @@ class _UserMerchantDetailScreenState extends State<UserMerchantDetailScreen> {
                   ),
 
                 // Menu items grouped by category
-                ...detailState.menuByCategory!.entries.map((entry) {
-                  final category = entry.key;
-                  final items = entry.value;
+                if (detailState.menuByCategory.hasData)
+                  ...detailState.menuByCategory.value!.entries.map((entry) {
+                    final category = entry.key;
+                    final items = entry.value;
 
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Category header
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 12.h),
-                        child: Text(
-                          category,
-                          style: context.typography.h4.copyWith(
-                            fontSize: 16.sp,
-                            fontWeight: FontWeight.w600,
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Category header
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 12.h),
+                          child: Text(
+                            category,
+                            style: context.typography.h4.copyWith(
+                              fontSize: 16.sp,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
                         ),
-                      ),
 
-                      // Items in category
-                      ...items.map((item) {
-                        // Get current quantity from cart
-                        final cartItem = cartState.cart?.items
-                            .where((cartItem) => cartItem.menuId == item.id)
-                            .toList();
-                        final currentQty =
-                            cartItem != null && cartItem.isNotEmpty
-                            ? cartItem.first.quantity
-                            : 0;
+                        // Items in category
+                        ...items.map((item) {
+                          // Get current quantity from cart
+                          final cartItem = cartState.currentCart?.items
+                              .where((cartItem) => cartItem.menuId == item.id)
+                              .toList();
+                          final currentQty =
+                              cartItem != null && cartItem.isNotEmpty
+                              ? cartItem.first.quantity
+                              : 0;
 
-                        return ItemCardWidget(
-                          item: item,
-                          currentQty: currentQty,
-                          onQuantityChanged: (newQty) {
-                            // Validate quantity doesn't exceed stock
-                            if (newQty > item.stock) {
-                              showToast(
-                                context: context,
-                                location: ToastLocation.bottomCenter,
-                                builder: (context, overlay) =>
-                                    context.buildToast(
-                                      title: 'Stock Limit',
-                                      message:
-                                          'Only ${item.stock} items available',
-                                    ),
-                              );
-                              return;
-                            }
+                          return ItemCardWidget(
+                            item: item,
+                            currentQty: currentQty,
+                            onQuantityChanged: (newQty) {
+                              // Validate quantity doesn't exceed stock
+                              if (newQty > item.stock) {
+                                showToast(
+                                  context: context,
+                                  location: ToastLocation.bottomCenter,
+                                  builder: (context, overlay) =>
+                                      context.buildToast(
+                                        title: 'Stock Limit',
+                                        message:
+                                            'Only ${item.stock} items available',
+                                      ),
+                                );
+                                return;
+                              }
 
-                            // Update cart
-                            if (newQty > 0) {
-                              _cartCubit.addItem(
-                                menu: item,
-                                merchantName: detailState.merchant!.name,
-                                quantity: newQty,
-                              );
-                            } else {
-                              _cartCubit.removeItem(item.id);
-                            }
-                          },
-                        );
-                      }),
-                    ],
-                  );
-                }),
+                              // Update cart
+                              if (newQty > 0) {
+                                _cartCubit.addItem(
+                                  menu: item,
+                                  merchantName: merchant.name,
+                                  quantity: newQty,
+                                );
+                              } else {
+                                _cartCubit.removeItem(item.id);
+                              }
+                            },
+                          );
+                        }),
+                      ],
+                    );
+                  }),
               ],
             ),
 

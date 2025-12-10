@@ -50,7 +50,8 @@ class _OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
       padding: EdgeInsets.zero,
       body: BlocBuilder<CartCubit, CartState>(
         builder: (context, state) {
-          if (state.isEmpty || state.cart == null) {
+          final cart = state.currentCart;
+          if (state.isEmpty || cart == null) {
             // Cart is empty, redirect back
             WidgetsBinding.instance.addPostFrameCallback((_) {
               if (mounted) context.pop();
@@ -58,7 +59,7 @@ class _OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
             return const Center(child: CircularProgressIndicator());
           }
 
-          return _buildContent(context, state.cart!);
+          return _buildContent(context, cart);
         },
       ),
     );

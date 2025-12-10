@@ -56,7 +56,7 @@ class _UserEditProfileScreenState extends State<UserEditProfileScreen> {
     Map<FormKey<T>, dynamic> values,
   ) {
     final cubit = context.read<UserProfileCubit>();
-    if (cubit.state.isLoading) return;
+    if (cubit.state.updateProfileResult.isLoading) return;
 
     final name = _nameKey[values];
     final email = _emailKey[values];
@@ -83,9 +83,8 @@ class _UserEditProfileScreenState extends State<UserEditProfileScreen> {
         builder: (context, authState) {
           return BlocConsumer<UserProfileCubit, UserProfileState>(
             listener: (context, profileState) {
-              profileState.whenOr(
-                success: (message) {
-                  if (profileState.updateProfileResult == null) return;
+              profileState.updateProfileResult.whenOr(
+                success: (user, message) {
                   context.showMyToast(message, type: ToastType.success);
                   delay(const Duration(seconds: 3), () {
                     context.read<UserProfileCubit>().reset();
@@ -100,6 +99,7 @@ class _UserEditProfileScreenState extends State<UserEditProfileScreen> {
               );
             },
             builder: (context, profileState) {
+              final isLoading = profileState.updateProfileResult.isLoading;
               return Form(
                 onSubmit: _handleFormSubmit,
                 child: Column(
@@ -110,7 +110,7 @@ class _UserEditProfileScreenState extends State<UserEditProfileScreen> {
                       children: [
                         Text(context.l10n.label_photo_profile).small(),
                         ImagePickerWidget(
-                          enabled: !profileState.isLoading,
+                          enabled: !isLoading,
                           previewUrl: authState.user.data?.value.image,
                           value: _pickedPhoto,
                           size: Size(86.h, 86.h),
@@ -124,7 +124,7 @@ class _UserEditProfileScreenState extends State<UserEditProfileScreen> {
                       label: Text(context.l10n.label_name).small(),
                       showErrors: _showErrors,
                       child: TextField(
-                        enabled: !profileState.isLoading,
+                        enabled: !isLoading,
                         focusNode: _nameFn,
                         initialValue: authState.user.data?.value.name,
                         placeholder: Text(
@@ -148,7 +148,7 @@ class _UserEditProfileScreenState extends State<UserEditProfileScreen> {
                       validator: _emailValidator,
                       showErrors: _showErrors,
                       child: TextField(
-                        enabled: !profileState.isLoading,
+                        enabled: !isLoading,
                         focusNode: _emailFn,
                         initialValue: authState.user.data?.value.email,
                         placeholder: Text(
@@ -195,7 +195,6 @@ class _UserEditProfileScreenState extends State<UserEditProfileScreen> {
                       child: FormErrorBuilder(
                         builder: (context, errors, child) {
                           final hasErrors = errors.isNotEmpty;
-                          final isLoading = profileState.isLoading;
 
                           return Button(
                             style: isLoading || hasErrors

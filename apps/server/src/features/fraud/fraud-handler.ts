@@ -43,24 +43,26 @@ export const FraudHandler = priv.router({
 		.handler(async ({ context, input: { params, body } }) => {
 			const data = trimObjectValues(body);
 
-			const result = await context.repo.fraud.update(
-				params.id,
-				{
-					status: data.status,
-					resolution: data.resolution,
-					actionTaken: data.actionTaken,
-				},
-				undefined,
-				context,
-			);
+			return await context.svc.db.transaction(async (tx) => {
+				const result = await context.repo.fraud.update(
+					params.id,
+					{
+						status: data.status,
+						resolution: data.resolution,
+						actionTaken: data.actionTaken,
+					},
+					{ tx },
+					context,
+				);
 
-			return {
-				status: 200,
-				body: {
-					message: "Fraud event reviewed successfully",
-					data: result,
-				},
-			};
+				return {
+					status: 200,
+					body: {
+						message: "Fraud event reviewed successfully",
+						data: result,
+					},
+				};
+			});
 		}),
 
 	// Get fraud statistics (ADMIN/OPERATOR only)

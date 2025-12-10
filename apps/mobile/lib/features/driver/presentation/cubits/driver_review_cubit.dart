@@ -6,7 +6,7 @@ import 'package:api_client/api_client.dart';
 class DriverReviewCubit extends BaseCubit<DriverReviewState> {
   DriverReviewCubit({required ReviewRepository reviewRepository})
     : _reviewRepository = reviewRepository,
-      super(DriverReviewState());
+      super(const DriverReviewState());
 
   final ReviewRepository _reviewRepository;
 
@@ -19,7 +19,7 @@ class DriverReviewCubit extends BaseCubit<DriverReviewState> {
     String? comment,
   }) async => await taskManager.execute('DRC-sR1-$orderId', () async {
     try {
-      emit(state.toLoading());
+      emit(state.copyWith(submitReviewResult: const OperationResult.loading()));
 
       final res = await _reviewRepository.submitReview(
         orderId: orderId,
@@ -29,14 +29,19 @@ class DriverReviewCubit extends BaseCubit<DriverReviewState> {
         comment: comment,
       );
 
-      emit(state.toSuccess(submitted: res.data, message: res.message));
+      emit(
+        state.copyWith(
+          submitReviewResult: OperationResult.success(res.data),
+          submitted: res.data,
+        ),
+      );
     } on BaseError catch (e, st) {
       logger.e(
         '[ReviewCubit] Failed to submit review: ${e.message}',
         error: e,
         stackTrace: st,
       );
-      emit(state.toFailure(e));
+      emit(state.copyWith(submitReviewResult: OperationResult.failed(e)));
     }
   });
 
@@ -48,10 +53,14 @@ class DriverReviewCubit extends BaseCubit<DriverReviewState> {
     () async {
       try {
         if (refresh) {
-          emit(state.toLoading());
+          emit(
+            state.copyWith(fetchReviewsResult: const OperationResult.loading()),
+          );
         } else {
-          if (!state.hasMore || state.isLoading) return;
-          emit(state.toLoading());
+          if (!state.hasMore || state.fetchReviewsResult.isLoading) return;
+          emit(
+            state.copyWith(fetchReviewsResult: const OperationResult.loading()),
+          );
         }
 
         final res = await _reviewRepository.getMyReviews(
@@ -64,20 +73,21 @@ class DriverReviewCubit extends BaseCubit<DriverReviewState> {
 
         if (refresh) {
           emit(
-            state.toSuccess(
+            state.copyWith(
+              fetchReviewsResult: OperationResult.success(res.data),
               reviews: res.data,
               cursor: nextCursor,
               hasMore: hasMore,
-              message: res.message,
             ),
           );
         } else {
+          final updatedReviews = [...state.reviews, ...res.data];
           emit(
-            state.toSuccess(
-              reviews: [...state.reviews, ...res.data],
+            state.copyWith(
+              fetchReviewsResult: OperationResult.success(updatedReviews),
+              reviews: updatedReviews,
               cursor: nextCursor,
               hasMore: hasMore,
-              message: res.message,
             ),
           );
         }
@@ -87,14 +97,14 @@ class DriverReviewCubit extends BaseCubit<DriverReviewState> {
           error: e,
           stackTrace: st,
         );
-        emit(state.toFailure(e));
+        emit(state.copyWith(fetchReviewsResult: OperationResult.failed(e)));
       }
     },
   );
 
   /// Load more reviews (pagination)
   Future<void> loadMoreReviews() async {
-    if (!state.hasMore || state.isLoading) return;
+    if (!state.hasMore || state.fetchReviewsResult.isLoading) return;
     await loadMyReviews(refresh: false);
   }
 
@@ -105,6 +115,6 @@ class DriverReviewCubit extends BaseCubit<DriverReviewState> {
 
   /// Reset state
   void reset() {
-    emit(DriverReviewState());
+    emit(const DriverReviewState());
   }
 }

@@ -29,32 +29,43 @@ export const UserBadgeHandler = priv.router({
 		};
 	}),
 	create: priv.create.handler(async ({ context, input: { body } }) => {
-		const data = trimObjectValues(body);
-		const result = await context.repo.badge.user.create({
-			...data,
-			userId: context.user.id,
-		});
+		return await context.svc.db.transaction(async (tx) => {
+			const data = trimObjectValues(body);
+			const result = await context.repo.badge.user.create(
+				{
+					...data,
+					userId: context.user.id,
+				},
+				{ tx },
+			);
 
-		return {
-			status: 200,
-			body: { message: m.server_user_badge_created(), data: result },
-		};
+			return {
+				status: 200,
+				body: { message: m.server_user_badge_created(), data: result },
+			};
+		});
 	}),
 	update: priv.update.handler(async ({ context, input: { params, body } }) => {
-		const data = trimObjectValues(body);
-		const result = await context.repo.badge.user.update(params.id, data);
+		return await context.svc.db.transaction(async (tx) => {
+			const data = trimObjectValues(body);
+			const result = await context.repo.badge.user.update(params.id, data, {
+				tx,
+			});
 
-		return {
-			status: 200,
-			body: { message: m.server_user_badge_updated(), data: result },
-		};
+			return {
+				status: 200,
+				body: { message: m.server_user_badge_updated(), data: result },
+			};
+		});
 	}),
 	remove: priv.remove.handler(async ({ context, input: { params } }) => {
-		await context.repo.badge.user.remove(params.id);
+		return await context.svc.db.transaction(async (tx) => {
+			await context.repo.badge.user.remove(params.id, { tx });
 
-		return {
-			status: 200,
-			body: { message: m.server_user_badge_deleted(), data: null },
-		};
+			return {
+				status: 200,
+				body: { message: m.server_user_badge_deleted(), data: null },
+			};
+		});
 	}),
 });

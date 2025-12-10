@@ -129,10 +129,10 @@ class _ChangePasswordFormViewState extends State<_ChangePasswordFormView> {
     if (!mounted) return;
 
     final state = cubit.state;
-    if (state.isSuccess) {
+    if (state.updatePasswordResult.isSuccess) {
       _showToast(
         context.l10n.success,
-        state.message ?? context.l10n.toast_success,
+        state.updatePasswordResult.message ?? context.l10n.toast_success,
       );
       // Navigate back after successful password change
       Future.delayed(const Duration(milliseconds: 500), () {
@@ -140,10 +140,11 @@ class _ChangePasswordFormViewState extends State<_ChangePasswordFormView> {
           context.pop();
         }
       });
-    } else if (state.isFailure) {
+    } else if (state.updatePasswordResult.isFailure) {
       _showToast(
         context.l10n.error,
-        state.error?.message ?? context.l10n.an_error_occurred,
+        state.updatePasswordResult.error?.message ??
+            context.l10n.an_error_occurred,
       );
     }
   }
@@ -162,7 +163,7 @@ class _ChangePasswordFormViewState extends State<_ChangePasswordFormView> {
   Widget build(BuildContext context) {
     return BlocBuilder<UserProfileCubit, UserProfileState>(
       builder: (context, state) {
-        final isLoading = state.isLoading;
+        final isLoading = state.updatePasswordResult.isLoading;
 
         return Form(
           controller: _formController,

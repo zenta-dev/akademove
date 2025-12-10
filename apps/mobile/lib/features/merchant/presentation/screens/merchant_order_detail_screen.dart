@@ -42,7 +42,7 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
     try {
       // Get merchant ID from MerchantCubit
       final merchantState = context.read<MerchantCubit>().state;
-      final currentMerchant = merchantState.mine;
+      final currentMerchant = merchantState.mine.value;
 
       if (currentMerchant != null) {
         setState(() {

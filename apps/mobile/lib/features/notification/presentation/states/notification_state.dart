@@ -8,9 +8,7 @@ class NotificationState {
     this.totalPages = 1,
     this.totalCount = 0,
     this.isLoadingMore = false,
-    this.state = CubitState.initial,
-    this.message,
-    this.error,
+    this.status = const OperationResult.idle(),
   });
 
   final List<NotificationModel> notifications;
@@ -19,9 +17,7 @@ class NotificationState {
   final int totalPages;
   final int totalCount;
   final bool isLoadingMore;
-  final CubitState state;
-  final String? message;
-  final BaseError? error;
+  final OperationResult<dynamic> status;
 
   NotificationState copyWith({
     List<NotificationModel>? notifications,
@@ -30,9 +26,7 @@ class NotificationState {
     int? totalPages,
     int? totalCount,
     bool? isLoadingMore,
-    CubitState? state,
-    String? message,
-    BaseError? error,
+    OperationResult<dynamic>? status,
   }) {
     return NotificationState(
       notifications: notifications ?? this.notifications,
@@ -41,17 +35,15 @@ class NotificationState {
       totalPages: totalPages ?? this.totalPages,
       totalCount: totalCount ?? this.totalCount,
       isLoadingMore: isLoadingMore ?? this.isLoadingMore,
-      state: state ?? this.state,
-      message: message ?? this.message,
-      error: error ?? this.error,
+      status: status ?? this.status,
     );
   }
 
   NotificationState toInitial() =>
-      copyWith(state: CubitState.initial, message: null, error: null);
+      copyWith(status: const OperationResult.idle());
 
   NotificationState toLoading() =>
-      copyWith(state: CubitState.loading, message: null, error: null);
+      copyWith(status: const OperationResult.loading());
 
   NotificationState toSuccess({
     List<NotificationModel>? notifications,
@@ -61,18 +53,16 @@ class NotificationState {
     int? totalCount,
     String? message,
   }) => copyWith(
-    state: CubitState.success,
+    status: OperationResult.success(null, message: message),
     notifications: notifications ?? this.notifications,
     unreadCount: unreadCount ?? this.unreadCount,
     currentPage: currentPage ?? this.currentPage,
     totalPages: totalPages ?? this.totalPages,
     totalCount: totalCount ?? this.totalCount,
-    message: message,
-    error: null,
   );
 
   NotificationState toFailure(BaseError error, {String? message}) =>
-      copyWith(state: CubitState.failure, error: error, message: message);
+      copyWith(status: OperationResult.failed(error));
 
   NotificationState toLoadingMore() => copyWith(isLoadingMore: true);
 

@@ -5,6 +5,7 @@ import type {
 } from "@repo/schema";
 import { type OrderEnvelope, OrderEnvelopeSchema } from "@repo/schema/ws";
 import Decimal from "decimal.js";
+import { sql } from "drizzle-orm";
 import { BaseDurableObject, type BroadcastOptions } from "@/core/base";
 import { BUSINESS_CONSTANTS, CONFIGURATION_KEYS } from "@/core/constants";
 import { getManagers, getRepositories, getServices } from "@/core/factory";
@@ -352,15 +353,13 @@ export class OrderRoom extends BaseDurableObject {
 
 		// Use SELECT FOR UPDATE to prevent race condition when multiple drivers accept
 		// This locks the order row until the transaction completes
-		const lockedOrder = await tx.query.order.findFirst({
-			where: (f, op) => op.eq(f.id, orderId),
-			// Note: Drizzle doesn't have built-in FOR UPDATE, so we use raw SQL
-		});
-
-		// Execute raw SQL for row-level locking
-		await tx.execute(
-			`SELECT * FROM "order" WHERE id = '${orderId}' FOR UPDATE NOWAIT`,
+		// FIX: Use parameterized query to prevent SQL injection
+		const lockedOrderResult = await tx.execute(
+			sql`SELECT * FROM "order" WHERE id = ${orderId} FOR UPDATE NOWAIT`,
 		);
+		const lockedOrder = lockedOrderResult[0] as
+			| { id: string; status: string; type: string; driverId: string | null }
+			| undefined;
 
 		// Check if order is still available (not already accepted by another driver)
 		if (
@@ -557,7 +556,6 @@ export class OrderRoom extends BaseDurableObject {
 		// Calculate amounts
 		const totalPrice = new Decimal(order.totalPrice);
 		const platformCommission = totalPrice.times(commissionRate);
-		const driverEarning = totalPrice.minus(platformCommission);
 		// For FOOD orders, merchantCommissionRate MUST come from config, no fallback allowed
 		const merchantCommission =
 			order.type === "FOOD"
@@ -566,6 +564,11 @@ export class OrderRoom extends BaseDurableObject {
 							.merchantCommissionRate,
 					)
 				: new Decimal(0);
+		// FIX: Driver earning should be calculated minus both platform AND merchant commission
+		// For FOOD orders, part of the total goes to the merchant
+		const driverEarning = totalPrice
+			.minus(platformCommission)
+			.minus(merchantCommission);
 
 		// Get driver wallet
 		const driverwallet = await this.#repo.wallet.getByUserId(
@@ -629,10 +632,15 @@ export class OrderRoom extends BaseDurableObject {
 			),
 
 			// Update driver availability
-			this.#repo.driver.main.update(done.driverId, {
-				isTakingOrder: false,
-				currentLocation: done.driverCurrentLocation,
-			}),
+			// FIX: Pass transaction context (opts) to ensure atomicity
+			this.#repo.driver.main.update(
+				done.driverId,
+				{
+					isTakingOrder: false,
+					currentLocation: done.driverCurrentLocation,
+				},
+				opts,
+			),
 		]);
 
 		// Update driver wallet balance atomically
@@ -1137,7 +1145,12 @@ export class OrderRoom extends BaseDurableObject {
 			}
 
 			// Reset driver availability
-			await this.#repo.driver.main.update(driverId, { isTakingOrder: false });
+			// FIX: Pass transaction context (opts) to ensure atomicity
+			await this.#repo.driver.main.update(
+				driverId,
+				{ isTakingOrder: false },
+				opts,
+			);
 
 			// Notify user about no-show
 			const userWs = this.findById(order.userId);

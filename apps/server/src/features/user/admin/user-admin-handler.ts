@@ -30,36 +30,42 @@ export const UserAdminHandler = priv.router({
 		};
 	}),
 	create: priv.create.handler(async ({ context, input: { body } }) => {
-		const data = trimObjectValues(body);
-		const result = await context.repo.user.admin.create(data);
+		return await context.svc.db.transaction(async (tx) => {
+			const data = trimObjectValues(body);
+			const result = await context.repo.user.admin.create(data, { tx });
 
-		return {
-			status: 200,
-			body: { message: m.server_user_created(), data: result },
-		};
+			return {
+				status: 200,
+				body: { message: m.server_user_created(), data: result },
+			};
+		});
 	}),
 	update: priv.update.handler(async ({ context, input: { params, body } }) => {
-		const data = trimObjectValues(body);
-		const result = await context.repo.user.admin.update(
-			params.id,
-			data,
-			{},
-			context.req.headers,
-			context,
-		);
+		return await context.svc.db.transaction(async (tx) => {
+			const data = trimObjectValues(body);
+			const result = await context.repo.user.admin.update(
+				params.id,
+				data,
+				{ tx },
+				context.req.headers,
+				context,
+			);
 
-		return {
-			status: 200,
-			body: { message: m.server_user_updated(), data: result },
-		};
+			return {
+				status: 200,
+				body: { message: m.server_user_updated(), data: result },
+			};
+		});
 	}),
 	remove: priv.remove.handler(async ({ context, input: { params } }) => {
-		await context.repo.user.admin.remove(params.id);
+		return await context.svc.db.transaction(async (tx) => {
+			await context.repo.user.admin.remove(params.id, { tx });
 
-		return {
-			status: 200,
-			body: { message: m.server_user_deleted(), data: null },
-		};
+			return {
+				status: 200,
+				body: { message: m.server_user_deleted(), data: null },
+			};
+		});
 	}),
 	dashboardStats: priv.dashboardStats.handler(
 		async ({ context, input: { query } }) => {

@@ -8,11 +8,10 @@ import { eq } from "drizzle-orm";
 import { BaseRepository } from "@/core/base";
 import { CACHE_TTLS, CONFIGURATION_KEYS } from "@/core/constants";
 import { RepositoryError } from "@/core/error";
-import type { WithUserId } from "@/core/interface";
+import type { PartialWithTx, WithUserId } from "@/core/interface";
 import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
 import type { ConfigurationDatabase } from "@/core/tables/configuration";
-import { OrderRepository } from "@/features/order/order-repository";
 import { log, safeAsync } from "@/utils";
 import {
 	BusinessConfigurationService,
@@ -95,8 +94,10 @@ export class ConfigurationRepository extends BaseRepository {
 	async update(
 		key: string,
 		item: UpdateConfiguration & WithUserId,
+		opts?: PartialWithTx,
 	): Promise<Configuration> {
 		try {
+			const db = opts?.tx ?? this.db;
 			const existing = await this.#getFromDB(key);
 			if (!existing)
 				throw new RepositoryError(`Configuration with key "${key}" not found`);
@@ -106,7 +107,7 @@ export class ConfigurationRepository extends BaseRepository {
 			);
 
 			const [[operation]] = await Promise.all([
-				this.db
+				db
 					.update(tables.configuration)
 					.set({
 						...item,
@@ -128,20 +129,22 @@ export class ConfigurationRepository extends BaseRepository {
 			await safeAsync(
 				Promise.all([
 					this.setCache(key, result, { expirationTtl: CACHE_TTLS["24h"] }),
-					this.db.insert(tables.configurationAuditLog).values(auditLogEntry),
+					db.insert(tables.configurationAuditLog).values(auditLogEntry),
 				]),
 			);
 
-			// Invalidate OrderRepository's in-memory pricing cache when pricing config is updated
+			// Invalidate order pricing KV cache when pricing config is updated
+			// Note: KV cache uses the same key as configuration key with "order:" prefix
 			if (
 				PRICING_CONFIG_KEYS.includes(
 					key as (typeof PRICING_CONFIG_KEYS)[number],
 				)
 			) {
-				OrderRepository.invalidatePricingCache();
+				// Delete the order repository's KV cache for this pricing config
+				await safeAsync(this.kv.delete(`order:${key}`));
 				log.info(
 					{ key },
-					"[ConfigurationRepository] Pricing config updated - invalidated OrderRepository cache",
+					"[ConfigurationRepository] Pricing config updated - invalidated order KV cache",
 				);
 			}
 

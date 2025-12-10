@@ -237,9 +237,10 @@ export class UserBadgeRepository extends BaseRepository {
 		}
 	}
 
-	async remove(id: string): Promise<void> {
+	async remove(id: string, opts?: WithTx): Promise<void> {
 		try {
-			const result = await this.db
+			const tx = opts?.tx ?? this.db;
+			const result = await tx
 				.delete(tables.userBadge)
 				.where(eq(tables.userBadge.id, id))
 				.returning({ id: tables.userBadge.id });

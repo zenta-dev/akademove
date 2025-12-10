@@ -1,45 +1,32 @@
 part of '_export.dart';
 
-@MappableClass(
-  generateMethods:
-      GenerateMethods.stringify | GenerateMethods.equals | GenerateMethods.copy,
-)
-class DriverListHistoryState extends BaseState2
-    with DriverListHistoryStateMappable {
-  DriverListHistoryState({
-    super.state,
-    super.message,
-    super.error,
-    this.orders,
+class DriverListHistoryState extends Equatable {
+  const DriverListHistoryState({
+    this.fetchHistoryResult = const OperationResult.idle(),
+    this.orders = const [],
     this.paginationResult,
   });
 
-  final List<Order>? orders;
+  final OperationResult<List<Order>> fetchHistoryResult;
+
+  final List<Order> orders;
   final PaginationResult? paginationResult;
 
   @override
-  DriverListHistoryState toInitial() => DriverListHistoryState();
+  List<Object?> get props => [fetchHistoryResult, orders, paginationResult];
 
   @override
-  DriverListHistoryState toLoading() => copyWith(state: CubitState.loading);
+  bool get stringify => true;
 
-  @override
-  DriverListHistoryState toSuccess({
-    String? message,
+  DriverListHistoryState copyWith({
+    OperationResult<List<Order>>? fetchHistoryResult,
     List<Order>? orders,
     PaginationResult? paginationResult,
-  }) => copyWith(
-    state: CubitState.success,
-    message: message,
-    orders: orders ?? this.orders,
-    paginationResult: paginationResult ?? this.paginationResult,
-  );
-
-  @override
-  DriverListHistoryState toFailure(BaseError error, {String? message}) =>
-      copyWith(
-        state: CubitState.failure,
-        error: error,
-        message: message ?? error.message,
-      );
+  }) {
+    return DriverListHistoryState(
+      fetchHistoryResult: fetchHistoryResult ?? this.fetchHistoryResult,
+      orders: orders ?? this.orders,
+      paginationResult: paginationResult ?? this.paginationResult,
+    );
+  }
 }

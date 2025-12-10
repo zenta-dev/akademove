@@ -1,55 +1,61 @@
 import 'package:akademove/core/_export.dart';
 import 'package:api_client/api_client.dart';
-import 'package:dart_mappable/dart_mappable.dart';
+import 'package:equatable/equatable.dart';
 
-part 'leaderboard_state.mapper.dart';
-
-@MappableClass(
-  generateMethods:
-      GenerateMethods.stringify | GenerateMethods.equals | GenerateMethods.copy,
-)
-class LeaderboardState extends BaseState2 with LeaderboardStateMappable {
-  LeaderboardState({
-    this.leaderboards = const [],
-    this.badges = const [],
-    this.userBadges = const [],
-    this.myRankings = const [],
-    super.state,
-    super.message,
-    super.error,
+class LeaderboardState extends Equatable {
+  const LeaderboardState({
+    this.leaderboards = const OperationResult.idle(),
+    this.badges = const OperationResult.idle(),
+    this.userBadges = const OperationResult.idle(),
+    this.myRankings = const OperationResult.idle(),
   });
 
-  final List<Leaderboard> leaderboards;
-  final List<Badge> badges;
-  final List<UserBadge> userBadges;
-  final List<Leaderboard> myRankings;
+  final OperationResult<List<Leaderboard>> leaderboards;
+  final OperationResult<List<Badge>> badges;
+  final OperationResult<List<UserBadge>> userBadges;
+  final OperationResult<List<Leaderboard>> myRankings;
+
+  bool get isLoading =>
+      leaderboards.isLoading ||
+      badges.isLoading ||
+      userBadges.isLoading ||
+      myRankings.isLoading;
+
+  bool get isFailure =>
+      leaderboards.isFailure ||
+      badges.isFailure ||
+      userBadges.isFailure ||
+      myRankings.isFailure;
+
+  BaseError? get error =>
+      leaderboards.error ??
+      badges.error ??
+      userBadges.error ??
+      myRankings.error;
+
+  String? get message =>
+      leaderboards.message ??
+      badges.message ??
+      userBadges.message ??
+      myRankings.message;
 
   @override
-  LeaderboardState toInitial() => LeaderboardState();
+  List<Object> get props => [leaderboards, badges, userBadges, myRankings];
+
+  LeaderboardState copyWith({
+    OperationResult<List<Leaderboard>>? leaderboards,
+    OperationResult<List<Badge>>? badges,
+    OperationResult<List<UserBadge>>? userBadges,
+    OperationResult<List<Leaderboard>>? myRankings,
+  }) {
+    return LeaderboardState(
+      leaderboards: leaderboards ?? this.leaderboards,
+      badges: badges ?? this.badges,
+      userBadges: userBadges ?? this.userBadges,
+      myRankings: myRankings ?? this.myRankings,
+    );
+  }
 
   @override
-  LeaderboardState toLoading() => copyWith(state: CubitState.loading);
-
-  @override
-  LeaderboardState toSuccess({
-    String? message,
-    List<Leaderboard>? leaderboards,
-    List<Badge>? badges,
-    List<UserBadge>? userBadges,
-    List<Leaderboard>? myRankings,
-  }) => copyWith(
-    state: CubitState.success,
-    message: message,
-    leaderboards: leaderboards ?? this.leaderboards,
-    badges: badges ?? this.badges,
-    userBadges: userBadges ?? this.userBadges,
-    myRankings: myRankings ?? this.myRankings,
-  );
-
-  @override
-  LeaderboardState toFailure(BaseError error, {String? message}) => copyWith(
-    state: CubitState.failure,
-    error: error,
-    message: message ?? error.message,
-  );
+  bool get stringify => true;
 }

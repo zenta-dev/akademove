@@ -80,11 +80,13 @@ class _MerchantHomeScreenState extends State<MerchantHomeScreen> {
                       BlocBuilder<MerchantCubit, MerchantState>(
                         builder: (context, state) {
                           return Text(
-                            context.l10n.hello(state.mine?.name ?? "Folks"),
+                            context.l10n.hello(
+                              state.mine.value?.name ?? "Folks",
+                            ),
                             style: context.typography.h1.copyWith(
                               fontSize: 20.sp,
                             ),
-                          ).asSkeleton(enabled: state.isLoading);
+                          ).asSkeleton(enabled: state.mine.isLoading);
                         },
                       ),
                       Row(

@@ -1,14 +1,9 @@
 part of '_export.dart';
 
-@MappableClass(
-  generateMethods:
-      GenerateMethods.stringify | GenerateMethods.equals | GenerateMethods.copy,
-)
-class DriverHomeState extends BaseState2 with DriverHomeStateMappable {
-  DriverHomeState({
-    super.state,
-    super.message,
-    super.error,
+class DriverHomeState extends Equatable {
+  const DriverHomeState({
+    this.initResult = const OperationResult.idle(),
+    this.toggleOnlineResult = const OperationResult.idle(),
     this.myDriver,
     this.isOnline = false,
     this.todayEarnings = 0,
@@ -16,6 +11,9 @@ class DriverHomeState extends BaseState2 with DriverHomeStateMappable {
     this.currentOrder,
     this.incomingOrder,
   });
+
+  final OperationResult<Driver> initResult;
+  final OperationResult<Driver> toggleOnlineResult;
 
   final Driver? myDriver;
   final bool isOnline;
@@ -25,35 +23,39 @@ class DriverHomeState extends BaseState2 with DriverHomeStateMappable {
   final Order? incomingOrder;
 
   @override
-  DriverHomeState toInitial() => DriverHomeState();
+  List<Object?> get props => [
+    initResult,
+    toggleOnlineResult,
+    myDriver,
+    isOnline,
+    todayEarnings,
+    todayTrips,
+    currentOrder,
+    incomingOrder,
+  ];
 
   @override
-  DriverHomeState toLoading() => copyWith(state: CubitState.loading);
+  bool get stringify => true;
 
-  @override
-  DriverHomeState toSuccess({
-    String? message,
+  DriverHomeState copyWith({
+    OperationResult<Driver>? initResult,
+    OperationResult<Driver>? toggleOnlineResult,
     Driver? myDriver,
     bool? isOnline,
     num? todayEarnings,
     int? todayTrips,
     Order? currentOrder,
     Order? incomingOrder,
-  }) => copyWith(
-    state: CubitState.success,
-    message: message,
-    myDriver: myDriver ?? this.myDriver,
-    isOnline: isOnline ?? this.isOnline,
-    todayEarnings: todayEarnings ?? this.todayEarnings,
-    todayTrips: todayTrips ?? this.todayTrips,
-    currentOrder: currentOrder ?? this.currentOrder,
-    incomingOrder: incomingOrder ?? this.incomingOrder,
-  );
-
-  @override
-  DriverHomeState toFailure(BaseError error, {String? message}) => copyWith(
-    state: CubitState.failure,
-    error: error,
-    message: message ?? error.message,
-  );
+  }) {
+    return DriverHomeState(
+      initResult: initResult ?? this.initResult,
+      toggleOnlineResult: toggleOnlineResult ?? this.toggleOnlineResult,
+      myDriver: myDriver ?? this.myDriver,
+      isOnline: isOnline ?? this.isOnline,
+      todayEarnings: todayEarnings ?? this.todayEarnings,
+      todayTrips: todayTrips ?? this.todayTrips,
+      currentOrder: currentOrder ?? this.currentOrder,
+      incomingOrder: incomingOrder ?? this.incomingOrder,
+    );
+  }
 }

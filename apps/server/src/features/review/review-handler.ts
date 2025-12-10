@@ -60,71 +60,85 @@ export const ReviewHandler = priv.router({
 	create: priv.create.handler(async ({ context, input: { body } }) => {
 		const data = trimObjectValues(body);
 
-		// Validate that user can review this order
-		const reviewStatus = await context.repo.review.getOrderReviewStatus(
-			data.orderId,
-			context.user.id,
-		);
+		// Use transaction to prevent race conditions (duplicate reviews)
+		return await context.svc.db.transaction(async (tx) => {
+			const opts = { tx };
 
-		if (!reviewStatus.canReview) {
-			if (reviewStatus.alreadyReviewed) {
-				throw new RepositoryError(m.server_review_already_exists(), {
-					code: "BAD_REQUEST",
-				});
-			}
-			if (!reviewStatus.orderCompleted) {
-				throw new RepositoryError(m.server_review_order_not_completed(), {
-					code: "BAD_REQUEST",
-				});
-			}
-			throw new RepositoryError(m.server_review_not_authorized(), {
-				code: "BAD_REQUEST",
+			// Validate that user can review this order (within transaction to prevent TOCTOU)
+			const validationService = new ReviewValidationService(context.svc.db);
+			const eligibility = await validationService.getReviewEligibility({
+				orderId: data.orderId,
+				userId: context.user.id,
+				opts,
 			});
-		}
 
-		// FIX: Validate that toUserId is the correct party in the order
-		// This prevents users from reviewing arbitrary users
-		const validationService = new ReviewValidationService(context.svc.db);
-		const targetValidation = await validationService.validateReviewTarget({
-			orderId: data.orderId,
-			fromUserId: context.user.id,
-			toUserId: data.toUserId,
-		});
-
-		if (!targetValidation.valid) {
-			throw new RepositoryError(
-				targetValidation.error ?? "Invalid review target",
-				{
+			if (!eligibility.canReview) {
+				if (eligibility.alreadyReviewed) {
+					throw new RepositoryError(m.server_review_already_exists(), {
+						code: "BAD_REQUEST",
+					});
+				}
+				if (!eligibility.orderCompleted) {
+					throw new RepositoryError(m.server_review_order_not_completed(), {
+						code: "BAD_REQUEST",
+					});
+				}
+				throw new RepositoryError(m.server_review_not_authorized(), {
 					code: "BAD_REQUEST",
+				});
+			}
+
+			// Validate that toUserId is the correct party in the order
+			// This prevents users from reviewing arbitrary users
+			const targetValidation = await validationService.validateReviewTarget({
+				orderId: data.orderId,
+				fromUserId: context.user.id,
+				toUserId: data.toUserId,
+				opts,
+			});
+
+			if (!targetValidation.valid) {
+				throw new RepositoryError(
+					targetValidation.error ?? "Invalid review target",
+					{
+						code: "BAD_REQUEST",
+					},
+				);
+			}
+
+			const result = await context.repo.review.create(
+				{
+					...data,
+					fromUserId: context.user.id,
 				},
+				opts,
 			);
-		}
 
-		const result = await context.repo.review.create({
-			...data,
-			fromUserId: context.user.id,
+			return {
+				status: 200,
+				body: { message: m.server_review_created(), data: result },
+			};
 		});
-
-		return {
-			status: 200,
-			body: { message: m.server_review_created(), data: result },
-		};
 	}),
 	update: priv.update.handler(async ({ context, input: { params, body } }) => {
-		const data = trimObjectValues(body);
-		const result = await context.repo.review.update(params.id, data);
+		return await context.svc.db.transaction(async (tx) => {
+			const data = trimObjectValues(body);
+			const result = await context.repo.review.update(params.id, data, { tx });
 
-		return {
-			status: 200,
-			body: { message: m.server_review_updated(), data: result },
-		};
+			return {
+				status: 200,
+				body: { message: m.server_review_updated(), data: result },
+			};
+		});
 	}),
 	remove: priv.remove.handler(async ({ context, input: { params } }) => {
-		await context.repo.review.remove(params.id);
+		return await context.svc.db.transaction(async (tx) => {
+			await context.repo.review.remove(params.id, { tx });
 
-		return {
-			status: 200,
-			body: { message: m.server_review_deleted(), data: null },
-		};
+			return {
+				status: 200,
+				body: { message: m.server_review_deleted(), data: null },
+			};
+		});
 	}),
 });

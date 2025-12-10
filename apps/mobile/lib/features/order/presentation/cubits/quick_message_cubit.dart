@@ -1,11 +1,12 @@
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/order/data/repositories/quick_message_repository.dart';
-import 'package:akademove/features/order/presentation/cubits/quick_message_state.dart';
+import 'package:api_client/api_client.dart';
 
-class QuickMessageCubit extends BaseCubit<QuickMessageState> {
+class QuickMessageCubit
+    extends BaseCubit<OperationResult<List<QuickMessageTemplate>>> {
   QuickMessageCubit({required QuickMessageRepository quickMessageRepository})
     : _quickMessageRepository = quickMessageRepository,
-      super(QuickMessageState());
+      super(const OperationResult.idle());
 
   final QuickMessageRepository _quickMessageRepository;
 
@@ -17,7 +18,7 @@ class QuickMessageCubit extends BaseCubit<QuickMessageState> {
   }) async =>
       await taskManager.execute('QMC-fT-$role-$orderType-$locale', () async {
         try {
-          emit(state.toLoading());
+          emit(const OperationResult.loading());
 
           final res = await _quickMessageRepository.listTemplates(
             role: role,
@@ -26,23 +27,18 @@ class QuickMessageCubit extends BaseCubit<QuickMessageState> {
             isActive: true,
           );
 
-          emit(
-            state.toSuccessWithTemplates(
-              templates: res.data,
-              message: res.message,
-            ),
-          );
+          emit(OperationResult.success(res.data));
         } on BaseError catch (e, st) {
           logger.e(
             '[QuickMessageCubit] - Error fetching templates: ${e.message}',
             error: e,
             stackTrace: st,
           );
-          emit(state.toFailure(e));
+          emit(OperationResult.failed(e));
         }
       });
 
   void reset() {
-    emit(QuickMessageState());
+    emit(const OperationResult.idle());
   }
 }

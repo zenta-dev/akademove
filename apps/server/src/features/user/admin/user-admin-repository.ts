@@ -247,8 +247,12 @@ export class UserAdminRepository extends BaseRepository {
 		return randomPassword;
 	}
 
-	async create(item: InviteUser): Promise<User & { password: string }> {
+	async create(
+		item: InviteUser,
+		opts?: PartialWithTx,
+	): Promise<User & { password: string }> {
 		try {
+			const db = opts?.tx ?? this.db;
 			// Check if user already exists
 
 			const whereClauses: SQL[] = [];
@@ -259,7 +263,7 @@ export class UserAdminRepository extends BaseRepository {
 				whereClauses.push(eq(tables.user.phone, item.phone));
 			}
 
-			const existingUser = await this.db.query.user.findFirst({
+			const existingUser = await db.query.user.findFirst({
 				columns: { email: true, phone: true },
 				where: (_f, op) => op.or(...whereClauses),
 			});
@@ -273,7 +277,7 @@ export class UserAdminRepository extends BaseRepository {
 			const userId = UserIdService.generate();
 
 			// Create user with role, no image for admin-created users
-			const user = await this.db
+			const user = await db
 				.insert(tables.user)
 				.values({
 					id: userId,
@@ -306,14 +310,14 @@ export class UserAdminRepository extends BaseRepository {
 					{ ...user, userBadges: [] },
 					this.#storage,
 				),
-				await this.db.insert(tables.account).values({
+				await db.insert(tables.account).values({
 					id: UserIdService.generate(),
 					accountId: UserIdService.generate(),
 					userId: user.id,
 					providerId: "credentials",
 					password: hashedPassword,
 				}),
-				await this.db.insert(tables.wallet).values({
+				await db.insert(tables.wallet).values({
 					id: v7(),
 					userId: user.id,
 					balance: "0",
@@ -566,9 +570,10 @@ export class UserAdminRepository extends BaseRepository {
 		}
 	}
 
-	async remove(id: string): Promise<void> {
+	async remove(id: string, opts?: PartialWithTx): Promise<void> {
 		try {
-			const result = await this.db
+			const db = opts?.tx ?? this.db;
+			const result = await db
 				.delete(tables.user)
 				.where(eq(tables.user.id, id))
 				.returning({ id: tables.user.id });

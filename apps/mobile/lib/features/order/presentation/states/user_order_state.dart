@@ -1,77 +1,78 @@
 part of '_export.dart';
 
-@MappableClass(
-  generateMethods:
-      GenerateMethods.stringify | GenerateMethods.equals | GenerateMethods.copy,
-)
-class UserOrderState extends BaseState2 with UserOrderStateMappable {
-  UserOrderState({
-    this.estimateOrder,
-    this.orderHistories,
-    this.selectedOrder,
-    this.currentOrder,
-    this.currentPayment,
-    this.currentTransaction,
-    this.currentAssignedDriver,
-    this.scheduledOrders,
-    this.selectedScheduledOrder,
-    super.state,
-    super.message,
-    super.error,
+class UserOrderState extends Equatable {
+  const UserOrderState({
+    this.estimateOrder = const OperationResult.idle(),
+    this.orderHistories = const OperationResult.idle(),
+    this.selectedOrder = const OperationResult.idle(),
+    this.currentOrder = const OperationResult.idle(),
+    this.currentPayment = const OperationResult.idle(),
+    this.currentTransaction = const OperationResult.idle(),
+    this.currentAssignedDriver = const OperationResult.idle(),
+    this.scheduledOrders = const OperationResult.idle(),
+    this.selectedScheduledOrder = const OperationResult.idle(),
   });
 
-  final EstimateOrderResult? estimateOrder;
-  final List<Order>? orderHistories;
-  final Order? selectedOrder;
+  final OperationResult<EstimateOrderResult> estimateOrder;
+  final OperationResult<List<Order>> orderHistories;
+  final OperationResult<Order> selectedOrder;
 
-  final Order? currentOrder;
-  final Payment? currentPayment;
-  final Transaction? currentTransaction;
-  final Driver? currentAssignedDriver;
+  final OperationResult<Order> currentOrder;
+  final OperationResult<Payment> currentPayment;
+  final OperationResult<Transaction> currentTransaction;
+  final OperationResult<Driver?> currentAssignedDriver;
 
   /// List of scheduled orders for the user
-  final List<Order>? scheduledOrders;
+  final OperationResult<List<Order>> scheduledOrders;
 
   /// Currently selected scheduled order for viewing/editing
-  final Order? selectedScheduledOrder;
+  final OperationResult<Order> selectedScheduledOrder;
+
+  // Convenience getters mainly for scheduled orders as that was the error context
+  bool get isLoading =>
+      scheduledOrders.isLoading; // Add others if needed contextually
+  bool get isFailure => scheduledOrders.isFailure;
+  BaseError? get error => scheduledOrders.error;
 
   @override
-  UserOrderState toInitial() =>
-      copyWith(state: CubitState.initial, message: null, error: null);
+  List<Object> get props => [
+    estimateOrder,
+    orderHistories,
+    selectedOrder,
+    currentOrder,
+    currentPayment,
+    currentTransaction,
+    currentAssignedDriver,
+    scheduledOrders,
+    selectedScheduledOrder,
+  ];
+
+  UserOrderState copyWith({
+    OperationResult<EstimateOrderResult>? estimateOrder,
+    OperationResult<List<Order>>? orderHistories,
+    OperationResult<Order>? selectedOrder,
+    OperationResult<Order>? currentOrder,
+    OperationResult<Payment>? currentPayment,
+    OperationResult<Transaction>? currentTransaction,
+    OperationResult<Driver?>? currentAssignedDriver,
+    OperationResult<List<Order>>? scheduledOrders,
+    OperationResult<Order>? selectedScheduledOrder,
+  }) {
+    return UserOrderState(
+      estimateOrder: estimateOrder ?? this.estimateOrder,
+      orderHistories: orderHistories ?? this.orderHistories,
+      selectedOrder: selectedOrder ?? this.selectedOrder,
+      currentOrder: currentOrder ?? this.currentOrder,
+      currentPayment: currentPayment ?? this.currentPayment,
+      currentTransaction: currentTransaction ?? this.currentTransaction,
+      currentAssignedDriver:
+          currentAssignedDriver ?? this.currentAssignedDriver,
+      scheduledOrders: scheduledOrders ?? this.scheduledOrders,
+      selectedScheduledOrder:
+          selectedScheduledOrder ?? this.selectedScheduledOrder,
+    );
+  }
 
   @override
-  UserOrderState toLoading() =>
-      copyWith(state: CubitState.loading, message: null, error: null);
-
-  @override
-  UserOrderState toSuccess({
-    EstimateOrderResult? estimateOrder,
-    Order? currentOrder,
-    Payment? currentPayment,
-    Transaction? currentTransaction,
-    Driver? currentAssignedDriver,
-    List<Order>? orderHistories,
-    Order? selectedOrder,
-    List<Order>? scheduledOrders,
-    Order? selectedScheduledOrder,
-    String? message,
-  }) => copyWith(
-    state: CubitState.success,
-    estimateOrder: estimateOrder ?? this.estimateOrder,
-    currentOrder: currentOrder ?? this.currentOrder,
-    currentPayment: currentPayment ?? this.currentPayment,
-    currentTransaction: currentTransaction ?? this.currentTransaction,
-    currentAssignedDriver: currentAssignedDriver ?? this.currentAssignedDriver,
-    orderHistories: orderHistories ?? this.orderHistories,
-    selectedOrder: selectedOrder ?? this.selectedOrder,
-    scheduledOrders: scheduledOrders ?? this.scheduledOrders,
-    selectedScheduledOrder:
-        selectedScheduledOrder ?? this.selectedScheduledOrder,
-    message: message,
-    error: null,
-  );
-
-  @override
-  UserOrderState toFailure(BaseError error, {String? message}) =>
-      copyWith(state: CubitState.failure, error: error, message: message);
+  bool get stringify => true;
 }

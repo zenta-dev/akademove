@@ -15,7 +15,7 @@ class DriverHomeCubit extends BaseCubit<DriverHomeState> {
        _orderRepository = orderRepository,
        _webSocketService = webSocketService,
        _configurationRepository = configurationRepository,
-       super(DriverHomeState());
+       super(const DriverHomeState());
 
   final DriverRepository _driverRepository;
   final OrderRepository _orderRepository;
@@ -32,7 +32,7 @@ class DriverHomeCubit extends BaseCubit<DriverHomeState> {
   }
 
   void reset() {
-    emit(DriverHomeState());
+    emit(const DriverHomeState());
     _locationUpdateTimer?.cancel();
   }
 
@@ -46,13 +46,15 @@ class DriverHomeCubit extends BaseCubit<DriverHomeState> {
   Future<void> loadDriverProfile() async =>
       await taskManager.execute("DHC-lDP1", () async {
         try {
+          emit(state.copyWith(initResult: const OperationResult.loading()));
+
           final res = await _driverRepository.getMine();
 
           emit(
-            state.toSuccess(
+            state.copyWith(
+              initResult: OperationResult.success(res.data),
               myDriver: res.data,
               isOnline: res.data.isOnline,
-              message: res.message,
             ),
           );
 
@@ -66,7 +68,7 @@ class DriverHomeCubit extends BaseCubit<DriverHomeState> {
             error: e,
             stackTrace: st,
           );
-          emit(state.toFailure(e));
+          emit(state.copyWith(initResult: OperationResult.failed(e)));
         }
       });
 
@@ -89,7 +91,7 @@ class DriverHomeCubit extends BaseCubit<DriverHomeState> {
           final todayEarnings = await _calculateDriverEarnings(todayOrders);
 
           emit(
-            state.toSuccess(
+            state.copyWith(
               todayTrips: todayOrders.length,
               todayEarnings: todayEarnings,
             ),
@@ -110,7 +112,9 @@ class DriverHomeCubit extends BaseCubit<DriverHomeState> {
 
         try {
           final newStatus = !state.isOnline;
-          emit(state.toLoading());
+          emit(
+            state.copyWith(toggleOnlineResult: const OperationResult.loading()),
+          );
 
           final res = await _driverRepository.updateOnlineStatus(
             driverId: driverId,
@@ -118,10 +122,10 @@ class DriverHomeCubit extends BaseCubit<DriverHomeState> {
           );
 
           emit(
-            state.toSuccess(
+            state.copyWith(
+              toggleOnlineResult: OperationResult.success(res.data),
               myDriver: res.data,
               isOnline: res.data.isOnline,
-              message: res.message,
             ),
           );
 
@@ -138,7 +142,7 @@ class DriverHomeCubit extends BaseCubit<DriverHomeState> {
             error: e,
             stackTrace: st,
           );
-          emit(state.toFailure(e));
+          emit(state.copyWith(toggleOnlineResult: OperationResult.failed(e)));
         }
       });
 
@@ -214,7 +218,7 @@ class DriverHomeCubit extends BaseCubit<DriverHomeState> {
               logger.i(
                 '[DriverHomeCubit] - New incoming order offer: ${order.id}',
               );
-              emit(state.toSuccess(incomingOrder: order));
+              emit(state.copyWith(incomingOrder: order));
             }
           }
 
@@ -273,7 +277,7 @@ class DriverHomeCubit extends BaseCubit<DriverHomeState> {
   }
 
   void setCurrentOrder(Order order) {
-    emit(state.toSuccess(currentOrder: order));
+    emit(state.copyWith(currentOrder: order));
   }
 
   void clearCurrentOrder() {

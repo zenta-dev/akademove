@@ -55,8 +55,8 @@ class _UserRideOnTripScreenState extends State<UserRideOnTripScreen> {
   }
 
   Future<void> _updateMapWithOrderData(UserOrderState state) async {
-    final driver = state.currentAssignedDriver;
-    final order = state.currentOrder;
+    final driver = state.currentAssignedDriver.value;
+    final order = state.currentOrder.value;
 
     if (order == null) return;
 
@@ -426,9 +426,9 @@ class _UserRideOnTripScreenState extends State<UserRideOnTripScreen> {
   }
 
   Widget _buildOrderDetails(UserOrderState state) {
-    final order = state.currentOrder;
-    final payment = state.currentPayment;
-    final estimateOrder = state.estimateOrder;
+    final order = state.currentOrder.value;
+    final payment = state.currentPayment.value;
+    final estimateOrder = state.estimateOrder.value;
 
     // Use estimateOrder locations if available (has proper names)
     // Otherwise fall back to order coordinates
@@ -506,7 +506,8 @@ class _UserRideOnTripScreenState extends State<UserRideOnTripScreen> {
   }
 
   Widget _buildBody(BuildContext context, UserOrderState state) {
-    final orderStatus = state.currentOrder?.status;
+    final order = state.currentOrder.value;
+    final orderStatus = order?.status;
     final isSearching =
         orderStatus == OrderStatus.MATCHING ||
         orderStatus == OrderStatus.REQUESTED;
@@ -522,7 +523,7 @@ class _UserRideOnTripScreenState extends State<UserRideOnTripScreen> {
           fontWeight: FontWeight.w600,
           fontSize: 16.sp,
         ),
-        _buildDriverInfo(state.currentAssignedDriver, orderStatus),
+        _buildDriverInfo(state.currentAssignedDriver.value, orderStatus),
         _buildOrderDetails(state),
       ],
     );
@@ -540,12 +541,13 @@ class _UserRideOnTripScreenState extends State<UserRideOnTripScreen> {
           listener: (context, state) async {
             await _updateMapWithOrderData(state);
 
-            if (state.currentOrder?.status == OrderStatus.COMPLETED &&
+            final currentOrder = state.currentOrder.value;
+
+            if (currentOrder?.status == OrderStatus.COMPLETED &&
                 mounted &&
                 context.mounted) {
               // Navigate to rating/review screen
-              final driver = state.currentAssignedDriver;
-              final currentOrder = state.currentOrder;
+              final driver = state.currentAssignedDriver.value;
               if (driver != null && currentOrder != null) {
                 final result = await context.pushNamed(
                   Routes.userRating.name,
@@ -572,12 +574,9 @@ class _UserRideOnTripScreenState extends State<UserRideOnTripScreen> {
                 );
                 context.goNamed(Routes.userHome.name);
               }
-            } else if ((state.currentOrder?.status ==
-                        OrderStatus.CANCELLED_BY_USER ||
-                    state.currentOrder?.status ==
-                        OrderStatus.CANCELLED_BY_DRIVER ||
-                    state.currentOrder?.status ==
-                        OrderStatus.CANCELLED_BY_SYSTEM) &&
+            } else if ((currentOrder?.status == OrderStatus.CANCELLED_BY_USER ||
+                    currentOrder?.status == OrderStatus.CANCELLED_BY_DRIVER ||
+                    currentOrder?.status == OrderStatus.CANCELLED_BY_SYSTEM) &&
                 mounted &&
                 context.mounted) {
               context.showMyToast(
@@ -613,7 +612,7 @@ class _UserRideOnTripScreenState extends State<UserRideOnTripScreen> {
                     // Emergency button - only show during IN_TRIP status
                     BlocBuilder<UserOrderCubit, UserOrderState>(
                       builder: (context, state) {
-                        final order = state.currentOrder;
+                        final order = state.currentOrder.value;
                         if (order == null ||
                             order.status != OrderStatus.IN_TRIP) {
                           return const SizedBox.shrink();
@@ -621,7 +620,7 @@ class _UserRideOnTripScreenState extends State<UserRideOnTripScreen> {
 
                         // Get current location from driver or order
                         final driverLocation =
-                            state.currentAssignedDriver?.currentLocation;
+                            state.currentAssignedDriver.value?.currentLocation;
                         final emergencyLocation = driverLocation != null
                             ? EmergencyLocation(
                                 latitude: driverLocation.y.toDouble(),

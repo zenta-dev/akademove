@@ -1,94 +1,144 @@
 part of '_export.dart';
 
-@MappableClass(
-  generateMethods:
-      GenerateMethods.stringify | GenerateMethods.equals | GenerateMethods.copy,
-)
-class UserWalletState extends BaseState2 with UserWalletStateMappable {
-  UserWalletState({
-    this.myWallet,
-    this.myTransactions = const [],
-    this.thisMonthSummary,
-    super.state,
-    super.message,
-    super.error,
+class UserWalletState extends Equatable {
+  const UserWalletState({
+    this.myWallet = const OperationResult.idle(),
+    this.myTransactions = const OperationResult.idle(),
+    this.thisMonthSummary = const OperationResult.idle(),
   });
 
-  final Wallet? myWallet;
-  final List<Transaction> myTransactions;
-  final WalletMonthlySummaryResponse? thisMonthSummary;
+  final OperationResult<Wallet> myWallet;
+  final OperationResult<List<Transaction>> myTransactions;
+  final OperationResult<WalletMonthlySummaryResponse> thisMonthSummary;
+
+  bool get isLoading =>
+      myWallet.isLoading ||
+      myTransactions.isLoading ||
+      thisMonthSummary.isLoading;
 
   @override
-  UserWalletState toInitial() =>
-      copyWith(state: CubitState.initial, message: null, error: null);
+  List<Object> get props => [myWallet, myTransactions, thisMonthSummary];
 
-  @override
-  UserWalletState toLoading() =>
-      copyWith(state: CubitState.loading, message: null, error: null);
+  UserWalletState copyWith({
+    OperationResult<Wallet>? myWallet,
+    OperationResult<List<Transaction>>? myTransactions,
+    OperationResult<WalletMonthlySummaryResponse>? thisMonthSummary,
+  }) {
+    return UserWalletState(
+      myWallet: myWallet ?? this.myWallet,
+      myTransactions: myTransactions ?? this.myTransactions,
+      thisMonthSummary: thisMonthSummary ?? this.thisMonthSummary,
+    );
+  }
 
-  @override
+  // Helper methods for Cubit
+  UserWalletState toLoading({
+    bool wallet = false,
+    bool transactions = false,
+    bool summary = false,
+  }) {
+    return copyWith(
+      myWallet: wallet ? const OperationResult.loading() : null,
+      myTransactions: transactions ? const OperationResult.loading() : null,
+      thisMonthSummary: summary ? const OperationResult.loading() : null,
+    );
+  }
+
   UserWalletState toSuccess({
-    Wallet? myWallet,
-    List<Transaction>? myTransactions,
-    WalletMonthlySummaryResponse? thisMonthSummary,
-    String? message,
-  }) => copyWith(
-    state: CubitState.success,
-    myWallet: myWallet ?? this.myWallet,
-    myTransactions: myTransactions ?? this.myTransactions,
-    thisMonthSummary: thisMonthSummary ?? this.thisMonthSummary,
-    message: message,
-    error: null,
-  );
+    Wallet? wallet,
+    List<Transaction>? transactions,
+    WalletMonthlySummaryResponse? summary,
+  }) {
+    return copyWith(
+      myWallet: wallet != null ? OperationResult.success(wallet) : null,
+      myTransactions: transactions != null
+          ? OperationResult.success(transactions)
+          : null,
+      thisMonthSummary: summary != null
+          ? OperationResult.success(summary)
+          : null,
+    );
+  }
+
+  UserWalletState toFailure(
+    BaseError error, {
+    bool wallet = false,
+    bool transactions = false,
+    bool summary = false,
+  }) {
+    return copyWith(
+      myWallet: wallet ? OperationResult.failed(error) : null,
+      myTransactions: transactions ? OperationResult.failed(error) : null,
+      thisMonthSummary: summary ? OperationResult.failed(error) : null,
+    );
+  }
 
   @override
-  UserWalletState toFailure(BaseError error, {String? message}) =>
-      copyWith(state: CubitState.failure, error: error, message: message);
+  bool get stringify => true;
 }
 
-@MappableClass(
-  generateMethods:
-      GenerateMethods.stringify | GenerateMethods.equals | GenerateMethods.copy,
-)
-class UserWalletTopUpState extends BaseState2
-    with UserWalletTopUpStateMappable {
-  UserWalletTopUpState({
-    this.paymentResult,
-    this.transactionResult,
-    this.walletResult,
-    super.state,
-    super.message,
-    super.error,
+class UserWalletTopUpState extends Equatable {
+  const UserWalletTopUpState({
+    this.status = const OperationResult.idle(),
+    this.payment,
+    this.transaction,
+    this.wallet,
   });
 
-  final Payment? paymentResult;
-  final Transaction? transactionResult;
-  final Wallet? walletResult;
+  final OperationResult<void> status;
+  final Payment? payment;
+  final Transaction? transaction;
+  final Wallet? wallet;
+
+  // Backwards compatibility getters
+  Payment? get paymentResult => payment;
+  Transaction? get transactionResult => transaction;
+  Wallet? get walletResult => wallet;
+
+  bool get isLoading => status.isLoading;
+  bool get isSuccess => status.isSuccess;
+  bool get isFailure => status.isFailure;
+  BaseError? get error => status.error;
 
   @override
-  UserWalletTopUpState toInitial() =>
-      copyWith(state: CubitState.initial, message: null, error: null);
+  List<Object?> get props => [status, payment, transaction, wallet];
 
-  @override
-  UserWalletTopUpState toLoading() =>
-      copyWith(state: CubitState.loading, message: null, error: null);
+  UserWalletTopUpState copyWith({
+    OperationResult<void>? status,
+    Payment? payment,
+    Transaction? transaction,
+    Wallet? wallet,
+  }) {
+    return UserWalletTopUpState(
+      status: status ?? this.status,
+      payment: payment ?? this.payment,
+      transaction: transaction ?? this.transaction,
+      wallet: wallet ?? this.wallet,
+    );
+  }
 
-  @override
+  // Helper methods for Cubit
+  UserWalletTopUpState toLoading() {
+    return copyWith(status: const OperationResult.loading());
+  }
+
   UserWalletTopUpState toSuccess({
     Payment? paymentResult,
     Transaction? transactionResult,
     Wallet? walletResult,
-    String? message,
-  }) => copyWith(
-    state: CubitState.success,
-    paymentResult: paymentResult ?? this.paymentResult,
-    transactionResult: transactionResult ?? this.transactionResult,
-    walletResult: walletResult ?? this.walletResult,
-    message: message,
-    error: null,
-  );
+  }) {
+    return copyWith(
+      status: OperationResult.success(null),
+      payment: paymentResult ?? payment,
+      transaction: transactionResult ?? transaction,
+      wallet: walletResult ?? wallet,
+    );
+  }
+
+  UserWalletTopUpState toFailure(BaseError error) {
+    return copyWith(status: OperationResult.failed(error));
+  }
 
   @override
-  UserWalletTopUpState toFailure(BaseError error, {String? message}) =>
-      copyWith(state: CubitState.failure, error: error, message: message);
+  bool get stringify => true;
 }

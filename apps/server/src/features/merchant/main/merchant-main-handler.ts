@@ -87,24 +87,32 @@ export const MerchantMainHandler = priv.router({
 				}
 			}
 
-			const data = trimObjectValues(unflattenData(body));
-			const result = await context.repo.merchant.main.update(params.id, data);
+			return await context.svc.db.transaction(async (tx) => {
+				const data = trimObjectValues(unflattenData(body));
+				const result = await context.repo.merchant.main.update(
+					params.id,
+					data,
+					{ tx },
+				);
 
-			return {
-				status: 200,
-				body: { message: m.server_merchant_updated(), data: result },
-			};
+				return {
+					status: 200,
+					body: { message: m.server_merchant_updated(), data: result },
+				};
+			});
 		}),
 	remove: priv.remove
 
 		.use(requireRoles("MERCHANT", "SYSTEM"))
 		.handler(async ({ context, input: { params } }) => {
-			await context.repo.merchant.main.remove(params.id);
+			return await context.svc.db.transaction(async (tx) => {
+				await context.repo.merchant.main.remove(params.id, { tx });
 
-			return {
-				status: 200,
-				body: { message: m.server_merchant_deleted(), data: null },
-			};
+				return {
+					status: 200,
+					body: { message: m.server_merchant_deleted(), data: null },
+				};
+			});
 		}),
 	bestSellers: priv.bestSellers
 
@@ -158,12 +166,17 @@ export const MerchantMainHandler = priv.router({
 				{ merchantId: params.id, userId: context.user.id },
 				"[MerchantMainHandler] Activating merchant",
 			);
-			const result = await context.repo.merchant.main.activate(params.id);
 
-			return {
-				status: 200,
-				body: { message: m.server_merchant_activated(), data: result },
-			};
+			return await context.svc.db.transaction(async (tx) => {
+				const result = await context.repo.merchant.main.activate(params.id, {
+					tx,
+				});
+
+				return {
+					status: 200,
+					body: { message: m.server_merchant_activated(), data: result },
+				};
+			});
 		}),
 	deactivate: priv.deactivate
 
@@ -173,16 +186,20 @@ export const MerchantMainHandler = priv.router({
 				{ merchantId: params.id, userId: context.user.id, reason: body.reason },
 				"[MerchantMainHandler] Deactivating merchant",
 			);
-			const data = trimObjectValues(body);
-			const result = await context.repo.merchant.main.deactivate(
-				params.id,
-				data.reason,
-			);
 
-			return {
-				status: 200,
-				body: { message: m.server_merchant_deactivated(), data: result },
-			};
+			return await context.svc.db.transaction(async (tx) => {
+				const data = trimObjectValues(body);
+				const result = await context.repo.merchant.main.deactivate(
+					params.id,
+					data.reason,
+					{ tx },
+				);
+
+				return {
+					status: 200,
+					body: { message: m.server_merchant_deactivated(), data: result },
+				};
+			});
 		}),
 	setOnlineStatus: priv.setOnlineStatus
 

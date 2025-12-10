@@ -21,22 +21,26 @@ export const MerchantApprovalHandler = priv.router({
 
 	updateDocumentStatus: priv.updateDocumentStatus.handler(
 		async ({ context, input: { params, body } }) => {
-			const data = trimObjectValues(body);
-			const result = await context.repo.merchant.approval.updateDocumentStatus(
-				params.id,
-				data.document,
-				data.status,
-				data.reason,
-				context,
-			);
+			return await context.svc.db.transaction(async (tx) => {
+				const data = trimObjectValues(body);
+				const result =
+					await context.repo.merchant.approval.updateDocumentStatus(
+						params.id,
+						data.document,
+						data.status,
+						data.reason,
+						context,
+						{ tx },
+					);
 
-			return {
-				status: 200,
-				body: {
-					message: "Document status updated successfully",
-					data: result,
-				},
-			};
+				return {
+					status: 200,
+					body: {
+						message: "Document status updated successfully",
+						data: result,
+					},
+				};
+			});
 		},
 	),
 

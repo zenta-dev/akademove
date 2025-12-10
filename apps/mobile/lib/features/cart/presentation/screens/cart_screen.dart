@@ -60,20 +60,24 @@ class _CartScreenState extends State<CartScreen> {
       padding: EdgeInsets.zero,
       body: BlocConsumer<CartCubit, CartState>(
         listener: (context, state) {
-          if (state.isFailure && state.error != null) {
-            showToast(
-              context: context,
-              builder: (context, overlay) => context.buildToast(
-                title: context.l10n.error,
-                message: state.error!.message ?? context.l10n.an_error_occurred,
-              ),
-              location: ToastLocation.topCenter,
-            );
-          }
+          // Listen to cart load failures
+          state.cart.whenOr(
+            failure: (error) {
+              showToast(
+                context: context,
+                builder: (context, overlay) => context.buildToast(
+                  title: context.l10n.error,
+                  message: error.message ?? context.l10n.an_error_occurred,
+                ),
+                location: ToastLocation.topCenter,
+              );
+            },
+            orElse: () {},
+          );
         },
         builder: (context, state) {
-          return state.whenOr(
-            success: (_) {
+          return state.cart.whenOr(
+            success: (cart, _) {
               if (state.isEmpty) {
                 return _buildEmptyCart(context);
               }
@@ -136,7 +140,7 @@ class _CartScreenState extends State<CartScreen> {
   }
 
   Widget _buildContent(BuildContext context, CartState state) {
-    final cart = state.cart;
+    final cart = state.currentCart;
     if (cart == null) return const SizedBox.shrink();
 
     return Column(

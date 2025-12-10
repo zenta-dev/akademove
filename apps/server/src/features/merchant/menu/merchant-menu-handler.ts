@@ -62,16 +62,21 @@ export const MerchantMenuHandler = priv.router({
 			}
 		}
 
-		const data = trimObjectValues(body);
-		const result = await context.repo.merchant.menu.create({
-			...data,
-			...params,
-		});
+		return await context.svc.db.transaction(async (tx) => {
+			const data = trimObjectValues(body);
+			const result = await context.repo.merchant.menu.create(
+				{
+					...data,
+					...params,
+				},
+				{ tx },
+			);
 
-		return {
-			status: 200,
-			body: { message: m.server_menu_created(), data: result },
-		};
+			return {
+				status: 200,
+				body: { message: m.server_menu_created(), data: result },
+			};
+		});
 	}),
 	update: priv.update.handler(async ({ context, input: { params, body } }) => {
 		// Only MERCHANT, ADMIN, and OPERATOR can update menu items
@@ -103,16 +108,22 @@ export const MerchantMenuHandler = priv.router({
 			}
 		}
 
-		const data = trimObjectValues(body);
-		const result = await context.repo.merchant.menu.update(params.id, {
-			...data,
-			merchantId: params.merchantId,
-		});
+		return await context.svc.db.transaction(async (tx) => {
+			const data = trimObjectValues(body);
+			const result = await context.repo.merchant.menu.update(
+				params.id,
+				{
+					...data,
+					merchantId: params.merchantId,
+				},
+				{ tx },
+			);
 
-		return {
-			status: 200,
-			body: { message: m.server_menu_updated(), data: result },
-		};
+			return {
+				status: 200,
+				body: { message: m.server_menu_updated(), data: result },
+			};
+		});
 	}),
 	remove: priv.remove.handler(async ({ context, input: { params } }) => {
 		// Only MERCHANT, ADMIN, and OPERATOR can delete menu items
@@ -145,11 +156,13 @@ export const MerchantMenuHandler = priv.router({
 			}
 		}
 
-		await context.repo.merchant.menu.remove(params.id);
+		return await context.svc.db.transaction(async (tx) => {
+			await context.repo.merchant.menu.remove(params.id, { tx });
 
-		return {
-			status: 200,
-			body: { message: m.server_menu_deleted(), data: null },
-		};
+			return {
+				status: 200,
+				body: { message: m.server_menu_deleted(), data: null },
+			};
+		});
 	}),
 });

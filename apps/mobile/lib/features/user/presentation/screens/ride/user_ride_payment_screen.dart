@@ -29,7 +29,7 @@ class UserRidePaymentScreen extends StatelessWidget {
             builder: (context, state) {
               return Text(
                     context.formatCurrency(
-                      state.currentPayment?.amount ?? dummyAmount,
+                      state.currentPayment.value?.amount ?? dummyAmount,
                     ),
                   )
                   .large(color: context.colorScheme.primary)
@@ -38,10 +38,10 @@ class UserRidePaymentScreen extends StatelessWidget {
           ),
           BlocConsumer<UserOrderCubit, UserOrderState>(
             listener: (context, state) {
-              final payment = state.currentPayment;
+              final payment = state.currentPayment.value;
               if (payment == null) return;
 
-              if (state.isSuccess &&
+              if (state.currentPayment.isSuccess &&
                   payment.status == TransactionStatus.SUCCESS) {
                 context
                   ..showMyToast(
@@ -60,7 +60,7 @@ class UserRidePaymentScreen extends StatelessWidget {
             builder: (context, state) {
               if (paymentMethod == PaymentMethod.QRIS) {
                 return QRISPaymentWidget(
-                  payment: state.currentPayment ?? dummyPayment,
+                  payment: state.currentPayment.value ?? dummyPayment,
                   transactionType: TransactionType.PAYMENT,
                   onExpired: () {
                     context.pop();
@@ -69,7 +69,7 @@ class UserRidePaymentScreen extends StatelessWidget {
               }
               if (paymentMethod == PaymentMethod.BANK_TRANSFER) {
                 return BankTransferPaymentWidget(
-                  payment: state.currentPayment ?? dummyPayment,
+                  payment: state.currentPayment.value ?? dummyPayment,
                   bankProvider: bankProvider,
                   onExpired: () {
                     context.pop();

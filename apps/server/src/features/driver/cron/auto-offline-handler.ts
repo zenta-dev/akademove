@@ -109,10 +109,12 @@ export async function handleAutoOfflineCron() {
 				// The schedule system only enforces "class time = offline", not "free time = online"
 				if (isInSchedule && driver.isOnline) {
 					// Driver is in class but still online - set them offline
-					await svc.db
-						.update(tables.driver)
-						.set({ isOnline: false })
-						.where(eq(tables.driver.id, driver.id));
+					await svc.db.transaction(async (tx) => {
+						await tx
+							.update(tables.driver)
+							.set({ isOnline: false })
+							.where(eq(tables.driver.id, driver.id));
+					});
 
 					// Invalidate driver cache
 					await repo.driver.main.deleteCache(driver.id);

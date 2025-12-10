@@ -1,29 +1,25 @@
 import 'package:akademove/core/_export.dart';
 import 'package:api_client/api_client.dart';
+import 'package:equatable/equatable.dart';
 
-class MerchantAvailabilityState extends BaseState<Merchant?> {
+class MerchantAvailabilityState extends Equatable {
   const MerchantAvailabilityState({
-    super.data,
-    super.error,
-    super.state,
-    super.message,
+    this.availability = const OperationResult.idle(),
   });
 
-  factory MerchantAvailabilityState.initial() =>
-      const MerchantAvailabilityState();
+  final OperationResult<Merchant> availability;
 
-  factory MerchantAvailabilityState.loading() =>
-      const MerchantAvailabilityState(state: CubitState.loading);
+  @override
+  List<Object> get props => [availability];
 
-  factory MerchantAvailabilityState.success(
-    Merchant merchant, {
-    String? message,
-  }) => MerchantAvailabilityState(
-    data: merchant,
-    state: CubitState.success,
-    message: message,
-  );
+  MerchantAvailabilityState copyWith({
+    OperationResult<Merchant>? availability,
+  }) {
+    return MerchantAvailabilityState(
+      availability: availability ?? this.availability,
+    );
+  }
 
-  factory MerchantAvailabilityState.failure(BaseError error) =>
-      MerchantAvailabilityState(error: error, state: CubitState.failure);
+  @override
+  bool get stringify => true;
 }

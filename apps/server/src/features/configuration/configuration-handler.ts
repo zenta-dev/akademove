@@ -50,15 +50,21 @@ export const ConfigurationHandler = pub.router({
 			});
 		}
 
-		const data = trimObjectValues(body);
-		const result = await context.repo.configuration.update(params.key, {
-			...data,
-			userId: context.user.id,
+		return await context.svc.db.transaction(async (tx) => {
+			const data = trimObjectValues(body);
+			const result = await context.repo.configuration.update(
+				params.key,
+				{
+					...data,
+					userId: context.user.id,
+				},
+				{ tx },
+			);
+			return {
+				status: 200,
+				body: { message: m.server_configuration_updated(), data: result },
+			};
 		});
-		return {
-			status: 200,
-			body: { message: m.server_configuration_updated(), data: result },
-		};
 	}),
 	/**
 	 * Public endpoint to get business configuration.

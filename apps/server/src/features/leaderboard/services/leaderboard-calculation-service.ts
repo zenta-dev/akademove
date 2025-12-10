@@ -66,10 +66,18 @@ export class LeaderboardCalculationService {
 				"STREAK",
 			];
 
-			// Process all combinations of period + category
+			// Process all combinations of period + category within transactions
 			for (const period of periods) {
 				for (const category of categories) {
-					await this.calculateLeaderboardForPeriodAndCategory(period, category);
+					await this.#db.transaction(async (tx) => {
+						await this.calculateLeaderboardForPeriodAndCategory(
+							period,
+							category,
+							{
+								tx,
+							},
+						);
+					});
 				}
 			}
 

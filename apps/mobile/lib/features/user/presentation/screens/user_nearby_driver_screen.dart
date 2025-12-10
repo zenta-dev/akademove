@@ -95,7 +95,9 @@ class _UserNearbyDriverScreenState extends State<UserNearbyDriverScreen> {
     if (useCache) {
       if (!mounted) return;
 
-      _updateDriverMarkers(context.read<UserRideCubit>().state.nearbyDrivers);
+      _updateDriverMarkers(
+        context.read<UserRideCubit>().state.nearbyDrivers.value ?? [],
+      );
       if (!mounted) return;
       setState(() {});
       return;
@@ -114,7 +116,9 @@ class _UserNearbyDriverScreenState extends State<UserNearbyDriverScreen> {
 
     if (!mounted) return;
 
-    _updateDriverMarkers(context.read<UserRideCubit>().state.nearbyDrivers);
+    _updateDriverMarkers(
+      context.read<UserRideCubit>().state.nearbyDrivers.value ?? [],
+    );
     if (!mounted) return;
     setState(() {});
   }
@@ -284,13 +288,15 @@ class _UserNearbyDriverScreenState extends State<UserNearbyDriverScreen> {
                 BlocBuilder<UserLocationCubit, UserLocationState>(
                   builder: (context, state) {
                     return Text(
-                      state.placemark?.street ?? 'St. Boulevard No.80',
+                      state.location.value?.$2?.street ?? 'St. Boulevard No.80',
                       style: context.typography.small.copyWith(
                         fontSize: 16.sp,
                         fontWeight: FontWeight.w500,
                       ),
                     ).asSkeleton(
-                      enabled: state.placemark == null || state.isLoading,
+                      enabled:
+                          state.location.value?.$2 == null ||
+                          state.location.isLoading,
                     );
                   },
                 ),
@@ -302,7 +308,7 @@ class _UserNearbyDriverScreenState extends State<UserNearbyDriverScreen> {
                         fontSize: 12.sp,
                         color: context.colorScheme.mutedForeground,
                       ),
-                    ).asSkeleton(enabled: state.isLoading);
+                    ).asSkeleton(enabled: state.nearbyDrivers.isLoading);
                   },
                 ),
               ],

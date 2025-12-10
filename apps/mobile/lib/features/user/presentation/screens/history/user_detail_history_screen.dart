@@ -17,7 +17,7 @@ class UserDetailHistoryScreen extends StatelessWidget {
       headers: [
         BlocBuilder<UserOrderCubit, UserOrderState>(
           builder: (context, state) {
-            final order = state.selectedOrder ?? dummyOrder;
+            final order = state.selectedOrder.value ?? dummyOrder;
             return DefaultAppBar(
               title: order.status.localizedName(context),
               subtitle: order.requestedAt.format('dd MMM yyy - HH:mm'),
@@ -28,13 +28,13 @@ class UserDetailHistoryScreen extends StatelessWidget {
                   color: context.colorScheme.mutedForeground,
                 ),
               ],
-            ).asSkeleton(enabled: state.isLoading);
+            ).asSkeleton(enabled: state.selectedOrder.isLoading);
           },
         ),
       ],
       body: BlocBuilder<UserOrderCubit, UserOrderState>(
         builder: (context, state) {
-          final order = state.selectedOrder;
+          final order = state.selectedOrder.value;
 
           return Column(
             children: [

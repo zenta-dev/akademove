@@ -57,13 +57,17 @@ export const DriverMainHandler = priv.router({
 			}
 		}
 
-		const data = trimObjectValues(body);
-		const result = await context.repo.driver.main.update(params.id, data);
+		return await context.svc.db.transaction(async (tx) => {
+			const data = trimObjectValues(body);
+			const result = await context.repo.driver.main.update(params.id, data, {
+				tx,
+			});
 
-		return {
-			status: 200,
-			body: { message: m.server_driver_updated(), data: result },
-		};
+			return {
+				status: 200,
+				body: { message: m.server_driver_updated(), data: result },
+			};
+		});
 	}),
 	updateLocation: priv.updateLocation.handler(
 		async ({ context, input: { params, body } }) => {
@@ -148,15 +152,21 @@ export const DriverMainHandler = priv.router({
 					});
 			}
 
-			const result = await context.repo.driver.main.updateLocation(params.id, {
-				x: data.x,
-				y: data.y,
-			});
+			return await context.svc.db.transaction(async (tx) => {
+				const result = await context.repo.driver.main.updateLocation(
+					params.id,
+					{
+						x: data.x,
+						y: data.y,
+					},
+					{ tx },
+				);
 
-			return {
-				status: 200,
-				body: { message: m.server_driver_updated(), data: result },
-			};
+				return {
+					status: 200,
+					body: { message: m.server_driver_updated(), data: result },
+				};
+			});
 		},
 	),
 	updateOnlineStatus: priv.updateOnlineStatus.handler(
@@ -172,16 +182,19 @@ export const DriverMainHandler = priv.router({
 				}
 			}
 
-			const data = trimObjectValues(body);
-			const result = await context.repo.driver.main.updateOnlineStatus(
-				params.id,
-				data.isOnline,
-			);
+			return await context.svc.db.transaction(async (tx) => {
+				const data = trimObjectValues(body);
+				const result = await context.repo.driver.main.updateOnlineStatus(
+					params.id,
+					data.isOnline,
+					{ tx },
+				);
 
-			return {
-				status: 200,
-				body: { message: m.server_driver_updated(), data: result },
-			};
+				return {
+					status: 200,
+					body: { message: m.server_driver_updated(), data: result },
+				};
+			});
 		},
 	),
 	updateTakingOrderStatus: priv.updateTakingOrderStatus.handler(
@@ -197,25 +210,30 @@ export const DriverMainHandler = priv.router({
 				}
 			}
 
-			const data = trimObjectValues(body);
-			const result = await context.repo.driver.main.updateTakingOrderStatus(
-				params.id,
-				data.isTakingOrder,
-			);
+			return await context.svc.db.transaction(async (tx) => {
+				const data = trimObjectValues(body);
+				const result = await context.repo.driver.main.updateTakingOrderStatus(
+					params.id,
+					data.isTakingOrder,
+					{ tx },
+				);
 
-			return {
-				status: 200,
-				body: { message: m.server_driver_updated(), data: result },
-			};
+				return {
+					status: 200,
+					body: { message: m.server_driver_updated(), data: result },
+				};
+			});
 		},
 	),
 	remove: priv.remove.handler(async ({ context, input: { params } }) => {
-		await context.repo.driver.main.remove(params.id);
+		return await context.svc.db.transaction(async (tx) => {
+			await context.repo.driver.main.remove(params.id, { tx });
 
-		return {
-			status: 200,
-			body: { message: m.server_driver_deleted(), data: null },
-		};
+			return {
+				status: 200,
+				body: { message: m.server_driver_deleted(), data: null },
+			};
+		});
 	}),
 	getAnalytics: priv.getAnalytics.handler(
 		async ({ context, input: { params, query } }) => {
@@ -245,95 +263,107 @@ export const DriverMainHandler = priv.router({
 		},
 	),
 	approve: priv.approve.handler(async ({ context, input: { params } }) => {
-		const result = await context.repo.driver.main.approve(params.id);
+		return await context.svc.db.transaction(async (tx) => {
+			const result = await context.repo.driver.main.approve(params.id, { tx });
 
-		// Send approval notification to driver
-		try {
-			await context.repo.notification.sendNotificationToUserId({
-				toUserId: result.userId,
-				title: "Driver Application Approved",
-				body: "Congratulations! Your driver application and quiz have been approved. You can now start accepting orders.",
-				data: {
-					type: "DRIVER_APPROVED",
-					driverId: result.id,
-					deeplink: "akademove://driver/home",
-				},
-				apns: {
-					payload: { aps: { category: "DRIVER_APPROVED", sound: "default" } },
-				},
-				fromUserId: context.user.id,
-			});
-		} catch (error) {
-			// Log but don't fail the request if notification sending fails
-			log.error(
-				{ error, userId: result.userId, driverId: result.id },
-				"[DriverHandler.approve] Failed to send approval notification",
-			);
-		}
-
-		return {
-			status: 200,
-			body: { message: m.server_driver_approved(), data: result },
-		};
-	}),
-	reject: priv.reject.handler(async ({ context, input: { params, body } }) => {
-		const data = trimObjectValues(body);
-		const result = await context.repo.driver.main.reject(
-			params.id,
-			data.reason,
-		);
-
-		// Send rejection notification to driver with reason
-		try {
-			await context.repo.notification.sendNotificationToUserId({
-				toUserId: result.userId,
-				title: "Driver Application Declined",
-				body: `Your driver application has been declined. Reason: ${data.reason || "Your application does not meet our requirements. Please contact support for more information."}`,
-				data: {
-					type: "DRIVER_DECLINED",
-					driverId: result.id,
-					reason: data.reason || "",
-					deeplink: "akademove://contact-support",
-				},
-				apns: {
-					payload: { aps: { category: "DRIVER_DECLINED", sound: "default" } },
-				},
-				fromUserId: context.user.id,
-			});
-		} catch (error) {
-			// Log but don't fail the request if notification sending fails
-			log.error(
-				{ error, userId: result.userId, driverId: result.id },
-				"[DriverHandler.reject] Failed to send rejection notification",
-			);
-		}
-
-		return {
-			status: 200,
-			body: { message: m.server_driver_rejected(), data: result },
-		};
-	}),
-	suspend: priv.suspend.handler(
-		async ({ context, input: { params, body } }) => {
-			const data = trimObjectValues(body);
-			const result = await context.repo.driver.main.suspend(
-				params.id,
-				data.reason,
-				data.suspendUntil,
-			);
+			// Send approval notification to driver
+			try {
+				await context.repo.notification.sendNotificationToUserId({
+					toUserId: result.userId,
+					title: "Driver Application Approved",
+					body: "Congratulations! Your driver application and quiz have been approved. You can now start accepting orders.",
+					data: {
+						type: "DRIVER_APPROVED",
+						driverId: result.id,
+						deeplink: "akademove://driver/home",
+					},
+					apns: {
+						payload: { aps: { category: "DRIVER_APPROVED", sound: "default" } },
+					},
+					fromUserId: context.user.id,
+				});
+			} catch (error) {
+				// Log but don't fail the request if notification sending fails
+				log.error(
+					{ error, userId: result.userId, driverId: result.id },
+					"[DriverHandler.approve] Failed to send approval notification",
+				);
+			}
 
 			return {
 				status: 200,
-				body: { message: m.server_driver_suspended(), data: result },
+				body: { message: m.server_driver_approved(), data: result },
 			};
+		});
+	}),
+	reject: priv.reject.handler(async ({ context, input: { params, body } }) => {
+		return await context.svc.db.transaction(async (tx) => {
+			const data = trimObjectValues(body);
+			const result = await context.repo.driver.main.reject(
+				params.id,
+				data.reason,
+				{ tx },
+			);
+
+			// Send rejection notification to driver with reason
+			try {
+				await context.repo.notification.sendNotificationToUserId({
+					toUserId: result.userId,
+					title: "Driver Application Declined",
+					body: `Your driver application has been declined. Reason: ${data.reason || "Your application does not meet our requirements. Please contact support for more information."}`,
+					data: {
+						type: "DRIVER_DECLINED",
+						driverId: result.id,
+						reason: data.reason || "",
+						deeplink: "akademove://contact-support",
+					},
+					apns: {
+						payload: { aps: { category: "DRIVER_DECLINED", sound: "default" } },
+					},
+					fromUserId: context.user.id,
+				});
+			} catch (error) {
+				// Log but don't fail the request if notification sending fails
+				log.error(
+					{ error, userId: result.userId, driverId: result.id },
+					"[DriverHandler.reject] Failed to send rejection notification",
+				);
+			}
+
+			return {
+				status: 200,
+				body: { message: m.server_driver_rejected(), data: result },
+			};
+		});
+	}),
+	suspend: priv.suspend.handler(
+		async ({ context, input: { params, body } }) => {
+			return await context.svc.db.transaction(async (tx) => {
+				const data = trimObjectValues(body);
+				const result = await context.repo.driver.main.suspend(
+					params.id,
+					data.reason,
+					data.suspendUntil,
+					{ tx },
+				);
+
+				return {
+					status: 200,
+					body: { message: m.server_driver_suspended(), data: result },
+				};
+			});
 		},
 	),
 	activate: priv.activate.handler(async ({ context, input: { params } }) => {
-		const result = await context.repo.driver.main.activate(params.id);
+		return await context.svc.db.transaction(async (tx) => {
+			const result = await context.repo.driver.main.activate(params.id, {
+				tx,
+			});
 
-		return {
-			status: 200,
-			body: { message: m.server_driver_activated(), data: result },
-		};
+			return {
+				status: 200,
+				body: { message: m.server_driver_activated(), data: result },
+			};
+		});
 	}),
 });

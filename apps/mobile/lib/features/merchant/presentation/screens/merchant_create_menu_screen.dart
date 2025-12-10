@@ -123,7 +123,7 @@ class _MerchantCreateMenuScreenState extends State<MerchantCreateMenuScreen> {
 
     // Get merchant ID
     final merchantCubit = context.read<MerchantCubit>();
-    final merchantId = merchantCubit.state.mine?.id;
+    final merchantId = merchantCubit.state.mine.value?.id;
 
     if (merchantId == null) {
       _showToast(

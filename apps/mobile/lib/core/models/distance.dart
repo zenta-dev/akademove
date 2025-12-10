@@ -2,8 +2,7 @@ part of '_export.dart';
 
 enum DistanceUnit { m, km }
 
-@MappableClass()
-class Distance with DistanceMappable {
+class Distance extends Equatable {
   const Distance({required this.value, required this.unit});
   final double value;
   final DistanceUnit unit;
@@ -16,4 +15,14 @@ class Distance with DistanceMappable {
     }
     return '${value.toStringAsFixed(0)} ${unit.name}';
   }
+
+  Distance copyWith({double? value, DistanceUnit? unit}) {
+    return Distance(value: value ?? this.value, unit: unit ?? this.unit);
+  }
+
+  @override
+  List<Object?> get props => [value, unit];
+
+  @override
+  bool get stringify => true;
 }

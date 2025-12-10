@@ -41,15 +41,16 @@ class _UserDeliveryPaymentScreenState extends State<UserDeliveryPaymentScreen> {
       ],
       body: BlocConsumer<UserDeliveryCubit, UserDeliveryState>(
         listener: (context, state) {
-          if (state.isFailure && state.error != null) {
+          if (state.status.isFailure && state.status.error != null) {
             context.showMyToast(
-              state.error?.message ?? context.l10n.toast_failed_place_order,
+              state.status.error?.message ??
+                  context.l10n.toast_failed_place_order,
               type: ToastType.failed,
             );
           }
         },
         builder: (context, deliveryState) {
-          final estimate = deliveryState.estimate;
+          final estimate = deliveryState.estimate.value;
           return Padding(
             padding: EdgeInsets.all(16.w),
             child: Column(
@@ -71,7 +72,7 @@ class _UserDeliveryPaymentScreenState extends State<UserDeliveryPaymentScreen> {
                           }),
                       bankProvider: bankProvider,
                       walletBalance:
-                          walletState.myWallet?.balance.toDouble() ?? 0,
+                          walletState.myWallet.value?.balance.toDouble() ?? 0,
                       totalCost: estimate?.summary.totalCost.toDouble() ?? 0,
                     );
                   },

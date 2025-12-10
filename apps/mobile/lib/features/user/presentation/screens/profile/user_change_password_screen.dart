@@ -48,7 +48,7 @@ class _UserChangePasswordScreenState extends State<UserChangePasswordScreen> {
     Map<FormKey<T>, dynamic> values,
   ) {
     final cubit = context.read<UserProfileCubit>();
-    if (cubit.state.isLoading) return;
+    if (cubit.state.updatePasswordResult.isLoading) return;
 
     final oldPassword = _oldPasswordKey[values];
     final newPassword = _newPasswordKey[values];
@@ -77,9 +77,8 @@ class _UserChangePasswordScreenState extends State<UserChangePasswordScreen> {
         onSubmit: _handleFormSubmit,
         child: BlocConsumer<UserProfileCubit, UserProfileState>(
           listener: (context, state) {
-            state.whenOr(
-              success: (message) {
-                if (state.updatePasswordResult == null) return;
+            state.updatePasswordResult.whenOr(
+              success: (result, message) {
                 context.showMyToast(message, type: ToastType.success);
                 delay(const Duration(seconds: 3), () {
                   context.read<UserProfileCubit>().reset();
@@ -94,6 +93,7 @@ class _UserChangePasswordScreenState extends State<UserChangePasswordScreen> {
             );
           },
           builder: (context, state) {
+            final isLoading = state.updatePasswordResult.isLoading;
             return Column(
               spacing: 8.h,
               children: [
@@ -106,7 +106,7 @@ class _UserChangePasswordScreenState extends State<UserChangePasswordScreen> {
                     FormValidationMode.submitted,
                   },
                   child: TextField(
-                    enabled: !state.isLoading,
+                    enabled: !isLoading,
                     focusNode: _oldPasswordFn,
                     placeholder: Text(context.l10n.placeholder_old_password),
                     textInputAction: TextInputAction.next,
@@ -129,7 +129,7 @@ class _UserChangePasswordScreenState extends State<UserChangePasswordScreen> {
                     FormValidationMode.submitted,
                   },
                   child: TextField(
-                    enabled: !state.isLoading,
+                    enabled: !isLoading,
                     focusNode: _newPasswordFn,
                     placeholder: Text(context.l10n.placeholder_new_password),
                     textInputAction: TextInputAction.next,
@@ -152,7 +152,7 @@ class _UserChangePasswordScreenState extends State<UserChangePasswordScreen> {
                     FormValidationMode.submitted,
                   },
                   child: TextField(
-                    enabled: !state.isLoading,
+                    enabled: !isLoading,
                     focusNode: _confirmNewPasswordFn,
                     placeholder: Text(
                       context.l10n.placeholder_confirm_new_password,
@@ -173,7 +173,6 @@ class _UserChangePasswordScreenState extends State<UserChangePasswordScreen> {
                   child: FormErrorBuilder(
                     builder: (context, errors, child) {
                       final hasErrors = errors.isNotEmpty;
-                      final isLoading = state.isLoading;
 
                       return Button(
                         style: isLoading || hasErrors

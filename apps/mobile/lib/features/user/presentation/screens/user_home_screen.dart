@@ -193,27 +193,23 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
       width: double.infinity,
       child: BlocBuilder<UserHomeCubit, UserHomeState>(
         builder: (context, state) {
-          return state.whenOr(
-            success: (_) => ListView.separated(
+          return state.popularMerchants.whenOr(
+            success: (merchants, _) => ListView.separated(
               scrollDirection: Axis.horizontal,
-              itemCount: state.popularMerchants.length,
+              itemCount: merchants.length,
               separatorBuilder: (context, index) => Gap(16.w),
               itemBuilder: (context, index) => Button(
                 style: const ButtonStyle.ghost(density: ButtonDensity.compact),
                 onPressed: () {
                   context.pushNamed(
                     Routes.userMerchantDetail.name,
-                    pathParameters: {
-                      'merchantId': state.popularMerchants[index].id,
-                    },
-                    extra: {'merchant': state.popularMerchants[index]},
+                    pathParameters: {'merchantId': merchants[index].id},
+                    extra: {'merchant': merchants[index]},
                   );
                 },
                 child: LimitedBox(
                   maxWidth: 111.w,
-                  child: _MerchantCardWidget(
-                    merchant: state.popularMerchants[index],
-                  ),
+                  child: _MerchantCardWidget(merchant: merchants[index]),
                 ),
               ),
             ),

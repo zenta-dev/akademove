@@ -16,6 +16,7 @@ import type {
 	CountCache,
 	ListResult,
 	OrderByOperation,
+	PartialWithTx,
 	WithTx,
 } from "@/core/interface";
 import { type DatabaseService, tables } from "@/core/services/db";
@@ -251,14 +252,16 @@ export class MerchantMenuRepository extends BaseRepository {
 
 	async create(
 		item: InsertMerchantMenu & { merchantId: string },
+		opts?: PartialWithTx,
 	): Promise<MerchantMenu> {
 		try {
+			const db = opts?.tx ?? this.db;
 			const id = v7();
 			const imageFile = item.image;
 			const imageKey = MenuImageService.generateImageKey(id, imageFile);
 
 			const [operation] = await Promise.all([
-				this.db
+				db
 					.insert(tables.merchantMenu)
 					.values({
 						...item,
@@ -302,8 +305,10 @@ export class MerchantMenuRepository extends BaseRepository {
 	async update(
 		id: string,
 		item: UpdateMerchantMenu & { merchantId: string },
+		opts?: PartialWithTx,
 	): Promise<MerchantMenu> {
 		try {
+			const db = opts?.tx ?? this.db;
 			const existing = await this.#getFromDB(id);
 			if (!existing) {
 				throw new RepositoryError(`Merchant menu with id "${id}" not found`, {
@@ -327,7 +332,7 @@ export class MerchantMenuRepository extends BaseRepository {
 				: Promise.resolve();
 
 			const [operation] = await Promise.all([
-				this.db
+				db
 					.update(tables.merchantMenu)
 					.set({
 						...item,
@@ -357,8 +362,9 @@ export class MerchantMenuRepository extends BaseRepository {
 		}
 	}
 
-	async remove(id: string): Promise<void> {
+	async remove(id: string, opts?: PartialWithTx): Promise<void> {
 		try {
+			const db = opts?.tx ?? this.db;
 			const existing = await this.#getFromDB(id);
 			if (!existing) {
 				throw new RepositoryError(`Merchant menu with id "${id}" not found`, {
@@ -369,7 +375,7 @@ export class MerchantMenuRepository extends BaseRepository {
 			const currentCount = await this.#getTotalRow();
 
 			const [result] = await Promise.all([
-				this.db
+				db
 					.delete(tables.merchantMenu)
 					.where(eq(tables.merchantMenu.id, id))
 					.returning({ id: tables.merchantMenu.id }),

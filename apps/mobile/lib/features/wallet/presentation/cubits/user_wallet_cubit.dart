@@ -23,7 +23,7 @@ class UserWalletCubit extends BaseCubit<UserWalletState> {
       try {
         emit(state.toLoading());
         final res = await _walletRepository.getWallet();
-        emit(state.toSuccess(myWallet: res.data));
+        emit(state.toSuccess(wallet: res.data));
       } on BaseError catch (e, st) {
         logger.e(
           '[UserWalletCubit] - Error: ${e.message}',
@@ -39,7 +39,7 @@ class UserWalletCubit extends BaseCubit<UserWalletState> {
       try {
         emit(state.toLoading());
         final res = await _transactionRepository.list();
-        emit(state.toSuccess(myTransactions: res.data));
+        emit(state.toSuccess(transactions: res.data));
       } on BaseError catch (e, st) {
         logger.e(
           '[UserRideCubit] - Error: ${e.message}',
@@ -59,7 +59,7 @@ class UserWalletCubit extends BaseCubit<UserWalletState> {
           month: now.month,
           year: now.year,
         );
-        emit(state.toSuccess(thisMonthSummary: res.data));
+        emit(state.toSuccess(summary: res.data));
       } on BaseError catch (e, st) {
         logger.e(
           '[UserRideCubit] - Error: ${e.message}',

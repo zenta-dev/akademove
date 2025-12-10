@@ -6,7 +6,7 @@ import 'package:api_client/api_client.dart';
 class UserReviewCubit extends BaseCubit<UserReviewState> {
   UserReviewCubit({required UserReviewRepository reviewRepository})
     : _reviewRepository = reviewRepository,
-      super(UserReviewState());
+      super(const UserReviewState());
 
   final UserReviewRepository _reviewRepository;
 
@@ -81,6 +81,6 @@ class UserReviewCubit extends BaseCubit<UserReviewState> {
 
   /// Reset state
   void reset() {
-    emit(UserReviewState());
+    emit(const UserReviewState());
   }
 }

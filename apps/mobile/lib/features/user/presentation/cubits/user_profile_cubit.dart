@@ -5,21 +5,27 @@ import 'package:api_client/api_client.dart';
 class UserProfileCubit extends BaseCubit<UserProfileState> {
   UserProfileCubit({required UserRepository userRepository})
     : _userRepository = userRepository,
-      super(UserProfileState());
+      super(const UserProfileState());
 
   final UserRepository _userRepository;
 
-  void reset() => emit(UserProfileState());
+  void reset() => emit(const UserProfileState());
 
   Future<void> updateProfile(UpdateProfileRequest req) async =>
       await taskManager.execute('UPC-uP', () async {
         try {
-          emit(state.toLoading());
+          emit(
+            state.copyWith(
+              updateProfileResult: const OperationResult.loading(),
+            ),
+          );
           final res = await _userRepository.updateProfile(req);
           emit(
-            state.toSuccess(
-              updateProfileResult: res.data,
-              message: res.message,
+            state.copyWith(
+              updateProfileResult: OperationResult.success(
+                res.data,
+                message: res.message,
+              ),
             ),
           );
         } on BaseError catch (e, st) {
@@ -28,19 +34,25 @@ class UserProfileCubit extends BaseCubit<UserProfileState> {
             error: e,
             stackTrace: st,
           );
-          emit(state.toFailure(e));
+          emit(state.copyWith(updateProfileResult: OperationResult.failed(e)));
         }
       });
 
   Future<void> updatePassword(UserMeChangePasswordRequest req) async =>
       await taskManager.execute('UPC-uPW', () async {
         try {
-          emit(state.toLoading());
+          emit(
+            state.copyWith(
+              updatePasswordResult: const OperationResult.loading(),
+            ),
+          );
           final res = await _userRepository.updatePassword(req);
           emit(
-            state.toSuccess(
-              updatePasswordResult: res.data,
-              message: res.message,
+            state.copyWith(
+              updatePasswordResult: OperationResult.success(
+                res.data,
+                message: res.message,
+              ),
             ),
           );
         } on BaseError catch (e, st) {
@@ -49,8 +61,7 @@ class UserProfileCubit extends BaseCubit<UserProfileState> {
             error: e,
             stackTrace: st,
           );
-
-          emit(state.toFailure(e));
+          emit(state.copyWith(updatePasswordResult: OperationResult.failed(e)));
         }
       });
 }

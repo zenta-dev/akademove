@@ -1,46 +1,30 @@
 part of '_export.dart';
 
-@MappableClass(
-  generateMethods:
-      GenerateMethods.stringify | GenerateMethods.equals | GenerateMethods.copy,
-)
-class EmergencyState extends BaseState2 with EmergencyStateMappable {
-  EmergencyState({
-    this.triggered,
-    this.list = const [],
-    super.state,
-    super.message,
-    super.error,
+class EmergencyState extends Equatable {
+  const EmergencyState({
+    this.triggerEmergency = const OperationResult.idle(),
+    this.emergencies = const OperationResult.idle(),
   });
 
-  /// Currently triggered emergency (if any)
-  final Emergency? triggered;
+  /// Result of triggering emergency
+  final OperationResult<Emergency> triggerEmergency;
 
   /// List of emergencies for the current order
-  final List<Emergency> list;
+  final OperationResult<List<Emergency>> emergencies;
 
   @override
-  EmergencyState toInitial() =>
-      copyWith(state: CubitState.initial, message: null, error: null);
+  List<Object> get props => [triggerEmergency, emergencies];
+
+  EmergencyState copyWith({
+    OperationResult<Emergency>? triggerEmergency,
+    OperationResult<List<Emergency>>? emergencies,
+  }) {
+    return EmergencyState(
+      triggerEmergency: triggerEmergency ?? this.triggerEmergency,
+      emergencies: emergencies ?? this.emergencies,
+    );
+  }
 
   @override
-  EmergencyState toLoading() =>
-      copyWith(state: CubitState.loading, message: null, error: null);
-
-  @override
-  EmergencyState toSuccess({
-    Emergency? triggered,
-    List<Emergency>? list,
-    String? message,
-  }) => copyWith(
-    state: CubitState.success,
-    triggered: triggered ?? this.triggered,
-    list: list ?? this.list,
-    message: message,
-    error: null,
-  );
-
-  @override
-  EmergencyState toFailure(BaseError error, {String? message}) =>
-      copyWith(state: CubitState.failure, error: error, message: message);
+  bool get stringify => true;
 }

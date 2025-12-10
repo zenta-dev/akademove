@@ -5,16 +5,16 @@ import 'package:api_client/api_client.dart';
 class EmergencyCubit extends BaseCubit<EmergencyState> {
   EmergencyCubit({required EmergencyRepository repository})
     : _repository = repository,
-      super(EmergencyState());
+      super(const EmergencyState());
 
   final EmergencyRepository _repository;
 
   Future<void> init() async {
-    emit(EmergencyState());
+    emit(const EmergencyState());
   }
 
   void reset() {
-    emit(EmergencyState());
+    emit(const EmergencyState());
   }
 
   Future<void> trigger({
@@ -26,7 +26,7 @@ class EmergencyCubit extends BaseCubit<EmergencyState> {
     List<String>? contactedAuthorities,
   }) async => await taskManager.execute('EC-t1-$orderId', () async {
     try {
-      emit(state.toLoading());
+      emit(state.copyWith(triggerEmergency: const OperationResult.loading()));
 
       final res = await _repository.trigger(
         TriggerEmergencyQuery(
@@ -39,50 +39,73 @@ class EmergencyCubit extends BaseCubit<EmergencyState> {
         ),
       );
 
-      emit(state.toSuccess(triggered: res.data, message: res.message));
+      emit(
+        state.copyWith(
+          triggerEmergency: OperationResult.success(
+            res.data,
+            message: res.message,
+          ),
+        ),
+      );
     } on BaseError catch (e, st) {
       logger.e(
         '[EmergencyCubit] Failed to trigger emergency',
         error: e,
         stackTrace: st,
       );
-      emit(state.toFailure(e));
+      emit(state.copyWith(triggerEmergency: OperationResult.failed(e)));
     }
   });
 
   Future<void> loadByOrder(String orderId) async =>
       await taskManager.execute('EC-lBO2-$orderId', () async {
         try {
-          emit(state.toLoading());
+          emit(state.copyWith(emergencies: const OperationResult.loading()));
 
           final res = await _repository.listByOrder(orderId);
 
-          emit(state.toSuccess(list: res.data, message: res.message));
+          emit(
+            state.copyWith(
+              emergencies: OperationResult.success(
+                res.data,
+                message: res.message,
+              ),
+            ),
+          );
         } on BaseError catch (e, st) {
           logger.e(
             '[EmergencyCubit] Failed to load emergencies',
             error: e,
             stackTrace: st,
           );
-          emit(state.toFailure(e));
+          emit(state.copyWith(emergencies: OperationResult.failed(e)));
         }
       });
 
-  Future<void> get(String id) async =>
-      taskManager.execute('UBC-g3-$id', () async {
-        try {
-          emit(state.toLoading());
+  Future<void> get(String id) async => taskManager.execute(
+    'UBC-g3-$id',
+    () async {
+      try {
+        emit(state.copyWith(triggerEmergency: const OperationResult.loading()));
 
-          final res = await _repository.get(id);
+        final res = await _repository.get(id);
 
-          emit(state.toSuccess(triggered: res.data, message: res.message));
-        } on BaseError catch (e, st) {
-          logger.e(
-            '[EmergencyCubit] Failed to get emergency',
-            error: e,
-            stackTrace: st,
-          );
-          emit(state.toFailure(e));
-        }
-      });
+        emit(
+          state.copyWith(
+            triggerEmergency: OperationResult.success(
+              res.data,
+              message: res.message,
+            ),
+          ),
+        );
+      } on BaseError catch (e, st) {
+        logger.e(
+          '[EmergencyCubit] Failed to get emergency',
+          error: e,
+          stackTrace: st,
+        );
+        emit(state.copyWith(triggerEmergency: OperationResult.failed(e)));
+      }
+    },
+  );
 }

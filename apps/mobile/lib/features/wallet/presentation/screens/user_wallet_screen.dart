@@ -56,8 +56,8 @@ class UserWalletScreen extends StatelessWidget {
           BlocBuilder<UserWalletCubit, UserWalletState>(
             builder: (context, state) {
               return WalletBalanceCardWidget(
-                balance: (state.myWallet?.balance ?? 0).toDouble(),
-              ).asSkeleton(enabled: state.isLoading);
+                balance: (state.myWallet.value?.balance ?? 0).toDouble(),
+              ).asSkeleton(enabled: state.myWallet.isLoading);
             },
           ),
           Card(
@@ -68,8 +68,9 @@ class UserWalletScreen extends StatelessWidget {
                 BlocBuilder<UserWalletCubit, UserWalletState>(
                   builder: (context, state) {
                     return WalletMonthlySummaryCardWidget(
-                      summary: state.thisMonthSummary ?? dummyWalletSummary,
-                    ).asSkeleton(enabled: state.isLoading);
+                      summary:
+                          state.thisMonthSummary.value ?? dummyWalletSummary,
+                    ).asSkeleton(enabled: state.myWallet.isLoading);
                   },
                 ),
                 const Divider(),
@@ -78,10 +79,10 @@ class UserWalletScreen extends StatelessWidget {
                   child: BlocBuilder<UserWalletCubit, UserWalletState>(
                     builder: (context, state) {
                       return WalletListTransactionWidget(
-                        transactions: state.isLoading
+                        transactions: state.myWallet.isLoading
                             ? List.generate(10, (_) => dummyTransaction)
-                            : state.myTransactions,
-                      ).asSkeleton(enabled: state.isLoading);
+                            : state.myTransactions.value ?? [],
+                      ).asSkeleton(enabled: state.myWallet.isLoading);
                     },
                   ),
                 ),

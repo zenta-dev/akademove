@@ -6,7 +6,7 @@ import 'package:api_client/api_client.dart';
 class CouponCubit extends BaseCubit<CouponState> {
   CouponCubit({required CouponRepository couponRepository})
     : _couponRepository = couponRepository,
-      super(CouponState.initial());
+      super(const CouponState());
 
   final CouponRepository _couponRepository;
 
@@ -17,22 +17,29 @@ class CouponCubit extends BaseCubit<CouponState> {
     String? merchantId,
   }) async => await taskManager.execute('CC-lEC1', () async {
     try {
-      emit(CouponState.loading());
+      emit(state.copyWith(eligibleCoupons: const OperationResult.loading()));
       final res = await _couponRepository.getEligibleCoupons(
         serviceType: serviceType,
         totalAmount: totalAmount,
         merchantId: merchantId,
       );
-      emit(CouponState.success(res.data, message: res.message));
+      emit(
+        state.copyWith(
+          eligibleCoupons: OperationResult.success(
+            res.data,
+            message: res.message,
+          ),
+        ),
+      );
     } on BaseError catch (e, st) {
       logger.e('[CouponCubit] - Error: ${e.message}', error: e, stackTrace: st);
-      emit(CouponState.failure(e));
+      emit(state.copyWith(eligibleCoupons: OperationResult.failed(e)));
     }
   });
 
   /// Manually select a specific coupon from the eligible list
   void selectCoupon(Coupon? coupon) {
-    final currentData = state.data;
+    final currentData = state.eligibleCoupons.value;
     if (currentData == null) return;
 
     // Recalculate discount for the selected coupon
@@ -42,11 +49,13 @@ class CouponCubit extends BaseCubit<CouponState> {
     );
 
     emit(
-      CouponState.success(
-        EligibleCouponsResult(
-          coupons: currentData.coupons,
-          bestCoupon: coupon,
-          bestDiscountAmount: selectedDiscountAmount,
+      state.copyWith(
+        eligibleCoupons: OperationResult.success(
+          EligibleCouponsResult(
+            coupons: currentData.coupons,
+            bestCoupon: coupon,
+            bestDiscountAmount: selectedDiscountAmount,
+          ),
         ),
       ),
     );
@@ -54,15 +63,17 @@ class CouponCubit extends BaseCubit<CouponState> {
 
   /// Clear selected coupon
   void clearCoupon() {
-    final currentData = state.data;
+    final currentData = state.eligibleCoupons.value;
     if (currentData == null) return;
 
     emit(
-      CouponState.success(
-        EligibleCouponsResult(
-          coupons: currentData.coupons,
-          bestCoupon: null,
-          bestDiscountAmount: 0,
+      state.copyWith(
+        eligibleCoupons: OperationResult.success(
+          EligibleCouponsResult(
+            coupons: currentData.coupons,
+            bestCoupon: null,
+            bestDiscountAmount: 0,
+          ),
         ),
       ),
     );

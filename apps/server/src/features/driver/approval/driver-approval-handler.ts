@@ -42,22 +42,25 @@ export const DriverApprovalHandler = priv.router({
 				);
 			}
 
-			const data = trimObjectValues(body);
-			const result = await context.repo.driver.approval.updateDocumentStatus(
-				params.id,
-				data.document,
-				data.status,
-				data.reason,
-				context,
-			);
+			return await context.svc.db.transaction(async (tx) => {
+				const data = trimObjectValues(body);
+				const result = await context.repo.driver.approval.updateDocumentStatus(
+					params.id,
+					data.document,
+					data.status,
+					data.reason,
+					context,
+					{ tx },
+				);
 
-			return {
-				status: 200,
-				body: {
-					message: "Document status updated successfully",
-					data: result,
-				},
-			};
+				return {
+					status: 200,
+					body: {
+						message: "Document status updated successfully",
+						data: result,
+					},
+				};
+			});
 		},
 	),
 
@@ -73,19 +76,22 @@ export const DriverApprovalHandler = priv.router({
 				);
 			}
 
-			const result = await context.repo.driver.approval.verifyQuiz(
-				params.id,
-				body.quizVerified,
-				context,
-			);
+			return await context.svc.db.transaction(async (tx) => {
+				const result = await context.repo.driver.approval.verifyQuiz(
+					params.id,
+					body.quizVerified,
+					context,
+					{ tx },
+				);
 
-			return {
-				status: 200,
-				body: {
-					message: "Quiz verification updated successfully",
-					data: result,
-				},
-			};
+				return {
+					status: 200,
+					body: {
+						message: "Quiz verification updated successfully",
+						data: result,
+					},
+				};
+			});
 		},
 	),
 

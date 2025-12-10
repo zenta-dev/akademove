@@ -54,11 +54,11 @@ class _DriverReviewsScreenState extends State<DriverReviewsScreen> {
         value: _cubit,
         child: BlocBuilder<DriverReviewCubit, DriverReviewState>(
           builder: (context, state) {
-            if (state.isLoading && state.reviews.isEmpty) {
+            if (state.fetchReviewsResult.isLoading && state.reviews.isEmpty) {
               return Center(child: CircularProgressIndicator());
             }
 
-            if (state.isFailure && state.reviews.isEmpty) {
+            if (state.fetchReviewsResult.isFailure && state.reviews.isEmpty) {
               return Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -70,7 +70,8 @@ class _DriverReviewsScreenState extends State<DriverReviewsScreen> {
                       color: context.colorScheme.destructive,
                     ),
                     Text(
-                      state.error?.message ?? context.l10n.failed_to_load,
+                      state.fetchReviewsResult.error?.message ??
+                          context.l10n.failed_to_load,
                       style: context.typography.small,
                       textAlign: TextAlign.center,
                     ),

@@ -1,4 +1,3 @@
-import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/auth/presentation/cubits/_export.dart';
 import 'package:akademove/features/emergency/presentation/cubits/_export.dart';
 import 'package:akademove/features/emergency/presentation/states/_export.dart';
@@ -25,7 +24,7 @@ class EmergencyButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocListener<EmergencyCubit, EmergencyState>(
       listener: (context, state) {
-        if (state.state == CubitState.success && state.triggered != null) {
+        if (state.triggerEmergency.isSuccess) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(context.l10n.emergency_alert_sent_successfully),
@@ -33,11 +32,11 @@ class EmergencyButton extends StatelessWidget {
               duration: const Duration(seconds: 3),
             ),
           );
-        } else if (state.state == CubitState.failure) {
+        } else if (state.triggerEmergency.isFailure) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
-                'Failed to send alert: ${state.message ?? 'Unknown error'}',
+                'Failed to send alert: ${state.triggerEmergency.error?.message ?? 'Unknown error'}',
               ),
               backgroundColor: Colors.red,
               duration: const Duration(seconds: 4),

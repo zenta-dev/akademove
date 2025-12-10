@@ -79,13 +79,11 @@ class _NotificationScreenState extends State<NotificationScreen> {
         value: _cubit,
         child: BlocBuilder<NotificationCubit, NotificationState>(
           builder: (context, state) {
-            if (state.state == CubitState.loading &&
-                state.notifications.isEmpty) {
+            if (state.status.isLoading && state.notifications.isEmpty) {
               return const Center(child: CircularProgressIndicator());
             }
 
-            if (state.state == CubitState.failure &&
-                state.notifications.isEmpty) {
+            if (state.status.isFailure && state.notifications.isEmpty) {
               return Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -97,7 +95,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
                       color: context.colorScheme.destructive,
                     ),
                     Text(
-                      state.error?.message ?? context.l10n.failed_to_load,
+                      state.status.error?.message ??
+                          context.l10n.failed_to_load,
                       style: context.typography.small,
                       textAlign: TextAlign.center,
                     ),

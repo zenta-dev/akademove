@@ -448,19 +448,24 @@ export class DriverMainRepository extends BaseRepository {
 		}
 	}
 
-	async updateLocation(id: string, coord: Coordinate): Promise<Driver> {
+	async updateLocation(
+		id: string,
+		coord: Coordinate,
+		opts?: WithTx,
+	): Promise<Driver> {
 		try {
-			const existing = await this.#getFromDB(id);
+			const tx = opts?.tx ?? this.db;
+			const existing = await this.#getFromDB(id, opts);
 			if (!existing)
 				throw new RepositoryError(m.error_driver_not_found(), {
 					code: "NOT_FOUND",
 				});
-			const [updated] = await this.db
+			const [updated] = await tx
 				.update(tables.driver)
 				.set({ currentLocation: coord, lastLocationUpdate: new Date() })
 				.where(eq(tables.driver.id, id))
 				.returning();
-			const user = await this.db.query.user.findFirst({
+			const user = await tx.query.user.findFirst({
 				with: { userBadges: { with: { badge: true } } },
 				where: (f, op) => op.eq(f.id, existing.userId),
 			});
@@ -472,7 +477,7 @@ export class DriverMainRepository extends BaseRepository {
 			await this.setCache(id, result, { expirationTtl: CACHE_TTLS["24h"] });
 			return result;
 		} catch (error) {
-			throw this.handleError(error, "mark as online");
+			throw this.handleError(error, "update location");
 		}
 	}
 
@@ -561,9 +566,10 @@ export class DriverMainRepository extends BaseRepository {
 		}
 	}
 
-	async remove(id: string): Promise<void> {
+	async remove(id: string, opts?: WithTx): Promise<void> {
 		try {
-			const find = await this.#getFromDB(id);
+			const tx = opts?.tx ?? this.db;
+			const find = await this.#getFromDB(id, opts);
 			if (!find)
 				throw new RepositoryError(m.error_driver_not_found(), {
 					code: "NOT_FOUND",
@@ -571,7 +577,7 @@ export class DriverMainRepository extends BaseRepository {
 
 			// Delete driver record and documents in parallel
 			const [result] = await Promise.all([
-				this.db
+				tx
 					.delete(tables.driver)
 					.where(eq(tables.driver.id, id))
 					.returning({ id: tables.driver.id }),
@@ -702,9 +708,10 @@ export class DriverMainRepository extends BaseRepository {
 		}
 	}
 
-	async approve(id: string): Promise<Driver> {
+	async approve(id: string, opts?: WithTx): Promise<Driver> {
 		try {
-			const existing = await this.#getFromDB(id);
+			const tx = opts?.tx ?? this.db;
+			const existing = await this.#getFromDB(id, opts);
 			if (!existing) {
 				throw new RepositoryError(m.error_driver_not_found(), {
 					code: "NOT_FOUND",
@@ -727,13 +734,13 @@ export class DriverMainRepository extends BaseRepository {
 				);
 			}
 
-			const [updated] = await this.db
+			const [updated] = await tx
 				.update(tables.driver)
 				.set({ status: "APPROVED" })
 				.where(eq(tables.driver.id, id))
 				.returning();
 
-			const user = await this.db.query.user.findFirst({
+			const user = await tx.query.user.findFirst({
 				with: { userBadges: { with: { badge: true } } },
 				where: (f, op) => op.eq(f.id, existing.userId),
 			});
@@ -754,9 +761,10 @@ export class DriverMainRepository extends BaseRepository {
 		}
 	}
 
-	async reject(id: string, reason: string): Promise<Driver> {
+	async reject(id: string, reason: string, opts?: WithTx): Promise<Driver> {
 		try {
-			const existing = await this.#getFromDB(id);
+			const tx = opts?.tx ?? this.db;
+			const existing = await this.#getFromDB(id, opts);
 			if (!existing) {
 				throw new RepositoryError(m.error_driver_not_found(), {
 					code: "NOT_FOUND",
@@ -770,13 +778,13 @@ export class DriverMainRepository extends BaseRepository {
 				);
 			}
 
-			const [updated] = await this.db
+			const [updated] = await tx
 				.update(tables.driver)
 				.set({ status: "REJECTED" })
 				.where(eq(tables.driver.id, id))
 				.returning();
 
-			const user = await this.db.query.user.findFirst({
+			const user = await tx.query.user.findFirst({
 				with: { userBadges: { with: { badge: true } } },
 				where: (f, op) => op.eq(f.id, existing.userId),
 			});
@@ -804,9 +812,11 @@ export class DriverMainRepository extends BaseRepository {
 		id: string,
 		reason: string,
 		suspendUntil?: Date,
+		opts?: WithTx,
 	): Promise<Driver> {
 		try {
-			const existing = await this.#getFromDB(id);
+			const tx = opts?.tx ?? this.db;
+			const existing = await this.#getFromDB(id, opts);
 			if (!existing) {
 				throw new RepositoryError(m.error_driver_not_found(), {
 					code: "NOT_FOUND",
@@ -820,13 +830,13 @@ export class DriverMainRepository extends BaseRepository {
 				);
 			}
 
-			const [updated] = await this.db
+			const [updated] = await tx
 				.update(tables.driver)
 				.set({ status: "SUSPENDED" })
 				.where(eq(tables.driver.id, id))
 				.returning();
 
-			const user = await this.db.query.user.findFirst({
+			const user = await tx.query.user.findFirst({
 				with: { userBadges: { with: { badge: true } } },
 				where: (f, op) => op.eq(f.id, existing.userId),
 			});
@@ -850,9 +860,10 @@ export class DriverMainRepository extends BaseRepository {
 		}
 	}
 
-	async activate(id: string): Promise<Driver> {
+	async activate(id: string, opts?: WithTx): Promise<Driver> {
 		try {
-			const existing = await this.#getFromDB(id);
+			const tx = opts?.tx ?? this.db;
+			const existing = await this.#getFromDB(id, opts);
 			if (!existing) {
 				throw new RepositoryError(m.error_driver_not_found(), {
 					code: "NOT_FOUND",
@@ -870,13 +881,13 @@ export class DriverMainRepository extends BaseRepository {
 				);
 			}
 
-			const [updated] = await this.db
+			const [updated] = await tx
 				.update(tables.driver)
 				.set({ status: "ACTIVE" })
 				.where(eq(tables.driver.id, id))
 				.returning();
 
-			const user = await this.db.query.user.findFirst({
+			const user = await tx.query.user.findFirst({
 				with: { userBadges: { with: { badge: true } } },
 				where: (f, op) => op.eq(f.id, existing.userId),
 			});

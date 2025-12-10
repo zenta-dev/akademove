@@ -8,7 +8,7 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
     required WebSocketService webSocketService,
   }) : _orderRepository = orderRepository,
        _webSocketService = webSocketService,
-       super(UserOrderState());
+       super(const UserOrderState());
 
   final OrderRepository _orderRepository;
   final WebSocketService _webSocketService;
@@ -21,7 +21,7 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
   }
 
   void reset() {
-    emit(UserOrderState());
+    emit(const UserOrderState());
   }
 
   @override
@@ -32,20 +32,27 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
 
   Future<void> list() async => await taskManager.execute('UOC-l1', () async {
     try {
-      emit(state.toLoading());
+      emit(state.copyWith(orderHistories: const OperationResult.loading()));
 
       final res = await _orderRepository.list(
         const ListOrderQuery(statuses: OrderStatus.values),
       );
 
-      emit(state.toSuccess(orderHistories: res.data, message: res.message));
+      emit(
+        state.copyWith(
+          orderHistories: OperationResult.success(
+            res.data,
+            message: res.message,
+          ),
+        ),
+      );
     } on BaseError catch (e, st) {
       logger.e(
-        '[UserRideCubit] - Error: ${e.message}',
+        '[UserOrderCubit] - Error: ${e.message}',
         error: e,
         stackTrace: st,
       );
-      emit(state.toFailure(e));
+      emit(state.copyWith(orderHistories: OperationResult.failed(e)));
     }
   });
 
@@ -54,36 +61,44 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
         if (id == null) return;
 
         try {
-          emit(state.toLoading());
+          emit(state.copyWith(selectedOrder: const OperationResult.loading()));
 
-          final local = state.orderHistories?.cast<Order?>().firstWhere(
+          final localList = state.orderHistories.value;
+          final local = localList?.cast<Order?>().firstWhere(
             (v) => v?.id == id,
             orElse: () => null,
           );
 
           if (local != null) {
-            emit(state.toSuccess(selectedOrder: local));
+            emit(state.copyWith(selectedOrder: OperationResult.success(local)));
             return;
           }
 
           // Fetch from API
           final res = await _orderRepository.get(id);
 
-          emit(state.toSuccess(selectedOrder: res.data, message: res.message));
+          emit(
+            state.copyWith(
+              selectedOrder: OperationResult.success(
+                res.data,
+                message: res.message,
+              ),
+            ),
+          );
         } on BaseError catch (e, st) {
           logger.e(
-            '[UserRideCubit] - Error: ${e.message}',
+            '[UserOrderCubit] - Error: ${e.message}',
             error: e,
             stackTrace: st,
           );
-          emit(state.toFailure(e));
+          emit(state.copyWith(selectedOrder: OperationResult.failed(e)));
         }
       });
 
   Future<void> estimate(Place pickup, Place dropoff) async => await taskManager
       .execute('UOC-e1-${pickup.hashCode}-${dropoff.hashCode}', () async {
         try {
-          emit(state.toLoading());
+          emit(state.copyWith(estimateOrder: const OperationResult.loading()));
 
           final res = await _orderRepository.estimate(
             EstimateOrderQuery(
@@ -94,21 +109,23 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
           );
 
           emit(
-            state.toSuccess(
-              estimateOrder: EstimateOrderResult(
-                summary: res.data,
-                pickup: pickup,
-                dropoff: dropoff,
+            state.copyWith(
+              estimateOrder: OperationResult.success(
+                EstimateOrderResult(
+                  summary: res.data,
+                  pickup: pickup,
+                  dropoff: dropoff,
+                ),
               ),
             ),
           );
         } on BaseError catch (e, st) {
           logger.e(
-            '[UserRideCubit] - Error: ${e.message}',
+            '[UserOrderCubit] - Error: ${e.message}',
             error: e,
             stackTrace: st,
           );
-          emit(state.toFailure(e));
+          emit(state.copyWith(estimateOrder: OperationResult.failed(e)));
         }
       });
 
@@ -122,7 +139,13 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
     String? couponCode,
   }) async => await taskManager.execute('UOC-pO', () async {
     try {
-      emit(state.toLoading());
+      emit(
+        state.copyWith(
+          currentOrder: const OperationResult.loading(),
+          currentPayment: const OperationResult.loading(),
+          currentTransaction: const OperationResult.loading(),
+        ),
+      );
 
       final res = await _orderRepository.placeOrder(
         PlaceOrder(
@@ -143,20 +166,26 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
       _paymentId = res.data.payment.id;
       await _setupPaymentWebsocket(paymentId: res.data.payment.id);
       emit(
-        state.toSuccess(
-          currentOrder: res.data.order,
-          currentPayment: res.data.payment,
-          currentTransaction: res.data.transaction,
+        state.copyWith(
+          currentOrder: OperationResult.success(res.data.order),
+          currentPayment: OperationResult.success(res.data.payment),
+          currentTransaction: OperationResult.success(res.data.transaction),
         ),
       );
       return res.data;
     } on BaseError catch (e, st) {
       logger.e(
-        '[UserRideCubit] - Error: ${e.message}',
+        '[UserOrderCubit] - Error: ${e.message}',
         error: e,
         stackTrace: st,
       );
-      emit(state.toFailure(e));
+      emit(
+        state.copyWith(
+          currentOrder: OperationResult.failed(e),
+          currentPayment: OperationResult.failed(e),
+          currentTransaction: OperationResult.failed(e),
+        ),
+      );
       return null;
     }
   });
@@ -170,9 +199,9 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
 
         if (data.e == PaymentEnvelopeEvent.PAYMENT_SUCCESS) {
           emit(
-            state.toSuccess(
-              currentPayment: data.p.payment,
-              currentTransaction: data.p.transaction,
+            state.copyWith(
+              currentPayment: OperationResult.success(data.p.payment),
+              currentTransaction: OperationResult.success(data.p.transaction),
             ),
           );
 
@@ -182,12 +211,18 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
 
         if (data.e == PaymentEnvelopeEvent.PAYMENT_FAILED) {
           emit(
-            state.toSuccess(
-              currentPayment: data.p.payment,
-              currentTransaction: data.p.transaction,
+            state.copyWith(
+              currentPayment: OperationResult.success(data.p.payment),
+              currentTransaction: OperationResult.success(data.p.transaction),
             ),
           );
-          emit(state.toFailure(const UnknownError('Payment expired')));
+          emit(
+            state.copyWith(
+              currentPayment: OperationResult.failed(
+                const UnknownError('Payment expired'),
+              ),
+            ),
+          );
         }
       }
 
@@ -206,8 +241,10 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
         stackTrace: st,
       );
       emit(
-        state.toFailure(
-          const UnknownError('Failed to connect to payment service'),
+        state.copyWith(
+          currentPayment: OperationResult.failed(
+            const UnknownError('Failed to connect to payment service'),
+          ),
         ),
       );
     }
@@ -221,40 +258,59 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
         logger.d('Driver Pool WebSocket Message: $data');
 
         if (data.e == OrderEnvelopeEvent.MATCHING &&
-            state.currentOrder?.id == data.p.detail?.order.id) {
-          emit(
-            state.toSuccess(
-              currentOrder: data.p.detail?.order,
-              currentPayment: data.p.detail?.payment,
-              currentTransaction: data.p.detail?.transaction,
-            ),
-          );
+            state.currentOrder.value?.id == data.p.detail?.order.id) {
+          final detail = data.p.detail;
+          final payment = detail?.payment;
+          final transaction = detail?.transaction;
+          if (detail != null && payment != null && transaction != null) {
+            emit(
+              state.copyWith(
+                currentOrder: OperationResult.success(detail.order),
+                currentPayment: OperationResult.success(payment),
+                currentTransaction: OperationResult.success(transaction),
+              ),
+            );
+          }
         }
 
         if (data.e == OrderEnvelopeEvent.CANCELED) {
+          final detail = data.p.detail;
+          final payment = detail?.payment;
+          final transaction = detail?.transaction;
+          if (detail != null && payment != null && transaction != null) {
+            emit(
+              state.copyWith(
+                currentOrder: OperationResult.success(detail.order),
+                currentPayment: OperationResult.success(payment),
+                currentTransaction: OperationResult.success(transaction),
+              ),
+            );
+          }
           emit(
-            state.toSuccess(
-              currentOrder: data.p.detail?.order,
-              currentPayment: data.p.detail?.payment,
-              currentTransaction: data.p.detail?.transaction,
-            ),
-          );
-          emit(
-            state.toFailure(
-              UnknownError(data.p.cancelReason ?? 'Order cancelled'),
+            state.copyWith(
+              currentOrder: OperationResult.failed(
+                UnknownError(data.p.cancelReason ?? 'Order cancelled'),
+              ),
             ),
           );
         }
 
         if (data.e == OrderEnvelopeEvent.DRIVER_ACCEPTED) {
-          emit(
-            state.toSuccess(
-              currentOrder: data.p.detail?.order,
-              currentPayment: data.p.detail?.payment,
-              currentTransaction: data.p.detail?.transaction,
-              currentAssignedDriver: data.p.driverAssigned,
-            ),
-          );
+          final detail = data.p.detail;
+          final payment = detail?.payment;
+          final transaction = detail?.transaction;
+          if (detail != null && payment != null && transaction != null) {
+            emit(
+              state.copyWith(
+                currentOrder: OperationResult.success(detail.order),
+                currentPayment: OperationResult.success(payment),
+                currentTransaction: OperationResult.success(transaction),
+                currentAssignedDriver: OperationResult.success(
+                  data.p.driverAssigned,
+                ),
+              ),
+            );
+          }
 
           await _webSocketService.disconnect(driverPool);
           final orderId = _orderId;
@@ -279,8 +335,10 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
         stackTrace: st,
       );
       emit(
-        state.toFailure(
-          const UnknownError('Failed to connect to driver service'),
+        state.copyWith(
+          currentAssignedDriver: OperationResult.failed(
+            const UnknownError('Failed to connect to driver service'),
+          ),
         ),
       );
     }
@@ -296,12 +354,16 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
         if (data.e == OrderEnvelopeEvent.DRIVER_LOCATION_UPDATE) {
           final x = data.p.driverUpdateLocation?.x;
           final y = data.p.driverUpdateLocation?.y;
-          var driver = state.currentAssignedDriver ?? dummyDriver;
+          var driver = state.currentAssignedDriver.value ?? dummyDriver;
           if (x != null && y != null) {
             driver = driver.copyWith(
               currentLocation: Coordinate(x: x, y: y),
             );
-            emit(state.toSuccess(currentAssignedDriver: driver));
+            emit(
+              state.copyWith(
+                currentAssignedDriver: OperationResult.success(driver),
+              ),
+            );
           }
         }
       }
@@ -346,20 +408,27 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
     'UOC-lso',
     () async {
       try {
-        emit(state.toLoading());
+        emit(state.copyWith(scheduledOrders: const OperationResult.loading()));
 
         final res = await _orderRepository.listScheduledOrders(
           const ListOrderQuery(statuses: [OrderStatus.SCHEDULED]),
         );
 
-        emit(state.toSuccess(scheduledOrders: res.data, message: res.message));
+        emit(
+          state.copyWith(
+            scheduledOrders: OperationResult.success(
+              res.data,
+              message: res.message,
+            ),
+          ),
+        );
       } on BaseError catch (e, st) {
         logger.e(
           '[UserOrderCubit] - Error listing scheduled orders: ${e.message}',
           error: e,
           stackTrace: st,
         );
-        emit(state.toFailure(e));
+        emit(state.copyWith(scheduledOrders: OperationResult.failed(e)));
       }
     },
   );
@@ -376,7 +445,13 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
     String? couponCode,
   }) async => await taskManager.execute('UOC-pso', () async {
     try {
-      emit(state.toLoading());
+      emit(
+        state.copyWith(
+          currentOrder: const OperationResult.loading(),
+          currentPayment: const OperationResult.loading(),
+          currentTransaction: const OperationResult.loading(),
+        ),
+      );
 
       final res = await _orderRepository.placeScheduledOrder(
         PlaceScheduledOrder(
@@ -399,10 +474,10 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
       await _setupPaymentWebsocket(paymentId: res.data.payment.id);
 
       emit(
-        state.toSuccess(
-          currentOrder: res.data.order,
-          currentPayment: res.data.payment,
-          currentTransaction: res.data.transaction,
+        state.copyWith(
+          currentOrder: OperationResult.success(res.data.order),
+          currentPayment: OperationResult.success(res.data.payment),
+          currentTransaction: OperationResult.success(res.data.transaction),
         ),
       );
 
@@ -413,7 +488,13 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
         error: e,
         stackTrace: st,
       );
-      emit(state.toFailure(e));
+      emit(
+        state.copyWith(
+          currentOrder: OperationResult.failed(e),
+          currentPayment: OperationResult.failed(e),
+          currentTransaction: OperationResult.failed(e),
+        ),
+      );
       return null;
     }
   });
@@ -424,7 +505,9 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
     DateTime newScheduledAt,
   ) async => await taskManager.execute('UOC-uso-$orderId', () async {
     try {
-      emit(state.toLoading());
+      emit(
+        state.copyWith(selectedScheduledOrder: const OperationResult.loading()),
+      );
 
       final res = await _orderRepository.updateScheduledOrder(
         orderId,
@@ -432,7 +515,8 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
       );
 
       // Update the scheduled orders list with the updated order
-      final updatedList = state.scheduledOrders?.map((order) {
+      final currentList = state.scheduledOrders.value;
+      final updatedList = currentList?.map((order) {
         if (order.id == orderId) {
           return res.data;
         }
@@ -440,10 +524,14 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
       }).toList();
 
       emit(
-        state.toSuccess(
-          scheduledOrders: updatedList,
-          selectedScheduledOrder: res.data,
-          message: res.message,
+        state.copyWith(
+          scheduledOrders: updatedList != null
+              ? OperationResult.success(updatedList, message: res.message)
+              : state.scheduledOrders,
+          selectedScheduledOrder: OperationResult.success(
+            res.data,
+            message: res.message,
+          ),
         ),
       );
 
@@ -454,56 +542,68 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
         error: e,
         stackTrace: st,
       );
-      emit(state.toFailure(e));
+      emit(state.copyWith(selectedScheduledOrder: OperationResult.failed(e)));
       return null;
     }
   });
 
   /// Cancel a scheduled order
-  Future<Order?> cancelScheduledOrder(String orderId, {String? reason}) async =>
-      await taskManager.execute('UOC-cso-$orderId', () async {
-        try {
-          emit(state.toLoading());
+  Future<Order?> cancelScheduledOrder(
+    String orderId, {
+    String? reason,
+  }) async => await taskManager.execute('UOC-cso-$orderId', () async {
+    try {
+      emit(
+        state.copyWith(selectedScheduledOrder: const OperationResult.loading()),
+      );
 
-          final res = await _orderRepository.cancelScheduledOrder(
-            orderId,
-            reason: reason,
-          );
+      final res = await _orderRepository.cancelScheduledOrder(
+        orderId,
+        reason: reason,
+      );
 
-          // Remove cancelled order from the scheduled orders list
-          final updatedList = state.scheduledOrders
-              ?.where((order) => order.id != orderId)
-              .toList();
+      // Remove cancelled order from the scheduled orders list
+      final currentList = state.scheduledOrders.value;
+      final updatedList = currentList
+          ?.where((order) => order.id != orderId)
+          .toList();
 
-          emit(
-            state.toSuccess(
-              scheduledOrders: updatedList,
-              selectedScheduledOrder: null,
-              message: res.message,
-            ),
-          );
+      emit(
+        state.copyWith(
+          scheduledOrders: updatedList != null
+              ? OperationResult.success(updatedList, message: res.message)
+              : state.scheduledOrders,
+          selectedScheduledOrder: const OperationResult.idle(),
+        ),
+      );
 
-          return res.data;
-        } on BaseError catch (e, st) {
-          logger.e(
-            '[UserOrderCubit] - Error cancelling scheduled order: ${e.message}',
-            error: e,
-            stackTrace: st,
-          );
-          emit(state.toFailure(e));
-          return null;
-        }
-      });
+      return res.data;
+    } on BaseError catch (e, st) {
+      logger.e(
+        '[UserOrderCubit] - Error cancelling scheduled order: ${e.message}',
+        error: e,
+        stackTrace: st,
+      );
+      emit(state.copyWith(selectedScheduledOrder: OperationResult.failed(e)));
+      return null;
+    }
+  });
 
   /// Select a scheduled order for viewing/editing
   void selectScheduledOrder(Order? order) {
-    emit(state.toSuccess(selectedScheduledOrder: order));
+    if (order != null) {
+      emit(
+        state.copyWith(selectedScheduledOrder: OperationResult.success(order)),
+      );
+    } else {
+      emit(
+        state.copyWith(selectedScheduledOrder: const OperationResult.idle()),
+      );
+    }
   }
 
   /// Clear the selected scheduled order
   void clearSelectedScheduledOrder() {
-    emit(
-      state.copyWith(selectedScheduledOrder: null, state: CubitState.success),
-    );
+    emit(state.copyWith(selectedScheduledOrder: const OperationResult.idle()));
   }
 }

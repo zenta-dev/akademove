@@ -64,6 +64,14 @@ export class WalletMonthlySummaryService {
 			case "WITHDRAW":
 			case "COMMISSION":
 				return { income: 0, expense: amount };
+			case "ADJUSTMENT":
+				// For adjustments (transfers), check if amount is positive or negative
+				// Positive amount = incoming transfer (income)
+				// Negative amount = outgoing transfer (expense)
+				if (amount >= 0) {
+					return { income: amount, expense: 0 };
+				}
+				return { income: 0, expense: Math.abs(amount) };
 			default:
 				return { income: 0, expense: 0 };
 		}

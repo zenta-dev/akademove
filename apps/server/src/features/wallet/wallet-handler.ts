@@ -1,6 +1,8 @@
 import { m } from "@repo/i18n";
+import { RepositoryError } from "@/core/error";
 import { createORPCRouter } from "@/core/router/orpc";
 import { BusinessConfigurationService } from "@/features/configuration/services";
+import { log } from "@/utils";
 import { WalletSpec } from "./wallet-spec";
 
 const { pub, priv } = createORPCRouter(WalletSpec);
@@ -77,17 +79,16 @@ export const WalletHandler = pub.router({
 			});
 
 			if (!recipientWallet) {
-				throw new Error("Recipient wallet not found");
+				throw new RepositoryError("Recipient wallet not found", {
+					code: "NOT_FOUND",
+				});
 			}
 
 			// Prevent self-transfer
 			if (senderWallet.id === recipientWallet.id) {
-				throw new Error("Cannot transfer to your own wallet");
-			}
-
-			// Check sufficient balance
-			if (senderWallet.balance < body.amount) {
-				throw new Error("Insufficient balance");
+				throw new RepositoryError("Cannot transfer to your own wallet", {
+					code: "BAD_REQUEST",
+				});
 			}
 
 			// Get minimum transfer amount from configuration
@@ -96,15 +97,27 @@ export const WalletHandler = pub.router({
 				context.svc.kv,
 			);
 			if (body.amount < businessConfig.minTransferAmount) {
-				throw new Error(
+				throw new RepositoryError(
 					`Minimum transfer amount is ${businessConfig.minTransferAmount.toLocaleString("id-ID")} IDR`,
+					{ code: "BAD_REQUEST" },
 				);
 			}
 
-			const senderBalanceBefore = senderWallet.balance;
-			const senderBalanceAfter = senderBalanceBefore - body.amount;
-			const recipientBalanceBefore = Number(recipientWallet.balance);
-			const recipientBalanceAfter = recipientBalanceBefore + body.amount;
+			// Use atomic transfer to prevent race conditions
+			// This will throw if sender has insufficient balance
+			const {
+				senderBalanceBefore,
+				senderBalanceAfter,
+				recipientBalanceBefore,
+				recipientBalanceAfter,
+			} = await context.repo.wallet.transfer(
+				{
+					senderWalletId: senderWallet.id,
+					recipientWalletId: recipientWallet.id,
+					amount: body.amount,
+				},
+				opts,
+			);
 
 			// Create transfer transactions (using ADJUSTMENT type)
 			const [senderTransaction, recipientTransaction] = await Promise.all([
@@ -147,21 +160,15 @@ export const WalletHandler = pub.router({
 				),
 			]);
 
-			// Update wallet balances
-			await Promise.all([
-				context.repo.wallet.update(
-					senderWallet.id,
-					{ balance: senderBalanceAfter },
-					opts,
-					context,
-				),
-				context.repo.wallet.update(
-					recipientWallet.id,
-					{ balance: recipientBalanceAfter },
-					opts,
-					context,
-				),
-			]);
+			log.info(
+				{
+					userId: context.user.id,
+					senderWalletId: senderWallet.id,
+					recipientWalletId: body.walletId,
+					amount: body.amount,
+				},
+				"[WalletHandler] Transfer completed",
+			);
 
 			return {
 				status: 200,
@@ -188,14 +195,11 @@ export const WalletHandler = pub.router({
 	}),
 	withdraw: priv.withdraw.handler(async ({ context, input: { body } }) => {
 		return await context.svc.db.transaction(async (tx) => {
-			const wallet = await context.repo.wallet.getByUserId(context.user.id, {
-				tx,
-			});
-
-			// Check sufficient balance
-			if (wallet.balance < body.amount) {
-				throw new Error("Insufficient balance");
-			}
+			const opts = { tx };
+			const wallet = await context.repo.wallet.getByUserId(
+				context.user.id,
+				opts,
+			);
 
 			// Get minimum withdrawal amount from configuration
 			const businessConfig = await BusinessConfigurationService.getConfig(
@@ -203,13 +207,19 @@ export const WalletHandler = pub.router({
 				context.svc.kv,
 			);
 			if (body.amount < businessConfig.minWithdrawalAmount) {
-				throw new Error(
+				throw new RepositoryError(
 					`Minimum withdrawal amount is ${businessConfig.minWithdrawalAmount.toLocaleString("id-ID")} IDR`,
+					{ code: "BAD_REQUEST" },
 				);
 			}
 
-			const balanceBefore = wallet.balance;
-			const balanceAfter = balanceBefore - body.amount;
+			// Use atomic balance deduction to prevent race conditions
+			// This will throw if insufficient balance (atomically checks and deducts)
+			const { balanceBefore, balanceAfter } =
+				await context.repo.wallet.atomicDeduct(
+					{ walletId: wallet.id, amount: body.amount },
+					opts,
+				);
 
 			// Create withdrawal transaction (PENDING status)
 			// In production, this would trigger Midtrans disbursement API
@@ -228,15 +238,18 @@ export const WalletHandler = pub.router({
 						accountName: body.accountName,
 					},
 				},
-				{ tx },
+				opts,
 			);
 
-			// Update wallet balance
-			await context.repo.wallet.update(
-				wallet.id,
-				{ balance: balanceAfter },
-				{ tx },
-				context,
+			log.info(
+				{
+					userId: context.user.id,
+					walletId: wallet.id,
+					amount: body.amount,
+					balanceBefore,
+					balanceAfter,
+				},
+				"[WalletHandler] Withdrawal processed",
 			);
 
 			return {

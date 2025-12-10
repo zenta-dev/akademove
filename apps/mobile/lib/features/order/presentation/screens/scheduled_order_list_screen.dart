@@ -105,8 +105,8 @@ class _ScheduledOrderListScreenState extends State<ScheduledOrderListScreen> {
   Widget build(BuildContext context) {
     return BlocBuilder<UserOrderCubit, UserOrderState>(
       builder: (context, state) {
-        final scheduledOrders = state.scheduledOrders ?? [];
-        final isLoading = state.state == CubitState.loading;
+        final scheduledOrders = state.scheduledOrders.value ?? [];
+        final isLoading = state.scheduledOrders.isLoading;
 
         return MyScaffold(
           headers: [

@@ -68,10 +68,7 @@ class _DriverHistoryScreenState extends State<DriverHistoryScreen> {
           .read<DriverListHistoryCubit>()
           .state
           .orders
-          ?.last;
-      if (lastOrder == null) {
-        return;
-      }
+          .last;
 
       final selectedStatus = _selectedStatus;
       await context.read<DriverListHistoryCubit>().loadMoreOrders(
@@ -103,9 +100,7 @@ class _DriverHistoryScreenState extends State<DriverHistoryScreen> {
         final filteredOrders =
             (_selectedType == null
                 ? state.orders
-                : state.orders
-                          ?.where((o) => o.type == _selectedType)
-                          .toList() ??
+                : state.orders.where((o) => o.type == _selectedType).toList() ??
                       []) ??
             [];
         return MyScaffold(

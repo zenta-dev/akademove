@@ -58,22 +58,21 @@ class _UserMenuDetailScreenState extends State<UserMenuDetailScreen> {
         if (state.showMerchantConflict) {
           MerchantConflictDialog.show(
             context,
-            currentMerchantName: state.cart?.merchantName ?? '',
+            currentMerchantName: state.currentCart?.merchantName ?? '',
             newMerchantName: state.pendingMerchantName ?? '',
           );
-        } else if (state.isSuccess && !state.showMerchantConflict) {
+        } else if (state.addItemResult.isSuccess &&
+            !state.showMerchantConflict) {
           // Successfully added to cart without conflict
-          if (state.cart != null) {
-            showToast(
-              context: context,
-              builder: (context, overlay) => context.buildToast(
-                title: context.l10n.menu_added_to_cart,
-                message: context.l10n.menu_item_added_to_cart,
-              ),
-              location: ToastLocation.topCenter,
-            );
-            context.pop(); // Go back after success
-          }
+          showToast(
+            context: context,
+            builder: (context, overlay) => context.buildToast(
+              title: context.l10n.menu_added_to_cart,
+              message: context.l10n.menu_item_added_to_cart,
+            ),
+            location: ToastLocation.topCenter,
+          );
+          context.pop(); // Go back after success
         }
       },
       child: MyScaffold(

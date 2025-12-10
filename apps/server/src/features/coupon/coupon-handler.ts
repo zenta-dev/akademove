@@ -64,67 +64,77 @@ export const CouponHandler = priv.router({
 		},
 	),
 	create: priv.create.handler(async ({ context, input: { body } }) => {
-		const data = trimObjectValues(body);
-		const result = await context.repo.coupon.create(
-			{
-				...data,
-				userId: context.user.id,
-			},
-			undefined,
-			context,
-		);
-
-		return {
-			status: 200,
-			body: { message: m.server_coupon_created(), data: result },
-		};
-	}),
-	update: priv.update.handler(async ({ context, input: { params, body } }) => {
-		const data = trimObjectValues(body);
-		const result = await context.repo.coupon.update(
-			params.id,
-			data,
-			undefined,
-			context,
-		);
-
-		return {
-			status: 200,
-			body: { message: m.server_coupon_updated(), data: result },
-		};
-	}),
-	remove: priv.remove.handler(async ({ context, input: { params } }) => {
-		await context.repo.coupon.remove(params.id, undefined, context);
-
-		return {
-			status: 200,
-			body: { message: m.server_coupon_deleted(), data: null },
-		};
-	}),
-	activate: priv.activate.handler(async ({ context, input: { params } }) => {
-		const result = await context.repo.coupon.activate(
-			params.id,
-			undefined,
-			context,
-		);
-
-		return {
-			status: 200,
-			body: { message: m.server_coupon_activated(), data: result },
-		};
-	}),
-	deactivate: priv.deactivate.handler(
-		async ({ context, input: { params } }) => {
-			const result = await context.repo.coupon.deactivate(
-				params.id,
-				undefined,
+		return await context.svc.db.transaction(async (tx) => {
+			const data = trimObjectValues(body);
+			const result = await context.repo.coupon.create(
+				{
+					...data,
+					userId: context.user.id,
+				},
+				{ tx },
 				context,
 			);
 
 			return {
 				status: 200,
-				body: { message: m.server_coupon_deactivated(), data: result },
+				body: { message: m.server_coupon_created(), data: result },
 			};
+		});
+	}),
+	update: priv.update.handler(async ({ context, input: { params, body } }) => {
+		return await context.svc.db.transaction(async (tx) => {
+			const data = trimObjectValues(body);
+			const result = await context.repo.coupon.update(
+				params.id,
+				data,
+				{ tx },
+				context,
+			);
+
+			return {
+				status: 200,
+				body: { message: m.server_coupon_updated(), data: result },
+			};
+		});
+	}),
+	remove: priv.remove.handler(async ({ context, input: { params } }) => {
+		return await context.svc.db.transaction(async (tx) => {
+			await context.repo.coupon.remove(params.id, { tx }, context);
+
+			return {
+				status: 200,
+				body: { message: m.server_coupon_deleted(), data: null },
+			};
+		});
+	}),
+	activate: priv.activate.handler(async ({ context, input: { params } }) => {
+		return await context.svc.db.transaction(async (tx) => {
+			const result = await context.repo.coupon.activate(
+				params.id,
+				{ tx },
+				context,
+			);
+
+			return {
+				status: 200,
+				body: { message: m.server_coupon_activated(), data: result },
+			};
+		});
+	}),
+	deactivate: priv.deactivate.handler(
+		async ({ context, input: { params } }) => {
+			return await context.svc.db.transaction(async (tx) => {
+				const result = await context.repo.coupon.deactivate(
+					params.id,
+					{ tx },
+					context,
+				);
+
+				return {
+					status: 200,
+					body: { message: m.server_coupon_deactivated(), data: result },
+				};
+			});
 		},
 	),
 });

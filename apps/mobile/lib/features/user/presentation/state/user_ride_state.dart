@@ -1,52 +1,40 @@
 part of '_export.dart';
 
-@MappableClass(
-  generateMethods:
-      GenerateMethods.stringify | GenerateMethods.equals | GenerateMethods.copy,
-)
-class UserRideState extends BaseState2 with UserRideStateMappable {
-  UserRideState({
-    this.nearbyDrivers = const [],
-    this.nearbyPlaces = const PageTokenPaginationResult<List<Place>>(data: []),
-    this.searchPlaces = const PageTokenPaginationResult<List<Place>>(data: []),
+class UserRideState extends Equatable {
+  const UserRideState({
+    this.nearbyDrivers = const OperationResult.idle(),
+    this.nearbyPlaces = const OperationResult.idle(),
+    this.searchPlaces = const OperationResult.idle(),
     this.mapController,
-    super.state,
-    super.message,
-    super.error,
   });
 
-  final List<Driver> nearbyDrivers;
-  final PageTokenPaginationResult<List<Place>> nearbyPlaces;
-  final PageTokenPaginationResult<List<Place>> searchPlaces;
+  final OperationResult<List<Driver>> nearbyDrivers;
+  final OperationResult<PageTokenPaginationResult<List<Place>>> nearbyPlaces;
+  final OperationResult<PageTokenPaginationResult<List<Place>>> searchPlaces;
   final GoogleMapController? mapController;
 
   @override
-  UserRideState toInitial() =>
-      copyWith(state: CubitState.initial, message: null, error: null);
+  List<Object?> get props => [
+    nearbyDrivers,
+    nearbyPlaces,
+    searchPlaces,
+    mapController,
+  ];
+
+  UserRideState copyWith({
+    OperationResult<List<Driver>>? nearbyDrivers,
+    OperationResult<PageTokenPaginationResult<List<Place>>>? nearbyPlaces,
+    OperationResult<PageTokenPaginationResult<List<Place>>>? searchPlaces,
+    GoogleMapController? mapController,
+  }) {
+    return UserRideState(
+      nearbyDrivers: nearbyDrivers ?? this.nearbyDrivers,
+      nearbyPlaces: nearbyPlaces ?? this.nearbyPlaces,
+      searchPlaces: searchPlaces ?? this.searchPlaces,
+      mapController: mapController ?? this.mapController,
+    );
+  }
 
   @override
-  UserRideState toLoading() =>
-      copyWith(state: CubitState.loading, message: null, error: null);
-
-  @override
-  UserRideState toSuccess({
-    List<Driver>? nearbyDrivers,
-    PageTokenPaginationResult<List<Place>>? nearbyPlaces,
-    PageTokenPaginationResult<List<Place>>? searchPlaces,
-    String? message,
-  }) => copyWith(
-    state: CubitState.success,
-    nearbyDrivers: nearbyDrivers ?? this.nearbyDrivers,
-    nearbyPlaces: nearbyPlaces ?? this.nearbyPlaces,
-    searchPlaces: searchPlaces ?? this.searchPlaces,
-    message: message,
-    error: null,
-  );
-
-  @override
-  UserRideState toFailure(BaseError error, {String? message}) =>
-      copyWith(state: CubitState.failure, error: error, message: message);
-
-  UserRideState setMapController(GoogleMapController con) =>
-      copyWith(mapController: con);
+  bool get stringify => true;
 }

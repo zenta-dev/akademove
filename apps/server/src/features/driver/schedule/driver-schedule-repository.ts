@@ -10,7 +10,11 @@ import { v7 } from "uuid";
 import { BaseRepository } from "@/core/base";
 import { CACHE_TTLS } from "@/core/constants";
 import { RepositoryError } from "@/core/error";
-import type { ListResult, OrderByOperation } from "@/core/interface";
+import type {
+	ListResult,
+	OrderByOperation,
+	PartialWithTx,
+} from "@/core/interface";
 import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
 import type { DriverScheduleDatabase } from "@/core/tables/driver";
@@ -153,9 +157,11 @@ export class DriverScheduleRepository extends BaseRepository {
 
 	async create(
 		item: InsertDriverSchedule & { userId: string },
+		opts?: PartialWithTx,
 	): Promise<DriverSchedule> {
 		try {
-			const [operation] = await this.db
+			const db = opts?.tx ?? this.db;
+			const [operation] = await db
 				.insert(tables.driverSchedule)
 				.values({
 					...item,
@@ -178,13 +184,15 @@ export class DriverScheduleRepository extends BaseRepository {
 	async update(
 		id: string,
 		item: UpdateDriverSchedule,
+		opts?: PartialWithTx,
 	): Promise<DriverSchedule> {
 		try {
+			const db = opts?.tx ?? this.db;
 			const existing = await this.#getFromDB(id);
 			if (!existing)
 				throw new RepositoryError(`Schedule with id "${id}" not found`);
 
-			const [operation] = await this.db
+			const [operation] = await db
 				.update(tables.driverSchedule)
 				.set({
 					...existing,
@@ -208,9 +216,10 @@ export class DriverScheduleRepository extends BaseRepository {
 		}
 	}
 
-	async remove(id: string): Promise<void> {
+	async remove(id: string, opts?: PartialWithTx): Promise<void> {
 		try {
-			const result = await this.db
+			const db = opts?.tx ?? this.db;
+			const result = await db
 				.delete(tables.driverSchedule)
 				.where(eq(tables.driverSchedule.id, id))
 				.returning({ id: tables.driverSchedule.id });
