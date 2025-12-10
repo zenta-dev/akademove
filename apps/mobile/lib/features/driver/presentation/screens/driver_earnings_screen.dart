@@ -461,6 +461,9 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
     final accountNameController = TextEditingController();
     BankProvider selectedBank = BankProvider.BCA;
     var isLoadingSavedBank = true;
+    var isValidating = false;
+    var isValidated = false;
+    var saveBank = false;
 
     // Fetch saved bank details and show dialog
     showDialog(
@@ -481,10 +484,71 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
                   }
                   if (savedBank.accountName != null) {
                     accountNameController.text = savedBank.accountName!;
+                    // If we have saved account name, consider it pre-validated
+                    isValidated = true;
                   }
                 });
               }
             });
+          }
+
+          Future<void> validateBankAccount() async {
+            final accountNumber = accountNumberController.text.trim();
+            if (accountNumber.isEmpty) {
+              context.showMyToast(
+                context.l10n.toast_enter_bank_account,
+                type: ToastType.failed,
+              );
+              return;
+            }
+            if (accountNumber.length < 5) {
+              context.showMyToast(
+                context.l10n.toast_bank_account_min_digits,
+                type: ToastType.failed,
+              );
+              return;
+            }
+
+            setState(() => isValidating = true);
+
+            try {
+              final result = await this.context
+                  .read<WalletRepository>()
+                  .validateBankAccount(
+                    bankProvider: selectedBank,
+                    accountNumber: accountNumber,
+                  );
+
+              if (result.data.isValid && result.data.accountName != null) {
+                setState(() {
+                  accountNameController.text = result.data.accountName!;
+                  isValidated = true;
+                  isValidating = false;
+                });
+                if (mounted) {
+                  context.showMyToast(
+                    context.l10n.toast_bank_account_verified,
+                    type: ToastType.success,
+                  );
+                }
+              } else {
+                setState(() => isValidating = false);
+                if (mounted) {
+                  context.showMyToast(
+                    context.l10n.toast_failed_verify_bank,
+                    type: ToastType.failed,
+                  );
+                }
+              }
+            } catch (e) {
+              setState(() => isValidating = false);
+              if (mounted) {
+                context.showMyToast(
+                  context.l10n.toast_failed_verify_bank,
+                  type: ToastType.failed,
+                );
+              }
+            }
           }
 
           return AlertDialog(
@@ -548,7 +612,11 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
                     value: selectedBank,
                     onChanged: (value) {
                       if (value != null) {
-                        setState(() => selectedBank = value);
+                        setState(() {
+                          selectedBank = value;
+                          // Reset validation when bank changes
+                          isValidated = false;
+                        });
                       }
                     },
                     placeholder: Text(context.l10n.select_bank),
@@ -569,14 +637,102 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
                       ),
                     ).call,
                   ),
-                  // Account number field
-                  TextField(
-                    controller: accountNumberController,
-                    placeholder: Text(context.l10n.hint_bank_account_number),
+                  // Account number field with validate button
+                  Row(
+                    spacing: 8.w,
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          controller: accountNumberController,
+                          placeholder: Text(
+                            context.l10n.hint_bank_account_number,
+                          ),
+                          onChanged: (_) {
+                            // Reset validation when account number changes
+                            if (isValidated) {
+                              setState(() => isValidated = false);
+                            }
+                          },
+                        ),
+                      ),
+                      Button(
+                        onPressed:
+                            isValidating ||
+                                isValidated ||
+                                accountNumberController.text.trim().length < 5
+                            ? null
+                            : validateBankAccount,
+                        style: isValidated
+                            ? ButtonStyle.outline(
+                                density: ButtonDensity.compact,
+                              )
+                            : ButtonStyle.secondary(
+                                density: ButtonDensity.compact,
+                              ),
+                        child: isValidating
+                            ? SizedBox(
+                                width: 16.sp,
+                                height: 16.sp,
+                                child: const CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                ),
+                              )
+                            : isValidated
+                            ? Icon(
+                                LucideIcons.check,
+                                size: 16.sp,
+                                color: const Color(0xFF4CAF50),
+                              )
+                            : Text(context.l10n.confirm),
+                      ),
+                    ],
                   ),
-                  TextField(
-                    controller: accountNameController,
-                    placeholder: Text(context.l10n.hint_account_name),
+                  // Account name field (read-only when validated)
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    spacing: 4.h,
+                    children: [
+                      TextField(
+                        controller: accountNameController,
+                        placeholder: Text(context.l10n.hint_account_name),
+                        readOnly: isValidated,
+                      ),
+                      if (isValidated && accountNameController.text.isNotEmpty)
+                        Text(
+                          accountNameController.text,
+                          style: context.typography.small.copyWith(
+                            fontSize: 12.sp,
+                            color: const Color(0xFF4CAF50),
+                          ),
+                        ),
+                    ],
+                  ),
+                  // Save bank checkbox
+                  Row(
+                    spacing: 8.w,
+                    children: [
+                      Checkbox(
+                        state: saveBank
+                            ? CheckboxState.checked
+                            : CheckboxState.unchecked,
+                        onChanged: (state) {
+                          setState(
+                            () => saveBank = state == CheckboxState.checked,
+                          );
+                        },
+                      ),
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () => setState(() => saveBank = !saveBank),
+                          child: Text(
+                            context.l10n.withdraw_wallet_save_bank,
+                            style: context.typography.small.copyWith(
+                              fontSize: 14.sp,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -587,63 +743,67 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
                 child: Text(context.l10n.cancel),
               ),
               PrimaryButton(
-                onPressed: () async {
-                  final amountText = amountController.text.trim();
-                  final accountNumber = accountNumberController.text.trim();
-                  final accountName = accountNameController.text.trim();
+                onPressed: isValidating
+                    ? null
+                    : () async {
+                        final amountText = amountController.text.trim();
+                        final accountNumber = accountNumberController.text
+                            .trim();
+                        final accountName = accountNameController.text.trim();
 
-                  // Validate amount
-                  if (amountText.isEmpty) {
-                    if (mounted) {
-                      context.showMyToast(
-                        context.l10n.enter_withdrawal_amount,
-                        type: ToastType.failed,
-                      );
-                    }
-                    return;
-                  }
+                        // Validate amount
+                        if (amountText.isEmpty) {
+                          if (mounted) {
+                            context.showMyToast(
+                              context.l10n.enter_withdrawal_amount,
+                              type: ToastType.failed,
+                            );
+                          }
+                          return;
+                        }
 
-                  final amount = num.tryParse(amountText);
-                  if (amount == null || amount <= 0) {
-                    if (mounted) {
-                      context.showMyToast(
-                        context.l10n.invalid_amount,
-                        type: ToastType.failed,
-                      );
-                    }
-                    return;
-                  }
+                        final amount = num.tryParse(amountText);
+                        if (amount == null || amount <= 0) {
+                          if (mounted) {
+                            context.showMyToast(
+                              context.l10n.invalid_amount,
+                              type: ToastType.failed,
+                            );
+                          }
+                          return;
+                        }
 
-                  final balance = _wallet?.balance ?? 0;
-                  if (amount > balance) {
-                    if (mounted) {
-                      context.showMyToast(
-                        context.l10n.insufficient_balance,
-                        type: ToastType.failed,
-                      );
-                    }
-                    return;
-                  }
+                        final balance = _wallet?.balance ?? 0;
+                        if (amount > balance) {
+                          if (mounted) {
+                            context.showMyToast(
+                              context.l10n.insufficient_balance,
+                              type: ToastType.failed,
+                            );
+                          }
+                          return;
+                        }
 
-                  // Validate account number
-                  if (accountNumber.isEmpty) {
-                    if (mounted) {
-                      context.showMyToast(
-                        context.l10n.please_enter_bank_account_number,
-                        type: ToastType.failed,
-                      );
-                    }
-                    return;
-                  }
+                        // Validate account number
+                        if (accountNumber.isEmpty) {
+                          if (mounted) {
+                            context.showMyToast(
+                              context.l10n.please_enter_bank_account_number,
+                              type: ToastType.failed,
+                            );
+                          }
+                          return;
+                        }
 
-                  Navigator.of(dialogContext).pop();
-                  await _processWithdrawal(
-                    amount: amount,
-                    bankProvider: selectedBank,
-                    accountNumber: accountNumber,
-                    accountName: accountName.isEmpty ? null : accountName,
-                  );
-                },
+                        Navigator.of(dialogContext).pop();
+                        await _processWithdrawal(
+                          amount: amount,
+                          bankProvider: selectedBank,
+                          accountNumber: accountNumber,
+                          accountName: accountName.isEmpty ? null : accountName,
+                          saveBank: saveBank,
+                        );
+                      },
                 child: Text(context.l10n.withdraw),
               ),
             ],
@@ -678,6 +838,7 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
     required BankProvider bankProvider,
     required String accountNumber,
     String? accountName,
+    bool saveBank = false,
   }) async {
     try {
       setState(() => _isLoading = true);
@@ -687,6 +848,8 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
         bankProvider: bankProvider,
         accountNumber: accountNumber,
         accountName: accountName,
+        // TODO: Add saveBank once API client is regenerated
+        // saveBank: saveBank,
       );
 
       final result = await context.read<WalletRepository>().withdraw(request);
