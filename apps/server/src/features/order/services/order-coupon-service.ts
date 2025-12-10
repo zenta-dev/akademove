@@ -198,7 +198,7 @@ export class OrderCouponService {
 		discountAmount: number,
 		db: DatabaseService,
 		kv: KeyValueService,
-		_opts?: PartialWithTx,
+		opts?: PartialWithTx,
 	): Promise<void> {
 		try {
 			// Create a CouponRepository instance
@@ -207,10 +207,16 @@ export class OrderCouponService {
 			).CouponRepository(db, kv);
 
 			// Record the usage in coupon_usages table
-			await couponRepo.recordUsage(couponId, orderId, userId, discountAmount);
+			await couponRepo.recordUsage(
+				couponId,
+				orderId,
+				userId,
+				discountAmount,
+				opts,
+			);
 
 			// Increment the used count on the coupon
-			await couponRepo.incrementUsageCount(couponId);
+			await couponRepo.incrementUsageCount(couponId, opts);
 
 			logger.info(
 				{

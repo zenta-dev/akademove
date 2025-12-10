@@ -23,6 +23,10 @@ import { merchant, merchantMenu } from "./merchant";
 
 export const orderStatus = pgEnum("order_status", CONSTANTS.ORDER_STATUSES);
 export const orderType = pgEnum("order_type", CONSTANTS.ORDER_TYPES);
+export const deliveryItemType = pgEnum(
+	"delivery_item_type",
+	CONSTANTS.DELIVERY_ITEM_TYPES,
+);
 
 export interface OrderNote {
 	pickup?: string;
@@ -108,6 +112,8 @@ export const order = pgTable(
 		proofOfDeliveryUrl: text("proof_of_delivery_url"),
 		deliveryOtp: text("delivery_otp"),
 		otpVerifiedAt: timestamp("otp_verified_at"),
+
+		deliveryItemType: deliveryItemType(),
 	},
 	(t) => [
 		// Foreign key indexes for filtering by user/driver/merchant

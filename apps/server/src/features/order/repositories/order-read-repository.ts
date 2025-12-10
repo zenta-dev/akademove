@@ -328,12 +328,7 @@ export class OrderReadRepository extends OrderBaseRepository {
 	 * Estimate order pricing based on pickup/dropoff locations
 	 */
 	async estimate(
-		params: Pick<
-			EstimateOrder,
-			"type" | "pickupLocation" | "dropoffLocation"
-		> & {
-			weight?: number;
-		},
+		params: EstimateOrder,
 		opts?: WithTx,
 	): Promise<OrderSummary & { config: PricingConfiguration }> {
 		try {
@@ -348,13 +343,7 @@ export class OrderReadRepository extends OrderBaseRepository {
 				OrderSummary & { config: PricingConfiguration }
 			>(cacheKey, {
 				fallback: async () => {
-					// Build EstimateOrder input for the service
-					const estimateInput: EstimateOrder = {
-						type: params.type,
-						pickupLocation: params.pickupLocation,
-						dropoffLocation: params.dropoffLocation,
-						weight: params.weight,
-					};
+				 
 
 					// Get pricing configuration (still needed to return to client)
 					const pricingConfig = await this.getPricingConfiguration(
@@ -366,8 +355,7 @@ export class OrderReadRepository extends OrderBaseRepository {
 						throw new RepositoryError(m.error_missing_pricing_configuration());
 
 					// Use OrderPricingService to calculate estimate
-					const pricing =
-						await this.#pricingService.estimateOrder(estimateInput);
+					const pricing = await this.#pricingService.estimateOrder(params);
 
 					const result = { ...pricing, config: pricingConfig };
 

@@ -145,12 +145,7 @@ export class OrderRepository {
 	 * Estimate order pricing
 	 */
 	async estimate(
-		params: Pick<
-			EstimateOrder,
-			"type" | "pickupLocation" | "dropoffLocation"
-		> & {
-			weight?: number;
-		},
+		params: EstimateOrder,
 		opts?: WithTx,
 	): Promise<OrderSummary & { config: PricingConfiguration }> {
 		return this.#readRepo.estimate(params, opts);

@@ -72,14 +72,14 @@ export const OrderSpec = {
 	estimate: oc
 		.route({
 			tags: [FEATURE_TAGS.ORDER],
-			method: "GET",
+			method: "POST",
 			path: "/estimate",
 			inputStructure: "detailed",
 			outputStructure: "detailed",
 		})
 		.input(
 			z.object({
-				query: FlatEstimateOrderSchema,
+				body: FlatEstimateOrderSchema,
 			}),
 		)
 		.output(

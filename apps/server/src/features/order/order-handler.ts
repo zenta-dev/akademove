@@ -47,18 +47,18 @@ export const OrderHandler = priv.router({
 			},
 		};
 	}),
-	estimate: priv.estimate.handler(async ({ context, input: { query } }) => {
+	estimate: priv.estimate.handler(async ({ context, input: { body } }) => {
 		// PERFORMANCE: No transaction needed for read-only estimate endpoint
 		// This endpoint only reads pricing config (now cached in memory) and calls external API
 		const res = await context.repo.order.estimate({
-			...query,
+			...body,
 			pickupLocation: {
-				x: query.pickupLocation_x,
-				y: query.pickupLocation_y,
+				x: body.pickupLocation_x,
+				y: body.pickupLocation_y,
 			},
 			dropoffLocation: {
-				x: query.dropoffLocation_x,
-				y: query.dropoffLocation_y,
+				x: body.dropoffLocation_x,
+				y: body.dropoffLocation_y,
 			},
 		});
 		return {
