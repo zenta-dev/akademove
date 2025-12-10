@@ -1,3 +1,4 @@
+import 'package:akademove/app/_export.dart';
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/l10n/l10n.dart';
@@ -233,7 +234,7 @@ class _UserWalletTransferScreenState extends State<UserWalletTransferScreen> {
                 ),
                 if (recipient.phone != null)
                   DefaultText(
-                    recipient.phone!.masked,
+                    '${recipient.phone!.countryCode} ${recipient.phone!.maskedNumber}',
                     fontSize: 12.sp,
                     color: Theme.of(context).colorScheme.mutedForeground,
                   ),
@@ -433,18 +434,15 @@ class _UserWalletTransferScreenState extends State<UserWalletTransferScreen> {
   }
 
   Future<void> _handleScanQr(BuildContext context) async {
-    // TODO: Implement QR scanner navigation
-    // final result = await context.push<UserLookupResult>(
-    //   '/wallet/transfer/scan',
-    // );
-    // if (result != null && context.mounted) {
-    //   context.read<UserWalletTransferCubit>().setRecipientFromQr(result);
-    //   phoneController.text = result.phone?.masked ?? '';
-    //   setState(() {
-    //     useUserId = false;
-    //   });
-    // }
-    context.showMyToast('QR Scanner coming soon', type: ToastType.info);
+    final result = await context.push<UserLookupResult>(
+      Routes.userWalletTransferScan.path,
+    );
+    if (result != null && context.mounted) {
+      context.read<UserWalletTransferCubit>().setRecipientFromQr(result);
+      setState(() {
+        useUserId = false;
+      });
+    }
   }
 
   Future<void> _handleTransfer(
