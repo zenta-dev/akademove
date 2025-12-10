@@ -37,6 +37,11 @@ void main() {
       // TODO
     });
 
+    // String genderPreference
+    test('to test the property `genderPreference`', () async {
+      // TODO
+    });
+
     // String couponCode
     test('to test the property `couponCode`', () async {
       // TODO

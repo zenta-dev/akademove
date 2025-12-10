@@ -21,18 +21,23 @@ void main() {
       // TODO
     });
 
-    //Future<MerchantOrderAccept200Response> orderCancelScheduledOrder(String id, OrderCancelRequest orderCancelRequest) async
+    //Future<MerchantOrderAccept200Response> orderCancelScheduledOrder(String id, OrderCancelScheduledOrderRequest orderCancelScheduledOrderRequest) async
     test('test orderCancelScheduledOrder', () async {
       // TODO
     });
 
-    //Future<OrderEstimate200Response> orderEstimate(num dropoffLocationX, num dropoffLocationY, num pickupLocationX, num pickupLocationY, OrderType type, { String notePickup, String noteDropoff, String noteInstructions, List<OrderItem> items, UserGender gender, String couponCode, List<num> discountIds, num weight }) async
+    //Future<OrderEstimate200Response> orderEstimate(num dropoffLocationX, num dropoffLocationY, num pickupLocationX, num pickupLocationY, OrderType type, { String notePickup, String noteDropoff, String noteInstructions, List<OrderItem> items, UserGender gender, String genderPreference, String couponCode, List<num> discountIds, num weight }) async
     test('test orderEstimate', () async {
       // TODO
     });
 
     //Future<MerchantOrderAccept200Response> orderGet(String id) async
     test('test orderGet', () async {
+      // TODO
+    });
+
+    //Future<OrderGetStatusHistory200Response> orderGetStatusHistory(String id) async
+    test('test orderGetStatusHistory', () async {
       // TODO
     });
 

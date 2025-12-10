@@ -36,7 +36,7 @@ void main() {
       // TODO
     });
 
-    //Future<BroadcastDelete200Response> broadcastDelete(String id) async
+    //Future<BannerDelete200Response> broadcastDelete(String id) async
     test('test broadcastDelete', () async {
       // TODO
     });
@@ -91,22 +91,22 @@ void main() {
       // TODO
     });
 
-    //Future<DriverGetMine200ResponseBody> driverActivate(String id) async
+    //Future<DriverGet200Response> driverActivate(String id) async
     test('test driverActivate', () async {
       // TODO
     });
 
-    //Future<DriverGetMine200ResponseBody> driverApprove(String id) async
+    //Future<DriverGet200Response> driverApprove(String id) async
     test('test driverApprove', () async {
       // TODO
     });
 
-    //Future<DriverGetMine200ResponseBody> driverReject(String id, DriverRejectRequest driverRejectRequest) async
+    //Future<DriverGet200Response> driverReject(String id, DriverRejectRequest driverRejectRequest) async
     test('test driverReject', () async {
       // TODO
     });
 
-    //Future<DriverGetMine200ResponseBody> driverSuspend(String id, DriverSuspendRequest driverSuspendRequest) async
+    //Future<DriverGet200Response> driverSuspend(String id, DriverSuspendRequest driverSuspendRequest) async
     test('test driverSuspend', () async {
       // TODO
     });

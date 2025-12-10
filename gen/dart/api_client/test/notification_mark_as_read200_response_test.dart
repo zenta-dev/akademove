@@ -13,7 +13,7 @@ void main() {
       // TODO
     });
 
-    // NotificationList200ResponseDataInner data
+    // NotificationMarkAsRead200ResponseData data
     test('to test the property `data`', () async {
       // TODO
     });

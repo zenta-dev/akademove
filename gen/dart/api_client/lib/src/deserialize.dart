@@ -12,8 +12,6 @@ import 'package:api_client/src/model/admin_update_user.dart';
 import 'package:api_client/src/model/approve_driver.dart';
 import 'package:api_client/src/model/audit_list200_response.dart';
 import 'package:api_client/src/model/audit_list200_response_data_inner.dart';
-import 'package:api_client/src/model/audit_log_job.dart';
-import 'package:api_client/src/model/audit_log_job_payload.dart';
 import 'package:api_client/src/model/auth_exchange_token200_response.dart';
 import 'package:api_client/src/model/auth_forgot_password_request.dart';
 import 'package:api_client/src/model/auth_get_session200_response.dart';
@@ -26,8 +24,6 @@ import 'package:api_client/src/model/badge.dart';
 import 'package:api_client/src/model/badge_benefits.dart';
 import 'package:api_client/src/model/badge_create200_response.dart';
 import 'package:api_client/src/model/badge_criteria.dart';
-import 'package:api_client/src/model/badge_evaluation_job.dart';
-import 'package:api_client/src/model/badge_evaluation_job_payload.dart';
 import 'package:api_client/src/model/badge_list200_response.dart';
 import 'package:api_client/src/model/badge_remove200_response.dart';
 import 'package:api_client/src/model/badge_user_create200_response.dart';
@@ -47,9 +43,6 @@ import 'package:api_client/src/model/banner_list200_response_data_inner.dart';
 import 'package:api_client/src/model/banner_list_public200_response.dart';
 import 'package:api_client/src/model/banner_list_public200_response_data_inner.dart';
 import 'package:api_client/src/model/banner_update_request.dart';
-import 'package:api_client/src/model/batch_notification_job.dart';
-import 'package:api_client/src/model/batch_notification_job_payload.dart';
-import 'package:api_client/src/model/batch_notification_job_payload_notification.dart';
 import 'package:api_client/src/model/broadcast.dart';
 import 'package:api_client/src/model/broadcast_create201_response.dart';
 import 'package:api_client/src/model/broadcast_create201_response_data.dart';
@@ -84,8 +77,6 @@ import 'package:api_client/src/model/coupon_get_eligible_coupons200_response_dat
 import 'package:api_client/src/model/coupon_get_eligible_coupons_request.dart';
 import 'package:api_client/src/model/coupon_list200_response.dart';
 import 'package:api_client/src/model/coupon_rules.dart';
-import 'package:api_client/src/model/coupon_usage_job.dart';
-import 'package:api_client/src/model/coupon_usage_job_payload.dart';
 import 'package:api_client/src/model/coupon_validate200_response.dart';
 import 'package:api_client/src/model/coupon_validate200_response_data.dart';
 import 'package:api_client/src/model/coupon_validate_request.dart';
@@ -111,11 +102,6 @@ import 'package:api_client/src/model/driver_get_mine200_response_body.dart';
 import 'package:api_client/src/model/driver_get_review200_response.dart';
 import 'package:api_client/src/model/driver_get_review200_response_data.dart';
 import 'package:api_client/src/model/driver_list200_response.dart';
-import 'package:api_client/src/model/driver_matching_job.dart';
-import 'package:api_client/src/model/driver_matching_job_payload.dart';
-import 'package:api_client/src/model/driver_matching_job_payload_pickup_location.dart';
-import 'package:api_client/src/model/driver_metrics_job.dart';
-import 'package:api_client/src/model/driver_metrics_job_payload.dart';
 import 'package:api_client/src/model/driver_min_quiz_question.dart';
 import 'package:api_client/src/model/driver_min_quiz_question_options_inner.dart';
 import 'package:api_client/src/model/driver_quiz_answer.dart';
@@ -246,8 +232,6 @@ import 'package:api_client/src/model/order_cancel_scheduled_order_request.dart';
 import 'package:api_client/src/model/order_chat_message.dart';
 import 'package:api_client/src/model/order_chat_message_list_query.dart';
 import 'package:api_client/src/model/order_chat_message_sender.dart';
-import 'package:api_client/src/model/order_completion_job.dart';
-import 'package:api_client/src/model/order_completion_job_payload.dart';
 import 'package:api_client/src/model/order_driver.dart';
 import 'package:api_client/src/model/order_envelope.dart';
 import 'package:api_client/src/model/order_envelope_payload.dart';
@@ -268,12 +252,8 @@ import 'package:api_client/src/model/order_place_order200_response.dart';
 import 'package:api_client/src/model/order_place_scheduled_order200_response.dart';
 import 'package:api_client/src/model/order_send_message_request.dart';
 import 'package:api_client/src/model/order_status_history.dart';
-import 'package:api_client/src/model/order_status_history_job.dart';
-import 'package:api_client/src/model/order_status_history_job_payload.dart';
 import 'package:api_client/src/model/order_summary.dart';
 import 'package:api_client/src/model/order_summary_breakdown.dart';
-import 'package:api_client/src/model/order_timeout_job.dart';
-import 'package:api_client/src/model/order_timeout_job_payload.dart';
 import 'package:api_client/src/model/order_upload_delivery_proof200_response.dart';
 import 'package:api_client/src/model/order_upload_delivery_proof200_response_data.dart';
 import 'package:api_client/src/model/order_upload_delivery_proof_request.dart';
@@ -293,23 +273,10 @@ import 'package:api_client/src/model/place_order_response_auto_applied_coupon.da
 import 'package:api_client/src/model/place_scheduled_order.dart';
 import 'package:api_client/src/model/place_scheduled_order_response.dart';
 import 'package:api_client/src/model/pricing_configuration.dart';
-import 'package:api_client/src/model/push_notification_job.dart';
-import 'package:api_client/src/model/push_notification_job_payload.dart';
-import 'package:api_client/src/model/push_notification_job_payload_android.dart';
-import 'package:api_client/src/model/push_notification_job_payload_android_notification.dart';
-import 'package:api_client/src/model/push_notification_job_payload_apns.dart';
-import 'package:api_client/src/model/push_notification_job_payload_apns_payload.dart';
-import 'package:api_client/src/model/push_notification_job_payload_apns_payload_aps.dart';
-import 'package:api_client/src/model/push_notification_job_payload_webpush.dart';
-import 'package:api_client/src/model/push_notification_job_payload_webpush_fcm_options.dart';
-import 'package:api_client/src/model/queue_message.dart';
-import 'package:api_client/src/model/queue_message_meta.dart';
 import 'package:api_client/src/model/quick_message_create200_response.dart';
 import 'package:api_client/src/model/quick_message_list200_response.dart';
 import 'package:api_client/src/model/quick_message_list200_response_data.dart';
 import 'package:api_client/src/model/quick_message_template.dart';
-import 'package:api_client/src/model/refund_job.dart';
-import 'package:api_client/src/model/refund_job_payload.dart';
 import 'package:api_client/src/model/reject_driver.dart';
 import 'package:api_client/src/model/report.dart';
 import 'package:api_client/src/model/report_create200_response.dart';
@@ -388,8 +355,6 @@ import 'package:api_client/src/model/wallet_get_monthly_summary200_response.dart
 import 'package:api_client/src/model/wallet_monthly_summary_query.dart';
 import 'package:api_client/src/model/wallet_monthly_summary_response.dart';
 import 'package:api_client/src/model/wallet_top_up200_response.dart';
-import 'package:api_client/src/model/web_socket_broadcast_job.dart';
-import 'package:api_client/src/model/web_socket_broadcast_job_payload.dart';
 import 'package:api_client/src/model/withdraw_request.dart';
 
 final _regList = RegExp(r'^List<(.*)>$');
@@ -475,11 +440,6 @@ ReturnType deserialize<ReturnType, BaseType>(
             value as Map<String, dynamic>,
           )
           as ReturnType;
-    case 'AuditLogJob':
-      return AuditLogJob.fromJson(value as Map<String, dynamic>) as ReturnType;
-    case 'AuditLogJobPayload':
-      return AuditLogJobPayload.fromJson(value as Map<String, dynamic>)
-          as ReturnType;
     case 'AuthExchangeToken200Response':
       return AuthExchangeToken200Response.fromJson(
             value as Map<String, dynamic>,
@@ -516,12 +476,6 @@ ReturnType deserialize<ReturnType, BaseType>(
           as ReturnType;
     case 'BadgeCriteria':
       return BadgeCriteria.fromJson(value as Map<String, dynamic>)
-          as ReturnType;
-    case 'BadgeEvaluationJob':
-      return BadgeEvaluationJob.fromJson(value as Map<String, dynamic>)
-          as ReturnType;
-    case 'BadgeEvaluationJobPayload':
-      return BadgeEvaluationJobPayload.fromJson(value as Map<String, dynamic>)
           as ReturnType;
     case 'BadgeLevel':
     case 'BadgeList200Response':
@@ -585,17 +539,6 @@ ReturnType deserialize<ReturnType, BaseType>(
           as ReturnType;
     case 'BannerUpdateRequest':
       return BannerUpdateRequest.fromJson(value as Map<String, dynamic>)
-          as ReturnType;
-    case 'BatchNotificationJob':
-      return BatchNotificationJob.fromJson(value as Map<String, dynamic>)
-          as ReturnType;
-    case 'BatchNotificationJobPayload':
-      return BatchNotificationJobPayload.fromJson(value as Map<String, dynamic>)
-          as ReturnType;
-    case 'BatchNotificationJobPayloadNotification':
-      return BatchNotificationJobPayloadNotification.fromJson(
-            value as Map<String, dynamic>,
-          )
           as ReturnType;
     case 'Broadcast':
       return Broadcast.fromJson(value as Map<String, dynamic>) as ReturnType;
@@ -717,12 +660,6 @@ ReturnType deserialize<ReturnType, BaseType>(
     case 'CouponRules':
       return CouponRules.fromJson(value as Map<String, dynamic>) as ReturnType;
     case 'CouponType':
-    case 'CouponUsageJob':
-      return CouponUsageJob.fromJson(value as Map<String, dynamic>)
-          as ReturnType;
-    case 'CouponUsageJobPayload':
-      return CouponUsageJobPayload.fromJson(value as Map<String, dynamic>)
-          as ReturnType;
     case 'CouponValidate200Response':
       return CouponValidate200Response.fromJson(value as Map<String, dynamic>)
           as ReturnType;
@@ -829,23 +766,6 @@ ReturnType deserialize<ReturnType, BaseType>(
     case 'DriverKey':
     case 'DriverList200Response':
       return DriverList200Response.fromJson(value as Map<String, dynamic>)
-          as ReturnType;
-    case 'DriverMatchingJob':
-      return DriverMatchingJob.fromJson(value as Map<String, dynamic>)
-          as ReturnType;
-    case 'DriverMatchingJobPayload':
-      return DriverMatchingJobPayload.fromJson(value as Map<String, dynamic>)
-          as ReturnType;
-    case 'DriverMatchingJobPayloadPickupLocation':
-      return DriverMatchingJobPayloadPickupLocation.fromJson(
-            value as Map<String, dynamic>,
-          )
-          as ReturnType;
-    case 'DriverMetricsJob':
-      return DriverMetricsJob.fromJson(value as Map<String, dynamic>)
-          as ReturnType;
-    case 'DriverMetricsJobPayload':
-      return DriverMetricsJobPayload.fromJson(value as Map<String, dynamic>)
           as ReturnType;
     case 'DriverMinQuizQuestion':
       return DriverMinQuizQuestion.fromJson(value as Map<String, dynamic>)
@@ -1349,12 +1269,6 @@ ReturnType deserialize<ReturnType, BaseType>(
     case 'OrderChatMessageSender':
       return OrderChatMessageSender.fromJson(value as Map<String, dynamic>)
           as ReturnType;
-    case 'OrderCompletionJob':
-      return OrderCompletionJob.fromJson(value as Map<String, dynamic>)
-          as ReturnType;
-    case 'OrderCompletionJobPayload':
-      return OrderCompletionJobPayload.fromJson(value as Map<String, dynamic>)
-          as ReturnType;
     case 'OrderDriver':
       return OrderDriver.fromJson(value as Map<String, dynamic>) as ReturnType;
     case 'OrderEnvelope':
@@ -1424,25 +1338,11 @@ ReturnType deserialize<ReturnType, BaseType>(
     case 'OrderStatusHistory':
       return OrderStatusHistory.fromJson(value as Map<String, dynamic>)
           as ReturnType;
-    case 'OrderStatusHistoryJob':
-      return OrderStatusHistoryJob.fromJson(value as Map<String, dynamic>)
-          as ReturnType;
-    case 'OrderStatusHistoryJobPayload':
-      return OrderStatusHistoryJobPayload.fromJson(
-            value as Map<String, dynamic>,
-          )
-          as ReturnType;
     case 'OrderStatusHistoryRole':
     case 'OrderSummary':
       return OrderSummary.fromJson(value as Map<String, dynamic>) as ReturnType;
     case 'OrderSummaryBreakdown':
       return OrderSummaryBreakdown.fromJson(value as Map<String, dynamic>)
-          as ReturnType;
-    case 'OrderTimeoutJob':
-      return OrderTimeoutJob.fromJson(value as Map<String, dynamic>)
-          as ReturnType;
-    case 'OrderTimeoutJobPayload':
-      return OrderTimeoutJobPayload.fromJson(value as Map<String, dynamic>)
           as ReturnType;
     case 'OrderType':
     case 'OrderUploadDeliveryProof200Response':
@@ -1519,52 +1419,6 @@ ReturnType deserialize<ReturnType, BaseType>(
     case 'PricingConfiguration':
       return PricingConfiguration.fromJson(value as Map<String, dynamic>)
           as ReturnType;
-    case 'PushNotificationJob':
-      return PushNotificationJob.fromJson(value as Map<String, dynamic>)
-          as ReturnType;
-    case 'PushNotificationJobPayload':
-      return PushNotificationJobPayload.fromJson(value as Map<String, dynamic>)
-          as ReturnType;
-    case 'PushNotificationJobPayloadAndroid':
-      return PushNotificationJobPayloadAndroid.fromJson(
-            value as Map<String, dynamic>,
-          )
-          as ReturnType;
-    case 'PushNotificationJobPayloadAndroidNotification':
-      return PushNotificationJobPayloadAndroidNotification.fromJson(
-            value as Map<String, dynamic>,
-          )
-          as ReturnType;
-    case 'PushNotificationJobPayloadApns':
-      return PushNotificationJobPayloadApns.fromJson(
-            value as Map<String, dynamic>,
-          )
-          as ReturnType;
-    case 'PushNotificationJobPayloadApnsPayload':
-      return PushNotificationJobPayloadApnsPayload.fromJson(
-            value as Map<String, dynamic>,
-          )
-          as ReturnType;
-    case 'PushNotificationJobPayloadApnsPayloadAps':
-      return PushNotificationJobPayloadApnsPayloadAps.fromJson(
-            value as Map<String, dynamic>,
-          )
-          as ReturnType;
-    case 'PushNotificationJobPayloadWebpush':
-      return PushNotificationJobPayloadWebpush.fromJson(
-            value as Map<String, dynamic>,
-          )
-          as ReturnType;
-    case 'PushNotificationJobPayloadWebpushFcmOptions':
-      return PushNotificationJobPayloadWebpushFcmOptions.fromJson(
-            value as Map<String, dynamic>,
-          )
-          as ReturnType;
-    case 'QueueMessage':
-      return QueueMessage.fromJson(value as Map<String, dynamic>) as ReturnType;
-    case 'QueueMessageMeta':
-      return QueueMessageMeta.fromJson(value as Map<String, dynamic>)
-          as ReturnType;
     case 'QuickMessageCreate200Response':
       return QuickMessageCreate200Response.fromJson(
             value as Map<String, dynamic>,
@@ -1580,11 +1434,6 @@ ReturnType deserialize<ReturnType, BaseType>(
           as ReturnType;
     case 'QuickMessageTemplate':
       return QuickMessageTemplate.fromJson(value as Map<String, dynamic>)
-          as ReturnType;
-    case 'RefundJob':
-      return RefundJob.fromJson(value as Map<String, dynamic>) as ReturnType;
-    case 'RefundJobPayload':
-      return RefundJobPayload.fromJson(value as Map<String, dynamic>)
           as ReturnType;
     case 'RejectDriver':
       return RejectDriver.fromJson(value as Map<String, dynamic>) as ReturnType;
@@ -1832,14 +1681,6 @@ ReturnType deserialize<ReturnType, BaseType>(
           as ReturnType;
     case 'WalletTopUp200Response':
       return WalletTopUp200Response.fromJson(value as Map<String, dynamic>)
-          as ReturnType;
-    case 'WebSocketBroadcastJob':
-      return WebSocketBroadcastJob.fromJson(value as Map<String, dynamic>)
-          as ReturnType;
-    case 'WebSocketBroadcastJobPayload':
-      return WebSocketBroadcastJobPayload.fromJson(
-            value as Map<String, dynamic>,
-          )
           as ReturnType;
     case 'WithdrawRequest':
       return WithdrawRequest.fromJson(value as Map<String, dynamic>)

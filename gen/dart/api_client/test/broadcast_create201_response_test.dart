@@ -13,7 +13,7 @@ void main() {
       // TODO
     });
 
-    // BroadcastList200ResponseDataInner data
+    // BroadcastCreate201ResponseData data
     test('to test the property `data`', () async {
       // TODO
     });
