@@ -25,7 +25,6 @@ export const localeMiddleware = createMiddleware<HonoContext>(
 
 		if (acceptLanguage) {
 			const locale = locales.find((l) => acceptLanguage.includes(l));
-			logger.info(`Locale set to ${locale} from Accept-Language header`);
 			c.set("locale", locale ?? "en");
 			return asyncStorage.run(
 				{ locale: locale ?? "en", messageCalls: new Set() },

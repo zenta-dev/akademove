@@ -81,8 +81,7 @@ export const honoRequireAuthMiddleware = createMiddleware<HonoContext>(
 );
 
 export const orpcRequireAuthMiddleware = base.middleware(
-	async ({ context, path, next }) => {
-		logger.debug(`${path} need to be authenticated`);
+	async ({ context, next }) => {
 		const { token, user } = context;
 		if (!token) {
 			throw new AuthError("Missing or invalid authentication token", {
