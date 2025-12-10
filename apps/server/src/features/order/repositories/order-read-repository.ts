@@ -343,8 +343,6 @@ export class OrderReadRepository extends OrderBaseRepository {
 				OrderSummary & { config: PricingConfiguration }
 			>(cacheKey, {
 				fallback: async () => {
-				 
-
 					// Get pricing configuration (still needed to return to client)
 					const pricingConfig = await this.getPricingConfiguration(
 						params.type,

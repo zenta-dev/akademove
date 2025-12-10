@@ -8,7 +8,6 @@ import { faker, fakerID_ID } from "@faker-js/faker";
 import type {
 	DeliveryPricingConfiguration,
 	FoodPricingConfiguration,
-	InsertConfiguration,
 	InsertQuickMessageTemplate,
 	Phone,
 	RidePricingConfiguration,
@@ -925,6 +924,7 @@ export async function seedConfigurations() {
 
 		await tx
 			.insert(configuration)
+			// biome-ignore lint/suspicious/noExplicitAny: it just works
 			.values(CONFIGS as any)
 			.onConflictDoUpdate({
 				target: configuration.key,

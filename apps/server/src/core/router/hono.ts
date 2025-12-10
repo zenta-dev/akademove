@@ -2,7 +2,6 @@ import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { logger as honoLogger } from "hono/logger";
 import { matchedRoutes } from "hono/route";
-import { pinoLogger } from "hono-pino";
 import { BaseError } from "@/core/error";
 import type { HonoContext } from "@/core/interface";
 import { isCloudflare } from "@/utils";

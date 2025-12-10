@@ -520,9 +520,7 @@ export const AuthHandler = pub.router({
 	}),
 	forgotPassword: pub.forgotPassword.handler(
 		async ({ context, input: { body } }) => {
-			const res = await safeAsync(
-				context.repo.auth.forgotPassword(trimObjectValues(body)),
-			);
+			await context.repo.auth.forgotPassword(trimObjectValues(body));
 
 			return {
 				status: 202,

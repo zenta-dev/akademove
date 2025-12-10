@@ -44,7 +44,6 @@ import {
 } from "@/components/ui/popover";
 import { Textarea } from "@/components/ui/textarea";
 import { orpcQuery, queryClient } from "@/lib/orpc";
-import type { FileRouteTypes } from "@/routeTree.gen";
 import { cn } from "@/utils/cn";
 
 const PLACEMENT_OPTIONS = [
@@ -84,7 +83,7 @@ export const BannerForm = ({
 	banner?: Banner;
 	onSuccess?: () => Promise<void>;
 }) => {
-	const router = useRouter();
+	const _router = useRouter();
 	const form = useForm({
 		resolver: zodResolver(
 			kind === "new" ? InsertBannerSchema : UpdateBannerSchema,

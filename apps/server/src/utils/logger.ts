@@ -72,8 +72,9 @@ const createLogHandler = (
 	labelColor: string,
 	msgColor: string = ANSI.FgWhite,
 ) => {
+	// biome-ignore lint/suspicious/noExplicitAny: any for pino log object
 	return (o: Record<string, any>) => {
-		const { time, level, msg, hostname, pid, ...rest } = o;
+		const { time, msg, ...rest } = o;
 
 		const timeStr = `${ANSI.FgGray}${formatTime(time)}${ANSI.Reset}`;
 		const labelStr = `${labelColor}[${label}]${ANSI.Reset}`;

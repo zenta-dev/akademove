@@ -149,8 +149,8 @@ export class OrderPricingConfigProvider implements IPricingConfigProvider {
 				throw new RepositoryError("Delivery pricing configuration not found", {
 					code: "NOT_FOUND",
 				});
-			} 
-			
+			}
+
 			const parsed = DeliveryPricingConfigurationSchema.parse(config.value);
 			OrderPricingConfigProvider.cache.set(config.key, parsed);
 
