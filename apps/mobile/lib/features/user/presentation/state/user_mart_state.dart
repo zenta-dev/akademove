@@ -1,15 +1,25 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+
 part of '_export.dart';
 
-/// Wrapper class to hold menu + merchant name for best sellers
-@MappableClass(
-  generateMethods:
-      GenerateMethods.stringify | GenerateMethods.equals | GenerateMethods.copy,
-)
-class BestSellerItem with BestSellerItemMappable {
+class BestSellerItem extends Equatable {
   const BestSellerItem({required this.menu, required this.merchantName});
 
   final MerchantMenu menu;
   final String merchantName;
+
+  @override
+  List<Object> get props => [menu, merchantName];
+
+  @override
+  bool get stringify => true;
+
+  BestSellerItem copyWith({MerchantMenu? menu, String? merchantName}) {
+    return BestSellerItem(
+      menu: menu ?? this.menu,
+      merchantName: merchantName ?? this.merchantName,
+    );
+  }
 }
 
 class UserMartState extends Equatable {
