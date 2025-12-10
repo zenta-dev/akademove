@@ -95,11 +95,11 @@ class ListDriverQuizQuestionQuery {
 
   @override
   int get hashCode =>
-      cursor.hashCode +
+      (cursor == null ? 0 : cursor.hashCode) +
       (limit == null ? 0 : limit.hashCode) +
       direction.hashCode +
       (page == null ? 0 : page.hashCode) +
-      query.hashCode +
+      (query == null ? 0 : query.hashCode) +
       sortBy.hashCode +
       order.hashCode +
       mode.hashCode +

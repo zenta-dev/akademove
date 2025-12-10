@@ -89,10 +89,10 @@ class FraudEventListQuery {
       status.hashCode +
       severity.hashCode +
       eventType.hashCode +
-      userId.hashCode +
-      driverId.hashCode +
-      startDate.hashCode +
-      endDate.hashCode +
+      (userId == null ? 0 : userId.hashCode) +
+      (driverId == null ? 0 : driverId.hashCode) +
+      (startDate == null ? 0 : startDate.hashCode) +
+      (endDate == null ? 0 : endDate.hashCode) +
       sortBy.hashCode +
       order.hashCode;
 

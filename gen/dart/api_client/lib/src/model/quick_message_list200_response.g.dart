@@ -7,7 +7,7 @@ part of 'quick_message_list200_response.dart';
 // **************************************************************************
 
 abstract class _$QuickMessageList200ResponseCWProxy {
-  QuickMessageList200Response message(String message);
+  QuickMessageList200Response message(String? message);
 
   QuickMessageList200Response data(QuickMessageList200ResponseData data);
 
@@ -23,7 +23,7 @@ abstract class _$QuickMessageList200ResponseCWProxy {
   /// QuickMessageList200Response(...).copyWith(id: 12, name: "My name")
   /// ```
   QuickMessageList200Response call({
-    String message,
+    String? message,
     QuickMessageList200ResponseData data,
     PaginationResult? pagination,
     int? totalPages,
@@ -39,7 +39,8 @@ class _$QuickMessageList200ResponseCWProxyImpl
   final QuickMessageList200Response _value;
 
   @override
-  QuickMessageList200Response message(String message) => call(message: message);
+  QuickMessageList200Response message(String? message) =>
+      call(message: message);
 
   @override
   QuickMessageList200Response data(QuickMessageList200ResponseData data) =>
@@ -68,10 +69,10 @@ class _$QuickMessageList200ResponseCWProxyImpl
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return QuickMessageList200Response(
-      message: message == const $CopyWithPlaceholder() || message == null
+      message: message == const $CopyWithPlaceholder()
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
-          : message as String,
+          : message as String?,
       data: data == const $CopyWithPlaceholder() || data == null
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
@@ -105,7 +106,7 @@ QuickMessageList200Response _$QuickMessageList200ResponseFromJson(
 ) => $checkedCreate('QuickMessageList200Response', json, ($checkedConvert) {
   $checkKeys(json, requiredKeys: const ['message', 'data']);
   final val = QuickMessageList200Response(
-    message: $checkedConvert('message', (v) => v as String),
+    message: $checkedConvert('message', (v) => v as String?),
     data: $checkedConvert(
       'data',
       (v) =>

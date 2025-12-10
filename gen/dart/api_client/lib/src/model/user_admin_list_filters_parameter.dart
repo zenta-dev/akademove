@@ -60,8 +60,8 @@ class UserAdminListFiltersParameter {
       genders.hashCode +
       emailVerified.hashCode +
       banned.hashCode +
-      startDate.hashCode +
-      endDate.hashCode;
+      (startDate == null ? 0 : startDate.hashCode) +
+      (endDate == null ? 0 : endDate.hashCode);
 
   factory UserAdminListFiltersParameter.fromJson(Map<String, dynamic> json) =>
       _$UserAdminListFiltersParameterFromJson(json);

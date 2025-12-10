@@ -7,7 +7,7 @@ part of 'transaction_get200_response.dart';
 // **************************************************************************
 
 abstract class _$TransactionGet200ResponseCWProxy {
-  TransactionGet200Response message(String message);
+  TransactionGet200Response message(String? message);
 
   TransactionGet200Response data(Transaction data);
 
@@ -23,7 +23,7 @@ abstract class _$TransactionGet200ResponseCWProxy {
   /// TransactionGet200Response(...).copyWith(id: 12, name: "My name")
   /// ```
   TransactionGet200Response call({
-    String message,
+    String? message,
     Transaction data,
     PaginationResult? pagination,
     int? totalPages,
@@ -39,7 +39,7 @@ class _$TransactionGet200ResponseCWProxyImpl
   final TransactionGet200Response _value;
 
   @override
-  TransactionGet200Response message(String message) => call(message: message);
+  TransactionGet200Response message(String? message) => call(message: message);
 
   @override
   TransactionGet200Response data(Transaction data) => call(data: data);
@@ -67,10 +67,10 @@ class _$TransactionGet200ResponseCWProxyImpl
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return TransactionGet200Response(
-      message: message == const $CopyWithPlaceholder() || message == null
+      message: message == const $CopyWithPlaceholder()
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
-          : message as String,
+          : message as String?,
       data: data == const $CopyWithPlaceholder() || data == null
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
@@ -104,7 +104,7 @@ TransactionGet200Response _$TransactionGet200ResponseFromJson(
 ) => $checkedCreate('TransactionGet200Response', json, ($checkedConvert) {
   $checkKeys(json, requiredKeys: const ['message', 'data']);
   final val = TransactionGet200Response(
-    message: $checkedConvert('message', (v) => v as String),
+    message: $checkedConvert('message', (v) => v as String?),
     data: $checkedConvert(
       'data',
       (v) => Transaction.fromJson(v as Map<String, dynamic>),

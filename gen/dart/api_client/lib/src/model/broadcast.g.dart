@@ -7,7 +7,7 @@ part of 'broadcast.dart';
 // **************************************************************************
 
 abstract class _$BroadcastCWProxy {
-  Broadcast id(String id);
+  Broadcast id(String? id);
 
   Broadcast title(String title);
 
@@ -35,9 +35,9 @@ abstract class _$BroadcastCWProxy {
 
   Broadcast createdBy(String? createdBy);
 
-  Broadcast createdAt(DateTime createdAt);
+  Broadcast createdAt(DateTime? createdAt);
 
-  Broadcast updatedAt(DateTime updatedAt);
+  Broadcast updatedAt(DateTime? updatedAt);
 
   /// Creates a new instance with the provided field values.
   /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `Broadcast(...).copyWith.fieldName(value)`.
@@ -47,7 +47,7 @@ abstract class _$BroadcastCWProxy {
   /// Broadcast(...).copyWith(id: 12, name: "My name")
   /// ```
   Broadcast call({
-    String id,
+    String? id,
     String title,
     String message,
     BroadcastType type,
@@ -61,8 +61,8 @@ abstract class _$BroadcastCWProxy {
     num? successCount,
     num? totalCount,
     String? createdBy,
-    DateTime createdAt,
-    DateTime updatedAt,
+    DateTime? createdAt,
+    DateTime? updatedAt,
   });
 }
 
@@ -74,7 +74,7 @@ class _$BroadcastCWProxyImpl implements _$BroadcastCWProxy {
   final Broadcast _value;
 
   @override
-  Broadcast id(String id) => call(id: id);
+  Broadcast id(String? id) => call(id: id);
 
   @override
   Broadcast title(String title) => call(title: title);
@@ -119,10 +119,10 @@ class _$BroadcastCWProxyImpl implements _$BroadcastCWProxy {
   Broadcast createdBy(String? createdBy) => call(createdBy: createdBy);
 
   @override
-  Broadcast createdAt(DateTime createdAt) => call(createdAt: createdAt);
+  Broadcast createdAt(DateTime? createdAt) => call(createdAt: createdAt);
 
   @override
-  Broadcast updatedAt(DateTime updatedAt) => call(updatedAt: updatedAt);
+  Broadcast updatedAt(DateTime? updatedAt) => call(updatedAt: updatedAt);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -151,10 +151,10 @@ class _$BroadcastCWProxyImpl implements _$BroadcastCWProxy {
     Object? updatedAt = const $CopyWithPlaceholder(),
   }) {
     return Broadcast(
-      id: id == const $CopyWithPlaceholder() || id == null
+      id: id == const $CopyWithPlaceholder()
           ? _value.id
           // ignore: cast_nullable_to_non_nullable
-          : id as String,
+          : id as String?,
       title: title == const $CopyWithPlaceholder() || title == null
           ? _value.title
           // ignore: cast_nullable_to_non_nullable
@@ -209,14 +209,14 @@ class _$BroadcastCWProxyImpl implements _$BroadcastCWProxy {
           ? _value.createdBy
           // ignore: cast_nullable_to_non_nullable
           : createdBy as String?,
-      createdAt: createdAt == const $CopyWithPlaceholder() || createdAt == null
+      createdAt: createdAt == const $CopyWithPlaceholder()
           ? _value.createdAt
           // ignore: cast_nullable_to_non_nullable
-          : createdAt as DateTime,
-      updatedAt: updatedAt == const $CopyWithPlaceholder() || updatedAt == null
+          : createdAt as DateTime?,
+      updatedAt: updatedAt == const $CopyWithPlaceholder()
           ? _value.updatedAt
           // ignore: cast_nullable_to_non_nullable
-          : updatedAt as DateTime,
+          : updatedAt as DateTime?,
     );
   }
 }
@@ -232,63 +232,68 @@ extension $BroadcastCopyWith on Broadcast {
 // JsonSerializableGenerator
 // **************************************************************************
 
-Broadcast _$BroadcastFromJson(
-  Map<String, dynamic> json,
-) => $checkedCreate('Broadcast', json, ($checkedConvert) {
-  $checkKeys(
-    json,
-    requiredKeys: const [
-      'id',
-      'title',
-      'message',
-      'type',
-      'status',
-      'targetAudience',
-      'createdAt',
-      'updatedAt',
-    ],
-  );
-  final val = Broadcast(
-    id: $checkedConvert('id', (v) => v as String),
-    title: $checkedConvert('title', (v) => v as String),
-    message: $checkedConvert('message', (v) => v as String),
-    type: $checkedConvert(
-      'type',
-      (v) => $enumDecode(_$BroadcastTypeEnumMap, v),
-    ),
-    status: $checkedConvert(
-      'status',
-      (v) => $enumDecode(_$BroadcastStatusEnumMap, v),
-    ),
-    targetAudience: $checkedConvert(
-      'targetAudience',
-      (v) => $enumDecode(_$BroadcastTargetAudienceEnumEnumMap, v),
-    ),
-    targetIds: $checkedConvert(
-      'targetIds',
-      (v) => (v as List<dynamic>?)?.map((e) => e as String).toList(),
-    ),
-    scheduledAt: $checkedConvert(
-      'scheduledAt',
-      (v) => v == null ? null : DateTime.parse(v as String),
-    ),
-    sentAt: $checkedConvert(
-      'sentAt',
-      (v) => v == null ? null : DateTime.parse(v as String),
-    ),
-    completedAt: $checkedConvert(
-      'completedAt',
-      (v) => v == null ? null : DateTime.parse(v as String),
-    ),
-    failedCount: $checkedConvert('failedCount', (v) => v as num? ?? 0),
-    successCount: $checkedConvert('successCount', (v) => v as num? ?? 0),
-    totalCount: $checkedConvert('totalCount', (v) => v as num? ?? 0),
-    createdBy: $checkedConvert('createdBy', (v) => v as String?),
-    createdAt: $checkedConvert('createdAt', (v) => DateTime.parse(v as String)),
-    updatedAt: $checkedConvert('updatedAt', (v) => DateTime.parse(v as String)),
-  );
-  return val;
-});
+Broadcast _$BroadcastFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('Broadcast', json, ($checkedConvert) {
+      $checkKeys(
+        json,
+        requiredKeys: const [
+          'id',
+          'title',
+          'message',
+          'type',
+          'status',
+          'targetAudience',
+          'createdAt',
+          'updatedAt',
+        ],
+      );
+      final val = Broadcast(
+        id: $checkedConvert('id', (v) => v as String?),
+        title: $checkedConvert('title', (v) => v as String),
+        message: $checkedConvert('message', (v) => v as String),
+        type: $checkedConvert(
+          'type',
+          (v) => $enumDecode(_$BroadcastTypeEnumMap, v),
+        ),
+        status: $checkedConvert(
+          'status',
+          (v) => $enumDecode(_$BroadcastStatusEnumMap, v),
+        ),
+        targetAudience: $checkedConvert(
+          'targetAudience',
+          (v) => $enumDecode(_$BroadcastTargetAudienceEnumEnumMap, v),
+        ),
+        targetIds: $checkedConvert(
+          'targetIds',
+          (v) => (v as List<dynamic>?)?.map((e) => e as String).toList(),
+        ),
+        scheduledAt: $checkedConvert(
+          'scheduledAt',
+          (v) => v == null ? null : DateTime.parse(v as String),
+        ),
+        sentAt: $checkedConvert(
+          'sentAt',
+          (v) => v == null ? null : DateTime.parse(v as String),
+        ),
+        completedAt: $checkedConvert(
+          'completedAt',
+          (v) => v == null ? null : DateTime.parse(v as String),
+        ),
+        failedCount: $checkedConvert('failedCount', (v) => v as num? ?? 0),
+        successCount: $checkedConvert('successCount', (v) => v as num? ?? 0),
+        totalCount: $checkedConvert('totalCount', (v) => v as num? ?? 0),
+        createdBy: $checkedConvert('createdBy', (v) => v as String?),
+        createdAt: $checkedConvert(
+          'createdAt',
+          (v) => v == null ? null : DateTime.parse(v as String),
+        ),
+        updatedAt: $checkedConvert(
+          'updatedAt',
+          (v) => v == null ? null : DateTime.parse(v as String),
+        ),
+      );
+      return val;
+    });
 
 Map<String, dynamic> _$BroadcastToJson(Broadcast instance) => <String, dynamic>{
   'id': instance.id,
@@ -306,8 +311,8 @@ Map<String, dynamic> _$BroadcastToJson(Broadcast instance) => <String, dynamic>{
   'successCount': ?instance.successCount,
   'totalCount': ?instance.totalCount,
   'createdBy': ?instance.createdBy,
-  'createdAt': instance.createdAt.toIso8601String(),
-  'updatedAt': instance.updatedAt.toIso8601String(),
+  'createdAt': instance.createdAt?.toIso8601String(),
+  'updatedAt': instance.updatedAt?.toIso8601String(),
 };
 
 const _$BroadcastTypeEnumMap = {

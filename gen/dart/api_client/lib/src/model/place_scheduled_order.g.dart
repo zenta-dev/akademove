@@ -19,6 +19,10 @@ abstract class _$PlaceScheduledOrderCWProxy {
 
   PlaceScheduledOrder gender(UserGender? gender);
 
+  PlaceScheduledOrder genderPreference(
+    PlaceScheduledOrderGenderPreferenceEnum? genderPreference,
+  );
+
   PlaceScheduledOrder couponCode(String? couponCode);
 
   PlaceScheduledOrder payment(PlaceOrderPayment payment);
@@ -39,6 +43,7 @@ abstract class _$PlaceScheduledOrderCWProxy {
     OrderType type,
     List<OrderItem>? items,
     UserGender? gender,
+    PlaceScheduledOrderGenderPreferenceEnum? genderPreference,
     String? couponCode,
     PlaceOrderPayment payment,
     DateTime scheduledAt,
@@ -73,6 +78,11 @@ class _$PlaceScheduledOrderCWProxyImpl implements _$PlaceScheduledOrderCWProxy {
   PlaceScheduledOrder gender(UserGender? gender) => call(gender: gender);
 
   @override
+  PlaceScheduledOrder genderPreference(
+    PlaceScheduledOrderGenderPreferenceEnum? genderPreference,
+  ) => call(genderPreference: genderPreference);
+
+  @override
   PlaceScheduledOrder couponCode(String? couponCode) =>
       call(couponCode: couponCode);
 
@@ -99,6 +109,7 @@ class _$PlaceScheduledOrderCWProxyImpl implements _$PlaceScheduledOrderCWProxy {
     Object? type = const $CopyWithPlaceholder(),
     Object? items = const $CopyWithPlaceholder(),
     Object? gender = const $CopyWithPlaceholder(),
+    Object? genderPreference = const $CopyWithPlaceholder(),
     Object? couponCode = const $CopyWithPlaceholder(),
     Object? payment = const $CopyWithPlaceholder(),
     Object? scheduledAt = const $CopyWithPlaceholder(),
@@ -132,6 +143,10 @@ class _$PlaceScheduledOrderCWProxyImpl implements _$PlaceScheduledOrderCWProxy {
           ? _value.gender
           // ignore: cast_nullable_to_non_nullable
           : gender as UserGender?,
+      genderPreference: genderPreference == const $CopyWithPlaceholder()
+          ? _value.genderPreference
+          // ignore: cast_nullable_to_non_nullable
+          : genderPreference as PlaceScheduledOrderGenderPreferenceEnum?,
       couponCode: couponCode == const $CopyWithPlaceholder()
           ? _value.couponCode
           // ignore: cast_nullable_to_non_nullable
@@ -201,6 +216,13 @@ PlaceScheduledOrder _$PlaceScheduledOrderFromJson(Map<String, dynamic> json) =>
           'gender',
           (v) => $enumDecodeNullable(_$UserGenderEnumMap, v),
         ),
+        genderPreference: $checkedConvert(
+          'genderPreference',
+          (v) => $enumDecodeNullable(
+            _$PlaceScheduledOrderGenderPreferenceEnumEnumMap,
+            v,
+          ),
+        ),
         couponCode: $checkedConvert('couponCode', (v) => v as String?),
         payment: $checkedConvert(
           'payment',
@@ -223,6 +245,9 @@ Map<String, dynamic> _$PlaceScheduledOrderToJson(
   'type': _$OrderTypeEnumMap[instance.type]!,
   'items': ?instance.items?.map((e) => e.toJson()).toList(),
   'gender': ?_$UserGenderEnumMap[instance.gender],
+  'genderPreference':
+      ?_$PlaceScheduledOrderGenderPreferenceEnumEnumMap[instance
+          .genderPreference],
   'couponCode': ?instance.couponCode,
   'payment': instance.payment.toJson(),
   'scheduledAt': instance.scheduledAt.toIso8601String(),
@@ -237,4 +262,9 @@ const _$OrderTypeEnumMap = {
 const _$UserGenderEnumMap = {
   UserGender.MALE: 'MALE',
   UserGender.FEMALE: 'FEMALE',
+};
+
+const _$PlaceScheduledOrderGenderPreferenceEnumEnumMap = {
+  PlaceScheduledOrderGenderPreferenceEnum.SAME: 'SAME',
+  PlaceScheduledOrderGenderPreferenceEnum.ANY: 'ANY',
 };

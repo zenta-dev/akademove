@@ -13,7 +13,7 @@ abstract class _$AuditList200ResponseDataInnerCWProxy {
     AuditList200ResponseDataInnerTableNameEnum tableName,
   );
 
-  AuditList200ResponseDataInner recordId(String recordId);
+  AuditList200ResponseDataInner recordId(String? recordId);
 
   AuditList200ResponseDataInner operation(
     AuditList200ResponseDataInnerOperationEnum operation,
@@ -33,7 +33,7 @@ abstract class _$AuditList200ResponseDataInnerCWProxy {
 
   AuditList200ResponseDataInner reason(String? reason);
 
-  AuditList200ResponseDataInner updatedAt(DateTime updatedAt);
+  AuditList200ResponseDataInner updatedAt(DateTime? updatedAt);
 
   /// Creates a new instance with the provided field values.
   /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `AuditList200ResponseDataInner(...).copyWith.fieldName(value)`.
@@ -45,7 +45,7 @@ abstract class _$AuditList200ResponseDataInnerCWProxy {
   AuditList200ResponseDataInner call({
     num id,
     AuditList200ResponseDataInnerTableNameEnum tableName,
-    String recordId,
+    String? recordId,
     AuditList200ResponseDataInnerOperationEnum operation,
     Object? oldData,
     Object? newData,
@@ -54,7 +54,7 @@ abstract class _$AuditList200ResponseDataInnerCWProxy {
     String? userAgent,
     String? sessionId,
     String? reason,
-    DateTime updatedAt,
+    DateTime? updatedAt,
   });
 }
 
@@ -75,7 +75,7 @@ class _$AuditList200ResponseDataInnerCWProxyImpl
   ) => call(tableName: tableName);
 
   @override
-  AuditList200ResponseDataInner recordId(String recordId) =>
+  AuditList200ResponseDataInner recordId(String? recordId) =>
       call(recordId: recordId);
 
   @override
@@ -111,7 +111,7 @@ class _$AuditList200ResponseDataInnerCWProxyImpl
   AuditList200ResponseDataInner reason(String? reason) => call(reason: reason);
 
   @override
-  AuditList200ResponseDataInner updatedAt(DateTime updatedAt) =>
+  AuditList200ResponseDataInner updatedAt(DateTime? updatedAt) =>
       call(updatedAt: updatedAt);
 
   @override
@@ -145,10 +145,10 @@ class _$AuditList200ResponseDataInnerCWProxyImpl
           ? _value.tableName
           // ignore: cast_nullable_to_non_nullable
           : tableName as AuditList200ResponseDataInnerTableNameEnum,
-      recordId: recordId == const $CopyWithPlaceholder() || recordId == null
+      recordId: recordId == const $CopyWithPlaceholder()
           ? _value.recordId
           // ignore: cast_nullable_to_non_nullable
-          : recordId as String,
+          : recordId as String?,
       operation: operation == const $CopyWithPlaceholder() || operation == null
           ? _value.operation
           // ignore: cast_nullable_to_non_nullable
@@ -181,10 +181,10 @@ class _$AuditList200ResponseDataInnerCWProxyImpl
           ? _value.reason
           // ignore: cast_nullable_to_non_nullable
           : reason as String?,
-      updatedAt: updatedAt == const $CopyWithPlaceholder() || updatedAt == null
+      updatedAt: updatedAt == const $CopyWithPlaceholder()
           ? _value.updatedAt
           // ignore: cast_nullable_to_non_nullable
-          : updatedAt as DateTime,
+          : updatedAt as DateTime?,
     );
   }
 }
@@ -222,7 +222,7 @@ AuditList200ResponseDataInner _$AuditList200ResponseDataInnerFromJson(
       (v) =>
           $enumDecode(_$AuditList200ResponseDataInnerTableNameEnumEnumMap, v),
     ),
-    recordId: $checkedConvert('recordId', (v) => v as String),
+    recordId: $checkedConvert('recordId', (v) => v as String?),
     operation: $checkedConvert(
       'operation',
       (v) =>
@@ -235,7 +235,10 @@ AuditList200ResponseDataInner _$AuditList200ResponseDataInnerFromJson(
     userAgent: $checkedConvert('userAgent', (v) => v as String?),
     sessionId: $checkedConvert('sessionId', (v) => v as String?),
     reason: $checkedConvert('reason', (v) => v as String?),
-    updatedAt: $checkedConvert('updatedAt', (v) => DateTime.parse(v as String)),
+    updatedAt: $checkedConvert(
+      'updatedAt',
+      (v) => v == null ? null : DateTime.parse(v as String),
+    ),
   );
   return val;
 });
@@ -256,7 +259,7 @@ Map<String, dynamic> _$AuditList200ResponseDataInnerToJson(
   'userAgent': ?instance.userAgent,
   'sessionId': ?instance.sessionId,
   'reason': ?instance.reason,
-  'updatedAt': instance.updatedAt.toIso8601String(),
+  'updatedAt': instance.updatedAt?.toIso8601String(),
 };
 
 const _$AuditList200ResponseDataInnerTableNameEnumEnumMap = {

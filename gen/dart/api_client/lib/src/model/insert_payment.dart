@@ -37,8 +37,8 @@ class InsertPayment {
     this.payload,
     this.response,
   });
-  @JsonKey(name: r'transactionId', required: true, includeIfNull: false)
-  final String transactionId;
+  @JsonKey(name: r'transactionId', required: true, includeIfNull: true)
+  final String? transactionId;
 
   @JsonKey(name: r'provider', required: true, includeIfNull: false)
   final PaymentProvider provider;
@@ -96,17 +96,17 @@ class InsertPayment {
 
   @override
   int get hashCode =>
-      transactionId.hashCode +
+      (transactionId == null ? 0 : transactionId.hashCode) +
       provider.hashCode +
       method.hashCode +
       bankProvider.hashCode +
       amount.hashCode +
       status.hashCode +
-      externalId.hashCode +
-      paymentUrl.hashCode +
+      (externalId == null ? 0 : externalId.hashCode) +
+      (paymentUrl == null ? 0 : paymentUrl.hashCode) +
       vaNumber.hashCode +
       (metadata == null ? 0 : metadata.hashCode) +
-      expiresAt.hashCode +
+      (expiresAt == null ? 0 : expiresAt.hashCode) +
       (payload == null ? 0 : payload.hashCode) +
       (response == null ? 0 : response.hashCode);
 

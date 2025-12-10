@@ -40,7 +40,10 @@ class DriverUpdateDocumentStatusRequest {
           other.reason == reason;
 
   @override
-  int get hashCode => document.hashCode + status.hashCode + reason.hashCode;
+  int get hashCode =>
+      document.hashCode +
+      status.hashCode +
+      (reason == null ? 0 : reason.hashCode);
 
   factory DriverUpdateDocumentStatusRequest.fromJson(
     Map<String, dynamic> json,

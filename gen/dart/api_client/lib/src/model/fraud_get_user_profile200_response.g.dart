@@ -7,7 +7,7 @@ part of 'fraud_get_user_profile200_response.dart';
 // **************************************************************************
 
 abstract class _$FraudGetUserProfile200ResponseCWProxy {
-  FraudGetUserProfile200Response message(String message);
+  FraudGetUserProfile200Response message(String? message);
 
   FraudGetUserProfile200Response data(UserFraudProfile? data);
 
@@ -23,7 +23,7 @@ abstract class _$FraudGetUserProfile200ResponseCWProxy {
   /// FraudGetUserProfile200Response(...).copyWith(id: 12, name: "My name")
   /// ```
   FraudGetUserProfile200Response call({
-    String message,
+    String? message,
     UserFraudProfile? data,
     PaginationResult? pagination,
     int? totalPages,
@@ -39,7 +39,7 @@ class _$FraudGetUserProfile200ResponseCWProxyImpl
   final FraudGetUserProfile200Response _value;
 
   @override
-  FraudGetUserProfile200Response message(String message) =>
+  FraudGetUserProfile200Response message(String? message) =>
       call(message: message);
 
   @override
@@ -69,10 +69,10 @@ class _$FraudGetUserProfile200ResponseCWProxyImpl
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return FraudGetUserProfile200Response(
-      message: message == const $CopyWithPlaceholder() || message == null
+      message: message == const $CopyWithPlaceholder()
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
-          : message as String,
+          : message as String?,
       data: data == const $CopyWithPlaceholder()
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
@@ -107,7 +107,7 @@ FraudGetUserProfile200Response _$FraudGetUserProfile200ResponseFromJson(
 ) => $checkedCreate('FraudGetUserProfile200Response', json, ($checkedConvert) {
   $checkKeys(json, requiredKeys: const ['message', 'data']);
   final val = FraudGetUserProfile200Response(
-    message: $checkedConvert('message', (v) => v as String),
+    message: $checkedConvert('message', (v) => v as String?),
     data: $checkedConvert(
       'data',
       (v) => v == null

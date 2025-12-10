@@ -19,8 +19,8 @@ part 'sign_in_response.g.dart';
 class SignInResponse {
   /// Returns a new [SignInResponse] instance.
   const SignInResponse({required this.token, required this.user});
-  @JsonKey(name: r'token', required: true, includeIfNull: false)
-  final String token;
+  @JsonKey(name: r'token', required: true, includeIfNull: true)
+  final String? token;
 
   @JsonKey(name: r'user', required: true, includeIfNull: false)
   final User user;
@@ -31,7 +31,7 @@ class SignInResponse {
       other is SignInResponse && other.token == token && other.user == user;
 
   @override
-  int get hashCode => token.hashCode + user.hashCode;
+  int get hashCode => (token == null ? 0 : token.hashCode) + user.hashCode;
 
   factory SignInResponse.fromJson(Map<String, dynamic> json) =>
       _$SignInResponseFromJson(json);

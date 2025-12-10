@@ -26,8 +26,8 @@ class Newsletter {
     required this.createdAt,
     required this.updatedAt,
   });
-  @JsonKey(name: r'id', required: true, includeIfNull: false)
-  final String id;
+  @JsonKey(name: r'id', required: true, includeIfNull: true)
+  final String? id;
 
   @JsonKey(name: r'email', required: true, includeIfNull: false)
   final String email;
@@ -38,11 +38,11 @@ class Newsletter {
   @JsonKey(name: r'userId', required: false, includeIfNull: false)
   final String? userId;
 
-  @JsonKey(name: r'createdAt', required: true, includeIfNull: false)
-  final DateTime createdAt;
+  @JsonKey(name: r'createdAt', required: true, includeIfNull: true)
+  final DateTime? createdAt;
 
-  @JsonKey(name: r'updatedAt', required: true, includeIfNull: false)
-  final DateTime updatedAt;
+  @JsonKey(name: r'updatedAt', required: true, includeIfNull: true)
+  final DateTime? updatedAt;
 
   @override
   bool operator ==(Object other) =>
@@ -57,12 +57,12 @@ class Newsletter {
 
   @override
   int get hashCode =>
-      id.hashCode +
+      (id == null ? 0 : id.hashCode) +
       email.hashCode +
       status.hashCode +
-      userId.hashCode +
-      createdAt.hashCode +
-      updatedAt.hashCode;
+      (userId == null ? 0 : userId.hashCode) +
+      (createdAt == null ? 0 : createdAt.hashCode) +
+      (updatedAt == null ? 0 : updatedAt.hashCode);
 
   factory Newsletter.fromJson(Map<String, dynamic> json) =>
       _$NewsletterFromJson(json);

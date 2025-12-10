@@ -7,10 +7,10 @@ part of 'merchant_analytics200_response_data_top_selling_items_inner.dart';
 // **************************************************************************
 
 abstract class _$MerchantAnalytics200ResponseDataTopSellingItemsInnerCWProxy {
-  MerchantAnalytics200ResponseDataTopSellingItemsInner menuId(String menuId);
+  MerchantAnalytics200ResponseDataTopSellingItemsInner menuId(String? menuId);
 
   MerchantAnalytics200ResponseDataTopSellingItemsInner menuName(
-    String menuName,
+    String? menuName,
   );
 
   MerchantAnalytics200ResponseDataTopSellingItemsInner menuImage(
@@ -33,8 +33,8 @@ abstract class _$MerchantAnalytics200ResponseDataTopSellingItemsInnerCWProxy {
   /// MerchantAnalytics200ResponseDataTopSellingItemsInner(...).copyWith(id: 12, name: "My name")
   /// ```
   MerchantAnalytics200ResponseDataTopSellingItemsInner call({
-    String menuId,
-    String menuName,
+    String? menuId,
+    String? menuName,
     String? menuImage,
     num totalOrders,
     num totalRevenue,
@@ -52,12 +52,12 @@ class _$MerchantAnalytics200ResponseDataTopSellingItemsInnerCWProxyImpl
   final MerchantAnalytics200ResponseDataTopSellingItemsInner _value;
 
   @override
-  MerchantAnalytics200ResponseDataTopSellingItemsInner menuId(String menuId) =>
+  MerchantAnalytics200ResponseDataTopSellingItemsInner menuId(String? menuId) =>
       call(menuId: menuId);
 
   @override
   MerchantAnalytics200ResponseDataTopSellingItemsInner menuName(
-    String menuName,
+    String? menuName,
   ) => call(menuName: menuName);
 
   @override
@@ -91,14 +91,14 @@ class _$MerchantAnalytics200ResponseDataTopSellingItemsInnerCWProxyImpl
     Object? totalRevenue = const $CopyWithPlaceholder(),
   }) {
     return MerchantAnalytics200ResponseDataTopSellingItemsInner(
-      menuId: menuId == const $CopyWithPlaceholder() || menuId == null
+      menuId: menuId == const $CopyWithPlaceholder()
           ? _value.menuId
           // ignore: cast_nullable_to_non_nullable
-          : menuId as String,
-      menuName: menuName == const $CopyWithPlaceholder() || menuName == null
+          : menuId as String?,
+      menuName: menuName == const $CopyWithPlaceholder()
           ? _value.menuName
           // ignore: cast_nullable_to_non_nullable
-          : menuName as String,
+          : menuName as String?,
       menuImage: menuImage == const $CopyWithPlaceholder()
           ? _value.menuImage
           // ignore: cast_nullable_to_non_nullable
@@ -142,8 +142,8 @@ _$MerchantAnalytics200ResponseDataTopSellingItemsInnerFromJson(
       requiredKeys: const ['menuId', 'menuName', 'totalOrders', 'totalRevenue'],
     );
     final val = MerchantAnalytics200ResponseDataTopSellingItemsInner(
-      menuId: $checkedConvert('menuId', (v) => v as String),
-      menuName: $checkedConvert('menuName', (v) => v as String),
+      menuId: $checkedConvert('menuId', (v) => v as String?),
+      menuName: $checkedConvert('menuName', (v) => v as String?),
       menuImage: $checkedConvert('menuImage', (v) => v as String?),
       totalOrders: $checkedConvert('totalOrders', (v) => v as num),
       totalRevenue: $checkedConvert('totalRevenue', (v) => v as num),

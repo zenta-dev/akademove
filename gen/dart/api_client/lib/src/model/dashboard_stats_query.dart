@@ -36,7 +36,10 @@ class DashboardStatsQuery {
           other.period == period;
 
   @override
-  int get hashCode => startDate.hashCode + endDate.hashCode + period.hashCode;
+  int get hashCode =>
+      (startDate == null ? 0 : startDate.hashCode) +
+      (endDate == null ? 0 : endDate.hashCode) +
+      period.hashCode;
 
   factory DashboardStatsQuery.fromJson(Map<String, dynamic> json) =>
       _$DashboardStatsQueryFromJson(json);

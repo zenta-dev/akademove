@@ -7,7 +7,7 @@ part of 'auth_sign_in200_response.dart';
 // **************************************************************************
 
 abstract class _$AuthSignIn200ResponseCWProxy {
-  AuthSignIn200Response message(String message);
+  AuthSignIn200Response message(String? message);
 
   AuthSignIn200Response data(SignInResponse data);
 
@@ -23,7 +23,7 @@ abstract class _$AuthSignIn200ResponseCWProxy {
   /// AuthSignIn200Response(...).copyWith(id: 12, name: "My name")
   /// ```
   AuthSignIn200Response call({
-    String message,
+    String? message,
     SignInResponse data,
     PaginationResult? pagination,
     int? totalPages,
@@ -39,7 +39,7 @@ class _$AuthSignIn200ResponseCWProxyImpl
   final AuthSignIn200Response _value;
 
   @override
-  AuthSignIn200Response message(String message) => call(message: message);
+  AuthSignIn200Response message(String? message) => call(message: message);
 
   @override
   AuthSignIn200Response data(SignInResponse data) => call(data: data);
@@ -67,10 +67,10 @@ class _$AuthSignIn200ResponseCWProxyImpl
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return AuthSignIn200Response(
-      message: message == const $CopyWithPlaceholder() || message == null
+      message: message == const $CopyWithPlaceholder()
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
-          : message as String,
+          : message as String?,
       data: data == const $CopyWithPlaceholder() || data == null
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
@@ -104,7 +104,7 @@ AuthSignIn200Response _$AuthSignIn200ResponseFromJson(
 ) => $checkedCreate('AuthSignIn200Response', json, ($checkedConvert) {
   $checkKeys(json, requiredKeys: const ['message', 'data']);
   final val = AuthSignIn200Response(
-    message: $checkedConvert('message', (v) => v as String),
+    message: $checkedConvert('message', (v) => v as String?),
     data: $checkedConvert(
       'data',
       (v) => SignInResponse.fromJson(v as Map<String, dynamic>),

@@ -7,7 +7,7 @@ part of 'broadcast_stats200_response.dart';
 // **************************************************************************
 
 abstract class _$BroadcastStats200ResponseCWProxy {
-  BroadcastStats200Response message(String message);
+  BroadcastStats200Response message(String? message);
 
   BroadcastStats200Response data(BroadcastStats200ResponseData data);
 
@@ -23,7 +23,7 @@ abstract class _$BroadcastStats200ResponseCWProxy {
   /// BroadcastStats200Response(...).copyWith(id: 12, name: "My name")
   /// ```
   BroadcastStats200Response call({
-    String message,
+    String? message,
     BroadcastStats200ResponseData data,
     PaginationResult? pagination,
     int? totalPages,
@@ -39,7 +39,7 @@ class _$BroadcastStats200ResponseCWProxyImpl
   final BroadcastStats200Response _value;
 
   @override
-  BroadcastStats200Response message(String message) => call(message: message);
+  BroadcastStats200Response message(String? message) => call(message: message);
 
   @override
   BroadcastStats200Response data(BroadcastStats200ResponseData data) =>
@@ -68,10 +68,10 @@ class _$BroadcastStats200ResponseCWProxyImpl
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return BroadcastStats200Response(
-      message: message == const $CopyWithPlaceholder() || message == null
+      message: message == const $CopyWithPlaceholder()
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
-          : message as String,
+          : message as String?,
       data: data == const $CopyWithPlaceholder() || data == null
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
@@ -105,7 +105,7 @@ BroadcastStats200Response _$BroadcastStats200ResponseFromJson(
 ) => $checkedCreate('BroadcastStats200Response', json, ($checkedConvert) {
   $checkKeys(json, requiredKeys: const ['message', 'data']);
   final val = BroadcastStats200Response(
-    message: $checkedConvert('message', (v) => v as String),
+    message: $checkedConvert('message', (v) => v as String?),
     data: $checkedConvert(
       'data',
       (v) => BroadcastStats200ResponseData.fromJson(v as Map<String, dynamic>),

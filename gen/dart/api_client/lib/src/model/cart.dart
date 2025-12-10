@@ -26,11 +26,11 @@ class Cart {
     required this.subtotal,
     required this.lastUpdated,
   });
-  @JsonKey(name: r'merchantId', required: true, includeIfNull: false)
-  final String merchantId;
+  @JsonKey(name: r'merchantId', required: true, includeIfNull: true)
+  final String? merchantId;
 
-  @JsonKey(name: r'merchantName', required: true, includeIfNull: false)
-  final String merchantName;
+  @JsonKey(name: r'merchantName', required: true, includeIfNull: true)
+  final String? merchantName;
 
   @JsonKey(name: r'items', required: true, includeIfNull: false)
   final List<CartItem> items;
@@ -43,8 +43,8 @@ class Cart {
   @JsonKey(name: r'subtotal', required: true, includeIfNull: false)
   final num subtotal;
 
-  @JsonKey(name: r'lastUpdated', required: true, includeIfNull: false)
-  final DateTime lastUpdated;
+  @JsonKey(name: r'lastUpdated', required: true, includeIfNull: true)
+  final DateTime? lastUpdated;
 
   @override
   bool operator ==(Object other) =>
@@ -59,12 +59,12 @@ class Cart {
 
   @override
   int get hashCode =>
-      merchantId.hashCode +
-      merchantName.hashCode +
+      (merchantId == null ? 0 : merchantId.hashCode) +
+      (merchantName == null ? 0 : merchantName.hashCode) +
       items.hashCode +
       totalItems.hashCode +
       subtotal.hashCode +
-      lastUpdated.hashCode;
+      (lastUpdated == null ? 0 : lastUpdated.hashCode);
 
   factory Cart.fromJson(Map<String, dynamic> json) => _$CartFromJson(json);
 

@@ -94,13 +94,13 @@ class UpdateAccountDeletion {
       phone.hashCode +
       accountType.hashCode +
       reason.hashCode +
-      additionalInfo.hashCode +
+      (additionalInfo == null ? 0 : additionalInfo.hashCode) +
       status.hashCode +
-      userId.hashCode +
-      reviewedById.hashCode +
-      reviewNotes.hashCode +
-      reviewedAt.hashCode +
-      completedAt.hashCode;
+      (userId == null ? 0 : userId.hashCode) +
+      (reviewedById == null ? 0 : reviewedById.hashCode) +
+      (reviewNotes == null ? 0 : reviewNotes.hashCode) +
+      (reviewedAt == null ? 0 : reviewedAt.hashCode) +
+      (completedAt == null ? 0 : completedAt.hashCode);
 
   factory UpdateAccountDeletion.fromJson(Map<String, dynamic> json) =>
       _$UpdateAccountDeletionFromJson(json);

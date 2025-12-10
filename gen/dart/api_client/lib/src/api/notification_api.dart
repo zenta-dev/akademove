@@ -9,13 +9,14 @@ import 'dart:convert';
 import 'package:api_client/src/deserialize.dart';
 import 'package:dio/dio.dart';
 
-import 'package:api_client/src/model/broadcast_delete200_response.dart';
+import 'package:api_client/src/model/banner_delete200_response.dart';
 import 'package:api_client/src/model/notification_get_unread_count200_response.dart';
 import 'package:api_client/src/model/notification_list200_response.dart';
 import 'package:api_client/src/model/notification_mark_as_read200_response.dart';
 import 'package:api_client/src/model/notification_save_token_request.dart';
 import 'package:api_client/src/model/notification_subscribe_to_topic200_response.dart';
 import 'package:api_client/src/model/notification_subscribe_to_topic_request.dart';
+import 'package:api_client/src/model/notification_unsubscribe_to_topic_request.dart';
 import 'package:api_client/src/model/pagination_mode.dart';
 import 'package:api_client/src/model/pagination_order.dart';
 
@@ -36,9 +37,9 @@ class NotificationApi {
   /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
   /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
   ///
-  /// Returns a [Future] containing a [Response] with a [BroadcastDelete200Response] as data
+  /// Returns a [Future] containing a [Response] with a [BannerDelete200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<BroadcastDelete200Response>> notificationDelete({
+  Future<Response<BannerDelete200Response>> notificationDelete({
     required String id,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -73,15 +74,15 @@ class NotificationApi {
       onReceiveProgress: onReceiveProgress,
     );
 
-    BroadcastDelete200Response? _responseData;
+    BannerDelete200Response? _responseData;
 
     try {
       final rawData = _response.data;
       _responseData = rawData == null
           ? null
-          : deserialize<BroadcastDelete200Response, BroadcastDelete200Response>(
+          : deserialize<BannerDelete200Response, BannerDelete200Response>(
               rawData,
-              'BroadcastDelete200Response',
+              'BannerDelete200Response',
               growable: true,
             );
     } catch (error, stackTrace) {
@@ -94,7 +95,7 @@ class NotificationApi {
       );
     }
 
-    return Response<BroadcastDelete200Response>(
+    return Response<BannerDelete200Response>(
       data: _responseData,
       headers: _response.headers,
       isRedirect: _response.isRedirect,
@@ -454,9 +455,9 @@ class NotificationApi {
   /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
   /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
   ///
-  /// Returns a [Future] containing a [Response] with a [BroadcastDelete200Response] as data
+  /// Returns a [Future] containing a [Response] with a [BannerDelete200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<BroadcastDelete200Response>> notificationRemoveToken({
+  Future<Response<BannerDelete200Response>> notificationRemoveToken({
     required String token,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -491,15 +492,15 @@ class NotificationApi {
       onReceiveProgress: onReceiveProgress,
     );
 
-    BroadcastDelete200Response? _responseData;
+    BannerDelete200Response? _responseData;
 
     try {
       final rawData = _response.data;
       _responseData = rawData == null
           ? null
-          : deserialize<BroadcastDelete200Response, BroadcastDelete200Response>(
+          : deserialize<BannerDelete200Response, BannerDelete200Response>(
               rawData,
-              'BroadcastDelete200Response',
+              'BannerDelete200Response',
               growable: true,
             );
     } catch (error, stackTrace) {
@@ -512,7 +513,7 @@ class NotificationApi {
       );
     }
 
-    return Response<BroadcastDelete200Response>(
+    return Response<BannerDelete200Response>(
       data: _responseData,
       headers: _response.headers,
       isRedirect: _response.isRedirect,
@@ -536,9 +537,9 @@ class NotificationApi {
   /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
   /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
   ///
-  /// Returns a [Future] containing a [Response] with a [BroadcastDelete200Response] as data
+  /// Returns a [Future] containing a [Response] with a [BannerDelete200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<BroadcastDelete200Response>> notificationSaveToken({
+  Future<Response<BannerDelete200Response>> notificationSaveToken({
     required NotificationSaveTokenRequest notificationSaveTokenRequest,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -583,15 +584,15 @@ class NotificationApi {
       onReceiveProgress: onReceiveProgress,
     );
 
-    BroadcastDelete200Response? _responseData;
+    BannerDelete200Response? _responseData;
 
     try {
       final rawData = _response.data;
       _responseData = rawData == null
           ? null
-          : deserialize<BroadcastDelete200Response, BroadcastDelete200Response>(
+          : deserialize<BannerDelete200Response, BannerDelete200Response>(
               rawData,
-              'BroadcastDelete200Response',
+              'BannerDelete200Response',
               growable: true,
             );
     } catch (error, stackTrace) {
@@ -604,7 +605,7 @@ class NotificationApi {
       );
     }
 
-    return Response<BroadcastDelete200Response>(
+    return Response<BannerDelete200Response>(
       data: _responseData,
       headers: _response.headers,
       isRedirect: _response.isRedirect,
@@ -717,7 +718,7 @@ class NotificationApi {
   ///
   ///
   /// Parameters:
-  /// * [notificationSubscribeToTopicRequest]
+  /// * [notificationUnsubscribeToTopicRequest]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -729,8 +730,8 @@ class NotificationApi {
   /// Throws [DioException] if API call or serialization fails
   Future<Response<NotificationSubscribeToTopic200Response>>
   notificationUnsubscribeToTopic({
-    required NotificationSubscribeToTopicRequest
-    notificationSubscribeToTopicRequest,
+    required NotificationUnsubscribeToTopicRequest
+    notificationUnsubscribeToTopicRequest,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -755,7 +756,7 @@ class NotificationApi {
     dynamic _bodyData;
 
     try {
-      _bodyData = jsonEncode(notificationSubscribeToTopicRequest);
+      _bodyData = jsonEncode(notificationUnsubscribeToTopicRequest);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _options.compose(_dio.options, _path),

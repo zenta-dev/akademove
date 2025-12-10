@@ -27,7 +27,7 @@ class OrderCancelRequest {
       other is OrderCancelRequest && other.reason == reason;
 
   @override
-  int get hashCode => reason.hashCode;
+  int get hashCode => (reason == null ? 0 : reason.hashCode);
 
   factory OrderCancelRequest.fromJson(Map<String, dynamic> json) =>
       _$OrderCancelRequestFromJson(json);

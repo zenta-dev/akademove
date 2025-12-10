@@ -98,8 +98,8 @@ class InsertFraudEvent {
   @JsonKey(name: r'actionTaken', required: true, includeIfNull: true)
   final String? actionTaken;
 
-  @JsonKey(name: r'detectedAt', required: true, includeIfNull: false)
-  final DateTime detectedAt;
+  @JsonKey(name: r'detectedAt', required: true, includeIfNull: true)
+  final DateTime? detectedAt;
 
   @JsonKey(name: r'resolvedAt', required: true, includeIfNull: true)
   final DateTime? resolvedAt;
@@ -147,7 +147,7 @@ class InsertFraudEvent {
       (handledById == null ? 0 : handledById.hashCode) +
       (resolution == null ? 0 : resolution.hashCode) +
       (actionTaken == null ? 0 : actionTaken.hashCode) +
-      detectedAt.hashCode +
+      (detectedAt == null ? 0 : detectedAt.hashCode) +
       (resolvedAt == null ? 0 : resolvedAt.hashCode);
 
   factory InsertFraudEvent.fromJson(Map<String, dynamic> json) =>

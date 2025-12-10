@@ -37,8 +37,8 @@ class Broadcast {
     required this.createdAt,
     required this.updatedAt,
   });
-  @JsonKey(name: r'id', required: true, includeIfNull: false)
-  final String id;
+  @JsonKey(name: r'id', required: true, includeIfNull: true)
+  final String? id;
 
   @JsonKey(name: r'title', required: true, includeIfNull: false)
   final String title;
@@ -94,11 +94,11 @@ class Broadcast {
   @JsonKey(name: r'createdBy', required: false, includeIfNull: false)
   final String? createdBy;
 
-  @JsonKey(name: r'createdAt', required: true, includeIfNull: false)
-  final DateTime createdAt;
+  @JsonKey(name: r'createdAt', required: true, includeIfNull: true)
+  final DateTime? createdAt;
 
-  @JsonKey(name: r'updatedAt', required: true, includeIfNull: false)
-  final DateTime updatedAt;
+  @JsonKey(name: r'updatedAt', required: true, includeIfNull: true)
+  final DateTime? updatedAt;
 
   @override
   bool operator ==(Object other) =>
@@ -123,22 +123,22 @@ class Broadcast {
 
   @override
   int get hashCode =>
-      id.hashCode +
+      (id == null ? 0 : id.hashCode) +
       title.hashCode +
       message.hashCode +
       type.hashCode +
       status.hashCode +
       targetAudience.hashCode +
       targetIds.hashCode +
-      scheduledAt.hashCode +
-      sentAt.hashCode +
-      completedAt.hashCode +
+      (scheduledAt == null ? 0 : scheduledAt.hashCode) +
+      (sentAt == null ? 0 : sentAt.hashCode) +
+      (completedAt == null ? 0 : completedAt.hashCode) +
       failedCount.hashCode +
       successCount.hashCode +
       totalCount.hashCode +
-      createdBy.hashCode +
-      createdAt.hashCode +
-      updatedAt.hashCode;
+      (createdBy == null ? 0 : createdBy.hashCode) +
+      (createdAt == null ? 0 : createdAt.hashCode) +
+      (updatedAt == null ? 0 : updatedAt.hashCode);
 
   factory Broadcast.fromJson(Map<String, dynamic> json) =>
       _$BroadcastFromJson(json);

@@ -39,7 +39,7 @@ class InsertConfiguration {
   int get hashCode =>
       name.hashCode +
       (value == null ? 0 : value.hashCode) +
-      description.hashCode;
+      (description == null ? 0 : description.hashCode);
 
   factory InsertConfiguration.fromJson(Map<String, dynamic> json) =>
       _$InsertConfigurationFromJson(json);

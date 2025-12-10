@@ -7,7 +7,7 @@ part of 'insert_transaction.dart';
 // **************************************************************************
 
 abstract class _$InsertTransactionCWProxy {
-  InsertTransaction walletId(String walletId);
+  InsertTransaction walletId(String? walletId);
 
   InsertTransaction type(TransactionType type);
 
@@ -33,7 +33,7 @@ abstract class _$InsertTransactionCWProxy {
   /// InsertTransaction(...).copyWith(id: 12, name: "My name")
   /// ```
   InsertTransaction call({
-    String walletId,
+    String? walletId,
     TransactionType type,
     num amount,
     num? balanceBefore,
@@ -53,7 +53,7 @@ class _$InsertTransactionCWProxyImpl implements _$InsertTransactionCWProxy {
   final InsertTransaction _value;
 
   @override
-  InsertTransaction walletId(String walletId) => call(walletId: walletId);
+  InsertTransaction walletId(String? walletId) => call(walletId: walletId);
 
   @override
   InsertTransaction type(TransactionType type) => call(type: type);
@@ -103,10 +103,10 @@ class _$InsertTransactionCWProxyImpl implements _$InsertTransactionCWProxy {
     Object? metadata = const $CopyWithPlaceholder(),
   }) {
     return InsertTransaction(
-      walletId: walletId == const $CopyWithPlaceholder() || walletId == null
+      walletId: walletId == const $CopyWithPlaceholder()
           ? _value.walletId
           // ignore: cast_nullable_to_non_nullable
-          : walletId as String,
+          : walletId as String?,
       type: type == const $CopyWithPlaceholder() || type == null
           ? _value.type
           // ignore: cast_nullable_to_non_nullable
@@ -162,7 +162,7 @@ InsertTransaction _$InsertTransactionFromJson(Map<String, dynamic> json) =>
         requiredKeys: const ['walletId', 'type', 'amount', 'status'],
       );
       final val = InsertTransaction(
-        walletId: $checkedConvert('walletId', (v) => v as String),
+        walletId: $checkedConvert('walletId', (v) => v as String?),
         type: $checkedConvert(
           'type',
           (v) => $enumDecode(_$TransactionTypeEnumMap, v),

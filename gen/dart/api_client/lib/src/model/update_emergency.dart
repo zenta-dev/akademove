@@ -79,16 +79,16 @@ class UpdateEmergency {
 
   @override
   int get hashCode =>
-      orderId.hashCode +
-      userId.hashCode +
-      driverId.hashCode +
+      (orderId == null ? 0 : orderId.hashCode) +
+      (userId == null ? 0 : userId.hashCode) +
+      (driverId == null ? 0 : driverId.hashCode) +
       type.hashCode +
       status.hashCode +
-      description.hashCode +
+      (description == null ? 0 : description.hashCode) +
       location.hashCode +
       contactedAuthorities.hashCode +
-      respondedById.hashCode +
-      resolution.hashCode;
+      (respondedById == null ? 0 : respondedById.hashCode) +
+      (resolution == null ? 0 : resolution.hashCode);
 
   factory UpdateEmergency.fromJson(Map<String, dynamic> json) =>
       _$UpdateEmergencyFromJson(json);

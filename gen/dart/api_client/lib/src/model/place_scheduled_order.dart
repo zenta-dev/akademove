@@ -30,6 +30,7 @@ class PlaceScheduledOrder {
     required this.type,
     this.items,
     this.gender,
+    this.genderPreference,
     this.couponCode,
     required this.payment,
     required this.scheduledAt,
@@ -52,6 +53,9 @@ class PlaceScheduledOrder {
   @JsonKey(name: r'gender', required: false, includeIfNull: false)
   final UserGender? gender;
 
+  @JsonKey(name: r'genderPreference', required: false, includeIfNull: false)
+  final PlaceScheduledOrderGenderPreferenceEnum? genderPreference;
+
   @JsonKey(name: r'couponCode', required: false, includeIfNull: false)
   final String? couponCode;
 
@@ -71,6 +75,7 @@ class PlaceScheduledOrder {
           other.type == type &&
           other.items == items &&
           other.gender == gender &&
+          other.genderPreference == genderPreference &&
           other.couponCode == couponCode &&
           other.payment == payment &&
           other.scheduledAt == scheduledAt;
@@ -83,6 +88,7 @@ class PlaceScheduledOrder {
       type.hashCode +
       items.hashCode +
       gender.hashCode +
+      genderPreference.hashCode +
       couponCode.hashCode +
       payment.hashCode +
       scheduledAt.hashCode;
@@ -96,4 +102,18 @@ class PlaceScheduledOrder {
   String toString() {
     return toJson().toString();
   }
+}
+
+enum PlaceScheduledOrderGenderPreferenceEnum {
+  @JsonValue(r'SAME')
+  SAME(r'SAME'),
+  @JsonValue(r'ANY')
+  ANY(r'ANY');
+
+  const PlaceScheduledOrderGenderPreferenceEnum(this.value);
+
+  final String value;
+
+  @override
+  String toString() => value;
 }

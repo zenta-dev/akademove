@@ -67,8 +67,8 @@ class UpdateBroadcast {
       type.hashCode +
       targetAudience.hashCode +
       targetIds.hashCode +
-      scheduledAt.hashCode +
-      createdBy.hashCode;
+      (scheduledAt == null ? 0 : scheduledAt.hashCode) +
+      (createdBy == null ? 0 : createdBy.hashCode);
 
   factory UpdateBroadcast.fromJson(Map<String, dynamic> json) =>
       _$UpdateBroadcastFromJson(json);

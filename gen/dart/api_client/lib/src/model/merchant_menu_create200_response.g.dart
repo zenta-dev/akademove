@@ -7,7 +7,7 @@ part of 'merchant_menu_create200_response.dart';
 // **************************************************************************
 
 abstract class _$MerchantMenuCreate200ResponseCWProxy {
-  MerchantMenuCreate200Response message(String message);
+  MerchantMenuCreate200Response message(String? message);
 
   MerchantMenuCreate200Response data(MerchantMenu data);
 
@@ -23,7 +23,7 @@ abstract class _$MerchantMenuCreate200ResponseCWProxy {
   /// MerchantMenuCreate200Response(...).copyWith(id: 12, name: "My name")
   /// ```
   MerchantMenuCreate200Response call({
-    String message,
+    String? message,
     MerchantMenu data,
     PaginationResult? pagination,
     int? totalPages,
@@ -39,7 +39,7 @@ class _$MerchantMenuCreate200ResponseCWProxyImpl
   final MerchantMenuCreate200Response _value;
 
   @override
-  MerchantMenuCreate200Response message(String message) =>
+  MerchantMenuCreate200Response message(String? message) =>
       call(message: message);
 
   @override
@@ -68,10 +68,10 @@ class _$MerchantMenuCreate200ResponseCWProxyImpl
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return MerchantMenuCreate200Response(
-      message: message == const $CopyWithPlaceholder() || message == null
+      message: message == const $CopyWithPlaceholder()
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
-          : message as String,
+          : message as String?,
       data: data == const $CopyWithPlaceholder() || data == null
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
@@ -106,7 +106,7 @@ MerchantMenuCreate200Response _$MerchantMenuCreate200ResponseFromJson(
 ) => $checkedCreate('MerchantMenuCreate200Response', json, ($checkedConvert) {
   $checkKeys(json, requiredKeys: const ['message', 'data']);
   final val = MerchantMenuCreate200Response(
-    message: $checkedConvert('message', (v) => v as String),
+    message: $checkedConvert('message', (v) => v as String?),
     data: $checkedConvert(
       'data',
       (v) => MerchantMenu.fromJson(v as Map<String, dynamic>),

@@ -29,6 +29,7 @@ class EstimateOrder {
     required this.type,
     this.items,
     this.gender,
+    this.genderPreference,
     this.couponCode,
     this.discountIds,
     this.weight,
@@ -51,6 +52,9 @@ class EstimateOrder {
   @JsonKey(name: r'gender', required: false, includeIfNull: false)
   final UserGender? gender;
 
+  @JsonKey(name: r'genderPreference', required: false, includeIfNull: false)
+  final EstimateOrderGenderPreferenceEnum? genderPreference;
+
   @JsonKey(name: r'couponCode', required: false, includeIfNull: false)
   final String? couponCode;
 
@@ -71,6 +75,7 @@ class EstimateOrder {
           other.type == type &&
           other.items == items &&
           other.gender == gender &&
+          other.genderPreference == genderPreference &&
           other.couponCode == couponCode &&
           other.discountIds == discountIds &&
           other.weight == weight;
@@ -83,7 +88,8 @@ class EstimateOrder {
       type.hashCode +
       items.hashCode +
       gender.hashCode +
-      couponCode.hashCode +
+      genderPreference.hashCode +
+      (couponCode == null ? 0 : couponCode.hashCode) +
       discountIds.hashCode +
       weight.hashCode;
 
@@ -96,4 +102,18 @@ class EstimateOrder {
   String toString() {
     return toJson().toString();
   }
+}
+
+enum EstimateOrderGenderPreferenceEnum {
+  @JsonValue(r'SAME')
+  SAME(r'SAME'),
+  @JsonValue(r'ANY')
+  ANY(r'ANY');
+
+  const EstimateOrderGenderPreferenceEnum(this.value);
+
+  final String value;
+
+  @override
+  String toString() => value;
 }

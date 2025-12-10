@@ -61,7 +61,7 @@ class BroadcastUpdateRequest {
       type.hashCode +
       targetAudience.hashCode +
       targetIds.hashCode +
-      scheduledAt.hashCode;
+      (scheduledAt == null ? 0 : scheduledAt.hashCode);
 
   factory BroadcastUpdateRequest.fromJson(Map<String, dynamic> json) =>
       _$BroadcastUpdateRequestFromJson(json);

@@ -19,6 +19,8 @@ abstract class _$PlaceOrderCWProxy {
 
   PlaceOrder gender(UserGender? gender);
 
+  PlaceOrder genderPreference(PlaceOrderGenderPreferenceEnum? genderPreference);
+
   PlaceOrder couponCode(String? couponCode);
 
   PlaceOrder payment(PlaceOrderPayment payment);
@@ -37,6 +39,7 @@ abstract class _$PlaceOrderCWProxy {
     OrderType type,
     List<OrderItem>? items,
     UserGender? gender,
+    PlaceOrderGenderPreferenceEnum? genderPreference,
     String? couponCode,
     PlaceOrderPayment payment,
   });
@@ -70,6 +73,11 @@ class _$PlaceOrderCWProxyImpl implements _$PlaceOrderCWProxy {
   PlaceOrder gender(UserGender? gender) => call(gender: gender);
 
   @override
+  PlaceOrder genderPreference(
+    PlaceOrderGenderPreferenceEnum? genderPreference,
+  ) => call(genderPreference: genderPreference);
+
+  @override
   PlaceOrder couponCode(String? couponCode) => call(couponCode: couponCode);
 
   @override
@@ -90,6 +98,7 @@ class _$PlaceOrderCWProxyImpl implements _$PlaceOrderCWProxy {
     Object? type = const $CopyWithPlaceholder(),
     Object? items = const $CopyWithPlaceholder(),
     Object? gender = const $CopyWithPlaceholder(),
+    Object? genderPreference = const $CopyWithPlaceholder(),
     Object? couponCode = const $CopyWithPlaceholder(),
     Object? payment = const $CopyWithPlaceholder(),
   }) {
@@ -122,6 +131,10 @@ class _$PlaceOrderCWProxyImpl implements _$PlaceOrderCWProxy {
           ? _value.gender
           // ignore: cast_nullable_to_non_nullable
           : gender as UserGender?,
+      genderPreference: genderPreference == const $CopyWithPlaceholder()
+          ? _value.genderPreference
+          // ignore: cast_nullable_to_non_nullable
+          : genderPreference as PlaceOrderGenderPreferenceEnum?,
       couponCode: couponCode == const $CopyWithPlaceholder()
           ? _value.couponCode
           // ignore: cast_nullable_to_non_nullable
@@ -182,6 +195,10 @@ PlaceOrder _$PlaceOrderFromJson(Map<String, dynamic> json) => $checkedCreate(
         'gender',
         (v) => $enumDecodeNullable(_$UserGenderEnumMap, v),
       ),
+      genderPreference: $checkedConvert(
+        'genderPreference',
+        (v) => $enumDecodeNullable(_$PlaceOrderGenderPreferenceEnumEnumMap, v),
+      ),
       couponCode: $checkedConvert('couponCode', (v) => v as String?),
       payment: $checkedConvert(
         'payment',
@@ -200,6 +217,8 @@ Map<String, dynamic> _$PlaceOrderToJson(PlaceOrder instance) =>
       'type': _$OrderTypeEnumMap[instance.type]!,
       'items': ?instance.items?.map((e) => e.toJson()).toList(),
       'gender': ?_$UserGenderEnumMap[instance.gender],
+      'genderPreference':
+          ?_$PlaceOrderGenderPreferenceEnumEnumMap[instance.genderPreference],
       'couponCode': ?instance.couponCode,
       'payment': instance.payment.toJson(),
     };
@@ -213,4 +232,9 @@ const _$OrderTypeEnumMap = {
 const _$UserGenderEnumMap = {
   UserGender.MALE: 'MALE',
   UserGender.FEMALE: 'FEMALE',
+};
+
+const _$PlaceOrderGenderPreferenceEnumEnumMap = {
+  PlaceOrderGenderPreferenceEnum.SAME: 'SAME',
+  PlaceOrderGenderPreferenceEnum.ANY: 'ANY',
 };

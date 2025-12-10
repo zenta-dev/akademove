@@ -25,8 +25,8 @@ class DriverQuizAnswerStartQuiz201Response {
     this.pagination,
     this.totalPages,
   });
-  @JsonKey(name: r'message', required: true, includeIfNull: false)
-  final String message;
+  @JsonKey(name: r'message', required: true, includeIfNull: true)
+  final String? message;
 
   @JsonKey(name: r'data', required: true, includeIfNull: false)
   final DriverQuizAttempt data;
@@ -50,7 +50,7 @@ class DriverQuizAnswerStartQuiz201Response {
 
   @override
   int get hashCode =>
-      message.hashCode +
+      (message == null ? 0 : message.hashCode) +
       data.hashCode +
       pagination.hashCode +
       totalPages.hashCode;

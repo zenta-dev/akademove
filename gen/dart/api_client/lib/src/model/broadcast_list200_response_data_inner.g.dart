@@ -7,7 +7,7 @@ part of 'broadcast_list200_response_data_inner.dart';
 // **************************************************************************
 
 abstract class _$BroadcastList200ResponseDataInnerCWProxy {
-  BroadcastList200ResponseDataInner id(String id);
+  BroadcastList200ResponseDataInner id(String? id);
 
   BroadcastList200ResponseDataInner title(String title);
 
@@ -37,11 +37,11 @@ abstract class _$BroadcastList200ResponseDataInnerCWProxy {
 
   BroadcastList200ResponseDataInner failedCount(int? failedCount);
 
-  BroadcastList200ResponseDataInner createdBy(String createdBy);
+  BroadcastList200ResponseDataInner createdBy(String? createdBy);
 
-  BroadcastList200ResponseDataInner createdAt(DateTime createdAt);
+  BroadcastList200ResponseDataInner createdAt(DateTime? createdAt);
 
-  BroadcastList200ResponseDataInner updatedAt(DateTime updatedAt);
+  BroadcastList200ResponseDataInner updatedAt(DateTime? updatedAt);
 
   /// Creates a new instance with the provided field values.
   /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `BroadcastList200ResponseDataInner(...).copyWith.fieldName(value)`.
@@ -51,7 +51,7 @@ abstract class _$BroadcastList200ResponseDataInnerCWProxy {
   /// BroadcastList200ResponseDataInner(...).copyWith(id: 12, name: "My name")
   /// ```
   BroadcastList200ResponseDataInner call({
-    String id,
+    String? id,
     String title,
     String message,
     BroadcastList200ResponseDataInnerTypeEnum type,
@@ -63,9 +63,9 @@ abstract class _$BroadcastList200ResponseDataInnerCWProxy {
     int? totalRecipients,
     int? sentCount,
     int? failedCount,
-    String createdBy,
-    DateTime createdAt,
-    DateTime updatedAt,
+    String? createdBy,
+    DateTime? createdAt,
+    DateTime? updatedAt,
   });
 }
 
@@ -78,7 +78,7 @@ class _$BroadcastList200ResponseDataInnerCWProxyImpl
   final BroadcastList200ResponseDataInner _value;
 
   @override
-  BroadcastList200ResponseDataInner id(String id) => call(id: id);
+  BroadcastList200ResponseDataInner id(String? id) => call(id: id);
 
   @override
   BroadcastList200ResponseDataInner title(String title) => call(title: title);
@@ -127,15 +127,15 @@ class _$BroadcastList200ResponseDataInnerCWProxyImpl
       call(failedCount: failedCount);
 
   @override
-  BroadcastList200ResponseDataInner createdBy(String createdBy) =>
+  BroadcastList200ResponseDataInner createdBy(String? createdBy) =>
       call(createdBy: createdBy);
 
   @override
-  BroadcastList200ResponseDataInner createdAt(DateTime createdAt) =>
+  BroadcastList200ResponseDataInner createdAt(DateTime? createdAt) =>
       call(createdAt: createdAt);
 
   @override
-  BroadcastList200ResponseDataInner updatedAt(DateTime updatedAt) =>
+  BroadcastList200ResponseDataInner updatedAt(DateTime? updatedAt) =>
       call(updatedAt: updatedAt);
 
   @override
@@ -164,10 +164,10 @@ class _$BroadcastList200ResponseDataInnerCWProxyImpl
     Object? updatedAt = const $CopyWithPlaceholder(),
   }) {
     return BroadcastList200ResponseDataInner(
-      id: id == const $CopyWithPlaceholder() || id == null
+      id: id == const $CopyWithPlaceholder()
           ? _value.id
           // ignore: cast_nullable_to_non_nullable
-          : id as String,
+          : id as String?,
       title: title == const $CopyWithPlaceholder() || title == null
           ? _value.title
           // ignore: cast_nullable_to_non_nullable
@@ -215,18 +215,18 @@ class _$BroadcastList200ResponseDataInnerCWProxyImpl
           ? _value.failedCount
           // ignore: cast_nullable_to_non_nullable
           : failedCount as int?,
-      createdBy: createdBy == const $CopyWithPlaceholder() || createdBy == null
+      createdBy: createdBy == const $CopyWithPlaceholder()
           ? _value.createdBy
           // ignore: cast_nullable_to_non_nullable
-          : createdBy as String,
-      createdAt: createdAt == const $CopyWithPlaceholder() || createdAt == null
+          : createdBy as String?,
+      createdAt: createdAt == const $CopyWithPlaceholder()
           ? _value.createdAt
           // ignore: cast_nullable_to_non_nullable
-          : createdAt as DateTime,
-      updatedAt: updatedAt == const $CopyWithPlaceholder() || updatedAt == null
+          : createdAt as DateTime?,
+      updatedAt: updatedAt == const $CopyWithPlaceholder()
           ? _value.updatedAt
           // ignore: cast_nullable_to_non_nullable
-          : updatedAt as DateTime,
+          : updatedAt as DateTime?,
     );
   }
 }
@@ -264,7 +264,7 @@ BroadcastList200ResponseDataInner _$BroadcastList200ResponseDataInnerFromJson(
     ],
   );
   final val = BroadcastList200ResponseDataInner(
-    id: $checkedConvert('id', (v) => v as String),
+    id: $checkedConvert('id', (v) => v as String?),
     title: $checkedConvert('title', (v) => v as String),
     message: $checkedConvert('message', (v) => v as String),
     type: $checkedConvert(
@@ -304,9 +304,15 @@ BroadcastList200ResponseDataInner _$BroadcastList200ResponseDataInnerFromJson(
       'failedCount',
       (v) => (v as num?)?.toInt() ?? 0,
     ),
-    createdBy: $checkedConvert('createdBy', (v) => v as String),
-    createdAt: $checkedConvert('createdAt', (v) => DateTime.parse(v as String)),
-    updatedAt: $checkedConvert('updatedAt', (v) => DateTime.parse(v as String)),
+    createdBy: $checkedConvert('createdBy', (v) => v as String?),
+    createdAt: $checkedConvert(
+      'createdAt',
+      (v) => v == null ? null : DateTime.parse(v as String),
+    ),
+    updatedAt: $checkedConvert(
+      'updatedAt',
+      (v) => v == null ? null : DateTime.parse(v as String),
+    ),
   );
   return val;
 });
@@ -330,8 +336,8 @@ Map<String, dynamic> _$BroadcastList200ResponseDataInnerToJson(
   'sentCount': ?instance.sentCount,
   'failedCount': ?instance.failedCount,
   'createdBy': instance.createdBy,
-  'createdAt': instance.createdAt.toIso8601String(),
-  'updatedAt': instance.updatedAt.toIso8601String(),
+  'createdAt': instance.createdAt?.toIso8601String(),
+  'updatedAt': instance.updatedAt?.toIso8601String(),
 };
 
 const _$BroadcastList200ResponseDataInnerTypeEnumEnumMap = {

@@ -56,7 +56,7 @@ class InsertSupportTicket {
       subject.hashCode +
       category.hashCode +
       priority.hashCode +
-      orderId.hashCode +
+      (orderId == null ? 0 : orderId.hashCode) +
       message.hashCode;
 
   factory InsertSupportTicket.fromJson(Map<String, dynamic> json) =>

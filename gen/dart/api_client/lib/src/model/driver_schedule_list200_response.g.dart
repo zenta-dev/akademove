@@ -7,7 +7,7 @@ part of 'driver_schedule_list200_response.dart';
 // **************************************************************************
 
 abstract class _$DriverScheduleList200ResponseCWProxy {
-  DriverScheduleList200Response message(String message);
+  DriverScheduleList200Response message(String? message);
 
   DriverScheduleList200Response data(List<DriverSchedule> data);
 
@@ -23,7 +23,7 @@ abstract class _$DriverScheduleList200ResponseCWProxy {
   /// DriverScheduleList200Response(...).copyWith(id: 12, name: "My name")
   /// ```
   DriverScheduleList200Response call({
-    String message,
+    String? message,
     List<DriverSchedule> data,
     PaginationResult? pagination,
     int? totalPages,
@@ -39,7 +39,7 @@ class _$DriverScheduleList200ResponseCWProxyImpl
   final DriverScheduleList200Response _value;
 
   @override
-  DriverScheduleList200Response message(String message) =>
+  DriverScheduleList200Response message(String? message) =>
       call(message: message);
 
   @override
@@ -69,10 +69,10 @@ class _$DriverScheduleList200ResponseCWProxyImpl
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return DriverScheduleList200Response(
-      message: message == const $CopyWithPlaceholder() || message == null
+      message: message == const $CopyWithPlaceholder()
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
-          : message as String,
+          : message as String?,
       data: data == const $CopyWithPlaceholder() || data == null
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
@@ -107,7 +107,7 @@ DriverScheduleList200Response _$DriverScheduleList200ResponseFromJson(
 ) => $checkedCreate('DriverScheduleList200Response', json, ($checkedConvert) {
   $checkKeys(json, requiredKeys: const ['message', 'data']);
   final val = DriverScheduleList200Response(
-    message: $checkedConvert('message', (v) => v as String),
+    message: $checkedConvert('message', (v) => v as String?),
     data: $checkedConvert(
       'data',
       (v) => (v as List<dynamic>)

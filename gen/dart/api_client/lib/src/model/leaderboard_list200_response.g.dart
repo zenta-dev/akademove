@@ -7,7 +7,7 @@ part of 'leaderboard_list200_response.dart';
 // **************************************************************************
 
 abstract class _$LeaderboardList200ResponseCWProxy {
-  LeaderboardList200Response message(String message);
+  LeaderboardList200Response message(String? message);
 
   LeaderboardList200Response data(List<Leaderboard> data);
 
@@ -23,7 +23,7 @@ abstract class _$LeaderboardList200ResponseCWProxy {
   /// LeaderboardList200Response(...).copyWith(id: 12, name: "My name")
   /// ```
   LeaderboardList200Response call({
-    String message,
+    String? message,
     List<Leaderboard> data,
     PaginationResult? pagination,
     int? totalPages,
@@ -39,7 +39,7 @@ class _$LeaderboardList200ResponseCWProxyImpl
   final LeaderboardList200Response _value;
 
   @override
-  LeaderboardList200Response message(String message) => call(message: message);
+  LeaderboardList200Response message(String? message) => call(message: message);
 
   @override
   LeaderboardList200Response data(List<Leaderboard> data) => call(data: data);
@@ -67,10 +67,10 @@ class _$LeaderboardList200ResponseCWProxyImpl
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return LeaderboardList200Response(
-      message: message == const $CopyWithPlaceholder() || message == null
+      message: message == const $CopyWithPlaceholder()
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
-          : message as String,
+          : message as String?,
       data: data == const $CopyWithPlaceholder() || data == null
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
@@ -104,7 +104,7 @@ LeaderboardList200Response _$LeaderboardList200ResponseFromJson(
 ) => $checkedCreate('LeaderboardList200Response', json, ($checkedConvert) {
   $checkKeys(json, requiredKeys: const ['message', 'data']);
   final val = LeaderboardList200Response(
-    message: $checkedConvert('message', (v) => v as String),
+    message: $checkedConvert('message', (v) => v as String?),
     data: $checkedConvert(
       'data',
       (v) => (v as List<dynamic>)

@@ -7,13 +7,13 @@ part of 'notification_list200_response_data_inner.dart';
 // **************************************************************************
 
 abstract class _$NotificationList200ResponseDataInnerCWProxy {
-  NotificationList200ResponseDataInner id(String id);
+  NotificationList200ResponseDataInner id(String? id);
 
-  NotificationList200ResponseDataInner userId(String userId);
+  NotificationList200ResponseDataInner userId(String? userId);
 
-  NotificationList200ResponseDataInner title(String title);
+  NotificationList200ResponseDataInner title(String? title);
 
-  NotificationList200ResponseDataInner body(String body);
+  NotificationList200ResponseDataInner body(String? body);
 
   NotificationList200ResponseDataInner data(Object? data);
 
@@ -21,7 +21,7 @@ abstract class _$NotificationList200ResponseDataInnerCWProxy {
 
   NotificationList200ResponseDataInner isRead(bool isRead);
 
-  NotificationList200ResponseDataInner createdAt(DateTime createdAt);
+  NotificationList200ResponseDataInner createdAt(DateTime? createdAt);
 
   NotificationList200ResponseDataInner readAt(DateTime? readAt);
 
@@ -33,14 +33,14 @@ abstract class _$NotificationList200ResponseDataInnerCWProxy {
   /// NotificationList200ResponseDataInner(...).copyWith(id: 12, name: "My name")
   /// ```
   NotificationList200ResponseDataInner call({
-    String id,
-    String userId,
-    String title,
-    String body,
+    String? id,
+    String? userId,
+    String? title,
+    String? body,
     Object? data,
     String? messageId,
     bool isRead,
-    DateTime createdAt,
+    DateTime? createdAt,
     DateTime? readAt,
   });
 }
@@ -54,18 +54,18 @@ class _$NotificationList200ResponseDataInnerCWProxyImpl
   final NotificationList200ResponseDataInner _value;
 
   @override
-  NotificationList200ResponseDataInner id(String id) => call(id: id);
+  NotificationList200ResponseDataInner id(String? id) => call(id: id);
 
   @override
-  NotificationList200ResponseDataInner userId(String userId) =>
+  NotificationList200ResponseDataInner userId(String? userId) =>
       call(userId: userId);
 
   @override
-  NotificationList200ResponseDataInner title(String title) =>
+  NotificationList200ResponseDataInner title(String? title) =>
       call(title: title);
 
   @override
-  NotificationList200ResponseDataInner body(String body) => call(body: body);
+  NotificationList200ResponseDataInner body(String? body) => call(body: body);
 
   @override
   NotificationList200ResponseDataInner data(Object? data) => call(data: data);
@@ -79,7 +79,7 @@ class _$NotificationList200ResponseDataInnerCWProxyImpl
       call(isRead: isRead);
 
   @override
-  NotificationList200ResponseDataInner createdAt(DateTime createdAt) =>
+  NotificationList200ResponseDataInner createdAt(DateTime? createdAt) =>
       call(createdAt: createdAt);
 
   @override
@@ -106,22 +106,22 @@ class _$NotificationList200ResponseDataInnerCWProxyImpl
     Object? readAt = const $CopyWithPlaceholder(),
   }) {
     return NotificationList200ResponseDataInner(
-      id: id == const $CopyWithPlaceholder() || id == null
+      id: id == const $CopyWithPlaceholder()
           ? _value.id
           // ignore: cast_nullable_to_non_nullable
-          : id as String,
-      userId: userId == const $CopyWithPlaceholder() || userId == null
+          : id as String?,
+      userId: userId == const $CopyWithPlaceholder()
           ? _value.userId
           // ignore: cast_nullable_to_non_nullable
-          : userId as String,
-      title: title == const $CopyWithPlaceholder() || title == null
+          : userId as String?,
+      title: title == const $CopyWithPlaceholder()
           ? _value.title
           // ignore: cast_nullable_to_non_nullable
-          : title as String,
-      body: body == const $CopyWithPlaceholder() || body == null
+          : title as String?,
+      body: body == const $CopyWithPlaceholder()
           ? _value.body
           // ignore: cast_nullable_to_non_nullable
-          : body as String,
+          : body as String?,
       data: data == const $CopyWithPlaceholder()
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
@@ -134,10 +134,10 @@ class _$NotificationList200ResponseDataInnerCWProxyImpl
           ? _value.isRead
           // ignore: cast_nullable_to_non_nullable
           : isRead as bool,
-      createdAt: createdAt == const $CopyWithPlaceholder() || createdAt == null
+      createdAt: createdAt == const $CopyWithPlaceholder()
           ? _value.createdAt
           // ignore: cast_nullable_to_non_nullable
-          : createdAt as DateTime,
+          : createdAt as DateTime?,
       readAt: readAt == const $CopyWithPlaceholder()
           ? _value.readAt
           // ignore: cast_nullable_to_non_nullable
@@ -176,16 +176,16 @@ _$NotificationList200ResponseDataInnerFromJson(Map<String, dynamic> json) =>
         ],
       );
       final val = NotificationList200ResponseDataInner(
-        id: $checkedConvert('id', (v) => v as String),
-        userId: $checkedConvert('userId', (v) => v as String),
-        title: $checkedConvert('title', (v) => v as String),
-        body: $checkedConvert('body', (v) => v as String),
+        id: $checkedConvert('id', (v) => v as String?),
+        userId: $checkedConvert('userId', (v) => v as String?),
+        title: $checkedConvert('title', (v) => v as String?),
+        body: $checkedConvert('body', (v) => v as String?),
         data: $checkedConvert('data', (v) => v),
         messageId: $checkedConvert('messageId', (v) => v as String?),
         isRead: $checkedConvert('isRead', (v) => v as bool),
         createdAt: $checkedConvert(
           'createdAt',
-          (v) => DateTime.parse(v as String),
+          (v) => v == null ? null : DateTime.parse(v as String),
         ),
         readAt: $checkedConvert(
           'readAt',
@@ -205,6 +205,6 @@ Map<String, dynamic> _$NotificationList200ResponseDataInnerToJson(
   'data': ?instance.data,
   'messageId': ?instance.messageId,
   'isRead': instance.isRead,
-  'createdAt': instance.createdAt.toIso8601String(),
+  'createdAt': instance.createdAt?.toIso8601String(),
   'readAt': ?instance.readAt?.toIso8601String(),
 };

@@ -56,7 +56,7 @@ class CouponValidate200ResponseData {
       (coupon == null ? 0 : coupon.hashCode) +
       discountAmount.hashCode +
       finalAmount.hashCode +
-      reason.hashCode;
+      (reason == null ? 0 : reason.hashCode);
 
   factory CouponValidate200ResponseData.fromJson(Map<String, dynamic> json) =>
       _$CouponValidate200ResponseDataFromJson(json);

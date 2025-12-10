@@ -7,7 +7,7 @@ part of 'merchant_analytics200_response.dart';
 // **************************************************************************
 
 abstract class _$MerchantAnalytics200ResponseCWProxy {
-  MerchantAnalytics200Response message(String message);
+  MerchantAnalytics200Response message(String? message);
 
   MerchantAnalytics200Response data(MerchantAnalytics200ResponseData data);
 
@@ -23,7 +23,7 @@ abstract class _$MerchantAnalytics200ResponseCWProxy {
   /// MerchantAnalytics200Response(...).copyWith(id: 12, name: "My name")
   /// ```
   MerchantAnalytics200Response call({
-    String message,
+    String? message,
     MerchantAnalytics200ResponseData data,
     PaginationResult? pagination,
     int? totalPages,
@@ -39,7 +39,7 @@ class _$MerchantAnalytics200ResponseCWProxyImpl
   final MerchantAnalytics200Response _value;
 
   @override
-  MerchantAnalytics200Response message(String message) =>
+  MerchantAnalytics200Response message(String? message) =>
       call(message: message);
 
   @override
@@ -69,10 +69,10 @@ class _$MerchantAnalytics200ResponseCWProxyImpl
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return MerchantAnalytics200Response(
-      message: message == const $CopyWithPlaceholder() || message == null
+      message: message == const $CopyWithPlaceholder()
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
-          : message as String,
+          : message as String?,
       data: data == const $CopyWithPlaceholder() || data == null
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
@@ -107,7 +107,7 @@ MerchantAnalytics200Response _$MerchantAnalytics200ResponseFromJson(
 ) => $checkedCreate('MerchantAnalytics200Response', json, ($checkedConvert) {
   $checkKeys(json, requiredKeys: const ['message', 'data']);
   final val = MerchantAnalytics200Response(
-    message: $checkedConvert('message', (v) => v as String),
+    message: $checkedConvert('message', (v) => v as String?),
     data: $checkedConvert(
       'data',
       (v) =>

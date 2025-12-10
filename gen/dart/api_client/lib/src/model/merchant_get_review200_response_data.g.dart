@@ -7,9 +7,9 @@ part of 'merchant_get_review200_response_data.dart';
 // **************************************************************************
 
 abstract class _$MerchantGetReview200ResponseDataCWProxy {
-  MerchantGetReview200ResponseData id(String id);
+  MerchantGetReview200ResponseData id(String? id);
 
-  MerchantGetReview200ResponseData merchantId(String merchantId);
+  MerchantGetReview200ResponseData merchantId(String? merchantId);
 
   MerchantGetReview200ResponseData status(
     MerchantGetReview200ResponseDataStatusEnum status,
@@ -30,9 +30,9 @@ abstract class _$MerchantGetReview200ResponseDataCWProxy {
 
   MerchantGetReview200ResponseData reviewNotes(String? reviewNotes);
 
-  MerchantGetReview200ResponseData createdAt(DateTime createdAt);
+  MerchantGetReview200ResponseData createdAt(DateTime? createdAt);
 
-  MerchantGetReview200ResponseData updatedAt(DateTime updatedAt);
+  MerchantGetReview200ResponseData updatedAt(DateTime? updatedAt);
 
   /// Creates a new instance with the provided field values.
   /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `MerchantGetReview200ResponseData(...).copyWith.fieldName(value)`.
@@ -42,8 +42,8 @@ abstract class _$MerchantGetReview200ResponseDataCWProxy {
   /// MerchantGetReview200ResponseData(...).copyWith(id: 12, name: "My name")
   /// ```
   MerchantGetReview200ResponseData call({
-    String id,
-    String merchantId,
+    String? id,
+    String? merchantId,
     MerchantGetReview200ResponseDataStatusEnum status,
     MerchantGetReview200ResponseDataBusinessDocumentStatusEnum
     businessDocumentStatus,
@@ -51,8 +51,8 @@ abstract class _$MerchantGetReview200ResponseDataCWProxy {
     String? reviewedBy,
     DateTime? reviewedAt,
     String? reviewNotes,
-    DateTime createdAt,
-    DateTime updatedAt,
+    DateTime? createdAt,
+    DateTime? updatedAt,
   });
 }
 
@@ -65,10 +65,10 @@ class _$MerchantGetReview200ResponseDataCWProxyImpl
   final MerchantGetReview200ResponseData _value;
 
   @override
-  MerchantGetReview200ResponseData id(String id) => call(id: id);
+  MerchantGetReview200ResponseData id(String? id) => call(id: id);
 
   @override
-  MerchantGetReview200ResponseData merchantId(String merchantId) =>
+  MerchantGetReview200ResponseData merchantId(String? merchantId) =>
       call(merchantId: merchantId);
 
   @override
@@ -100,11 +100,11 @@ class _$MerchantGetReview200ResponseDataCWProxyImpl
       call(reviewNotes: reviewNotes);
 
   @override
-  MerchantGetReview200ResponseData createdAt(DateTime createdAt) =>
+  MerchantGetReview200ResponseData createdAt(DateTime? createdAt) =>
       call(createdAt: createdAt);
 
   @override
-  MerchantGetReview200ResponseData updatedAt(DateTime updatedAt) =>
+  MerchantGetReview200ResponseData updatedAt(DateTime? updatedAt) =>
       call(updatedAt: updatedAt);
 
   @override
@@ -128,15 +128,14 @@ class _$MerchantGetReview200ResponseDataCWProxyImpl
     Object? updatedAt = const $CopyWithPlaceholder(),
   }) {
     return MerchantGetReview200ResponseData(
-      id: id == const $CopyWithPlaceholder() || id == null
+      id: id == const $CopyWithPlaceholder()
           ? _value.id
           // ignore: cast_nullable_to_non_nullable
-          : id as String,
-      merchantId:
-          merchantId == const $CopyWithPlaceholder() || merchantId == null
+          : id as String?,
+      merchantId: merchantId == const $CopyWithPlaceholder()
           ? _value.merchantId
           // ignore: cast_nullable_to_non_nullable
-          : merchantId as String,
+          : merchantId as String?,
       status: status == const $CopyWithPlaceholder() || status == null
           ? _value.status
           // ignore: cast_nullable_to_non_nullable
@@ -165,14 +164,14 @@ class _$MerchantGetReview200ResponseDataCWProxyImpl
           ? _value.reviewNotes
           // ignore: cast_nullable_to_non_nullable
           : reviewNotes as String?,
-      createdAt: createdAt == const $CopyWithPlaceholder() || createdAt == null
+      createdAt: createdAt == const $CopyWithPlaceholder()
           ? _value.createdAt
           // ignore: cast_nullable_to_non_nullable
-          : createdAt as DateTime,
-      updatedAt: updatedAt == const $CopyWithPlaceholder() || updatedAt == null
+          : createdAt as DateTime?,
+      updatedAt: updatedAt == const $CopyWithPlaceholder()
           ? _value.updatedAt
           // ignore: cast_nullable_to_non_nullable
-          : updatedAt as DateTime,
+          : updatedAt as DateTime?,
     );
   }
 }
@@ -211,8 +210,8 @@ MerchantGetReview200ResponseData _$MerchantGetReview200ResponseDataFromJson(
     ],
   );
   final val = MerchantGetReview200ResponseData(
-    id: $checkedConvert('id', (v) => v as String),
-    merchantId: $checkedConvert('merchantId', (v) => v as String),
+    id: $checkedConvert('id', (v) => v as String?),
+    merchantId: $checkedConvert('merchantId', (v) => v as String?),
     status: $checkedConvert(
       'status',
       (v) =>
@@ -235,8 +234,14 @@ MerchantGetReview200ResponseData _$MerchantGetReview200ResponseDataFromJson(
       (v) => v == null ? null : DateTime.parse(v as String),
     ),
     reviewNotes: $checkedConvert('reviewNotes', (v) => v as String?),
-    createdAt: $checkedConvert('createdAt', (v) => DateTime.parse(v as String)),
-    updatedAt: $checkedConvert('updatedAt', (v) => DateTime.parse(v as String)),
+    createdAt: $checkedConvert(
+      'createdAt',
+      (v) => v == null ? null : DateTime.parse(v as String),
+    ),
+    updatedAt: $checkedConvert(
+      'updatedAt',
+      (v) => v == null ? null : DateTime.parse(v as String),
+    ),
   );
   return val;
 });
@@ -255,8 +260,8 @@ Map<String, dynamic> _$MerchantGetReview200ResponseDataToJson(
   'reviewedBy': instance.reviewedBy,
   'reviewedAt': instance.reviewedAt?.toIso8601String(),
   'reviewNotes': instance.reviewNotes,
-  'createdAt': instance.createdAt.toIso8601String(),
-  'updatedAt': instance.updatedAt.toIso8601String(),
+  'createdAt': instance.createdAt?.toIso8601String(),
+  'updatedAt': instance.updatedAt?.toIso8601String(),
 };
 
 const _$MerchantGetReview200ResponseDataStatusEnumEnumMap = {

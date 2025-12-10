@@ -34,8 +34,8 @@ class BroadcastList200ResponseDataInner {
     required this.createdAt,
     required this.updatedAt,
   });
-  @JsonKey(name: r'id', required: true, includeIfNull: false)
-  final String id;
+  @JsonKey(name: r'id', required: true, includeIfNull: true)
+  final String? id;
 
   @JsonKey(name: r'title', required: true, includeIfNull: false)
   final String title;
@@ -91,14 +91,14 @@ class BroadcastList200ResponseDataInner {
   )
   final int? failedCount;
 
-  @JsonKey(name: r'createdBy', required: true, includeIfNull: false)
-  final String createdBy;
+  @JsonKey(name: r'createdBy', required: true, includeIfNull: true)
+  final String? createdBy;
 
-  @JsonKey(name: r'createdAt', required: true, includeIfNull: false)
-  final DateTime createdAt;
+  @JsonKey(name: r'createdAt', required: true, includeIfNull: true)
+  final DateTime? createdAt;
 
-  @JsonKey(name: r'updatedAt', required: true, includeIfNull: false)
-  final DateTime updatedAt;
+  @JsonKey(name: r'updatedAt', required: true, includeIfNull: true)
+  final DateTime? updatedAt;
 
   @override
   bool operator ==(Object other) =>
@@ -122,21 +122,21 @@ class BroadcastList200ResponseDataInner {
 
   @override
   int get hashCode =>
-      id.hashCode +
+      (id == null ? 0 : id.hashCode) +
       title.hashCode +
       message.hashCode +
       type.hashCode +
       status.hashCode +
       targetAudience.hashCode +
       targetIds.hashCode +
-      scheduledAt.hashCode +
-      sentAt.hashCode +
+      (scheduledAt == null ? 0 : scheduledAt.hashCode) +
+      (sentAt == null ? 0 : sentAt.hashCode) +
       totalRecipients.hashCode +
       sentCount.hashCode +
       failedCount.hashCode +
-      createdBy.hashCode +
-      createdAt.hashCode +
-      updatedAt.hashCode;
+      (createdBy == null ? 0 : createdBy.hashCode) +
+      (createdAt == null ? 0 : createdAt.hashCode) +
+      (updatedAt == null ? 0 : updatedAt.hashCode);
 
   factory BroadcastList200ResponseDataInner.fromJson(
     Map<String, dynamic> json,

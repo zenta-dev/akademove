@@ -21,7 +21,7 @@ Method | HTTP request | Description
 
 
 # **notificationDelete**
-> BroadcastDelete200Response notificationDelete(id)
+> BannerDelete200Response notificationDelete(id)
 
 
 
@@ -48,7 +48,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**BroadcastDelete200Response**](BroadcastDelete200Response.md)
+[**BannerDelete200Response**](BannerDelete200Response.md)
 
 ### Authorization
 
@@ -234,7 +234,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **notificationRemoveToken**
-> BroadcastDelete200Response notificationRemoveToken(token)
+> BannerDelete200Response notificationRemoveToken(token)
 
 
 
@@ -261,7 +261,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**BroadcastDelete200Response**](BroadcastDelete200Response.md)
+[**BannerDelete200Response**](BannerDelete200Response.md)
 
 ### Authorization
 
@@ -275,7 +275,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **notificationSaveToken**
-> BroadcastDelete200Response notificationSaveToken(notificationSaveTokenRequest)
+> BannerDelete200Response notificationSaveToken(notificationSaveTokenRequest)
 
 
 
@@ -302,7 +302,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**BroadcastDelete200Response**](BroadcastDelete200Response.md)
+[**BannerDelete200Response**](BannerDelete200Response.md)
 
 ### Authorization
 
@@ -357,7 +357,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **notificationUnsubscribeToTopic**
-> NotificationSubscribeToTopic200Response notificationUnsubscribeToTopic(notificationSubscribeToTopicRequest)
+> NotificationSubscribeToTopic200Response notificationUnsubscribeToTopic(notificationUnsubscribeToTopicRequest)
 
 
 
@@ -366,10 +366,10 @@ Name | Type | Description  | Notes
 import 'package:api_client/api.dart';
 
 final api = ApiClient().getNotificationApi();
-final NotificationSubscribeToTopicRequest notificationSubscribeToTopicRequest = ; // NotificationSubscribeToTopicRequest | 
+final NotificationUnsubscribeToTopicRequest notificationUnsubscribeToTopicRequest = ; // NotificationUnsubscribeToTopicRequest | 
 
 try {
-    final response = api.notificationUnsubscribeToTopic(notificationSubscribeToTopicRequest);
+    final response = api.notificationUnsubscribeToTopic(notificationUnsubscribeToTopicRequest);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling NotificationApi->notificationUnsubscribeToTopic: $e\n');
@@ -380,7 +380,7 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **notificationSubscribeToTopicRequest** | [**NotificationSubscribeToTopicRequest**](NotificationSubscribeToTopicRequest.md)|  | 
+ **notificationUnsubscribeToTopicRequest** | [**NotificationUnsubscribeToTopicRequest**](NotificationUnsubscribeToTopicRequest.md)|  | 
 
 ### Return type
 

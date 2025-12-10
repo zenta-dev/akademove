@@ -59,7 +59,7 @@ class EmergencyContactConfiguration {
       name.hashCode +
       phone.hashCode +
       type.hashCode +
-      description.hashCode +
+      (description == null ? 0 : description.hashCode) +
       isActive.hashCode;
 
   factory EmergencyContactConfiguration.fromJson(Map<String, dynamic> json) =>

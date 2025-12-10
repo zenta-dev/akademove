@@ -7,7 +7,7 @@ part of 'merchant_best_sellers200_response.dart';
 // **************************************************************************
 
 abstract class _$MerchantBestSellers200ResponseCWProxy {
-  MerchantBestSellers200Response message(String message);
+  MerchantBestSellers200Response message(String? message);
 
   MerchantBestSellers200Response data(
     List<MerchantBestSellers200ResponseDataInner> data,
@@ -25,7 +25,7 @@ abstract class _$MerchantBestSellers200ResponseCWProxy {
   /// MerchantBestSellers200Response(...).copyWith(id: 12, name: "My name")
   /// ```
   MerchantBestSellers200Response call({
-    String message,
+    String? message,
     List<MerchantBestSellers200ResponseDataInner> data,
     PaginationResult? pagination,
     int? totalPages,
@@ -41,7 +41,7 @@ class _$MerchantBestSellers200ResponseCWProxyImpl
   final MerchantBestSellers200Response _value;
 
   @override
-  MerchantBestSellers200Response message(String message) =>
+  MerchantBestSellers200Response message(String? message) =>
       call(message: message);
 
   @override
@@ -72,10 +72,10 @@ class _$MerchantBestSellers200ResponseCWProxyImpl
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return MerchantBestSellers200Response(
-      message: message == const $CopyWithPlaceholder() || message == null
+      message: message == const $CopyWithPlaceholder()
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
-          : message as String,
+          : message as String?,
       data: data == const $CopyWithPlaceholder() || data == null
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
@@ -110,7 +110,7 @@ MerchantBestSellers200Response _$MerchantBestSellers200ResponseFromJson(
 ) => $checkedCreate('MerchantBestSellers200Response', json, ($checkedConvert) {
   $checkKeys(json, requiredKeys: const ['message', 'data']);
   final val = MerchantBestSellers200Response(
-    message: $checkedConvert('message', (v) => v as String),
+    message: $checkedConvert('message', (v) => v as String?),
     data: $checkedConvert(
       'data',
       (v) => (v as List<dynamic>)

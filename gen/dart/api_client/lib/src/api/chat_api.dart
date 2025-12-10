@@ -318,7 +318,7 @@ class ChatApi {
     final _queryParameters = <String, dynamic>{
       if (role != null) r'role': role,
       if (orderType != null) r'orderType': orderType,
-      if (locale != null) r'locale': locale,
+      r'locale': locale,
       if (isActive != null) r'isActive': isActive,
     };
 

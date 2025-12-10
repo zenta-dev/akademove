@@ -21,8 +21,8 @@ class InsertSupportChatMessage {
     required this.ticketId,
     required this.message,
   });
-  @JsonKey(name: r'ticketId', required: true, includeIfNull: false)
-  final String ticketId;
+  @JsonKey(name: r'ticketId', required: true, includeIfNull: true)
+  final String? ticketId;
 
   @JsonKey(name: r'message', required: true, includeIfNull: false)
   final String message;
@@ -35,7 +35,8 @@ class InsertSupportChatMessage {
           other.message == message;
 
   @override
-  int get hashCode => ticketId.hashCode + message.hashCode;
+  int get hashCode =>
+      (ticketId == null ? 0 : ticketId.hashCode) + message.hashCode;
 
   factory InsertSupportChatMessage.fromJson(Map<String, dynamic> json) =>
       _$InsertSupportChatMessageFromJson(json);

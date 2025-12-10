@@ -7,9 +7,9 @@ part of 'cart.dart';
 // **************************************************************************
 
 abstract class _$CartCWProxy {
-  Cart merchantId(String merchantId);
+  Cart merchantId(String? merchantId);
 
-  Cart merchantName(String merchantName);
+  Cart merchantName(String? merchantName);
 
   Cart items(List<CartItem> items);
 
@@ -17,7 +17,7 @@ abstract class _$CartCWProxy {
 
   Cart subtotal(num subtotal);
 
-  Cart lastUpdated(DateTime lastUpdated);
+  Cart lastUpdated(DateTime? lastUpdated);
 
   /// Creates a new instance with the provided field values.
   /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `Cart(...).copyWith.fieldName(value)`.
@@ -27,12 +27,12 @@ abstract class _$CartCWProxy {
   /// Cart(...).copyWith(id: 12, name: "My name")
   /// ```
   Cart call({
-    String merchantId,
-    String merchantName,
+    String? merchantId,
+    String? merchantName,
     List<CartItem> items,
     int totalItems,
     num subtotal,
-    DateTime lastUpdated,
+    DateTime? lastUpdated,
   });
 }
 
@@ -44,10 +44,10 @@ class _$CartCWProxyImpl implements _$CartCWProxy {
   final Cart _value;
 
   @override
-  Cart merchantId(String merchantId) => call(merchantId: merchantId);
+  Cart merchantId(String? merchantId) => call(merchantId: merchantId);
 
   @override
-  Cart merchantName(String merchantName) => call(merchantName: merchantName);
+  Cart merchantName(String? merchantName) => call(merchantName: merchantName);
 
   @override
   Cart items(List<CartItem> items) => call(items: items);
@@ -59,7 +59,7 @@ class _$CartCWProxyImpl implements _$CartCWProxy {
   Cart subtotal(num subtotal) => call(subtotal: subtotal);
 
   @override
-  Cart lastUpdated(DateTime lastUpdated) => call(lastUpdated: lastUpdated);
+  Cart lastUpdated(DateTime? lastUpdated) => call(lastUpdated: lastUpdated);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -78,16 +78,14 @@ class _$CartCWProxyImpl implements _$CartCWProxy {
     Object? lastUpdated = const $CopyWithPlaceholder(),
   }) {
     return Cart(
-      merchantId:
-          merchantId == const $CopyWithPlaceholder() || merchantId == null
+      merchantId: merchantId == const $CopyWithPlaceholder()
           ? _value.merchantId
           // ignore: cast_nullable_to_non_nullable
-          : merchantId as String,
-      merchantName:
-          merchantName == const $CopyWithPlaceholder() || merchantName == null
+          : merchantId as String?,
+      merchantName: merchantName == const $CopyWithPlaceholder()
           ? _value.merchantName
           // ignore: cast_nullable_to_non_nullable
-          : merchantName as String,
+          : merchantName as String?,
       items: items == const $CopyWithPlaceholder() || items == null
           ? _value.items
           // ignore: cast_nullable_to_non_nullable
@@ -101,11 +99,10 @@ class _$CartCWProxyImpl implements _$CartCWProxy {
           ? _value.subtotal
           // ignore: cast_nullable_to_non_nullable
           : subtotal as num,
-      lastUpdated:
-          lastUpdated == const $CopyWithPlaceholder() || lastUpdated == null
+      lastUpdated: lastUpdated == const $CopyWithPlaceholder()
           ? _value.lastUpdated
           // ignore: cast_nullable_to_non_nullable
-          : lastUpdated as DateTime,
+          : lastUpdated as DateTime?,
     );
   }
 }
@@ -135,8 +132,8 @@ Cart _$CartFromJson(Map<String, dynamic> json) =>
         ],
       );
       final val = Cart(
-        merchantId: $checkedConvert('merchantId', (v) => v as String),
-        merchantName: $checkedConvert('merchantName', (v) => v as String),
+        merchantId: $checkedConvert('merchantId', (v) => v as String?),
+        merchantName: $checkedConvert('merchantName', (v) => v as String?),
         items: $checkedConvert(
           'items',
           (v) => (v as List<dynamic>)
@@ -147,7 +144,7 @@ Cart _$CartFromJson(Map<String, dynamic> json) =>
         subtotal: $checkedConvert('subtotal', (v) => v as num),
         lastUpdated: $checkedConvert(
           'lastUpdated',
-          (v) => DateTime.parse(v as String),
+          (v) => v == null ? null : DateTime.parse(v as String),
         ),
       );
       return val;
@@ -159,5 +156,5 @@ Map<String, dynamic> _$CartToJson(Cart instance) => <String, dynamic>{
   'items': instance.items.map((e) => e.toJson()).toList(),
   'totalItems': instance.totalItems,
   'subtotal': instance.subtotal,
-  'lastUpdated': instance.lastUpdated.toIso8601String(),
+  'lastUpdated': instance.lastUpdated?.toIso8601String(),
 };

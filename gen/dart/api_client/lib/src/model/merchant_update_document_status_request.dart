@@ -40,7 +40,10 @@ class MerchantUpdateDocumentStatusRequest {
           other.reason == reason;
 
   @override
-  int get hashCode => document.hashCode + status.hashCode + reason.hashCode;
+  int get hashCode =>
+      document.hashCode +
+      status.hashCode +
+      (reason == null ? 0 : reason.hashCode);
 
   factory MerchantUpdateDocumentStatusRequest.fromJson(
     Map<String, dynamic> json,

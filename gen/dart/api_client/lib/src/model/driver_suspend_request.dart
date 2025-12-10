@@ -18,8 +18,8 @@ part 'driver_suspend_request.g.dart';
 class DriverSuspendRequest {
   /// Returns a new [DriverSuspendRequest] instance.
   const DriverSuspendRequest({required this.reason, this.suspendUntil});
-  @JsonKey(name: r'reason', required: true, includeIfNull: false)
-  final String reason;
+  @JsonKey(name: r'reason', required: true, includeIfNull: true)
+  final String? reason;
 
   @JsonKey(name: r'suspendUntil', required: false, includeIfNull: false)
   final DateTime? suspendUntil;
@@ -32,7 +32,9 @@ class DriverSuspendRequest {
           other.suspendUntil == suspendUntil;
 
   @override
-  int get hashCode => reason.hashCode + suspendUntil.hashCode;
+  int get hashCode =>
+      (reason == null ? 0 : reason.hashCode) +
+      (suspendUntil == null ? 0 : suspendUntil.hashCode);
 
   factory DriverSuspendRequest.fromJson(Map<String, dynamic> json) =>
       _$DriverSuspendRequestFromJson(json);

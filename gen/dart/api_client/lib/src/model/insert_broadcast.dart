@@ -67,8 +67,8 @@ class InsertBroadcast {
       type.hashCode +
       targetAudience.hashCode +
       targetIds.hashCode +
-      scheduledAt.hashCode +
-      createdBy.hashCode;
+      (scheduledAt == null ? 0 : scheduledAt.hashCode) +
+      (createdBy == null ? 0 : createdBy.hashCode);
 
   factory InsertBroadcast.fromJson(Map<String, dynamic> json) =>
       _$InsertBroadcastFromJson(json);

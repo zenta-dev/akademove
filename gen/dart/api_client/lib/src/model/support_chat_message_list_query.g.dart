@@ -7,7 +7,7 @@ part of 'support_chat_message_list_query.dart';
 // **************************************************************************
 
 abstract class _$SupportChatMessageListQueryCWProxy {
-  SupportChatMessageListQuery ticketId(String ticketId);
+  SupportChatMessageListQuery ticketId(String? ticketId);
 
   SupportChatMessageListQuery limit(int? limit);
 
@@ -21,7 +21,7 @@ abstract class _$SupportChatMessageListQueryCWProxy {
   /// SupportChatMessageListQuery(...).copyWith(id: 12, name: "My name")
   /// ```
   SupportChatMessageListQuery call({
-    String ticketId,
+    String? ticketId,
     int? limit,
     String? cursor,
   });
@@ -36,7 +36,7 @@ class _$SupportChatMessageListQueryCWProxyImpl
   final SupportChatMessageListQuery _value;
 
   @override
-  SupportChatMessageListQuery ticketId(String ticketId) =>
+  SupportChatMessageListQuery ticketId(String? ticketId) =>
       call(ticketId: ticketId);
 
   @override
@@ -59,10 +59,10 @@ class _$SupportChatMessageListQueryCWProxyImpl
     Object? cursor = const $CopyWithPlaceholder(),
   }) {
     return SupportChatMessageListQuery(
-      ticketId: ticketId == const $CopyWithPlaceholder() || ticketId == null
+      ticketId: ticketId == const $CopyWithPlaceholder()
           ? _value.ticketId
           // ignore: cast_nullable_to_non_nullable
-          : ticketId as String,
+          : ticketId as String?,
       limit: limit == const $CopyWithPlaceholder()
           ? _value.limit
           // ignore: cast_nullable_to_non_nullable
@@ -92,7 +92,7 @@ SupportChatMessageListQuery _$SupportChatMessageListQueryFromJson(
 ) => $checkedCreate('SupportChatMessageListQuery', json, ($checkedConvert) {
   $checkKeys(json, requiredKeys: const ['ticketId']);
   final val = SupportChatMessageListQuery(
-    ticketId: $checkedConvert('ticketId', (v) => v as String),
+    ticketId: $checkedConvert('ticketId', (v) => v as String?),
     limit: $checkedConvert('limit', (v) => (v as num?)?.toInt() ?? 50),
     cursor: $checkedConvert('cursor', (v) => v as String?),
   );

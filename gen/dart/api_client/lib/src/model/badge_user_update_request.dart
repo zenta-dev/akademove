@@ -37,7 +37,10 @@ class BadgeUserUpdateRequest {
           other.metadata == metadata;
 
   @override
-  int get hashCode => userId.hashCode + badgeId.hashCode + metadata.hashCode;
+  int get hashCode =>
+      (userId == null ? 0 : userId.hashCode) +
+      (badgeId == null ? 0 : badgeId.hashCode) +
+      metadata.hashCode;
 
   factory BadgeUserUpdateRequest.fromJson(Map<String, dynamic> json) =>
       _$BadgeUserUpdateRequestFromJson(json);

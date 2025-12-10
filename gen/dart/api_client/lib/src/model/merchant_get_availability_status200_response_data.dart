@@ -23,8 +23,8 @@ class MerchantGetAvailabilityStatus200ResponseData {
     required this.isTakingOrders,
     required this.operatingStatus,
   });
-  @JsonKey(name: r'id', required: true, includeIfNull: false)
-  final String id;
+  @JsonKey(name: r'id', required: true, includeIfNull: true)
+  final String? id;
 
   @JsonKey(name: r'isOnline', required: true, includeIfNull: false)
   final bool isOnline;
@@ -48,7 +48,7 @@ class MerchantGetAvailabilityStatus200ResponseData {
 
   @override
   int get hashCode =>
-      id.hashCode +
+      (id == null ? 0 : id.hashCode) +
       isOnline.hashCode +
       isTakingOrders.hashCode +
       operatingStatus.hashCode;

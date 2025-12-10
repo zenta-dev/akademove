@@ -22,8 +22,8 @@ class SuspendDriver {
     required this.reason,
     this.suspendUntil,
   });
-  @JsonKey(name: r'id', required: true, includeIfNull: false)
-  final String id;
+  @JsonKey(name: r'id', required: true, includeIfNull: true)
+  final String? id;
 
   @JsonKey(name: r'reason', required: true, includeIfNull: false)
   final String reason;
@@ -40,7 +40,10 @@ class SuspendDriver {
           other.suspendUntil == suspendUntil;
 
   @override
-  int get hashCode => id.hashCode + reason.hashCode + suspendUntil.hashCode;
+  int get hashCode =>
+      (id == null ? 0 : id.hashCode) +
+      reason.hashCode +
+      (suspendUntil == null ? 0 : suspendUntil.hashCode);
 
   factory SuspendDriver.fromJson(Map<String, dynamic> json) =>
       _$SuspendDriverFromJson(json);

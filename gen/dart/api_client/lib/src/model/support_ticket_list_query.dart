@@ -79,11 +79,11 @@ class SupportTicketListQuery {
       status.hashCode +
       category.hashCode +
       priority.hashCode +
-      assignedToId.hashCode +
-      userId.hashCode +
-      search.hashCode +
+      (assignedToId == null ? 0 : assignedToId.hashCode) +
+      (userId == null ? 0 : userId.hashCode) +
+      (search == null ? 0 : search.hashCode) +
       limit.hashCode +
-      cursor.hashCode;
+      (cursor == null ? 0 : cursor.hashCode);
 
   factory SupportTicketListQuery.fromJson(Map<String, dynamic> json) =>
       _$SupportTicketListQueryFromJson(json);

@@ -4,7 +4,7 @@
 
 // ignore_for_file: unused_element
 import 'package:api_client/src/model/pagination_result.dart';
-import 'package:api_client/src/model/notification_list200_response_data_inner.dart';
+import 'package:api_client/src/model/notification_mark_as_read200_response_data.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
 
@@ -25,11 +25,11 @@ class NotificationMarkAsRead200Response {
     this.pagination,
     this.totalPages,
   });
-  @JsonKey(name: r'message', required: true, includeIfNull: false)
-  final String message;
+  @JsonKey(name: r'message', required: true, includeIfNull: true)
+  final String? message;
 
   @JsonKey(name: r'data', required: true, includeIfNull: false)
-  final NotificationList200ResponseDataInner data;
+  final NotificationMarkAsRead200ResponseData data;
 
   @JsonKey(name: r'pagination', required: false, includeIfNull: false)
   final PaginationResult? pagination;
@@ -50,7 +50,7 @@ class NotificationMarkAsRead200Response {
 
   @override
   int get hashCode =>
-      message.hashCode +
+      (message == null ? 0 : message.hashCode) +
       data.hashCode +
       pagination.hashCode +
       totalPages.hashCode;

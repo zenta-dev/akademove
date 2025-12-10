@@ -73,12 +73,12 @@ class DriverScheduleUpdateRequest {
 
   @override
   int get hashCode =>
-      name.hashCode +
+      (name == null ? 0 : name.hashCode) +
       dayOfWeek.hashCode +
       startTime.hashCode +
       endTime.hashCode +
       isRecurring.hashCode +
-      specificDate.hashCode +
+      (specificDate == null ? 0 : specificDate.hashCode) +
       isActive.hashCode;
 
   factory DriverScheduleUpdateRequest.fromJson(Map<String, dynamic> json) =>

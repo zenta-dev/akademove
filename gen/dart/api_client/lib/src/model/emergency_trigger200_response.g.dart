@@ -7,7 +7,7 @@ part of 'emergency_trigger200_response.dart';
 // **************************************************************************
 
 abstract class _$EmergencyTrigger200ResponseCWProxy {
-  EmergencyTrigger200Response message(String message);
+  EmergencyTrigger200Response message(String? message);
 
   EmergencyTrigger200Response data(Emergency data);
 
@@ -23,7 +23,7 @@ abstract class _$EmergencyTrigger200ResponseCWProxy {
   /// EmergencyTrigger200Response(...).copyWith(id: 12, name: "My name")
   /// ```
   EmergencyTrigger200Response call({
-    String message,
+    String? message,
     Emergency data,
     PaginationResult? pagination,
     int? totalPages,
@@ -39,7 +39,8 @@ class _$EmergencyTrigger200ResponseCWProxyImpl
   final EmergencyTrigger200Response _value;
 
   @override
-  EmergencyTrigger200Response message(String message) => call(message: message);
+  EmergencyTrigger200Response message(String? message) =>
+      call(message: message);
 
   @override
   EmergencyTrigger200Response data(Emergency data) => call(data: data);
@@ -67,10 +68,10 @@ class _$EmergencyTrigger200ResponseCWProxyImpl
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return EmergencyTrigger200Response(
-      message: message == const $CopyWithPlaceholder() || message == null
+      message: message == const $CopyWithPlaceholder()
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
-          : message as String,
+          : message as String?,
       data: data == const $CopyWithPlaceholder() || data == null
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
@@ -104,7 +105,7 @@ EmergencyTrigger200Response _$EmergencyTrigger200ResponseFromJson(
 ) => $checkedCreate('EmergencyTrigger200Response', json, ($checkedConvert) {
   $checkKeys(json, requiredKeys: const ['message', 'data']);
   final val = EmergencyTrigger200Response(
-    message: $checkedConvert('message', (v) => v as String),
+    message: $checkedConvert('message', (v) => v as String?),
     data: $checkedConvert(
       'data',
       (v) => Emergency.fromJson(v as Map<String, dynamic>),

@@ -42,7 +42,9 @@ class CouponGetEligibleCouponsRequest {
 
   @override
   int get hashCode =>
-      serviceType.hashCode + totalAmount.hashCode + merchantId.hashCode;
+      serviceType.hashCode +
+      totalAmount.hashCode +
+      (merchantId == null ? 0 : merchantId.hashCode);
 
   factory CouponGetEligibleCouponsRequest.fromJson(Map<String, dynamic> json) =>
       _$CouponGetEligibleCouponsRequestFromJson(json);

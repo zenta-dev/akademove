@@ -238,7 +238,7 @@ class DriverQuizQuestionApi {
     );
 
     final _queryParameters = <String, dynamic>{
-      if (category != null) r'category': category,
+      r'category': category,
       if (limit != null) r'limit': limit,
     };
 

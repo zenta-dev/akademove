@@ -75,15 +75,15 @@ class UpdateLeaderboard {
 
   @override
   int get hashCode =>
-      userId.hashCode +
-      driverId.hashCode +
-      merchantId.hashCode +
+      (userId == null ? 0 : userId.hashCode) +
+      (driverId == null ? 0 : driverId.hashCode) +
+      (merchantId == null ? 0 : merchantId.hashCode) +
       category.hashCode +
       period.hashCode +
       rank.hashCode +
       score.hashCode +
-      periodStart.hashCode +
-      periodEnd.hashCode;
+      (periodStart == null ? 0 : periodStart.hashCode) +
+      (periodEnd == null ? 0 : periodEnd.hashCode);
 
   factory UpdateLeaderboard.fromJson(Map<String, dynamic> json) =>
       _$UpdateLeaderboardFromJson(json);

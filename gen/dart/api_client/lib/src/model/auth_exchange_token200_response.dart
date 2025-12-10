@@ -24,11 +24,11 @@ class AuthExchangeToken200Response {
     this.pagination,
     this.totalPages,
   });
-  @JsonKey(name: r'message', required: true, includeIfNull: false)
-  final String message;
+  @JsonKey(name: r'message', required: true, includeIfNull: true)
+  final String? message;
 
-  @JsonKey(name: r'data', required: true, includeIfNull: false)
-  final String data;
+  @JsonKey(name: r'data', required: true, includeIfNull: true)
+  final String? data;
 
   @JsonKey(name: r'pagination', required: false, includeIfNull: false)
   final PaginationResult? pagination;
@@ -49,8 +49,8 @@ class AuthExchangeToken200Response {
 
   @override
   int get hashCode =>
-      message.hashCode +
-      data.hashCode +
+      (message == null ? 0 : message.hashCode) +
+      (data == null ? 0 : data.hashCode) +
       pagination.hashCode +
       totalPages.hashCode;
 

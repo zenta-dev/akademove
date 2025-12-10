@@ -7,10 +7,10 @@ part of 'notification_mark_as_read200_response.dart';
 // **************************************************************************
 
 abstract class _$NotificationMarkAsRead200ResponseCWProxy {
-  NotificationMarkAsRead200Response message(String message);
+  NotificationMarkAsRead200Response message(String? message);
 
   NotificationMarkAsRead200Response data(
-    NotificationList200ResponseDataInner data,
+    NotificationMarkAsRead200ResponseData data,
   );
 
   NotificationMarkAsRead200Response pagination(PaginationResult? pagination);
@@ -25,8 +25,8 @@ abstract class _$NotificationMarkAsRead200ResponseCWProxy {
   /// NotificationMarkAsRead200Response(...).copyWith(id: 12, name: "My name")
   /// ```
   NotificationMarkAsRead200Response call({
-    String message,
-    NotificationList200ResponseDataInner data,
+    String? message,
+    NotificationMarkAsRead200ResponseData data,
     PaginationResult? pagination,
     int? totalPages,
   });
@@ -41,12 +41,12 @@ class _$NotificationMarkAsRead200ResponseCWProxyImpl
   final NotificationMarkAsRead200Response _value;
 
   @override
-  NotificationMarkAsRead200Response message(String message) =>
+  NotificationMarkAsRead200Response message(String? message) =>
       call(message: message);
 
   @override
   NotificationMarkAsRead200Response data(
-    NotificationList200ResponseDataInner data,
+    NotificationMarkAsRead200ResponseData data,
   ) => call(data: data);
 
   @override
@@ -72,14 +72,14 @@ class _$NotificationMarkAsRead200ResponseCWProxyImpl
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return NotificationMarkAsRead200Response(
-      message: message == const $CopyWithPlaceholder() || message == null
+      message: message == const $CopyWithPlaceholder()
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
-          : message as String,
+          : message as String?,
       data: data == const $CopyWithPlaceholder() || data == null
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
-          : data as NotificationList200ResponseDataInner,
+          : data as NotificationMarkAsRead200ResponseData,
       pagination: pagination == const $CopyWithPlaceholder()
           ? _value.pagination
           // ignore: cast_nullable_to_non_nullable
@@ -112,10 +112,10 @@ NotificationMarkAsRead200Response _$NotificationMarkAsRead200ResponseFromJson(
 ) {
   $checkKeys(json, requiredKeys: const ['message', 'data']);
   final val = NotificationMarkAsRead200Response(
-    message: $checkedConvert('message', (v) => v as String),
+    message: $checkedConvert('message', (v) => v as String?),
     data: $checkedConvert(
       'data',
-      (v) => NotificationList200ResponseDataInner.fromJson(
+      (v) => NotificationMarkAsRead200ResponseData.fromJson(
         v as Map<String, dynamic>,
       ),
     ),

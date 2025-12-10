@@ -24,8 +24,8 @@ class CouponValidateRequest {
     this.serviceType,
     this.merchantId,
   });
-  @JsonKey(name: r'code', required: true, includeIfNull: false)
-  final String code;
+  @JsonKey(name: r'code', required: true, includeIfNull: true)
+  final String? code;
 
   @JsonKey(name: r'orderAmount', required: true, includeIfNull: false)
   final num orderAmount;
@@ -47,10 +47,10 @@ class CouponValidateRequest {
 
   @override
   int get hashCode =>
-      code.hashCode +
+      (code == null ? 0 : code.hashCode) +
       orderAmount.hashCode +
       serviceType.hashCode +
-      merchantId.hashCode;
+      (merchantId == null ? 0 : merchantId.hashCode);
 
   factory CouponValidateRequest.fromJson(Map<String, dynamic> json) =>
       _$CouponValidateRequestFromJson(json);

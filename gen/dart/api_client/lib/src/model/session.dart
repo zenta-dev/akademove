@@ -27,14 +27,14 @@ class Session {
     required this.createdAt,
     required this.updatedAt,
   });
-  @JsonKey(name: r'id', required: true, includeIfNull: false)
-  final String id;
+  @JsonKey(name: r'id', required: true, includeIfNull: true)
+  final String? id;
 
-  @JsonKey(name: r'expiresAt', required: true, includeIfNull: false)
-  final DateTime expiresAt;
+  @JsonKey(name: r'expiresAt', required: true, includeIfNull: true)
+  final DateTime? expiresAt;
 
-  @JsonKey(name: r'token', required: true, includeIfNull: false)
-  final String token;
+  @JsonKey(name: r'token', required: true, includeIfNull: true)
+  final String? token;
 
   @JsonKey(name: r'ipAddress', required: false, includeIfNull: false)
   final String? ipAddress;
@@ -42,14 +42,14 @@ class Session {
   @JsonKey(name: r'userAgent', required: false, includeIfNull: false)
   final String? userAgent;
 
-  @JsonKey(name: r'userId', required: true, includeIfNull: false)
-  final String userId;
+  @JsonKey(name: r'userId', required: true, includeIfNull: true)
+  final String? userId;
 
-  @JsonKey(name: r'createdAt', required: true, includeIfNull: false)
-  final DateTime createdAt;
+  @JsonKey(name: r'createdAt', required: true, includeIfNull: true)
+  final DateTime? createdAt;
 
-  @JsonKey(name: r'updatedAt', required: true, includeIfNull: false)
-  final DateTime updatedAt;
+  @JsonKey(name: r'updatedAt', required: true, includeIfNull: true)
+  final DateTime? updatedAt;
 
   @override
   bool operator ==(Object other) =>
@@ -66,14 +66,14 @@ class Session {
 
   @override
   int get hashCode =>
-      id.hashCode +
-      expiresAt.hashCode +
-      token.hashCode +
-      ipAddress.hashCode +
-      userAgent.hashCode +
-      userId.hashCode +
-      createdAt.hashCode +
-      updatedAt.hashCode;
+      (id == null ? 0 : id.hashCode) +
+      (expiresAt == null ? 0 : expiresAt.hashCode) +
+      (token == null ? 0 : token.hashCode) +
+      (ipAddress == null ? 0 : ipAddress.hashCode) +
+      (userAgent == null ? 0 : userAgent.hashCode) +
+      (userId == null ? 0 : userId.hashCode) +
+      (createdAt == null ? 0 : createdAt.hashCode) +
+      (updatedAt == null ? 0 : updatedAt.hashCode);
 
   factory Session.fromJson(Map<String, dynamic> json) =>
       _$SessionFromJson(json);

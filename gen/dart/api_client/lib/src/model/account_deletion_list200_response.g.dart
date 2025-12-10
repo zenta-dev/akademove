@@ -7,7 +7,7 @@ part of 'account_deletion_list200_response.dart';
 // **************************************************************************
 
 abstract class _$AccountDeletionList200ResponseCWProxy {
-  AccountDeletionList200Response message(String message);
+  AccountDeletionList200Response message(String? message);
 
   AccountDeletionList200Response data(AccountDeletionList200ResponseData data);
 
@@ -23,7 +23,7 @@ abstract class _$AccountDeletionList200ResponseCWProxy {
   /// AccountDeletionList200Response(...).copyWith(id: 12, name: "My name")
   /// ```
   AccountDeletionList200Response call({
-    String message,
+    String? message,
     AccountDeletionList200ResponseData data,
     PaginationResult? pagination,
     int? totalPages,
@@ -39,7 +39,7 @@ class _$AccountDeletionList200ResponseCWProxyImpl
   final AccountDeletionList200Response _value;
 
   @override
-  AccountDeletionList200Response message(String message) =>
+  AccountDeletionList200Response message(String? message) =>
       call(message: message);
 
   @override
@@ -70,10 +70,10 @@ class _$AccountDeletionList200ResponseCWProxyImpl
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return AccountDeletionList200Response(
-      message: message == const $CopyWithPlaceholder() || message == null
+      message: message == const $CopyWithPlaceholder()
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
-          : message as String,
+          : message as String?,
       data: data == const $CopyWithPlaceholder() || data == null
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
@@ -108,7 +108,7 @@ AccountDeletionList200Response _$AccountDeletionList200ResponseFromJson(
 ) => $checkedCreate('AccountDeletionList200Response', json, ($checkedConvert) {
   $checkKeys(json, requiredKeys: const ['message', 'data']);
   final val = AccountDeletionList200Response(
-    message: $checkedConvert('message', (v) => v as String),
+    message: $checkedConvert('message', (v) => v as String?),
     data: $checkedConvert(
       'data',
       (v) => AccountDeletionList200ResponseData.fromJson(

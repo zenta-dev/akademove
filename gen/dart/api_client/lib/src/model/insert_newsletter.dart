@@ -32,7 +32,7 @@ class InsertNewsletter {
           other.userId == userId;
 
   @override
-  int get hashCode => email.hashCode + userId.hashCode;
+  int get hashCode => email.hashCode + (userId == null ? 0 : userId.hashCode);
 
   factory InsertNewsletter.fromJson(Map<String, dynamic> json) =>
       _$InsertNewsletterFromJson(json);

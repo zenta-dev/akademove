@@ -7,7 +7,7 @@ part of 'driver_get_analytics200_response.dart';
 // **************************************************************************
 
 abstract class _$DriverGetAnalytics200ResponseCWProxy {
-  DriverGetAnalytics200Response message(String message);
+  DriverGetAnalytics200Response message(String? message);
 
   DriverGetAnalytics200Response data(DriverGetAnalytics200ResponseData data);
 
@@ -23,7 +23,7 @@ abstract class _$DriverGetAnalytics200ResponseCWProxy {
   /// DriverGetAnalytics200Response(...).copyWith(id: 12, name: "My name")
   /// ```
   DriverGetAnalytics200Response call({
-    String message,
+    String? message,
     DriverGetAnalytics200ResponseData data,
     PaginationResult? pagination,
     int? totalPages,
@@ -39,7 +39,7 @@ class _$DriverGetAnalytics200ResponseCWProxyImpl
   final DriverGetAnalytics200Response _value;
 
   @override
-  DriverGetAnalytics200Response message(String message) =>
+  DriverGetAnalytics200Response message(String? message) =>
       call(message: message);
 
   @override
@@ -69,10 +69,10 @@ class _$DriverGetAnalytics200ResponseCWProxyImpl
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return DriverGetAnalytics200Response(
-      message: message == const $CopyWithPlaceholder() || message == null
+      message: message == const $CopyWithPlaceholder()
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
-          : message as String,
+          : message as String?,
       data: data == const $CopyWithPlaceholder() || data == null
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
@@ -107,7 +107,7 @@ DriverGetAnalytics200Response _$DriverGetAnalytics200ResponseFromJson(
 ) => $checkedCreate('DriverGetAnalytics200Response', json, ($checkedConvert) {
   $checkKeys(json, requiredKeys: const ['message', 'data']);
   final val = DriverGetAnalytics200Response(
-    message: $checkedConvert('message', (v) => v as String),
+    message: $checkedConvert('message', (v) => v as String?),
     data: $checkedConvert(
       'data',
       (v) =>

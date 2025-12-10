@@ -42,7 +42,9 @@ class EmergencyUpdateStatusRequest {
 
   @override
   int get hashCode =>
-      status.hashCode + resolution.hashCode + respondedById.hashCode;
+      status.hashCode +
+      (resolution == null ? 0 : resolution.hashCode) +
+      (respondedById == null ? 0 : respondedById.hashCode);
 
   factory EmergencyUpdateStatusRequest.fromJson(Map<String, dynamic> json) =>
       _$EmergencyUpdateStatusRequestFromJson(json);

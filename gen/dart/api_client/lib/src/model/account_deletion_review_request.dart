@@ -32,7 +32,8 @@ class AccountDeletionReviewRequest {
           other.reviewNotes == reviewNotes;
 
   @override
-  int get hashCode => status.hashCode + reviewNotes.hashCode;
+  int get hashCode =>
+      status.hashCode + (reviewNotes == null ? 0 : reviewNotes.hashCode);
 
   factory AccountDeletionReviewRequest.fromJson(Map<String, dynamic> json) =>
       _$AccountDeletionReviewRequestFromJson(json);

@@ -7,16 +7,16 @@ part of 'driver_quiz_question_get_quiz_questions200_response_data_inner.dart';
 // **************************************************************************
 
 abstract class _$DriverQuizQuestionGetQuizQuestions200ResponseDataInnerCWProxy {
-  DriverQuizQuestionGetQuizQuestions200ResponseDataInner id(String id);
+  DriverQuizQuestionGetQuizQuestions200ResponseDataInner id(String? id);
 
   DriverQuizQuestionGetQuizQuestions200ResponseDataInner question(
-    String question,
+    String? question,
   );
 
-  DriverQuizQuestionGetQuizQuestions200ResponseDataInner type(String type);
+  DriverQuizQuestionGetQuizQuestions200ResponseDataInner type(String? type);
 
   DriverQuizQuestionGetQuizQuestions200ResponseDataInner category(
-    String category,
+    String? category,
   );
 
   DriverQuizQuestionGetQuizQuestions200ResponseDataInner points(num points);
@@ -38,10 +38,10 @@ abstract class _$DriverQuizQuestionGetQuizQuestions200ResponseDataInnerCWProxy {
   /// DriverQuizQuestionGetQuizQuestions200ResponseDataInner(...).copyWith(id: 12, name: "My name")
   /// ```
   DriverQuizQuestionGetQuizQuestions200ResponseDataInner call({
-    String id,
-    String question,
-    String type,
-    String category,
+    String? id,
+    String? question,
+    String? type,
+    String? category,
     num points,
     num displayOrder,
     List<DriverQuizQuestionGetQuizQuestions200ResponseDataInnerOptionsInner>
@@ -60,21 +60,21 @@ class _$DriverQuizQuestionGetQuizQuestions200ResponseDataInnerCWProxyImpl
   final DriverQuizQuestionGetQuizQuestions200ResponseDataInner _value;
 
   @override
-  DriverQuizQuestionGetQuizQuestions200ResponseDataInner id(String id) =>
+  DriverQuizQuestionGetQuizQuestions200ResponseDataInner id(String? id) =>
       call(id: id);
 
   @override
   DriverQuizQuestionGetQuizQuestions200ResponseDataInner question(
-    String question,
+    String? question,
   ) => call(question: question);
 
   @override
-  DriverQuizQuestionGetQuizQuestions200ResponseDataInner type(String type) =>
+  DriverQuizQuestionGetQuizQuestions200ResponseDataInner type(String? type) =>
       call(type: type);
 
   @override
   DriverQuizQuestionGetQuizQuestions200ResponseDataInner category(
-    String category,
+    String? category,
   ) => call(category: category);
 
   @override
@@ -110,22 +110,22 @@ class _$DriverQuizQuestionGetQuizQuestions200ResponseDataInnerCWProxyImpl
     Object? options = const $CopyWithPlaceholder(),
   }) {
     return DriverQuizQuestionGetQuizQuestions200ResponseDataInner(
-      id: id == const $CopyWithPlaceholder() || id == null
+      id: id == const $CopyWithPlaceholder()
           ? _value.id
           // ignore: cast_nullable_to_non_nullable
-          : id as String,
-      question: question == const $CopyWithPlaceholder() || question == null
+          : id as String?,
+      question: question == const $CopyWithPlaceholder()
           ? _value.question
           // ignore: cast_nullable_to_non_nullable
-          : question as String,
-      type: type == const $CopyWithPlaceholder() || type == null
+          : question as String?,
+      type: type == const $CopyWithPlaceholder()
           ? _value.type
           // ignore: cast_nullable_to_non_nullable
-          : type as String,
-      category: category == const $CopyWithPlaceholder() || category == null
+          : type as String?,
+      category: category == const $CopyWithPlaceholder()
           ? _value.category
           // ignore: cast_nullable_to_non_nullable
-          : category as String,
+          : category as String?,
       points: points == const $CopyWithPlaceholder() || points == null
           ? _value.points
           // ignore: cast_nullable_to_non_nullable
@@ -180,10 +180,10 @@ _$DriverQuizQuestionGetQuizQuestions200ResponseDataInnerFromJson(
       ],
     );
     final val = DriverQuizQuestionGetQuizQuestions200ResponseDataInner(
-      id: $checkedConvert('id', (v) => v as String),
-      question: $checkedConvert('question', (v) => v as String),
-      type: $checkedConvert('type', (v) => v as String),
-      category: $checkedConvert('category', (v) => v as String),
+      id: $checkedConvert('id', (v) => v as String?),
+      question: $checkedConvert('question', (v) => v as String?),
+      type: $checkedConvert('type', (v) => v as String?),
+      category: $checkedConvert('category', (v) => v as String?),
       points: $checkedConvert('points', (v) => v as num),
       displayOrder: $checkedConvert('displayOrder', (v) => v as num),
       options: $checkedConvert(

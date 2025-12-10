@@ -7,7 +7,7 @@ part of 'insert_support_chat_message.dart';
 // **************************************************************************
 
 abstract class _$InsertSupportChatMessageCWProxy {
-  InsertSupportChatMessage ticketId(String ticketId);
+  InsertSupportChatMessage ticketId(String? ticketId);
 
   InsertSupportChatMessage message(String message);
 
@@ -18,7 +18,7 @@ abstract class _$InsertSupportChatMessageCWProxy {
   /// ```dart
   /// InsertSupportChatMessage(...).copyWith(id: 12, name: "My name")
   /// ```
-  InsertSupportChatMessage call({String ticketId, String message});
+  InsertSupportChatMessage call({String? ticketId, String message});
 }
 
 /// Callable proxy for `copyWith` functionality.
@@ -30,7 +30,7 @@ class _$InsertSupportChatMessageCWProxyImpl
   final InsertSupportChatMessage _value;
 
   @override
-  InsertSupportChatMessage ticketId(String ticketId) =>
+  InsertSupportChatMessage ticketId(String? ticketId) =>
       call(ticketId: ticketId);
 
   @override
@@ -49,10 +49,10 @@ class _$InsertSupportChatMessageCWProxyImpl
     Object? message = const $CopyWithPlaceholder(),
   }) {
     return InsertSupportChatMessage(
-      ticketId: ticketId == const $CopyWithPlaceholder() || ticketId == null
+      ticketId: ticketId == const $CopyWithPlaceholder()
           ? _value.ticketId
           // ignore: cast_nullable_to_non_nullable
-          : ticketId as String,
+          : ticketId as String?,
       message: message == const $CopyWithPlaceholder() || message == null
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
@@ -78,7 +78,7 @@ InsertSupportChatMessage _$InsertSupportChatMessageFromJson(
 ) => $checkedCreate('InsertSupportChatMessage', json, ($checkedConvert) {
   $checkKeys(json, requiredKeys: const ['ticketId', 'message']);
   final val = InsertSupportChatMessage(
-    ticketId: $checkedConvert('ticketId', (v) => v as String),
+    ticketId: $checkedConvert('ticketId', (v) => v as String?),
     message: $checkedConvert('message', (v) => v as String),
   );
   return val;

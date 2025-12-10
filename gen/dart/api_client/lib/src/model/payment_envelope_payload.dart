@@ -49,7 +49,7 @@ class PaymentEnvelopePayload {
 
   @override
   int get hashCode =>
-      failReason.hashCode +
+      (failReason == null ? 0 : failReason.hashCode) +
       payment.hashCode +
       transaction.hashCode +
       wallet.hashCode;

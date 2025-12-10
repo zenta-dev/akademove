@@ -7,7 +7,7 @@ part of 'merchant_get_mine200_response_body.dart';
 // **************************************************************************
 
 abstract class _$MerchantGetMine200ResponseBodyCWProxy {
-  MerchantGetMine200ResponseBody message(String message);
+  MerchantGetMine200ResponseBody message(String? message);
 
   MerchantGetMine200ResponseBody data(Merchant data);
 
@@ -23,7 +23,7 @@ abstract class _$MerchantGetMine200ResponseBodyCWProxy {
   /// MerchantGetMine200ResponseBody(...).copyWith(id: 12, name: "My name")
   /// ```
   MerchantGetMine200ResponseBody call({
-    String message,
+    String? message,
     Merchant data,
     PaginationResult? pagination,
     int? totalPages,
@@ -39,7 +39,7 @@ class _$MerchantGetMine200ResponseBodyCWProxyImpl
   final MerchantGetMine200ResponseBody _value;
 
   @override
-  MerchantGetMine200ResponseBody message(String message) =>
+  MerchantGetMine200ResponseBody message(String? message) =>
       call(message: message);
 
   @override
@@ -68,10 +68,10 @@ class _$MerchantGetMine200ResponseBodyCWProxyImpl
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return MerchantGetMine200ResponseBody(
-      message: message == const $CopyWithPlaceholder() || message == null
+      message: message == const $CopyWithPlaceholder()
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
-          : message as String,
+          : message as String?,
       data: data == const $CopyWithPlaceholder() || data == null
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
@@ -106,7 +106,7 @@ MerchantGetMine200ResponseBody _$MerchantGetMine200ResponseBodyFromJson(
 ) => $checkedCreate('MerchantGetMine200ResponseBody', json, ($checkedConvert) {
   $checkKeys(json, requiredKeys: const ['message', 'data']);
   final val = MerchantGetMine200ResponseBody(
-    message: $checkedConvert('message', (v) => v as String),
+    message: $checkedConvert('message', (v) => v as String?),
     data: $checkedConvert(
       'data',
       (v) => Merchant.fromJson(v as Map<String, dynamic>),

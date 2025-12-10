@@ -41,7 +41,10 @@ class ChatList200ResponseData {
           other.nextCursor == nextCursor;
 
   @override
-  int get hashCode => rows.hashCode + hasMore.hashCode + nextCursor.hashCode;
+  int get hashCode =>
+      rows.hashCode +
+      hasMore.hashCode +
+      (nextCursor == null ? 0 : nextCursor.hashCode);
 
   factory ChatList200ResponseData.fromJson(Map<String, dynamic> json) =>
       _$ChatList200ResponseDataFromJson(json);

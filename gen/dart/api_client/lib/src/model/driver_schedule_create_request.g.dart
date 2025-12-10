@@ -7,9 +7,9 @@ part of 'driver_schedule_create_request.dart';
 // **************************************************************************
 
 abstract class _$DriverScheduleCreateRequestCWProxy {
-  DriverScheduleCreateRequest name(String name);
+  DriverScheduleCreateRequest name(String? name);
 
-  DriverScheduleCreateRequest driverId(String driverId);
+  DriverScheduleCreateRequest driverId(String? driverId);
 
   DriverScheduleCreateRequest dayOfWeek(DayOfWeek dayOfWeek);
 
@@ -31,8 +31,8 @@ abstract class _$DriverScheduleCreateRequestCWProxy {
   /// DriverScheduleCreateRequest(...).copyWith(id: 12, name: "My name")
   /// ```
   DriverScheduleCreateRequest call({
-    String name,
-    String driverId,
+    String? name,
+    String? driverId,
     DayOfWeek dayOfWeek,
     Time startTime,
     Time endTime,
@@ -51,10 +51,10 @@ class _$DriverScheduleCreateRequestCWProxyImpl
   final DriverScheduleCreateRequest _value;
 
   @override
-  DriverScheduleCreateRequest name(String name) => call(name: name);
+  DriverScheduleCreateRequest name(String? name) => call(name: name);
 
   @override
-  DriverScheduleCreateRequest driverId(String driverId) =>
+  DriverScheduleCreateRequest driverId(String? driverId) =>
       call(driverId: driverId);
 
   @override
@@ -99,14 +99,14 @@ class _$DriverScheduleCreateRequestCWProxyImpl
     Object? isActive = const $CopyWithPlaceholder(),
   }) {
     return DriverScheduleCreateRequest(
-      name: name == const $CopyWithPlaceholder() || name == null
+      name: name == const $CopyWithPlaceholder()
           ? _value.name
           // ignore: cast_nullable_to_non_nullable
-          : name as String,
-      driverId: driverId == const $CopyWithPlaceholder() || driverId == null
+          : name as String?,
+      driverId: driverId == const $CopyWithPlaceholder()
           ? _value.driverId
           // ignore: cast_nullable_to_non_nullable
-          : driverId as String,
+          : driverId as String?,
       dayOfWeek: dayOfWeek == const $CopyWithPlaceholder() || dayOfWeek == null
           ? _value.dayOfWeek
           // ignore: cast_nullable_to_non_nullable
@@ -161,8 +161,8 @@ DriverScheduleCreateRequest _$DriverScheduleCreateRequestFromJson(
     ],
   );
   final val = DriverScheduleCreateRequest(
-    name: $checkedConvert('name', (v) => v as String),
-    driverId: $checkedConvert('driverId', (v) => v as String),
+    name: $checkedConvert('name', (v) => v as String?),
+    driverId: $checkedConvert('driverId', (v) => v as String?),
     dayOfWeek: $checkedConvert(
       'dayOfWeek',
       (v) => $enumDecode(_$DayOfWeekEnumMap, v),

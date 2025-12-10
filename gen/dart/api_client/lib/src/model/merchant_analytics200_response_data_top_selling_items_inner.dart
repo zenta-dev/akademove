@@ -24,11 +24,11 @@ class MerchantAnalytics200ResponseDataTopSellingItemsInner {
     required this.totalOrders,
     required this.totalRevenue,
   });
-  @JsonKey(name: r'menuId', required: true, includeIfNull: false)
-  final String menuId;
+  @JsonKey(name: r'menuId', required: true, includeIfNull: true)
+  final String? menuId;
 
-  @JsonKey(name: r'menuName', required: true, includeIfNull: false)
-  final String menuName;
+  @JsonKey(name: r'menuName', required: true, includeIfNull: true)
+  final String? menuName;
 
   @JsonKey(name: r'menuImage', required: false, includeIfNull: false)
   final String? menuImage;
@@ -51,9 +51,9 @@ class MerchantAnalytics200ResponseDataTopSellingItemsInner {
 
   @override
   int get hashCode =>
-      menuId.hashCode +
-      menuName.hashCode +
-      menuImage.hashCode +
+      (menuId == null ? 0 : menuId.hashCode) +
+      (menuName == null ? 0 : menuName.hashCode) +
+      (menuImage == null ? 0 : menuImage.hashCode) +
       totalOrders.hashCode +
       totalRevenue.hashCode;
 

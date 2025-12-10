@@ -28,17 +28,17 @@ class NotificationList200ResponseDataInner {
     required this.createdAt,
     this.readAt,
   });
-  @JsonKey(name: r'id', required: true, includeIfNull: false)
-  final String id;
+  @JsonKey(name: r'id', required: true, includeIfNull: true)
+  final String? id;
 
-  @JsonKey(name: r'userId', required: true, includeIfNull: false)
-  final String userId;
+  @JsonKey(name: r'userId', required: true, includeIfNull: true)
+  final String? userId;
 
-  @JsonKey(name: r'title', required: true, includeIfNull: false)
-  final String title;
+  @JsonKey(name: r'title', required: true, includeIfNull: true)
+  final String? title;
 
-  @JsonKey(name: r'body', required: true, includeIfNull: false)
-  final String body;
+  @JsonKey(name: r'body', required: true, includeIfNull: true)
+  final String? body;
 
   @JsonKey(name: r'data', required: false, includeIfNull: false)
   final Object? data;
@@ -49,8 +49,8 @@ class NotificationList200ResponseDataInner {
   @JsonKey(name: r'isRead', required: true, includeIfNull: false)
   final bool isRead;
 
-  @JsonKey(name: r'createdAt', required: true, includeIfNull: false)
-  final DateTime createdAt;
+  @JsonKey(name: r'createdAt', required: true, includeIfNull: true)
+  final DateTime? createdAt;
 
   @JsonKey(name: r'readAt', required: false, includeIfNull: false)
   final DateTime? readAt;
@@ -71,15 +71,15 @@ class NotificationList200ResponseDataInner {
 
   @override
   int get hashCode =>
-      id.hashCode +
-      userId.hashCode +
-      title.hashCode +
-      body.hashCode +
+      (id == null ? 0 : id.hashCode) +
+      (userId == null ? 0 : userId.hashCode) +
+      (title == null ? 0 : title.hashCode) +
+      (body == null ? 0 : body.hashCode) +
       (data == null ? 0 : data.hashCode) +
-      messageId.hashCode +
+      (messageId == null ? 0 : messageId.hashCode) +
       isRead.hashCode +
-      createdAt.hashCode +
-      readAt.hashCode;
+      (createdAt == null ? 0 : createdAt.hashCode) +
+      (readAt == null ? 0 : readAt.hashCode);
 
   factory NotificationList200ResponseDataInner.fromJson(
     Map<String, dynamic> json,

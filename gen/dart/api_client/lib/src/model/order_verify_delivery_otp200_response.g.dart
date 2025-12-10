@@ -7,7 +7,7 @@ part of 'order_verify_delivery_otp200_response.dart';
 // **************************************************************************
 
 abstract class _$OrderVerifyDeliveryOTP200ResponseCWProxy {
-  OrderVerifyDeliveryOTP200Response message(String message);
+  OrderVerifyDeliveryOTP200Response message(String? message);
 
   OrderVerifyDeliveryOTP200Response data(
     OrderVerifyDeliveryOTP200ResponseData data,
@@ -25,7 +25,7 @@ abstract class _$OrderVerifyDeliveryOTP200ResponseCWProxy {
   /// OrderVerifyDeliveryOTP200Response(...).copyWith(id: 12, name: "My name")
   /// ```
   OrderVerifyDeliveryOTP200Response call({
-    String message,
+    String? message,
     OrderVerifyDeliveryOTP200ResponseData data,
     PaginationResult? pagination,
     int? totalPages,
@@ -41,7 +41,7 @@ class _$OrderVerifyDeliveryOTP200ResponseCWProxyImpl
   final OrderVerifyDeliveryOTP200Response _value;
 
   @override
-  OrderVerifyDeliveryOTP200Response message(String message) =>
+  OrderVerifyDeliveryOTP200Response message(String? message) =>
       call(message: message);
 
   @override
@@ -72,10 +72,10 @@ class _$OrderVerifyDeliveryOTP200ResponseCWProxyImpl
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return OrderVerifyDeliveryOTP200Response(
-      message: message == const $CopyWithPlaceholder() || message == null
+      message: message == const $CopyWithPlaceholder()
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
-          : message as String,
+          : message as String?,
       data: data == const $CopyWithPlaceholder() || data == null
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
@@ -112,7 +112,7 @@ OrderVerifyDeliveryOTP200Response _$OrderVerifyDeliveryOTP200ResponseFromJson(
 ) {
   $checkKeys(json, requiredKeys: const ['message', 'data']);
   final val = OrderVerifyDeliveryOTP200Response(
-    message: $checkedConvert('message', (v) => v as String),
+    message: $checkedConvert('message', (v) => v as String?),
     data: $checkedConvert(
       'data',
       (v) => OrderVerifyDeliveryOTP200ResponseData.fromJson(

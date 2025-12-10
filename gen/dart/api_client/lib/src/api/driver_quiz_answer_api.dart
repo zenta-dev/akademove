@@ -406,7 +406,7 @@ class DriverQuizAnswerApi {
     );
 
     final _queryParameters = <String, dynamic>{
-      if (driverId != null) r'driverId': driverId,
+      r'driverId': driverId,
       if (status != null) r'status': status,
       if (page != null) r'page': page,
       if (limit != null) r'limit': limit,

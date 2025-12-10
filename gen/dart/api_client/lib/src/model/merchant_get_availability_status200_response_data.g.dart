@@ -7,7 +7,7 @@ part of 'merchant_get_availability_status200_response_data.dart';
 // **************************************************************************
 
 abstract class _$MerchantGetAvailabilityStatus200ResponseDataCWProxy {
-  MerchantGetAvailabilityStatus200ResponseData id(String id);
+  MerchantGetAvailabilityStatus200ResponseData id(String? id);
 
   MerchantGetAvailabilityStatus200ResponseData isOnline(bool isOnline);
 
@@ -28,7 +28,7 @@ abstract class _$MerchantGetAvailabilityStatus200ResponseDataCWProxy {
   /// MerchantGetAvailabilityStatus200ResponseData(...).copyWith(id: 12, name: "My name")
   /// ```
   MerchantGetAvailabilityStatus200ResponseData call({
-    String id,
+    String? id,
     bool isOnline,
     bool isTakingOrders,
     MerchantGetAvailabilityStatus200ResponseDataOperatingStatusEnum
@@ -45,7 +45,7 @@ class _$MerchantGetAvailabilityStatus200ResponseDataCWProxyImpl
   final MerchantGetAvailabilityStatus200ResponseData _value;
 
   @override
-  MerchantGetAvailabilityStatus200ResponseData id(String id) => call(id: id);
+  MerchantGetAvailabilityStatus200ResponseData id(String? id) => call(id: id);
 
   @override
   MerchantGetAvailabilityStatus200ResponseData isOnline(bool isOnline) =>
@@ -77,10 +77,10 @@ class _$MerchantGetAvailabilityStatus200ResponseDataCWProxyImpl
     Object? operatingStatus = const $CopyWithPlaceholder(),
   }) {
     return MerchantGetAvailabilityStatus200ResponseData(
-      id: id == const $CopyWithPlaceholder() || id == null
+      id: id == const $CopyWithPlaceholder()
           ? _value.id
           // ignore: cast_nullable_to_non_nullable
-          : id as String,
+          : id as String?,
       isOnline: isOnline == const $CopyWithPlaceholder() || isOnline == null
           ? _value.isOnline
           // ignore: cast_nullable_to_non_nullable
@@ -126,7 +126,7 @@ _$MerchantGetAvailabilityStatus200ResponseDataFromJson(
     requiredKeys: const ['id', 'isOnline', 'isTakingOrders', 'operatingStatus'],
   );
   final val = MerchantGetAvailabilityStatus200ResponseData(
-    id: $checkedConvert('id', (v) => v as String),
+    id: $checkedConvert('id', (v) => v as String?),
     isOnline: $checkedConvert('isOnline', (v) => v as bool),
     isTakingOrders: $checkedConvert('isTakingOrders', (v) => v as bool),
     operatingStatus: $checkedConvert(

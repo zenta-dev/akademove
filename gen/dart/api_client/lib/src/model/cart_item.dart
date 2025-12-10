@@ -27,17 +27,17 @@ class CartItem {
     required this.quantity,
     this.notes,
   });
-  @JsonKey(name: r'menuId', required: true, includeIfNull: false)
-  final String menuId;
+  @JsonKey(name: r'menuId', required: true, includeIfNull: true)
+  final String? menuId;
 
-  @JsonKey(name: r'merchantId', required: true, includeIfNull: false)
-  final String merchantId;
+  @JsonKey(name: r'merchantId', required: true, includeIfNull: true)
+  final String? merchantId;
 
-  @JsonKey(name: r'merchantName', required: true, includeIfNull: false)
-  final String merchantName;
+  @JsonKey(name: r'merchantName', required: true, includeIfNull: true)
+  final String? merchantName;
 
-  @JsonKey(name: r'menuName', required: true, includeIfNull: false)
-  final String menuName;
+  @JsonKey(name: r'menuName', required: true, includeIfNull: true)
+  final String? menuName;
 
   @JsonKey(name: r'menuImage', required: true, includeIfNull: true)
   final String? menuImage;
@@ -68,10 +68,10 @@ class CartItem {
 
   @override
   int get hashCode =>
-      menuId.hashCode +
-      merchantId.hashCode +
-      merchantName.hashCode +
-      menuName.hashCode +
+      (menuId == null ? 0 : menuId.hashCode) +
+      (merchantId == null ? 0 : merchantId.hashCode) +
+      (merchantName == null ? 0 : merchantName.hashCode) +
+      (menuName == null ? 0 : menuName.hashCode) +
       (menuImage == null ? 0 : menuImage.hashCode) +
       unitPrice.hashCode +
       quantity.hashCode +

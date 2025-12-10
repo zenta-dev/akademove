@@ -7,7 +7,7 @@ part of 'fraud_get_stats200_response.dart';
 // **************************************************************************
 
 abstract class _$FraudGetStats200ResponseCWProxy {
-  FraudGetStats200Response message(String message);
+  FraudGetStats200Response message(String? message);
 
   FraudGetStats200Response data(FraudStats data);
 
@@ -23,7 +23,7 @@ abstract class _$FraudGetStats200ResponseCWProxy {
   /// FraudGetStats200Response(...).copyWith(id: 12, name: "My name")
   /// ```
   FraudGetStats200Response call({
-    String message,
+    String? message,
     FraudStats data,
     PaginationResult? pagination,
     int? totalPages,
@@ -39,7 +39,7 @@ class _$FraudGetStats200ResponseCWProxyImpl
   final FraudGetStats200Response _value;
 
   @override
-  FraudGetStats200Response message(String message) => call(message: message);
+  FraudGetStats200Response message(String? message) => call(message: message);
 
   @override
   FraudGetStats200Response data(FraudStats data) => call(data: data);
@@ -67,10 +67,10 @@ class _$FraudGetStats200ResponseCWProxyImpl
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return FraudGetStats200Response(
-      message: message == const $CopyWithPlaceholder() || message == null
+      message: message == const $CopyWithPlaceholder()
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
-          : message as String,
+          : message as String?,
       data: data == const $CopyWithPlaceholder() || data == null
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
@@ -104,7 +104,7 @@ FraudGetStats200Response _$FraudGetStats200ResponseFromJson(
 ) => $checkedCreate('FraudGetStats200Response', json, ($checkedConvert) {
   $checkKeys(json, requiredKeys: const ['message', 'data']);
   final val = FraudGetStats200Response(
-    message: $checkedConvert('message', (v) => v as String),
+    message: $checkedConvert('message', (v) => v as String?),
     data: $checkedConvert(
       'data',
       (v) => FraudStats.fromJson(v as Map<String, dynamic>),

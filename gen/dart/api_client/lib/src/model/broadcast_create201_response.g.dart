@@ -7,9 +7,9 @@ part of 'broadcast_create201_response.dart';
 // **************************************************************************
 
 abstract class _$BroadcastCreate201ResponseCWProxy {
-  BroadcastCreate201Response message(String message);
+  BroadcastCreate201Response message(String? message);
 
-  BroadcastCreate201Response data(BroadcastList200ResponseDataInner data);
+  BroadcastCreate201Response data(BroadcastCreate201ResponseData data);
 
   BroadcastCreate201Response pagination(PaginationResult? pagination);
 
@@ -23,8 +23,8 @@ abstract class _$BroadcastCreate201ResponseCWProxy {
   /// BroadcastCreate201Response(...).copyWith(id: 12, name: "My name")
   /// ```
   BroadcastCreate201Response call({
-    String message,
-    BroadcastList200ResponseDataInner data,
+    String? message,
+    BroadcastCreate201ResponseData data,
     PaginationResult? pagination,
     int? totalPages,
   });
@@ -39,10 +39,10 @@ class _$BroadcastCreate201ResponseCWProxyImpl
   final BroadcastCreate201Response _value;
 
   @override
-  BroadcastCreate201Response message(String message) => call(message: message);
+  BroadcastCreate201Response message(String? message) => call(message: message);
 
   @override
-  BroadcastCreate201Response data(BroadcastList200ResponseDataInner data) =>
+  BroadcastCreate201Response data(BroadcastCreate201ResponseData data) =>
       call(data: data);
 
   @override
@@ -68,14 +68,14 @@ class _$BroadcastCreate201ResponseCWProxyImpl
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return BroadcastCreate201Response(
-      message: message == const $CopyWithPlaceholder() || message == null
+      message: message == const $CopyWithPlaceholder()
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
-          : message as String,
+          : message as String?,
       data: data == const $CopyWithPlaceholder() || data == null
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
-          : data as BroadcastList200ResponseDataInner,
+          : data as BroadcastCreate201ResponseData,
       pagination: pagination == const $CopyWithPlaceholder()
           ? _value.pagination
           // ignore: cast_nullable_to_non_nullable
@@ -105,11 +105,10 @@ BroadcastCreate201Response _$BroadcastCreate201ResponseFromJson(
 ) => $checkedCreate('BroadcastCreate201Response', json, ($checkedConvert) {
   $checkKeys(json, requiredKeys: const ['message', 'data']);
   final val = BroadcastCreate201Response(
-    message: $checkedConvert('message', (v) => v as String),
+    message: $checkedConvert('message', (v) => v as String?),
     data: $checkedConvert(
       'data',
-      (v) =>
-          BroadcastList200ResponseDataInner.fromJson(v as Map<String, dynamic>),
+      (v) => BroadcastCreate201ResponseData.fromJson(v as Map<String, dynamic>),
     ),
     pagination: $checkedConvert(
       'pagination',

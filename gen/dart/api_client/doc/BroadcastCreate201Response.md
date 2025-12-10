@@ -9,7 +9,7 @@ import 'package:api_client/api.dart';
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **message** | **String** |  | 
-**data** | [**BroadcastList200ResponseDataInner**](BroadcastList200ResponseDataInner.md) |  | 
+**data** | [**BroadcastCreate201ResponseData**](BroadcastCreate201ResponseData.md) |  | 
 **pagination** | [**PaginationResult**](PaginationResult.md) |  | [optional] 
 **totalPages** | **int** |  | [optional] 
 

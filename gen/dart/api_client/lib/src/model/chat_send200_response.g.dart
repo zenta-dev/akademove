@@ -7,7 +7,7 @@ part of 'chat_send200_response.dart';
 // **************************************************************************
 
 abstract class _$ChatSend200ResponseCWProxy {
-  ChatSend200Response message(String message);
+  ChatSend200Response message(String? message);
 
   ChatSend200Response data(OrderChatMessage data);
 
@@ -23,7 +23,7 @@ abstract class _$ChatSend200ResponseCWProxy {
   /// ChatSend200Response(...).copyWith(id: 12, name: "My name")
   /// ```
   ChatSend200Response call({
-    String message,
+    String? message,
     OrderChatMessage data,
     PaginationResult? pagination,
     int? totalPages,
@@ -38,7 +38,7 @@ class _$ChatSend200ResponseCWProxyImpl implements _$ChatSend200ResponseCWProxy {
   final ChatSend200Response _value;
 
   @override
-  ChatSend200Response message(String message) => call(message: message);
+  ChatSend200Response message(String? message) => call(message: message);
 
   @override
   ChatSend200Response data(OrderChatMessage data) => call(data: data);
@@ -66,10 +66,10 @@ class _$ChatSend200ResponseCWProxyImpl implements _$ChatSend200ResponseCWProxy {
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return ChatSend200Response(
-      message: message == const $CopyWithPlaceholder() || message == null
+      message: message == const $CopyWithPlaceholder()
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
-          : message as String,
+          : message as String?,
       data: data == const $CopyWithPlaceholder() || data == null
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
@@ -102,7 +102,7 @@ ChatSend200Response _$ChatSend200ResponseFromJson(Map<String, dynamic> json) =>
     $checkedCreate('ChatSend200Response', json, ($checkedConvert) {
       $checkKeys(json, requiredKeys: const ['message', 'data']);
       final val = ChatSend200Response(
-        message: $checkedConvert('message', (v) => v as String),
+        message: $checkedConvert('message', (v) => v as String?),
         data: $checkedConvert(
           'data',
           (v) => OrderChatMessage.fromJson(v as Map<String, dynamic>),

@@ -29,11 +29,11 @@ class DriverScheduleCreateRequest {
     this.specificDate,
     this.isActive = true,
   });
-  @JsonKey(name: r'name', required: true, includeIfNull: false)
-  final String name;
+  @JsonKey(name: r'name', required: true, includeIfNull: true)
+  final String? name;
 
-  @JsonKey(name: r'driverId', required: true, includeIfNull: false)
-  final String driverId;
+  @JsonKey(name: r'driverId', required: true, includeIfNull: true)
+  final String? driverId;
 
   @JsonKey(name: r'dayOfWeek', required: true, includeIfNull: false)
   final DayOfWeek dayOfWeek;
@@ -78,13 +78,13 @@ class DriverScheduleCreateRequest {
 
   @override
   int get hashCode =>
-      name.hashCode +
-      driverId.hashCode +
+      (name == null ? 0 : name.hashCode) +
+      (driverId == null ? 0 : driverId.hashCode) +
       dayOfWeek.hashCode +
       startTime.hashCode +
       endTime.hashCode +
       isRecurring.hashCode +
-      specificDate.hashCode +
+      (specificDate == null ? 0 : specificDate.hashCode) +
       isActive.hashCode;
 
   factory DriverScheduleCreateRequest.fromJson(Map<String, dynamic> json) =>

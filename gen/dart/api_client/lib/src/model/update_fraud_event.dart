@@ -38,7 +38,9 @@ class UpdateFraudEvent {
 
   @override
   int get hashCode =>
-      status.hashCode + resolution.hashCode + actionTaken.hashCode;
+      status.hashCode +
+      (resolution == null ? 0 : resolution.hashCode) +
+      (actionTaken == null ? 0 : actionTaken.hashCode);
 
   factory UpdateFraudEvent.fromJson(Map<String, dynamic> json) =>
       _$UpdateFraudEventFromJson(json);

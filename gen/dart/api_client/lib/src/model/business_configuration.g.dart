@@ -25,7 +25,39 @@ abstract class _$BusinessConfigurationCWProxy {
 
   BusinessConfiguration noShowFee(num noShowFee);
 
+  BusinessConfiguration noShowDriverCompensationRate(
+    num noShowDriverCompensationRate,
+  );
+
   BusinessConfiguration highValueOrderThreshold(num highValueOrderThreshold);
+
+  BusinessConfiguration driverMatchingTimeoutMinutes(
+    num? driverMatchingTimeoutMinutes,
+  );
+
+  BusinessConfiguration driverMatchingInitialRadiusKm(
+    num? driverMatchingInitialRadiusKm,
+  );
+
+  BusinessConfiguration driverMatchingMaxRadiusKm(
+    num? driverMatchingMaxRadiusKm,
+  );
+
+  BusinessConfiguration driverMatchingRadiusExpansionRate(
+    num? driverMatchingRadiusExpansionRate,
+  );
+
+  BusinessConfiguration driverMatchingIntervalSeconds(
+    num? driverMatchingIntervalSeconds,
+  );
+
+  BusinessConfiguration driverMatchingBroadcastLimit(
+    int? driverMatchingBroadcastLimit,
+  );
+
+  BusinessConfiguration driverMaxCancellationsPerDay(
+    int? driverMaxCancellationsPerDay,
+  );
 
   /// Creates a new instance with the provided field values.
   /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `BusinessConfiguration(...).copyWith.fieldName(value)`.
@@ -42,7 +74,15 @@ abstract class _$BusinessConfigurationCWProxy {
     num userCancellationFeeBeforeAccept,
     num userCancellationFeeAfterAccept,
     num noShowFee,
+    num noShowDriverCompensationRate,
     num highValueOrderThreshold,
+    num? driverMatchingTimeoutMinutes,
+    num? driverMatchingInitialRadiusKm,
+    num? driverMatchingMaxRadiusKm,
+    num? driverMatchingRadiusExpansionRate,
+    num? driverMatchingIntervalSeconds,
+    int? driverMatchingBroadcastLimit,
+    int? driverMaxCancellationsPerDay,
   });
 }
 
@@ -84,8 +124,50 @@ class _$BusinessConfigurationCWProxyImpl
   BusinessConfiguration noShowFee(num noShowFee) => call(noShowFee: noShowFee);
 
   @override
+  BusinessConfiguration noShowDriverCompensationRate(
+    num noShowDriverCompensationRate,
+  ) => call(noShowDriverCompensationRate: noShowDriverCompensationRate);
+
+  @override
   BusinessConfiguration highValueOrderThreshold(num highValueOrderThreshold) =>
       call(highValueOrderThreshold: highValueOrderThreshold);
+
+  @override
+  BusinessConfiguration driverMatchingTimeoutMinutes(
+    num? driverMatchingTimeoutMinutes,
+  ) => call(driverMatchingTimeoutMinutes: driverMatchingTimeoutMinutes);
+
+  @override
+  BusinessConfiguration driverMatchingInitialRadiusKm(
+    num? driverMatchingInitialRadiusKm,
+  ) => call(driverMatchingInitialRadiusKm: driverMatchingInitialRadiusKm);
+
+  @override
+  BusinessConfiguration driverMatchingMaxRadiusKm(
+    num? driverMatchingMaxRadiusKm,
+  ) => call(driverMatchingMaxRadiusKm: driverMatchingMaxRadiusKm);
+
+  @override
+  BusinessConfiguration driverMatchingRadiusExpansionRate(
+    num? driverMatchingRadiusExpansionRate,
+  ) => call(
+    driverMatchingRadiusExpansionRate: driverMatchingRadiusExpansionRate,
+  );
+
+  @override
+  BusinessConfiguration driverMatchingIntervalSeconds(
+    num? driverMatchingIntervalSeconds,
+  ) => call(driverMatchingIntervalSeconds: driverMatchingIntervalSeconds);
+
+  @override
+  BusinessConfiguration driverMatchingBroadcastLimit(
+    int? driverMatchingBroadcastLimit,
+  ) => call(driverMatchingBroadcastLimit: driverMatchingBroadcastLimit);
+
+  @override
+  BusinessConfiguration driverMaxCancellationsPerDay(
+    int? driverMaxCancellationsPerDay,
+  ) => call(driverMaxCancellationsPerDay: driverMaxCancellationsPerDay);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -103,7 +185,15 @@ class _$BusinessConfigurationCWProxyImpl
     Object? userCancellationFeeBeforeAccept = const $CopyWithPlaceholder(),
     Object? userCancellationFeeAfterAccept = const $CopyWithPlaceholder(),
     Object? noShowFee = const $CopyWithPlaceholder(),
+    Object? noShowDriverCompensationRate = const $CopyWithPlaceholder(),
     Object? highValueOrderThreshold = const $CopyWithPlaceholder(),
+    Object? driverMatchingTimeoutMinutes = const $CopyWithPlaceholder(),
+    Object? driverMatchingInitialRadiusKm = const $CopyWithPlaceholder(),
+    Object? driverMatchingMaxRadiusKm = const $CopyWithPlaceholder(),
+    Object? driverMatchingRadiusExpansionRate = const $CopyWithPlaceholder(),
+    Object? driverMatchingIntervalSeconds = const $CopyWithPlaceholder(),
+    Object? driverMatchingBroadcastLimit = const $CopyWithPlaceholder(),
+    Object? driverMaxCancellationsPerDay = const $CopyWithPlaceholder(),
   }) {
     return BusinessConfiguration(
       minTransferAmount:
@@ -146,12 +236,53 @@ class _$BusinessConfigurationCWProxyImpl
           ? _value.noShowFee
           // ignore: cast_nullable_to_non_nullable
           : noShowFee as num,
+      noShowDriverCompensationRate:
+          noShowDriverCompensationRate == const $CopyWithPlaceholder() ||
+              noShowDriverCompensationRate == null
+          ? _value.noShowDriverCompensationRate
+          // ignore: cast_nullable_to_non_nullable
+          : noShowDriverCompensationRate as num,
       highValueOrderThreshold:
           highValueOrderThreshold == const $CopyWithPlaceholder() ||
               highValueOrderThreshold == null
           ? _value.highValueOrderThreshold
           // ignore: cast_nullable_to_non_nullable
           : highValueOrderThreshold as num,
+      driverMatchingTimeoutMinutes:
+          driverMatchingTimeoutMinutes == const $CopyWithPlaceholder()
+          ? _value.driverMatchingTimeoutMinutes
+          // ignore: cast_nullable_to_non_nullable
+          : driverMatchingTimeoutMinutes as num?,
+      driverMatchingInitialRadiusKm:
+          driverMatchingInitialRadiusKm == const $CopyWithPlaceholder()
+          ? _value.driverMatchingInitialRadiusKm
+          // ignore: cast_nullable_to_non_nullable
+          : driverMatchingInitialRadiusKm as num?,
+      driverMatchingMaxRadiusKm:
+          driverMatchingMaxRadiusKm == const $CopyWithPlaceholder()
+          ? _value.driverMatchingMaxRadiusKm
+          // ignore: cast_nullable_to_non_nullable
+          : driverMatchingMaxRadiusKm as num?,
+      driverMatchingRadiusExpansionRate:
+          driverMatchingRadiusExpansionRate == const $CopyWithPlaceholder()
+          ? _value.driverMatchingRadiusExpansionRate
+          // ignore: cast_nullable_to_non_nullable
+          : driverMatchingRadiusExpansionRate as num?,
+      driverMatchingIntervalSeconds:
+          driverMatchingIntervalSeconds == const $CopyWithPlaceholder()
+          ? _value.driverMatchingIntervalSeconds
+          // ignore: cast_nullable_to_non_nullable
+          : driverMatchingIntervalSeconds as num?,
+      driverMatchingBroadcastLimit:
+          driverMatchingBroadcastLimit == const $CopyWithPlaceholder()
+          ? _value.driverMatchingBroadcastLimit
+          // ignore: cast_nullable_to_non_nullable
+          : driverMatchingBroadcastLimit as int?,
+      driverMaxCancellationsPerDay:
+          driverMaxCancellationsPerDay == const $CopyWithPlaceholder()
+          ? _value.driverMaxCancellationsPerDay
+          // ignore: cast_nullable_to_non_nullable
+          : driverMaxCancellationsPerDay as int?,
     );
   }
 }
@@ -181,6 +312,7 @@ BusinessConfiguration _$BusinessConfigurationFromJson(
       'userCancellationFeeBeforeAccept',
       'userCancellationFeeAfterAccept',
       'noShowFee',
+      'noShowDriverCompensationRate',
       'highValueOrderThreshold',
     ],
   );
@@ -204,9 +336,41 @@ BusinessConfiguration _$BusinessConfigurationFromJson(
       (v) => v as num,
     ),
     noShowFee: $checkedConvert('noShowFee', (v) => v as num),
+    noShowDriverCompensationRate: $checkedConvert(
+      'noShowDriverCompensationRate',
+      (v) => v as num,
+    ),
     highValueOrderThreshold: $checkedConvert(
       'highValueOrderThreshold',
       (v) => v as num,
+    ),
+    driverMatchingTimeoutMinutes: $checkedConvert(
+      'driverMatchingTimeoutMinutes',
+      (v) => v as num? ?? 15,
+    ),
+    driverMatchingInitialRadiusKm: $checkedConvert(
+      'driverMatchingInitialRadiusKm',
+      (v) => v as num? ?? 5,
+    ),
+    driverMatchingMaxRadiusKm: $checkedConvert(
+      'driverMatchingMaxRadiusKm',
+      (v) => v as num? ?? 20,
+    ),
+    driverMatchingRadiusExpansionRate: $checkedConvert(
+      'driverMatchingRadiusExpansionRate',
+      (v) => v as num? ?? 0.2,
+    ),
+    driverMatchingIntervalSeconds: $checkedConvert(
+      'driverMatchingIntervalSeconds',
+      (v) => v as num? ?? 30,
+    ),
+    driverMatchingBroadcastLimit: $checkedConvert(
+      'driverMatchingBroadcastLimit',
+      (v) => (v as num?)?.toInt() ?? 10,
+    ),
+    driverMaxCancellationsPerDay: $checkedConvert(
+      'driverMaxCancellationsPerDay',
+      (v) => (v as num?)?.toInt() ?? 3,
     ),
   );
   return val;
@@ -222,5 +386,14 @@ Map<String, dynamic> _$BusinessConfigurationToJson(
   'userCancellationFeeBeforeAccept': instance.userCancellationFeeBeforeAccept,
   'userCancellationFeeAfterAccept': instance.userCancellationFeeAfterAccept,
   'noShowFee': instance.noShowFee,
+  'noShowDriverCompensationRate': instance.noShowDriverCompensationRate,
   'highValueOrderThreshold': instance.highValueOrderThreshold,
+  'driverMatchingTimeoutMinutes': ?instance.driverMatchingTimeoutMinutes,
+  'driverMatchingInitialRadiusKm': ?instance.driverMatchingInitialRadiusKm,
+  'driverMatchingMaxRadiusKm': ?instance.driverMatchingMaxRadiusKm,
+  'driverMatchingRadiusExpansionRate':
+      ?instance.driverMatchingRadiusExpansionRate,
+  'driverMatchingIntervalSeconds': ?instance.driverMatchingIntervalSeconds,
+  'driverMatchingBroadcastLimit': ?instance.driverMatchingBroadcastLimit,
+  'driverMaxCancellationsPerDay': ?instance.driverMaxCancellationsPerDay,
 };

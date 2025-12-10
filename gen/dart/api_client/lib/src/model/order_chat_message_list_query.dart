@@ -22,8 +22,8 @@ class OrderChatMessageListQuery {
     required this.limit,
     this.cursor,
   });
-  @JsonKey(name: r'orderId', required: true, includeIfNull: false)
-  final String orderId;
+  @JsonKey(name: r'orderId', required: true, includeIfNull: true)
+  final String? orderId;
 
   // minimum: -9007199254740991
   // maximum: 1000
@@ -42,7 +42,10 @@ class OrderChatMessageListQuery {
           other.cursor == cursor;
 
   @override
-  int get hashCode => orderId.hashCode + limit.hashCode + cursor.hashCode;
+  int get hashCode =>
+      (orderId == null ? 0 : orderId.hashCode) +
+      limit.hashCode +
+      (cursor == null ? 0 : cursor.hashCode);
 
   factory OrderChatMessageListQuery.fromJson(Map<String, dynamic> json) =>
       _$OrderChatMessageListQueryFromJson(json);

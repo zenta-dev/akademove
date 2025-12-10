@@ -7,7 +7,7 @@ part of 'audit_list200_response.dart';
 // **************************************************************************
 
 abstract class _$AuditList200ResponseCWProxy {
-  AuditList200Response message(String message);
+  AuditList200Response message(String? message);
 
   AuditList200Response data(List<AuditList200ResponseDataInner> data);
 
@@ -23,7 +23,7 @@ abstract class _$AuditList200ResponseCWProxy {
   /// AuditList200Response(...).copyWith(id: 12, name: "My name")
   /// ```
   AuditList200Response call({
-    String message,
+    String? message,
     List<AuditList200ResponseDataInner> data,
     PaginationResult? pagination,
     int? totalPages,
@@ -39,7 +39,7 @@ class _$AuditList200ResponseCWProxyImpl
   final AuditList200Response _value;
 
   @override
-  AuditList200Response message(String message) => call(message: message);
+  AuditList200Response message(String? message) => call(message: message);
 
   @override
   AuditList200Response data(List<AuditList200ResponseDataInner> data) =>
@@ -68,10 +68,10 @@ class _$AuditList200ResponseCWProxyImpl
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return AuditList200Response(
-      message: message == const $CopyWithPlaceholder() || message == null
+      message: message == const $CopyWithPlaceholder()
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
-          : message as String,
+          : message as String?,
       data: data == const $CopyWithPlaceholder() || data == null
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
@@ -105,7 +105,7 @@ AuditList200Response _$AuditList200ResponseFromJson(
 ) => $checkedCreate('AuditList200Response', json, ($checkedConvert) {
   $checkKeys(json, requiredKeys: const ['message', 'data']);
   final val = AuditList200Response(
-    message: $checkedConvert('message', (v) => v as String),
+    message: $checkedConvert('message', (v) => v as String?),
     data: $checkedConvert(
       'data',
       (v) => (v as List<dynamic>)

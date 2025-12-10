@@ -27,17 +27,17 @@ class DriverQuizQuestionGetQuizQuestions200ResponseDataInner {
     required this.displayOrder,
     required this.options,
   });
-  @JsonKey(name: r'id', required: true, includeIfNull: false)
-  final String id;
+  @JsonKey(name: r'id', required: true, includeIfNull: true)
+  final String? id;
 
-  @JsonKey(name: r'question', required: true, includeIfNull: false)
-  final String question;
+  @JsonKey(name: r'question', required: true, includeIfNull: true)
+  final String? question;
 
-  @JsonKey(name: r'type', required: true, includeIfNull: false)
-  final String type;
+  @JsonKey(name: r'type', required: true, includeIfNull: true)
+  final String? type;
 
-  @JsonKey(name: r'category', required: true, includeIfNull: false)
-  final String category;
+  @JsonKey(name: r'category', required: true, includeIfNull: true)
+  final String? category;
 
   @JsonKey(name: r'points', required: true, includeIfNull: false)
   final num points;
@@ -63,10 +63,10 @@ class DriverQuizQuestionGetQuizQuestions200ResponseDataInner {
 
   @override
   int get hashCode =>
-      id.hashCode +
-      question.hashCode +
-      type.hashCode +
-      category.hashCode +
+      (id == null ? 0 : id.hashCode) +
+      (question == null ? 0 : question.hashCode) +
+      (type == null ? 0 : type.hashCode) +
+      (category == null ? 0 : category.hashCode) +
       points.hashCode +
       displayOrder.hashCode +
       options.hashCode;

@@ -7,21 +7,20 @@ part of 'driver_min_quiz_question.dart';
 // **************************************************************************
 
 abstract class _$DriverMinQuizQuestionCWProxy {
-  DriverMinQuizQuestion id(String id);
+  DriverMinQuizQuestion id(String? id);
 
-  DriverMinQuizQuestion question(String question);
+  DriverMinQuizQuestion question(String? question);
 
-  DriverMinQuizQuestion type(String type);
+  DriverMinQuizQuestion type(String? type);
 
-  DriverMinQuizQuestion category(String category);
+  DriverMinQuizQuestion category(String? category);
 
   DriverMinQuizQuestion points(num points);
 
   DriverMinQuizQuestion displayOrder(num displayOrder);
 
   DriverMinQuizQuestion options(
-    List<DriverQuizQuestionGetQuizQuestions200ResponseDataInnerOptionsInner>
-    options,
+    List<DriverMinQuizQuestionOptionsInner> options,
   );
 
   /// Creates a new instance with the provided field values.
@@ -32,14 +31,13 @@ abstract class _$DriverMinQuizQuestionCWProxy {
   /// DriverMinQuizQuestion(...).copyWith(id: 12, name: "My name")
   /// ```
   DriverMinQuizQuestion call({
-    String id,
-    String question,
-    String type,
-    String category,
+    String? id,
+    String? question,
+    String? type,
+    String? category,
     num points,
     num displayOrder,
-    List<DriverQuizQuestionGetQuizQuestions200ResponseDataInnerOptionsInner>
-    options,
+    List<DriverMinQuizQuestionOptionsInner> options,
   });
 }
 
@@ -52,16 +50,16 @@ class _$DriverMinQuizQuestionCWProxyImpl
   final DriverMinQuizQuestion _value;
 
   @override
-  DriverMinQuizQuestion id(String id) => call(id: id);
+  DriverMinQuizQuestion id(String? id) => call(id: id);
 
   @override
-  DriverMinQuizQuestion question(String question) => call(question: question);
+  DriverMinQuizQuestion question(String? question) => call(question: question);
 
   @override
-  DriverMinQuizQuestion type(String type) => call(type: type);
+  DriverMinQuizQuestion type(String? type) => call(type: type);
 
   @override
-  DriverMinQuizQuestion category(String category) => call(category: category);
+  DriverMinQuizQuestion category(String? category) => call(category: category);
 
   @override
   DriverMinQuizQuestion points(num points) => call(points: points);
@@ -72,8 +70,7 @@ class _$DriverMinQuizQuestionCWProxyImpl
 
   @override
   DriverMinQuizQuestion options(
-    List<DriverQuizQuestionGetQuizQuestions200ResponseDataInnerOptionsInner>
-    options,
+    List<DriverMinQuizQuestionOptionsInner> options,
   ) => call(options: options);
 
   @override
@@ -94,22 +91,22 @@ class _$DriverMinQuizQuestionCWProxyImpl
     Object? options = const $CopyWithPlaceholder(),
   }) {
     return DriverMinQuizQuestion(
-      id: id == const $CopyWithPlaceholder() || id == null
+      id: id == const $CopyWithPlaceholder()
           ? _value.id
           // ignore: cast_nullable_to_non_nullable
-          : id as String,
-      question: question == const $CopyWithPlaceholder() || question == null
+          : id as String?,
+      question: question == const $CopyWithPlaceholder()
           ? _value.question
           // ignore: cast_nullable_to_non_nullable
-          : question as String,
-      type: type == const $CopyWithPlaceholder() || type == null
+          : question as String?,
+      type: type == const $CopyWithPlaceholder()
           ? _value.type
           // ignore: cast_nullable_to_non_nullable
-          : type as String,
-      category: category == const $CopyWithPlaceholder() || category == null
+          : type as String?,
+      category: category == const $CopyWithPlaceholder()
           ? _value.category
           // ignore: cast_nullable_to_non_nullable
-          : category as String,
+          : category as String?,
       points: points == const $CopyWithPlaceholder() || points == null
           ? _value.points
           // ignore: cast_nullable_to_non_nullable
@@ -122,10 +119,7 @@ class _$DriverMinQuizQuestionCWProxyImpl
       options: options == const $CopyWithPlaceholder() || options == null
           ? _value.options
           // ignore: cast_nullable_to_non_nullable
-          : options
-                as List<
-                  DriverQuizQuestionGetQuizQuestions200ResponseDataInnerOptionsInner
-                >,
+          : options as List<DriverMinQuizQuestionOptionsInner>,
     );
   }
 }
@@ -158,20 +152,19 @@ DriverMinQuizQuestion _$DriverMinQuizQuestionFromJson(
     ],
   );
   final val = DriverMinQuizQuestion(
-    id: $checkedConvert('id', (v) => v as String),
-    question: $checkedConvert('question', (v) => v as String),
-    type: $checkedConvert('type', (v) => v as String),
-    category: $checkedConvert('category', (v) => v as String),
+    id: $checkedConvert('id', (v) => v as String?),
+    question: $checkedConvert('question', (v) => v as String?),
+    type: $checkedConvert('type', (v) => v as String?),
+    category: $checkedConvert('category', (v) => v as String?),
     points: $checkedConvert('points', (v) => v as num),
     displayOrder: $checkedConvert('displayOrder', (v) => v as num),
     options: $checkedConvert(
       'options',
       (v) => (v as List<dynamic>)
           .map(
-            (e) =>
-                DriverQuizQuestionGetQuizQuestions200ResponseDataInnerOptionsInner.fromJson(
-                  e as Map<String, dynamic>,
-                ),
+            (e) => DriverMinQuizQuestionOptionsInner.fromJson(
+              e as Map<String, dynamic>,
+            ),
           )
           .toList(),
     ),

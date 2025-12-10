@@ -41,7 +41,7 @@ abstract class _$InsertFraudEventCWProxy {
 
   InsertFraudEvent actionTaken(String? actionTaken);
 
-  InsertFraudEvent detectedAt(DateTime detectedAt);
+  InsertFraudEvent detectedAt(DateTime? detectedAt);
 
   InsertFraudEvent resolvedAt(DateTime? resolvedAt);
 
@@ -70,7 +70,7 @@ abstract class _$InsertFraudEventCWProxy {
     String? handledById,
     String? resolution,
     String? actionTaken,
-    DateTime detectedAt,
+    DateTime? detectedAt,
     DateTime? resolvedAt,
   });
 }
@@ -141,7 +141,7 @@ class _$InsertFraudEventCWProxyImpl implements _$InsertFraudEventCWProxy {
       call(actionTaken: actionTaken);
 
   @override
-  InsertFraudEvent detectedAt(DateTime detectedAt) =>
+  InsertFraudEvent detectedAt(DateTime? detectedAt) =>
       call(detectedAt: detectedAt);
 
   @override
@@ -246,11 +246,10 @@ class _$InsertFraudEventCWProxyImpl implements _$InsertFraudEventCWProxy {
           ? _value.actionTaken
           // ignore: cast_nullable_to_non_nullable
           : actionTaken as String?,
-      detectedAt:
-          detectedAt == const $CopyWithPlaceholder() || detectedAt == null
+      detectedAt: detectedAt == const $CopyWithPlaceholder()
           ? _value.detectedAt
           // ignore: cast_nullable_to_non_nullable
-          : detectedAt as DateTime,
+          : detectedAt as DateTime?,
       resolvedAt: resolvedAt == const $CopyWithPlaceholder()
           ? _value.resolvedAt
           // ignore: cast_nullable_to_non_nullable
@@ -341,7 +340,7 @@ InsertFraudEvent _$InsertFraudEventFromJson(Map<String, dynamic> json) =>
         actionTaken: $checkedConvert('actionTaken', (v) => v as String?),
         detectedAt: $checkedConvert(
           'detectedAt',
-          (v) => DateTime.parse(v as String),
+          (v) => v == null ? null : DateTime.parse(v as String),
         ),
         resolvedAt: $checkedConvert(
           'resolvedAt',
@@ -370,7 +369,7 @@ Map<String, dynamic> _$InsertFraudEventToJson(InsertFraudEvent instance) =>
       'handledById': instance.handledById,
       'resolution': instance.resolution,
       'actionTaken': instance.actionTaken,
-      'detectedAt': instance.detectedAt.toIso8601String(),
+      'detectedAt': instance.detectedAt?.toIso8601String(),
       'resolvedAt': instance.resolvedAt?.toIso8601String(),
     };
 

@@ -39,7 +39,9 @@ class FraudStatsQuery {
 
   @override
   int get hashCode =>
-      startDate.hashCode + endDate.hashCode + trendDays.hashCode;
+      (startDate == null ? 0 : startDate.hashCode) +
+      (endDate == null ? 0 : endDate.hashCode) +
+      trendDays.hashCode;
 
   factory FraudStatsQuery.fromJson(Map<String, dynamic> json) =>
       _$FraudStatsQueryFromJson(json);

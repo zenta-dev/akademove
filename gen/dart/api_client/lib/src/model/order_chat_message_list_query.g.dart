@@ -7,7 +7,7 @@ part of 'order_chat_message_list_query.dart';
 // **************************************************************************
 
 abstract class _$OrderChatMessageListQueryCWProxy {
-  OrderChatMessageListQuery orderId(String orderId);
+  OrderChatMessageListQuery orderId(String? orderId);
 
   OrderChatMessageListQuery limit(int limit);
 
@@ -20,7 +20,7 @@ abstract class _$OrderChatMessageListQueryCWProxy {
   /// ```dart
   /// OrderChatMessageListQuery(...).copyWith(id: 12, name: "My name")
   /// ```
-  OrderChatMessageListQuery call({String orderId, int limit, String? cursor});
+  OrderChatMessageListQuery call({String? orderId, int limit, String? cursor});
 }
 
 /// Callable proxy for `copyWith` functionality.
@@ -32,7 +32,7 @@ class _$OrderChatMessageListQueryCWProxyImpl
   final OrderChatMessageListQuery _value;
 
   @override
-  OrderChatMessageListQuery orderId(String orderId) => call(orderId: orderId);
+  OrderChatMessageListQuery orderId(String? orderId) => call(orderId: orderId);
 
   @override
   OrderChatMessageListQuery limit(int limit) => call(limit: limit);
@@ -54,10 +54,10 @@ class _$OrderChatMessageListQueryCWProxyImpl
     Object? cursor = const $CopyWithPlaceholder(),
   }) {
     return OrderChatMessageListQuery(
-      orderId: orderId == const $CopyWithPlaceholder() || orderId == null
+      orderId: orderId == const $CopyWithPlaceholder()
           ? _value.orderId
           // ignore: cast_nullable_to_non_nullable
-          : orderId as String,
+          : orderId as String?,
       limit: limit == const $CopyWithPlaceholder() || limit == null
           ? _value.limit
           // ignore: cast_nullable_to_non_nullable
@@ -87,7 +87,7 @@ OrderChatMessageListQuery _$OrderChatMessageListQueryFromJson(
 ) => $checkedCreate('OrderChatMessageListQuery', json, ($checkedConvert) {
   $checkKeys(json, requiredKeys: const ['orderId', 'limit']);
   final val = OrderChatMessageListQuery(
-    orderId: $checkedConvert('orderId', (v) => v as String),
+    orderId: $checkedConvert('orderId', (v) => v as String?),
     limit: $checkedConvert('limit', (v) => (v as num).toInt()),
     cursor: $checkedConvert('cursor', (v) => v as String?),
   );

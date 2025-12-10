@@ -15,6 +15,7 @@ Method | HTTP request | Description
 [**orderCancelScheduledOrder**](OrderApi.md#ordercancelscheduledorder) | **POST** /orders/scheduled/{id}/cancel | 
 [**orderEstimate**](OrderApi.md#orderestimate) | **GET** /orders/estimate | 
 [**orderGet**](OrderApi.md#orderget) | **GET** /orders/{id} | 
+[**orderGetStatusHistory**](OrderApi.md#ordergetstatushistory) | **GET** /orders/{id}/status-history | 
 [**orderList**](OrderApi.md#orderlist) | **GET** /orders | 
 [**orderListMessages**](OrderApi.md#orderlistmessages) | **GET** /orders/{id}/messages | 
 [**orderListScheduledOrders**](OrderApi.md#orderlistscheduledorders) | **GET** /orders/scheduled | 
@@ -157,7 +158,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **orderCancelScheduledOrder**
-> MerchantOrderAccept200Response orderCancelScheduledOrder(id, orderCancelRequest)
+> MerchantOrderAccept200Response orderCancelScheduledOrder(id, orderCancelScheduledOrderRequest)
 
 
 
@@ -167,10 +168,10 @@ import 'package:api_client/api.dart';
 
 final api = ApiClient().getOrderApi();
 final String id = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
-final OrderCancelRequest orderCancelRequest = ; // OrderCancelRequest | 
+final OrderCancelScheduledOrderRequest orderCancelScheduledOrderRequest = ; // OrderCancelScheduledOrderRequest | 
 
 try {
-    final response = api.orderCancelScheduledOrder(id, orderCancelRequest);
+    final response = api.orderCancelScheduledOrder(id, orderCancelScheduledOrderRequest);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling OrderApi->orderCancelScheduledOrder: $e\n');
@@ -182,7 +183,7 @@ try {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **id** | **String**|  | 
- **orderCancelRequest** | [**OrderCancelRequest**](OrderCancelRequest.md)|  | 
+ **orderCancelScheduledOrderRequest** | [**OrderCancelScheduledOrderRequest**](OrderCancelScheduledOrderRequest.md)|  | 
 
 ### Return type
 
@@ -200,7 +201,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **orderEstimate**
-> OrderEstimate200Response orderEstimate(dropoffLocationX, dropoffLocationY, pickupLocationX, pickupLocationY, type, notePickup, noteDropoff, noteInstructions, items, gender, couponCode, discountIds, weight)
+> OrderEstimate200Response orderEstimate(dropoffLocationX, dropoffLocationY, pickupLocationX, pickupLocationY, type, notePickup, noteDropoff, noteInstructions, items, gender, genderPreference, couponCode, discountIds, weight)
 
 
 
@@ -219,12 +220,13 @@ final String noteDropoff = noteDropoff_example; // String |
 final String noteInstructions = noteInstructions_example; // String | 
 final List<OrderItem> items = ; // List<OrderItem> | 
 final UserGender gender = ; // UserGender | 
+final String genderPreference = genderPreference_example; // String | 
 final String couponCode = couponCode_example; // String | 
 final List<num> discountIds = ; // List<num> | 
 final num weight = 8.14; // num | 
 
 try {
-    final response = api.orderEstimate(dropoffLocationX, dropoffLocationY, pickupLocationX, pickupLocationY, type, notePickup, noteDropoff, noteInstructions, items, gender, couponCode, discountIds, weight);
+    final response = api.orderEstimate(dropoffLocationX, dropoffLocationY, pickupLocationX, pickupLocationY, type, notePickup, noteDropoff, noteInstructions, items, gender, genderPreference, couponCode, discountIds, weight);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling OrderApi->orderEstimate: $e\n');
@@ -245,6 +247,7 @@ Name | Type | Description  | Notes
  **noteInstructions** | **String**|  | [optional] 
  **items** | [**List&lt;OrderItem&gt;**](OrderItem.md)|  | [optional] 
  **gender** | [**UserGender**](.md)|  | [optional] 
+ **genderPreference** | **String**|  | [optional] 
  **couponCode** | **String**|  | [optional] 
  **discountIds** | [**List&lt;num&gt;**](num.md)|  | [optional] 
  **weight** | **num**|  | [optional] 
@@ -293,6 +296,47 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**MerchantOrderAccept200Response**](MerchantOrderAccept200Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **orderGetStatusHistory**
+> OrderGetStatusHistory200Response orderGetStatusHistory(id)
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getOrderApi();
+final String id = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
+
+try {
+    final response = api.orderGetStatusHistory(id);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling OrderApi->orderGetStatusHistory: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**|  | 
+
+### Return type
+
+[**OrderGetStatusHistory200Response**](OrderGetStatusHistory200Response.md)
 
 ### Authorization
 

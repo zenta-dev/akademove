@@ -891,7 +891,7 @@ class AuthApi {
     required String detailEmail,
     required String detailPhoneCountryCode,
     required int detailPhoneNumber,
-    required String detailAddress,
+    String? detailAddress,
     required num detailLocationX,
     required num detailLocationY,
     required String detailCategory,

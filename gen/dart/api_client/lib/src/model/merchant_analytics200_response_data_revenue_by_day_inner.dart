@@ -22,8 +22,8 @@ class MerchantAnalytics200ResponseDataRevenueByDayInner {
     required this.revenue,
     required this.orders,
   });
-  @JsonKey(name: r'date', required: true, includeIfNull: false)
-  final String date;
+  @JsonKey(name: r'date', required: true, includeIfNull: true)
+  final String? date;
 
   @JsonKey(name: r'revenue', required: true, includeIfNull: false)
   final num revenue;
@@ -40,7 +40,8 @@ class MerchantAnalytics200ResponseDataRevenueByDayInner {
           other.orders == orders;
 
   @override
-  int get hashCode => date.hashCode + revenue.hashCode + orders.hashCode;
+  int get hashCode =>
+      (date == null ? 0 : date.hashCode) + revenue.hashCode + orders.hashCode;
 
   factory MerchantAnalytics200ResponseDataRevenueByDayInner.fromJson(
     Map<String, dynamic> json,

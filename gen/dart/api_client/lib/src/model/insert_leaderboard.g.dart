@@ -7,7 +7,7 @@ part of 'insert_leaderboard.dart';
 // **************************************************************************
 
 abstract class _$InsertLeaderboardCWProxy {
-  InsertLeaderboard userId(String userId);
+  InsertLeaderboard userId(String? userId);
 
   InsertLeaderboard driverId(String? driverId);
 
@@ -21,9 +21,9 @@ abstract class _$InsertLeaderboardCWProxy {
 
   InsertLeaderboard score(int score);
 
-  InsertLeaderboard periodStart(DateTime periodStart);
+  InsertLeaderboard periodStart(DateTime? periodStart);
 
-  InsertLeaderboard periodEnd(DateTime periodEnd);
+  InsertLeaderboard periodEnd(DateTime? periodEnd);
 
   /// Creates a new instance with the provided field values.
   /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `InsertLeaderboard(...).copyWith.fieldName(value)`.
@@ -33,15 +33,15 @@ abstract class _$InsertLeaderboardCWProxy {
   /// InsertLeaderboard(...).copyWith(id: 12, name: "My name")
   /// ```
   InsertLeaderboard call({
-    String userId,
+    String? userId,
     String? driverId,
     String? merchantId,
     InsertLeaderboardCategoryEnum category,
     InsertLeaderboardPeriodEnum period,
     int rank,
     int score,
-    DateTime periodStart,
-    DateTime periodEnd,
+    DateTime? periodStart,
+    DateTime? periodEnd,
   });
 }
 
@@ -53,7 +53,7 @@ class _$InsertLeaderboardCWProxyImpl implements _$InsertLeaderboardCWProxy {
   final InsertLeaderboard _value;
 
   @override
-  InsertLeaderboard userId(String userId) => call(userId: userId);
+  InsertLeaderboard userId(String? userId) => call(userId: userId);
 
   @override
   InsertLeaderboard driverId(String? driverId) => call(driverId: driverId);
@@ -77,11 +77,12 @@ class _$InsertLeaderboardCWProxyImpl implements _$InsertLeaderboardCWProxy {
   InsertLeaderboard score(int score) => call(score: score);
 
   @override
-  InsertLeaderboard periodStart(DateTime periodStart) =>
+  InsertLeaderboard periodStart(DateTime? periodStart) =>
       call(periodStart: periodStart);
 
   @override
-  InsertLeaderboard periodEnd(DateTime periodEnd) => call(periodEnd: periodEnd);
+  InsertLeaderboard periodEnd(DateTime? periodEnd) =>
+      call(periodEnd: periodEnd);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -103,10 +104,10 @@ class _$InsertLeaderboardCWProxyImpl implements _$InsertLeaderboardCWProxy {
     Object? periodEnd = const $CopyWithPlaceholder(),
   }) {
     return InsertLeaderboard(
-      userId: userId == const $CopyWithPlaceholder() || userId == null
+      userId: userId == const $CopyWithPlaceholder()
           ? _value.userId
           // ignore: cast_nullable_to_non_nullable
-          : userId as String,
+          : userId as String?,
       driverId: driverId == const $CopyWithPlaceholder()
           ? _value.driverId
           // ignore: cast_nullable_to_non_nullable
@@ -131,15 +132,14 @@ class _$InsertLeaderboardCWProxyImpl implements _$InsertLeaderboardCWProxy {
           ? _value.score
           // ignore: cast_nullable_to_non_nullable
           : score as int,
-      periodStart:
-          periodStart == const $CopyWithPlaceholder() || periodStart == null
+      periodStart: periodStart == const $CopyWithPlaceholder()
           ? _value.periodStart
           // ignore: cast_nullable_to_non_nullable
-          : periodStart as DateTime,
-      periodEnd: periodEnd == const $CopyWithPlaceholder() || periodEnd == null
+          : periodStart as DateTime?,
+      periodEnd: periodEnd == const $CopyWithPlaceholder()
           ? _value.periodEnd
           // ignore: cast_nullable_to_non_nullable
-          : periodEnd as DateTime,
+          : periodEnd as DateTime?,
     );
   }
 }
@@ -171,7 +171,7 @@ InsertLeaderboard _$InsertLeaderboardFromJson(Map<String, dynamic> json) =>
         ],
       );
       final val = InsertLeaderboard(
-        userId: $checkedConvert('userId', (v) => v as String),
+        userId: $checkedConvert('userId', (v) => v as String?),
         driverId: $checkedConvert('driverId', (v) => v as String?),
         merchantId: $checkedConvert('merchantId', (v) => v as String?),
         category: $checkedConvert(
@@ -186,11 +186,11 @@ InsertLeaderboard _$InsertLeaderboardFromJson(Map<String, dynamic> json) =>
         score: $checkedConvert('score', (v) => (v as num).toInt()),
         periodStart: $checkedConvert(
           'periodStart',
-          (v) => DateTime.parse(v as String),
+          (v) => v == null ? null : DateTime.parse(v as String),
         ),
         periodEnd: $checkedConvert(
           'periodEnd',
-          (v) => DateTime.parse(v as String),
+          (v) => v == null ? null : DateTime.parse(v as String),
         ),
       );
       return val;
@@ -205,8 +205,8 @@ Map<String, dynamic> _$InsertLeaderboardToJson(InsertLeaderboard instance) =>
       'period': _$InsertLeaderboardPeriodEnumEnumMap[instance.period]!,
       'rank': instance.rank,
       'score': instance.score,
-      'periodStart': instance.periodStart.toIso8601String(),
-      'periodEnd': instance.periodEnd.toIso8601String(),
+      'periodStart': instance.periodStart?.toIso8601String(),
+      'periodEnd': instance.periodEnd?.toIso8601String(),
     };
 
 const _$InsertLeaderboardCategoryEnumEnumMap = {

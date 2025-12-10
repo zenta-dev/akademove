@@ -7,7 +7,7 @@ part of 'newsletter.dart';
 // **************************************************************************
 
 abstract class _$NewsletterCWProxy {
-  Newsletter id(String id);
+  Newsletter id(String? id);
 
   Newsletter email(String email);
 
@@ -15,9 +15,9 @@ abstract class _$NewsletterCWProxy {
 
   Newsletter userId(String? userId);
 
-  Newsletter createdAt(DateTime createdAt);
+  Newsletter createdAt(DateTime? createdAt);
 
-  Newsletter updatedAt(DateTime updatedAt);
+  Newsletter updatedAt(DateTime? updatedAt);
 
   /// Creates a new instance with the provided field values.
   /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `Newsletter(...).copyWith.fieldName(value)`.
@@ -27,12 +27,12 @@ abstract class _$NewsletterCWProxy {
   /// Newsletter(...).copyWith(id: 12, name: "My name")
   /// ```
   Newsletter call({
-    String id,
+    String? id,
     String email,
     NewsletterStatus status,
     String? userId,
-    DateTime createdAt,
-    DateTime updatedAt,
+    DateTime? createdAt,
+    DateTime? updatedAt,
   });
 }
 
@@ -44,7 +44,7 @@ class _$NewsletterCWProxyImpl implements _$NewsletterCWProxy {
   final Newsletter _value;
 
   @override
-  Newsletter id(String id) => call(id: id);
+  Newsletter id(String? id) => call(id: id);
 
   @override
   Newsletter email(String email) => call(email: email);
@@ -56,10 +56,10 @@ class _$NewsletterCWProxyImpl implements _$NewsletterCWProxy {
   Newsletter userId(String? userId) => call(userId: userId);
 
   @override
-  Newsletter createdAt(DateTime createdAt) => call(createdAt: createdAt);
+  Newsletter createdAt(DateTime? createdAt) => call(createdAt: createdAt);
 
   @override
-  Newsletter updatedAt(DateTime updatedAt) => call(updatedAt: updatedAt);
+  Newsletter updatedAt(DateTime? updatedAt) => call(updatedAt: updatedAt);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -78,10 +78,10 @@ class _$NewsletterCWProxyImpl implements _$NewsletterCWProxy {
     Object? updatedAt = const $CopyWithPlaceholder(),
   }) {
     return Newsletter(
-      id: id == const $CopyWithPlaceholder() || id == null
+      id: id == const $CopyWithPlaceholder()
           ? _value.id
           // ignore: cast_nullable_to_non_nullable
-          : id as String,
+          : id as String?,
       email: email == const $CopyWithPlaceholder() || email == null
           ? _value.email
           // ignore: cast_nullable_to_non_nullable
@@ -94,14 +94,14 @@ class _$NewsletterCWProxyImpl implements _$NewsletterCWProxy {
           ? _value.userId
           // ignore: cast_nullable_to_non_nullable
           : userId as String?,
-      createdAt: createdAt == const $CopyWithPlaceholder() || createdAt == null
+      createdAt: createdAt == const $CopyWithPlaceholder()
           ? _value.createdAt
           // ignore: cast_nullable_to_non_nullable
-          : createdAt as DateTime,
-      updatedAt: updatedAt == const $CopyWithPlaceholder() || updatedAt == null
+          : createdAt as DateTime?,
+      updatedAt: updatedAt == const $CopyWithPlaceholder()
           ? _value.updatedAt
           // ignore: cast_nullable_to_non_nullable
-          : updatedAt as DateTime,
+          : updatedAt as DateTime?,
     );
   }
 }
@@ -117,26 +117,31 @@ extension $NewsletterCopyWith on Newsletter {
 // JsonSerializableGenerator
 // **************************************************************************
 
-Newsletter _$NewsletterFromJson(
-  Map<String, dynamic> json,
-) => $checkedCreate('Newsletter', json, ($checkedConvert) {
-  $checkKeys(
-    json,
-    requiredKeys: const ['id', 'email', 'status', 'createdAt', 'updatedAt'],
-  );
-  final val = Newsletter(
-    id: $checkedConvert('id', (v) => v as String),
-    email: $checkedConvert('email', (v) => v as String),
-    status: $checkedConvert(
-      'status',
-      (v) => $enumDecode(_$NewsletterStatusEnumMap, v),
-    ),
-    userId: $checkedConvert('userId', (v) => v as String?),
-    createdAt: $checkedConvert('createdAt', (v) => DateTime.parse(v as String)),
-    updatedAt: $checkedConvert('updatedAt', (v) => DateTime.parse(v as String)),
-  );
-  return val;
-});
+Newsletter _$NewsletterFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('Newsletter', json, ($checkedConvert) {
+      $checkKeys(
+        json,
+        requiredKeys: const ['id', 'email', 'status', 'createdAt', 'updatedAt'],
+      );
+      final val = Newsletter(
+        id: $checkedConvert('id', (v) => v as String?),
+        email: $checkedConvert('email', (v) => v as String),
+        status: $checkedConvert(
+          'status',
+          (v) => $enumDecode(_$NewsletterStatusEnumMap, v),
+        ),
+        userId: $checkedConvert('userId', (v) => v as String?),
+        createdAt: $checkedConvert(
+          'createdAt',
+          (v) => v == null ? null : DateTime.parse(v as String),
+        ),
+        updatedAt: $checkedConvert(
+          'updatedAt',
+          (v) => v == null ? null : DateTime.parse(v as String),
+        ),
+      );
+      return val;
+    });
 
 Map<String, dynamic> _$NewsletterToJson(Newsletter instance) =>
     <String, dynamic>{
@@ -144,8 +149,8 @@ Map<String, dynamic> _$NewsletterToJson(Newsletter instance) =>
       'email': instance.email,
       'status': _$NewsletterStatusEnumMap[instance.status]!,
       'userId': ?instance.userId,
-      'createdAt': instance.createdAt.toIso8601String(),
-      'updatedAt': instance.updatedAt.toIso8601String(),
+      'createdAt': instance.createdAt?.toIso8601String(),
+      'updatedAt': instance.updatedAt?.toIso8601String(),
     };
 
 const _$NewsletterStatusEnumMap = {

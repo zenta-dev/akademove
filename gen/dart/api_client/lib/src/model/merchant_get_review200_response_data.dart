@@ -29,11 +29,11 @@ class MerchantGetReview200ResponseData {
     required this.createdAt,
     required this.updatedAt,
   });
-  @JsonKey(name: r'id', required: true, includeIfNull: false)
-  final String id;
+  @JsonKey(name: r'id', required: true, includeIfNull: true)
+  final String? id;
 
-  @JsonKey(name: r'merchantId', required: true, includeIfNull: false)
-  final String merchantId;
+  @JsonKey(name: r'merchantId', required: true, includeIfNull: true)
+  final String? merchantId;
 
   @JsonKey(name: r'status', required: true, includeIfNull: false)
   final MerchantGetReview200ResponseDataStatusEnum status;
@@ -58,11 +58,11 @@ class MerchantGetReview200ResponseData {
   @JsonKey(name: r'reviewNotes', required: true, includeIfNull: true)
   final String? reviewNotes;
 
-  @JsonKey(name: r'createdAt', required: true, includeIfNull: false)
-  final DateTime createdAt;
+  @JsonKey(name: r'createdAt', required: true, includeIfNull: true)
+  final DateTime? createdAt;
 
-  @JsonKey(name: r'updatedAt', required: true, includeIfNull: false)
-  final DateTime updatedAt;
+  @JsonKey(name: r'updatedAt', required: true, includeIfNull: true)
+  final DateTime? updatedAt;
 
   @override
   bool operator ==(Object other) =>
@@ -81,16 +81,16 @@ class MerchantGetReview200ResponseData {
 
   @override
   int get hashCode =>
-      id.hashCode +
-      merchantId.hashCode +
+      (id == null ? 0 : id.hashCode) +
+      (merchantId == null ? 0 : merchantId.hashCode) +
       status.hashCode +
       businessDocumentStatus.hashCode +
       (businessDocumentReason == null ? 0 : businessDocumentReason.hashCode) +
       (reviewedBy == null ? 0 : reviewedBy.hashCode) +
       (reviewedAt == null ? 0 : reviewedAt.hashCode) +
       (reviewNotes == null ? 0 : reviewNotes.hashCode) +
-      createdAt.hashCode +
-      updatedAt.hashCode;
+      (createdAt == null ? 0 : createdAt.hashCode) +
+      (updatedAt == null ? 0 : updatedAt.hashCode);
 
   factory MerchantGetReview200ResponseData.fromJson(
     Map<String, dynamic> json,

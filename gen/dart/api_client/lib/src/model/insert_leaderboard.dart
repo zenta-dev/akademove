@@ -28,8 +28,8 @@ class InsertLeaderboard {
     required this.periodStart,
     required this.periodEnd,
   });
-  @JsonKey(name: r'userId', required: true, includeIfNull: false)
-  final String userId;
+  @JsonKey(name: r'userId', required: true, includeIfNull: true)
+  final String? userId;
 
   @JsonKey(name: r'driverId', required: false, includeIfNull: false)
   final String? driverId;
@@ -53,11 +53,11 @@ class InsertLeaderboard {
   @JsonKey(name: r'score', required: true, includeIfNull: false)
   final int score;
 
-  @JsonKey(name: r'periodStart', required: true, includeIfNull: false)
-  final DateTime periodStart;
+  @JsonKey(name: r'periodStart', required: true, includeIfNull: true)
+  final DateTime? periodStart;
 
-  @JsonKey(name: r'periodEnd', required: true, includeIfNull: false)
-  final DateTime periodEnd;
+  @JsonKey(name: r'periodEnd', required: true, includeIfNull: true)
+  final DateTime? periodEnd;
 
   @override
   bool operator ==(Object other) =>
@@ -75,15 +75,15 @@ class InsertLeaderboard {
 
   @override
   int get hashCode =>
-      userId.hashCode +
-      driverId.hashCode +
-      merchantId.hashCode +
+      (userId == null ? 0 : userId.hashCode) +
+      (driverId == null ? 0 : driverId.hashCode) +
+      (merchantId == null ? 0 : merchantId.hashCode) +
       category.hashCode +
       period.hashCode +
       rank.hashCode +
       score.hashCode +
-      periodStart.hashCode +
-      periodEnd.hashCode;
+      (periodStart == null ? 0 : periodStart.hashCode) +
+      (periodEnd == null ? 0 : periodEnd.hashCode);
 
   factory InsertLeaderboard.fromJson(Map<String, dynamic> json) =>
       _$InsertLeaderboardFromJson(json);

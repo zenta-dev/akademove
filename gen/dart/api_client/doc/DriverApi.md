@@ -78,7 +78,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **driverGet**
-> DriverGetMine200ResponseBody driverGet(id)
+> DriverGet200Response driverGet(id)
 
 
 
@@ -105,7 +105,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**DriverGetMine200ResponseBody**](DriverGetMine200ResponseBody.md)
+[**DriverGet200Response**](DriverGet200Response.md)
 
 ### Authorization
 
@@ -714,7 +714,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **driverUpdate**
-> DriverGetMine200ResponseBody driverUpdate(id, studentId, licensePlate, bankProvider, bankNumber, isTakingOrder, currentLocationX, currentLocationY, studentCard, driverLicense, vehicleCertificate)
+> DriverGet200Response driverUpdate(id, studentId, licensePlate, bankProvider, bankNumber, isTakingOrder, currentLocationX, currentLocationY, studentCard, driverLicense, vehicleCertificate)
 
 
 
@@ -761,7 +761,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**DriverGetMine200ResponseBody**](DriverGetMine200ResponseBody.md)
+[**DriverGet200Response**](DriverGet200Response.md)
 
 ### Authorization
 
@@ -818,7 +818,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **driverUpdateLocation**
-> DriverGetMine200ResponseBody driverUpdateLocation(id, coordinateWithMeta)
+> DriverGet200Response driverUpdateLocation(id, coordinateWithMeta)
 
 
 
@@ -847,7 +847,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**DriverGetMine200ResponseBody**](DriverGetMine200ResponseBody.md)
+[**DriverGet200Response**](DriverGet200Response.md)
 
 ### Authorization
 
@@ -861,7 +861,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **driverUpdateOnlineStatus**
-> DriverGetMine200ResponseBody driverUpdateOnlineStatus(id, driverUpdateOnlineStatusRequest)
+> DriverGet200Response driverUpdateOnlineStatus(id, driverUpdateOnlineStatusRequest)
 
 
 
@@ -890,7 +890,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**DriverGetMine200ResponseBody**](DriverGetMine200ResponseBody.md)
+[**DriverGet200Response**](DriverGet200Response.md)
 
 ### Authorization
 
@@ -904,7 +904,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **driverUpdateTakingOrderStatus**
-> DriverGetMine200ResponseBody driverUpdateTakingOrderStatus(id, driverUpdateTakingOrderStatusRequest)
+> DriverGet200Response driverUpdateTakingOrderStatus(id, driverUpdateTakingOrderStatusRequest)
 
 
 
@@ -933,7 +933,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**DriverGetMine200ResponseBody**](DriverGetMine200ResponseBody.md)
+[**DriverGet200Response**](DriverGet200Response.md)
 
 ### Authorization
 

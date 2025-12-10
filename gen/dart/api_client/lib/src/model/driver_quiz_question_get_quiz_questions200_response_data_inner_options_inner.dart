@@ -21,11 +21,11 @@ class DriverQuizQuestionGetQuizQuestions200ResponseDataInnerOptionsInner {
     required this.id,
     required this.text,
   });
-  @JsonKey(name: r'id', required: true, includeIfNull: false)
-  final String id;
+  @JsonKey(name: r'id', required: true, includeIfNull: true)
+  final String? id;
 
-  @JsonKey(name: r'text', required: true, includeIfNull: false)
-  final String text;
+  @JsonKey(name: r'text', required: true, includeIfNull: true)
+  final String? text;
 
   @override
   bool operator ==(Object other) =>
@@ -35,7 +35,8 @@ class DriverQuizQuestionGetQuizQuestions200ResponseDataInnerOptionsInner {
           other.text == text;
 
   @override
-  int get hashCode => id.hashCode + text.hashCode;
+  int get hashCode =>
+      (id == null ? 0 : id.hashCode) + (text == null ? 0 : text.hashCode);
 
   factory DriverQuizQuestionGetQuizQuestions200ResponseDataInnerOptionsInner.fromJson(
     Map<String, dynamic> json,

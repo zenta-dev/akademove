@@ -7,7 +7,7 @@ part of 'merchant_analytics200_response_data_revenue_by_day_inner.dart';
 // **************************************************************************
 
 abstract class _$MerchantAnalytics200ResponseDataRevenueByDayInnerCWProxy {
-  MerchantAnalytics200ResponseDataRevenueByDayInner date(String date);
+  MerchantAnalytics200ResponseDataRevenueByDayInner date(String? date);
 
   MerchantAnalytics200ResponseDataRevenueByDayInner revenue(num revenue);
 
@@ -21,7 +21,7 @@ abstract class _$MerchantAnalytics200ResponseDataRevenueByDayInnerCWProxy {
   /// MerchantAnalytics200ResponseDataRevenueByDayInner(...).copyWith(id: 12, name: "My name")
   /// ```
   MerchantAnalytics200ResponseDataRevenueByDayInner call({
-    String date,
+    String? date,
     num revenue,
     num orders,
   });
@@ -38,7 +38,7 @@ class _$MerchantAnalytics200ResponseDataRevenueByDayInnerCWProxyImpl
   final MerchantAnalytics200ResponseDataRevenueByDayInner _value;
 
   @override
-  MerchantAnalytics200ResponseDataRevenueByDayInner date(String date) =>
+  MerchantAnalytics200ResponseDataRevenueByDayInner date(String? date) =>
       call(date: date);
 
   @override
@@ -63,10 +63,10 @@ class _$MerchantAnalytics200ResponseDataRevenueByDayInnerCWProxyImpl
     Object? orders = const $CopyWithPlaceholder(),
   }) {
     return MerchantAnalytics200ResponseDataRevenueByDayInner(
-      date: date == const $CopyWithPlaceholder() || date == null
+      date: date == const $CopyWithPlaceholder()
           ? _value.date
           // ignore: cast_nullable_to_non_nullable
-          : date as String,
+          : date as String?,
       revenue: revenue == const $CopyWithPlaceholder() || revenue == null
           ? _value.revenue
           // ignore: cast_nullable_to_non_nullable
@@ -100,7 +100,7 @@ _$MerchantAnalytics200ResponseDataRevenueByDayInnerFromJson(
 ) {
   $checkKeys(json, requiredKeys: const ['date', 'revenue', 'orders']);
   final val = MerchantAnalytics200ResponseDataRevenueByDayInner(
-    date: $checkedConvert('date', (v) => v as String),
+    date: $checkedConvert('date', (v) => v as String?),
     revenue: $checkedConvert('revenue', (v) => v as num),
     orders: $checkedConvert('orders', (v) => v as num),
   );

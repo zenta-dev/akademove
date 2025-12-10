@@ -8,11 +8,11 @@ part of 'driver_quiz_question_get_quiz_questions200_response_data_inner_options_
 
 abstract class _$DriverQuizQuestionGetQuizQuestions200ResponseDataInnerOptionsInnerCWProxy {
   DriverQuizQuestionGetQuizQuestions200ResponseDataInnerOptionsInner id(
-    String id,
+    String? id,
   );
 
   DriverQuizQuestionGetQuizQuestions200ResponseDataInnerOptionsInner text(
-    String text,
+    String? text,
   );
 
   /// Creates a new instance with the provided field values.
@@ -23,8 +23,8 @@ abstract class _$DriverQuizQuestionGetQuizQuestions200ResponseDataInnerOptionsIn
   /// DriverQuizQuestionGetQuizQuestions200ResponseDataInnerOptionsInner(...).copyWith(id: 12, name: "My name")
   /// ```
   DriverQuizQuestionGetQuizQuestions200ResponseDataInnerOptionsInner call({
-    String id,
-    String text,
+    String? id,
+    String? text,
   });
 }
 
@@ -42,12 +42,12 @@ class _$DriverQuizQuestionGetQuizQuestions200ResponseDataInnerOptionsInnerCWProx
 
   @override
   DriverQuizQuestionGetQuizQuestions200ResponseDataInnerOptionsInner id(
-    String id,
+    String? id,
   ) => call(id: id);
 
   @override
   DriverQuizQuestionGetQuizQuestions200ResponseDataInnerOptionsInner text(
-    String text,
+    String? text,
   ) => call(text: text);
 
   @override
@@ -63,14 +63,14 @@ class _$DriverQuizQuestionGetQuizQuestions200ResponseDataInnerOptionsInnerCWProx
     Object? text = const $CopyWithPlaceholder(),
   }) {
     return DriverQuizQuestionGetQuizQuestions200ResponseDataInnerOptionsInner(
-      id: id == const $CopyWithPlaceholder() || id == null
+      id: id == const $CopyWithPlaceholder()
           ? _value.id
           // ignore: cast_nullable_to_non_nullable
-          : id as String,
-      text: text == const $CopyWithPlaceholder() || text == null
+          : id as String?,
+      text: text == const $CopyWithPlaceholder()
           ? _value.text
           // ignore: cast_nullable_to_non_nullable
-          : text as String,
+          : text as String?,
     );
   }
 }
@@ -101,8 +101,8 @@ _$DriverQuizQuestionGetQuizQuestions200ResponseDataInnerOptionsInnerFromJson(
     $checkKeys(json, requiredKeys: const ['id', 'text']);
     final val =
         DriverQuizQuestionGetQuizQuestions200ResponseDataInnerOptionsInner(
-          id: $checkedConvert('id', (v) => v as String),
-          text: $checkedConvert('text', (v) => v as String),
+          id: $checkedConvert('id', (v) => v as String?),
+          text: $checkedConvert('text', (v) => v as String?),
         );
     return val;
   },

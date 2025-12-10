@@ -7,7 +7,7 @@ part of 'merchant_order_accept200_response.dart';
 // **************************************************************************
 
 abstract class _$MerchantOrderAccept200ResponseCWProxy {
-  MerchantOrderAccept200Response message(String message);
+  MerchantOrderAccept200Response message(String? message);
 
   MerchantOrderAccept200Response data(Order data);
 
@@ -23,7 +23,7 @@ abstract class _$MerchantOrderAccept200ResponseCWProxy {
   /// MerchantOrderAccept200Response(...).copyWith(id: 12, name: "My name")
   /// ```
   MerchantOrderAccept200Response call({
-    String message,
+    String? message,
     Order data,
     PaginationResult? pagination,
     int? totalPages,
@@ -39,7 +39,7 @@ class _$MerchantOrderAccept200ResponseCWProxyImpl
   final MerchantOrderAccept200Response _value;
 
   @override
-  MerchantOrderAccept200Response message(String message) =>
+  MerchantOrderAccept200Response message(String? message) =>
       call(message: message);
 
   @override
@@ -68,10 +68,10 @@ class _$MerchantOrderAccept200ResponseCWProxyImpl
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return MerchantOrderAccept200Response(
-      message: message == const $CopyWithPlaceholder() || message == null
+      message: message == const $CopyWithPlaceholder()
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
-          : message as String,
+          : message as String?,
       data: data == const $CopyWithPlaceholder() || data == null
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
@@ -106,7 +106,7 @@ MerchantOrderAccept200Response _$MerchantOrderAccept200ResponseFromJson(
 ) => $checkedCreate('MerchantOrderAccept200Response', json, ($checkedConvert) {
   $checkKeys(json, requiredKeys: const ['message', 'data']);
   final val = MerchantOrderAccept200Response(
-    message: $checkedConvert('message', (v) => v as String),
+    message: $checkedConvert('message', (v) => v as String?),
     data: $checkedConvert(
       'data',
       (v) => Order.fromJson(v as Map<String, dynamic>),

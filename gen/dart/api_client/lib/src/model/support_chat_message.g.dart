@@ -7,23 +7,23 @@ part of 'support_chat_message.dart';
 // **************************************************************************
 
 abstract class _$SupportChatMessageCWProxy {
-  SupportChatMessage id(String id);
+  SupportChatMessage id(String? id);
 
-  SupportChatMessage ticketId(String ticketId);
+  SupportChatMessage ticketId(String? ticketId);
 
-  SupportChatMessage senderId(String senderId);
+  SupportChatMessage senderId(String? senderId);
 
-  SupportChatMessage message(String message);
+  SupportChatMessage message(String? message);
 
   SupportChatMessage isFromSupport(bool isFromSupport);
 
   SupportChatMessage readAt(DateTime? readAt);
 
-  SupportChatMessage sentAt(DateTime sentAt);
+  SupportChatMessage sentAt(DateTime? sentAt);
 
-  SupportChatMessage createdAt(DateTime createdAt);
+  SupportChatMessage createdAt(DateTime? createdAt);
 
-  SupportChatMessage updatedAt(DateTime updatedAt);
+  SupportChatMessage updatedAt(DateTime? updatedAt);
 
   SupportChatMessage sender(OrderChatMessageSender? sender);
 
@@ -35,15 +35,15 @@ abstract class _$SupportChatMessageCWProxy {
   /// SupportChatMessage(...).copyWith(id: 12, name: "My name")
   /// ```
   SupportChatMessage call({
-    String id,
-    String ticketId,
-    String senderId,
-    String message,
+    String? id,
+    String? ticketId,
+    String? senderId,
+    String? message,
     bool isFromSupport,
     DateTime? readAt,
-    DateTime sentAt,
-    DateTime createdAt,
-    DateTime updatedAt,
+    DateTime? sentAt,
+    DateTime? createdAt,
+    DateTime? updatedAt,
     OrderChatMessageSender? sender,
   });
 }
@@ -56,16 +56,16 @@ class _$SupportChatMessageCWProxyImpl implements _$SupportChatMessageCWProxy {
   final SupportChatMessage _value;
 
   @override
-  SupportChatMessage id(String id) => call(id: id);
+  SupportChatMessage id(String? id) => call(id: id);
 
   @override
-  SupportChatMessage ticketId(String ticketId) => call(ticketId: ticketId);
+  SupportChatMessage ticketId(String? ticketId) => call(ticketId: ticketId);
 
   @override
-  SupportChatMessage senderId(String senderId) => call(senderId: senderId);
+  SupportChatMessage senderId(String? senderId) => call(senderId: senderId);
 
   @override
-  SupportChatMessage message(String message) => call(message: message);
+  SupportChatMessage message(String? message) => call(message: message);
 
   @override
   SupportChatMessage isFromSupport(bool isFromSupport) =>
@@ -75,14 +75,14 @@ class _$SupportChatMessageCWProxyImpl implements _$SupportChatMessageCWProxy {
   SupportChatMessage readAt(DateTime? readAt) => call(readAt: readAt);
 
   @override
-  SupportChatMessage sentAt(DateTime sentAt) => call(sentAt: sentAt);
+  SupportChatMessage sentAt(DateTime? sentAt) => call(sentAt: sentAt);
 
   @override
-  SupportChatMessage createdAt(DateTime createdAt) =>
+  SupportChatMessage createdAt(DateTime? createdAt) =>
       call(createdAt: createdAt);
 
   @override
-  SupportChatMessage updatedAt(DateTime updatedAt) =>
+  SupportChatMessage updatedAt(DateTime? updatedAt) =>
       call(updatedAt: updatedAt);
 
   @override
@@ -110,22 +110,22 @@ class _$SupportChatMessageCWProxyImpl implements _$SupportChatMessageCWProxy {
     Object? sender = const $CopyWithPlaceholder(),
   }) {
     return SupportChatMessage(
-      id: id == const $CopyWithPlaceholder() || id == null
+      id: id == const $CopyWithPlaceholder()
           ? _value.id
           // ignore: cast_nullable_to_non_nullable
-          : id as String,
-      ticketId: ticketId == const $CopyWithPlaceholder() || ticketId == null
+          : id as String?,
+      ticketId: ticketId == const $CopyWithPlaceholder()
           ? _value.ticketId
           // ignore: cast_nullable_to_non_nullable
-          : ticketId as String,
-      senderId: senderId == const $CopyWithPlaceholder() || senderId == null
+          : ticketId as String?,
+      senderId: senderId == const $CopyWithPlaceholder()
           ? _value.senderId
           // ignore: cast_nullable_to_non_nullable
-          : senderId as String,
-      message: message == const $CopyWithPlaceholder() || message == null
+          : senderId as String?,
+      message: message == const $CopyWithPlaceholder()
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
-          : message as String,
+          : message as String?,
       isFromSupport:
           isFromSupport == const $CopyWithPlaceholder() || isFromSupport == null
           ? _value.isFromSupport
@@ -135,18 +135,18 @@ class _$SupportChatMessageCWProxyImpl implements _$SupportChatMessageCWProxy {
           ? _value.readAt
           // ignore: cast_nullable_to_non_nullable
           : readAt as DateTime?,
-      sentAt: sentAt == const $CopyWithPlaceholder() || sentAt == null
+      sentAt: sentAt == const $CopyWithPlaceholder()
           ? _value.sentAt
           // ignore: cast_nullable_to_non_nullable
-          : sentAt as DateTime,
-      createdAt: createdAt == const $CopyWithPlaceholder() || createdAt == null
+          : sentAt as DateTime?,
+      createdAt: createdAt == const $CopyWithPlaceholder()
           ? _value.createdAt
           // ignore: cast_nullable_to_non_nullable
-          : createdAt as DateTime,
-      updatedAt: updatedAt == const $CopyWithPlaceholder() || updatedAt == null
+          : createdAt as DateTime?,
+      updatedAt: updatedAt == const $CopyWithPlaceholder()
           ? _value.updatedAt
           // ignore: cast_nullable_to_non_nullable
-          : updatedAt as DateTime,
+          : updatedAt as DateTime?,
       sender: sender == const $CopyWithPlaceholder()
           ? _value.sender
           // ignore: cast_nullable_to_non_nullable
@@ -167,44 +167,52 @@ extension $SupportChatMessageCopyWith on SupportChatMessage {
 // JsonSerializableGenerator
 // **************************************************************************
 
-SupportChatMessage _$SupportChatMessageFromJson(
-  Map<String, dynamic> json,
-) => $checkedCreate('SupportChatMessage', json, ($checkedConvert) {
-  $checkKeys(
-    json,
-    requiredKeys: const [
-      'id',
-      'ticketId',
-      'senderId',
-      'message',
-      'isFromSupport',
-      'sentAt',
-      'createdAt',
-      'updatedAt',
-    ],
-  );
-  final val = SupportChatMessage(
-    id: $checkedConvert('id', (v) => v as String),
-    ticketId: $checkedConvert('ticketId', (v) => v as String),
-    senderId: $checkedConvert('senderId', (v) => v as String),
-    message: $checkedConvert('message', (v) => v as String),
-    isFromSupport: $checkedConvert('isFromSupport', (v) => v as bool),
-    readAt: $checkedConvert(
-      'readAt',
-      (v) => v == null ? null : DateTime.parse(v as String),
-    ),
-    sentAt: $checkedConvert('sentAt', (v) => DateTime.parse(v as String)),
-    createdAt: $checkedConvert('createdAt', (v) => DateTime.parse(v as String)),
-    updatedAt: $checkedConvert('updatedAt', (v) => DateTime.parse(v as String)),
-    sender: $checkedConvert(
-      'sender',
-      (v) => v == null
-          ? null
-          : OrderChatMessageSender.fromJson(v as Map<String, dynamic>),
-    ),
-  );
-  return val;
-});
+SupportChatMessage _$SupportChatMessageFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('SupportChatMessage', json, ($checkedConvert) {
+      $checkKeys(
+        json,
+        requiredKeys: const [
+          'id',
+          'ticketId',
+          'senderId',
+          'message',
+          'isFromSupport',
+          'sentAt',
+          'createdAt',
+          'updatedAt',
+        ],
+      );
+      final val = SupportChatMessage(
+        id: $checkedConvert('id', (v) => v as String?),
+        ticketId: $checkedConvert('ticketId', (v) => v as String?),
+        senderId: $checkedConvert('senderId', (v) => v as String?),
+        message: $checkedConvert('message', (v) => v as String?),
+        isFromSupport: $checkedConvert('isFromSupport', (v) => v as bool),
+        readAt: $checkedConvert(
+          'readAt',
+          (v) => v == null ? null : DateTime.parse(v as String),
+        ),
+        sentAt: $checkedConvert(
+          'sentAt',
+          (v) => v == null ? null : DateTime.parse(v as String),
+        ),
+        createdAt: $checkedConvert(
+          'createdAt',
+          (v) => v == null ? null : DateTime.parse(v as String),
+        ),
+        updatedAt: $checkedConvert(
+          'updatedAt',
+          (v) => v == null ? null : DateTime.parse(v as String),
+        ),
+        sender: $checkedConvert(
+          'sender',
+          (v) => v == null
+              ? null
+              : OrderChatMessageSender.fromJson(v as Map<String, dynamic>),
+        ),
+      );
+      return val;
+    });
 
 Map<String, dynamic> _$SupportChatMessageToJson(SupportChatMessage instance) =>
     <String, dynamic>{
@@ -214,8 +222,8 @@ Map<String, dynamic> _$SupportChatMessageToJson(SupportChatMessage instance) =>
       'message': instance.message,
       'isFromSupport': instance.isFromSupport,
       'readAt': ?instance.readAt?.toIso8601String(),
-      'sentAt': instance.sentAt.toIso8601String(),
-      'createdAt': instance.createdAt.toIso8601String(),
-      'updatedAt': instance.updatedAt.toIso8601String(),
+      'sentAt': instance.sentAt?.toIso8601String(),
+      'createdAt': instance.createdAt?.toIso8601String(),
+      'updatedAt': instance.updatedAt?.toIso8601String(),
       'sender': ?instance.sender?.toJson(),
     };

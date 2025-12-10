@@ -7,7 +7,7 @@ part of 'auth_get_session200_response.dart';
 // **************************************************************************
 
 abstract class _$AuthGetSession200ResponseCWProxy {
-  AuthGetSession200Response message(String message);
+  AuthGetSession200Response message(String? message);
 
   AuthGetSession200Response data(GetSessionResponse? data);
 
@@ -23,7 +23,7 @@ abstract class _$AuthGetSession200ResponseCWProxy {
   /// AuthGetSession200Response(...).copyWith(id: 12, name: "My name")
   /// ```
   AuthGetSession200Response call({
-    String message,
+    String? message,
     GetSessionResponse? data,
     PaginationResult? pagination,
     int? totalPages,
@@ -39,7 +39,7 @@ class _$AuthGetSession200ResponseCWProxyImpl
   final AuthGetSession200Response _value;
 
   @override
-  AuthGetSession200Response message(String message) => call(message: message);
+  AuthGetSession200Response message(String? message) => call(message: message);
 
   @override
   AuthGetSession200Response data(GetSessionResponse? data) => call(data: data);
@@ -67,10 +67,10 @@ class _$AuthGetSession200ResponseCWProxyImpl
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return AuthGetSession200Response(
-      message: message == const $CopyWithPlaceholder() || message == null
+      message: message == const $CopyWithPlaceholder()
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
-          : message as String,
+          : message as String?,
       data: data == const $CopyWithPlaceholder()
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
@@ -104,7 +104,7 @@ AuthGetSession200Response _$AuthGetSession200ResponseFromJson(
 ) => $checkedCreate('AuthGetSession200Response', json, ($checkedConvert) {
   $checkKeys(json, requiredKeys: const ['message', 'data']);
   final val = AuthGetSession200Response(
-    message: $checkedConvert('message', (v) => v as String),
+    message: $checkedConvert('message', (v) => v as String?),
     data: $checkedConvert(
       'data',
       (v) => v == null

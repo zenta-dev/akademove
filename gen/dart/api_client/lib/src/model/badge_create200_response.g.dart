@@ -7,7 +7,7 @@ part of 'badge_create200_response.dart';
 // **************************************************************************
 
 abstract class _$BadgeCreate200ResponseCWProxy {
-  BadgeCreate200Response message(String message);
+  BadgeCreate200Response message(String? message);
 
   BadgeCreate200Response data(Badge data);
 
@@ -23,7 +23,7 @@ abstract class _$BadgeCreate200ResponseCWProxy {
   /// BadgeCreate200Response(...).copyWith(id: 12, name: "My name")
   /// ```
   BadgeCreate200Response call({
-    String message,
+    String? message,
     Badge data,
     PaginationResult? pagination,
     int? totalPages,
@@ -39,7 +39,7 @@ class _$BadgeCreate200ResponseCWProxyImpl
   final BadgeCreate200Response _value;
 
   @override
-  BadgeCreate200Response message(String message) => call(message: message);
+  BadgeCreate200Response message(String? message) => call(message: message);
 
   @override
   BadgeCreate200Response data(Badge data) => call(data: data);
@@ -67,10 +67,10 @@ class _$BadgeCreate200ResponseCWProxyImpl
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return BadgeCreate200Response(
-      message: message == const $CopyWithPlaceholder() || message == null
+      message: message == const $CopyWithPlaceholder()
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
-          : message as String,
+          : message as String?,
       data: data == const $CopyWithPlaceholder() || data == null
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
@@ -104,7 +104,7 @@ BadgeCreate200Response _$BadgeCreate200ResponseFromJson(
 ) => $checkedCreate('BadgeCreate200Response', json, ($checkedConvert) {
   $checkKeys(json, requiredKeys: const ['message', 'data']);
   final val = BadgeCreate200Response(
-    message: $checkedConvert('message', (v) => v as String),
+    message: $checkedConvert('message', (v) => v as String?),
     data: $checkedConvert(
       'data',
       (v) => Badge.fromJson(v as Map<String, dynamic>),

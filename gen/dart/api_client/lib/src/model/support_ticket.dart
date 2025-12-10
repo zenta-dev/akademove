@@ -38,11 +38,11 @@ class SupportTicket {
     this.user,
     this.assignedTo,
   });
-  @JsonKey(name: r'id', required: true, includeIfNull: false)
-  final String id;
+  @JsonKey(name: r'id', required: true, includeIfNull: true)
+  final String? id;
 
-  @JsonKey(name: r'userId', required: true, includeIfNull: false)
-  final String userId;
+  @JsonKey(name: r'userId', required: true, includeIfNull: true)
+  final String? userId;
 
   @JsonKey(name: r'assignedToId', required: false, includeIfNull: false)
   final String? assignedToId;
@@ -68,11 +68,11 @@ class SupportTicket {
   @JsonKey(name: r'resolvedAt', required: false, includeIfNull: false)
   final DateTime? resolvedAt;
 
-  @JsonKey(name: r'createdAt', required: true, includeIfNull: false)
-  final DateTime createdAt;
+  @JsonKey(name: r'createdAt', required: true, includeIfNull: true)
+  final DateTime? createdAt;
 
-  @JsonKey(name: r'updatedAt', required: true, includeIfNull: false)
-  final DateTime updatedAt;
+  @JsonKey(name: r'updatedAt', required: true, includeIfNull: true)
+  final DateTime? updatedAt;
 
   @JsonKey(name: r'user', required: false, includeIfNull: false)
   final SupportTicketUser? user;
@@ -101,18 +101,18 @@ class SupportTicket {
 
   @override
   int get hashCode =>
-      id.hashCode +
-      userId.hashCode +
-      assignedToId.hashCode +
+      (id == null ? 0 : id.hashCode) +
+      (userId == null ? 0 : userId.hashCode) +
+      (assignedToId == null ? 0 : assignedToId.hashCode) +
       subject.hashCode +
       category.hashCode +
       priority.hashCode +
       status.hashCode +
-      orderId.hashCode +
-      lastMessageAt.hashCode +
-      resolvedAt.hashCode +
-      createdAt.hashCode +
-      updatedAt.hashCode +
+      (orderId == null ? 0 : orderId.hashCode) +
+      (lastMessageAt == null ? 0 : lastMessageAt.hashCode) +
+      (resolvedAt == null ? 0 : resolvedAt.hashCode) +
+      (createdAt == null ? 0 : createdAt.hashCode) +
+      (updatedAt == null ? 0 : updatedAt.hashCode) +
       user.hashCode +
       assignedTo.hashCode;
 

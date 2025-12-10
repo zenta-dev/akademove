@@ -11,9 +11,9 @@ import 'package:dio/dio.dart';
 
 import 'package:api_client/src/model/badge_remove200_response.dart';
 import 'package:api_client/src/model/coordinate_with_meta.dart';
+import 'package:api_client/src/model/driver_get200_response.dart';
 import 'package:api_client/src/model/driver_get_analytics200_response.dart';
 import 'package:api_client/src/model/driver_get_mine200_response.dart';
-import 'package:api_client/src/model/driver_get_mine200_response_body.dart';
 import 'package:api_client/src/model/driver_get_review200_response.dart';
 import 'package:api_client/src/model/driver_list200_response.dart';
 import 'package:api_client/src/model/driver_schedule_create200_response.dart';
@@ -53,8 +53,8 @@ class DriverApi {
   /// Throws [DioException] if API call or serialization fails
   Future<Response<String>> analyticsExportDriverAnalytics({
     required String driverId,
-    required DateTime startDate,
-    required DateTime endDate,
+    DateTime? startDate,
+    DateTime? endDate,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -135,9 +135,9 @@ class DriverApi {
   /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
   /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
   ///
-  /// Returns a [Future] containing a [Response] with a [DriverGetMine200ResponseBody] as data
+  /// Returns a [Future] containing a [Response] with a [DriverGet200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<DriverGetMine200ResponseBody>> driverGet({
+  Future<Response<DriverGet200Response>> driverGet({
     required String id,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -172,16 +172,17 @@ class DriverApi {
       onReceiveProgress: onReceiveProgress,
     );
 
-    DriverGetMine200ResponseBody? _responseData;
+    DriverGet200Response? _responseData;
 
     try {
       final rawData = _response.data;
       _responseData = rawData == null
           ? null
-          : deserialize<
-              DriverGetMine200ResponseBody,
-              DriverGetMine200ResponseBody
-            >(rawData, 'DriverGetMine200ResponseBody', growable: true);
+          : deserialize<DriverGet200Response, DriverGet200Response>(
+              rawData,
+              'DriverGet200Response',
+              growable: true,
+            );
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -192,7 +193,7 @@ class DriverApi {
       );
     }
 
-    return Response<DriverGetMine200ResponseBody>(
+    return Response<DriverGet200Response>(
       data: _responseData,
       headers: _response.headers,
       isRedirect: _response.isRedirect,
@@ -1461,9 +1462,9 @@ class DriverApi {
   /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
   /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
   ///
-  /// Returns a [Future] containing a [Response] with a [DriverGetMine200ResponseBody] as data
+  /// Returns a [Future] containing a [Response] with a [DriverGet200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<DriverGetMine200ResponseBody>> driverUpdate({
+  Future<Response<DriverGet200Response>> driverUpdate({
     required String id,
     num? studentId,
     String? licensePlate,
@@ -1535,16 +1536,17 @@ class DriverApi {
       onReceiveProgress: onReceiveProgress,
     );
 
-    DriverGetMine200ResponseBody? _responseData;
+    DriverGet200Response? _responseData;
 
     try {
       final rawData = _response.data;
       _responseData = rawData == null
           ? null
-          : deserialize<
-              DriverGetMine200ResponseBody,
-              DriverGetMine200ResponseBody
-            >(rawData, 'DriverGetMine200ResponseBody', growable: true);
+          : deserialize<DriverGet200Response, DriverGet200Response>(
+              rawData,
+              'DriverGet200Response',
+              growable: true,
+            );
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -1555,7 +1557,7 @@ class DriverApi {
       );
     }
 
-    return Response<DriverGetMine200ResponseBody>(
+    return Response<DriverGet200Response>(
       data: _responseData,
       headers: _response.headers,
       isRedirect: _response.isRedirect,
@@ -1680,9 +1682,9 @@ class DriverApi {
   /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
   /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
   ///
-  /// Returns a [Future] containing a [Response] with a [DriverGetMine200ResponseBody] as data
+  /// Returns a [Future] containing a [Response] with a [DriverGet200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<DriverGetMine200ResponseBody>> driverUpdateLocation({
+  Future<Response<DriverGet200Response>> driverUpdateLocation({
     required String id,
     required CoordinateWithMeta coordinateWithMeta,
     CancelToken? cancelToken,
@@ -1733,16 +1735,17 @@ class DriverApi {
       onReceiveProgress: onReceiveProgress,
     );
 
-    DriverGetMine200ResponseBody? _responseData;
+    DriverGet200Response? _responseData;
 
     try {
       final rawData = _response.data;
       _responseData = rawData == null
           ? null
-          : deserialize<
-              DriverGetMine200ResponseBody,
-              DriverGetMine200ResponseBody
-            >(rawData, 'DriverGetMine200ResponseBody', growable: true);
+          : deserialize<DriverGet200Response, DriverGet200Response>(
+              rawData,
+              'DriverGet200Response',
+              growable: true,
+            );
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -1753,7 +1756,7 @@ class DriverApi {
       );
     }
 
-    return Response<DriverGetMine200ResponseBody>(
+    return Response<DriverGet200Response>(
       data: _responseData,
       headers: _response.headers,
       isRedirect: _response.isRedirect,
@@ -1778,9 +1781,9 @@ class DriverApi {
   /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
   /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
   ///
-  /// Returns a [Future] containing a [Response] with a [DriverGetMine200ResponseBody] as data
+  /// Returns a [Future] containing a [Response] with a [DriverGet200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<DriverGetMine200ResponseBody>> driverUpdateOnlineStatus({
+  Future<Response<DriverGet200Response>> driverUpdateOnlineStatus({
     required String id,
     required DriverUpdateOnlineStatusRequest driverUpdateOnlineStatusRequest,
     CancelToken? cancelToken,
@@ -1831,16 +1834,17 @@ class DriverApi {
       onReceiveProgress: onReceiveProgress,
     );
 
-    DriverGetMine200ResponseBody? _responseData;
+    DriverGet200Response? _responseData;
 
     try {
       final rawData = _response.data;
       _responseData = rawData == null
           ? null
-          : deserialize<
-              DriverGetMine200ResponseBody,
-              DriverGetMine200ResponseBody
-            >(rawData, 'DriverGetMine200ResponseBody', growable: true);
+          : deserialize<DriverGet200Response, DriverGet200Response>(
+              rawData,
+              'DriverGet200Response',
+              growable: true,
+            );
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -1851,7 +1855,7 @@ class DriverApi {
       );
     }
 
-    return Response<DriverGetMine200ResponseBody>(
+    return Response<DriverGet200Response>(
       data: _responseData,
       headers: _response.headers,
       isRedirect: _response.isRedirect,
@@ -1876,9 +1880,9 @@ class DriverApi {
   /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
   /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
   ///
-  /// Returns a [Future] containing a [Response] with a [DriverGetMine200ResponseBody] as data
+  /// Returns a [Future] containing a [Response] with a [DriverGet200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<DriverGetMine200ResponseBody>> driverUpdateTakingOrderStatus({
+  Future<Response<DriverGet200Response>> driverUpdateTakingOrderStatus({
     required String id,
     required DriverUpdateTakingOrderStatusRequest
     driverUpdateTakingOrderStatusRequest,
@@ -1930,16 +1934,17 @@ class DriverApi {
       onReceiveProgress: onReceiveProgress,
     );
 
-    DriverGetMine200ResponseBody? _responseData;
+    DriverGet200Response? _responseData;
 
     try {
       final rawData = _response.data;
       _responseData = rawData == null
           ? null
-          : deserialize<
-              DriverGetMine200ResponseBody,
-              DriverGetMine200ResponseBody
-            >(rawData, 'DriverGetMine200ResponseBody', growable: true);
+          : deserialize<DriverGet200Response, DriverGet200Response>(
+              rawData,
+              'DriverGet200Response',
+              growable: true,
+            );
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -1950,7 +1955,7 @@ class DriverApi {
       );
     }
 
-    return Response<DriverGetMine200ResponseBody>(
+    return Response<DriverGet200Response>(
       data: _responseData,
       headers: _response.headers,
       isRedirect: _response.isRedirect,

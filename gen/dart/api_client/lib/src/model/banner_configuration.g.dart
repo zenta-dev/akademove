@@ -7,11 +7,11 @@ part of 'banner_configuration.dart';
 // **************************************************************************
 
 abstract class _$BannerConfigurationCWProxy {
-  BannerConfiguration title(String title);
+  BannerConfiguration title(String? title);
 
-  BannerConfiguration description(String description);
+  BannerConfiguration description(String? description);
 
-  BannerConfiguration imageUrl(String imageUrl);
+  BannerConfiguration imageUrl(String? imageUrl);
 
   /// Creates a new instance with the provided field values.
   /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `BannerConfiguration(...).copyWith.fieldName(value)`.
@@ -20,7 +20,11 @@ abstract class _$BannerConfigurationCWProxy {
   /// ```dart
   /// BannerConfiguration(...).copyWith(id: 12, name: "My name")
   /// ```
-  BannerConfiguration call({String title, String description, String imageUrl});
+  BannerConfiguration call({
+    String? title,
+    String? description,
+    String? imageUrl,
+  });
 }
 
 /// Callable proxy for `copyWith` functionality.
@@ -31,14 +35,14 @@ class _$BannerConfigurationCWProxyImpl implements _$BannerConfigurationCWProxy {
   final BannerConfiguration _value;
 
   @override
-  BannerConfiguration title(String title) => call(title: title);
+  BannerConfiguration title(String? title) => call(title: title);
 
   @override
-  BannerConfiguration description(String description) =>
+  BannerConfiguration description(String? description) =>
       call(description: description);
 
   @override
-  BannerConfiguration imageUrl(String imageUrl) => call(imageUrl: imageUrl);
+  BannerConfiguration imageUrl(String? imageUrl) => call(imageUrl: imageUrl);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -54,19 +58,18 @@ class _$BannerConfigurationCWProxyImpl implements _$BannerConfigurationCWProxy {
     Object? imageUrl = const $CopyWithPlaceholder(),
   }) {
     return BannerConfiguration(
-      title: title == const $CopyWithPlaceholder() || title == null
+      title: title == const $CopyWithPlaceholder()
           ? _value.title
           // ignore: cast_nullable_to_non_nullable
-          : title as String,
-      description:
-          description == const $CopyWithPlaceholder() || description == null
+          : title as String?,
+      description: description == const $CopyWithPlaceholder()
           ? _value.description
           // ignore: cast_nullable_to_non_nullable
-          : description as String,
-      imageUrl: imageUrl == const $CopyWithPlaceholder() || imageUrl == null
+          : description as String?,
+      imageUrl: imageUrl == const $CopyWithPlaceholder()
           ? _value.imageUrl
           // ignore: cast_nullable_to_non_nullable
-          : imageUrl as String,
+          : imageUrl as String?,
     );
   }
 }
@@ -90,9 +93,9 @@ BannerConfiguration _$BannerConfigurationFromJson(Map<String, dynamic> json) =>
         requiredKeys: const ['title', 'description', 'imageUrl'],
       );
       final val = BannerConfiguration(
-        title: $checkedConvert('title', (v) => v as String),
-        description: $checkedConvert('description', (v) => v as String),
-        imageUrl: $checkedConvert('imageUrl', (v) => v as String),
+        title: $checkedConvert('title', (v) => v as String?),
+        description: $checkedConvert('description', (v) => v as String?),
+        imageUrl: $checkedConvert('imageUrl', (v) => v as String?),
       );
       return val;
     });

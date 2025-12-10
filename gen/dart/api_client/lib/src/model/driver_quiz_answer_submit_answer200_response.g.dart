@@ -7,7 +7,7 @@ part of 'driver_quiz_answer_submit_answer200_response.dart';
 // **************************************************************************
 
 abstract class _$DriverQuizAnswerSubmitAnswer200ResponseCWProxy {
-  DriverQuizAnswerSubmitAnswer200Response message(String message);
+  DriverQuizAnswerSubmitAnswer200Response message(String? message);
 
   DriverQuizAnswerSubmitAnswer200Response data(
     SubmitDriverQuizAnswerResponse data,
@@ -27,7 +27,7 @@ abstract class _$DriverQuizAnswerSubmitAnswer200ResponseCWProxy {
   /// DriverQuizAnswerSubmitAnswer200Response(...).copyWith(id: 12, name: "My name")
   /// ```
   DriverQuizAnswerSubmitAnswer200Response call({
-    String message,
+    String? message,
     SubmitDriverQuizAnswerResponse data,
     PaginationResult? pagination,
     int? totalPages,
@@ -43,7 +43,7 @@ class _$DriverQuizAnswerSubmitAnswer200ResponseCWProxyImpl
   final DriverQuizAnswerSubmitAnswer200Response _value;
 
   @override
-  DriverQuizAnswerSubmitAnswer200Response message(String message) =>
+  DriverQuizAnswerSubmitAnswer200Response message(String? message) =>
       call(message: message);
 
   @override
@@ -75,10 +75,10 @@ class _$DriverQuizAnswerSubmitAnswer200ResponseCWProxyImpl
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return DriverQuizAnswerSubmitAnswer200Response(
-      message: message == const $CopyWithPlaceholder() || message == null
+      message: message == const $CopyWithPlaceholder()
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
-          : message as String,
+          : message as String?,
       data: data == const $CopyWithPlaceholder() || data == null
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
@@ -115,7 +115,7 @@ _$DriverQuizAnswerSubmitAnswer200ResponseFromJson(Map<String, dynamic> json) =>
     ) {
       $checkKeys(json, requiredKeys: const ['message', 'data']);
       final val = DriverQuizAnswerSubmitAnswer200Response(
-        message: $checkedConvert('message', (v) => v as String),
+        message: $checkedConvert('message', (v) => v as String?),
         data: $checkedConvert(
           'data',
           (v) => SubmitDriverQuizAnswerResponse.fromJson(

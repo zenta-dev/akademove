@@ -22,8 +22,8 @@ class SupportChatMessageListQuery {
     this.limit = 50,
     this.cursor,
   });
-  @JsonKey(name: r'ticketId', required: true, includeIfNull: false)
-  final String ticketId;
+  @JsonKey(name: r'ticketId', required: true, includeIfNull: true)
+  final String? ticketId;
 
   // minimum: -9007199254740991
   // maximum: 1000
@@ -47,7 +47,10 @@ class SupportChatMessageListQuery {
           other.cursor == cursor;
 
   @override
-  int get hashCode => ticketId.hashCode + limit.hashCode + cursor.hashCode;
+  int get hashCode =>
+      (ticketId == null ? 0 : ticketId.hashCode) +
+      limit.hashCode +
+      (cursor == null ? 0 : cursor.hashCode);
 
   factory SupportChatMessageListQuery.fromJson(Map<String, dynamic> json) =>
       _$SupportChatMessageListQueryFromJson(json);

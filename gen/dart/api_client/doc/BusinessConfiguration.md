@@ -15,7 +15,15 @@ Name | Type | Description | Notes
 **userCancellationFeeBeforeAccept** | **num** |  | 
 **userCancellationFeeAfterAccept** | **num** |  | 
 **noShowFee** | **num** |  | 
+**noShowDriverCompensationRate** | **num** |  | 
 **highValueOrderThreshold** | **num** |  | 
+**driverMatchingTimeoutMinutes** | **num** |  | [optional] [default to 15]
+**driverMatchingInitialRadiusKm** | **num** |  | [optional] [default to 5]
+**driverMatchingMaxRadiusKm** | **num** |  | [optional] [default to 20]
+**driverMatchingRadiusExpansionRate** | **num** |  | [optional] [default to 0.2]
+**driverMatchingIntervalSeconds** | **num** |  | [optional] [default to 30]
+**driverMatchingBroadcastLimit** | **int** |  | [optional] [default to 10]
+**driverMaxCancellationsPerDay** | **int** |  | [optional] [default to 3]
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

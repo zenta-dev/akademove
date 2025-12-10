@@ -35,11 +35,11 @@ class DriverGetReview200ResponseData {
     required this.createdAt,
     required this.updatedAt,
   });
-  @JsonKey(name: r'id', required: true, includeIfNull: false)
-  final String id;
+  @JsonKey(name: r'id', required: true, includeIfNull: true)
+  final String? id;
 
-  @JsonKey(name: r'driverId', required: true, includeIfNull: false)
-  final String driverId;
+  @JsonKey(name: r'driverId', required: true, includeIfNull: true)
+  final String? driverId;
 
   @JsonKey(name: r'status', required: true, includeIfNull: false)
   final DriverGetReview200ResponseDataStatusEnum status;
@@ -87,11 +87,11 @@ class DriverGetReview200ResponseData {
   @JsonKey(name: r'reviewNotes', required: true, includeIfNull: true)
   final String? reviewNotes;
 
-  @JsonKey(name: r'createdAt', required: true, includeIfNull: false)
-  final DateTime createdAt;
+  @JsonKey(name: r'createdAt', required: true, includeIfNull: true)
+  final DateTime? createdAt;
 
-  @JsonKey(name: r'updatedAt', required: true, includeIfNull: false)
-  final DateTime updatedAt;
+  @JsonKey(name: r'updatedAt', required: true, includeIfNull: true)
+  final DateTime? updatedAt;
 
   @override
   bool operator ==(Object other) =>
@@ -116,8 +116,8 @@ class DriverGetReview200ResponseData {
 
   @override
   int get hashCode =>
-      id.hashCode +
-      driverId.hashCode +
+      (id == null ? 0 : id.hashCode) +
+      (driverId == null ? 0 : driverId.hashCode) +
       status.hashCode +
       studentCardStatus.hashCode +
       (studentCardReason == null ? 0 : studentCardReason.hashCode) +
@@ -132,8 +132,8 @@ class DriverGetReview200ResponseData {
       (reviewedBy == null ? 0 : reviewedBy.hashCode) +
       (reviewedAt == null ? 0 : reviewedAt.hashCode) +
       (reviewNotes == null ? 0 : reviewNotes.hashCode) +
-      createdAt.hashCode +
-      updatedAt.hashCode;
+      (createdAt == null ? 0 : createdAt.hashCode) +
+      (updatedAt == null ? 0 : updatedAt.hashCode);
 
   factory DriverGetReview200ResponseData.fromJson(Map<String, dynamic> json) =>
       _$DriverGetReview200ResponseDataFromJson(json);

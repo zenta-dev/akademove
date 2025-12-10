@@ -3,7 +3,7 @@
 //
 
 // ignore_for_file: unused_element
-import 'package:api_client/src/model/driver_quiz_question_get_quiz_questions200_response_data_inner_options_inner.dart';
+import 'package:api_client/src/model/driver_min_quiz_question_options_inner.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
 
@@ -27,17 +27,17 @@ class DriverMinQuizQuestion {
     required this.displayOrder,
     required this.options,
   });
-  @JsonKey(name: r'id', required: true, includeIfNull: false)
-  final String id;
+  @JsonKey(name: r'id', required: true, includeIfNull: true)
+  final String? id;
 
-  @JsonKey(name: r'question', required: true, includeIfNull: false)
-  final String question;
+  @JsonKey(name: r'question', required: true, includeIfNull: true)
+  final String? question;
 
-  @JsonKey(name: r'type', required: true, includeIfNull: false)
-  final String type;
+  @JsonKey(name: r'type', required: true, includeIfNull: true)
+  final String? type;
 
-  @JsonKey(name: r'category', required: true, includeIfNull: false)
-  final String category;
+  @JsonKey(name: r'category', required: true, includeIfNull: true)
+  final String? category;
 
   @JsonKey(name: r'points', required: true, includeIfNull: false)
   final num points;
@@ -46,8 +46,7 @@ class DriverMinQuizQuestion {
   final num displayOrder;
 
   @JsonKey(name: r'options', required: true, includeIfNull: false)
-  final List<DriverQuizQuestionGetQuizQuestions200ResponseDataInnerOptionsInner>
-  options;
+  final List<DriverMinQuizQuestionOptionsInner> options;
 
   @override
   bool operator ==(Object other) =>
@@ -63,10 +62,10 @@ class DriverMinQuizQuestion {
 
   @override
   int get hashCode =>
-      id.hashCode +
-      question.hashCode +
-      type.hashCode +
-      category.hashCode +
+      (id == null ? 0 : id.hashCode) +
+      (question == null ? 0 : question.hashCode) +
+      (type == null ? 0 : type.hashCode) +
+      (category == null ? 0 : category.hashCode) +
       points.hashCode +
       displayOrder.hashCode +
       options.hashCode;

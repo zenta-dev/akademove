@@ -7,7 +7,7 @@ part of 'driver_quiz_answer_get_attempt200_response.dart';
 // **************************************************************************
 
 abstract class _$DriverQuizAnswerGetAttempt200ResponseCWProxy {
-  DriverQuizAnswerGetAttempt200Response message(String message);
+  DriverQuizAnswerGetAttempt200Response message(String? message);
 
   DriverQuizAnswerGetAttempt200Response data(DriverQuizAnswer data);
 
@@ -25,7 +25,7 @@ abstract class _$DriverQuizAnswerGetAttempt200ResponseCWProxy {
   /// DriverQuizAnswerGetAttempt200Response(...).copyWith(id: 12, name: "My name")
   /// ```
   DriverQuizAnswerGetAttempt200Response call({
-    String message,
+    String? message,
     DriverQuizAnswer data,
     PaginationResult? pagination,
     int? totalPages,
@@ -41,7 +41,7 @@ class _$DriverQuizAnswerGetAttempt200ResponseCWProxyImpl
   final DriverQuizAnswerGetAttempt200Response _value;
 
   @override
-  DriverQuizAnswerGetAttempt200Response message(String message) =>
+  DriverQuizAnswerGetAttempt200Response message(String? message) =>
       call(message: message);
 
   @override
@@ -72,10 +72,10 @@ class _$DriverQuizAnswerGetAttempt200ResponseCWProxyImpl
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return DriverQuizAnswerGetAttempt200Response(
-      message: message == const $CopyWithPlaceholder() || message == null
+      message: message == const $CopyWithPlaceholder()
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
-          : message as String,
+          : message as String?,
       data: data == const $CopyWithPlaceholder() || data == null
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
@@ -112,7 +112,7 @@ _$DriverQuizAnswerGetAttempt200ResponseFromJson(Map<String, dynamic> json) =>
     ) {
       $checkKeys(json, requiredKeys: const ['message', 'data']);
       final val = DriverQuizAnswerGetAttempt200Response(
-        message: $checkedConvert('message', (v) => v as String),
+        message: $checkedConvert('message', (v) => v as String?),
         data: $checkedConvert(
           'data',
           (v) => DriverQuizAnswer.fromJson(v as Map<String, dynamic>),

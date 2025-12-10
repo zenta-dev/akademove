@@ -27,7 +27,7 @@ class DriverSubmitApprovalRequest {
       other is DriverSubmitApprovalRequest && other.reviewNotes == reviewNotes;
 
   @override
-  int get hashCode => reviewNotes.hashCode;
+  int get hashCode => (reviewNotes == null ? 0 : reviewNotes.hashCode);
 
   factory DriverSubmitApprovalRequest.fromJson(Map<String, dynamic> json) =>
       _$DriverSubmitApprovalRequestFromJson(json);

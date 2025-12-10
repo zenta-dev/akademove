@@ -7,7 +7,7 @@ part of 'user_admin_create200_response.dart';
 // **************************************************************************
 
 abstract class _$UserAdminCreate200ResponseCWProxy {
-  UserAdminCreate200Response message(String message);
+  UserAdminCreate200Response message(String? message);
 
   UserAdminCreate200Response data(User data);
 
@@ -23,7 +23,7 @@ abstract class _$UserAdminCreate200ResponseCWProxy {
   /// UserAdminCreate200Response(...).copyWith(id: 12, name: "My name")
   /// ```
   UserAdminCreate200Response call({
-    String message,
+    String? message,
     User data,
     PaginationResult? pagination,
     int? totalPages,
@@ -39,7 +39,7 @@ class _$UserAdminCreate200ResponseCWProxyImpl
   final UserAdminCreate200Response _value;
 
   @override
-  UserAdminCreate200Response message(String message) => call(message: message);
+  UserAdminCreate200Response message(String? message) => call(message: message);
 
   @override
   UserAdminCreate200Response data(User data) => call(data: data);
@@ -67,10 +67,10 @@ class _$UserAdminCreate200ResponseCWProxyImpl
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return UserAdminCreate200Response(
-      message: message == const $CopyWithPlaceholder() || message == null
+      message: message == const $CopyWithPlaceholder()
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
-          : message as String,
+          : message as String?,
       data: data == const $CopyWithPlaceholder() || data == null
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
@@ -104,7 +104,7 @@ UserAdminCreate200Response _$UserAdminCreate200ResponseFromJson(
 ) => $checkedCreate('UserAdminCreate200Response', json, ($checkedConvert) {
   $checkKeys(json, requiredKeys: const ['message', 'data']);
   final val = UserAdminCreate200Response(
-    message: $checkedConvert('message', (v) => v as String),
+    message: $checkedConvert('message', (v) => v as String?),
     data: $checkedConvert(
       'data',
       (v) => User.fromJson(v as Map<String, dynamic>),

@@ -7,13 +7,13 @@ part of 'cart_item.dart';
 // **************************************************************************
 
 abstract class _$CartItemCWProxy {
-  CartItem menuId(String menuId);
+  CartItem menuId(String? menuId);
 
-  CartItem merchantId(String merchantId);
+  CartItem merchantId(String? merchantId);
 
-  CartItem merchantName(String merchantName);
+  CartItem merchantName(String? merchantName);
 
-  CartItem menuName(String menuName);
+  CartItem menuName(String? menuName);
 
   CartItem menuImage(String? menuImage);
 
@@ -31,10 +31,10 @@ abstract class _$CartItemCWProxy {
   /// CartItem(...).copyWith(id: 12, name: "My name")
   /// ```
   CartItem call({
-    String menuId,
-    String merchantId,
-    String merchantName,
-    String menuName,
+    String? menuId,
+    String? merchantId,
+    String? merchantName,
+    String? menuName,
     String? menuImage,
     num unitPrice,
     int quantity,
@@ -50,17 +50,17 @@ class _$CartItemCWProxyImpl implements _$CartItemCWProxy {
   final CartItem _value;
 
   @override
-  CartItem menuId(String menuId) => call(menuId: menuId);
+  CartItem menuId(String? menuId) => call(menuId: menuId);
 
   @override
-  CartItem merchantId(String merchantId) => call(merchantId: merchantId);
+  CartItem merchantId(String? merchantId) => call(merchantId: merchantId);
 
   @override
-  CartItem merchantName(String merchantName) =>
+  CartItem merchantName(String? merchantName) =>
       call(merchantName: merchantName);
 
   @override
-  CartItem menuName(String menuName) => call(menuName: menuName);
+  CartItem menuName(String? menuName) => call(menuName: menuName);
 
   @override
   CartItem menuImage(String? menuImage) => call(menuImage: menuImage);
@@ -93,24 +93,22 @@ class _$CartItemCWProxyImpl implements _$CartItemCWProxy {
     Object? notes = const $CopyWithPlaceholder(),
   }) {
     return CartItem(
-      menuId: menuId == const $CopyWithPlaceholder() || menuId == null
+      menuId: menuId == const $CopyWithPlaceholder()
           ? _value.menuId
           // ignore: cast_nullable_to_non_nullable
-          : menuId as String,
-      merchantId:
-          merchantId == const $CopyWithPlaceholder() || merchantId == null
+          : menuId as String?,
+      merchantId: merchantId == const $CopyWithPlaceholder()
           ? _value.merchantId
           // ignore: cast_nullable_to_non_nullable
-          : merchantId as String,
-      merchantName:
-          merchantName == const $CopyWithPlaceholder() || merchantName == null
+          : merchantId as String?,
+      merchantName: merchantName == const $CopyWithPlaceholder()
           ? _value.merchantName
           // ignore: cast_nullable_to_non_nullable
-          : merchantName as String,
-      menuName: menuName == const $CopyWithPlaceholder() || menuName == null
+          : merchantName as String?,
+      menuName: menuName == const $CopyWithPlaceholder()
           ? _value.menuName
           // ignore: cast_nullable_to_non_nullable
-          : menuName as String,
+          : menuName as String?,
       menuImage: menuImage == const $CopyWithPlaceholder()
           ? _value.menuImage
           // ignore: cast_nullable_to_non_nullable
@@ -157,10 +155,10 @@ CartItem _$CartItemFromJson(Map<String, dynamic> json) =>
         ],
       );
       final val = CartItem(
-        menuId: $checkedConvert('menuId', (v) => v as String),
-        merchantId: $checkedConvert('merchantId', (v) => v as String),
-        merchantName: $checkedConvert('merchantName', (v) => v as String),
-        menuName: $checkedConvert('menuName', (v) => v as String),
+        menuId: $checkedConvert('menuId', (v) => v as String?),
+        merchantId: $checkedConvert('merchantId', (v) => v as String?),
+        merchantName: $checkedConvert('merchantName', (v) => v as String?),
+        menuName: $checkedConvert('menuName', (v) => v as String?),
         menuImage: $checkedConvert('menuImage', (v) => v as String?),
         unitPrice: $checkedConvert('unitPrice', (v) => v as num),
         quantity: $checkedConvert('quantity', (v) => (v as num).toInt()),

@@ -30,7 +30,7 @@ abstract class _$DashboardStatsCWProxy {
   DashboardStats onlineDrivers(num onlineDrivers);
 
   DashboardStats revenueByDay(
-    List<MerchantAnalytics200ResponseDataRevenueByDayInner> revenueByDay,
+    List<DashboardStatsRevenueByDayInner> revenueByDay,
   );
 
   DashboardStats ordersByDay(List<DashboardStatsOrdersByDayInner> ordersByDay);
@@ -68,7 +68,7 @@ abstract class _$DashboardStatsCWProxy {
     num todayRevenue,
     num todayOrders,
     num onlineDrivers,
-    List<MerchantAnalytics200ResponseDataRevenueByDayInner> revenueByDay,
+    List<DashboardStatsRevenueByDayInner> revenueByDay,
     List<DashboardStatsOrdersByDayInner> ordersByDay,
     List<DashboardStatsOrdersByTypeInner> ordersByType,
     List<DashboardStatsTopDriversInner> topDrivers,
@@ -127,7 +127,7 @@ class _$DashboardStatsCWProxyImpl implements _$DashboardStatsCWProxy {
 
   @override
   DashboardStats revenueByDay(
-    List<MerchantAnalytics200ResponseDataRevenueByDayInner> revenueByDay,
+    List<DashboardStatsRevenueByDayInner> revenueByDay,
   ) => call(revenueByDay: revenueByDay);
 
   @override
@@ -244,8 +244,7 @@ class _$DashboardStatsCWProxyImpl implements _$DashboardStatsCWProxy {
           revenueByDay == const $CopyWithPlaceholder() || revenueByDay == null
           ? _value.revenueByDay
           // ignore: cast_nullable_to_non_nullable
-          : revenueByDay
-                as List<MerchantAnalytics200ResponseDataRevenueByDayInner>,
+          : revenueByDay as List<DashboardStatsRevenueByDayInner>,
       ordersByDay:
           ordersByDay == const $CopyWithPlaceholder() || ordersByDay == null
           ? _value.ordersByDay
@@ -329,7 +328,7 @@ DashboardStats _$DashboardStatsFromJson(
       'revenueByDay',
       (v) => (v as List<dynamic>)
           .map(
-            (e) => MerchantAnalytics200ResponseDataRevenueByDayInner.fromJson(
+            (e) => DashboardStatsRevenueByDayInner.fromJson(
               e as Map<String, dynamic>,
             ),
           )

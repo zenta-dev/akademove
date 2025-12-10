@@ -7,7 +7,7 @@ part of 'notification_save_token_request.dart';
 // **************************************************************************
 
 abstract class _$NotificationSaveTokenRequestCWProxy {
-  NotificationSaveTokenRequest token(String token);
+  NotificationSaveTokenRequest token(String? token);
 
   /// Creates a new instance with the provided field values.
   /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `NotificationSaveTokenRequest(...).copyWith.fieldName(value)`.
@@ -16,7 +16,7 @@ abstract class _$NotificationSaveTokenRequestCWProxy {
   /// ```dart
   /// NotificationSaveTokenRequest(...).copyWith(id: 12, name: "My name")
   /// ```
-  NotificationSaveTokenRequest call({String token});
+  NotificationSaveTokenRequest call({String? token});
 }
 
 /// Callable proxy for `copyWith` functionality.
@@ -28,7 +28,7 @@ class _$NotificationSaveTokenRequestCWProxyImpl
   final NotificationSaveTokenRequest _value;
 
   @override
-  NotificationSaveTokenRequest token(String token) => call(token: token);
+  NotificationSaveTokenRequest token(String? token) => call(token: token);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -42,10 +42,10 @@ class _$NotificationSaveTokenRequestCWProxyImpl
     Object? token = const $CopyWithPlaceholder(),
   }) {
     return NotificationSaveTokenRequest(
-      token: token == const $CopyWithPlaceholder() || token == null
+      token: token == const $CopyWithPlaceholder()
           ? _value.token
           // ignore: cast_nullable_to_non_nullable
-          : token as String,
+          : token as String?,
     );
   }
 }
@@ -68,7 +68,7 @@ NotificationSaveTokenRequest _$NotificationSaveTokenRequestFromJson(
 ) => $checkedCreate('NotificationSaveTokenRequest', json, ($checkedConvert) {
   $checkKeys(json, requiredKeys: const ['token']);
   final val = NotificationSaveTokenRequest(
-    token: $checkedConvert('token', (v) => v as String),
+    token: $checkedConvert('token', (v) => v as String?),
   );
   return val;
 });

@@ -3,8 +3,8 @@ import {
 	DurableObjectNamespace,
 	Hyperdrive,
 	KVNamespace,
+	Queue,
 	TanStackStart,
-	Tunnel,
 	Worker,
 } from "alchemy/cloudflare";
 import { config } from "dotenv";
@@ -44,6 +44,37 @@ const PAYMENT_ROOM = DurableObjectNamespace("payment-rooms", {
 	sqlite: true,
 });
 
+const ORDER_DLQ = await Queue("order-dlq", {
+	name: `${APP_NAME}-order-dlq`,
+	settings: {
+		messageRetentionPeriod: 604800, // 7 days retention for debugging
+	},
+});
+
+const ORDER_QUEUE = await Queue("order-queue", {
+	name: `${APP_NAME}-order-queue`,
+	dlq: ORDER_DLQ,
+	settings: {
+		messageRetentionPeriod: 86400, // 1 day retention
+	},
+});
+
+const NOTIFICATION_QUEUE = await Queue("notification-queue", {
+	name: `${APP_NAME}-notification-queue`,
+	dlq: ORDER_DLQ, // Share DLQ for all failed notifications
+	settings: {
+		messageRetentionPeriod: 3600, // 1 hour retention (notifications are time-sensitive)
+	},
+});
+
+const PROCESSING_QUEUE = await Queue("processing-queue", {
+	name: `${APP_NAME}-processing-queue`,
+	dlq: ORDER_DLQ,
+	settings: {
+		messageRetentionPeriod: 86400, // 1 day retention
+	},
+});
+
 export const [server, web] = await Promise.all([
 	Worker(`${APP_NAME}-server`, {
 		name: `${APP_NAME}-server`,
@@ -76,7 +107,50 @@ export const [server, web] = await Promise.all([
 			DB_URL: alchemy.secret.env.DATABASE_URL,
 			MAIN_DB: mainDB,
 			MAIN_KV: mainKV,
+			ORDER_QUEUE,
+			NOTIFICATION_QUEUE,
+			PROCESSING_QUEUE,
+			ORDER_DLQ,
 		},
+		// Queue consumers with retry configuration
+		eventSources: [
+			{
+				// Order queue - critical operations, aggressive retries
+				queue: ORDER_QUEUE,
+				settings: {
+					batchSize: 5, // Process 5 messages at a time
+					maxConcurrency: 3, // Allow 3 concurrent invocations
+					maxRetries: 10, // Retry up to 10 times (resilient)
+					maxWaitTimeMs: 1000, // Wait up to 1s to fill batch
+					retryDelay: 10, // Wait 10s between retries
+					deadLetterQueue: ORDER_DLQ,
+				},
+			},
+			{
+				// Notification queue - high throughput, quick processing
+				queue: NOTIFICATION_QUEUE,
+				settings: {
+					batchSize: 50, // Process many notifications at once
+					maxConcurrency: 10, // High parallelism for notifications
+					maxRetries: 3, // Notifications can fail after 3 attempts
+					maxWaitTimeMs: 500, // Quick batching
+					retryDelay: 5, // Short retry delay
+					deadLetterQueue: ORDER_DLQ,
+				},
+			},
+			{
+				// Processing queue - background tasks, eventual consistency
+				queue: PROCESSING_QUEUE,
+				settings: {
+					batchSize: 20, // Moderate batch size
+					maxConcurrency: 5, // Moderate parallelism
+					maxRetries: 5, // Standard retry count
+					maxWaitTimeMs: 2000, // Allow more time to batch
+					retryDelay: 30, // Longer retry delay (less urgent)
+					deadLetterQueue: ORDER_DLQ,
+				},
+			},
+		],
 		crons: ["* * * * *"], // Run every 1 minute for auto-offline checks
 		dev: {
 			port: 3000,
@@ -115,19 +189,19 @@ export const [server, web] = await Promise.all([
 	}),
 ]);
 
-if (isDev) {
-	await Tunnel("server-app", {
-		name: "server-app-tunnel",
-		configSrc: "cloudflare",
-		ingress: [
-			{
-				hostname: "dev-server.akademove.com",
-				service: "http://localhost:3000",
-			},
-			{ service: "http_status:404" },
-		],
-	});
-}
+// if (isDev) {
+// 	await Tunnel("server-app", {
+// 		name: "server-app-tunnel",
+// 		configSrc: "cloudflare",
+// 		ingress: [
+// 			{
+// 				hostname: "dev-server.akademove.com",
+// 				service: "http://localhost:3000",
+// 			},
+// 			{ service: "http_status:404" },
+// 		],
+// 	});
+// }
 
 export type ServerEnv = typeof server.Env;
 

@@ -30,17 +30,17 @@ class SupportChatMessage {
     required this.updatedAt,
     this.sender,
   });
-  @JsonKey(name: r'id', required: true, includeIfNull: false)
-  final String id;
+  @JsonKey(name: r'id', required: true, includeIfNull: true)
+  final String? id;
 
-  @JsonKey(name: r'ticketId', required: true, includeIfNull: false)
-  final String ticketId;
+  @JsonKey(name: r'ticketId', required: true, includeIfNull: true)
+  final String? ticketId;
 
-  @JsonKey(name: r'senderId', required: true, includeIfNull: false)
-  final String senderId;
+  @JsonKey(name: r'senderId', required: true, includeIfNull: true)
+  final String? senderId;
 
-  @JsonKey(name: r'message', required: true, includeIfNull: false)
-  final String message;
+  @JsonKey(name: r'message', required: true, includeIfNull: true)
+  final String? message;
 
   @JsonKey(name: r'isFromSupport', required: true, includeIfNull: false)
   final bool isFromSupport;
@@ -48,14 +48,14 @@ class SupportChatMessage {
   @JsonKey(name: r'readAt', required: false, includeIfNull: false)
   final DateTime? readAt;
 
-  @JsonKey(name: r'sentAt', required: true, includeIfNull: false)
-  final DateTime sentAt;
+  @JsonKey(name: r'sentAt', required: true, includeIfNull: true)
+  final DateTime? sentAt;
 
-  @JsonKey(name: r'createdAt', required: true, includeIfNull: false)
-  final DateTime createdAt;
+  @JsonKey(name: r'createdAt', required: true, includeIfNull: true)
+  final DateTime? createdAt;
 
-  @JsonKey(name: r'updatedAt', required: true, includeIfNull: false)
-  final DateTime updatedAt;
+  @JsonKey(name: r'updatedAt', required: true, includeIfNull: true)
+  final DateTime? updatedAt;
 
   @JsonKey(name: r'sender', required: false, includeIfNull: false)
   final OrderChatMessageSender? sender;
@@ -77,15 +77,15 @@ class SupportChatMessage {
 
   @override
   int get hashCode =>
-      id.hashCode +
-      ticketId.hashCode +
-      senderId.hashCode +
-      message.hashCode +
+      (id == null ? 0 : id.hashCode) +
+      (ticketId == null ? 0 : ticketId.hashCode) +
+      (senderId == null ? 0 : senderId.hashCode) +
+      (message == null ? 0 : message.hashCode) +
       isFromSupport.hashCode +
-      readAt.hashCode +
-      sentAt.hashCode +
-      createdAt.hashCode +
-      updatedAt.hashCode +
+      (readAt == null ? 0 : readAt.hashCode) +
+      (sentAt == null ? 0 : sentAt.hashCode) +
+      (createdAt == null ? 0 : createdAt.hashCode) +
+      (updatedAt == null ? 0 : updatedAt.hashCode) +
       sender.hashCode;
 
   factory SupportChatMessage.fromJson(Map<String, dynamic> json) =>

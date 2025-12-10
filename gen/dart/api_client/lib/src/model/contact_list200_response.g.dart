@@ -7,7 +7,7 @@ part of 'contact_list200_response.dart';
 // **************************************************************************
 
 abstract class _$ContactList200ResponseCWProxy {
-  ContactList200Response message(String message);
+  ContactList200Response message(String? message);
 
   ContactList200Response data(ContactList200ResponseData data);
 
@@ -23,7 +23,7 @@ abstract class _$ContactList200ResponseCWProxy {
   /// ContactList200Response(...).copyWith(id: 12, name: "My name")
   /// ```
   ContactList200Response call({
-    String message,
+    String? message,
     ContactList200ResponseData data,
     PaginationResult? pagination,
     int? totalPages,
@@ -39,7 +39,7 @@ class _$ContactList200ResponseCWProxyImpl
   final ContactList200Response _value;
 
   @override
-  ContactList200Response message(String message) => call(message: message);
+  ContactList200Response message(String? message) => call(message: message);
 
   @override
   ContactList200Response data(ContactList200ResponseData data) =>
@@ -68,10 +68,10 @@ class _$ContactList200ResponseCWProxyImpl
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return ContactList200Response(
-      message: message == const $CopyWithPlaceholder() || message == null
+      message: message == const $CopyWithPlaceholder()
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
-          : message as String,
+          : message as String?,
       data: data == const $CopyWithPlaceholder() || data == null
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
@@ -105,7 +105,7 @@ ContactList200Response _$ContactList200ResponseFromJson(
 ) => $checkedCreate('ContactList200Response', json, ($checkedConvert) {
   $checkKeys(json, requiredKeys: const ['message', 'data']);
   final val = ContactList200Response(
-    message: $checkedConvert('message', (v) => v as String),
+    message: $checkedConvert('message', (v) => v as String?),
     data: $checkedConvert(
       'data',
       (v) => ContactList200ResponseData.fromJson(v as Map<String, dynamic>),

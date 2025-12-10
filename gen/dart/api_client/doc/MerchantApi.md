@@ -85,7 +85,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **merchantActivate**
-> MerchantGetMine200ResponseBody merchantActivate(id)
+> MerchantGet200Response merchantActivate(id)
 
 
 
@@ -112,7 +112,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**MerchantGetMine200ResponseBody**](MerchantGetMine200ResponseBody.md)
+[**MerchantGet200Response**](MerchantGet200Response.md)
 
 ### Authorization
 
@@ -216,7 +216,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **merchantDeactivate**
-> MerchantGetMine200ResponseBody merchantDeactivate(id, merchantDeactivateRequest)
+> MerchantGet200Response merchantDeactivate(id, merchantDeactivateRequest)
 
 
 
@@ -245,7 +245,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**MerchantGetMine200ResponseBody**](MerchantGetMine200ResponseBody.md)
+[**MerchantGet200Response**](MerchantGet200Response.md)
 
 ### Authorization
 
@@ -259,7 +259,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **merchantGet**
-> MerchantGetMine200ResponseBody merchantGet(id)
+> MerchantGet200Response merchantGet(id)
 
 
 
@@ -286,7 +286,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**MerchantGetMine200ResponseBody**](MerchantGetMine200ResponseBody.md)
+[**MerchantGet200Response**](MerchantGet200Response.md)
 
 ### Authorization
 
@@ -1007,7 +1007,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **merchantSetOnlineStatus**
-> MerchantGetMine200ResponseBody merchantSetOnlineStatus(id, driverUpdateOnlineStatusRequest)
+> MerchantGet200Response merchantSetOnlineStatus(id, driverUpdateOnlineStatusRequest)
 
 
 
@@ -1036,7 +1036,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**MerchantGetMine200ResponseBody**](MerchantGetMine200ResponseBody.md)
+[**MerchantGet200Response**](MerchantGet200Response.md)
 
 ### Authorization
 
@@ -1050,7 +1050,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **merchantSetOperatingStatus**
-> MerchantGetMine200ResponseBody merchantSetOperatingStatus(id, merchantSetOperatingStatusRequest)
+> MerchantGet200Response merchantSetOperatingStatus(id, merchantSetOperatingStatusRequest)
 
 
 
@@ -1079,7 +1079,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**MerchantGetMine200ResponseBody**](MerchantGetMine200ResponseBody.md)
+[**MerchantGet200Response**](MerchantGet200Response.md)
 
 ### Authorization
 
@@ -1093,7 +1093,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **merchantSetOrderTakingStatus**
-> MerchantGetMine200ResponseBody merchantSetOrderTakingStatus(id, merchantSetOrderTakingStatusRequest)
+> MerchantGet200Response merchantSetOrderTakingStatus(id, merchantSetOrderTakingStatusRequest)
 
 
 
@@ -1122,7 +1122,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**MerchantGetMine200ResponseBody**](MerchantGetMine200ResponseBody.md)
+[**MerchantGet200Response**](MerchantGet200Response.md)
 
 ### Authorization
 
@@ -1136,7 +1136,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **merchantSubmitApproval**
-> MerchantGetReview200Response merchantSubmitApproval(id, driverSubmitApprovalRequest)
+> MerchantGetReview200Response merchantSubmitApproval(id, merchantSubmitApprovalRequest)
 
 
 
@@ -1146,10 +1146,10 @@ import 'package:api_client/api.dart';
 
 final api = ApiClient().getMerchantApi();
 final String id = id_example; // String | 
-final DriverSubmitApprovalRequest driverSubmitApprovalRequest = ; // DriverSubmitApprovalRequest | 
+final MerchantSubmitApprovalRequest merchantSubmitApprovalRequest = ; // MerchantSubmitApprovalRequest | 
 
 try {
-    final response = api.merchantSubmitApproval(id, driverSubmitApprovalRequest);
+    final response = api.merchantSubmitApproval(id, merchantSubmitApprovalRequest);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling MerchantApi->merchantSubmitApproval: $e\n');
@@ -1161,7 +1161,7 @@ try {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **id** | **String**|  | 
- **driverSubmitApprovalRequest** | [**DriverSubmitApprovalRequest**](DriverSubmitApprovalRequest.md)|  | 
+ **merchantSubmitApprovalRequest** | [**MerchantSubmitApprovalRequest**](MerchantSubmitApprovalRequest.md)|  | 
 
 ### Return type
 
@@ -1222,7 +1222,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **merchantUpdate**
-> MerchantGetMine200ResponseBody merchantUpdate(id, phoneCountryCode, phoneNumber, locationX, locationY, bankProvider, bankNumber, name, email, address, category, document, image)
+> MerchantGet200Response merchantUpdate(id, phoneCountryCode, phoneNumber, locationX, locationY, bankProvider, bankNumber, name, email, address, category, document, image)
 
 
 
@@ -1273,7 +1273,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**MerchantGetMine200ResponseBody**](MerchantGetMine200ResponseBody.md)
+[**MerchantGet200Response**](MerchantGet200Response.md)
 
 ### Authorization
 

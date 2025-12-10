@@ -7,7 +7,7 @@ part of 'insert_payment.dart';
 // **************************************************************************
 
 abstract class _$InsertPaymentCWProxy {
-  InsertPayment transactionId(String transactionId);
+  InsertPayment transactionId(String? transactionId);
 
   InsertPayment provider(PaymentProvider provider);
 
@@ -41,7 +41,7 @@ abstract class _$InsertPaymentCWProxy {
   /// InsertPayment(...).copyWith(id: 12, name: "My name")
   /// ```
   InsertPayment call({
-    String transactionId,
+    String? transactionId,
     PaymentProvider provider,
     PaymentMethod method,
     BankProvider? bankProvider,
@@ -65,7 +65,7 @@ class _$InsertPaymentCWProxyImpl implements _$InsertPaymentCWProxy {
   final InsertPayment _value;
 
   @override
-  InsertPayment transactionId(String transactionId) =>
+  InsertPayment transactionId(String? transactionId) =>
       call(transactionId: transactionId);
 
   @override
@@ -129,11 +129,10 @@ class _$InsertPaymentCWProxyImpl implements _$InsertPaymentCWProxy {
     Object? response = const $CopyWithPlaceholder(),
   }) {
     return InsertPayment(
-      transactionId:
-          transactionId == const $CopyWithPlaceholder() || transactionId == null
+      transactionId: transactionId == const $CopyWithPlaceholder()
           ? _value.transactionId
           // ignore: cast_nullable_to_non_nullable
-          : transactionId as String,
+          : transactionId as String?,
       provider: provider == const $CopyWithPlaceholder() || provider == null
           ? _value.provider
           // ignore: cast_nullable_to_non_nullable
@@ -210,7 +209,7 @@ InsertPayment _$InsertPaymentFromJson(Map<String, dynamic> json) =>
         ],
       );
       final val = InsertPayment(
-        transactionId: $checkedConvert('transactionId', (v) => v as String),
+        transactionId: $checkedConvert('transactionId', (v) => v as String?),
         provider: $checkedConvert(
           'provider',
           (v) => $enumDecode(_$PaymentProviderEnumMap, v),

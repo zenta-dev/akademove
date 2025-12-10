@@ -7,11 +7,11 @@ part of 'merchant_best_sellers200_response_data_inner_menu.dart';
 // **************************************************************************
 
 abstract class _$MerchantBestSellers200ResponseDataInnerMenuCWProxy {
-  MerchantBestSellers200ResponseDataInnerMenu id(String id);
+  MerchantBestSellers200ResponseDataInnerMenu id(String? id);
 
-  MerchantBestSellers200ResponseDataInnerMenu merchantId(String merchantId);
+  MerchantBestSellers200ResponseDataInnerMenu merchantId(String? merchantId);
 
-  MerchantBestSellers200ResponseDataInnerMenu name(String name);
+  MerchantBestSellers200ResponseDataInnerMenu name(String? name);
 
   MerchantBestSellers200ResponseDataInnerMenu image(String? image);
 
@@ -21,9 +21,9 @@ abstract class _$MerchantBestSellers200ResponseDataInnerMenuCWProxy {
 
   MerchantBestSellers200ResponseDataInnerMenu stock(num stock);
 
-  MerchantBestSellers200ResponseDataInnerMenu createdAt(DateTime createdAt);
+  MerchantBestSellers200ResponseDataInnerMenu createdAt(DateTime? createdAt);
 
-  MerchantBestSellers200ResponseDataInnerMenu updatedAt(DateTime updatedAt);
+  MerchantBestSellers200ResponseDataInnerMenu updatedAt(DateTime? updatedAt);
 
   /// Creates a new instance with the provided field values.
   /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `MerchantBestSellers200ResponseDataInnerMenu(...).copyWith.fieldName(value)`.
@@ -33,15 +33,15 @@ abstract class _$MerchantBestSellers200ResponseDataInnerMenuCWProxy {
   /// MerchantBestSellers200ResponseDataInnerMenu(...).copyWith(id: 12, name: "My name")
   /// ```
   MerchantBestSellers200ResponseDataInnerMenu call({
-    String id,
-    String merchantId,
-    String name,
+    String? id,
+    String? merchantId,
+    String? name,
     String? image,
     String? category,
     num price,
     num stock,
-    DateTime createdAt,
-    DateTime updatedAt,
+    DateTime? createdAt,
+    DateTime? updatedAt,
   });
 }
 
@@ -54,14 +54,14 @@ class _$MerchantBestSellers200ResponseDataInnerMenuCWProxyImpl
   final MerchantBestSellers200ResponseDataInnerMenu _value;
 
   @override
-  MerchantBestSellers200ResponseDataInnerMenu id(String id) => call(id: id);
+  MerchantBestSellers200ResponseDataInnerMenu id(String? id) => call(id: id);
 
   @override
-  MerchantBestSellers200ResponseDataInnerMenu merchantId(String merchantId) =>
+  MerchantBestSellers200ResponseDataInnerMenu merchantId(String? merchantId) =>
       call(merchantId: merchantId);
 
   @override
-  MerchantBestSellers200ResponseDataInnerMenu name(String name) =>
+  MerchantBestSellers200ResponseDataInnerMenu name(String? name) =>
       call(name: name);
 
   @override
@@ -81,11 +81,11 @@ class _$MerchantBestSellers200ResponseDataInnerMenuCWProxyImpl
       call(stock: stock);
 
   @override
-  MerchantBestSellers200ResponseDataInnerMenu createdAt(DateTime createdAt) =>
+  MerchantBestSellers200ResponseDataInnerMenu createdAt(DateTime? createdAt) =>
       call(createdAt: createdAt);
 
   @override
-  MerchantBestSellers200ResponseDataInnerMenu updatedAt(DateTime updatedAt) =>
+  MerchantBestSellers200ResponseDataInnerMenu updatedAt(DateTime? updatedAt) =>
       call(updatedAt: updatedAt);
 
   @override
@@ -108,19 +108,18 @@ class _$MerchantBestSellers200ResponseDataInnerMenuCWProxyImpl
     Object? updatedAt = const $CopyWithPlaceholder(),
   }) {
     return MerchantBestSellers200ResponseDataInnerMenu(
-      id: id == const $CopyWithPlaceholder() || id == null
+      id: id == const $CopyWithPlaceholder()
           ? _value.id
           // ignore: cast_nullable_to_non_nullable
-          : id as String,
-      merchantId:
-          merchantId == const $CopyWithPlaceholder() || merchantId == null
+          : id as String?,
+      merchantId: merchantId == const $CopyWithPlaceholder()
           ? _value.merchantId
           // ignore: cast_nullable_to_non_nullable
-          : merchantId as String,
-      name: name == const $CopyWithPlaceholder() || name == null
+          : merchantId as String?,
+      name: name == const $CopyWithPlaceholder()
           ? _value.name
           // ignore: cast_nullable_to_non_nullable
-          : name as String,
+          : name as String?,
       image: image == const $CopyWithPlaceholder()
           ? _value.image
           // ignore: cast_nullable_to_non_nullable
@@ -137,14 +136,14 @@ class _$MerchantBestSellers200ResponseDataInnerMenuCWProxyImpl
           ? _value.stock
           // ignore: cast_nullable_to_non_nullable
           : stock as num,
-      createdAt: createdAt == const $CopyWithPlaceholder() || createdAt == null
+      createdAt: createdAt == const $CopyWithPlaceholder()
           ? _value.createdAt
           // ignore: cast_nullable_to_non_nullable
-          : createdAt as DateTime,
-      updatedAt: updatedAt == const $CopyWithPlaceholder() || updatedAt == null
+          : createdAt as DateTime?,
+      updatedAt: updatedAt == const $CopyWithPlaceholder()
           ? _value.updatedAt
           // ignore: cast_nullable_to_non_nullable
-          : updatedAt as DateTime,
+          : updatedAt as DateTime?,
     );
   }
 }
@@ -181,15 +180,21 @@ _$MerchantBestSellers200ResponseDataInnerMenuFromJson(
     ],
   );
   final val = MerchantBestSellers200ResponseDataInnerMenu(
-    id: $checkedConvert('id', (v) => v as String),
-    merchantId: $checkedConvert('merchantId', (v) => v as String),
-    name: $checkedConvert('name', (v) => v as String),
+    id: $checkedConvert('id', (v) => v as String?),
+    merchantId: $checkedConvert('merchantId', (v) => v as String?),
+    name: $checkedConvert('name', (v) => v as String?),
     image: $checkedConvert('image', (v) => v as String?),
     category: $checkedConvert('category', (v) => v as String?),
     price: $checkedConvert('price', (v) => v as num),
     stock: $checkedConvert('stock', (v) => v as num),
-    createdAt: $checkedConvert('createdAt', (v) => DateTime.parse(v as String)),
-    updatedAt: $checkedConvert('updatedAt', (v) => DateTime.parse(v as String)),
+    createdAt: $checkedConvert(
+      'createdAt',
+      (v) => v == null ? null : DateTime.parse(v as String),
+    ),
+    updatedAt: $checkedConvert(
+      'updatedAt',
+      (v) => v == null ? null : DateTime.parse(v as String),
+    ),
   );
   return val;
 });
@@ -204,6 +209,6 @@ Map<String, dynamic> _$MerchantBestSellers200ResponseDataInnerMenuToJson(
   'category': ?instance.category,
   'price': instance.price,
   'stock': instance.stock,
-  'createdAt': instance.createdAt.toIso8601String(),
-  'updatedAt': instance.updatedAt.toIso8601String(),
+  'createdAt': instance.createdAt?.toIso8601String(),
+  'updatedAt': instance.updatedAt?.toIso8601String(),
 };

@@ -30,6 +30,7 @@ class PlaceOrder {
     required this.type,
     this.items,
     this.gender,
+    this.genderPreference,
     this.couponCode,
     required this.payment,
   });
@@ -51,6 +52,9 @@ class PlaceOrder {
   @JsonKey(name: r'gender', required: false, includeIfNull: false)
   final UserGender? gender;
 
+  @JsonKey(name: r'genderPreference', required: false, includeIfNull: false)
+  final PlaceOrderGenderPreferenceEnum? genderPreference;
+
   @JsonKey(name: r'couponCode', required: false, includeIfNull: false)
   final String? couponCode;
 
@@ -67,6 +71,7 @@ class PlaceOrder {
           other.type == type &&
           other.items == items &&
           other.gender == gender &&
+          other.genderPreference == genderPreference &&
           other.couponCode == couponCode &&
           other.payment == payment;
 
@@ -78,6 +83,7 @@ class PlaceOrder {
       type.hashCode +
       items.hashCode +
       gender.hashCode +
+      genderPreference.hashCode +
       couponCode.hashCode +
       payment.hashCode;
 
@@ -90,4 +96,18 @@ class PlaceOrder {
   String toString() {
     return toJson().toString();
   }
+}
+
+enum PlaceOrderGenderPreferenceEnum {
+  @JsonValue(r'SAME')
+  SAME(r'SAME'),
+  @JsonValue(r'ANY')
+  ANY(r'ANY');
+
+  const PlaceOrderGenderPreferenceEnum(this.value);
+
+  final String value;
+
+  @override
+  String toString() => value;
 }
