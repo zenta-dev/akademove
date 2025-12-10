@@ -52,16 +52,11 @@ export function composeAuthCookieValue({
 }: AuthCookieOptions): string {
 	const name = getAuthTokenName(isDev);
 
-	const parts = [
-		`${name}=${token}`,
-		`Max-Age=${maxAge}`,
-		"Path=/",
-		"HttpOnly",
-		"Secure",
-		"SameSite=None",
-	];
+	const parts = [`${name}=${token}`, `Max-Age=${maxAge}`, "Path=/", "HttpOnly"];
 
 	if (!isDev) {
+		parts.push("Secure");
+		parts.push("SameSite=None");
 		parts.push("Domain=.akademove.com");
 	}
 

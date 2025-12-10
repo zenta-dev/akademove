@@ -1,6 +1,8 @@
 import { Hono } from "hono";
 import { cors } from "hono/cors";
+import { logger as honoLogger } from "hono/logger";
 import { matchedRoutes } from "hono/route";
+import { pinoLogger } from "hono-pino";
 import { BaseError } from "@/core/error";
 import type { HonoContext } from "@/core/interface";
 import { isCloudflare } from "@/utils";
@@ -11,13 +13,12 @@ import { honoAuthMiddleware } from "../middlewares/auth";
 import { honoClientAgentMiddleware } from "../middlewares/client";
 import { localeMiddleware } from "../middlewares/language";
 import { honoRateLimit, RATE_LIMITS } from "../middlewares/rate-limit";
-
 export const createHono = () => new Hono<HonoContext>();
 
 export const setupHonoRouter = () => {
 	const app = createHono();
 
-	app.use(logger());
+	app.use(honoLogger());
 	app.use(honoClientAgentMiddleware);
 	app.use("*", async (c, next) => {
 		if (matchedRoutes(c).some((route) => route.path.startsWith("/ws"))) {
@@ -88,6 +89,6 @@ export const setupHonoRouter = () => {
 	return app;
 };
 
-function logError(err: unknown) {
-	logger.error({ error: err }, "HONO ERROR");
+function logError(error: unknown) {
+	logger.error({ error }, "HONO ERROR");
 }
