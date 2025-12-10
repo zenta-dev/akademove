@@ -16,9 +16,9 @@ export type DriverQuizAnswerStatus = z.infer<
 export const DriverQuizAttemptSchema = z.object({
 	attemptId: z.string(),
 	questions: z.array(DriverMinQuizQuestionSchema),
-	totalQuestions: z.number(),
-	totalPoints: z.number(),
-	passingScore: z.number(),
+	totalQuestions: z.coerce.number(),
+	totalPoints: z.coerce.number(),
+	passingScore: z.coerce.number(),
 });
 export type DriverQuizAttempt = z.infer<typeof DriverQuizAttemptSchema>;
 
@@ -29,7 +29,7 @@ export const DriverQuizQuestionAnswerSchema = z.object({
 	questionId: z.string(),
 	selectedOptionId: z.string(),
 	isCorrect: z.boolean(),
-	pointsEarned: z.number().int().min(0),
+	pointsEarned: z.coerce.number().int().min(0),
 	answeredAt: DateSchema,
 });
 export type DriverQuizQuestionAnswer = z.infer<
@@ -44,12 +44,12 @@ export const DriverQuizAnswerSchema = z.object({
 	id: z.string(),
 	driverId: z.uuid(),
 	status: DriverQuizAnswerStatusSchema,
-	totalQuestions: z.number().int().min(1),
-	correctAnswers: z.number().int().min(0),
-	totalPoints: z.number().int().min(0),
-	earnedPoints: z.number().int().min(0),
-	passingScore: z.number().int().min(0).max(1000).default(70),
-	scorePercentage: z.number().min(0).max(1000),
+	totalQuestions: z.coerce.number().int().min(1),
+	correctAnswers: z.coerce.number().int().min(0),
+	totalPoints: z.coerce.number().int().min(0),
+	earnedPoints: z.coerce.number().int().min(0),
+	passingScore: z.coerce.number().int().min(0).max(1000).default(70),
+	scorePercentage: z.coerce.number().min(0).max(1000),
 	answers: z.array(DriverQuizQuestionAnswerSchema),
 	startedAt: DateSchema,
 	completedAt: DateSchema.nullable(),
@@ -85,7 +85,7 @@ export type SubmitDriverQuizAnswer = z.infer<
 
 export const SubmitDriverQuizAnswerResponseSchema = z.object({
 	isCorrect: z.boolean(),
-	pointsEarned: z.number(),
+	pointsEarned: z.coerce.number(),
 	correctOptionId: z.string().optional(),
 	explanation: z.string().nullable(),
 });
@@ -117,12 +117,12 @@ export type ListDriverQuizAnswerQuery = z.infer<
 export const DriverQuizResultSchema = z.object({
 	attemptId: z.string(),
 	status: DriverQuizAnswerStatusSchema,
-	totalQuestions: z.number().int(),
-	correctAnswers: z.number().int(),
-	scorePercentage: z.number(),
+	totalQuestions: z.coerce.number().int(),
+	correctAnswers: z.coerce.number().int(),
+	scorePercentage: z.coerce.number(),
 	passed: z.boolean(),
-	earnedPoints: z.number().int(),
-	totalPoints: z.number().int(),
+	earnedPoints: z.coerce.number().int(),
+	totalPoints: z.coerce.number().int(),
 	completedAt: DateSchema.nullable(),
 });
 export type DriverQuizResult = z.infer<typeof DriverQuizResultSchema>;

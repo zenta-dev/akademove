@@ -11,7 +11,7 @@ export const QuickMessageTemplateSchema = z.object({
 	orderType: z.enum(CONSTANTS.ORDER_TYPES).nullable(),
 	locale: z.string().default("en"),
 	isActive: z.boolean(),
-	displayOrder: z.number().int(),
+	displayOrder: z.coerce.number().int(),
 	createdAt: DateSchema,
 	updatedAt: DateSchema,
 });

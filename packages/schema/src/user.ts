@@ -95,7 +95,7 @@ export type AdminUpdateUserPassword = z.infer<
 
 export const BanUserSchema = z.object({
 	banReason: z.string(),
-	banExpiresIn: z.number().optional(),
+	banExpiresIn: z.coerce.number().optional(),
 });
 export type BanUser = z.infer<typeof BanUserSchema>;
 
@@ -125,64 +125,64 @@ export type UpdateUser = z.infer<typeof UpdateUserSchema>;
 export const FlatUpdateUserSchema = flattenZodObject(UpdateUserSchema);
 
 export const DashboardStatsSchema = z.object({
-	totalUsers: z.number(),
-	totalDrivers: z.number(),
-	totalMerchants: z.number(),
-	activeOrders: z.number(),
-	totalOrders: z.number(),
-	completedOrders: z.number(),
-	cancelledOrders: z.number(),
-	totalRevenue: z.number(),
-	todayRevenue: z.number(),
-	todayOrders: z.number(),
-	onlineDrivers: z.number(),
+	totalUsers: z.coerce.number(),
+	totalDrivers: z.coerce.number(),
+	totalMerchants: z.coerce.number(),
+	activeOrders: z.coerce.number(),
+	totalOrders: z.coerce.number(),
+	completedOrders: z.coerce.number(),
+	cancelledOrders: z.coerce.number(),
+	totalRevenue: z.coerce.number(),
+	todayRevenue: z.coerce.number(),
+	todayOrders: z.coerce.number(),
+	onlineDrivers: z.coerce.number(),
 	revenueByDay: z.array(
 		z.object({
 			date: z.string(),
-			revenue: z.number(),
-			orders: z.number(),
+			revenue: z.coerce.number(),
+			orders: z.coerce.number(),
 		}),
 	),
 	ordersByDay: z.array(
 		z.object({
 			date: z.string(),
-			total: z.number(),
-			completed: z.number(),
-			cancelled: z.number(),
+			total: z.coerce.number(),
+			completed: z.coerce.number(),
+			cancelled: z.coerce.number(),
 		}),
 	),
 	ordersByType: z.array(
 		z.object({
 			type: z.string(),
-			orders: z.number(),
-			revenue: z.number(),
+			orders: z.coerce.number(),
+			revenue: z.coerce.number(),
 		}),
 	),
 	topDrivers: z.array(
 		z.object({
 			id: z.string(),
 			name: z.string(),
-			earnings: z.number(),
-			orders: z.number(),
-			rating: z.number(),
+			earnings: z.coerce.number(),
+			orders: z.coerce.number(),
+			rating: z.coerce.number(),
 		}),
 	),
 	topMerchants: z.array(
 		z.object({
 			id: z.string(),
 			name: z.string(),
-			revenue: z.number(),
-			orders: z.number(),
-			rating: z.number(),
+			revenue: z.coerce.number(),
+			orders: z.coerce.number(),
+			rating: z.coerce.number(),
 		}),
 	),
 	highCancellationDrivers: z.array(
 		z.object({
 			id: z.string(),
 			name: z.string(),
-			totalOrders: z.number(),
-			cancelledOrders: z.number(),
-			cancellationRate: z.number(),
+			totalOrders: z.coerce.number(),
+			cancelledOrders: z.coerce.number(),
+			cancellationRate: z.coerce.number(),
 		}),
 	),
 });

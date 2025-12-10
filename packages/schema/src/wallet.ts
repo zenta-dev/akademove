@@ -8,7 +8,7 @@ export const CurrencySchema = z.enum(CURRENCY);
 export const WalletSchema = z.object({
 	id: z.uuid(),
 	userId: z.string(),
-	balance: z.number(),
+	balance: z.coerce.number(),
 	currency: CurrencySchema,
 	isActive: z.boolean(),
 	createdAt: DateSchema,

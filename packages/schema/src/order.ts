@@ -39,15 +39,23 @@ export type OrderType = z.infer<typeof OrderTypeSchema>;
 export const GenderPreferenceSchema = z.enum(["SAME", "ANY"]);
 export type GenderPreference = z.infer<typeof GenderPreferenceSchema>;
 
+export const DeliveryItemTypeSchema = z.enum(CONSTANTS.DELIVERY_ITEM_TYPES);
+export type DeliveryItemType = z.infer<typeof DeliveryItemTypeSchema>;
+
 export const OrderNoteSchema = z.object({
 	pickup: z.string().optional(),
+	senderName: z.string().optional(),
+	senderPhone: z.string().optional(),
+	pickupInstructions: z.string().optional(),
 	dropoff: z.string().optional(),
-	instructions: z.string().optional(),
+	recevierName: z.string().optional(),
+	recevierPhone: z.string().optional(),
+	dropoffInstructions: z.string().optional(),
 });
 export type OrderNote = z.infer<typeof OrderNoteSchema>;
 
 export const OrderItemSchema = z.object({
-	quantity: z.number(),
+	quantity: z.coerce.number(),
 	item: MerchantMenuSchema.partial(),
 });
 
@@ -81,16 +89,16 @@ export const OrderSchema = z.object({
 	status: OrderStatusSchema,
 	pickupLocation: CoordinateSchema,
 	dropoffLocation: CoordinateSchema,
-	distanceKm: z.number(),
-	basePrice: z.number(),
-	tip: z.number().optional(),
-	totalPrice: z.number(),
-	platformCommission: z.number().optional(),
-	driverEarning: z.number().optional(),
-	merchantCommission: z.number().optional(),
+	distanceKm: z.coerce.number(),
+	basePrice: z.coerce.number(),
+	tip: z.coerce.number().optional(),
+	totalPrice: z.coerce.number(),
+	platformCommission: z.coerce.number().optional(),
+	driverEarning: z.coerce.number().optional(),
+	merchantCommission: z.coerce.number().optional(),
 	couponId: z.uuid().optional(),
 	couponCode: z.string().optional(),
-	discountAmount: z.number().optional(),
+	discountAmount: z.coerce.number().optional(),
 	note: OrderNoteSchema.optional(),
 	requestedAt: DateSchema,
 	acceptedAt: DateSchema.optional(),
@@ -114,8 +122,9 @@ export const OrderSchema = z.object({
 	otpVerifiedAt: DateSchema.optional(),
 
 	// delivery, food
-	itemCount: z.number().optional(),
+	itemCount: z.coerce.number().optional(),
 	items: z.array(OrderItemSchema).optional(),
+	deliveryItemType: DeliveryItemTypeSchema.optional(),
 
 	// relations
 	user: UserSchema.partial().optional(),
@@ -128,8 +137,8 @@ export type Order = z.infer<typeof OrderSchema>;
  * Order Status History Schema - For audit trail API responses
  */
 export const OrderStatusHistorySchema = z.object({
-	id: z.number(),
-	orderId: z.string().uuid(),
+	id: z.coerce.number(),
+	orderId: z.uuid(),
 	previousStatus: OrderStatusSchema.nullable(),
 	newStatus: OrderStatusSchema,
 	changedBy: z.string().nullable(),
@@ -175,7 +184,7 @@ export const PlaceOrderResponseSchema = z.object({
 	autoAppliedCoupon: z
 		.object({
 			code: z.string(),
-			discountAmount: z.number(),
+			discountAmount: z.coerce.number(),
 		})
 		.optional(),
 });
@@ -194,7 +203,7 @@ export const PlaceScheduledOrderResponseSchema = z.object({
 	autoAppliedCoupon: z
 		.object({
 			code: z.string(),
-			discountAmount: z.number(),
+			discountAmount: z.coerce.number(),
 		})
 		.optional(),
 });
@@ -228,7 +237,7 @@ export const EstimateOrderSchema = PlaceOrderSchema.omit({
 	payment: true,
 }).safeExtend({
 	discountIds: z.array(z.coerce.number()).optional(),
-	weight: z.number().positive().max(20).optional(),
+	weight: z.coerce.number().positive().max(20).optional(),
 });
 export type EstimateOrder = z.infer<typeof EstimateOrderSchema>;
 
@@ -240,6 +249,7 @@ export const OrderSchemaRegistries = {
 		schema: OrderStatusHistoryRoleSchema,
 		strategy: "output",
 	},
+	DeliveryItemType: { schema: DeliveryItemTypeSchema, strategy: "output" },
 	OrderType: { schema: OrderTypeSchema, strategy: "output" },
 	OrderNote: { schema: OrderNoteSchema, strategy: "output" },
 	OrderItem: { schema: OrderItemSchema, strategy: "output" },

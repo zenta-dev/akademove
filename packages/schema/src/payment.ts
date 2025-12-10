@@ -26,7 +26,7 @@ export const PaymentSchema = z.object({
 	provider: PaymentProviderSchema,
 	method: PaymentMethodSchema,
 	bankProvider: BankProviderSchema.optional(),
-	amount: z.number(),
+	amount: z.coerce.number(),
 	status: TransactionStatusSchema,
 	externalId: z.string().optional(),
 	paymentUrl: z.string().optional(),
@@ -73,7 +73,7 @@ export const TransferRequestSchema = PaymentSchema.pick({
 export type TransferRequest = z.infer<typeof TransferRequestSchema>;
 
 export const WithdrawRequestSchema = z.object({
-	amount: z.number().positive(),
+	amount: z.coerce.number().positive(),
 	bankProvider: BankProviderSchema,
 	accountNumber: z.string(),
 	accountName: z.string().optional(),

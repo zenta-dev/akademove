@@ -16,20 +16,20 @@ export type CouponType = z.infer<typeof CouponTypeSchema>;
 
 const GeneralRulesSchema = z.object({
 	type: GeneralRuleTypeSchema.optional(),
-	minOrderAmount: z.number().nonnegative().optional(),
-	maxDiscountAmount: z.number().nonnegative().optional(),
+	minOrderAmount: z.coerce.number().nonnegative().optional(),
+	maxDiscountAmount: z.coerce.number().nonnegative().optional(),
 });
 export type GeneralRules = z.infer<typeof GeneralRulesSchema>;
 
 const UserRulesSchema = z.object({
 	newUserOnly: z.boolean().optional(),
-	perUserLimit: z.number().int().positive().optional(),
+	perUserLimit: z.coerce.number().int().positive().optional(),
 });
 export type UserRules = z.infer<typeof UserRulesSchema>;
 
 const TimeRulesSchema = z.object({
 	allowedDays: z.array(DayOfWeekSchema).optional(),
-	allowedHours: z.array(z.number().int().min(0).max(23)).optional(),
+	allowedHours: z.array(z.coerce.number().int().min(0).max(23)).optional(),
 });
 export type TimeRules = z.infer<typeof TimeRulesSchema>;
 
@@ -52,10 +52,10 @@ export const CouponSchema = z.object({
 		.max(256),
 	couponType: CouponTypeSchema.default("GENERAL"),
 	rules: CouponRulesSchema,
-	discountAmount: z.number().optional(),
-	discountPercentage: z.number().optional(),
-	usageLimit: z.number(),
-	usedCount: z.number(),
+	discountAmount: z.coerce.number().optional(),
+	discountPercentage: z.coerce.number().optional(),
+	usageLimit: z.coerce.number(),
+	usedCount: z.coerce.number(),
 	periodStart: DateSchema,
 	periodEnd: DateSchema,
 	isActive: z.boolean(),

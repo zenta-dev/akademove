@@ -10,7 +10,7 @@ export const CartItemSchema = z.object({
 	menuName: z.string(),
 	menuImage: z.string().nullable(),
 	unitPrice: z.coerce.number(),
-	quantity: z.number().int().min(1).max(99),
+	quantity: z.coerce.number().int().min(1).max(99),
 	notes: z.string().nullable().optional(),
 });
 
@@ -21,7 +21,7 @@ export const CartSchema = z.object({
 	merchantId: z.uuid(),
 	merchantName: z.string(),
 	items: z.array(CartItemSchema).min(1),
-	totalItems: z.number().int().min(1),
+	totalItems: z.coerce.number().int().min(1),
 	subtotal: z.coerce.number(),
 	lastUpdated: z.coerce.date(),
 });
@@ -31,7 +31,7 @@ export type Cart = z.infer<typeof CartSchema>;
 // Helper schemas for operations
 export const AddToCartSchema = z.object({
 	menu: MerchantMenuSchema,
-	quantity: z.number().int().min(1).max(99).default(1),
+	quantity: z.coerce.number().int().min(1).max(99).default(1),
 	notes: z.string().nullable().optional(),
 });
 

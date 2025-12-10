@@ -39,6 +39,14 @@ export const CONSTANTS = Object.freeze({
 		"NO_SHOW",
 	] as const,
 	ORDER_TYPES: ["RIDE", "DELIVERY", "FOOD"] as const,
+	DELIVERY_ITEM_TYPES: [
+		"FOOD",
+		"CLOTH",
+		"DOCUMENT",
+		"MEDICINE",
+		"BOOK",
+		"OTHER",
+	] as const,
 	COUPON_TYPES: ["GENERAL", "EVENT", "MERCHANT", "FIRST_ORDER"] as const,
 	DAY_OF_WEEK: [
 		"SUNDAY",

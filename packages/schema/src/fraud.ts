@@ -22,7 +22,7 @@ export type FraudStatus = z.infer<typeof FraudStatusSchema>;
 export const FraudSignalSchema = z.object({
 	type: FraudEventTypeSchema,
 	severity: FraudSeveritySchema,
-	confidence: z.number().min(0).max(100),
+	confidence: z.coerce.number().min(0).max(100),
 	metadata: z.record(z.string(), z.unknown()).optional(),
 });
 export type FraudSignal = z.infer<typeof FraudSignalSchema>;
@@ -72,7 +72,7 @@ export const FraudEventSchema = z.object({
 	driver: z
 		.object({
 			id: z.uuid(),
-			studentId: z.number(),
+			studentId: z.coerce.number(),
 			licensePlate: z.string(),
 		})
 		.optional(),
@@ -115,8 +115,8 @@ export const UserFraudProfileSchema = z.object({
 	id: z.uuid(),
 	userId: z.string(),
 	riskScore: z.coerce.number().min(0).max(100),
-	totalEvents: z.number().int(),
-	confirmedEvents: z.number().int(),
+	totalEvents: z.coerce.number().int(),
+	confirmedEvents: z.coerce.number().int(),
 	isHighRisk: z.boolean(),
 	knownIps: z.array(z.string()),
 	lastEventAt: DateSchema.nullable(),
@@ -147,13 +147,13 @@ export type InsertUserFraudProfile = z.infer<
 
 // Fraud config schema (stored in configurations table)
 export const FraudConfigSchema = z.object({
-	gpsMaxVelocityKmh: z.number().default(200),
-	gpsTeleportThresholdKm: z.number().default(50),
-	gpsMinUpdateIntervalMs: z.number().default(1000),
-	duplicateIpWindowHours: z.number().default(24),
-	duplicateIpMaxRegistrations: z.number().default(3),
-	nameSimilarityThreshold: z.number().min(0).max(1).default(0.85),
-	highRiskScoreThreshold: z.number().min(0).max(100).default(70),
+	gpsMaxVelocityKmh: z.coerce.number().default(200),
+	gpsTeleportThresholdKm: z.coerce.number().default(50),
+	gpsMinUpdateIntervalMs: z.coerce.number().default(1000),
+	duplicateIpWindowHours: z.coerce.number().default(24),
+	duplicateIpMaxRegistrations: z.coerce.number().default(3),
+	nameSimilarityThreshold: z.coerce.number().min(0).max(1).default(0.85),
+	highRiskScoreThreshold: z.coerce.number().min(0).max(100).default(70),
 });
 export type FraudConfig = z.infer<typeof FraudConfigSchema>;
 
@@ -174,27 +174,27 @@ export type FraudEventListQuery = z.infer<typeof FraudEventListQuerySchema>;
 // Trend item schema
 export const FraudTrendItemSchema = z.object({
 	date: z.string(),
-	count: z.number().int(),
+	count: z.coerce.number().int(),
 });
 
 // Events by severity schema
 export const EventsBySeveritySchema = z.object({
-	LOW: z.number().int(),
-	MEDIUM: z.number().int(),
-	HIGH: z.number().int(),
-	CRITICAL: z.number().int(),
+	LOW: z.coerce.number().int(),
+	MEDIUM: z.coerce.number().int(),
+	HIGH: z.coerce.number().int(),
+	CRITICAL: z.coerce.number().int(),
 });
 
 // Stats response
 export const FraudStatsSchema = z.object({
-	totalEvents: z.number().int(),
-	pendingEvents: z.number().int(),
-	reviewingEvents: z.number().int(),
-	confirmedEvents: z.number().int(),
-	dismissedEvents: z.number().int(),
+	totalEvents: z.coerce.number().int(),
+	pendingEvents: z.coerce.number().int(),
+	reviewingEvents: z.coerce.number().int(),
+	confirmedEvents: z.coerce.number().int(),
+	dismissedEvents: z.coerce.number().int(),
 	eventsBySeverity: EventsBySeveritySchema,
-	eventsByType: z.record(z.string(), z.number().int()),
-	highRiskUsers: z.number().int(),
+	eventsByType: z.record(z.string(), z.coerce.number().int()),
+	highRiskUsers: z.coerce.number().int(),
 	recentTrend: z.array(FraudTrendItemSchema),
 });
 export type FraudStats = z.infer<typeof FraudStatsSchema>;

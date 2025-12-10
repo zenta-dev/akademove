@@ -19,13 +19,13 @@ import type { SchemaRegistries } from "./common.js";
 
 export const QueueMessageMetaSchema = z.object({
 	/** Unique message ID for deduplication */
-	messageId: z.string().uuid(),
+	messageId: z.uuid(),
 	/** Idempotency key to prevent duplicate processing */
 	idempotencyKey: z.string(),
 	/** Timestamp when message was created */
 	createdAt: z.coerce.date(),
 	/** Number of retry attempts (set by queue system) */
-	retryCount: z.number().int().min(0).default(0),
+	retryCount: z.coerce.number().int().min(0).default(0),
 	/** Original order ID for tracing */
 	orderId: z.string().optional(),
 	/** User ID for audit trail */
@@ -47,24 +47,24 @@ export const DriverMatchingJobSchema = z.object({
 	payload: z.object({
 		orderId: z.string(),
 		pickupLocation: z.object({
-			x: z.number(),
-			y: z.number(),
+			x: z.coerce.number(),
+			y: z.coerce.number(),
 		}),
 		orderType: z.enum(["RIDE", "DELIVERY", "FOOD"]),
 		genderPreference: z.enum(["SAME", "ANY"]).optional(),
 		userGender: z.enum(["MALE", "FEMALE"]).optional(),
 		/** Initial search radius in km (configurable via admin) */
-		initialRadiusKm: z.number().positive().default(5),
+		initialRadiusKm: z.coerce.number().positive().default(5),
 		/** Maximum matching duration in minutes (default 15, configurable) */
-		maxMatchingDurationMinutes: z.number().positive().default(15),
+		maxMatchingDurationMinutes: z.coerce.number().positive().default(15),
 		/** Current matching attempt (for radius expansion) */
-		currentAttempt: z.number().int().min(1).default(1),
+		currentAttempt: z.coerce.number().int().min(1).default(1),
 		/** Maximum expansion attempts before timeout */
-		maxExpansionAttempts: z.number().int().positive().default(10),
+		maxExpansionAttempts: z.coerce.number().int().positive().default(10),
 		/** Radius expansion rate per attempt (e.g., 0.2 = 20%) */
-		expansionRate: z.number().positive().default(0.2),
+		expansionRate: z.coerce.number().positive().default(0.2),
 		/** Interval between matching attempts in seconds */
-		matchingIntervalSeconds: z.number().positive().default(30),
+		matchingIntervalSeconds: z.coerce.number().positive().default(30),
 		/** Payment ID for refund if matching times out */
 		paymentId: z.string().optional(),
 		/** WebSocket room ID for real-time updates */
@@ -84,7 +84,7 @@ export const OrderTimeoutJobSchema = z.object({
 		orderId: z.string(),
 		userId: z.string(),
 		paymentId: z.string().optional(),
-		totalPrice: z.number(),
+		totalPrice: z.coerce.number(),
 		/** Reason for timeout (for user notification) */
 		timeoutReason: z
 			.string()
@@ -105,15 +105,15 @@ export const OrderCompletionJobSchema = z.object({
 		orderId: z.string(),
 		driverId: z.string(),
 		driverUserId: z.string(),
-		totalPrice: z.number(),
+		totalPrice: z.coerce.number(),
 		orderType: z.enum(["RIDE", "DELIVERY", "FOOD"]),
 		/** Pre-calculated commission rate (after badge reduction) */
-		commissionRate: z.number().min(0).max(1),
+		commissionRate: z.coerce.number().min(0).max(1),
 		/** Driver's current location for availability update */
 		driverCurrentLocation: z
 			.object({
-				x: z.number(),
-				y: z.number(),
+				x: z.coerce.number(),
+				y: z.coerce.number(),
 			})
 			.optional(),
 	}),
@@ -132,8 +132,8 @@ export const RefundJobSchema = z.object({
 		walletId: z.string(),
 		paymentId: z.string(),
 		transactionId: z.string(),
-		refundAmount: z.number().positive(),
-		penaltyAmount: z.number().min(0).default(0),
+		refundAmount: z.coerce.number().positive(),
+		penaltyAmount: z.coerce.number().min(0).default(0),
 		reason: z.string(),
 		/** Refund type for audit */
 		refundType: z.enum([
@@ -208,7 +208,7 @@ export const PushNotificationJobSchema = z.object({
 							.object({
 								category: z.string().optional(),
 								sound: z.string().optional(),
-								badge: z.number().optional(),
+								badge: z.coerce.number().optional(),
 							})
 							.optional(),
 					})
@@ -282,7 +282,7 @@ export const CouponUsageJobSchema = z.object({
 		couponId: z.string(),
 		userId: z.string(),
 		orderId: z.string(),
-		discountAmount: z.number(),
+		discountAmount: z.coerce.number(),
 	}),
 });
 export type CouponUsageJob = z.infer<typeof CouponUsageJobSchema>;
@@ -345,7 +345,7 @@ export const DriverMetricsJobSchema = z.object({
 			"RATING_RECEIVED",
 			"NO_SHOW_REPORTED",
 		]),
-		value: z.number().optional(),
+		value: z.coerce.number().optional(),
 	}),
 });
 export type DriverMetricsJob = z.infer<typeof DriverMetricsJobSchema>;
@@ -443,31 +443,31 @@ export type QueuePayload<T extends QueueMessageType> = Extract<
 // ============================================================================
 
 export const QueueSchemaRegistries = {
-	QueueMessageMeta: { schema: QueueMessageMetaSchema, strategy: "output" },
-	DriverMatchingJob: { schema: DriverMatchingJobSchema, strategy: "output" },
-	OrderTimeoutJob: { schema: OrderTimeoutJobSchema, strategy: "output" },
-	OrderCompletionJob: { schema: OrderCompletionJobSchema, strategy: "output" },
-	RefundJob: { schema: RefundJobSchema, strategy: "output" },
-	PaymentWebhookJob: { schema: PaymentWebhookJobSchema, strategy: "output" },
-	PushNotificationJob: {
-		schema: PushNotificationJobSchema,
-		strategy: "output",
-	},
-	BatchNotificationJob: {
-		schema: BatchNotificationJobSchema,
-		strategy: "output",
-	},
-	BadgeEvaluationJob: { schema: BadgeEvaluationJobSchema, strategy: "output" },
-	CouponUsageJob: { schema: CouponUsageJobSchema, strategy: "output" },
-	AuditLogJob: { schema: AuditLogJobSchema, strategy: "output" },
-	OrderStatusHistoryJob: {
-		schema: OrderStatusHistoryJobSchema,
-		strategy: "output",
-	},
-	DriverMetricsJob: { schema: DriverMetricsJobSchema, strategy: "output" },
-	WebSocketBroadcastJob: {
-		schema: WebSocketBroadcastJobSchema,
-		strategy: "output",
-	},
-	QueueMessage: { schema: QueueMessageSchema, strategy: "output" },
+	// QueueMessageMeta: { schema: QueueMessageMetaSchema, strategy: "output" },
+	// DriverMatchingJob: { schema: DriverMatchingJobSchema, strategy: "output" },
+	// OrderTimeoutJob: { schema: OrderTimeoutJobSchema, strategy: "output" },
+	// OrderCompletionJob: { schema: OrderCompletionJobSchema, strategy: "output" },
+	// RefundJob: { schema: RefundJobSchema, strategy: "output" },
+	// PaymentWebhookJob: { schema: PaymentWebhookJobSchema, strategy: "output" },
+	// PushNotificationJob: {
+	// 	schema: PushNotificationJobSchema,
+	// 	strategy: "output",
+	// },
+	// BatchNotificationJob: {
+	// 	schema: BatchNotificationJobSchema,
+	// 	strategy: "output",
+	// },
+	// BadgeEvaluationJob: { schema: BadgeEvaluationJobSchema, strategy: "output" },
+	// CouponUsageJob: { schema: CouponUsageJobSchema, strategy: "output" },
+	// AuditLogJob: { schema: AuditLogJobSchema, strategy: "output" },
+	// OrderStatusHistoryJob: {
+	// 	schema: OrderStatusHistoryJobSchema,
+	// 	strategy: "output",
+	// },
+	// DriverMetricsJob: { schema: DriverMetricsJobSchema, strategy: "output" },
+	// WebSocketBroadcastJob: {
+	// 	schema: WebSocketBroadcastJobSchema,
+	// 	strategy: "output",
+	// },
+	// QueueMessage: { schema: QueueMessageSchema, strategy: "output" },
 } satisfies SchemaRegistries;

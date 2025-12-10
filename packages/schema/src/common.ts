@@ -4,8 +4,8 @@ import * as z from "zod";
 import { CONSTANTS } from "./constants.js";
 
 export const TimeSchema = z.object({
-	h: z.number(),
-	m: z.number(),
+	h: z.coerce.number(),
+	m: z.coerce.number(),
 });
 export type Time = z.infer<typeof TimeSchema>;
 
@@ -37,6 +37,9 @@ export const EmptySchema = z.null();
 export const ClientAgentSchema = z.enum(["unknown", "mobile", "web"]);
 export type ClientAgent = z.infer<typeof ClientAgentSchema>;
 
+export const WeightSizeSchema = z.enum(["SMALL", "MEDIUM", "LARGE"]);
+export type WeightSize = z.infer<typeof WeightSizeSchema>;
+
 // export const MoneyAmountSchema = z.object({
 // 	currency: z.string(),
 // 	amount: z.coerce.number(),
@@ -65,6 +68,7 @@ export const CommonSchemaRegistries = {
 	CountryCode: { schema: CountryCodeSchema, strategy: "output" },
 	Phone: { schema: PhoneSchema, strategy: "output" },
 	DayOfWeek: { schema: DayOfWeekSchema, strategy: "output" },
+	WeightSize: { schema: WeightSizeSchema, strategy: "output" },
 } satisfies SchemaRegistries;
 
 export const createSuccessResponseSchema = <T>(schema: T) =>

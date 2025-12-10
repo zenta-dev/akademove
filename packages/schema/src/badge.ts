@@ -5,17 +5,17 @@ import { extractSchemaKeysAsEnum } from "./enum.helper.js";
 import { flattenZodObject } from "./flatten.helper.js";
 
 export const BadgeCriteriaSchema = z.object({
-	minOrders: z.number().int().min(0).optional(),
-	minRating: z.number().min(0).max(5).optional(),
-	minOnTimeRate: z.number().min(0).max(1).optional(),
-	minStreak: z.number().int().min(0).optional(),
-	minEarnings: z.number().min(0).optional(),
+	minOrders: z.coerce.number().int().min(0).optional(),
+	minRating: z.coerce.number().min(0).max(5).optional(),
+	minOnTimeRate: z.coerce.number().min(0).max(1).optional(),
+	minStreak: z.coerce.number().int().min(0).optional(),
+	minEarnings: z.coerce.number().min(0).optional(),
 });
 export type BadgeCriteria = z.infer<typeof BadgeCriteriaSchema>;
 
 export const BadgeBenefitsSchema = z.object({
-	priorityBoost: z.number().int().min(0).max(1000).optional(),
-	commissionReduction: z.number().min(0).max(0.5).optional(),
+	priorityBoost: z.coerce.number().int().min(0).max(1000).optional(),
+	commissionReduction: z.coerce.number().min(0).max(0.5).optional(),
 });
 export type BadgeBenefits = z.infer<typeof BadgeBenefitsSchema>;
 
@@ -35,7 +35,7 @@ export const BadgeSchema = z.object({
 	criteria: BadgeCriteriaSchema,
 	benefits: BadgeBenefitsSchema.optional(),
 	isActive: z.boolean().default(true),
-	displayOrder: z.number().int().min(0).default(0),
+	displayOrder: z.coerce.number().int().min(0).default(0),
 	createdAt: DateSchema,
 	updatedAt: DateSchema,
 });
@@ -66,9 +66,9 @@ export const FlatUpdateBadgeSchema = flattenZodObject(UpdateBadgeSchema);
 export type FlatUpdateBadge = z.infer<typeof FlatUpdateBadgeSchema>;
 
 export const UserBadgeMetadataSchema = z.object({
-	ordersCompleted: z.number().int().min(0).optional(),
-	finalRating: z.number().min(0).max(5).optional(),
-	streakDays: z.number().int().min(0).optional(),
+	ordersCompleted: z.coerce.number().int().min(0).optional(),
+	finalRating: z.coerce.number().min(0).max(5).optional(),
+	streakDays: z.coerce.number().int().min(0).optional(),
 });
 export type UserBadgeMetadata = z.infer<typeof UserBadgeMetadataSchema>;
 

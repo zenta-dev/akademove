@@ -46,7 +46,7 @@ export const MerchantSchema = z.object({
 	operatingStatus: MerchantOperatingStatusSchema.describe(
 		"Current operating status (OPEN, CLOSED, BREAK, MAINTENANCE)",
 	),
-	rating: z.number(),
+	rating: z.coerce.number(),
 	document: z.url().optional(),
 	image: z.url().optional(),
 	category: MerchantCategorySchema,
