@@ -17,6 +17,7 @@ import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
 import type { MailService } from "@/core/services/mail";
 import type { StorageService } from "@/core/services/storage";
+import { safeAsync } from "@/utils";
 import type { JwtManager } from "@/utils/jwt";
 import type { PasswordManager } from "@/utils/password";
 import {
@@ -73,6 +74,7 @@ export class AuthRepository extends BaseRepository {
 		opts?: PartialWithTx,
 	) {
 		const db = opts?.tx ?? this.db;
+
 		try {
 			return await this.#sessionService.signIn(params, {
 				getUserWithAccount: async (email: string) => {
@@ -96,7 +98,9 @@ export class AuthRepository extends BaseRepository {
 					});
 				},
 				getCache: async <T>(key: string) => {
-					return await this.getCache<T>(key);
+					const res = await safeAsync(() => this.getCache<T>(key));
+					if (res.success) return res.data;
+					return undefined;
 				},
 				setCache: async <T>(key: string, value: T) => {
 					await this.setCache(key, value);
