@@ -1,16 +1,17 @@
 import { localizeHref, m } from "@repo/i18n";
 import { Link, useRouterState } from "@tanstack/react-router";
 import {
-	Bike,
-	ChartLine,
-	ClipboardList,
-	DollarSign,
-	Gauge,
-	HelpCircle,
-	Mail,
-	Receipt,
-	Store,
-	Users,
+	BikeIcon,
+	ChartLineIcon,
+	ClipboardListIcon,
+	DollarSignIcon,
+	GaugeIcon,
+	HelpCircleIcon,
+	ImageIcon,
+	MailIcon,
+	ReceiptIcon,
+	StoreIcon,
+	UsersIcon,
 } from "lucide-react";
 import {
 	Sidebar,
@@ -27,52 +28,57 @@ const navMain = Object.freeze([
 	{
 		title: m.overview(),
 		href: localizeHref("/dash/admin"),
-		icon: Gauge,
+		icon: GaugeIcon,
 	},
 	{
 		title: m.users(),
 		href: localizeHref("/dash/admin/users"),
-		icon: Users,
+		icon: UsersIcon,
 	},
 	{
 		title: m.drivers(),
 		href: localizeHref("/dash/admin/drivers"),
-		icon: Bike,
+		icon: BikeIcon,
 	},
 	{
 		title: m.merchants(),
 		href: localizeHref("/dash/admin/merchants"),
-		icon: Store,
+		icon: StoreIcon,
 	},
 	{
 		title: m.orders(),
 		href: localizeHref("/dash/admin/orders"),
-		icon: Receipt,
+		icon: ReceiptIcon,
 	},
 	{
 		title: m.pricing(),
 		href: localizeHref("/dash/admin/pricing"),
-		icon: DollarSign,
+		icon: DollarSignIcon,
 	},
 	{
 		title: m.analytics(),
 		href: localizeHref("/dash/admin/analytics"),
-		icon: ChartLine,
+		icon: ChartLineIcon,
 	},
 	{
 		title: m.audit_logs(),
 		href: localizeHref("/dash/admin/audit"),
-		icon: ClipboardList,
+		icon: ClipboardListIcon,
 	},
 	{
 		title: m.contact_us(),
 		href: localizeHref("/dash/admin/contacts"),
-		icon: Mail,
+		icon: MailIcon,
 	},
 	{
 		title: m.quiz_questions(),
 		href: localizeHref("/dash/admin/quiz-questions"),
-		icon: HelpCircle,
+		icon: HelpCircleIcon,
+	},
+	{
+		title: m.banners(),
+		href: localizeHref("/dash/admin/banners"),
+		icon: ImageIcon,
 	},
 ] as const);
 

@@ -17,6 +17,7 @@ export const SUB_ROUTE_TITLES = Object.freeze({
 		PRICING: `${m.pricing()} - ${ROUTE_TITLES.ADMINISTRATOR}`,
 		DRIVERS: `${m.drivers()} - ${ROUTE_TITLES.ADMINISTRATOR}`,
 		MERCHANTS: `${m.merchants()} - ${ROUTE_TITLES.ADMINISTRATOR}`,
+		BANNERS: `${m.banners()} - ${ROUTE_TITLES.ADMINISTRATOR}`,
 		ORDERS: `${m.orders()} - ${ROUTE_TITLES.ADMINISTRATOR}`,
 		USERS: `${m.users()} - ${ROUTE_TITLES.ADMINISTRATOR}`,
 		CONTACTS: `${m.contact_us()} - ${ROUTE_TITLES.ADMINISTRATOR}`,

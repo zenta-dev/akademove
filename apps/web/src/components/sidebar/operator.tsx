@@ -1,18 +1,18 @@
 import { localizeHref, m } from "@repo/i18n";
 import { Link, useRouterState } from "@tanstack/react-router";
 import {
-	Bike,
-	DollarSign,
-	Flag,
-	Gauge,
-	HelpCircle,
-	Image,
-	Mail,
-	Receipt,
-	Shield,
-	Store,
-	Ticket,
-	Users,
+	BikeIcon,
+	DollarSignIcon,
+	FlagIcon,
+	GaugeIcon,
+	HelpCircleIcon,
+	ImageIcon,
+	MailIcon,
+	ReceiptIcon,
+	ShieldIcon,
+	StoreIcon,
+	TicketIcon,
+	UsersIcon,
 } from "lucide-react";
 import {
 	Sidebar,
@@ -29,62 +29,62 @@ const navMain = Object.freeze([
 	{
 		title: m.overview(),
 		href: localizeHref("/dash/operator"),
-		icon: Gauge,
+		icon: GaugeIcon,
 	},
 	{
 		title: m.users(),
 		href: localizeHref("/dash/operator/users"),
-		icon: Users,
+		icon: UsersIcon,
 	},
 	{
 		title: m.drivers(),
 		href: localizeHref("/dash/operator/drivers"),
-		icon: Bike,
+		icon: BikeIcon,
 	},
 	{
 		title: m.merchants(),
 		href: localizeHref("/dash/operator/merchants"),
-		icon: Store,
+		icon: StoreIcon,
 	},
 	{
 		title: m.orders(),
 		href: localizeHref("/dash/operator/orders"),
-		icon: Receipt,
+		icon: ReceiptIcon,
 	},
 	{
 		title: m.pricing(),
 		href: localizeHref("/dash/operator/pricing"),
-		icon: DollarSign,
+		icon: DollarSignIcon,
 	},
 	{
 		title: m.coupons(),
 		href: localizeHref("/dash/operator/coupons"),
-		icon: Ticket,
+		icon: TicketIcon,
 	},
 	{
 		title: m.reports(),
 		href: localizeHref("/dash/operator/reports"),
-		icon: Flag,
+		icon: FlagIcon,
 	},
 	{
 		title: "Fraud Detection",
 		href: localizeHref("/dash/operator/fraud"),
-		icon: Shield,
+		icon: ShieldIcon,
 	},
 	{
 		title: m.contact_us(),
 		href: localizeHref("/dash/operator/contacts"),
-		icon: Mail,
+		icon: MailIcon,
 	},
 	{
 		title: m.quiz_questions(),
 		href: localizeHref("/dash/operator/quiz-questions"),
-		icon: HelpCircle,
+		icon: HelpCircleIcon,
 	},
 	{
 		title: m.banners(),
 		href: localizeHref("/dash/operator/banners"),
-		icon: Image,
+		icon: ImageIcon,
 	},
 ] as const);
 
