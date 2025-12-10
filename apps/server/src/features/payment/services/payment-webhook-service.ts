@@ -1,6 +1,6 @@
 import { env } from "cloudflare:workers";
 import { m } from "@repo/i18n";
-import type { OrderType } from "@repo/schema/order";
+import type { OrderStatus, OrderType } from "@repo/schema/order";
 import type { Payment } from "@repo/schema/payment";
 import type { Transaction } from "@repo/schema/transaction";
 import { nullsToUndefined } from "@repo/shared";
@@ -11,6 +11,7 @@ import { RepositoryError } from "@/core/error";
 import type { WithTx } from "@/core/interface";
 import { tables } from "@/core/services/db";
 import type { PaymentDatabase } from "@/core/tables/payment";
+import { OrderStateService } from "@/features/order/services/order-state-service";
 import { delay, log, toNumberSafe, toStringNumberSafe } from "@/utils";
 import { generateOrderCode } from "@/utils/uuid";
 import { PaymentChargeService } from "./payment-charge-service";
@@ -482,13 +483,42 @@ export class PaymentWebhookService {
 			});
 		}
 
+		// Validate state transition before updating
+		const currentStatus = order.status as OrderStatus;
+		const stateService = new OrderStateService();
+
+		// Only proceed if order is in REQUESTED status (waiting for payment)
+		if (currentStatus !== "REQUESTED") {
+			log.warn(
+				{ orderId, currentStatus },
+				"[PaymentWebhookService] Order not in REQUESTED status, skipping status update",
+			);
+			// Don't throw error - payment was still successful, but order may have been updated already
+			return;
+		}
+
+		// Validate transition using state machine
+		stateService.validateTransition(currentStatus, "MATCHING");
+
 		// Update transaction and order status
 		const [updatedTransaction] = await Promise.all([
 			updateTransaction(transaction.id, { status: "SUCCESS" }, { tx }),
 			tx
 				.update(tables.order)
-				.set({ status: "MATCHING" })
+				.set({ status: "MATCHING", updatedAt: new Date() })
 				.where(eq(tables.order.id, order.id)),
+			// Record status change in audit trail
+			tx
+				.insert(tables.orderStatusHistory)
+				.values({
+					orderId: order.id,
+					previousStatus: currentStatus,
+					newStatus: "MATCHING",
+					changedBy: undefined,
+					changedByRole: "SYSTEM",
+					reason: "Payment successful, order moved to matching",
+					changedAt: new Date(),
+				}),
 		]);
 
 		const paymentStub = this.#getPaymentRoomStub(payment.id);

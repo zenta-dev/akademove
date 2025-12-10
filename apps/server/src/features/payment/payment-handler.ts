@@ -3,6 +3,7 @@ import { createHash } from "node:crypto";
 import { m } from "@repo/i18n";
 import { RepositoryError } from "@/core/error";
 import { createORPCRouter } from "@/core/router/orpc";
+import { OrderQueueService } from "@/core/services/queue";
 import { log } from "@/utils";
 import { PaymentSpec } from "./payment-spec";
 
@@ -49,34 +50,38 @@ function verifyMidtransSignature(payload: {
 }
 
 export const PaymentHandler = pub.router({
-	webhookMidtrans: pub.webhookMidtrans.handler(
-		async ({ context, input: { body } }) => {
-			// CRITICAL: Verify webhook signature before processing
-			const isValidSignature = verifyMidtransSignature({
-				order_id: body.order_id,
-				status_code: body.status_code,
-				gross_amount: body.gross_amount,
-				signature_key: body.signature_key,
-			});
+	webhookMidtrans: pub.webhookMidtrans.handler(async ({ input: { body } }) => {
+		// CRITICAL: Verify webhook signature before processing
+		const isValidSignature = verifyMidtransSignature({
+			order_id: body.order_id,
+			status_code: body.status_code,
+			gross_amount: body.gross_amount,
+			signature_key: body.signature_key,
+		});
 
-			if (!isValidSignature) {
-				throw new RepositoryError(
-					"Invalid webhook signature - potential security breach",
-					{ code: "UNAUTHORIZED" },
-				);
-			}
+		if (!isValidSignature) {
+			throw new RepositoryError(
+				"Invalid webhook signature - potential security breach",
+				{ code: "UNAUTHORIZED" },
+			);
+		}
 
-			return await context.svc.db.transaction(async (tx) => {
-				await context.repo.payment.handleWebhookMidtrans({
-					body,
-					tx,
-				});
+		// Enqueue webhook for async processing
+		// This allows fast response to Midtrans while processing happens in background
+		await OrderQueueService.enqueuePaymentWebhook({
+			webhookBody: body,
+			provider: "MIDTRANS",
+			receivedAt: new Date(),
+		});
 
-				return {
-					status: 200,
-					body: { message: m.server_webhook_processed(), data: null },
-				};
-			});
-		},
-	),
+		log.info(
+			{ orderId: body.order_id, status: body.transaction_status },
+			"[PaymentHandler] Payment webhook enqueued for processing",
+		);
+
+		return {
+			status: 200,
+			body: { message: m.server_webhook_processed(), data: null },
+		};
+	}),
 });
