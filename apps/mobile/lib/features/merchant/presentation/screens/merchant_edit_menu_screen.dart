@@ -99,7 +99,7 @@ class _MerchantEditMenuScreenState extends State<MerchantEditMenuScreen> {
     // Try to match category
     if (menu.category != null) {
       try {
-        final categoryLower = menu.category?.toLowerCase() ?? '';
+        final categoryLower = menu.category?.toLowerCase();
         _selectedMenuCategory = MenuCategoryEnumEdit.values.firstWhere(
           (e) => e.name.toLowerCase() == categoryLower,
         );

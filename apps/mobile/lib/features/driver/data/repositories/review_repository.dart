@@ -35,7 +35,7 @@ class ReviewRepository extends BaseRepository {
             code: ErrorCode.unknown,
           ));
 
-      return SuccessResponse(message: data.message ?? '', data: data.data);
+      return SuccessResponse(message: data.message, data: data.data);
     });
   }
 
@@ -80,7 +80,7 @@ class ReviewRepository extends BaseRepository {
             code: ErrorCode.unknown,
           ));
 
-      return SuccessResponse(message: data.message ?? '', data: data.data);
+      return SuccessResponse(message: data.message, data: data.data);
     });
   }
 
@@ -96,7 +96,7 @@ class ReviewRepository extends BaseRepository {
             code: ErrorCode.notFound,
           ));
 
-      return SuccessResponse(message: data.message ?? '', data: data.data);
+      return SuccessResponse(message: data.message, data: data.data);
     });
   }
 }

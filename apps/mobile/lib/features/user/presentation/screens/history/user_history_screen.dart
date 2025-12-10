@@ -106,7 +106,7 @@ class UserOrderCardWidget extends StatelessWidget {
       builder: (context, snapshot) {
         final data = snapshot.data;
         return DefaultText(
-          '${data?.name ?? ''}, ${data?.street ?? ''}',
+          '${data?.name}, ${data?.street}',
           fontSize: 14.sp,
         ).asSkeleton(enabled: snapshot.connectionState != ConnectionState.done);
       },

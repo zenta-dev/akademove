@@ -318,20 +318,16 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
         builder: (context, state) {
           return state.banners.whenOr(
             success: (banners, _) {
-              // Filter out banners with null imageUrl
-              final validBanners = banners
-                  .where((b) => b.imageUrl != null)
-                  .toList();
-              if (validBanners.isEmpty) {
+              if (banners.isEmpty) {
                 return const SizedBox.shrink();
               }
               return Carousel(
                 transition: CarouselTransition.sliding(gap: 16.w),
                 controller: _bannerController,
                 autoplaySpeed: const Duration(seconds: 10),
-                itemCount: validBanners.length,
+                itemCount: banners.length,
                 itemBuilder: (context, index) {
-                  final banner = validBanners[index];
+                  final banner = banners[index];
                   return BannerCardWidget(banner: banner);
                 },
                 speed: const Duration(seconds: 10),

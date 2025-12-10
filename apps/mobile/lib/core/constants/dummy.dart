@@ -71,11 +71,11 @@ const dummyMerchant = Merchant(
   categories: ['Drink', 'Coffe', 'Desert', 'Food'],
   image: '${UrlConstants.randomImageUrl}/seed/512/512',
   operatingStatus: MerchantOperatingStatusEnum.MAINTENANCE,
-  isTakingOrders: false,
   isOnline: false,
   status: MerchantStatusEnum.ACTIVE,
   createdAt: dummyConstDateTime,
   updatedAt: dummyConstDateTime,
+  activeOrderCount: 0,
 );
 
 const dummyPlace = Place(

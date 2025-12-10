@@ -395,7 +395,7 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
                   const Icon(LucideIcons.bookOpen),
                   // Expanded(
                   //   child: Text(
-                  //     note.instructions ?? '',
+                  //     note.instructions ,
                   //     style: context.typography.small.copyWith(
                   //       fontSize: 12.sp,
                   //       fontWeight: FontWeight.w500,

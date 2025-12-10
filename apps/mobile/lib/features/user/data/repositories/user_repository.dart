@@ -41,7 +41,7 @@ class UserRepository extends BaseRepository {
               code: ErrorCode.internalServerError,
             ));
 
-        return SuccessResponse(message: data.message ?? '', data: data.data);
+        return SuccessResponse(message: data.message, data: data.data);
       });
 
   Future<BaseResponse<bool>> updatePassword(UserMeChangePasswordRequest req) =>
@@ -56,7 +56,7 @@ class UserRepository extends BaseRepository {
               code: ErrorCode.internalServerError,
             ));
 
-        return SuccessResponse(message: data.message ?? '', data: data.data);
+        return SuccessResponse(message: data.message, data: data.data);
       });
 
   /// Lookup user by phone number for wallet transfer
@@ -71,7 +71,7 @@ class UserRepository extends BaseRepository {
             code: ErrorCode.internalServerError,
           ));
 
-      return SuccessResponse(message: data.message ?? '', data: data.data);
+      return SuccessResponse(message: data.message, data: data.data);
     },
   );
 }

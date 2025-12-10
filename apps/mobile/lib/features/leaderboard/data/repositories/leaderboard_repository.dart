@@ -31,7 +31,7 @@ class LeaderboardRepository extends BaseRepository {
             code: ErrorCode.unknown,
           ));
 
-      return SuccessResponse(message: data.message ?? '', data: data.data);
+      return SuccessResponse(message: data.message, data: data.data);
     });
   }
 
@@ -49,7 +49,7 @@ class LeaderboardRepository extends BaseRepository {
 
       final leaderboard = data.data;
 
-      return SuccessResponse(message: data.message ?? '', data: leaderboard);
+      return SuccessResponse(message: data.message, data: leaderboard);
     });
   }
 

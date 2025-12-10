@@ -15,7 +15,7 @@ class WalletRepository extends BaseRepository {
             'Wallet not found',
             code: ErrorCode.notFound,
           ));
-      return SuccessResponse(message: data.message ?? '', data: data.data);
+      return SuccessResponse(message: data.message, data: data.data);
     });
   }
 
@@ -34,7 +34,7 @@ class WalletRepository extends BaseRepository {
             'Monthly summary not found',
             code: ErrorCode.notFound,
           ));
-      return SuccessResponse(message: data.message ?? '', data: data.data);
+      return SuccessResponse(message: data.message, data: data.data);
     });
   }
 
@@ -49,7 +49,7 @@ class WalletRepository extends BaseRepository {
             'Failed to top-up',
             code: ErrorCode.notFound,
           ));
-      return SuccessResponse(message: data.message ?? '', data: data.data);
+      return SuccessResponse(message: data.message, data: data.data);
     });
   }
 
@@ -64,7 +64,7 @@ class WalletRepository extends BaseRepository {
             'Failed to withdraw',
             code: ErrorCode.unknown,
           ));
-      return SuccessResponse(message: data.message ?? '', data: data.data);
+      return SuccessResponse(message: data.message, data: data.data);
     });
   }
 
@@ -87,7 +87,7 @@ class WalletRepository extends BaseRepository {
             'Failed to transfer',
             code: ErrorCode.unknown,
           ));
-      return SuccessResponse(message: data.message ?? '', data: data.data);
+      return SuccessResponse(message: data.message, data: data.data);
     });
   }
 
@@ -112,7 +112,7 @@ class WalletRepository extends BaseRepository {
           ));
       final savedBank = data.data;
       return SuccessResponse(
-        message: data.message ?? '',
+        message: data.message,
         data: (
           hasSavedBank: savedBank.hasSavedBank,
           bankProvider: savedBank.bankProvider,

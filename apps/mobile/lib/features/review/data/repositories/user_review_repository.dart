@@ -24,7 +24,7 @@ class UserReviewRepository extends BaseRepository {
           toUserId: toUserId,
           category: category,
           score: score,
-          comment: comment ?? '',
+          comment: comment,
         ),
       );
 
@@ -35,7 +35,7 @@ class UserReviewRepository extends BaseRepository {
             code: ErrorCode.unknown,
           ));
 
-      return SuccessResponse(message: data.message ?? '', data: data.data);
+      return SuccessResponse(message: data.message, data: data.data);
     });
   }
 
@@ -81,7 +81,7 @@ class UserReviewRepository extends BaseRepository {
             code: ErrorCode.unknown,
           ));
 
-      return SuccessResponse(message: data.message ?? '', data: data.data);
+      return SuccessResponse(message: data.message, data: data.data);
     });
   }
 
@@ -97,7 +97,7 @@ class UserReviewRepository extends BaseRepository {
             code: ErrorCode.notFound,
           ));
 
-      return SuccessResponse(message: data.message ?? '', data: data.data);
+      return SuccessResponse(message: data.message, data: data.data);
     });
   }
 }

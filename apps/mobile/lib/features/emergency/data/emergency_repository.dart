@@ -49,7 +49,7 @@ class EmergencyRepository extends BaseRepository {
             code: ErrorCode.internalServerError,
           );
         }
-        return SuccessResponse(message: data.message ?? '', data: data.data);
+        return SuccessResponse(message: data.message, data: data.data);
       }
 
       throw const RepositoryError(
@@ -74,7 +74,7 @@ class EmergencyRepository extends BaseRepository {
             code: ErrorCode.internalServerError,
           );
         }
-        return SuccessResponse(message: data.message ?? '', data: data.data);
+        return SuccessResponse(message: data.message, data: data.data);
       }
 
       throw const RepositoryError(
@@ -97,7 +97,7 @@ class EmergencyRepository extends BaseRepository {
             code: ErrorCode.internalServerError,
           );
         }
-        return SuccessResponse(message: data.message ?? '', data: data.data);
+        return SuccessResponse(message: data.message, data: data.data);
       }
 
       throw const RepositoryError(

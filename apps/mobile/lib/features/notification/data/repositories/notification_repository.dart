@@ -114,7 +114,7 @@ class NotificationRepository extends BaseRepository {
       );
 
       return SuccessResponse(
-        message: data.message ?? '',
+        message: data.message,
         data: notificationListResponse,
       );
     });
@@ -139,7 +139,7 @@ class NotificationRepository extends BaseRepository {
 
       final notification = NotificationModel.fromMarkAsReadDto(data.data);
 
-      return SuccessResponse(message: data.message ?? '', data: notification);
+      return SuccessResponse(message: data.message, data: notification);
     });
   }
 
@@ -162,7 +162,7 @@ class NotificationRepository extends BaseRepository {
 
       final count = data.data.count.toInt();
 
-      return SuccessResponse(message: data.message ?? '', data: count);
+      return SuccessResponse(message: data.message, data: count);
     });
   }
 
@@ -183,7 +183,7 @@ class NotificationRepository extends BaseRepository {
         );
       }
 
-      return SuccessResponse(message: data.message ?? '', data: data.data.ok);
+      return SuccessResponse(message: data.message, data: data.data.ok);
     });
   }
 
@@ -205,7 +205,7 @@ class NotificationRepository extends BaseRepository {
       }
 
       return SuccessResponse(
-        message: data.message ?? '',
+        message: data.message,
         data: data.data.count.toInt(),
       );
     });
@@ -238,11 +238,8 @@ class NotificationRepository extends BaseRepository {
       }
 
       await _apiClient.getNotificationApi().notificationUnsubscribeToTopic(
-        notificationUnsubscribeToTopicRequest:
-            NotificationUnsubscribeToTopicRequest(
-              topic: topic,
-              token: fcmToken,
-            ),
+        notificationSubscribeToTopicRequest:
+            NotificationSubscribeToTopicRequest(topic: topic, token: fcmToken),
       );
       logger.i('[$tag] Unsubscribed from topic: $topic');
     });

@@ -26,7 +26,7 @@ class DriverQuizRepository extends BaseRepository {
 
       final apiData = data.data;
 
-      return SuccessResponse(message: data.message ?? '', data: apiData);
+      return SuccessResponse(message: data.message, data: apiData);
     });
   }
 
@@ -48,7 +48,7 @@ class DriverQuizRepository extends BaseRepository {
         );
       }
 
-      return SuccessResponse(message: data.message ?? '', data: data.data);
+      return SuccessResponse(message: data.message, data: data.data);
     });
   }
 
@@ -72,7 +72,7 @@ class DriverQuizRepository extends BaseRepository {
 
       final resultData = data.data;
 
-      return SuccessResponse(message: data.message ?? '', data: resultData);
+      return SuccessResponse(message: data.message, data: resultData);
     });
   }
 
@@ -89,7 +89,7 @@ class DriverQuizRepository extends BaseRepository {
         if (data != null) {
           final resultData = data.data;
 
-          return SuccessResponse(message: data.message ?? '', data: resultData);
+          return SuccessResponse(message: data.message, data: resultData);
         }
 
         return SuccessResponse(message: 'No quiz attempt found', data: null);

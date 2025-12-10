@@ -320,9 +320,9 @@ class DeleteAccountButtonWidget extends StatelessWidget {
 
   /// Build email query string
   String _buildEmailQuery(dynamic user, String accountType) {
-    final name = user?.name ?? '';
-    final email = user?.email ?? '';
-    final phone = user?.phoneNumber ?? '';
+    final name = user?.name;
+    final email = user?.email;
+    final phone = user?.phoneNumber;
 
     return 'subject=Account Deletion Request'
         '&body=I request that my AkadeMove account be permanently deleted.%0A%0A'

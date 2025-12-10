@@ -66,7 +66,7 @@ class OrderChatRepository extends BaseRepository {
         nextCursor: data.nextCursor,
       );
 
-      return SuccessResponse(data: result, message: responseData.message ?? '');
+      return SuccessResponse(data: result, message: responseData.message);
     });
   }
 
@@ -92,7 +92,7 @@ class OrderChatRepository extends BaseRepository {
 
       return SuccessResponse(
         data: responseData.data,
-        message: responseData.message ?? '',
+        message: responseData.message,
       );
     });
   }
