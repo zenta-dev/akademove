@@ -4,6 +4,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
 	Dialog,
 	DialogContent,
@@ -50,6 +51,7 @@ export function WithdrawDialog({
 	const [accountName, setAccountName] = useState("");
 	const [hasPrefilledBank, setHasPrefilledBank] = useState(false);
 	const [isValidated, setIsValidated] = useState(false);
+	const [saveBank, setSaveBank] = useState(false);
 
 	// Fetch saved bank account details
 	const savedBankQuery = useQuery({
@@ -99,7 +101,7 @@ export function WithdrawDialog({
 	// Reset validation when bank provider or account number changes
 	useEffect(() => {
 		setIsValidated(false);
-	}, [bankProvider, accountNumber]);
+	}, []);
 
 	// Bank validation mutation
 	const validateMutation = useMutation({
@@ -160,6 +162,7 @@ export function WithdrawDialog({
 					bankProvider,
 					accountNumber: accountNumber.trim(),
 					accountName: accountName.trim() || undefined,
+					saveBank: saveBank || undefined,
 				},
 			});
 
@@ -277,22 +280,47 @@ export function WithdrawDialog({
 						</Select>
 					</div>
 
-					{/* Account Number */}
+					{/* Account Number with Validate Button */}
 					<div>
 						<Label htmlFor="accountNumber">
 							{m.withdraw_wallet_account_number()}
 						</Label>
-						<Input
-							id="accountNumber"
-							type="text"
-							placeholder={m.withdraw_wallet_account_number_placeholder()}
-							value={accountNumber}
-							onChange={(e) =>
-								setAccountNumber(e.target.value.replace(/\D/g, ""))
-							}
-							required
-							disabled={withdrawMutation.isPending}
-						/>
+						<div className="flex gap-2">
+							<Input
+								id="accountNumber"
+								type="text"
+								placeholder={m.withdraw_wallet_account_number_placeholder()}
+								value={accountNumber}
+								onChange={(e) =>
+									setAccountNumber(e.target.value.replace(/\D/g, ""))
+								}
+								required
+								disabled={
+									withdrawMutation.isPending || validateMutation.isPending
+								}
+								className="flex-1"
+							/>
+							<Button
+								type="button"
+								variant={isValidated ? "outline" : "secondary"}
+								onClick={() => validateMutation.mutate()}
+								disabled={
+									withdrawMutation.isPending ||
+									validateMutation.isPending ||
+									accountNumber.length < 5 ||
+									isValidated
+								}
+							>
+								{validateMutation.isPending
+									? m.withdraw_wallet_validating()
+									: isValidated
+										? "✓"
+										: m.withdraw_wallet_validate()}
+							</Button>
+						</div>
+						{isValidated && accountName && (
+							<p className="mt-1 text-green-600 text-xs">{accountName}</p>
+						)}
 					</div>
 
 					{/* Account Name (Optional) */}
@@ -309,11 +337,27 @@ export function WithdrawDialog({
 							placeholder={m.withdraw_wallet_account_name_placeholder()}
 							value={accountName}
 							onChange={(e) => setAccountName(e.target.value)}
-							disabled={withdrawMutation.isPending}
+							disabled={withdrawMutation.isPending || isValidated}
 						/>
 						<p className="mt-1 text-muted-foreground text-xs">
 							{m.withdraw_wallet_account_name_desc()}
 						</p>
+					</div>
+
+					{/* Save Bank Details Checkbox */}
+					<div className="flex items-center space-x-2">
+						<Checkbox
+							id="saveBank"
+							checked={saveBank}
+							onCheckedChange={(checked) => setSaveBank(checked === true)}
+							disabled={withdrawMutation.isPending}
+						/>
+						<Label
+							htmlFor="saveBank"
+							className="cursor-pointer text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+						>
+							{m.withdraw_wallet_save_bank()}
+						</Label>
 					</div>
 
 					<DialogFooter>

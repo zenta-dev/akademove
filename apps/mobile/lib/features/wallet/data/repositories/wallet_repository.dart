@@ -122,4 +122,44 @@ class WalletRepository extends BaseRepository {
       );
     });
   }
+
+  Future<
+    BaseResponse<
+      ({
+        bool isValid,
+        String? accountName,
+        String bankCode,
+        String accountNumber,
+      })
+    >
+  >
+  validateBankAccount({
+    required BankProvider bankProvider,
+    required String accountNumber,
+  }) {
+    return guard(() async {
+      final res = await _apiClient.getPaymentApi().bankValidateAccount(
+        bankValidationRequest: BankValidationRequest(
+          bankProvider: bankProvider,
+          accountNumber: accountNumber,
+        ),
+      );
+      final data =
+          res.data ??
+          (throw const RepositoryError(
+            'Failed to validate bank account',
+            code: ErrorCode.unknown,
+          ));
+      final validation = data.data;
+      return SuccessResponse(
+        message: data.message,
+        data: (
+          isValid: validation.isValid,
+          accountName: validation.accountName,
+          bankCode: validation.bankCode,
+          accountNumber: validation.accountNumber,
+        ),
+      );
+    });
+  }
 }

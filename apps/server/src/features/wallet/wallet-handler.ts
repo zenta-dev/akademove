@@ -257,6 +257,55 @@ export const WalletHandler = pub.router({
 				);
 			}
 
+			// Save bank details to driver/merchant profile if requested
+			if (data.saveBank) {
+				const bankDetails: {
+					bankProvider: BankProvider;
+					accountNumber: string;
+					accountName?: string;
+				} = {
+					bankProvider: data.bankProvider,
+					accountNumber: data.accountNumber,
+					accountName: data.accountName,
+				};
+
+				// Try to update driver profile first
+				const driver = await tx.query.driver.findFirst({
+					where: (f, op) => op.eq(f.userId, context.user.id),
+					columns: { id: true },
+				});
+
+				if (driver) {
+					await context.repo.driver.update(
+						driver.id,
+						{ bank: bankDetails },
+						opts,
+					);
+					logger.info(
+						{ userId: context.user.id, driverId: driver.id },
+						"[WalletHandler] Saved bank details to driver profile",
+					);
+				} else {
+					// Try merchant profile
+					const merchant = await tx.query.merchant.findFirst({
+						where: (f, op) => op.eq(f.userId, context.user.id),
+						columns: { id: true },
+					});
+
+					if (merchant) {
+						await context.repo.merchant.update(
+							merchant.id,
+							{ bank: bankDetails },
+							opts,
+						);
+						logger.info(
+							{ userId: context.user.id, merchantId: merchant.id },
+							"[WalletHandler] Saved bank details to merchant profile",
+						);
+					}
+				}
+			}
+
 			// Use atomic balance deduction to prevent race conditions
 			// This will throw if insufficient balance (atomically checks and deducts)
 			const { balanceBefore, balanceAfter } =

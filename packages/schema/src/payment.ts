@@ -91,6 +91,8 @@ export const WithdrawRequestSchema = z.object({
 	bankProvider: BankProviderSchema,
 	accountNumber: z.string(),
 	accountName: z.string().optional(),
+	/** If true, save bank details to user's driver/merchant profile for future use */
+	saveBank: z.boolean().optional(),
 });
 export type WithdrawRequest = z.infer<typeof WithdrawRequestSchema>;
 
