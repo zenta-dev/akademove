@@ -176,8 +176,6 @@ export const [server, web] = await Promise.all([
 			VITE_FIREBASE_APP_ID: alchemy.env.FIREBASE_APP_ID,
 			VITE_FIREBASE_MEASUREMENT_ID: alchemy.env.FIREBASE_MEASUREMENT_ID,
 			VITE_FIREBASE_VAPID_KEY: alchemy.env.FIREBASE_VAPID_KEY,
-			LOG_SOURCE_TOKEN: alchemy.secret.env.LOG_SOURCE_TOKEN,
-			LOG_ENDPOINT: alchemy.secret.env.LOG_ENDPOINT,
 		},
 		dev: {
 			command: "bun run dev",
