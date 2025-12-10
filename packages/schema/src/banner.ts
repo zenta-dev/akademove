@@ -40,7 +40,7 @@ export type BannerPlacement = z.infer<typeof BannerPlacementSchema>;
 
 // Full Banner Schema (for admin/operator)
 export const BannerSchema = z.object({
-	id: z.string().uuid(),
+	id: z.uuid(),
 	title: z.string().min(1, "Title is required").max(255, "Title too long"),
 	description: z.string().nullable().optional(),
 	imageUrl: z.string().url("Invalid image URL").max(512),
@@ -52,12 +52,12 @@ export const BannerSchema = z.object({
 	targetAudience: BannerTargetAudienceSchema,
 
 	isActive: z.boolean(),
-	priority: z.number().int().min(0).default(0),
+	priority: z.coerce.number().int().min(0).default(0),
 	startAt: DateSchema.nullable().optional(),
 	endAt: DateSchema.nullable().optional(),
 
-	createdById: z.string().uuid(),
-	updatedById: z.string().uuid().nullable().optional(),
+	createdById: z.string(),
+	updatedById: z.string().nullable().optional(),
 	createdAt: DateSchema,
 	updatedAt: DateSchema,
 });
@@ -79,7 +79,7 @@ export type UpdateBanner = z.infer<typeof UpdateBannerSchema>;
 
 // Public Banner Schema (for mobile app - without audit fields)
 export const PublicBannerSchema = z.object({
-	id: z.string().uuid(),
+	id: z.uuid(),
 	title: z.string(),
 	description: z.string().nullable().optional(),
 	imageUrl: z.string(),
@@ -91,7 +91,7 @@ export const PublicBannerSchema = z.object({
 	targetAudience: BannerTargetAudienceSchema,
 
 	isActive: z.boolean(),
-	priority: z.number().int(),
+	priority: z.coerce.number().int(),
 	startAt: DateSchema.nullable().optional(),
 	endAt: DateSchema.nullable().optional(),
 });

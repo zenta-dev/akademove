@@ -8,10 +8,10 @@ import { hasAccess } from "@/lib/actions";
 import { SUB_ROUTE_TITLES } from "@/lib/constants";
 import { orpcQuery } from "@/lib/orpc";
 
-export const Route = createFileRoute("/dash/operator/banners/$id")({
-	head: () => ({ meta: [{ title: SUB_ROUTE_TITLES.OPERATOR.BANNERS }] }),
+export const Route = createFileRoute("/dash/admin/banners/$id")({
+	head: () => ({ meta: [{ title: SUB_ROUTE_TITLES.ADMIN.BANNERS }] }),
 	beforeLoad: async () => {
-		const ok = await hasAccess(["OPERATOR"]);
+		const ok = await hasAccess(["ADMIN"]);
 		if (!ok) redirect({ to: "/", throw: true });
 		return { allowed: ok };
 	},
@@ -65,7 +65,7 @@ function RouteComponent() {
 						banner={banner.data.body.data}
 						onSuccess={async () => {
 							navigate({
-								to: "/dash/operator/banners",
+								to: "/dash/admin/banners",
 								search: { order: "desc", mode: "offset", limit: 10 },
 							});
 						}}

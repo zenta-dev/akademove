@@ -44,6 +44,7 @@ import {
 } from "@/components/ui/popover";
 import { Textarea } from "@/components/ui/textarea";
 import { orpcQuery, queryClient } from "@/lib/orpc";
+import type { FileRouteTypes } from "@/routeTree.gen";
 import { cn } from "@/utils/cn";
 
 const PLACEMENT_OPTIONS = [
@@ -77,9 +78,11 @@ const ACTION_TYPE_OPTIONS = [
 export const BannerForm = ({
 	kind,
 	banner,
+	onSuccess,
 }: {
 	kind: "new" | "edit";
 	banner?: Banner;
+	onSuccess?: () => Promise<void>;
 }) => {
 	const router = useRouter();
 	const form = useForm({
@@ -116,7 +119,7 @@ export const BannerForm = ({
 					},
 	});
 
-	const onSuccess = useCallback(
+	const _onSuccess = useCallback(
 		async (kind: "insert" | "update") => {
 			await queryClient.invalidateQueries();
 			toast.success(
@@ -130,13 +133,9 @@ export const BannerForm = ({
 				}),
 			);
 			form.reset();
-			await router.navigate({
-				to: "/dash/operator/banners",
-				// @ts-expect-error - search params type mismatch
-				search: {},
-			});
+			await onSuccess?.();
 		},
-		[form, router],
+		[form, onSuccess],
 	);
 
 	const onError = useCallback((kind: "insert" | "update", error: Error) => {
@@ -157,14 +156,14 @@ export const BannerForm = ({
 
 	const insertMutation = useMutation(
 		orpcQuery.banner.create.mutationOptions({
-			onSuccess: () => onSuccess("insert"),
+			onSuccess: () => _onSuccess("insert"),
 			onError: (error: Error) => onError("insert", error),
 		}),
 	);
 
 	const updateMutation = useMutation(
 		orpcQuery.banner.update.mutationOptions({
-			onSuccess: () => onSuccess("update"),
+			onSuccess: () => _onSuccess("update"),
 			onError: (error: Error) => onError("update", error),
 		}),
 	);

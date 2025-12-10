@@ -10,7 +10,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { orpcQuery } from "@/lib/orpc";
 import type { FileRouteTypes } from "@/routeTree.gen";
 import type { TableProps } from "../type";
-import { BANNER_COLUMNS } from "./columns";
+import { createBannerColumns } from "./columns";
 
 type BannerSearchParams = TableProps["search"] & {
 	isActive?: string;
@@ -21,9 +21,10 @@ type BannerSearchParams = TableProps["search"] & {
 interface Props extends Omit<TableProps, "search"> {
 	search: BannerSearchParams;
 	to: FileRouteTypes["to"];
+	userRole?: "ADMIN" | "OPERATOR";
 }
 
-export const BannerTable = ({ search, to }: Props) => {
+export const BannerTable = ({ search, to, userRole: role }: Props) => {
 	const navigate = useNavigate();
 	const [filter, setFilter] = useState<string | undefined>(search.query);
 	const debouncedFilter = useDebounce(filter ?? search.query, 500);
@@ -171,6 +172,11 @@ export const BannerTable = ({ search, to }: Props) => {
 		{ value: "DRIVERS", label: "Drivers Only" },
 		{ value: "MERCHANTS", label: "Merchants Only" },
 	];
+
+	const BANNER_COLUMNS = useMemo(
+		() => createBannerColumns(role ?? "OPERATOR"),
+		[role],
+	);
 
 	return (
 		<>

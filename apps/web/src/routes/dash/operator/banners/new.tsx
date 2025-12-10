@@ -37,7 +37,15 @@ function RouteComponent() {
 			</div>
 			<Card className="mt-4">
 				<CardContent>
-					<BannerForm kind="new" />
+					<BannerForm
+						kind="new"
+						onSuccess={async () => {
+							navigate({
+								to: "/dash/operator/banners",
+								search: { order: "desc", mode: "offset", limit: 10 },
+							});
+						}}
+					/>
 				</CardContent>
 			</Card>
 		</div>

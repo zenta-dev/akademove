@@ -34,131 +34,136 @@ const TargetAudienceBadge = ({ audience }: { audience: string }) => {
 	return <Badge variant="outline">{labels[audience] ?? audience}</Badge>;
 };
 
-export const BANNER_COLUMNS = [
-	{
-		id: "title",
-		accessorKey: "title",
-		enableHiding: false,
-		header: ({ column }) => {
-			return (
-				<Button
-					variant="ghost"
-					className="has-[>svg]:p-0"
-					onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-				>
-					{m.banner_title()}
-					<ArrowUpDown className="ml-2 h-4 w-4" />
-				</Button>
-			);
+export const createBannerColumns = (
+	role: "ADMIN" | "OPERATOR",
+): ColumnDef<Banner>[] =>
+	[
+		{
+			id: "title",
+			accessorKey: "title",
+			enableHiding: false,
+			header: ({ column }) => {
+				return (
+					<Button
+						variant="ghost"
+						className="has-[>svg]:p-0"
+						onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+					>
+						{m.banner_title()}
+						<ArrowUpDown className="ml-2 h-4 w-4" />
+					</Button>
+				);
+			},
 		},
-	},
-	{
-		id: "imageUrl",
-		accessorKey: "imageUrl",
-		header: m.banner_image_url(),
-		cell: ({ row }) => {
-			const url = row.getValue("imageUrl") as string;
-			return url ? (
-				<a
-					href={url}
-					target="_blank"
-					rel="noopener noreferrer"
-					className="text-blue-600 hover:underline"
-				>
-					<img
-						src={url}
-						alt="Banner preview"
-						className="h-10 w-16 rounded object-cover"
-					/>
-				</a>
-			) : (
-				<span className="text-muted-foreground">-</span>
-			);
+		{
+			id: "imageUrl",
+			accessorKey: "imageUrl",
+			header: m.banner_image_url(),
+			cell: ({ row }) => {
+				const url = row.getValue("imageUrl") as string;
+				return url ? (
+					<a
+						href={url}
+						target="_blank"
+						rel="noopener noreferrer"
+						className="text-blue-600 hover:underline"
+					>
+						<img
+							src={url}
+							alt="Banner preview"
+							className="h-10 w-16 rounded object-cover"
+						/>
+					</a>
+				) : (
+					<span className="text-muted-foreground">-</span>
+				);
+			},
 		},
-	},
-	{
-		id: "placement",
-		accessorKey: "placement",
-		header: m.banner_placement(),
-		cell: ({ row }) => {
-			return <PlacementBadge placement={row.getValue("placement")} />;
+		{
+			id: "placement",
+			accessorKey: "placement",
+			header: m.banner_placement(),
+			cell: ({ row }) => {
+				return <PlacementBadge placement={row.getValue("placement")} />;
+			},
 		},
-	},
-	{
-		id: "targetAudience",
-		accessorKey: "targetAudience",
-		header: m.banner_target_audience(),
-		cell: ({ row }) => {
-			return <TargetAudienceBadge audience={row.getValue("targetAudience")} />;
+		{
+			id: "targetAudience",
+			accessorKey: "targetAudience",
+			header: m.banner_target_audience(),
+			cell: ({ row }) => {
+				return (
+					<TargetAudienceBadge audience={row.getValue("targetAudience")} />
+				);
+			},
 		},
-	},
-	{
-		id: "priority",
-		accessorKey: "priority",
-		header: ({ column }) => {
-			return (
-				<Button
-					variant="ghost"
-					className="has-[>svg]:p-0"
-					onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-				>
-					{m.banner_priority()}
-					<ArrowUpDown className="ml-2 h-4 w-4" />
-				</Button>
-			);
+		{
+			id: "priority",
+			accessorKey: "priority",
+			header: ({ column }) => {
+				return (
+					<Button
+						variant="ghost"
+						className="has-[>svg]:p-0"
+						onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+					>
+						{m.banner_priority()}
+						<ArrowUpDown className="ml-2 h-4 w-4" />
+					</Button>
+				);
+			},
 		},
-	},
-	{
-		id: "isActive",
-		accessorKey: "isActive",
-		header: m.banner_is_active(),
-		cell: ({ row }) => {
-			const value = Boolean(row.getValue("isActive"));
-			if (value) {
+		{
+			id: "isActive",
+			accessorKey: "isActive",
+			header: m.banner_is_active(),
+			cell: ({ row }) => {
+				const value = Boolean(row.getValue("isActive"));
+				if (value) {
+					return (
+						<Badge
+							variant="secondary"
+							className="bg-green-500/20 text-green-500 dark:bg-green-600/20 dark:text-green-600"
+						>
+							<BadgeCheckIcon />
+							{m.yes().toUpperCase()}
+						</Badge>
+					);
+				}
 				return (
 					<Badge
 						variant="secondary"
-						className="bg-green-500/20 text-green-500 dark:bg-green-600/20 dark:text-green-600"
+						className="bg-red-500/20 text-red-500 dark:bg-red-600/20 dark:text-red-600"
 					>
-						<BadgeCheckIcon />
-						{m.yes().toUpperCase()}
+						<BadgeXIcon />
+						{m.no().toUpperCase()}
 					</Badge>
 				);
-			}
-			return (
-				<Badge
-					variant="secondary"
-					className="bg-red-500/20 text-red-500 dark:bg-red-600/20 dark:text-red-600"
-				>
-					<BadgeXIcon />
-					{m.no().toUpperCase()}
-				</Badge>
-			);
+			},
 		},
-	},
-	{
-		id: "createdAt",
-		accessorKey: "createdAt",
-		header: m.created_at(),
-		cell: ({ row }) => {
-			const date = new Date(row.getValue("createdAt"));
-			return (
-				<div className="text-start font-medium">
-					{date.toLocaleDateString("id-ID", {
-						day: "numeric",
-						month: "short",
-						year: "numeric",
-					})}
-				</div>
-			);
+		{
+			id: "createdAt",
+			accessorKey: "createdAt",
+			header: m.created_at(),
+			cell: ({ row }) => {
+				const date = new Date(row.getValue("createdAt"));
+				return (
+					<div className="text-start font-medium">
+						{date.toLocaleDateString("id-ID", {
+							day: "numeric",
+							month: "short",
+							year: "numeric",
+						})}
+					</div>
+				);
+			},
 		},
-	},
-	{
-		id: "actions",
-		enableHiding: false,
-		header: m.actions(),
-		cell: ({ row }) => {
-			return <BannerActionTable val={row.original} />;
+		{
+			id: "actions",
+			enableHiding: false,
+			header: m.actions(),
+			cell: ({ row }) => {
+				return <BannerActionTable val={row.original} role={role} />;
+			},
 		},
-	},
-] as const satisfies ColumnDef<Banner>[];
+	] as const satisfies ColumnDef<Banner>[];

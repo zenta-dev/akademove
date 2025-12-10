@@ -1,3 +1,8 @@
+import type {
+	BannerActionType,
+	BannerPlacement,
+	BannerTargetAudience,
+} from "@repo/schema/banner";
 import { relations } from "drizzle-orm";
 import {
 	boolean,
@@ -110,54 +115,4 @@ export const bannerRelations = relations(banner, ({ one }) => ({
 	}),
 }));
 
-// Zod Schemas
-export const BannerSchema = z.object({
-	id: z.string().uuid(),
-	title: z.string().min(1, "Title is required").max(255, "Title too long"),
-	description: z.string().nullable().optional(),
-	imageUrl: z.string().url("Invalid image URL").max(512),
-
-	actionType: BannerActionTypeSchema,
-	actionValue: z.string().nullable().optional(),
-
-	placement: BannerPlacementSchema,
-	targetAudience: BannerTargetAudienceSchema,
-
-	isActive: z.boolean(),
-	priority: z.number().int().min(0).default(0),
-	startAt: z.coerce.date().nullable().optional(),
-	endAt: z.coerce.date().nullable().optional(),
-
-	createdById: z.string().uuid(),
-	updatedById: z.string().uuid().nullable().optional(),
-	createdAt: z.coerce.date(),
-	updatedAt: z.coerce.date(),
-});
-
-export const InsertBannerSchema = BannerSchema.omit({
-	id: true,
-	createdById: true,
-	updatedById: true,
-	createdAt: true,
-	updatedAt: true,
-});
-
-export const UpdateBannerSchema = InsertBannerSchema.partial();
-
-// Public banner schema (for mobile app - without audit fields)
-export const PublicBannerSchema = BannerSchema.omit({
-	createdById: true,
-	updatedById: true,
-	createdAt: true,
-	updatedAt: true,
-});
-
-// Types
-export type Banner = z.infer<typeof BannerSchema>;
-export type InsertBanner = z.infer<typeof InsertBannerSchema>;
-export type UpdateBanner = z.infer<typeof UpdateBannerSchema>;
-export type PublicBanner = z.infer<typeof PublicBannerSchema>;
-export type BannerActionType = z.infer<typeof BannerActionTypeSchema>;
-export type BannerTargetAudience = z.infer<typeof BannerTargetAudienceSchema>;
-export type BannerPlacement = z.infer<typeof BannerPlacementSchema>;
 export type BannerDatabase = typeof banner.$inferSelect;

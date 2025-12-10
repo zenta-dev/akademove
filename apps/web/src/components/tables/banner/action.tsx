@@ -15,7 +15,13 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-export const BannerActionTable = ({ val }: { val: Banner }) => {
+export const BannerActionTable = ({
+	val,
+	role,
+}: {
+	val: Banner;
+	role?: "ADMIN" | "OPERATOR";
+}) => {
 	const [toggleActiveOpen, setToggleActiveOpen] = useState(false);
 	const [deleteOpen, setDeleteOpen] = useState(false);
 
@@ -31,7 +37,14 @@ export const BannerActionTable = ({ val }: { val: Banner }) => {
 				<DropdownMenuContent align="end">
 					<DropdownMenuLabel>{m.actions()}</DropdownMenuLabel>
 					<DropdownMenuItem asChild>
-						<Link to="/dash/operator/banners/$id" params={{ id: val.id }}>
+						<Link
+							to={
+								role === "ADMIN"
+									? "/dash/admin/banners/$id"
+									: "/dash/operator/banners/$id"
+							}
+							params={{ id: val.id }}
+						>
 							<EditIcon className="mr-2 h-4 w-4" />
 							{m.banner_edit()}
 						</Link>

@@ -1,9 +1,11 @@
 import { m } from "@repo/i18n";
 import type {
+	Banner,
 	BannerActionType,
 	BannerPlacement,
 	BannerTargetAudience,
 	InsertBanner,
+	PublicBanner,
 	UpdateBanner,
 } from "@repo/schema/banner";
 import { and, desc, eq, or, sql } from "drizzle-orm";
@@ -14,11 +16,7 @@ import { RepositoryError } from "@/core/error";
 import type { PartialWithTx, WithUserId } from "@/core/interface";
 import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
-import type {
-	Banner,
-	BannerDatabase,
-	PublicBanner,
-} from "@/core/tables/banner";
+import type { BannerDatabase } from "@/core/tables/banner";
 import { logger } from "@/utils/logger";
 import type { BannerListQuery } from "./banner-spec";
 

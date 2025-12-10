@@ -1,7 +1,9 @@
 import { m } from "@repo/i18n";
 import { trimObjectValues } from "@repo/shared";
 import { AuthError } from "@/core/error";
+import { hasRoles } from "@/core/middlewares/auth";
 import { createORPCRouter } from "@/core/router/orpc";
+import { logger } from "@/utils/logger";
 import { BannerSpec } from "./banner-spec";
 
 const { pub, priv } = createORPCRouter(BannerSpec);
@@ -23,7 +25,9 @@ export const BannerHandler = pub.router({
 
 	// Private endpoints - require ADMIN or OPERATOR role
 	list: priv.list.handler(async ({ context, input: { query } }) => {
-		if (context.user.role !== "ADMIN" && context.user.role !== "OPERATOR") {
+		logger.debug(context.user, "accessing banner list");
+		32;
+		if (!hasRoles(context.user.role, "SYSTEM")) {
 			throw new AuthError("Access denied: Missing required role", {
 				code: "FORBIDDEN",
 			});
@@ -40,12 +44,6 @@ export const BannerHandler = pub.router({
 	}),
 
 	get: priv.get.handler(async ({ context, input: { params } }) => {
-		if (context.user.role !== "ADMIN" && context.user.role !== "OPERATOR") {
-			throw new AuthError("Access denied: Missing required role", {
-				code: "FORBIDDEN",
-			});
-		}
-
 		const result = await context.repo.banner.get(params.id);
 		return {
 			status: 200,
@@ -57,7 +55,7 @@ export const BannerHandler = pub.router({
 	}),
 
 	create: priv.create.handler(async ({ context, input: { body } }) => {
-		if (context.user.role !== "ADMIN" && context.user.role !== "OPERATOR") {
+		if (!hasRoles(context.user.role, "SYSTEM")) {
 			throw new AuthError("Access denied: Missing required role", {
 				code: "FORBIDDEN",
 			});
@@ -83,7 +81,7 @@ export const BannerHandler = pub.router({
 	}),
 
 	update: priv.update.handler(async ({ context, input: { params, body } }) => {
-		if (context.user.role !== "ADMIN" && context.user.role !== "OPERATOR") {
+		if (!hasRoles(context.user.role, "SYSTEM")) {
 			throw new AuthError("Access denied: Missing required role", {
 				code: "FORBIDDEN",
 			});
@@ -110,7 +108,7 @@ export const BannerHandler = pub.router({
 	}),
 
 	delete: priv.delete.handler(async ({ context, input: { params } }) => {
-		if (context.user.role !== "ADMIN" && context.user.role !== "OPERATOR") {
+		if (!hasRoles(context.user.role, "SYSTEM")) {
 			throw new AuthError("Access denied: Missing required role", {
 				code: "FORBIDDEN",
 			});
@@ -130,7 +128,7 @@ export const BannerHandler = pub.router({
 
 	toggleActive: priv.toggleActive.handler(
 		async ({ context, input: { params } }) => {
-			if (context.user.role !== "ADMIN" && context.user.role !== "OPERATOR") {
+			if (!hasRoles(context.user.role, "SYSTEM")) {
 				throw new AuthError("Access denied: Missing required role", {
 					code: "FORBIDDEN",
 				});

@@ -13,15 +13,15 @@ import { Card, CardContent } from "@/components/ui/card";
 import { hasAccess } from "@/lib/actions";
 import { SUB_ROUTE_TITLES } from "@/lib/constants";
 
-export const Route = createFileRoute("/dash/operator/banners/")({
+export const Route = createFileRoute("/dash/admin/banners/")({
 	validateSearch: (values) => {
 		const search = UnifiedPaginationQuerySchema.parse(values);
 		if (!values.limit) return { ...search, page: 1, limit: 15 };
 		return search;
 	},
-	head: () => ({ meta: [{ title: SUB_ROUTE_TITLES.OPERATOR.BANNERS }] }),
+	head: () => ({ meta: [{ title: SUB_ROUTE_TITLES.ADMIN.BANNERS }] }),
 	beforeLoad: async () => {
-		const ok = await hasAccess(["OPERATOR"]);
+		const ok = await hasAccess(["ADMIN"]);
 		if (!ok) redirect({ to: "/", throw: true });
 		return { allowed: ok };
 	},
@@ -44,7 +44,7 @@ function RouteComponent() {
 					<h2 className="font-medium text-xl">{m.banners()}</h2>
 					<p className="text-muted-foreground">{m.admin_dash_desc()}</p>
 				</div>
-				<Link to="/dash/operator/banners/new" className={buttonVariants()}>
+				<Link to="/dash/admin/banners/new" className={buttonVariants()}>
 					<PlusIcon />
 					{m.banner_create()}
 				</Link>
@@ -53,8 +53,8 @@ function RouteComponent() {
 				<CardContent className="p-0">
 					<BannerTable
 						search={search}
-						to="/dash/operator/banners"
-						userRole="OPERATOR"
+						to="/dash/admin/banners"
+						userRole="ADMIN"
 					/>
 				</CardContent>
 			</Card>

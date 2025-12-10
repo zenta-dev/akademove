@@ -82,7 +82,7 @@ export const BannerSpec = {
 			inputStructure: "detailed",
 			outputStructure: "detailed",
 		})
-		.input(z.object({ params: z.object({ id: z.string().uuid() }) }))
+		.input(z.object({ params: z.object({ id: z.uuid() }) }))
 		.output(createSuccesSchema(BannerSchema, "Successfully retrieved banner")),
 
 	create: oc
@@ -110,7 +110,7 @@ export const BannerSpec = {
 		})
 		.input(
 			z.object({
-				params: z.object({ id: z.string().uuid() }),
+				params: z.object({ id: z.uuid() }),
 				body: UpdateBannerSchema,
 			}),
 		)
@@ -124,7 +124,7 @@ export const BannerSpec = {
 			inputStructure: "detailed",
 			outputStructure: "detailed",
 		})
-		.input(z.object({ params: z.object({ id: z.string().uuid() }) }))
+		.input(z.object({ params: z.object({ id: z.uuid() }) }))
 		.output(
 			createSuccesSchema(z.object({ ok: z.boolean() }), "Banner deleted"),
 		),
@@ -138,6 +138,6 @@ export const BannerSpec = {
 			inputStructure: "detailed",
 			outputStructure: "detailed",
 		})
-		.input(z.object({ params: z.object({ id: z.string().uuid() }) }))
+		.input(z.object({ params: z.object({ id: z.uuid() }) }))
 		.output(createSuccesSchema(BannerSchema, "Banner status toggled")),
 };
