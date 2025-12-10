@@ -16,8 +16,9 @@ class ResetPasswordScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    return Scaffold(
-      child: Stack(
+    return MyScaffold(
+      scrollable: false,
+      body: Stack(
         children: [
           SvgTiledBackground(
             asset: Assets.images.bg.signIn.path,
@@ -30,8 +31,7 @@ class ResetPasswordScreen extends StatelessWidget {
             ),
           ),
           Center(
-            child: Padding(
-              padding: EdgeInsets.all(8.dg),
+            child: SingleChildScrollView(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
