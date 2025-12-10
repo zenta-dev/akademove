@@ -185,6 +185,7 @@ export function WithdrawDialog({
 		setBankProvider("BCA");
 		setAccountNumber("");
 		setAccountName("");
+		setIsValidated(false);
 	};
 
 	const handleSubmit = (e: React.FormEvent) => {
