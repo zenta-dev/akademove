@@ -1,6 +1,7 @@
 import * as accountDeletion from "@/core/tables/account-deletion";
 import * as auth from "@/core/tables/auth";
 import * as badge from "@/core/tables/badge";
+import * as banner from "@/core/tables/banner";
 import * as broadcast from "@/core/tables/broadcast";
 import * as chat from "@/core/tables/chat";
 import * as configuration from "@/core/tables/configuration";
@@ -28,6 +29,7 @@ export const tables = {
 	...accountDeletion,
 	...auth,
 	...badge,
+	...banner,
 	...broadcast,
 	...chat,
 	...configuration,
