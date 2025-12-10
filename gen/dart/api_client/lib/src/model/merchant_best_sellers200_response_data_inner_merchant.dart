@@ -23,11 +23,11 @@ class MerchantBestSellers200ResponseDataInnerMerchant {
     this.image,
     required this.rating,
   });
-  @JsonKey(name: r'id', required: true, includeIfNull: true)
-  final String? id;
+  @JsonKey(name: r'id', required: true, includeIfNull: false)
+  final String id;
 
-  @JsonKey(name: r'name', required: true, includeIfNull: true)
-  final String? name;
+  @JsonKey(name: r'name', required: true, includeIfNull: false)
+  final String name;
 
   @JsonKey(name: r'image', required: false, includeIfNull: false)
   final String? image;
@@ -46,10 +46,7 @@ class MerchantBestSellers200ResponseDataInnerMerchant {
 
   @override
   int get hashCode =>
-      (id == null ? 0 : id.hashCode) +
-      (name == null ? 0 : name.hashCode) +
-      (image == null ? 0 : image.hashCode) +
-      rating.hashCode;
+      id.hashCode + name.hashCode + image.hashCode + rating.hashCode;
 
   factory MerchantBestSellers200ResponseDataInnerMerchant.fromJson(
     Map<String, dynamic> json,

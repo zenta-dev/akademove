@@ -150,19 +150,19 @@ class OrderEstimateRequest {
       dropoffLocationY.hashCode +
       pickupLocationX.hashCode +
       pickupLocationY.hashCode +
-      (notePickup == null ? 0 : notePickup.hashCode) +
-      (noteSenderName == null ? 0 : noteSenderName.hashCode) +
-      (noteSenderPhone == null ? 0 : noteSenderPhone.hashCode) +
-      (notePickupInstructions == null ? 0 : notePickupInstructions.hashCode) +
-      (noteDropoff == null ? 0 : noteDropoff.hashCode) +
-      (noteRecevierName == null ? 0 : noteRecevierName.hashCode) +
-      (noteRecevierPhone == null ? 0 : noteRecevierPhone.hashCode) +
-      (noteDropoffInstructions == null ? 0 : noteDropoffInstructions.hashCode) +
+      notePickup.hashCode +
+      noteSenderName.hashCode +
+      noteSenderPhone.hashCode +
+      notePickupInstructions.hashCode +
+      noteDropoff.hashCode +
+      noteRecevierName.hashCode +
+      noteRecevierPhone.hashCode +
+      noteDropoffInstructions.hashCode +
       type.hashCode +
       items.hashCode +
       gender.hashCode +
       genderPreference.hashCode +
-      (couponCode == null ? 0 : couponCode.hashCode) +
+      couponCode.hashCode +
       discountIds.hashCode +
       weight.hashCode;
 

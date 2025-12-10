@@ -22,8 +22,8 @@ class DriverGetAnalytics200ResponseDataTopEarningDaysInner {
     required this.earnings,
     required this.orders,
   });
-  @JsonKey(name: r'date', required: true, includeIfNull: true)
-  final String? date;
+  @JsonKey(name: r'date', required: true, includeIfNull: false)
+  final String date;
 
   @JsonKey(name: r'earnings', required: true, includeIfNull: false)
   final num earnings;
@@ -40,8 +40,7 @@ class DriverGetAnalytics200ResponseDataTopEarningDaysInner {
           other.orders == orders;
 
   @override
-  int get hashCode =>
-      (date == null ? 0 : date.hashCode) + earnings.hashCode + orders.hashCode;
+  int get hashCode => date.hashCode + earnings.hashCode + orders.hashCode;
 
   factory DriverGetAnalytics200ResponseDataTopEarningDaysInner.fromJson(
     Map<String, dynamic> json,

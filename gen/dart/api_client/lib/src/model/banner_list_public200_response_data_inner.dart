@@ -34,14 +34,14 @@ class BannerListPublic200ResponseDataInner {
   @JsonKey(name: r'id', required: true, includeIfNull: false)
   final String id;
 
-  @JsonKey(name: r'title', required: true, includeIfNull: true)
-  final String? title;
+  @JsonKey(name: r'title', required: true, includeIfNull: false)
+  final String title;
 
   @JsonKey(name: r'description', required: false, includeIfNull: false)
   final String? description;
 
-  @JsonKey(name: r'imageUrl', required: true, includeIfNull: true)
-  final String? imageUrl;
+  @JsonKey(name: r'imageUrl', required: true, includeIfNull: false)
+  final String imageUrl;
 
   @JsonKey(name: r'actionType', required: true, includeIfNull: false)
   final BannerListPublic200ResponseDataInnerActionTypeEnum actionType;
@@ -89,9 +89,9 @@ class BannerListPublic200ResponseDataInner {
   @override
   int get hashCode =>
       id.hashCode +
-      (title == null ? 0 : title.hashCode) +
+      title.hashCode +
       (description == null ? 0 : description.hashCode) +
-      (imageUrl == null ? 0 : imageUrl.hashCode) +
+      imageUrl.hashCode +
       actionType.hashCode +
       (actionValue == null ? 0 : actionValue.hashCode) +
       placement.hashCode +

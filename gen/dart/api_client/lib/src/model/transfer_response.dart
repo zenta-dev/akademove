@@ -27,7 +27,6 @@ class TransferResponse {
     this.note,
     required this.createdAt,
   });
-
   @JsonKey(name: r'transactionId', required: true, includeIfNull: false)
   final String transactionId;
 
@@ -68,7 +67,7 @@ class TransferResponse {
       status.hashCode +
       recipientName.hashCode +
       recipientUserId.hashCode +
-      (note?.hashCode ?? 0) +
+      note.hashCode +
       createdAt.hashCode;
 
   factory TransferResponse.fromJson(Map<String, dynamic> json) =>

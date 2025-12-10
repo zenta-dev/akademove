@@ -63,7 +63,7 @@ class SupportChatEnvelopePayload {
       ticketId.hashCode +
       messageId.hashCode +
       isTyping.hashCode +
-      (userId == null ? 0 : userId.hashCode);
+      userId.hashCode;
 
   factory SupportChatEnvelopePayload.fromJson(Map<String, dynamic> json) =>
       _$SupportChatEnvelopePayloadFromJson(json);

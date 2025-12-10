@@ -27,11 +27,11 @@ abstract class _$OrderMerchantCWProxy {
 
   OrderMerchant isOnline(bool? isOnline);
 
-  OrderMerchant isTakingOrders(bool? isTakingOrders);
-
   OrderMerchant operatingStatus(
     OrderMerchantOperatingStatusEnum? operatingStatus,
   );
+
+  OrderMerchant activeOrderCount(int? activeOrderCount);
 
   OrderMerchant rating(num? rating);
 
@@ -67,8 +67,8 @@ abstract class _$OrderMerchantCWProxy {
     OrderMerchantStatusEnum? status,
     bool? isActive,
     bool? isOnline,
-    bool? isTakingOrders,
     OrderMerchantOperatingStatusEnum? operatingStatus,
+    int? activeOrderCount,
     num? rating,
     String? document,
     String? image,
@@ -118,13 +118,13 @@ class _$OrderMerchantCWProxyImpl implements _$OrderMerchantCWProxy {
   OrderMerchant isOnline(bool? isOnline) => call(isOnline: isOnline);
 
   @override
-  OrderMerchant isTakingOrders(bool? isTakingOrders) =>
-      call(isTakingOrders: isTakingOrders);
-
-  @override
   OrderMerchant operatingStatus(
     OrderMerchantOperatingStatusEnum? operatingStatus,
   ) => call(operatingStatus: operatingStatus);
+
+  @override
+  OrderMerchant activeOrderCount(int? activeOrderCount) =>
+      call(activeOrderCount: activeOrderCount);
 
   @override
   OrderMerchant rating(num? rating) => call(rating: rating);
@@ -171,8 +171,8 @@ class _$OrderMerchantCWProxyImpl implements _$OrderMerchantCWProxy {
     Object? status = const $CopyWithPlaceholder(),
     Object? isActive = const $CopyWithPlaceholder(),
     Object? isOnline = const $CopyWithPlaceholder(),
-    Object? isTakingOrders = const $CopyWithPlaceholder(),
     Object? operatingStatus = const $CopyWithPlaceholder(),
+    Object? activeOrderCount = const $CopyWithPlaceholder(),
     Object? rating = const $CopyWithPlaceholder(),
     Object? document = const $CopyWithPlaceholder(),
     Object? image = const $CopyWithPlaceholder(),
@@ -223,14 +223,14 @@ class _$OrderMerchantCWProxyImpl implements _$OrderMerchantCWProxy {
           ? _value.isOnline
           // ignore: cast_nullable_to_non_nullable
           : isOnline as bool?,
-      isTakingOrders: isTakingOrders == const $CopyWithPlaceholder()
-          ? _value.isTakingOrders
-          // ignore: cast_nullable_to_non_nullable
-          : isTakingOrders as bool?,
       operatingStatus: operatingStatus == const $CopyWithPlaceholder()
           ? _value.operatingStatus
           // ignore: cast_nullable_to_non_nullable
           : operatingStatus as OrderMerchantOperatingStatusEnum?,
+      activeOrderCount: activeOrderCount == const $CopyWithPlaceholder()
+          ? _value.activeOrderCount
+          // ignore: cast_nullable_to_non_nullable
+          : activeOrderCount as int?,
       rating: rating == const $CopyWithPlaceholder()
           ? _value.rating
           // ignore: cast_nullable_to_non_nullable
@@ -301,11 +301,14 @@ OrderMerchant _$OrderMerchantFromJson(Map<String, dynamic> json) =>
         ),
         isActive: $checkedConvert('isActive', (v) => v as bool?),
         isOnline: $checkedConvert('isOnline', (v) => v as bool?),
-        isTakingOrders: $checkedConvert('isTakingOrders', (v) => v as bool?),
         operatingStatus: $checkedConvert(
           'operatingStatus',
           (v) =>
               $enumDecodeNullable(_$OrderMerchantOperatingStatusEnumEnumMap, v),
+        ),
+        activeOrderCount: $checkedConvert(
+          'activeOrderCount',
+          (v) => (v as num?)?.toInt(),
         ),
         rating: $checkedConvert('rating', (v) => v as num?),
         document: $checkedConvert('document', (v) => v as String?),
@@ -346,9 +349,9 @@ Map<String, dynamic> _$OrderMerchantToJson(OrderMerchant instance) =>
       'status': ?_$OrderMerchantStatusEnumEnumMap[instance.status],
       'isActive': ?instance.isActive,
       'isOnline': ?instance.isOnline,
-      'isTakingOrders': ?instance.isTakingOrders,
       'operatingStatus':
           ?_$OrderMerchantOperatingStatusEnumEnumMap[instance.operatingStatus],
+      'activeOrderCount': ?instance.activeOrderCount,
       'rating': ?instance.rating,
       'document': ?instance.document,
       'image': ?instance.image,

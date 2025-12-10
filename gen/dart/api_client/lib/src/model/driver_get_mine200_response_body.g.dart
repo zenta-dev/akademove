@@ -7,7 +7,7 @@ part of 'driver_get_mine200_response_body.dart';
 // **************************************************************************
 
 abstract class _$DriverGetMine200ResponseBodyCWProxy {
-  DriverGetMine200ResponseBody message(String? message);
+  DriverGetMine200ResponseBody message(String message);
 
   DriverGetMine200ResponseBody data(Driver data);
 
@@ -23,7 +23,7 @@ abstract class _$DriverGetMine200ResponseBodyCWProxy {
   /// DriverGetMine200ResponseBody(...).copyWith(id: 12, name: "My name")
   /// ```
   DriverGetMine200ResponseBody call({
-    String? message,
+    String message,
     Driver data,
     PaginationResult? pagination,
     int? totalPages,
@@ -39,7 +39,7 @@ class _$DriverGetMine200ResponseBodyCWProxyImpl
   final DriverGetMine200ResponseBody _value;
 
   @override
-  DriverGetMine200ResponseBody message(String? message) =>
+  DriverGetMine200ResponseBody message(String message) =>
       call(message: message);
 
   @override
@@ -68,10 +68,10 @@ class _$DriverGetMine200ResponseBodyCWProxyImpl
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return DriverGetMine200ResponseBody(
-      message: message == const $CopyWithPlaceholder()
+      message: message == const $CopyWithPlaceholder() || message == null
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
-          : message as String?,
+          : message as String,
       data: data == const $CopyWithPlaceholder() || data == null
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
@@ -106,7 +106,7 @@ DriverGetMine200ResponseBody _$DriverGetMine200ResponseBodyFromJson(
 ) => $checkedCreate('DriverGetMine200ResponseBody', json, ($checkedConvert) {
   $checkKeys(json, requiredKeys: const ['message', 'data']);
   final val = DriverGetMine200ResponseBody(
-    message: $checkedConvert('message', (v) => v as String?),
+    message: $checkedConvert('message', (v) => v as String),
     data: $checkedConvert(
       'data',
       (v) => Driver.fromJson(v as Map<String, dynamic>),

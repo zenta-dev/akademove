@@ -7,7 +7,7 @@ part of 'banner_create201_response.dart';
 // **************************************************************************
 
 abstract class _$BannerCreate201ResponseCWProxy {
-  BannerCreate201Response message(String? message);
+  BannerCreate201Response message(String message);
 
   BannerCreate201Response data(BannerCreate201ResponseData data);
 
@@ -23,7 +23,7 @@ abstract class _$BannerCreate201ResponseCWProxy {
   /// BannerCreate201Response(...).copyWith(id: 12, name: "My name")
   /// ```
   BannerCreate201Response call({
-    String? message,
+    String message,
     BannerCreate201ResponseData data,
     PaginationResult? pagination,
     int? totalPages,
@@ -39,7 +39,7 @@ class _$BannerCreate201ResponseCWProxyImpl
   final BannerCreate201Response _value;
 
   @override
-  BannerCreate201Response message(String? message) => call(message: message);
+  BannerCreate201Response message(String message) => call(message: message);
 
   @override
   BannerCreate201Response data(BannerCreate201ResponseData data) =>
@@ -68,10 +68,10 @@ class _$BannerCreate201ResponseCWProxyImpl
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return BannerCreate201Response(
-      message: message == const $CopyWithPlaceholder()
+      message: message == const $CopyWithPlaceholder() || message == null
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
-          : message as String?,
+          : message as String,
       data: data == const $CopyWithPlaceholder() || data == null
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
@@ -105,7 +105,7 @@ BannerCreate201Response _$BannerCreate201ResponseFromJson(
 ) => $checkedCreate('BannerCreate201Response', json, ($checkedConvert) {
   $checkKeys(json, requiredKeys: const ['message', 'data']);
   final val = BannerCreate201Response(
-    message: $checkedConvert('message', (v) => v as String?),
+    message: $checkedConvert('message', (v) => v as String),
     data: $checkedConvert(
       'data',
       (v) => BannerCreate201ResponseData.fromJson(v as Map<String, dynamic>),

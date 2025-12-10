@@ -9,7 +9,7 @@ part of 'cart.dart';
 abstract class _$CartCWProxy {
   Cart merchantId(String merchantId);
 
-  Cart merchantName(String? merchantName);
+  Cart merchantName(String merchantName);
 
   Cart items(List<CartItem> items);
 
@@ -28,7 +28,7 @@ abstract class _$CartCWProxy {
   /// ```
   Cart call({
     String merchantId,
-    String? merchantName,
+    String merchantName,
     List<CartItem> items,
     int totalItems,
     num subtotal,
@@ -47,7 +47,7 @@ class _$CartCWProxyImpl implements _$CartCWProxy {
   Cart merchantId(String merchantId) => call(merchantId: merchantId);
 
   @override
-  Cart merchantName(String? merchantName) => call(merchantName: merchantName);
+  Cart merchantName(String merchantName) => call(merchantName: merchantName);
 
   @override
   Cart items(List<CartItem> items) => call(items: items);
@@ -83,10 +83,11 @@ class _$CartCWProxyImpl implements _$CartCWProxy {
           ? _value.merchantId
           // ignore: cast_nullable_to_non_nullable
           : merchantId as String,
-      merchantName: merchantName == const $CopyWithPlaceholder()
+      merchantName:
+          merchantName == const $CopyWithPlaceholder() || merchantName == null
           ? _value.merchantName
           // ignore: cast_nullable_to_non_nullable
-          : merchantName as String?,
+          : merchantName as String,
       items: items == const $CopyWithPlaceholder() || items == null
           ? _value.items
           // ignore: cast_nullable_to_non_nullable
@@ -134,7 +135,7 @@ Cart _$CartFromJson(Map<String, dynamic> json) =>
       );
       final val = Cart(
         merchantId: $checkedConvert('merchantId', (v) => v as String),
-        merchantName: $checkedConvert('merchantName', (v) => v as String?),
+        merchantName: $checkedConvert('merchantName', (v) => v as String),
         items: $checkedConvert(
           'items',
           (v) => (v as List<dynamic>)

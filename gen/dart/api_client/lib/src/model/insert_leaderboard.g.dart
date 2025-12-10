@@ -7,7 +7,7 @@ part of 'insert_leaderboard.dart';
 // **************************************************************************
 
 abstract class _$InsertLeaderboardCWProxy {
-  InsertLeaderboard userId(String? userId);
+  InsertLeaderboard userId(String userId);
 
   InsertLeaderboard driverId(String? driverId);
 
@@ -33,7 +33,7 @@ abstract class _$InsertLeaderboardCWProxy {
   /// InsertLeaderboard(...).copyWith(id: 12, name: "My name")
   /// ```
   InsertLeaderboard call({
-    String? userId,
+    String userId,
     String? driverId,
     String? merchantId,
     InsertLeaderboardCategoryEnum category,
@@ -53,7 +53,7 @@ class _$InsertLeaderboardCWProxyImpl implements _$InsertLeaderboardCWProxy {
   final InsertLeaderboard _value;
 
   @override
-  InsertLeaderboard userId(String? userId) => call(userId: userId);
+  InsertLeaderboard userId(String userId) => call(userId: userId);
 
   @override
   InsertLeaderboard driverId(String? driverId) => call(driverId: driverId);
@@ -104,10 +104,10 @@ class _$InsertLeaderboardCWProxyImpl implements _$InsertLeaderboardCWProxy {
     Object? periodEnd = const $CopyWithPlaceholder(),
   }) {
     return InsertLeaderboard(
-      userId: userId == const $CopyWithPlaceholder()
+      userId: userId == const $CopyWithPlaceholder() || userId == null
           ? _value.userId
           // ignore: cast_nullable_to_non_nullable
-          : userId as String?,
+          : userId as String,
       driverId: driverId == const $CopyWithPlaceholder()
           ? _value.driverId
           // ignore: cast_nullable_to_non_nullable
@@ -171,7 +171,7 @@ InsertLeaderboard _$InsertLeaderboardFromJson(Map<String, dynamic> json) =>
         ],
       );
       final val = InsertLeaderboard(
-        userId: $checkedConvert('userId', (v) => v as String?),
+        userId: $checkedConvert('userId', (v) => v as String),
         driverId: $checkedConvert('driverId', (v) => v as String?),
         merchantId: $checkedConvert('merchantId', (v) => v as String?),
         category: $checkedConvert(

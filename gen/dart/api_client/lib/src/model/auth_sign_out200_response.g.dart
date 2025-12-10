@@ -7,7 +7,7 @@ part of 'auth_sign_out200_response.dart';
 // **************************************************************************
 
 abstract class _$AuthSignOut200ResponseCWProxy {
-  AuthSignOut200Response message(String? message);
+  AuthSignOut200Response message(String message);
 
   AuthSignOut200Response data(bool data);
 
@@ -23,7 +23,7 @@ abstract class _$AuthSignOut200ResponseCWProxy {
   /// AuthSignOut200Response(...).copyWith(id: 12, name: "My name")
   /// ```
   AuthSignOut200Response call({
-    String? message,
+    String message,
     bool data,
     PaginationResult? pagination,
     int? totalPages,
@@ -39,7 +39,7 @@ class _$AuthSignOut200ResponseCWProxyImpl
   final AuthSignOut200Response _value;
 
   @override
-  AuthSignOut200Response message(String? message) => call(message: message);
+  AuthSignOut200Response message(String message) => call(message: message);
 
   @override
   AuthSignOut200Response data(bool data) => call(data: data);
@@ -67,10 +67,10 @@ class _$AuthSignOut200ResponseCWProxyImpl
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return AuthSignOut200Response(
-      message: message == const $CopyWithPlaceholder()
+      message: message == const $CopyWithPlaceholder() || message == null
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
-          : message as String?,
+          : message as String,
       data: data == const $CopyWithPlaceholder() || data == null
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
@@ -104,7 +104,7 @@ AuthSignOut200Response _$AuthSignOut200ResponseFromJson(
 ) => $checkedCreate('AuthSignOut200Response', json, ($checkedConvert) {
   $checkKeys(json, requiredKeys: const ['message', 'data']);
   final val = AuthSignOut200Response(
-    message: $checkedConvert('message', (v) => v as String?),
+    message: $checkedConvert('message', (v) => v as String),
     data: $checkedConvert('data', (v) => v as bool),
     pagination: $checkedConvert(
       'pagination',

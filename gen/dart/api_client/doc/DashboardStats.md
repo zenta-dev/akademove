@@ -19,7 +19,7 @@ Name | Type | Description | Notes
 **todayRevenue** | **num** |  | 
 **todayOrders** | **num** |  | 
 **onlineDrivers** | **num** |  | 
-**revenueByDay** | [**List&lt;DashboardStatsRevenueByDayInner&gt;**](DashboardStatsRevenueByDayInner.md) |  | 
+**revenueByDay** | [**List&lt;MerchantAnalytics200ResponseDataRevenueByDayInner&gt;**](MerchantAnalytics200ResponseDataRevenueByDayInner.md) |  | 
 **ordersByDay** | [**List&lt;DashboardStatsOrdersByDayInner&gt;**](DashboardStatsOrdersByDayInner.md) |  | 
 **ordersByType** | [**List&lt;DashboardStatsOrdersByTypeInner&gt;**](DashboardStatsOrdersByTypeInner.md) |  | 
 **topDrivers** | [**List&lt;DashboardStatsTopDriversInner&gt;**](DashboardStatsTopDriversInner.md) |  | 

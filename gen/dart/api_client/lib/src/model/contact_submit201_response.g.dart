@@ -7,7 +7,7 @@ part of 'contact_submit201_response.dart';
 // **************************************************************************
 
 abstract class _$ContactSubmit201ResponseCWProxy {
-  ContactSubmit201Response message(String? message);
+  ContactSubmit201Response message(String message);
 
   ContactSubmit201Response data(Contact data);
 
@@ -23,7 +23,7 @@ abstract class _$ContactSubmit201ResponseCWProxy {
   /// ContactSubmit201Response(...).copyWith(id: 12, name: "My name")
   /// ```
   ContactSubmit201Response call({
-    String? message,
+    String message,
     Contact data,
     PaginationResult? pagination,
     int? totalPages,
@@ -39,7 +39,7 @@ class _$ContactSubmit201ResponseCWProxyImpl
   final ContactSubmit201Response _value;
 
   @override
-  ContactSubmit201Response message(String? message) => call(message: message);
+  ContactSubmit201Response message(String message) => call(message: message);
 
   @override
   ContactSubmit201Response data(Contact data) => call(data: data);
@@ -67,10 +67,10 @@ class _$ContactSubmit201ResponseCWProxyImpl
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return ContactSubmit201Response(
-      message: message == const $CopyWithPlaceholder()
+      message: message == const $CopyWithPlaceholder() || message == null
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
-          : message as String?,
+          : message as String,
       data: data == const $CopyWithPlaceholder() || data == null
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
@@ -104,7 +104,7 @@ ContactSubmit201Response _$ContactSubmit201ResponseFromJson(
 ) => $checkedCreate('ContactSubmit201Response', json, ($checkedConvert) {
   $checkKeys(json, requiredKeys: const ['message', 'data']);
   final val = ContactSubmit201Response(
-    message: $checkedConvert('message', (v) => v as String?),
+    message: $checkedConvert('message', (v) => v as String),
     data: $checkedConvert(
       'data',
       (v) => Contact.fromJson(v as Map<String, dynamic>),

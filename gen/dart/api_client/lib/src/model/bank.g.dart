@@ -11,6 +11,8 @@ abstract class _$BankCWProxy {
 
   Bank number(num number);
 
+  Bank accountName(String? accountName);
+
   /// Creates a new instance with the provided field values.
   /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `Bank(...).copyWith.fieldName(value)`.
   ///
@@ -18,7 +20,7 @@ abstract class _$BankCWProxy {
   /// ```dart
   /// Bank(...).copyWith(id: 12, name: "My name")
   /// ```
-  Bank call({BankProvider provider, num number});
+  Bank call({BankProvider provider, num number, String? accountName});
 }
 
 /// Callable proxy for `copyWith` functionality.
@@ -35,6 +37,9 @@ class _$BankCWProxyImpl implements _$BankCWProxy {
   Bank number(num number) => call(number: number);
 
   @override
+  Bank accountName(String? accountName) => call(accountName: accountName);
+
+  @override
   /// Creates a new instance with the provided field values.
   /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `Bank(...).copyWith.fieldName(value)`.
   ///
@@ -45,6 +50,7 @@ class _$BankCWProxyImpl implements _$BankCWProxy {
   Bank call({
     Object? provider = const $CopyWithPlaceholder(),
     Object? number = const $CopyWithPlaceholder(),
+    Object? accountName = const $CopyWithPlaceholder(),
   }) {
     return Bank(
       provider: provider == const $CopyWithPlaceholder() || provider == null
@@ -55,6 +61,10 @@ class _$BankCWProxyImpl implements _$BankCWProxy {
           ? _value.number
           // ignore: cast_nullable_to_non_nullable
           : number as num,
+      accountName: accountName == const $CopyWithPlaceholder()
+          ? _value.accountName
+          // ignore: cast_nullable_to_non_nullable
+          : accountName as String?,
     );
   }
 }
@@ -79,6 +89,7 @@ Bank _$BankFromJson(Map<String, dynamic> json) =>
           (v) => $enumDecode(_$BankProviderEnumMap, v),
         ),
         number: $checkedConvert('number', (v) => v as num),
+        accountName: $checkedConvert('accountName', (v) => v as String?),
       );
       return val;
     });
@@ -86,6 +97,7 @@ Bank _$BankFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$BankToJson(Bank instance) => <String, dynamic>{
   'provider': _$BankProviderEnumMap[instance.provider]!,
   'number': instance.number,
+  'accountName': ?instance.accountName,
 };
 
 const _$BankProviderEnumMap = {

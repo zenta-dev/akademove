@@ -27,9 +27,9 @@ abstract class _$MerchantCWProxy {
 
   Merchant isOnline(bool isOnline);
 
-  Merchant isTakingOrders(bool isTakingOrders);
-
   Merchant operatingStatus(MerchantOperatingStatusEnum operatingStatus);
+
+  Merchant activeOrderCount(int activeOrderCount);
 
   Merchant rating(num rating);
 
@@ -65,8 +65,8 @@ abstract class _$MerchantCWProxy {
     MerchantStatusEnum status,
     bool isActive,
     bool isOnline,
-    bool isTakingOrders,
     MerchantOperatingStatusEnum operatingStatus,
+    int activeOrderCount,
     num rating,
     String? document,
     String? image,
@@ -116,12 +116,12 @@ class _$MerchantCWProxyImpl implements _$MerchantCWProxy {
   Merchant isOnline(bool isOnline) => call(isOnline: isOnline);
 
   @override
-  Merchant isTakingOrders(bool isTakingOrders) =>
-      call(isTakingOrders: isTakingOrders);
-
-  @override
   Merchant operatingStatus(MerchantOperatingStatusEnum operatingStatus) =>
       call(operatingStatus: operatingStatus);
+
+  @override
+  Merchant activeOrderCount(int activeOrderCount) =>
+      call(activeOrderCount: activeOrderCount);
 
   @override
   Merchant rating(num rating) => call(rating: rating);
@@ -166,8 +166,8 @@ class _$MerchantCWProxyImpl implements _$MerchantCWProxy {
     Object? status = const $CopyWithPlaceholder(),
     Object? isActive = const $CopyWithPlaceholder(),
     Object? isOnline = const $CopyWithPlaceholder(),
-    Object? isTakingOrders = const $CopyWithPlaceholder(),
     Object? operatingStatus = const $CopyWithPlaceholder(),
+    Object? activeOrderCount = const $CopyWithPlaceholder(),
     Object? rating = const $CopyWithPlaceholder(),
     Object? document = const $CopyWithPlaceholder(),
     Object? image = const $CopyWithPlaceholder(),
@@ -218,18 +218,18 @@ class _$MerchantCWProxyImpl implements _$MerchantCWProxy {
           ? _value.isOnline
           // ignore: cast_nullable_to_non_nullable
           : isOnline as bool,
-      isTakingOrders:
-          isTakingOrders == const $CopyWithPlaceholder() ||
-              isTakingOrders == null
-          ? _value.isTakingOrders
-          // ignore: cast_nullable_to_non_nullable
-          : isTakingOrders as bool,
       operatingStatus:
           operatingStatus == const $CopyWithPlaceholder() ||
               operatingStatus == null
           ? _value.operatingStatus
           // ignore: cast_nullable_to_non_nullable
           : operatingStatus as MerchantOperatingStatusEnum,
+      activeOrderCount:
+          activeOrderCount == const $CopyWithPlaceholder() ||
+              activeOrderCount == null
+          ? _value.activeOrderCount
+          // ignore: cast_nullable_to_non_nullable
+          : activeOrderCount as int,
       rating: rating == const $CopyWithPlaceholder() || rating == null
           ? _value.rating
           // ignore: cast_nullable_to_non_nullable
@@ -292,8 +292,8 @@ Merchant _$MerchantFromJson(
       'status',
       'isActive',
       'isOnline',
-      'isTakingOrders',
       'operatingStatus',
+      'activeOrderCount',
       'rating',
       'category',
       'categories',
@@ -322,10 +322,13 @@ Merchant _$MerchantFromJson(
     ),
     isActive: $checkedConvert('isActive', (v) => v as bool),
     isOnline: $checkedConvert('isOnline', (v) => v as bool),
-    isTakingOrders: $checkedConvert('isTakingOrders', (v) => v as bool),
     operatingStatus: $checkedConvert(
       'operatingStatus',
       (v) => $enumDecode(_$MerchantOperatingStatusEnumEnumMap, v),
+    ),
+    activeOrderCount: $checkedConvert(
+      'activeOrderCount',
+      (v) => (v as num).toInt(),
     ),
     rating: $checkedConvert('rating', (v) => v as num),
     document: $checkedConvert('document', (v) => v as String?),
@@ -359,9 +362,9 @@ Map<String, dynamic> _$MerchantToJson(Merchant instance) => <String, dynamic>{
   'status': _$MerchantStatusEnumEnumMap[instance.status]!,
   'isActive': instance.isActive,
   'isOnline': instance.isOnline,
-  'isTakingOrders': instance.isTakingOrders,
   'operatingStatus':
       _$MerchantOperatingStatusEnumEnumMap[instance.operatingStatus]!,
+  'activeOrderCount': instance.activeOrderCount,
   'rating': instance.rating,
   'document': ?instance.document,
   'image': ?instance.image,

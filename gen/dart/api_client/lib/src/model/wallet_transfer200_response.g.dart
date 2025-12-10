@@ -7,7 +7,7 @@ part of 'wallet_transfer200_response.dart';
 // **************************************************************************
 
 abstract class _$WalletTransfer200ResponseCWProxy {
-  WalletTransfer200Response message(String? message);
+  WalletTransfer200Response message(String message);
 
   WalletTransfer200Response data(TransferResponse data);
 
@@ -23,7 +23,7 @@ abstract class _$WalletTransfer200ResponseCWProxy {
   /// WalletTransfer200Response(...).copyWith(id: 12, name: "My name")
   /// ```
   WalletTransfer200Response call({
-    String? message,
+    String message,
     TransferResponse data,
     PaginationResult? pagination,
     int? totalPages,
@@ -39,7 +39,7 @@ class _$WalletTransfer200ResponseCWProxyImpl
   final WalletTransfer200Response _value;
 
   @override
-  WalletTransfer200Response message(String? message) => call(message: message);
+  WalletTransfer200Response message(String message) => call(message: message);
 
   @override
   WalletTransfer200Response data(TransferResponse data) => call(data: data);
@@ -67,10 +67,10 @@ class _$WalletTransfer200ResponseCWProxyImpl
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return WalletTransfer200Response(
-      message: message == const $CopyWithPlaceholder()
+      message: message == const $CopyWithPlaceholder() || message == null
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
-          : message as String?,
+          : message as String,
       data: data == const $CopyWithPlaceholder() || data == null
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
@@ -104,7 +104,7 @@ WalletTransfer200Response _$WalletTransfer200ResponseFromJson(
 ) => $checkedCreate('WalletTransfer200Response', json, ($checkedConvert) {
   $checkKeys(json, requiredKeys: const ['message', 'data']);
   final val = WalletTransfer200Response(
-    message: $checkedConvert('message', (v) => v as String?),
+    message: $checkedConvert('message', (v) => v as String),
     data: $checkedConvert(
       'data',
       (v) => TransferResponse.fromJson(v as Map<String, dynamic>),

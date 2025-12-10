@@ -7,9 +7,9 @@ part of 'merchant_best_sellers200_response_data_inner_merchant.dart';
 // **************************************************************************
 
 abstract class _$MerchantBestSellers200ResponseDataInnerMerchantCWProxy {
-  MerchantBestSellers200ResponseDataInnerMerchant id(String? id);
+  MerchantBestSellers200ResponseDataInnerMerchant id(String id);
 
-  MerchantBestSellers200ResponseDataInnerMerchant name(String? name);
+  MerchantBestSellers200ResponseDataInnerMerchant name(String name);
 
   MerchantBestSellers200ResponseDataInnerMerchant image(String? image);
 
@@ -23,8 +23,8 @@ abstract class _$MerchantBestSellers200ResponseDataInnerMerchantCWProxy {
   /// MerchantBestSellers200ResponseDataInnerMerchant(...).copyWith(id: 12, name: "My name")
   /// ```
   MerchantBestSellers200ResponseDataInnerMerchant call({
-    String? id,
-    String? name,
+    String id,
+    String name,
     String? image,
     num rating,
   });
@@ -41,11 +41,10 @@ class _$MerchantBestSellers200ResponseDataInnerMerchantCWProxyImpl
   final MerchantBestSellers200ResponseDataInnerMerchant _value;
 
   @override
-  MerchantBestSellers200ResponseDataInnerMerchant id(String? id) =>
-      call(id: id);
+  MerchantBestSellers200ResponseDataInnerMerchant id(String id) => call(id: id);
 
   @override
-  MerchantBestSellers200ResponseDataInnerMerchant name(String? name) =>
+  MerchantBestSellers200ResponseDataInnerMerchant name(String name) =>
       call(name: name);
 
   @override
@@ -71,14 +70,14 @@ class _$MerchantBestSellers200ResponseDataInnerMerchantCWProxyImpl
     Object? rating = const $CopyWithPlaceholder(),
   }) {
     return MerchantBestSellers200ResponseDataInnerMerchant(
-      id: id == const $CopyWithPlaceholder()
+      id: id == const $CopyWithPlaceholder() || id == null
           ? _value.id
           // ignore: cast_nullable_to_non_nullable
-          : id as String?,
-      name: name == const $CopyWithPlaceholder()
+          : id as String,
+      name: name == const $CopyWithPlaceholder() || name == null
           ? _value.name
           // ignore: cast_nullable_to_non_nullable
-          : name as String?,
+          : name as String,
       image: image == const $CopyWithPlaceholder()
           ? _value.image
           // ignore: cast_nullable_to_non_nullable
@@ -112,8 +111,8 @@ _$MerchantBestSellers200ResponseDataInnerMerchantFromJson(
 ) {
   $checkKeys(json, requiredKeys: const ['id', 'name', 'rating']);
   final val = MerchantBestSellers200ResponseDataInnerMerchant(
-    id: $checkedConvert('id', (v) => v as String?),
-    name: $checkedConvert('name', (v) => v as String?),
+    id: $checkedConvert('id', (v) => v as String),
+    name: $checkedConvert('name', (v) => v as String),
     image: $checkedConvert('image', (v) => v as String?),
     rating: $checkedConvert('rating', (v) => v as num),
   );

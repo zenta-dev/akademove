@@ -136,7 +136,7 @@ class Broadcast {
       failedCount.hashCode +
       successCount.hashCode +
       totalCount.hashCode +
-      (createdBy == null ? 0 : createdBy.hashCode) +
+      createdBy.hashCode +
       (createdAt == null ? 0 : createdAt.hashCode) +
       (updatedAt == null ? 0 : updatedAt.hashCode);
 

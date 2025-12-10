@@ -7,7 +7,7 @@ part of 'coupon_create200_response.dart';
 // **************************************************************************
 
 abstract class _$CouponCreate200ResponseCWProxy {
-  CouponCreate200Response message(String? message);
+  CouponCreate200Response message(String message);
 
   CouponCreate200Response data(Coupon? data);
 
@@ -23,7 +23,7 @@ abstract class _$CouponCreate200ResponseCWProxy {
   /// CouponCreate200Response(...).copyWith(id: 12, name: "My name")
   /// ```
   CouponCreate200Response call({
-    String? message,
+    String message,
     Coupon? data,
     PaginationResult? pagination,
     int? totalPages,
@@ -39,7 +39,7 @@ class _$CouponCreate200ResponseCWProxyImpl
   final CouponCreate200Response _value;
 
   @override
-  CouponCreate200Response message(String? message) => call(message: message);
+  CouponCreate200Response message(String message) => call(message: message);
 
   @override
   CouponCreate200Response data(Coupon? data) => call(data: data);
@@ -67,10 +67,10 @@ class _$CouponCreate200ResponseCWProxyImpl
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return CouponCreate200Response(
-      message: message == const $CopyWithPlaceholder()
+      message: message == const $CopyWithPlaceholder() || message == null
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
-          : message as String?,
+          : message as String,
       data: data == const $CopyWithPlaceholder()
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
@@ -104,7 +104,7 @@ CouponCreate200Response _$CouponCreate200ResponseFromJson(
 ) => $checkedCreate('CouponCreate200Response', json, ($checkedConvert) {
   $checkKeys(json, requiredKeys: const ['message', 'data']);
   final val = CouponCreate200Response(
-    message: $checkedConvert('message', (v) => v as String?),
+    message: $checkedConvert('message', (v) => v as String),
     data: $checkedConvert(
       'data',
       (v) => v == null ? null : Coupon.fromJson(v as Map<String, dynamic>),

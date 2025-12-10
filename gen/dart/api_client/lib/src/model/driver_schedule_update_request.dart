@@ -73,7 +73,7 @@ class DriverScheduleUpdateRequest {
 
   @override
   int get hashCode =>
-      (name == null ? 0 : name.hashCode) +
+      name.hashCode +
       dayOfWeek.hashCode +
       startTime.hashCode +
       endTime.hashCode +

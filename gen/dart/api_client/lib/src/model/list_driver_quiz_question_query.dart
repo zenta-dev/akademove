@@ -95,11 +95,11 @@ class ListDriverQuizQuestionQuery {
 
   @override
   int get hashCode =>
-      (cursor == null ? 0 : cursor.hashCode) +
+      cursor.hashCode +
       (limit == null ? 0 : limit.hashCode) +
       direction.hashCode +
       (page == null ? 0 : page.hashCode) +
-      (query == null ? 0 : query.hashCode) +
+      query.hashCode +
       sortBy.hashCode +
       order.hashCode +
       mode.hashCode +
@@ -233,10 +233,10 @@ enum ListDriverQuizQuestionQuerySortByEnum {
   address(r'address'),
   @JsonValue(r'location')
   location(r'location'),
-  @JsonValue(r'isTakingOrders')
-  isTakingOrders(r'isTakingOrders'),
   @JsonValue(r'operatingStatus')
   operatingStatus(r'operatingStatus'),
+  @JsonValue(r'activeOrderCount')
+  activeOrderCount(r'activeOrderCount'),
   @JsonValue(r'document')
   document(r'document'),
   @JsonValue(r'image')

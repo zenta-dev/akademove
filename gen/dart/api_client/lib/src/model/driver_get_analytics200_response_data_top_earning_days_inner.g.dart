@@ -7,7 +7,7 @@ part of 'driver_get_analytics200_response_data_top_earning_days_inner.dart';
 // **************************************************************************
 
 abstract class _$DriverGetAnalytics200ResponseDataTopEarningDaysInnerCWProxy {
-  DriverGetAnalytics200ResponseDataTopEarningDaysInner date(String? date);
+  DriverGetAnalytics200ResponseDataTopEarningDaysInner date(String date);
 
   DriverGetAnalytics200ResponseDataTopEarningDaysInner earnings(num earnings);
 
@@ -21,7 +21,7 @@ abstract class _$DriverGetAnalytics200ResponseDataTopEarningDaysInnerCWProxy {
   /// DriverGetAnalytics200ResponseDataTopEarningDaysInner(...).copyWith(id: 12, name: "My name")
   /// ```
   DriverGetAnalytics200ResponseDataTopEarningDaysInner call({
-    String? date,
+    String date,
     num earnings,
     num orders,
   });
@@ -38,7 +38,7 @@ class _$DriverGetAnalytics200ResponseDataTopEarningDaysInnerCWProxyImpl
   final DriverGetAnalytics200ResponseDataTopEarningDaysInner _value;
 
   @override
-  DriverGetAnalytics200ResponseDataTopEarningDaysInner date(String? date) =>
+  DriverGetAnalytics200ResponseDataTopEarningDaysInner date(String date) =>
       call(date: date);
 
   @override
@@ -63,10 +63,10 @@ class _$DriverGetAnalytics200ResponseDataTopEarningDaysInnerCWProxyImpl
     Object? orders = const $CopyWithPlaceholder(),
   }) {
     return DriverGetAnalytics200ResponseDataTopEarningDaysInner(
-      date: date == const $CopyWithPlaceholder()
+      date: date == const $CopyWithPlaceholder() || date == null
           ? _value.date
           // ignore: cast_nullable_to_non_nullable
-          : date as String?,
+          : date as String,
       earnings: earnings == const $CopyWithPlaceholder() || earnings == null
           ? _value.earnings
           // ignore: cast_nullable_to_non_nullable
@@ -101,7 +101,7 @@ _$DriverGetAnalytics200ResponseDataTopEarningDaysInnerFromJson(
   ($checkedConvert) {
     $checkKeys(json, requiredKeys: const ['date', 'earnings', 'orders']);
     final val = DriverGetAnalytics200ResponseDataTopEarningDaysInner(
-      date: $checkedConvert('date', (v) => v as String?),
+      date: $checkedConvert('date', (v) => v as String),
       earnings: $checkedConvert('earnings', (v) => v as num),
       orders: $checkedConvert('orders', (v) => v as num),
     );

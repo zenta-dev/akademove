@@ -7,7 +7,7 @@ part of 'driver_schedule_create200_response.dart';
 // **************************************************************************
 
 abstract class _$DriverScheduleCreate200ResponseCWProxy {
-  DriverScheduleCreate200Response message(String? message);
+  DriverScheduleCreate200Response message(String message);
 
   DriverScheduleCreate200Response data(DriverSchedule data);
 
@@ -23,7 +23,7 @@ abstract class _$DriverScheduleCreate200ResponseCWProxy {
   /// DriverScheduleCreate200Response(...).copyWith(id: 12, name: "My name")
   /// ```
   DriverScheduleCreate200Response call({
-    String? message,
+    String message,
     DriverSchedule data,
     PaginationResult? pagination,
     int? totalPages,
@@ -39,7 +39,7 @@ class _$DriverScheduleCreate200ResponseCWProxyImpl
   final DriverScheduleCreate200Response _value;
 
   @override
-  DriverScheduleCreate200Response message(String? message) =>
+  DriverScheduleCreate200Response message(String message) =>
       call(message: message);
 
   @override
@@ -68,10 +68,10 @@ class _$DriverScheduleCreate200ResponseCWProxyImpl
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return DriverScheduleCreate200Response(
-      message: message == const $CopyWithPlaceholder()
+      message: message == const $CopyWithPlaceholder() || message == null
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
-          : message as String?,
+          : message as String,
       data: data == const $CopyWithPlaceholder() || data == null
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
@@ -106,7 +106,7 @@ DriverScheduleCreate200Response _$DriverScheduleCreate200ResponseFromJson(
 ) => $checkedCreate('DriverScheduleCreate200Response', json, ($checkedConvert) {
   $checkKeys(json, requiredKeys: const ['message', 'data']);
   final val = DriverScheduleCreate200Response(
-    message: $checkedConvert('message', (v) => v as String?),
+    message: $checkedConvert('message', (v) => v as String),
     data: $checkedConvert(
       'data',
       (v) => DriverSchedule.fromJson(v as Map<String, dynamic>),

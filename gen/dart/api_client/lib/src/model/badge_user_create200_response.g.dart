@@ -7,7 +7,7 @@ part of 'badge_user_create200_response.dart';
 // **************************************************************************
 
 abstract class _$BadgeUserCreate200ResponseCWProxy {
-  BadgeUserCreate200Response message(String? message);
+  BadgeUserCreate200Response message(String message);
 
   BadgeUserCreate200Response data(UserBadge data);
 
@@ -23,7 +23,7 @@ abstract class _$BadgeUserCreate200ResponseCWProxy {
   /// BadgeUserCreate200Response(...).copyWith(id: 12, name: "My name")
   /// ```
   BadgeUserCreate200Response call({
-    String? message,
+    String message,
     UserBadge data,
     PaginationResult? pagination,
     int? totalPages,
@@ -39,7 +39,7 @@ class _$BadgeUserCreate200ResponseCWProxyImpl
   final BadgeUserCreate200Response _value;
 
   @override
-  BadgeUserCreate200Response message(String? message) => call(message: message);
+  BadgeUserCreate200Response message(String message) => call(message: message);
 
   @override
   BadgeUserCreate200Response data(UserBadge data) => call(data: data);
@@ -67,10 +67,10 @@ class _$BadgeUserCreate200ResponseCWProxyImpl
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return BadgeUserCreate200Response(
-      message: message == const $CopyWithPlaceholder()
+      message: message == const $CopyWithPlaceholder() || message == null
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
-          : message as String?,
+          : message as String,
       data: data == const $CopyWithPlaceholder() || data == null
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
@@ -104,7 +104,7 @@ BadgeUserCreate200Response _$BadgeUserCreate200ResponseFromJson(
 ) => $checkedCreate('BadgeUserCreate200Response', json, ($checkedConvert) {
   $checkKeys(json, requiredKeys: const ['message', 'data']);
   final val = BadgeUserCreate200Response(
-    message: $checkedConvert('message', (v) => v as String?),
+    message: $checkedConvert('message', (v) => v as String),
     data: $checkedConvert(
       'data',
       (v) => UserBadge.fromJson(v as Map<String, dynamic>),

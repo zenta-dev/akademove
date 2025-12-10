@@ -21,11 +21,11 @@ class NotificationSubscribeToTopicRequest {
     required this.topic,
     required this.token,
   });
-  @JsonKey(name: r'topic', required: true, includeIfNull: true)
-  final String? topic;
+  @JsonKey(name: r'topic', required: true, includeIfNull: false)
+  final String topic;
 
-  @JsonKey(name: r'token', required: true, includeIfNull: true)
-  final String? token;
+  @JsonKey(name: r'token', required: true, includeIfNull: false)
+  final String token;
 
   @override
   bool operator ==(Object other) =>
@@ -35,9 +35,7 @@ class NotificationSubscribeToTopicRequest {
           other.token == token;
 
   @override
-  int get hashCode =>
-      (topic == null ? 0 : topic.hashCode) +
-      (token == null ? 0 : token.hashCode);
+  int get hashCode => topic.hashCode + token.hashCode;
 
   factory NotificationSubscribeToTopicRequest.fromJson(
     Map<String, dynamic> json,

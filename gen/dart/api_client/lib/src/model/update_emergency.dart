@@ -84,11 +84,11 @@ class UpdateEmergency {
       driverId.hashCode +
       type.hashCode +
       status.hashCode +
-      (description == null ? 0 : description.hashCode) +
+      description.hashCode +
       location.hashCode +
       contactedAuthorities.hashCode +
-      (respondedById == null ? 0 : respondedById.hashCode) +
-      (resolution == null ? 0 : resolution.hashCode);
+      respondedById.hashCode +
+      resolution.hashCode;
 
   factory UpdateEmergency.fromJson(Map<String, dynamic> json) =>
       _$UpdateEmergencyFromJson(json);

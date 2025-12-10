@@ -7,7 +7,7 @@ part of 'driver_quiz_question_create201_response.dart';
 // **************************************************************************
 
 abstract class _$DriverQuizQuestionCreate201ResponseCWProxy {
-  DriverQuizQuestionCreate201Response message(String? message);
+  DriverQuizQuestionCreate201Response message(String message);
 
   DriverQuizQuestionCreate201Response data(DriverQuizQuestion data);
 
@@ -23,7 +23,7 @@ abstract class _$DriverQuizQuestionCreate201ResponseCWProxy {
   /// DriverQuizQuestionCreate201Response(...).copyWith(id: 12, name: "My name")
   /// ```
   DriverQuizQuestionCreate201Response call({
-    String? message,
+    String message,
     DriverQuizQuestion data,
     PaginationResult? pagination,
     int? totalPages,
@@ -39,7 +39,7 @@ class _$DriverQuizQuestionCreate201ResponseCWProxyImpl
   final DriverQuizQuestionCreate201Response _value;
 
   @override
-  DriverQuizQuestionCreate201Response message(String? message) =>
+  DriverQuizQuestionCreate201Response message(String message) =>
       call(message: message);
 
   @override
@@ -70,10 +70,10 @@ class _$DriverQuizQuestionCreate201ResponseCWProxyImpl
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return DriverQuizQuestionCreate201Response(
-      message: message == const $CopyWithPlaceholder()
+      message: message == const $CopyWithPlaceholder() || message == null
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
-          : message as String?,
+          : message as String,
       data: data == const $CopyWithPlaceholder() || data == null
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
@@ -110,7 +110,7 @@ _$DriverQuizQuestionCreate201ResponseFromJson(Map<String, dynamic> json) =>
     ) {
       $checkKeys(json, requiredKeys: const ['message', 'data']);
       final val = DriverQuizQuestionCreate201Response(
-        message: $checkedConvert('message', (v) => v as String?),
+        message: $checkedConvert('message', (v) => v as String),
         data: $checkedConvert(
           'data',
           (v) => DriverQuizQuestion.fromJson(v as Map<String, dynamic>),

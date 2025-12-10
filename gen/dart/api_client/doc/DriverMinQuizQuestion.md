@@ -14,7 +14,7 @@ Name | Type | Description | Notes
 **category** | **String** |  | 
 **points** | **num** |  | 
 **displayOrder** | **num** |  | 
-**options** | [**List&lt;DriverMinQuizQuestionOptionsInner&gt;**](DriverMinQuizQuestionOptionsInner.md) |  | 
+**options** | [**List&lt;DriverQuizQuestionGetQuizQuestions200ResponseDataInnerOptionsInner&gt;**](DriverQuizQuestionGetQuizQuestions200ResponseDataInnerOptionsInner.md) |  | 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

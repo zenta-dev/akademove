@@ -7,9 +7,9 @@ part of 'auth_exchange_token200_response.dart';
 // **************************************************************************
 
 abstract class _$AuthExchangeToken200ResponseCWProxy {
-  AuthExchangeToken200Response message(String? message);
+  AuthExchangeToken200Response message(String message);
 
-  AuthExchangeToken200Response data(String? data);
+  AuthExchangeToken200Response data(String data);
 
   AuthExchangeToken200Response pagination(PaginationResult? pagination);
 
@@ -23,8 +23,8 @@ abstract class _$AuthExchangeToken200ResponseCWProxy {
   /// AuthExchangeToken200Response(...).copyWith(id: 12, name: "My name")
   /// ```
   AuthExchangeToken200Response call({
-    String? message,
-    String? data,
+    String message,
+    String data,
     PaginationResult? pagination,
     int? totalPages,
   });
@@ -39,11 +39,11 @@ class _$AuthExchangeToken200ResponseCWProxyImpl
   final AuthExchangeToken200Response _value;
 
   @override
-  AuthExchangeToken200Response message(String? message) =>
+  AuthExchangeToken200Response message(String message) =>
       call(message: message);
 
   @override
-  AuthExchangeToken200Response data(String? data) => call(data: data);
+  AuthExchangeToken200Response data(String data) => call(data: data);
 
   @override
   AuthExchangeToken200Response pagination(PaginationResult? pagination) =>
@@ -68,14 +68,14 @@ class _$AuthExchangeToken200ResponseCWProxyImpl
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return AuthExchangeToken200Response(
-      message: message == const $CopyWithPlaceholder()
+      message: message == const $CopyWithPlaceholder() || message == null
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
-          : message as String?,
-      data: data == const $CopyWithPlaceholder()
+          : message as String,
+      data: data == const $CopyWithPlaceholder() || data == null
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
-          : data as String?,
+          : data as String,
       pagination: pagination == const $CopyWithPlaceholder()
           ? _value.pagination
           // ignore: cast_nullable_to_non_nullable
@@ -106,8 +106,8 @@ AuthExchangeToken200Response _$AuthExchangeToken200ResponseFromJson(
 ) => $checkedCreate('AuthExchangeToken200Response', json, ($checkedConvert) {
   $checkKeys(json, requiredKeys: const ['message', 'data']);
   final val = AuthExchangeToken200Response(
-    message: $checkedConvert('message', (v) => v as String?),
-    data: $checkedConvert('data', (v) => v as String?),
+    message: $checkedConvert('message', (v) => v as String),
+    data: $checkedConvert('data', (v) => v as String),
     pagination: $checkedConvert(
       'pagination',
       (v) => v == null

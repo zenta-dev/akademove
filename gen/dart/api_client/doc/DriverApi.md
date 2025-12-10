@@ -78,7 +78,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **driverGet**
-> DriverGet200Response driverGet(id)
+> DriverGetMine200ResponseBody driverGet(id)
 
 
 
@@ -105,7 +105,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**DriverGet200Response**](DriverGet200Response.md)
+[**DriverGetMine200ResponseBody**](DriverGetMine200ResponseBody.md)
 
 ### Authorization
 
@@ -714,7 +714,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **driverUpdate**
-> DriverGet200Response driverUpdate(id, studentId, licensePlate, bankProvider, bankNumber, isTakingOrder, currentLocationX, currentLocationY, studentCard, driverLicense, vehicleCertificate)
+> DriverGetMine200ResponseBody driverUpdate(id, studentId, licensePlate, bankProvider, bankNumber, bankAccountName, isTakingOrder, currentLocationX, currentLocationY, studentCard, driverLicense, vehicleCertificate)
 
 
 
@@ -728,6 +728,7 @@ final num studentId = 8.14; // num |
 final String licensePlate = licensePlate_example; // String | 
 final String bankProvider = bankProvider_example; // String | 
 final num bankNumber = 8.14; // num | 
+final String bankAccountName = bankAccountName_example; // String | 
 final bool isTakingOrder = true; // bool | 
 final num currentLocationX = 8.14; // num | Longitude (X-axis, East-West)
 final num currentLocationY = 8.14; // num | Latitude (Y-axis, North-South)
@@ -736,7 +737,7 @@ final MultipartFile driverLicense = BINARY_DATA_HERE; // MultipartFile |
 final MultipartFile vehicleCertificate = BINARY_DATA_HERE; // MultipartFile | 
 
 try {
-    final response = api.driverUpdate(id, studentId, licensePlate, bankProvider, bankNumber, isTakingOrder, currentLocationX, currentLocationY, studentCard, driverLicense, vehicleCertificate);
+    final response = api.driverUpdate(id, studentId, licensePlate, bankProvider, bankNumber, bankAccountName, isTakingOrder, currentLocationX, currentLocationY, studentCard, driverLicense, vehicleCertificate);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling DriverApi->driverUpdate: $e\n');
@@ -752,6 +753,7 @@ Name | Type | Description  | Notes
  **licensePlate** | **String**|  | [optional] 
  **bankProvider** | **String**|  | [optional] 
  **bankNumber** | **num**|  | [optional] 
+ **bankAccountName** | **String**|  | [optional] 
  **isTakingOrder** | **bool**|  | [optional] 
  **currentLocationX** | **num**| Longitude (X-axis, East-West) | [optional] 
  **currentLocationY** | **num**| Latitude (Y-axis, North-South) | [optional] 
@@ -761,7 +763,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**DriverGet200Response**](DriverGet200Response.md)
+[**DriverGetMine200ResponseBody**](DriverGetMine200ResponseBody.md)
 
 ### Authorization
 
@@ -818,7 +820,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **driverUpdateLocation**
-> DriverGet200Response driverUpdateLocation(id, coordinateWithMeta)
+> DriverGetMine200ResponseBody driverUpdateLocation(id, coordinateWithMeta)
 
 
 
@@ -847,7 +849,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**DriverGet200Response**](DriverGet200Response.md)
+[**DriverGetMine200ResponseBody**](DriverGetMine200ResponseBody.md)
 
 ### Authorization
 
@@ -861,7 +863,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **driverUpdateOnlineStatus**
-> DriverGet200Response driverUpdateOnlineStatus(id, driverUpdateOnlineStatusRequest)
+> DriverGetMine200ResponseBody driverUpdateOnlineStatus(id, driverUpdateOnlineStatusRequest)
 
 
 
@@ -890,7 +892,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**DriverGet200Response**](DriverGet200Response.md)
+[**DriverGetMine200ResponseBody**](DriverGetMine200ResponseBody.md)
 
 ### Authorization
 
@@ -904,7 +906,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **driverUpdateTakingOrderStatus**
-> DriverGet200Response driverUpdateTakingOrderStatus(id, driverUpdateTakingOrderStatusRequest)
+> DriverGetMine200ResponseBody driverUpdateTakingOrderStatus(id, driverUpdateTakingOrderStatusRequest)
 
 
 
@@ -933,7 +935,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**DriverGet200Response**](DriverGet200Response.md)
+[**DriverGetMine200ResponseBody**](DriverGetMine200ResponseBody.md)
 
 ### Authorization
 

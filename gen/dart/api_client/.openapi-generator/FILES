@@ -46,6 +46,9 @@ doc/BadgeUserUpdateRequest.md
 doc/BanUser.md
 doc/Bank.md
 doc/BankProvider.md
+doc/BankValidateAccount200Response.md
+doc/BankValidationRequest.md
+doc/BankValidationResponse.md
 doc/BannerConfiguration.md
 doc/BannerCreate201Response.md
 doc/BannerCreate201ResponseData.md
@@ -113,7 +116,6 @@ doc/DashboardStatsHighCancellationDriversInner.md
 doc/DashboardStatsOrdersByDayInner.md
 doc/DashboardStatsOrdersByTypeInner.md
 doc/DashboardStatsQuery.md
-doc/DashboardStatsRevenueByDayInner.md
 doc/DashboardStatsTopDriversInner.md
 doc/DashboardStatsTopMerchantsInner.md
 doc/DayOfWeek.md
@@ -122,7 +124,6 @@ doc/DeliveryPricingConfiguration.md
 doc/DismissReport.md
 doc/Driver.md
 doc/DriverApi.md
-doc/DriverGet200Response.md
 doc/DriverGetAnalytics200Response.md
 doc/DriverGetAnalytics200ResponseData.md
 doc/DriverGetAnalytics200ResponseDataEarningsByDayInner.md
@@ -135,7 +136,6 @@ doc/DriverGetReview200ResponseData.md
 doc/DriverKey.md
 doc/DriverList200Response.md
 doc/DriverMinQuizQuestion.md
-doc/DriverMinQuizQuestionOptionsInner.md
 doc/DriverQuizAnswer.md
 doc/DriverQuizAnswerApi.md
 doc/DriverQuizAnswerCompleteQuiz200Response.md
@@ -252,7 +252,6 @@ doc/MerchantBestSellers200ResponseDataInnerMenu.md
 doc/MerchantBestSellers200ResponseDataInnerMerchant.md
 doc/MerchantCategory.md
 doc/MerchantDeactivateRequest.md
-doc/MerchantGet200Response.md
 doc/MerchantGetAvailabilityStatus200Response.md
 doc/MerchantGetAvailabilityStatus200ResponseData.md
 doc/MerchantGetMine200Response.md
@@ -267,9 +266,7 @@ doc/MerchantMenuList200Response.md
 doc/MerchantOrderAccept200Response.md
 doc/MerchantPopulars200Response.md
 doc/MerchantSetOperatingStatusRequest.md
-doc/MerchantSetOrderTakingStatusRequest.md
 doc/MerchantStatus.md
-doc/MerchantSubmitApprovalRequest.md
 doc/MerchantUpdateDocumentStatusRequest.md
 doc/Newsletter.md
 doc/NewsletterKey.md
@@ -285,11 +282,9 @@ doc/NotificationSaveTokenRequest.md
 doc/NotificationSubscribeToTopic200Response.md
 doc/NotificationSubscribeToTopic200ResponseData.md
 doc/NotificationSubscribeToTopicRequest.md
-doc/NotificationUnsubscribeToTopicRequest.md
 doc/Order.md
 doc/OrderApi.md
 doc/OrderCancelRequest.md
-doc/OrderCancelScheduledOrderRequest.md
 doc/OrderChatMessage.md
 doc/OrderChatMessageListQuery.md
 doc/OrderChatMessageSender.md
@@ -341,6 +336,7 @@ doc/PaymentEnvelopePayload.md
 doc/PaymentKey.md
 doc/PaymentMethod.md
 doc/PaymentProvider.md
+doc/PayoutStatus.md
 doc/Phone.md
 doc/PlaceOrder.md
 doc/PlaceOrderPayment.md
@@ -374,6 +370,7 @@ doc/ReviewKeySchema.md
 doc/ReviewList200Response.md
 doc/RidePricingConfiguration.md
 doc/RoleAccess.md
+doc/SavedBankAccount.md
 doc/SendEmailVerification.md
 doc/Session.md
 doc/SignInRequest.md
@@ -408,6 +405,7 @@ doc/TransactionList200Response.md
 doc/TransactionStatus.md
 doc/TransactionType.md
 doc/TransferRequest.md
+doc/TransferResponse.md
 doc/UnbanUser.md
 doc/UpdateAccountDeletion.md
 doc/UpdateBroadcast.md
@@ -442,6 +440,10 @@ doc/UserFraudProfile.md
 doc/UserFraudProfileUser.md
 doc/UserGender.md
 doc/UserKey.md
+doc/UserLookupByPhone200Response.md
+doc/UserLookupQuery.md
+doc/UserLookupResult.md
+doc/UserLookupResultPhone.md
 doc/UserMeChangePasswordRequest.md
 doc/UserRole.md
 doc/UserRules.md
@@ -451,12 +453,15 @@ doc/Wallet.md
 doc/WalletApi.md
 doc/WalletGet200Response.md
 doc/WalletGetMonthlySummary200Response.md
+doc/WalletGetSavedBankAccount200Response.md
 doc/WalletKey.md
 doc/WalletMonthlySummaryQuery.md
 doc/WalletMonthlySummaryResponse.md
 doc/WalletTopUp200Response.md
+doc/WalletTransfer200Response.md
 doc/WeightSize.md
 doc/WithdrawRequest.md
+doc/WithdrawResponse.md
 lib/api_client.dart
 lib/src/api.dart
 lib/src/api/admin_api.dart
@@ -527,6 +532,9 @@ lib/src/model/badge_user_update_request.dart
 lib/src/model/ban_user.dart
 lib/src/model/bank.dart
 lib/src/model/bank_provider.dart
+lib/src/model/bank_validate_account200_response.dart
+lib/src/model/bank_validation_request.dart
+lib/src/model/bank_validation_response.dart
 lib/src/model/banner_configuration.dart
 lib/src/model/banner_create201_response.dart
 lib/src/model/banner_create201_response_data.dart
@@ -591,7 +599,6 @@ lib/src/model/dashboard_stats_high_cancellation_drivers_inner.dart
 lib/src/model/dashboard_stats_orders_by_day_inner.dart
 lib/src/model/dashboard_stats_orders_by_type_inner.dart
 lib/src/model/dashboard_stats_query.dart
-lib/src/model/dashboard_stats_revenue_by_day_inner.dart
 lib/src/model/dashboard_stats_top_drivers_inner.dart
 lib/src/model/dashboard_stats_top_merchants_inner.dart
 lib/src/model/day_of_week.dart
@@ -599,7 +606,6 @@ lib/src/model/delivery_item_type.dart
 lib/src/model/delivery_pricing_configuration.dart
 lib/src/model/dismiss_report.dart
 lib/src/model/driver.dart
-lib/src/model/driver_get200_response.dart
 lib/src/model/driver_get_analytics200_response.dart
 lib/src/model/driver_get_analytics200_response_data.dart
 lib/src/model/driver_get_analytics200_response_data_earnings_by_day_inner.dart
@@ -612,7 +618,6 @@ lib/src/model/driver_get_review200_response_data.dart
 lib/src/model/driver_key.dart
 lib/src/model/driver_list200_response.dart
 lib/src/model/driver_min_quiz_question.dart
-lib/src/model/driver_min_quiz_question_options_inner.dart
 lib/src/model/driver_quiz_answer.dart
 lib/src/model/driver_quiz_answer_complete_quiz200_response.dart
 lib/src/model/driver_quiz_answer_get_attempt200_response.dart
@@ -723,7 +728,6 @@ lib/src/model/merchant_best_sellers200_response_data_inner_menu.dart
 lib/src/model/merchant_best_sellers200_response_data_inner_merchant.dart
 lib/src/model/merchant_category.dart
 lib/src/model/merchant_deactivate_request.dart
-lib/src/model/merchant_get200_response.dart
 lib/src/model/merchant_get_availability_status200_response.dart
 lib/src/model/merchant_get_availability_status200_response_data.dart
 lib/src/model/merchant_get_mine200_response.dart
@@ -738,9 +742,7 @@ lib/src/model/merchant_menu_list200_response.dart
 lib/src/model/merchant_order_accept200_response.dart
 lib/src/model/merchant_populars200_response.dart
 lib/src/model/merchant_set_operating_status_request.dart
-lib/src/model/merchant_set_order_taking_status_request.dart
 lib/src/model/merchant_status.dart
-lib/src/model/merchant_submit_approval_request.dart
 lib/src/model/merchant_update_document_status_request.dart
 lib/src/model/newsletter.dart
 lib/src/model/newsletter_key.dart
@@ -755,10 +757,8 @@ lib/src/model/notification_save_token_request.dart
 lib/src/model/notification_subscribe_to_topic200_response.dart
 lib/src/model/notification_subscribe_to_topic200_response_data.dart
 lib/src/model/notification_subscribe_to_topic_request.dart
-lib/src/model/notification_unsubscribe_to_topic_request.dart
 lib/src/model/order.dart
 lib/src/model/order_cancel_request.dart
-lib/src/model/order_cancel_scheduled_order_request.dart
 lib/src/model/order_chat_message.dart
 lib/src/model/order_chat_message_list_query.dart
 lib/src/model/order_chat_message_sender.dart
@@ -809,6 +809,7 @@ lib/src/model/payment_envelope_payload.dart
 lib/src/model/payment_key.dart
 lib/src/model/payment_method.dart
 lib/src/model/payment_provider.dart
+lib/src/model/payout_status.dart
 lib/src/model/phone.dart
 lib/src/model/place_order.dart
 lib/src/model/place_order_payment.dart
@@ -840,6 +841,7 @@ lib/src/model/review_key_schema.dart
 lib/src/model/review_list200_response.dart
 lib/src/model/ride_pricing_configuration.dart
 lib/src/model/role_access.dart
+lib/src/model/saved_bank_account.dart
 lib/src/model/send_email_verification.dart
 lib/src/model/session.dart
 lib/src/model/sign_in_request.dart
@@ -873,6 +875,7 @@ lib/src/model/transaction_list200_response.dart
 lib/src/model/transaction_status.dart
 lib/src/model/transaction_type.dart
 lib/src/model/transfer_request.dart
+lib/src/model/transfer_response.dart
 lib/src/model/unban_user.dart
 lib/src/model/update_account_deletion.dart
 lib/src/model/update_broadcast.dart
@@ -906,6 +909,10 @@ lib/src/model/user_fraud_profile.dart
 lib/src/model/user_fraud_profile_user.dart
 lib/src/model/user_gender.dart
 lib/src/model/user_key.dart
+lib/src/model/user_lookup_by_phone200_response.dart
+lib/src/model/user_lookup_query.dart
+lib/src/model/user_lookup_result.dart
+lib/src/model/user_lookup_result_phone.dart
 lib/src/model/user_me_change_password_request.dart
 lib/src/model/user_role.dart
 lib/src/model/user_rules.dart
@@ -914,10 +921,26 @@ lib/src/model/verify_email.dart
 lib/src/model/wallet.dart
 lib/src/model/wallet_get200_response.dart
 lib/src/model/wallet_get_monthly_summary200_response.dart
+lib/src/model/wallet_get_saved_bank_account200_response.dart
 lib/src/model/wallet_key.dart
 lib/src/model/wallet_monthly_summary_query.dart
 lib/src/model/wallet_monthly_summary_response.dart
 lib/src/model/wallet_top_up200_response.dart
+lib/src/model/wallet_transfer200_response.dart
 lib/src/model/weight_size.dart
 lib/src/model/withdraw_request.dart
+lib/src/model/withdraw_response.dart
 pubspec.yaml
+test/bank_validate_account200_response_test.dart
+test/bank_validation_request_test.dart
+test/bank_validation_response_test.dart
+test/payout_status_test.dart
+test/saved_bank_account_test.dart
+test/transfer_response_test.dart
+test/user_lookup_by_phone200_response_test.dart
+test/user_lookup_query_test.dart
+test/user_lookup_result_phone_test.dart
+test/user_lookup_result_test.dart
+test/wallet_get_saved_bank_account200_response_test.dart
+test/wallet_transfer200_response_test.dart
+test/withdraw_response_test.dart

@@ -7,7 +7,7 @@ part of 'suspend_driver.dart';
 // **************************************************************************
 
 abstract class _$SuspendDriverCWProxy {
-  SuspendDriver id(String? id);
+  SuspendDriver id(String id);
 
   SuspendDriver reason(String reason);
 
@@ -20,7 +20,7 @@ abstract class _$SuspendDriverCWProxy {
   /// ```dart
   /// SuspendDriver(...).copyWith(id: 12, name: "My name")
   /// ```
-  SuspendDriver call({String? id, String reason, DateTime? suspendUntil});
+  SuspendDriver call({String id, String reason, DateTime? suspendUntil});
 }
 
 /// Callable proxy for `copyWith` functionality.
@@ -31,7 +31,7 @@ class _$SuspendDriverCWProxyImpl implements _$SuspendDriverCWProxy {
   final SuspendDriver _value;
 
   @override
-  SuspendDriver id(String? id) => call(id: id);
+  SuspendDriver id(String id) => call(id: id);
 
   @override
   SuspendDriver reason(String reason) => call(reason: reason);
@@ -54,10 +54,10 @@ class _$SuspendDriverCWProxyImpl implements _$SuspendDriverCWProxy {
     Object? suspendUntil = const $CopyWithPlaceholder(),
   }) {
     return SuspendDriver(
-      id: id == const $CopyWithPlaceholder()
+      id: id == const $CopyWithPlaceholder() || id == null
           ? _value.id
           // ignore: cast_nullable_to_non_nullable
-          : id as String?,
+          : id as String,
       reason: reason == const $CopyWithPlaceholder() || reason == null
           ? _value.reason
           // ignore: cast_nullable_to_non_nullable
@@ -85,7 +85,7 @@ SuspendDriver _$SuspendDriverFromJson(Map<String, dynamic> json) =>
     $checkedCreate('SuspendDriver', json, ($checkedConvert) {
       $checkKeys(json, requiredKeys: const ['id', 'reason']);
       final val = SuspendDriver(
-        id: $checkedConvert('id', (v) => v as String?),
+        id: $checkedConvert('id', (v) => v as String),
         reason: $checkedConvert('reason', (v) => v as String),
         suspendUntil: $checkedConvert(
           'suspendUntil',

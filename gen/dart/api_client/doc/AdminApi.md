@@ -776,7 +776,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **driverActivate**
-> DriverGet200Response driverActivate(id)
+> DriverGetMine200ResponseBody driverActivate(id)
 
 
 
@@ -803,7 +803,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**DriverGet200Response**](DriverGet200Response.md)
+[**DriverGetMine200ResponseBody**](DriverGetMine200ResponseBody.md)
 
 ### Authorization
 
@@ -817,7 +817,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **driverApprove**
-> DriverGet200Response driverApprove(id)
+> DriverGetMine200ResponseBody driverApprove(id)
 
 
 
@@ -844,7 +844,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**DriverGet200Response**](DriverGet200Response.md)
+[**DriverGetMine200ResponseBody**](DriverGetMine200ResponseBody.md)
 
 ### Authorization
 
@@ -858,7 +858,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **driverReject**
-> DriverGet200Response driverReject(id, driverRejectRequest)
+> DriverGetMine200ResponseBody driverReject(id, driverRejectRequest)
 
 
 
@@ -887,7 +887,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**DriverGet200Response**](DriverGet200Response.md)
+[**DriverGetMine200ResponseBody**](DriverGetMine200ResponseBody.md)
 
 ### Authorization
 
@@ -901,7 +901,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **driverSuspend**
-> DriverGet200Response driverSuspend(id, driverSuspendRequest)
+> DriverGetMine200ResponseBody driverSuspend(id, driverSuspendRequest)
 
 
 
@@ -930,7 +930,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**DriverGet200Response**](DriverGet200Response.md)
+[**DriverGetMine200ResponseBody**](DriverGetMine200ResponseBody.md)
 
 ### Authorization
 

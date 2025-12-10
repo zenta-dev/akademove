@@ -7,7 +7,7 @@ part of 'notification_mark_as_read200_response.dart';
 // **************************************************************************
 
 abstract class _$NotificationMarkAsRead200ResponseCWProxy {
-  NotificationMarkAsRead200Response message(String? message);
+  NotificationMarkAsRead200Response message(String message);
 
   NotificationMarkAsRead200Response data(
     NotificationMarkAsRead200ResponseData data,
@@ -25,7 +25,7 @@ abstract class _$NotificationMarkAsRead200ResponseCWProxy {
   /// NotificationMarkAsRead200Response(...).copyWith(id: 12, name: "My name")
   /// ```
   NotificationMarkAsRead200Response call({
-    String? message,
+    String message,
     NotificationMarkAsRead200ResponseData data,
     PaginationResult? pagination,
     int? totalPages,
@@ -41,7 +41,7 @@ class _$NotificationMarkAsRead200ResponseCWProxyImpl
   final NotificationMarkAsRead200Response _value;
 
   @override
-  NotificationMarkAsRead200Response message(String? message) =>
+  NotificationMarkAsRead200Response message(String message) =>
       call(message: message);
 
   @override
@@ -72,10 +72,10 @@ class _$NotificationMarkAsRead200ResponseCWProxyImpl
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return NotificationMarkAsRead200Response(
-      message: message == const $CopyWithPlaceholder()
+      message: message == const $CopyWithPlaceholder() || message == null
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
-          : message as String?,
+          : message as String,
       data: data == const $CopyWithPlaceholder() || data == null
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
@@ -112,7 +112,7 @@ NotificationMarkAsRead200Response _$NotificationMarkAsRead200ResponseFromJson(
 ) {
   $checkKeys(json, requiredKeys: const ['message', 'data']);
   final val = NotificationMarkAsRead200Response(
-    message: $checkedConvert('message', (v) => v as String?),
+    message: $checkedConvert('message', (v) => v as String),
     data: $checkedConvert(
       'data',
       (v) => NotificationMarkAsRead200ResponseData.fromJson(

@@ -18,8 +18,8 @@ part 'reject_driver.g.dart';
 class RejectDriver {
   /// Returns a new [RejectDriver] instance.
   const RejectDriver({required this.id, required this.reason});
-  @JsonKey(name: r'id', required: true, includeIfNull: true)
-  final String? id;
+  @JsonKey(name: r'id', required: true, includeIfNull: false)
+  final String id;
 
   @JsonKey(name: r'reason', required: true, includeIfNull: false)
   final String reason;
@@ -30,7 +30,7 @@ class RejectDriver {
       other is RejectDriver && other.id == id && other.reason == reason;
 
   @override
-  int get hashCode => (id == null ? 0 : id.hashCode) + reason.hashCode;
+  int get hashCode => id.hashCode + reason.hashCode;
 
   factory RejectDriver.fromJson(Map<String, dynamic> json) =>
       _$RejectDriverFromJson(json);

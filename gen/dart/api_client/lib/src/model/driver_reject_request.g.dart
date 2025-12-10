@@ -7,7 +7,7 @@ part of 'driver_reject_request.dart';
 // **************************************************************************
 
 abstract class _$DriverRejectRequestCWProxy {
-  DriverRejectRequest reason(String? reason);
+  DriverRejectRequest reason(String reason);
 
   /// Creates a new instance with the provided field values.
   /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `DriverRejectRequest(...).copyWith.fieldName(value)`.
@@ -16,7 +16,7 @@ abstract class _$DriverRejectRequestCWProxy {
   /// ```dart
   /// DriverRejectRequest(...).copyWith(id: 12, name: "My name")
   /// ```
-  DriverRejectRequest call({String? reason});
+  DriverRejectRequest call({String reason});
 }
 
 /// Callable proxy for `copyWith` functionality.
@@ -27,7 +27,7 @@ class _$DriverRejectRequestCWProxyImpl implements _$DriverRejectRequestCWProxy {
   final DriverRejectRequest _value;
 
   @override
-  DriverRejectRequest reason(String? reason) => call(reason: reason);
+  DriverRejectRequest reason(String reason) => call(reason: reason);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -39,10 +39,10 @@ class _$DriverRejectRequestCWProxyImpl implements _$DriverRejectRequestCWProxy {
   /// ```
   DriverRejectRequest call({Object? reason = const $CopyWithPlaceholder()}) {
     return DriverRejectRequest(
-      reason: reason == const $CopyWithPlaceholder()
+      reason: reason == const $CopyWithPlaceholder() || reason == null
           ? _value.reason
           // ignore: cast_nullable_to_non_nullable
-          : reason as String?,
+          : reason as String,
     );
   }
 }
@@ -63,7 +63,7 @@ DriverRejectRequest _$DriverRejectRequestFromJson(Map<String, dynamic> json) =>
     $checkedCreate('DriverRejectRequest', json, ($checkedConvert) {
       $checkKeys(json, requiredKeys: const ['reason']);
       final val = DriverRejectRequest(
-        reason: $checkedConvert('reason', (v) => v as String?),
+        reason: $checkedConvert('reason', (v) => v as String),
       );
       return val;
     });

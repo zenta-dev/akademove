@@ -7,7 +7,7 @@ part of 'account_deletion_delete200_response.dart';
 // **************************************************************************
 
 abstract class _$AccountDeletionDelete200ResponseCWProxy {
-  AccountDeletionDelete200Response message(String? message);
+  AccountDeletionDelete200Response message(String message);
 
   AccountDeletionDelete200Response data(
     AccountDeletionDelete200ResponseData data,
@@ -25,7 +25,7 @@ abstract class _$AccountDeletionDelete200ResponseCWProxy {
   /// AccountDeletionDelete200Response(...).copyWith(id: 12, name: "My name")
   /// ```
   AccountDeletionDelete200Response call({
-    String? message,
+    String message,
     AccountDeletionDelete200ResponseData data,
     PaginationResult? pagination,
     int? totalPages,
@@ -41,7 +41,7 @@ class _$AccountDeletionDelete200ResponseCWProxyImpl
   final AccountDeletionDelete200Response _value;
 
   @override
-  AccountDeletionDelete200Response message(String? message) =>
+  AccountDeletionDelete200Response message(String message) =>
       call(message: message);
 
   @override
@@ -72,10 +72,10 @@ class _$AccountDeletionDelete200ResponseCWProxyImpl
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return AccountDeletionDelete200Response(
-      message: message == const $CopyWithPlaceholder()
+      message: message == const $CopyWithPlaceholder() || message == null
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
-          : message as String?,
+          : message as String,
       data: data == const $CopyWithPlaceholder() || data == null
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
@@ -111,7 +111,7 @@ AccountDeletionDelete200Response _$AccountDeletionDelete200ResponseFromJson(
     $checkedCreate('AccountDeletionDelete200Response', json, ($checkedConvert) {
       $checkKeys(json, requiredKeys: const ['message', 'data']);
       final val = AccountDeletionDelete200Response(
-        message: $checkedConvert('message', (v) => v as String?),
+        message: $checkedConvert('message', (v) => v as String),
         data: $checkedConvert(
           'data',
           (v) => AccountDeletionDelete200ResponseData.fromJson(

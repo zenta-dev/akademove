@@ -79,9 +79,9 @@ class SupportTicketListQuery {
       status.hashCode +
       category.hashCode +
       priority.hashCode +
-      (assignedToId == null ? 0 : assignedToId.hashCode) +
-      (userId == null ? 0 : userId.hashCode) +
-      (search == null ? 0 : search.hashCode) +
+      assignedToId.hashCode +
+      userId.hashCode +
+      search.hashCode +
       limit.hashCode +
       cursor.hashCode;
 

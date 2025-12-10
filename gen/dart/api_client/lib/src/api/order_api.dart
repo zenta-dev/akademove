@@ -14,7 +14,6 @@ import 'package:api_client/src/model/chat_send200_response.dart';
 import 'package:api_client/src/model/insert_order_chat_message.dart';
 import 'package:api_client/src/model/merchant_order_accept200_response.dart';
 import 'package:api_client/src/model/order_cancel_request.dart';
-import 'package:api_client/src/model/order_cancel_scheduled_order_request.dart';
 import 'package:api_client/src/model/order_estimate200_response.dart';
 import 'package:api_client/src/model/order_estimate_request.dart';
 import 'package:api_client/src/model/order_get_status_history200_response.dart';
@@ -321,7 +320,7 @@ class OrderApi {
   ///
   /// Parameters:
   /// * [id]
-  /// * [orderCancelScheduledOrderRequest]
+  /// * [orderCancelRequest]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -333,7 +332,7 @@ class OrderApi {
   /// Throws [DioException] if API call or serialization fails
   Future<Response<MerchantOrderAccept200Response>> orderCancelScheduledOrder({
     required String id,
-    required OrderCancelScheduledOrderRequest orderCancelScheduledOrderRequest,
+    required OrderCancelRequest orderCancelRequest,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -363,7 +362,7 @@ class OrderApi {
     dynamic _bodyData;
 
     try {
-      _bodyData = jsonEncode(orderCancelScheduledOrderRequest);
+      _bodyData = jsonEncode(orderCancelRequest);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _options.compose(_dio.options, _path),

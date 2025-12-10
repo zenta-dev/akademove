@@ -7,7 +7,7 @@ part of 'coupon_get_eligible_coupons200_response.dart';
 // **************************************************************************
 
 abstract class _$CouponGetEligibleCoupons200ResponseCWProxy {
-  CouponGetEligibleCoupons200Response message(String? message);
+  CouponGetEligibleCoupons200Response message(String message);
 
   CouponGetEligibleCoupons200Response data(
     CouponGetEligibleCoupons200ResponseData data,
@@ -25,7 +25,7 @@ abstract class _$CouponGetEligibleCoupons200ResponseCWProxy {
   /// CouponGetEligibleCoupons200Response(...).copyWith(id: 12, name: "My name")
   /// ```
   CouponGetEligibleCoupons200Response call({
-    String? message,
+    String message,
     CouponGetEligibleCoupons200ResponseData data,
     PaginationResult? pagination,
     int? totalPages,
@@ -41,7 +41,7 @@ class _$CouponGetEligibleCoupons200ResponseCWProxyImpl
   final CouponGetEligibleCoupons200Response _value;
 
   @override
-  CouponGetEligibleCoupons200Response message(String? message) =>
+  CouponGetEligibleCoupons200Response message(String message) =>
       call(message: message);
 
   @override
@@ -73,10 +73,10 @@ class _$CouponGetEligibleCoupons200ResponseCWProxyImpl
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return CouponGetEligibleCoupons200Response(
-      message: message == const $CopyWithPlaceholder()
+      message: message == const $CopyWithPlaceholder() || message == null
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
-          : message as String?,
+          : message as String,
       data: data == const $CopyWithPlaceholder() || data == null
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
@@ -113,7 +113,7 @@ _$CouponGetEligibleCoupons200ResponseFromJson(Map<String, dynamic> json) =>
     ) {
       $checkKeys(json, requiredKeys: const ['message', 'data']);
       final val = CouponGetEligibleCoupons200Response(
-        message: $checkedConvert('message', (v) => v as String?),
+        message: $checkedConvert('message', (v) => v as String),
         data: $checkedConvert(
           'data',
           (v) => CouponGetEligibleCoupons200ResponseData.fromJson(

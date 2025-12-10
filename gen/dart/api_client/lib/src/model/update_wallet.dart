@@ -42,7 +42,7 @@ class UpdateWallet {
 
   @override
   int get hashCode =>
-      (userId == null ? 0 : userId.hashCode) +
+      userId.hashCode +
       balance.hashCode +
       currency.hashCode +
       isActive.hashCode;

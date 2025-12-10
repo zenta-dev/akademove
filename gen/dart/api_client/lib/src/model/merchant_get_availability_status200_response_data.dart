@@ -20,22 +20,24 @@ class MerchantGetAvailabilityStatus200ResponseData {
   const MerchantGetAvailabilityStatus200ResponseData({
     required this.id,
     required this.isOnline,
-    required this.isTakingOrders,
     required this.operatingStatus,
+    required this.activeOrderCount,
   });
-  @JsonKey(name: r'id', required: true, includeIfNull: true)
-  final String? id;
+  @JsonKey(name: r'id', required: true, includeIfNull: false)
+  final String id;
 
   @JsonKey(name: r'isOnline', required: true, includeIfNull: false)
   final bool isOnline;
-
-  @JsonKey(name: r'isTakingOrders', required: true, includeIfNull: false)
-  final bool isTakingOrders;
 
   /// Merchant operating status
   @JsonKey(name: r'operatingStatus', required: true, includeIfNull: false)
   final MerchantGetAvailabilityStatus200ResponseDataOperatingStatusEnum
   operatingStatus;
+
+  // minimum: 0
+  // maximum: 9007199254740991
+  @JsonKey(name: r'activeOrderCount', required: true, includeIfNull: false)
+  final int activeOrderCount;
 
   @override
   bool operator ==(Object other) =>
@@ -43,15 +45,15 @@ class MerchantGetAvailabilityStatus200ResponseData {
       other is MerchantGetAvailabilityStatus200ResponseData &&
           other.id == id &&
           other.isOnline == isOnline &&
-          other.isTakingOrders == isTakingOrders &&
-          other.operatingStatus == operatingStatus;
+          other.operatingStatus == operatingStatus &&
+          other.activeOrderCount == activeOrderCount;
 
   @override
   int get hashCode =>
-      (id == null ? 0 : id.hashCode) +
+      id.hashCode +
       isOnline.hashCode +
-      isTakingOrders.hashCode +
-      operatingStatus.hashCode;
+      operatingStatus.hashCode +
+      activeOrderCount.hashCode;
 
   factory MerchantGetAvailabilityStatus200ResponseData.fromJson(
     Map<String, dynamic> json,

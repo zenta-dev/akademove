@@ -7,7 +7,7 @@ part of 'coupon_validate_request.dart';
 // **************************************************************************
 
 abstract class _$CouponValidateRequestCWProxy {
-  CouponValidateRequest code(String? code);
+  CouponValidateRequest code(String code);
 
   CouponValidateRequest orderAmount(num orderAmount);
 
@@ -23,7 +23,7 @@ abstract class _$CouponValidateRequestCWProxy {
   /// CouponValidateRequest(...).copyWith(id: 12, name: "My name")
   /// ```
   CouponValidateRequest call({
-    String? code,
+    String code,
     num orderAmount,
     OrderType? serviceType,
     String? merchantId,
@@ -39,7 +39,7 @@ class _$CouponValidateRequestCWProxyImpl
   final CouponValidateRequest _value;
 
   @override
-  CouponValidateRequest code(String? code) => call(code: code);
+  CouponValidateRequest code(String code) => call(code: code);
 
   @override
   CouponValidateRequest orderAmount(num orderAmount) =>
@@ -68,10 +68,10 @@ class _$CouponValidateRequestCWProxyImpl
     Object? merchantId = const $CopyWithPlaceholder(),
   }) {
     return CouponValidateRequest(
-      code: code == const $CopyWithPlaceholder()
+      code: code == const $CopyWithPlaceholder() || code == null
           ? _value.code
           // ignore: cast_nullable_to_non_nullable
-          : code as String?,
+          : code as String,
       orderAmount:
           orderAmount == const $CopyWithPlaceholder() || orderAmount == null
           ? _value.orderAmount
@@ -106,7 +106,7 @@ CouponValidateRequest _$CouponValidateRequestFromJson(
 ) => $checkedCreate('CouponValidateRequest', json, ($checkedConvert) {
   $checkKeys(json, requiredKeys: const ['code', 'orderAmount']);
   final val = CouponValidateRequest(
-    code: $checkedConvert('code', (v) => v as String?),
+    code: $checkedConvert('code', (v) => v as String),
     orderAmount: $checkedConvert('orderAmount', (v) => v as num),
     serviceType: $checkedConvert(
       'serviceType',

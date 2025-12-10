@@ -7,7 +7,7 @@ part of 'driver_suspend_request.dart';
 // **************************************************************************
 
 abstract class _$DriverSuspendRequestCWProxy {
-  DriverSuspendRequest reason(String? reason);
+  DriverSuspendRequest reason(String reason);
 
   DriverSuspendRequest suspendUntil(DateTime? suspendUntil);
 
@@ -18,7 +18,7 @@ abstract class _$DriverSuspendRequestCWProxy {
   /// ```dart
   /// DriverSuspendRequest(...).copyWith(id: 12, name: "My name")
   /// ```
-  DriverSuspendRequest call({String? reason, DateTime? suspendUntil});
+  DriverSuspendRequest call({String reason, DateTime? suspendUntil});
 }
 
 /// Callable proxy for `copyWith` functionality.
@@ -30,7 +30,7 @@ class _$DriverSuspendRequestCWProxyImpl
   final DriverSuspendRequest _value;
 
   @override
-  DriverSuspendRequest reason(String? reason) => call(reason: reason);
+  DriverSuspendRequest reason(String reason) => call(reason: reason);
 
   @override
   DriverSuspendRequest suspendUntil(DateTime? suspendUntil) =>
@@ -49,10 +49,10 @@ class _$DriverSuspendRequestCWProxyImpl
     Object? suspendUntil = const $CopyWithPlaceholder(),
   }) {
     return DriverSuspendRequest(
-      reason: reason == const $CopyWithPlaceholder()
+      reason: reason == const $CopyWithPlaceholder() || reason == null
           ? _value.reason
           // ignore: cast_nullable_to_non_nullable
-          : reason as String?,
+          : reason as String,
       suspendUntil: suspendUntil == const $CopyWithPlaceholder()
           ? _value.suspendUntil
           // ignore: cast_nullable_to_non_nullable
@@ -78,7 +78,7 @@ DriverSuspendRequest _$DriverSuspendRequestFromJson(
 ) => $checkedCreate('DriverSuspendRequest', json, ($checkedConvert) {
   $checkKeys(json, requiredKeys: const ['reason']);
   final val = DriverSuspendRequest(
-    reason: $checkedConvert('reason', (v) => v as String?),
+    reason: $checkedConvert('reason', (v) => v as String),
     suspendUntil: $checkedConvert(
       'suspendUntil',
       (v) => v == null ? null : DateTime.parse(v as String),

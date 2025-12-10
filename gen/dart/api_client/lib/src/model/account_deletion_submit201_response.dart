@@ -25,8 +25,8 @@ class AccountDeletionSubmit201Response {
     this.pagination,
     this.totalPages,
   });
-  @JsonKey(name: r'message', required: true, includeIfNull: true)
-  final String? message;
+  @JsonKey(name: r'message', required: true, includeIfNull: false)
+  final String message;
 
   @JsonKey(name: r'data', required: true, includeIfNull: false)
   final AccountDeletion data;
@@ -50,7 +50,7 @@ class AccountDeletionSubmit201Response {
 
   @override
   int get hashCode =>
-      (message == null ? 0 : message.hashCode) +
+      message.hashCode +
       data.hashCode +
       pagination.hashCode +
       totalPages.hashCode;

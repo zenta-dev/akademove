@@ -28,14 +28,14 @@ class MerchantBestSellers200ResponseDataInnerMenu {
     required this.createdAt,
     required this.updatedAt,
   });
-  @JsonKey(name: r'id', required: true, includeIfNull: true)
-  final String? id;
+  @JsonKey(name: r'id', required: true, includeIfNull: false)
+  final String id;
 
-  @JsonKey(name: r'merchantId', required: true, includeIfNull: true)
-  final String? merchantId;
+  @JsonKey(name: r'merchantId', required: true, includeIfNull: false)
+  final String merchantId;
 
-  @JsonKey(name: r'name', required: true, includeIfNull: true)
-  final String? name;
+  @JsonKey(name: r'name', required: true, includeIfNull: false)
+  final String name;
 
   @JsonKey(name: r'image', required: false, includeIfNull: false)
   final String? image;
@@ -71,11 +71,11 @@ class MerchantBestSellers200ResponseDataInnerMenu {
 
   @override
   int get hashCode =>
-      (id == null ? 0 : id.hashCode) +
-      (merchantId == null ? 0 : merchantId.hashCode) +
-      (name == null ? 0 : name.hashCode) +
-      (image == null ? 0 : image.hashCode) +
-      (category == null ? 0 : category.hashCode) +
+      id.hashCode +
+      merchantId.hashCode +
+      name.hashCode +
+      image.hashCode +
+      category.hashCode +
       price.hashCode +
       stock.hashCode +
       (createdAt == null ? 0 : createdAt.hashCode) +

@@ -7,7 +7,7 @@ part of 'order_place_scheduled_order200_response.dart';
 // **************************************************************************
 
 abstract class _$OrderPlaceScheduledOrder200ResponseCWProxy {
-  OrderPlaceScheduledOrder200Response message(String? message);
+  OrderPlaceScheduledOrder200Response message(String message);
 
   OrderPlaceScheduledOrder200Response data(PlaceScheduledOrderResponse data);
 
@@ -23,7 +23,7 @@ abstract class _$OrderPlaceScheduledOrder200ResponseCWProxy {
   /// OrderPlaceScheduledOrder200Response(...).copyWith(id: 12, name: "My name")
   /// ```
   OrderPlaceScheduledOrder200Response call({
-    String? message,
+    String message,
     PlaceScheduledOrderResponse data,
     PaginationResult? pagination,
     int? totalPages,
@@ -39,7 +39,7 @@ class _$OrderPlaceScheduledOrder200ResponseCWProxyImpl
   final OrderPlaceScheduledOrder200Response _value;
 
   @override
-  OrderPlaceScheduledOrder200Response message(String? message) =>
+  OrderPlaceScheduledOrder200Response message(String message) =>
       call(message: message);
 
   @override
@@ -70,10 +70,10 @@ class _$OrderPlaceScheduledOrder200ResponseCWProxyImpl
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return OrderPlaceScheduledOrder200Response(
-      message: message == const $CopyWithPlaceholder()
+      message: message == const $CopyWithPlaceholder() || message == null
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
-          : message as String?,
+          : message as String,
       data: data == const $CopyWithPlaceholder() || data == null
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
@@ -110,7 +110,7 @@ _$OrderPlaceScheduledOrder200ResponseFromJson(Map<String, dynamic> json) =>
     ) {
       $checkKeys(json, requiredKeys: const ['message', 'data']);
       final val = OrderPlaceScheduledOrder200Response(
-        message: $checkedConvert('message', (v) => v as String?),
+        message: $checkedConvert('message', (v) => v as String),
         data: $checkedConvert(
           'data',
           (v) =>

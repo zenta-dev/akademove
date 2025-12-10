@@ -211,7 +211,6 @@ Class | Method | HTTP request | Description
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantRemove**](doc/MerchantApi.md#merchantremove) | **DELETE** /merchants/{id} | 
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantSetOnlineStatus**](doc/MerchantApi.md#merchantsetonlinestatus) | **PATCH** /merchants/{id}/availability/online | 
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantSetOperatingStatus**](doc/MerchantApi.md#merchantsetoperatingstatus) | **PATCH** /merchants/{id}/availability/operating-status | 
-[*MerchantApi*](doc/MerchantApi.md) | [**merchantSetOrderTakingStatus**](doc/MerchantApi.md#merchantsetordertakingstatus) | **PATCH** /merchants/{id}/availability/order-taking | 
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantSubmitApproval**](doc/MerchantApi.md#merchantsubmitapproval) | **POST** /merchants/{id}/approval-review/submit-approval | 
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantSubmitRejection**](doc/MerchantApi.md#merchantsubmitrejection) | **POST** /merchants/{id}/approval-review/submit-rejection | 
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantUpdate**](doc/MerchantApi.md#merchantupdate) | **PUT** /merchants/{id} | 
@@ -242,7 +241,9 @@ Class | Method | HTTP request | Description
 [*OrderApi*](doc/OrderApi.md) | [**orderUpdateScheduledOrder**](doc/OrderApi.md#orderupdatescheduledorder) | **PUT** /orders/scheduled/{id} | 
 [*OrderApi*](doc/OrderApi.md) | [**orderUploadDeliveryProof**](doc/OrderApi.md#orderuploaddeliveryproof) | **POST** /orders/{id}/delivery-proof | 
 [*OrderApi*](doc/OrderApi.md) | [**orderVerifyDeliveryOTP**](doc/OrderApi.md#orderverifydeliveryotp) | **POST** /orders/{id}/verify-otp | 
+[*PaymentApi*](doc/PaymentApi.md) | [**bankValidateAccount**](doc/PaymentApi.md#bankvalidateaccount) | **POST** /bank/validate | 
 [*PaymentApi*](doc/PaymentApi.md) | [**paymentWebhookMidtrans**](doc/PaymentApi.md#paymentwebhookmidtrans) | **POST** /payments/webhook/midtrans | 
+[*PaymentApi*](doc/PaymentApi.md) | [**paymentWebhookMidtransPayout**](doc/PaymentApi.md#paymentwebhookmidtranspayout) | **POST** /payments/webhook/midtrans/payout | Midtrans Iris Payout Webhook
 [*ReportApi*](doc/ReportApi.md) | [**reportCreate**](doc/ReportApi.md#reportcreate) | **POST** /reports | 
 [*ReportApi*](doc/ReportApi.md) | [**reportDismiss**](doc/ReportApi.md#reportdismiss) | **POST** /reports/{id}/dismiss | 
 [*ReportApi*](doc/ReportApi.md) | [**reportGet**](doc/ReportApi.md#reportget) | **GET** /reports/{id} | 
@@ -262,10 +263,12 @@ Class | Method | HTTP request | Description
 [*TransactionApi*](doc/TransactionApi.md) | [**transactionList**](doc/TransactionApi.md#transactionlist) | **GET** /transactions | 
 [*UserApi*](doc/UserApi.md) | [**accountDeletionSubmit**](doc/UserApi.md#accountdeletionsubmit) | **POST** /account-deletion/submit | 
 [*UserApi*](doc/UserApi.md) | [**contactSubmit**](doc/UserApi.md#contactsubmit) | **POST** /contacts/submit | 
+[*UserApi*](doc/UserApi.md) | [**userLookupByPhone**](doc/UserApi.md#userlookupbyphone) | **GET** /users/lookup/phone | 
 [*UserApi*](doc/UserApi.md) | [**userMeChangePassword**](doc/UserApi.md#usermechangepassword) | **PUT** /users/me/change-password | 
 [*UserApi*](doc/UserApi.md) | [**userMeUpdate**](doc/UserApi.md#usermeupdate) | **PUT** /users/me | 
 [*WalletApi*](doc/WalletApi.md) | [**walletGet**](doc/WalletApi.md#walletget) | **GET** /wallets | 
 [*WalletApi*](doc/WalletApi.md) | [**walletGetMonthlySummary**](doc/WalletApi.md#walletgetmonthlysummary) | **GET** /wallets/summary | 
+[*WalletApi*](doc/WalletApi.md) | [**walletGetSavedBankAccount**](doc/WalletApi.md#walletgetsavedbankaccount) | **GET** /wallets/bank | 
 [*WalletApi*](doc/WalletApi.md) | [**walletPay**](doc/WalletApi.md#walletpay) | **POST** /wallets/pay | 
 [*WalletApi*](doc/WalletApi.md) | [**walletTopUp**](doc/WalletApi.md#wallettopup) | **POST** /wallets/topup | 
 [*WalletApi*](doc/WalletApi.md) | [**walletTransfer**](doc/WalletApi.md#wallettransfer) | **POST** /wallets/transfer | 
@@ -315,6 +318,9 @@ Class | Method | HTTP request | Description
  - [BanUser](doc/BanUser.md)
  - [Bank](doc/Bank.md)
  - [BankProvider](doc/BankProvider.md)
+ - [BankValidateAccount200Response](doc/BankValidateAccount200Response.md)
+ - [BankValidationRequest](doc/BankValidationRequest.md)
+ - [BankValidationResponse](doc/BankValidationResponse.md)
  - [BannerConfiguration](doc/BannerConfiguration.md)
  - [BannerCreate201Response](doc/BannerCreate201Response.md)
  - [BannerCreate201ResponseData](doc/BannerCreate201ResponseData.md)
@@ -379,7 +385,6 @@ Class | Method | HTTP request | Description
  - [DashboardStatsOrdersByDayInner](doc/DashboardStatsOrdersByDayInner.md)
  - [DashboardStatsOrdersByTypeInner](doc/DashboardStatsOrdersByTypeInner.md)
  - [DashboardStatsQuery](doc/DashboardStatsQuery.md)
- - [DashboardStatsRevenueByDayInner](doc/DashboardStatsRevenueByDayInner.md)
  - [DashboardStatsTopDriversInner](doc/DashboardStatsTopDriversInner.md)
  - [DashboardStatsTopMerchantsInner](doc/DashboardStatsTopMerchantsInner.md)
  - [DayOfWeek](doc/DayOfWeek.md)
@@ -387,7 +392,6 @@ Class | Method | HTTP request | Description
  - [DeliveryPricingConfiguration](doc/DeliveryPricingConfiguration.md)
  - [DismissReport](doc/DismissReport.md)
  - [Driver](doc/Driver.md)
- - [DriverGet200Response](doc/DriverGet200Response.md)
  - [DriverGetAnalytics200Response](doc/DriverGetAnalytics200Response.md)
  - [DriverGetAnalytics200ResponseData](doc/DriverGetAnalytics200ResponseData.md)
  - [DriverGetAnalytics200ResponseDataEarningsByDayInner](doc/DriverGetAnalytics200ResponseDataEarningsByDayInner.md)
@@ -400,7 +404,6 @@ Class | Method | HTTP request | Description
  - [DriverKey](doc/DriverKey.md)
  - [DriverList200Response](doc/DriverList200Response.md)
  - [DriverMinQuizQuestion](doc/DriverMinQuizQuestion.md)
- - [DriverMinQuizQuestionOptionsInner](doc/DriverMinQuizQuestionOptionsInner.md)
  - [DriverQuizAnswer](doc/DriverQuizAnswer.md)
  - [DriverQuizAnswerCompleteQuiz200Response](doc/DriverQuizAnswerCompleteQuiz200Response.md)
  - [DriverQuizAnswerGetAttempt200Response](doc/DriverQuizAnswerGetAttempt200Response.md)
@@ -511,7 +514,6 @@ Class | Method | HTTP request | Description
  - [MerchantBestSellers200ResponseDataInnerMerchant](doc/MerchantBestSellers200ResponseDataInnerMerchant.md)
  - [MerchantCategory](doc/MerchantCategory.md)
  - [MerchantDeactivateRequest](doc/MerchantDeactivateRequest.md)
- - [MerchantGet200Response](doc/MerchantGet200Response.md)
  - [MerchantGetAvailabilityStatus200Response](doc/MerchantGetAvailabilityStatus200Response.md)
  - [MerchantGetAvailabilityStatus200ResponseData](doc/MerchantGetAvailabilityStatus200ResponseData.md)
  - [MerchantGetMine200Response](doc/MerchantGetMine200Response.md)
@@ -526,9 +528,7 @@ Class | Method | HTTP request | Description
  - [MerchantOrderAccept200Response](doc/MerchantOrderAccept200Response.md)
  - [MerchantPopulars200Response](doc/MerchantPopulars200Response.md)
  - [MerchantSetOperatingStatusRequest](doc/MerchantSetOperatingStatusRequest.md)
- - [MerchantSetOrderTakingStatusRequest](doc/MerchantSetOrderTakingStatusRequest.md)
  - [MerchantStatus](doc/MerchantStatus.md)
- - [MerchantSubmitApprovalRequest](doc/MerchantSubmitApprovalRequest.md)
  - [MerchantUpdateDocumentStatusRequest](doc/MerchantUpdateDocumentStatusRequest.md)
  - [Newsletter](doc/Newsletter.md)
  - [NewsletterKey](doc/NewsletterKey.md)
@@ -543,10 +543,8 @@ Class | Method | HTTP request | Description
  - [NotificationSubscribeToTopic200Response](doc/NotificationSubscribeToTopic200Response.md)
  - [NotificationSubscribeToTopic200ResponseData](doc/NotificationSubscribeToTopic200ResponseData.md)
  - [NotificationSubscribeToTopicRequest](doc/NotificationSubscribeToTopicRequest.md)
- - [NotificationUnsubscribeToTopicRequest](doc/NotificationUnsubscribeToTopicRequest.md)
  - [Order](doc/Order.md)
  - [OrderCancelRequest](doc/OrderCancelRequest.md)
- - [OrderCancelScheduledOrderRequest](doc/OrderCancelScheduledOrderRequest.md)
  - [OrderChatMessage](doc/OrderChatMessage.md)
  - [OrderChatMessageListQuery](doc/OrderChatMessageListQuery.md)
  - [OrderChatMessageSender](doc/OrderChatMessageSender.md)
@@ -597,6 +595,7 @@ Class | Method | HTTP request | Description
  - [PaymentKey](doc/PaymentKey.md)
  - [PaymentMethod](doc/PaymentMethod.md)
  - [PaymentProvider](doc/PaymentProvider.md)
+ - [PayoutStatus](doc/PayoutStatus.md)
  - [Phone](doc/Phone.md)
  - [PlaceOrder](doc/PlaceOrder.md)
  - [PlaceOrderPayment](doc/PlaceOrderPayment.md)
@@ -628,6 +627,7 @@ Class | Method | HTTP request | Description
  - [ReviewList200Response](doc/ReviewList200Response.md)
  - [RidePricingConfiguration](doc/RidePricingConfiguration.md)
  - [RoleAccess](doc/RoleAccess.md)
+ - [SavedBankAccount](doc/SavedBankAccount.md)
  - [SendEmailVerification](doc/SendEmailVerification.md)
  - [Session](doc/Session.md)
  - [SignInRequest](doc/SignInRequest.md)
@@ -661,6 +661,7 @@ Class | Method | HTTP request | Description
  - [TransactionStatus](doc/TransactionStatus.md)
  - [TransactionType](doc/TransactionType.md)
  - [TransferRequest](doc/TransferRequest.md)
+ - [TransferResponse](doc/TransferResponse.md)
  - [UnbanUser](doc/UnbanUser.md)
  - [UpdateAccountDeletion](doc/UpdateAccountDeletion.md)
  - [UpdateBroadcast](doc/UpdateBroadcast.md)
@@ -694,6 +695,10 @@ Class | Method | HTTP request | Description
  - [UserFraudProfileUser](doc/UserFraudProfileUser.md)
  - [UserGender](doc/UserGender.md)
  - [UserKey](doc/UserKey.md)
+ - [UserLookupByPhone200Response](doc/UserLookupByPhone200Response.md)
+ - [UserLookupQuery](doc/UserLookupQuery.md)
+ - [UserLookupResult](doc/UserLookupResult.md)
+ - [UserLookupResultPhone](doc/UserLookupResultPhone.md)
  - [UserMeChangePasswordRequest](doc/UserMeChangePasswordRequest.md)
  - [UserRole](doc/UserRole.md)
  - [UserRules](doc/UserRules.md)
@@ -702,12 +707,15 @@ Class | Method | HTTP request | Description
  - [Wallet](doc/Wallet.md)
  - [WalletGet200Response](doc/WalletGet200Response.md)
  - [WalletGetMonthlySummary200Response](doc/WalletGetMonthlySummary200Response.md)
+ - [WalletGetSavedBankAccount200Response](doc/WalletGetSavedBankAccount200Response.md)
  - [WalletKey](doc/WalletKey.md)
  - [WalletMonthlySummaryQuery](doc/WalletMonthlySummaryQuery.md)
  - [WalletMonthlySummaryResponse](doc/WalletMonthlySummaryResponse.md)
  - [WalletTopUp200Response](doc/WalletTopUp200Response.md)
+ - [WalletTransfer200Response](doc/WalletTransfer200Response.md)
  - [WeightSize](doc/WeightSize.md)
  - [WithdrawRequest](doc/WithdrawRequest.md)
+ - [WithdrawResponse](doc/WithdrawResponse.md)
 
 
 ## Documentation For Authorization

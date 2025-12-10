@@ -23,8 +23,8 @@ class BadgeUserCreateRequest {
     required this.badgeId,
     this.metadata,
   });
-  @JsonKey(name: r'userId', required: true, includeIfNull: true)
-  final String? userId;
+  @JsonKey(name: r'userId', required: true, includeIfNull: false)
+  final String userId;
 
   @JsonKey(name: r'badgeId', required: true, includeIfNull: false)
   final String badgeId;
@@ -41,10 +41,7 @@ class BadgeUserCreateRequest {
           other.metadata == metadata;
 
   @override
-  int get hashCode =>
-      (userId == null ? 0 : userId.hashCode) +
-      badgeId.hashCode +
-      metadata.hashCode;
+  int get hashCode => userId.hashCode + badgeId.hashCode + metadata.hashCode;
 
   factory BadgeUserCreateRequest.fromJson(Map<String, dynamic> json) =>
       _$BadgeUserCreateRequestFromJson(json);

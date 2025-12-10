@@ -9,11 +9,11 @@ part of 'banner_list_public200_response_data_inner.dart';
 abstract class _$BannerListPublic200ResponseDataInnerCWProxy {
   BannerListPublic200ResponseDataInner id(String id);
 
-  BannerListPublic200ResponseDataInner title(String? title);
+  BannerListPublic200ResponseDataInner title(String title);
 
   BannerListPublic200ResponseDataInner description(String? description);
 
-  BannerListPublic200ResponseDataInner imageUrl(String? imageUrl);
+  BannerListPublic200ResponseDataInner imageUrl(String imageUrl);
 
   BannerListPublic200ResponseDataInner actionType(
     BannerListPublic200ResponseDataInnerActionTypeEnum actionType,
@@ -46,9 +46,9 @@ abstract class _$BannerListPublic200ResponseDataInnerCWProxy {
   /// ```
   BannerListPublic200ResponseDataInner call({
     String id,
-    String? title,
+    String title,
     String? description,
-    String? imageUrl,
+    String imageUrl,
     BannerListPublic200ResponseDataInnerActionTypeEnum actionType,
     String? actionValue,
     BannerListPublic200ResponseDataInnerPlacementEnum placement,
@@ -72,7 +72,7 @@ class _$BannerListPublic200ResponseDataInnerCWProxyImpl
   BannerListPublic200ResponseDataInner id(String id) => call(id: id);
 
   @override
-  BannerListPublic200ResponseDataInner title(String? title) =>
+  BannerListPublic200ResponseDataInner title(String title) =>
       call(title: title);
 
   @override
@@ -80,7 +80,7 @@ class _$BannerListPublic200ResponseDataInnerCWProxyImpl
       call(description: description);
 
   @override
-  BannerListPublic200ResponseDataInner imageUrl(String? imageUrl) =>
+  BannerListPublic200ResponseDataInner imageUrl(String imageUrl) =>
       call(imageUrl: imageUrl);
 
   @override
@@ -145,18 +145,18 @@ class _$BannerListPublic200ResponseDataInnerCWProxyImpl
           ? _value.id
           // ignore: cast_nullable_to_non_nullable
           : id as String,
-      title: title == const $CopyWithPlaceholder()
+      title: title == const $CopyWithPlaceholder() || title == null
           ? _value.title
           // ignore: cast_nullable_to_non_nullable
-          : title as String?,
+          : title as String,
       description: description == const $CopyWithPlaceholder()
           ? _value.description
           // ignore: cast_nullable_to_non_nullable
           : description as String?,
-      imageUrl: imageUrl == const $CopyWithPlaceholder()
+      imageUrl: imageUrl == const $CopyWithPlaceholder() || imageUrl == null
           ? _value.imageUrl
           // ignore: cast_nullable_to_non_nullable
-          : imageUrl as String?,
+          : imageUrl as String,
       actionType:
           actionType == const $CopyWithPlaceholder() || actionType == null
           ? _value.actionType
@@ -230,9 +230,9 @@ _$BannerListPublic200ResponseDataInnerFromJson(Map<String, dynamic> json) =>
       );
       final val = BannerListPublic200ResponseDataInner(
         id: $checkedConvert('id', (v) => v as String),
-        title: $checkedConvert('title', (v) => v as String?),
+        title: $checkedConvert('title', (v) => v as String),
         description: $checkedConvert('description', (v) => v as String?),
-        imageUrl: $checkedConvert('imageUrl', (v) => v as String?),
+        imageUrl: $checkedConvert('imageUrl', (v) => v as String),
         actionType: $checkedConvert(
           'actionType',
           (v) => $enumDecode(

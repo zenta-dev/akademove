@@ -11,6 +11,7 @@ Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**walletGet**](WalletApi.md#walletget) | **GET** /wallets | 
 [**walletGetMonthlySummary**](WalletApi.md#walletgetmonthlysummary) | **GET** /wallets/summary | 
+[**walletGetSavedBankAccount**](WalletApi.md#walletgetsavedbankaccount) | **GET** /wallets/bank | 
 [**walletPay**](WalletApi.md#walletpay) | **POST** /wallets/pay | 
 [**walletTopUp**](WalletApi.md#wallettopup) | **POST** /wallets/topup | 
 [**walletTransfer**](WalletApi.md#wallettransfer) | **POST** /wallets/transfer | 
@@ -85,6 +86,45 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**WalletGetMonthlySummary200Response**](WalletGetMonthlySummary200Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **walletGetSavedBankAccount**
+> WalletGetSavedBankAccount200Response walletGetSavedBankAccount()
+
+
+
+Get saved bank account details from driver/merchant profile for pre-filling withdrawal forms
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getWalletApi();
+
+try {
+    final response = api.walletGetSavedBankAccount();
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling WalletApi->walletGetSavedBankAccount: $e\n');
+}
+```
+
+### Parameters
+This endpoint does not need any parameter.
+
+### Return type
+
+[**WalletGetSavedBankAccount200Response**](WalletGetSavedBankAccount200Response.md)
 
 ### Authorization
 
@@ -180,7 +220,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **walletTransfer**
-> WalletTopUp200Response walletTransfer(transferRequest)
+> WalletTransfer200Response walletTransfer(transferRequest)
 
 
 
@@ -207,7 +247,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**WalletTopUp200Response**](WalletTopUp200Response.md)
+[**WalletTransfer200Response**](WalletTransfer200Response.md)
 
 ### Authorization
 

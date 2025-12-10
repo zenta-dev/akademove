@@ -13,7 +13,7 @@ abstract class _$AuditList200ResponseDataInnerCWProxy {
     AuditList200ResponseDataInnerTableNameEnum tableName,
   );
 
-  AuditList200ResponseDataInner recordId(String? recordId);
+  AuditList200ResponseDataInner recordId(String recordId);
 
   AuditList200ResponseDataInner operation(
     AuditList200ResponseDataInnerOperationEnum operation,
@@ -45,7 +45,7 @@ abstract class _$AuditList200ResponseDataInnerCWProxy {
   AuditList200ResponseDataInner call({
     num id,
     AuditList200ResponseDataInnerTableNameEnum tableName,
-    String? recordId,
+    String recordId,
     AuditList200ResponseDataInnerOperationEnum operation,
     Object? oldData,
     Object? newData,
@@ -75,7 +75,7 @@ class _$AuditList200ResponseDataInnerCWProxyImpl
   ) => call(tableName: tableName);
 
   @override
-  AuditList200ResponseDataInner recordId(String? recordId) =>
+  AuditList200ResponseDataInner recordId(String recordId) =>
       call(recordId: recordId);
 
   @override
@@ -145,10 +145,10 @@ class _$AuditList200ResponseDataInnerCWProxyImpl
           ? _value.tableName
           // ignore: cast_nullable_to_non_nullable
           : tableName as AuditList200ResponseDataInnerTableNameEnum,
-      recordId: recordId == const $CopyWithPlaceholder()
+      recordId: recordId == const $CopyWithPlaceholder() || recordId == null
           ? _value.recordId
           // ignore: cast_nullable_to_non_nullable
-          : recordId as String?,
+          : recordId as String,
       operation: operation == const $CopyWithPlaceholder() || operation == null
           ? _value.operation
           // ignore: cast_nullable_to_non_nullable
@@ -222,7 +222,7 @@ AuditList200ResponseDataInner _$AuditList200ResponseDataInnerFromJson(
       (v) =>
           $enumDecode(_$AuditList200ResponseDataInnerTableNameEnumEnumMap, v),
     ),
-    recordId: $checkedConvert('recordId', (v) => v as String?),
+    recordId: $checkedConvert('recordId', (v) => v as String),
     operation: $checkedConvert(
       'operation',
       (v) =>

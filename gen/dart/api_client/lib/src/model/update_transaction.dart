@@ -79,8 +79,8 @@ class UpdateTransaction {
       balanceBefore.hashCode +
       balanceAfter.hashCode +
       status.hashCode +
-      (description == null ? 0 : description.hashCode) +
-      (referenceId == null ? 0 : referenceId.hashCode) +
+      description.hashCode +
+      referenceId.hashCode +
       (metadata == null ? 0 : metadata.hashCode);
 
   factory UpdateTransaction.fromJson(Map<String, dynamic> json) =>

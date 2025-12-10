@@ -7,7 +7,7 @@ part of 'configuration_get200_response.dart';
 // **************************************************************************
 
 abstract class _$ConfigurationGet200ResponseCWProxy {
-  ConfigurationGet200Response message(String? message);
+  ConfigurationGet200Response message(String message);
 
   ConfigurationGet200Response data(Configuration data);
 
@@ -23,7 +23,7 @@ abstract class _$ConfigurationGet200ResponseCWProxy {
   /// ConfigurationGet200Response(...).copyWith(id: 12, name: "My name")
   /// ```
   ConfigurationGet200Response call({
-    String? message,
+    String message,
     Configuration data,
     PaginationResult? pagination,
     int? totalPages,
@@ -39,8 +39,7 @@ class _$ConfigurationGet200ResponseCWProxyImpl
   final ConfigurationGet200Response _value;
 
   @override
-  ConfigurationGet200Response message(String? message) =>
-      call(message: message);
+  ConfigurationGet200Response message(String message) => call(message: message);
 
   @override
   ConfigurationGet200Response data(Configuration data) => call(data: data);
@@ -68,10 +67,10 @@ class _$ConfigurationGet200ResponseCWProxyImpl
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return ConfigurationGet200Response(
-      message: message == const $CopyWithPlaceholder()
+      message: message == const $CopyWithPlaceholder() || message == null
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
-          : message as String?,
+          : message as String,
       data: data == const $CopyWithPlaceholder() || data == null
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
@@ -105,7 +104,7 @@ ConfigurationGet200Response _$ConfigurationGet200ResponseFromJson(
 ) => $checkedCreate('ConfigurationGet200Response', json, ($checkedConvert) {
   $checkKeys(json, requiredKeys: const ['message', 'data']);
   final val = ConfigurationGet200Response(
-    message: $checkedConvert('message', (v) => v as String?),
+    message: $checkedConvert('message', (v) => v as String),
     data: $checkedConvert(
       'data',
       (v) => Configuration.fromJson(v as Map<String, dynamic>),

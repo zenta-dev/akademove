@@ -89,7 +89,7 @@ class EstimateOrder {
       items.hashCode +
       gender.hashCode +
       genderPreference.hashCode +
-      (couponCode == null ? 0 : couponCode.hashCode) +
+      couponCode.hashCode +
       discountIds.hashCode +
       weight.hashCode;
 

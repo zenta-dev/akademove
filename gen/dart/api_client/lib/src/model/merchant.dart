@@ -32,8 +32,8 @@ class Merchant {
     required this.status,
     required this.isActive,
     required this.isOnline,
-    required this.isTakingOrders,
     required this.operatingStatus,
+    required this.activeOrderCount,
     required this.rating,
     this.document,
     this.image,
@@ -75,13 +75,15 @@ class Merchant {
   @JsonKey(name: r'isOnline', required: true, includeIfNull: false)
   final bool isOnline;
 
-  /// Whether merchant is actively taking orders (subset of online)
-  @JsonKey(name: r'isTakingOrders', required: true, includeIfNull: false)
-  final bool isTakingOrders;
-
   /// Current operating status (OPEN, CLOSED, BREAK, MAINTENANCE)
   @JsonKey(name: r'operatingStatus', required: true, includeIfNull: false)
   final MerchantOperatingStatusEnum operatingStatus;
+
+  /// Number of active orders being processed by merchant
+  // minimum: 0
+  // maximum: 9007199254740991
+  @JsonKey(name: r'activeOrderCount', required: true, includeIfNull: false)
+  final int activeOrderCount;
 
   @JsonKey(name: r'rating', required: true, includeIfNull: false)
   final num rating;
@@ -122,8 +124,8 @@ class Merchant {
           other.status == status &&
           other.isActive == isActive &&
           other.isOnline == isOnline &&
-          other.isTakingOrders == isTakingOrders &&
           other.operatingStatus == operatingStatus &&
+          other.activeOrderCount == activeOrderCount &&
           other.rating == rating &&
           other.document == document &&
           other.image == image &&
@@ -145,8 +147,8 @@ class Merchant {
       status.hashCode +
       isActive.hashCode +
       isOnline.hashCode +
-      isTakingOrders.hashCode +
       operatingStatus.hashCode +
+      activeOrderCount.hashCode +
       rating.hashCode +
       document.hashCode +
       image.hashCode +

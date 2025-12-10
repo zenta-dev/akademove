@@ -7,7 +7,7 @@ part of 'user_admin_dashboard_stats200_response.dart';
 // **************************************************************************
 
 abstract class _$UserAdminDashboardStats200ResponseCWProxy {
-  UserAdminDashboardStats200Response message(String? message);
+  UserAdminDashboardStats200Response message(String message);
 
   UserAdminDashboardStats200Response data(DashboardStats data);
 
@@ -23,7 +23,7 @@ abstract class _$UserAdminDashboardStats200ResponseCWProxy {
   /// UserAdminDashboardStats200Response(...).copyWith(id: 12, name: "My name")
   /// ```
   UserAdminDashboardStats200Response call({
-    String? message,
+    String message,
     DashboardStats data,
     PaginationResult? pagination,
     int? totalPages,
@@ -39,7 +39,7 @@ class _$UserAdminDashboardStats200ResponseCWProxyImpl
   final UserAdminDashboardStats200Response _value;
 
   @override
-  UserAdminDashboardStats200Response message(String? message) =>
+  UserAdminDashboardStats200Response message(String message) =>
       call(message: message);
 
   @override
@@ -69,10 +69,10 @@ class _$UserAdminDashboardStats200ResponseCWProxyImpl
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return UserAdminDashboardStats200Response(
-      message: message == const $CopyWithPlaceholder()
+      message: message == const $CopyWithPlaceholder() || message == null
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
-          : message as String?,
+          : message as String,
       data: data == const $CopyWithPlaceholder() || data == null
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
@@ -109,7 +109,7 @@ UserAdminDashboardStats200Response _$UserAdminDashboardStats200ResponseFromJson(
 ) {
   $checkKeys(json, requiredKeys: const ['message', 'data']);
   final val = UserAdminDashboardStats200Response(
-    message: $checkedConvert('message', (v) => v as String?),
+    message: $checkedConvert('message', (v) => v as String),
     data: $checkedConvert(
       'data',
       (v) => DashboardStats.fromJson(v as Map<String, dynamic>),

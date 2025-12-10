@@ -4,9 +4,9 @@
 
 // ignore_for_file: unused_element
 import 'package:api_client/src/model/dashboard_stats_orders_by_day_inner.dart';
-import 'package:api_client/src/model/dashboard_stats_revenue_by_day_inner.dart';
 import 'package:api_client/src/model/dashboard_stats_top_drivers_inner.dart';
 import 'package:api_client/src/model/dashboard_stats_high_cancellation_drivers_inner.dart';
+import 'package:api_client/src/model/merchant_analytics200_response_data_revenue_by_day_inner.dart';
 import 'package:api_client/src/model/dashboard_stats_orders_by_type_inner.dart';
 import 'package:api_client/src/model/dashboard_stats_top_merchants_inner.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -76,7 +76,7 @@ class DashboardStats {
   final num onlineDrivers;
 
   @JsonKey(name: r'revenueByDay', required: true, includeIfNull: false)
-  final List<DashboardStatsRevenueByDayInner> revenueByDay;
+  final List<MerchantAnalytics200ResponseDataRevenueByDayInner> revenueByDay;
 
   @JsonKey(name: r'ordersByDay', required: true, includeIfNull: false)
   final List<DashboardStatsOrdersByDayInner> ordersByDay;

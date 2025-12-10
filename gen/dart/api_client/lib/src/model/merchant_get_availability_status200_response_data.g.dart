@@ -7,17 +7,17 @@ part of 'merchant_get_availability_status200_response_data.dart';
 // **************************************************************************
 
 abstract class _$MerchantGetAvailabilityStatus200ResponseDataCWProxy {
-  MerchantGetAvailabilityStatus200ResponseData id(String? id);
+  MerchantGetAvailabilityStatus200ResponseData id(String id);
 
   MerchantGetAvailabilityStatus200ResponseData isOnline(bool isOnline);
-
-  MerchantGetAvailabilityStatus200ResponseData isTakingOrders(
-    bool isTakingOrders,
-  );
 
   MerchantGetAvailabilityStatus200ResponseData operatingStatus(
     MerchantGetAvailabilityStatus200ResponseDataOperatingStatusEnum
     operatingStatus,
+  );
+
+  MerchantGetAvailabilityStatus200ResponseData activeOrderCount(
+    int activeOrderCount,
   );
 
   /// Creates a new instance with the provided field values.
@@ -28,11 +28,11 @@ abstract class _$MerchantGetAvailabilityStatus200ResponseDataCWProxy {
   /// MerchantGetAvailabilityStatus200ResponseData(...).copyWith(id: 12, name: "My name")
   /// ```
   MerchantGetAvailabilityStatus200ResponseData call({
-    String? id,
+    String id,
     bool isOnline,
-    bool isTakingOrders,
     MerchantGetAvailabilityStatus200ResponseDataOperatingStatusEnum
     operatingStatus,
+    int activeOrderCount,
   });
 }
 
@@ -45,22 +45,22 @@ class _$MerchantGetAvailabilityStatus200ResponseDataCWProxyImpl
   final MerchantGetAvailabilityStatus200ResponseData _value;
 
   @override
-  MerchantGetAvailabilityStatus200ResponseData id(String? id) => call(id: id);
+  MerchantGetAvailabilityStatus200ResponseData id(String id) => call(id: id);
 
   @override
   MerchantGetAvailabilityStatus200ResponseData isOnline(bool isOnline) =>
       call(isOnline: isOnline);
 
   @override
-  MerchantGetAvailabilityStatus200ResponseData isTakingOrders(
-    bool isTakingOrders,
-  ) => call(isTakingOrders: isTakingOrders);
-
-  @override
   MerchantGetAvailabilityStatus200ResponseData operatingStatus(
     MerchantGetAvailabilityStatus200ResponseDataOperatingStatusEnum
     operatingStatus,
   ) => call(operatingStatus: operatingStatus);
+
+  @override
+  MerchantGetAvailabilityStatus200ResponseData activeOrderCount(
+    int activeOrderCount,
+  ) => call(activeOrderCount: activeOrderCount);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -73,24 +73,18 @@ class _$MerchantGetAvailabilityStatus200ResponseDataCWProxyImpl
   MerchantGetAvailabilityStatus200ResponseData call({
     Object? id = const $CopyWithPlaceholder(),
     Object? isOnline = const $CopyWithPlaceholder(),
-    Object? isTakingOrders = const $CopyWithPlaceholder(),
     Object? operatingStatus = const $CopyWithPlaceholder(),
+    Object? activeOrderCount = const $CopyWithPlaceholder(),
   }) {
     return MerchantGetAvailabilityStatus200ResponseData(
-      id: id == const $CopyWithPlaceholder()
+      id: id == const $CopyWithPlaceholder() || id == null
           ? _value.id
           // ignore: cast_nullable_to_non_nullable
-          : id as String?,
+          : id as String,
       isOnline: isOnline == const $CopyWithPlaceholder() || isOnline == null
           ? _value.isOnline
           // ignore: cast_nullable_to_non_nullable
           : isOnline as bool,
-      isTakingOrders:
-          isTakingOrders == const $CopyWithPlaceholder() ||
-              isTakingOrders == null
-          ? _value.isTakingOrders
-          // ignore: cast_nullable_to_non_nullable
-          : isTakingOrders as bool,
       operatingStatus:
           operatingStatus == const $CopyWithPlaceholder() ||
               operatingStatus == null
@@ -98,6 +92,12 @@ class _$MerchantGetAvailabilityStatus200ResponseDataCWProxyImpl
           // ignore: cast_nullable_to_non_nullable
           : operatingStatus
                 as MerchantGetAvailabilityStatus200ResponseDataOperatingStatusEnum,
+      activeOrderCount:
+          activeOrderCount == const $CopyWithPlaceholder() ||
+              activeOrderCount == null
+          ? _value.activeOrderCount
+          // ignore: cast_nullable_to_non_nullable
+          : activeOrderCount as int,
     );
   }
 }
@@ -123,18 +123,26 @@ _$MerchantGetAvailabilityStatus200ResponseDataFromJson(
 ) {
   $checkKeys(
     json,
-    requiredKeys: const ['id', 'isOnline', 'isTakingOrders', 'operatingStatus'],
+    requiredKeys: const [
+      'id',
+      'isOnline',
+      'operatingStatus',
+      'activeOrderCount',
+    ],
   );
   final val = MerchantGetAvailabilityStatus200ResponseData(
-    id: $checkedConvert('id', (v) => v as String?),
+    id: $checkedConvert('id', (v) => v as String),
     isOnline: $checkedConvert('isOnline', (v) => v as bool),
-    isTakingOrders: $checkedConvert('isTakingOrders', (v) => v as bool),
     operatingStatus: $checkedConvert(
       'operatingStatus',
       (v) => $enumDecode(
         _$MerchantGetAvailabilityStatus200ResponseDataOperatingStatusEnumEnumMap,
         v,
       ),
+    ),
+    activeOrderCount: $checkedConvert(
+      'activeOrderCount',
+      (v) => (v as num).toInt(),
     ),
   );
   return val;
@@ -145,10 +153,10 @@ Map<String, dynamic> _$MerchantGetAvailabilityStatus200ResponseDataToJson(
 ) => <String, dynamic>{
   'id': instance.id,
   'isOnline': instance.isOnline,
-  'isTakingOrders': instance.isTakingOrders,
   'operatingStatus':
       _$MerchantGetAvailabilityStatus200ResponseDataOperatingStatusEnumEnumMap[instance
           .operatingStatus]!,
+  'activeOrderCount': instance.activeOrderCount,
 };
 
 const _$MerchantGetAvailabilityStatus200ResponseDataOperatingStatusEnumEnumMap =

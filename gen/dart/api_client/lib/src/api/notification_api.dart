@@ -16,7 +16,6 @@ import 'package:api_client/src/model/notification_mark_as_read200_response.dart'
 import 'package:api_client/src/model/notification_save_token_request.dart';
 import 'package:api_client/src/model/notification_subscribe_to_topic200_response.dart';
 import 'package:api_client/src/model/notification_subscribe_to_topic_request.dart';
-import 'package:api_client/src/model/notification_unsubscribe_to_topic_request.dart';
 import 'package:api_client/src/model/pagination_mode.dart';
 import 'package:api_client/src/model/pagination_order.dart';
 
@@ -718,7 +717,7 @@ class NotificationApi {
   ///
   ///
   /// Parameters:
-  /// * [notificationUnsubscribeToTopicRequest]
+  /// * [notificationSubscribeToTopicRequest]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -730,8 +729,8 @@ class NotificationApi {
   /// Throws [DioException] if API call or serialization fails
   Future<Response<NotificationSubscribeToTopic200Response>>
   notificationUnsubscribeToTopic({
-    required NotificationUnsubscribeToTopicRequest
-    notificationUnsubscribeToTopicRequest,
+    required NotificationSubscribeToTopicRequest
+    notificationSubscribeToTopicRequest,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -756,7 +755,7 @@ class NotificationApi {
     dynamic _bodyData;
 
     try {
-      _bodyData = jsonEncode(notificationUnsubscribeToTopicRequest);
+      _bodyData = jsonEncode(notificationSubscribeToTopicRequest);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _options.compose(_dio.options, _path),

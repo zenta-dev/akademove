@@ -7,7 +7,7 @@ part of 'auth_sign_up_user201_response.dart';
 // **************************************************************************
 
 abstract class _$AuthSignUpUser201ResponseCWProxy {
-  AuthSignUpUser201Response message(String? message);
+  AuthSignUpUser201Response message(String message);
 
   AuthSignUpUser201Response data(SignUpResponse data);
 
@@ -23,7 +23,7 @@ abstract class _$AuthSignUpUser201ResponseCWProxy {
   /// AuthSignUpUser201Response(...).copyWith(id: 12, name: "My name")
   /// ```
   AuthSignUpUser201Response call({
-    String? message,
+    String message,
     SignUpResponse data,
     PaginationResult? pagination,
     int? totalPages,
@@ -39,7 +39,7 @@ class _$AuthSignUpUser201ResponseCWProxyImpl
   final AuthSignUpUser201Response _value;
 
   @override
-  AuthSignUpUser201Response message(String? message) => call(message: message);
+  AuthSignUpUser201Response message(String message) => call(message: message);
 
   @override
   AuthSignUpUser201Response data(SignUpResponse data) => call(data: data);
@@ -67,10 +67,10 @@ class _$AuthSignUpUser201ResponseCWProxyImpl
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return AuthSignUpUser201Response(
-      message: message == const $CopyWithPlaceholder()
+      message: message == const $CopyWithPlaceholder() || message == null
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
-          : message as String?,
+          : message as String,
       data: data == const $CopyWithPlaceholder() || data == null
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
@@ -104,7 +104,7 @@ AuthSignUpUser201Response _$AuthSignUpUser201ResponseFromJson(
 ) => $checkedCreate('AuthSignUpUser201Response', json, ($checkedConvert) {
   $checkKeys(json, requiredKeys: const ['message', 'data']);
   final val = AuthSignUpUser201Response(
-    message: $checkedConvert('message', (v) => v as String?),
+    message: $checkedConvert('message', (v) => v as String),
     data: $checkedConvert(
       'data',
       (v) => SignUpResponse.fromJson(v as Map<String, dynamic>),

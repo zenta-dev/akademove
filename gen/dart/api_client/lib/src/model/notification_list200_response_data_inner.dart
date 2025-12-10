@@ -31,14 +31,14 @@ class NotificationList200ResponseDataInner {
   @JsonKey(name: r'id', required: true, includeIfNull: false)
   final String id;
 
-  @JsonKey(name: r'userId', required: true, includeIfNull: true)
-  final String? userId;
+  @JsonKey(name: r'userId', required: true, includeIfNull: false)
+  final String userId;
 
-  @JsonKey(name: r'title', required: true, includeIfNull: true)
-  final String? title;
+  @JsonKey(name: r'title', required: true, includeIfNull: false)
+  final String title;
 
-  @JsonKey(name: r'body', required: true, includeIfNull: true)
-  final String? body;
+  @JsonKey(name: r'body', required: true, includeIfNull: false)
+  final String body;
 
   @JsonKey(name: r'data', required: false, includeIfNull: false)
   final Object? data;
@@ -72,11 +72,11 @@ class NotificationList200ResponseDataInner {
   @override
   int get hashCode =>
       id.hashCode +
-      (userId == null ? 0 : userId.hashCode) +
-      (title == null ? 0 : title.hashCode) +
-      (body == null ? 0 : body.hashCode) +
+      userId.hashCode +
+      title.hashCode +
+      body.hashCode +
       (data == null ? 0 : data.hashCode) +
-      (messageId == null ? 0 : messageId.hashCode) +
+      messageId.hashCode +
       isRead.hashCode +
       (createdAt == null ? 0 : createdAt.hashCode) +
       (readAt == null ? 0 : readAt.hashCode);

@@ -29,8 +29,8 @@ class DriverScheduleCreateRequest {
     this.specificDate,
     this.isActive = true,
   });
-  @JsonKey(name: r'name', required: true, includeIfNull: true)
-  final String? name;
+  @JsonKey(name: r'name', required: true, includeIfNull: false)
+  final String name;
 
   @JsonKey(name: r'driverId', required: true, includeIfNull: false)
   final String driverId;
@@ -78,7 +78,7 @@ class DriverScheduleCreateRequest {
 
   @override
   int get hashCode =>
-      (name == null ? 0 : name.hashCode) +
+      name.hashCode +
       driverId.hashCode +
       dayOfWeek.hashCode +
       startTime.hashCode +

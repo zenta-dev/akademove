@@ -37,7 +37,7 @@ abstract class _$BannerList200ResponseDataInnerCWProxy {
 
   BannerList200ResponseDataInner endAt(DateTime? endAt);
 
-  BannerList200ResponseDataInner createdById(String? createdById);
+  BannerList200ResponseDataInner createdById(String createdById);
 
   BannerList200ResponseDataInner updatedById(String? updatedById);
 
@@ -65,7 +65,7 @@ abstract class _$BannerList200ResponseDataInnerCWProxy {
     int? priority,
     DateTime? startAt,
     DateTime? endAt,
-    String? createdById,
+    String createdById,
     String? updatedById,
     DateTime? createdAt,
     DateTime? updatedAt,
@@ -129,7 +129,7 @@ class _$BannerList200ResponseDataInnerCWProxyImpl
   BannerList200ResponseDataInner endAt(DateTime? endAt) => call(endAt: endAt);
 
   @override
-  BannerList200ResponseDataInner createdById(String? createdById) =>
+  BannerList200ResponseDataInner createdById(String createdById) =>
       call(createdById: createdById);
 
   @override
@@ -222,10 +222,11 @@ class _$BannerList200ResponseDataInnerCWProxyImpl
           ? _value.endAt
           // ignore: cast_nullable_to_non_nullable
           : endAt as DateTime?,
-      createdById: createdById == const $CopyWithPlaceholder()
+      createdById:
+          createdById == const $CopyWithPlaceholder() || createdById == null
           ? _value.createdById
           // ignore: cast_nullable_to_non_nullable
-          : createdById as String?,
+          : createdById as String,
       updatedById: updatedById == const $CopyWithPlaceholder()
           ? _value.updatedById
           // ignore: cast_nullable_to_non_nullable
@@ -306,7 +307,7 @@ BannerList200ResponseDataInner _$BannerList200ResponseDataInnerFromJson(
       'endAt',
       (v) => v == null ? null : DateTime.parse(v as String),
     ),
-    createdById: $checkedConvert('createdById', (v) => v as String?),
+    createdById: $checkedConvert('createdById', (v) => v as String),
     updatedById: $checkedConvert('updatedById', (v) => v as String?),
     createdAt: $checkedConvert(
       'createdAt',

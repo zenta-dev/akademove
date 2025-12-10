@@ -7,7 +7,7 @@ part of 'chat_list200_response.dart';
 // **************************************************************************
 
 abstract class _$ChatList200ResponseCWProxy {
-  ChatList200Response message(String? message);
+  ChatList200Response message(String message);
 
   ChatList200Response data(ChatList200ResponseData data);
 
@@ -23,7 +23,7 @@ abstract class _$ChatList200ResponseCWProxy {
   /// ChatList200Response(...).copyWith(id: 12, name: "My name")
   /// ```
   ChatList200Response call({
-    String? message,
+    String message,
     ChatList200ResponseData data,
     PaginationResult? pagination,
     int? totalPages,
@@ -38,7 +38,7 @@ class _$ChatList200ResponseCWProxyImpl implements _$ChatList200ResponseCWProxy {
   final ChatList200Response _value;
 
   @override
-  ChatList200Response message(String? message) => call(message: message);
+  ChatList200Response message(String message) => call(message: message);
 
   @override
   ChatList200Response data(ChatList200ResponseData data) => call(data: data);
@@ -66,10 +66,10 @@ class _$ChatList200ResponseCWProxyImpl implements _$ChatList200ResponseCWProxy {
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return ChatList200Response(
-      message: message == const $CopyWithPlaceholder()
+      message: message == const $CopyWithPlaceholder() || message == null
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
-          : message as String?,
+          : message as String,
       data: data == const $CopyWithPlaceholder() || data == null
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
@@ -102,7 +102,7 @@ ChatList200Response _$ChatList200ResponseFromJson(Map<String, dynamic> json) =>
     $checkedCreate('ChatList200Response', json, ($checkedConvert) {
       $checkKeys(json, requiredKeys: const ['message', 'data']);
       final val = ChatList200Response(
-        message: $checkedConvert('message', (v) => v as String?),
+        message: $checkedConvert('message', (v) => v as String),
         data: $checkedConvert(
           'data',
           (v) => ChatList200ResponseData.fromJson(v as Map<String, dynamic>),

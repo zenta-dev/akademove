@@ -28,8 +28,8 @@ class InsertLeaderboard {
     required this.periodStart,
     required this.periodEnd,
   });
-  @JsonKey(name: r'userId', required: true, includeIfNull: true)
-  final String? userId;
+  @JsonKey(name: r'userId', required: true, includeIfNull: false)
+  final String userId;
 
   @JsonKey(name: r'driverId', required: false, includeIfNull: false)
   final String? driverId;
@@ -75,7 +75,7 @@ class InsertLeaderboard {
 
   @override
   int get hashCode =>
-      (userId == null ? 0 : userId.hashCode) +
+      userId.hashCode +
       driverId.hashCode +
       merchantId.hashCode +
       category.hashCode +

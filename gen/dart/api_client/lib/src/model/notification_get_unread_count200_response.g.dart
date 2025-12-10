@@ -7,7 +7,7 @@ part of 'notification_get_unread_count200_response.dart';
 // **************************************************************************
 
 abstract class _$NotificationGetUnreadCount200ResponseCWProxy {
-  NotificationGetUnreadCount200Response message(String? message);
+  NotificationGetUnreadCount200Response message(String message);
 
   NotificationGetUnreadCount200Response data(
     NotificationGetUnreadCount200ResponseData data,
@@ -27,7 +27,7 @@ abstract class _$NotificationGetUnreadCount200ResponseCWProxy {
   /// NotificationGetUnreadCount200Response(...).copyWith(id: 12, name: "My name")
   /// ```
   NotificationGetUnreadCount200Response call({
-    String? message,
+    String message,
     NotificationGetUnreadCount200ResponseData data,
     PaginationResult? pagination,
     int? totalPages,
@@ -43,7 +43,7 @@ class _$NotificationGetUnreadCount200ResponseCWProxyImpl
   final NotificationGetUnreadCount200Response _value;
 
   @override
-  NotificationGetUnreadCount200Response message(String? message) =>
+  NotificationGetUnreadCount200Response message(String message) =>
       call(message: message);
 
   @override
@@ -75,10 +75,10 @@ class _$NotificationGetUnreadCount200ResponseCWProxyImpl
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return NotificationGetUnreadCount200Response(
-      message: message == const $CopyWithPlaceholder()
+      message: message == const $CopyWithPlaceholder() || message == null
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
-          : message as String?,
+          : message as String,
       data: data == const $CopyWithPlaceholder() || data == null
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
@@ -115,7 +115,7 @@ _$NotificationGetUnreadCount200ResponseFromJson(Map<String, dynamic> json) =>
     ) {
       $checkKeys(json, requiredKeys: const ['message', 'data']);
       final val = NotificationGetUnreadCount200Response(
-        message: $checkedConvert('message', (v) => v as String?),
+        message: $checkedConvert('message', (v) => v as String),
         data: $checkedConvert(
           'data',
           (v) => NotificationGetUnreadCount200ResponseData.fromJson(

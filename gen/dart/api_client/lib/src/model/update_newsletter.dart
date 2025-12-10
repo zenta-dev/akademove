@@ -37,8 +37,7 @@ class UpdateNewsletter {
           other.userId == userId;
 
   @override
-  int get hashCode =>
-      email.hashCode + status.hashCode + (userId == null ? 0 : userId.hashCode);
+  int get hashCode => email.hashCode + status.hashCode + userId.hashCode;
 
   factory UpdateNewsletter.fromJson(Map<String, dynamic> json) =>
       _$UpdateNewsletterFromJson(json);

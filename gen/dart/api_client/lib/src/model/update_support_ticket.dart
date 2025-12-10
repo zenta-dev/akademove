@@ -39,9 +39,7 @@ class UpdateSupportTicket {
 
   @override
   int get hashCode =>
-      (assignedToId == null ? 0 : assignedToId.hashCode) +
-      priority.hashCode +
-      status.hashCode;
+      assignedToId.hashCode + priority.hashCode + status.hashCode;
 
   factory UpdateSupportTicket.fromJson(Map<String, dynamic> json) =>
       _$UpdateSupportTicketFromJson(json);

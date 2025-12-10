@@ -7,7 +7,7 @@ part of 'review_check_can_review200_response.dart';
 // **************************************************************************
 
 abstract class _$ReviewCheckCanReview200ResponseCWProxy {
-  ReviewCheckCanReview200Response message(String? message);
+  ReviewCheckCanReview200Response message(String message);
 
   ReviewCheckCanReview200Response data(
     ReviewCheckCanReview200ResponseData data,
@@ -25,7 +25,7 @@ abstract class _$ReviewCheckCanReview200ResponseCWProxy {
   /// ReviewCheckCanReview200Response(...).copyWith(id: 12, name: "My name")
   /// ```
   ReviewCheckCanReview200Response call({
-    String? message,
+    String message,
     ReviewCheckCanReview200ResponseData data,
     PaginationResult? pagination,
     int? totalPages,
@@ -41,7 +41,7 @@ class _$ReviewCheckCanReview200ResponseCWProxyImpl
   final ReviewCheckCanReview200Response _value;
 
   @override
-  ReviewCheckCanReview200Response message(String? message) =>
+  ReviewCheckCanReview200Response message(String message) =>
       call(message: message);
 
   @override
@@ -72,10 +72,10 @@ class _$ReviewCheckCanReview200ResponseCWProxyImpl
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return ReviewCheckCanReview200Response(
-      message: message == const $CopyWithPlaceholder()
+      message: message == const $CopyWithPlaceholder() || message == null
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
-          : message as String?,
+          : message as String,
       data: data == const $CopyWithPlaceholder() || data == null
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
@@ -110,7 +110,7 @@ ReviewCheckCanReview200Response _$ReviewCheckCanReview200ResponseFromJson(
 ) => $checkedCreate('ReviewCheckCanReview200Response', json, ($checkedConvert) {
   $checkKeys(json, requiredKeys: const ['message', 'data']);
   final val = ReviewCheckCanReview200Response(
-    message: $checkedConvert('message', (v) => v as String?),
+    message: $checkedConvert('message', (v) => v as String),
     data: $checkedConvert(
       'data',
       (v) => ReviewCheckCanReview200ResponseData.fromJson(

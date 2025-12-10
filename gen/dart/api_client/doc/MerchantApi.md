@@ -32,7 +32,6 @@ Method | HTTP request | Description
 [**merchantRemove**](MerchantApi.md#merchantremove) | **DELETE** /merchants/{id} | 
 [**merchantSetOnlineStatus**](MerchantApi.md#merchantsetonlinestatus) | **PATCH** /merchants/{id}/availability/online | 
 [**merchantSetOperatingStatus**](MerchantApi.md#merchantsetoperatingstatus) | **PATCH** /merchants/{id}/availability/operating-status | 
-[**merchantSetOrderTakingStatus**](MerchantApi.md#merchantsetordertakingstatus) | **PATCH** /merchants/{id}/availability/order-taking | 
 [**merchantSubmitApproval**](MerchantApi.md#merchantsubmitapproval) | **POST** /merchants/{id}/approval-review/submit-approval | 
 [**merchantSubmitRejection**](MerchantApi.md#merchantsubmitrejection) | **POST** /merchants/{id}/approval-review/submit-rejection | 
 [**merchantUpdate**](MerchantApi.md#merchantupdate) | **PUT** /merchants/{id} | 
@@ -85,7 +84,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **merchantActivate**
-> MerchantGet200Response merchantActivate(id)
+> MerchantGetMine200ResponseBody merchantActivate(id)
 
 
 
@@ -112,7 +111,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**MerchantGet200Response**](MerchantGet200Response.md)
+[**MerchantGetMine200ResponseBody**](MerchantGetMine200ResponseBody.md)
 
 ### Authorization
 
@@ -216,7 +215,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **merchantDeactivate**
-> MerchantGet200Response merchantDeactivate(id, merchantDeactivateRequest)
+> MerchantGetMine200ResponseBody merchantDeactivate(id, merchantDeactivateRequest)
 
 
 
@@ -245,7 +244,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**MerchantGet200Response**](MerchantGet200Response.md)
+[**MerchantGetMine200ResponseBody**](MerchantGetMine200ResponseBody.md)
 
 ### Authorization
 
@@ -259,7 +258,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **merchantGet**
-> MerchantGet200Response merchantGet(id)
+> MerchantGetMine200ResponseBody merchantGet(id)
 
 
 
@@ -286,7 +285,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**MerchantGet200Response**](MerchantGet200Response.md)
+[**MerchantGetMine200ResponseBody**](MerchantGetMine200ResponseBody.md)
 
 ### Authorization
 
@@ -419,7 +418,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **merchantList**
-> MerchantPopulars200Response merchantList(cursor, limit, direction, page, query, sortBy, order, mode, categories, isActive, minRating, maxRating, maxDistance, latitude, longitude)
+> MerchantPopulars200Response merchantList(cursor, limit, direction, page, query, sortBy, order, mode, categories, isActive, status, operatingStatus, minRating, maxRating, maxDistance, latitude, longitude)
 
 
 
@@ -438,6 +437,8 @@ final PaginationOrder order = ; // PaginationOrder |
 final PaginationMode mode = ; // PaginationMode | 
 final Object categories = ; // Object | 
 final Object isActive = ; // Object | 
+final MerchantStatus status = ; // MerchantStatus | 
+final String operatingStatus = operatingStatus_example; // String | 
 final num minRating = 8.14; // num | 
 final num maxRating = 8.14; // num | 
 final num maxDistance = 8.14; // num | 
@@ -445,7 +446,7 @@ final num latitude = 8.14; // num |
 final num longitude = 8.14; // num | 
 
 try {
-    final response = api.merchantList(cursor, limit, direction, page, query, sortBy, order, mode, categories, isActive, minRating, maxRating, maxDistance, latitude, longitude);
+    final response = api.merchantList(cursor, limit, direction, page, query, sortBy, order, mode, categories, isActive, status, operatingStatus, minRating, maxRating, maxDistance, latitude, longitude);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling MerchantApi->merchantList: $e\n');
@@ -466,6 +467,8 @@ Name | Type | Description  | Notes
  **mode** | [**PaginationMode**](.md)|  | [optional] [default to offset]
  **categories** | [**Object**](.md)|  | [optional] 
  **isActive** | [**Object**](.md)|  | [optional] 
+ **status** | [**MerchantStatus**](.md)|  | [optional] 
+ **operatingStatus** | **String**|  | [optional] 
  **minRating** | **num**|  | [optional] 
  **maxRating** | **num**|  | [optional] 
  **maxDistance** | **num**|  | [optional] 
@@ -1007,7 +1010,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **merchantSetOnlineStatus**
-> MerchantGet200Response merchantSetOnlineStatus(id, driverUpdateOnlineStatusRequest)
+> MerchantGetMine200ResponseBody merchantSetOnlineStatus(id, driverUpdateOnlineStatusRequest)
 
 
 
@@ -1036,7 +1039,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**MerchantGet200Response**](MerchantGet200Response.md)
+[**MerchantGetMine200ResponseBody**](MerchantGetMine200ResponseBody.md)
 
 ### Authorization
 
@@ -1050,7 +1053,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **merchantSetOperatingStatus**
-> MerchantGet200Response merchantSetOperatingStatus(id, merchantSetOperatingStatusRequest)
+> MerchantGetMine200ResponseBody merchantSetOperatingStatus(id, merchantSetOperatingStatusRequest)
 
 
 
@@ -1079,50 +1082,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**MerchantGet200Response**](MerchantGet200Response.md)
-
-### Authorization
-
-[bearer_auth](../README.md#bearer_auth)
-
-### HTTP request headers
-
- - **Content-Type**: application/json
- - **Accept**: application/json
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
-
-# **merchantSetOrderTakingStatus**
-> MerchantGet200Response merchantSetOrderTakingStatus(id, merchantSetOrderTakingStatusRequest)
-
-
-
-### Example
-```dart
-import 'package:api_client/api.dart';
-
-final api = ApiClient().getMerchantApi();
-final String id = id_example; // String | 
-final MerchantSetOrderTakingStatusRequest merchantSetOrderTakingStatusRequest = ; // MerchantSetOrderTakingStatusRequest | 
-
-try {
-    final response = api.merchantSetOrderTakingStatus(id, merchantSetOrderTakingStatusRequest);
-    print(response);
-} catch on DioException (e) {
-    print('Exception when calling MerchantApi->merchantSetOrderTakingStatus: $e\n');
-}
-```
-
-### Parameters
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **id** | **String**|  | 
- **merchantSetOrderTakingStatusRequest** | [**MerchantSetOrderTakingStatusRequest**](MerchantSetOrderTakingStatusRequest.md)|  | 
-
-### Return type
-
-[**MerchantGet200Response**](MerchantGet200Response.md)
+[**MerchantGetMine200ResponseBody**](MerchantGetMine200ResponseBody.md)
 
 ### Authorization
 
@@ -1136,7 +1096,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **merchantSubmitApproval**
-> MerchantGetReview200Response merchantSubmitApproval(id, merchantSubmitApprovalRequest)
+> MerchantGetReview200Response merchantSubmitApproval(id, driverSubmitApprovalRequest)
 
 
 
@@ -1146,10 +1106,10 @@ import 'package:api_client/api.dart';
 
 final api = ApiClient().getMerchantApi();
 final String id = id_example; // String | 
-final MerchantSubmitApprovalRequest merchantSubmitApprovalRequest = ; // MerchantSubmitApprovalRequest | 
+final DriverSubmitApprovalRequest driverSubmitApprovalRequest = ; // DriverSubmitApprovalRequest | 
 
 try {
-    final response = api.merchantSubmitApproval(id, merchantSubmitApprovalRequest);
+    final response = api.merchantSubmitApproval(id, driverSubmitApprovalRequest);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling MerchantApi->merchantSubmitApproval: $e\n');
@@ -1161,7 +1121,7 @@ try {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **id** | **String**|  | 
- **merchantSubmitApprovalRequest** | [**MerchantSubmitApprovalRequest**](MerchantSubmitApprovalRequest.md)|  | 
+ **driverSubmitApprovalRequest** | [**DriverSubmitApprovalRequest**](DriverSubmitApprovalRequest.md)|  | 
 
 ### Return type
 
@@ -1222,7 +1182,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **merchantUpdate**
-> MerchantGet200Response merchantUpdate(id, phoneCountryCode, phoneNumber, locationX, locationY, bankProvider, bankNumber, name, email, address, category, document, image)
+> MerchantGetMine200ResponseBody merchantUpdate(id, phoneCountryCode, phoneNumber, locationX, locationY, bankProvider, bankNumber, name, email, address, category, bankAccountName, document, image)
 
 
 
@@ -1242,11 +1202,12 @@ final String name = name_example; // String |
 final String email = email_example; // String | 
 final String address = address_example; // String | 
 final String category = category_example; // String | Primary merchant category
+final String bankAccountName = bankAccountName_example; // String | 
 final MultipartFile document = BINARY_DATA_HERE; // MultipartFile | 
 final MultipartFile image = BINARY_DATA_HERE; // MultipartFile | 
 
 try {
-    final response = api.merchantUpdate(id, phoneCountryCode, phoneNumber, locationX, locationY, bankProvider, bankNumber, name, email, address, category, document, image);
+    final response = api.merchantUpdate(id, phoneCountryCode, phoneNumber, locationX, locationY, bankProvider, bankNumber, name, email, address, category, bankAccountName, document, image);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling MerchantApi->merchantUpdate: $e\n');
@@ -1268,12 +1229,13 @@ Name | Type | Description  | Notes
  **email** | **String**|  | [optional] 
  **address** | **String**|  | [optional] 
  **category** | **String**| Primary merchant category | [optional] 
+ **bankAccountName** | **String**|  | [optional] 
  **document** | **MultipartFile**|  | [optional] 
  **image** | **MultipartFile**|  | [optional] 
 
 ### Return type
 
-[**MerchantGet200Response**](MerchantGet200Response.md)
+[**MerchantGetMine200ResponseBody**](MerchantGetMine200ResponseBody.md)
 
 ### Authorization
 

@@ -7,7 +7,7 @@ part of 'sign_up_response.dart';
 // **************************************************************************
 
 abstract class _$SignUpResponseCWProxy {
-  SignUpResponse token(String? token);
+  SignUpResponse token(String token);
 
   SignUpResponse user(User user);
 
@@ -18,7 +18,7 @@ abstract class _$SignUpResponseCWProxy {
   /// ```dart
   /// SignUpResponse(...).copyWith(id: 12, name: "My name")
   /// ```
-  SignUpResponse call({String? token, User user});
+  SignUpResponse call({String token, User user});
 }
 
 /// Callable proxy for `copyWith` functionality.
@@ -29,7 +29,7 @@ class _$SignUpResponseCWProxyImpl implements _$SignUpResponseCWProxy {
   final SignUpResponse _value;
 
   @override
-  SignUpResponse token(String? token) => call(token: token);
+  SignUpResponse token(String token) => call(token: token);
 
   @override
   SignUpResponse user(User user) => call(user: user);
@@ -47,10 +47,10 @@ class _$SignUpResponseCWProxyImpl implements _$SignUpResponseCWProxy {
     Object? user = const $CopyWithPlaceholder(),
   }) {
     return SignUpResponse(
-      token: token == const $CopyWithPlaceholder()
+      token: token == const $CopyWithPlaceholder() || token == null
           ? _value.token
           // ignore: cast_nullable_to_non_nullable
-          : token as String?,
+          : token as String,
       user: user == const $CopyWithPlaceholder() || user == null
           ? _value.user
           // ignore: cast_nullable_to_non_nullable
@@ -74,7 +74,7 @@ SignUpResponse _$SignUpResponseFromJson(Map<String, dynamic> json) =>
     $checkedCreate('SignUpResponse', json, ($checkedConvert) {
       $checkKeys(json, requiredKeys: const ['token', 'user']);
       final val = SignUpResponse(
-        token: $checkedConvert('token', (v) => v as String?),
+        token: $checkedConvert('token', (v) => v as String),
         user: $checkedConvert(
           'user',
           (v) => User.fromJson(v as Map<String, dynamic>),

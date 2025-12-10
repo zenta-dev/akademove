@@ -429,7 +429,7 @@ class FraudApi {
       if (status != null) r'status': status,
       if (severity != null) r'severity': severity,
       if (eventType != null) r'eventType': eventType,
-      r'userId': userId,
+      if (userId != null) r'userId': userId,
       if (driverId != null) r'driverId': driverId,
       if (startDate != null) r'startDate': startDate,
       if (endDate != null) r'endDate': endDate,

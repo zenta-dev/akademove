@@ -29,8 +29,8 @@ class Cart {
   @JsonKey(name: r'merchantId', required: true, includeIfNull: false)
   final String merchantId;
 
-  @JsonKey(name: r'merchantName', required: true, includeIfNull: true)
-  final String? merchantName;
+  @JsonKey(name: r'merchantName', required: true, includeIfNull: false)
+  final String merchantName;
 
   @JsonKey(name: r'items', required: true, includeIfNull: false)
   final List<CartItem> items;
@@ -60,7 +60,7 @@ class Cart {
   @override
   int get hashCode =>
       merchantId.hashCode +
-      (merchantName == null ? 0 : merchantName.hashCode) +
+      merchantName.hashCode +
       items.hashCode +
       totalItems.hashCode +
       subtotal.hashCode +

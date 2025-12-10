@@ -102,8 +102,8 @@ class UpdatePayment {
       bankProvider.hashCode +
       amount.hashCode +
       status.hashCode +
-      (externalId == null ? 0 : externalId.hashCode) +
-      (paymentUrl == null ? 0 : paymentUrl.hashCode) +
+      externalId.hashCode +
+      paymentUrl.hashCode +
       vaNumber.hashCode +
       (metadata == null ? 0 : metadata.hashCode) +
       (expiresAt == null ? 0 : expiresAt.hashCode) +

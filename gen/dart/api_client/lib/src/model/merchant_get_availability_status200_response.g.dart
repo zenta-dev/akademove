@@ -7,7 +7,7 @@ part of 'merchant_get_availability_status200_response.dart';
 // **************************************************************************
 
 abstract class _$MerchantGetAvailabilityStatus200ResponseCWProxy {
-  MerchantGetAvailabilityStatus200Response message(String? message);
+  MerchantGetAvailabilityStatus200Response message(String message);
 
   MerchantGetAvailabilityStatus200Response data(
     MerchantGetAvailabilityStatus200ResponseData data,
@@ -27,7 +27,7 @@ abstract class _$MerchantGetAvailabilityStatus200ResponseCWProxy {
   /// MerchantGetAvailabilityStatus200Response(...).copyWith(id: 12, name: "My name")
   /// ```
   MerchantGetAvailabilityStatus200Response call({
-    String? message,
+    String message,
     MerchantGetAvailabilityStatus200ResponseData data,
     PaginationResult? pagination,
     int? totalPages,
@@ -43,7 +43,7 @@ class _$MerchantGetAvailabilityStatus200ResponseCWProxyImpl
   final MerchantGetAvailabilityStatus200Response _value;
 
   @override
-  MerchantGetAvailabilityStatus200Response message(String? message) =>
+  MerchantGetAvailabilityStatus200Response message(String message) =>
       call(message: message);
 
   @override
@@ -75,10 +75,10 @@ class _$MerchantGetAvailabilityStatus200ResponseCWProxyImpl
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return MerchantGetAvailabilityStatus200Response(
-      message: message == const $CopyWithPlaceholder()
+      message: message == const $CopyWithPlaceholder() || message == null
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
-          : message as String?,
+          : message as String,
       data: data == const $CopyWithPlaceholder() || data == null
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
@@ -115,7 +115,7 @@ _$MerchantGetAvailabilityStatus200ResponseFromJson(Map<String, dynamic> json) =>
     ) {
       $checkKeys(json, requiredKeys: const ['message', 'data']);
       final val = MerchantGetAvailabilityStatus200Response(
-        message: $checkedConvert('message', (v) => v as String?),
+        message: $checkedConvert('message', (v) => v as String),
         data: $checkedConvert(
           'data',
           (v) => MerchantGetAvailabilityStatus200ResponseData.fromJson(

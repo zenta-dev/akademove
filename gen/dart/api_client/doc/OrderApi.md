@@ -158,7 +158,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **orderCancelScheduledOrder**
-> MerchantOrderAccept200Response orderCancelScheduledOrder(id, orderCancelScheduledOrderRequest)
+> MerchantOrderAccept200Response orderCancelScheduledOrder(id, orderCancelRequest)
 
 
 
@@ -168,10 +168,10 @@ import 'package:api_client/api.dart';
 
 final api = ApiClient().getOrderApi();
 final String id = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
-final OrderCancelScheduledOrderRequest orderCancelScheduledOrderRequest = ; // OrderCancelScheduledOrderRequest | 
+final OrderCancelRequest orderCancelRequest = ; // OrderCancelRequest | 
 
 try {
-    final response = api.orderCancelScheduledOrder(id, orderCancelScheduledOrderRequest);
+    final response = api.orderCancelScheduledOrder(id, orderCancelRequest);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling OrderApi->orderCancelScheduledOrder: $e\n');
@@ -183,7 +183,7 @@ try {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **id** | **String**|  | 
- **orderCancelScheduledOrderRequest** | [**OrderCancelScheduledOrderRequest**](OrderCancelScheduledOrderRequest.md)|  | 
+ **orderCancelRequest** | [**OrderCancelRequest**](OrderCancelRequest.md)|  | 
 
 ### Return type
 

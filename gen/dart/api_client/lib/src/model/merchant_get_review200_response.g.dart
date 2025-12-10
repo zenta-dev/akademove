@@ -7,7 +7,7 @@ part of 'merchant_get_review200_response.dart';
 // **************************************************************************
 
 abstract class _$MerchantGetReview200ResponseCWProxy {
-  MerchantGetReview200Response message(String? message);
+  MerchantGetReview200Response message(String message);
 
   MerchantGetReview200Response data(MerchantGetReview200ResponseData data);
 
@@ -23,7 +23,7 @@ abstract class _$MerchantGetReview200ResponseCWProxy {
   /// MerchantGetReview200Response(...).copyWith(id: 12, name: "My name")
   /// ```
   MerchantGetReview200Response call({
-    String? message,
+    String message,
     MerchantGetReview200ResponseData data,
     PaginationResult? pagination,
     int? totalPages,
@@ -39,7 +39,7 @@ class _$MerchantGetReview200ResponseCWProxyImpl
   final MerchantGetReview200Response _value;
 
   @override
-  MerchantGetReview200Response message(String? message) =>
+  MerchantGetReview200Response message(String message) =>
       call(message: message);
 
   @override
@@ -69,10 +69,10 @@ class _$MerchantGetReview200ResponseCWProxyImpl
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return MerchantGetReview200Response(
-      message: message == const $CopyWithPlaceholder()
+      message: message == const $CopyWithPlaceholder() || message == null
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
-          : message as String?,
+          : message as String,
       data: data == const $CopyWithPlaceholder() || data == null
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
@@ -107,7 +107,7 @@ MerchantGetReview200Response _$MerchantGetReview200ResponseFromJson(
 ) => $checkedCreate('MerchantGetReview200Response', json, ($checkedConvert) {
   $checkKeys(json, requiredKeys: const ['message', 'data']);
   final val = MerchantGetReview200Response(
-    message: $checkedConvert('message', (v) => v as String?),
+    message: $checkedConvert('message', (v) => v as String),
     data: $checkedConvert(
       'data',
       (v) =>

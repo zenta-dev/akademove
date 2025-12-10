@@ -357,7 +357,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **notificationUnsubscribeToTopic**
-> NotificationSubscribeToTopic200Response notificationUnsubscribeToTopic(notificationUnsubscribeToTopicRequest)
+> NotificationSubscribeToTopic200Response notificationUnsubscribeToTopic(notificationSubscribeToTopicRequest)
 
 
 
@@ -366,10 +366,10 @@ Name | Type | Description  | Notes
 import 'package:api_client/api.dart';
 
 final api = ApiClient().getNotificationApi();
-final NotificationUnsubscribeToTopicRequest notificationUnsubscribeToTopicRequest = ; // NotificationUnsubscribeToTopicRequest | 
+final NotificationSubscribeToTopicRequest notificationSubscribeToTopicRequest = ; // NotificationSubscribeToTopicRequest | 
 
 try {
-    final response = api.notificationUnsubscribeToTopic(notificationUnsubscribeToTopicRequest);
+    final response = api.notificationUnsubscribeToTopic(notificationSubscribeToTopicRequest);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling NotificationApi->notificationUnsubscribeToTopic: $e\n');
@@ -380,7 +380,7 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **notificationUnsubscribeToTopicRequest** | [**NotificationUnsubscribeToTopicRequest**](NotificationUnsubscribeToTopicRequest.md)|  | 
+ **notificationSubscribeToTopicRequest** | [**NotificationSubscribeToTopicRequest**](NotificationSubscribeToTopicRequest.md)|  | 
 
 ### Return type
 

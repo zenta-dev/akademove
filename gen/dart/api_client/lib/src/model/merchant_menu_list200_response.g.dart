@@ -7,7 +7,7 @@ part of 'merchant_menu_list200_response.dart';
 // **************************************************************************
 
 abstract class _$MerchantMenuList200ResponseCWProxy {
-  MerchantMenuList200Response message(String? message);
+  MerchantMenuList200Response message(String message);
 
   MerchantMenuList200Response data(List<MerchantMenu> data);
 
@@ -23,7 +23,7 @@ abstract class _$MerchantMenuList200ResponseCWProxy {
   /// MerchantMenuList200Response(...).copyWith(id: 12, name: "My name")
   /// ```
   MerchantMenuList200Response call({
-    String? message,
+    String message,
     List<MerchantMenu> data,
     PaginationResult? pagination,
     int? totalPages,
@@ -39,8 +39,7 @@ class _$MerchantMenuList200ResponseCWProxyImpl
   final MerchantMenuList200Response _value;
 
   @override
-  MerchantMenuList200Response message(String? message) =>
-      call(message: message);
+  MerchantMenuList200Response message(String message) => call(message: message);
 
   @override
   MerchantMenuList200Response data(List<MerchantMenu> data) => call(data: data);
@@ -68,10 +67,10 @@ class _$MerchantMenuList200ResponseCWProxyImpl
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return MerchantMenuList200Response(
-      message: message == const $CopyWithPlaceholder()
+      message: message == const $CopyWithPlaceholder() || message == null
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
-          : message as String?,
+          : message as String,
       data: data == const $CopyWithPlaceholder() || data == null
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
@@ -105,7 +104,7 @@ MerchantMenuList200Response _$MerchantMenuList200ResponseFromJson(
 ) => $checkedCreate('MerchantMenuList200Response', json, ($checkedConvert) {
   $checkKeys(json, requiredKeys: const ['message', 'data']);
   final val = MerchantMenuList200Response(
-    message: $checkedConvert('message', (v) => v as String?),
+    message: $checkedConvert('message', (v) => v as String),
     data: $checkedConvert(
       'data',
       (v) => (v as List<dynamic>)

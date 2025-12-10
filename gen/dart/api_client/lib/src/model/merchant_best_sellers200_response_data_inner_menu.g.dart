@@ -7,11 +7,11 @@ part of 'merchant_best_sellers200_response_data_inner_menu.dart';
 // **************************************************************************
 
 abstract class _$MerchantBestSellers200ResponseDataInnerMenuCWProxy {
-  MerchantBestSellers200ResponseDataInnerMenu id(String? id);
+  MerchantBestSellers200ResponseDataInnerMenu id(String id);
 
-  MerchantBestSellers200ResponseDataInnerMenu merchantId(String? merchantId);
+  MerchantBestSellers200ResponseDataInnerMenu merchantId(String merchantId);
 
-  MerchantBestSellers200ResponseDataInnerMenu name(String? name);
+  MerchantBestSellers200ResponseDataInnerMenu name(String name);
 
   MerchantBestSellers200ResponseDataInnerMenu image(String? image);
 
@@ -33,9 +33,9 @@ abstract class _$MerchantBestSellers200ResponseDataInnerMenuCWProxy {
   /// MerchantBestSellers200ResponseDataInnerMenu(...).copyWith(id: 12, name: "My name")
   /// ```
   MerchantBestSellers200ResponseDataInnerMenu call({
-    String? id,
-    String? merchantId,
-    String? name,
+    String id,
+    String merchantId,
+    String name,
     String? image,
     String? category,
     num price,
@@ -54,14 +54,14 @@ class _$MerchantBestSellers200ResponseDataInnerMenuCWProxyImpl
   final MerchantBestSellers200ResponseDataInnerMenu _value;
 
   @override
-  MerchantBestSellers200ResponseDataInnerMenu id(String? id) => call(id: id);
+  MerchantBestSellers200ResponseDataInnerMenu id(String id) => call(id: id);
 
   @override
-  MerchantBestSellers200ResponseDataInnerMenu merchantId(String? merchantId) =>
+  MerchantBestSellers200ResponseDataInnerMenu merchantId(String merchantId) =>
       call(merchantId: merchantId);
 
   @override
-  MerchantBestSellers200ResponseDataInnerMenu name(String? name) =>
+  MerchantBestSellers200ResponseDataInnerMenu name(String name) =>
       call(name: name);
 
   @override
@@ -108,18 +108,19 @@ class _$MerchantBestSellers200ResponseDataInnerMenuCWProxyImpl
     Object? updatedAt = const $CopyWithPlaceholder(),
   }) {
     return MerchantBestSellers200ResponseDataInnerMenu(
-      id: id == const $CopyWithPlaceholder()
+      id: id == const $CopyWithPlaceholder() || id == null
           ? _value.id
           // ignore: cast_nullable_to_non_nullable
-          : id as String?,
-      merchantId: merchantId == const $CopyWithPlaceholder()
+          : id as String,
+      merchantId:
+          merchantId == const $CopyWithPlaceholder() || merchantId == null
           ? _value.merchantId
           // ignore: cast_nullable_to_non_nullable
-          : merchantId as String?,
-      name: name == const $CopyWithPlaceholder()
+          : merchantId as String,
+      name: name == const $CopyWithPlaceholder() || name == null
           ? _value.name
           // ignore: cast_nullable_to_non_nullable
-          : name as String?,
+          : name as String,
       image: image == const $CopyWithPlaceholder()
           ? _value.image
           // ignore: cast_nullable_to_non_nullable
@@ -180,9 +181,9 @@ _$MerchantBestSellers200ResponseDataInnerMenuFromJson(
     ],
   );
   final val = MerchantBestSellers200ResponseDataInnerMenu(
-    id: $checkedConvert('id', (v) => v as String?),
-    merchantId: $checkedConvert('merchantId', (v) => v as String?),
-    name: $checkedConvert('name', (v) => v as String?),
+    id: $checkedConvert('id', (v) => v as String),
+    merchantId: $checkedConvert('merchantId', (v) => v as String),
+    name: $checkedConvert('name', (v) => v as String),
     image: $checkedConvert('image', (v) => v as String?),
     category: $checkedConvert('category', (v) => v as String?),
     price: $checkedConvert('price', (v) => v as num),

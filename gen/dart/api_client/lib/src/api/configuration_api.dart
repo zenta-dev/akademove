@@ -91,18 +91,18 @@ class ConfigurationApi {
     );
 
     final _queryParameters = <String, dynamic>{
-      r'cursor': cursor,
+      if (cursor != null) r'cursor': cursor,
       if (limit != null) r'limit': limit,
       if (direction != null) r'direction': direction,
       if (page != null) r'page': page,
-      r'query': query,
+      if (query != null) r'query': query,
       if (sortBy != null) r'sortBy': sortBy,
       if (order != null) r'order': order,
       if (mode != null) r'mode': mode,
       if (tableName != null) r'tableName': tableName,
-      r'recordId': recordId,
+      if (recordId != null) r'recordId': recordId,
       if (operation != null) r'operation': operation,
-      r'updatedById': updatedById,
+      if (updatedById != null) r'updatedById': updatedById,
       r'startDate': startDate,
       r'endDate': endDate,
     };

@@ -7,7 +7,7 @@ part of 'notification_subscribe_to_topic200_response.dart';
 // **************************************************************************
 
 abstract class _$NotificationSubscribeToTopic200ResponseCWProxy {
-  NotificationSubscribeToTopic200Response message(String? message);
+  NotificationSubscribeToTopic200Response message(String message);
 
   NotificationSubscribeToTopic200Response data(
     NotificationSubscribeToTopic200ResponseData data,
@@ -27,7 +27,7 @@ abstract class _$NotificationSubscribeToTopic200ResponseCWProxy {
   /// NotificationSubscribeToTopic200Response(...).copyWith(id: 12, name: "My name")
   /// ```
   NotificationSubscribeToTopic200Response call({
-    String? message,
+    String message,
     NotificationSubscribeToTopic200ResponseData data,
     PaginationResult? pagination,
     int? totalPages,
@@ -43,7 +43,7 @@ class _$NotificationSubscribeToTopic200ResponseCWProxyImpl
   final NotificationSubscribeToTopic200Response _value;
 
   @override
-  NotificationSubscribeToTopic200Response message(String? message) =>
+  NotificationSubscribeToTopic200Response message(String message) =>
       call(message: message);
 
   @override
@@ -75,10 +75,10 @@ class _$NotificationSubscribeToTopic200ResponseCWProxyImpl
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return NotificationSubscribeToTopic200Response(
-      message: message == const $CopyWithPlaceholder()
+      message: message == const $CopyWithPlaceholder() || message == null
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
-          : message as String?,
+          : message as String,
       data: data == const $CopyWithPlaceholder() || data == null
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
@@ -115,7 +115,7 @@ _$NotificationSubscribeToTopic200ResponseFromJson(Map<String, dynamic> json) =>
     ) {
       $checkKeys(json, requiredKeys: const ['message', 'data']);
       final val = NotificationSubscribeToTopic200Response(
-        message: $checkedConvert('message', (v) => v as String?),
+        message: $checkedConvert('message', (v) => v as String),
         data: $checkedConvert(
           'data',
           (v) => NotificationSubscribeToTopic200ResponseData.fromJson(

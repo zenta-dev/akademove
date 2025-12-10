@@ -60,7 +60,7 @@ class Newsletter {
       id.hashCode +
       email.hashCode +
       status.hashCode +
-      (userId == null ? 0 : userId.hashCode) +
+      userId.hashCode +
       (createdAt == null ? 0 : createdAt.hashCode) +
       (updatedAt == null ? 0 : updatedAt.hashCode);
 

@@ -7,7 +7,7 @@ part of 'review_list200_response.dart';
 // **************************************************************************
 
 abstract class _$ReviewList200ResponseCWProxy {
-  ReviewList200Response message(String? message);
+  ReviewList200Response message(String message);
 
   ReviewList200Response data(List<Review> data);
 
@@ -23,7 +23,7 @@ abstract class _$ReviewList200ResponseCWProxy {
   /// ReviewList200Response(...).copyWith(id: 12, name: "My name")
   /// ```
   ReviewList200Response call({
-    String? message,
+    String message,
     List<Review> data,
     PaginationResult? pagination,
     int? totalPages,
@@ -39,7 +39,7 @@ class _$ReviewList200ResponseCWProxyImpl
   final ReviewList200Response _value;
 
   @override
-  ReviewList200Response message(String? message) => call(message: message);
+  ReviewList200Response message(String message) => call(message: message);
 
   @override
   ReviewList200Response data(List<Review> data) => call(data: data);
@@ -67,10 +67,10 @@ class _$ReviewList200ResponseCWProxyImpl
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return ReviewList200Response(
-      message: message == const $CopyWithPlaceholder()
+      message: message == const $CopyWithPlaceholder() || message == null
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
-          : message as String?,
+          : message as String,
       data: data == const $CopyWithPlaceholder() || data == null
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
@@ -104,7 +104,7 @@ ReviewList200Response _$ReviewList200ResponseFromJson(
 ) => $checkedCreate('ReviewList200Response', json, ($checkedConvert) {
   $checkKeys(json, requiredKeys: const ['message', 'data']);
   final val = ReviewList200Response(
-    message: $checkedConvert('message', (v) => v as String?),
+    message: $checkedConvert('message', (v) => v as String),
     data: $checkedConvert(
       'data',
       (v) => (v as List<dynamic>)

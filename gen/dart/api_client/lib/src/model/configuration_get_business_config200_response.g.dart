@@ -7,7 +7,7 @@ part of 'configuration_get_business_config200_response.dart';
 // **************************************************************************
 
 abstract class _$ConfigurationGetBusinessConfig200ResponseCWProxy {
-  ConfigurationGetBusinessConfig200Response message(String? message);
+  ConfigurationGetBusinessConfig200Response message(String message);
 
   ConfigurationGetBusinessConfig200Response data(BusinessConfiguration data);
 
@@ -25,7 +25,7 @@ abstract class _$ConfigurationGetBusinessConfig200ResponseCWProxy {
   /// ConfigurationGetBusinessConfig200Response(...).copyWith(id: 12, name: "My name")
   /// ```
   ConfigurationGetBusinessConfig200Response call({
-    String? message,
+    String message,
     BusinessConfiguration data,
     PaginationResult? pagination,
     int? totalPages,
@@ -41,7 +41,7 @@ class _$ConfigurationGetBusinessConfig200ResponseCWProxyImpl
   final ConfigurationGetBusinessConfig200Response _value;
 
   @override
-  ConfigurationGetBusinessConfig200Response message(String? message) =>
+  ConfigurationGetBusinessConfig200Response message(String message) =>
       call(message: message);
 
   @override
@@ -72,10 +72,10 @@ class _$ConfigurationGetBusinessConfig200ResponseCWProxyImpl
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return ConfigurationGetBusinessConfig200Response(
-      message: message == const $CopyWithPlaceholder()
+      message: message == const $CopyWithPlaceholder() || message == null
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
-          : message as String?,
+          : message as String,
       data: data == const $CopyWithPlaceholder() || data == null
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
@@ -113,7 +113,7 @@ _$ConfigurationGetBusinessConfig200ResponseFromJson(
 ) {
   $checkKeys(json, requiredKeys: const ['message', 'data']);
   final val = ConfigurationGetBusinessConfig200Response(
-    message: $checkedConvert('message', (v) => v as String?),
+    message: $checkedConvert('message', (v) => v as String),
     data: $checkedConvert(
       'data',
       (v) => BusinessConfiguration.fromJson(v as Map<String, dynamic>),

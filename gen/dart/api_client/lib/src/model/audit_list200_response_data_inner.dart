@@ -37,8 +37,8 @@ class AuditList200ResponseDataInner {
   @JsonKey(name: r'tableName', required: true, includeIfNull: false)
   final AuditList200ResponseDataInnerTableNameEnum tableName;
 
-  @JsonKey(name: r'recordId', required: true, includeIfNull: true)
-  final String? recordId;
+  @JsonKey(name: r'recordId', required: true, includeIfNull: false)
+  final String recordId;
 
   @JsonKey(name: r'operation', required: true, includeIfNull: false)
   final AuditList200ResponseDataInnerOperationEnum operation;
@@ -88,15 +88,15 @@ class AuditList200ResponseDataInner {
   int get hashCode =>
       id.hashCode +
       tableName.hashCode +
-      (recordId == null ? 0 : recordId.hashCode) +
+      recordId.hashCode +
       operation.hashCode +
       (oldData == null ? 0 : oldData.hashCode) +
       (newData == null ? 0 : newData.hashCode) +
-      (updatedById == null ? 0 : updatedById.hashCode) +
-      (ipAddress == null ? 0 : ipAddress.hashCode) +
-      (userAgent == null ? 0 : userAgent.hashCode) +
-      (sessionId == null ? 0 : sessionId.hashCode) +
-      (reason == null ? 0 : reason.hashCode) +
+      updatedById.hashCode +
+      ipAddress.hashCode +
+      userAgent.hashCode +
+      sessionId.hashCode +
+      reason.hashCode +
       (updatedAt == null ? 0 : updatedAt.hashCode);
 
   factory AuditList200ResponseDataInner.fromJson(Map<String, dynamic> json) =>

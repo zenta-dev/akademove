@@ -7,7 +7,7 @@ part of 'banner_list200_response.dart';
 // **************************************************************************
 
 abstract class _$BannerList200ResponseCWProxy {
-  BannerList200Response message(String? message);
+  BannerList200Response message(String message);
 
   BannerList200Response data(List<BannerList200ResponseDataInner> data);
 
@@ -23,7 +23,7 @@ abstract class _$BannerList200ResponseCWProxy {
   /// BannerList200Response(...).copyWith(id: 12, name: "My name")
   /// ```
   BannerList200Response call({
-    String? message,
+    String message,
     List<BannerList200ResponseDataInner> data,
     PaginationResult? pagination,
     int? totalPages,
@@ -39,7 +39,7 @@ class _$BannerList200ResponseCWProxyImpl
   final BannerList200Response _value;
 
   @override
-  BannerList200Response message(String? message) => call(message: message);
+  BannerList200Response message(String message) => call(message: message);
 
   @override
   BannerList200Response data(List<BannerList200ResponseDataInner> data) =>
@@ -68,10 +68,10 @@ class _$BannerList200ResponseCWProxyImpl
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return BannerList200Response(
-      message: message == const $CopyWithPlaceholder()
+      message: message == const $CopyWithPlaceholder() || message == null
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
-          : message as String?,
+          : message as String,
       data: data == const $CopyWithPlaceholder() || data == null
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
@@ -105,7 +105,7 @@ BannerList200Response _$BannerList200ResponseFromJson(
 ) => $checkedCreate('BannerList200Response', json, ($checkedConvert) {
   $checkKeys(json, requiredKeys: const ['message', 'data']);
   final val = BannerList200Response(
-    message: $checkedConvert('message', (v) => v as String?),
+    message: $checkedConvert('message', (v) => v as String),
     data: $checkedConvert(
       'data',
       (v) => (v as List<dynamic>)

@@ -18,8 +18,8 @@ part 'order_send_message_request.g.dart';
 class OrderSendMessageRequest {
   /// Returns a new [OrderSendMessageRequest] instance.
   const OrderSendMessageRequest({required this.message});
-  @JsonKey(name: r'message', required: true, includeIfNull: true)
-  final String? message;
+  @JsonKey(name: r'message', required: true, includeIfNull: false)
+  final String message;
 
   @override
   bool operator ==(Object other) =>
@@ -27,7 +27,7 @@ class OrderSendMessageRequest {
       other is OrderSendMessageRequest && other.message == message;
 
   @override
-  int get hashCode => (message == null ? 0 : message.hashCode);
+  int get hashCode => message.hashCode;
 
   factory OrderSendMessageRequest.fromJson(Map<String, dynamic> json) =>
       _$OrderSendMessageRequestFromJson(json);

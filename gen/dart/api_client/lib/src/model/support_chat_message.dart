@@ -36,11 +36,11 @@ class SupportChatMessage {
   @JsonKey(name: r'ticketId', required: true, includeIfNull: false)
   final String ticketId;
 
-  @JsonKey(name: r'senderId', required: true, includeIfNull: true)
-  final String? senderId;
+  @JsonKey(name: r'senderId', required: true, includeIfNull: false)
+  final String senderId;
 
-  @JsonKey(name: r'message', required: true, includeIfNull: true)
-  final String? message;
+  @JsonKey(name: r'message', required: true, includeIfNull: false)
+  final String message;
 
   @JsonKey(name: r'isFromSupport', required: true, includeIfNull: false)
   final bool isFromSupport;
@@ -79,8 +79,8 @@ class SupportChatMessage {
   int get hashCode =>
       id.hashCode +
       ticketId.hashCode +
-      (senderId == null ? 0 : senderId.hashCode) +
-      (message == null ? 0 : message.hashCode) +
+      senderId.hashCode +
+      message.hashCode +
       isFromSupport.hashCode +
       (readAt == null ? 0 : readAt.hashCode) +
       (sentAt == null ? 0 : sentAt.hashCode) +

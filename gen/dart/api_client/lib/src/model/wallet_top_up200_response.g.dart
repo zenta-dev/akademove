@@ -7,7 +7,7 @@ part of 'wallet_top_up200_response.dart';
 // **************************************************************************
 
 abstract class _$WalletTopUp200ResponseCWProxy {
-  WalletTopUp200Response message(String? message);
+  WalletTopUp200Response message(String message);
 
   WalletTopUp200Response data(Payment data);
 
@@ -23,7 +23,7 @@ abstract class _$WalletTopUp200ResponseCWProxy {
   /// WalletTopUp200Response(...).copyWith(id: 12, name: "My name")
   /// ```
   WalletTopUp200Response call({
-    String? message,
+    String message,
     Payment data,
     PaginationResult? pagination,
     int? totalPages,
@@ -39,7 +39,7 @@ class _$WalletTopUp200ResponseCWProxyImpl
   final WalletTopUp200Response _value;
 
   @override
-  WalletTopUp200Response message(String? message) => call(message: message);
+  WalletTopUp200Response message(String message) => call(message: message);
 
   @override
   WalletTopUp200Response data(Payment data) => call(data: data);
@@ -67,10 +67,10 @@ class _$WalletTopUp200ResponseCWProxyImpl
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return WalletTopUp200Response(
-      message: message == const $CopyWithPlaceholder()
+      message: message == const $CopyWithPlaceholder() || message == null
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
-          : message as String?,
+          : message as String,
       data: data == const $CopyWithPlaceholder() || data == null
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
@@ -104,7 +104,7 @@ WalletTopUp200Response _$WalletTopUp200ResponseFromJson(
 ) => $checkedCreate('WalletTopUp200Response', json, ($checkedConvert) {
   $checkKeys(json, requiredKeys: const ['message', 'data']);
   final val = WalletTopUp200Response(
-    message: $checkedConvert('message', (v) => v as String?),
+    message: $checkedConvert('message', (v) => v as String),
     data: $checkedConvert(
       'data',
       (v) => Payment.fromJson(v as Map<String, dynamic>),

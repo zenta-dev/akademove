@@ -7,7 +7,7 @@ part of 'driver_quiz_question_list200_response.dart';
 // **************************************************************************
 
 abstract class _$DriverQuizQuestionList200ResponseCWProxy {
-  DriverQuizQuestionList200Response message(String? message);
+  DriverQuizQuestionList200Response message(String message);
 
   DriverQuizQuestionList200Response data(
     DriverQuizQuestionList200ResponseData data,
@@ -25,7 +25,7 @@ abstract class _$DriverQuizQuestionList200ResponseCWProxy {
   /// DriverQuizQuestionList200Response(...).copyWith(id: 12, name: "My name")
   /// ```
   DriverQuizQuestionList200Response call({
-    String? message,
+    String message,
     DriverQuizQuestionList200ResponseData data,
     PaginationResult? pagination,
     int? totalPages,
@@ -41,7 +41,7 @@ class _$DriverQuizQuestionList200ResponseCWProxyImpl
   final DriverQuizQuestionList200Response _value;
 
   @override
-  DriverQuizQuestionList200Response message(String? message) =>
+  DriverQuizQuestionList200Response message(String message) =>
       call(message: message);
 
   @override
@@ -72,10 +72,10 @@ class _$DriverQuizQuestionList200ResponseCWProxyImpl
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return DriverQuizQuestionList200Response(
-      message: message == const $CopyWithPlaceholder()
+      message: message == const $CopyWithPlaceholder() || message == null
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
-          : message as String?,
+          : message as String,
       data: data == const $CopyWithPlaceholder() || data == null
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
@@ -112,7 +112,7 @@ DriverQuizQuestionList200Response _$DriverQuizQuestionList200ResponseFromJson(
 ) {
   $checkKeys(json, requiredKeys: const ['message', 'data']);
   final val = DriverQuizQuestionList200Response(
-    message: $checkedConvert('message', (v) => v as String?),
+    message: $checkedConvert('message', (v) => v as String),
     data: $checkedConvert(
       'data',
       (v) => DriverQuizQuestionList200ResponseData.fromJson(

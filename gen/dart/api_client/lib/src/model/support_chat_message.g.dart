@@ -11,9 +11,9 @@ abstract class _$SupportChatMessageCWProxy {
 
   SupportChatMessage ticketId(String ticketId);
 
-  SupportChatMessage senderId(String? senderId);
+  SupportChatMessage senderId(String senderId);
 
-  SupportChatMessage message(String? message);
+  SupportChatMessage message(String message);
 
   SupportChatMessage isFromSupport(bool isFromSupport);
 
@@ -37,8 +37,8 @@ abstract class _$SupportChatMessageCWProxy {
   SupportChatMessage call({
     String id,
     String ticketId,
-    String? senderId,
-    String? message,
+    String senderId,
+    String message,
     bool isFromSupport,
     DateTime? readAt,
     DateTime? sentAt,
@@ -62,10 +62,10 @@ class _$SupportChatMessageCWProxyImpl implements _$SupportChatMessageCWProxy {
   SupportChatMessage ticketId(String ticketId) => call(ticketId: ticketId);
 
   @override
-  SupportChatMessage senderId(String? senderId) => call(senderId: senderId);
+  SupportChatMessage senderId(String senderId) => call(senderId: senderId);
 
   @override
-  SupportChatMessage message(String? message) => call(message: message);
+  SupportChatMessage message(String message) => call(message: message);
 
   @override
   SupportChatMessage isFromSupport(bool isFromSupport) =>
@@ -118,14 +118,14 @@ class _$SupportChatMessageCWProxyImpl implements _$SupportChatMessageCWProxy {
           ? _value.ticketId
           // ignore: cast_nullable_to_non_nullable
           : ticketId as String,
-      senderId: senderId == const $CopyWithPlaceholder()
+      senderId: senderId == const $CopyWithPlaceholder() || senderId == null
           ? _value.senderId
           // ignore: cast_nullable_to_non_nullable
-          : senderId as String?,
-      message: message == const $CopyWithPlaceholder()
+          : senderId as String,
+      message: message == const $CopyWithPlaceholder() || message == null
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
-          : message as String?,
+          : message as String,
       isFromSupport:
           isFromSupport == const $CopyWithPlaceholder() || isFromSupport == null
           ? _value.isFromSupport
@@ -185,8 +185,8 @@ SupportChatMessage _$SupportChatMessageFromJson(Map<String, dynamic> json) =>
       final val = SupportChatMessage(
         id: $checkedConvert('id', (v) => v as String),
         ticketId: $checkedConvert('ticketId', (v) => v as String),
-        senderId: $checkedConvert('senderId', (v) => v as String?),
-        message: $checkedConvert('message', (v) => v as String?),
+        senderId: $checkedConvert('senderId', (v) => v as String),
+        message: $checkedConvert('message', (v) => v as String),
         isFromSupport: $checkedConvert('isFromSupport', (v) => v as bool),
         readAt: $checkedConvert(
           'readAt',

@@ -22,8 +22,8 @@ class SuspendDriver {
     required this.reason,
     this.suspendUntil,
   });
-  @JsonKey(name: r'id', required: true, includeIfNull: true)
-  final String? id;
+  @JsonKey(name: r'id', required: true, includeIfNull: false)
+  final String id;
 
   @JsonKey(name: r'reason', required: true, includeIfNull: false)
   final String reason;
@@ -41,7 +41,7 @@ class SuspendDriver {
 
   @override
   int get hashCode =>
-      (id == null ? 0 : id.hashCode) +
+      id.hashCode +
       reason.hashCode +
       (suspendUntil == null ? 0 : suspendUntil.hashCode);
 

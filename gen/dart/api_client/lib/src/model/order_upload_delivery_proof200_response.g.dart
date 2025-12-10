@@ -7,7 +7,7 @@ part of 'order_upload_delivery_proof200_response.dart';
 // **************************************************************************
 
 abstract class _$OrderUploadDeliveryProof200ResponseCWProxy {
-  OrderUploadDeliveryProof200Response message(String? message);
+  OrderUploadDeliveryProof200Response message(String message);
 
   OrderUploadDeliveryProof200Response data(
     OrderUploadDeliveryProof200ResponseData data,
@@ -25,7 +25,7 @@ abstract class _$OrderUploadDeliveryProof200ResponseCWProxy {
   /// OrderUploadDeliveryProof200Response(...).copyWith(id: 12, name: "My name")
   /// ```
   OrderUploadDeliveryProof200Response call({
-    String? message,
+    String message,
     OrderUploadDeliveryProof200ResponseData data,
     PaginationResult? pagination,
     int? totalPages,
@@ -41,7 +41,7 @@ class _$OrderUploadDeliveryProof200ResponseCWProxyImpl
   final OrderUploadDeliveryProof200Response _value;
 
   @override
-  OrderUploadDeliveryProof200Response message(String? message) =>
+  OrderUploadDeliveryProof200Response message(String message) =>
       call(message: message);
 
   @override
@@ -73,10 +73,10 @@ class _$OrderUploadDeliveryProof200ResponseCWProxyImpl
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return OrderUploadDeliveryProof200Response(
-      message: message == const $CopyWithPlaceholder()
+      message: message == const $CopyWithPlaceholder() || message == null
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
-          : message as String?,
+          : message as String,
       data: data == const $CopyWithPlaceholder() || data == null
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
@@ -113,7 +113,7 @@ _$OrderUploadDeliveryProof200ResponseFromJson(Map<String, dynamic> json) =>
     ) {
       $checkKeys(json, requiredKeys: const ['message', 'data']);
       final val = OrderUploadDeliveryProof200Response(
-        message: $checkedConvert('message', (v) => v as String?),
+        message: $checkedConvert('message', (v) => v as String),
         data: $checkedConvert(
           'data',
           (v) => OrderUploadDeliveryProof200ResponseData.fromJson(

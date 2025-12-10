@@ -7,7 +7,7 @@ part of 'order_send_message_request.dart';
 // **************************************************************************
 
 abstract class _$OrderSendMessageRequestCWProxy {
-  OrderSendMessageRequest message(String? message);
+  OrderSendMessageRequest message(String message);
 
   /// Creates a new instance with the provided field values.
   /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `OrderSendMessageRequest(...).copyWith.fieldName(value)`.
@@ -16,7 +16,7 @@ abstract class _$OrderSendMessageRequestCWProxy {
   /// ```dart
   /// OrderSendMessageRequest(...).copyWith(id: 12, name: "My name")
   /// ```
-  OrderSendMessageRequest call({String? message});
+  OrderSendMessageRequest call({String message});
 }
 
 /// Callable proxy for `copyWith` functionality.
@@ -28,7 +28,7 @@ class _$OrderSendMessageRequestCWProxyImpl
   final OrderSendMessageRequest _value;
 
   @override
-  OrderSendMessageRequest message(String? message) => call(message: message);
+  OrderSendMessageRequest message(String message) => call(message: message);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -42,10 +42,10 @@ class _$OrderSendMessageRequestCWProxyImpl
     Object? message = const $CopyWithPlaceholder(),
   }) {
     return OrderSendMessageRequest(
-      message: message == const $CopyWithPlaceholder()
+      message: message == const $CopyWithPlaceholder() || message == null
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
-          : message as String?,
+          : message as String,
     );
   }
 }
@@ -67,7 +67,7 @@ OrderSendMessageRequest _$OrderSendMessageRequestFromJson(
 ) => $checkedCreate('OrderSendMessageRequest', json, ($checkedConvert) {
   $checkKeys(json, requiredKeys: const ['message']);
   final val = OrderSendMessageRequest(
-    message: $checkedConvert('message', (v) => v as String?),
+    message: $checkedConvert('message', (v) => v as String),
   );
   return val;
 });

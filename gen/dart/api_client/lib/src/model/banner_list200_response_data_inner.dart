@@ -78,8 +78,8 @@ class BannerList200ResponseDataInner {
   @JsonKey(name: r'endAt', required: false, includeIfNull: false)
   final DateTime? endAt;
 
-  @JsonKey(name: r'createdById', required: true, includeIfNull: true)
-  final String? createdById;
+  @JsonKey(name: r'createdById', required: true, includeIfNull: false)
+  final String createdById;
 
   @JsonKey(name: r'updatedById', required: false, includeIfNull: false)
   final String? updatedById;
@@ -125,7 +125,7 @@ class BannerList200ResponseDataInner {
       priority.hashCode +
       (startAt == null ? 0 : startAt.hashCode) +
       (endAt == null ? 0 : endAt.hashCode) +
-      (createdById == null ? 0 : createdById.hashCode) +
+      createdById.hashCode +
       (updatedById == null ? 0 : updatedById.hashCode) +
       (createdAt == null ? 0 : createdAt.hashCode) +
       (updatedAt == null ? 0 : updatedAt.hashCode);

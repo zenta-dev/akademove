@@ -7,7 +7,7 @@ part of 'fraud_list_high_risk_users200_response.dart';
 // **************************************************************************
 
 abstract class _$FraudListHighRiskUsers200ResponseCWProxy {
-  FraudListHighRiskUsers200Response message(String? message);
+  FraudListHighRiskUsers200Response message(String message);
 
   FraudListHighRiskUsers200Response data(List<UserFraudProfile> data);
 
@@ -23,7 +23,7 @@ abstract class _$FraudListHighRiskUsers200ResponseCWProxy {
   /// FraudListHighRiskUsers200Response(...).copyWith(id: 12, name: "My name")
   /// ```
   FraudListHighRiskUsers200Response call({
-    String? message,
+    String message,
     List<UserFraudProfile> data,
     PaginationResult? pagination,
     int? totalPages,
@@ -39,7 +39,7 @@ class _$FraudListHighRiskUsers200ResponseCWProxyImpl
   final FraudListHighRiskUsers200Response _value;
 
   @override
-  FraudListHighRiskUsers200Response message(String? message) =>
+  FraudListHighRiskUsers200Response message(String message) =>
       call(message: message);
 
   @override
@@ -69,10 +69,10 @@ class _$FraudListHighRiskUsers200ResponseCWProxyImpl
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return FraudListHighRiskUsers200Response(
-      message: message == const $CopyWithPlaceholder()
+      message: message == const $CopyWithPlaceholder() || message == null
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
-          : message as String?,
+          : message as String,
       data: data == const $CopyWithPlaceholder() || data == null
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
@@ -109,7 +109,7 @@ FraudListHighRiskUsers200Response _$FraudListHighRiskUsers200ResponseFromJson(
 ) {
   $checkKeys(json, requiredKeys: const ['message', 'data']);
   final val = FraudListHighRiskUsers200Response(
-    message: $checkedConvert('message', (v) => v as String?),
+    message: $checkedConvert('message', (v) => v as String),
     data: $checkedConvert(
       'data',
       (v) => (v as List<dynamic>)

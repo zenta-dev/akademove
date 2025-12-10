@@ -10,22 +10,22 @@ import 'package:api_client/src/deserialize.dart';
 import 'package:dio/dio.dart';
 
 import 'package:api_client/src/model/badge_remove200_response.dart';
+import 'package:api_client/src/model/driver_submit_approval_request.dart';
 import 'package:api_client/src/model/driver_submit_rejection_request.dart';
 import 'package:api_client/src/model/driver_update_online_status_request.dart';
 import 'package:api_client/src/model/merchant_analytics200_response.dart';
 import 'package:api_client/src/model/merchant_best_sellers200_response.dart';
 import 'package:api_client/src/model/merchant_deactivate_request.dart';
-import 'package:api_client/src/model/merchant_get200_response.dart';
 import 'package:api_client/src/model/merchant_get_availability_status200_response.dart';
 import 'package:api_client/src/model/merchant_get_mine200_response.dart';
+import 'package:api_client/src/model/merchant_get_mine200_response_body.dart';
 import 'package:api_client/src/model/merchant_get_review200_response.dart';
 import 'package:api_client/src/model/merchant_menu_create200_response.dart';
 import 'package:api_client/src/model/merchant_menu_list200_response.dart';
 import 'package:api_client/src/model/merchant_order_accept200_response.dart';
 import 'package:api_client/src/model/merchant_populars200_response.dart';
 import 'package:api_client/src/model/merchant_set_operating_status_request.dart';
-import 'package:api_client/src/model/merchant_set_order_taking_status_request.dart';
-import 'package:api_client/src/model/merchant_submit_approval_request.dart';
+import 'package:api_client/src/model/merchant_status.dart';
 import 'package:api_client/src/model/merchant_update_document_status_request.dart';
 import 'package:api_client/src/model/pagination_mode.dart';
 import 'package:api_client/src/model/pagination_order.dart';
@@ -135,9 +135,9 @@ class MerchantApi {
   /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
   /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
   ///
-  /// Returns a [Future] containing a [Response] with a [MerchantGet200Response] as data
+  /// Returns a [Future] containing a [Response] with a [MerchantGetMine200ResponseBody] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<MerchantGet200Response>> merchantActivate({
+  Future<Response<MerchantGetMine200ResponseBody>> merchantActivate({
     required String id,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -172,17 +172,16 @@ class MerchantApi {
       onReceiveProgress: onReceiveProgress,
     );
 
-    MerchantGet200Response? _responseData;
+    MerchantGetMine200ResponseBody? _responseData;
 
     try {
       final rawData = _response.data;
       _responseData = rawData == null
           ? null
-          : deserialize<MerchantGet200Response, MerchantGet200Response>(
-              rawData,
-              'MerchantGet200Response',
-              growable: true,
-            );
+          : deserialize<
+              MerchantGetMine200ResponseBody,
+              MerchantGetMine200ResponseBody
+            >(rawData, 'MerchantGetMine200ResponseBody', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -193,7 +192,7 @@ class MerchantApi {
       );
     }
 
-    return Response<MerchantGet200Response>(
+    return Response<MerchantGetMine200ResponseBody>(
       data: _responseData,
       headers: _response.headers,
       isRedirect: _response.isRedirect,
@@ -396,9 +395,9 @@ class MerchantApi {
   /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
   /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
   ///
-  /// Returns a [Future] containing a [Response] with a [MerchantGet200Response] as data
+  /// Returns a [Future] containing a [Response] with a [MerchantGetMine200ResponseBody] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<MerchantGet200Response>> merchantDeactivate({
+  Future<Response<MerchantGetMine200ResponseBody>> merchantDeactivate({
     required String id,
     required MerchantDeactivateRequest merchantDeactivateRequest,
     CancelToken? cancelToken,
@@ -449,17 +448,16 @@ class MerchantApi {
       onReceiveProgress: onReceiveProgress,
     );
 
-    MerchantGet200Response? _responseData;
+    MerchantGetMine200ResponseBody? _responseData;
 
     try {
       final rawData = _response.data;
       _responseData = rawData == null
           ? null
-          : deserialize<MerchantGet200Response, MerchantGet200Response>(
-              rawData,
-              'MerchantGet200Response',
-              growable: true,
-            );
+          : deserialize<
+              MerchantGetMine200ResponseBody,
+              MerchantGetMine200ResponseBody
+            >(rawData, 'MerchantGetMine200ResponseBody', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -470,7 +468,7 @@ class MerchantApi {
       );
     }
 
-    return Response<MerchantGet200Response>(
+    return Response<MerchantGetMine200ResponseBody>(
       data: _responseData,
       headers: _response.headers,
       isRedirect: _response.isRedirect,
@@ -494,9 +492,9 @@ class MerchantApi {
   /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
   /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
   ///
-  /// Returns a [Future] containing a [Response] with a [MerchantGet200Response] as data
+  /// Returns a [Future] containing a [Response] with a [MerchantGetMine200ResponseBody] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<MerchantGet200Response>> merchantGet({
+  Future<Response<MerchantGetMine200ResponseBody>> merchantGet({
     required String id,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -531,17 +529,16 @@ class MerchantApi {
       onReceiveProgress: onReceiveProgress,
     );
 
-    MerchantGet200Response? _responseData;
+    MerchantGetMine200ResponseBody? _responseData;
 
     try {
       final rawData = _response.data;
       _responseData = rawData == null
           ? null
-          : deserialize<MerchantGet200Response, MerchantGet200Response>(
-              rawData,
-              'MerchantGet200Response',
-              growable: true,
-            );
+          : deserialize<
+              MerchantGetMine200ResponseBody,
+              MerchantGetMine200ResponseBody
+            >(rawData, 'MerchantGetMine200ResponseBody', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -552,7 +549,7 @@ class MerchantApi {
       );
     }
 
-    return Response<MerchantGet200Response>(
+    return Response<MerchantGetMine200ResponseBody>(
       data: _responseData,
       headers: _response.headers,
       isRedirect: _response.isRedirect,
@@ -820,6 +817,8 @@ class MerchantApi {
   /// * [mode]
   /// * [categories]
   /// * [isActive]
+  /// * [status]
+  /// * [operatingStatus]
   /// * [minRating]
   /// * [maxRating]
   /// * [maxDistance]
@@ -845,6 +844,8 @@ class MerchantApi {
     PaginationMode? mode = PaginationMode.offset,
     Object? categories,
     Object? isActive,
+    MerchantStatus? status,
+    String? operatingStatus,
     num? minRating,
     num? maxRating,
     num? maxDistance,
@@ -881,6 +882,8 @@ class MerchantApi {
       if (mode != null) r'mode': mode,
       if (categories != null) r'categories': categories,
       if (isActive != null) r'isActive': isActive,
+      if (status != null) r'status': status,
+      if (operatingStatus != null) r'operatingStatus': operatingStatus,
       if (minRating != null) r'minRating': minRating,
       if (maxRating != null) r'maxRating': maxRating,
       if (maxDistance != null) r'maxDistance': maxDistance,
@@ -950,7 +953,7 @@ class MerchantApi {
   /// Throws [DioException] if API call or serialization fails
   Future<Response<MerchantMenuCreate200Response>> merchantMenuCreate({
     required String merchantId,
-    String? name,
+    required String name,
     required num price,
     required int stock,
     String? category,
@@ -986,7 +989,7 @@ class MerchantApi {
     try {
       _bodyData = FormData.fromMap(<String, dynamic>{
         r'name': name,
-        r'category': category,
+        if (category != null) r'category': category,
         r'price': price,
         r'stock': stock,
         if (image != null) r'image': image,
@@ -1396,8 +1399,8 @@ class MerchantApi {
 
     try {
       _bodyData = FormData.fromMap(<String, dynamic>{
-        r'name': name,
-        r'category': category,
+        if (name != null) r'name': name,
+        if (category != null) r'category': category,
         if (price != null) r'price': price,
         if (stock != null) r'stock': stock,
         if (image != null) r'image': image,
@@ -1782,7 +1785,7 @@ class MerchantApi {
     try {
       _bodyData = FormData.fromMap(<String, dynamic>{
         r'reason': reason,
-        r'note': note,
+        if (note != null) r'note': note,
       });
     } catch (error, stackTrace) {
       throw DioException(
@@ -2031,9 +2034,9 @@ class MerchantApi {
   /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
   /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
   ///
-  /// Returns a [Future] containing a [Response] with a [MerchantGet200Response] as data
+  /// Returns a [Future] containing a [Response] with a [MerchantGetMine200ResponseBody] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<MerchantGet200Response>> merchantSetOnlineStatus({
+  Future<Response<MerchantGetMine200ResponseBody>> merchantSetOnlineStatus({
     required String id,
     required DriverUpdateOnlineStatusRequest driverUpdateOnlineStatusRequest,
     CancelToken? cancelToken,
@@ -2084,17 +2087,16 @@ class MerchantApi {
       onReceiveProgress: onReceiveProgress,
     );
 
-    MerchantGet200Response? _responseData;
+    MerchantGetMine200ResponseBody? _responseData;
 
     try {
       final rawData = _response.data;
       _responseData = rawData == null
           ? null
-          : deserialize<MerchantGet200Response, MerchantGet200Response>(
-              rawData,
-              'MerchantGet200Response',
-              growable: true,
-            );
+          : deserialize<
+              MerchantGetMine200ResponseBody,
+              MerchantGetMine200ResponseBody
+            >(rawData, 'MerchantGetMine200ResponseBody', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -2105,7 +2107,7 @@ class MerchantApi {
       );
     }
 
-    return Response<MerchantGet200Response>(
+    return Response<MerchantGetMine200ResponseBody>(
       data: _responseData,
       headers: _response.headers,
       isRedirect: _response.isRedirect,
@@ -2130,9 +2132,9 @@ class MerchantApi {
   /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
   /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
   ///
-  /// Returns a [Future] containing a [Response] with a [MerchantGet200Response] as data
+  /// Returns a [Future] containing a [Response] with a [MerchantGetMine200ResponseBody] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<MerchantGet200Response>> merchantSetOperatingStatus({
+  Future<Response<MerchantGetMine200ResponseBody>> merchantSetOperatingStatus({
     required String id,
     required MerchantSetOperatingStatusRequest
     merchantSetOperatingStatusRequest,
@@ -2184,17 +2186,16 @@ class MerchantApi {
       onReceiveProgress: onReceiveProgress,
     );
 
-    MerchantGet200Response? _responseData;
+    MerchantGetMine200ResponseBody? _responseData;
 
     try {
       final rawData = _response.data;
       _responseData = rawData == null
           ? null
-          : deserialize<MerchantGet200Response, MerchantGet200Response>(
-              rawData,
-              'MerchantGet200Response',
-              growable: true,
-            );
+          : deserialize<
+              MerchantGetMine200ResponseBody,
+              MerchantGetMine200ResponseBody
+            >(rawData, 'MerchantGetMine200ResponseBody', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -2205,107 +2206,7 @@ class MerchantApi {
       );
     }
 
-    return Response<MerchantGet200Response>(
-      data: _responseData,
-      headers: _response.headers,
-      isRedirect: _response.isRedirect,
-      requestOptions: _response.requestOptions,
-      redirects: _response.redirects,
-      statusCode: _response.statusCode,
-      statusMessage: _response.statusMessage,
-      extra: _response.extra,
-    );
-  }
-
-  /// merchantSetOrderTakingStatus
-  ///
-  ///
-  /// Parameters:
-  /// * [id]
-  /// * [merchantSetOrderTakingStatusRequest]
-  /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
-  /// * [headers] - Can be used to add additional headers to the request
-  /// * [extras] - Can be used to add flags to the request
-  /// * [validateStatus] - A [ValidateStatus] callback that can be used to determine request success based on the HTTP status of the response
-  /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
-  /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
-  ///
-  /// Returns a [Future] containing a [Response] with a [MerchantGet200Response] as data
-  /// Throws [DioException] if API call or serialization fails
-  Future<Response<MerchantGet200Response>> merchantSetOrderTakingStatus({
-    required String id,
-    required MerchantSetOrderTakingStatusRequest
-    merchantSetOrderTakingStatusRequest,
-    CancelToken? cancelToken,
-    Map<String, dynamic>? headers,
-    Map<String, dynamic>? extra,
-    ValidateStatus? validateStatus,
-    ProgressCallback? onSendProgress,
-    ProgressCallback? onReceiveProgress,
-  }) async {
-    final _path = r'/merchants/{id}/availability/order-taking'.replaceAll(
-      '{'
-      r'id'
-      '}',
-      id.toString(),
-    );
-    final _options = Options(
-      method: r'PATCH',
-      headers: <String, dynamic>{...?headers},
-      extra: <String, dynamic>{
-        'secure': <Map<String, String>>[
-          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
-        ],
-        ...?extra,
-      },
-      contentType: 'application/json',
-      validateStatus: validateStatus,
-    );
-
-    dynamic _bodyData;
-
-    try {
-      _bodyData = jsonEncode(merchantSetOrderTakingStatusRequest);
-    } catch (error, stackTrace) {
-      throw DioException(
-        requestOptions: _options.compose(_dio.options, _path),
-        type: DioExceptionType.unknown,
-        error: error,
-        stackTrace: stackTrace,
-      );
-    }
-
-    final _response = await _dio.request<Object>(
-      _path,
-      data: _bodyData,
-      options: _options,
-      cancelToken: cancelToken,
-      onSendProgress: onSendProgress,
-      onReceiveProgress: onReceiveProgress,
-    );
-
-    MerchantGet200Response? _responseData;
-
-    try {
-      final rawData = _response.data;
-      _responseData = rawData == null
-          ? null
-          : deserialize<MerchantGet200Response, MerchantGet200Response>(
-              rawData,
-              'MerchantGet200Response',
-              growable: true,
-            );
-    } catch (error, stackTrace) {
-      throw DioException(
-        requestOptions: _response.requestOptions,
-        response: _response,
-        type: DioExceptionType.unknown,
-        error: error,
-        stackTrace: stackTrace,
-      );
-    }
-
-    return Response<MerchantGet200Response>(
+    return Response<MerchantGetMine200ResponseBody>(
       data: _responseData,
       headers: _response.headers,
       isRedirect: _response.isRedirect,
@@ -2322,7 +2223,7 @@ class MerchantApi {
   ///
   /// Parameters:
   /// * [id]
-  /// * [merchantSubmitApprovalRequest]
+  /// * [driverSubmitApprovalRequest]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -2334,7 +2235,7 @@ class MerchantApi {
   /// Throws [DioException] if API call or serialization fails
   Future<Response<MerchantGetReview200Response>> merchantSubmitApproval({
     required String id,
-    required MerchantSubmitApprovalRequest merchantSubmitApprovalRequest,
+    required DriverSubmitApprovalRequest driverSubmitApprovalRequest,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -2364,7 +2265,7 @@ class MerchantApi {
     dynamic _bodyData;
 
     try {
-      _bodyData = jsonEncode(merchantSubmitApprovalRequest);
+      _bodyData = jsonEncode(driverSubmitApprovalRequest);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _options.compose(_dio.options, _path),
@@ -2529,6 +2430,7 @@ class MerchantApi {
   /// * [email]
   /// * [address]
   /// * [category] - Primary merchant category
+  /// * [bankAccountName]
   /// * [document]
   /// * [image]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
@@ -2538,9 +2440,9 @@ class MerchantApi {
   /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
   /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
   ///
-  /// Returns a [Future] containing a [Response] with a [MerchantGet200Response] as data
+  /// Returns a [Future] containing a [Response] with a [MerchantGetMine200ResponseBody] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<MerchantGet200Response>> merchantUpdate({
+  Future<Response<MerchantGetMine200ResponseBody>> merchantUpdate({
     required String id,
     required String phoneCountryCode,
     required int phoneNumber,
@@ -2552,6 +2454,7 @@ class MerchantApi {
     String? email,
     String? address,
     String? category,
+    String? bankAccountName,
     MultipartFile? document,
     MultipartFile? image,
     CancelToken? cancelToken,
@@ -2588,12 +2491,13 @@ class MerchantApi {
         if (email != null) r'email': email,
         r'phone_countryCode': phoneCountryCode,
         r'phone_number': phoneNumber,
-        r'address': address,
+        if (address != null) r'address': address,
         r'location_x': locationX,
         r'location_y': locationY,
         if (category != null) r'category': category,
         r'bank_provider': bankProvider,
         r'bank_number': bankNumber,
+        if (bankAccountName != null) r'bank_accountName': bankAccountName,
         if (document != null) r'document': document,
         if (image != null) r'image': image,
       });
@@ -2615,17 +2519,16 @@ class MerchantApi {
       onReceiveProgress: onReceiveProgress,
     );
 
-    MerchantGet200Response? _responseData;
+    MerchantGetMine200ResponseBody? _responseData;
 
     try {
       final rawData = _response.data;
       _responseData = rawData == null
           ? null
-          : deserialize<MerchantGet200Response, MerchantGet200Response>(
-              rawData,
-              'MerchantGet200Response',
-              growable: true,
-            );
+          : deserialize<
+              MerchantGetMine200ResponseBody,
+              MerchantGetMine200ResponseBody
+            >(rawData, 'MerchantGetMine200ResponseBody', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -2636,7 +2539,7 @@ class MerchantApi {
       );
     }
 
-    return Response<MerchantGet200Response>(
+    return Response<MerchantGetMine200ResponseBody>(
       data: _responseData,
       headers: _response.headers,
       isRedirect: _response.isRedirect,

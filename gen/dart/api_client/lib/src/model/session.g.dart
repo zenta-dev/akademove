@@ -7,17 +7,17 @@ part of 'session.dart';
 // **************************************************************************
 
 abstract class _$SessionCWProxy {
-  Session id(String? id);
+  Session id(String id);
 
   Session expiresAt(DateTime? expiresAt);
 
-  Session token(String? token);
+  Session token(String token);
 
   Session ipAddress(String? ipAddress);
 
   Session userAgent(String? userAgent);
 
-  Session userId(String? userId);
+  Session userId(String userId);
 
   Session createdAt(DateTime? createdAt);
 
@@ -31,12 +31,12 @@ abstract class _$SessionCWProxy {
   /// Session(...).copyWith(id: 12, name: "My name")
   /// ```
   Session call({
-    String? id,
+    String id,
     DateTime? expiresAt,
-    String? token,
+    String token,
     String? ipAddress,
     String? userAgent,
-    String? userId,
+    String userId,
     DateTime? createdAt,
     DateTime? updatedAt,
   });
@@ -50,13 +50,13 @@ class _$SessionCWProxyImpl implements _$SessionCWProxy {
   final Session _value;
 
   @override
-  Session id(String? id) => call(id: id);
+  Session id(String id) => call(id: id);
 
   @override
   Session expiresAt(DateTime? expiresAt) => call(expiresAt: expiresAt);
 
   @override
-  Session token(String? token) => call(token: token);
+  Session token(String token) => call(token: token);
 
   @override
   Session ipAddress(String? ipAddress) => call(ipAddress: ipAddress);
@@ -65,7 +65,7 @@ class _$SessionCWProxyImpl implements _$SessionCWProxy {
   Session userAgent(String? userAgent) => call(userAgent: userAgent);
 
   @override
-  Session userId(String? userId) => call(userId: userId);
+  Session userId(String userId) => call(userId: userId);
 
   @override
   Session createdAt(DateTime? createdAt) => call(createdAt: createdAt);
@@ -92,18 +92,18 @@ class _$SessionCWProxyImpl implements _$SessionCWProxy {
     Object? updatedAt = const $CopyWithPlaceholder(),
   }) {
     return Session(
-      id: id == const $CopyWithPlaceholder()
+      id: id == const $CopyWithPlaceholder() || id == null
           ? _value.id
           // ignore: cast_nullable_to_non_nullable
-          : id as String?,
+          : id as String,
       expiresAt: expiresAt == const $CopyWithPlaceholder()
           ? _value.expiresAt
           // ignore: cast_nullable_to_non_nullable
           : expiresAt as DateTime?,
-      token: token == const $CopyWithPlaceholder()
+      token: token == const $CopyWithPlaceholder() || token == null
           ? _value.token
           // ignore: cast_nullable_to_non_nullable
-          : token as String?,
+          : token as String,
       ipAddress: ipAddress == const $CopyWithPlaceholder()
           ? _value.ipAddress
           // ignore: cast_nullable_to_non_nullable
@@ -112,10 +112,10 @@ class _$SessionCWProxyImpl implements _$SessionCWProxy {
           ? _value.userAgent
           // ignore: cast_nullable_to_non_nullable
           : userAgent as String?,
-      userId: userId == const $CopyWithPlaceholder()
+      userId: userId == const $CopyWithPlaceholder() || userId == null
           ? _value.userId
           // ignore: cast_nullable_to_non_nullable
-          : userId as String?,
+          : userId as String,
       createdAt: createdAt == const $CopyWithPlaceholder()
           ? _value.createdAt
           // ignore: cast_nullable_to_non_nullable
@@ -153,15 +153,15 @@ Session _$SessionFromJson(Map<String, dynamic> json) =>
         ],
       );
       final val = Session(
-        id: $checkedConvert('id', (v) => v as String?),
+        id: $checkedConvert('id', (v) => v as String),
         expiresAt: $checkedConvert(
           'expiresAt',
           (v) => v == null ? null : DateTime.parse(v as String),
         ),
-        token: $checkedConvert('token', (v) => v as String?),
+        token: $checkedConvert('token', (v) => v as String),
         ipAddress: $checkedConvert('ipAddress', (v) => v as String?),
         userAgent: $checkedConvert('userAgent', (v) => v as String?),
-        userId: $checkedConvert('userId', (v) => v as String?),
+        userId: $checkedConvert('userId', (v) => v as String),
         createdAt: $checkedConvert(
           'createdAt',
           (v) => v == null ? null : DateTime.parse(v as String),

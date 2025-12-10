@@ -7,7 +7,7 @@ part of 'driver_get_analytics200_response_data_earnings_by_day_inner.dart';
 // **************************************************************************
 
 abstract class _$DriverGetAnalytics200ResponseDataEarningsByDayInnerCWProxy {
-  DriverGetAnalytics200ResponseDataEarningsByDayInner date(String? date);
+  DriverGetAnalytics200ResponseDataEarningsByDayInner date(String date);
 
   DriverGetAnalytics200ResponseDataEarningsByDayInner earnings(num earnings);
 
@@ -25,7 +25,7 @@ abstract class _$DriverGetAnalytics200ResponseDataEarningsByDayInnerCWProxy {
   /// DriverGetAnalytics200ResponseDataEarningsByDayInner(...).copyWith(id: 12, name: "My name")
   /// ```
   DriverGetAnalytics200ResponseDataEarningsByDayInner call({
-    String? date,
+    String date,
     num earnings,
     num orders,
     num commission,
@@ -43,7 +43,7 @@ class _$DriverGetAnalytics200ResponseDataEarningsByDayInnerCWProxyImpl
   final DriverGetAnalytics200ResponseDataEarningsByDayInner _value;
 
   @override
-  DriverGetAnalytics200ResponseDataEarningsByDayInner date(String? date) =>
+  DriverGetAnalytics200ResponseDataEarningsByDayInner date(String date) =>
       call(date: date);
 
   @override
@@ -74,10 +74,10 @@ class _$DriverGetAnalytics200ResponseDataEarningsByDayInnerCWProxyImpl
     Object? commission = const $CopyWithPlaceholder(),
   }) {
     return DriverGetAnalytics200ResponseDataEarningsByDayInner(
-      date: date == const $CopyWithPlaceholder()
+      date: date == const $CopyWithPlaceholder() || date == null
           ? _value.date
           // ignore: cast_nullable_to_non_nullable
-          : date as String?,
+          : date as String,
       earnings: earnings == const $CopyWithPlaceholder() || earnings == null
           ? _value.earnings
           // ignore: cast_nullable_to_non_nullable
@@ -120,7 +120,7 @@ _$DriverGetAnalytics200ResponseDataEarningsByDayInnerFromJson(
       requiredKeys: const ['date', 'earnings', 'orders', 'commission'],
     );
     final val = DriverGetAnalytics200ResponseDataEarningsByDayInner(
-      date: $checkedConvert('date', (v) => v as String?),
+      date: $checkedConvert('date', (v) => v as String),
       earnings: $checkedConvert('earnings', (v) => v as num),
       orders: $checkedConvert('orders', (v) => v as num),
       commission: $checkedConvert('commission', (v) => v as num),

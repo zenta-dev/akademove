@@ -7,7 +7,7 @@ part of 'order_place_order200_response.dart';
 // **************************************************************************
 
 abstract class _$OrderPlaceOrder200ResponseCWProxy {
-  OrderPlaceOrder200Response message(String? message);
+  OrderPlaceOrder200Response message(String message);
 
   OrderPlaceOrder200Response data(PlaceOrderResponse data);
 
@@ -23,7 +23,7 @@ abstract class _$OrderPlaceOrder200ResponseCWProxy {
   /// OrderPlaceOrder200Response(...).copyWith(id: 12, name: "My name")
   /// ```
   OrderPlaceOrder200Response call({
-    String? message,
+    String message,
     PlaceOrderResponse data,
     PaginationResult? pagination,
     int? totalPages,
@@ -39,7 +39,7 @@ class _$OrderPlaceOrder200ResponseCWProxyImpl
   final OrderPlaceOrder200Response _value;
 
   @override
-  OrderPlaceOrder200Response message(String? message) => call(message: message);
+  OrderPlaceOrder200Response message(String message) => call(message: message);
 
   @override
   OrderPlaceOrder200Response data(PlaceOrderResponse data) => call(data: data);
@@ -67,10 +67,10 @@ class _$OrderPlaceOrder200ResponseCWProxyImpl
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return OrderPlaceOrder200Response(
-      message: message == const $CopyWithPlaceholder()
+      message: message == const $CopyWithPlaceholder() || message == null
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
-          : message as String?,
+          : message as String,
       data: data == const $CopyWithPlaceholder() || data == null
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
@@ -104,7 +104,7 @@ OrderPlaceOrder200Response _$OrderPlaceOrder200ResponseFromJson(
 ) => $checkedCreate('OrderPlaceOrder200Response', json, ($checkedConvert) {
   $checkKeys(json, requiredKeys: const ['message', 'data']);
   final val = OrderPlaceOrder200Response(
-    message: $checkedConvert('message', (v) => v as String?),
+    message: $checkedConvert('message', (v) => v as String),
     data: $checkedConvert(
       'data',
       (v) => PlaceOrderResponse.fromJson(v as Map<String, dynamic>),

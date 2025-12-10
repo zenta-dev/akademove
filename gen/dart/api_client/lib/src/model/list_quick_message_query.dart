@@ -46,10 +46,7 @@ class ListQuickMessageQuery {
 
   @override
   int get hashCode =>
-      role.hashCode +
-      orderType.hashCode +
-      (locale == null ? 0 : locale.hashCode) +
-      isActive.hashCode;
+      role.hashCode + orderType.hashCode + locale.hashCode + isActive.hashCode;
 
   factory ListQuickMessageQuery.fromJson(Map<String, dynamic> json) =>
       _$ListQuickMessageQueryFromJson(json);

@@ -7,7 +7,7 @@ part of 'driver_list200_response.dart';
 // **************************************************************************
 
 abstract class _$DriverList200ResponseCWProxy {
-  DriverList200Response message(String? message);
+  DriverList200Response message(String message);
 
   DriverList200Response data(List<Driver> data);
 
@@ -23,7 +23,7 @@ abstract class _$DriverList200ResponseCWProxy {
   /// DriverList200Response(...).copyWith(id: 12, name: "My name")
   /// ```
   DriverList200Response call({
-    String? message,
+    String message,
     List<Driver> data,
     PaginationResult? pagination,
     int? totalPages,
@@ -39,7 +39,7 @@ class _$DriverList200ResponseCWProxyImpl
   final DriverList200Response _value;
 
   @override
-  DriverList200Response message(String? message) => call(message: message);
+  DriverList200Response message(String message) => call(message: message);
 
   @override
   DriverList200Response data(List<Driver> data) => call(data: data);
@@ -67,10 +67,10 @@ class _$DriverList200ResponseCWProxyImpl
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return DriverList200Response(
-      message: message == const $CopyWithPlaceholder()
+      message: message == const $CopyWithPlaceholder() || message == null
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
-          : message as String?,
+          : message as String,
       data: data == const $CopyWithPlaceholder() || data == null
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
@@ -104,7 +104,7 @@ DriverList200Response _$DriverList200ResponseFromJson(
 ) => $checkedCreate('DriverList200Response', json, ($checkedConvert) {
   $checkKeys(json, requiredKeys: const ['message', 'data']);
   final val = DriverList200Response(
-    message: $checkedConvert('message', (v) => v as String?),
+    message: $checkedConvert('message', (v) => v as String),
     data: $checkedConvert(
       'data',
       (v) => (v as List<dynamic>)

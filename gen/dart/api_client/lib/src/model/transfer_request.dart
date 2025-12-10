@@ -22,7 +22,6 @@ class TransferRequest {
     required this.recipientUserId,
     this.note,
   });
-
   @JsonKey(name: r'amount', required: true, includeIfNull: false)
   final num amount;
 
@@ -44,7 +43,7 @@ class TransferRequest {
 
   @override
   int get hashCode =>
-      amount.hashCode + recipientUserId.hashCode + (note?.hashCode ?? 0);
+      amount.hashCode + recipientUserId.hashCode + note.hashCode;
 
   factory TransferRequest.fromJson(Map<String, dynamic> json) =>
       _$TransferRequestFromJson(json);

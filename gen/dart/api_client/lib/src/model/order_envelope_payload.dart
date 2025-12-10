@@ -79,7 +79,7 @@ class OrderEnvelopePayload {
       done.hashCode +
       message.hashCode +
       merchantAction.hashCode +
-      (cancelReason == null ? 0 : cancelReason.hashCode) +
+      cancelReason.hashCode +
       noShow.hashCode;
 
   factory OrderEnvelopePayload.fromJson(Map<String, dynamic> json) =>

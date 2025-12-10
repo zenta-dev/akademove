@@ -729,6 +729,7 @@ class AuthApi {
   /// * [detailDriverLicense]
   /// * [detailVehicleCertificate]
   /// * [gender]
+  /// * [detailBankAccountName]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -754,6 +755,7 @@ class AuthApi {
     required MultipartFile detailDriverLicense,
     required MultipartFile detailVehicleCertificate,
     String? gender,
+    String? detailBankAccountName,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -791,6 +793,8 @@ class AuthApi {
         r'detail_licensePlate': detailLicensePlate,
         r'detail_bank_provider': detailBankProvider,
         r'detail_bank_number': detailBankNumber,
+        if (detailBankAccountName != null)
+          r'detail_bank_accountName': detailBankAccountName,
         r'detail_studentCard': detailStudentCard,
         r'detail_driverLicense': detailDriverLicense,
         r'detail_vehicleCertificate': detailVehicleCertificate,
@@ -868,6 +872,7 @@ class AuthApi {
   /// * [detailBankNumber]
   /// * [photo]
   /// * [gender]
+  /// * [detailBankAccountName]
   /// * [detailDocument]
   /// * [detailImage]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
@@ -890,7 +895,7 @@ class AuthApi {
     required String detailEmail,
     required String detailPhoneCountryCode,
     required int detailPhoneNumber,
-    String? detailAddress,
+    required String detailAddress,
     required num detailLocationX,
     required num detailLocationY,
     required String detailCategory,
@@ -898,6 +903,7 @@ class AuthApi {
     required num detailBankNumber,
     MultipartFile? photo,
     String? gender,
+    String? detailBankAccountName,
     MultipartFile? detailDocument,
     MultipartFile? detailImage,
     CancelToken? cancelToken,
@@ -943,6 +949,8 @@ class AuthApi {
         r'detail_category': detailCategory,
         r'detail_bank_provider': detailBankProvider,
         r'detail_bank_number': detailBankNumber,
+        if (detailBankAccountName != null)
+          r'detail_bank_accountName': detailBankAccountName,
         if (detailDocument != null) r'detail_document': detailDocument,
         if (detailImage != null) r'detail_image': detailImage,
       });

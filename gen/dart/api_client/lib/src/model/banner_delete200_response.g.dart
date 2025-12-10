@@ -7,7 +7,7 @@ part of 'banner_delete200_response.dart';
 // **************************************************************************
 
 abstract class _$BannerDelete200ResponseCWProxy {
-  BannerDelete200Response message(String? message);
+  BannerDelete200Response message(String message);
 
   BannerDelete200Response data(BannerDelete200ResponseData data);
 
@@ -23,7 +23,7 @@ abstract class _$BannerDelete200ResponseCWProxy {
   /// BannerDelete200Response(...).copyWith(id: 12, name: "My name")
   /// ```
   BannerDelete200Response call({
-    String? message,
+    String message,
     BannerDelete200ResponseData data,
     PaginationResult? pagination,
     int? totalPages,
@@ -39,7 +39,7 @@ class _$BannerDelete200ResponseCWProxyImpl
   final BannerDelete200Response _value;
 
   @override
-  BannerDelete200Response message(String? message) => call(message: message);
+  BannerDelete200Response message(String message) => call(message: message);
 
   @override
   BannerDelete200Response data(BannerDelete200ResponseData data) =>
@@ -68,10 +68,10 @@ class _$BannerDelete200ResponseCWProxyImpl
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return BannerDelete200Response(
-      message: message == const $CopyWithPlaceholder()
+      message: message == const $CopyWithPlaceholder() || message == null
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
-          : message as String?,
+          : message as String,
       data: data == const $CopyWithPlaceholder() || data == null
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
@@ -105,7 +105,7 @@ BannerDelete200Response _$BannerDelete200ResponseFromJson(
 ) => $checkedCreate('BannerDelete200Response', json, ($checkedConvert) {
   $checkKeys(json, requiredKeys: const ['message', 'data']);
   final val = BannerDelete200Response(
-    message: $checkedConvert('message', (v) => v as String?),
+    message: $checkedConvert('message', (v) => v as String),
     data: $checkedConvert(
       'data',
       (v) => BannerDelete200ResponseData.fromJson(v as Map<String, dynamic>),

@@ -7,7 +7,7 @@ part of 'account_deletion_submit201_response.dart';
 // **************************************************************************
 
 abstract class _$AccountDeletionSubmit201ResponseCWProxy {
-  AccountDeletionSubmit201Response message(String? message);
+  AccountDeletionSubmit201Response message(String message);
 
   AccountDeletionSubmit201Response data(AccountDeletion data);
 
@@ -23,7 +23,7 @@ abstract class _$AccountDeletionSubmit201ResponseCWProxy {
   /// AccountDeletionSubmit201Response(...).copyWith(id: 12, name: "My name")
   /// ```
   AccountDeletionSubmit201Response call({
-    String? message,
+    String message,
     AccountDeletion data,
     PaginationResult? pagination,
     int? totalPages,
@@ -39,7 +39,7 @@ class _$AccountDeletionSubmit201ResponseCWProxyImpl
   final AccountDeletionSubmit201Response _value;
 
   @override
-  AccountDeletionSubmit201Response message(String? message) =>
+  AccountDeletionSubmit201Response message(String message) =>
       call(message: message);
 
   @override
@@ -69,10 +69,10 @@ class _$AccountDeletionSubmit201ResponseCWProxyImpl
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return AccountDeletionSubmit201Response(
-      message: message == const $CopyWithPlaceholder()
+      message: message == const $CopyWithPlaceholder() || message == null
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
-          : message as String?,
+          : message as String,
       data: data == const $CopyWithPlaceholder() || data == null
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
@@ -108,7 +108,7 @@ AccountDeletionSubmit201Response _$AccountDeletionSubmit201ResponseFromJson(
     $checkedCreate('AccountDeletionSubmit201Response', json, ($checkedConvert) {
       $checkKeys(json, requiredKeys: const ['message', 'data']);
       final val = AccountDeletionSubmit201Response(
-        message: $checkedConvert('message', (v) => v as String?),
+        message: $checkedConvert('message', (v) => v as String),
         data: $checkedConvert(
           'data',
           (v) => AccountDeletion.fromJson(v as Map<String, dynamic>),

@@ -7,7 +7,7 @@ part of 'coupon_validate200_response.dart';
 // **************************************************************************
 
 abstract class _$CouponValidate200ResponseCWProxy {
-  CouponValidate200Response message(String? message);
+  CouponValidate200Response message(String message);
 
   CouponValidate200Response data(CouponValidate200ResponseData data);
 
@@ -23,7 +23,7 @@ abstract class _$CouponValidate200ResponseCWProxy {
   /// CouponValidate200Response(...).copyWith(id: 12, name: "My name")
   /// ```
   CouponValidate200Response call({
-    String? message,
+    String message,
     CouponValidate200ResponseData data,
     PaginationResult? pagination,
     int? totalPages,
@@ -39,7 +39,7 @@ class _$CouponValidate200ResponseCWProxyImpl
   final CouponValidate200Response _value;
 
   @override
-  CouponValidate200Response message(String? message) => call(message: message);
+  CouponValidate200Response message(String message) => call(message: message);
 
   @override
   CouponValidate200Response data(CouponValidate200ResponseData data) =>
@@ -68,10 +68,10 @@ class _$CouponValidate200ResponseCWProxyImpl
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return CouponValidate200Response(
-      message: message == const $CopyWithPlaceholder()
+      message: message == const $CopyWithPlaceholder() || message == null
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
-          : message as String?,
+          : message as String,
       data: data == const $CopyWithPlaceholder() || data == null
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
@@ -105,7 +105,7 @@ CouponValidate200Response _$CouponValidate200ResponseFromJson(
 ) => $checkedCreate('CouponValidate200Response', json, ($checkedConvert) {
   $checkKeys(json, requiredKeys: const ['message', 'data']);
   final val = CouponValidate200Response(
-    message: $checkedConvert('message', (v) => v as String?),
+    message: $checkedConvert('message', (v) => v as String),
     data: $checkedConvert(
       'data',
       (v) => CouponValidate200ResponseData.fromJson(v as Map<String, dynamic>),

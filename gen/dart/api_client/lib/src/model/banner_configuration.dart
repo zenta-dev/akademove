@@ -22,14 +22,14 @@ class BannerConfiguration {
     required this.description,
     required this.imageUrl,
   });
-  @JsonKey(name: r'title', required: true, includeIfNull: true)
-  final String? title;
+  @JsonKey(name: r'title', required: true, includeIfNull: false)
+  final String title;
 
-  @JsonKey(name: r'description', required: true, includeIfNull: true)
-  final String? description;
+  @JsonKey(name: r'description', required: true, includeIfNull: false)
+  final String description;
 
-  @JsonKey(name: r'imageUrl', required: true, includeIfNull: true)
-  final String? imageUrl;
+  @JsonKey(name: r'imageUrl', required: true, includeIfNull: false)
+  final String imageUrl;
 
   @override
   bool operator ==(Object other) =>
@@ -40,10 +40,7 @@ class BannerConfiguration {
           other.imageUrl == imageUrl;
 
   @override
-  int get hashCode =>
-      (title == null ? 0 : title.hashCode) +
-      (description == null ? 0 : description.hashCode) +
-      (imageUrl == null ? 0 : imageUrl.hashCode);
+  int get hashCode => title.hashCode + description.hashCode + imageUrl.hashCode;
 
   factory BannerConfiguration.fromJson(Map<String, dynamic> json) =>
       _$BannerConfigurationFromJson(json);

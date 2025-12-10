@@ -7,7 +7,7 @@ part of 'review_create200_response.dart';
 // **************************************************************************
 
 abstract class _$ReviewCreate200ResponseCWProxy {
-  ReviewCreate200Response message(String? message);
+  ReviewCreate200Response message(String message);
 
   ReviewCreate200Response data(Review data);
 
@@ -23,7 +23,7 @@ abstract class _$ReviewCreate200ResponseCWProxy {
   /// ReviewCreate200Response(...).copyWith(id: 12, name: "My name")
   /// ```
   ReviewCreate200Response call({
-    String? message,
+    String message,
     Review data,
     PaginationResult? pagination,
     int? totalPages,
@@ -39,7 +39,7 @@ class _$ReviewCreate200ResponseCWProxyImpl
   final ReviewCreate200Response _value;
 
   @override
-  ReviewCreate200Response message(String? message) => call(message: message);
+  ReviewCreate200Response message(String message) => call(message: message);
 
   @override
   ReviewCreate200Response data(Review data) => call(data: data);
@@ -67,10 +67,10 @@ class _$ReviewCreate200ResponseCWProxyImpl
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return ReviewCreate200Response(
-      message: message == const $CopyWithPlaceholder()
+      message: message == const $CopyWithPlaceholder() || message == null
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
-          : message as String?,
+          : message as String,
       data: data == const $CopyWithPlaceholder() || data == null
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
@@ -104,7 +104,7 @@ ReviewCreate200Response _$ReviewCreate200ResponseFromJson(
 ) => $checkedCreate('ReviewCreate200Response', json, ($checkedConvert) {
   $checkKeys(json, requiredKeys: const ['message', 'data']);
   final val = ReviewCreate200Response(
-    message: $checkedConvert('message', (v) => v as String?),
+    message: $checkedConvert('message', (v) => v as String),
     data: $checkedConvert(
       'data',
       (v) => Review.fromJson(v as Map<String, dynamic>),

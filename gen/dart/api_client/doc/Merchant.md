@@ -18,8 +18,8 @@ Name | Type | Description | Notes
 **status** | **String** | Merchant approval status | 
 **isActive** | **bool** |  | 
 **isOnline** | **bool** | Whether merchant is currently online/available | 
-**isTakingOrders** | **bool** | Whether merchant is actively taking orders (subset of online) | 
 **operatingStatus** | **String** | Current operating status (OPEN, CLOSED, BREAK, MAINTENANCE) | 
+**activeOrderCount** | **int** | Number of active orders being processed by merchant | 
 **rating** | **num** |  | 
 **document** | **String** |  | [optional] 
 **image** | **String** |  | [optional] 

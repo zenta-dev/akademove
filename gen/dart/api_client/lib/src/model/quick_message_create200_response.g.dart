@@ -7,7 +7,7 @@ part of 'quick_message_create200_response.dart';
 // **************************************************************************
 
 abstract class _$QuickMessageCreate200ResponseCWProxy {
-  QuickMessageCreate200Response message(String? message);
+  QuickMessageCreate200Response message(String message);
 
   QuickMessageCreate200Response data(QuickMessageTemplate data);
 
@@ -23,7 +23,7 @@ abstract class _$QuickMessageCreate200ResponseCWProxy {
   /// QuickMessageCreate200Response(...).copyWith(id: 12, name: "My name")
   /// ```
   QuickMessageCreate200Response call({
-    String? message,
+    String message,
     QuickMessageTemplate data,
     PaginationResult? pagination,
     int? totalPages,
@@ -39,7 +39,7 @@ class _$QuickMessageCreate200ResponseCWProxyImpl
   final QuickMessageCreate200Response _value;
 
   @override
-  QuickMessageCreate200Response message(String? message) =>
+  QuickMessageCreate200Response message(String message) =>
       call(message: message);
 
   @override
@@ -69,10 +69,10 @@ class _$QuickMessageCreate200ResponseCWProxyImpl
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return QuickMessageCreate200Response(
-      message: message == const $CopyWithPlaceholder()
+      message: message == const $CopyWithPlaceholder() || message == null
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
-          : message as String?,
+          : message as String,
       data: data == const $CopyWithPlaceholder() || data == null
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
@@ -107,7 +107,7 @@ QuickMessageCreate200Response _$QuickMessageCreate200ResponseFromJson(
 ) => $checkedCreate('QuickMessageCreate200Response', json, ($checkedConvert) {
   $checkKeys(json, requiredKeys: const ['message', 'data']);
   final val = QuickMessageCreate200Response(
-    message: $checkedConvert('message', (v) => v as String?),
+    message: $checkedConvert('message', (v) => v as String),
     data: $checkedConvert(
       'data',
       (v) => QuickMessageTemplate.fromJson(v as Map<String, dynamic>),

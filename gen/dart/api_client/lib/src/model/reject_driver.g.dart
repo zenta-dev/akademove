@@ -7,7 +7,7 @@ part of 'reject_driver.dart';
 // **************************************************************************
 
 abstract class _$RejectDriverCWProxy {
-  RejectDriver id(String? id);
+  RejectDriver id(String id);
 
   RejectDriver reason(String reason);
 
@@ -18,7 +18,7 @@ abstract class _$RejectDriverCWProxy {
   /// ```dart
   /// RejectDriver(...).copyWith(id: 12, name: "My name")
   /// ```
-  RejectDriver call({String? id, String reason});
+  RejectDriver call({String id, String reason});
 }
 
 /// Callable proxy for `copyWith` functionality.
@@ -29,7 +29,7 @@ class _$RejectDriverCWProxyImpl implements _$RejectDriverCWProxy {
   final RejectDriver _value;
 
   @override
-  RejectDriver id(String? id) => call(id: id);
+  RejectDriver id(String id) => call(id: id);
 
   @override
   RejectDriver reason(String reason) => call(reason: reason);
@@ -47,10 +47,10 @@ class _$RejectDriverCWProxyImpl implements _$RejectDriverCWProxy {
     Object? reason = const $CopyWithPlaceholder(),
   }) {
     return RejectDriver(
-      id: id == const $CopyWithPlaceholder()
+      id: id == const $CopyWithPlaceholder() || id == null
           ? _value.id
           // ignore: cast_nullable_to_non_nullable
-          : id as String?,
+          : id as String,
       reason: reason == const $CopyWithPlaceholder() || reason == null
           ? _value.reason
           // ignore: cast_nullable_to_non_nullable
@@ -74,7 +74,7 @@ RejectDriver _$RejectDriverFromJson(Map<String, dynamic> json) =>
     $checkedCreate('RejectDriver', json, ($checkedConvert) {
       $checkKeys(json, requiredKeys: const ['id', 'reason']);
       final val = RejectDriver(
-        id: $checkedConvert('id', (v) => v as String?),
+        id: $checkedConvert('id', (v) => v as String),
         reason: $checkedConvert('reason', (v) => v as String),
       );
       return val;

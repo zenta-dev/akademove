@@ -7,7 +7,7 @@ part of 'wallet_get_monthly_summary200_response.dart';
 // **************************************************************************
 
 abstract class _$WalletGetMonthlySummary200ResponseCWProxy {
-  WalletGetMonthlySummary200Response message(String? message);
+  WalletGetMonthlySummary200Response message(String message);
 
   WalletGetMonthlySummary200Response data(WalletMonthlySummaryResponse data);
 
@@ -23,7 +23,7 @@ abstract class _$WalletGetMonthlySummary200ResponseCWProxy {
   /// WalletGetMonthlySummary200Response(...).copyWith(id: 12, name: "My name")
   /// ```
   WalletGetMonthlySummary200Response call({
-    String? message,
+    String message,
     WalletMonthlySummaryResponse data,
     PaginationResult? pagination,
     int? totalPages,
@@ -39,7 +39,7 @@ class _$WalletGetMonthlySummary200ResponseCWProxyImpl
   final WalletGetMonthlySummary200Response _value;
 
   @override
-  WalletGetMonthlySummary200Response message(String? message) =>
+  WalletGetMonthlySummary200Response message(String message) =>
       call(message: message);
 
   @override
@@ -69,10 +69,10 @@ class _$WalletGetMonthlySummary200ResponseCWProxyImpl
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return WalletGetMonthlySummary200Response(
-      message: message == const $CopyWithPlaceholder()
+      message: message == const $CopyWithPlaceholder() || message == null
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
-          : message as String?,
+          : message as String,
       data: data == const $CopyWithPlaceholder() || data == null
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
@@ -109,7 +109,7 @@ WalletGetMonthlySummary200Response _$WalletGetMonthlySummary200ResponseFromJson(
 ) {
   $checkKeys(json, requiredKeys: const ['message', 'data']);
   final val = WalletGetMonthlySummary200Response(
-    message: $checkedConvert('message', (v) => v as String?),
+    message: $checkedConvert('message', (v) => v as String),
     data: $checkedConvert(
       'data',
       (v) => WalletMonthlySummaryResponse.fromJson(v as Map<String, dynamic>),

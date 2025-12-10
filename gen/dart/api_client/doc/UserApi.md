@@ -11,6 +11,7 @@ Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**accountDeletionSubmit**](UserApi.md#accountdeletionsubmit) | **POST** /account-deletion/submit | 
 [**contactSubmit**](UserApi.md#contactsubmit) | **POST** /contacts/submit | 
+[**userLookupByPhone**](UserApi.md#userlookupbyphone) | **GET** /users/lookup/phone | 
 [**userMeChangePassword**](UserApi.md#usermechangepassword) | **PUT** /users/me/change-password | 
 [**userMeUpdate**](UserApi.md#usermeupdate) | **PUT** /users/me | 
 
@@ -93,6 +94,49 @@ Name | Type | Description  | Notes
 ### HTTP request headers
 
  - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **userLookupByPhone**
+> UserLookupByPhone200Response userLookupByPhone(phone)
+
+
+
+Lookup user by phone number for wallet transfer. Returns minimal user info with masked phone number for privacy.
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getUserApi();
+final String phone = phone_example; // String | 
+
+try {
+    final response = api.userLookupByPhone(phone);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling UserApi->userLookupByPhone: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **phone** | **String**|  | 
+
+### Return type
+
+[**UserLookupByPhone200Response**](UserLookupByPhone200Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
  - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)

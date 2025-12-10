@@ -94,11 +94,11 @@ class UpdateAccountDeletion {
       phone.hashCode +
       accountType.hashCode +
       reason.hashCode +
-      (additionalInfo == null ? 0 : additionalInfo.hashCode) +
+      additionalInfo.hashCode +
       status.hashCode +
       userId.hashCode +
       reviewedById.hashCode +
-      (reviewNotes == null ? 0 : reviewNotes.hashCode) +
+      reviewNotes.hashCode +
       (reviewedAt == null ? 0 : reviewedAt.hashCode) +
       (completedAt == null ? 0 : completedAt.hashCode);
 

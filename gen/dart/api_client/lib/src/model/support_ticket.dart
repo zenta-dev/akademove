@@ -41,8 +41,8 @@ class SupportTicket {
   @JsonKey(name: r'id', required: true, includeIfNull: false)
   final String id;
 
-  @JsonKey(name: r'userId', required: true, includeIfNull: true)
-  final String? userId;
+  @JsonKey(name: r'userId', required: true, includeIfNull: false)
+  final String userId;
 
   @JsonKey(name: r'assignedToId', required: false, includeIfNull: false)
   final String? assignedToId;
@@ -102,8 +102,8 @@ class SupportTicket {
   @override
   int get hashCode =>
       id.hashCode +
-      (userId == null ? 0 : userId.hashCode) +
-      (assignedToId == null ? 0 : assignedToId.hashCode) +
+      userId.hashCode +
+      assignedToId.hashCode +
       subject.hashCode +
       category.hashCode +
       priority.hashCode +

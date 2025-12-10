@@ -9,11 +9,11 @@ part of 'notification_list200_response_data_inner.dart';
 abstract class _$NotificationList200ResponseDataInnerCWProxy {
   NotificationList200ResponseDataInner id(String id);
 
-  NotificationList200ResponseDataInner userId(String? userId);
+  NotificationList200ResponseDataInner userId(String userId);
 
-  NotificationList200ResponseDataInner title(String? title);
+  NotificationList200ResponseDataInner title(String title);
 
-  NotificationList200ResponseDataInner body(String? body);
+  NotificationList200ResponseDataInner body(String body);
 
   NotificationList200ResponseDataInner data(Object? data);
 
@@ -34,9 +34,9 @@ abstract class _$NotificationList200ResponseDataInnerCWProxy {
   /// ```
   NotificationList200ResponseDataInner call({
     String id,
-    String? userId,
-    String? title,
-    String? body,
+    String userId,
+    String title,
+    String body,
     Object? data,
     String? messageId,
     bool isRead,
@@ -57,15 +57,15 @@ class _$NotificationList200ResponseDataInnerCWProxyImpl
   NotificationList200ResponseDataInner id(String id) => call(id: id);
 
   @override
-  NotificationList200ResponseDataInner userId(String? userId) =>
+  NotificationList200ResponseDataInner userId(String userId) =>
       call(userId: userId);
 
   @override
-  NotificationList200ResponseDataInner title(String? title) =>
+  NotificationList200ResponseDataInner title(String title) =>
       call(title: title);
 
   @override
-  NotificationList200ResponseDataInner body(String? body) => call(body: body);
+  NotificationList200ResponseDataInner body(String body) => call(body: body);
 
   @override
   NotificationList200ResponseDataInner data(Object? data) => call(data: data);
@@ -110,18 +110,18 @@ class _$NotificationList200ResponseDataInnerCWProxyImpl
           ? _value.id
           // ignore: cast_nullable_to_non_nullable
           : id as String,
-      userId: userId == const $CopyWithPlaceholder()
+      userId: userId == const $CopyWithPlaceholder() || userId == null
           ? _value.userId
           // ignore: cast_nullable_to_non_nullable
-          : userId as String?,
-      title: title == const $CopyWithPlaceholder()
+          : userId as String,
+      title: title == const $CopyWithPlaceholder() || title == null
           ? _value.title
           // ignore: cast_nullable_to_non_nullable
-          : title as String?,
-      body: body == const $CopyWithPlaceholder()
+          : title as String,
+      body: body == const $CopyWithPlaceholder() || body == null
           ? _value.body
           // ignore: cast_nullable_to_non_nullable
-          : body as String?,
+          : body as String,
       data: data == const $CopyWithPlaceholder()
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
@@ -177,9 +177,9 @@ _$NotificationList200ResponseDataInnerFromJson(Map<String, dynamic> json) =>
       );
       final val = NotificationList200ResponseDataInner(
         id: $checkedConvert('id', (v) => v as String),
-        userId: $checkedConvert('userId', (v) => v as String?),
-        title: $checkedConvert('title', (v) => v as String?),
-        body: $checkedConvert('body', (v) => v as String?),
+        userId: $checkedConvert('userId', (v) => v as String),
+        title: $checkedConvert('title', (v) => v as String),
+        body: $checkedConvert('body', (v) => v as String),
         data: $checkedConvert('data', (v) => v),
         messageId: $checkedConvert('messageId', (v) => v as String?),
         isRead: $checkedConvert('isRead', (v) => v as bool),

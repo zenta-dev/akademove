@@ -51,10 +51,7 @@ class ListDriverQuizAnswerQuery {
 
   @override
   int get hashCode =>
-      (driverId == null ? 0 : driverId.hashCode) +
-      status.hashCode +
-      page.hashCode +
-      limit.hashCode;
+      driverId.hashCode + status.hashCode + page.hashCode + limit.hashCode;
 
   factory ListDriverQuizAnswerQuery.fromJson(Map<String, dynamic> json) =>
       _$ListDriverQuizAnswerQueryFromJson(json);

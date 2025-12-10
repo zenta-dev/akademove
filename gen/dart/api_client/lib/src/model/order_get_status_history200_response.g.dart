@@ -7,7 +7,7 @@ part of 'order_get_status_history200_response.dart';
 // **************************************************************************
 
 abstract class _$OrderGetStatusHistory200ResponseCWProxy {
-  OrderGetStatusHistory200Response message(String? message);
+  OrderGetStatusHistory200Response message(String message);
 
   OrderGetStatusHistory200Response data(List<OrderStatusHistory> data);
 
@@ -23,7 +23,7 @@ abstract class _$OrderGetStatusHistory200ResponseCWProxy {
   /// OrderGetStatusHistory200Response(...).copyWith(id: 12, name: "My name")
   /// ```
   OrderGetStatusHistory200Response call({
-    String? message,
+    String message,
     List<OrderStatusHistory> data,
     PaginationResult? pagination,
     int? totalPages,
@@ -39,7 +39,7 @@ class _$OrderGetStatusHistory200ResponseCWProxyImpl
   final OrderGetStatusHistory200Response _value;
 
   @override
-  OrderGetStatusHistory200Response message(String? message) =>
+  OrderGetStatusHistory200Response message(String message) =>
       call(message: message);
 
   @override
@@ -69,10 +69,10 @@ class _$OrderGetStatusHistory200ResponseCWProxyImpl
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return OrderGetStatusHistory200Response(
-      message: message == const $CopyWithPlaceholder()
+      message: message == const $CopyWithPlaceholder() || message == null
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
-          : message as String?,
+          : message as String,
       data: data == const $CopyWithPlaceholder() || data == null
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
@@ -109,7 +109,7 @@ OrderGetStatusHistory200Response _$OrderGetStatusHistory200ResponseFromJson(
 ) {
   $checkKeys(json, requiredKeys: const ['message', 'data']);
   final val = OrderGetStatusHistory200Response(
-    message: $checkedConvert('message', (v) => v as String?),
+    message: $checkedConvert('message', (v) => v as String),
     data: $checkedConvert(
       'data',
       (v) => (v as List<dynamic>)

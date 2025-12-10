@@ -75,7 +75,7 @@ class UpdateLeaderboard {
 
   @override
   int get hashCode =>
-      (userId == null ? 0 : userId.hashCode) +
+      userId.hashCode +
       driverId.hashCode +
       merchantId.hashCode +
       category.hashCode +

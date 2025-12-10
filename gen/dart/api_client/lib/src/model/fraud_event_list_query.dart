@@ -89,7 +89,7 @@ class FraudEventListQuery {
       status.hashCode +
       severity.hashCode +
       eventType.hashCode +
-      (userId == null ? 0 : userId.hashCode) +
+      userId.hashCode +
       driverId.hashCode +
       (startDate == null ? 0 : startDate.hashCode) +
       (endDate == null ? 0 : endDate.hashCode) +
