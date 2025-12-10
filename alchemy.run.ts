@@ -150,7 +150,11 @@ export const [server, web] = await Promise.all([
 				},
 			},
 		],
-		crons: ["* * * * *"], // Run every 1 minute for auto-offline checks
+		crons: [
+			"* * * * *", // Every minute: auto-offline + scheduled orders (need minute precision)
+			"*/5 * * * *", // Every 5 minutes: order checker (timeouts, cleanup)
+			"*/15 * * * *", // Every 15 minutes: leaderboard calculation
+		],
 		dev: {
 			port: 3000,
 		},
