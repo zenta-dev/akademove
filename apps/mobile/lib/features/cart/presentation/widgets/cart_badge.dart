@@ -1,9 +1,9 @@
+import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/cart/presentation/cubits/cart_cubit.dart';
 import 'package:akademove/features/cart/presentation/states/_export.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:shadcn_flutter/shadcn_flutter.dart' as shadcn;
+import 'package:shadcn_flutter/shadcn_flutter.dart';
 
 /// Badge widget that displays cart item count in AppBar
 /// Shows red badge with count when cart has items
@@ -20,10 +20,11 @@ class CartBadge extends StatelessWidget {
 
         return IconButton(
           onPressed: onTap,
+          variance: const ButtonStyle.ghost(),
           icon: Stack(
             clipBehavior: Clip.none,
             children: [
-              Icon(shadcn.LucideIcons.shoppingCart, size: 20.sp),
+              Icon(LucideIcons.shoppingCart, size: 20.sp),
               if (itemCount > 0)
                 Positioned(
                   right: -4,
@@ -34,7 +35,7 @@ class CartBadge extends StatelessWidget {
                       vertical: 2.h,
                     ),
                     decoration: BoxDecoration(
-                      color: Colors.red,
+                      color: context.colorScheme.destructive,
                       borderRadius: BorderRadius.circular(10),
                     ),
                     constraints: BoxConstraints(

@@ -7,7 +7,6 @@ import 'package:akademove/features/order/data/repositories/order_repository.dart
 import 'package:akademove/l10n/l10n.dart';
 import 'package:api_client/api_client.dart' hide Cart, CartItem;
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/material.dart' as material;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -163,7 +162,7 @@ class _OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
                     errorWidget: (context, url, error) => Container(
                       color: mutedColor.withValues(alpha: 0.1),
                       child: Icon(
-                        material.Icons.fastfood,
+                        LucideIcons.utensils,
                         size: 24.sp,
                         color: mutedColor.withValues(alpha: 0.5),
                       ),
@@ -174,7 +173,7 @@ class _OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
                     height: 50.w,
                     color: mutedColor.withValues(alpha: 0.1),
                     child: Icon(
-                      material.Icons.fastfood,
+                      LucideIcons.utensils,
                       size: 24.sp,
                       color: mutedColor.withValues(alpha: 0.5),
                     ),
@@ -246,70 +245,64 @@ class _OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
           ),
           Gap(12.h),
           // wallet payment option
-          material.Material(
-            color: _selectedPaymentMethod == PaymentMethod.wallet
-                ? context.colorScheme.primary.withValues(alpha: 0.1)
-                : Colors.transparent,
-            borderRadius: BorderRadius.circular(8),
-            child: material.InkWell(
-              onTap: () {
-                setState(() {
-                  _selectedPaymentMethod = PaymentMethod.wallet;
-                });
-              },
-              borderRadius: BorderRadius.circular(8),
-              child: Container(
-                padding: EdgeInsets.all(12.dg),
-                decoration: BoxDecoration(
-                  border: Border.all(
+          GestureDetector(
+            onTap: () {
+              setState(() {
+                _selectedPaymentMethod = PaymentMethod.wallet;
+              });
+            },
+            child: Container(
+              padding: EdgeInsets.all(12.dg),
+              decoration: BoxDecoration(
+                color: _selectedPaymentMethod == PaymentMethod.wallet
+                    ? context.colorScheme.primary.withValues(alpha: 0.1)
+                    : Colors.transparent,
+                border: Border.all(
+                  color: _selectedPaymentMethod == PaymentMethod.wallet
+                      ? context.colorScheme.primary
+                      : context.colorScheme.border,
+                  width: _selectedPaymentMethod == PaymentMethod.wallet ? 2 : 1,
+                ),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Row(
+                children: [
+                  Icon(
+                    LucideIcons.wallet,
+                    size: 24.sp,
                     color: _selectedPaymentMethod == PaymentMethod.wallet
                         ? context.colorScheme.primary
-                        : context.colorScheme.border,
-                    width: _selectedPaymentMethod == PaymentMethod.wallet
-                        ? 2
-                        : 1,
+                        : mutedColor,
                   ),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Row(
-                  children: [
+                  Gap(12.w),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          context.l10n.order_confirm_payment_wallet,
+                          style: context.typography.semiBold.copyWith(
+                            fontSize: 14.sp,
+                          ),
+                        ),
+                        Gap(2.h),
+                        Text(
+                          context.l10n.order_confirm_payment_description,
+                          style: TextStyle(
+                            fontSize: 12.sp,
+                            color: mutedColor.withValues(alpha: 0.6),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  if (_selectedPaymentMethod == PaymentMethod.wallet)
                     Icon(
-                      LucideIcons.wallet,
-                      size: 24.sp,
-                      color: _selectedPaymentMethod == PaymentMethod.wallet
-                          ? context.colorScheme.primary
-                          : mutedColor,
+                      LucideIcons.circleCheck,
+                      size: 20.sp,
+                      color: context.colorScheme.primary,
                     ),
-                    Gap(12.w),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            context.l10n.order_confirm_payment_wallet,
-                            style: context.typography.semiBold.copyWith(
-                              fontSize: 14.sp,
-                            ),
-                          ),
-                          Gap(2.h),
-                          Text(
-                            context.l10n.order_confirm_payment_description,
-                            style: TextStyle(
-                              fontSize: 12.sp,
-                              color: mutedColor.withValues(alpha: 0.6),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    if (_selectedPaymentMethod == PaymentMethod.wallet)
-                      Icon(
-                        LucideIcons.circleCheck,
-                        size: 20.sp,
-                        color: context.colorScheme.primary,
-                      ),
-                  ],
-                ),
+                ],
               ),
             ),
           ),
