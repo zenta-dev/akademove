@@ -3,6 +3,7 @@ import type { Driver, Payment, Transaction } from "@repo/schema";
 import type { OrderStatus } from "@repo/schema/order";
 import { trimObjectValues } from "@repo/shared";
 import { AuthError } from "@/core/error";
+import { shouldBypassAuthorization } from "@/core/middlewares/auth";
 import { createORPCRouter } from "@/core/router/orpc";
 import { logger } from "@/utils/logger";
 import { DriverMainRepository } from "../driver/main/driver-main-repository";
@@ -69,7 +70,11 @@ export const OrderHandler = priv.router({
 
 		// FIX: Add IDOR protection - users can only view orders they're involved in
 		// Admins and operators can view any order
-		if (context.user.role !== "ADMIN" && context.user.role !== "OPERATOR") {
+		if (
+			!shouldBypassAuthorization() &&
+			context.user.role !== "ADMIN" &&
+			context.user.role !== "OPERATOR"
+		) {
 			const isOwner = result.userId === context.user.id;
 
 			// Check if driver is assigned to this order
@@ -328,7 +333,7 @@ export const OrderHandler = priv.router({
 				const order = await context.repo.order.get(orderId, { tx });
 
 				// Verify user is customer
-				if (order.userId !== context.user.id) {
+				if (!shouldBypassAuthorization() && order.userId !== context.user.id) {
 					throw new AuthError("Only customer can verify OTP", {
 						code: "FORBIDDEN",
 					});
@@ -532,7 +537,11 @@ export const OrderHandler = priv.router({
 			// FIX: Add IDOR protection - users can only view status history for orders they're involved in
 			// const order = await context.repo.order.get(params.id);
 
-			if (context.user.role !== "ADMIN" && context.user.role !== "OPERATOR") {
+			if (
+				!shouldBypassAuthorization() &&
+				context.user.role !== "ADMIN" &&
+				context.user.role !== "OPERATOR"
+			) {
 				// const isOwner = order.userId === context.user.id;
 				// // Check if driver is assigned to this order
 				// let isAssignedDriver = false;

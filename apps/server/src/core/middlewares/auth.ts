@@ -1,3 +1,4 @@
+import { env } from "cloudflare:workers";
 import { os } from "@orpc/server";
 import type { RoleAccess } from "@repo/schema";
 import type { UserRole } from "@repo/schema/user";
@@ -7,6 +8,16 @@ import { isDev, safeAsync } from "@/utils";
 import { logger } from "@/utils/logger";
 import { AuthError } from "../error";
 import type { HonoContext, ORPCContext } from "../interface";
+
+/**
+ * Check if authorization bypass is enabled.
+ * WARNING: This should ONLY be used for demo/presentation purposes.
+ * When enabled, all role and IDOR checks are bypassed.
+ * Set BYPASS_AUTHORIZATION=true in .env to enable.
+ */
+export function shouldBypassAuthorization(): boolean {
+	return env.BYPASS_AUTHORIZATION === "true";
+}
 
 const base = os.$context<ORPCContext>();
 export const honoAuthMiddleware = createMiddleware<HonoContext>(
