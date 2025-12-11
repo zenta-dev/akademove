@@ -181,12 +181,12 @@ class _MenuCard extends StatelessWidget {
                   ? Image.network(
                       menu.image!,
                       width: double.infinity,
-                      height: 95.h,
+                      height: 80.h,
                       fit: BoxFit.cover,
                       errorBuilder: (context, error, stackTrace) {
                         return Container(
                           width: double.infinity,
-                          height: 95.h,
+                          height: 80.h,
                           color: const Color(0xFFE0E0E0),
                           child: const Icon(LucideIcons.image, size: 32),
                         );
@@ -195,7 +195,7 @@ class _MenuCard extends StatelessWidget {
                         if (loadingProgress == null) return child;
                         return Container(
                           width: double.infinity,
-                          height: 95.h,
+                          height: 80.h,
                           color: const Color(0xFFEEEEEE),
                           child: const Center(
                             child: CircularProgressIndicator(),
@@ -205,7 +205,7 @@ class _MenuCard extends StatelessWidget {
                     )
                   : Container(
                       width: double.infinity,
-                      height: 95.h,
+                      height: 80.h,
                       color: const Color(0xFFE0E0E0),
                       child: const Icon(LucideIcons.image, size: 32),
                     ),
@@ -215,6 +215,7 @@ class _MenuCard extends StatelessWidget {
               children: [
                 Expanded(
                   child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(

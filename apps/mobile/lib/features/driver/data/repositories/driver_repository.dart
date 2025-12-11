@@ -258,4 +258,20 @@ class DriverRepository extends BaseRepository {
       return SuccessResponse(message: data.message, data: data.data);
     });
   }
+
+  // Password Management (using user API since drivers are also users)
+  Future<BaseResponse<bool>> updatePassword(UserMeChangePasswordRequest req) =>
+      guard(() async {
+        final res = await _apiClient.getUserApi().userMeChangePassword(
+          userMeChangePasswordRequest: req,
+        );
+        final data =
+            res.data ??
+            (throw const RepositoryError(
+              'An error occured',
+              code: ErrorCode.internalServerError,
+            ));
+
+        return SuccessResponse(message: data.message, data: data.data);
+      });
 }

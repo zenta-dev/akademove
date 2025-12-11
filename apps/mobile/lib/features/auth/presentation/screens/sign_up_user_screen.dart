@@ -152,6 +152,8 @@ class _SignUpUserFormViewState extends State<_SignUpUserFormView> {
                   ],
                 ),
               ),
+
+              Text(context.l10n.gender).small(fontWeight: FontWeight.w500),
               SizedBox(
                 width: double.infinity,
                 child: Select<UserGender>(

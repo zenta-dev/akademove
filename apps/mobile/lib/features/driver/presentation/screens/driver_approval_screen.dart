@@ -1,3 +1,4 @@
+import 'package:akademove/app/_export.dart';
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/l10n/l10n.dart';
@@ -5,6 +6,7 @@ import 'package:akademove/locator.dart';
 import 'package:api_client/api_client.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 
 class DriverApprovalScreen extends StatefulWidget {
@@ -40,7 +42,24 @@ class _DriverApprovalScreenState extends State<DriverApprovalScreen> {
   Widget build(BuildContext context) {
     return BlocProvider.value(
       value: _cubit,
-      child: BlocBuilder<DriverApprovalCubit, DriverApprovalState>(
+      child: BlocConsumer<DriverApprovalCubit, DriverApprovalState>(
+        listener: (context, state) {
+          if (state.driver.isFailure || state.approvalReview.isFailure) {
+            final errorMessage =
+                state.driver.error?.message ??
+                state.approvalReview.error?.message ??
+                context.l10n.an_error_occurred;
+            context.showMyToast("Your approval is failed: $errorMessage");
+          } else if (state.allDocumentsApproved &&
+              state.quizPassed &&
+              state.quizVerified) {
+            context.showMyToast(
+              "Congratulations! Your driver application has been approved.",
+            );
+            delay(Duration(seconds: 1));
+            context.pushReplacementNamed(Routes.driverHome.name);
+          }
+        },
         builder: (context, state) {
           return MyScaffold(
             headers: [
@@ -49,13 +68,10 @@ class _DriverApprovalScreenState extends State<DriverApprovalScreen> {
                 padding: EdgeInsets.all(16.r),
               ),
             ],
-            body: RefreshTrigger(
-              onRefresh: _onRefresh,
-              child: SingleChildScrollView(
-                padding: EdgeInsets.all(16.r),
-                child: _buildContent(context, state),
-              ),
-            ),
+            onRefresh: () async {
+              context.read<DriverApprovalCubit>().load();
+            },
+            body: _buildContent(context, state),
           );
         },
       ),

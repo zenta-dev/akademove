@@ -120,6 +120,7 @@ class _UserRideScreenState extends State<UserRideScreen> {
           ),
         ),
       );
+      setState(() {});
     }
 
     // Add dropoff marker
@@ -139,6 +140,7 @@ class _UserRideScreenState extends State<UserRideScreen> {
           ),
         ),
       );
+      setState(() {});
     }
 
     // Add polyline if both locations are selected
@@ -181,6 +183,7 @@ class _UserRideScreenState extends State<UserRideScreen> {
               width: 4,
             ),
           );
+          setState(() {});
         } else {
           // Fallback to straight line if no route available
           newPolylines.add(
@@ -194,6 +197,7 @@ class _UserRideScreenState extends State<UserRideScreen> {
               width: 4,
             ),
           );
+          setState(() {});
         }
       } catch (e) {
         if (!mounted) return;
@@ -211,6 +215,7 @@ class _UserRideScreenState extends State<UserRideScreen> {
             width: 4,
           ),
         );
+        setState(() {});
       }
     }
 

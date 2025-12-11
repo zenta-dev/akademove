@@ -3,7 +3,8 @@ import 'package:api_client/api_client.dart';
 
 // tests for AuthVerifyEmail200ResponseData
 void main() {
-  final AuthVerifyEmail200ResponseData? instance = /* AuthVerifyEmail200ResponseData(...) */ null;
+  final AuthVerifyEmail200ResponseData?
+  instance = /* AuthVerifyEmail200ResponseData(...) */ null;
   // TODO add properties to the entity
 
   group(AuthVerifyEmail200ResponseData, () {
@@ -21,6 +22,5 @@ void main() {
     test('to test the property `user`', () async {
       // TODO
     });
-
   });
 }

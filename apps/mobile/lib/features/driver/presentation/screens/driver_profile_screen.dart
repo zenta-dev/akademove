@@ -1,4 +1,5 @@
 import 'package:akademove/app/router/router.dart';
+import 'package:akademove/app/widgets/_export.dart';
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/l10n/l10n.dart';
@@ -400,6 +401,167 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
     return Column(
       spacing: 12.h,
       children: [
+        // Account Settings Section
+        Text(
+          context.l10n.account_settings,
+          style: context.typography.h4.copyWith(
+            fontSize: 16.sp,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        Button(
+          style:
+              ButtonStyle.card(
+                density: ButtonDensity(
+                  (val) =>
+                      EdgeInsets.symmetric(horizontal: 12.dg, vertical: 8.h),
+                ),
+              ).copyWith(
+                decoration: (context, states, value) =>
+                    value.copyWithIfBoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+              ),
+          onPressed: () async {
+            await context.pushNamed(Routes.driverEditProfile.name);
+          },
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              DefaultText(context.l10n.edit_profile, fontSize: 14.sp),
+              Icon(LucideIcons.pencil, size: 14.sp),
+            ],
+          ),
+        ),
+        Button(
+          style:
+              ButtonStyle.card(
+                density: ButtonDensity(
+                  (val) =>
+                      EdgeInsets.symmetric(horizontal: 12.dg, vertical: 8.h),
+                ),
+              ).copyWith(
+                decoration: (context, states, value) =>
+                    value.copyWithIfBoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+              ),
+          onPressed: () async {
+            await context.pushNamed(Routes.driverChangePassword.name);
+          },
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              DefaultText(context.l10n.change_password, fontSize: 14.sp),
+              Icon(LucideIcons.pencil, size: 14.sp),
+            ],
+          ),
+        ),
+
+        // Legal Section
+        Text(
+          'Legal',
+          style: context.typography.h4.copyWith(
+            fontSize: 16.sp,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        Button(
+          style:
+              ButtonStyle.card(
+                density: ButtonDensity(
+                  (val) =>
+                      EdgeInsets.symmetric(horizontal: 12.dg, vertical: 8.h),
+                ),
+              ).copyWith(
+                decoration: (context, states, value) =>
+                    value.copyWithIfBoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+              ),
+          onPressed: () async {
+            await context.pushNamed(Routes.termsOfService.name);
+          },
+          child: Row(
+            children: [
+              DefaultText(context.l10n.terms_of_service, fontSize: 14.sp),
+            ],
+          ),
+        ),
+        Button(
+          style:
+              ButtonStyle.card(
+                density: ButtonDensity(
+                  (val) =>
+                      EdgeInsets.symmetric(horizontal: 12.dg, vertical: 8.h),
+                ),
+              ).copyWith(
+                decoration: (context, states, value) =>
+                    value.copyWithIfBoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+              ),
+          onPressed: () async {
+            await context.pushNamed(Routes.privacyPolicies.name);
+          },
+          child: Row(
+            children: [
+              DefaultText(context.l10n.privacy_policy, fontSize: 14.sp),
+            ],
+          ),
+        ),
+        Button(
+          style:
+              ButtonStyle.card(
+                density: ButtonDensity(
+                  (val) =>
+                      EdgeInsets.symmetric(horizontal: 12.dg, vertical: 8.h),
+                ),
+              ).copyWith(
+                decoration: (context, states, value) =>
+                    value.copyWithIfBoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+              ),
+          onPressed: () async {
+            await context.pushNamed(Routes.faq.name);
+          },
+          child: Row(
+            children: [DefaultText(context.l10n.faq, fontSize: 14.sp)],
+          ),
+        ),
+
+        // App Settings Section
+        Text(
+          context.l10n.app_settings,
+          style: context.typography.h4.copyWith(
+            fontSize: 16.sp,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        Column(
+          spacing: 8.h,
+          children: [
+            Column(
+              spacing: 4.h,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                DefaultText(context.l10n.language, fontSize: 14.sp),
+                const AppSelectLocaleWidget(),
+              ],
+            ),
+            Column(
+              spacing: 4.h,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                DefaultText(context.l10n.theme, fontSize: 14.sp),
+                const AppSelectThemeWidget(),
+              ],
+            ),
+          ],
+        ),
+
+        // Account Actions Section
         const DeleteAccountButtonWidget(accountType: 'DRIVER'),
         SizedBox(
           width: double.infinity,

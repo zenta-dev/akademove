@@ -314,32 +314,34 @@ class _DriverKrsScreenState extends State<DriverKrsScreen> {
                       ),
                       SizedBox(height: 16.h),
 
-                      Select<DayOfWeek>(
-                        value: selectedDay,
-                        onChanged: (value) {
-                          if (value != null) {
-                            setState(() => selectedDay = value);
-                          }
-                        },
-                        placeholder: Text(context.l10n.day_of_week),
-                        itemBuilder: (context, item) {
-                          return Text(_getDayFullText(context, item));
-                        },
-                        popupConstraints: BoxConstraints(
-                          maxHeight: 300.h,
-                          maxWidth: 300.w,
-                        ),
-                        popup: SelectPopup(
-                          items: SelectItemList(
-                            children: [
-                              for (final day in DayOfWeek.values)
-                                SelectItemButton(
-                                  value: day,
-                                  child: Text(_getDayFullText(context, day)),
-                                ),
-                            ],
+                      Builder(
+                        builder: (selectContext) => Select<DayOfWeek>(
+                          value: selectedDay,
+                          onChanged: (value) {
+                            if (value != null) {
+                              setState(() => selectedDay = value);
+                            }
+                          },
+                          placeholder: Text(context.l10n.day_of_week),
+                          itemBuilder: (itemContext, item) {
+                            return Text(_getDayFullText(context, item));
+                          },
+                          popupConstraints: BoxConstraints(
+                            maxHeight: 300.h,
+                            maxWidth: 300.w,
                           ),
-                        ).call,
+                          popup: SelectPopup(
+                            items: SelectItemList(
+                              children: [
+                                for (final day in DayOfWeek.values)
+                                  SelectItemButton(
+                                    value: day,
+                                    child: Text(_getDayFullText(context, day)),
+                                  ),
+                              ],
+                            ),
+                          ).call,
+                        ),
                       ),
                       SizedBox(height: 16.h),
 

@@ -1,3 +1,4 @@
+import 'package:akademove/app/router/router.dart';
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/l10n/l10n.dart';
@@ -123,6 +124,7 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
                         return _buildEarningsSummary(summary);
                       },
                     ),
+                    _buildCommissionReportSection(),
                     _buildRecentTransactions(),
                     _buildWithdrawButton(),
                   ],
@@ -306,6 +308,112 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
         ),
       ),
     );
+  }
+
+  Widget _buildCommissionReportSection() {
+    return GestureDetector(
+      onTap: () => context.push(Routes.driverCommissionReport.path),
+      child: Card(
+        child: Padding(
+          padding: EdgeInsets.all(16.dg),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: 12.h,
+            children: [
+              Row(
+                spacing: 8.w,
+                children: [
+                  Icon(
+                    LucideIcons.percent,
+                    size: 20.sp,
+                    color: context.colorScheme.primary,
+                  ),
+                  Expanded(
+                    child: Text(
+                      context.l10n.commission_report,
+                      style: context.typography.h3.copyWith(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  Icon(
+                    LucideIcons.chevronRight,
+                    size: 20.sp,
+                    color: context.colorScheme.mutedForeground,
+                  ),
+                ],
+              ),
+              Row(
+                spacing: 12.w,
+                children: [
+                  Expanded(
+                    child: _buildCommissionStatCard(
+                      context.l10n.commission,
+                      _calculateTotalCommission(),
+                      LucideIcons.trendingDown,
+                      const Color(0xFFF44336),
+                    ),
+                  ),
+                  Expanded(
+                    child: _buildCommissionStatCard(
+                      context.l10n.label_platform_commission,
+                      20, // Default commission rate
+                      LucideIcons.percent,
+                      context.colorScheme.primary,
+                      isPercentage: true,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCommissionStatCard(
+    String label,
+    num value,
+    IconData icon,
+    Color color, {
+    bool isPercentage = false,
+  }) {
+    return Container(
+      padding: EdgeInsets.all(12.dg),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(8.r),
+      ),
+      child: Column(
+        spacing: 8.h,
+        children: [
+          Icon(icon, color: color, size: 20.sp),
+          Text(
+            label,
+            style: context.typography.small.copyWith(
+              color: context.colorScheme.mutedForeground,
+            ),
+          ),
+          Text(
+            isPercentage ? '$value%' : context.formatCurrency(value),
+            style: context.typography.h4.copyWith(
+              fontSize: 16.sp,
+              fontWeight: FontWeight.bold,
+              color: color,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  num _calculateTotalCommission() {
+    // Calculate commission from transactions
+    return _transactions
+        .where((t) => t.type == TransactionType.COMMISSION)
+        .fold<num>(0, (sum, t) => sum + t.amount);
   }
 
   Widget _buildRecentTransactions() {

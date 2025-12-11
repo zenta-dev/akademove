@@ -90,7 +90,9 @@ class MerchantMenuCubit extends BaseCubit<MerchantMenuState> {
     MultipartFile? image,
   }) async => await taskManager.execute('createMenu-$merchantId', () async {
     try {
-      emit(state.copyWith(merchantMenus: const OperationResult.loading()));
+      // PERBAIKAN: Simpan data lama, JANGAN emit loading
+      final currentList = state.menus.data?.value ?? [];
+
       final res = await _merchantRepository.createMenu(
         merchantId: merchantId,
         name: name,
@@ -101,7 +103,6 @@ class MerchantMenuCubit extends BaseCubit<MerchantMenuState> {
       );
 
       // Add new menu to the list
-      final currentList = state.menus.data?.value ?? [];
       final updatedList = [res.data, ...currentList];
 
       emit(
@@ -137,7 +138,9 @@ class MerchantMenuCubit extends BaseCubit<MerchantMenuState> {
   }) async =>
       await taskManager.execute('updateMenu-$merchantId-$menuId', () async {
         try {
-          emit(state.copyWith(merchantMenus: const OperationResult.loading()));
+          // PERBAIKAN: Simpan data lama, JANGAN emit loading
+          final currentList = state.menus.data?.value ?? [];
+
           final res = await _merchantRepository.updateMenu(
             merchantId: merchantId,
             menuId: menuId,
@@ -149,7 +152,6 @@ class MerchantMenuCubit extends BaseCubit<MerchantMenuState> {
           );
 
           // Update the menu in the list
-          final currentList = state.menus.data?.value ?? [];
           final updatedList = currentList.map((menu) {
             if (menu.id == menuId) {
               return res.data;
@@ -185,14 +187,15 @@ class MerchantMenuCubit extends BaseCubit<MerchantMenuState> {
   }) async =>
       await taskManager.execute('deleteMenu-$merchantId-$menuId', () async {
         try {
-          emit(state.copyWith(merchantMenus: const OperationResult.loading()));
+          // PERBAIKAN: Simpan data lama, JANGAN emit loading
+          final currentList = state.menus.data?.value ?? [];
+
           final res = await _merchantRepository.deleteMenu(
             merchantId: merchantId,
             menuId: menuId,
           );
 
           // Remove the menu from the list
-          final currentList = state.menus.data?.value ?? [];
           final updatedList = currentList
               .where((menu) => menu.id != menuId)
               .toList();

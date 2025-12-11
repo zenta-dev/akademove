@@ -47,16 +47,40 @@ final driverRouter = StatefulShellRoute.indexedStack(
               name: Routes.driverEarnings.name,
               path: 'earnings',
               builder: (context, state) => const DriverEarningsScreen(),
+              routes: [
+                GoRoute(
+                  name: Routes.driverCommissionReport.name,
+                  path: 'commission',
+                  builder: (context, state) =>
+                      const DriverCommissionReportScreen(),
+                ),
+              ],
             ),
             GoRoute(
               name: Routes.driverLeaderboard.name,
               path: 'leaderboard',
               builder: (context, state) => const LeaderboardScreen(),
+              routes: [
+                GoRoute(
+                  name: Routes.driverLeaderboardDetail.name,
+                  path: 'detail',
+                  builder: (context, state) =>
+                      const DriverLeaderboardDetailScreen(),
+                ),
+              ],
             ),
             GoRoute(
               name: Routes.driverReviews.name,
               path: 'reviews',
               builder: (context, state) => const DriverReviewsScreen(),
+              routes: [
+                GoRoute(
+                  name: Routes.driverReviewsDetail.name,
+                  path: 'detail',
+                  builder: (context, state) =>
+                      const DriverReviewsDetailScreen(),
+                ),
+              ],
             ),
           ],
         ),
@@ -86,6 +110,18 @@ final driverRouter = StatefulShellRoute.indexedStack(
           name: Routes.driverProfile.name,
           path: Routes.driverProfile.path,
           builder: (context, state) => const DriverProfileScreen(),
+          routes: [
+            GoRoute(
+              name: Routes.driverEditProfile.name,
+              path: 'edit',
+              builder: (context, state) => const DriverEditProfileScreen(),
+            ),
+            GoRoute(
+              name: Routes.driverChangePassword.name,
+              path: 'change-password',
+              builder: (context, state) => const DriverChangePasswordScreen(),
+            ),
+          ],
         ),
       ],
     ),

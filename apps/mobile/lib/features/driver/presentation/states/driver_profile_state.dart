@@ -4,11 +4,13 @@ class DriverProfileState extends Equatable {
   const DriverProfileState({
     this.fetchProfileResult = const OperationResult.idle(),
     this.updateProfileResult = const OperationResult.idle(),
+    this.updatePasswordResult = const OperationResult.idle(),
     this.myDriver,
   });
 
   final OperationResult<Driver> fetchProfileResult;
   final OperationResult<Driver> updateProfileResult;
+  final OperationResult<bool> updatePasswordResult;
 
   final Driver? myDriver;
 
@@ -16,6 +18,7 @@ class DriverProfileState extends Equatable {
   List<Object?> get props => [
     fetchProfileResult,
     updateProfileResult,
+    updatePasswordResult,
     myDriver,
   ];
 
@@ -25,11 +28,13 @@ class DriverProfileState extends Equatable {
   DriverProfileState copyWith({
     OperationResult<Driver>? fetchProfileResult,
     OperationResult<Driver>? updateProfileResult,
+    OperationResult<bool>? updatePasswordResult,
     Driver? myDriver,
   }) {
     return DriverProfileState(
       fetchProfileResult: fetchProfileResult ?? this.fetchProfileResult,
       updateProfileResult: updateProfileResult ?? this.updateProfileResult,
+      updatePasswordResult: updatePasswordResult ?? this.updatePasswordResult,
       myDriver: myDriver ?? this.myDriver,
     );
   }

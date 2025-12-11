@@ -168,7 +168,7 @@ class _MerchantCreateMenuScreenState extends State<MerchantCreateMenuScreen> {
         ),
         location: ToastLocation.topCenter,
       );
-
+      if (context.canPop() && mounted) {}
       // Navigate back to list
       context.pop();
     } else if (state.menu.isFailure) {

@@ -128,7 +128,7 @@ class MerchantMenuDetailScreen extends StatelessWidget {
                 ),
 
                 // Action Buttons
-                if (state.menu.isLoading)
+                if (state.menus.isLoading)
                   const Center(child: CircularProgressIndicator())
                 else
                   Row(
@@ -166,12 +166,12 @@ class MerchantMenuDetailScreen extends StatelessWidget {
                   ),
 
                 // Error Message
-                if (state.menu.isFailure && state.menu.error != null)
+                if (state.menus.isFailure && state.menus.error != null)
                   Card(
                     child: Padding(
                       padding: const EdgeInsets.all(12),
                       child: Text(
-                        state.menu.error?.message ??
+                        state.menus.error?.message ??
                             context.l10n.an_error_occurred,
                         style: const TextStyle(color: Color(0xFFF44336)),
                       ),
@@ -186,6 +186,10 @@ class MerchantMenuDetailScreen extends StatelessWidget {
   }
 
   void _showDeleteConfirmation(BuildContext context, MerchantMenu menu) {
+    final merchantCubit = context.read<MerchantCubit>();
+    final menuCubit = context.read<MerchantMenuCubit>();
+    final merchantId = merchantCubit.state.mine.value?.id;
+
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
@@ -197,62 +201,36 @@ class MerchantMenuDetailScreen extends StatelessWidget {
             child: Text(context.l10n.cancel),
           ),
           Button.destructive(
-            onPressed: () {
+            onPressed: () async {
+              if (merchantId == null) {
+                logger.e('[MerchantMenuDetailScreen] - No merchant ID found');
+                return;
+              }
+
+              await menuCubit.deleteMenu(
+                merchantId: merchantId,
+                menuId: menu.id,
+              );
+
+              if (!context.mounted) return;
+
+              context.showMyToast(
+                context.l10n.success_menu_deleted,
+                type: ToastType.success,
+              );
+
+              await Future.delayed(const Duration(milliseconds: 500));
+
+              if (!dialogContext.mounted || !context.mounted) return;
+
               Navigator.of(dialogContext).pop();
-              _deleteMenu(context, menu);
+              context.pop();
             },
             child: Text(context.l10n.delete),
           ),
         ],
       ),
     );
-  }
-
-  Future<void> _deleteMenu(BuildContext context, MerchantMenu menu) async {
-    final merchantCubit = context.read<MerchantCubit>();
-    final menuCubit = context.read<MerchantMenuCubit>();
-
-    final merchantId = merchantCubit.state.mine.value?.id;
-
-    if (merchantId == null) {
-      logger.e('[MerchantMenuDetailScreen] - No merchant ID found');
-      return;
-    }
-
-    // Delete menu
-    await menuCubit.deleteMenu(merchantId: merchantId, menuId: menu.id);
-
-    // Check if mounted before navigating
-    if (!context.mounted) return;
-
-    final state = menuCubit.state;
-
-    if (state.menu.isSuccess) {
-      // Show success message
-      showToast(
-        context: context,
-        builder: (context, overlay) => context.buildToast(
-          title: context.l10n.success,
-          message: state.menu.message ?? context.l10n.success_menu_deleted,
-        ),
-        location: ToastLocation.topCenter,
-      );
-
-      // Navigate back to list
-      context.pop();
-    } else if (state.menu.isFailure) {
-      // Show error message
-      showToast(
-        context: context,
-        builder: (context, overlay) => context.buildToast(
-          title: context.l10n.error,
-          message:
-              state.menu.error?.message ??
-              context.l10n.error_failed_delete_menu,
-        ),
-        location: ToastLocation.topCenter,
-      );
-    }
   }
 
   Widget _buildDetailRow(

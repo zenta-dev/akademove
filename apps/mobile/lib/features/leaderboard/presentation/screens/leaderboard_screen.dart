@@ -27,7 +27,7 @@ class _LeaderboardView extends StatefulWidget {
 }
 
 class _LeaderboardViewState extends State<_LeaderboardView> {
-  int _tabIndex = 0;
+  final int _tabIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -70,30 +70,7 @@ class _LeaderboardViewState extends State<_LeaderboardView> {
       );
     }
 
-    return Column(
-      children: [
-        // Tab Bar
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-          child: TabList(
-            index: _tabIndex,
-            onChanged: (index) => setState(() => _tabIndex = index),
-            children: [
-              TabItem(child: Text(context.l10n.tab_rankings)),
-              TabItem(child: Text(context.l10n.tab_badges)),
-            ],
-          ),
-        ),
-
-        // Tab Views
-        Expanded(
-          child: IndexedStack(
-            index: _tabIndex,
-            children: [_buildLeaderboardTab(state), _buildBadgesTab(state)],
-          ),
-        ),
-      ],
-    );
+    return Column(children: [Expanded(child: _buildLeaderboardTab(state))]);
   }
 
   Widget _buildLeaderboardTab(LeaderboardState state) {

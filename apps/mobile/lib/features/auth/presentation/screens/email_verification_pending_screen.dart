@@ -3,6 +3,7 @@ import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/gen/assets.gen.dart';
 import 'package:akademove/l10n/l10n.dart';
+import 'package:api_client/api_client.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -149,11 +150,27 @@ class _EmailVerificationPendingViewState
         state.message ?? context.l10n.email_verification_success_title,
         type: ToastType.success,
       );
-      // Only navigate to sign-in when email verification is complete (verifyCode step)
       if (step == EmailVerificationStep.verifyCode) {
         await delay(const Duration(seconds: 1), () {});
-        if (context.mounted) {
+        if (context.mounted && state.value?.redirectDashboard == false) {
           context.goNamed(Routes.authSignIn.name);
+        }
+        if (context.mounted && state.value?.redirectDashboard == true) {
+          switch (state.value?.role) {
+            case UserRole.USER:
+              context.pushReplacementNamed(Routes.userHome.name);
+            case UserRole.MERCHANT:
+              context.pushReplacementNamed(Routes.merchantHome.name);
+            case UserRole.DRIVER:
+              context.pushReplacementNamed(Routes.driverHome.name);
+            case UserRole.ADMIN:
+            case UserRole.OPERATOR:
+            case null:
+              context.showMyToast(
+                context.l10n.unsupported_role_desc,
+                type: ToastType.failed,
+              );
+          }
         }
       }
     }

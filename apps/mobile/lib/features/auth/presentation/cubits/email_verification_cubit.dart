@@ -1,9 +1,15 @@
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
+import 'package:api_client/api_client.dart';
 
 enum EmailVerificationStep { requestCode, verifyCode }
 
-typedef _EmailState = ({EmailVerificationStep step, String? email});
+typedef _EmailState = ({
+  EmailVerificationStep step,
+  String? email,
+  bool redirectDashboard,
+  UserRole? role,
+});
 typedef EmailVerificationState = OperationResult<_EmailState>;
 
 class EmailVerificationCubit extends BaseCubit<EmailVerificationState> {
@@ -28,6 +34,8 @@ class EmailVerificationCubit extends BaseCubit<EmailVerificationState> {
             OperationResult.success((
               step: EmailVerificationStep.requestCode,
               email: email,
+              redirectDashboard: false,
+              role: null,
             ), message: res.message),
           );
         } on BaseError catch (e, st) {
@@ -51,6 +59,8 @@ class EmailVerificationCubit extends BaseCubit<EmailVerificationState> {
         OperationResult.success((
           step: EmailVerificationStep.verifyCode,
           email: email,
+          redirectDashboard: res.data.token != null,
+          role: res.data.user?.role,
         ), message: res.message),
       );
     } on BaseError catch (e, st) {

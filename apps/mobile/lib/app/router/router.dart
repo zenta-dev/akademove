@@ -82,11 +82,16 @@ enum Routes {
   driverHome('/driver/home'),
   driverOrderDetail('/driver/order/:orderId'),
   driverEarnings('/driver/earnings'),
+  driverCommissionReport('/driver/earnings/commission'),
   driverLeaderboard('/driver/leaderboard'),
+  driverLeaderboardDetail('/driver/leaderboard/detail'),
   driverReviews('/driver/reviews'),
+  driverReviewsDetail('/driver/reviews/detail'),
   driverKRS('/driver/krs'),
   driverHistory('/driver/history'),
   driverProfile('/driver/profile'),
+  driverEditProfile('/driver/profile/edit'),
+  driverChangePassword('/driver/profile/change-password'),
 
   ///
   /// Merchant Routes

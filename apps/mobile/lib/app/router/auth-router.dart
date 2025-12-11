@@ -100,5 +100,10 @@ final authRouter = ShellRoute(
         child: const DriverQuizScreen(),
       ),
     ),
+    GoRoute(
+      name: Routes.driverApproval.name,
+      path: Routes.driverApproval.path,
+      builder: (context, state) => const DriverApprovalScreen(),
+    ),
   ],
 );

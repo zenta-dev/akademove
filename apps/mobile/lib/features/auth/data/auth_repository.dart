@@ -314,7 +314,7 @@ class AuthRepository extends BaseRepository {
     });
   }
 
-  Future<BaseResponse<bool>> verifyEmail({
+  Future<BaseResponse<AuthVerifyEmail200ResponseData>> verifyEmail({
     required String email,
     required String code,
   }) async {
@@ -330,7 +330,13 @@ class AuthRepository extends BaseRepository {
             code: ErrorCode.unknown,
           ));
 
-      return SuccessResponse(message: data.message, data: true);
+      final token = data.data.token;
+      if (token != null) {
+        _apiClient.setBearerAuth('bearer_auth', token);
+        _ws.sessionToken = token;
+      }
+
+      return SuccessResponse(message: data.message, data: data.data);
     });
   }
 }
