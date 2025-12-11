@@ -65,6 +65,10 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
   String? _ownerBankName;
   final TextEditingController _bankAccountController = TextEditingController();
 
+  // Phone number states
+  String? _ownerPhoneNumber;
+  String? _outletPhoneNumber;
+
   final TextEditingController _searchController = TextEditingController();
   bool _isSearching = false;
   List<Placemark> _searchSuggestions = [];
@@ -599,17 +603,22 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
 
       if (!mounted) return;
 
+      // Parse outlet phone number
+      final outletPhoneNum = _outletPhoneNumber != null
+          ? num.tryParse(_outletPhoneNumber!.replaceAll(RegExp('[^0-9]'), ''))
+          : null;
+
       // Call update profile API
       await merchantCubit.updateProfile(
         merchantId: merchantId,
         name: outletName,
         email: outletEmail,
-        phoneCountryCode: '+62', // TODO: Get from phone input
-        phoneNumber: 0, // TODO: Get from phone input
+        phoneCountryCode: '+62',
+        phoneNumber: outletPhoneNum?.toInt() ?? 0,
         address: _outletAddress,
         locationX: _outletLocation.x,
         locationY: _outletLocation.y,
-        category: null, // TODO: Add category selection if needed
+        category: null,
         bankProvider: _selectedBankProvider!.name,
         bankNumber: bankNumber,
         bankAccountName: _accountHolderName,
@@ -758,7 +767,9 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
                       _FormKeys.ownerPhoneNumber,
                       context.l10n.label_owner_phone,
                       (val) {
-                        // Phone number change callback
+                        setState(() {
+                          _ownerPhoneNumber = val.number;
+                        });
                       },
                     ),
                     _buildTextField(
@@ -775,7 +786,9 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
                       _FormKeys.outletPhoneNumber,
                       context.l10n.label_outlet_phone,
                       (val) {
-                        // Phone number change callback
+                        setState(() {
+                          _outletPhoneNumber = val.number;
+                        });
                       },
                     ),
                     _buildTextField(

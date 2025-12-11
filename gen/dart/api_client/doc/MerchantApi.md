@@ -5,7 +5,7 @@
 import 'package:api_client/api.dart';
 ```
 
-All URIs are relative to *http://10.86.19.105:3000/api*
+All URIs are relative to *http://localhost:3000/api*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
@@ -42,6 +42,13 @@ Method | HTTP request | Description
 [**merchantSubmitRejection**](MerchantApi.md#merchantsubmitrejection) | **POST** /merchants/{id}/approval-review/submit-rejection | 
 [**merchantUpdate**](MerchantApi.md#merchantupdate) | **PUT** /merchants/{id} | 
 [**merchantUpdateDocumentStatus**](MerchantApi.md#merchantupdatedocumentstatus) | **POST** /merchants/{id}/approval-review/update-document | 
+[**merchantWalletGetMonthlySummary**](MerchantApi.md#merchantwalletgetmonthlysummary) | **GET** /merchants/{merchantId}/wallet/summary | 
+[**merchantWalletGetSavedBankAccount**](MerchantApi.md#merchantwalletgetsavedbankaccount) | **GET** /merchants/{merchantId}/wallet/bank | 
+[**merchantWalletGetTransactions**](MerchantApi.md#merchantwalletgettransactions) | **GET** /merchants/{merchantId}/wallet/transactions | 
+[**merchantWalletGetWallet**](MerchantApi.md#merchantwalletgetwallet) | **GET** /merchants/{merchantId}/wallet | 
+[**merchantWalletTopUp**](MerchantApi.md#merchantwallettopup) | **POST** /merchants/{merchantId}/wallet/topup | 
+[**merchantWalletTransfer**](MerchantApi.md#merchantwallettransfer) | **POST** /merchants/{merchantId}/wallet/transfer | 
+[**merchantWalletWithdraw**](MerchantApi.md#merchantwalletwithdraw) | **POST** /merchants/{merchantId}/wallet/withdraw | 
 
 
 # **analyticsExportMerchantAnalytics**
@@ -1543,6 +1550,333 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**MerchantGetReview200Response**](MerchantGetReview200Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **merchantWalletGetMonthlySummary**
+> DriverWalletGetMonthlySummary200Response merchantWalletGetMonthlySummary(merchantId, year, month)
+
+
+
+Get merchant wallet monthly summary
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getMerchantApi();
+final String merchantId = merchantId_example; // String | 
+final num year = 8.14; // num | 
+final num month = 8.14; // num | 
+
+try {
+    final response = api.merchantWalletGetMonthlySummary(merchantId, year, month);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling MerchantApi->merchantWalletGetMonthlySummary: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **merchantId** | **String**|  | 
+ **year** | **num**|  | 
+ **month** | **num**|  | 
+
+### Return type
+
+[**DriverWalletGetMonthlySummary200Response**](DriverWalletGetMonthlySummary200Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **merchantWalletGetSavedBankAccount**
+> DriverWalletGetSavedBankAccount200Response merchantWalletGetSavedBankAccount(merchantId)
+
+
+
+Get saved bank account details from merchant profile for pre-filling withdrawal forms
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getMerchantApi();
+final String merchantId = merchantId_example; // String | 
+
+try {
+    final response = api.merchantWalletGetSavedBankAccount(merchantId);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling MerchantApi->merchantWalletGetSavedBankAccount: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **merchantId** | **String**|  | 
+
+### Return type
+
+[**DriverWalletGetSavedBankAccount200Response**](DriverWalletGetSavedBankAccount200Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **merchantWalletGetTransactions**
+> DriverWalletGetTransactions200Response merchantWalletGetTransactions(merchantId, cursor, limit, direction, page, query, sortBy, order, mode)
+
+
+
+Get merchant wallet transactions
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getMerchantApi();
+final String merchantId = merchantId_example; // String | 
+final String cursor = cursor_example; // String | 
+final Object limit = ; // Object | 
+final String direction = direction_example; // String | 
+final Object page = ; // Object | 
+final String query = query_example; // String | 
+final String sortBy = sortBy_example; // String | 
+final PaginationOrder order = ; // PaginationOrder | 
+final PaginationMode mode = ; // PaginationMode | 
+
+try {
+    final response = api.merchantWalletGetTransactions(merchantId, cursor, limit, direction, page, query, sortBy, order, mode);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling MerchantApi->merchantWalletGetTransactions: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **merchantId** | **String**|  | 
+ **cursor** | **String**|  | [optional] 
+ **limit** | [**Object**](.md)|  | [optional] 
+ **direction** | **String**|  | [optional] 
+ **page** | [**Object**](.md)|  | [optional] 
+ **query** | **String**|  | [optional] 
+ **sortBy** | **String**|  | [optional] 
+ **order** | [**PaginationOrder**](.md)|  | [optional] [default to desc]
+ **mode** | [**PaginationMode**](.md)|  | [optional] [default to offset]
+
+### Return type
+
+[**DriverWalletGetTransactions200Response**](DriverWalletGetTransactions200Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **merchantWalletGetWallet**
+> DriverWalletGetWallet200Response merchantWalletGetWallet(merchantId)
+
+
+
+Get merchant wallet by merchant ID
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getMerchantApi();
+final String merchantId = merchantId_example; // String | 
+
+try {
+    final response = api.merchantWalletGetWallet(merchantId);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling MerchantApi->merchantWalletGetWallet: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **merchantId** | **String**|  | 
+
+### Return type
+
+[**DriverWalletGetWallet200Response**](DriverWalletGetWallet200Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **merchantWalletTopUp**
+> DriverWalletTopUp200Response merchantWalletTopUp(merchantId, topUpRequest)
+
+
+
+Top up merchant wallet
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getMerchantApi();
+final String merchantId = merchantId_example; // String | 
+final TopUpRequest topUpRequest = ; // TopUpRequest | 
+
+try {
+    final response = api.merchantWalletTopUp(merchantId, topUpRequest);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling MerchantApi->merchantWalletTopUp: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **merchantId** | **String**|  | 
+ **topUpRequest** | [**TopUpRequest**](TopUpRequest.md)|  | 
+
+### Return type
+
+[**DriverWalletTopUp200Response**](DriverWalletTopUp200Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **merchantWalletTransfer**
+> DriverWalletTransfer200Response merchantWalletTransfer(merchantId, transferRequest)
+
+
+
+Transfer from merchant wallet to another user
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getMerchantApi();
+final String merchantId = merchantId_example; // String | 
+final TransferRequest transferRequest = ; // TransferRequest | 
+
+try {
+    final response = api.merchantWalletTransfer(merchantId, transferRequest);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling MerchantApi->merchantWalletTransfer: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **merchantId** | **String**|  | 
+ **transferRequest** | [**TransferRequest**](TransferRequest.md)|  | 
+
+### Return type
+
+[**DriverWalletTransfer200Response**](DriverWalletTransfer200Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **merchantWalletWithdraw**
+> DriverWalletTopUp200Response merchantWalletWithdraw(merchantId, withdrawRequest)
+
+
+
+Withdraw from merchant wallet to bank account
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getMerchantApi();
+final String merchantId = merchantId_example; // String | 
+final WithdrawRequest withdrawRequest = ; // WithdrawRequest | 
+
+try {
+    final response = api.merchantWalletWithdraw(merchantId, withdrawRequest);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling MerchantApi->merchantWalletWithdraw: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **merchantId** | **String**|  | 
+ **withdrawRequest** | [**WithdrawRequest**](WithdrawRequest.md)|  | 
+
+### Return type
+
+[**DriverWalletTopUp200Response**](DriverWalletTopUp200Response.md)
 
 ### Authorization
 

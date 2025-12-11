@@ -115,8 +115,25 @@ class UserOrderCardWidget extends StatelessWidget {
     );
   }
 
+  void _navigateToOnTrip(BuildContext context) {
+    // First recover the active order in the cubit
+    context.read<UserOrderCubit>().recoverActiveOrder();
+
+    // Navigate to the appropriate on-trip screen based on order type
+    switch (order.type) {
+      case OrderType.RIDE:
+        context.pushNamed(Routes.userRideOnTrip.name);
+      case OrderType.DELIVERY:
+        context.pushNamed(Routes.userDeliveryOnTrip.name);
+      case OrderType.FOOD:
+        context.pushNamed(Routes.userFoodOnTrip.name);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final isActive = order.status.isActive;
+
     return CardButton(
       onPressed: () => context.pushNamed(
         Routes.userHistoryDetail.name,
@@ -209,6 +226,28 @@ class UserOrderCardWidget extends StatelessWidget {
               ),
             ],
           ),
+
+          // Show "View Trip" button when order is active
+          if (isActive) ...[
+            SizedBox(
+              width: double.infinity,
+              child: PrimaryButton(
+                onPressed: () => _navigateToOnTrip(context),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  spacing: 8.w,
+                  children: [
+                    Icon(LucideIcons.navigation, size: 16.sp),
+                    DefaultText(
+                      context.l10n.view_active_order,
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ],
       ),
     );

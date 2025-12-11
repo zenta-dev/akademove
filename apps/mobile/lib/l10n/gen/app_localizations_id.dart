@@ -3543,4 +3543,16 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get toast_error => 'Error';
+
+  @override
+  String get cancel_reason_optional => 'Alasan (opsional)';
+
+  @override
+  String get order_cancelled_successfully => 'Pesanan berhasil dibatalkan';
+
+  @override
+  String get failed_to_cancel_order => 'Gagal membatalkan pesanan';
+
+  @override
+  String get view_active_order => 'Lihat Perjalanan';
 }

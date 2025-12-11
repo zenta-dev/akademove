@@ -1,6 +1,7 @@
 import 'package:akademove/core/_export.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class FaqScreen extends StatefulWidget {
   const FaqScreen({super.key});
@@ -157,6 +158,42 @@ class _FaqScreenState extends State<FaqScreen> {
     });
   }
 
+  Future<void> _openContactSupport(BuildContext context) async {
+    final emailUri = Uri(
+      scheme: 'mailto',
+      path: 'support@akademove.com',
+      query: 'subject=Support Request&body=Hi AkadeMove Support Team,%0A%0A',
+    );
+
+    try {
+      if (await canLaunchUrl(emailUri)) {
+        await launchUrl(emailUri);
+      } else {
+        if (context.mounted) {
+          showToast(
+            context: context,
+            builder: (context, overlay) => context.buildToast(
+              title: 'Error',
+              message: 'Could not open email app. Please try again.',
+            ),
+            location: ToastLocation.topCenter,
+          );
+        }
+      }
+    } catch (e) {
+      if (context.mounted) {
+        showToast(
+          context: context,
+          builder: (context, overlay) => context.buildToast(
+            title: 'Error',
+            message: 'Could not open email app. Please try again.',
+          ),
+          location: ToastLocation.topCenter,
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MyScaffold(
@@ -238,9 +275,7 @@ class _FaqScreenState extends State<FaqScreen> {
             children: [
               Expanded(
                 child: Button.secondary(
-                  onPressed: () {
-                    // TODO: Navigate to contact/support page
-                  },
+                  onPressed: () => _openContactSupport(context),
                   child: Text(
                     'Contact Support',
                     style: context.typography.small.copyWith(fontSize: 14.sp),

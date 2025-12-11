@@ -193,60 +193,63 @@ void main() {
         ],
       );
 
-      test('deduplicates concurrent calls', () async {
-        // TODO: Fix flaky test - deduplication may not work correctly
-        // when emit() creates new state object between checkAndAssignOperation
-        // and emit(state.toLoading()). This works in wallet but not emergency cubit.
-        return;
-        /*
-        // Arrange
-        final emergency = Emergency(
-          id: TestConstants.testEmergencyId,
-          orderId: TestConstants.testOrderId,
-          userId: TestConstants.testUserId,
-          type: EmergencyType.ACCIDENT,
-          status: EmergencyStatus.REPORTED,
-          description: 'Test emergency',
-          reportedAt: TestConstants.testCreatedAt,
-        );
+      test(
+        'deduplicates concurrent calls',
+        () async {
+          // This test is flaky because the emit() creates new state object
+          // between checkAndAssignOperation and emit(state.toLoading()).
+          // The taskManager.execute already handles deduplication via task keys.
+          // Skipping until a proper solution is found.
 
-        when(() => mockEmergencyRepository.trigger(any())).thenAnswer((
-          _,
-        ) async {
-          // Simulate slow operation
-          await Future<void>.delayed(const Duration(milliseconds: 50));
-          return SuccessResponse(
-            message: 'Emergency triggered',
-            data: emergency,
+          // Arrange
+          final emergency = Emergency(
+            id: TestConstants.testEmergencyId,
+            orderId: TestConstants.testOrderId,
+            userId: TestConstants.testUserId,
+            type: EmergencyType.ACCIDENT,
+            status: EmergencyStatus.REPORTED,
+            description: 'Test emergency',
+            reportedAt: TestConstants.testCreatedAt,
           );
-        });
 
-        // Act - fire multiple calls without awaiting
-        // ignore: unawaited_futures
-        cubit.trigger(
-          orderId: TestConstants.testOrderId,
-          userId: TestConstants.testUserId,
-          type: EmergencyType.ACCIDENT,
-          description: 'Test emergency',
-        );
-        // ignore: unawaited_futures
-        cubit.trigger(
-          orderId: TestConstants.testOrderId,
-          userId: TestConstants.testUserId,
-          type: EmergencyType.ACCIDENT,
-          description: 'Test emergency',
-        );
-        await cubit.trigger(
-          orderId: TestConstants.testOrderId,
-          userId: TestConstants.testUserId,
-          type: EmergencyType.ACCIDENT,
-          description: 'Test emergency',
-        );
+          when(() => mockEmergencyRepository.trigger(any())).thenAnswer((
+            _,
+          ) async {
+            // Simulate slow operation
+            await Future<void>.delayed(const Duration(milliseconds: 50));
+            return SuccessResponse(
+              message: 'Emergency triggered',
+              data: emergency,
+            );
+          });
 
-        // Assert - should only call repository once due to operation deduplication
-        verify(() => mockEmergencyRepository.trigger(any())).called(1);
-        */
-      });
+          // Act - fire multiple calls without awaiting
+          // ignore: unawaited_futures
+          cubit.trigger(
+            orderId: TestConstants.testOrderId,
+            userId: TestConstants.testUserId,
+            type: EmergencyType.ACCIDENT,
+            description: 'Test emergency',
+          );
+          // ignore: unawaited_futures
+          cubit.trigger(
+            orderId: TestConstants.testOrderId,
+            userId: TestConstants.testUserId,
+            type: EmergencyType.ACCIDENT,
+            description: 'Test emergency',
+          );
+          await cubit.trigger(
+            orderId: TestConstants.testOrderId,
+            userId: TestConstants.testUserId,
+            type: EmergencyType.ACCIDENT,
+            description: 'Test emergency',
+          );
+
+          // Assert - should only call repository once due to operation deduplication
+          verify(() => mockEmergencyRepository.trigger(any())).called(1);
+        },
+        skip: 'Flaky test - deduplication timing issue with state emissions',
+      );
     });
 
     group('loadByOrder', () {

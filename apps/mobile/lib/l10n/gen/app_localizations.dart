@@ -7002,6 +7002,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Error'**
   String get toast_error;
+
+  /// No description provided for @cancel_reason_optional.
+  ///
+  /// In en, this message translates to:
+  /// **'Reason (optional)'**
+  String get cancel_reason_optional;
+
+  /// No description provided for @order_cancelled_successfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Order cancelled successfully'**
+  String get order_cancelled_successfully;
+
+  /// No description provided for @failed_to_cancel_order.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to cancel order'**
+  String get failed_to_cancel_order;
+
+  /// No description provided for @view_active_order.
+  ///
+  /// In en, this message translates to:
+  /// **'View Trip'**
+  String get view_active_order;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

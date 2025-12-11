@@ -1504,5 +1504,9 @@
 	"merchant_category_food": "Makanan & Minuman",
 	"placeholder_menu_stock": "Masukkan jumlah stok",
 	"hint_menu_category": "contoh: Minuman, Camilan, Makanan Utama",
-	"toast_error": "Error"
+	"toast_error": "Error",
+	"cancel_reason_optional": "Alasan (opsional)",
+	"order_cancelled_successfully": "Pesanan berhasil dibatalkan",
+	"failed_to_cancel_order": "Gagal membatalkan pesanan",
+	"view_active_order": "Lihat Perjalanan"
 }

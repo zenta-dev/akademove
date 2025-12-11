@@ -1503,5 +1503,9 @@
 	"merchant_category_food": "Food & Beverages",
 	"placeholder_menu_stock": "Enter stock quantity",
 	"hint_menu_category": "e.g., Beverages, Snacks, Main Course",
-	"toast_error": "Error"
+	"toast_error": "Error",
+	"cancel_reason_optional": "Reason (optional)",
+	"order_cancelled_successfully": "Order cancelled successfully",
+	"failed_to_cancel_order": "Failed to cancel order",
+	"view_active_order": "View Trip"
 }

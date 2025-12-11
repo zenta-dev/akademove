@@ -595,6 +595,98 @@ class _UserDeliveryOnTripScreenState extends State<UserDeliveryOnTripScreen> {
     );
   }
 
+  /// Check if the order can be cancelled by the user
+  bool _canCancelOrder(OrderStatus? status) {
+    if (status == null) return false;
+    return [
+      OrderStatus.REQUESTED,
+      OrderStatus.MATCHING,
+      OrderStatus.ACCEPTED,
+      OrderStatus.ARRIVING,
+    ].contains(status);
+  }
+
+  Future<void> _showCancelDialog(BuildContext context, Order order) async {
+    final reasonController = TextEditingController();
+
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text(context.l10n.cancel_order),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(context.l10n.are_you_sure_you_want_to_cancel_this_order),
+            Gap(16.h),
+            TextField(
+              controller: reasonController,
+              placeholder: Text(context.l10n.cancel_reason_optional),
+              maxLines: 3,
+            ),
+          ],
+        ),
+        actions: [
+          Button.outline(
+            onPressed: () => Navigator.pop(dialogContext, false),
+            child: Text(context.l10n.no),
+          ),
+          Button.destructive(
+            onPressed: () => Navigator.pop(dialogContext, true),
+            child: Text(context.l10n.yes_cancel),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true && context.mounted) {
+      final reason = reasonController.text.trim();
+      final cubit = context.read<UserOrderCubit>();
+
+      final result = await cubit.cancelOrder(
+        order.id,
+        reason: reason.isNotEmpty ? reason : null,
+      );
+
+      if (result != null && context.mounted) {
+        context.showMyToast(
+          context.l10n.order_cancelled_successfully,
+          type: ToastType.success,
+        );
+        context.goNamed(Routes.userHome.name);
+      } else if (context.mounted) {
+        context.showMyToast(
+          cubit.state.currentOrder.error?.message ??
+              context.l10n.failed_to_cancel_order,
+          type: ToastType.failed,
+        );
+      }
+    }
+
+    reasonController.dispose();
+  }
+
+  Widget _buildCancelButton(Order? order) {
+    if (order == null || !_canCancelOrder(order.status)) {
+      return const SizedBox.shrink();
+    }
+
+    return SizedBox(
+      width: double.infinity,
+      child: Button.destructive(
+        onPressed: () => _showCancelDialog(context, order),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(LucideIcons.x, size: 18.sp),
+            Gap(8.w),
+            Text(context.l10n.cancel_order),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildBody(BuildContext context, UserOrderState state) {
     final order = state.currentOrder.value;
     final orderStatus = order?.status;
@@ -617,6 +709,7 @@ class _UserDeliveryOnTripScreenState extends State<UserDeliveryOnTripScreen> {
         ),
         _buildDriverInfo(state.currentAssignedDriver.value, orderStatus),
         _buildOrderDetails(state),
+        _buildCancelButton(order),
       ],
     );
   }

@@ -1,9 +1,11 @@
+import 'package:akademove/app/router/router.dart';
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/l10n/l10n.dart';
 import 'package:flutter/material.dart' show RefreshIndicator;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 import 'package:syncfusion_flutter_charts/charts.dart' as charts;
@@ -431,7 +433,7 @@ class _MerchantCommissionReportDetailScreenState
                       Expanded(
                         child: Button.outline(
                           onPressed: () {
-                            // TODO: Implement withdrawal navigation
+                            context.push(Routes.merchantWalletWithdraw.path);
                           },
                           child: Text(
                             context.l10n.withdrawal,

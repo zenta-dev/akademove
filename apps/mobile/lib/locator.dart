@@ -112,6 +112,9 @@ void _setupRepository() {
     ..registerLazySingleton(() => ReportRepository(apiClient: sl<ApiClient>()))
     ..registerLazySingleton(
       () => DriverQuizRepository(apiClient: sl<ApiClient>()),
+    )
+    ..registerLazySingleton(
+      () => MerchantWalletRepository(apiClient: sl<ApiClient>()),
     );
 }
 
@@ -299,5 +302,10 @@ void _setupCubit() {
     )
     ..registerFactory(
       () => DriverApprovalCubit(driverRepository: sl<DriverRepository>()),
+    )
+    ..registerFactory(
+      () => MerchantWalletCubit(
+        merchantWalletRepository: sl<MerchantWalletRepository>(),
+      ),
     );
 }

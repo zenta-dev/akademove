@@ -232,6 +232,30 @@ class WalletBalanceCardWidget extends StatelessWidget {
                   ),
             ),
             onPressed: () {
+              context.pushNamed(Routes.userWalletWithdraw.name);
+            },
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              spacing: 4.w,
+              children: [
+                const Icon(LucideIcons.banknote, color: Colors.white),
+                Text(
+                  context.l10n.withdraw,
+                  style: context.typography.small.copyWith(color: Colors.white),
+                ),
+              ],
+            ),
+          ),
+          Gap(8.h),
+          Button(
+            style: const ButtonStyle.outline().copyWith(
+              decoration: (context, states, value) =>
+                  value.copyWithIfBoxDecoration(
+                    color: Colors.transparent,
+                    border: Border.all(color: Colors.white),
+                  ),
+            ),
+            onPressed: () {
               context.pushNamed(Routes.userWalletMyQr.name);
             },
             child: Row(
