@@ -605,7 +605,7 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
         ),
 
         // Account Actions Section
-        const DeleteAccountButtonWidget(accountType: 'DRIVER'),
+        // const DeleteAccountButtonWidget(accountType: 'DRIVER'),
         SizedBox(
           width: double.infinity,
           child: DestructiveButton(

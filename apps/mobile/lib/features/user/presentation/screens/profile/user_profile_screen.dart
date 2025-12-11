@@ -143,7 +143,7 @@ class UserProfileScreen extends StatelessWidget {
               children: [DefaultText(context.l10n.faq, fontSize: 14.sp)],
             ),
           ),
-          const DeleteAccountButtonWidget(accountType: 'USER'),
+          // const DeleteAccountButtonWidget(accountType: 'USER'),
           const SignOutButtonWidget(),
           DefaultText(
             context.l10n.app_settings,

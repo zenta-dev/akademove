@@ -313,7 +313,7 @@ class _DriverEditProfileScreenState extends State<DriverEditProfileScreen> {
                               style: isLoading || hasErrors
                                   ? const ButtonStyle.outline()
                                   : const ButtonStyle.primary(),
-                              onPressed: (!hasErrors && !isLoading)
+                              onPressed: (!isLoading)
                                   ? () => context.submitForm()
                                   : null,
                               child: isLoading

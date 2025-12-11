@@ -116,6 +116,7 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
               ),
             ),
           ],
+          scrollable: false,
           body: Column(
             children: [
               // Map view

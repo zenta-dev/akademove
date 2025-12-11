@@ -265,29 +265,14 @@ class _UserMenuDetailScreenState extends State<UserMenuDetailScreen> {
   }
 
   Widget _buildQuantitySelector(BuildContext context) {
-    final mutedColor = context.colorScheme.mutedForeground;
     final menu = widget.menu;
 
     return Row(
       children: [
-        GestureDetector(
-          onTap: _quantity > 1 ? () => setState(() => _quantity--) : null,
-          child: Container(
-            width: 48.w,
-            height: 48.w,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              color: _quantity > 1
-                  ? mutedColor.withValues(alpha: 0.1)
-                  : mutedColor.withValues(alpha: 0.05),
-              borderRadius: BorderRadius.circular(8.r),
-            ),
-            child: Icon(
-              LucideIcons.minus,
-              size: 20.sp,
-              color: _quantity > 1 ? null : mutedColor.withValues(alpha: 0.3),
-            ),
-          ),
+        IconButton(
+          onPressed: _quantity > 1 ? () => setState(() => _quantity--) : null,
+          icon: const Icon(LucideIcons.minus, size: 20),
+          variance: ButtonVariance.primary,
         ),
         Gap(16.w),
         Text(
@@ -298,28 +283,12 @@ class _UserMenuDetailScreenState extends State<UserMenuDetailScreen> {
           ),
         ),
         Gap(16.w),
-        GestureDetector(
-          onTap: _quantity < menu.stock
+        IconButton(
+          onPressed: _quantity < menu.stock
               ? () => setState(() => _quantity++)
               : null,
-          child: Container(
-            width: 48.w,
-            height: 48.w,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              color: _quantity < menu.stock
-                  ? context.colorScheme.primary
-                  : mutedColor.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(8.r),
-            ),
-            child: Icon(
-              LucideIcons.plus,
-              size: 20.sp,
-              color: _quantity < menu.stock
-                  ? Colors.white
-                  : mutedColor.withValues(alpha: 0.3),
-            ),
-          ),
+          icon: const Icon(LucideIcons.plus, size: 20),
+          variance: ButtonVariance.primary,
         ),
       ],
     );

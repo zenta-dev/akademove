@@ -170,7 +170,7 @@ class MerchantProfileScreen extends StatelessWidget {
             ),
           ),
 
-          const DeleteAccountButtonWidget(accountType: 'MERCHANT'),
+          // const DeleteAccountButtonWidget(accountType: 'MERCHANT'),
           const SignOutButtonWidget(),
         ],
       ),
