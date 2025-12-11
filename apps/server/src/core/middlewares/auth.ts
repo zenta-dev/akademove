@@ -120,9 +120,9 @@ export const orpcRequireAuthMiddleware = base.middleware(
 
 // "ALL" means any logged in user
 // "SYSTEM" means only system level users like ADMIN and OPERATOR only
-const systemRoles: UserRole[] = ["ADMIN", "OPERATOR"];
+const _systemRoles: UserRole[] = ["ADMIN", "OPERATOR"];
 
-export function hasRoles(userRole?: UserRole, ...roles: RoleAccess[]) {
+export function hasRoles(_userRole?: UserRole, ..._roles: RoleAccess[]) {
 	// if (!userRole) return false;
 
 	// const hasRole = roles.some((role) => {

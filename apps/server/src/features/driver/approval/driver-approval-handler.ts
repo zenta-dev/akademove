@@ -1,6 +1,5 @@
 import { m } from "@repo/i18n";
 import { trimObjectValues } from "@repo/shared";
-import { AuthError } from "@/core/error";
 import { createORPCRouter } from "@/core/router/orpc";
 import { logger } from "@/utils/logger";
 import { DriverApprovalSpec } from "./driver-approval-spec";

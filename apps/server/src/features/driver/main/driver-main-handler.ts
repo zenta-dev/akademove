@@ -1,7 +1,6 @@
 import { m } from "@repo/i18n";
 import { toLocation } from "@repo/schema/position";
 import { trimObjectValues } from "@repo/shared";
-import { AuthError } from "@/core/error";
 import { createORPCRouter } from "@/core/router/orpc";
 import { FraudDetectionService } from "@/features/fraud/services";
 import { logger } from "@/utils/logger";
