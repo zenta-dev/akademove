@@ -1,11 +1,14 @@
 import { m } from "@repo/i18n";
 import type { Order } from "@repo/schema/order";
 import type { UserRole } from "@repo/schema/user";
+import type { OrderEnvelope } from "@repo/schema/ws";
 import { eq } from "drizzle-orm";
+import { BUSINESS_CONSTANTS } from "@/core/constants";
 import { RepositoryError } from "@/core/error";
 import type { WithTx } from "@/core/interface";
 import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
+import { OrderQueueService } from "@/core/services/queue";
 import { BusinessConfigurationService } from "@/features/configuration/services";
 import { toNumberSafe } from "@/utils";
 import { logger } from "@/utils/logger";
@@ -45,7 +48,7 @@ export class OrderCancellationRepository extends OrderBaseRepository {
 	/**
 	 * Cancels an order with penalty logic based on SRS requirements:
 	 * - User cancels: No penalty before driver acceptance, 10% fee after acceptance
-	 * - Driver cancels: Warning and suspension tracking after 3 cancellations/day
+	 * - Driver cancels: Re-match with other drivers (no refund until timeout)
 	 * - System/Merchant cancels: Full refund
 	 */
 	async cancelOrder(
@@ -78,6 +81,32 @@ export class OrderCancellationRepository extends OrderBaseRepository {
 			// Validate status transition
 			this.#stateService.validateTransition(order.status, cancelStatus);
 
+			// Handle driver cancellation - track and suspend if excessive
+			if (cancelStatus === "CANCELLED_BY_DRIVER" && order.driverId) {
+				await this.#handleDriverCancellation(order.driverId, order.id, opts);
+
+				// Reset driver's isTakingOrder flag
+				await opts.tx
+					.update(tables.driver)
+					.set({ isTakingOrder: false })
+					.where(eq(tables.driver.id, order.driverId));
+
+				logger.info(
+					{ driverId: order.driverId, orderId: order.id },
+					"[OrderCancellationRepository] Reset driver isTakingOrder flag after driver cancellation",
+				);
+
+				// Re-match with other drivers instead of cancelling
+				// This allows the order to be offered to other drivers
+				return await this.#retryMatchingAfterDriverCancel(
+					order,
+					order.driverId,
+					reason,
+					opts,
+				);
+			}
+
+			// For non-driver cancellations, process normally with refund
 			// Fetch business configuration for cancellation fee rates
 			const businessConfig = await BusinessConfigurationService.getConfig(
 				this.db,
@@ -112,11 +141,6 @@ export class OrderCancellationRepository extends OrderBaseRepository {
 					},
 					"[OrderCancellationRepository] User cancellation penalty applied (10%)",
 				);
-			}
-
-			// Handle driver cancellation - track and suspend if excessive
-			if (cancelStatus === "CANCELLED_BY_DRIVER" && order.driverId) {
-				await this.#handleDriverCancellation(order.driverId, order.id, opts);
 			}
 
 			// Reset driver's isTakingOrder flag if order had an assigned driver
@@ -175,6 +199,115 @@ export class OrderCancellationRepository extends OrderBaseRepository {
 			);
 			throw this.handleError(error, "cancel");
 		}
+	}
+
+	/**
+	 * Retry matching after driver cancellation
+	 *
+	 * Instead of refunding and cancelling, this:
+	 * 1. Resets the order status to MATCHING
+	 * 2. Clears the assigned driver
+	 * 3. Re-enqueues driver matching with the cancelled driver excluded
+	 * 4. Notifies the user via WebSocket that we're finding a new driver
+	 */
+	async #retryMatchingAfterDriverCancel(
+		order: Order,
+		cancelledDriverId: string,
+		reason?: string,
+		opts?: WithTx,
+	): Promise<Order> {
+		// Get existing excluded drivers from order metadata (if any previous retries)
+		const existingExcludedDrivers: string[] = [];
+
+		// Add the driver who just cancelled
+		const excludedDriverIds = [
+			...new Set([...existingExcludedDrivers, cancelledDriverId]),
+		];
+
+		// Update order: reset to MATCHING status and clear driver assignment
+		const updatedOrder = await this.#writeRepo.update(
+			order.id,
+			{
+				status: "MATCHING",
+				driverId: undefined, // Clear driver assignment
+				cancelReason: undefined, // Clear any previous cancel reason
+			},
+			{
+				...opts,
+				changedByRole: "SYSTEM",
+				reason: `Re-matching after driver cancellation: ${reason ?? "Driver cancelled"}`,
+			} as WithTx,
+		);
+
+		// Re-enqueue driver matching with excluded drivers
+		await OrderQueueService.enqueueDriverMatching({
+			orderId: order.id,
+			pickupLocation: order.pickupLocation,
+			orderType: order.type,
+			genderPreference: order.genderPreference ?? undefined,
+			userGender: order.gender ?? undefined,
+			initialRadiusKm: BUSINESS_CONSTANTS.DRIVER_MATCHING_RADIUS_KM,
+			maxMatchingDurationMinutes: 15,
+			currentAttempt: 1,
+			maxExpansionAttempts:
+				BUSINESS_CONSTANTS.DRIVER_MATCHING_MAX_EXPANSION_ATTEMPTS,
+			expansionRate: BUSINESS_CONSTANTS.DRIVER_MATCHING_RADIUS_EXPANSION,
+			matchingIntervalSeconds: 30,
+			excludedDriverIds,
+			isRetry: true,
+		});
+
+		// Broadcast DRIVER_CANCELLED_REMATCHING event to notify user via WebSocket
+		try {
+			const roomStub = OrderBaseRepository.getRoomStubByName(order.id);
+			const retryPayload: OrderEnvelope = {
+				e: "DRIVER_CANCELLED_REMATCHING",
+				f: "s",
+				t: "c",
+				tg: "USER",
+				p: {
+					detail: {
+						order: updatedOrder,
+						payment: null,
+						transaction: null,
+					},
+					retryInfo: {
+						orderId: order.id,
+						cancelledDriverId,
+						excludedDriverCount: excludedDriverIds.length,
+						reason: reason ?? "Driver cancelled the order",
+					},
+				},
+			};
+			await roomStub.broadcast(retryPayload);
+
+			logger.info(
+				{
+					orderId: order.id,
+					userId: order.userId,
+					event: "DRIVER_CANCELLED_REMATCHING",
+				},
+				"[OrderCancellationRepository] Broadcasted retry status to user",
+			);
+		} catch (error) {
+			// Log but don't fail the transaction if WebSocket broadcast fails
+			logger.error(
+				{ error, orderId: order.id },
+				"[OrderCancellationRepository] Failed to broadcast retry status via WebSocket",
+			);
+		}
+
+		logger.info(
+			{
+				orderId: order.id,
+				cancelledDriverId,
+				excludedDriverIds,
+				reason,
+			},
+			"[OrderCancellationRepository] Driver cancelled - re-matching with other drivers",
+		);
+
+		return updatedOrder;
 	}
 
 	/**

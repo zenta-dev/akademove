@@ -3,8 +3,7 @@ import 'package:api_client/api_client.dart';
 
 // tests for WalletMonthlySummaryQuery
 void main() {
-  final WalletMonthlySummaryQuery?
-  instance = /* WalletMonthlySummaryQuery(...) */ null;
+  final WalletMonthlySummaryQuery? instance = /* WalletMonthlySummaryQuery(...) */ null;
   // TODO add properties to the entity
 
   group(WalletMonthlySummaryQuery, () {
@@ -17,5 +16,6 @@ void main() {
     test('to test the property `month`', () async {
       // TODO
     });
+
   });
 }

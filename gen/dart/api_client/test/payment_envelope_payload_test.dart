@@ -3,8 +3,7 @@ import 'package:api_client/api_client.dart';
 
 // tests for PaymentEnvelopePayload
 void main() {
-  final PaymentEnvelopePayload? instance = /* PaymentEnvelopePayload(...) */
-      null;
+  final PaymentEnvelopePayload? instance = /* PaymentEnvelopePayload(...) */ null;
   // TODO add properties to the entity
 
   group(PaymentEnvelopePayload, () {
@@ -27,5 +26,6 @@ void main() {
     test('to test the property `wallet`', () async {
       // TODO
     });
+
   });
 }

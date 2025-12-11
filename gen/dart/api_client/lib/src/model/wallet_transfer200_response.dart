@@ -22,31 +22,29 @@ class WalletTransfer200Response {
   const WalletTransfer200Response({
     required this.message,
     required this.data,
-    this.pagination,
-    this.totalPages,
+     this.pagination,
+     this.totalPages,
   });
   @JsonKey(name: r'message', required: true, includeIfNull: false)
   final String message;
-
+  
   @JsonKey(name: r'data', required: true, includeIfNull: false)
   final TransferResponse data;
-
+  
   @JsonKey(name: r'pagination', required: false, includeIfNull: false)
   final PaginationResult? pagination;
-
-  // minimum: 0
-  // maximum: 9007199254740991
+  
+          // minimum: 0
+          // maximum: 9007199254740991
   @JsonKey(name: r'totalPages', required: false, includeIfNull: false)
   final int? totalPages;
-
+  
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is WalletTransfer200Response &&
-          other.message == message &&
-          other.data == data &&
-          other.pagination == pagination &&
-          other.totalPages == totalPages;
+  bool operator ==(Object other) => identical(this, other) || other is WalletTransfer200Response &&
+    other.message == message &&
+    other.data == data &&
+    other.pagination == pagination &&
+    other.totalPages == totalPages;
 
   @override
   int get hashCode =>
@@ -55,8 +53,7 @@ class WalletTransfer200Response {
       pagination.hashCode +
       totalPages.hashCode;
 
-  factory WalletTransfer200Response.fromJson(Map<String, dynamic> json) =>
-      _$WalletTransfer200ResponseFromJson(json);
+  factory WalletTransfer200Response.fromJson(Map<String, dynamic> json) => _$WalletTransfer200ResponseFromJson(json);
 
   Map<String, dynamic> toJson() => _$WalletTransfer200ResponseToJson(this);
 
@@ -64,4 +61,6 @@ class WalletTransfer200Response {
   String toString() {
     return toJson().toString();
   }
+
 }
+

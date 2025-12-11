@@ -3,7 +3,6 @@ import {
 	type ChargeParameter,
 	type ChargeResponse,
 	CoreApi,
-	Iris,
 	MidtransError,
 	type TransactionStatusResponse,
 } from "@erhahahaa/midtrans-client-typescript";
@@ -279,7 +278,7 @@ export class MidtransPaymentService implements PaymentService {
 
 /**
  * Iris API response for bank account validation
- * @see https://iris-docs.midtrans.com/#validate-bank-account
+ * @see https://docs.midtrans.com/reference/validate-bank-account
  */
 interface IrisBankValidationResponse {
 	account_name?: string;
@@ -306,29 +305,137 @@ interface IrisPayoutItemResponse {
 }
 
 /**
- * MidtransBankValidationService uses the Midtrans Iris API to validate bank accounts.
- * This is used during driver/merchant sign-up to verify bank account ownership.
- *
- * @see https://iris-docs.midtrans.com/#validate-bank-account
+ * Iris API response for create payouts
  */
-export class MidtransBankValidationService implements BankValidationService {
-	readonly #client: Iris;
+interface IrisCreatePayoutsResponse {
+	payouts: Array<{
+		status: string;
+		reference_no: string;
+	}>;
+}
+
+/**
+ * Iris API response for balance
+ */
+interface IrisBalanceResponse {
+	balance: string;
+}
+
+/**
+ * Iris API error response
+ */
+interface IrisErrorResponse {
+	error_message?: string;
+	errors?: string[];
+}
+
+// ==================== Custom Iris HTTP Client ====================
+
+const IRIS_SANDBOX_URL = "https://app.sandbox.midtrans.com/iris/api/v1";
+const IRIS_PRODUCTION_URL = "https://app.midtrans.com/iris/api/v1";
+
+/**
+ * Custom Iris HTTP client that uses direct fetch instead of the midtrans package.
+ * This follows the Midtrans Iris API documentation directly.
+ *
+ * @see https://docs.midtrans.com/reference/payout-api-overview
+ */
+class IrisHttpClient {
+	readonly #serverKey: string;
+	readonly #baseUrl: string;
 
 	constructor(opts: MidtransIrisOptions) {
-		this.#client = new Iris(opts);
+		this.#serverKey = opts.serverKey;
+		this.#baseUrl = opts.isProduction ? IRIS_PRODUCTION_URL : IRIS_SANDBOX_URL;
 	}
 
-	/**
-	 * Get the Iris client instance for advanced operations
-	 */
-	get client(): Iris {
-		return this.#client;
+	private getAuthHeader(): string {
+		// Midtrans uses HTTP Basic Auth with serverKey as username and empty password
+		const credentials = Buffer.from(`${this.#serverKey}:`).toString("base64");
+		return `Basic ${credentials}`;
 	}
 
-	/**
-	 * Validate a bank account using Midtrans Iris API
-	 * Returns account holder name if valid, null if invalid
-	 */
+	async request<T>(
+		method: "GET" | "POST" | "PATCH",
+		endpoint: string,
+		params?: Record<string, string>,
+		body?: unknown,
+	): Promise<T> {
+		let url = `${this.#baseUrl}${endpoint}`;
+
+		// Add query params for GET requests
+		if (params && Object.keys(params).length > 0) {
+			const searchParams = new URLSearchParams(params);
+			url = `${url}?${searchParams.toString()}`;
+		}
+
+		const headers: Record<string, string> = {
+			Authorization: this.getAuthHeader(),
+			Accept: "application/json",
+		};
+
+		const fetchOptions: RequestInit = {
+			method,
+			headers,
+		};
+
+		if (body && method !== "GET") {
+			headers["Content-Type"] = "application/json";
+			fetchOptions.body = JSON.stringify(body);
+		}
+
+		logger.debug(
+			{ method, url, hasBody: !!body },
+			"[IrisHttpClient] Making request",
+		);
+
+		const response = await fetch(url, fetchOptions);
+		const responseText = await response.text();
+
+		logger.debug(
+			{ status: response.status, responseText: responseText.substring(0, 500) },
+			"[IrisHttpClient] Response received",
+		);
+
+		// Try to parse as JSON
+		let data: T;
+		try {
+			data = JSON.parse(responseText) as T;
+		} catch {
+			// If response is not JSON, it's likely an auth error
+			throw new PaymentError(
+				`Iris API returned non-JSON response: ${responseText.substring(0, 100)}`,
+				{ code: "INTERNAL_SERVER_ERROR" },
+			);
+		}
+
+		// Check for error responses
+		if (!response.ok) {
+			const errorData = data as unknown as IrisErrorResponse;
+			const errorMessage =
+				errorData.error_message ??
+				errorData.errors?.join(", ") ??
+				`Iris API error: ${response.status}`;
+			throw new PaymentError(errorMessage, { code: "BAD_REQUEST" });
+		}
+
+		return data;
+	}
+}
+
+/**
+ * CustomIrisBankValidationService uses direct fetch to the Midtrans Iris API.
+ * This bypasses the midtrans-client-typescript package which may have issues.
+ *
+ * @see https://docs.midtrans.com/reference/validate-bank-account
+ */
+export class CustomIrisBankValidationService implements BankValidationService {
+	readonly #client: IrisHttpClient;
+
+	constructor(opts: MidtransIrisOptions) {
+		this.#client = new IrisHttpClient(opts);
+	}
+
 	async validateBankAccount(
 		payload: BankValidationPayload,
 	): Promise<BankValidationResult> {
@@ -336,20 +443,23 @@ export class MidtransBankValidationService implements BankValidationService {
 			const bankCode = payload.bankProvider.toLowerCase();
 			logger.debug(
 				{ bankCode, accountNumber: payload.accountNumber },
-				"[MidtransBankValidation] Validating bank account",
+				"[CustomIrisBankValidation] Validating bank account",
 			);
 
-			const response = (await this.#client.validateBankAccount({
-				bank: bankCode,
-				account: payload.accountNumber,
-			})) as IrisBankValidationResponse;
+			const response = await this.#client.request<IrisBankValidationResponse>(
+				"GET",
+				"/account_validation",
+				{
+					bank: bankCode,
+					account: payload.accountNumber,
+				},
+			);
 
 			logger.debug(
 				{ response },
-				"[MidtransBankValidation] Validation response",
+				"[CustomIrisBankValidation] Validation response",
 			);
 
-			// Check if we got a valid account name back
 			const accountName = response.account_name ?? null;
 			const isValid = accountName !== null && accountName.trim().length > 0;
 
@@ -361,18 +471,12 @@ export class MidtransBankValidationService implements BankValidationService {
 			};
 		} catch (error) {
 			logger.error(
-				{ payload, detail: error },
-				"[MidtransBankValidation] Validation failed",
+				{ payload, error },
+				"[CustomIrisBankValidation] Validation failed",
 			);
 
-			if (error instanceof MidtransError) {
-				logger.debug(
-					{ rawData: error.rawHttpClientData },
-					"[MidtransBankValidation] Raw error data",
-				);
-
-				// Return invalid result instead of throwing for expected validation failures
-				// (e.g., account not found, invalid account number format)
+			// Return invalid result for expected validation failures
+			if (error instanceof PaymentError) {
 				return {
 					isValid: false,
 					accountName: null,
@@ -389,25 +493,17 @@ export class MidtransBankValidationService implements BankValidationService {
 }
 
 /**
- * MidtransPayoutService handles disbursements/payouts via Midtrans Iris API.
- * This is used for driver/merchant withdrawals to their bank accounts.
+ * CustomIrisPayoutService uses direct fetch to the Midtrans Iris API.
  *
- * @see https://iris-docs.midtrans.com/#create-payouts
+ * @see https://docs.midtrans.com/reference/create-payouts
  */
-export class MidtransPayoutService implements PayoutService {
-	readonly #client: Iris;
+export class CustomIrisPayoutService implements PayoutService {
+	readonly #client: IrisHttpClient;
 
 	constructor(opts: MidtransIrisOptions) {
-		this.#client = new Iris(opts);
+		this.#client = new IrisHttpClient(opts);
 	}
 
-	/**
-	 * Create a payout/disbursement to a bank account
-	 * This initiates a transfer from the Midtrans Iris balance to the beneficiary's bank account
-	 *
-	 * @param payload - Payout details including beneficiary info and amount
-	 * @returns Payout result with status and reference number
-	 */
 	async createPayout(payload: PayoutPayload): Promise<PayoutResult> {
 		try {
 			logger.info(
@@ -416,22 +512,27 @@ export class MidtransPayoutService implements PayoutService {
 					beneficiaryBank: payload.beneficiaryBank,
 					amount: payload.amount,
 				},
-				"[MidtransPayout] Creating payout",
+				"[CustomIrisPayout] Creating payout",
 			);
 
-			const response = await this.#client.createPayouts({
-				payouts: [
-					{
-						beneficiary_name: payload.beneficiaryName,
-						beneficiary_account: payload.beneficiaryAccount,
-						beneficiary_bank: payload.beneficiaryBank.toLowerCase(),
-						beneficiary_email: payload.beneficiaryEmail,
-						amount: payload.amount.toString(),
-						notes: payload.notes ?? `Withdrawal ${payload.referenceNo}`,
-						reference_no: payload.referenceNo,
-					},
-				],
-			});
+			const response = await this.#client.request<IrisCreatePayoutsResponse>(
+				"POST",
+				"/payouts",
+				undefined,
+				{
+					payouts: [
+						{
+							beneficiary_name: payload.beneficiaryName,
+							beneficiary_account: payload.beneficiaryAccount,
+							beneficiary_bank: payload.beneficiaryBank.toLowerCase(),
+							beneficiary_email: payload.beneficiaryEmail,
+							amount: payload.amount.toString(),
+							notes: payload.notes ?? `Withdrawal ${payload.referenceNo}`,
+							reference_no: payload.referenceNo,
+						},
+					],
+				},
+			);
 
 			const payoutItem = response.payouts[0];
 			if (!payoutItem) {
@@ -441,11 +542,8 @@ export class MidtransPayoutService implements PayoutService {
 			}
 
 			logger.info(
-				{
-					referenceNo: payoutItem.reference_no,
-					status: payoutItem.status,
-				},
-				"[MidtransPayout] Payout created",
+				{ referenceNo: payoutItem.reference_no, status: payoutItem.status },
+				"[CustomIrisPayout] Payout created",
 			);
 
 			return {
@@ -454,30 +552,16 @@ export class MidtransPayoutService implements PayoutService {
 			};
 		} catch (error) {
 			logger.error(
-				{ payload, detail: error },
-				"[MidtransPayout] Create payout failed",
+				{ payload, error },
+				"[CustomIrisPayout] Create payout failed",
 			);
 
-			if (error instanceof MidtransError) {
-				logger.debug(
-					{ rawData: error.rawHttpClientData },
-					"[MidtransPayout] Raw error data",
-				);
-
-				// Extract error message from Midtrans response
-				const apiResponse = error.ApiResponse;
-				const errorMessage =
-					apiResponse?.status_message ?? "Payout creation failed";
-
+			if (error instanceof PaymentError) {
 				return {
 					status: "failed",
 					referenceNo: payload.referenceNo,
-					errorMessage,
+					errorMessage: error.message,
 				};
-			}
-
-			if (error instanceof PaymentError) {
-				throw error;
 			}
 
 			throw new PaymentError("Failed to create payout", {
@@ -486,21 +570,19 @@ export class MidtransPayoutService implements PayoutService {
 		}
 	}
 
-	/**
-	 * Get payout details by reference number
-	 *
-	 * @param referenceNo - The reference number of the payout
-	 * @returns Detailed payout information
-	 */
 	async getPayoutDetails(referenceNo: string): Promise<PayoutDetails> {
 		try {
-			logger.debug({ referenceNo }, "[MidtransPayout] Getting payout details");
+			logger.debug(
+				{ referenceNo },
+				"[CustomIrisPayout] Getting payout details",
+			);
 
-			const response = (await this.#client.getPayoutDetails(
-				referenceNo,
-			)) as IrisPayoutItemResponse;
+			const response = await this.#client.request<IrisPayoutItemResponse>(
+				"GET",
+				`/payouts/${referenceNo}`,
+			);
 
-			logger.debug({ response }, "[MidtransPayout] Payout details response");
+			logger.debug({ response }, "[CustomIrisPayout] Payout details response");
 
 			return {
 				status: this.mapPayoutStatus(response.status),
@@ -515,16 +597,9 @@ export class MidtransPayoutService implements PayoutService {
 			};
 		} catch (error) {
 			logger.error(
-				{ referenceNo, detail: error },
-				"[MidtransPayout] Get payout details failed",
+				{ referenceNo, error },
+				"[CustomIrisPayout] Get payout details failed",
 			);
-
-			if (error instanceof MidtransError) {
-				logger.debug(
-					{ rawData: error.rawHttpClientData },
-					"[MidtransPayout] Raw error data",
-				);
-			}
 
 			throw new PaymentError("Failed to get payout details", {
 				code: "INTERNAL_SERVER_ERROR",
@@ -532,31 +607,21 @@ export class MidtransPayoutService implements PayoutService {
 		}
 	}
 
-	/**
-	 * Get current Iris balance
-	 * This shows how much is available for disbursements
-	 *
-	 * @returns Available balance in IDR
-	 */
 	async getBalance(): Promise<number> {
 		try {
-			logger.debug("[MidtransPayout] Getting Iris balance");
+			logger.debug("[CustomIrisPayout] Getting Iris balance");
 
-			const response = await this.#client.getBalance();
+			const response = await this.#client.request<IrisBalanceResponse>(
+				"GET",
+				"/balance",
+			);
 
 			const balance = Number.parseFloat(response.balance);
-			logger.info({ balance }, "[MidtransPayout] Current Iris balance");
+			logger.info({ balance }, "[CustomIrisPayout] Current Iris balance");
 
 			return balance;
 		} catch (error) {
-			logger.error({ detail: error }, "[MidtransPayout] Get balance failed");
-
-			if (error instanceof MidtransError) {
-				logger.debug(
-					{ rawData: error.rawHttpClientData },
-					"[MidtransPayout] Raw error data",
-				);
-			}
+			logger.error({ error }, "[CustomIrisPayout] Get balance failed");
 
 			throw new PaymentError("Failed to get Iris balance", {
 				code: "INTERNAL_SERVER_ERROR",
@@ -564,9 +629,6 @@ export class MidtransPayoutService implements PayoutService {
 		}
 	}
 
-	/**
-	 * Map Midtrans Iris payout status to our PayoutStatus type
-	 */
 	private mapPayoutStatus(status: string): PayoutStatus {
 		const statusLower = status.toLowerCase();
 		switch (statusLower) {
@@ -585,9 +647,126 @@ export class MidtransPayoutService implements PayoutService {
 			default:
 				logger.warn(
 					{ status },
-					"[MidtransPayout] Unknown payout status, defaulting to queued",
+					"[CustomIrisPayout] Unknown payout status, defaulting to queued",
 				);
 				return "queued";
 		}
+	}
+}
+
+// ==================== Mock Services (when Iris is disabled) ====================
+
+/**
+ * MockBankValidationService is used when MIDTRANS_EXPERIMENTAL_IRIS is disabled.
+ * It skips actual bank validation and returns the account as valid.
+ *
+ * WARNING: This does not perform real validation. Enable Iris for production use.
+ */
+export class MockBankValidationService implements BankValidationService {
+	async validateBankAccount(
+		payload: BankValidationPayload,
+	): Promise<BankValidationResult> {
+		logger.warn(
+			{ payload },
+			"[MockBankValidation] Using mock validation - MIDTRANS_EXPERIMENTAL_IRIS is disabled",
+		);
+
+		return {
+			isValid: true,
+			accountName: null,
+			bankCode: payload.bankProvider,
+			accountNumber: payload.accountNumber,
+		};
+	}
+}
+
+/**
+ * MockPayoutService is used when MIDTRANS_EXPERIMENTAL_IRIS is disabled.
+ * All payout operations will fail with an error.
+ */
+export class MockPayoutService implements PayoutService {
+	async createPayout(payload: PayoutPayload): Promise<PayoutResult> {
+		logger.error(
+			{ payload },
+			"[MockPayout] Payout attempted but MIDTRANS_EXPERIMENTAL_IRIS is disabled",
+		);
+
+		return {
+			status: "failed",
+			referenceNo: payload.referenceNo,
+			errorMessage:
+				"Payout service is disabled. Enable MIDTRANS_EXPERIMENTAL_IRIS to use payouts.",
+		};
+	}
+
+	async getPayoutDetails(referenceNo: string): Promise<PayoutDetails> {
+		logger.error(
+			{ referenceNo },
+			"[MockPayout] Get payout details attempted but MIDTRANS_EXPERIMENTAL_IRIS is disabled",
+		);
+
+		throw new PaymentError(
+			"Payout service is disabled. Enable MIDTRANS_EXPERIMENTAL_IRIS to use payouts.",
+			{ code: "BAD_REQUEST" },
+		);
+	}
+
+	async getBalance(): Promise<number> {
+		logger.error(
+			"[MockPayout] Get balance attempted but MIDTRANS_EXPERIMENTAL_IRIS is disabled",
+		);
+
+		throw new PaymentError(
+			"Payout service is disabled. Enable MIDTRANS_EXPERIMENTAL_IRIS to use payouts.",
+			{ code: "BAD_REQUEST" },
+		);
+	}
+}
+
+/**
+ * @deprecated Use CustomIrisBankValidationService instead.
+ * MidtransBankValidationService uses the Midtrans Iris API to validate bank accounts.
+ * This is used during driver/merchant sign-up to verify bank account ownership.
+ *
+ * @see https://iris-docs.midtrans.com/#validate-bank-account
+ */
+export class MidtransBankValidationService implements BankValidationService {
+	readonly #client: CustomIrisBankValidationService;
+
+	constructor(opts: MidtransIrisOptions) {
+		this.#client = new CustomIrisBankValidationService(opts);
+	}
+
+	async validateBankAccount(
+		payload: BankValidationPayload,
+	): Promise<BankValidationResult> {
+		return this.#client.validateBankAccount(payload);
+	}
+}
+
+/**
+ * @deprecated Use CustomIrisPayoutService instead.
+ * MidtransPayoutService handles disbursements/payouts via Midtrans Iris API.
+ * This is used for driver/merchant withdrawals to their bank accounts.
+ *
+ * @see https://iris-docs.midtrans.com/#create-payouts
+ */
+export class MidtransPayoutService implements PayoutService {
+	readonly #client: CustomIrisPayoutService;
+
+	constructor(opts: MidtransIrisOptions) {
+		this.#client = new CustomIrisPayoutService(opts);
+	}
+
+	async createPayout(payload: PayoutPayload): Promise<PayoutResult> {
+		return this.#client.createPayout(payload);
+	}
+
+	async getPayoutDetails(referenceNo: string): Promise<PayoutDetails> {
+		return this.#client.getPayoutDetails(referenceNo);
+	}
+
+	async getBalance(): Promise<number> {
+		return this.#client.getBalance();
 	}
 }

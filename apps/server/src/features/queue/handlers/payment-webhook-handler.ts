@@ -26,7 +26,9 @@ export async function handlePaymentWebhook(
 	context: QueueHandlerContext,
 ): Promise<void> {
 	const { payload, meta } = job;
-	const { webhookBody, provider, receivedAt } = payload;
+	const { webhookBody, provider } = payload;
+	// receivedAt is serialized as ISO string when passing through the queue
+	const receivedAt = new Date(payload.receivedAt);
 
 	const orderId = webhookBody.order_id as string | undefined;
 	const transactionStatus = webhookBody.transaction_status as

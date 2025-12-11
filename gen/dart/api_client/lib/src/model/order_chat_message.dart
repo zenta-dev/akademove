@@ -26,44 +26,42 @@ class OrderChatMessage {
     required this.sentAt,
     required this.createdAt,
     required this.updatedAt,
-    this.sender,
+     this.sender,
   });
   @JsonKey(name: r'id', required: true, includeIfNull: false)
   final String id;
-
+  
   @JsonKey(name: r'orderId', required: true, includeIfNull: false)
   final String orderId;
-
+  
   @JsonKey(name: r'senderId', required: true, includeIfNull: false)
   final String senderId;
-
+  
   @JsonKey(name: r'message', required: true, includeIfNull: false)
   final String message;
-
+  
   @JsonKey(name: r'sentAt', required: true, includeIfNull: false)
   final DateTime sentAt;
-
+  
   @JsonKey(name: r'createdAt', required: true, includeIfNull: false)
   final DateTime createdAt;
-
+  
   @JsonKey(name: r'updatedAt', required: true, includeIfNull: false)
   final DateTime updatedAt;
-
+  
   @JsonKey(name: r'sender', required: false, includeIfNull: false)
   final OrderChatMessageSender? sender;
-
+  
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is OrderChatMessage &&
-          other.id == id &&
-          other.orderId == orderId &&
-          other.senderId == senderId &&
-          other.message == message &&
-          other.sentAt == sentAt &&
-          other.createdAt == createdAt &&
-          other.updatedAt == updatedAt &&
-          other.sender == sender;
+  bool operator ==(Object other) => identical(this, other) || other is OrderChatMessage &&
+    other.id == id &&
+    other.orderId == orderId &&
+    other.senderId == senderId &&
+    other.message == message &&
+    other.sentAt == sentAt &&
+    other.createdAt == createdAt &&
+    other.updatedAt == updatedAt &&
+    other.sender == sender;
 
   @override
   int get hashCode =>
@@ -76,8 +74,7 @@ class OrderChatMessage {
       updatedAt.hashCode +
       sender.hashCode;
 
-  factory OrderChatMessage.fromJson(Map<String, dynamic> json) =>
-      _$OrderChatMessageFromJson(json);
+  factory OrderChatMessage.fromJson(Map<String, dynamic> json) => _$OrderChatMessageFromJson(json);
 
   Map<String, dynamic> toJson() => _$OrderChatMessageToJson(this);
 
@@ -85,4 +82,6 @@ class OrderChatMessage {
   String toString() {
     return toJson().toString();
   }
+
 }
+

@@ -22,11 +22,6 @@ void main() {
       // TODO
     });
 
-    // String pickupInstructions
-    test('to test the property `pickupInstructions`', () async {
-      // TODO
-    });
-
     // String dropoff
     test('to test the property `dropoff`', () async {
       // TODO
@@ -42,9 +37,5 @@ void main() {
       // TODO
     });
 
-    // String dropoffInstructions
-    test('to test the property `dropoffInstructions`', () async {
-      // TODO
-    });
   });
 }

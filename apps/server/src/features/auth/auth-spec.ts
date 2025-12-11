@@ -1,4 +1,5 @@
 import { oc } from "@orpc/contract";
+import { UserSchema } from "@repo/schema";
 import {
 	FlatSignUpDriverSchema,
 	FlatSignUpMerchantSchema,
@@ -200,6 +201,15 @@ export const AuthSpec = {
 		})
 		.input(z.object({ body: VerifyEmailSchema }))
 		.output(
-			z.union([createSuccesSchema(z.boolean(), "Email verified successfully")]),
+			z.union([
+				createSuccesSchema(
+					z.object({
+						ok: z.boolean(),
+						token: z.string().optional(),
+						user: UserSchema.optional(),
+					}),
+					"Email verified successfully",
+				),
+			]),
 		),
 };

@@ -18,41 +18,39 @@ part 'broadcast_update_request.g.dart';
 class BroadcastUpdateRequest {
   /// Returns a new [BroadcastUpdateRequest] instance.
   const BroadcastUpdateRequest({
-    this.title,
-    this.message,
-    this.type,
-    this.targetAudience,
-    this.targetIds,
-    this.scheduledAt,
+     this.title,
+     this.message,
+     this.type,
+     this.targetAudience,
+     this.targetIds,
+     this.scheduledAt,
   });
   @JsonKey(name: r'title', required: false, includeIfNull: false)
   final String? title;
-
+  
   @JsonKey(name: r'message', required: false, includeIfNull: false)
   final String? message;
-
+  
   @JsonKey(name: r'type', required: false, includeIfNull: false)
   final BroadcastUpdateRequestTypeEnum? type;
-
+  
   @JsonKey(name: r'targetAudience', required: false, includeIfNull: false)
   final BroadcastUpdateRequestTargetAudienceEnum? targetAudience;
-
+  
   @JsonKey(name: r'targetIds', required: false, includeIfNull: false)
   final List<String>? targetIds;
-
+  
   @JsonKey(name: r'scheduledAt', required: false, includeIfNull: false)
   final DateTime? scheduledAt;
-
+  
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is BroadcastUpdateRequest &&
-          other.title == title &&
-          other.message == message &&
-          other.type == type &&
-          other.targetAudience == targetAudience &&
-          other.targetIds == targetIds &&
-          other.scheduledAt == scheduledAt;
+  bool operator ==(Object other) => identical(this, other) || other is BroadcastUpdateRequest &&
+    other.title == title &&
+    other.message == message &&
+    other.type == type &&
+    other.targetAudience == targetAudience &&
+    other.targetIds == targetIds &&
+    other.scheduledAt == scheduledAt;
 
   @override
   int get hashCode =>
@@ -63,8 +61,7 @@ class BroadcastUpdateRequest {
       targetIds.hashCode +
       (scheduledAt == null ? 0 : scheduledAt.hashCode);
 
-  factory BroadcastUpdateRequest.fromJson(Map<String, dynamic> json) =>
-      _$BroadcastUpdateRequestFromJson(json);
+  factory BroadcastUpdateRequest.fromJson(Map<String, dynamic> json) => _$BroadcastUpdateRequestFromJson(json);
 
   Map<String, dynamic> toJson() => _$BroadcastUpdateRequestToJson(this);
 
@@ -72,6 +69,7 @@ class BroadcastUpdateRequest {
   String toString() {
     return toJson().toString();
   }
+
 }
 
 enum BroadcastUpdateRequestTypeEnum {
@@ -81,11 +79,11 @@ enum BroadcastUpdateRequestTypeEnum {
   IN_APP(r'IN_APP'),
   @JsonValue(r'ALL')
   ALL(r'ALL');
-
+  
   const BroadcastUpdateRequestTypeEnum(this.value);
-
+  
   final String value;
-
+  
   @override
   String toString() => value;
 }
@@ -103,11 +101,12 @@ enum BroadcastUpdateRequestTargetAudienceEnum {
   ADMINS(r'ADMINS'),
   @JsonValue(r'OPERATORS')
   OPERATORS(r'OPERATORS');
-
+  
   const BroadcastUpdateRequestTargetAudienceEnum(this.value);
-
+  
   final String value;
-
+  
   @override
   String toString() => value;
 }
+

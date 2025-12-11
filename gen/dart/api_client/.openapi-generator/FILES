@@ -30,6 +30,8 @@ doc/AuthHasAccessRequest.md
 doc/AuthSignIn200Response.md
 doc/AuthSignOut200Response.md
 doc/AuthSignUpUser201Response.md
+doc/AuthVerifyEmail200Response.md
+doc/AuthVerifyEmail200ResponseData.md
 doc/Badge.md
 doc/BadgeApi.md
 doc/BadgeBenefits.md
@@ -301,7 +303,6 @@ doc/OrderEnvelopePayloadMerchantAction.md
 doc/OrderEnvelopePayloadMessage.md
 doc/OrderEnvelopePayloadNoShow.md
 doc/OrderEstimate200Response.md
-doc/OrderEstimateRequest.md
 doc/OrderGetStatusHistory200Response.md
 doc/OrderItem.md
 doc/OrderItemItem.md
@@ -517,6 +518,8 @@ lib/src/model/auth_has_access_request.dart
 lib/src/model/auth_sign_in200_response.dart
 lib/src/model/auth_sign_out200_response.dart
 lib/src/model/auth_sign_up_user201_response.dart
+lib/src/model/auth_verify_email200_response.dart
+lib/src/model/auth_verify_email200_response_data.dart
 lib/src/model/badge.dart
 lib/src/model/badge_benefits.dart
 lib/src/model/badge_create200_response.dart
@@ -775,7 +778,6 @@ lib/src/model/order_envelope_payload_merchant_action.dart
 lib/src/model/order_envelope_payload_message.dart
 lib/src/model/order_envelope_payload_no_show.dart
 lib/src/model/order_estimate200_response.dart
-lib/src/model/order_estimate_request.dart
 lib/src/model/order_get_status_history200_response.dart
 lib/src/model/order_item.dart
 lib/src/model/order_item_item.dart
@@ -959,6 +961,8 @@ test/auth_has_access_request_test.dart
 test/auth_sign_in200_response_test.dart
 test/auth_sign_out200_response_test.dart
 test/auth_sign_up_user201_response_test.dart
+test/auth_verify_email200_response_data_test.dart
+test/auth_verify_email200_response_test.dart
 test/badge_api_test.dart
 test/badge_benefits_test.dart
 test/badge_create200_response_test.dart
@@ -1229,7 +1233,6 @@ test/order_envelope_payload_no_show_test.dart
 test/order_envelope_payload_test.dart
 test/order_envelope_test.dart
 test/order_estimate200_response_test.dart
-test/order_estimate_request_test.dart
 test/order_get_status_history200_response_test.dart
 test/order_item_item_test.dart
 test/order_item_test.dart

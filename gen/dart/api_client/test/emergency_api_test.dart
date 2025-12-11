@@ -1,6 +1,7 @@
 import 'package:test/test.dart';
 import 'package:api_client/api_client.dart';
 
+
 /// tests for EmergencyApi
 void main() {
   final instance = ApiClient().getEmergencyApi();
@@ -25,5 +26,6 @@ void main() {
     test('test emergencyUpdateStatus', () async {
       // TODO
     });
+
   });
 }

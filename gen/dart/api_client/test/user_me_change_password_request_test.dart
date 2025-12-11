@@ -3,8 +3,7 @@ import 'package:api_client/api_client.dart';
 
 // tests for UserMeChangePasswordRequest
 void main() {
-  final UserMeChangePasswordRequest?
-  instance = /* UserMeChangePasswordRequest(...) */ null;
+  final UserMeChangePasswordRequest? instance = /* UserMeChangePasswordRequest(...) */ null;
   // TODO add properties to the entity
 
   group(UserMeChangePasswordRequest, () {
@@ -22,5 +21,6 @@ void main() {
     test('to test the property `confirmNewPassword`', () async {
       // TODO
     });
+
   });
 }

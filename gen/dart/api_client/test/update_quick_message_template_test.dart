@@ -3,8 +3,7 @@ import 'package:api_client/api_client.dart';
 
 // tests for UpdateQuickMessageTemplate
 void main() {
-  final UpdateQuickMessageTemplate?
-  instance = /* UpdateQuickMessageTemplate(...) */ null;
+  final UpdateQuickMessageTemplate? instance = /* UpdateQuickMessageTemplate(...) */ null;
   // TODO add properties to the entity
 
   group(UpdateQuickMessageTemplate, () {
@@ -37,5 +36,6 @@ void main() {
     test('to test the property `displayOrder`', () async {
       // TODO
     });
+
   });
 }

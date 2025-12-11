@@ -35,38 +35,38 @@ export class BusinessConfigurationService {
 		kv: KeyValueService,
 	): Promise<BusinessConfiguration> {
 		try {
-			// Try to get from cache first
-			const cached = await kv.get<BusinessConfiguration>(
+			// Fetch from database with cache fallback
+			const fetchFromDatabase = async (): Promise<BusinessConfiguration> => {
+				const result = await db.query.configuration.findFirst({
+					where: (f, op) =>
+						op.eq(f.key, CONFIGURATION_KEYS.BUSINESS_CONFIGURATION),
+				});
+
+				if (!result) {
+					logger.error(
+						"[BusinessConfigurationService] Business configuration not found in database",
+					);
+					throw new RepositoryError(
+						"Business configuration not found. Please run database seed.",
+						{ code: "NOT_FOUND" },
+					);
+				}
+
+				const config = result.value as unknown as BusinessConfiguration;
+
+				// Cache for 1 hour
+				await kv.put(BusinessConfigurationService.CACHE_KEY, config, {
+					expirationTtl: CACHE_TTLS["1h"],
+				});
+
+				return config;
+			};
+
+			// Try to get from cache first, with database fallback
+			return await kv.get<BusinessConfiguration>(
 				BusinessConfigurationService.CACHE_KEY,
+				{ fallback: fetchFromDatabase },
 			);
-			if (cached) {
-				return cached;
-			}
-
-			// Fetch from database
-			const result = await db.query.configuration.findFirst({
-				where: (f, op) =>
-					op.eq(f.key, CONFIGURATION_KEYS.BUSINESS_CONFIGURATION),
-			});
-
-			if (!result) {
-				logger.error(
-					"[BusinessConfigurationService] Business configuration not found in database",
-				);
-				throw new RepositoryError(
-					"Business configuration not found. Please run database seed.",
-					{ code: "NOT_FOUND" },
-				);
-			}
-
-			const config = result.value as unknown as BusinessConfiguration;
-
-			// Cache for 1 hour
-			await kv.put(BusinessConfigurationService.CACHE_KEY, config, {
-				expirationTtl: CACHE_TTLS["1h"],
-			});
-
-			return config;
 		} catch (error) {
 			if (error instanceof RepositoryError) {
 				throw error;

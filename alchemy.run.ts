@@ -100,6 +100,7 @@ export const [server, web] = await Promise.all([
 			MIDTRANS_IS_PRODUCTION: alchemy.secret.env.MIDTRANS_IS_PRODUCTION,
 			MIDTRANS_SERVER_KEY: alchemy.secret.env.MIDTRANS_SERVER_KEY,
 			MIDTRANS_CLIENT_KEY: alchemy.secret.env.MIDTRANS_CLIENT_KEY,
+			MIDTRANS_EXPERIMENTAL_IRIS: alchemy.env.MIDTRANS_EXPERIMENTAL_IRIS,
 			FIREBASE_SERVICE_ACCOUNT: alchemy.secret.env.FIREBASE_SERVICE_ACCOUNT,
 			ORDER_ROOM,
 			PAYMENT_ROOM,
@@ -190,19 +191,19 @@ export const [server, web] = await Promise.all([
 	}),
 ]);
 
-if (isDev) {
-	await Tunnel("server-app", {
-		name: "server-app-tunnel",
-		configSrc: "cloudflare",
-		ingress: [
-			{
-				hostname: "dev-server.akademove.com",
-				service: "http://localhost:3000",
-			},
-			{ service: "http_status:404" },
-		],
-	});
-}
+// if (isDev) {
+// 	await Tunnel("server-app", {
+// 		name: "server-app-tunnel",
+// 		configSrc: "cloudflare",
+// 		ingress: [
+// 			{
+// 				hostname: "dev-server.akademove.com",
+// 				service: "http://localhost:3000",
+// 			},
+// 			{ service: "http_status:404" },
+// 		],
+// 	});
+// }
 
 export type ServerEnv = typeof server.Env;
 

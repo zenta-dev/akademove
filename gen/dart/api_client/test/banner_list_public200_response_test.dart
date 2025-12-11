@@ -3,8 +3,7 @@ import 'package:api_client/api_client.dart';
 
 // tests for BannerListPublic200Response
 void main() {
-  final BannerListPublic200Response?
-  instance = /* BannerListPublic200Response(...) */ null;
+  final BannerListPublic200Response? instance = /* BannerListPublic200Response(...) */ null;
   // TODO add properties to the entity
 
   group(BannerListPublic200Response, () {
@@ -27,5 +26,6 @@ void main() {
     test('to test the property `totalPages`', () async {
       // TODO
     });
+
   });
 }

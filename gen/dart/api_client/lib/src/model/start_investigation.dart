@@ -17,20 +17,21 @@ part 'start_investigation.g.dart';
 )
 class StartInvestigation {
   /// Returns a new [StartInvestigation] instance.
-  const StartInvestigation({required this.notes});
+  const StartInvestigation({
+    required this.notes,
+  });
   @JsonKey(name: r'notes', required: true, includeIfNull: false)
   final String notes;
+  
+  @override
+  bool operator ==(Object other) => identical(this, other) || other is StartInvestigation &&
+    other.notes == notes;
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is StartInvestigation && other.notes == notes;
+  int get hashCode =>
+      notes.hashCode;
 
-  @override
-  int get hashCode => notes.hashCode;
-
-  factory StartInvestigation.fromJson(Map<String, dynamic> json) =>
-      _$StartInvestigationFromJson(json);
+  factory StartInvestigation.fromJson(Map<String, dynamic> json) => _$StartInvestigationFromJson(json);
 
   Map<String, dynamic> toJson() => _$StartInvestigationToJson(this);
 
@@ -38,4 +39,6 @@ class StartInvestigation {
   String toString() {
     return toJson().toString();
   }
+
 }
+

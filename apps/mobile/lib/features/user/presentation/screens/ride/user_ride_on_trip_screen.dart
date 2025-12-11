@@ -347,7 +347,7 @@ class _UserRideOnTripScreenState extends State<UserRideOnTripScreen> {
           padding: EdgeInsets.all(12.w),
           child: Row(
             children: [
-              Avatar(size: 48.w, initials: '?').asSkeleton(),
+              Avatar(size: 48.w, initials: '?'),
               SizedBox(width: 12.w),
               Expanded(
                 child: Column(
@@ -358,18 +358,18 @@ class _UserRideOnTripScreenState extends State<UserRideOnTripScreen> {
                       'Driver name',
                       fontWeight: FontWeight.w500,
                       fontSize: 16.sp,
-                    ).asSkeleton(),
+                    ),
                     DefaultText(
                       context.l10n.text_license_plate,
                       fontSize: 12.sp,
-                    ).asSkeleton(),
+                    ),
                   ],
                 ),
               ),
             ],
           ),
         ),
-      );
+      ).asSkeleton();
     }
 
     return Card(

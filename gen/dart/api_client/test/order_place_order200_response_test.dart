@@ -3,8 +3,7 @@ import 'package:api_client/api_client.dart';
 
 // tests for OrderPlaceOrder200Response
 void main() {
-  final OrderPlaceOrder200Response?
-  instance = /* OrderPlaceOrder200Response(...) */ null;
+  final OrderPlaceOrder200Response? instance = /* OrderPlaceOrder200Response(...) */ null;
   // TODO add properties to the entity
 
   group(OrderPlaceOrder200Response, () {
@@ -27,5 +26,6 @@ void main() {
     test('to test the property `totalPages`', () async {
       // TODO
     });
+
   });
 }

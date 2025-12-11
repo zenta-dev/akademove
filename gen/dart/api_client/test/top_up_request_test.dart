@@ -21,5 +21,11 @@ void main() {
     test('to test the property `method`', () async {
       // TODO
     });
+
+    // BankProvider bankProvider
+    test('to test the property `bankProvider`', () async {
+      // TODO
+    });
+
   });
 }

@@ -26,30 +26,28 @@ class DriverQuizQuestionAnswer {
   });
   @JsonKey(name: r'questionId', required: true, includeIfNull: false)
   final String questionId;
-
+  
   @JsonKey(name: r'selectedOptionId', required: true, includeIfNull: false)
   final String selectedOptionId;
-
+  
   @JsonKey(name: r'isCorrect', required: true, includeIfNull: false)
   final bool isCorrect;
-
-  // minimum: 0
-  // maximum: 9007199254740991
+  
+          // minimum: 0
+          // maximum: 9007199254740991
   @JsonKey(name: r'pointsEarned', required: true, includeIfNull: false)
   final int pointsEarned;
-
+  
   @JsonKey(name: r'answeredAt', required: true, includeIfNull: false)
   final DateTime answeredAt;
-
+  
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is DriverQuizQuestionAnswer &&
-          other.questionId == questionId &&
-          other.selectedOptionId == selectedOptionId &&
-          other.isCorrect == isCorrect &&
-          other.pointsEarned == pointsEarned &&
-          other.answeredAt == answeredAt;
+  bool operator ==(Object other) => identical(this, other) || other is DriverQuizQuestionAnswer &&
+    other.questionId == questionId &&
+    other.selectedOptionId == selectedOptionId &&
+    other.isCorrect == isCorrect &&
+    other.pointsEarned == pointsEarned &&
+    other.answeredAt == answeredAt;
 
   @override
   int get hashCode =>
@@ -59,8 +57,7 @@ class DriverQuizQuestionAnswer {
       pointsEarned.hashCode +
       answeredAt.hashCode;
 
-  factory DriverQuizQuestionAnswer.fromJson(Map<String, dynamic> json) =>
-      _$DriverQuizQuestionAnswerFromJson(json);
+  factory DriverQuizQuestionAnswer.fromJson(Map<String, dynamic> json) => _$DriverQuizQuestionAnswerFromJson(json);
 
   Map<String, dynamic> toJson() => _$DriverQuizQuestionAnswerToJson(this);
 
@@ -68,4 +65,6 @@ class DriverQuizQuestionAnswer {
   String toString() {
     return toJson().toString();
   }
+
 }
+

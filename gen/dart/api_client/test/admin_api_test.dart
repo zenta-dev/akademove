@@ -1,6 +1,7 @@
 import 'package:test/test.dart';
 import 'package:api_client/api_client.dart';
 
+
 /// tests for AdminApi
 void main() {
   final instance = ApiClient().getAdminApi();
@@ -140,5 +141,6 @@ void main() {
     test('test userAdminUpdate', () async {
       // TODO
     });
+
   });
 }

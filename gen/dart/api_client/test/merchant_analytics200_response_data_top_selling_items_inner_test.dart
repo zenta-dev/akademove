@@ -3,9 +3,7 @@ import 'package:api_client/api_client.dart';
 
 // tests for MerchantAnalytics200ResponseDataTopSellingItemsInner
 void main() {
-  final MerchantAnalytics200ResponseDataTopSellingItemsInner?
-  instance = /* MerchantAnalytics200ResponseDataTopSellingItemsInner(...) */
-      null;
+  final MerchantAnalytics200ResponseDataTopSellingItemsInner? instance = /* MerchantAnalytics200ResponseDataTopSellingItemsInner(...) */ null;
   // TODO add properties to the entity
 
   group(MerchantAnalytics200ResponseDataTopSellingItemsInner, () {
@@ -33,5 +31,6 @@ void main() {
     test('to test the property `totalRevenue`', () async {
       // TODO
     });
+
   });
 }

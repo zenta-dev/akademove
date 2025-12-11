@@ -37,6 +37,8 @@ export async function handleDriverMatching(
 		maxExpansionAttempts,
 		expansionRate,
 		matchingIntervalSeconds,
+		excludedDriverIds,
+		isRetry,
 	} = payload;
 
 	logger.info(
@@ -45,6 +47,8 @@ export async function handleDriverMatching(
 			attempt: currentAttempt,
 			radiusKm: initialRadiusKm,
 			maxMinutes: maxMatchingDurationMinutes,
+			isRetry: isRetry ?? false,
+			excludedDriverCount: excludedDriverIds?.length ?? 0,
 		},
 		"[DriverMatchingHandler] Processing matching job",
 	);
@@ -98,6 +102,7 @@ export async function handleDriverMatching(
 						genderPreference,
 						userGender,
 						radiusKm: currentRadius,
+						excludedDriverIds,
 					},
 					BUSINESS_CONSTANTS.DRIVER_MATCHING_BROADCAST_LIMIT,
 				);

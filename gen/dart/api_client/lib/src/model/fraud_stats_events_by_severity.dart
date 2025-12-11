@@ -23,41 +23,41 @@ class FraudStatsEventsBySeverity {
     required this.HIGH,
     required this.CRITICAL,
   });
-  // minimum: -9007199254740991
-  // maximum: 9007199254740991
+          // minimum: -9007199254740991
+          // maximum: 9007199254740991
   @JsonKey(name: r'LOW', required: true, includeIfNull: false)
   final int LOW;
-
-  // minimum: -9007199254740991
-  // maximum: 9007199254740991
+  
+          // minimum: -9007199254740991
+          // maximum: 9007199254740991
   @JsonKey(name: r'MEDIUM', required: true, includeIfNull: false)
   final int MEDIUM;
-
-  // minimum: -9007199254740991
-  // maximum: 9007199254740991
+  
+          // minimum: -9007199254740991
+          // maximum: 9007199254740991
   @JsonKey(name: r'HIGH', required: true, includeIfNull: false)
   final int HIGH;
-
-  // minimum: -9007199254740991
-  // maximum: 9007199254740991
+  
+          // minimum: -9007199254740991
+          // maximum: 9007199254740991
   @JsonKey(name: r'CRITICAL', required: true, includeIfNull: false)
   final int CRITICAL;
-
+  
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is FraudStatsEventsBySeverity &&
-          other.LOW == LOW &&
-          other.MEDIUM == MEDIUM &&
-          other.HIGH == HIGH &&
-          other.CRITICAL == CRITICAL;
+  bool operator ==(Object other) => identical(this, other) || other is FraudStatsEventsBySeverity &&
+    other.LOW == LOW &&
+    other.MEDIUM == MEDIUM &&
+    other.HIGH == HIGH &&
+    other.CRITICAL == CRITICAL;
 
   @override
   int get hashCode =>
-      LOW.hashCode + MEDIUM.hashCode + HIGH.hashCode + CRITICAL.hashCode;
+      LOW.hashCode +
+      MEDIUM.hashCode +
+      HIGH.hashCode +
+      CRITICAL.hashCode;
 
-  factory FraudStatsEventsBySeverity.fromJson(Map<String, dynamic> json) =>
-      _$FraudStatsEventsBySeverityFromJson(json);
+  factory FraudStatsEventsBySeverity.fromJson(Map<String, dynamic> json) => _$FraudStatsEventsBySeverityFromJson(json);
 
   Map<String, dynamic> toJson() => _$FraudStatsEventsBySeverityToJson(this);
 
@@ -65,4 +65,6 @@ class FraudStatsEventsBySeverity {
   String toString() {
     return toJson().toString();
   }
+
 }
+

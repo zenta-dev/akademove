@@ -5,6 +5,7 @@ import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/locator.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 
@@ -241,5 +242,15 @@ extension BuildContextExt on BuildContext {
       logger.f('📨 Foreground FCM: ${msg.toMap()}');
       await safeAsync(() => ntfSvc.show(title: title, body: body, data: data));
     });
+  }
+
+  void popUntilRoot() {
+    while (canPop()) {
+      try {
+        pop();
+      } catch (e) {
+        break;
+      }
+    }
   }
 }

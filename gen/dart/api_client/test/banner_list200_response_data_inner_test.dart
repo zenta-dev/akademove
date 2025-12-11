@@ -3,8 +3,7 @@ import 'package:api_client/api_client.dart';
 
 // tests for BannerList200ResponseDataInner
 void main() {
-  final BannerList200ResponseDataInner?
-  instance = /* BannerList200ResponseDataInner(...) */ null;
+  final BannerList200ResponseDataInner? instance = /* BannerList200ResponseDataInner(...) */ null;
   // TODO add properties to the entity
 
   group(BannerList200ResponseDataInner, () {
@@ -87,5 +86,6 @@ void main() {
     test('to test the property `updatedAt`', () async {
       // TODO
     });
+
   });
 }

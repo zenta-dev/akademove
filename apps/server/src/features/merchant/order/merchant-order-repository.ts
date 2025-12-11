@@ -59,6 +59,7 @@ export class MerchantOrderRepository extends BaseRepository {
 			otpVerifiedAt: item.otpVerifiedAt ?? undefined,
 			scheduledAt: item.scheduledAt ?? undefined,
 			scheduledMatchingAt: item.scheduledMatchingAt ?? undefined,
+			deliveryItemType: item.deliveryItemType ?? undefined,
 		};
 	}
 

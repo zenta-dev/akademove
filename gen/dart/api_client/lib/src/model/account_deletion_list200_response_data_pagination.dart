@@ -20,29 +20,27 @@ class AccountDeletionList200ResponseDataPagination {
   const AccountDeletionList200ResponseDataPagination({
     required this.totalPages,
   });
-  // minimum: 0
-  // maximum: 9007199254740991
+          // minimum: 0
+          // maximum: 9007199254740991
   @JsonKey(name: r'totalPages', required: true, includeIfNull: false)
   final int totalPages;
+  
+  @override
+  bool operator ==(Object other) => identical(this, other) || other is AccountDeletionList200ResponseDataPagination &&
+    other.totalPages == totalPages;
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is AccountDeletionList200ResponseDataPagination &&
-          other.totalPages == totalPages;
+  int get hashCode =>
+      totalPages.hashCode;
 
-  @override
-  int get hashCode => totalPages.hashCode;
+  factory AccountDeletionList200ResponseDataPagination.fromJson(Map<String, dynamic> json) => _$AccountDeletionList200ResponseDataPaginationFromJson(json);
 
-  factory AccountDeletionList200ResponseDataPagination.fromJson(
-    Map<String, dynamic> json,
-  ) => _$AccountDeletionList200ResponseDataPaginationFromJson(json);
-
-  Map<String, dynamic> toJson() =>
-      _$AccountDeletionList200ResponseDataPaginationToJson(this);
+  Map<String, dynamic> toJson() => _$AccountDeletionList200ResponseDataPaginationToJson(this);
 
   @override
   String toString() {
     return toJson().toString();
   }
+
 }
+

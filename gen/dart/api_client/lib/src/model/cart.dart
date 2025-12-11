@@ -28,34 +28,32 @@ class Cart {
   });
   @JsonKey(name: r'merchantId', required: true, includeIfNull: false)
   final String merchantId;
-
+  
   @JsonKey(name: r'merchantName', required: true, includeIfNull: false)
   final String merchantName;
-
+  
   @JsonKey(name: r'items', required: true, includeIfNull: false)
   final List<CartItem> items;
-
-  // minimum: 1
-  // maximum: 9007199254740991
+  
+          // minimum: 1
+          // maximum: 9007199254740991
   @JsonKey(name: r'totalItems', required: true, includeIfNull: false)
   final int totalItems;
-
+  
   @JsonKey(name: r'subtotal', required: true, includeIfNull: false)
   final num subtotal;
-
+  
   @JsonKey(name: r'lastUpdated', required: true, includeIfNull: true)
   final DateTime? lastUpdated;
-
+  
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is Cart &&
-          other.merchantId == merchantId &&
-          other.merchantName == merchantName &&
-          other.items == items &&
-          other.totalItems == totalItems &&
-          other.subtotal == subtotal &&
-          other.lastUpdated == lastUpdated;
+  bool operator ==(Object other) => identical(this, other) || other is Cart &&
+    other.merchantId == merchantId &&
+    other.merchantName == merchantName &&
+    other.items == items &&
+    other.totalItems == totalItems &&
+    other.subtotal == subtotal &&
+    other.lastUpdated == lastUpdated;
 
   @override
   int get hashCode =>
@@ -74,4 +72,6 @@ class Cart {
   String toString() {
     return toJson().toString();
   }
+
 }
+

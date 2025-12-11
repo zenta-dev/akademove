@@ -19,25 +19,27 @@ part 'contact_list200_response_data.g.dart';
 )
 class ContactList200ResponseData {
   /// Returns a new [ContactList200ResponseData] instance.
-  const ContactList200ResponseData({required this.rows, this.pagination});
+  const ContactList200ResponseData({
+    required this.rows,
+     this.pagination,
+  });
   @JsonKey(name: r'rows', required: true, includeIfNull: false)
   final List<Contact> rows;
-
+  
   @JsonKey(name: r'pagination', required: false, includeIfNull: false)
   final AccountDeletionList200ResponseDataPagination? pagination;
+  
+  @override
+  bool operator ==(Object other) => identical(this, other) || other is ContactList200ResponseData &&
+    other.rows == rows &&
+    other.pagination == pagination;
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is ContactList200ResponseData &&
-          other.rows == rows &&
-          other.pagination == pagination;
+  int get hashCode =>
+      rows.hashCode +
+      pagination.hashCode;
 
-  @override
-  int get hashCode => rows.hashCode + pagination.hashCode;
-
-  factory ContactList200ResponseData.fromJson(Map<String, dynamic> json) =>
-      _$ContactList200ResponseDataFromJson(json);
+  factory ContactList200ResponseData.fromJson(Map<String, dynamic> json) => _$ContactList200ResponseDataFromJson(json);
 
   Map<String, dynamic> toJson() => _$ContactList200ResponseDataToJson(this);
 
@@ -45,4 +47,6 @@ class ContactList200ResponseData {
   String toString() {
     return toJson().toString();
   }
+
 }
+

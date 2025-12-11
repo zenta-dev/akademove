@@ -17,22 +17,22 @@ part 'merchant_deactivate_request.g.dart';
 )
 class MerchantDeactivateRequest {
   /// Returns a new [MerchantDeactivateRequest] instance.
-  const MerchantDeactivateRequest({required this.reason});
-
-  /// Reason for deactivation
+  const MerchantDeactivateRequest({
+    required this.reason,
+  });
+      /// Reason for deactivation
   @JsonKey(name: r'reason', required: true, includeIfNull: false)
   final String reason;
+  
+  @override
+  bool operator ==(Object other) => identical(this, other) || other is MerchantDeactivateRequest &&
+    other.reason == reason;
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is MerchantDeactivateRequest && other.reason == reason;
+  int get hashCode =>
+      reason.hashCode;
 
-  @override
-  int get hashCode => reason.hashCode;
-
-  factory MerchantDeactivateRequest.fromJson(Map<String, dynamic> json) =>
-      _$MerchantDeactivateRequestFromJson(json);
+  factory MerchantDeactivateRequest.fromJson(Map<String, dynamic> json) => _$MerchantDeactivateRequestFromJson(json);
 
   Map<String, dynamic> toJson() => _$MerchantDeactivateRequestToJson(this);
 
@@ -40,4 +40,6 @@ class MerchantDeactivateRequest {
   String toString() {
     return toJson().toString();
   }
+
 }
+

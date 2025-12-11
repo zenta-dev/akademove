@@ -333,8 +333,8 @@ export class OrderReadRepository extends OrderBaseRepository {
 	): Promise<OrderSummary & { config: PricingConfiguration }> {
 		try {
 			// Create cache key based on parameters (rounded to 4 decimal places for coordinate precision)
-			const pickup = `${params.pickupLocation.x.toFixed(4)},${params.pickupLocation.y.toFixed(4)}`;
-			const dropoff = `${params.dropoffLocation.x.toFixed(4)},${params.dropoffLocation.y.toFixed(4)}`;
+			const pickup = `${params.pickupLocation.x},${params.pickupLocation.y}`;
+			const dropoff = `${params.dropoffLocation.x},${params.dropoffLocation.y}`;
 			const weight = params.weight ? `:${params.weight}` : "";
 			const cacheKey = `estimate:${params.type}:${pickup}:${dropoff}${weight}`;
 

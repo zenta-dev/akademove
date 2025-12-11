@@ -3,8 +3,7 @@ import 'package:api_client/api_client.dart';
 
 // tests for NotificationSaveTokenRequest
 void main() {
-  final NotificationSaveTokenRequest?
-  instance = /* NotificationSaveTokenRequest(...) */ null;
+  final NotificationSaveTokenRequest? instance = /* NotificationSaveTokenRequest(...) */ null;
   // TODO add properties to the entity
 
   group(NotificationSaveTokenRequest, () {
@@ -12,5 +11,6 @@ void main() {
     test('to test the property `token`', () async {
       // TODO
     });
+
   });
 }

@@ -22,8 +22,7 @@ class _UserDeliveryDetailsScreenState extends State<UserDeliveryDetailsScreen> {
   DeliveryItemType selectedItemType = DeliveryItemType.OTHER;
   GoogleMapController? _mapController;
 
-  OrderNote dropoffNote = OrderNote();
-  OrderNote pickupNote = OrderNote();
+  OrderNote note = OrderNote();
 
   @override
   void initState() {
@@ -145,57 +144,116 @@ class _UserDeliveryDetailsScreenState extends State<UserDeliveryDetailsScreen> {
           ],
         ),
       ],
-      body: Column(
-        spacing: 16.h,
-        children: [
-          BlocBuilder<UserOrderCubit, UserOrderState>(
-            builder: (context, state) {
-              final pickup = state.pickupLocation;
-              final dropoff = state.dropoffLocation;
-              if (pickup == null || dropoff == null) {
-                return const SizedBox.shrink();
-              }
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                spacing: 8.h,
+      body: BlocConsumer<UserOrderCubit, UserOrderState>(
+        listener: (context, state) {
+          if (state.estimateOrder.isSuccess && state.estimateOrder.hasData) {
+            context.popUntilRoot();
+            context.pushNamed(Routes.userDeliverySummary.name);
+          }
+        },
+        builder: (context, state) {
+          return Column(
+            spacing: 16.h,
+            children: [
+              BlocBuilder<UserOrderCubit, UserOrderState>(
+                builder: (context, state) {
+                  final pickup = state.pickupLocation;
+                  final dropoff = state.dropoffLocation;
+                  if (pickup == null || dropoff == null) {
+                    return const SizedBox.shrink();
+                  }
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    spacing: 8.h,
+                    children: [
+                      _LocationCardWidget(
+                        place: pickup,
+                        note: note,
+                        isPickup: true,
+                        onChanged: (value) {
+                          setState(() {
+                            note = value;
+                          });
+                        },
+                      ),
+                      _LocationCardWidget(
+                        place: dropoff,
+                        note: note,
+                        isPickup: false,
+                        onChanged: (value) {
+                          setState(() {
+                            note = value;
+                          });
+                        },
+                      ),
+                    ],
+                  );
+                },
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  _LocationCardWidget(
-                    place: pickup,
-                    note: pickupNote,
-                    isPickup: true,
-                    onChanged: (value) {
-                      setState(() {
-                        pickupNote = value;
-                      });
-                    },
+                  Row(
+                    spacing: 8.w,
+                    children: [
+                      Icon(
+                        LucideIcons.weight,
+                        size: 20.sp,
+                        color: context.colorScheme.primary,
+                      ),
+                      Text(
+                        context.l10n.total_weight,
+                        style: context.typography.small.copyWith(
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
                   ),
-                  _LocationCardWidget(
-                    place: dropoff,
-                    note: dropoffNote,
-                    isPickup: false,
-                    onChanged: (value) {
-                      setState(() {
-                        dropoffNote = value;
-                      });
-                    },
+                  GhostButton(
+                    onPressed: handleWeightDrawer,
+                    child: Row(
+                      spacing: 8.w,
+                      children: [
+                        Text(
+                          selectedWeightSize != null
+                              ? WeightSize.values
+                                    .firstWhere(
+                                      (element) =>
+                                          element == selectedWeightSize,
+                                    )
+                                    .localizedName(context)
+                              : context.l10n.choose,
+                          style: context.typography.small.copyWith(
+                            fontSize: 14.sp,
+                            fontWeight: selectedWeightSize != null
+                                ? FontWeight.w500
+                                : FontWeight.w400,
+                            color: selectedWeightSize != null
+                                ? context.colorScheme.foreground
+                                : context.colorScheme.mutedForeground,
+                          ),
+                        ),
+                        Icon(
+                          LucideIcons.chevronDown,
+                          size: 16.sp,
+                          color: context.colorScheme.mutedForeground,
+                        ),
+                      ],
+                    ),
                   ),
                 ],
-              );
-            },
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
+              ),
               Row(
                 spacing: 8.w,
                 children: [
                   Icon(
-                    LucideIcons.weight,
+                    LucideIcons.package,
                     size: 20.sp,
                     color: context.colorScheme.primary,
                   ),
                   Text(
-                    context.l10n.total_weight,
+                    context.l10n.choose_item_type,
                     style: context.typography.small.copyWith(
                       fontSize: 16.sp,
                       fontWeight: FontWeight.w500,
@@ -203,152 +261,146 @@ class _UserDeliveryDetailsScreenState extends State<UserDeliveryDetailsScreen> {
                   ),
                 ],
               ),
-              GhostButton(
-                onPressed: handleWeightDrawer,
-                child: Row(
-                  spacing: 8.w,
-                  children: [
-                    Text(
-                      selectedWeightSize != null
-                          ? WeightSize.values
-                                .firstWhere(
-                                  (element) => element == selectedWeightSize,
-                                )
-                                .localizedName(context)
-                          : context.l10n.choose,
-                      style: context.typography.small.copyWith(
-                        fontSize: 14.sp,
-                        fontWeight: selectedWeightSize != null
-                            ? FontWeight.w500
-                            : FontWeight.w400,
-                        color: selectedWeightSize != null
-                            ? context.colorScheme.foreground
-                            : context.colorScheme.mutedForeground,
+              Wrap(
+                spacing: 4.w,
+                runSpacing: 8.h,
+                children: DeliveryItemType.values.map((itemType) {
+                  return Chip(
+                    onPressed: () => setState(() {
+                      selectedItemType = itemType;
+                    }),
+                    style: isTypeSelected(itemType)
+                        ? ButtonStyle.primary()
+                        : ButtonStyle.outline(),
+                    child: Padding(
+                      padding: EdgeInsets.all(4.dg),
+                      child: Text(
+                        itemType.localizedName(context),
+                        style: context.typography.small.copyWith(
+                          fontSize: 14.sp,
+                          color: selectedItemType == itemType
+                              ? Colors.white
+                              : context.colorScheme.foreground,
+                        ),
                       ),
                     ),
-                    Icon(
-                      LucideIcons.chevronDown,
-                      size: 16.sp,
+                  );
+                }).toList(),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                spacing: 4.w,
+                children: [
+                  Text(
+                    context.l10n.total_delivery_distance,
+                    style: context.typography.small.copyWith(
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.normal,
                       color: context.colorScheme.mutedForeground,
                     ),
-                  ],
-                ),
+                  ),
+                  BlocConsumer<UserMapCubit, UserMapState>(
+                    listener: (context, state) {
+                      if (state.routeCoordinates.isSuccess &&
+                          state.routeCoordinates.value != null) {}
+                    },
+                    builder: (context, state) {
+                      return Text(
+                        '${state.routeInfo.value?.km.toStringAsFixed(1) ?? '-'} km',
+                        style: context.typography.small.copyWith(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ).asSkeleton(enabled: state.routeInfo.isLoading);
+                    },
+                  ),
+                ],
               ),
-            ],
-          ),
-          Row(
-            spacing: 8.w,
-            children: [
-              Icon(
-                LucideIcons.package,
-                size: 20.sp,
-                color: context.colorScheme.primary,
-              ),
-              Text(
-                context.l10n.choose_item_type,
-                style: context.typography.small.copyWith(
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ],
-          ),
-          Wrap(
-            spacing: 4.w,
-            runSpacing: 8.h,
-            children: DeliveryItemType.values.map((itemType) {
-              return Chip(
-                onPressed: () => setState(() {
-                  selectedItemType = itemType;
-                }),
-                style: isTypeSelected(itemType)
-                    ? ButtonStyle.primary()
-                    : ButtonStyle.outline(),
-                child: Padding(
-                  padding: EdgeInsets.all(4.dg),
-                  child: Text(
-                    itemType.localizedName(context),
-                    style: context.typography.small.copyWith(
-                      fontSize: 14.sp,
-                      color: selectedItemType == itemType
-                          ? Colors.white
-                          : context.colorScheme.foreground,
-                    ),
+              SizedBox(
+                width: double.infinity,
+                height: 150.h,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(12.r),
+                  child: BlocBuilder<UserMapCubit, UserMapState>(
+                    builder: (context, state) {
+                      return MapWrapperWidget(
+                        onMapCreated: (controller) async {
+                          _mapController = controller;
+                          setState(() {});
+                          await _fitMapToBounds();
+                        },
+                        markers: state.markers,
+                        polylines: state.polylines,
+                        myLocationEnabled: true,
+                        myLocationButtonEnabled: false,
+                        zoomControlsEnabled: false,
+                        scrollGesturesEnabled: false,
+                        zoomGesturesEnabled: false,
+                        rotateGesturesEnabled: false,
+                        tiltGesturesEnabled: false,
+                      ).asSkeleton(enabled: state.routeCoordinates.isLoading);
+                    },
                   ),
                 ),
-              );
-            }).toList(),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            spacing: 4.w,
-            children: [
-              Text(
-                context.l10n.total_delivery_distance,
-                style: context.typography.small.copyWith(
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.normal,
-                  color: context.colorScheme.mutedForeground,
-                ),
               ),
-              BlocConsumer<UserMapCubit, UserMapState>(
-                listener: (context, state) {
-                  if (state.routeCoordinates.isSuccess &&
-                      state.routeCoordinates.value != null) {}
-                },
-                builder: (context, state) {
-                  return Text(
-                    '${state.routeInfo.value?.km.toStringAsFixed(1) ?? '-'} km',
-                    style: context.typography.small.copyWith(
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ).asSkeleton(enabled: state.routeInfo.isLoading);
-                },
+              SizedBox(
+                width: double.infinity,
+                child: Button.primary(
+                  enabled: !state.estimateOrder.isLoading,
+                  onPressed: state.estimateOrder.isLoading
+                      ? null
+                      : () {
+                          if (selectedWeightSize == null) {
+                            context.showMyToast(
+                              "Please select a weight size",
+                              type: ToastType.failed,
+                            );
+                            return;
+                          }
+
+                          final orderState = context
+                              .read<UserOrderCubit>()
+                              .state;
+                          final pickup = orderState.pickupLocation;
+                          final dropoff = orderState.dropoffLocation;
+                          if (pickup == null || dropoff == null) {
+                            context.showMyToast(
+                              "Pickup and dropoff locations are required",
+                            );
+                            return;
+                          }
+                          context.read<UserOrderCubit>().estimate(
+                            req: EstimateOrder(
+                              pickupLocation: Coordinate(
+                                x: pickup.lng,
+                                y: pickup.lat,
+                              ),
+                              dropoffLocation: Coordinate(
+                                x: dropoff.lng,
+                                y: dropoff.lat,
+                              ),
+                              type: OrderType.DELIVERY,
+                              note: note,
+                              weight: selectedWeightSize?.maxWeight,
+                            ),
+                            pickup: pickup,
+                            dropoff: dropoff,
+                          );
+                        },
+                  child: state.estimateOrder.isLoading
+                      ? const Submiting()
+                      : Text(
+                          context.l10n.continue_text,
+                          style: context.typography.small.copyWith(
+                            fontSize: 16.sp,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                ),
               ),
             ],
-          ),
-          SizedBox(
-            width: double.infinity,
-            height: 150.h,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(12.r),
-              child: BlocBuilder<UserMapCubit, UserMapState>(
-                builder: (context, state) {
-                  return MapWrapperWidget(
-                    onMapCreated: (controller) async {
-                      _mapController = controller;
-                      setState(() {});
-                      await _fitMapToBounds();
-                    },
-                    markers: state.markers,
-                    polylines: state.polylines,
-                    myLocationEnabled: true,
-                    myLocationButtonEnabled: false,
-                    zoomControlsEnabled: false,
-                    scrollGesturesEnabled: false,
-                    zoomGesturesEnabled: false,
-                    rotateGesturesEnabled: false,
-                    tiltGesturesEnabled: false,
-                  ).asSkeleton(enabled: state.routeCoordinates.isLoading);
-                },
-              ),
-            ),
-          ),
-          SizedBox(
-            width: double.infinity,
-            child: Button.primary(
-              onPressed: () {},
-              child: Text(
-                context.l10n.continue_text,
-                style: context.typography.small.copyWith(
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-          ),
-        ],
+          );
+        },
       ),
     );
   }

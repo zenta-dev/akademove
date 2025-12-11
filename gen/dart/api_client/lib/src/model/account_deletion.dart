@@ -27,80 +27,78 @@ class AccountDeletion {
     required this.phone,
     required this.accountType,
     required this.reason,
-    this.additionalInfo,
+     this.additionalInfo,
     required this.status,
-    this.userId,
-    this.reviewedById,
-    this.reviewNotes,
+     this.userId,
+     this.reviewedById,
+     this.reviewNotes,
     required this.createdAt,
     required this.updatedAt,
-    this.reviewedAt,
-    this.completedAt,
+     this.reviewedAt,
+     this.completedAt,
   });
   @JsonKey(name: r'id', required: true, includeIfNull: false)
   final String id;
-
+  
   @JsonKey(name: r'fullName', required: true, includeIfNull: false)
   final String fullName;
-
+  
   @JsonKey(name: r'email', required: true, includeIfNull: false)
   final String email;
-
+  
   @JsonKey(name: r'phone', required: true, includeIfNull: false)
   final String phone;
-
+  
   @JsonKey(name: r'accountType', required: true, includeIfNull: false)
   final AccountType accountType;
-
+  
   @JsonKey(name: r'reason', required: true, includeIfNull: false)
   final AccountDeletionReason reason;
-
+  
   @JsonKey(name: r'additionalInfo', required: false, includeIfNull: false)
   final String? additionalInfo;
-
+  
   @JsonKey(name: r'status', required: true, includeIfNull: false)
   final AccountDeletionStatus status;
-
+  
   @JsonKey(name: r'userId', required: false, includeIfNull: false)
   final String? userId;
-
+  
   @JsonKey(name: r'reviewedById', required: false, includeIfNull: false)
   final String? reviewedById;
-
+  
   @JsonKey(name: r'reviewNotes', required: false, includeIfNull: false)
   final String? reviewNotes;
-
+  
   @JsonKey(name: r'createdAt', required: true, includeIfNull: false)
   final DateTime createdAt;
-
+  
   @JsonKey(name: r'updatedAt', required: true, includeIfNull: false)
   final DateTime updatedAt;
-
+  
   @JsonKey(name: r'reviewedAt', required: false, includeIfNull: false)
   final DateTime? reviewedAt;
-
+  
   @JsonKey(name: r'completedAt', required: false, includeIfNull: false)
   final DateTime? completedAt;
-
+  
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is AccountDeletion &&
-          other.id == id &&
-          other.fullName == fullName &&
-          other.email == email &&
-          other.phone == phone &&
-          other.accountType == accountType &&
-          other.reason == reason &&
-          other.additionalInfo == additionalInfo &&
-          other.status == status &&
-          other.userId == userId &&
-          other.reviewedById == reviewedById &&
-          other.reviewNotes == reviewNotes &&
-          other.createdAt == createdAt &&
-          other.updatedAt == updatedAt &&
-          other.reviewedAt == reviewedAt &&
-          other.completedAt == completedAt;
+  bool operator ==(Object other) => identical(this, other) || other is AccountDeletion &&
+    other.id == id &&
+    other.fullName == fullName &&
+    other.email == email &&
+    other.phone == phone &&
+    other.accountType == accountType &&
+    other.reason == reason &&
+    other.additionalInfo == additionalInfo &&
+    other.status == status &&
+    other.userId == userId &&
+    other.reviewedById == reviewedById &&
+    other.reviewNotes == reviewNotes &&
+    other.createdAt == createdAt &&
+    other.updatedAt == updatedAt &&
+    other.reviewedAt == reviewedAt &&
+    other.completedAt == completedAt;
 
   @override
   int get hashCode =>
@@ -120,8 +118,7 @@ class AccountDeletion {
       reviewedAt.hashCode +
       completedAt.hashCode;
 
-  factory AccountDeletion.fromJson(Map<String, dynamic> json) =>
-      _$AccountDeletionFromJson(json);
+  factory AccountDeletion.fromJson(Map<String, dynamic> json) => _$AccountDeletionFromJson(json);
 
   Map<String, dynamic> toJson() => _$AccountDeletionToJson(this);
 
@@ -129,4 +126,6 @@ class AccountDeletion {
   String toString() {
     return toJson().toString();
   }
+
 }
+

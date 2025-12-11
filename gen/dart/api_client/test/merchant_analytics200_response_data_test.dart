@@ -3,8 +3,7 @@ import 'package:api_client/api_client.dart';
 
 // tests for MerchantAnalytics200ResponseData
 void main() {
-  final MerchantAnalytics200ResponseData?
-  instance = /* MerchantAnalytics200ResponseData(...) */ null;
+  final MerchantAnalytics200ResponseData? instance = /* MerchantAnalytics200ResponseData(...) */ null;
   // TODO add properties to the entity
 
   group(MerchantAnalytics200ResponseData, () {
@@ -47,5 +46,6 @@ void main() {
     test('to test the property `revenueByDay`', () async {
       // TODO
     });
+
   });
 }

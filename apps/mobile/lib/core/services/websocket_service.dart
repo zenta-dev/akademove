@@ -3,16 +3,19 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:akademove/core/_export.dart';
+import 'package:flutter/widgets.dart';
 import 'package:web_socket_channel/status.dart' as status;
 import 'package:web_socket_channel/web_socket_channel.dart';
 
-class WebSocketService {
+class WebSocketService with WidgetsBindingObserver {
   WebSocketService({
     this.maxReconnectAttempts = 5,
     this.initialReconnectDelay = const Duration(seconds: 1),
     this.maxReconnectDelay = const Duration(seconds: 30),
     this.useExponentialBackoff = true,
-  });
+  }) {
+    WidgetsBinding.instance.addObserver(this);
+  }
 
   final Map<String, WebSocketChannel> _connections = {};
   final Map<String, StreamSubscription<dynamic>> _subscriptions = {};
@@ -21,11 +24,71 @@ class WebSocketService {
   final Map<String, int> _reconnectAttempts = {};
 
   String? sessionToken;
+  bool _isPaused = false;
 
   final int maxReconnectAttempts;
   final Duration initialReconnectDelay;
   final Duration maxReconnectDelay;
   final bool useExponentialBackoff;
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    switch (state) {
+      case AppLifecycleState.paused:
+      case AppLifecycleState.inactive:
+      case AppLifecycleState.hidden:
+        _pauseAllConnections();
+      case AppLifecycleState.resumed:
+        _resumeAllConnections();
+      case AppLifecycleState.detached:
+        // App is being terminated, dispose will handle cleanup
+        break;
+    }
+  }
+
+  void _pauseAllConnections() {
+    if (_isPaused) return;
+    _isPaused = true;
+    _logInfo('ALL', 'App paused — suspending WebSocket connections');
+
+    // Cancel all reconnect timers to prevent background reconnection attempts
+    for (final timer in _reconnectTimers.values) {
+      timer.cancel();
+    }
+    _reconnectTimers.clear();
+
+    // Close all active connections gracefully
+    for (final key in _connections.keys.toList()) {
+      _closeConnectionWithoutRemovingConfig(key);
+    }
+  }
+
+  Future<void> _resumeAllConnections() async {
+    if (!_isPaused) return;
+    _isPaused = false;
+    _logInfo('ALL', 'App resumed — restoring WebSocket connections');
+
+    // Reset reconnect attempts and re-establish all configured connections
+    for (final key in _configs.keys.toList()) {
+      _reconnectAttempts[key] = 0;
+      _establishConnection(key);
+    }
+  }
+
+  Future<void> _closeConnectionWithoutRemovingConfig(String key) async {
+    try {
+      _reconnectTimers[key]?.cancel();
+      _reconnectTimers.remove(key);
+
+      await _subscriptions[key]?.cancel();
+      _subscriptions.remove(key);
+
+      await _connections[key]?.sink.close(status.goingAway);
+      _connections.remove(key);
+    } catch (error) {
+      _logDebug(key, 'Error during pause cleanup: $error');
+    }
+  }
 
   Future<void> connect(
     String key,
@@ -44,6 +107,16 @@ class WebSocketService {
 
       _reconnectAttempts[key] = 0;
       _logInfo(key, 'Initializing connection to $url');
+
+      // Don't establish connection if app is paused
+      if (_isPaused) {
+        _logInfo(
+          key,
+          'App is paused — connection will be established on resume',
+        );
+        return;
+      }
+
       _establishConnection(key);
     } catch (error, stackTrace) {
       _logError(key, 'Failed to connect', error: error, stackTrace: stackTrace);
@@ -136,6 +209,12 @@ class WebSocketService {
     final config = _configs[key];
     if (config == null || !config.autoReconnect) return;
 
+    // Don't attempt reconnect if app is paused
+    if (_isPaused) {
+      _logDebug(key, 'App is paused — skipping reconnect attempt');
+      return;
+    }
+
     if (_reconnectTimers[key]?.isActive ?? false) return;
 
     final attempts = _reconnectAttempts[key] ?? 0;
@@ -158,6 +237,12 @@ class WebSocketService {
     );
 
     _reconnectTimers[key] = Timer(boundedDelay, () async {
+      // Double-check pause state when timer fires
+      if (_isPaused) {
+        _logDebug(key, 'App paused during reconnect delay — aborting');
+        return;
+      }
+
       _reconnectAttempts[key] = attempts + 1;
 
       _logDebug(key, 'Performing reconnect attempt ${attempts + 1}');
@@ -226,6 +311,10 @@ class WebSocketService {
   Future<void> dispose() async {
     try {
       _logInfo('ALL', 'Disposing WebSocketService...');
+
+      // Remove lifecycle observer
+      WidgetsBinding.instance.removeObserver(this);
+
       for (final timer in _reconnectTimers.values) {
         timer.cancel();
       }

@@ -3,5 +3,7 @@ import 'package:api_client/api_client.dart';
 
 // tests for UserKey
 void main() {
-  group(UserKey, () {});
+
+  group(UserKey, () {
+  });
 }

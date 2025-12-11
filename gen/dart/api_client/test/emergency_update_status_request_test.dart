@@ -3,8 +3,7 @@ import 'package:api_client/api_client.dart';
 
 // tests for EmergencyUpdateStatusRequest
 void main() {
-  final EmergencyUpdateStatusRequest?
-  instance = /* EmergencyUpdateStatusRequest(...) */ null;
+  final EmergencyUpdateStatusRequest? instance = /* EmergencyUpdateStatusRequest(...) */ null;
   // TODO add properties to the entity
 
   group(EmergencyUpdateStatusRequest, () {
@@ -22,5 +21,6 @@ void main() {
     test('to test the property `respondedById`', () async {
       // TODO
     });
+
   });
 }

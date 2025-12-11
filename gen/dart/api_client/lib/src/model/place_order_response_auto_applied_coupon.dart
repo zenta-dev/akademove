@@ -23,29 +23,28 @@ class PlaceOrderResponseAutoAppliedCoupon {
   });
   @JsonKey(name: r'code', required: true, includeIfNull: false)
   final String code;
-
+  
   @JsonKey(name: r'discountAmount', required: true, includeIfNull: false)
   final num discountAmount;
+  
+  @override
+  bool operator ==(Object other) => identical(this, other) || other is PlaceOrderResponseAutoAppliedCoupon &&
+    other.code == code &&
+    other.discountAmount == discountAmount;
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is PlaceOrderResponseAutoAppliedCoupon &&
-          other.code == code &&
-          other.discountAmount == discountAmount;
+  int get hashCode =>
+      code.hashCode +
+      discountAmount.hashCode;
 
-  @override
-  int get hashCode => code.hashCode + discountAmount.hashCode;
+  factory PlaceOrderResponseAutoAppliedCoupon.fromJson(Map<String, dynamic> json) => _$PlaceOrderResponseAutoAppliedCouponFromJson(json);
 
-  factory PlaceOrderResponseAutoAppliedCoupon.fromJson(
-    Map<String, dynamic> json,
-  ) => _$PlaceOrderResponseAutoAppliedCouponFromJson(json);
-
-  Map<String, dynamic> toJson() =>
-      _$PlaceOrderResponseAutoAppliedCouponToJson(this);
+  Map<String, dynamic> toJson() => _$PlaceOrderResponseAutoAppliedCouponToJson(this);
 
   @override
   String toString() {
     return toJson().toString();
   }
+
 }
+

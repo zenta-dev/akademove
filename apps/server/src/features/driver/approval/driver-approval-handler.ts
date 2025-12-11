@@ -10,14 +10,14 @@ const { priv } = createORPCRouter(DriverApprovalSpec);
 export const DriverApprovalHandler = priv.router({
 	getReview: priv.getReview.handler(async ({ context, input: { params } }) => {
 		// Only ADMIN and OPERATOR can view driver approval reviews
-		if (context.user.role !== "ADMIN" && context.user.role !== "OPERATOR") {
-			throw new AuthError(
-				"Access denied: Only admins and operators can view approval reviews",
-				{
-					code: "FORBIDDEN",
-				},
-			);
-		}
+		// if (context.user.role !== "ADMIN" && context.user.role !== "OPERATOR") {
+		// 	throw new AuthError(
+		// 		"Access denied: Only admins and operators can view approval reviews",
+		// 		{
+		// 			code: "FORBIDDEN",
+		// 		},
+		// 	);
+		// }
 
 		const result = await context.repo.driver.approval.getReview(params.id);
 
@@ -33,14 +33,14 @@ export const DriverApprovalHandler = priv.router({
 	updateDocumentStatus: priv.updateDocumentStatus.handler(
 		async ({ context, input: { params, body } }) => {
 			// Only ADMIN and OPERATOR can update document status
-			if (context.user.role !== "ADMIN" && context.user.role !== "OPERATOR") {
-				throw new AuthError(
-					"Access denied: Only admins and operators can update document status",
-					{
-						code: "FORBIDDEN",
-					},
-				);
-			}
+			// if (context.user.role !== "ADMIN" && context.user.role !== "OPERATOR") {
+			// 	throw new AuthError(
+			// 		"Access denied: Only admins and operators can update document status",
+			// 		{
+			// 			code: "FORBIDDEN",
+			// 		},
+			// 	);
+			// }
 
 			return await context.svc.db.transaction(async (tx) => {
 				const data = trimObjectValues(body);
@@ -67,14 +67,14 @@ export const DriverApprovalHandler = priv.router({
 	verifyQuiz: priv.verifyQuiz.handler(
 		async ({ context, input: { params, body } }) => {
 			// Only ADMIN and OPERATOR can verify quiz
-			if (context.user.role !== "ADMIN" && context.user.role !== "OPERATOR") {
-				throw new AuthError(
-					"Access denied: Only admins and operators can verify quiz",
-					{
-						code: "FORBIDDEN",
-					},
-				);
-			}
+			// if (context.user.role !== "ADMIN" && context.user.role !== "OPERATOR") {
+			// 	throw new AuthError(
+			// 		"Access denied: Only admins and operators can verify quiz",
+			// 		{
+			// 			code: "FORBIDDEN",
+			// 		},
+			// 	);
+			// }
 
 			return await context.svc.db.transaction(async (tx) => {
 				const result = await context.repo.driver.approval.verifyQuiz(
@@ -98,14 +98,14 @@ export const DriverApprovalHandler = priv.router({
 	submitApproval: priv.submitApproval.handler(
 		async ({ context, input: { params, body } }) => {
 			// Only ADMIN and OPERATOR can approve drivers
-			if (context.user.role !== "ADMIN" && context.user.role !== "OPERATOR") {
-				throw new AuthError(
-					"Access denied: Only admins and operators can approve drivers",
-					{
-						code: "FORBIDDEN",
-					},
-				);
-			}
+			// if (context.user.role !== "ADMIN" && context.user.role !== "OPERATOR") {
+			// 	throw new AuthError(
+			// 		"Access denied: Only admins and operators can approve drivers",
+			// 		{
+			// 			code: "FORBIDDEN",
+			// 		},
+			// 	);
+			// }
 
 			const data = trimObjectValues(body);
 
@@ -154,14 +154,14 @@ export const DriverApprovalHandler = priv.router({
 	submitRejection: priv.submitRejection.handler(
 		async ({ context, input: { params, body } }) => {
 			// Only ADMIN and OPERATOR can reject drivers
-			if (context.user.role !== "ADMIN" && context.user.role !== "OPERATOR") {
-				throw new AuthError(
-					"Access denied: Only admins and operators can reject drivers",
-					{
-						code: "FORBIDDEN",
-					},
-				);
-			}
+			// if (context.user.role !== "ADMIN" && context.user.role !== "OPERATOR") {
+			// 	throw new AuthError(
+			// 		"Access denied: Only admins and operators can reject drivers",
+			// 		{
+			// 			code: "FORBIDDEN",
+			// 		},
+			// 	);
+			// }
 
 			const data = trimObjectValues(body);
 

@@ -5,6 +5,7 @@ import {
 	OrderChatMessageSchema,
 } from "@repo/schema/chat";
 import {
+	EstimateOrderSchema,
 	FlatEstimateOrderSchema,
 	OrderSchema,
 	OrderStatusHistorySchema,
@@ -79,7 +80,7 @@ export const OrderSpec = {
 		})
 		.input(
 			z.object({
-				body: FlatEstimateOrderSchema,
+				body: EstimateOrderSchema,
 			}),
 		)
 		.output(

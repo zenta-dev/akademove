@@ -3,8 +3,7 @@ import 'package:api_client/api_client.dart';
 
 // tests for DriverQuizQuestionAnswer
 void main() {
-  final DriverQuizQuestionAnswer? instance = /* DriverQuizQuestionAnswer(...) */
-      null;
+  final DriverQuizQuestionAnswer? instance = /* DriverQuizQuestionAnswer(...) */ null;
   // TODO add properties to the entity
 
   group(DriverQuizQuestionAnswer, () {
@@ -32,5 +31,6 @@ void main() {
     test('to test the property `answeredAt`', () async {
       // TODO
     });
+
   });
 }

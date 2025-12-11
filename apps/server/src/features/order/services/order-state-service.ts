@@ -35,7 +35,9 @@ const VALID_TRANSITIONS: Record<OrderStatus, OrderStatus[]> = {
 	IN_TRIP: ["COMPLETED", "CANCELLED_BY_DRIVER", "CANCELLED_BY_SYSTEM"],
 	COMPLETED: [],
 	CANCELLED_BY_USER: [],
-	CANCELLED_BY_DRIVER: [],
+	// FIX: Allow CANCELLED_BY_DRIVER orders to be retried (transition back to MATCHING)
+	// This enables re-matching with other drivers when a driver cancels an accepted order
+	CANCELLED_BY_DRIVER: ["MATCHING"],
 	CANCELLED_BY_MERCHANT: [],
 	CANCELLED_BY_SYSTEM: [],
 	NO_SHOW: [],

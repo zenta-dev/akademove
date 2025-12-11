@@ -22,79 +22,72 @@ class InsertCoupon {
   const InsertCoupon({
     required this.name,
     required this.code,
-    this.couponType = CouponType.GENERAL,
+     this.couponType = CouponType.GENERAL,
     required this.rules,
-    this.discountAmount,
-    this.discountPercentage,
+     this.discountAmount,
+     this.discountPercentage,
     required this.usageLimit,
     required this.periodStart,
     required this.periodEnd,
     required this.isActive,
-    this.merchantId,
-    this.eventName,
-    this.eventDescription,
+     this.merchantId,
+     this.eventName,
+     this.eventDescription,
   });
   @JsonKey(name: r'name', required: true, includeIfNull: false)
   final String name;
-
+  
   @JsonKey(name: r'code', required: true, includeIfNull: false)
   final String code;
-
-  @JsonKey(
-    defaultValue: CouponType.GENERAL,
-    name: r'couponType',
-    required: false,
-    includeIfNull: false,
-  )
+  
+  @JsonKey(defaultValue: CouponType.GENERAL,name: r'couponType', required: false, includeIfNull: false)
   final CouponType? couponType;
-
+  
   @JsonKey(name: r'rules', required: true, includeIfNull: false)
   final CouponRules rules;
-
+  
   @JsonKey(name: r'discountAmount', required: false, includeIfNull: false)
   final num? discountAmount;
-
+  
   @JsonKey(name: r'discountPercentage', required: false, includeIfNull: false)
   final num? discountPercentage;
-
+  
   @JsonKey(name: r'usageLimit', required: true, includeIfNull: false)
   final num usageLimit;
-
+  
   @JsonKey(name: r'periodStart', required: true, includeIfNull: false)
   final DateTime periodStart;
-
+  
   @JsonKey(name: r'periodEnd', required: true, includeIfNull: false)
   final DateTime periodEnd;
-
+  
   @JsonKey(name: r'isActive', required: true, includeIfNull: false)
   final bool isActive;
-
+  
   @JsonKey(name: r'merchantId', required: false, includeIfNull: false)
   final String? merchantId;
-
+  
   @JsonKey(name: r'eventName', required: false, includeIfNull: false)
   final String? eventName;
-
+  
   @JsonKey(name: r'eventDescription', required: false, includeIfNull: false)
   final String? eventDescription;
-
+  
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is InsertCoupon &&
-          other.name == name &&
-          other.code == code &&
-          other.couponType == couponType &&
-          other.rules == rules &&
-          other.discountAmount == discountAmount &&
-          other.discountPercentage == discountPercentage &&
-          other.usageLimit == usageLimit &&
-          other.periodStart == periodStart &&
-          other.periodEnd == periodEnd &&
-          other.isActive == isActive &&
-          other.merchantId == merchantId &&
-          other.eventName == eventName &&
-          other.eventDescription == eventDescription;
+  bool operator ==(Object other) => identical(this, other) || other is InsertCoupon &&
+    other.name == name &&
+    other.code == code &&
+    other.couponType == couponType &&
+    other.rules == rules &&
+    other.discountAmount == discountAmount &&
+    other.discountPercentage == discountPercentage &&
+    other.usageLimit == usageLimit &&
+    other.periodStart == periodStart &&
+    other.periodEnd == periodEnd &&
+    other.isActive == isActive &&
+    other.merchantId == merchantId &&
+    other.eventName == eventName &&
+    other.eventDescription == eventDescription;
 
   @override
   int get hashCode =>
@@ -112,8 +105,7 @@ class InsertCoupon {
       eventName.hashCode +
       eventDescription.hashCode;
 
-  factory InsertCoupon.fromJson(Map<String, dynamic> json) =>
-      _$InsertCouponFromJson(json);
+  factory InsertCoupon.fromJson(Map<String, dynamic> json) => _$InsertCouponFromJson(json);
 
   Map<String, dynamic> toJson() => _$InsertCouponToJson(this);
 
@@ -121,4 +113,6 @@ class InsertCoupon {
   String toString() {
     return toJson().toString();
   }
+
 }
+

@@ -17,30 +17,33 @@ part 'coordinate.g.dart';
 )
 class Coordinate {
   /// Returns a new [Coordinate] instance.
-  const Coordinate({required this.x, required this.y});
-
-  /// Longitude (X-axis, East-West)
-  // minimum: -180
-  // maximum: 180
+  const Coordinate({
+    required this.x,
+    required this.y,
+  });
+      /// Longitude (X-axis, East-West)
+          // minimum: -180
+          // maximum: 180
   @JsonKey(name: r'x', required: true, includeIfNull: false)
   final num x;
-
-  /// Latitude (Y-axis, North-South)
-  // minimum: -90
-  // maximum: 90
+  
+      /// Latitude (Y-axis, North-South)
+          // minimum: -90
+          // maximum: 90
   @JsonKey(name: r'y', required: true, includeIfNull: false)
   final num y;
+  
+  @override
+  bool operator ==(Object other) => identical(this, other) || other is Coordinate &&
+    other.x == x &&
+    other.y == y;
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is Coordinate && other.x == x && other.y == y;
+  int get hashCode =>
+      x.hashCode +
+      y.hashCode;
 
-  @override
-  int get hashCode => x.hashCode + y.hashCode;
-
-  factory Coordinate.fromJson(Map<String, dynamic> json) =>
-      _$CoordinateFromJson(json);
+  factory Coordinate.fromJson(Map<String, dynamic> json) => _$CoordinateFromJson(json);
 
   Map<String, dynamic> toJson() => _$CoordinateToJson(this);
 
@@ -48,4 +51,6 @@ class Coordinate {
   String toString() {
     return toJson().toString();
   }
+
 }
+

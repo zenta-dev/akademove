@@ -3,8 +3,7 @@ import 'package:api_client/api_client.dart';
 
 // tests for DriverVerifyQuizRequest
 void main() {
-  final DriverVerifyQuizRequest? instance = /* DriverVerifyQuizRequest(...) */
-      null;
+  final DriverVerifyQuizRequest? instance = /* DriverVerifyQuizRequest(...) */ null;
   // TODO add properties to the entity
 
   group(DriverVerifyQuizRequest, () {
@@ -12,5 +11,6 @@ void main() {
     test('to test the property `quizVerified`', () async {
       // TODO
     });
+
   });
 }

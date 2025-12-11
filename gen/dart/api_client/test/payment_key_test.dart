@@ -3,5 +3,7 @@ import 'package:api_client/api_client.dart';
 
 // tests for PaymentKey
 void main() {
-  group(PaymentKey, () {});
+
+  group(PaymentKey, () {
+  });
 }

@@ -547,7 +547,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **authVerifyEmail**
-> AuthSignOut200Response authVerifyEmail(verifyEmail)
+> AuthVerifyEmail200Response authVerifyEmail(verifyEmail)
 
 
 
@@ -574,7 +574,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**AuthSignOut200Response**](AuthSignOut200Response.md)
+[**AuthVerifyEmail200Response**](AuthVerifyEmail200Response.md)
 
 ### Authorization
 

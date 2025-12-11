@@ -3,8 +3,7 @@ import 'package:api_client/api_client.dart';
 
 // tests for ChatList200ResponseData
 void main() {
-  final ChatList200ResponseData? instance = /* ChatList200ResponseData(...) */
-      null;
+  final ChatList200ResponseData? instance = /* ChatList200ResponseData(...) */ null;
   // TODO add properties to the entity
 
   group(ChatList200ResponseData, () {
@@ -22,5 +21,6 @@ void main() {
     test('to test the property `nextCursor`', () async {
       // TODO
     });
+
   });
 }

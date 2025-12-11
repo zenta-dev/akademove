@@ -59,7 +59,10 @@ export type UpdatePayment = z.infer<typeof UpdatePaymentSchema>;
 export const TopUpRequestSchema = PaymentSchema.pick({
 	amount: true,
 	provider: true,
-}).safeExtend({ method: PaymentMethodSchema.exclude(["wallet"]) });
+}).safeExtend({
+	method: PaymentMethodSchema.exclude(["wallet"]),
+	bankProvider: BankProviderSchema.optional(),
+});
 export type TopUpRequest = z.infer<typeof TopUpRequestSchema>;
 
 export const PayRequestSchema = PaymentSchema.pick({
@@ -113,8 +116,8 @@ export type PayoutStatus = z.infer<typeof PayoutStatusSchema>;
  * Returned after initiating a withdrawal to bank account
  */
 export const WithdrawResponseSchema = z.object({
-	id: z.string().uuid(),
-	transactionId: z.string().uuid(),
+	id: z.uuid(),
+	transactionId: z.uuid(),
 	provider: PaymentProviderSchema,
 	method: PaymentMethodSchema,
 	amount: z.coerce.number(),

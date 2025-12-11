@@ -52,6 +52,7 @@ export const OrderEnvelopeEventSchema = z.enum([
 	"MERCHANT_PREPARING",
 	"MERCHANT_READY",
 	"NO_SHOW",
+	"DRIVER_CANCELLED_REMATCHING",
 ]);
 export const OrderEnvelopeActionSchema = z.enum([
 	"MATCHING",
@@ -110,6 +111,14 @@ export const OrderEnvelopePayloadSchema = z.object({
 		.object({
 			orderId: z.uuid(),
 			driverId: z.uuid(),
+			reason: z.string().optional(),
+		})
+		.optional(),
+	retryInfo: z
+		.object({
+			orderId: z.uuid(),
+			cancelledDriverId: z.uuid(),
+			excludedDriverCount: z.number(),
 			reason: z.string().optional(),
 		})
 		.optional(),

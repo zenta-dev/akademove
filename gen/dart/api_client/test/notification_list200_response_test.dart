@@ -3,8 +3,7 @@ import 'package:api_client/api_client.dart';
 
 // tests for NotificationList200Response
 void main() {
-  final NotificationList200Response?
-  instance = /* NotificationList200Response(...) */ null;
+  final NotificationList200Response? instance = /* NotificationList200Response(...) */ null;
   // TODO add properties to the entity
 
   group(NotificationList200Response, () {
@@ -27,5 +26,6 @@ void main() {
     test('to test the property `totalPages`', () async {
       // TODO
     });
+
   });
 }

@@ -3,8 +3,7 @@ import 'package:api_client/api_client.dart';
 
 // tests for UserLookupByPhone200Response
 void main() {
-  final UserLookupByPhone200Response?
-  instance = /* UserLookupByPhone200Response(...) */ null;
+  final UserLookupByPhone200Response? instance = /* UserLookupByPhone200Response(...) */ null;
   // TODO add properties to the entity
 
   group(UserLookupByPhone200Response, () {
@@ -27,5 +26,6 @@ void main() {
     test('to test the property `totalPages`', () async {
       // TODO
     });
+
   });
 }

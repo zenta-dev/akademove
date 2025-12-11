@@ -3,5 +3,7 @@ import 'package:api_client/api_client.dart';
 
 // tests for OrderStatusHistoryRole
 void main() {
-  group(OrderStatusHistoryRole, () {});
+
+  group(OrderStatusHistoryRole, () {
+  });
 }

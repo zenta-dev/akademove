@@ -39,6 +39,7 @@ export const WalletHandler = pub.router({
 					transactionType: "TOPUP",
 					userId: context.user.id,
 					orderType: "TOPUP",
+					bank: body.bankProvider,
 				},
 				{ tx },
 			);
@@ -259,13 +260,9 @@ export const WalletHandler = pub.router({
 
 			// Save bank details to driver/merchant profile if requested
 			if (data.saveBank) {
-				const bankDetails: {
-					bankProvider: BankProvider;
-					accountNumber: string;
-					accountName?: string;
-				} = {
-					bankProvider: data.bankProvider,
-					accountNumber: data.accountNumber,
+				const bankDetails = {
+					provider: data.bankProvider,
+					number: Number(data.accountNumber),
 					accountName: data.accountName,
 				};
 
@@ -276,7 +273,7 @@ export const WalletHandler = pub.router({
 				});
 
 				if (driver) {
-					await context.repo.driver.update(
+					await context.repo.driver.main.update(
 						driver.id,
 						{ bank: bankDetails },
 						opts,
@@ -293,7 +290,7 @@ export const WalletHandler = pub.router({
 					});
 
 					if (merchant) {
-						await context.repo.merchant.update(
+						await context.repo.merchant.main.update(
 							merchant.id,
 							{ bank: bankDetails },
 							opts,

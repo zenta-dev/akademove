@@ -3,8 +3,7 @@ import 'package:api_client/api_client.dart';
 
 // tests for SupportChatEnvelopePayload
 void main() {
-  final SupportChatEnvelopePayload?
-  instance = /* SupportChatEnvelopePayload(...) */ null;
+  final SupportChatEnvelopePayload? instance = /* SupportChatEnvelopePayload(...) */ null;
   // TODO add properties to the entity
 
   group(SupportChatEnvelopePayload, () {
@@ -37,5 +36,6 @@ void main() {
     test('to test the property `userId`', () async {
       // TODO
     });
+
   });
 }

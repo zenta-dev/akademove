@@ -3,8 +3,7 @@ import 'package:api_client/api_client.dart';
 
 // tests for DashboardStatsHighCancellationDriversInner
 void main() {
-  final DashboardStatsHighCancellationDriversInner?
-  instance = /* DashboardStatsHighCancellationDriversInner(...) */ null;
+  final DashboardStatsHighCancellationDriversInner? instance = /* DashboardStatsHighCancellationDriversInner(...) */ null;
   // TODO add properties to the entity
 
   group(DashboardStatsHighCancellationDriversInner, () {
@@ -32,5 +31,6 @@ void main() {
     test('to test the property `cancellationRate`', () async {
       // TODO
     });
+
   });
 }

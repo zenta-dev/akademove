@@ -3,8 +3,7 @@ import 'package:api_client/api_client.dart';
 
 // tests for MerchantUpdateDocumentStatusRequest
 void main() {
-  final MerchantUpdateDocumentStatusRequest?
-  instance = /* MerchantUpdateDocumentStatusRequest(...) */ null;
+  final MerchantUpdateDocumentStatusRequest? instance = /* MerchantUpdateDocumentStatusRequest(...) */ null;
   // TODO add properties to the entity
 
   group(MerchantUpdateDocumentStatusRequest, () {
@@ -22,5 +21,6 @@ void main() {
     test('to test the property `reason`', () async {
       // TODO
     });
+
   });
 }

@@ -46,11 +46,11 @@ export const OrderNoteSchema = z.object({
 	pickup: z.string().optional(),
 	senderName: z.string().optional(),
 	senderPhone: z.string().optional(),
-	pickupInstructions: z.string().optional(),
+	// pickupInstructions: z.string().optional(),
 	dropoff: z.string().optional(),
 	recevierName: z.string().optional(),
 	recevierPhone: z.string().optional(),
-	dropoffInstructions: z.string().optional(),
+	// dropoffInstructions: z.string().optional(),
 });
 export type OrderNote = z.infer<typeof OrderNoteSchema>;
 

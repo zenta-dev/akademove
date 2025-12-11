@@ -69,6 +69,10 @@ export const DriverMatchingJobSchema = z.object({
 		paymentId: z.string().optional(),
 		/** WebSocket room ID for real-time updates */
 		wsRoomId: z.string().optional(),
+		/** Driver IDs to exclude from matching (e.g., drivers who already cancelled this order) */
+		excludedDriverIds: z.array(z.string()).optional(),
+		/** Whether this is a retry after driver cancellation */
+		isRetry: z.boolean().optional(),
 	}),
 });
 export type DriverMatchingJob = z.infer<typeof DriverMatchingJobSchema>;

@@ -1,6 +1,7 @@
 import 'package:test/test.dart';
 import 'package:api_client/api_client.dart';
 
+
 /// tests for LeaderboardApi
 void main() {
   final instance = ApiClient().getLeaderboardApi();
@@ -15,5 +16,6 @@ void main() {
     test('test leaderboardList', () async {
       // TODO
     });
+
   });
 }

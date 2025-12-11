@@ -59,6 +59,55 @@ extension OrderStatusExt on OrderStatus {
       OrderStatus.SCHEDULED => context.l10n.scheduled,
     };
   }
+
+  /// Check if this order status allows cancellation by the user
+  bool get canBeCancelled {
+    return switch (this) {
+      // User can cancel these statuses
+      OrderStatus.REQUESTED ||
+      OrderStatus.MATCHING ||
+      OrderStatus.ACCEPTED ||
+      OrderStatus.SCHEDULED => true,
+      // User cannot cancel these statuses
+      OrderStatus.PREPARING ||
+      OrderStatus.READY_FOR_PICKUP ||
+      OrderStatus.ARRIVING ||
+      OrderStatus.IN_TRIP ||
+      OrderStatus.COMPLETED ||
+      OrderStatus.CANCELLED_BY_USER ||
+      OrderStatus.CANCELLED_BY_DRIVER ||
+      OrderStatus.CANCELLED_BY_MERCHANT ||
+      OrderStatus.CANCELLED_BY_SYSTEM ||
+      OrderStatus.NO_SHOW => false,
+    };
+  }
+
+  /// Check if this is a terminal/final status
+  bool get isTerminal {
+    return switch (this) {
+      OrderStatus.COMPLETED ||
+      OrderStatus.CANCELLED_BY_USER ||
+      OrderStatus.CANCELLED_BY_DRIVER ||
+      OrderStatus.CANCELLED_BY_MERCHANT ||
+      OrderStatus.CANCELLED_BY_SYSTEM ||
+      OrderStatus.NO_SHOW => true,
+      _ => false,
+    };
+  }
+
+  /// Check if this is an active/in-progress status
+  bool get isActive {
+    return switch (this) {
+      OrderStatus.REQUESTED ||
+      OrderStatus.MATCHING ||
+      OrderStatus.ACCEPTED ||
+      OrderStatus.PREPARING ||
+      OrderStatus.READY_FOR_PICKUP ||
+      OrderStatus.ARRIVING ||
+      OrderStatus.IN_TRIP => true,
+      _ => false,
+    };
+  }
 }
 
 extension OrderTypeExt on OrderType {

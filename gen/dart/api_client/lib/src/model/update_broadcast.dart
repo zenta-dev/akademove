@@ -19,46 +19,44 @@ part 'update_broadcast.g.dart';
 class UpdateBroadcast {
   /// Returns a new [UpdateBroadcast] instance.
   const UpdateBroadcast({
-    this.title,
-    this.message,
-    this.type,
-    this.targetAudience,
-    this.targetIds,
-    this.scheduledAt,
-    this.createdBy,
+     this.title,
+     this.message,
+     this.type,
+     this.targetAudience,
+     this.targetIds,
+     this.scheduledAt,
+     this.createdBy,
   });
   @JsonKey(name: r'title', required: false, includeIfNull: false)
   final String? title;
-
+  
   @JsonKey(name: r'message', required: false, includeIfNull: false)
   final String? message;
-
+  
   @JsonKey(name: r'type', required: false, includeIfNull: false)
   final BroadcastType? type;
-
+  
   @JsonKey(name: r'targetAudience', required: false, includeIfNull: false)
   final UpdateBroadcastTargetAudienceEnum? targetAudience;
-
+  
   @JsonKey(name: r'targetIds', required: false, includeIfNull: false)
   final List<String>? targetIds;
-
+  
   @JsonKey(name: r'scheduledAt', required: false, includeIfNull: false)
   final DateTime? scheduledAt;
-
+  
   @JsonKey(name: r'createdBy', required: false, includeIfNull: false)
   final String? createdBy;
-
+  
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is UpdateBroadcast &&
-          other.title == title &&
-          other.message == message &&
-          other.type == type &&
-          other.targetAudience == targetAudience &&
-          other.targetIds == targetIds &&
-          other.scheduledAt == scheduledAt &&
-          other.createdBy == createdBy;
+  bool operator ==(Object other) => identical(this, other) || other is UpdateBroadcast &&
+    other.title == title &&
+    other.message == message &&
+    other.type == type &&
+    other.targetAudience == targetAudience &&
+    other.targetIds == targetIds &&
+    other.scheduledAt == scheduledAt &&
+    other.createdBy == createdBy;
 
   @override
   int get hashCode =>
@@ -70,8 +68,7 @@ class UpdateBroadcast {
       (scheduledAt == null ? 0 : scheduledAt.hashCode) +
       createdBy.hashCode;
 
-  factory UpdateBroadcast.fromJson(Map<String, dynamic> json) =>
-      _$UpdateBroadcastFromJson(json);
+  factory UpdateBroadcast.fromJson(Map<String, dynamic> json) => _$UpdateBroadcastFromJson(json);
 
   Map<String, dynamic> toJson() => _$UpdateBroadcastToJson(this);
 
@@ -79,6 +76,7 @@ class UpdateBroadcast {
   String toString() {
     return toJson().toString();
   }
+
 }
 
 enum UpdateBroadcastTargetAudienceEnum {
@@ -94,11 +92,12 @@ enum UpdateBroadcastTargetAudienceEnum {
   ADMINS(r'ADMINS'),
   @JsonValue(r'OPERATORS')
   OPERATORS(r'OPERATORS');
-
+  
   const UpdateBroadcastTargetAudienceEnum(this.value);
-
+  
   final String value;
-
+  
   @override
   String toString() => value;
 }
+

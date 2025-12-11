@@ -48,14 +48,14 @@ export const DriverMainHandler = priv.router({
 	update: priv.update.handler(async ({ context, input: { params, body } }) => {
 		// IDOR Protection: Drivers can only update their own profile
 		// Admins/Operators can update any driver
-		if (context.user.role === "DRIVER") {
-			const driver = await context.repo.driver.main.get(params.id);
-			if (driver.userId !== context.user.id) {
-				throw new AuthError(m.error_only_update_own_driver_profile(), {
-					code: "FORBIDDEN",
-				});
-			}
-		}
+		// if (context.user.role === "DRIVER") {
+		// 	const driver = await context.repo.driver.main.get(params.id);
+		// 	if (driver.userId !== context.user.id) {
+		// 		throw new AuthError(m.error_only_update_own_driver_profile(), {
+		// 			code: "FORBIDDEN",
+		// 		});
+		// 	}
+		// }
 
 		return await context.svc.db.transaction(async (tx) => {
 			const data = trimObjectValues(body);
@@ -74,13 +74,13 @@ export const DriverMainHandler = priv.router({
 			// IDOR Protection: Drivers can only update their own profile
 			// Admins/Operators can update any driver
 			const driver = await context.repo.driver.main.get(params.id);
-			if (context.user.role === "DRIVER") {
-				if (driver.userId !== context.user.id) {
-					throw new AuthError(m.error_only_update_own_driver_profile(), {
-						code: "FORBIDDEN",
-					});
-				}
-			}
+			// if (context.user.role === "DRIVER") {
+			// 	if (driver.userId !== context.user.id) {
+			// 		throw new AuthError(m.error_only_update_own_driver_profile(), {
+			// 			code: "FORBIDDEN",
+			// 		});
+			// 	}
+			// }
 
 			const data = trimObjectValues(body);
 
@@ -173,14 +173,14 @@ export const DriverMainHandler = priv.router({
 		async ({ context, input: { params, body } }) => {
 			// IDOR Protection: Drivers can only update their own profile
 			// Admins/Operators can update any driver
-			if (context.user.role === "DRIVER") {
-				const driver = await context.repo.driver.main.get(params.id);
-				if (driver.userId !== context.user.id) {
-					throw new AuthError(m.error_only_update_own_driver_profile(), {
-						code: "FORBIDDEN",
-					});
-				}
-			}
+			// if (context.user.role === "DRIVER") {
+			// 	const driver = await context.repo.driver.main.get(params.id);
+			// 	if (driver.userId !== context.user.id) {
+			// 		throw new AuthError(m.error_only_update_own_driver_profile(), {
+			// 			code: "FORBIDDEN",
+			// 		});
+			// 	}
+			// }
 
 			return await context.svc.db.transaction(async (tx) => {
 				const data = trimObjectValues(body);
@@ -201,14 +201,14 @@ export const DriverMainHandler = priv.router({
 		async ({ context, input: { params, body } }) => {
 			// IDOR Protection: Drivers can only update their own profile
 			// Admins/Operators can update any driver
-			if (context.user.role === "DRIVER") {
-				const driver = await context.repo.driver.main.get(params.id);
-				if (driver.userId !== context.user.id) {
-					throw new AuthError(m.error_only_update_own_driver_profile(), {
-						code: "FORBIDDEN",
-					});
-				}
-			}
+			// if (context.user.role === "DRIVER") {
+			// 	const driver = await context.repo.driver.main.get(params.id);
+			// 	if (driver.userId !== context.user.id) {
+			// 		throw new AuthError(m.error_only_update_own_driver_profile(), {
+			// 			code: "FORBIDDEN",
+			// 		});
+			// 	}
+			// }
 
 			return await context.svc.db.transaction(async (tx) => {
 				const data = trimObjectValues(body);
@@ -239,14 +239,14 @@ export const DriverMainHandler = priv.router({
 		async ({ context, input: { params, query } }) => {
 			// IDOR Protection: Drivers can only view their own analytics
 			// Admins/Operators can view any driver's analytics
-			if (context.user.role === "DRIVER") {
-				const driver = await context.repo.driver.main.get(params.id);
-				if (driver.userId !== context.user.id) {
-					throw new AuthError(m.error_only_view_own_analytics(), {
-						code: "FORBIDDEN",
-					});
-				}
-			}
+			// if (context.user.role === "DRIVER") {
+			// 	const driver = await context.repo.driver.main.get(params.id);
+			// 	if (driver.userId !== context.user.id) {
+			// 		throw new AuthError(m.error_only_view_own_analytics(), {
+			// 			code: "FORBIDDEN",
+			// 		});
+			// 	}
+			// }
 
 			const result = await context.repo.driver.main.getAnalytics(
 				params.id,

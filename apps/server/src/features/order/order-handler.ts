@@ -52,14 +52,6 @@ export const OrderHandler = priv.router({
 		// This endpoint only reads pricing config (now cached in memory) and calls external API
 		const res = await context.repo.order.estimate({
 			...body,
-			pickupLocation: {
-				x: body.pickupLocation_x,
-				y: body.pickupLocation_y,
-			},
-			dropoffLocation: {
-				x: body.dropoffLocation_x,
-				y: body.dropoffLocation_y,
-			},
 		});
 		return {
 			status: 200,
@@ -136,13 +128,18 @@ export const OrderHandler = priv.router({
 					});
 				}
 
-				// Drivers can only update orders assigned to them
-				// FIX: Need to get driver record to compare user IDs correctly
+				// Drivers can only update orders assigned to them OR accept orders in MATCHING/REQUESTED status
 				if (context.user.role === "DRIVER") {
 					const driver = await context.repo.driver.main.getByUserId(
 						context.user.id,
 					);
-					if (order.driverId !== driver.id) {
+
+					// Allow drivers to accept orders that are being offered (MATCHING/REQUESTED status)
+					const isOrderBeingOffered =
+						order.status === "MATCHING" || order.status === "REQUESTED";
+					const isAssignedToDriver = order.driverId === driver.id;
+
+					if (!isOrderBeingOffered && !isAssignedToDriver) {
 						throw new AuthError(m.error_only_update_assigned_orders(), {
 							code: "FORBIDDEN",
 						});
@@ -155,6 +152,7 @@ export const OrderHandler = priv.router({
 					const merchant = await context.repo.merchant.main.getByUserId(
 						context.user.id,
 					);
+
 					if (order.merchantId !== merchant.id) {
 						throw new AuthError(m.error_only_update_own_orders(), {
 							code: "FORBIDDEN",

@@ -1,6 +1,7 @@
 import 'package:test/test.dart';
 import 'package:api_client/api_client.dart';
 
+
 /// tests for WalletApi
 void main() {
   final instance = ApiClient().getWalletApi();
@@ -42,5 +43,6 @@ void main() {
     test('test walletWithdraw', () async {
       // TODO
     });
+
   });
 }

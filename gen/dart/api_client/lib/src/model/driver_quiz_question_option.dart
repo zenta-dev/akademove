@@ -24,26 +24,26 @@ class DriverQuizQuestionOption {
   });
   @JsonKey(name: r'id', required: true, includeIfNull: false)
   final String id;
-
+  
   @JsonKey(name: r'text', required: true, includeIfNull: false)
   final String text;
-
+  
   @JsonKey(name: r'isCorrect', required: true, includeIfNull: false)
   final bool isCorrect;
+  
+  @override
+  bool operator ==(Object other) => identical(this, other) || other is DriverQuizQuestionOption &&
+    other.id == id &&
+    other.text == text &&
+    other.isCorrect == isCorrect;
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is DriverQuizQuestionOption &&
-          other.id == id &&
-          other.text == text &&
-          other.isCorrect == isCorrect;
+  int get hashCode =>
+      id.hashCode +
+      text.hashCode +
+      isCorrect.hashCode;
 
-  @override
-  int get hashCode => id.hashCode + text.hashCode + isCorrect.hashCode;
-
-  factory DriverQuizQuestionOption.fromJson(Map<String, dynamic> json) =>
-      _$DriverQuizQuestionOptionFromJson(json);
+  factory DriverQuizQuestionOption.fromJson(Map<String, dynamic> json) => _$DriverQuizQuestionOptionFromJson(json);
 
   Map<String, dynamic> toJson() => _$DriverQuizQuestionOptionToJson(this);
 
@@ -51,4 +51,6 @@ class DriverQuizQuestionOption {
   String toString() {
     return toJson().toString();
   }
+
 }
+

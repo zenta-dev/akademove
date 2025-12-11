@@ -3,8 +3,7 @@ import 'package:api_client/api_client.dart';
 
 // tests for BankValidateAccount200Response
 void main() {
-  final BankValidateAccount200Response?
-  instance = /* BankValidateAccount200Response(...) */ null;
+  final BankValidateAccount200Response? instance = /* BankValidateAccount200Response(...) */ null;
   // TODO add properties to the entity
 
   group(BankValidateAccount200Response, () {
@@ -27,5 +26,6 @@ void main() {
     test('to test the property `totalPages`', () async {
       // TODO
     });
+
   });
 }

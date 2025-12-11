@@ -3,8 +3,7 @@ import 'package:api_client/api_client.dart';
 
 // tests for DriverUpdateOnlineStatusRequest
 void main() {
-  final DriverUpdateOnlineStatusRequest?
-  instance = /* DriverUpdateOnlineStatusRequest(...) */ null;
+  final DriverUpdateOnlineStatusRequest? instance = /* DriverUpdateOnlineStatusRequest(...) */ null;
   // TODO add properties to the entity
 
   group(DriverUpdateOnlineStatusRequest, () {
@@ -12,5 +11,6 @@ void main() {
     test('to test the property `isOnline`', () async {
       // TODO
     });
+
   });
 }

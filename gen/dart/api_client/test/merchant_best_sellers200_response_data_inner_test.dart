@@ -3,8 +3,7 @@ import 'package:api_client/api_client.dart';
 
 // tests for MerchantBestSellers200ResponseDataInner
 void main() {
-  final MerchantBestSellers200ResponseDataInner?
-  instance = /* MerchantBestSellers200ResponseDataInner(...) */ null;
+  final MerchantBestSellers200ResponseDataInner? instance = /* MerchantBestSellers200ResponseDataInner(...) */ null;
   // TODO add properties to the entity
 
   group(MerchantBestSellers200ResponseDataInner, () {
@@ -22,5 +21,6 @@ void main() {
     test('to test the property `orderCount`', () async {
       // TODO
     });
+
   });
 }

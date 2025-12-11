@@ -29,35 +29,39 @@ class UserWalletTopUpCubit extends BaseCubit<UserWalletTopUpState> {
     return super.close();
   }
 
-  Future<void> topUp(int amount, TopUpRequestMethodEnum method) async =>
-      await taskManager.execute('UWTPC-tU1', () async {
-        try {
-          emit(state.copyWith(payment: const OperationResult.loading()));
-          final res = await _walletRepository.topUp(
-            TopUpRequest(
-              amount: amount,
-              provider: PaymentProvider.MIDTRANS,
-              method: method,
-            ),
-          );
+  Future<void> topUp(
+    int amount,
+    TopUpRequestMethodEnum method, {
+    BankProvider? bankProvider,
+  }) async => await taskManager.execute('UWTPC-tU1', () async {
+    try {
+      emit(state.copyWith(payment: const OperationResult.loading()));
+      final res = await _walletRepository.topUp(
+        TopUpRequest(
+          amount: amount,
+          provider: PaymentProvider.MIDTRANS,
+          method: method,
+          bankProvider: bankProvider,
+        ),
+      );
 
-          _paymentId = res.data.id;
-          await _setupPaymentWebsocket(paymentId: res.data.id);
+      _paymentId = res.data.id;
+      await _setupPaymentWebsocket(paymentId: res.data.id);
 
-          emit(
-            state.copyWith(
-              payment: OperationResult.success(res.data, message: res.message),
-            ),
-          );
-        } on BaseError catch (e, st) {
-          logger.e(
-            '[UserWalletTopUpCubit] - Error: ${e.message}',
-            error: e,
-            stackTrace: st,
-          );
-          emit(state.copyWith(payment: OperationResult.failed(e)));
-        }
-      });
+      emit(
+        state.copyWith(
+          payment: OperationResult.success(res.data, message: res.message),
+        ),
+      );
+    } on BaseError catch (e, st) {
+      logger.e(
+        '[UserWalletTopUpCubit] - Error: ${e.message}',
+        error: e,
+        stackTrace: st,
+      );
+      emit(state.copyWith(payment: OperationResult.failed(e)));
+    }
+  });
 
   Future<void> _setupPaymentWebsocket({required String paymentId}) async {
     _paymentId = paymentId;

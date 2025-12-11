@@ -100,7 +100,7 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
       });
 
   Future<void> estimate({
-    required OrderEstimateRequest req,
+    required EstimateOrder req,
     required Place pickup,
     required Place dropoff,
   }) async => await taskManager.execute(
@@ -189,17 +189,19 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
         ),
       );
       return res.data;
-    } on BaseError catch (e, st) {
-      logger.e(
-        '[UserOrderCubit] - Error: ${e.message}',
-        error: e,
-        stackTrace: st,
-      );
+    } catch (e, st) {
+      logger.e('[UserOrderCubit] - Error: $e', error: e, stackTrace: st);
       emit(
         state.copyWith(
-          currentOrder: OperationResult.failed(e),
-          currentPayment: OperationResult.failed(e),
-          currentTransaction: OperationResult.failed(e),
+          currentOrder: OperationResult.failed(
+            e is BaseError ? e : UnknownError(e.toString()),
+          ),
+          currentPayment: OperationResult.failed(
+            e is BaseError ? e : UnknownError(e.toString()),
+          ),
+          currentTransaction: OperationResult.failed(
+            e is BaseError ? e : UnknownError(e.toString()),
+          ),
         ),
       );
       return null;
@@ -622,4 +624,49 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
   void clearSelectedScheduledOrder() {
     emit(state.copyWith(selectedScheduledOrder: const OperationResult.idle()));
   }
+
+  /// Cancel an active order (non-scheduled)
+  /// POST /api/orders/{id}/cancel
+  Future<Order?> cancelOrder(String orderId, {String? reason}) async =>
+      await taskManager.execute('UOC-co-$orderId', () async {
+        try {
+          emit(state.copyWith(selectedOrder: const OperationResult.loading()));
+
+          final res = await _orderRepository.cancelOrder(
+            orderId,
+            reason: reason,
+          );
+
+          // Update the order histories list with the cancelled order
+          final currentList = state.orderHistories.value;
+          final updatedList = currentList?.map((order) {
+            if (order.id == orderId) {
+              return res.data;
+            }
+            return order;
+          }).toList();
+
+          emit(
+            state.copyWith(
+              orderHistories: updatedList != null
+                  ? OperationResult.success(updatedList, message: res.message)
+                  : state.orderHistories,
+              selectedOrder: OperationResult.success(
+                res.data,
+                message: res.message,
+              ),
+            ),
+          );
+
+          return res.data;
+        } on BaseError catch (e, st) {
+          logger.e(
+            '[UserOrderCubit] - Error cancelling order: ${e.message}',
+            error: e,
+            stackTrace: st,
+          );
+          emit(state.copyWith(selectedOrder: OperationResult.failed(e)));
+          return null;
+        }
+      });
 }

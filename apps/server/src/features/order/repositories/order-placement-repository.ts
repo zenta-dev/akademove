@@ -62,6 +62,13 @@ export class OrderPlacementRepository extends OrderBaseRepository {
 			// Validate required parameters
 			OrderValidationService.validatePlaceOrderParams(params);
 
+			// Validate user does not have an active order
+			// Users can only place one order at a time
+			await OrderValidationService.validateNoActiveOrder(
+				params.userId,
+				opts.tx,
+			);
+
 			logger.debug(
 				{
 					userId: params.userId,
@@ -345,20 +352,29 @@ export class OrderPlacementRepository extends OrderBaseRepository {
 				m.server_order_placed(),
 			);
 
-			// Broadcast to driver pool
-			const stub = OrderBaseRepository.getRoomStubByName(DRIVER_POOL_KEY);
-			stub.broadcast({
-				f: "s",
-				t: "s",
-				a: "MATCHING",
-				p: {
-					detail: {
-						order,
-						payment,
-						transaction,
+			// Only broadcast to driver pool for wallet payments that succeeded immediately
+			// For non-wallet payments (BANK_TRANSFER, QRIS), the webhook handler will broadcast
+			// after payment success to avoid race condition where drivers see unpaid orders
+			if (params.payment.method === "wallet" && payment.status === "SUCCESS") {
+				const stub = OrderBaseRepository.getRoomStubByName(DRIVER_POOL_KEY);
+				stub.broadcast({
+					f: "s",
+					t: "s",
+					a: "MATCHING",
+					p: {
+						detail: {
+							order,
+							payment,
+							transaction,
+						},
 					},
-				},
-			});
+				});
+
+				logger.debug(
+					{ orderId: order.id },
+					"[OrderPlacementRepository] Broadcast to driver pool after wallet payment success",
+				);
+			}
 
 			return { order, payment, transaction, autoAppliedCoupon };
 		} catch (err) {

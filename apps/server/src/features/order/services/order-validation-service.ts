@@ -1,10 +1,24 @@
 import { m } from "@repo/i18n";
 import type { PlaceOrder } from "@repo/schema/order";
-import { eq } from "drizzle-orm";
+import { and, eq, inArray } from "drizzle-orm";
 import { RepositoryError } from "@/core/error";
 import type { DatabaseTransaction } from "@/core/services/db";
 import { tables } from "@/core/services/db";
 import { logger } from "@/utils/logger";
+
+/**
+ * Order statuses that are considered "active" - user cannot place a new order
+ * while they have an order in any of these statuses
+ */
+const ACTIVE_ORDER_STATUSES = [
+	"REQUESTED",
+	"MATCHING",
+	"ACCEPTED",
+	"PREPARING",
+	"READY_FOR_PICKUP",
+	"ARRIVING",
+	"IN_TRIP",
+] as const;
 
 /**
  * Service responsible for order placement validation
@@ -180,5 +194,42 @@ export class OrderValidationService {
 		}
 
 		logger.debug({ orderId }, "[OrderValidation] Stock validation passed");
+	}
+
+	/**
+	 * Validate that user does not have an active order
+	 *
+	 * Users can only have one active order at a time. This prevents users from
+	 * creating multiple orders simultaneously which could cause issues with
+	 * driver matching and wallet balance.
+	 *
+	 * @param userId - The user ID to check
+	 * @param tx - Database transaction
+	 * @throws RepositoryError if user already has an active order
+	 */
+	static async validateNoActiveOrder(
+		userId: string,
+		tx: DatabaseTransaction,
+	): Promise<void> {
+		const activeOrder = await tx.query.order.findFirst({
+			columns: { id: true, status: true },
+			where: and(
+				eq(tables.order.userId, userId),
+				inArray(tables.order.status, [...ACTIVE_ORDER_STATUSES]),
+			),
+		});
+
+		if (activeOrder) {
+			logger.warn(
+				{ userId, activeOrderId: activeOrder.id, status: activeOrder.status },
+				"[OrderValidation] User already has an active order",
+			);
+			throw new RepositoryError(
+				"You already have an active order. Please complete or cancel it before placing a new order.",
+				{ code: "BAD_REQUEST" },
+			);
+		}
+
+		logger.debug({ userId }, "[OrderValidation] No active order found");
 	}
 }

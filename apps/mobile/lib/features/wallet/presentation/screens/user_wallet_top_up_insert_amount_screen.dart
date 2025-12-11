@@ -23,6 +23,7 @@ class _UserWalletTopUpInsertAmountScreenState
     extends State<UserWalletTopUpInsertAmountScreen> {
   late TextEditingController amountController;
   int amount = 0;
+  BankProvider? selectedBankProvider;
 
   @override
   void initState() {
@@ -36,10 +37,25 @@ class _UserWalletTopUpInsertAmountScreenState
     super.dispose();
   }
 
+  bool get _isBankTransfer =>
+      widget.method == TopUpRequestMethodEnum.BANK_TRANSFER;
+
+  bool get _canSubmit {
+    if (amount <= 0) return false;
+    if (_isBankTransfer && selectedBankProvider == null) return false;
+    return true;
+  }
+
   @override
   Widget build(BuildContext context) {
     return MyScaffold(
-      headers: [DefaultAppBar(title: context.l10n.top_up_qris)],
+      headers: [
+        DefaultAppBar(
+          title: _isBankTransfer
+              ? context.l10n.payment_method_bank_transfer
+              : context.l10n.top_up_qris,
+        ),
+      ],
       body: Column(
         spacing: 16.h,
         mainAxisSize: MainAxisSize.min,
@@ -100,6 +116,7 @@ class _UserWalletTopUpInsertAmountScreenState
               ),
             ],
           ),
+          if (_isBankTransfer) _buildBankProviderSelector(context),
           BlocBuilder<UserWalletTopUpCubit, UserWalletTopUpState>(
             builder: (context, state) {
               final isLoading = state.payment.isLoading;
@@ -107,7 +124,7 @@ class _UserWalletTopUpInsertAmountScreenState
                 width: double.infinity,
                 child: Button.primary(
                   enabled: !isLoading,
-                  onPressed: amount <= 0 || isLoading
+                  onPressed: !_canSubmit || isLoading
                       ? null
                       : () async {
                           final parsed = int.tryParse(
@@ -133,6 +150,7 @@ class _UserWalletTopUpInsertAmountScreenState
                           await context.read<UserWalletTopUpCubit>().topUp(
                             parsed,
                             widget.method,
+                            bankProvider: selectedBankProvider,
                           );
 
                           if (mounted && context.mounted) {
@@ -157,6 +175,64 @@ class _UserWalletTopUpInsertAmountScreenState
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildBankProviderSelector(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: 4.h,
+      children: [
+        Label(child: DefaultText(context.l10n.bank_provider, fontSize: 14.sp)),
+        OutlineButton(
+          onPressed: () async {
+            await openSheet<BankProvider>(
+              context: context,
+              position: OverlayPosition.bottom,
+              builder: (context) {
+                return BankProviderSelectorWidget(
+                  onSelected: (provider) {
+                    setState(() {
+                      selectedBankProvider = provider;
+                    });
+                  },
+                );
+              },
+            );
+          },
+          child: Row(
+            children: [
+              if (selectedBankProvider != null) ...[
+                Builder(
+                  builder: (context) {
+                    final bankDict = bankProviderDicts.firstWhere(
+                      (e) => e.provider == selectedBankProvider,
+                      orElse: () => bankProviderDicts.first,
+                    );
+                    return Row(
+                      spacing: 8.w,
+                      children: [
+                        SizedBox(
+                          width: 24.sp,
+                          height: 24.sp,
+                          child: bankDict.icon.svg(width: 24.sp, height: 24.sp),
+                        ),
+                        DefaultText(selectedBankProvider!.value),
+                      ],
+                    );
+                  },
+                ),
+              ] else
+                DefaultText(
+                  context.l10n.placeholder_select_bank_provider,
+                  color: context.colorScheme.mutedForeground,
+                ),
+              const Spacer(),
+              Icon(LucideIcons.chevronDown, size: 16.sp),
+            ],
+          ),
+        ),
+      ],
     );
   }
 

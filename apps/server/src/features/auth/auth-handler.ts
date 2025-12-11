@@ -1,4 +1,5 @@
 import { m } from "@repo/i18n";
+import type { User } from "@repo/schema";
 import type { BankProvider } from "@repo/schema/common";
 import { unflattenData } from "@repo/schema/flatten.helper";
 import {
@@ -7,7 +8,7 @@ import {
 	trimObjectValues,
 } from "@repo/shared";
 import { AuthError, BaseError, RepositoryError } from "@/core/error";
-import { hasRoles } from "@/core/middlewares/auth";
+import { hasRoles, orpcAuthMiddleware } from "@/core/middlewares/auth";
 import { createORPCRouter } from "@/core/router/orpc";
 import { DuplicateAccountService } from "@/features/fraud/services";
 import { isDev } from "@/utils";
@@ -168,10 +169,8 @@ export const AuthHandler = pub.router({
 						}
 					}
 				}
-				await Promise.all(tasks);
 
-				const [signInResult] = await Promise.all([
-					context.repo.auth.signIn(data, opts),
+				tasks.push(
 					context.repo.badge.user.create(
 						{
 							userId: result.user.id,
@@ -179,6 +178,11 @@ export const AuthHandler = pub.router({
 						},
 						opts,
 					),
+				);
+				await Promise.all(tasks);
+
+				const [signInResult] = await Promise.all([
+					context.repo.auth.signIn(data, opts),
 				]);
 
 				await context.repo.auth.sendEmailVerification(
@@ -367,10 +371,7 @@ export const AuthHandler = pub.router({
 						}
 					}
 
-					await Promise.all(tasks);
-
-					const [signInResult] = await Promise.all([
-						context.repo.auth.signIn(data, opts),
+					tasks.push(
 						context.repo.driver.main.create(
 							{
 								...data.detail,
@@ -378,6 +379,9 @@ export const AuthHandler = pub.router({
 							},
 							opts,
 						),
+					);
+
+					tasks.push(
 						context.repo.badge.user.create(
 							{
 								userId: result.user.id,
@@ -385,6 +389,12 @@ export const AuthHandler = pub.router({
 							},
 							opts,
 						),
+					);
+
+					await Promise.all(tasks);
+
+					const [signInResult] = await Promise.all([
+						context.repo.auth.signIn(data, opts),
 					]);
 
 					await context.repo.auth.sendEmailVerification(
@@ -461,8 +471,7 @@ export const AuthHandler = pub.router({
 						context.repo.badge.main.getByCode("NEW_MERCHANT", opts),
 					]);
 
-					const [signInResult] = await Promise.all([
-						context.repo.auth.signIn(data, opts),
+					await Promise.all([
 						context.repo.merchant.main.create(
 							{
 								...data.detail,
@@ -477,6 +486,10 @@ export const AuthHandler = pub.router({
 							},
 							opts,
 						),
+					]);
+
+					const [signInResult] = await Promise.all([
+						context.repo.auth.signIn(data, opts),
 					]);
 
 					await context.repo.auth.sendEmailVerification(
@@ -643,18 +656,38 @@ export const AuthHandler = pub.router({
 			});
 		},
 	),
-	verifyEmail: pub.verifyEmail.handler(async ({ context, input: { body } }) => {
-		return context.svc.db.transaction(async (tx) => {
-			const opts = { tx };
-			await context.repo.auth.verifyEmail(trimObjectValues(body), opts);
+	verifyEmail: pub
+		.use(orpcAuthMiddleware)
+		.verifyEmail.handler(async ({ context, input: { body } }) => {
+			await context.svc.db.transaction(async (tx) => {
+				await context.repo.auth.verifyEmail(trimObjectValues(body), { tx });
+			});
+
+			let token: string | undefined;
+			let user: User | undefined;
+
+			if (context.token && context.user) {
+				const valid = await context.repo.auth.getSession(context.token);
+				if (valid) {
+					token = valid.token;
+					user = valid.user;
+					context.resHeaders?.set(
+						"Set-Cookie",
+						composeAuthCookieValue({
+							token: context.token,
+							isDev,
+							maxAge: 7 * 24 * 60 * 60,
+						}),
+					);
+				}
+			}
 
 			return {
 				status: 200,
 				body: {
 					message: "Email verified successfully",
-					data: true,
+					data: { ok: true, token, user },
 				},
 			};
-		});
-	}),
+		}),
 });

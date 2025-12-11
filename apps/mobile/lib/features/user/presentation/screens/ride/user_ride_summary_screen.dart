@@ -93,32 +93,6 @@ class _UserRideSummaryScreenState extends State<UserRideSummaryScreen> {
       );
       return;
     }
-
-    switch (payment.method) {
-      case PaymentMethod.QRIS:
-        await context.pushNamed(
-          Routes.userRidePayment.name,
-          queryParameters: {'paymentMethod': PaymentMethod.QRIS.name},
-        );
-      case PaymentMethod.BANK_TRANSFER:
-        await context.pushNamed(
-          Routes.userRidePayment.name,
-          queryParameters: {
-            'paymentMethod': PaymentMethod.BANK_TRANSFER.name,
-            'bankProvider': payment.bankProvider?.name,
-          },
-        );
-      case PaymentMethod.wallet:
-        // wallet payment is instant, navigate directly to trip screen
-        if (payment.status == TransactionStatus.SUCCESS) {
-          context.pushReplacementNamed(Routes.userRideOnTrip.name);
-        } else {
-          context.showMyToast(
-            context.l10n.toast_wallet_payment_failed,
-            type: ToastType.failed,
-          );
-        }
-    }
   }
 
   Future<void> placeScheduledOrder(UserOrderState state) async {
@@ -428,7 +402,66 @@ class _UserRideSummaryScreenState extends State<UserRideSummaryScreen> {
             fontSize: 16.sp,
             fontWeight: FontWeight.w500,
           ),
-          BlocBuilder<UserOrderCubit, UserOrderState>(
+          BlocConsumer<UserOrderCubit, UserOrderState>(
+            listener: (context, state) {
+              if (state.currentOrder.isFailure ||
+                  state.currentPayment.isFailure) {
+                final errorMsg =
+                    state.currentOrder.error?.message ??
+                    state.currentPayment.error?.message ??
+                    context.l10n.toast_failed_place_order;
+                context.showMyToast(errorMsg, type: ToastType.failed);
+              }
+
+              if (state.currentOrder.isSuccess &&
+                  state.currentPayment.isSuccess &&
+                  state.currentPayment.hasData) {
+                setState(() {
+                  scheduledAt = null;
+                });
+
+                final payment = state.currentPayment.value;
+
+                if (payment == null) {
+                  context.showMyToast(
+                    context.l10n.toast_payment_info_not_available,
+                    type: ToastType.failed,
+                  );
+                  return;
+                }
+
+                switch (payment.method) {
+                  case PaymentMethod.QRIS:
+                    context.popUntilRoot();
+                    context.pushNamed(
+                      Routes.userRidePayment.name,
+                      queryParameters: {
+                        'paymentMethod': PaymentMethod.QRIS.name,
+                      },
+                    );
+                  case PaymentMethod.BANK_TRANSFER:
+                    context.popUntilRoot();
+                    context.pushNamed(
+                      Routes.userRidePayment.name,
+                      queryParameters: {
+                        'paymentMethod': PaymentMethod.BANK_TRANSFER.name,
+                        'bankProvider': payment.bankProvider?.name,
+                      },
+                    );
+                  case PaymentMethod.wallet:
+                    // wallet payment is instant, navigate directly to trip screen
+                    context.popUntilRoot();
+                    if (payment.status == TransactionStatus.SUCCESS) {
+                      context.pushReplacementNamed(Routes.userRideOnTrip.name);
+                    } else {
+                      context.showMyToast(
+                        context.l10n.toast_wallet_payment_failed,
+                        type: ToastType.failed,
+                      );
+                    }
+                }
+              }
+            },
             builder: (context, orderState) {
               return BlocBuilder<UserWalletCubit, UserWalletState>(
                 builder: (context, walletState) {

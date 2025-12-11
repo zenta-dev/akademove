@@ -78,13 +78,19 @@ function RouteComponent() {
 
 	const verifyMutation = useMutation(
 		orpcQuery.auth.verifyEmail.mutationOptions({
-			onSuccess: async () => {
+			onSuccess: async (body) => {
 				toast.success("Email verified successfully!");
-				await Promise.all([
+				const tasks: Promise<unknown>[] = [
 					router.invalidate(),
 					queryClient.invalidateQueries(),
-					router.navigate({ to: localizeHref("/sign-in") }),
-				]);
+				];
+				const token = body.body.data.token;
+				if (token) {
+					tasks.push(router.navigate({ to: "/" }));
+				} else {
+					tasks.push(router.navigate({ to: localizeHref("/sign-in") }));
+				}
+				await Promise.all(tasks);
 			},
 			onError: (error) => {
 				toast.error("Verification failed", {

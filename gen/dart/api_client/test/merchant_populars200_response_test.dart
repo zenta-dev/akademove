@@ -3,8 +3,7 @@ import 'package:api_client/api_client.dart';
 
 // tests for MerchantPopulars200Response
 void main() {
-  final MerchantPopulars200Response?
-  instance = /* MerchantPopulars200Response(...) */ null;
+  final MerchantPopulars200Response? instance = /* MerchantPopulars200Response(...) */ null;
   // TODO add properties to the entity
 
   group(MerchantPopulars200Response, () {
@@ -27,5 +26,6 @@ void main() {
     test('to test the property `totalPages`', () async {
       // TODO
     });
+
   });
 }

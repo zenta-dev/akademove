@@ -13,6 +13,8 @@ abstract class _$TopUpRequestCWProxy {
 
   TopUpRequest method(TopUpRequestMethodEnum method);
 
+  TopUpRequest bankProvider(BankProvider? bankProvider);
+
   /// Creates a new instance with the provided field values.
   /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `TopUpRequest(...).copyWith.fieldName(value)`.
   ///
@@ -24,6 +26,7 @@ abstract class _$TopUpRequestCWProxy {
     num amount,
     PaymentProvider provider,
     TopUpRequestMethodEnum method,
+    BankProvider? bankProvider,
   });
 }
 
@@ -44,6 +47,10 @@ class _$TopUpRequestCWProxyImpl implements _$TopUpRequestCWProxy {
   TopUpRequest method(TopUpRequestMethodEnum method) => call(method: method);
 
   @override
+  TopUpRequest bankProvider(BankProvider? bankProvider) =>
+      call(bankProvider: bankProvider);
+
+  @override
   /// Creates a new instance with the provided field values.
   /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `TopUpRequest(...).copyWith.fieldName(value)`.
   ///
@@ -55,6 +62,7 @@ class _$TopUpRequestCWProxyImpl implements _$TopUpRequestCWProxy {
     Object? amount = const $CopyWithPlaceholder(),
     Object? provider = const $CopyWithPlaceholder(),
     Object? method = const $CopyWithPlaceholder(),
+    Object? bankProvider = const $CopyWithPlaceholder(),
   }) {
     return TopUpRequest(
       amount: amount == const $CopyWithPlaceholder() || amount == null
@@ -69,6 +77,10 @@ class _$TopUpRequestCWProxyImpl implements _$TopUpRequestCWProxy {
           ? _value.method
           // ignore: cast_nullable_to_non_nullable
           : method as TopUpRequestMethodEnum,
+      bankProvider: bankProvider == const $CopyWithPlaceholder()
+          ? _value.bankProvider
+          // ignore: cast_nullable_to_non_nullable
+          : bankProvider as BankProvider?,
     );
   }
 }
@@ -97,6 +109,10 @@ TopUpRequest _$TopUpRequestFromJson(Map<String, dynamic> json) =>
           'method',
           (v) => $enumDecode(_$TopUpRequestMethodEnumEnumMap, v),
         ),
+        bankProvider: $checkedConvert(
+          'bankProvider',
+          (v) => $enumDecodeNullable(_$BankProviderEnumMap, v),
+        ),
       );
       return val;
     });
@@ -106,6 +122,7 @@ Map<String, dynamic> _$TopUpRequestToJson(TopUpRequest instance) =>
       'amount': instance.amount,
       'provider': _$PaymentProviderEnumMap[instance.provider]!,
       'method': _$TopUpRequestMethodEnumEnumMap[instance.method]!,
+      'bankProvider': ?_$BankProviderEnumMap[instance.bankProvider],
     };
 
 const _$PaymentProviderEnumMap = {
@@ -116,4 +133,12 @@ const _$PaymentProviderEnumMap = {
 const _$TopUpRequestMethodEnumEnumMap = {
   TopUpRequestMethodEnum.QRIS: 'QRIS',
   TopUpRequestMethodEnum.BANK_TRANSFER: 'BANK_TRANSFER',
+};
+
+const _$BankProviderEnumMap = {
+  BankProvider.BCA: 'BCA',
+  BankProvider.BNI: 'BNI',
+  BankProvider.BRI: 'BRI',
+  BankProvider.MANDIRI: 'MANDIRI',
+  BankProvider.PERMATA: 'PERMATA',
 };

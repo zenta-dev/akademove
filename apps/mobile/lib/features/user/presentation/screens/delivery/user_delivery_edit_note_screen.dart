@@ -2,6 +2,7 @@ import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/l10n/l10n.dart';
 import 'package:api_client/api_client.dart';
+import 'package:flutter/services.dart' show TextInputAction;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -26,22 +27,35 @@ class UserDeliveryEditDetailScreen extends StatefulWidget {
 
 class _UserDeliveryEditDetailScreenState
     extends State<UserDeliveryEditDetailScreen> {
-  late TextEditingController _nameController;
-  late TextEditingController _noteController;
-  late TextEditingController _phoneController;
+  static const _nameKey = TextFieldKey('name');
+  static const _phoneKey = TextFieldKey('phone');
+  static const _insKey = TextFieldKey('ins');
+
+  late FocusNode _nameFocusNode;
+  late FocusNode _phoneFocusNode;
+  late FocusNode _insFocusNode;
 
   OrderNote _note = OrderNote();
   GoogleMapController? _mapController;
+
+  var _submitting = false;
 
   @override
   void initState() {
     super.initState();
     _note = widget.initialNote;
+    _nameFocusNode = FocusNode();
+    _phoneFocusNode = FocusNode();
+    _insFocusNode = FocusNode();
   }
 
   @override
   void dispose() {
     _mapController?.dispose();
+
+    _nameFocusNode.dispose();
+    _phoneFocusNode.dispose();
+    _insFocusNode.dispose();
     super.dispose();
   }
 
@@ -87,6 +101,7 @@ class _UserDeliveryEditDetailScreenState
         ),
       ],
       body: Column(
+        spacing: 16.h,
         children: [
           SizedBox(
             width: double.infinity,
@@ -120,6 +135,130 @@ class _UserDeliveryEditDetailScreenState
                   );
                 },
               ),
+            ),
+          ),
+          Form(
+            onSubmit: (context, values) async {
+              if (_submitting) return;
+              _submitting = true;
+
+              final name = _nameKey[values];
+              final phone = _phoneKey[values];
+              final ins = _insKey[values];
+
+              setState(() {
+                if (widget.isPickup) {
+                  _note = _note.copyWith(
+                    senderName: name,
+                    senderPhone: phone,
+                    pickup: ins,
+                  );
+                } else {
+                  _note = _note.copyWith(
+                    recevierName: name,
+                    recevierPhone: phone,
+                    dropoff: ins,
+                  );
+                }
+              });
+
+              final valid = await context.submitForm();
+
+              if (valid.errors.isEmpty && context.mounted) {
+                context.pop(_note);
+              }
+
+              _submitting = false;
+            },
+            child: Column(
+              spacing: 16.h,
+              children: [
+                FormField(
+                  key: _nameKey,
+                  label: DefaultText(
+                    context.l10n.name,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  validator: LengthValidator(min: 5),
+                  showErrors: const {
+                    FormValidationMode.changed,
+                    FormValidationMode.submitted,
+                  },
+                  child: TextField(
+                    initialValue: widget.isPickup
+                        ? widget.initialNote.senderName
+                        : widget.initialNote.recevierName,
+                    focusNode: _nameFocusNode,
+                    textInputAction: TextInputAction.next,
+                  ),
+                ),
+                FormField(
+                  key: _phoneKey,
+                  label: DefaultText(
+                    context.l10n.phone,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  validator: LengthValidator(min: 10),
+                  showErrors: const {
+                    FormValidationMode.changed,
+                    FormValidationMode.submitted,
+                  },
+                  child: TextField(
+                    initialValue: widget.isPickup
+                        ? widget.initialNote.senderPhone
+                        : widget.initialNote.recevierPhone,
+                    focusNode: _phoneFocusNode,
+                    keyboardType: TextInputType.phone,
+                    textInputAction: TextInputAction.next,
+                  ),
+                ),
+                FormField(
+                  key: _insKey,
+                  label: DefaultText(
+                    "Notes & Instructions",
+                    fontWeight: FontWeight.w500,
+                  ),
+                  validator: NotEmptyValidator(),
+                  showErrors: const {
+                    FormValidationMode.changed,
+                    FormValidationMode.submitted,
+                  },
+                  child: TextArea(
+                    initialValue: widget.isPickup
+                        ? widget.initialNote.pickup
+                        : widget.initialNote.dropoff,
+                    focusNode: _insFocusNode,
+                    textInputAction: TextInputAction.next,
+                  ),
+                ),
+                SizedBox(
+                  width: double.infinity,
+                  child: FormErrorBuilder(
+                    builder: (context, errors, child) {
+                      return Button(
+                        style: _submitting
+                            ? const ButtonStyle.ghost()
+                            : const ButtonStyle.primary(),
+                        onPressed: _submitting
+                            ? null
+                            : () {
+                                context.submitForm();
+                                setState(() {
+                                  _submitting = true;
+                                });
+                              },
+                        child: _submitting
+                            ? Submiting()
+                            : DefaultText(
+                                context.l10n.confirm,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.white,
+                              ),
+                      );
+                    },
+                  ),
+                ),
+              ],
             ),
           ),
         ],

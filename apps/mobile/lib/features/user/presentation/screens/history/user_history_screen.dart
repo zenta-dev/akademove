@@ -46,6 +46,9 @@ class UserHistoryScreen extends StatelessWidget {
         ),
       ],
       scrollable: false,
+      onRefresh: () async {
+        context.read<UserOrderCubit>().list();
+      },
       body: BlocBuilder<UserOrderCubit, UserOrderState>(
         builder: (context, state) {
           final result = state.orderHistories;

@@ -3,8 +3,7 @@ import 'package:api_client/api_client.dart';
 
 // tests for DriverQuizQuestionOption
 void main() {
-  final DriverQuizQuestionOption? instance = /* DriverQuizQuestionOption(...) */
-      null;
+  final DriverQuizQuestionOption? instance = /* DriverQuizQuestionOption(...) */ null;
   // TODO add properties to the entity
 
   group(DriverQuizQuestionOption, () {
@@ -22,5 +21,6 @@ void main() {
     test('to test the property `isCorrect`', () async {
       // TODO
     });
+
   });
 }

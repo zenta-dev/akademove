@@ -3,8 +3,7 @@ import 'package:api_client/api_client.dart';
 
 // tests for DashboardStatsOrdersByTypeInner
 void main() {
-  final DashboardStatsOrdersByTypeInner?
-  instance = /* DashboardStatsOrdersByTypeInner(...) */ null;
+  final DashboardStatsOrdersByTypeInner? instance = /* DashboardStatsOrdersByTypeInner(...) */ null;
   // TODO add properties to the entity
 
   group(DashboardStatsOrdersByTypeInner, () {
@@ -22,5 +21,6 @@ void main() {
     test('to test the property `revenue`', () async {
       // TODO
     });
+
   });
 }

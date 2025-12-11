@@ -201,7 +201,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **orderEstimate**
-> OrderEstimate200Response orderEstimate(orderEstimateRequest)
+> OrderEstimate200Response orderEstimate(estimateOrder)
 
 
 
@@ -210,10 +210,10 @@ Name | Type | Description  | Notes
 import 'package:api_client/api.dart';
 
 final api = ApiClient().getOrderApi();
-final OrderEstimateRequest orderEstimateRequest = ; // OrderEstimateRequest | 
+final EstimateOrder estimateOrder = ; // EstimateOrder | 
 
 try {
-    final response = api.orderEstimate(orderEstimateRequest);
+    final response = api.orderEstimate(estimateOrder);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling OrderApi->orderEstimate: $e\n');
@@ -224,7 +224,7 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **orderEstimateRequest** | [**OrderEstimateRequest**](OrderEstimateRequest.md)|  | 
+ **estimateOrder** | [**EstimateOrder**](EstimateOrder.md)|  | 
 
 ### Return type
 

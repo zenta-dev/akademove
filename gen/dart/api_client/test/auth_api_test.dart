@@ -1,6 +1,7 @@
 import 'package:test/test.dart';
 import 'package:api_client/api_client.dart';
 
+
 /// tests for AuthApi
 void main() {
   final instance = ApiClient().getAuthApi();
@@ -61,9 +62,10 @@ void main() {
       // TODO
     });
 
-    //Future<AuthSignOut200Response> authVerifyEmail(VerifyEmail verifyEmail) async
+    //Future<AuthVerifyEmail200Response> authVerifyEmail(VerifyEmail verifyEmail) async
     test('test authVerifyEmail', () async {
       // TODO
     });
+
   });
 }

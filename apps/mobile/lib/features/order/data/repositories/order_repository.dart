@@ -68,10 +68,10 @@ class OrderRepository extends BaseRepository {
     });
   }
 
-  Future<BaseResponse<OrderSummary>> estimate(OrderEstimateRequest req) {
+  Future<BaseResponse<OrderSummary>> estimate(EstimateOrder req) {
     return guard(() async {
       final res = await _apiClient.getOrderApi().orderEstimate(
-        orderEstimateRequest: req,
+        estimateOrder: req,
       );
 
       final data =
@@ -272,6 +272,26 @@ class OrderRepository extends BaseRepository {
           res.data ??
           (throw const RepositoryError(
             'Failed to cancel scheduled order',
+            code: ErrorCode.unknown,
+          ));
+
+      return SuccessResponse(message: data.message, data: data.data);
+    });
+  }
+
+  /// Cancel an active order
+  /// POST /api/orders/{id}/cancel
+  Future<BaseResponse<Order>> cancelOrder(String id, {String? reason}) {
+    return guard(() async {
+      final res = await _apiClient.getOrderApi().orderCancel(
+        id: id,
+        orderCancelRequest: OrderCancelRequest(reason: reason),
+      );
+
+      final data =
+          res.data ??
+          (throw const RepositoryError(
+            'Failed to cancel order',
             code: ErrorCode.unknown,
           ));
 

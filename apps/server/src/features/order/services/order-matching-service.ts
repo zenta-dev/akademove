@@ -24,6 +24,8 @@ export interface MatchingCriteria {
 	userGender?: UserGender;
 	radiusKm?: number;
 	orderId?: string; // Optional for logging purposes
+	/** Driver IDs to exclude from matching (e.g., drivers who already cancelled this order) */
+	excludedDriverIds?: string[];
 }
 
 export interface MatchedDriver {
@@ -56,8 +58,9 @@ export class OrderMatchingService {
 	 * 4. Ensure driver has passed the quiz (quizStatus = PASSED)
 	 * 5. Ensure driver's email is verified
 	 * 6. Apply gender preference if requested
-	 * 7. Sort by rating (highest first)
-	 * 8. Return top match
+	 * 7. Exclude any drivers in the exclusion list
+	 * 8. Sort by rating (highest first)
+	 * 9. Return top match
 	 *
 	 * @param criteria - Matching criteria
 	 * @param opts - Transaction options
@@ -114,6 +117,8 @@ export class OrderMatchingService {
 						)`,
 						// Gender preference filter
 						this.#buildGenderFilter(criteria),
+						// Exclude specific drivers (e.g., those who already cancelled this order)
+						this.#buildExcludedDriversFilter(criteria.excludedDriverIds),
 						// Check cancellation count (not exceeded daily limit)
 						or(
 							isNull(tables.driver.lastCancellationDate),
@@ -218,6 +223,8 @@ export class OrderMatchingService {
 							${radiusMeters}
 						)`,
 						this.#buildGenderFilter(criteria),
+						// Exclude specific drivers (e.g., those who already cancelled this order)
+						this.#buildExcludedDriversFilter(criteria.excludedDriverIds),
 					),
 				)
 				.orderBy(sql`${tables.driver.rating} DESC`, sql`distance ASC`)
@@ -382,5 +389,23 @@ export class OrderMatchingService {
 
 		// "SAME" preference - filter for matching gender
 		return eq(tables.user.gender, criteria.userGender);
+	}
+
+	/**
+	 * Build SQL filter to exclude specific drivers
+	 *
+	 * Used to prevent re-offering orders to drivers who already cancelled
+	 */
+	#buildExcludedDriversFilter(excludedDriverIds?: string[]) {
+		if (!excludedDriverIds || excludedDriverIds.length === 0) {
+			// No exclusion needed
+			return sql`1=1`;
+		}
+
+		// Exclude drivers by their IDs
+		return sql`${tables.driver.id} NOT IN (${sql.join(
+			excludedDriverIds.map((id) => sql`${id}`),
+			sql`, `,
+		)})`;
 	}
 }

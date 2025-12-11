@@ -17,28 +17,28 @@ part 'driver_update_taking_order_status_request.g.dart';
 )
 class DriverUpdateTakingOrderStatusRequest {
   /// Returns a new [DriverUpdateTakingOrderStatusRequest] instance.
-  const DriverUpdateTakingOrderStatusRequest({required this.isTakingOrder});
+  const DriverUpdateTakingOrderStatusRequest({
+    required this.isTakingOrder,
+  });
   @JsonKey(name: r'isTakingOrder', required: true, includeIfNull: false)
   final bool isTakingOrder;
+  
+  @override
+  bool operator ==(Object other) => identical(this, other) || other is DriverUpdateTakingOrderStatusRequest &&
+    other.isTakingOrder == isTakingOrder;
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is DriverUpdateTakingOrderStatusRequest &&
-          other.isTakingOrder == isTakingOrder;
+  int get hashCode =>
+      isTakingOrder.hashCode;
 
-  @override
-  int get hashCode => isTakingOrder.hashCode;
+  factory DriverUpdateTakingOrderStatusRequest.fromJson(Map<String, dynamic> json) => _$DriverUpdateTakingOrderStatusRequestFromJson(json);
 
-  factory DriverUpdateTakingOrderStatusRequest.fromJson(
-    Map<String, dynamic> json,
-  ) => _$DriverUpdateTakingOrderStatusRequestFromJson(json);
-
-  Map<String, dynamic> toJson() =>
-      _$DriverUpdateTakingOrderStatusRequestToJson(this);
+  Map<String, dynamic> toJson() => _$DriverUpdateTakingOrderStatusRequestToJson(this);
 
   @override
   String toString() {
     return toJson().toString();
   }
+
 }
+

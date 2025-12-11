@@ -3,5 +3,7 @@ import 'package:api_client/api_client.dart';
 
 // tests for DriverQuizStatus
 void main() {
-  group(DriverQuizStatus, () {});
+
+  group(DriverQuizStatus, () {
+  });
 }

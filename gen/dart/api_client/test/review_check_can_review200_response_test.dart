@@ -3,8 +3,7 @@ import 'package:api_client/api_client.dart';
 
 // tests for ReviewCheckCanReview200Response
 void main() {
-  final ReviewCheckCanReview200Response?
-  instance = /* ReviewCheckCanReview200Response(...) */ null;
+  final ReviewCheckCanReview200Response? instance = /* ReviewCheckCanReview200Response(...) */ null;
   // TODO add properties to the entity
 
   group(ReviewCheckCanReview200Response, () {
@@ -27,5 +26,6 @@ void main() {
     test('to test the property `totalPages`', () async {
       // TODO
     });
+
   });
 }

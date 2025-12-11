@@ -64,8 +64,9 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
   Widget build(BuildContext context) {
     return MyScaffold(
       headers: [
-        AppBar(
-          title: TextField(controller: _searchController),
+        DefaultAppBar(
+          title: context.l10n.home,
+          padding: EdgeInsets.all(16.r),
           trailing: [
             BlocBuilder<NotificationCubit, NotificationState>(
               bloc: _notificationCubit,

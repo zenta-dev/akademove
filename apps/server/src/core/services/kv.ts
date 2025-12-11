@@ -1,5 +1,5 @@
 import { decode, encode } from "@msgpack/msgpack";
-import { KeyValueError } from "@/core/error";
+import { BaseError, KeyValueError } from "@/core/error";
 import type { PromiseFn } from "@/utils";
 import { logger } from "@/utils/logger";
 
@@ -27,6 +27,7 @@ export class CloudflareKVService implements KeyValueService {
 			const value = await this.namespace.get(key, "arrayBuffer");
 
 			if (!value) {
+				// Cache miss - use fallback if provided (this is normal behavior, not an error)
 				if (options?.fallback) return await options.fallback();
 				throw new KeyValueError(`Value for key ${key} not found`, {
 					code: "NOT_FOUND",
@@ -36,6 +37,11 @@ export class CloudflareKVService implements KeyValueService {
 			const obj = decode(new Uint8Array(value)) as T;
 			return obj;
 		} catch (error) {
+			// Only log and use fallback for unexpected errors (not cache misses)
+			if (error instanceof BaseError && error.code === "NOT_FOUND") {
+				throw error;
+			}
+
 			logger.error({ error, key }, "[CloudflareKVService] Error getting value");
 			if (options?.fallback) {
 				try {

@@ -70,6 +70,7 @@ import {
 } from "@/features/wallet/services";
 import { WalletRepository } from "@/features/wallet/wallet-repository";
 import { JwtManager } from "@/utils/jwt";
+import { logger } from "@/utils/logger";
 import { PasswordManager } from "@/utils/password";
 import { FirebaseAdminService } from "./services/firebase";
 import { GoogleMapService } from "./services/map";
@@ -77,6 +78,8 @@ import {
 	MidtransBankValidationService,
 	MidtransPaymentService,
 	MidtransPayoutService,
+	MockBankValidationService,
+	MockPayoutService,
 } from "./services/payment";
 
 var _manager: ManagerContext | undefined;
@@ -129,17 +132,29 @@ export function getServices(): ServiceContext {
 	);
 	const paymentWebhookService = new PaymentWebhookService();
 
-	// Initialize bank validation service (Midtrans Iris API)
-	const bankValidationService = new MidtransBankValidationService({
-		isProduction,
-		serverKey: env.MIDTRANS_SERVER_KEY,
-	});
+	// Initialize Iris services (bank validation & payout)
+	// Feature flag: MIDTRANS_EXPERIMENTAL_IRIS enables the real Iris API
+	const enableIris = env.MIDTRANS_EXPERIMENTAL_IRIS === "true";
 
-	// Initialize payout/disbursement service (Midtrans Iris API)
-	const payoutService = new MidtransPayoutService({
-		isProduction,
-		serverKey: env.MIDTRANS_SERVER_KEY,
-	});
+	const bankValidationService = enableIris
+		? new MidtransBankValidationService({
+				isProduction,
+				serverKey: env.MIDTRANS_SERVER_KEY,
+			})
+		: new MockBankValidationService();
+
+	const payoutService = enableIris
+		? new MidtransPayoutService({
+				isProduction,
+				serverKey: env.MIDTRANS_SERVER_KEY,
+			})
+		: new MockPayoutService();
+
+	if (!enableIris) {
+		logger.warn(
+			"[Factory] Midtrans Iris API is disabled. Set MIDTRANS_EXPERIMENTAL_IRIS=true to enable bank validation and payouts.",
+		);
+	}
 
 	// Initialize order domain services
 	const orderPricingConfigProvider = new OrderPricingConfigProvider(db);

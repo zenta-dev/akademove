@@ -3,8 +3,7 @@ import 'package:api_client/api_client.dart';
 
 // tests for AuthSignUpUser201Response
 void main() {
-  final AuthSignUpUser201Response?
-  instance = /* AuthSignUpUser201Response(...) */ null;
+  final AuthSignUpUser201Response? instance = /* AuthSignUpUser201Response(...) */ null;
   // TODO add properties to the entity
 
   group(AuthSignUpUser201Response, () {
@@ -27,5 +26,6 @@ void main() {
     test('to test the property `totalPages`', () async {
       // TODO
     });
+
   });
 }

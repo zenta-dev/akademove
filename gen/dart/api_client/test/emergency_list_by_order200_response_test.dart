@@ -3,8 +3,7 @@ import 'package:api_client/api_client.dart';
 
 // tests for EmergencyListByOrder200Response
 void main() {
-  final EmergencyListByOrder200Response?
-  instance = /* EmergencyListByOrder200Response(...) */ null;
+  final EmergencyListByOrder200Response? instance = /* EmergencyListByOrder200Response(...) */ null;
   // TODO add properties to the entity
 
   group(EmergencyListByOrder200Response, () {
@@ -27,5 +26,6 @@ void main() {
     test('to test the property `totalPages`', () async {
       // TODO
     });
+
   });
 }
