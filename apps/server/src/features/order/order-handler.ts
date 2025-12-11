@@ -1,4 +1,5 @@
 import { m } from "@repo/i18n";
+import type { OrderStatus } from "@repo/schema/order";
 import { trimObjectValues } from "@repo/shared";
 import { AuthError } from "@/core/error";
 import { createORPCRouter } from "@/core/router/orpc";
@@ -570,4 +571,132 @@ export const OrderHandler = priv.router({
 			};
 		},
 	),
+
+	// Get active order for current user (for order recovery on app reopen)
+	getActive: priv.getActive.handler(async ({ context }) => {
+		const role = context.user.role;
+		const userId = context.user.id;
+
+		logger.debug(
+			{ userId, role },
+			"[OrderHandler] Getting active order for user",
+		);
+
+		// Active order statuses - orders that are in progress
+		const activeStatuses: (
+			| "REQUESTED"
+			| "MATCHING"
+			| "ACCEPTED"
+			| "PREPARING"
+			| "READY_FOR_PICKUP"
+			| "ARRIVING"
+			| "IN_TRIP"
+		)[] = [
+			"REQUESTED",
+			"MATCHING",
+			"ACCEPTED",
+			"PREPARING",
+			"READY_FOR_PICKUP",
+			"ARRIVING",
+			"IN_TRIP",
+		];
+
+		let id: string | undefined;
+
+		// Get the appropriate ID based on role
+		if (role === "DRIVER") {
+			const driver = await context.repo.driver.main.getByUserId(userId);
+			id = driver.id;
+		} else if (role === "MERCHANT") {
+			const merchant = await context.repo.merchant.main.getByUserId(userId);
+			id = merchant.id;
+		} else if (role === "USER") {
+			id = userId;
+		}
+
+		// Query for active order
+		const { rows } = await context.repo.order.list({
+			id,
+			role,
+			statuses: [...activeStatuses] as OrderStatus[],
+			limit: 1,
+			order: "desc",
+			mode: "offset",
+		});
+
+		const activeOrder = rows[0];
+
+		if (!activeOrder) {
+			return {
+				status: 200,
+				body: {
+					message: "No active order found",
+					data: undefined,
+				},
+			};
+		}
+
+		// Get associated payment and transaction
+		let payment: unknown;
+		let transaction: unknown;
+		let driver: unknown;
+
+		try {
+			// Try to get payment info
+			const paymentResult = await context.svc.db.query.payment.findFirst({
+				where: (f, op) =>
+					op.and(
+						op.like(
+							f.metadata as unknown as Parameters<typeof op.like>[0],
+							`%"orderId":"${activeOrder.id}"%`,
+						),
+					),
+			});
+			if (paymentResult) {
+				payment = paymentResult;
+				// Get associated transaction
+				if (paymentResult.transactionId) {
+					const txResult = await context.svc.db.query.transaction.findFirst({
+						where: (f, op) =>
+							op.eq(f.id, paymentResult.transactionId as string),
+					});
+					if (txResult) {
+						transaction = txResult;
+					}
+				}
+			}
+		} catch {
+			// Ignore errors fetching payment/transaction
+		}
+
+		// Get driver info if assigned
+		if (activeOrder.driverId) {
+			try {
+				const driverResult = await context.repo.driver.main.get(
+					activeOrder.driverId,
+				);
+				driver = driverResult;
+			} catch {
+				// Ignore errors fetching driver
+			}
+		}
+
+		logger.info(
+			{ userId, orderId: activeOrder.id, status: activeOrder.status },
+			"[OrderHandler] Found active order for user",
+		);
+
+		return {
+			status: 200,
+			body: {
+				message: "Successfully retrieved active order",
+				data: {
+					order: activeOrder,
+					payment,
+					transaction,
+					driver,
+				},
+			},
+		};
+	}),
 });

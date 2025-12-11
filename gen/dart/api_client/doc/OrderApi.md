@@ -15,6 +15,7 @@ Method | HTTP request | Description
 [**orderCancelScheduledOrder**](OrderApi.md#ordercancelscheduledorder) | **POST** /orders/scheduled/{id}/cancel | 
 [**orderEstimate**](OrderApi.md#orderestimate) | **POST** /orders/estimate | 
 [**orderGet**](OrderApi.md#orderget) | **GET** /orders/{id} | 
+[**orderGetActive**](OrderApi.md#ordergetactive) | **GET** /orders/active | 
 [**orderGetStatusHistory**](OrderApi.md#ordergetstatushistory) | **GET** /orders/{id}/status-history | 
 [**orderList**](OrderApi.md#orderlist) | **GET** /orders | 
 [**orderListMessages**](OrderApi.md#orderlistmessages) | **GET** /orders/{id}/messages | 
@@ -270,6 +271,43 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**MerchantOrderAccept200Response**](MerchantOrderAccept200Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **orderGetActive**
+> OrderGetActive200Response orderGetActive()
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getOrderApi();
+
+try {
+    final response = api.orderGetActive();
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling OrderApi->orderGetActive: $e\n');
+}
+```
+
+### Parameters
+This endpoint does not need any parameter.
+
+### Return type
+
+[**OrderGetActive200Response**](OrderGetActive200Response.md)
 
 ### Authorization
 

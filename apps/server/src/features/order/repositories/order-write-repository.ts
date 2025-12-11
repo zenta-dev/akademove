@@ -83,37 +83,50 @@ export class OrderWriteRepository extends OrderBaseRepository {
 				);
 			}
 
+			// Build update object, handling explicit null vs undefined:
+			// - undefined: don't update the field
+			// - null (passed as empty string ''): clear the field to null
+			// - value: update with new value
+			const updateData: Record<string, unknown> = {
+				...item,
+				deliveryOtp: deliveryOtp ?? item.deliveryOtp,
+				basePrice: existing.basePrice
+					? toStringNumberSafe(existing.basePrice)
+					: undefined,
+				totalPrice: item.totalPrice
+					? toStringNumberSafe(item.totalPrice)
+					: undefined,
+				tip: item.tip ? toStringNumberSafe(item.tip) : undefined,
+				acceptedAt: existing.acceptedAt ? new Date(existing.acceptedAt) : null,
+				discountAmount: item.discountAmount
+					? toStringNumberSafe(item.discountAmount)
+					: undefined,
+				platformCommission: item.platformCommission
+					? toStringNumberSafe(item.platformCommission)
+					: undefined,
+				driverEarning: item.driverEarning
+					? toStringNumberSafe(item.driverEarning)
+					: undefined,
+				merchantCommission: item.merchantCommission
+					? toStringNumberSafe(item.merchantCommission)
+					: undefined,
+				arrivedAt: existing.arrivedAt ? new Date(existing.arrivedAt) : null,
+				createdAt: new Date(existing.createdAt),
+				updatedAt: new Date(),
+			};
+
+			// Handle explicit null values for clearing fields
+			// Use empty string '' as sentinel to indicate "clear this field to null"
+			if (item.driverId === "") {
+				updateData.driverId = null;
+			}
+			if (item.cancelReason === "") {
+				updateData.cancelReason = null;
+			}
+
 			const [operation] = await opts.tx
 				.update(tables.order)
-				.set({
-					...item,
-					deliveryOtp: deliveryOtp ?? item.deliveryOtp,
-					basePrice: existing.basePrice
-						? toStringNumberSafe(existing.basePrice)
-						: undefined,
-					totalPrice: item.totalPrice
-						? toStringNumberSafe(item.totalPrice)
-						: undefined,
-					tip: item.tip ? toStringNumberSafe(item.tip) : undefined,
-					acceptedAt: existing.acceptedAt
-						? new Date(existing.acceptedAt)
-						: null,
-					discountAmount: item.discountAmount
-						? toStringNumberSafe(item.discountAmount)
-						: undefined,
-					platformCommission: item.platformCommission
-						? toStringNumberSafe(item.platformCommission)
-						: undefined,
-					driverEarning: item.driverEarning
-						? toStringNumberSafe(item.driverEarning)
-						: undefined,
-					merchantCommission: item.merchantCommission
-						? toStringNumberSafe(item.merchantCommission)
-						: undefined,
-					arrivedAt: existing.arrivedAt ? new Date(existing.arrivedAt) : null,
-					createdAt: new Date(existing.createdAt),
-					updatedAt: new Date(),
-				})
+				.set(updateData)
 				.where(eq(tables.order.id, id))
 				.returning({ id: tables.order.id });
 

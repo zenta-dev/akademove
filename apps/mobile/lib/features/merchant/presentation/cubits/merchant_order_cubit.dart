@@ -23,13 +23,271 @@ class MerchantOrderCubit extends BaseCubit<MerchantOrderState> {
   final NotificationService _notificationService;
 
   String? _orderId;
+  String? _merchantId;
+
+  /// WebSocket key for merchant-level order notifications
+  static const _merchantWsKeyPrefix = 'merchant-orders';
+
+  String _getMerchantWsKey(String merchantId) =>
+      '$_merchantWsKeyPrefix-$merchantId';
 
   void reset() => emit(const MerchantOrderState());
 
   @override
   Future<void> close() {
     unsubscribeFromOrder();
+    unsubscribeFromMerchantOrders();
     return super.close();
+  }
+
+  /// Subscribe to merchant-level WebSocket for real-time incoming order notifications
+  ///
+  /// This connects to `/ws/merchant/{merchantId}/orders` and receives events like:
+  /// - NEW_ORDER: When a new food order is placed for this merchant
+  /// - ORDER_CANCELLED: When an order is cancelled
+  /// - DRIVER_ASSIGNED: When a driver is assigned to pick up the order
+  /// - ORDER_COMPLETED: When an order is completed
+  /// - ORDER_STATUS_CHANGED: When order status changes
+  Future<void> subscribeToMerchantOrders(String merchantId) async {
+    _merchantId = merchantId;
+    final wsKey = _getMerchantWsKey(merchantId);
+
+    try {
+      logger.i(
+        '[MerchantOrderCubit] - Subscribing to merchant WebSocket: $merchantId',
+      );
+
+      await _webSocketService.connect(
+        wsKey,
+        '${UrlConstants.wsBaseUrl}/merchant/$merchantId/orders',
+        onMessage: (dynamic msg) {
+          try {
+            final json = jsonDecode(msg.toString()) as Map<String, dynamic>;
+            final envelope = MerchantEnvelope.fromJson(json);
+            _handleMerchantUpdate(envelope);
+          } catch (e, st) {
+            logger.e(
+              '[MerchantOrderCubit] - Failed to parse merchant WebSocket message',
+              error: e,
+              stackTrace: st,
+            );
+          }
+        },
+        autoReconnect: true,
+      );
+
+      emit(state.copyWith(isMerchantWsConnected: true));
+    } catch (e, st) {
+      logger.e(
+        '[MerchantOrderCubit] - Failed to subscribe to merchant WebSocket',
+        error: e,
+        stackTrace: st,
+      );
+      emit(state.copyWith(isMerchantWsConnected: false));
+    }
+  }
+
+  /// Handle incoming merchant WebSocket updates
+  void _handleMerchantUpdate(MerchantEnvelope envelope) {
+    logger.d(
+      '[MerchantOrderCubit] - Received merchant WebSocket update: ${envelope.e}',
+    );
+
+    switch (envelope.e) {
+      case MerchantEnvelopeEvent.NEW_ORDER:
+        _handleNewOrderEvent(envelope.p);
+      case MerchantEnvelopeEvent.ORDER_CANCELLED:
+        _handleOrderCancelledEvent(envelope.p);
+      case MerchantEnvelopeEvent.DRIVER_ASSIGNED:
+        _handleDriverAssignedEvent(envelope.p);
+      case MerchantEnvelopeEvent.ORDER_COMPLETED:
+        _handleOrderCompletedEvent(envelope.p);
+      case MerchantEnvelopeEvent.ORDER_STATUS_CHANGED:
+        _handleOrderStatusChangedEvent(envelope.p);
+      case null:
+        logger.w('[MerchantOrderCubit] - Received envelope with null event');
+    }
+  }
+
+  /// Handle NEW_ORDER event - add new order to list and notify merchant
+  void _handleNewOrderEvent(MerchantEnvelopePayload payload) {
+    final newOrder = payload.order;
+    if (newOrder == null) {
+      logger.w('[MerchantOrderCubit] - NEW_ORDER event missing order data');
+      return;
+    }
+
+    logger.i(
+      '[MerchantOrderCubit] - New order received: ${newOrder.id} '
+      '(items: ${payload.itemCount}, total: ${payload.totalAmount})',
+    );
+
+    // Check if order already exists in the list
+    final existingOrders = state.orders.value ?? [];
+    final orderExists = existingOrders.any((o) => o.id == newOrder.id);
+
+    if (!orderExists) {
+      // Add new order to the beginning of the list
+      final updatedList = [newOrder, ...existingOrders];
+      emit(
+        state.copyWith(
+          orders: OperationResult.success(
+            updatedList,
+            message: 'New order received!',
+          ),
+        ),
+      );
+
+      // Notify merchant with haptic feedback and local notification
+      _notifyNewOrder(newOrder);
+    }
+  }
+
+  /// Handle ORDER_CANCELLED event - remove or update order in list
+  void _handleOrderCancelledEvent(MerchantEnvelopePayload payload) {
+    final orderId = payload.orderId;
+    final cancelledOrder = payload.order;
+
+    if (orderId == null && cancelledOrder == null) {
+      logger.w(
+        '[MerchantOrderCubit] - ORDER_CANCELLED event missing order data',
+      );
+      return;
+    }
+
+    final targetOrderId = orderId ?? cancelledOrder?.id;
+    logger.i(
+      '[MerchantOrderCubit] - Order cancelled: $targetOrderId '
+      '(reason: ${payload.cancelReason})',
+    );
+
+    final existingOrders = state.orders.value ?? [];
+
+    if (cancelledOrder != null) {
+      // Update the order with cancelled status
+      final updatedList = existingOrders.map((o) {
+        if (o.id == cancelledOrder.id) {
+          return cancelledOrder;
+        }
+        return o;
+      }).toList();
+
+      emit(
+        state.copyWith(
+          orders: OperationResult.success(
+            updatedList,
+            message: 'Order was cancelled',
+          ),
+          order: state.order.value?.id == cancelledOrder.id
+              ? OperationResult.success(
+                  cancelledOrder,
+                  message: 'Order was cancelled',
+                )
+              : state.order,
+        ),
+      );
+    } else if (targetOrderId != null) {
+      // Just remove the order from active orders list
+      final updatedList = existingOrders
+          .where((o) => o.id != targetOrderId)
+          .toList();
+
+      emit(
+        state.copyWith(
+          orders: OperationResult.success(
+            updatedList,
+            message: 'Order was cancelled',
+          ),
+        ),
+      );
+    }
+  }
+
+  /// Handle DRIVER_ASSIGNED event - update order with driver info
+  void _handleDriverAssignedEvent(MerchantEnvelopePayload payload) {
+    final updatedOrder = payload.order;
+    final orderId = payload.orderId;
+
+    logger.i(
+      '[MerchantOrderCubit] - Driver assigned to order: '
+      '${orderId ?? updatedOrder?.id} (driver: ${payload.driverName})',
+    );
+
+    if (updatedOrder != null) {
+      _updateOrderInList(updatedOrder, message: 'Driver assigned');
+    }
+  }
+
+  /// Handle ORDER_COMPLETED event - update order status
+  void _handleOrderCompletedEvent(MerchantEnvelopePayload payload) {
+    final completedOrder = payload.order;
+    final orderId = payload.orderId;
+
+    logger.i(
+      '[MerchantOrderCubit] - Order completed: ${orderId ?? completedOrder?.id}',
+    );
+
+    if (completedOrder != null) {
+      _updateOrderInList(completedOrder, message: 'Order completed');
+    }
+  }
+
+  /// Handle ORDER_STATUS_CHANGED event - update order status
+  void _handleOrderStatusChangedEvent(MerchantEnvelopePayload payload) {
+    final updatedOrder = payload.order;
+    final orderId = payload.orderId;
+
+    logger.i(
+      '[MerchantOrderCubit] - Order status changed: '
+      '${orderId ?? updatedOrder?.id} -> ${payload.newStatus}',
+    );
+
+    if (updatedOrder != null) {
+      _updateOrderInList(updatedOrder);
+    }
+  }
+
+  /// Helper to update an order in the orders list
+  void _updateOrderInList(Order updatedOrder, {String? message}) {
+    final existingOrders = state.orders.value ?? [];
+    final orderExists = existingOrders.any((o) => o.id == updatedOrder.id);
+
+    final updatedList = orderExists
+        ? existingOrders.map((o) {
+            if (o.id == updatedOrder.id) {
+              return updatedOrder;
+            }
+            return o;
+          }).toList()
+        : [updatedOrder, ...existingOrders];
+
+    emit(
+      state.copyWith(
+        orders: OperationResult.success(updatedList, message: message),
+        order: state.order.value?.id == updatedOrder.id
+            ? OperationResult.success(updatedOrder, message: message)
+            : state.order,
+      ),
+    );
+  }
+
+  /// Unsubscribe from merchant-level WebSocket
+  Future<void> unsubscribeFromMerchantOrders() async {
+    if (_merchantId == null) return;
+
+    try {
+      logger.i('[MerchantOrderCubit] - Unsubscribing from merchant WebSocket');
+      final wsKey = _getMerchantWsKey(_merchantId!);
+      await _webSocketService.disconnect(wsKey);
+      _merchantId = null;
+      emit(state.copyWith(isMerchantWsConnected: false));
+    } catch (e, st) {
+      logger.e(
+        '[MerchantOrderCubit] - Failed to unsubscribe from merchant WebSocket',
+        error: e,
+        stackTrace: st,
+      );
+    }
   }
 
   Future<void> subscribeToOrder(String orderId) async {

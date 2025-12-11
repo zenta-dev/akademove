@@ -319,4 +319,28 @@ export const OrderSpec = {
 				"Successfully retrieved order status history",
 			),
 		),
+
+	// Get active order for current user (order recovery on app reopen)
+	getActive: oc
+		.route({
+			tags: [FEATURE_TAGS.ORDER],
+			method: "GET",
+			path: "/active",
+			inputStructure: "detailed",
+			outputStructure: "detailed",
+		})
+		.input(z.object({}))
+		.output(
+			createSuccesSchema(
+				z
+					.object({
+						order: OrderSchema.optional(),
+						payment: z.unknown().optional(),
+						transaction: z.unknown().optional(),
+						driver: z.unknown().optional(),
+					})
+					.optional(),
+				"Successfully retrieved active order",
+			),
+		),
 };

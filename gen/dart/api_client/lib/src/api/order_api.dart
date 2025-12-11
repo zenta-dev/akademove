@@ -16,6 +16,7 @@ import 'package:api_client/src/model/insert_order_chat_message.dart';
 import 'package:api_client/src/model/merchant_order_accept200_response.dart';
 import 'package:api_client/src/model/order_cancel_request.dart';
 import 'package:api_client/src/model/order_estimate200_response.dart';
+import 'package:api_client/src/model/order_get_active200_response.dart';
 import 'package:api_client/src/model/order_get_status_history200_response.dart';
 import 'package:api_client/src/model/order_list200_response.dart';
 import 'package:api_client/src/model/order_place_order200_response.dart';
@@ -576,6 +577,81 @@ _responseData = rawData == null ? null : deserialize<MerchantOrderAccept200Respo
     }
 
     return Response<MerchantOrderAccept200Response>(
+      data: _responseData,
+      headers: _response.headers,
+      isRedirect: _response.isRedirect,
+      requestOptions: _response.requestOptions,
+      redirects: _response.redirects,
+      statusCode: _response.statusCode,
+      statusMessage: _response.statusMessage,
+      extra: _response.extra,
+    );
+  }
+
+  /// orderGetActive
+  /// 
+  ///
+  /// Parameters:
+  /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
+  /// * [headers] - Can be used to add additional headers to the request
+  /// * [extras] - Can be used to add flags to the request
+  /// * [validateStatus] - A [ValidateStatus] callback that can be used to determine request success based on the HTTP status of the response
+  /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
+  /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
+  ///
+  /// Returns a [Future] containing a [Response] with a [OrderGetActive200Response] as data
+  /// Throws [DioException] if API call or serialization fails
+  Future<Response<OrderGetActive200Response>> orderGetActive({ 
+    CancelToken? cancelToken,
+    Map<String, dynamic>? headers,
+    Map<String, dynamic>? extra,
+    ValidateStatus? validateStatus,
+    ProgressCallback? onSendProgress,
+    ProgressCallback? onReceiveProgress,
+  }) async {
+    final _path = r'/orders/active';
+    final _options = Options(
+      method: r'GET',
+      headers: <String, dynamic>{
+        ...?headers,
+      },
+      extra: <String, dynamic>{
+        'secure': <Map<String, String>>[
+          {
+            'type': 'http',
+            'scheme': 'bearer',
+            'name': 'bearer_auth',
+          },
+        ],
+        ...?extra,
+      },
+      validateStatus: validateStatus,
+    );
+
+    final _response = await _dio.request<Object>(
+      _path,
+      options: _options,
+      cancelToken: cancelToken,
+      onSendProgress: onSendProgress,
+      onReceiveProgress: onReceiveProgress,
+    );
+
+    OrderGetActive200Response? _responseData;
+
+    try {
+      final rawData = _response.data;
+_responseData = rawData == null ? null : deserialize<OrderGetActive200Response, OrderGetActive200Response>(rawData, 'OrderGetActive200Response', growable: true);
+    } catch (error, stackTrace) {
+      throw DioException(
+        requestOptions: _response.requestOptions,
+        response: _response,
+        type: DioExceptionType.unknown,
+        error: error,
+        stackTrace: stackTrace,
+      );
+    }
+
+    return Response<OrderGetActive200Response>(
       data: _responseData,
       headers: _response.headers,
       isRedirect: _response.isRedirect,

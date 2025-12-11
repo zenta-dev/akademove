@@ -248,6 +248,8 @@ import 'package:api_client/src/model/order_envelope_payload_message.dart';
 import 'package:api_client/src/model/order_envelope_payload_no_show.dart';
 import 'package:api_client/src/model/order_envelope_payload_retry_info.dart';
 import 'package:api_client/src/model/order_estimate200_response.dart';
+import 'package:api_client/src/model/order_get_active200_response.dart';
+import 'package:api_client/src/model/order_get_active200_response_data.dart';
 import 'package:api_client/src/model/order_get_status_history200_response.dart';
 import 'package:api_client/src/model/order_item.dart';
 import 'package:api_client/src/model/order_item_item.dart';
@@ -1031,6 +1033,10 @@ final _regMap = RegExp(r'^Map<String,(.*)>$');
           return OrderEnvelopePayloadRetryInfo.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'OrderEstimate200Response':
           return OrderEstimate200Response.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'OrderGetActive200Response':
+          return OrderGetActive200Response.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'OrderGetActive200ResponseData':
+          return OrderGetActive200ResponseData.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'OrderGetStatusHistory200Response':
           return OrderGetStatusHistory200Response.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'OrderItem':

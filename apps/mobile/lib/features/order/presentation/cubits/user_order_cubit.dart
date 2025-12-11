@@ -6,12 +6,15 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
   UserOrderCubit({
     required OrderRepository orderRepository,
     required WebSocketService webSocketService,
+    required KeyValueService keyValueService,
   }) : _orderRepository = orderRepository,
        _webSocketService = webSocketService,
+       _keyValueService = keyValueService,
        super(const UserOrderState());
 
   final OrderRepository _orderRepository;
   final WebSocketService _webSocketService;
+  final KeyValueService _keyValueService;
 
   String? _paymentId;
   String? _orderId;
@@ -32,6 +35,125 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
 
   void setLocation({Place? pickup, Place? dropoff}) {
     emit(state.copyWith(pickupLocation: pickup, dropoffLocation: dropoff));
+  }
+
+  /// Check if there's an active order for the current user and recover the state
+  /// This should be called when the app is reopened or after authentication
+  /// Returns true if an active order was found and recovered
+  Future<bool> recoverActiveOrder() async {
+    try {
+      return await taskManager.execute('UOC-rao', () async {
+        logger.d('[UserOrderCubit] Checking for active order to recover...');
+
+        final res = await _orderRepository.getActiveOrder();
+        final activeOrder = res.data;
+
+        if (activeOrder == null) {
+          logger.d('[UserOrderCubit] No active order found');
+          // Clear any stored active order ID
+          await _keyValueService.remove(KeyValueKeys.activeOrderId);
+          return false;
+        }
+
+        logger.i(
+          '[UserOrderCubit] Found active order: ${activeOrder.order.id} '
+          'with status: ${activeOrder.order.status}',
+        );
+
+        // Store the active order ID for future reference
+        await _keyValueService.set(
+          KeyValueKeys.activeOrderId,
+          activeOrder.order.id,
+        );
+
+        _orderId = activeOrder.order.id;
+
+        // Emit the recovered state
+        emit(
+          state.copyWith(
+            currentOrder: OperationResult.success(activeOrder.order),
+            currentPayment: activeOrder.payment != null
+                ? OperationResult.success(activeOrder.payment!)
+                : const OperationResult.idle(),
+            currentTransaction: activeOrder.transaction != null
+                ? OperationResult.success(activeOrder.transaction!)
+                : const OperationResult.idle(),
+            currentAssignedDriver: activeOrder.driver != null
+                ? OperationResult.success(activeOrder.driver)
+                : const OperationResult.idle(),
+          ),
+        );
+
+        // Setup appropriate WebSocket connections based on order status
+        final status = activeOrder.order.status;
+        final orderType = activeOrder.order.type;
+        final paymentStatus = activeOrder.payment?.status;
+
+        if (status == OrderStatus.REQUESTED) {
+          // For FOOD orders with successful payment, connect to order WebSocket
+          // to receive merchant updates (ACCEPTED, PREPARING, READY)
+          if (orderType == OrderType.FOOD &&
+              paymentStatus == TransactionStatus.SUCCESS) {
+            await _setupLiveOrderWebsocket(orderId: activeOrder.order.id);
+          } else if (activeOrder.payment != null) {
+            // Order is waiting for payment, setup payment WebSocket
+            _paymentId = activeOrder.payment!.id;
+            await _setupPaymentWebsocket(paymentId: activeOrder.payment!.id);
+          }
+        } else if (status == OrderStatus.MATCHING) {
+          // Order is waiting for driver, setup driver pool WebSocket
+          await _setupFindDriverWebsocket();
+        } else if ([
+          OrderStatus.ACCEPTED,
+          OrderStatus.PREPARING,
+          OrderStatus.READY_FOR_PICKUP,
+          OrderStatus.ARRIVING,
+          OrderStatus.IN_TRIP,
+        ].contains(status)) {
+          // Order has a driver, setup live order WebSocket
+          await _setupLiveOrderWebsocket(orderId: activeOrder.order.id);
+        }
+
+        return true;
+      });
+    } on BaseError catch (e, st) {
+      logger.e(
+        '[UserOrderCubit] - Error recovering active order: ${e.message}',
+        error: e,
+        stackTrace: st,
+      );
+      // Clear any stored active order ID on error
+      await _keyValueService.remove(KeyValueKeys.activeOrderId);
+      return false;
+    }
+  }
+
+  /// Check if user has an active order without full recovery
+  /// Returns the active order ID if found, null otherwise
+  Future<String?> checkActiveOrderId() async {
+    try {
+      final res = await _orderRepository.getActiveOrder();
+      return res.data?.order.id;
+    } catch (e) {
+      logger.e('[UserOrderCubit] - Error checking active order: $e');
+      return null;
+    }
+  }
+
+  /// Clear the active order state and stored ID
+  Future<void> clearActiveOrder() async {
+    await _keyValueService.remove(KeyValueKeys.activeOrderId);
+    await teardownWebsocket();
+    _orderId = null;
+    _paymentId = null;
+    emit(
+      state.copyWith(
+        currentOrder: const OperationResult.idle(),
+        currentPayment: const OperationResult.idle(),
+        currentTransaction: const OperationResult.idle(),
+        currentAssignedDriver: const OperationResult.idle(),
+      ),
+    );
   }
 
   Future<void> list() async => await taskManager.execute('UOC-l1', () async {
@@ -224,7 +346,16 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
           );
 
           await _webSocketService.disconnect(paymentId);
-          await _setupFindDriverWebsocket();
+
+          // For FOOD orders, connect to order WebSocket to receive merchant updates
+          // For RIDE/DELIVERY orders, connect to driver pool for driver matching
+          final currentOrder = state.currentOrder.value;
+          final orderId = _orderId;
+          if (currentOrder?.type == OrderType.FOOD && orderId != null) {
+            await _setupLiveOrderWebsocket(orderId: orderId);
+          } else {
+            await _setupFindDriverWebsocket();
+          }
         }
 
         if (data.e == PaymentEnvelopeEvent.PAYMENT_FAILED) {
@@ -381,6 +512,169 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
               state.copyWith(
                 currentAssignedDriver: OperationResult.success(driver),
               ),
+            );
+          }
+        }
+
+        // Handle order completion - update order status to COMPLETED
+        if (data.e == OrderEnvelopeEvent.COMPLETED) {
+          final detail = data.p.detail;
+          if (detail != null) {
+            emit(
+              state.copyWith(
+                currentOrder: OperationResult.success(detail.order),
+                currentPayment: detail.payment != null
+                    ? OperationResult.success(detail.payment!)
+                    : state.currentPayment,
+                currentTransaction: detail.transaction != null
+                    ? OperationResult.success(detail.transaction!)
+                    : state.currentTransaction,
+              ),
+            );
+            logger.i('[UserOrderCubit] Order completed: ${detail.order.id}');
+          }
+        }
+
+        // Handle order cancellation events
+        if (data.e == OrderEnvelopeEvent.CANCELED) {
+          final detail = data.p.detail;
+          if (detail != null) {
+            emit(
+              state.copyWith(
+                currentOrder: OperationResult.success(detail.order),
+                currentPayment: detail.payment != null
+                    ? OperationResult.success(detail.payment!)
+                    : state.currentPayment,
+                currentTransaction: detail.transaction != null
+                    ? OperationResult.success(detail.transaction!)
+                    : state.currentTransaction,
+              ),
+            );
+            logger.i(
+              '[UserOrderCubit] Order cancelled: ${detail.order.id}, '
+              'reason: ${data.p.cancelReason}',
+            );
+          }
+        }
+
+        // Handle no-show event (driver reported user not present)
+        if (data.e == OrderEnvelopeEvent.NO_SHOW) {
+          final detail = data.p.detail;
+          if (detail != null) {
+            emit(
+              state.copyWith(
+                currentOrder: OperationResult.success(detail.order),
+                currentPayment: detail.payment != null
+                    ? OperationResult.success(detail.payment!)
+                    : state.currentPayment,
+                currentTransaction: detail.transaction != null
+                    ? OperationResult.success(detail.transaction!)
+                    : state.currentTransaction,
+              ),
+            );
+            logger.i(
+              '[UserOrderCubit] No-show reported for order: ${detail.order.id}',
+            );
+          }
+        }
+
+        // Handle driver cancelled and rematching event
+        if (data.e == OrderEnvelopeEvent.DRIVER_CANCELLED_REMATCHING) {
+          final retryInfo = data.p.retryInfo;
+          if (retryInfo != null) {
+            // Clear current driver and update order to MATCHING status
+            emit(
+              state.copyWith(
+                currentAssignedDriver: const OperationResult.idle(),
+              ),
+            );
+            logger.i(
+              '[UserOrderCubit] Driver cancelled, rematching: ${retryInfo.orderId}',
+            );
+          }
+        }
+
+        // Handle merchant accepted event (FOOD orders)
+        if (data.e == OrderEnvelopeEvent.MERCHANT_ACCEPTED) {
+          final detail = data.p.detail;
+          if (detail != null) {
+            emit(
+              state.copyWith(
+                currentOrder: OperationResult.success(detail.order),
+                currentPayment: detail.payment != null
+                    ? OperationResult.success(detail.payment!)
+                    : state.currentPayment,
+                currentTransaction: detail.transaction != null
+                    ? OperationResult.success(detail.transaction!)
+                    : state.currentTransaction,
+              ),
+            );
+            logger.i(
+              '[UserOrderCubit] Merchant accepted order: ${detail.order.id}',
+            );
+          }
+        }
+
+        // Handle merchant preparing event (FOOD orders)
+        if (data.e == OrderEnvelopeEvent.MERCHANT_PREPARING) {
+          final detail = data.p.detail;
+          if (detail != null) {
+            emit(
+              state.copyWith(
+                currentOrder: OperationResult.success(detail.order),
+                currentPayment: detail.payment != null
+                    ? OperationResult.success(detail.payment!)
+                    : state.currentPayment,
+                currentTransaction: detail.transaction != null
+                    ? OperationResult.success(detail.transaction!)
+                    : state.currentTransaction,
+              ),
+            );
+            logger.i(
+              '[UserOrderCubit] Merchant preparing order: ${detail.order.id}',
+            );
+          }
+        }
+
+        // Handle merchant ready event (FOOD orders - triggers driver matching)
+        if (data.e == OrderEnvelopeEvent.MERCHANT_READY) {
+          final detail = data.p.detail;
+          if (detail != null) {
+            emit(
+              state.copyWith(
+                currentOrder: OperationResult.success(detail.order),
+                currentPayment: detail.payment != null
+                    ? OperationResult.success(detail.payment!)
+                    : state.currentPayment,
+                currentTransaction: detail.transaction != null
+                    ? OperationResult.success(detail.transaction!)
+                    : state.currentTransaction,
+              ),
+            );
+            logger.i(
+              '[UserOrderCubit] Merchant ready, driver matching started: ${detail.order.id}',
+            );
+          }
+        }
+
+        // Handle merchant rejected event (FOOD orders)
+        if (data.e == OrderEnvelopeEvent.MERCHANT_REJECTED) {
+          final detail = data.p.detail;
+          if (detail != null) {
+            emit(
+              state.copyWith(
+                currentOrder: OperationResult.success(detail.order),
+                currentPayment: detail.payment != null
+                    ? OperationResult.success(detail.payment!)
+                    : state.currentPayment,
+                currentTransaction: detail.transaction != null
+                    ? OperationResult.success(detail.transaction!)
+                    : state.currentTransaction,
+              ),
+            );
+            logger.i(
+              '[UserOrderCubit] Merchant rejected order: ${detail.order.id}, '
+              'reason: ${data.p.cancelReason}',
             );
           }
         }

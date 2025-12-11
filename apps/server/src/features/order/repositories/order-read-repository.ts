@@ -14,7 +14,9 @@ import {
 import type { UserRole } from "@repo/schema/user";
 import {
 	and,
+	asc,
 	count,
+	desc,
 	eq,
 	gte,
 	ilike,
@@ -23,6 +25,7 @@ import {
 	lte,
 	or,
 	type SQL,
+	sql,
 } from "drizzle-orm";
 import { CACHE_TTLS } from "@/core/constants";
 import { RepositoryError } from "@/core/error";
@@ -161,7 +164,21 @@ export class OrderReadRepository extends OrderBaseRepository {
 	}
 
 	/**
+	 * Active order statuses - orders that are currently in progress
+	 */
+	static readonly ACTIVE_STATUSES: OrderStatus[] = [
+		"REQUESTED",
+		"MATCHING",
+		"ACCEPTED",
+		"PREPARING",
+		"READY_FOR_PICKUP",
+		"ARRIVING",
+		"IN_TRIP",
+	];
+
+	/**
 	 * List orders with pagination, filtering, and search
+	 * For DRIVER role, active orders are prioritized to show on top
 	 */
 	async list(
 		query?: OrderListQuery & {
@@ -188,10 +205,22 @@ export class OrderReadRepository extends OrderBaseRepository {
 		try {
 			const tx = opts?.tx ?? this.db;
 
+			// For DRIVER role, prioritize active orders on top
+			// Uses CASE WHEN to create a sort priority: active orders (0) before completed/cancelled (1)
+			const isActiveOrderCase = sql<number>`CASE WHEN ${tables.order.status} IN (${sql.join(
+				OrderReadRepository.ACTIVE_STATUSES.map((s) => sql`${s}`),
+				sql`, `,
+			)}) THEN 0 ELSE 1 END`;
+
 			const orderBy = (
 				f: typeof tables.order._.columns,
 				op: OrderByOperation,
 			) => {
+				// For DRIVER role, always sort active orders first, then by createdAt desc
+				if (role === "DRIVER") {
+					return [asc(isActiveOrderCase), desc(f.createdAt)];
+				}
+
 				if (sortBy) {
 					const parsed = OrderKeySchema.safeParse(sortBy);
 					const field = parsed.success ? f[parsed.data] : f.id;

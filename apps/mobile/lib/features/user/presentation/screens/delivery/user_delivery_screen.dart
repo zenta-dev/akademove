@@ -36,6 +36,49 @@ class _UserDeliveryScreenState extends State<UserDeliveryScreen> {
         context.read<UserLocationCubit>().clearMapState();
       }
     });
+
+    // Check for active order and redirect if exists
+    _checkActiveOrderAndRedirect();
+  }
+
+  /// Check if user has an active order and redirect to on-trip screen
+  Future<void> _checkActiveOrderAndRedirect() async {
+    final orderCubit = context.read<UserOrderCubit>();
+    final currentOrder = orderCubit.state.currentOrder.value;
+
+    // If there's already an active order in state, check if we should redirect
+    if (currentOrder != null) {
+      final status = currentOrder.status;
+      final activeStatuses = [
+        OrderStatus.REQUESTED,
+        OrderStatus.MATCHING,
+        OrderStatus.ACCEPTED,
+        OrderStatus.PREPARING,
+        OrderStatus.READY_FOR_PICKUP,
+        OrderStatus.ARRIVING,
+        OrderStatus.IN_TRIP,
+      ];
+
+      if (activeStatuses.contains(status) &&
+          currentOrder.type == OrderType.DELIVERY) {
+        // Redirect to on-trip screen
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted) {
+            context.pushReplacementNamed(Routes.userDeliveryOnTrip.name);
+          }
+        });
+        return;
+      }
+    }
+
+    // Check from server for active order
+    final hasActiveOrder = await orderCubit.recoverActiveOrder();
+    if (hasActiveOrder && mounted) {
+      final activeOrder = orderCubit.state.currentOrder.value;
+      if (activeOrder != null && activeOrder.type == OrderType.DELIVERY) {
+        context.pushReplacementNamed(Routes.userDeliveryOnTrip.name);
+      }
+    }
   }
 
   @override

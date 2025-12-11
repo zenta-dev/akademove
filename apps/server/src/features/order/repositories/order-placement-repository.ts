@@ -264,59 +264,97 @@ export class OrderPlacementRepository extends OrderBaseRepository {
 			if (!order)
 				throw new RepositoryError(m.error_failed_retrieve_placed_order());
 
-			// For wallet payments, automatically update order status to MATCHING
+			// For wallet payments, automatically update order status
+			// FOOD orders: Notify merchant first (stay in REQUESTED status until merchant accepts)
+			// RIDE/DELIVERY orders: Move directly to MATCHING for driver matching
 			if (params.payment.method === "wallet" && payment.status === "SUCCESS") {
-				order = await this.#writeRepo.update(
-					order.id,
-					{ status: "MATCHING" },
-					opts,
-				);
-
-				logger.info(
-					{
-						orderId: order.id,
-						userId: params.userId,
-						amount: estimate.totalCost,
-					},
-					"[OrderPlacementRepository] wallet payment successful - Order moved to MATCHING",
-				);
-
-				// Enqueue order timeout job for resilience
-				// This ensures the order will be cancelled if no driver accepts within the timeout period
-				try {
-					const businessConfig = await BusinessConfigurationService.getConfig(
-						this.db,
-						this.kv,
-					);
-
-					const timeoutMinutes = businessConfig.driverMatchingTimeoutMinutes;
-					const timeoutSeconds = timeoutMinutes * 60;
-
-					await OrderQueueService.enqueueOrderTimeout(
+				if (params.type === "FOOD" && merchantId) {
+					// FOOD orders: Notify merchant, stay in REQUESTED status
+					// Driver matching only starts after merchant marks order as READY_FOR_PICKUP
+					logger.info(
 						{
 							orderId: order.id,
 							userId: params.userId,
-							paymentId: payment.id,
-							totalPrice: finalTotalCost,
-							timeoutReason: `No driver found within ${timeoutMinutes} minutes`,
-							processRefund: true,
+							merchantId,
+							amount: estimate.totalCost,
 						},
-						timeoutSeconds,
+						"[OrderPlacementRepository] FOOD order - wallet payment successful - Notifying merchant",
+					);
+
+					// Notify merchant via WebSocket about new order
+					const { MerchantRoom } = await import(
+						"@/features/merchant/merchant-ws"
+					);
+					const merchantStub = MerchantRoom.getRoomStubByName(merchantId);
+					merchantStub.broadcast({
+						e: "NEW_ORDER",
+						f: "s",
+						t: "c",
+						p: {
+							order,
+							orderId: order.id,
+							merchantId,
+							itemCount: params.items?.length ?? 0,
+							totalAmount: finalTotalCost,
+						},
+					});
+				} else {
+					// RIDE/DELIVERY orders: Move to MATCHING for driver matching
+					order = await this.#writeRepo.update(
+						order.id,
+						{ status: "MATCHING" },
+						opts,
 					);
 
 					logger.info(
 						{
 							orderId: order.id,
-							timeoutMinutes,
+							userId: params.userId,
+							amount: estimate.totalCost,
 						},
-						"[OrderPlacementRepository] Order timeout job enqueued",
+						"[OrderPlacementRepository] wallet payment successful - Order moved to MATCHING",
 					);
-				} catch (queueError) {
-					// Log but don't fail the order - the cron fallback will handle stuck orders
-					logger.error(
-						{ error: queueError, orderId: order.id },
-						"[OrderPlacementRepository] Failed to enqueue timeout job - cron will handle",
-					);
+				}
+
+				// Enqueue order timeout job for resilience
+				// This ensures the order will be cancelled if no driver accepts within the timeout period
+				// For FOOD orders, timeout starts from merchant marking order as ready
+				if (params.type !== "FOOD") {
+					try {
+						const businessConfig = await BusinessConfigurationService.getConfig(
+							this.db,
+							this.kv,
+						);
+
+						const timeoutMinutes = businessConfig.driverMatchingTimeoutMinutes;
+						const timeoutSeconds = timeoutMinutes * 60;
+
+						await OrderQueueService.enqueueOrderTimeout(
+							{
+								orderId: order.id,
+								userId: params.userId,
+								paymentId: payment.id,
+								totalPrice: finalTotalCost,
+								timeoutReason: `No driver found within ${timeoutMinutes} minutes`,
+								processRefund: true,
+							},
+							timeoutSeconds,
+						);
+
+						logger.info(
+							{
+								orderId: order.id,
+								timeoutMinutes,
+							},
+							"[OrderPlacementRepository] Order timeout job enqueued",
+						);
+					} catch (queueError) {
+						// Log but don't fail the order - the cron fallback will handle stuck orders
+						logger.error(
+							{ error: queueError, orderId: order.id },
+							"[OrderPlacementRepository] Failed to enqueue timeout job - cron will handle",
+						);
+					}
 				}
 			}
 
@@ -355,7 +393,12 @@ export class OrderPlacementRepository extends OrderBaseRepository {
 			// Only broadcast to driver pool for wallet payments that succeeded immediately
 			// For non-wallet payments (BANK_TRANSFER, QRIS), the webhook handler will broadcast
 			// after payment success to avoid race condition where drivers see unpaid orders
-			if (params.payment.method === "wallet" && payment.status === "SUCCESS") {
+			// For FOOD orders, driver matching only starts after merchant marks order as READY_FOR_PICKUP
+			if (
+				params.payment.method === "wallet" &&
+				payment.status === "SUCCESS" &&
+				params.type !== "FOOD"
+			) {
 				const stub = OrderBaseRepository.getRoomStubByName(DRIVER_POOL_KEY);
 				stub.broadcast({
 					f: "s",

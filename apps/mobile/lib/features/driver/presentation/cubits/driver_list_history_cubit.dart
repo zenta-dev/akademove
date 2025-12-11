@@ -35,46 +35,47 @@ class DriverListHistoryCubit extends BaseCubit<DriverListHistoryState> {
         }
       });
 
-  Future<void> loadMoreOrders({required List<OrderStatus> statuses}) async =>
-      await taskManager.execute(
-        'DHC-lO2-${state.paginationResult?.nextCursor}',
-        () async {
-          try {
-            if (!(state.paginationResult?.hasMore ?? false) ||
-                state.fetchHistoryResult.isLoading) {
-              return;
-            }
-            emit(
-              state.copyWith(
-                fetchHistoryResult: const OperationResult.loading(),
-              ),
-            );
+  Future<void> loadMoreOrders({
+    required List<OrderStatus> statuses,
+    OrderType? type,
+  }) async => await taskManager.execute(
+    'DHC-lO2-${state.paginationResult?.nextCursor}',
+    () async {
+      try {
+        if (!(state.paginationResult?.hasMore ?? false) ||
+            state.fetchHistoryResult.isLoading) {
+          return;
+        }
+        emit(
+          state.copyWith(fetchHistoryResult: const OperationResult.loading()),
+        );
 
-            final orderRes = await _orderRepository.list(
-              ListOrderQuery(
-                limit: 20,
-                cursor: state.paginationResult?.nextCursor,
-                statuses: statuses,
-              ),
-            );
+        final orderRes = await _orderRepository.list(
+          ListOrderQuery(
+            limit: 20,
+            cursor: state.paginationResult?.nextCursor,
+            statuses: statuses,
+            type: type,
+          ),
+        );
 
-            final updatedOrders = [...state.orders, ...orderRes.data];
+        final updatedOrders = [...state.orders, ...orderRes.data];
 
-            emit(
-              state.copyWith(
-                fetchHistoryResult: OperationResult.success(updatedOrders),
-                orders: updatedOrders,
-                paginationResult: orderRes.paginationResult,
-              ),
-            );
-          } on BaseError catch (e, st) {
-            logger.e(
-              '[DriverHistoryCubit] - Error loading more orders: ${e.message}',
-              error: e,
-              stackTrace: st,
-            );
-            emit(state.copyWith(fetchHistoryResult: OperationResult.failed(e)));
-          }
-        },
-      );
+        emit(
+          state.copyWith(
+            fetchHistoryResult: OperationResult.success(updatedOrders),
+            orders: updatedOrders,
+            paginationResult: orderRes.paginationResult,
+          ),
+        );
+      } on BaseError catch (e, st) {
+        logger.e(
+          '[DriverHistoryCubit] - Error loading more orders: ${e.message}',
+          error: e,
+          stackTrace: st,
+        );
+        emit(state.copyWith(fetchHistoryResult: OperationResult.failed(e)));
+      }
+    },
+  );
 }

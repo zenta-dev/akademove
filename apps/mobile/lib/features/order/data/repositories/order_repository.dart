@@ -4,6 +4,7 @@ import 'package:api_client/api_client.dart';
 class ListOrderQuery extends UnifiedQuery {
   const ListOrderQuery({
     required this.statuses,
+    this.type,
     super.limit,
     super.page,
     super.cursor,
@@ -13,9 +14,11 @@ class ListOrderQuery extends UnifiedQuery {
   });
 
   final List<OrderStatus> statuses;
+  final OrderType? type;
 
   ListOrderQuery copyWith({
     List<OrderStatus>? statuses,
+    OrderType? type,
     int? limit,
     int? page,
     String? cursor,
@@ -25,6 +28,7 @@ class ListOrderQuery extends UnifiedQuery {
   }) {
     return ListOrderQuery(
       statuses: statuses ?? this.statuses,
+      type: type ?? this.type,
       limit: limit ?? this.limit,
       page: page ?? this.page,
       cursor: cursor ?? this.cursor,
@@ -51,6 +55,7 @@ class OrderRepository extends BaseRepository {
         order: query.orderBy,
         mode: PaginationMode.cursor,
         statuses: query.statuses.map((v) => v.value).toList(),
+        type: query.type?.value,
       );
 
       final data =
@@ -298,4 +303,88 @@ class OrderRepository extends BaseRepository {
       return SuccessResponse(message: data.message, data: data.data);
     });
   }
+
+  /// Get the active order for the current user (for order recovery on app reopen)
+  /// GET /api/orders/active
+  /// Returns the active order with associated payment, transaction, and driver
+  Future<BaseResponse<ActiveOrderResponse?>> getActiveOrder() {
+    return guard(() async {
+      final res = await _apiClient.dio.get<Map<String, dynamic>>(
+        '/orders/active',
+      );
+
+      final data = res.data;
+      if (data == null) {
+        throw const RepositoryError(
+          'Failed to get active order',
+          code: ErrorCode.unknown,
+        );
+      }
+
+      final body = data['body'] as Map<String, dynamic>?;
+      if (body == null) {
+        throw const RepositoryError(
+          'Invalid response format',
+          code: ErrorCode.unknown,
+        );
+      }
+
+      final orderData = body['data'] as Map<String, dynamic>?;
+      if (orderData == null) {
+        // No active order found
+        return SuccessResponse(
+          message: body['message'] as String? ?? 'No active order found',
+          data: null,
+        );
+      }
+
+      // Parse the active order response
+      final orderJson = orderData['order'] as Map<String, dynamic>?;
+      final paymentJson = orderData['payment'] as Map<String, dynamic>?;
+      final transactionJson = orderData['transaction'] as Map<String, dynamic>?;
+      final driverJson = orderData['driver'] as Map<String, dynamic>?;
+
+      final order = orderJson != null ? Order.fromJson(orderJson) : null;
+      final payment = paymentJson != null
+          ? Payment.fromJson(paymentJson)
+          : null;
+      final transaction = transactionJson != null
+          ? Transaction.fromJson(transactionJson)
+          : null;
+      final driver = driverJson != null ? Driver.fromJson(driverJson) : null;
+
+      if (order == null) {
+        return SuccessResponse(
+          message: body['message'] as String? ?? 'No active order found',
+          data: null,
+        );
+      }
+
+      return SuccessResponse(
+        message:
+            body['message'] as String? ?? 'Successfully retrieved active order',
+        data: ActiveOrderResponse(
+          order: order,
+          payment: payment,
+          transaction: transaction,
+          driver: driver,
+        ),
+      );
+    });
+  }
+}
+
+/// Response model for active order recovery
+class ActiveOrderResponse {
+  const ActiveOrderResponse({
+    required this.order,
+    this.payment,
+    this.transaction,
+    this.driver,
+  });
+
+  final Order order;
+  final Payment? payment;
+  final Transaction? transaction;
+  final Driver? driver;
 }

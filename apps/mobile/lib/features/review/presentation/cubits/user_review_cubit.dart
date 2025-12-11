@@ -49,12 +49,16 @@ class UserReviewCubit extends BaseCubit<UserReviewState> {
 
   /// Check if user can review an order
   Future<void> checkCanReview(
-    String orderId,
-  ) async => await taskManager.execute('URC-cCR1-$orderId', () async {
+    String orderId, {
+    required String currentUserId,
+  }) async => await taskManager.execute('URC-cCR1-$orderId', () async {
     try {
       emit(state.copyWith(canReview: const OperationResult.loading()));
 
-      final res = await _reviewRepository.canReviewOrder(orderId: orderId);
+      final res = await _reviewRepository.canReviewOrder(
+        orderId: orderId,
+        currentUserId: currentUserId,
+      );
 
       emit(
         state.copyWith(

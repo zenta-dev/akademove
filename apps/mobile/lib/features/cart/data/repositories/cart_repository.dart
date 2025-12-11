@@ -37,6 +37,7 @@ class CartRepository extends BaseRepository {
     required String merchantName,
     int quantity = 1,
     String? notes,
+    Coordinate? merchantLocation,
   }) async {
     return guard(() async {
       final currentCart = await getCart();
@@ -64,6 +65,7 @@ class CartRepository extends BaseRepository {
           totalItems: quantity,
           subtotal: menu.price * quantity,
           lastUpdated: DateTime.now(),
+          merchantLocation: merchantLocation,
         );
       } else {
         // Check merchant conflict
@@ -111,6 +113,7 @@ class CartRepository extends BaseRepository {
           totalItems: totalItems,
           subtotal: subtotal,
           lastUpdated: DateTime.now(),
+          merchantLocation: merchantLocation ?? currentCart.merchantLocation,
         );
       }
 
@@ -176,6 +179,7 @@ class CartRepository extends BaseRepository {
         totalItems: totalItems,
         subtotal: subtotal,
         lastUpdated: DateTime.now(),
+        merchantLocation: currentCart.merchantLocation,
       );
 
       await _saveCart(updatedCart);
@@ -217,6 +221,7 @@ class CartRepository extends BaseRepository {
         totalItems: totalItems,
         subtotal: subtotal,
         lastUpdated: DateTime.now(),
+        merchantLocation: currentCart.merchantLocation,
       );
 
       await _saveCart(updatedCart);
@@ -241,6 +246,7 @@ class CartRepository extends BaseRepository {
     required String merchantName,
     int quantity = 1,
     String? notes,
+    Coordinate? merchantLocation,
   }) async {
     await clearCart();
     return addItem(
@@ -248,6 +254,7 @@ class CartRepository extends BaseRepository {
       merchantName: merchantName,
       quantity: quantity,
       notes: notes,
+      merchantLocation: merchantLocation,
     );
   }
 

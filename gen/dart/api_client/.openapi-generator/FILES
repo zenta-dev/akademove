@@ -314,6 +314,8 @@ doc/OrderEnvelopePayloadMessage.md
 doc/OrderEnvelopePayloadNoShow.md
 doc/OrderEnvelopePayloadRetryInfo.md
 doc/OrderEstimate200Response.md
+doc/OrderGetActive200Response.md
+doc/OrderGetActive200ResponseData.md
 doc/OrderGetStatusHistory200Response.md
 doc/OrderItem.md
 doc/OrderItemItem.md
@@ -801,6 +803,8 @@ lib/src/model/order_envelope_payload_message.dart
 lib/src/model/order_envelope_payload_no_show.dart
 lib/src/model/order_envelope_payload_retry_info.dart
 lib/src/model/order_estimate200_response.dart
+lib/src/model/order_get_active200_response.dart
+lib/src/model/order_get_active200_response_data.dart
 lib/src/model/order_get_status_history200_response.dart
 lib/src/model/order_item.dart
 lib/src/model/order_item_item.dart
@@ -957,10 +961,9 @@ lib/src/model/weight_size.dart
 lib/src/model/withdraw_request.dart
 lib/src/model/withdraw_response.dart
 pubspec.yaml
-test/merchant_operating_hours_bulk_upsert_request_test.dart
-test/merchant_operating_hours_create200_response_test.dart
-test/merchant_operating_hours_create_request_test.dart
-test/merchant_operating_hours_key_test.dart
-test/merchant_operating_hours_list200_response_test.dart
-test/merchant_operating_hours_test.dart
-test/merchant_operating_hours_update_request_test.dart
+test/merchant_envelope_action_test.dart
+test/merchant_envelope_event_test.dart
+test/merchant_envelope_payload_test.dart
+test/merchant_envelope_test.dart
+test/order_get_active200_response_data_test.dart
+test/order_get_active200_response_test.dart

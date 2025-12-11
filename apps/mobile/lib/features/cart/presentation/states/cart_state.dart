@@ -11,6 +11,7 @@ class CartState extends Equatable {
     this.placeFoodOrderResult = const OperationResult.idle(),
     this.pendingItem,
     this.pendingMerchantName,
+    this.pendingMerchantLocation,
     this.showMerchantConflict = false,
   });
 
@@ -40,6 +41,9 @@ class CartState extends Equatable {
 
   /// Pending merchant name (when merchant conflict detected)
   final String? pendingMerchantName;
+
+  /// Pending merchant location (when merchant conflict detected)
+  final Coordinate? pendingMerchantLocation;
 
   /// Whether to show merchant conflict dialog
   final bool showMerchantConflict;
@@ -89,6 +93,7 @@ class CartState extends Equatable {
     placeFoodOrderResult,
     pendingItem,
     pendingMerchantName,
+    pendingMerchantLocation,
     showMerchantConflict,
   ];
 
@@ -102,6 +107,7 @@ class CartState extends Equatable {
     OperationResult<PlaceOrderResponse>? placeFoodOrderResult,
     CartItem? pendingItem,
     String? pendingMerchantName,
+    Coordinate? pendingMerchantLocation,
     bool? showMerchantConflict,
     bool clearPending = false,
   }) {
@@ -117,6 +123,9 @@ class CartState extends Equatable {
       pendingMerchantName: clearPending
           ? null
           : (pendingMerchantName ?? this.pendingMerchantName),
+      pendingMerchantLocation: clearPending
+          ? null
+          : (pendingMerchantLocation ?? this.pendingMerchantLocation),
       showMerchantConflict: clearPending
           ? false
           : (showMerchantConflict ?? this.showMerchantConflict),

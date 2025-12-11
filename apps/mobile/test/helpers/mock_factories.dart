@@ -67,3 +67,5 @@ class MockOrderChatRepository extends Mock implements OrderChatRepository {}
 // ============================================================================
 
 class MockWebSocketService extends Mock implements WebSocketService {}
+
+class MockKeyValueService extends Mock implements KeyValueService {}

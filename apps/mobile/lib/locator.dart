@@ -202,6 +202,7 @@ void _setupCubit() {
       () => UserOrderCubit(
         orderRepository: sl<OrderRepository>(),
         webSocketService: sl<WebSocketService>(),
+        keyValueService: sl<KeyValueService>(),
       ),
     )
     ..registerFactory(

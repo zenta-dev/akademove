@@ -259,13 +259,18 @@ final userRouter = StatefulShellRoute.indexedStack(
             final extra = state.extra as Map<String, dynamic>?;
             final menu = extra?['menu'] as MerchantMenu?;
             final merchantName = extra?['merchantName'] as String?;
+            final merchantLocation = extra?['merchantLocation'] as Coordinate?;
 
             if (menu == null || merchantName == null) {
               // Fallback if data not passed correctly
               return const UserMartScreen();
             }
 
-            return UserMenuDetailScreen(menu: menu, merchantName: merchantName);
+            return UserMenuDetailScreen(
+              menu: menu,
+              merchantName: merchantName,
+              merchantLocation: merchantLocation,
+            );
           },
         ),
         GoRoute(

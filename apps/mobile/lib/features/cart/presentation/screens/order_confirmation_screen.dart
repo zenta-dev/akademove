@@ -3,6 +3,7 @@ import 'package:akademove/features/cart/data/models/cart_models.dart'
     show Cart, CartItem;
 import 'package:akademove/features/cart/presentation/cubits/cart_cubit.dart';
 import 'package:akademove/features/cart/presentation/states/_export.dart';
+import 'package:akademove/features/user/presentation/cubits/_export.dart';
 import 'package:akademove/l10n/l10n.dart';
 import 'package:api_client/api_client.dart' hide Cart, CartItem;
 import 'package:cached_network_image/cached_network_image.dart';
@@ -453,17 +454,28 @@ class _OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
   }
 
   void _placeOrder(BuildContext context, Cart cart) {
-    // For food orders, we need pickup and dropoff locations
-    // For now, use merchant location as pickup and a default dropoff
-    // In production, you would get these from user input or profile
-    const pickupLocation = Coordinate(
-      x: 106.8271,
-      y: -6.1751,
-    ); // Default Jakarta
-    const dropoffLocation = Coordinate(
-      x: 106.8271,
-      y: -6.1751,
-    ); // Same as pickup for now
+    // Get merchant location from cart (pickup location for FOOD orders)
+    // Fallback to user's location if merchant location not available
+    final userLocationCubit = context.read<UserLocationCubit>();
+    final userLocation = userLocationCubit.state.coordinate;
+
+    // Pickup location = merchant location (where food is prepared)
+    // Dropoff location = user's current location (where food is delivered)
+    final pickupLocation = cart.merchantLocation ?? userLocation;
+    final dropoffLocation = userLocation;
+
+    if (pickupLocation == null || dropoffLocation == null) {
+      showToast(
+        context: context,
+        builder: (ctx, overlay) => ctx.buildToast(
+          title: context.l10n.order_confirm_failed,
+          message:
+              'Unable to determine location. Please enable location services.',
+        ),
+        location: ToastLocation.topCenter,
+      );
+      return;
+    }
 
     context.read<CartCubit>().placeFoodOrder(
       pickupLocation: pickupLocation,

@@ -1,6 +1,8 @@
 /// Cart data models for shopping cart functionality
 library;
 
+import 'package:api_client/api_client.dart' show Coordinate;
+
 /// Individual cart item model
 class CartItem {
   CartItem({
@@ -81,9 +83,19 @@ class Cart {
     required this.totalItems,
     required this.subtotal,
     required this.lastUpdated,
+    this.merchantLocation,
   });
 
   factory Cart.fromJson(Map<String, dynamic> json) {
+    Coordinate? location;
+    if (json['merchantLocation'] != null) {
+      final locJson = json['merchantLocation'] as Map<String, dynamic>;
+      location = Coordinate(
+        x: (locJson['x'] as num).toDouble(),
+        y: (locJson['y'] as num).toDouble(),
+      );
+    }
+
     return Cart(
       merchantId: json['merchantId'] as String,
       merchantName: json['merchantName'] as String,
@@ -93,6 +105,7 @@ class Cart {
       totalItems: json['totalItems'] as int,
       subtotal: json['subtotal'] as num,
       lastUpdated: DateTime.parse(json['lastUpdated'] as String),
+      merchantLocation: location,
     );
   }
 
@@ -103,6 +116,9 @@ class Cart {
   final num subtotal;
   final DateTime lastUpdated;
 
+  /// Merchant's location for pickup (FOOD orders)
+  final Coordinate? merchantLocation;
+
   Map<String, dynamic> toJson() {
     return {
       'merchantId': merchantId,
@@ -111,6 +127,31 @@ class Cart {
       'totalItems': totalItems,
       'subtotal': subtotal,
       'lastUpdated': lastUpdated.toIso8601String(),
+      if (merchantLocation != null)
+        'merchantLocation': {
+          'x': merchantLocation!.x,
+          'y': merchantLocation!.y,
+        },
     };
+  }
+
+  Cart copyWith({
+    String? merchantId,
+    String? merchantName,
+    List<CartItem>? items,
+    int? totalItems,
+    num? subtotal,
+    DateTime? lastUpdated,
+    Coordinate? merchantLocation,
+  }) {
+    return Cart(
+      merchantId: merchantId ?? this.merchantId,
+      merchantName: merchantName ?? this.merchantName,
+      items: items ?? this.items,
+      totalItems: totalItems ?? this.totalItems,
+      subtotal: subtotal ?? this.subtotal,
+      lastUpdated: lastUpdated ?? this.lastUpdated,
+      merchantLocation: merchantLocation ?? this.merchantLocation,
+    );
   }
 }

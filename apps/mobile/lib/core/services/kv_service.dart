@@ -1,7 +1,7 @@
 import 'package:akademove/core/_export.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-enum KeyValueKeys { token, fcmToken, themeMode, locale, cart }
+enum KeyValueKeys { token, fcmToken, themeMode, locale, cart, activeOrderId }
 
 abstract class KeyValueService {
   Future<T?> get<T>(KeyValueKeys key);

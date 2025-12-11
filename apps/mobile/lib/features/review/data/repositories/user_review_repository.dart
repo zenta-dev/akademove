@@ -40,7 +40,10 @@ class UserReviewRepository extends BaseRepository {
   }
 
   /// Check if user can review an order
-  Future<BaseResponse<bool>> canReviewOrder({required String orderId}) {
+  Future<BaseResponse<bool>> canReviewOrder({
+    required String orderId,
+    required String currentUserId,
+  }) {
     return guard(() async {
       // Note: This will need to be updated once the server API is regenerated
       // For now, we'll check by trying to get the order reviews
@@ -48,13 +51,12 @@ class UserReviewRepository extends BaseRepository {
         final orderReviews = await getOrderReviews(orderId: orderId);
         // If we can get reviews, the order exists
         // Check if current user already reviewed
+        final hasAlreadyReviewed = orderReviews.data.any(
+          (r) => r.fromUserId == currentUserId,
+        );
         return SuccessResponse(
-          message: 'Can review order',
-          data:
-              orderReviews.data.isEmpty ||
-              !orderReviews.data.any(
-                (r) => r.fromUserId == '',
-              ), // Will be current user
+          message: hasAlreadyReviewed ? 'Already reviewed' : 'Can review order',
+          data: !hasAlreadyReviewed,
         );
       } catch (e) {
         return SuccessResponse(message: 'Cannot review', data: false);

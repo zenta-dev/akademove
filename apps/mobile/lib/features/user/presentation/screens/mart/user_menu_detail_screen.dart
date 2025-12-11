@@ -18,11 +18,13 @@ class UserMenuDetailScreen extends StatefulWidget {
   const UserMenuDetailScreen({
     required this.menu,
     required this.merchantName,
+    this.merchantLocation,
     super.key,
   });
 
   final MerchantMenu menu;
   final String merchantName;
+  final Coordinate? merchantLocation;
 
   @override
   State<UserMenuDetailScreen> createState() => _UserMenuDetailScreenState();
@@ -46,6 +48,7 @@ class _UserMenuDetailScreenState extends State<UserMenuDetailScreen> {
       notes: _notesController.text.trim().isEmpty
           ? null
           : _notesController.text.trim(),
+      merchantLocation: widget.merchantLocation,
     );
   }
 

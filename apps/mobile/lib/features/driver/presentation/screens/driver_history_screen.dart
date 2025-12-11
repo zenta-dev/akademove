@@ -44,9 +44,11 @@ class _DriverHistoryScreenState extends State<DriverHistoryScreen> {
   Future<void> _loadOrders() async {
     try {
       final selectedStatus = _selectedStatus;
+      final selectedType = _selectedType;
       await context.read<DriverListHistoryCubit>().getOrders(
         query: ListOrderQuery(
           statuses: selectedStatus != null ? [selectedStatus] : [],
+          type: selectedType,
           limit: 20,
           cursor: null,
         ),
@@ -65,8 +67,10 @@ class _DriverHistoryScreenState extends State<DriverHistoryScreen> {
   Future<void> _loadMore() async {
     try {
       final selectedStatus = _selectedStatus;
+      final selectedType = _selectedType;
       await context.read<DriverListHistoryCubit>().loadMoreOrders(
         statuses: selectedStatus != null ? [selectedStatus] : [],
+        type: selectedType,
       );
     } catch (e) {
       if (mounted) {}
@@ -91,9 +95,8 @@ class _DriverHistoryScreenState extends State<DriverHistoryScreen> {
   Widget build(BuildContext context) {
     return BlocBuilder<DriverListHistoryCubit, DriverListHistoryState>(
       builder: (context, state) {
-        final filteredOrders = _selectedType == null
-            ? state.orders
-            : state.orders.where((o) => o.type == _selectedType).toList();
+        // Orders are now filtered server-side, no need for client-side filtering
+        final orders = state.orders;
         return MyScaffold(
           headers: [
             DefaultAppBar(
@@ -157,16 +160,16 @@ class _DriverHistoryScreenState extends State<DriverHistoryScreen> {
                       const Divider(),
                       // Order list
                       Expanded(
-                        child: filteredOrders.isEmpty
+                        child: orders.isEmpty
                             ? _buildEmptyState()
                             : ListView.separated(
                                 controller: _scrollController,
                                 padding: EdgeInsets.all(16.dg),
-                                itemCount: filteredOrders.length,
+                                itemCount: orders.length,
                                 separatorBuilder: (context, index) =>
                                     SizedBox(height: 12.h),
                                 itemBuilder: (context, index) {
-                                  if (index >= filteredOrders.length) {
+                                  if (index >= orders.length) {
                                     return const Center(
                                       child: Padding(
                                         padding: EdgeInsets.all(16),
@@ -176,7 +179,7 @@ class _DriverHistoryScreenState extends State<DriverHistoryScreen> {
                                   }
                                   return _buildOrderCard(
                                     context,
-                                    filteredOrders[index],
+                                    orders[index],
                                   );
                                 },
                               ),

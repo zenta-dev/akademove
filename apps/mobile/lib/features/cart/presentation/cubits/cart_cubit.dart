@@ -44,6 +44,7 @@ class CartCubit extends BaseCubit<CartState> {
     required String merchantName,
     required int quantity,
     String? notes,
+    Coordinate? merchantLocation,
   }) async => await taskManager.execute('CC-aI-${menu.id}', () async {
     try {
       // Don't emit loading for add operations to keep UI responsive
@@ -52,6 +53,7 @@ class CartCubit extends BaseCubit<CartState> {
         merchantName: merchantName,
         quantity: quantity,
         notes: notes,
+        merchantLocation: merchantLocation,
       );
 
       result.when(
@@ -83,6 +85,7 @@ class CartCubit extends BaseCubit<CartState> {
               state.copyWith(
                 pendingItem: item,
                 pendingMerchantName: merchantName,
+                pendingMerchantLocation: merchantLocation,
                 showMerchantConflict: true,
               ),
             );
@@ -108,6 +111,7 @@ class CartCubit extends BaseCubit<CartState> {
         try {
           final pendingItem = state.pendingItem;
           final pendingMerchantName = state.pendingMerchantName;
+          final pendingMerchantLocation = state.pendingMerchantLocation;
 
           if (pendingItem == null || pendingMerchantName == null) {
             emit(state.copyWith(clearPending: true));
@@ -135,6 +139,7 @@ class CartCubit extends BaseCubit<CartState> {
             merchantName: pendingMerchantName,
             quantity: pendingItem.quantity,
             notes: pendingItem.notes,
+            merchantLocation: pendingMerchantLocation,
           );
 
           result.when(

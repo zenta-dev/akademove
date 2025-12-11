@@ -294,6 +294,7 @@ class _UserMerchantDetailScreenState extends State<UserMerchantDetailScreen> {
                                   menu: item,
                                   merchantName: merchant.name,
                                   quantity: newQty,
+                                  merchantLocation: merchant.location,
                                 );
                               } else {
                                 _cartCubit.removeItem(item.id);

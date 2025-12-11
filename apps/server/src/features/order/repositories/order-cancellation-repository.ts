@@ -225,12 +225,13 @@ export class OrderCancellationRepository extends OrderBaseRepository {
 		];
 
 		// Update order: reset to MATCHING status and clear driver assignment
+		// Use empty string '' as sentinel to clear fields to null in database
 		const updatedOrder = await this.#writeRepo.update(
 			order.id,
 			{
 				status: "MATCHING",
-				driverId: undefined, // Clear driver assignment
-				cancelReason: undefined, // Clear any previous cancel reason
+				driverId: "", // Clear driver assignment (empty string = null in update)
+				cancelReason: "", // Clear any previous cancel reason (empty string = null in update)
 			},
 			{
 				...opts,
@@ -256,6 +257,39 @@ export class OrderCancellationRepository extends OrderBaseRepository {
 			excludedDriverIds,
 			isRetry: true,
 		});
+
+		// Enqueue a new timeout job for the retry matching
+		// The new timeout starts fresh from now (15 minutes from retry)
+		try {
+			const businessConfig = await BusinessConfigurationService.getConfig(
+				this.db,
+				this.kv,
+			);
+			const timeoutMinutes = businessConfig.driverMatchingTimeoutMinutes;
+			const timeoutSeconds = timeoutMinutes * 60;
+
+			await OrderQueueService.enqueueOrderTimeout(
+				{
+					orderId: order.id,
+					userId: order.userId,
+					totalPrice: order.totalPrice,
+					timeoutReason: `No driver found within ${timeoutMinutes} minutes after driver cancellation`,
+					processRefund: true,
+				},
+				timeoutSeconds,
+			);
+
+			logger.info(
+				{ orderId: order.id, timeoutMinutes },
+				"[OrderCancellationRepository] New timeout job enqueued after driver cancel re-match",
+			);
+		} catch (queueError) {
+			// Log but don't fail - cron fallback will handle stuck orders
+			logger.error(
+				{ error: queueError, orderId: order.id },
+				"[OrderCancellationRepository] Failed to enqueue new timeout job - cron will handle",
+			);
+		}
 
 		// Broadcast DRIVER_CANCELLED_REMATCHING event to notify user via WebSocket
 		try {

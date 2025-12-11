@@ -236,6 +236,7 @@ Class | Method | HTTP request | Description
 [*OrderApi*](doc/OrderApi.md) | [**orderCancelScheduledOrder**](doc/OrderApi.md#ordercancelscheduledorder) | **POST** /orders/scheduled/{id}/cancel | 
 [*OrderApi*](doc/OrderApi.md) | [**orderEstimate**](doc/OrderApi.md#orderestimate) | **POST** /orders/estimate | 
 [*OrderApi*](doc/OrderApi.md) | [**orderGet**](doc/OrderApi.md#orderget) | **GET** /orders/{id} | 
+[*OrderApi*](doc/OrderApi.md) | [**orderGetActive**](doc/OrderApi.md#ordergetactive) | **GET** /orders/active | 
 [*OrderApi*](doc/OrderApi.md) | [**orderGetStatusHistory**](doc/OrderApi.md#ordergetstatushistory) | **GET** /orders/{id}/status-history | 
 [*OrderApi*](doc/OrderApi.md) | [**orderList**](doc/OrderApi.md#orderlist) | **GET** /orders | 
 [*OrderApi*](doc/OrderApi.md) | [**orderListMessages**](doc/OrderApi.md#orderlistmessages) | **GET** /orders/{id}/messages | 
@@ -580,6 +581,8 @@ Class | Method | HTTP request | Description
  - [OrderEnvelopePayloadNoShow](doc/OrderEnvelopePayloadNoShow.md)
  - [OrderEnvelopePayloadRetryInfo](doc/OrderEnvelopePayloadRetryInfo.md)
  - [OrderEstimate200Response](doc/OrderEstimate200Response.md)
+ - [OrderGetActive200Response](doc/OrderGetActive200Response.md)
+ - [OrderGetActive200ResponseData](doc/OrderGetActive200ResponseData.md)
  - [OrderGetStatusHistory200Response](doc/OrderGetStatusHistory200Response.md)
  - [OrderItem](doc/OrderItem.md)
  - [OrderItemItem](doc/OrderItemItem.md)

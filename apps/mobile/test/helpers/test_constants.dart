@@ -126,6 +126,55 @@ class TestConstants {
     'p': {},
   };
 
+  // New WebSocket events for order flow tests
+  static Map<String, Object?> get orderCompletedMessage => {
+    'e': 'COMPLETED',
+    'p': {
+      'detail': {
+        'order': {
+          'id': testOrderId,
+          'userId': testUserId,
+          'type': 'RIDE',
+          'status': 'COMPLETED',
+          'pickupLocation': {'x': testPickupLng, 'y': testPickupLat},
+          'dropoffLocation': {'x': testDropoffLng, 'y': testDropoffLat},
+          'totalPrice': testOrderPrice,
+        },
+        'payment': {'id': testPaymentId, 'status': 'SUCCESS'},
+        'transaction': {'id': testTransactionId, 'status': 'SUCCESS'},
+      },
+    },
+  };
+
+  static Map<String, Object?> get orderNoShowMessage => {
+    'e': 'NO_SHOW',
+    'p': {
+      'detail': {
+        'order': {
+          'id': testOrderId,
+          'userId': testUserId,
+          'type': 'RIDE',
+          'status': 'NO_SHOW',
+          'pickupLocation': {'x': testPickupLng, 'y': testPickupLat},
+          'dropoffLocation': {'x': testDropoffLng, 'y': testDropoffLat},
+          'totalPrice': testOrderPrice,
+        },
+      },
+      'noShow': {
+        'orderId': testOrderId,
+        'driverId': testDriverId,
+        'reason': 'User not present at pickup location',
+      },
+    },
+  };
+
+  static Map<String, Object?> get driverCancelledRematchingMessage => {
+    'e': 'DRIVER_CANCELLED_REMATCHING',
+    'p': {
+      'retryInfo': {'orderId': testOrderId, 'attempt': 1, 'maxAttempts': 3},
+    },
+  };
+
   // Helper to create generic success response map
   static Map<String, Object?> successResponse<T>(T data, {String? message}) => {
     'message': message ?? successMessage,

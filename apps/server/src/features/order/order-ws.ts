@@ -853,6 +853,12 @@ export class OrderRoom extends BaseDurableObject {
 		const opts = { tx };
 
 		try {
+			// Get order before rejecting to access payment info
+			const orderBefore = await this.#repo.order.get(
+				merchantAction.orderId,
+				opts,
+			);
+
 			const updatedOrder = await this.#repo.merchant.order.rejectOrder(
 				merchantAction.orderId,
 				merchantAction.merchantId,
@@ -868,6 +874,26 @@ export class OrderRoom extends BaseDurableObject {
 					reason: merchantAction.reason,
 				},
 				"[OrderRoom] Merchant rejected order",
+			);
+
+			// Process full refund for merchant rejection using OrderRefundService
+			const refundAmount = new Decimal(orderBefore.totalPrice);
+			await OrderRefundService.processRefund(
+				updatedOrder.id,
+				orderBefore.userId,
+				refundAmount,
+				new Decimal(0), // No penalty for merchant rejection
+				opts,
+				merchantAction.reason ?? "Order rejected by merchant",
+			);
+
+			logger.info(
+				{
+					orderId: updatedOrder.id,
+					userId: orderBefore.userId,
+					refundAmount: toNumberSafe(refundAmount.toString()),
+				},
+				"[OrderRoom] Refund processed for merchant rejection",
 			);
 
 			const response: OrderEnvelope = {
@@ -956,18 +982,78 @@ export class OrderRoom extends BaseDurableObject {
 		const opts = { tx };
 
 		try {
-			const updatedOrder = await this.#repo.merchant.order.markReady(
+			// Mark order as ready first
+			const readyOrder = await this.#repo.merchant.order.markReady(
 				merchantAction.orderId,
 				merchantAction.merchantId,
 				opts,
 			);
 
 			logger.info(
-				{ orderId: updatedOrder.id, merchantId: merchantAction.merchantId },
+				{ orderId: readyOrder.id, merchantId: merchantAction.merchantId },
 				"[OrderRoom] Merchant marked order as ready",
 			);
 
-			const response: OrderEnvelope = {
+			// For FOOD orders, now trigger driver matching
+			// Update order status to MATCHING and broadcast to driver pool
+			const updatedOrder = await this.#repo.order.update(
+				readyOrder.id,
+				{ status: "MATCHING" },
+				opts,
+			);
+
+			logger.info(
+				{ orderId: updatedOrder.id },
+				"[OrderRoom] FOOD order moved to MATCHING after merchant ready",
+			);
+
+			// Get payment info for the order using referenceId (orderId)
+			const paymentTransaction =
+				await OrderRefundService.findPaymentTransaction(tx, updatedOrder.id);
+			const payment = paymentTransaction
+				? await OrderRefundService.findPayment(tx, paymentTransaction.id)
+				: null;
+
+			// Enqueue timeout job for driver matching (30 minutes default)
+			try {
+				const { OrderQueueService } = await import("@/core/services/queue");
+				const businessConfig = await BusinessConfigurationService.getConfig(
+					this.#svc.db,
+					this.#svc.kv,
+				);
+
+				const timeoutMinutes = businessConfig.driverMatchingTimeoutMinutes;
+				const timeoutSeconds = timeoutMinutes * 60;
+
+				await OrderQueueService.enqueueOrderTimeout(
+					{
+						orderId: updatedOrder.id,
+						userId: updatedOrder.userId,
+						paymentId: payment?.id,
+						totalPrice: updatedOrder.totalPrice,
+						timeoutReason: `No driver found within ${timeoutMinutes} minutes`,
+						processRefund: true,
+					},
+					timeoutSeconds,
+				);
+
+				logger.info(
+					{
+						orderId: updatedOrder.id,
+						timeoutMinutes,
+					},
+					"[OrderRoom] FOOD order timeout job enqueued after merchant ready",
+				);
+			} catch (queueError) {
+				// Log but don't fail - cron fallback will handle stuck orders
+				logger.error(
+					{ error: queueError, orderId: updatedOrder.id },
+					"[OrderRoom] Failed to enqueue timeout job - cron will handle",
+				);
+			}
+
+			// Broadcast MERCHANT_READY to user first
+			const readyResponse: OrderEnvelope = {
 				e: "MERCHANT_READY",
 				f: "s",
 				t: "c",
@@ -979,8 +1065,31 @@ export class OrderRoom extends BaseDurableObject {
 					},
 				},
 			};
+			this.broadcast(readyResponse, { excludes: [ws] });
 
-			this.broadcast(response, { excludes: [ws] });
+			// Broadcast to driver pool to start driver matching
+			const { DRIVER_POOL_KEY } = await import("@/core/constants");
+			const { OrderBaseRepository } = await import(
+				"@/features/order/repositories/order-base-repository"
+			);
+			const stub = OrderBaseRepository.getRoomStubByName(DRIVER_POOL_KEY);
+			stub.broadcast({
+				f: "s",
+				t: "s",
+				a: "MATCHING",
+				p: {
+					detail: {
+						order: updatedOrder,
+						payment: data.p.detail?.payment ?? null,
+						transaction: data.p.detail?.transaction ?? null,
+					},
+				},
+			});
+
+			logger.info(
+				{ orderId: updatedOrder.id },
+				"[OrderRoom] Broadcast to driver pool for FOOD order after merchant ready",
+			);
 		} catch (error) {
 			logger.error(
 				{ error, merchantAction },
