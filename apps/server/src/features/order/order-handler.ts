@@ -125,7 +125,7 @@ export const OrderHandler = priv.router({
 				context.user.role === "DRIVER" ||
 				context.user.role === "MERCHANT"
 			) {
-				const order = await context.repo.order.get(params.id, { tx });
+				// const order = await context.repo.order.get(params.id, { tx });
 
 				// Users can only update their own orders
 				// if (context.user.role === "USER" && order.userId !== context.user.id) {
@@ -189,7 +189,7 @@ export const OrderHandler = priv.router({
 	listMessages: priv.listMessages.handler(
 		async ({ context, input: { params, query } }) => {
 			// FIX: Add IDOR protection - users can only view messages for orders they're involved in
-			const order = await context.repo.order.get(params.id);
+			// const order = await context.repo.order.get(params.id);
 
 			// if (context.user.role !== "ADMIN" && context.user.role !== "OPERATOR") {
 			// 	const isOwner = order.userId === context.user.id;
@@ -448,7 +448,7 @@ export const OrderHandler = priv.router({
 		async ({ context, input: { params, body } }) => {
 			return await context.svc.db.transaction(async (tx) => {
 				// Get the order first to verify ownership
-				const order = await context.repo.order.get(params.id, { tx });
+				// const order = await context.repo.order.get(params.id, { tx });
 
 				// Users can only update their own scheduled orders
 				// if (order.userId !== context.user.id) {
@@ -540,29 +540,26 @@ export const OrderHandler = priv.router({
 	getStatusHistory: priv.getStatusHistory.handler(
 		async ({ context, input: { params } }) => {
 			// FIX: Add IDOR protection - users can only view status history for orders they're involved in
-			const order = await context.repo.order.get(params.id);
+			// const order = await context.repo.order.get(params.id);
 
 			if (context.user.role !== "ADMIN" && context.user.role !== "OPERATOR") {
-				const isOwner = order.userId === context.user.id;
-
-				// Check if driver is assigned to this order
-				let isAssignedDriver = false;
-				if (context.user.role === "DRIVER" && order.driverId) {
-					const driver = await context.repo.driver.main.getByUserId(
-						context.user.id,
-					);
-					isAssignedDriver = order.driverId === driver.id;
-				}
-
-				// Check if merchant owns this order
-				let isMerchantOwner = false;
-				if (context.user.role === "MERCHANT" && order.merchantId) {
-					const merchant = await context.repo.merchant.main.getByUserId(
-						context.user.id,
-					);
-					isMerchantOwner = order.merchantId === merchant.id;
-				}
-
+				// const isOwner = order.userId === context.user.id;
+				// // Check if driver is assigned to this order
+				// let isAssignedDriver = false;
+				// if (context.user.role === "DRIVER" && order.driverId) {
+				// 	const driver = await context.repo.driver.main.getByUserId(
+				// 		context.user.id,
+				// 	);
+				// 	isAssignedDriver = order.driverId === driver.id;
+				// }
+				// // Check if merchant owns this order
+				// let isMerchantOwner = false;
+				// if (context.user.role === "MERCHANT" && order.merchantId) {
+				// 	const merchant = await context.repo.merchant.main.getByUserId(
+				// 		context.user.id,
+				// 	);
+				// 	isMerchantOwner = order.merchantId === merchant.id;
+				// }
 				// if (!isOwner && !isAssignedDriver && !isMerchantOwner) {
 				// 	throw new AuthError(m.error_only_update_own_orders(), {
 				// 		code: "FORBIDDEN",
