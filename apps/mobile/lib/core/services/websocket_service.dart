@@ -99,6 +99,7 @@ class WebSocketService with WidgetsBindingObserver {
     bool autoReconnect = true,
   }) async {
     try {
+      logger.d('[WebSocket:$key] Requested connection to $url');
       await disconnect(key);
 
       _configs[key] = _ConnectionConfig(

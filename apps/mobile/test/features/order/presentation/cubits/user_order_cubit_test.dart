@@ -1,6 +1,6 @@
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/order/data/repositories/order_repository.dart';
-import 'package:akademove/features/order/presentation/cubits/user_order_cubit.dart';
+import 'package:akademove/features/user/presentation/cubits/user_order_cubit.dart';
 import 'package:akademove/features/order/presentation/states/_export.dart';
 import 'package:api_client/api_client.dart';
 import 'package:bloc_test/bloc_test.dart';
