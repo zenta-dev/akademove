@@ -72,6 +72,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
   @override
   Widget build(BuildContext context) {
     return MyScaffold(
+      scrollable: true,
       headers: [
         DefaultAppBar(
           title: context.l10n.home,

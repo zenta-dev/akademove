@@ -128,6 +128,7 @@ class _UserDeliveryDetailsScreenState extends State<UserDeliveryDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     return MyScaffold(
+      scrollable: true,
       headers: [
         AppBar(
           padding: EdgeInsets.all(4.dg),

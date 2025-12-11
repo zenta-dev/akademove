@@ -125,90 +125,87 @@ class _UserDeliveryPaymentScreenState extends State<UserDeliveryPaymentScreen> {
         builder: (context, orderState) {
           final estimate = orderState.estimateOrder.value;
 
-          return Padding(
-            padding: EdgeInsets.all(16.w),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              spacing: 16.h,
-              children: [
-                // Order summary
-                if (estimate != null) ...[
-                  Card(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      spacing: 8.h,
-                      children: [
-                        DefaultText(
-                          context.l10n.label_delivery_details,
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w600,
-                        ),
-                        _buildDetailRow(
-                          context,
-                          context.l10n.label_from,
-                          estimate.pickup.vicinity,
-                        ),
-                        _buildDetailRow(
-                          context,
-                          context.l10n.label_to,
-                          estimate.dropoff.vicinity,
-                        ),
-                        const Divider(),
-                        _buildDetailRow(
-                          context,
-                          context.l10n.label_total,
-                          context.formatCurrency(estimate.summary.totalCost),
-                          isBold: true,
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-                // Gender preference
-                PickGenderWidget(
-                  value: gender,
-                  onChanged: (val) => setState(() {
-                    gender = val;
-                  }),
-                ),
-                // Payment method
-                DefaultText(
-                  context.l10n.title_payment_method,
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.w500,
-                ),
-                BlocBuilder<UserWalletCubit, UserWalletState>(
-                  builder: (context, walletState) {
-                    return PaymentMethodPickerWidget(
-                      value: method,
-                      onChanged: (val, {BankProvider? bankProvider}) =>
-                          setState(() {
-                            method = val;
-                            this.bankProvider = bankProvider;
-                          }),
-                      bankProvider: bankProvider,
-                      walletBalance:
-                          walletState.myWallet.value?.balance.toDouble() ?? 0,
-                      totalCost: estimate?.summary.totalCost.toDouble() ?? 0,
-                    );
-                  },
-                ),
-                const Spacer(),
-                // Place order button
-                SizedBox(
-                  width: double.infinity,
-                  child: Button.primary(
-                    enabled: !orderState.currentOrder.isLoading,
-                    onPressed: orderState.currentOrder.isLoading
-                        ? null
-                        : _placeOrder,
-                    child: orderState.currentOrder.isLoading
-                        ? const Submiting()
-                        : Text(context.l10n.button_place_order),
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: 16.h,
+            children: [
+              // Order summary
+              if (estimate != null) ...[
+                Card(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    spacing: 8.h,
+                    children: [
+                      DefaultText(
+                        context.l10n.label_delivery_details,
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      _buildDetailRow(
+                        context,
+                        context.l10n.label_from,
+                        estimate.pickup.vicinity,
+                      ),
+                      _buildDetailRow(
+                        context,
+                        context.l10n.label_to,
+                        estimate.dropoff.vicinity,
+                      ),
+                      const Divider(),
+                      _buildDetailRow(
+                        context,
+                        context.l10n.label_total,
+                        context.formatCurrency(estimate.summary.totalCost),
+                        isBold: true,
+                      ),
+                    ],
                   ),
                 ),
               ],
-            ),
+              // Gender preference
+              PickGenderWidget(
+                value: gender,
+                onChanged: (val) => setState(() {
+                  gender = val;
+                }),
+              ),
+              // Payment method
+              DefaultText(
+                context.l10n.title_payment_method,
+                fontSize: 16.sp,
+                fontWeight: FontWeight.w500,
+              ),
+              BlocBuilder<UserWalletCubit, UserWalletState>(
+                builder: (context, walletState) {
+                  return PaymentMethodPickerWidget(
+                    value: method,
+                    onChanged: (val, {BankProvider? bankProvider}) =>
+                        setState(() {
+                          method = val;
+                          this.bankProvider = bankProvider;
+                        }),
+                    bankProvider: bankProvider,
+                    walletBalance:
+                        walletState.myWallet.value?.balance.toDouble() ?? 0,
+                    totalCost: estimate?.summary.totalCost.toDouble() ?? 0,
+                  );
+                },
+              ),
+              const Spacer(),
+              // Place order button
+              SizedBox(
+                width: double.infinity,
+                child: Button.primary(
+                  enabled: !orderState.currentOrder.isLoading,
+                  onPressed: orderState.currentOrder.isLoading
+                      ? null
+                      : _placeOrder,
+                  child: orderState.currentOrder.isLoading
+                      ? const Submiting()
+                      : Text(context.l10n.button_place_order),
+                ),
+              ),
+            ],
           );
         },
       ),

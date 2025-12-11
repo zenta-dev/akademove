@@ -8,7 +8,7 @@ class MyScaffold extends StatelessWidget {
     this.controller,
     this.padding,
     this.safeArea = false,
-    this.scrollable = true,
+    this.scrollable = false,
     this.headers = const [],
     this.footers = const [],
     this.loadingProgress,
