@@ -450,9 +450,9 @@ class _UserRideSummaryScreenState extends State<UserRideSummaryScreen> {
                     );
                   case PaymentMethod.wallet:
                     // wallet payment is instant, navigate directly to trip screen
-                    context.popUntilRoot();
                     if (payment.status == TransactionStatus.SUCCESS) {
-                      context.pushReplacementNamed(Routes.userRideOnTrip.name);
+                      context.popUntilRoot();
+                      context.pushNamed(Routes.userRideOnTrip.name);
                     } else {
                       context.showMyToast(
                         context.l10n.toast_wallet_payment_failed,

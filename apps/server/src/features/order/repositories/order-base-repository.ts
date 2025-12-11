@@ -72,6 +72,9 @@ export class OrderBaseRepository extends BaseRepository {
 
 	/**
 	 * Get order from database with related entities
+	 *
+	 * Note: Explicitly excludes driver.currentLocation geometry column to avoid
+	 * EWKB parsing errors when the geometry data is malformed or empty.
 	 */
 	protected async getFromDB(
 		id: string,
@@ -79,13 +82,21 @@ export class OrderBaseRepository extends BaseRepository {
 	): Promise<Order | undefined> {
 		const result = await (opts?.tx ?? this.db).query.order.findFirst({
 			with: {
-				user: true,
-				driver: { with: { user: true } },
-				merchant: true,
+				user: { columns: { name: true } },
+				driver: { columns: {}, with: { user: { columns: { name: true } } } },
+				merchant: { columns: { name: true } },
 			},
 			where: (f, op) => op.eq(f.id, id),
 		});
-		return result ? OrderBaseRepository.composeEntity(result) : undefined;
+		if (!result) return undefined;
+
+		// Type assertion needed because we're selecting specific columns from driver
+		// which changes the inferred type, but it's still compatible with Partial<Driver>
+		return OrderBaseRepository.composeEntity(
+			result as unknown as Parameters<
+				typeof OrderBaseRepository.composeEntity
+			>[0],
+		);
 	}
 
 	/**
