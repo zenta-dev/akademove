@@ -3,8 +3,10 @@ import * as z from "zod";
 import {
 	BankSchema,
 	DateSchema,
+	DayOfWeekSchema,
 	PhoneSchema,
 	type SchemaRegistries,
+	TimeSchema,
 } from "./common.js";
 import { CONSTANTS } from "./constants.js";
 import { extractSchemaKeysAsEnum } from "./enum.helper.js";
@@ -120,6 +122,51 @@ export type InsertMerchantMenu = z.infer<typeof InsertMerchantMenuSchema>;
 export const UpdateMerchantMenuSchema = InsertMerchantMenuSchema.partial();
 export type UpdateMerchantMenu = z.infer<typeof UpdateMerchantMenuSchema>;
 
+export const MerchantOperatingHoursSchema = z.object({
+	id: z.uuid(),
+	merchantId: z.uuid(),
+	dayOfWeek: DayOfWeekSchema,
+	isOpen: z.boolean().describe("Whether the merchant is open on this day"),
+	is24Hours: z
+		.boolean()
+		.describe("Whether the merchant operates 24 hours on this day"),
+	openTime: TimeSchema.optional().describe("Opening time (h: 0-23, m: 0-59)"),
+	closeTime: TimeSchema.optional().describe("Closing time (h: 0-23, m: 0-59)"),
+	createdAt: DateSchema,
+	updatedAt: DateSchema,
+});
+export type MerchantOperatingHours = z.infer<
+	typeof MerchantOperatingHoursSchema
+>;
+
+export const MerchantOperatingHoursKeySchema = extractSchemaKeysAsEnum(
+	MerchantOperatingHoursSchema,
+);
+
+export const InsertMerchantOperatingHoursSchema =
+	MerchantOperatingHoursSchema.omit({
+		id: true,
+		merchantId: true,
+		createdAt: true,
+		updatedAt: true,
+	});
+export type InsertMerchantOperatingHours = z.infer<
+	typeof InsertMerchantOperatingHoursSchema
+>;
+
+export const UpdateMerchantOperatingHoursSchema =
+	InsertMerchantOperatingHoursSchema.partial();
+export type UpdateMerchantOperatingHours = z.infer<
+	typeof UpdateMerchantOperatingHoursSchema
+>;
+
+export const BulkUpsertMerchantOperatingHoursSchema = z.object({
+	hours: z.array(InsertMerchantOperatingHoursSchema),
+});
+export type BulkUpsertMerchantOperatingHours = z.infer<
+	typeof BulkUpsertMerchantOperatingHoursSchema
+>;
+
 export const ActivateMerchantSchema = z.object({
 	id: z.uuid(),
 });
@@ -155,6 +202,14 @@ export const MerchantSchemaRegistries = {
 	MerchantStatus: { schema: MerchantStatusSchema, strategy: "output" },
 	Merchant: { schema: MerchantSchema, strategy: "output" },
 	MerchantMenu: { schema: MerchantMenuSchema, strategy: "output" },
+	MerchantOperatingHours: {
+		schema: MerchantOperatingHoursSchema,
+		strategy: "output",
+	},
 	MerchantKey: { schema: MerchantKeySchema, strategy: "input" },
 	MerchantMenuKey: { schema: MerchantMenuKeySchema, strategy: "input" },
+	MerchantOperatingHoursKey: {
+		schema: MerchantOperatingHoursKeySchema,
+		strategy: "input",
+	},
 } satisfies SchemaRegistries;

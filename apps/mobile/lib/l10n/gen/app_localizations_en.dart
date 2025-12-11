@@ -3525,4 +3525,22 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get copied_to_clipboard => 'Copied to clipboard';
+
+  @override
+  String get merchant_category_atk => 'ATK (Stationery)';
+
+  @override
+  String get merchant_category_printing => 'Printing';
+
+  @override
+  String get merchant_category_food => 'Food & Beverages';
+
+  @override
+  String get placeholder_menu_stock => 'Enter stock quantity';
+
+  @override
+  String get hint_menu_category => 'e.g., Beverages, Snacks, Main Course';
+
+  @override
+  String get toast_error => 'Error';
 }

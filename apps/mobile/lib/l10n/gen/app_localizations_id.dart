@@ -3525,4 +3525,22 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get copied_to_clipboard => 'Disalin ke clipboard';
+
+  @override
+  String get merchant_category_atk => 'ATK (Alat Tulis Kantor)';
+
+  @override
+  String get merchant_category_printing => 'Percetakan';
+
+  @override
+  String get merchant_category_food => 'Makanan & Minuman';
+
+  @override
+  String get placeholder_menu_stock => 'Masukkan jumlah stok';
+
+  @override
+  String get hint_menu_category => 'contoh: Minuman, Camilan, Makanan Utama';
+
+  @override
+  String get toast_error => 'Error';
 }

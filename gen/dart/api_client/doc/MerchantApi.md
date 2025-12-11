@@ -5,7 +5,7 @@
 import 'package:api_client/api.dart';
 ```
 
-All URIs are relative to *http://10.86.19.105:3000/api*
+All URIs are relative to *http://localhost:3000/api*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
@@ -24,6 +24,12 @@ Method | HTTP request | Description
 [**merchantMenuList**](MerchantApi.md#merchantmenulist) | **GET** /merchants/{merchantId}/menus | 
 [**merchantMenuRemove**](MerchantApi.md#merchantmenuremove) | **DELETE** /merchants/{merchantId}/menus/{id} | 
 [**merchantMenuUpdate**](MerchantApi.md#merchantmenuupdate) | **PUT** /merchants/{merchantId}/menus/{id} | 
+[**merchantOperatingHoursBulkUpsert**](MerchantApi.md#merchantoperatinghoursbulkupsert) | **POST** /merchants/{merchantId}/operating-hours/bulk | 
+[**merchantOperatingHoursCreate**](MerchantApi.md#merchantoperatinghourscreate) | **POST** /merchants/{merchantId}/operating-hours | 
+[**merchantOperatingHoursGet**](MerchantApi.md#merchantoperatinghoursget) | **GET** /merchants/{merchantId}/operating-hours/{id} | 
+[**merchantOperatingHoursList**](MerchantApi.md#merchantoperatinghourslist) | **GET** /merchants/{merchantId}/operating-hours | 
+[**merchantOperatingHoursRemove**](MerchantApi.md#merchantoperatinghoursremove) | **DELETE** /merchants/{merchantId}/operating-hours/{id} | 
+[**merchantOperatingHoursUpdate**](MerchantApi.md#merchantoperatinghoursupdate) | **PUT** /merchants/{merchantId}/operating-hours/{id} | 
 [**merchantOrderAccept**](MerchantApi.md#merchantorderaccept) | **POST** /merchants/{merchantId}/orders/{id}/accept | 
 [**merchantOrderMarkPreparing**](MerchantApi.md#merchantordermarkpreparing) | **PUT** /merchants/{merchantId}/orders/{id}/preparing | 
 [**merchantOrderMarkReady**](MerchantApi.md#merchantordermarkready) | **PUT** /merchants/{merchantId}/orders/{id}/ready | 
@@ -733,6 +739,264 @@ Name | Type | Description  | Notes
 ### HTTP request headers
 
  - **Content-Type**: multipart/form-data
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **merchantOperatingHoursBulkUpsert**
+> MerchantOperatingHoursList200Response merchantOperatingHoursBulkUpsert(merchantId, merchantOperatingHoursBulkUpsertRequest)
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getMerchantApi();
+final String merchantId = merchantId_example; // String | 
+final MerchantOperatingHoursBulkUpsertRequest merchantOperatingHoursBulkUpsertRequest = ; // MerchantOperatingHoursBulkUpsertRequest | 
+
+try {
+    final response = api.merchantOperatingHoursBulkUpsert(merchantId, merchantOperatingHoursBulkUpsertRequest);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling MerchantApi->merchantOperatingHoursBulkUpsert: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **merchantId** | **String**|  | 
+ **merchantOperatingHoursBulkUpsertRequest** | [**MerchantOperatingHoursBulkUpsertRequest**](MerchantOperatingHoursBulkUpsertRequest.md)|  | 
+
+### Return type
+
+[**MerchantOperatingHoursList200Response**](MerchantOperatingHoursList200Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **merchantOperatingHoursCreate**
+> MerchantOperatingHoursCreate200Response merchantOperatingHoursCreate(merchantId, merchantOperatingHoursCreateRequest)
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getMerchantApi();
+final String merchantId = merchantId_example; // String | 
+final MerchantOperatingHoursCreateRequest merchantOperatingHoursCreateRequest = ; // MerchantOperatingHoursCreateRequest | 
+
+try {
+    final response = api.merchantOperatingHoursCreate(merchantId, merchantOperatingHoursCreateRequest);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling MerchantApi->merchantOperatingHoursCreate: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **merchantId** | **String**|  | 
+ **merchantOperatingHoursCreateRequest** | [**MerchantOperatingHoursCreateRequest**](MerchantOperatingHoursCreateRequest.md)|  | 
+
+### Return type
+
+[**MerchantOperatingHoursCreate200Response**](MerchantOperatingHoursCreate200Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **merchantOperatingHoursGet**
+> MerchantOperatingHoursCreate200Response merchantOperatingHoursGet(merchantId, id)
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getMerchantApi();
+final String merchantId = merchantId_example; // String | 
+final String id = id_example; // String | 
+
+try {
+    final response = api.merchantOperatingHoursGet(merchantId, id);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling MerchantApi->merchantOperatingHoursGet: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **merchantId** | **String**|  | 
+ **id** | **String**|  | 
+
+### Return type
+
+[**MerchantOperatingHoursCreate200Response**](MerchantOperatingHoursCreate200Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **merchantOperatingHoursList**
+> MerchantOperatingHoursList200Response merchantOperatingHoursList(merchantId)
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getMerchantApi();
+final String merchantId = merchantId_example; // String | 
+
+try {
+    final response = api.merchantOperatingHoursList(merchantId);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling MerchantApi->merchantOperatingHoursList: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **merchantId** | **String**|  | 
+
+### Return type
+
+[**MerchantOperatingHoursList200Response**](MerchantOperatingHoursList200Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **merchantOperatingHoursRemove**
+> BadgeRemove200Response merchantOperatingHoursRemove(merchantId, id)
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getMerchantApi();
+final String merchantId = merchantId_example; // String | 
+final String id = id_example; // String | 
+
+try {
+    final response = api.merchantOperatingHoursRemove(merchantId, id);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling MerchantApi->merchantOperatingHoursRemove: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **merchantId** | **String**|  | 
+ **id** | **String**|  | 
+
+### Return type
+
+[**BadgeRemove200Response**](BadgeRemove200Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **merchantOperatingHoursUpdate**
+> MerchantOperatingHoursCreate200Response merchantOperatingHoursUpdate(merchantId, id, merchantOperatingHoursUpdateRequest)
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getMerchantApi();
+final String merchantId = merchantId_example; // String | 
+final String id = id_example; // String | 
+final MerchantOperatingHoursUpdateRequest merchantOperatingHoursUpdateRequest = ; // MerchantOperatingHoursUpdateRequest | 
+
+try {
+    final response = api.merchantOperatingHoursUpdate(merchantId, id, merchantOperatingHoursUpdateRequest);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling MerchantApi->merchantOperatingHoursUpdate: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **merchantId** | **String**|  | 
+ **id** | **String**|  | 
+ **merchantOperatingHoursUpdateRequest** | [**MerchantOperatingHoursUpdateRequest**](MerchantOperatingHoursUpdateRequest.md)|  | 
+
+### Return type
+
+[**MerchantOperatingHoursCreate200Response**](MerchantOperatingHoursCreate200Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)

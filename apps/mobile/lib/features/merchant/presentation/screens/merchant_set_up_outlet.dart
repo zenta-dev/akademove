@@ -2,48 +2,14 @@ import 'dart:io';
 
 import 'package:akademove/app/router/router.dart';
 import 'package:akademove/core/_export.dart';
+import 'package:akademove/features/features.dart';
 import 'package:akademove/l10n/l10n.dart';
+import 'package:api_client/api_client.dart';
+import 'package:dio/dio.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
-
-// Dummy Outlet Category Enum
-enum OutletCategoryEnum {
-  restaurant,
-  cafe,
-  fastFood,
-  bakery,
-  streetFood,
-  foodTruck,
-  bar,
-  coffeeshop,
-  dessertShop,
-  juiceBar,
-}
-
-// Setup Menu Category Enum (local to this screen)
-enum _SetupMenuCategoryEnum {
-  appetizer,
-  mainCourse,
-  dessert,
-  beverage,
-  snack,
-  breakfast,
-  lunch,
-  dinner,
-  salad,
-  soup,
-  seafood,
-  vegetarian,
-  vegan,
-  pasta,
-  pizza,
-  burger,
-  sandwich,
-  rice,
-  noodle,
-  grill,
-}
 
 abstract class _FormKeys {
   static const FormKey<String> step1OutletPhotoProfile = TextFieldKey(
@@ -62,6 +28,9 @@ abstract class _FormKeys {
   static const FormKey<String> step3MenuPrice = TextFieldKey(
     'step-3-menu-price',
   );
+  static const FormKey<String> step3MenuStock = TextFieldKey(
+    'step-3-menu-stock',
+  );
 }
 
 enum _Step1Docs { outletPhotoProfile }
@@ -71,12 +40,14 @@ enum _Step3Docs { menuPhoto }
 class DailySchedule {
   DailySchedule({
     required this.day,
+    required this.dayOfWeek,
     this.isEnabled = false,
     this.is24Hours = false,
     this.startTime = '10:00',
     this.endTime = '22:00',
   });
   final String day;
+  final DayOfWeek dayOfWeek;
   bool isEnabled;
   bool is24Hours;
   String startTime;
@@ -90,11 +61,33 @@ class DailySchedule {
   }) {
     return DailySchedule(
       day: day,
+      dayOfWeek: dayOfWeek,
       isEnabled: isEnabled ?? this.isEnabled,
       is24Hours: is24Hours ?? this.is24Hours,
       startTime: startTime ?? this.startTime,
       endTime: endTime ?? this.endTime,
     );
+  }
+
+  /// Convert to API request model
+  MerchantOperatingHoursCreateRequest toCreateRequest() {
+    return MerchantOperatingHoursCreateRequest(
+      dayOfWeek: dayOfWeek,
+      isOpen: isEnabled,
+      is24Hours: is24Hours,
+      openTime: is24Hours ? null : _parseTime(startTime),
+      closeTime: is24Hours ? null : _parseTime(endTime),
+    );
+  }
+
+  /// Parse time string (HH:mm) to Time object
+  static Time? _parseTime(String timeStr) {
+    final parts = timeStr.split(':');
+    if (parts.length != 2) return null;
+    final h = int.tryParse(parts[0]);
+    final m = int.tryParse(parts[1]);
+    if (h == null || m == null) return null;
+    return Time(h: h, m: m);
   }
 }
 
@@ -111,8 +104,8 @@ class _MerchantSetUpOutletScreenState extends State<MerchantSetUpOutletScreen> {
   late final FormController _formController;
   late final StepperController _stepController;
 
-  OutletCategoryEnum? _selectedOutletCategory;
-  _SetupMenuCategoryEnum? _selectedMenuCategory;
+  MerchantCategory? _selectedOutletCategory;
+  String? _selectedMenuCategory;
 
   // Image picker state
   final Map<_Step1Docs, File?> _step1Docs = {};
@@ -122,12 +115,19 @@ class _MerchantSetUpOutletScreenState extends State<MerchantSetUpOutletScreen> {
 
   List<DailySchedule> _weeklySchedule = [];
 
+  bool _isLoading = false;
+
   @override
   void initState() {
     super.initState();
     _scrollController = ScrollController();
     _formController = FormController();
     _stepController = StepperController();
+
+    // Load merchant data on init
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<MerchantCubit>().getMine();
+    });
   }
 
   @override
@@ -135,13 +135,34 @@ class _MerchantSetUpOutletScreenState extends State<MerchantSetUpOutletScreen> {
     super.didChangeDependencies();
     if (_weeklySchedule.isEmpty) {
       _weeklySchedule = [
-        DailySchedule(day: context.l10n.day_monday),
-        DailySchedule(day: context.l10n.day_tuesday),
-        DailySchedule(day: context.l10n.day_wednesday),
-        DailySchedule(day: context.l10n.day_thursday),
-        DailySchedule(day: context.l10n.day_friday),
-        DailySchedule(day: context.l10n.day_saturday),
-        DailySchedule(day: context.l10n.day_sunday),
+        DailySchedule(
+          day: context.l10n.day_monday,
+          dayOfWeek: DayOfWeek.MONDAY,
+        ),
+        DailySchedule(
+          day: context.l10n.day_tuesday,
+          dayOfWeek: DayOfWeek.TUESDAY,
+        ),
+        DailySchedule(
+          day: context.l10n.day_wednesday,
+          dayOfWeek: DayOfWeek.WEDNESDAY,
+        ),
+        DailySchedule(
+          day: context.l10n.day_thursday,
+          dayOfWeek: DayOfWeek.THURSDAY,
+        ),
+        DailySchedule(
+          day: context.l10n.day_friday,
+          dayOfWeek: DayOfWeek.FRIDAY,
+        ),
+        DailySchedule(
+          day: context.l10n.day_saturday,
+          dayOfWeek: DayOfWeek.SATURDAY,
+        ),
+        DailySchedule(
+          day: context.l10n.day_sunday,
+          dayOfWeek: DayOfWeek.SUNDAY,
+        ),
       ];
     }
   }
@@ -198,8 +219,8 @@ class _MerchantSetUpOutletScreenState extends State<MerchantSetUpOutletScreen> {
     // Validate form fields
     final formValid = _validateFormFields([
       _FormKeys.step3MenuName,
-      _FormKeys.step3MenuDescription,
       _FormKeys.step3MenuPrice,
+      _FormKeys.step3MenuStock,
     ]);
 
     // Validate menu photo
@@ -215,10 +236,7 @@ class _MerchantSetUpOutletScreenState extends State<MerchantSetUpOutletScreen> {
       });
     }
 
-    // Validate menu category
-    final hasMenuCategory = _selectedMenuCategory != null;
-
-    return formValid && hasMenuPhoto && hasMenuCategory;
+    return formValid && hasMenuPhoto;
   }
 
   void _scrollToTop() {
@@ -240,6 +258,14 @@ class _MerchantSetUpOutletScreenState extends State<MerchantSetUpOutletScreen> {
     );
   }
 
+  Future<MultipartFile?> _fileToMultipart(File? file) async {
+    if (file == null) return null;
+    return MultipartFile.fromFile(
+      file.path,
+      filename: file.path.split('/').last,
+    );
+  }
+
   Future<void> _handleSaveAndNavigateHome() async {
     _scrollToTop();
 
@@ -252,55 +278,165 @@ class _MerchantSetUpOutletScreenState extends State<MerchantSetUpOutletScreen> {
       return;
     }
 
-    // TODO: Integrate with MerchantCubit.updateOutletSetup when API is available
-    // The following data should be sent to the API:
-    // - Step 1: _step1Docs[_Step1Docs.outletPhotoProfile], _selectedOutletCategory
-    // - Step 2: _weeklySchedule (operating hours)
-    // - Step 3: _selectedMenuCategory, _step3Docs[_Step3Docs.menuPhoto], menu details
+    setState(() => _isLoading = true);
 
-    // For now, simulate API call
-    _showToast(
-      context,
-      context.l10n.toast_success,
-      context.l10n.toast_success_set_up_merchant,
-    );
+    try {
+      final merchantState = context.read<MerchantCubit>().state;
+      final merchant = merchantState.mine.data?.value;
 
-    // Navigate to home after a short delay to show the toast
-    Future.delayed(const Duration(milliseconds: 800), () {
-      if (mounted) {
-        context.goNamed(Routes.merchantHome.name);
+      if (merchant == null) {
+        _showToast(
+          context,
+          context.l10n.toast_error,
+          'Merchant data not found. Please try again.',
+        );
+        setState(() => _isLoading = false);
+        return;
       }
-    });
+
+      // Step 1: Update merchant profile (image and category)
+      final outletImage = await _fileToMultipart(
+        _step1Docs[_Step1Docs.outletPhotoProfile],
+      );
+
+      await context.read<MerchantCubit>().setupOutlet(
+        merchantId: merchant.id,
+        category: _selectedOutletCategory,
+        image: outletImage,
+      );
+
+      // Check if outlet setup was successful
+      final setupState = context.read<MerchantCubit>().state.setupOutlet;
+      if (setupState.isFailed) {
+        _showToast(
+          context,
+          context.l10n.toast_error,
+          setupState.error?.message ?? 'Failed to update outlet',
+        );
+        setState(() => _isLoading = false);
+        return;
+      }
+
+      // Step 2: Save operating hours
+      final operatingHours = _weeklySchedule
+          .map((schedule) => schedule.toCreateRequest())
+          .toList();
+
+      await context.read<MerchantCubit>().setupOperatingHours(
+        merchantId: merchant.id,
+        hours: operatingHours,
+      );
+
+      // Check if operating hours setup was successful
+      final operatingHoursState = context
+          .read<MerchantCubit>()
+          .state
+          .setupOperatingHours;
+      if (operatingHoursState.isFailed) {
+        _showToast(
+          context,
+          context.l10n.toast_error,
+          operatingHoursState.error?.message ??
+              'Failed to save operating hours',
+        );
+        setState(() => _isLoading = false);
+        return;
+      }
+
+      // Step 3: Create initial menu item
+      final menuImage = await _fileToMultipart(
+        _step3Docs[_Step3Docs.menuPhoto],
+      );
+      final menuName =
+          (_formController.values[_FormKeys.step3MenuName] as String?) ?? '';
+      final menuPriceStr =
+          (_formController.values[_FormKeys.step3MenuPrice] as String?) ?? '0';
+      final menuStockStr =
+          (_formController.values[_FormKeys.step3MenuStock] as String?) ?? '0';
+      final menuPrice = num.tryParse(menuPriceStr) ?? 0;
+      final menuStock = int.tryParse(menuStockStr) ?? 0;
+
+      await context.read<MerchantMenuCubit>().createMenu(
+        merchantId: merchant.id,
+        name: menuName,
+        price: menuPrice,
+        stock: menuStock,
+        category: _selectedMenuCategory,
+        image: menuImage,
+      );
+
+      setState(() => _isLoading = false);
+
+      _showToast(
+        context,
+        context.l10n.toast_success,
+        context.l10n.toast_success_set_up_merchant,
+      );
+
+      // Navigate to home after a short delay to show the toast
+      Future.delayed(const Duration(milliseconds: 800), () {
+        if (mounted) {
+          context.goNamed(Routes.merchantHome.name);
+        }
+      });
+    } catch (e) {
+      setState(() => _isLoading = false);
+      _showToast(context, context.l10n.toast_error, e.toString());
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        MyScaffold(
-          controller: _scrollController,
-          headers: [DefaultAppBar(title: context.l10n.title_set_up_outlet)],
-          body: Form(
-            controller: _formController,
-            child: Column(
-              children: [
-                Gap(12.h),
-                Stepper(
-                  controller: _stepController,
-                  direction: Axis.horizontal,
-                  variant: StepVariant.line,
-                  size: StepSize.small,
-                  steps: [
-                    _buildStep1(context),
-                    _buildStep2(context),
-                    _buildStep3(context),
-                  ],
-                ),
-              ],
+    return BlocListener<MerchantCubit, MerchantState>(
+      listener: (context, state) {
+        if (state.setupOutlet.isFailed) {
+          _showToast(
+            context,
+            context.l10n.toast_error,
+            state.setupOutlet.error?.message ?? 'Failed to setup outlet',
+          );
+        }
+        if (state.setupOperatingHours.isFailed) {
+          _showToast(
+            context,
+            context.l10n.toast_error,
+            state.setupOperatingHours.error?.message ??
+                'Failed to save operating hours',
+          );
+        }
+      },
+      child: Stack(
+        children: [
+          MyScaffold(
+            controller: _scrollController,
+            headers: [DefaultAppBar(title: context.l10n.title_set_up_outlet)],
+            body: Form(
+              controller: _formController,
+              child: Column(
+                children: [
+                  Gap(12.h),
+                  Stepper(
+                    controller: _stepController,
+                    direction: Axis.horizontal,
+                    variant: StepVariant.line,
+                    size: StepSize.small,
+                    steps: [
+                      _buildStep1(context),
+                      _buildStep2(context),
+                      _buildStep3(context),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
-      ],
+          if (_isLoading)
+            Container(
+              color: Colors.black.withValues(alpha: 0.3),
+              child: const Center(child: CircularProgressIndicator()),
+            ),
+        ],
+      ),
     );
   }
 
@@ -315,14 +451,10 @@ class _MerchantSetUpOutletScreenState extends State<MerchantSetUpOutletScreen> {
             _step1Docs,
             _step1DocsErrors,
           ),
-          _buildEnumSelect<OutletCategoryEnum>(
+          _buildMerchantCategorySelect(
             label: context.l10n.label_outlet_category,
-            key: _FormKeys.step1OutletCategory,
             placeholder: context.l10n.placeholder_outlet_category,
-            icon: LucideIcons.pizza,
             value: _selectedOutletCategory,
-            items: OutletCategoryEnum.values,
-            enabled: true,
             onChanged: (value) =>
                 setState(() => _selectedOutletCategory = value),
           ),
@@ -516,14 +648,10 @@ class _MerchantSetUpOutletScreenState extends State<MerchantSetUpOutletScreen> {
       title: Text(context.l10n.step_3),
       contentBuilder: (context) => _buildStepContainer(
         content: [
-          _buildEnumSelect<_SetupMenuCategoryEnum>(
+          _buildMenuCategoryInput(
             label: context.l10n.label_menu_category,
-            key: _FormKeys.step3MenuCategory,
             placeholder: context.l10n.placeholder_menu_category,
-            icon: LucideIcons.utensils,
             value: _selectedMenuCategory,
-            items: _SetupMenuCategoryEnum.values,
-            enabled: true,
             onChanged: (value) => setState(() => _selectedMenuCategory = value),
           ),
           _buildImagePicker(
@@ -540,17 +668,18 @@ class _MerchantSetUpOutletScreenState extends State<MerchantSetUpOutletScreen> {
             validator: const LengthValidator(min: 3),
           ),
           _buildTextField(
-            key: _FormKeys.step3MenuDescription,
-            label: context.l10n.label_menu_description,
-            placeholder: context.l10n.placeholder_menu_description,
-            icon: LucideIcons.fileText,
-            validator: const LengthValidator(min: 3),
-          ),
-          _buildTextField(
             key: _FormKeys.step3MenuPrice,
             label: context.l10n.label_menu_price,
             placeholder: context.l10n.placeholder_menu_price,
             icon: LucideIcons.dollarSign,
+            validator: const LengthValidator(min: 1),
+            keyboardType: TextInputType.number,
+          ),
+          _buildTextField(
+            key: _FormKeys.step3MenuStock,
+            label: context.l10n.label_menu_stock,
+            placeholder: context.l10n.placeholder_menu_stock,
+            icon: LucideIcons.package,
             validator: const LengthValidator(min: 1),
             keyboardType: TextInputType.number,
           ),
@@ -567,7 +696,7 @@ class _MerchantSetUpOutletScreenState extends State<MerchantSetUpOutletScreen> {
             label: context.l10n.button_save,
             isPrimary: true,
             isTrailing: true,
-            onPressed: _handleSaveAndNavigateHome,
+            onPressed: _isLoading ? () {} : _handleSaveAndNavigateHome,
           ),
         ],
       ),
@@ -669,15 +798,11 @@ class _MerchantSetUpOutletScreenState extends State<MerchantSetUpOutletScreen> {
     );
   }
 
-  Widget _buildEnumSelect<T extends Enum>({
+  Widget _buildMerchantCategorySelect({
     required String label,
-    required FormKey<String> key,
     required String placeholder,
-    required IconData icon,
-    required T? value,
-    required List<T> items,
-    required bool enabled,
-    required void Function(T?) onChanged,
+    required MerchantCategory? value,
+    required void Function(MerchantCategory?) onChanged,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -689,19 +814,19 @@ class _MerchantSetUpOutletScreenState extends State<MerchantSetUpOutletScreen> {
         ),
         SizedBox(
           width: double.infinity,
-          child: Select<T>(
-            enabled: enabled,
-            itemBuilder: (context, item) => Text(_getLocalizedEnumName(item)),
+          child: Select<MerchantCategory>(
+            itemBuilder: (context, item) =>
+                Text(_getMerchantCategoryLabel(item)),
             value: value,
             placeholder: Text(placeholder),
             onChanged: onChanged,
-            popup: SelectPopup<T>(
+            popup: SelectPopup<MerchantCategory>(
               items: SelectItemList(
-                children: items
+                children: MerchantCategory.values
                     .map(
                       (e) => SelectItemButton(
                         value: e,
-                        child: Text(_getLocalizedEnumName(e)),
+                        child: Text(_getMerchantCategoryLabel(e)),
                       ),
                     )
                     .toList(),
@@ -713,82 +838,44 @@ class _MerchantSetUpOutletScreenState extends State<MerchantSetUpOutletScreen> {
     );
   }
 
-  // Helper method to get localized enum names
-  String _getLocalizedEnumName(Enum enumValue) {
-    if (enumValue is OutletCategoryEnum) {
-      switch (enumValue) {
-        case OutletCategoryEnum.restaurant:
-          return context.l10n.outlet_category_restaurant;
-        case OutletCategoryEnum.cafe:
-          return context.l10n.outlet_category_cafe;
-        case OutletCategoryEnum.fastFood:
-          return context.l10n.outlet_category_fast_food;
-        case OutletCategoryEnum.bakery:
-          return context.l10n.outlet_category_bakery;
-        case OutletCategoryEnum.streetFood:
-          return context.l10n.outlet_category_street_food;
-        case OutletCategoryEnum.foodTruck:
-          return context.l10n.outlet_category_food_truck;
-        case OutletCategoryEnum.bar:
-          return context.l10n.outlet_category_bar;
-        case OutletCategoryEnum.coffeeshop:
-          return context.l10n.outlet_category_coffeeshop;
-        case OutletCategoryEnum.dessertShop:
-          return context.l10n.outlet_category_dessert_shop;
-        case OutletCategoryEnum.juiceBar:
-          return context.l10n.outlet_category_juice_bar;
-      }
-    } else if (enumValue is _SetupMenuCategoryEnum) {
-      switch (enumValue) {
-        case _SetupMenuCategoryEnum.appetizer:
-          return context.l10n.menu_category_appetizer;
-        case _SetupMenuCategoryEnum.mainCourse:
-          return context.l10n.menu_category_main_course;
-        case _SetupMenuCategoryEnum.dessert:
-          return context.l10n.menu_category_dessert;
-        case _SetupMenuCategoryEnum.beverage:
-          return context.l10n.menu_category_beverage;
-        case _SetupMenuCategoryEnum.snack:
-          return context.l10n.menu_category_snack;
-        case _SetupMenuCategoryEnum.breakfast:
-          return context.l10n.menu_category_breakfast;
-        case _SetupMenuCategoryEnum.lunch:
-          return context.l10n.menu_category_lunch;
-        case _SetupMenuCategoryEnum.dinner:
-          return context.l10n.menu_category_dinner;
-        case _SetupMenuCategoryEnum.salad:
-          return context.l10n.menu_category_salad;
-        case _SetupMenuCategoryEnum.soup:
-          return context.l10n.menu_category_soup;
-        case _SetupMenuCategoryEnum.seafood:
-          return context.l10n.menu_category_seafood;
-        case _SetupMenuCategoryEnum.vegetarian:
-          return context.l10n.menu_category_vegetarian;
-        case _SetupMenuCategoryEnum.vegan:
-          return context.l10n.menu_category_vegan;
-        case _SetupMenuCategoryEnum.pasta:
-          return context.l10n.menu_category_pasta;
-        case _SetupMenuCategoryEnum.pizza:
-          return context.l10n.menu_category_pizza;
-        case _SetupMenuCategoryEnum.burger:
-          return context.l10n.menu_category_burger;
-        case _SetupMenuCategoryEnum.sandwich:
-          return context.l10n.menu_category_sandwich;
-        case _SetupMenuCategoryEnum.rice:
-          return context.l10n.menu_category_rice;
-        case _SetupMenuCategoryEnum.noodle:
-          return context.l10n.menu_category_noodle;
-        case _SetupMenuCategoryEnum.grill:
-          return context.l10n.menu_category_grill;
-      }
+  String _getMerchantCategoryLabel(MerchantCategory category) {
+    switch (category) {
+      case MerchantCategory.ATK:
+        return context.l10n.merchant_category_atk;
+      case MerchantCategory.printing:
+        return context.l10n.merchant_category_printing;
+      case MerchantCategory.food:
+        return context.l10n.merchant_category_food;
     }
-    // Fallback to formatted enum name if not found
-    final result = enumValue.name.replaceAllMapped(
-      RegExp('([A-Z])'),
-      (match) => ' ${match.group(0)}',
+  }
+
+  Widget _buildMenuCategoryInput({
+    required String label,
+    required String placeholder,
+    required String? value,
+    required void Function(String?) onChanged,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: 8.h,
+      children: [
+        Text(
+          label,
+          style: context.typography.semiBold.copyWith(fontSize: 14.sp),
+        ),
+        TextField(
+          initialValue: value,
+          placeholder: Text(placeholder),
+          onChanged: onChanged,
+        ),
+        Text(
+          context.l10n.hint_menu_category,
+          style: context.typography.small.copyWith(
+            color: context.theme.colorScheme.mutedForeground,
+          ),
+        ),
+      ],
     );
-    return result.trim().substring(0, 1).toUpperCase() +
-        result.trim().substring(1);
   }
 
   Widget _buildImagePicker<T>(

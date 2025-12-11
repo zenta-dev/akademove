@@ -404,6 +404,91 @@ class MerchantRepository extends BaseRepository {
     });
   }
 
+  /// Setup outlet - updates merchant image and category
+  /// This is a simplified update method for the outlet setup wizard
+  /// It fetches current merchant data to get required fields, then updates
+  Future<BaseResponse<Merchant>> setupOutlet({
+    required String merchantId,
+    MerchantCategory? category,
+    MultipartFile? image,
+  }) {
+    return guard(() async {
+      // First, get current merchant data to retrieve required fields
+      final currentMerchant = await getMine();
+      final merchant = currentMerchant.data;
+
+      final res = await _apiClient.getMerchantApi().merchantUpdate(
+        id: merchantId,
+        phoneCountryCode: merchant.phone?.countryCode.value ?? '+62',
+        phoneNumber: merchant.phone?.number ?? 0,
+        locationX: merchant.location?.x ?? 0,
+        locationY: merchant.location?.y ?? 0,
+        bankProvider: merchant.bank.provider.value,
+        bankNumber: merchant.bank.number.toInt(),
+        bankAccountName: merchant.bank.accountName,
+        category: category?.value,
+        image: image,
+      );
+
+      final data =
+          res.data ??
+          (throw const RepositoryError(
+            'Failed to setup outlet',
+            code: ErrorCode.unknown,
+          ));
+
+      return SuccessResponse(message: data.message, data: data.data);
+    });
+  }
+
+  // ========== MERCHANT OPERATING HOURS METHODS ==========
+
+  /// Bulk upsert operating hours for a merchant
+  /// Used in the outlet setup wizard (Step 2) to set weekly operating schedule
+  Future<BaseResponse<List<MerchantOperatingHours>>> bulkUpsertOperatingHours({
+    required String merchantId,
+    required List<MerchantOperatingHoursCreateRequest> hours,
+  }) {
+    return guard(() async {
+      final res = await _apiClient
+          .getMerchantApi()
+          .merchantOperatingHoursBulkUpsert(
+            merchantId: merchantId,
+            merchantOperatingHoursBulkUpsertRequest:
+                MerchantOperatingHoursBulkUpsertRequest(hours: hours),
+          );
+
+      final data =
+          res.data ??
+          (throw const RepositoryError(
+            'Failed to update operating hours',
+            code: ErrorCode.unknown,
+          ));
+
+      return SuccessResponse(message: data.message, data: data.data);
+    });
+  }
+
+  /// Get operating hours for a merchant
+  Future<BaseResponse<List<MerchantOperatingHours>>> getOperatingHours({
+    required String merchantId,
+  }) {
+    return guard(() async {
+      final res = await _apiClient.getMerchantApi().merchantOperatingHoursList(
+        merchantId: merchantId,
+      );
+
+      final data =
+          res.data ??
+          (throw const RepositoryError(
+            'Failed to get operating hours',
+            code: ErrorCode.unknown,
+          ));
+
+      return SuccessResponse(message: data.message, data: data.data);
+    });
+  }
+
   // ========== MERCHANT ANALYTICS METHODS ==========
 
   /// Get merchant analytics

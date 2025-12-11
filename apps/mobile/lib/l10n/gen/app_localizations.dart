@@ -6966,6 +6966,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Copied to clipboard'**
   String get copied_to_clipboard;
+
+  /// No description provided for @merchant_category_atk.
+  ///
+  /// In en, this message translates to:
+  /// **'ATK (Stationery)'**
+  String get merchant_category_atk;
+
+  /// No description provided for @merchant_category_printing.
+  ///
+  /// In en, this message translates to:
+  /// **'Printing'**
+  String get merchant_category_printing;
+
+  /// No description provided for @merchant_category_food.
+  ///
+  /// In en, this message translates to:
+  /// **'Food & Beverages'**
+  String get merchant_category_food;
+
+  /// No description provided for @placeholder_menu_stock.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter stock quantity'**
+  String get placeholder_menu_stock;
+
+  /// No description provided for @hint_menu_category.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g., Beverages, Snacks, Main Course'**
+  String get hint_menu_category;
+
+  /// No description provided for @toast_error.
+  ///
+  /// In en, this message translates to:
+  /// **'Error'**
+  String get toast_error;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

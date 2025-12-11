@@ -1362,5 +1362,9 @@
   "your_name": "Nama Anda",
   "your_payment_details": "Informasi akun pembayaran Anda",
   "label_user_id": "ID Pengguna",
-  "copied_to_clipboard": "Disalin ke clipboard"
+  "copied_to_clipboard": "Disalin ke clipboard",
+  "server_operating_hours_retrieved": "Jam operasional berhasil diambil",
+  "server_operating_hours_created": "Jam operasional berhasil dibuat",
+  "server_operating_hours_updated": "Jam operasional berhasil diperbarui",
+  "server_operating_hours_deleted": "Jam operasional berhasil dihapus"
 }

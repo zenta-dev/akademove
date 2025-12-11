@@ -130,7 +130,10 @@ void _setupCubit() {
       () => EmailVerificationCubit(authRepository: sl<AuthRepository>()),
     )
     ..registerFactory(
-      () => MerchantCubit(merchantRepository: sl<MerchantRepository>()),
+      () => MerchantCubit(
+        merchantRepository: sl<MerchantRepository>(),
+        userRepository: sl<UserRepository>(),
+      ),
     )
     ..registerFactory(
       () => MerchantMenuCubit(merchantRepository: sl<MerchantRepository>()),

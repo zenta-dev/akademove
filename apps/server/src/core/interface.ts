@@ -37,6 +37,7 @@ import type { LeaderboardRepository } from "@/features/leaderboard/leaderboard-r
 import type { MerchantApprovalRepository } from "@/features/merchant/approval/merchant-approval-repository";
 import type { MerchantMainRepository } from "@/features/merchant/main/merchant-main-repository";
 import type { MerchantMenuRepository } from "@/features/merchant/menu/merchant-menu-repository";
+import type { MerchantOperatingHoursRepository } from "@/features/merchant/operating-hours/merchant-operating-hours-repository";
 import type { MerchantOrderRepository } from "@/features/merchant/order/merchant-order-repository";
 import type { NotificationRepository } from "@/features/notification/notification-repository";
 import type { PushNotificationService } from "@/features/notification/services/push-notification-service";
@@ -143,6 +144,7 @@ export interface RepositoryContext {
 	merchant: {
 		main: MerchantMainRepository;
 		menu: MerchantMenuRepository;
+		operatingHours: MerchantOperatingHoursRepository;
 		order: MerchantOrderRepository;
 		approval: MerchantApprovalRepository;
 	};

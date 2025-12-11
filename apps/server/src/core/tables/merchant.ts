@@ -1,4 +1,4 @@
-import type { Bank, Phone } from "@repo/schema/common";
+import type { Bank, Phone, Time } from "@repo/schema/common";
 import { CONSTANTS } from "@repo/schema/constants";
 import { relations } from "drizzle-orm";
 import {
@@ -13,6 +13,7 @@ import {
 } from "drizzle-orm/pg-core";
 import { user } from "./auth";
 import { DateModifier, index, pgEnum, pgTable, uniqueIndex } from "./common";
+import { dayOfWeek } from "./driver";
 
 export const merchantCategory = pgEnum(
 	"merchant_category",
@@ -106,6 +107,33 @@ export const merchantMenu = pgTable(
 	],
 );
 
+export const merchantOperatingHours = pgTable(
+	"merchant_operating_hours",
+	{
+		id: uuid().primaryKey(),
+		merchantId: uuid("merchant_id")
+			.notNull()
+			.references(() => merchant.id, { onDelete: "cascade" }),
+		dayOfWeek: dayOfWeek("day_of_week").notNull(),
+		isOpen: boolean("is_open").notNull().default(true),
+		is24Hours: boolean("is_24_hours").notNull().default(false),
+		openTime: jsonb("open_time").$type<Time>(),
+		closeTime: jsonb("close_time").$type<Time>(),
+		...DateModifier,
+	},
+	(t) => [
+		index("merchant_operating_hours_merchant_id_idx").on(t.merchantId),
+		index("merchant_operating_hours_day_idx").on(t.dayOfWeek),
+		index("merchant_operating_hours_is_open_idx").on(t.isOpen),
+		// Composite index for merchant + day lookup (most common query)
+		uniqueIndex("merchant_operating_hours_merchant_day_idx").on(
+			t.merchantId,
+			t.dayOfWeek,
+		),
+		index("merchant_operating_hours_created_at_idx").on(t.createdAt),
+	],
+);
+
 ///
 /// --- Relations --- ///
 ///
@@ -115,6 +143,7 @@ export const merchantRelations = relations(merchant, ({ one, many }) => ({
 		references: [user.id],
 	}),
 	menus: many(merchantMenu),
+	operatingHours: many(merchantOperatingHours),
 }));
 
 export const merchantMenuRelations = relations(merchantMenu, ({ one }) => ({
@@ -124,5 +153,17 @@ export const merchantMenuRelations = relations(merchantMenu, ({ one }) => ({
 	}),
 }));
 
+export const merchantOperatingHoursRelations = relations(
+	merchantOperatingHours,
+	({ one }) => ({
+		merchant: one(merchant, {
+			fields: [merchantOperatingHours.merchantId],
+			references: [merchant.id],
+		}),
+	}),
+);
+
 export type MerchantDatabase = typeof merchant.$inferSelect;
 export type MerchantMenuDatabase = typeof merchantMenu.$inferSelect;
+export type MerchantOperatingHoursDatabase =
+	typeof merchantOperatingHours.$inferSelect;

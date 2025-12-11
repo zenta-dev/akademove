@@ -1363,5 +1363,9 @@
   "your_name": "Your Name",
   "your_payment_details": "Your payment account information",
   "label_user_id": "User ID",
-  "copied_to_clipboard": "Copied to clipboard"
+  "copied_to_clipboard": "Copied to clipboard",
+  "server_operating_hours_retrieved": "Operating hours retrieved successfully",
+  "server_operating_hours_created": "Operating hours created successfully",
+  "server_operating_hours_updated": "Operating hours updated successfully",
+  "server_operating_hours_deleted": "Operating hours deleted successfully"
 }

@@ -200,6 +200,8 @@ import 'package:api_client/src/model/merchant_best_sellers200_response_data_inne
 import 'package:api_client/src/model/merchant_best_sellers200_response_data_inner_menu.dart';
 import 'package:api_client/src/model/merchant_best_sellers200_response_data_inner_merchant.dart';
 import 'package:api_client/src/model/merchant_deactivate_request.dart';
+import 'package:api_client/src/model/merchant_envelope.dart';
+import 'package:api_client/src/model/merchant_envelope_payload.dart';
 import 'package:api_client/src/model/merchant_get_availability_status200_response.dart';
 import 'package:api_client/src/model/merchant_get_availability_status200_response_data.dart';
 import 'package:api_client/src/model/merchant_get_mine200_response.dart';
@@ -209,6 +211,12 @@ import 'package:api_client/src/model/merchant_get_review200_response_data.dart';
 import 'package:api_client/src/model/merchant_menu.dart';
 import 'package:api_client/src/model/merchant_menu_create200_response.dart';
 import 'package:api_client/src/model/merchant_menu_list200_response.dart';
+import 'package:api_client/src/model/merchant_operating_hours.dart';
+import 'package:api_client/src/model/merchant_operating_hours_bulk_upsert_request.dart';
+import 'package:api_client/src/model/merchant_operating_hours_create200_response.dart';
+import 'package:api_client/src/model/merchant_operating_hours_create_request.dart';
+import 'package:api_client/src/model/merchant_operating_hours_list200_response.dart';
+import 'package:api_client/src/model/merchant_operating_hours_update_request.dart';
 import 'package:api_client/src/model/merchant_order_accept200_response.dart';
 import 'package:api_client/src/model/merchant_populars200_response.dart';
 import 'package:api_client/src/model/merchant_set_operating_status_request.dart';
@@ -897,6 +905,16 @@ final _regMap = RegExp(r'^Map<String,(.*)>$');
           
         case 'MerchantDeactivateRequest':
           return MerchantDeactivateRequest.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'MerchantEnvelope':
+          return MerchantEnvelope.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'MerchantEnvelopeAction':
+          
+          
+        case 'MerchantEnvelopeEvent':
+          
+          
+        case 'MerchantEnvelopePayload':
+          return MerchantEnvelopePayload.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'MerchantGetAvailabilityStatus200Response':
           return MerchantGetAvailabilityStatus200Response.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'MerchantGetAvailabilityStatus200ResponseData':
@@ -921,6 +939,21 @@ final _regMap = RegExp(r'^Map<String,(.*)>$');
           
         case 'MerchantMenuList200Response':
           return MerchantMenuList200Response.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'MerchantOperatingHours':
+          return MerchantOperatingHours.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'MerchantOperatingHoursBulkUpsertRequest':
+          return MerchantOperatingHoursBulkUpsertRequest.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'MerchantOperatingHoursCreate200Response':
+          return MerchantOperatingHoursCreate200Response.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'MerchantOperatingHoursCreateRequest':
+          return MerchantOperatingHoursCreateRequest.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'MerchantOperatingHoursKey':
+          
+          
+        case 'MerchantOperatingHoursList200Response':
+          return MerchantOperatingHoursList200Response.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'MerchantOperatingHoursUpdateRequest':
+          return MerchantOperatingHoursUpdateRequest.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'MerchantOrderAccept200Response':
           return MerchantOrderAccept200Response.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'MerchantPopulars200Response':

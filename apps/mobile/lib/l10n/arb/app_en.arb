@@ -1497,5 +1497,11 @@
 	"scan_to_send_money": "Scan this QR code to send money to me",
 	"share_qr_instruction": "Share this QR code with others so they can easily transfer money to you",
 	"label_user_id": "User ID",
-	"copied_to_clipboard": "Copied to clipboard"
+	"copied_to_clipboard": "Copied to clipboard",
+	"merchant_category_atk": "ATK (Stationery)",
+	"merchant_category_printing": "Printing",
+	"merchant_category_food": "Food & Beverages",
+	"placeholder_menu_stock": "Enter stock quantity",
+	"hint_menu_category": "e.g., Beverages, Snacks, Main Course",
+	"toast_error": "Error"
 }

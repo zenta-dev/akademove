@@ -62,7 +62,7 @@ try {
 
 ## Documentation for API Endpoints
 
-All URIs are relative to *http://10.86.19.105:3000/api*
+All URIs are relative to *http://localhost:3000/api*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
@@ -203,6 +203,12 @@ Class | Method | HTTP request | Description
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantMenuList**](doc/MerchantApi.md#merchantmenulist) | **GET** /merchants/{merchantId}/menus | 
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantMenuRemove**](doc/MerchantApi.md#merchantmenuremove) | **DELETE** /merchants/{merchantId}/menus/{id} | 
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantMenuUpdate**](doc/MerchantApi.md#merchantmenuupdate) | **PUT** /merchants/{merchantId}/menus/{id} | 
+[*MerchantApi*](doc/MerchantApi.md) | [**merchantOperatingHoursBulkUpsert**](doc/MerchantApi.md#merchantoperatinghoursbulkupsert) | **POST** /merchants/{merchantId}/operating-hours/bulk | 
+[*MerchantApi*](doc/MerchantApi.md) | [**merchantOperatingHoursCreate**](doc/MerchantApi.md#merchantoperatinghourscreate) | **POST** /merchants/{merchantId}/operating-hours | 
+[*MerchantApi*](doc/MerchantApi.md) | [**merchantOperatingHoursGet**](doc/MerchantApi.md#merchantoperatinghoursget) | **GET** /merchants/{merchantId}/operating-hours/{id} | 
+[*MerchantApi*](doc/MerchantApi.md) | [**merchantOperatingHoursList**](doc/MerchantApi.md#merchantoperatinghourslist) | **GET** /merchants/{merchantId}/operating-hours | 
+[*MerchantApi*](doc/MerchantApi.md) | [**merchantOperatingHoursRemove**](doc/MerchantApi.md#merchantoperatinghoursremove) | **DELETE** /merchants/{merchantId}/operating-hours/{id} | 
+[*MerchantApi*](doc/MerchantApi.md) | [**merchantOperatingHoursUpdate**](doc/MerchantApi.md#merchantoperatinghoursupdate) | **PUT** /merchants/{merchantId}/operating-hours/{id} | 
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantOrderAccept**](doc/MerchantApi.md#merchantorderaccept) | **POST** /merchants/{merchantId}/orders/{id}/accept | 
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantOrderMarkPreparing**](doc/MerchantApi.md#merchantordermarkpreparing) | **PUT** /merchants/{merchantId}/orders/{id}/preparing | 
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantOrderMarkReady**](doc/MerchantApi.md#merchantordermarkready) | **PUT** /merchants/{merchantId}/orders/{id}/ready | 
@@ -516,6 +522,10 @@ Class | Method | HTTP request | Description
  - [MerchantBestSellers200ResponseDataInnerMerchant](doc/MerchantBestSellers200ResponseDataInnerMerchant.md)
  - [MerchantCategory](doc/MerchantCategory.md)
  - [MerchantDeactivateRequest](doc/MerchantDeactivateRequest.md)
+ - [MerchantEnvelope](doc/MerchantEnvelope.md)
+ - [MerchantEnvelopeAction](doc/MerchantEnvelopeAction.md)
+ - [MerchantEnvelopeEvent](doc/MerchantEnvelopeEvent.md)
+ - [MerchantEnvelopePayload](doc/MerchantEnvelopePayload.md)
  - [MerchantGetAvailabilityStatus200Response](doc/MerchantGetAvailabilityStatus200Response.md)
  - [MerchantGetAvailabilityStatus200ResponseData](doc/MerchantGetAvailabilityStatus200ResponseData.md)
  - [MerchantGetMine200Response](doc/MerchantGetMine200Response.md)
@@ -527,6 +537,13 @@ Class | Method | HTTP request | Description
  - [MerchantMenuCreate200Response](doc/MerchantMenuCreate200Response.md)
  - [MerchantMenuKey](doc/MerchantMenuKey.md)
  - [MerchantMenuList200Response](doc/MerchantMenuList200Response.md)
+ - [MerchantOperatingHours](doc/MerchantOperatingHours.md)
+ - [MerchantOperatingHoursBulkUpsertRequest](doc/MerchantOperatingHoursBulkUpsertRequest.md)
+ - [MerchantOperatingHoursCreate200Response](doc/MerchantOperatingHoursCreate200Response.md)
+ - [MerchantOperatingHoursCreateRequest](doc/MerchantOperatingHoursCreateRequest.md)
+ - [MerchantOperatingHoursKey](doc/MerchantOperatingHoursKey.md)
+ - [MerchantOperatingHoursList200Response](doc/MerchantOperatingHoursList200Response.md)
+ - [MerchantOperatingHoursUpdateRequest](doc/MerchantOperatingHoursUpdateRequest.md)
  - [MerchantOrderAccept200Response](doc/MerchantOrderAccept200Response.md)
  - [MerchantPopulars200Response](doc/MerchantPopulars200Response.md)
  - [MerchantSetOperatingStatusRequest](doc/MerchantSetOperatingStatusRequest.md)
