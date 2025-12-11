@@ -16,6 +16,7 @@ Name | Type | Description | Notes
 **merchantAction** | [**OrderEnvelopePayloadMerchantAction**](OrderEnvelopePayloadMerchantAction.md) |  | [optional] 
 **cancelReason** | **String** |  | [optional] 
 **noShow** | [**OrderEnvelopePayloadNoShow**](OrderEnvelopePayloadNoShow.md) |  | [optional] 
+**retryInfo** | [**OrderEnvelopePayloadRetryInfo**](OrderEnvelopePayloadRetryInfo.md) |  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

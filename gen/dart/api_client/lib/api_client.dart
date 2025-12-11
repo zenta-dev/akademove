@@ -315,6 +315,7 @@ export 'package:api_client/src/model/order_envelope_payload_driver_update_locati
 export 'package:api_client/src/model/order_envelope_payload_merchant_action.dart';
 export 'package:api_client/src/model/order_envelope_payload_message.dart';
 export 'package:api_client/src/model/order_envelope_payload_no_show.dart';
+export 'package:api_client/src/model/order_envelope_payload_retry_info.dart';
 export 'package:api_client/src/model/order_estimate200_response.dart';
 export 'package:api_client/src/model/order_get_status_history200_response.dart';
 export 'package:api_client/src/model/order_item.dart';

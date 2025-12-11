@@ -167,6 +167,7 @@ const _$OrderEnvelopeEventEnumMap = {
   OrderEnvelopeEvent.MERCHANT_PREPARING: 'MERCHANT_PREPARING',
   OrderEnvelopeEvent.MERCHANT_READY: 'MERCHANT_READY',
   OrderEnvelopeEvent.NO_SHOW: 'NO_SHOW',
+  OrderEnvelopeEvent.DRIVER_CANCELLED_REMATCHING: 'DRIVER_CANCELLED_REMATCHING',
 };
 
 const _$OrderEnvelopeActionEnumMap = {

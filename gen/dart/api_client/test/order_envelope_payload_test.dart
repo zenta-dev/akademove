@@ -47,5 +47,10 @@ void main() {
       // TODO
     });
 
+    // OrderEnvelopePayloadRetryInfo retryInfo
+    test('to test the property `retryInfo`', () async {
+      // TODO
+    });
+
   });
 }

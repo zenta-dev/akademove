@@ -1,4 +1,5 @@
 .gitignore
+.openapi-generator-ignore
 README.md
 analysis_options.yaml
 build.yaml
@@ -301,6 +302,7 @@ doc/OrderEnvelopePayloadDriverUpdateLocation.md
 doc/OrderEnvelopePayloadMerchantAction.md
 doc/OrderEnvelopePayloadMessage.md
 doc/OrderEnvelopePayloadNoShow.md
+doc/OrderEnvelopePayloadRetryInfo.md
 doc/OrderEstimate200Response.md
 doc/OrderGetStatusHistory200Response.md
 doc/OrderItem.md
@@ -776,6 +778,7 @@ lib/src/model/order_envelope_payload_driver_update_location.dart
 lib/src/model/order_envelope_payload_merchant_action.dart
 lib/src/model/order_envelope_payload_message.dart
 lib/src/model/order_envelope_payload_no_show.dart
+lib/src/model/order_envelope_payload_retry_info.dart
 lib/src/model/order_estimate200_response.dart
 lib/src/model/order_get_status_history200_response.dart
 lib/src/model/order_item.dart
@@ -1229,6 +1232,7 @@ test/order_envelope_payload_driver_update_location_test.dart
 test/order_envelope_payload_merchant_action_test.dart
 test/order_envelope_payload_message_test.dart
 test/order_envelope_payload_no_show_test.dart
+test/order_envelope_payload_retry_info_test.dart
 test/order_envelope_payload_test.dart
 test/order_envelope_test.dart
 test/order_estimate200_response_test.dart

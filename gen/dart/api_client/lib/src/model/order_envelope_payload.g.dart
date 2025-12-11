@@ -27,6 +27,8 @@ abstract class _$OrderEnvelopePayloadCWProxy {
 
   OrderEnvelopePayload noShow(OrderEnvelopePayloadNoShow? noShow);
 
+  OrderEnvelopePayload retryInfo(OrderEnvelopePayloadRetryInfo? retryInfo);
+
   /// Creates a new instance with the provided field values.
   /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `OrderEnvelopePayload(...).copyWith.fieldName(value)`.
   ///
@@ -43,6 +45,7 @@ abstract class _$OrderEnvelopePayloadCWProxy {
     OrderEnvelopePayloadMerchantAction? merchantAction,
     String? cancelReason,
     OrderEnvelopePayloadNoShow? noShow,
+    OrderEnvelopePayloadRetryInfo? retryInfo,
   });
 }
 
@@ -88,6 +91,10 @@ class _$OrderEnvelopePayloadCWProxyImpl
       call(noShow: noShow);
 
   @override
+  OrderEnvelopePayload retryInfo(OrderEnvelopePayloadRetryInfo? retryInfo) =>
+      call(retryInfo: retryInfo);
+
+  @override
   /// Creates a new instance with the provided field values.
   /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `OrderEnvelopePayload(...).copyWith.fieldName(value)`.
   ///
@@ -104,6 +111,7 @@ class _$OrderEnvelopePayloadCWProxyImpl
     Object? merchantAction = const $CopyWithPlaceholder(),
     Object? cancelReason = const $CopyWithPlaceholder(),
     Object? noShow = const $CopyWithPlaceholder(),
+    Object? retryInfo = const $CopyWithPlaceholder(),
   }) {
     return OrderEnvelopePayload(
       detail: detail == const $CopyWithPlaceholder()
@@ -138,6 +146,10 @@ class _$OrderEnvelopePayloadCWProxyImpl
           ? _value.noShow
           // ignore: cast_nullable_to_non_nullable
           : noShow as OrderEnvelopePayloadNoShow?,
+      retryInfo: retryInfo == const $CopyWithPlaceholder()
+          ? _value.retryInfo
+          // ignore: cast_nullable_to_non_nullable
+          : retryInfo as OrderEnvelopePayloadRetryInfo?,
     );
   }
 }
@@ -203,6 +215,12 @@ OrderEnvelopePayload _$OrderEnvelopePayloadFromJson(
           ? null
           : OrderEnvelopePayloadNoShow.fromJson(v as Map<String, dynamic>),
     ),
+    retryInfo: $checkedConvert(
+      'retryInfo',
+      (v) => v == null
+          ? null
+          : OrderEnvelopePayloadRetryInfo.fromJson(v as Map<String, dynamic>),
+    ),
   );
   return val;
 });
@@ -218,4 +236,5 @@ Map<String, dynamic> _$OrderEnvelopePayloadToJson(
   'merchantAction': ?instance.merchantAction?.toJson(),
   'cancelReason': ?instance.cancelReason,
   'noShow': ?instance.noShow?.toJson(),
+  'retryInfo': ?instance.retryInfo?.toJson(),
 };

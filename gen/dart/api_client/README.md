@@ -561,6 +561,7 @@ Class | Method | HTTP request | Description
  - [OrderEnvelopePayloadMerchantAction](doc/OrderEnvelopePayloadMerchantAction.md)
  - [OrderEnvelopePayloadMessage](doc/OrderEnvelopePayloadMessage.md)
  - [OrderEnvelopePayloadNoShow](doc/OrderEnvelopePayloadNoShow.md)
+ - [OrderEnvelopePayloadRetryInfo](doc/OrderEnvelopePayloadRetryInfo.md)
  - [OrderEstimate200Response](doc/OrderEstimate200Response.md)
  - [OrderGetStatusHistory200Response](doc/OrderGetStatusHistory200Response.md)
  - [OrderItem](doc/OrderItem.md)

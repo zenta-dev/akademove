@@ -20,31 +20,31 @@ class AuthVerifyEmail200ResponseData {
   /// Returns a new [AuthVerifyEmail200ResponseData] instance.
   const AuthVerifyEmail200ResponseData({
     required this.ok,
-    this.token,
-    this.user,
+     this.token,
+     this.user,
   });
   @JsonKey(name: r'ok', required: true, includeIfNull: false)
   final bool ok;
-
+  
   @JsonKey(name: r'token', required: false, includeIfNull: false)
   final String? token;
-
+  
   @JsonKey(name: r'user', required: false, includeIfNull: false)
   final User? user;
+  
+  @override
+  bool operator ==(Object other) => identical(this, other) || other is AuthVerifyEmail200ResponseData &&
+    other.ok == ok &&
+    other.token == token &&
+    other.user == user;
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is AuthVerifyEmail200ResponseData &&
-          other.ok == ok &&
-          other.token == token &&
-          other.user == user;
+  int get hashCode =>
+      ok.hashCode +
+      token.hashCode +
+      user.hashCode;
 
-  @override
-  int get hashCode => ok.hashCode + token.hashCode + user.hashCode;
-
-  factory AuthVerifyEmail200ResponseData.fromJson(Map<String, dynamic> json) =>
-      _$AuthVerifyEmail200ResponseDataFromJson(json);
+  factory AuthVerifyEmail200ResponseData.fromJson(Map<String, dynamic> json) => _$AuthVerifyEmail200ResponseDataFromJson(json);
 
   Map<String, dynamic> toJson() => _$AuthVerifyEmail200ResponseDataToJson(this);
 
@@ -52,4 +52,6 @@ class AuthVerifyEmail200ResponseData {
   String toString() {
     return toJson().toString();
   }
+
 }
+

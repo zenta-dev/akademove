@@ -32,7 +32,9 @@ enum OrderEnvelopeEvent {
       @JsonValue(r'MERCHANT_READY')
       MERCHANT_READY(r'MERCHANT_READY'),
       @JsonValue(r'NO_SHOW')
-      NO_SHOW(r'NO_SHOW');
+      NO_SHOW(r'NO_SHOW'),
+      @JsonValue(r'DRIVER_CANCELLED_REMATCHING')
+      DRIVER_CANCELLED_REMATCHING(r'DRIVER_CANCELLED_REMATCHING');
 
   const OrderEnvelopeEvent(this.value);
 
