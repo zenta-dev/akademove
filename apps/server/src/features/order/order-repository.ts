@@ -12,9 +12,11 @@ import type {
 	UpdateScheduledOrder,
 } from "@repo/schema/order";
 import type { UserRole } from "@repo/schema/user";
+import type { OrderEnvelope } from "@repo/schema/ws";
 import type { UnifiedListResult, WithTx, WithUserId } from "@/core/interface";
 import type { DatabaseService } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
+import { logger } from "@/utils/logger";
 import type { PaymentRepository } from "../payment/payment-repository";
 import type { OrderListQuery } from "./order-spec";
 import {
@@ -110,6 +112,49 @@ export class OrderRepository {
 	 */
 	static getRoomStubByName(name: string) {
 		return OrderBaseRepository.getRoomStubByName(name);
+	}
+
+	/**
+	 * Broadcast order status change to all connected WebSocket clients
+	 * Used by REST API handlers to notify clients of status changes
+	 */
+	static async broadcastStatusChange(
+		orderId: string,
+		order: Order,
+	): Promise<void> {
+		const stub = OrderBaseRepository.getRoomStubByName(orderId);
+		const envelope: OrderEnvelope = {
+			e: "ORDER_STATUS_CHANGED",
+			f: "s",
+			t: "c",
+			p: {
+				detail: {
+					order,
+					payment: null,
+					transaction: null,
+				},
+			},
+		};
+
+		try {
+			await stub.fetch(
+				new Request("http://internal/broadcast", {
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify(envelope),
+				}),
+			);
+			logger.info(
+				{ orderId, status: order.status },
+				"[OrderRepository] Broadcast status change to WebSocket clients",
+			);
+		} catch (error) {
+			logger.error(
+				{ error, orderId },
+				"[OrderRepository] Failed to broadcast status change",
+			);
+			// Don't throw - broadcast failure shouldn't fail the API call
+		}
 	}
 
 	/**

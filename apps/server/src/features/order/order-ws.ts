@@ -41,6 +41,35 @@ export class OrderRoom extends BaseDurableObject {
 		super.broadcast(parse.data, opts);
 	}
 
+	/**
+	 * Handle HTTP requests and WebSocket upgrades
+	 * Supports POST /broadcast for REST API to trigger WebSocket broadcasts
+	 */
+	async fetch(request: Request): Promise<Response> {
+		const url = new URL(request.url);
+
+		// Handle broadcast requests from REST API handlers
+		if (request.method === "POST" && url.pathname.endsWith("/broadcast")) {
+			try {
+				const body = (await request.json()) as OrderEnvelope;
+				this.broadcast(body);
+				return new Response(JSON.stringify({ success: true }), {
+					status: 200,
+					headers: { "Content-Type": "application/json" },
+				});
+			} catch (error) {
+				logger.error({ error }, "[OrderRoom] Failed to broadcast message");
+				return new Response(
+					JSON.stringify({ success: false, error: "Failed to broadcast" }),
+					{ status: 500, headers: { "Content-Type": "application/json" } },
+				);
+			}
+		}
+
+		// Default: handle WebSocket upgrade
+		return super.fetch(request);
+	}
+
 	async webSocketMessage(ws: WebSocket, message: ArrayBuffer | string) {
 		super.webSocketMessage(ws, message);
 		const session = this.findUserIdBySocket(ws);

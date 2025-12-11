@@ -516,6 +516,29 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
           }
         }
 
+        // Handle generic order status change events from REST API updates
+        // This catches status changes made via REST API (e.g., driver updating status)
+        if (data.e == OrderEnvelopeEvent.ORDER_STATUS_CHANGED) {
+          final detail = data.p.detail;
+          if (detail != null) {
+            emit(
+              state.copyWith(
+                currentOrder: OperationResult.success(detail.order),
+                currentPayment: detail.payment != null
+                    ? OperationResult.success(detail.payment!)
+                    : state.currentPayment,
+                currentTransaction: detail.transaction != null
+                    ? OperationResult.success(detail.transaction!)
+                    : state.currentTransaction,
+              ),
+            );
+            logger.i(
+              '[UserOrderCubit] Order status changed: ${detail.order.id}, '
+              'new status: ${detail.order.status}',
+            );
+          }
+        }
+
         // Handle order completion - update order status to COMPLETED
         if (data.e == OrderEnvelopeEvent.COMPLETED) {
           final detail = data.p.detail;

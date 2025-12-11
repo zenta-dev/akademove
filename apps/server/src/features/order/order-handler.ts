@@ -8,6 +8,7 @@ import { logger } from "@/utils/logger";
 import { DriverMainRepository } from "../driver/main/driver-main-repository";
 import { PaymentRepository } from "../payment/payment-repository";
 import { TransactionRepository } from "../transaction/transaction-repository";
+import { OrderRepository } from "./order-repository";
 import { OrderSpec } from "./order-spec";
 
 const { priv } = createORPCRouter(OrderSpec);
@@ -165,6 +166,19 @@ export const OrderHandler = priv.router({
 
 			const data = trimObjectValues(body);
 			const result = await context.repo.order.update(params.id, data, { tx });
+
+			// Broadcast status change to WebSocket clients if status was updated
+			if (data.status) {
+				// Fire and forget - don't block the response
+				OrderRepository.broadcastStatusChange(params.id, result).catch(
+					(error) => {
+						logger.error(
+							{ error, orderId: params.id },
+							"[OrderHandler] Failed to broadcast status change",
+						);
+					},
+				);
+			}
 
 			return {
 				status: 200,

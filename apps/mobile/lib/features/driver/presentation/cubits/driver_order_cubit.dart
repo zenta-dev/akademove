@@ -328,7 +328,8 @@ class DriverOrderCubit extends BaseCubit<DriverOrderState> {
   Future<void>
   _updateLocation() async => await taskManager.execute('DOC-uL1', () async {
     final orderId = _currentOrderId;
-    if (orderId == null) return;
+    final driverId = _currentDriverId;
+    if (orderId == null || driverId == null) return;
 
     try {
       final permission = await Geolocator.checkPermission();
@@ -344,11 +345,24 @@ class DriverOrderCubit extends BaseCubit<DriverOrderState> {
         ),
       );
 
-      final driverRes = await _driverRepository.getMine();
+      // Send location update via WebSocket to broadcast to user in real-time
+      final envelope = OrderEnvelope(
+        f: EnvelopeSender.c,
+        t: EnvelopeSender.s,
+        a: OrderEnvelopeAction.UPDATE_LOCATION,
+        p: OrderEnvelopePayload(
+          driverUpdateLocation: OrderEnvelopePayloadDriverUpdateLocation(
+            driverId: driverId,
+            x: position.longitude,
+            y: position.latitude,
+          ),
+        ),
+      );
+      _webSocketService.send(orderId, jsonEncode(envelope.toJson()));
 
-      // Update location on server with mock location flag
+      // Also update location on server via REST API for persistence and fraud detection
       await _driverRepository.updateLocation(
-        driverId: driverRes.data.id,
+        driverId: driverId,
         location: CoordinateWithMeta(
           x: position.longitude,
           y: position.latitude,
@@ -357,7 +371,7 @@ class DriverOrderCubit extends BaseCubit<DriverOrderState> {
       );
 
       logger.d(
-        '[DriverOrderCubit] - Location updated: ${position.latitude}, ${position.longitude}, isMock: ${position.isMocked}',
+        '[DriverOrderCubit] - Location updated (WS + REST): ${position.latitude}, ${position.longitude}, isMock: ${position.isMocked}',
       );
     } catch (e, st) {
       logger.e(

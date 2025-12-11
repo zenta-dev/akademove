@@ -79,7 +79,7 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
             state.orderStatus == OrderStatus.CANCELLED_BY_SYSTEM) {
           Future.delayed(const Duration(seconds: 2), () {
             if (mounted && context.mounted) {
-              context.goNamed(Routes.driverHome.name);
+              context.popUntilRoot();
             }
           });
         }

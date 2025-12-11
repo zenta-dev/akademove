@@ -53,6 +53,7 @@ export const OrderEnvelopeEventSchema = z.enum([
 	"MERCHANT_READY",
 	"NO_SHOW",
 	"DRIVER_CANCELLED_REMATCHING",
+	"ORDER_STATUS_CHANGED",
 ]);
 export const OrderEnvelopeActionSchema = z.enum([
 	"MATCHING",
