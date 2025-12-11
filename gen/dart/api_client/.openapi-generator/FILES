@@ -961,9 +961,3 @@ lib/src/model/weight_size.dart
 lib/src/model/withdraw_request.dart
 lib/src/model/withdraw_response.dart
 pubspec.yaml
-test/driver_wallet_get_monthly_summary200_response_test.dart
-test/driver_wallet_get_saved_bank_account200_response_test.dart
-test/driver_wallet_get_transactions200_response_test.dart
-test/driver_wallet_get_wallet200_response_test.dart
-test/driver_wallet_top_up200_response_test.dart
-test/driver_wallet_transfer200_response_test.dart
