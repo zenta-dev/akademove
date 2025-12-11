@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
@@ -21,9 +22,11 @@ class DriverOrderCubit extends BaseCubit<DriverOrderState> {
 
   Timer? _locationUpdateTimer;
   String? _currentOrderId;
+  String? _currentDriverId;
 
   Future<void> init(Order order) async {
     _currentOrderId = order.id;
+    _currentDriverId = order.driverId;
     emit(
       state.copyWith(
         fetchOrderResult: OperationResult.success(order),
@@ -38,6 +41,7 @@ class DriverOrderCubit extends BaseCubit<DriverOrderState> {
   void reset() {
     _stopLocationTracking();
     _currentOrderId = null;
+    _currentDriverId = null;
     emit(const DriverOrderState());
   }
 
@@ -48,7 +52,7 @@ class DriverOrderCubit extends BaseCubit<DriverOrderState> {
     return super.close();
   }
 
-  Future<void> acceptOrder(String orderId) async =>
+  Future<void> acceptOrder(String orderId, String driverId) async =>
       await taskManager.execute('DOC-aO1-$orderId', () async {
         try {
           emit(
@@ -57,8 +61,11 @@ class DriverOrderCubit extends BaseCubit<DriverOrderState> {
 
           final res = await _orderRepository.update(
             orderId,
-            const UpdateOrder(status: OrderStatus.ACCEPTED),
+            UpdateOrder(status: OrderStatus.ACCEPTED, driverId: driverId),
           );
+
+          _currentOrderId = orderId;
+          _currentDriverId = driverId;
 
           emit(
             state.copyWith(
@@ -154,9 +161,105 @@ class DriverOrderCubit extends BaseCubit<DriverOrderState> {
     await updateOrderStatus(OrderStatus.IN_TRIP);
   }
 
-  Future<void> completeTrip() async {
-    await updateOrderStatus(OrderStatus.COMPLETED);
-  }
+  /// Complete the trip by sending a WebSocket 'DONE' action.
+  /// This triggers server-side commission calculation, driver wallet credit,
+  /// and broadcasts COMPLETED event to user for real-time UI update.
+  Future<void>
+  completeTrip() async => await taskManager.execute('DOC-cT-done', () async {
+    final orderId = _currentOrderId;
+    final driverId = _currentDriverId;
+
+    if (orderId == null || driverId == null) {
+      logger.w(
+        '[DriverOrderCubit] - Cannot complete trip: '
+        'orderId=$orderId, driverId=$driverId',
+      );
+      return;
+    }
+
+    try {
+      emit(state.copyWith(updateStatusResult: const OperationResult.loading()));
+
+      // Get current location for the DONE payload
+      final permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied ||
+          permission == LocationPermission.deniedForever) {
+        logger.w('[DriverOrderCubit] - Location permission denied');
+        emit(
+          state.copyWith(
+            updateStatusResult: OperationResult.failed(
+              const UnknownError('Location permission required'),
+            ),
+          ),
+        );
+        return;
+      }
+
+      final position = await Geolocator.getCurrentPosition(
+        locationSettings: const LocationSettings(
+          accuracy: LocationAccuracy.high,
+        ),
+      );
+
+      // Send DONE action via WebSocket to trigger server-side:
+      // - Commission calculation
+      // - Driver wallet credit
+      // - COMPLETED broadcast to user
+      final envelope = OrderEnvelope(
+        f: EnvelopeSender.c,
+        t: EnvelopeSender.s,
+        a: OrderEnvelopeAction.DONE,
+        p: OrderEnvelopePayload(
+          done: OrderEnvelopePayloadDone(
+            by: OrderEnvelopePayloadDoneByEnum.DRIVER,
+            orderId: orderId,
+            driverId: driverId,
+            driverCurrentLocation: Coordinate(
+              x: position.longitude,
+              y: position.latitude,
+            ),
+          ),
+        ),
+      );
+
+      _webSocketService.send(orderId, jsonEncode(envelope.toJson()));
+
+      logger.i(
+        '[DriverOrderCubit] - Sent DONE action via WebSocket for order: $orderId',
+      );
+
+      // Update local state optimistically
+      // The actual confirmation comes via WebSocket COMPLETED event
+      final currentOrder = state.currentOrder;
+      if (currentOrder != null) {
+        emit(
+          state.copyWith(
+            updateStatusResult: OperationResult.success(
+              currentOrder.copyWith(status: OrderStatus.COMPLETED),
+            ),
+            currentOrder: currentOrder.copyWith(status: OrderStatus.COMPLETED),
+            orderStatus: OrderStatus.COMPLETED,
+          ),
+        );
+      }
+
+      _stopLocationTracking();
+      // Don't teardown WebSocket immediately - wait for COMPLETED confirmation
+    } catch (e, st) {
+      logger.e(
+        '[DriverOrderCubit] - Error completing trip: $e',
+        error: e,
+        stackTrace: st,
+      );
+      emit(
+        state.copyWith(
+          updateStatusResult: OperationResult.failed(
+            e is BaseError ? e : UnknownError(e.toString()),
+          ),
+        ),
+      );
+    }
+  });
 
   Future<void> cancelOrder({String? reason}) async {
     final orderId = _currentOrderId;
@@ -294,8 +397,23 @@ class DriverOrderCubit extends BaseCubit<DriverOrderState> {
           }
 
           if (envelope.e == OrderEnvelopeEvent.COMPLETED) {
-            // Order completed
+            // Order completed - update state and cleanup
             _stopLocationTracking();
+            final completedOrder = detail?.order;
+            if (completedOrder != null) {
+              emit(
+                state.copyWith(
+                  updateStatusResult: OperationResult.success(completedOrder),
+                  currentOrder: completedOrder,
+                  orderStatus: completedOrder.status,
+                ),
+              );
+            }
+            logger.i(
+              '[DriverOrderCubit] - Order completed confirmation received',
+            );
+            // Teardown WebSocket after completion is confirmed
+            teardownWebSocket();
           }
         } catch (e, st) {
           logger.e(

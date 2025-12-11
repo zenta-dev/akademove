@@ -65,7 +65,9 @@ class _EmergencyTriggerDialogState extends State<EmergencyTriggerDialog> {
   }
 
   void _handleTrigger() {
-    if (_descriptionController.text.trim().isEmpty) {
+    if (_descriptionController.text.trim().isEmpty &&
+        context.mounted &&
+        mounted) {
       context.showMyToast(
         context.l10n.error_description_required,
         type: ToastType.failed,
@@ -77,7 +79,6 @@ class _EmergencyTriggerDialogState extends State<EmergencyTriggerDialog> {
     final userId = context.read<AuthCubit>().state.user.data?.value.id;
 
     if (userId == null) {
-      context.showMyToast('User not authenticated', type: ToastType.failed);
       return;
     }
 

@@ -377,7 +377,10 @@ class IncomingOrderListener extends StatelessWidget {
             onAccept: () async {
               // Accept the order via DriverOrderCubit first
               try {
-                await context.read<DriverOrderCubit>().acceptOrder(order.id);
+                await context.read<DriverOrderCubit>().acceptOrder(
+                  order.id,
+                  context.read<DriverHomeCubit>().state.myDriver?.id ?? '',
+                );
 
                 // Only close dialog and clear state after successful acceptance
                 if (dialogContext.mounted) {

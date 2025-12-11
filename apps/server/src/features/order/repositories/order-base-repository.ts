@@ -79,9 +79,9 @@ export class OrderBaseRepository extends BaseRepository {
 	): Promise<Order | undefined> {
 		const result = await (opts?.tx ?? this.db).query.order.findFirst({
 			with: {
-				user: { columns: { name: true } },
-				driver: { columns: {}, with: { user: { columns: { name: true } } } },
-				merchant: { columns: { name: true } },
+				user: true,
+				driver: { with: { user: true } },
+				merchant: true,
 			},
 			where: (f, op) => op.eq(f.id, id),
 		});

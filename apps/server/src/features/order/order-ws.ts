@@ -631,7 +631,7 @@ export class OrderRoom extends BaseDurableObject {
 
 		// Create transaction records for driver earning and platform commission
 		// Now using correct balance values from the atomic update
-		await Promise.all([
+		const [updatedOrder] = await Promise.all([
 			// Update order with commission details
 			this.#repo.order.update(
 				done.orderId,
@@ -720,11 +720,19 @@ export class OrderRoom extends BaseDurableObject {
 			"[OrderRoom] Commission calculated and distributed",
 		);
 
+		// Broadcast COMPLETED event with updated order details
+		// User cubit expects p.detail.order to update UI
 		const completedPayload: OrderEnvelope = {
 			e: "COMPLETED",
 			f: "s",
 			t: "c",
-			p: data.p,
+			p: {
+				detail: {
+					order: updatedOrder,
+					payment: null,
+					transaction: null,
+				},
+			},
 		};
 		this.broadcast(completedPayload, { excludes: [ws] });
 	}

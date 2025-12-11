@@ -507,9 +507,16 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
               child: PrimaryButton(
                 onPressed: isLoading
                     ? null
-                    : () => context.read<DriverOrderCubit>().acceptOrder(
-                        order.id,
-                      ),
+                    : () {
+                        final orderId = order.id;
+                        final driverId =
+                            context.read<AuthCubit>().state.driver.value?.id ??
+                            '';
+                        context.read<DriverOrderCubit>().acceptOrder(
+                          orderId,
+                          driverId,
+                        );
+                      },
                 child: isLoading
                     ? const CircularProgressIndicator()
                     : Text(context.l10n.accept_order),

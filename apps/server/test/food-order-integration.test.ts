@@ -108,15 +108,15 @@ class OrderStateMachine {
 	};
 
 	static canTransition(from: OrderStatus, to: OrderStatus): boolean {
-		return this.VALID_TRANSITIONS[from]?.includes(to) ?? false;
+		return OrderStateMachine.VALID_TRANSITIONS[from]?.includes(to) ?? false;
 	}
 
 	static getValidTransitions(from: OrderStatus): OrderStatus[] {
-		return this.VALID_TRANSITIONS[from] ?? [];
+		return OrderStateMachine.VALID_TRANSITIONS[from] ?? [];
 	}
 
 	static isTerminalState(status: OrderStatus): boolean {
-		return this.VALID_TRANSITIONS[status]?.length === 0;
+		return OrderStateMachine.VALID_TRANSITIONS[status]?.length === 0;
 	}
 
 	static isCancelledState(status: OrderStatus): boolean {

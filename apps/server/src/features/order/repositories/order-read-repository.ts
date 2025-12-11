@@ -67,17 +67,13 @@ export class OrderReadRepository extends OrderBaseRepository {
 	 */
 	async get(id: string, opts?: WithTx): Promise<Order> {
 		try {
-			const fallback = async () => {
-				const res = await this.getFromDB(id, opts);
-				if (!res)
-					throw new RepositoryError(`Order with id "${id}" not found`, {
-						code: "NOT_FOUND",
-					});
-				await this.setCache(id, res, { expirationTtl: CACHE_TTLS["1h"] });
-				return res;
-			};
-			const result = await this.getCache(id, { fallback });
-			return result;
+			const res = await this.getFromDB(id, opts);
+			if (!res)
+				throw new RepositoryError(`Order with id "${id}" not found`, {
+					code: "NOT_FOUND",
+				});
+			await this.setCache(id, res, { expirationTtl: CACHE_TTLS["1h"] });
+			return res;
 		} catch (error) {
 			throw this.handleError(error, "get by id");
 		}

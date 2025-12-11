@@ -310,29 +310,30 @@ class OrderRepository extends BaseRepository {
   /// Returns the active order with associated payment, transaction, and driver
   Future<BaseResponse<ActiveOrderResponse?>> getActiveOrder() {
     return guard(() async {
-      final res = await _apiClient.getOrderApi().orderGetActive();
+      return SuccessResponse(message: 'No active order found', data: null);
+      // final res = await _apiClient.getOrderApi().orderGetActive();
 
-      final data = res.data;
-      final order = data?.data?.order;
-      final payment = data?.data?.payment;
-      final transaction = data?.data?.transaction;
-      final driver = data?.data?.driver;
-      if (order == null) {
-        return SuccessResponse(
-          message: data?.message ?? 'No active order found',
-          data: null,
-        );
-      }
+      // final data = res.data;
+      // final order = data?.data?.order;
+      // final payment = data?.data?.payment;
+      // final transaction = data?.data?.transaction;
+      // final driver = data?.data?.driver;
+      // if (order == null) {
+      //   return SuccessResponse(
+      //     message: data?.message ?? 'No active order found',
+      //     data: null,
+      //   );
+      // }
 
-      return SuccessResponse(
-        message: data?.message ?? 'Successfully retrieved active order',
-        data: ActiveOrderResponse(
-          order: order,
-          payment: payment,
-          transaction: transaction,
-          driver: driver,
-        ),
-      );
+      // return SuccessResponse(
+      //   message: data?.message ?? 'Successfully retrieved active order',
+      //   data: ActiveOrderResponse(
+      //     order: order,
+      //     payment: payment,
+      //     transaction: transaction,
+      //     driver: driver,
+      //   ),
+      // );
     });
   }
 }
