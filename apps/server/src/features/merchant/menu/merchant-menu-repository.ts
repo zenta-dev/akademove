@@ -424,12 +424,13 @@ export class MerchantMenuRepository extends BaseRepository {
 				fallback: async () => {
 					const tx = opts?.tx ?? this.db;
 
-					// Build category filter
+					// Build category filter for merchants
 					const categoryFilter = category
 						? sql`${tables.merchant.categories} @> ARRAY[${category}]::text[]`
 						: sql`${tables.merchant.categories} && ARRAY['ATK', 'Printing', 'Food']::text[]`;
 
-					// Query to aggregate best sellers
+					// Use LEFT JOIN to include menus without orders
+					// Order by: order count DESC, then by merchant rating DESC, then by menu creation date DESC
 					const result = await tx
 						.select({
 							menuId: tables.merchantMenu.id,
@@ -446,26 +447,29 @@ export class MerchantMenuRepository extends BaseRepository {
 							merchantRating: tables.merchant.rating,
 							orderCount: sql<number>`cast(count(${tables.orderItem.id}) as integer)`,
 						})
-						.from(tables.orderItem)
-						.innerJoin(
-							tables.order,
-							eq(tables.orderItem.orderId, tables.order.id),
-						)
-						.innerJoin(
-							tables.merchantMenu,
-							eq(tables.orderItem.menuId, tables.merchantMenu.id),
-						)
+						.from(tables.merchantMenu)
 						.innerJoin(
 							tables.merchant,
 							eq(tables.merchantMenu.merchantId, tables.merchant.id),
 						)
-						.where(
+						.leftJoin(
+							tables.orderItem,
+							eq(tables.orderItem.menuId, tables.merchantMenu.id),
+						)
+						.leftJoin(
+							tables.order,
 							and(
+								eq(tables.orderItem.orderId, tables.order.id),
 								eq(tables.order.type, "FOOD"),
 								eq(tables.order.status, "COMPLETED"),
+							),
+						)
+						.where(
+							and(
 								eq(tables.merchant.status, "APPROVED"),
 								eq(tables.merchant.isActive, true),
 								eq(tables.merchant.operatingStatus, "OPEN"),
+								gt(tables.merchantMenu.stock, 0),
 								categoryFilter,
 							),
 						)
@@ -485,6 +489,8 @@ export class MerchantMenuRepository extends BaseRepository {
 						)
 						.orderBy(
 							desc(sql<number>`cast(count(${tables.orderItem.id}) as integer)`),
+							desc(tables.merchant.rating),
+							desc(tables.merchantMenu.createdAt),
 						)
 						.limit(limit);
 

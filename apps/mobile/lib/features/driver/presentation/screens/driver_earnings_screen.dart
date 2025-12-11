@@ -17,11 +17,8 @@ class DriverEarningsScreen extends StatefulWidget {
 }
 
 class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
-  Wallet? _wallet;
-  WalletMonthlySummaryResponse? _monthlySummary;
-  List<Transaction> _transactions = [];
-  bool _isLoading = false;
   DateTime _selectedMonth = DateTime.now();
+  bool _isWithdrawing = false;
 
   @override
   void initState() {
@@ -30,45 +27,10 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
   }
 
   Future<void> _loadData() async {
-    setState(() => _isLoading = true);
-
-    try {
-      // Load wallet, monthly summary, and transactions in parallel
-      final results = await Future.wait([
-        context.read<WalletRepository>().getWallet(),
-        context.read<WalletRepository>().getMonthlySummary(
-          month: _selectedMonth.month,
-          year: _selectedMonth.year,
-        ),
-        context.read<TransactionRepository>().list(),
-      ]);
-
-      if (mounted) {
-        setState(() {
-          _wallet = (results[0] as BaseResponse<Wallet>).data;
-          _monthlySummary =
-              (results[1] as BaseResponse<WalletMonthlySummaryResponse>).data;
-          _transactions = (results[2] as BaseResponse<List<Transaction>>).data;
-          _isLoading = false;
-        });
-      }
-    } on BaseError catch (e) {
-      if (mounted) {
-        setState(() => _isLoading = false);
-        context.showMyToast(
-          e.message ?? context.l10n.failed_to_load_earnings,
-          type: ToastType.failed,
-        );
-      }
-    } catch (e) {
-      if (mounted) {
-        setState(() => _isLoading = false);
-        context.showMyToast(
-          context.l10n.failed_to_load_earnings,
-          type: ToastType.failed,
-        );
-      }
-    }
+    await context.read<DriverEarningsCubit>().init(
+      month: _selectedMonth.month,
+      year: _selectedMonth.year,
+    );
   }
 
   Future<void> _onRefresh() async {
@@ -82,55 +44,56 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
         _selectedMonth.month + delta,
       );
     });
-    await _loadData();
+    await context.read<DriverEarningsCubit>().getMonthlySummary(
+      month: _selectedMonth.month,
+      year: _selectedMonth.year,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return MyScaffold(
-      headers: [
-        AppBar(
-          title: Text(context.l10n.earnings_wallet),
-          leading: [
-            IconButton(
-              icon: const Icon(LucideIcons.arrowLeft),
-              onPressed: () => context.pop(),
-              variance: ButtonVariance.ghost,
+    return BlocBuilder<DriverEarningsCubit, DriverEarningsState>(
+      builder: (context, state) {
+        final isLoading = state.fetchWalletResult.isLoading;
+        final wallet = state.wallet;
+        final transactions = state.transactions;
+        final monthlySummary = state.monthlySummary;
+
+        return MyScaffold(
+          headers: [
+            AppBar(
+              title: Text(context.l10n.earnings_wallet),
+              leading: [
+                IconButton(
+                  icon: const Icon(LucideIcons.arrowLeft),
+                  onPressed: () => context.pop(),
+                  variance: ButtonVariance.ghost,
+                ),
+              ],
             ),
           ],
-        ),
-      ],
-      body: _isLoading && _wallet == null
-          ? const Center(child: CircularProgressIndicator())
-          : RefreshTrigger(
-              onRefresh: _onRefresh,
-              child: SingleChildScrollView(
-                padding: EdgeInsets.all(16.dg),
-                child: Column(
-                  spacing: 16.h,
-                  children: [
-                    Builder(
-                      builder: (context) {
-                        final wallet = _wallet;
-                        if (wallet == null) return const SizedBox.shrink();
-                        return _buildWalletBalanceCard(wallet);
-                      },
+          body: isLoading && wallet == null
+              ? const Center(child: CircularProgressIndicator())
+              : RefreshTrigger(
+                  onRefresh: _onRefresh,
+                  child: SingleChildScrollView(
+                    padding: EdgeInsets.all(16.dg),
+                    child: Column(
+                      spacing: 16.h,
+                      children: [
+                        if (wallet != null) _buildWalletBalanceCard(wallet),
+                        if (monthlySummary != null) _buildMonthSelector(),
+                        if (monthlySummary is WalletMonthlySummaryResponse)
+                          _buildEarningsSummary(monthlySummary),
+                        _buildCommissionReportSection(transactions),
+                        _buildRecentTransactions(transactions),
+                        _buildWithdrawButton(wallet),
+                      ],
                     ),
-                    if (_monthlySummary != null) _buildMonthSelector(),
-                    Builder(
-                      builder: (context) {
-                        final summary = _monthlySummary;
-                        if (summary == null) return const SizedBox.shrink();
-                        return _buildEarningsSummary(summary);
-                      },
-                    ),
-                    _buildCommissionReportSection(),
-                    _buildRecentTransactions(),
-                    _buildWithdrawButton(),
-                  ],
+                  ),
                 ),
-              ),
-            ),
+        );
+      },
     );
   }
 
@@ -199,7 +162,7 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
   }
 
   Widget _buildMonthSelector() {
-    final monthFormat = DateFormat('MMMM yyyy');
+    final monthFormat = DateFormat("MMMM yyyy");
 
     return Row(
       children: [
@@ -310,7 +273,7 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
     );
   }
 
-  Widget _buildCommissionReportSection() {
+  Widget _buildCommissionReportSection(List<Transaction> transactions) {
     return GestureDetector(
       onTap: () => context.push(Routes.driverCommissionReport.path),
       child: Card(
@@ -350,7 +313,7 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
                   Expanded(
                     child: _buildCommissionStatCard(
                       context.l10n.commission,
-                      _calculateTotalCommission(),
+                      _calculateTotalCommission(transactions),
                       LucideIcons.trendingDown,
                       const Color(0xFFF44336),
                     ),
@@ -397,7 +360,7 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
             ),
           ),
           Text(
-            isPercentage ? '$value%' : context.formatCurrency(value),
+            isPercentage ? "$value%" : context.formatCurrency(value),
             style: context.typography.h4.copyWith(
               fontSize: 16.sp,
               fontWeight: FontWeight.bold,
@@ -409,15 +372,14 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
     );
   }
 
-  num _calculateTotalCommission() {
-    // Calculate commission from transactions
-    return _transactions
+  num _calculateTotalCommission(List<Transaction> transactions) {
+    return transactions
         .where((t) => t.type == TransactionType.COMMISSION)
         .fold<num>(0, (sum, t) => sum + t.amount);
   }
 
-  Widget _buildRecentTransactions() {
-    final recentTransactions = _transactions.take(5).toList();
+  Widget _buildRecentTransactions(List<Transaction> transactions) {
+    final recentTransactions = transactions.take(5).toList();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -435,7 +397,7 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
             const Spacer(),
             TextButton(
               onPressed: () {
-                _showAllTransactionsDialog(recentTransactions);
+                _showAllTransactionsDialog(transactions);
               },
               child: Text(context.l10n.view_all),
             ),
@@ -522,7 +484,7 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
                   ),
                   Text(
                     DateFormat(
-                      'MMM dd, yyyy HH:mm',
+                      "MMM dd, yyyy HH:mm",
                     ).format(transaction.createdAt),
                     style: context.typography.small.copyWith(
                       fontSize: 11.sp,
@@ -546,11 +508,13 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
     );
   }
 
-  Widget _buildWithdrawButton() {
+  Widget _buildWithdrawButton(Wallet? wallet) {
     return SizedBox(
       width: double.infinity,
       child: PrimaryButton(
-        onPressed: (_wallet?.balance ?? 0) > 0 ? _showWithdrawDialog : null,
+        onPressed: (wallet?.balance ?? 0) > 0
+            ? () => _showWithdrawDialog(wallet)
+            : null,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           spacing: 8,
@@ -563,7 +527,7 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
     );
   }
 
-  void _showWithdrawDialog() {
+  void _showWithdrawDialog(Wallet? wallet) {
     final amountController = TextEditingController();
     final accountNumberController = TextEditingController();
     final accountNameController = TextEditingController();
@@ -573,31 +537,34 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
     var isValidated = false;
     var saveBank = false;
 
-    // Fetch saved bank details and show dialog
+    final cubit = context.read<DriverEarningsCubit>();
+
     showDialog(
       context: context,
       builder: (dialogContext) => StatefulBuilder(
         builder: (context, setState) {
-          // Load saved bank details on first build
           if (isLoadingSavedBank) {
             isLoadingSavedBank = false;
-            _loadSavedBankDetails().then((savedBank) {
-              if (savedBank != null && savedBank.hasSavedBank) {
-                setState(() {
-                  if (savedBank.bankProvider != null) {
-                    selectedBank = savedBank.bankProvider!;
+            cubit
+                .getSavedBankAccount()
+                .then((result) {
+                  final savedBank = result.data;
+                  if (savedBank.hasSavedBank) {
+                    setState(() {
+                      if (savedBank.bankProvider != null) {
+                        selectedBank = savedBank.bankProvider!;
+                      }
+                      if (savedBank.accountNumber != null) {
+                        accountNumberController.text = savedBank.accountNumber!;
+                      }
+                      if (savedBank.accountName != null) {
+                        accountNameController.text = savedBank.accountName!;
+                        isValidated = true;
+                      }
+                    });
                   }
-                  if (savedBank.accountNumber != null) {
-                    accountNumberController.text = savedBank.accountNumber!;
-                  }
-                  if (savedBank.accountName != null) {
-                    accountNameController.text = savedBank.accountName!;
-                    // If we have saved account name, consider it pre-validated
-                    isValidated = true;
-                  }
-                });
-              }
-            });
+                })
+                .catchError((_) {});
           }
 
           Future<void> validateBankAccount() async {
@@ -620,12 +587,10 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
             setState(() => isValidating = true);
 
             try {
-              final result = await this.context
-                  .read<WalletRepository>()
-                  .validateBankAccount(
-                    bankProvider: selectedBank,
-                    accountNumber: accountNumber,
-                  );
+              final result = await cubit.validateBankAccount(
+                bankProvider: selectedBank,
+                accountNumber: accountNumber,
+              );
 
               if (result.data.isValid && result.data.accountName != null) {
                 setState(() {
@@ -633,7 +598,7 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
                   isValidated = true;
                   isValidating = false;
                 });
-                if (mounted) {
+                if (this.mounted) {
                   context.showMyToast(
                     context.l10n.toast_bank_account_verified,
                     type: ToastType.success,
@@ -641,7 +606,7 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
                 }
               } else {
                 setState(() => isValidating = false);
-                if (mounted) {
+                if (this.mounted) {
                   context.showMyToast(
                     context.l10n.toast_failed_verify_bank,
                     type: ToastType.failed,
@@ -650,7 +615,7 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
               }
             } catch (e) {
               setState(() => isValidating = false);
-              if (mounted) {
+              if (this.mounted) {
                 context.showMyToast(
                   context.l10n.toast_failed_verify_bank,
                   type: ToastType.failed,
@@ -667,7 +632,6 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 spacing: 16.h,
                 children: [
-                  // Available balance info
                   Container(
                     padding: EdgeInsets.all(12.dg),
                     decoration: BoxDecoration(
@@ -697,7 +661,7 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
                                 ),
                               ),
                               Text(
-                                context.formatCurrency(_wallet?.balance ?? 0),
+                                context.formatCurrency(wallet?.balance ?? 0),
                                 style: context.typography.h3.copyWith(
                                   fontSize: 18.sp,
                                   fontWeight: FontWeight.bold,
@@ -710,19 +674,16 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
                       ],
                     ),
                   ),
-                  // Amount field
                   TextField(
                     controller: amountController,
                     placeholder: Text(context.l10n.enter_withdrawal_amount),
                   ),
-                  // Bank provider dropdown
                   Select<BankProvider>(
                     value: selectedBank,
                     onChanged: (value) {
                       if (value != null) {
                         setState(() {
                           selectedBank = value;
-                          // Reset validation when bank changes
                           isValidated = false;
                         });
                       }
@@ -745,7 +706,6 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
                       ),
                     ).call,
                   ),
-                  // Account number field with validate button
                   Row(
                     spacing: 8.w,
                     children: [
@@ -756,7 +716,6 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
                             context.l10n.hint_bank_account_number,
                           ),
                           onChanged: (_) {
-                            // Reset validation when account number changes
                             if (isValidated) {
                               setState(() => isValidated = false);
                             }
@@ -795,7 +754,6 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
                       ),
                     ],
                   ),
-                  // Account name field (read-only when validated)
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     spacing: 4.h,
@@ -815,7 +773,6 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
                         ),
                     ],
                   ),
-                  // Save bank checkbox
                   Row(
                     spacing: 8.w,
                     children: [
@@ -859,9 +816,8 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
                             .trim();
                         final accountName = accountNameController.text.trim();
 
-                        // Validate amount
                         if (amountText.isEmpty) {
-                          if (mounted) {
+                          if (this.mounted) {
                             context.showMyToast(
                               context.l10n.enter_withdrawal_amount,
                               type: ToastType.failed,
@@ -872,7 +828,7 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
 
                         final amount = num.tryParse(amountText);
                         if (amount == null || amount <= 0) {
-                          if (mounted) {
+                          if (this.mounted) {
                             context.showMyToast(
                               context.l10n.invalid_amount,
                               type: ToastType.failed,
@@ -881,9 +837,9 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
                           return;
                         }
 
-                        final balance = _wallet?.balance ?? 0;
+                        final balance = wallet?.balance ?? 0;
                         if (amount > balance) {
-                          if (mounted) {
+                          if (this.mounted) {
                             context.showMyToast(
                               context.l10n.insufficient_balance,
                               type: ToastType.failed,
@@ -892,9 +848,8 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
                           return;
                         }
 
-                        // Validate account number
                         if (accountNumber.isEmpty) {
-                          if (mounted) {
+                          if (this.mounted) {
                             context.showMyToast(
                               context.l10n.please_enter_bank_account_number,
                               type: ToastType.failed,
@@ -921,26 +876,6 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
     );
   }
 
-  Future<
-    ({
-      bool hasSavedBank,
-      BankProvider? bankProvider,
-      String? accountNumber,
-      String? accountName,
-    })?
-  >
-  _loadSavedBankDetails() async {
-    try {
-      final result = await context
-          .read<WalletRepository>()
-          .getSavedBankAccount();
-      return result.data;
-    } catch (e) {
-      // Silently fail - user can enter bank details manually
-      return null;
-    }
-  }
-
   Future<void> _processWithdrawal({
     required num amount,
     required BankProvider bankProvider,
@@ -949,28 +884,26 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
     bool saveBank = false,
   }) async {
     try {
-      setState(() => _isLoading = true);
+      setState(() => _isWithdrawing = true);
 
       final request = WithdrawRequest(
         amount: amount,
         bankProvider: bankProvider,
         accountNumber: accountNumber,
         accountName: accountName,
-        // TODO: Add saveBank once API client is regenerated
-        // saveBank: saveBank,
       );
 
-      final result = await context.read<WalletRepository>().withdraw(request);
+      final cubit = context.read<DriverEarningsCubit>();
+      final result = await cubit.withdraw(request);
 
       if (mounted) {
-        setState(() => _isLoading = false);
+        setState(() => _isWithdrawing = false);
         context.showMyToast(result.message, type: ToastType.success);
-        // Reload data to reflect new balance
         _loadData();
       }
     } catch (e) {
       if (mounted) {
-        setState(() => _isLoading = false);
+        setState(() => _isWithdrawing = false);
         context.showMyToast(
           context.l10n.failed_to_withdraw,
           type: ToastType.failed,
@@ -1048,7 +981,7 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'All Transactions',
+                    "All Transactions",
                     style: TextStyle(
                       fontSize: 18.sp,
                       fontWeight: FontWeight.bold,
@@ -1071,7 +1004,7 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
                       Icon(LucideIcons.receipt, size: 64.sp),
                       SizedBox(height: 16.h),
                       Text(
-                        'No transactions found',
+                        "No transactions found",
                         style: TextStyle(
                           fontSize: 16.sp,
                           color: context.colorScheme.mutedForeground,
@@ -1096,7 +1029,7 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
                     final amountColor = isIncome
                         ? const Color(0xFF4CAF50)
                         : const Color(0xFFF44336);
-                    final amountPrefix = isIncome ? '+' : '-';
+                    final amountPrefix = isIncome ? "+" : "-";
 
                     return Card(
                       child: Padding(
@@ -1146,7 +1079,7 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
                                   SizedBox(height: 4.h),
                                   Text(
                                     DateFormat(
-                                      'MMM dd, yyyy HH:mm',
+                                      "MMM dd, yyyy HH:mm",
                                     ).format(transaction.createdAt),
                                     style: TextStyle(
                                       fontSize: 11.sp,
@@ -1158,7 +1091,7 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
                               ),
                             ),
                             Text(
-                              '$amountPrefix${context.formatCurrency(transaction.amount)}',
+                              "$amountPrefix${context.formatCurrency(transaction.amount)}",
                               style: TextStyle(
                                 fontSize: 16.sp,
                                 fontWeight: FontWeight.bold,

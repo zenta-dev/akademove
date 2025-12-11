@@ -6954,6 +6954,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Share this QR code with others so they can easily transfer money to you'**
   String get share_qr_instruction;
+
+  /// No description provided for @label_user_id.
+  ///
+  /// In en, this message translates to:
+  /// **'User ID'**
+  String get label_user_id;
+
+  /// No description provided for @copied_to_clipboard.
+  ///
+  /// In en, this message translates to:
+  /// **'Copied to clipboard'**
+  String get copied_to_clipboard;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

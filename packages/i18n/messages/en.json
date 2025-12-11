@@ -1361,5 +1361,7 @@
   "your_merchant_details": "Your merchant profile details",
   "your_message": "Your Message",
   "your_name": "Your Name",
-  "your_payment_details": "Your payment account information"
+  "your_payment_details": "Your payment account information",
+  "label_user_id": "User ID",
+  "copied_to_clipboard": "Copied to clipboard"
 }

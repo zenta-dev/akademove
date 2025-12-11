@@ -2,8 +2,11 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:akademove/core/_export.dart';
+import 'package:akademove/features/features.dart';
 import 'package:akademove/l10n/l10n.dart';
 import 'package:api_client/api_client.dart';
+import 'package:dio/dio.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:geocoding/geocoding.dart' hide Location;
 import 'package:geolocator/geolocator.dart';
@@ -522,16 +525,111 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
       return;
     }
 
+    // Get form values
+    final values = _formController.values;
+    final outletName = _FormKeys.outletName[values];
+    final outletEmail = _FormKeys.outletEmail[values];
+    final bankAccountNumber = _bankAccountController.text.trim();
+
+    // Validate required fields
+    if (outletName == null || outletName.isEmpty) {
+      _showToast(
+        context,
+        context.l10n.error_validation,
+        context.l10n.error_fill_required_fields,
+      );
+      return;
+    }
+
+    if (_selectedBankProvider == null) {
+      _showToast(
+        context,
+        context.l10n.error_validation,
+        context.l10n.toast_select_bank_first,
+      );
+      return;
+    }
+
+    if (bankAccountNumber.isEmpty) {
+      _showToast(
+        context,
+        context.l10n.error_validation,
+        context.l10n.toast_enter_bank_account,
+      );
+      return;
+    }
+
+    // Get merchant ID
+    final merchantCubit = context.read<MerchantCubit>();
+    final merchantId = merchantCubit.state.mine.value?.id;
+
+    if (merchantId == null) {
+      _showToast(
+        context,
+        context.l10n.error,
+        context.l10n.error_merchant_info_not_found,
+      );
+      return;
+    }
+
     setState(() => _isLoading = true);
 
     try {
-      // TODO: Integrate with MerchantRepository.updateProfile when available
-      // For now, simulate API call
-      await Future.delayed(const Duration(seconds: 1));
+      // Get document file and convert to MultipartFile
+      final documentFile = _documents[_Documents.outletDocument];
+      final document = documentFile != null && documentFile.existsSync()
+          ? await MultipartFile.fromFile(documentFile.path)
+          : null;
 
-      if (mounted) {
-        setState(() => _isLoading = false);
+      // Parse bank account number
+      final bankNumber = num.tryParse(
+        bankAccountNumber.replaceAll(RegExp('[^0-9]'), ''),
+      );
+      if (bankNumber == null) {
+        if (mounted) {
+          setState(() => _isLoading = false);
+          _showToast(
+            context,
+            context.l10n.error_validation,
+            context.l10n.toast_enter_bank_account,
+          );
+        }
+        return;
+      }
+
+      if (!mounted) return;
+
+      // Call update profile API
+      await merchantCubit.updateProfile(
+        merchantId: merchantId,
+        name: outletName,
+        email: outletEmail,
+        phoneCountryCode: '+62', // TODO: Get from phone input
+        phoneNumber: 0, // TODO: Get from phone input
+        address: _outletAddress,
+        locationX: _outletLocation.x,
+        locationY: _outletLocation.y,
+        category: null, // TODO: Add category selection if needed
+        bankProvider: _selectedBankProvider!.name,
+        bankNumber: bankNumber,
+        bankAccountName: _accountHolderName,
+        document: document,
+      );
+
+      if (!mounted) return;
+
+      final state = merchantCubit.state;
+      setState(() => _isLoading = false);
+
+      if (state.updateProfile.isSuccess) {
         _showToast(context, context.l10n.success, context.l10n.toast_success);
+        merchantCubit.clearUpdateProfileResult();
+      } else if (state.updateProfile.isFailed) {
+        _showToast(
+          context,
+          context.l10n.error,
+          state.updateProfile.error?.message ?? context.l10n.an_error_occurred,
+        );
       }
     } catch (e) {
       if (mounted) {

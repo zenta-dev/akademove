@@ -19,95 +19,67 @@ class DriverCommissionReportScreen extends StatefulWidget {
 
 class _DriverCommissionReportScreenState
     extends State<DriverCommissionReportScreen> {
-  Wallet? _wallet;
-  List<Transaction> _transactions = [];
-  bool _isLoading = false;
-  DateTime _selectedMonth = DateTime.now();
-
   @override
   void initState() {
     super.initState();
-    _loadData();
-  }
-
-  Future<void> _loadData() async {
-    setState(() => _isLoading = true);
-
-    try {
-      final results = await Future.wait([
-        context.read<WalletRepository>().getWallet(),
-        context.read<TransactionRepository>().list(),
-      ]);
-
-      if (mounted) {
-        setState(() {
-          _wallet = (results[0] as BaseResponse<Wallet>).data;
-          _transactions = (results[1] as BaseResponse<List<Transaction>>).data;
-          _isLoading = false;
-        });
-      }
-    } on BaseError catch (e) {
-      if (mounted) {
-        setState(() => _isLoading = false);
-        context.showMyToast(
-          e.message ?? context.l10n.failed_to_load,
-          type: ToastType.failed,
-        );
-      }
-    } catch (e) {
-      if (mounted) {
-        setState(() => _isLoading = false);
-        context.showMyToast(
-          context.l10n.failed_to_load,
-          type: ToastType.failed,
-        );
-      }
-    }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<DriverEarningsCubit>().init();
+    });
   }
 
   Future<void> _onRefresh() async {
-    await _loadData();
+    await context.read<DriverEarningsCubit>().init();
   }
 
   @override
   Widget build(BuildContext context) {
-    return MyScaffold(
-      headers: [
-        AppBar(
-          title: Text(context.l10n.title_commission_report),
-          leading: [
-            IconButton(
-              icon: const Icon(LucideIcons.arrowLeft),
-              onPressed: () => context.pop(),
-              variance: ButtonVariance.ghost,
+    return BlocBuilder<DriverEarningsCubit, DriverEarningsState>(
+      builder: (context, state) {
+        final isLoading =
+            state.fetchWalletResult.isLoading ||
+            state.fetchTransactionsResult.isLoading;
+        final wallet = state.wallet;
+        final transactions = state.transactions;
+
+        return MyScaffold(
+          headers: [
+            AppBar(
+              title: Text(context.l10n.title_commission_report),
+              leading: [
+                IconButton(
+                  icon: const Icon(LucideIcons.arrowLeft),
+                  onPressed: () => context.pop(),
+                  variance: ButtonVariance.ghost,
+                ),
+              ],
             ),
           ],
-        ),
-      ],
-      body: _isLoading && _wallet == null
-          ? const Center(child: CircularProgressIndicator())
-          : RefreshTrigger(
-              onRefresh: _onRefresh,
-              child: SingleChildScrollView(
-                padding: EdgeInsets.all(16.dg),
-                child: Column(
-                  spacing: 16.h,
-                  children: [
-                    _buildBalanceCards(),
-                    _buildCommissionChart(),
-                    _buildCommissionSummary(),
-                    _buildCommissionDetails(),
-                    _buildActionButtons(),
-                  ],
+          body: isLoading && wallet == null
+              ? const Center(child: CircularProgressIndicator())
+              : RefreshTrigger(
+                  onRefresh: _onRefresh,
+                  child: SingleChildScrollView(
+                    padding: EdgeInsets.all(16.dg),
+                    child: Column(
+                      spacing: 16.h,
+                      children: [
+                        _buildBalanceCards(transactions),
+                        _buildCommissionChart(transactions),
+                        _buildCommissionSummary(transactions),
+                        _buildCommissionDetails(transactions),
+                        _buildActionButtons(),
+                      ],
+                    ),
+                  ),
                 ),
-              ),
-            ),
+        );
+      },
     );
   }
 
-  Widget _buildBalanceCards() {
-    final totalEarnings = _calculateTotalEarnings();
-    final totalCommission = _calculateTotalCommission();
+  Widget _buildBalanceCards(List<Transaction> transactions) {
+    final totalEarnings = _calculateTotalEarnings(transactions);
+    final totalCommission = _calculateTotalCommission(transactions);
     final netIncome = totalEarnings - totalCommission;
 
     return Row(
@@ -174,9 +146,9 @@ class _DriverCommissionReportScreenState
     );
   }
 
-  Widget _buildCommissionChart() {
-    final totalEarnings = _calculateTotalEarnings();
-    final totalCommission = _calculateTotalCommission();
+  Widget _buildCommissionChart(List<Transaction> transactions) {
+    final totalEarnings = _calculateTotalEarnings(transactions);
+    final totalCommission = _calculateTotalCommission(transactions);
     final netIncome = totalEarnings - totalCommission;
 
     if (totalEarnings == 0) {
@@ -325,9 +297,9 @@ class _DriverCommissionReportScreenState
     );
   }
 
-  Widget _buildCommissionSummary() {
-    final totalEarnings = _calculateTotalEarnings();
-    final totalCommission = _calculateTotalCommission();
+  Widget _buildCommissionSummary(List<Transaction> transactions) {
+    final totalEarnings = _calculateTotalEarnings(transactions);
+    final totalCommission = _calculateTotalCommission(transactions);
     final commissionRate = totalEarnings > 0
         ? (totalCommission / totalEarnings) * 100
         : 0.0;
@@ -410,8 +382,8 @@ class _DriverCommissionReportScreenState
     );
   }
 
-  Widget _buildCommissionDetails() {
-    final commissionTransactions = _transactions
+  Widget _buildCommissionDetails(List<Transaction> transactions) {
+    final commissionTransactions = transactions
         .where((t) => t.type == TransactionType.COMMISSION)
         .toList();
 
@@ -558,14 +530,14 @@ class _DriverCommissionReportScreenState
     );
   }
 
-  num _calculateTotalEarnings() {
-    return _transactions
+  num _calculateTotalEarnings(List<Transaction> transactions) {
+    return transactions
         .where((t) => t.type == TransactionType.EARNING)
         .fold<num>(0, (sum, t) => sum + t.amount);
   }
 
-  num _calculateTotalCommission() {
-    return _transactions
+  num _calculateTotalCommission(List<Transaction> transactions) {
+    return transactions
         .where((t) => t.type == TransactionType.COMMISSION)
         .fold<num>(0, (sum, t) => sum + t.amount);
   }

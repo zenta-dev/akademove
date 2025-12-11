@@ -3,7 +3,7 @@ import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/l10n/l10n.dart';
 import 'package:api_client/api_client.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -43,6 +43,15 @@ class _UserWalletTransferScreenState extends State<UserWalletTransferScreen> {
     super.dispose();
   }
 
+  bool _canTransfer(UserWalletTransferState state) {
+    if (amount < 1000) return false;
+    if (useUserId) {
+      return userIdController.text.trim().isNotEmpty;
+    } else {
+      return state.selectedRecipient != null;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MyScaffold(
@@ -65,7 +74,6 @@ class _UserWalletTransferScreenState extends State<UserWalletTransferScreen> {
               context.l10n.transfer_success,
               type: ToastType.success,
             );
-            // Refresh wallet balance
             context.read<UserWalletCubit>().getMine();
             context.pop(true);
           } else if (state.transfer.isFailed) {
@@ -86,22 +94,20 @@ class _UserWalletTransferScreenState extends State<UserWalletTransferScreen> {
             children: [
               // Recipient Section
               if (!useUserId) ...[
-                // Phone input with lookup
                 _buildPhoneInput(context, state, isLookupLoading),
-                // Recipient preview when found
                 if (selectedRecipient != null)
                   _buildRecipientPreview(context, selectedRecipient),
-                // Not found message
                 if (state.recipientLookup.isSuccess &&
                     selectedRecipient == null &&
                     phoneController.text.trim().isNotEmpty)
                   _buildRecipientNotFound(context),
               ] else ...[
-                // User ID input (fallback)
                 _buildUserIdInput(context, isLoading),
               ],
+
               // Toggle between phone and user ID
               _buildToggleInputMode(context),
+
               // Amount quick templates
               Row(
                 spacing: 16.w,
@@ -111,11 +117,13 @@ class _UserWalletTransferScreenState extends State<UserWalletTransferScreen> {
                 spacing: 16.w,
                 children: [_buildTemplate(50000), _buildTemplate(100000)],
               ),
+
               // Amount Input
               _buildAmountInput(context, isLoading),
+
               // Note Input (optional)
               _buildNoteInput(context, isLoading),
-              const Spacer(),
+
               // Transfer button
               SizedBox(
                 width: double.infinity,
@@ -160,31 +168,32 @@ class _UserWalletTransferScreenState extends State<UserWalletTransferScreen> {
                 placeholder: Text(context.l10n.enter_recipient_phone),
                 onSubmitted: (_) => _lookupRecipient(context),
                 onChanged: (_) {
-                  // Clear previous lookup when user changes input
                   context.read<UserWalletTransferCubit>().clearRecipient();
                   setState(() {});
                 },
                 features: [
-                  if (phoneController.text.isNotEmpty)
-                    InputFeature.clear(
-                      icon: IconButton(
-                        density: ButtonDensity.compact,
-                        onPressed: () {
-                          phoneController.clear();
-                          context
-                              .read<UserWalletTransferCubit>()
-                              .clearRecipient();
-                          setState(() {});
-                        },
-                        icon: const Icon(LucideIcons.x),
-                        variance: const ButtonStyle.textIcon(),
-                      ),
+                  InputFeature.clear(
+                    icon: IconButton(
+                      density: ButtonDensity.compact,
+                      onPressed: phoneController.text.isEmpty
+                          ? null
+                          : () {
+                              phoneController.clear();
+                              context
+                                  .read<UserWalletTransferCubit>()
+                                  .clearRecipient();
+                              setState(() {});
+                            },
+                      icon: const Icon(LucideIcons.x),
+                      variance: phoneController.text.isEmpty
+                          ? const ButtonStyle.ghost()
+                          : const ButtonStyle.textIcon(),
                     ),
+                  ),
                 ],
               ),
             ),
-            Button(
-              style: const ButtonStyle.secondary(),
+            Button.secondary(
               enabled:
                   !isLookupLoading && phoneController.text.trim().isNotEmpty,
               onPressed: () => _lookupRecipient(context),
@@ -209,10 +218,10 @@ class _UserWalletTransferScreenState extends State<UserWalletTransferScreen> {
     return Container(
       padding: EdgeInsets.all(12.w),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
+        color: context.colorScheme.primary.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(8.r),
         border: Border.all(
-          color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3),
+          color: context.colorScheme.primary.withValues(alpha: 0.3),
         ),
       ),
       child: Row(
@@ -236,14 +245,14 @@ class _UserWalletTransferScreenState extends State<UserWalletTransferScreen> {
                   DefaultText(
                     '${recipient.phone!.countryCode} ${recipient.phone!.maskedNumber}',
                     fontSize: 12.sp,
-                    color: Theme.of(context).colorScheme.mutedForeground,
+                    color: context.colorScheme.mutedForeground,
                   ),
               ],
             ),
           ),
           Icon(
             LucideIcons.circleCheck,
-            color: Theme.of(context).colorScheme.primary,
+            color: context.colorScheme.primary,
             size: 20.w,
           ),
         ],
@@ -255,19 +264,17 @@ class _UserWalletTransferScreenState extends State<UserWalletTransferScreen> {
     return Container(
       padding: EdgeInsets.all(12.w),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.destructive.withValues(alpha: 0.1),
+        color: context.colorScheme.destructive.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(8.r),
         border: Border.all(
-          color: Theme.of(
-            context,
-          ).colorScheme.destructive.withValues(alpha: 0.3),
+          color: context.colorScheme.destructive.withValues(alpha: 0.3),
         ),
       ),
       child: Row(
         children: [
           Icon(
             LucideIcons.userX,
-            color: Theme.of(context).colorScheme.destructive,
+            color: context.colorScheme.destructive,
             size: 20.w,
           ),
           SizedBox(width: 12.w),
@@ -275,7 +282,7 @@ class _UserWalletTransferScreenState extends State<UserWalletTransferScreen> {
             child: DefaultText(
               context.l10n.recipient_not_found,
               fontSize: 13.sp,
-              color: Theme.of(context).colorScheme.destructive,
+              color: context.colorScheme.destructive,
             ),
           ),
         ],
@@ -325,24 +332,23 @@ class _UserWalletTransferScreenState extends State<UserWalletTransferScreen> {
         setState(() {
           useUserId = !useUserId;
         });
-        // Clear recipient when switching modes
         context.read<UserWalletTransferCubit>().clearRecipient();
       },
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
+        spacing: 4.w,
         children: [
           Icon(
             useUserId ? LucideIcons.phone : LucideIcons.hash,
             size: 14.w,
-            color: Theme.of(context).colorScheme.primary,
+            color: context.colorScheme.primary,
           ),
-          SizedBox(width: 4.w),
           DefaultText(
             useUserId
                 ? context.l10n.recipient_phone
                 : context.l10n.use_user_id_instead,
             fontSize: 13.sp,
-            color: Theme.of(context).colorScheme.primary,
+            color: context.colorScheme.primary,
           ),
         ],
       ),
@@ -361,11 +367,7 @@ class _UserWalletTransferScreenState extends State<UserWalletTransferScreen> {
           onChanged: (value) {
             final parsed = int.tryParse(value, radix: 10);
             setState(() {
-              if (parsed != null) {
-                amount = parsed;
-              } else {
-                amount = 0;
-              }
+              amount = parsed ?? 0;
             });
           },
           keyboardType: const TextInputType.numberWithOptions(signed: true),
@@ -417,14 +419,31 @@ class _UserWalletTransferScreenState extends State<UserWalletTransferScreen> {
     );
   }
 
-  bool _canTransfer(UserWalletTransferState state) {
-    if (amount < 1000) return false;
-
-    if (useUserId) {
-      return userIdController.text.trim().isNotEmpty;
+  String _formatPrice(int amount) {
+    if (amount >= 1000000) {
+      final juta = amount / 1000000;
+      return 'Rp ${juta.toStringAsFixed(juta % 1 == 0 ? 0 : 1)} juta';
+    } else if (amount >= 1000) {
+      final ribu = amount / 1000;
+      return 'Rp ${ribu.toStringAsFixed(ribu % 1 == 0 ? 0 : 1)} ribu';
     } else {
-      return state.selectedRecipient != null;
+      return 'Rp $amount';
     }
+  }
+
+  Widget _buildTemplate(int val) {
+    return Expanded(
+      child: Button(
+        style: const ButtonStyle.secondary(density: ButtonDensity.comfortable),
+        onPressed: () {
+          amountController.text = '$val';
+          setState(() {
+            amount = val;
+          });
+        },
+        child: DefaultText(_formatPrice(val)),
+      ),
+    );
   }
 
   void _lookupRecipient(BuildContext context) {
@@ -480,7 +499,6 @@ class _UserWalletTransferScreenState extends State<UserWalletTransferScreen> {
       return;
     }
 
-    // Show confirmation dialog
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (dialogContext) => AlertDialog(
@@ -488,20 +506,18 @@ class _UserWalletTransferScreenState extends State<UserWalletTransferScreen> {
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
+          spacing: 8.h,
           children: [
             DefaultText(
               '${context.l10n.recipient}: $recipientDisplay',
               fontSize: 14.sp,
             ),
-            SizedBox(height: 8.h),
             DefaultText(
               '${context.l10n.amount}: ${context.formatCurrency(amount)}',
               fontSize: 14.sp,
             ),
-            if (note.isNotEmpty) ...[
-              SizedBox(height: 8.h),
-              DefaultText('${context.l10n.note} $note', fontSize: 14.sp),
-            ],
+            if (note.isNotEmpty)
+              DefaultText('${context.l10n.note}: $note', fontSize: 14.sp),
           ],
         ),
         actions: [
@@ -524,32 +540,5 @@ class _UserWalletTransferScreenState extends State<UserWalletTransferScreen> {
         note: note.isEmpty ? null : note,
       );
     }
-  }
-
-  String _formatPrice(int amount) {
-    if (amount >= 1000000) {
-      final juta = amount / 1000000;
-      return 'Rp ${juta.toStringAsFixed(juta % 1 == 0 ? 0 : 1)} juta';
-    } else if (amount >= 1000) {
-      final ribu = amount / 1000;
-      return 'Rp ${ribu.toStringAsFixed(ribu % 1 == 0 ? 0 : 1)} ribu';
-    } else {
-      return 'Rp $amount';
-    }
-  }
-
-  Widget _buildTemplate(int val) {
-    return Expanded(
-      child: Button(
-        style: const ButtonStyle.secondary(density: ButtonDensity.comfortable),
-        onPressed: () {
-          amountController.text = '$val';
-          setState(() {
-            amount = val;
-          });
-        },
-        child: DefaultText(_formatPrice(val)),
-      ),
-    );
   }
 }

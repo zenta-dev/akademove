@@ -4,6 +4,7 @@ import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/l10n/l10n.dart';
 import 'package:api_client/api_client.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -206,6 +207,49 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
                 ),
               ),
             ],
+          ),
+          const Divider(),
+          // User ID with copy functionality
+          GestureDetector(
+            onTap: () {
+              Clipboard.setData(ClipboardData(text: driver.userId));
+              context.showMyToast(
+                context.l10n.copied_to_clipboard,
+                type: ToastType.success,
+              );
+            },
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              spacing: 8.w,
+              children: [
+                Icon(
+                  LucideIcons.fingerprint,
+                  size: 16.sp,
+                  color: context.colorScheme.mutedForeground,
+                ),
+                Text(
+                  context.l10n.label_user_id,
+                  style: context.typography.small.copyWith(
+                    fontSize: 12.sp,
+                    color: context.colorScheme.mutedForeground,
+                  ),
+                ),
+                Text(
+                  driver.userId.length > 8
+                      ? '${driver.userId.substring(0, 8)}...'
+                      : driver.userId,
+                  style: context.typography.p.copyWith(
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                Icon(
+                  LucideIcons.copy,
+                  size: 14.sp,
+                  color: context.colorScheme.mutedForeground,
+                ),
+              ],
+            ),
           ),
         ],
       ),

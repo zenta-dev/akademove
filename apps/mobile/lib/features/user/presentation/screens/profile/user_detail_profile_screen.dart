@@ -4,6 +4,7 @@ import 'package:akademove/gen/assets.gen.dart';
 import 'package:akademove/l10n/l10n.dart';
 import 'package:api_client/api_client.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -53,6 +54,44 @@ class UserDetailProfileScreen extends StatelessWidget {
                       return Column(
                         spacing: 12.h,
                         children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              DefaultText(
+                                context.l10n.label_user_id,
+                                fontSize: 14.sp,
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  Clipboard.setData(
+                                    ClipboardData(text: user.id),
+                                  );
+                                  context.showMyToast(
+                                    context.l10n.copied_to_clipboard,
+                                    type: ToastType.success,
+                                  );
+                                },
+                                child: Row(
+                                  spacing: 4.w,
+                                  children: [
+                                    DefaultText(
+                                      user.id.length > 8
+                                          ? '${user.id.substring(0, 8)}...'
+                                          : user.id,
+                                      fontSize: 14.sp,
+                                    ),
+                                    Icon(
+                                      LucideIcons.copy,
+                                      size: 14.sp,
+                                      color:
+                                          context.colorScheme.mutedForeground,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                          const Divider(),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [

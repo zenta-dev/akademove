@@ -2,14 +2,19 @@ import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/cart/data/_export.dart';
 import 'package:akademove/features/cart/data/models/cart_models.dart' as models;
 import 'package:akademove/features/cart/presentation/states/_export.dart';
+import 'package:akademove/features/order/data/repositories/order_repository.dart';
 import 'package:api_client/api_client.dart' hide Cart, CartItem;
 
 class CartCubit extends BaseCubit<CartState> {
-  CartCubit({required CartRepository cartRepository})
-    : _cartRepository = cartRepository,
-      super(const CartState());
+  CartCubit({
+    required CartRepository cartRepository,
+    required OrderRepository orderRepository,
+  }) : _cartRepository = cartRepository,
+       _orderRepository = orderRepository,
+       super(const CartState());
 
   final CartRepository _cartRepository;
+  final OrderRepository _orderRepository;
 
   /// Load cart from storage on init
   Future<void> loadCart() async => await taskManager.execute('CC-lC', () async {
@@ -287,4 +292,65 @@ class CartCubit extends BaseCubit<CartState> {
 
   /// Reset to initial state
   void reset() => emit(const CartState());
+
+  /// Place a food order from the current cart
+  Future<PlaceOrderResponse?> placeFoodOrder({
+    required Coordinate pickupLocation,
+    required Coordinate dropoffLocation,
+    required PaymentMethod paymentMethod,
+    PaymentProvider paymentProvider = PaymentProvider.MANUAL,
+  }) async => await taskManager.execute('CC-pFO', () async {
+    try {
+      emit(
+        state.copyWith(placeFoodOrderResult: const OperationResult.loading()),
+      );
+
+      // Get order items from cart
+      final orderItems = await _cartRepository.convertToOrderItems();
+      if (orderItems.isEmpty) {
+        throw const RepositoryError(
+          'Cart is empty',
+          code: ErrorCode.badRequest,
+        );
+      }
+
+      // Create place order request
+      final placeOrderRequest = PlaceOrder(
+        type: OrderType.FOOD,
+        pickupLocation: pickupLocation,
+        dropoffLocation: dropoffLocation,
+        items: orderItems,
+        payment: PlaceOrderPayment(
+          method: paymentMethod,
+          provider: paymentProvider,
+        ),
+      );
+
+      // Call API via repository
+      final response = await _orderRepository.placeOrder(placeOrderRequest);
+
+      // Clear cart on success
+      await _cartRepository.clearCart();
+
+      emit(
+        state.copyWith(
+          placeFoodOrderResult: OperationResult.success(
+            response.data,
+            message: response.message,
+          ),
+          cart: OperationResult.success(null),
+        ),
+      );
+
+      return response.data;
+    } on BaseError catch (e, st) {
+      logger.e(
+        '[CartCubit] - placeFoodOrder Error: ${e.message}',
+        error: e,
+        stackTrace: st,
+      );
+      emit(state.copyWith(placeFoodOrderResult: OperationResult.failed(e)));
+      return null;
+    }
+  });
 }

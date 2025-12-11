@@ -1360,5 +1360,7 @@
   "your_merchant_details": "Detail profil merchant Anda",
   "your_message": "Pesan Anda",
   "your_name": "Nama Anda",
-  "your_payment_details": "Informasi akun pembayaran Anda"
+  "your_payment_details": "Informasi akun pembayaran Anda",
+  "label_user_id": "ID Pengguna",
+  "copied_to_clipboard": "Disalin ke clipboard"
 }

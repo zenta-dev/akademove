@@ -3,6 +3,7 @@ import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/l10n/l10n.dart';
 import 'package:api_client/api_client.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -32,32 +33,44 @@ class UserWalletScreen extends StatelessWidget {
               icon: const Icon(LucideIcons.bell),
               variance: ButtonVariance.ghost,
               onPressed: () {
-                // TODO: Navigate to notifications screen when implemented
+                context.pushNamed(Routes.userNotifications.name);
               },
             ),
-            BlocBuilder<AuthCubit, AuthState>(
-              builder: (context, state) {
-                return IconButton(
-                  icon: UserAvatarWidget(
-                    name: state.user.data?.value.name ?? AppConstants.name,
-                    image: state.user.data?.value.image,
-                  ),
-                  variance: ButtonVariance.ghost,
-                  onPressed: () => context.pushNamed(Routes.userProfile.name),
-                ).asSkeleton(enabled: state.user.isLoading);
-              },
-            ),
+            // BlocBuilder<AuthCubit, AuthState>(
+            //   builder: (context, state) {
+            //     return IconButton(
+            //       icon: UserAvatarWidget(
+            //         name: state.user.data?.value.name ?? AppConstants.name,
+            //         image: state.user.data?.value.image,
+            //       ),
+            //       variance: ButtonVariance.ghost,
+            //       onPressed: () {
+            //         context.popUntilRoot();
+            //         context.read<BottomNavBarCubit>().setIndex(2);
+            //         context.pushNamed(Routes.userProfile.name);
+            //       },
+            //     ).asSkeleton(enabled: state.user.isLoading);
+            //   },
+            // ),
           ],
         ),
       ],
+      onRefresh: () async {
+        context.read<UserWalletCubit>().getMine();
+      },
       body: Column(
         spacing: 16.h,
         children: [
-          BlocBuilder<UserWalletCubit, UserWalletState>(
-            builder: (context, state) {
-              return WalletBalanceCardWidget(
-                balance: (state.myWallet.value?.balance ?? 0).toDouble(),
-              ).asSkeleton(enabled: state.myWallet.isLoading);
+          BlocBuilder<AuthCubit, AuthState>(
+            builder: (context, authState) {
+              return BlocBuilder<UserWalletCubit, UserWalletState>(
+                builder: (context, state) {
+                  return WalletBalanceCardWidget(
+                    balance: (state.myWallet.value?.balance ?? 0).toDouble(),
+                    userId: authState.user.data?.value.id,
+                  ).asSkeleton(enabled: state.myWallet.isLoading);
+                },
+              );
             },
           ),
           Card(
@@ -65,17 +78,17 @@ class UserWalletScreen extends StatelessWidget {
             child: Column(
               spacing: 8.h,
               children: [
-                BlocBuilder<UserWalletCubit, UserWalletState>(
-                  builder: (context, state) {
-                    return WalletMonthlySummaryCardWidget(
-                      summary:
-                          state.thisMonthSummary.value ?? dummyWalletSummary,
-                    ).asSkeleton(enabled: state.myWallet.isLoading);
-                  },
-                ),
-                const Divider(),
+                // BlocBuilder<UserWalletCubit, UserWalletState>(
+                //   builder: (context, state) {
+                //     return WalletMonthlySummaryCardWidget(
+                //       summary:
+                //           state.thisMonthSummary.value ?? dummyWalletSummary,
+                //     ).asSkeleton(enabled: state.myWallet.isLoading);
+                //   },
+                // ),
+                // const Divider(),
                 SizedBox(
-                  height: context.mediaQuerySize.height * 0.25,
+                  height: context.mediaQuerySize.height * 0.4,
                   child: BlocBuilder<UserWalletCubit, UserWalletState>(
                     builder: (context, state) {
                       return WalletListTransactionWidget(
@@ -96,8 +109,13 @@ class UserWalletScreen extends StatelessWidget {
 }
 
 class WalletBalanceCardWidget extends StatelessWidget {
-  const WalletBalanceCardWidget({required this.balance, super.key});
+  const WalletBalanceCardWidget({
+    required this.balance,
+    this.userId,
+    super.key,
+  });
   final double balance;
+  final String? userId;
 
   @override
   Widget build(BuildContext context) {
@@ -111,8 +129,44 @@ class WalletBalanceCardWidget extends StatelessWidget {
       child: Column(
         spacing: 8.h,
         children: [
+          if (userId != null)
+            GestureDetector(
+              onTap: () {
+                Clipboard.setData(ClipboardData(text: userId!));
+                context.showMyToast(
+                  context.l10n.copied_to_clipboard,
+                  type: ToastType.success,
+                );
+              },
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.2),
+                  borderRadius: BorderRadius.circular(20.r),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  spacing: 6.w,
+                  children: [
+                    Icon(
+                      LucideIcons.fingerprint,
+                      size: 14.sp,
+                      color: Colors.white,
+                    ),
+                    Text(
+                      '${context.l10n.label_user_id}: ${userId!.length > 8 ? '${userId!.substring(0, 8)}...' : userId!}',
+                      style: context.typography.small.copyWith(
+                        fontSize: 11.sp,
+                        color: Colors.white,
+                      ),
+                    ),
+                    Icon(LucideIcons.copy, size: 12.sp, color: Colors.white),
+                  ],
+                ),
+              ),
+            ),
           DefaultText(
-            context.l10n.expenses,
+            context.l10n.available_balance,
             fontSize: 12.sp,
             fontWeight: FontWeight.w600,
           ),
@@ -267,27 +321,38 @@ class WalletListTransactionWidget extends StatelessWidget {
             children: [
               Icon(_determineTransactionIcon(tx.type)),
               Gap(4.w),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    spacing: 4.w,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      DefaultText(tx.description ?? 'Unknown'),
-                      Icon(
-                        _determineStatusIcon(tx.status),
-                        size: 12.sp,
-                        color: _determineColor(tx.status),
-                      ),
-                    ],
-                  ),
-                  DefaultText(tx.createdAt.orderFormat),
-                ],
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Flexible(
+                          child: Text(
+                            tx.description ?? 'Unknown',
+                            style: context.typography.small,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                          ),
+                        ),
+                        Gap(4.w),
+                        Icon(
+                          _determineStatusIcon(tx.status),
+                          size: 12.sp,
+                          color: _determineColor(tx.status),
+                        ),
+                      ],
+                    ),
+                    DefaultText(tx.createdAt.orderFormat),
+                  ],
+                ),
               ),
-              const Spacer(),
-              DefaultText(
+              Gap(8.w),
+              Text(
                 '${_determinePlusMinus(tx.type, tx.status)} ${context.formatCurrency(tx.amount)}',
+                style: context.typography.small.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ],
           ),

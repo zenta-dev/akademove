@@ -24,6 +24,7 @@ Name | Type | Description | Notes
 **driverMatchingIntervalSeconds** | **num** |  | [optional] [default to 30]
 **driverMatchingBroadcastLimit** | **int** |  | [optional] [default to 10]
 **driverMaxCancellationsPerDay** | **int** |  | [optional] [default to 3]
+**paymentPendingTimeoutMinutes** | **num** |  | [optional] [default to 15]
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

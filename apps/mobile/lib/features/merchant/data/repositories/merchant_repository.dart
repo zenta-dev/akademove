@@ -3,10 +3,12 @@ import 'package:api_client/api_client.dart';
 import 'package:dio/dio.dart';
 
 class MerchantRepository extends BaseRepository {
-  const MerchantRepository({required ApiClient apiClient})
-    : _apiClient = apiClient;
+  MerchantRepository({required ApiClient apiClient}) : _apiClient = apiClient;
 
   final ApiClient _apiClient;
+
+  /// Cached merchant ID for availability operations
+  String? _cachedMerchantId;
 
   Future<BaseResponse<Merchant>> getMine() {
     return guard(() async {
@@ -264,56 +266,200 @@ class MerchantRepository extends BaseRepository {
 
   // ========== MERCHANT AVAILABILITY METHODS ==========
 
+  /// Helper to get merchant ID (cached for performance)
+  Future<String> _getMerchantId() async {
+    if (_cachedMerchantId != null) {
+      return _cachedMerchantId!;
+    }
+    final res = await getMine();
+    _cachedMerchantId = res.data.id;
+    return _cachedMerchantId!;
+  }
+
+  /// Clear cached merchant ID (call on logout)
+  void clearCache() {
+    _cachedMerchantId = null;
+  }
+
   /// Set merchant online status
   Future<BaseResponse<Merchant>> setOnlineStatus(bool isOnline) {
     return guard(() async {
-      // Use the merchant/me endpoint to get the current merchant,
-      // then call the availability endpoint
-      final res = await getMine();
+      final merchantId = await _getMerchantId();
 
-      // In a real implementation, you would call the API endpoint here
-      // For now, return the merchant with updated status
+      final res = await _apiClient.getMerchantApi().merchantSetOnlineStatus(
+        id: merchantId,
+        driverUpdateOnlineStatusRequest: DriverUpdateOnlineStatusRequest(
+          isOnline: isOnline,
+        ),
+      );
+
+      final data =
+          res.data ??
+          (throw const RepositoryError(
+            'Failed to update online status',
+            code: ErrorCode.unknown,
+          ));
+
       return SuccessResponse(
         message: isOnline ? 'You are now online' : 'You are now offline',
-        data: res.data,
-      );
-    });
-  }
-
-  /// Set merchant order-taking status
-  Future<BaseResponse<Merchant>> setOrderTakingStatus(bool isTakingOrders) {
-    return guard(() async {
-      final res = await getMine();
-
-      return SuccessResponse(
-        message: isTakingOrders
-            ? 'You are now taking orders'
-            : 'You have stopped taking orders',
-        data: res.data,
+        data: data.data,
       );
     });
   }
 
   /// Set merchant operating status (OPEN, CLOSED, BREAK, MAINTENANCE)
-  Future<BaseResponse<Merchant>> setOperatingStatus(String operatingStatus) {
+  Future<BaseResponse<Merchant>> setOperatingStatus(
+    MerchantSetOperatingStatusRequestOperatingStatusEnum operatingStatus,
+  ) {
     return guard(() async {
-      final res = await getMine();
+      final merchantId = await _getMerchantId();
+
+      final res = await _apiClient.getMerchantApi().merchantSetOperatingStatus(
+        id: merchantId,
+        merchantSetOperatingStatusRequest: MerchantSetOperatingStatusRequest(
+          operatingStatus: operatingStatus,
+        ),
+      );
+
+      final data =
+          res.data ??
+          (throw const RepositoryError(
+            'Failed to update operating status',
+            code: ErrorCode.unknown,
+          ));
 
       return SuccessResponse(
-        message: 'Store status updated to $operatingStatus',
-        data: res.data,
+        message: 'Store status updated to ${operatingStatus.value}',
+        data: data.data,
       );
     });
   }
 
   /// Get merchant availability status
-  Future<BaseResponse<Merchant>> getAvailabilityStatus() {
+  Future<BaseResponse<MerchantGetAvailabilityStatus200ResponseData>>
+  getAvailabilityStatus() {
     return guard(() async {
-      final res = await getMine();
+      final merchantId = await _getMerchantId();
+
+      final res = await _apiClient
+          .getMerchantApi()
+          .merchantGetAvailabilityStatus(id: merchantId);
+
+      final data =
+          res.data ??
+          (throw const RepositoryError(
+            'Failed to get availability status',
+            code: ErrorCode.unknown,
+          ));
+
+      return SuccessResponse(message: data.message, data: data.data);
+    });
+  }
+
+  // ========== MERCHANT PROFILE UPDATE METHODS ==========
+
+  /// Update merchant profile
+  Future<BaseResponse<Merchant>> update({
+    required String merchantId,
+    String? name,
+    String? email,
+    required String phoneCountryCode,
+    required int phoneNumber,
+    String? address,
+    required num locationX,
+    required num locationY,
+    String? category,
+    required String bankProvider,
+    required num bankNumber,
+    String? bankAccountName,
+    MultipartFile? document,
+    MultipartFile? image,
+  }) {
+    return guard(() async {
+      final res = await _apiClient.getMerchantApi().merchantUpdate(
+        id: merchantId,
+        name: name,
+        email: email,
+        phoneCountryCode: phoneCountryCode,
+        phoneNumber: phoneNumber,
+        address: address,
+        locationX: locationX,
+        locationY: locationY,
+        category: category,
+        bankProvider: bankProvider,
+        bankNumber: bankNumber,
+        bankAccountName: bankAccountName,
+        document: document,
+        image: image,
+      );
+
+      final data =
+          res.data ??
+          (throw const RepositoryError(
+            'Failed to update merchant',
+            code: ErrorCode.unknown,
+          ));
+
+      return SuccessResponse(message: data.message, data: data.data);
+    });
+  }
+
+  // ========== MERCHANT ANALYTICS METHODS ==========
+
+  /// Get merchant analytics
+  Future<BaseResponse<MerchantAnalytics200ResponseData>> getAnalytics({
+    String? period,
+    DateTime? startDate,
+    DateTime? endDate,
+  }) {
+    return guard(() async {
+      final merchantId = await _getMerchantId();
+
+      final res = await _apiClient.getMerchantApi().merchantAnalytics(
+        id: merchantId,
+        period: period,
+        startDate: startDate,
+        endDate: endDate,
+      );
+
+      final data =
+          res.data ??
+          (throw const RepositoryError(
+            'Failed to get analytics',
+            code: ErrorCode.unknown,
+          ));
+
+      return SuccessResponse(message: data.message, data: data.data);
+    });
+  }
+
+  /// Export merchant analytics
+  Future<BaseResponse<String>> exportAnalytics({
+    required DateTime startDate,
+    required DateTime endDate,
+  }) {
+    return guard(() async {
+      final merchantId = await _getMerchantId();
+
+      final res = await _apiClient
+          .getMerchantApi()
+          .analyticsExportMerchantAnalytics(
+            merchantId: merchantId,
+            startDate: startDate,
+            endDate: endDate,
+          );
+
+      final data = res.data;
+      if (data == null) {
+        throw const RepositoryError(
+          'Failed to export analytics',
+          code: ErrorCode.unknown,
+        );
+      }
 
       return SuccessResponse(
-        message: 'Availability status loaded',
-        data: res.data,
+        message: 'Analytics exported successfully',
+        data: data,
       );
     });
   }

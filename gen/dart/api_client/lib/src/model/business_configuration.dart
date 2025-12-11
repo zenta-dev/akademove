@@ -34,6 +34,7 @@ class BusinessConfiguration {
      this.driverMatchingIntervalSeconds = 30,
      this.driverMatchingBroadcastLimit = 10,
      this.driverMaxCancellationsPerDay = 3,
+     this.paymentPendingTimeoutMinutes = 15,
   });
   @JsonKey(name: r'minTransferAmount', required: true, includeIfNull: false)
   final num minTransferAmount;
@@ -95,6 +96,9 @@ class BusinessConfiguration {
   @JsonKey(defaultValue: 3,name: r'driverMaxCancellationsPerDay', required: false, includeIfNull: false)
   final int? driverMaxCancellationsPerDay;
   
+  @JsonKey(defaultValue: 15,name: r'paymentPendingTimeoutMinutes', required: false, includeIfNull: false)
+  final num? paymentPendingTimeoutMinutes;
+  
   @override
   bool operator ==(Object other) => identical(this, other) || other is BusinessConfiguration &&
     other.minTransferAmount == minTransferAmount &&
@@ -112,7 +116,8 @@ class BusinessConfiguration {
     other.driverMatchingRadiusExpansionRate == driverMatchingRadiusExpansionRate &&
     other.driverMatchingIntervalSeconds == driverMatchingIntervalSeconds &&
     other.driverMatchingBroadcastLimit == driverMatchingBroadcastLimit &&
-    other.driverMaxCancellationsPerDay == driverMaxCancellationsPerDay;
+    other.driverMaxCancellationsPerDay == driverMaxCancellationsPerDay &&
+    other.paymentPendingTimeoutMinutes == paymentPendingTimeoutMinutes;
 
   @override
   int get hashCode =>
@@ -131,7 +136,8 @@ class BusinessConfiguration {
       driverMatchingRadiusExpansionRate.hashCode +
       driverMatchingIntervalSeconds.hashCode +
       driverMatchingBroadcastLimit.hashCode +
-      driverMaxCancellationsPerDay.hashCode;
+      driverMaxCancellationsPerDay.hashCode +
+      paymentPendingTimeoutMinutes.hashCode;
 
   factory BusinessConfiguration.fromJson(Map<String, dynamic> json) => _$BusinessConfigurationFromJson(json);
 

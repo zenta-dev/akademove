@@ -136,6 +136,15 @@ void _setupCubit() {
       () => MerchantMenuCubit(merchantRepository: sl<MerchantRepository>()),
     )
     ..registerFactory(
+      () => MerchantAvailabilityCubit(
+        merchantRepository: sl<MerchantRepository>(),
+      ),
+    )
+    ..registerFactory(
+      () =>
+          MerchantAnalyticsCubit(merchantRepository: sl<MerchantRepository>()),
+    )
+    ..registerFactory(
       () => MerchantOrderCubit(
         orderRepository: sl<OrderRepository>(),
         merchantOrderRepository: sl<MerchantOrderRepository>(),
@@ -234,6 +243,12 @@ void _setupCubit() {
       () => DriverListHistoryCubit(orderRepository: sl<OrderRepository>()),
     )
     ..registerFactory(
+      () => DriverEarningsCubit(
+        walletRepository: sl<WalletRepository>(),
+        transactionRepository: sl<TransactionRepository>(),
+      ),
+    )
+    ..registerFactory(
       () => DriverProfileCubit(driverRepository: sl<DriverRepository>()),
     )
     ..registerFactory(
@@ -254,7 +269,12 @@ void _setupCubit() {
         badgeRepository: sl<BadgeRepository>(),
       ),
     )
-    ..registerFactory(() => CartCubit(cartRepository: sl<CartRepository>()))
+    ..registerFactory(
+      () => CartCubit(
+        cartRepository: sl<CartRepository>(),
+        orderRepository: sl<OrderRepository>(),
+      ),
+    )
     ..registerFactory(
       () => QuickMessageCubit(
         quickMessageRepository: sl<QuickMessageRepository>(),

@@ -110,6 +110,18 @@ export const BusinessConfigurationSchema = z.object({
 	 * Drivers exceeding this limit get temporarily suspended
 	 */
 	driverMaxCancellationsPerDay: z.coerce.number().int().positive().default(3),
+
+	// ========================================================================
+	// Order Payment Configuration
+	// ========================================================================
+
+	/**
+	 * Maximum duration in minutes for payment to be completed (default: 15 minutes)
+	 * Orders in REQUESTED status (waiting for payment confirmation) will be
+	 * auto-cancelled after this timeout. This applies to non-wallet payments
+	 * (BANK_TRANSFER, QRIS) where payment is not immediate.
+	 */
+	paymentPendingTimeoutMinutes: z.coerce.number().positive().default(15),
 });
 export type BusinessConfiguration = z.infer<typeof BusinessConfigurationSchema>;
 

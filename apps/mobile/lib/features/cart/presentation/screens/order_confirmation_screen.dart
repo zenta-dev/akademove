@@ -3,7 +3,6 @@ import 'package:akademove/features/cart/data/models/cart_models.dart'
     show Cart, CartItem;
 import 'package:akademove/features/cart/presentation/cubits/cart_cubit.dart';
 import 'package:akademove/features/cart/presentation/states/_export.dart';
-import 'package:akademove/features/order/data/repositories/order_repository.dart';
 import 'package:akademove/l10n/l10n.dart';
 import 'package:api_client/api_client.dart' hide Cart, CartItem;
 import 'package:cached_network_image/cached_network_image.dart';
@@ -14,9 +13,7 @@ import 'package:shadcn_flutter/shadcn_flutter.dart';
 
 /// Order confirmation screen displaying cart summary and payment method selection
 class OrderConfirmationScreen extends StatefulWidget {
-  const OrderConfirmationScreen({required this.orderRepository, super.key});
-
-  final OrderRepository orderRepository;
+  const OrderConfirmationScreen({super.key});
 
   @override
   State<OrderConfirmationScreen> createState() =>
@@ -25,7 +22,6 @@ class OrderConfirmationScreen extends StatefulWidget {
 
 class _OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
   PaymentMethod _selectedPaymentMethod = PaymentMethod.wallet;
-  bool _isPlacingOrder = false;
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +43,35 @@ class _OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
         ),
       ],
       padding: EdgeInsets.zero,
-      body: BlocBuilder<CartCubit, CartState>(
+      body: BlocConsumer<CartCubit, CartState>(
+        listenWhen: (prev, curr) =>
+            prev.placeFoodOrderResult != curr.placeFoodOrderResult,
+        listener: (context, state) {
+          if (state.placeFoodOrderResult.isSuccess) {
+            // Show success message
+            showToast(
+              context: context,
+              builder: (ctx, overlay) => ctx.buildToast(
+                title: context.l10n.order_confirm_success,
+                message: context.l10n.order_confirm_success_message,
+              ),
+              location: ToastLocation.topCenter,
+            );
+
+            // Navigate to home
+            context.go('/user/home');
+          } else if (state.placeFoodOrderResult.isFailed) {
+            final error = state.placeFoodOrderResult.error;
+            showToast(
+              context: context,
+              builder: (ctx, overlay) => ctx.buildToast(
+                title: context.l10n.order_confirm_failed,
+                message: error?.message ?? 'Unknown error',
+              ),
+              location: ToastLocation.topCenter,
+            );
+          }
+        },
         builder: (context, state) {
           final cart = state.currentCart;
           if (state.isEmpty || cart == null) {
@@ -58,13 +82,13 @@ class _OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
             return const Center(child: CircularProgressIndicator());
           }
 
-          return _buildContent(context, cart);
+          return _buildContent(context, cart, state);
         },
       ),
     );
   }
 
-  Widget _buildContent(BuildContext context, Cart cart) {
+  Widget _buildContent(BuildContext context, Cart cart, CartState state) {
     return Column(
       children: [
         Expanded(
@@ -81,7 +105,7 @@ class _OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
             ),
           ),
         ),
-        _buildBottomBar(context, cart),
+        _buildBottomBar(context, cart, state),
       ],
     );
   }
@@ -352,7 +376,9 @@ class _OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
     );
   }
 
-  Widget _buildBottomBar(BuildContext context, Cart cart) {
+  Widget _buildBottomBar(BuildContext context, Cart cart, CartState state) {
+    final isPlacingOrder = state.placeFoodOrderResult.isLoading;
+
     return Container(
       padding: EdgeInsets.all(16.dg),
       decoration: BoxDecoration(
@@ -397,10 +423,10 @@ class _OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
                 ),
                 Button(
                   style: const ButtonStyle.primary(),
-                  onPressed: _isPlacingOrder
+                  onPressed: isPlacingOrder
                       ? null
                       : () => _placeOrder(context, cart),
-                  child: _isPlacingOrder
+                  child: isPlacingOrder
                       ? Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
@@ -426,103 +452,23 @@ class _OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
     );
   }
 
-  // ignore: use_build_context_synchronously
-  Future<void> _placeOrder(BuildContext context, Cart cart) async {
-    // Capture context-dependent values BEFORE any async operations
-    final cartCubit = context.read<CartCubit>();
-    final successTitle = context.l10n.order_confirm_success;
-    final successMessage = context.l10n.order_confirm_success_message;
-    final failedTitle = context.l10n.order_confirm_failed;
+  void _placeOrder(BuildContext context, Cart cart) {
+    // For food orders, we need pickup and dropoff locations
+    // For now, use merchant location as pickup and a default dropoff
+    // In production, you would get these from user input or profile
+    const pickupLocation = Coordinate(
+      x: 106.8271,
+      y: -6.1751,
+    ); // Default Jakarta
+    const dropoffLocation = Coordinate(
+      x: 106.8271,
+      y: -6.1751,
+    ); // Same as pickup for now
 
-    setState(() {
-      _isPlacingOrder = true;
-    });
-
-    try {
-      // For food orders, we need pickup and dropoff locations
-      // For now, use merchant location as pickup and a default dropoff
-      // In production, you would get these from user input or profile
-      final pickupLocation = const Coordinate(
-        x: 106.8271,
-        y: -6.1751,
-      ); // Default Jakarta
-      final dropoffLocation = const Coordinate(
-        x: 106.8271,
-        y: -6.1751,
-      ); // Same as pickup for now
-
-      // Convert cart items to order items
-      final orderItems = cart.items.map((item) {
-        return OrderItem(
-          quantity: item.quantity,
-          item: OrderItemItem(
-            id: item.menuId,
-            merchantId: item.merchantId,
-            name: item.menuName,
-            image: item.menuImage,
-            price: item.unitPrice,
-          ),
-        );
-      }).toList();
-
-      // Create place order request
-      final placeOrderRequest = PlaceOrder(
-        type: OrderType.FOOD,
-        pickupLocation: pickupLocation,
-        dropoffLocation: dropoffLocation,
-        items: orderItems,
-        payment: PlaceOrderPayment(
-          method: _selectedPaymentMethod,
-          provider: PaymentProvider.MANUAL,
-        ),
-      );
-
-      // Call API via repository
-      final response = await widget.orderRepository.placeOrder(
-        placeOrderRequest,
-      );
-
-      if (!mounted) return;
-
-      if (response.isSuccess) {
-        // Clear cart
-        cartCubit.clearCart();
-
-        // Show success message
-        showToast(
-          // ignore: use_build_context_synchronously
-          context: context,
-          builder: (ctx, overlay) =>
-              ctx.buildToast(title: successTitle, message: successMessage),
-          location: ToastLocation.topCenter,
-        );
-
-        // For food orders, navigate to home for now
-        // TODO: Consider adding order tracking screen for food orders
-        // by updating UserOrderCubit state and navigating to userRideOnTrip
-        // ignore: use_build_context_synchronously
-        context.go('/user/home');
-      } else {
-        throw Exception('Failed to place order');
-      }
-    } catch (e) {
-      logger.e('Failed to place order', error: e);
-
-      if (mounted) {
-        showToast(
-          // ignore: use_build_context_synchronously
-          context: context,
-          builder: (ctx, overlay) =>
-              ctx.buildToast(title: failedTitle, message: e.toString()),
-          location: ToastLocation.topCenter,
-        );
-      }
-    } finally {
-      if (mounted) {
-        setState(() {
-          _isPlacingOrder = false;
-        });
-      }
-    }
+    context.read<CartCubit>().placeFoodOrder(
+      pickupLocation: pickupLocation,
+      dropoffLocation: dropoffLocation,
+      paymentMethod: _selectedPaymentMethod,
+    );
   }
 }

@@ -59,6 +59,10 @@ abstract class _$BusinessConfigurationCWProxy {
     int? driverMaxCancellationsPerDay,
   );
 
+  BusinessConfiguration paymentPendingTimeoutMinutes(
+    num? paymentPendingTimeoutMinutes,
+  );
+
   /// Creates a new instance with the provided field values.
   /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `BusinessConfiguration(...).copyWith.fieldName(value)`.
   ///
@@ -83,6 +87,7 @@ abstract class _$BusinessConfigurationCWProxy {
     num? driverMatchingIntervalSeconds,
     int? driverMatchingBroadcastLimit,
     int? driverMaxCancellationsPerDay,
+    num? paymentPendingTimeoutMinutes,
   });
 }
 
@@ -170,6 +175,11 @@ class _$BusinessConfigurationCWProxyImpl
   ) => call(driverMaxCancellationsPerDay: driverMaxCancellationsPerDay);
 
   @override
+  BusinessConfiguration paymentPendingTimeoutMinutes(
+    num? paymentPendingTimeoutMinutes,
+  ) => call(paymentPendingTimeoutMinutes: paymentPendingTimeoutMinutes);
+
+  @override
   /// Creates a new instance with the provided field values.
   /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `BusinessConfiguration(...).copyWith.fieldName(value)`.
   ///
@@ -194,6 +204,7 @@ class _$BusinessConfigurationCWProxyImpl
     Object? driverMatchingIntervalSeconds = const $CopyWithPlaceholder(),
     Object? driverMatchingBroadcastLimit = const $CopyWithPlaceholder(),
     Object? driverMaxCancellationsPerDay = const $CopyWithPlaceholder(),
+    Object? paymentPendingTimeoutMinutes = const $CopyWithPlaceholder(),
   }) {
     return BusinessConfiguration(
       minTransferAmount:
@@ -283,6 +294,11 @@ class _$BusinessConfigurationCWProxyImpl
           ? _value.driverMaxCancellationsPerDay
           // ignore: cast_nullable_to_non_nullable
           : driverMaxCancellationsPerDay as int?,
+      paymentPendingTimeoutMinutes:
+          paymentPendingTimeoutMinutes == const $CopyWithPlaceholder()
+          ? _value.paymentPendingTimeoutMinutes
+          // ignore: cast_nullable_to_non_nullable
+          : paymentPendingTimeoutMinutes as num?,
     );
   }
 }
@@ -372,6 +388,10 @@ BusinessConfiguration _$BusinessConfigurationFromJson(
       'driverMaxCancellationsPerDay',
       (v) => (v as num?)?.toInt() ?? 3,
     ),
+    paymentPendingTimeoutMinutes: $checkedConvert(
+      'paymentPendingTimeoutMinutes',
+      (v) => v as num? ?? 15,
+    ),
   );
   return val;
 });
@@ -396,4 +416,5 @@ Map<String, dynamic> _$BusinessConfigurationToJson(
   'driverMatchingIntervalSeconds': ?instance.driverMatchingIntervalSeconds,
   'driverMatchingBroadcastLimit': ?instance.driverMatchingBroadcastLimit,
   'driverMaxCancellationsPerDay': ?instance.driverMaxCancellationsPerDay,
+  'paymentPendingTimeoutMinutes': ?instance.paymentPendingTimeoutMinutes,
 };

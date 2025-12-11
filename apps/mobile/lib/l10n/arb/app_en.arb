@@ -1495,5 +1495,7 @@
 	"tap_to_change_schedule": "Tap to change",
 	"error_occurred": "An error occurred",
 	"scan_to_send_money": "Scan this QR code to send money to me",
-	"share_qr_instruction": "Share this QR code with others so they can easily transfer money to you"
+	"share_qr_instruction": "Share this QR code with others so they can easily transfer money to you",
+	"label_user_id": "User ID",
+	"copied_to_clipboard": "Copied to clipboard"
 }

@@ -4,6 +4,7 @@ import Decimal from "decimal.js";
 import { and, eq, inArray, lte } from "drizzle-orm";
 import { getServices } from "@/core/factory";
 import { tables } from "@/core/services/db";
+import { BusinessConfigurationService } from "@/features/configuration/services";
 import { OrderRefundService } from "@/features/order/services/order-refund-service";
 import { toNumberSafe } from "@/utils";
 import { logger } from "@/utils/logger";
@@ -14,10 +15,11 @@ import { OrderStateService } from "./services/order-state-service";
  * Called by Cloudflare Workers cron trigger
  *
  * Tasks:
- * 1. Cancel orders stuck in MATCHING status for too long (timeout)
- * 2. Auto-complete orders that have been in COMPLETED status without ratings for too long
- * 3. Handle NO_SHOW orders that need cleanup
- * 4. Update stale order timestamps
+ * 1. Cancel orders stuck in REQUESTED status (payment pending timeout)
+ * 2. Cancel orders stuck in MATCHING status for too long (no driver found)
+ * 3. Auto-complete orders that have been in COMPLETED status without ratings for too long
+ * 4. Handle NO_SHOW orders that need cleanup
+ * 5. Update stale order timestamps
  */
 export async function handleOrderCheckerCron(
 	_env: Env,
@@ -32,15 +34,143 @@ export async function handleOrderCheckerCron(
 		const svc = getServices();
 		const stateService = new OrderStateService();
 
+		// Get configurable timeouts from business configuration
+		const businessConfig = await BusinessConfigurationService.getConfig(
+			svc.db,
+			svc.kv,
+		);
+
 		// Configuration timeouts (in minutes)
-		const MATCHING_TIMEOUT_MINUTES = 10; // Cancel orders stuck in matching for 10 minutes
+		const REQUESTED_TIMEOUT_MINUTES =
+			businessConfig.paymentPendingTimeoutMinutes ?? 15; // Cancel orders waiting for payment
+		const MATCHING_TIMEOUT_MINUTES =
+			businessConfig.driverMatchingTimeoutMinutes ?? 10; // Cancel orders stuck in matching
 		const COMPLETION_TIMEOUT_MINUTES = 60; // Auto-complete orders without ratings after 60 minutes
 		const NO_SHOW_TIMEOUT_MINUTES = 30; // Handle NO_SHOW orders after 30 minutes
 
 		const now = new Date();
 		let processedOrders = 0;
 
-		// 1. Handle orders stuck in MATCHING status
+		// 1. Handle orders stuck in REQUESTED status (payment pending timeout)
+		const requestedTimeout = new Date(
+			now.getTime() - REQUESTED_TIMEOUT_MINUTES * 60 * 1000,
+		);
+		const stuckRequestedOrders = await svc.db.query.order.findMany({
+			where: (f, _op) =>
+				and(eq(f.status, "REQUESTED"), lte(f.createdAt, requestedTimeout)),
+			limit: 100,
+		});
+
+		for (const order of stuckRequestedOrders) {
+			try {
+				// Validate state transition
+				const currentStatus = order.status as OrderStatus;
+				if (currentStatus !== "REQUESTED") {
+					logger.warn(
+						{ orderId: order.id, currentStatus },
+						"[OrderCheckerCron] Order no longer in REQUESTED status, skipping",
+					);
+					continue;
+				}
+
+				// Validate transition using state machine
+				stateService.validateTransition(currentStatus, "CANCELLED_BY_SYSTEM");
+
+				const cancelReason = `Order cancelled due to payment timeout: payment not received within ${REQUESTED_TIMEOUT_MINUTES} minutes`;
+
+				await svc.db.transaction(async (tx) => {
+					// For REQUESTED orders, payment has not been confirmed yet
+					// Check if there's a pending payment that needs to be cancelled
+					// Payment is linked through transaction.referenceId which contains the orderId
+					const pendingPayment = await tx.query.payment.findFirst({
+						with: {
+							transaction: true,
+						},
+						where: (f, op) =>
+							op.and(
+								op.eq(f.status, "PENDING"),
+								op.exists(
+									tx
+										.select()
+										.from(tables.transaction)
+										.where(
+											op.and(
+												op.eq(tables.transaction.id, f.transactionId),
+												op.eq(tables.transaction.referenceId, order.id),
+											),
+										),
+								),
+							),
+					});
+
+					if (pendingPayment) {
+						// Mark payment as EXPIRED
+						await tx
+							.update(tables.payment)
+							.set({
+								status: "EXPIRED",
+								updatedAt: now,
+							})
+							.where(eq(tables.payment.id, pendingPayment.id));
+
+						// Also mark the transaction as EXPIRED
+						await tx
+							.update(tables.transaction)
+							.set({
+								status: "EXPIRED",
+								updatedAt: now,
+							})
+							.where(eq(tables.transaction.id, pendingPayment.transactionId));
+
+						logger.info(
+							{
+								orderId: order.id,
+								paymentId: pendingPayment.id,
+								transactionId: pendingPayment.transactionId,
+							},
+							"[OrderCheckerCron] Marked pending payment and transaction as EXPIRED",
+						);
+					}
+
+					// Update order status
+					await tx
+						.update(tables.order)
+						.set({
+							status: "CANCELLED_BY_SYSTEM",
+							cancelReason,
+							updatedAt: now,
+						})
+						.where(eq(tables.order.id, order.id));
+
+					// Record status change in audit trail
+					await tx.insert(tables.orderStatusHistory).values({
+						orderId: order.id,
+						previousStatus: currentStatus,
+						newStatus: "CANCELLED_BY_SYSTEM",
+						changedBy: undefined,
+						changedByRole: "SYSTEM",
+						reason: cancelReason,
+						changedAt: now,
+					});
+				});
+
+				logger.info(
+					{
+						orderId: order.id,
+						userId: order.userId,
+					},
+					"[OrderCheckerCron] Cancelled stuck REQUESTED order (payment timeout)",
+				);
+				processedOrders++;
+			} catch (error) {
+				logger.error(
+					{ error, orderId: order.id },
+					"[OrderCheckerCron] Failed to cancel stuck REQUESTED order",
+				);
+			}
+		}
+
+		// 2. Handle orders stuck in MATCHING status
 		const matchingTimeout = new Date(
 			now.getTime() - MATCHING_TIMEOUT_MINUTES * 60 * 1000,
 		);
@@ -120,7 +250,7 @@ export async function handleOrderCheckerCron(
 			}
 		}
 
-		// 2. Auto-complete orders without ratings
+		// 3. Auto-complete orders without ratings
 		const completionTimeout = new Date(
 			now.getTime() - COMPLETION_TIMEOUT_MINUTES * 60 * 1000,
 		);
@@ -158,7 +288,7 @@ export async function handleOrderCheckerCron(
 			}
 		}
 
-		// 3. Handle NO_SHOW orders
+		// 4. Handle NO_SHOW orders
 		const noShowTimeout = new Date(
 			now.getTime() - NO_SHOW_TIMEOUT_MINUTES * 60 * 1000,
 		);
@@ -240,7 +370,7 @@ export async function handleOrderCheckerCron(
 			}
 		}
 
-		// 4. Update stale timestamps for orders in transit
+		// 5. Update stale timestamps for orders in transit
 		const staleTimestampLimit = new Date(now.getTime() - 5 * 60 * 1000); // 5 minutes ago
 		const inTransitOrders = await svc.db.query.order.findMany({
 			where: (f, _op) =>
@@ -276,6 +406,7 @@ export async function handleOrderCheckerCron(
 		logger.info(
 			{
 				processedOrders,
+				stuckRequestedOrders: stuckRequestedOrders.length,
 				stuckMatchingOrders: stuckMatchingOrders.length,
 				completedOrders: completedOrders.length,
 				noShowOrders: noShowOrders.length,

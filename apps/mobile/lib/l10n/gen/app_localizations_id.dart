@@ -3519,4 +3519,10 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get share_qr_instruction => 'Bagikan QR code ini kepada orang lain agar mereka dapat dengan mudah mentransfer uang kepada Anda';
+
+  @override
+  String get label_user_id => 'ID Pengguna';
+
+  @override
+  String get copied_to_clipboard => 'Disalin ke clipboard';
 }

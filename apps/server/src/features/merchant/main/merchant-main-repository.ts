@@ -414,7 +414,7 @@ export class MerchantMainRepository extends BaseRepository {
 			let paginationClause = sql``;
 
 			if (opts?.cursor) {
-				paginationClause = sql`AND m.created_at > ${new Date(opts.cursor)} LIMIT ${limit + 1}`;
+				paginationClause = sql`LIMIT ${limit + 1}`;
 			} else if (opts?.page) {
 				const offset = (opts.page - 1) * limit;
 				paginationClause = sql`OFFSET ${offset} LIMIT ${limit}`;
@@ -422,37 +422,51 @@ export class MerchantMainRepository extends BaseRepository {
 				paginationClause = sql`LIMIT ${limit}`;
 			}
 
+			// Use LEFT JOIN to include merchants without orders
+			// Merchants without orders get a base score based on rating and recency
 			const rows = await this.db.execute<{
 				merchant_id: string;
 				popularity_score: number;
 			}>(sql`
 			WITH merchant_stats AS (
 				SELECT
-					o.merchant_id,
-					COUNT(*) AS total_orders,
-					SUM(o.total_price) AS total_revenue,
+					m.id AS merchant_id,
+					COALESCE(COUNT(o.id), 0) AS total_orders,
+					COALESCE(SUM(o.total_price), 0) AS total_revenue,
 					MAX(o.requested_at) AS last_order_date,
 					m.rating,
 					m.created_at
-				FROM am_orders o
-				JOIN am_merchants m ON m.id = o.merchant_id
-				WHERE o.status = 'COMPLETED'
+				FROM am_merchants m
+				LEFT JOIN am_orders o ON o.merchant_id = m.id
+					AND o.status = 'COMPLETED'
 					AND o.requested_at > NOW() - INTERVAL '30 days'
-					AND m.status = 'APPROVED'
+				WHERE m.status = 'APPROVED'
 					AND m.is_active = true
 					AND m.operating_status = 'OPEN'
-				GROUP BY o.merchant_id, m.rating, m.created_at
+				GROUP BY m.id, m.rating, m.created_at
 			),
 			normalized AS (
 				SELECT
 					merchant_id,
-					(total_orders - MIN(total_orders) OVER()) /
-						NULLIF((MAX(total_orders) OVER() - MIN(total_orders) OVER()), 0) AS order_score,
-					(total_revenue - MIN(total_revenue) OVER()) /
-						NULLIF((MAX(total_revenue) OVER() - MIN(total_revenue) OVER()), 0) AS revenue_score,
-					(rating - MIN(rating) OVER()) /
-						NULLIF((MAX(rating) OVER() - MIN(rating) OVER()), 0) AS rating_score,
-					EXTRACT(EPOCH FROM (NOW() - last_order_date)) AS seconds_since_last_order,
+					COALESCE(
+						(total_orders - MIN(total_orders) OVER()) /
+						NULLIF((MAX(total_orders) OVER() - MIN(total_orders) OVER()), 0),
+						0
+					) AS order_score,
+					COALESCE(
+						(total_revenue - MIN(total_revenue) OVER()) /
+						NULLIF((MAX(total_revenue) OVER() - MIN(total_revenue) OVER()), 0),
+						0
+					) AS revenue_score,
+					COALESCE(
+						(rating - MIN(rating) OVER()) /
+						NULLIF((MAX(rating) OVER() - MIN(rating) OVER()), 0),
+						0.5
+					) AS rating_score,
+					CASE
+						WHEN last_order_date IS NULL THEN NULL
+						ELSE EXTRACT(EPOCH FROM (NOW() - last_order_date))
+					END AS seconds_since_last_order,
 					created_at
 				FROM merchant_stats
 			),
@@ -462,23 +476,27 @@ export class MerchantMainRepository extends BaseRepository {
 					order_score,
 					revenue_score,
 					rating_score,
-					1 - (
-						(seconds_since_last_order - MIN(seconds_since_last_order) OVER()) /
-						NULLIF((MAX(seconds_since_last_order) OVER() - MIN(seconds_since_last_order) OVER()), 0)
-					) AS recency_score,
+					CASE
+						WHEN seconds_since_last_order IS NULL THEN 0.3
+						ELSE 1 - COALESCE(
+							(seconds_since_last_order - MIN(seconds_since_last_order) OVER()) /
+							NULLIF((MAX(seconds_since_last_order) OVER() - MIN(seconds_since_last_order) OVER()), 0),
+							0
+						)
+					END AS recency_score,
 					created_at
 				FROM normalized
 			)
 			SELECT
 				r.merchant_id,
 				(
-					0.40 * r.order_score +
-					0.25 * r.revenue_score +
-					0.20 * r.rating_score +
-					0.15 * r.recency_score
+					0.40 * COALESCE(r.order_score, 0) +
+					0.25 * COALESCE(r.revenue_score, 0) +
+					0.20 * COALESCE(r.rating_score, 0.5) +
+					0.15 * COALESCE(r.recency_score, 0.3)
 				) AS popularity_score
 			FROM recency r
-			ORDER BY popularity_score DESC
+			ORDER BY popularity_score DESC, r.created_at DESC
 			${paginationClause};
 		`);
 

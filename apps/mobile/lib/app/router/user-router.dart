@@ -281,9 +281,7 @@ final userRouter = StatefulShellRoute.indexedStack(
           path: Routes.userOrderConfirm.path,
           builder: (context, state) => BlocProvider.value(
             value: BlocProvider.of<CartCubit>(context),
-            child: OrderConfirmationScreen(
-              orderRepository: sl<OrderRepository>(),
-            ),
+            child: const OrderConfirmationScreen(),
           ),
         ),
         GoRoute(

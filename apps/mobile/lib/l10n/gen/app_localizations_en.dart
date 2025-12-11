@@ -3519,4 +3519,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get share_qr_instruction => 'Share this QR code with others so they can easily transfer money to you';
+
+  @override
+  String get label_user_id => 'User ID';
+
+  @override
+  String get copied_to_clipboard => 'Copied to clipboard';
 }

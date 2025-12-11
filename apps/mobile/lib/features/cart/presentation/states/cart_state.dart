@@ -8,6 +8,7 @@ class CartState extends Equatable {
     this.removeItemResult = const OperationResult.idle(),
     this.clearCartResult = const OperationResult.idle(),
     this.replaceCartResult = const OperationResult.idle(),
+    this.placeFoodOrderResult = const OperationResult.idle(),
     this.pendingItem,
     this.pendingMerchantName,
     this.showMerchantConflict = false,
@@ -30,6 +31,9 @@ class CartState extends Equatable {
 
   /// Replace cart operation result (when merchant conflict resolved)
   final OperationResult<Cart> replaceCartResult;
+
+  /// Place food order operation result
+  final OperationResult<PlaceOrderResponse> placeFoodOrderResult;
 
   /// Pending item to add (when merchant conflict detected)
   final CartItem? pendingItem;
@@ -82,6 +86,7 @@ class CartState extends Equatable {
     removeItemResult,
     clearCartResult,
     replaceCartResult,
+    placeFoodOrderResult,
     pendingItem,
     pendingMerchantName,
     showMerchantConflict,
@@ -94,6 +99,7 @@ class CartState extends Equatable {
     OperationResult<Cart?>? removeItemResult,
     OperationResult<bool>? clearCartResult,
     OperationResult<Cart>? replaceCartResult,
+    OperationResult<PlaceOrderResponse>? placeFoodOrderResult,
     CartItem? pendingItem,
     String? pendingMerchantName,
     bool? showMerchantConflict,
@@ -106,6 +112,7 @@ class CartState extends Equatable {
       removeItemResult: removeItemResult ?? this.removeItemResult,
       clearCartResult: clearCartResult ?? this.clearCartResult,
       replaceCartResult: replaceCartResult ?? this.replaceCartResult,
+      placeFoodOrderResult: placeFoodOrderResult ?? this.placeFoodOrderResult,
       pendingItem: clearPending ? null : (pendingItem ?? this.pendingItem),
       pendingMerchantName: clearPending
           ? null

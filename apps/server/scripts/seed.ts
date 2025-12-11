@@ -965,9 +965,12 @@ export async function seedConfigurations() {
 					noShowDriverCompensationRate: 0.8, // 80% of penalty goes to driver
 					// Delivery verification
 					highValueOrderThreshold: 100_000, // 100k IDR threshold for OTP
+					// Order timeouts
+					driverMatchingTimeoutMinutes: 15, // 15 minutes for driver matching
+					paymentPendingTimeoutMinutes: 15, // 15 minutes for payment confirmation
 				},
 				description:
-					"Business configuration for wallet limits, cancellation fees, and delivery verification",
+					"Business configuration for wallet limits, cancellation fees, delivery verification, and order timeouts",
 				updatedById: admin.id,
 				createdAt: now,
 				updatedAt: now,
