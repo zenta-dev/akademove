@@ -1,18 +1,19 @@
 // This file infers types for the cloudflare:workers environment from your Alchemy Worker.
 // @see https://alchemy.run/concepts/bindings/#type-safe-bindings
 
-import type { ServerEnv } from "../../alchemy.run";
-import type { PaymentRoom, OrderRoom } from "./src";
 import type {
-	OrderQueueMessage,
 	NotificationQueueMessage,
+	OrderQueueMessage,
 	ProcessingQueueMessage,
 	QueueMessage,
 } from "@repo/schema/queue";
+import type { ServerEnv } from "../../alchemy.run";
+import type { MerchantRoom, OrderRoom, PaymentRoom } from "./src";
 
 export interface CloudflareEnv extends ServerEnv {
 	ORDER_ROOM: DurableObjectNamespace<OrderRoom>;
 	PAYMENT_ROOM: DurableObjectNamespace<PaymentRoom>;
+	MERCHANT_ROOM: DurableObjectNamespace<MerchantRoom>;
 	// Queue bindings with typed message bodies
 	ORDER_QUEUE: Queue<OrderQueueMessage>;
 	NOTIFICATION_QUEUE: Queue<NotificationQueueMessage>;

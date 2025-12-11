@@ -330,7 +330,7 @@ class IncomingOrderListener extends StatelessWidget {
             final currentOrder = state.currentOrder;
             if (currentOrder != null) {
               // Navigate to order detail screen
-              context.goNamed(
+              context.pushNamed(
                 Routes.driverOrderDetail.name,
                 pathParameters: {'orderId': currentOrder.id},
               );

@@ -1,3 +1,4 @@
+export * from "./merchant/merchant-ws";
 export * from "./order/order-ws";
 export * from "./payment/payment-ws";
 
@@ -10,6 +11,7 @@ import {
 } from "@/core/middlewares/auth";
 import { honoWebsocketHeader } from "@/core/middlewares/header";
 import { withQueryParams } from "@/utils";
+import { MerchantRoom } from "./merchant/merchant-ws";
 import { OrderRepository } from "./order/order-repository";
 import { PaymentRepository } from "./payment/payment-repository";
 
@@ -42,6 +44,17 @@ export const setupWebsocketRouter = (app: Hono<HonoContext>) =>
 		.get("/ws/order/:id", async (c) => {
 			const { id } = c.req.param();
 			const stub = OrderRepository.getRoomStubByName(id);
+
+			const userId = c.var.session?.user.id;
+			if (!userId) return c.json({ message: "Unauthenticated" }, 401);
+
+			const req = withQueryParams(c.req.raw, { userId });
+
+			return await stub.fetch(req);
+		})
+		.get("/ws/merchant/:merchantId/orders", async (c) => {
+			const { merchantId } = c.req.param();
+			const stub = MerchantRoom.getRoomStubByName(merchantId);
 
 			const userId = c.var.session?.user.id;
 			if (!userId) return c.json({ message: "Unauthenticated" }, 401);

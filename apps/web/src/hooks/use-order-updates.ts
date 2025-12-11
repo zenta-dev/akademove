@@ -3,7 +3,19 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
 interface WebSocketEnvelope {
-	event: string;
+	e?: string; // event (server format)
+	event?: string; // event (legacy format)
+	p?: {
+		orderId?: string;
+		order?: unknown;
+		merchantId?: string;
+		itemCount?: number;
+		totalAmount?: number;
+		cancelReason?: string;
+		driverName?: string;
+		newStatus?: string;
+		location?: { lat: number; lng: number };
+	};
 	payload?: {
 		orderId?: string;
 		order?: unknown;
@@ -15,6 +27,7 @@ interface UseOrderUpdatesOptions {
 	enabled?: boolean;
 	role?: "USER" | "DRIVER" | "MERCHANT";
 	orderId?: string;
+	merchantId?: string;
 	interval?: number;
 	onNewOrder?: (order: unknown) => void;
 	onOrderUpdate?: (order: unknown) => void;
@@ -54,6 +67,7 @@ export const useOrderUpdates = (
 		enabled = true,
 		role = "USER",
 		orderId,
+		merchantId,
 		onNewOrder,
 		onOrderUpdate,
 		onDriverLocation,
@@ -91,119 +105,126 @@ export const useOrderUpdates = (
 			// Connect to specific order room
 			return `${protocol}//${host}/ws/order/${orderId}`;
 		}
+		if (role === "MERCHANT" && merchantId) {
+			// Connect to merchant-specific room for incoming order notifications
+			return `${protocol}//${host}/ws/merchant/${merchantId}/orders`;
+		}
 		if (role === "DRIVER") {
 			// Connect to driver pool for order assignments
 			return `${protocol}//${host}/ws/driver-pool`;
 		}
 		// Default to payment room for general updates
 		return `${protocol}//${host}/ws/payment/general`;
-	}, [orderId, role]);
+	}, [orderId, role, merchantId]);
 
 	const handleMessage = useCallback(
 		(envelope: WebSocketEnvelope) => {
-			switch (envelope.event) {
+			// Support both server format (e) and legacy format (event)
+			const event = envelope.e ?? envelope.event;
+			// Support both server format (p) and legacy format (payload)
+			const payload = envelope.p ?? envelope.payload;
+
+			switch (event) {
 				case "NEW_ORDER":
 					if (onNewOrderRef.current) {
-						onNewOrderRef.current(envelope.payload);
+						onNewOrderRef.current(payload);
 						// Invalidate order list queries
 						queryClient.invalidateQueries({ queryKey: ["orders"] });
+						queryClient.invalidateQueries({ queryKey: ["merchant", "orders"] });
 					}
 					break;
 
 				case "ORDER_UPDATE":
+				case "ORDER_STATUS_CHANGED":
 					if (onOrderUpdateRef.current) {
-						onOrderUpdateRef.current(envelope.payload);
+						onOrderUpdateRef.current(payload);
 					}
 					// Update specific order in cache
-					if (envelope.payload?.orderId) {
-						queryClient.setQueryData(
-							["order", envelope.payload.orderId],
-							envelope.payload.order,
-						);
+					if (payload?.orderId) {
+						queryClient.setQueryData(["order", payload.orderId], payload.order);
 					}
 					// Invalidate order list queries
 					queryClient.invalidateQueries({ queryKey: ["orders"] });
+					queryClient.invalidateQueries({ queryKey: ["merchant", "orders"] });
 					break;
 
 				case "DRIVER_LOCATION":
+				case "DRIVER_LOCATION_UPDATE":
 					if (
 						onDriverLocationRef.current &&
-						envelope.payload?.orderId &&
-						envelope.payload?.location
+						payload?.orderId &&
+						payload?.location
 					) {
 						onDriverLocationRef.current({
-							orderId: envelope.payload.orderId,
-							location: envelope.payload.location,
+							orderId: payload.orderId,
+							location: payload.location,
 						});
 					}
 					break;
 
 				case "ORDER_ACCEPTED":
+				case "DRIVER_ACCEPTED":
 					toast.success("Order has been accepted by a driver");
-					if (envelope.payload?.orderId) {
-						queryClient.setQueryData(
-							["order", envelope.payload.orderId],
-							envelope.payload.order,
-						);
+					if (payload?.orderId) {
+						queryClient.setQueryData(["order", payload.orderId], payload.order);
 					}
 					queryClient.invalidateQueries({ queryKey: ["orders"] });
+					queryClient.invalidateQueries({ queryKey: ["merchant", "orders"] });
 					break;
 
 				case "ORDER_CANCELLED":
+				case "CANCELED":
 					toast.error("Order has been cancelled");
-					if (envelope.payload?.orderId) {
-						queryClient.setQueryData(
-							["order", envelope.payload.orderId],
-							envelope.payload.order,
-						);
+					if (payload?.orderId) {
+						queryClient.setQueryData(["order", payload.orderId], payload.order);
 					}
 					queryClient.invalidateQueries({ queryKey: ["orders"] });
+					queryClient.invalidateQueries({ queryKey: ["merchant", "orders"] });
 					break;
 
 				case "DRIVER_ARRIVED":
 					toast.info("Driver has arrived at pickup location");
-					if (envelope.payload?.orderId) {
-						queryClient.setQueryData(
-							["order", envelope.payload.orderId],
-							envelope.payload.order,
-						);
+					if (payload?.orderId) {
+						queryClient.setQueryData(["order", payload.orderId], payload.order);
 					}
 					break;
 
 				case "ORDER_COMPLETED":
+				case "COMPLETED":
 					toast.success("Order has been completed");
-					if (envelope.payload?.orderId) {
-						queryClient.setQueryData(
-							["order", envelope.payload.orderId],
-							envelope.payload.order,
-						);
+					if (payload?.orderId) {
+						queryClient.setQueryData(["order", payload.orderId], payload.order);
 					}
 					queryClient.invalidateQueries({ queryKey: ["orders"] });
+					queryClient.invalidateQueries({ queryKey: ["merchant", "orders"] });
 					break;
 
 				case "MERCHANT_ACCEPTED":
 					toast.success("Merchant has accepted your order");
-					if (envelope.payload?.orderId) {
-						queryClient.setQueryData(
-							["order", envelope.payload.orderId],
-							envelope.payload.order,
-						);
+					if (payload?.orderId) {
+						queryClient.setQueryData(["order", payload.orderId], payload.order);
 					}
 					queryClient.invalidateQueries({ queryKey: ["orders"] });
 					break;
 
 				case "MERCHANT_READY":
 					toast.info("Your order is ready for pickup");
-					if (envelope.payload?.orderId) {
-						queryClient.setQueryData(
-							["order", envelope.payload.orderId],
-							envelope.payload.order,
-						);
+					if (payload?.orderId) {
+						queryClient.setQueryData(["order", payload.orderId], payload.order);
 					}
 					break;
 
+				case "DRIVER_ASSIGNED":
+					toast.info("A driver has been assigned to your order");
+					if (payload?.orderId) {
+						queryClient.setQueryData(["order", payload.orderId], payload.order);
+					}
+					queryClient.invalidateQueries({ queryKey: ["orders"] });
+					queryClient.invalidateQueries({ queryKey: ["merchant", "orders"] });
+					break;
+
 				default:
-					console.log("Unknown WebSocket event:", envelope.event);
+					console.log("Unknown WebSocket event:", event);
 			}
 		},
 		[queryClient],

@@ -598,19 +598,38 @@ export class PaymentWebhookService {
 			),
 		];
 
-		// If merchant order: notify merchant
+		// If merchant order: notify merchant via WebSocket and push notification
 		const merchantUserId = order.merchant?.user.id;
 		const merchantId = order.merchantId;
 		if (merchantId && merchantUserId) {
 			const itemCount = order.items.reduce((sum, i) => sum + i.quantity, 0);
 			const orderUrl = `${env.CORS_ORIGIN}/dash/merchant/orders/${order.id}`;
 
+			// Broadcast new order to merchant's WebSocket room for real-time dashboard updates
+			const merchantRoomStub = this.#getMerchantRoomStub(merchantId);
+			tasks.push(
+				merchantRoomStub.broadcast({
+					e: "NEW_ORDER",
+					f: "s",
+					t: "c",
+					tg: "MERCHANT",
+					p: {
+						order: composedOrder,
+						orderId: order.id,
+						merchantId,
+						itemCount,
+						totalAmount: toNumberSafe(order.totalPrice),
+					},
+				}),
+			);
+
+			// Also send push notification for when merchant is not connected
 			tasks.push(
 				sendNotification(
 					{
 						fromUserId: customerId,
 						toUserId: merchantUserId,
-						title: "📦 New Order Received",
+						title: "New Order Received",
 						body: `You have a new order (#${order.id}) with ${itemCount} item${itemCount > 1 ? "s" : ""}. Tap to view details.`,
 						data: {
 							type: "NEW_ORDER",
@@ -655,5 +674,16 @@ export class PaymentWebhookService {
 	#getOrderRoomStub(roomName: string) {
 		const stubId = env.ORDER_ROOM.idFromName(roomName);
 		return env.ORDER_ROOM.get(stubId);
+	}
+
+	/**
+	 * Gets merchant room Durable Object stub for WebSocket broadcasting
+	 *
+	 * @param merchantId - Merchant ID (used as room name)
+	 * @returns Durable Object stub
+	 */
+	#getMerchantRoomStub(merchantId: string) {
+		const stubId = env.MERCHANT_ROOM.idFromName(merchantId);
+		return env.MERCHANT_ROOM.get(stubId);
 	}
 }

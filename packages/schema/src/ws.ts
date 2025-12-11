@@ -150,6 +150,32 @@ export const PaymentEnvelopeSchema = createWsMinEnvelopeSchema({
 });
 export type PaymentEnvelope = z.infer<typeof PaymentEnvelopeSchema>;
 
+// Merchant WebSocket Envelope - for merchant dashboard real-time notifications
+export const MerchantEnvelopeEventSchema = z.enum([
+	"NEW_ORDER",
+	"ORDER_CANCELLED",
+	"DRIVER_ASSIGNED",
+	"ORDER_COMPLETED",
+	"ORDER_STATUS_CHANGED",
+]);
+export const MerchantEnvelopeActionSchema = z.enum(["NONE"]);
+export const MerchantEnvelopePayloadSchema = z.object({
+	order: OrderSchema.optional(),
+	orderId: z.uuid().optional(),
+	merchantId: z.uuid().optional(),
+	itemCount: z.number().optional(),
+	totalAmount: z.number().optional(),
+	cancelReason: z.string().optional(),
+	driverName: z.string().optional(),
+	newStatus: z.string().optional(),
+});
+export const MerchantEnvelopeSchema = createWsMinEnvelopeSchema({
+	event: MerchantEnvelopeEventSchema,
+	action: MerchantEnvelopeActionSchema,
+	payload: MerchantEnvelopePayloadSchema,
+});
+export type MerchantEnvelope = z.infer<typeof MerchantEnvelopeSchema>;
+
 export const WSSchemaRegistries = {
 	EnvelopeSender: { schema: EnvelopeSenderSchema, strategy: "output" },
 	EnvelopeTarget: { schema: EnvelopeTargetSchema, strategy: "output" },
@@ -176,4 +202,17 @@ export const WSSchemaRegistries = {
 		strategy: "output",
 	},
 	PaymentEnvelope: { schema: PaymentEnvelopeSchema, strategy: "output" },
+	MerchantEnvelopeEvent: {
+		schema: MerchantEnvelopeEventSchema,
+		strategy: "output",
+	},
+	MerchantEnvelopeAction: {
+		schema: MerchantEnvelopeActionSchema,
+		strategy: "output",
+	},
+	MerchantEnvelopePayload: {
+		schema: MerchantEnvelopePayloadSchema,
+		strategy: "output",
+	},
+	MerchantEnvelope: { schema: MerchantEnvelopeSchema, strategy: "output" },
 } satisfies SchemaRegistries;

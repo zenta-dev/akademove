@@ -1,4 +1,7 @@
-import type { BusinessConfiguration } from "@repo/schema/configuration";
+import {
+	type BusinessConfiguration,
+	BusinessConfigurationSchema,
+} from "@repo/schema/configuration";
 import { CACHE_TTLS, CONFIGURATION_KEYS } from "@/core/constants";
 import { RepositoryError } from "@/core/error";
 import type { DatabaseService } from "@/core/services/db";
@@ -52,7 +55,9 @@ export class BusinessConfigurationService {
 					);
 				}
 
-				const config = result.value as unknown as BusinessConfiguration;
+				// Parse through Zod schema to apply defaults for any missing fields
+				// This ensures backward compatibility when new config fields are added
+				const config = BusinessConfigurationSchema.parse(result.value);
 
 				// Cache for 1 hour
 				await kv.put(BusinessConfigurationService.CACHE_KEY, config, {
