@@ -22,9 +22,6 @@ abstract class _FormKeys {
   static const FormKey<String> step1OwnerEmail = TextFieldKey(
     'step-1-owner-email',
   );
-  static const FormKey<String> step1OwnerPhoneNumber = TextFieldKey(
-    'step-1-owner-phone-number',
-  );
   static const FormKey<String> step1OwnerPassword = TextFieldKey(
     'step-1-owner-password',
   );
@@ -38,10 +35,6 @@ abstract class _FormKeys {
   static const FormKey<String> step2OutletEmail = TextFieldKey(
     'step-2-outlet-email',
   );
-  static const FormKey<String> step2OutletPhoneNumber = TextFieldKey(
-    'step-2-outlet-phone-number',
-  );
-
   static const step3BankProvider = SelectKey<BankProvider>(
     'step-3-bank-provider',
   );
@@ -77,6 +70,8 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
   bool _isDraggingMarker = false;
   bool _termsAccepted = false;
   String? _submittedEmail;
+  String? _ownerPhoneNumber;
+  String? _outletPhoneNumber;
 
   final TextEditingController _searchController = TextEditingController();
   bool _isSearching = false;
@@ -561,7 +556,6 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
   bool get _isStep1Valid => _validateFormFields([
     _FormKeys.step1OwnerName,
     _FormKeys.step1OwnerEmail,
-    _FormKeys.step1OwnerPhoneNumber,
     _FormKeys.step1OwnerPassword,
     _FormKeys.step1OwnerConfirmPassword,
   ]);
@@ -570,7 +564,6 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
       _validateFormFields([
         _FormKeys.step2OutletName,
         _FormKeys.step2OutletEmail,
-        _FormKeys.step2OutletPhoneNumber,
       ]) &&
       _validateDocuments(_step2Docs, _step2DocsErrors) &&
       _selectedCategory != null;
@@ -691,12 +684,12 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
     final data = {
       'ownerName': _FormKeys.step1OwnerName[values],
       'ownerEmail': _FormKeys.step1OwnerEmail[values],
-      'ownerPhoneNumber': _FormKeys.step1OwnerPhoneNumber[values],
+      'ownerPhoneNumber': _ownerPhoneNumber,
       'ownerPassword': _FormKeys.step1OwnerPassword[values],
       'ownerConfirmPassword': _FormKeys.step1OwnerConfirmPassword[values],
       'outletName': _FormKeys.step2OutletName[values],
       'outletEmail': _FormKeys.step2OutletEmail[values],
-      'outletPhoneNumber': _FormKeys.step2OutletPhoneNumber[values],
+      'outletPhoneNumber': _outletPhoneNumber,
       'bankNumber': _FormKeys.step3BankNumber[values],
     };
 
@@ -811,12 +804,12 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
             keyboardType: TextInputType.emailAddress,
             enabled: !state.user.isLoading,
           ),
-          _buildPhoneField(context, state, _FormKeys.step1OwnerPhoneNumber, (
-            val,
-          ) {
+          _buildPhoneField(context, state, (val) {
             if (val.country == Country.indonesia) {
               _selectedOwnerCountryCode = CountryCode.ID;
             }
+            _ownerPhoneNumber = val.number;
+            setState(() {});
           }),
           _buildTextField(
             key: _FormKeys.step1OwnerPassword,
@@ -925,12 +918,12 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
             validator: const EmailValidator(),
             enabled: !state.user.isLoading,
           ),
-          _buildPhoneField(context, state, _FormKeys.step2OutletPhoneNumber, (
-            val,
-          ) {
+          _buildPhoneField(context, state, (val) {
             if (val.country == Country.indonesia) {
               _selectedOutletCountryCode = CountryCode.ID;
             }
+            _outletPhoneNumber = val.number;
+            setState(() {});
           }),
           _buildCategorySelect(state),
           Column(
@@ -1519,28 +1512,25 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
   Widget _buildPhoneField<T extends String>(
     BuildContext context,
     AuthState state,
-    FormKey<T> key,
     void Function(PhoneNumber val) onChanged,
   ) {
-    return FormField(
-      key: key,
-      label: Text(context.l10n.label_phone),
-      validator: const LengthValidator(min: 10, max: 15),
-      showErrors: const {
-        FormValidationMode.changed,
-        FormValidationMode.submitted,
-      },
-      child: ComponentTheme(
-        data: PhoneInputTheme(
-          maxWidth: 200 * context.theme.scaling,
-          flagWidth: 22.w,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: 8.h,
+      children: [
+        Text(context.l10n.phone).small(fontWeight: FontWeight.w500),
+        ComponentTheme(
+          data: PhoneInputTheme(
+            flagWidth: 22.w,
+            popupConstraints: BoxConstraints(maxHeight: 0.2.sh),
+          ),
+          child: PhoneInput(
+            initialCountry: Country.indonesia,
+            countries: const [Country.indonesia],
+            onChanged: onChanged,
+          ),
         ),
-        child: PhoneInput(
-          initialCountry: Country.indonesia,
-          countries: const [Country.indonesia],
-          onChanged: onChanged,
-        ),
-      ),
+      ],
     );
   }
 

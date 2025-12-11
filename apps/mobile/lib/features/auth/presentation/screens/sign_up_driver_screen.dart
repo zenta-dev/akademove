@@ -22,9 +22,6 @@ class _FormKeys {
   static const FormKey<String> step1StudentId = TextFieldKey(
     'step-1-student_id',
   );
-  static const FormKey<String> step1PhoneNumber = TextFieldKey(
-    'step-1-phone-number',
-  );
   static const FormKey<String> step1Password = TextFieldKey('step-1-password');
   static const FormKey<String> step1ConfirmPassword = TextFieldKey(
     'step-1-confirm_password',
@@ -54,6 +51,7 @@ class _SignUpDriverScreenState extends State<SignUpDriverScreen> {
   CountryCode _selectedCountryCode = CountryCode.ID;
   bool _termsAccepted = false;
   String? _submittedEmail;
+  String? phoneNumber;
 
   final Map<Step2Docs, File?> _step2Docs = {
     for (var doc in Step2Docs.values) doc: null,
@@ -112,7 +110,6 @@ class _SignUpDriverScreenState extends State<SignUpDriverScreen> {
       _FormKeys.step1Name,
       _FormKeys.step1Email,
       _FormKeys.step1StudentId,
-      _FormKeys.step1PhoneNumber,
       _FormKeys.step1Password,
       _FormKeys.step1ConfirmPassword,
     ]),
@@ -211,17 +208,17 @@ class _SignUpDriverScreenState extends State<SignUpDriverScreen> {
     final name = _FormKeys.step1Name[values];
     final email = _FormKeys.step1Email[values];
     final studentId = _FormKeys.step1StudentId[values];
-    final phoneNumber = _FormKeys.step1PhoneNumber[values];
     final password = _FormKeys.step1Password[values];
     final confirmPassword = _FormKeys.step1ConfirmPassword[values];
     final licensePlate = _FormKeys.step3LicensePlate[values];
     final bankNumber = _FormKeys.step4BankNumber[values];
 
+    final pn = phoneNumber;
     if (!_termsAccepted ||
         name == null ||
         email == null ||
         studentId == null ||
-        phoneNumber == null ||
+        pn == null ||
         password == null ||
         confirmPassword == null ||
         _step2Docs.values.any((v) => v == null) ||
@@ -236,7 +233,7 @@ class _SignUpDriverScreenState extends State<SignUpDriverScreen> {
       'name': name,
       'email': email,
       'studentId': studentId,
-      'phoneNumber': phoneNumber,
+      'phoneNumber': pn,
       'password': password,
       'confirmPassword': confirmPassword,
       'licensePlate': licensePlate,
@@ -714,31 +711,31 @@ class _SignUpDriverScreenState extends State<SignUpDriverScreen> {
   }
 
   Widget _buildPhoneField(BuildContext context, AuthState state) {
-    return FormField(
-      key: _FormKeys.step1PhoneNumber,
-      label: Text(context.l10n.phone),
-      validator: const LengthValidator(min: 10, max: 15),
-      showErrors: const {
-        FormValidationMode.changed,
-        FormValidationMode.submitted,
-      },
-      child: ComponentTheme(
-        data: PhoneInputTheme(
-          maxWidth: 212 * context.theme.scaling,
-          flagWidth: 22.w,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: 8.h,
+      children: [
+        Text(context.l10n.phone).small(fontWeight: FontWeight.w500),
+        ComponentTheme(
+          data: PhoneInputTheme(
+            flagWidth: 22.w,
+            popupConstraints: BoxConstraints(maxHeight: 0.2.sh),
+          ),
+          child: PhoneInput(
+            initialCountry: Country.indonesia,
+            countries: const [Country.indonesia],
+            onChanged: (value) {
+              switch (value.country) {
+                case Country.indonesia:
+                  _selectedCountryCode = CountryCode.ID;
+                default:
+              }
+              phoneNumber = value.number;
+              setState(() {});
+            },
+          ),
         ),
-        child: PhoneInput(
-          initialCountry: Country.indonesia,
-          countries: const [Country.indonesia],
-          onChanged: (value) {
-            switch (value.country) {
-              case Country.indonesia:
-                _selectedCountryCode = CountryCode.ID;
-              default:
-            }
-          },
-        ),
-      ),
+      ],
     );
   }
 

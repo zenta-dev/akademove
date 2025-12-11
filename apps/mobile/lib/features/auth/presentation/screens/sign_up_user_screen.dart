@@ -41,7 +41,6 @@ class _SignUpUserFormView extends StatefulWidget {
 class _SignUpUserFormViewState extends State<_SignUpUserFormView> {
   static const FormKey<String> _nameKey = TextFieldKey('name');
   static const FormKey<String> _emailKey = TextFieldKey('email');
-  static const FormKey<String> _phoneNumberKey = TextFieldKey('phone-number');
   static const FormKey<String> _passwordKey = TextFieldKey('password');
   static const FormKey<String> _confirmPasswordKey = TextFieldKey(
     'confirm_password',
@@ -49,6 +48,7 @@ class _SignUpUserFormViewState extends State<_SignUpUserFormView> {
 
   UserGender _selectedGender = UserGender.MALE;
   CountryCode _selectedCountryCode = CountryCode.ID;
+  String? phoneNumber;
   bool _termsAccepted = false;
   String _submittedEmail = '';
 
@@ -87,13 +87,12 @@ class _SignUpUserFormViewState extends State<_SignUpUserFormView> {
             if (state.user.isLoading) return;
             final name = _nameKey[values];
             final email = _emailKey[values];
-            final phoneNumber = _phoneNumberKey[values];
             final password = _passwordKey[values];
             final confirmPassword = _confirmPasswordKey[values];
             if (name == null ||
                 email == null ||
-                phoneNumber == null ||
                 password == null ||
+                phoneNumber == null ||
                 confirmPassword == null ||
                 !_termsAccepted) {
               return;
@@ -105,7 +104,7 @@ class _SignUpUserFormViewState extends State<_SignUpUserFormView> {
               email: email,
               phone: Phone(
                 countryCode: _selectedCountryCode,
-                number: int.parse(phoneNumber),
+                number: int.parse(phoneNumber ?? ''),
               ),
               gender: _selectedGender,
               password: password,
@@ -181,28 +180,25 @@ class _SignUpUserFormViewState extends State<_SignUpUserFormView> {
                   ).call,
                 ),
               ),
-              FormField(
-                key: _phoneNumberKey,
 
-                label: Text(context.l10n.phone),
-                validator: const LengthValidator(min: 10),
-                showErrors: const {
-                  FormValidationMode.changed,
-                  FormValidationMode.submitted,
-                },
-                child: ComponentTheme(
-                  data: PhoneInputTheme(maxWidth: null, flagWidth: 22.w),
-                  child: PhoneInput(
-                    initialCountry: Country.indonesia,
-                    countries: const [Country.indonesia],
-                    onChanged: (value) {
-                      switch (value.country) {
-                        case Country.indonesia:
-                          _selectedCountryCode = CountryCode.ID;
-                        default:
-                      }
-                    },
-                  ),
+              Text(context.l10n.phone).small(fontWeight: FontWeight.w500),
+              ComponentTheme(
+                data: PhoneInputTheme(
+                  flagWidth: 22.w,
+                  popupConstraints: BoxConstraints(maxHeight: 0.2.sh),
+                ),
+                child: PhoneInput(
+                  initialCountry: Country.indonesia,
+                  countries: const [Country.indonesia],
+                  onChanged: (value) {
+                    switch (value.country) {
+                      case Country.indonesia:
+                        _selectedCountryCode = CountryCode.ID;
+                      default:
+                    }
+                    phoneNumber = value.number;
+                    setState(() {});
+                  },
                 ),
               ),
               FormField(
