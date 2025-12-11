@@ -2,6 +2,7 @@ import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/features/merchant/presentation/widgets/order_rejection_dialog.dart';
 import 'package:akademove/l10n/l10n.dart';
+import 'package:akademove/locator.dart';
 import 'package:api_client/api_client.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -62,9 +63,9 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
   }
 
   Future<void> _onRefresh() async {
-    final result = await context.read<OrderRepository>().get(_currentOrder.id);
+    final result = await sl<OrderRepository>().get(_currentOrder.id);
     final order = result.data;
-    if (mounted && order != null) {
+    if (mounted) {
       setState(() {
         _currentOrder = order;
       });

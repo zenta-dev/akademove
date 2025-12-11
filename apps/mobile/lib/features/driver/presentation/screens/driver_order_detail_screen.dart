@@ -2,6 +2,7 @@ import 'package:akademove/app/router/router.dart';
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/l10n/l10n.dart';
+import 'package:akademove/locator.dart';
 import 'package:api_client/api_client.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -32,8 +33,7 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
 
   Future<void> _initializeOrder() async {
     // Load order details
-    final order = await context
-        .read<OrderRepository>()
+    final order = await sl<OrderRepository>()
         .get(widget.orderId)
         .then((res) => res.data);
     if (mounted) {
