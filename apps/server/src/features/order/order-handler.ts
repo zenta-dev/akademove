@@ -168,17 +168,7 @@ export const OrderHandler = priv.router({
 			const result = await context.repo.order.update(params.id, data, { tx });
 
 			// Broadcast status change to WebSocket clients if status was updated
-			if (data.status) {
-				// Fire and forget - don't block the response
-				OrderRepository.broadcastStatusChange(params.id, result).catch(
-					(error) => {
-						logger.error(
-							{ error, orderId: params.id },
-							"[OrderHandler] Failed to broadcast status change",
-						);
-					},
-				);
-			}
+			await OrderRepository.broadcastStatusChange(params.id, result);
 
 			return {
 				status: 200,

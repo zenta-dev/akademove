@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:api_client/api_client.dart';
@@ -19,6 +21,12 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
   String? _paymentId;
   String? _orderId;
 
+  /// Timer for polling active order updates
+  Timer? _pollingTimer;
+
+  /// Default polling interval in seconds
+  static const int _defaultPollingIntervalSeconds = 5;
+
   Future<void> init() async {
     reset();
   }
@@ -29,6 +37,7 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
 
   @override
   Future<void> close() async {
+    stopPolling();
     await teardownWebsocket();
     return super.close();
   }
@@ -89,30 +98,33 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
         final orderType = activeOrder.order.type;
         final paymentStatus = activeOrder.payment?.status;
 
-        if (status == OrderStatus.REQUESTED) {
-          // For FOOD orders with successful payment, connect to order WebSocket
-          // to receive merchant updates (ACCEPTED, PREPARING, READY)
-          if (orderType == OrderType.FOOD &&
-              paymentStatus == TransactionStatus.SUCCESS) {
-            await _setupLiveOrderWebsocket(orderId: activeOrder.order.id);
-          } else if (activeOrder.payment != null) {
-            // Order is waiting for payment, setup payment WebSocket
-            _paymentId = activeOrder.payment!.id;
-            await _setupPaymentWebsocket(paymentId: activeOrder.payment!.id);
-          }
-        } else if (status == OrderStatus.MATCHING) {
-          // Order is waiting for driver, setup driver pool WebSocket
-          await _setupFindDriverWebsocket();
-        } else if ([
-          OrderStatus.ACCEPTED,
-          OrderStatus.PREPARING,
-          OrderStatus.READY_FOR_PICKUP,
-          OrderStatus.ARRIVING,
-          OrderStatus.IN_TRIP,
-        ].contains(status)) {
-          // Order has a driver, setup live order WebSocket
-          await _setupLiveOrderWebsocket(orderId: activeOrder.order.id);
-        }
+        // if (status == OrderStatus.REQUESTED) {
+        //   // For FOOD orders with successful payment, connect to order WebSocket
+        //   // to receive merchant updates (ACCEPTED, PREPARING, READY)
+        //   if (orderType == OrderType.FOOD &&
+        //       paymentStatus == TransactionStatus.SUCCESS) {
+        //     await _setupLiveOrderWebsocket(orderId: activeOrder.order.id);
+        //   } else if (activeOrder.payment != null) {
+        //     // Order is waiting for payment, setup payment WebSocket
+        //     _paymentId = activeOrder.payment!.id;
+        //   }
+        // } else if (status == OrderStatus.MATCHING) {
+        //   // Order is waiting for driver, setup driver pool WebSocket
+        //   // await _setupFindDriverWebsocket();
+        // } else if ([
+        //   OrderStatus.ACCEPTED,
+        //   OrderStatus.PREPARING,
+        //   OrderStatus.READY_FOR_PICKUP,
+        //   OrderStatus.ARRIVING,
+        //   OrderStatus.IN_TRIP,
+        // ].contains(status)) {
+        //   // Order has a driver, setup live order WebSocket
+        // }
+
+        final pid = activeOrder.payment?.id;
+        if (pid != null) await _setupPaymentWebsocket(paymentId: pid);
+        startPolling();
+        await _setupLiveOrderWebsocket(orderId: activeOrder.order.id);
 
         return true;
       });
@@ -354,7 +366,7 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
           if (currentOrder?.type == OrderType.FOOD && orderId != null) {
             await _setupLiveOrderWebsocket(orderId: orderId);
           } else {
-            await _setupFindDriverWebsocket();
+            // await _setupFindDriverWebsocket();
           }
         }
 
@@ -399,99 +411,99 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
     }
   }
 
-  Future<void> _setupFindDriverWebsocket() async {
-    try {
-      const driverPool = 'driver-pool';
-      Future<void> handleMessage(Map<String, dynamic> json) async {
-        final data = OrderEnvelope.fromJson(json);
-        logger.d('Driver Pool WebSocket Message: $data');
+  // Future<void> _setupFindDriverWebsocket() async {
+  //   try {
+  //     const driverPool = 'driver-pool';
+  //     Future<void> handleMessage(Map<String, dynamic> json) async {
+  //       final data = OrderEnvelope.fromJson(json);
+  //       logger.d('Driver Pool WebSocket Message: $data');
 
-        if (data.e == OrderEnvelopeEvent.MATCHING &&
-            state.currentOrder.value?.id == data.p.detail?.order.id) {
-          final detail = data.p.detail;
-          final payment = detail?.payment;
-          final transaction = detail?.transaction;
-          if (detail != null && payment != null && transaction != null) {
-            emit(
-              state.copyWith(
-                currentOrder: OperationResult.success(detail.order),
-                currentPayment: OperationResult.success(payment),
-                currentTransaction: OperationResult.success(transaction),
-              ),
-            );
-          }
-        }
+  //       if (data.e == OrderEnvelopeEvent.MATCHING &&
+  //           state.currentOrder.value?.id == data.p.detail?.order.id) {
+  //         final detail = data.p.detail;
+  //         final payment = detail?.payment;
+  //         final transaction = detail?.transaction;
+  //         if (detail != null && payment != null && transaction != null) {
+  //           emit(
+  //             state.copyWith(
+  //               currentOrder: OperationResult.success(detail.order),
+  //               currentPayment: OperationResult.success(payment),
+  //               currentTransaction: OperationResult.success(transaction),
+  //             ),
+  //           );
+  //         }
+  //       }
 
-        if (data.e == OrderEnvelopeEvent.CANCELED) {
-          final detail = data.p.detail;
-          final payment = detail?.payment;
-          final transaction = detail?.transaction;
-          if (detail != null && payment != null && transaction != null) {
-            emit(
-              state.copyWith(
-                currentOrder: OperationResult.success(detail.order),
-                currentPayment: OperationResult.success(payment),
-                currentTransaction: OperationResult.success(transaction),
-              ),
-            );
-          }
-          emit(
-            state.copyWith(
-              currentOrder: OperationResult.failed(
-                UnknownError(data.p.cancelReason ?? 'Order cancelled'),
-              ),
-            ),
-          );
-        }
+  //       if (data.e == OrderEnvelopeEvent.CANCELED) {
+  //         final detail = data.p.detail;
+  //         final payment = detail?.payment;
+  //         final transaction = detail?.transaction;
+  //         if (detail != null && payment != null && transaction != null) {
+  //           emit(
+  //             state.copyWith(
+  //               currentOrder: OperationResult.success(detail.order),
+  //               currentPayment: OperationResult.success(payment),
+  //               currentTransaction: OperationResult.success(transaction),
+  //             ),
+  //           );
+  //         }
+  //         emit(
+  //           state.copyWith(
+  //             currentOrder: OperationResult.failed(
+  //               UnknownError(data.p.cancelReason ?? 'Order cancelled'),
+  //             ),
+  //           ),
+  //         );
+  //       }
 
-        if (data.e == OrderEnvelopeEvent.DRIVER_ACCEPTED) {
-          final detail = data.p.detail;
-          final payment = detail?.payment;
-          final transaction = detail?.transaction;
-          if (detail != null && payment != null && transaction != null) {
-            emit(
-              state.copyWith(
-                currentOrder: OperationResult.success(detail.order),
-                currentPayment: OperationResult.success(payment),
-                currentTransaction: OperationResult.success(transaction),
-                currentAssignedDriver: OperationResult.success(
-                  data.p.driverAssigned,
-                ),
-              ),
-            );
-          }
+  //       if (data.e == OrderEnvelopeEvent.DRIVER_ACCEPTED) {
+  //         final detail = data.p.detail;
+  //         final payment = detail?.payment;
+  //         final transaction = detail?.transaction;
+  //         if (detail != null && payment != null && transaction != null) {
+  //           emit(
+  //             state.copyWith(
+  //               currentOrder: OperationResult.success(detail.order),
+  //               currentPayment: OperationResult.success(payment),
+  //               currentTransaction: OperationResult.success(transaction),
+  //               currentAssignedDriver: OperationResult.success(
+  //                 data.p.driverAssigned,
+  //               ),
+  //             ),
+  //           );
+  //         }
 
-          await _webSocketService.disconnect(driverPool);
-          final orderId = _orderId;
-          if (orderId != null) {
-            await _setupLiveOrderWebsocket(orderId: orderId);
-          }
-        }
-      }
+  //         await _webSocketService.disconnect(driverPool);
+  //         final orderId = _orderId;
+  //         if (orderId != null) {
+  //           await _setupLiveOrderWebsocket(orderId: orderId);
+  //         }
+  //       }
+  //     }
 
-      await _webSocketService.connect(
-        driverPool,
-        '${UrlConstants.wsBaseUrl}/$driverPool',
-        onMessage: (msg) async {
-          final json = (msg as String).parseJson();
-          if (json is Map<String, dynamic>) await handleMessage(json);
-        },
-      );
-    } catch (e, st) {
-      logger.e(
-        '[UserOrderCubit] - Driver Pool WebSocket error: $e',
-        error: e,
-        stackTrace: st,
-      );
-      emit(
-        state.copyWith(
-          currentAssignedDriver: OperationResult.failed(
-            const UnknownError('Failed to connect to driver service'),
-          ),
-        ),
-      );
-    }
-  }
+  //     await _webSocketService.connect(
+  //       driverPool,
+  //       '${UrlConstants.wsBaseUrl}/$driverPool',
+  //       onMessage: (msg) async {
+  //         final json = (msg as String).parseJson();
+  //         if (json is Map<String, dynamic>) await handleMessage(json);
+  //       },
+  //     );
+  //   } catch (e, st) {
+  //     logger.e(
+  //       '[UserOrderCubit] - Driver Pool WebSocket error: $e',
+  //       error: e,
+  //       stackTrace: st,
+  //     );
+  //     emit(
+  //       state.copyWith(
+  //         currentAssignedDriver: OperationResult.failed(
+  //           const UnknownError('Failed to connect to driver service'),
+  //         ),
+  //       ),
+  //     );
+  //   }
+  // }
 
   Future<void> _setupLiveOrderWebsocket({required String orderId}) async {
     try {
@@ -734,6 +746,174 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
     }
 
     await Future.wait(futures);
+  }
+
+  // ==================== Polling ====================
+
+  /// Start polling for active order updates
+  /// This is a fallback mechanism for devices that don't support WebSocket
+  /// [intervalSeconds] - The interval between each poll (default: 5 seconds)
+  void startPolling({int intervalSeconds = _defaultPollingIntervalSeconds}) {
+    if (state.isPolling) {
+      logger.d('[UserOrderCubit] Polling already active, skipping start');
+      return;
+    }
+
+    logger.i(
+      '[UserOrderCubit] Starting polling with ${intervalSeconds}s interval',
+    );
+    emit(state.copyWith(isPolling: true));
+
+    _pollingTimer = Timer.periodic(
+      Duration(seconds: intervalSeconds),
+      (_) => _pollActiveOrder(),
+    );
+
+    // Also fetch immediately on start
+    _pollActiveOrder();
+  }
+
+  /// Stop polling for active order updates
+  void stopPolling() {
+    if (!state.isPolling && _pollingTimer == null) {
+      return;
+    }
+
+    logger.i('[UserOrderCubit] Stopping polling');
+    _pollingTimer?.cancel();
+    _pollingTimer = null;
+    emit(state.copyWith(isPolling: false));
+  }
+
+  /// Internal method to poll the active order
+  Future<void> _pollActiveOrder() async {
+    try {
+      final res = await _orderRepository.getActiveOrder();
+      final activeOrder = res.data;
+
+      if (activeOrder == null) {
+        // No active order, stop polling and clear state
+        logger.d('[UserOrderCubit] Poll: No active order found');
+        stopPolling();
+        await clearActiveOrder();
+        return;
+      }
+
+      final order = activeOrder.order;
+      final currentOrder = state.currentOrder.value;
+
+      // Check if order status changed or if we have new data
+      final hasChanges =
+          currentOrder == null ||
+          currentOrder.id != order.id ||
+          currentOrder.status != order.status ||
+          _hasDriverLocationChanged(
+            state.currentAssignedDriver.value,
+            activeOrder.driver,
+          );
+
+      if (hasChanges) {
+        logger.d(
+          '[UserOrderCubit] Poll: Order updated - '
+          'status: ${order.status}, driver: ${activeOrder.driver?.userId}',
+        );
+
+        emit(
+          state.copyWith(
+            currentOrder: OperationResult.success(order),
+            currentPayment: activeOrder.payment != null
+                ? OperationResult.success(activeOrder.payment!)
+                : state.currentPayment,
+            currentTransaction: activeOrder.transaction != null
+                ? OperationResult.success(activeOrder.transaction!)
+                : state.currentTransaction,
+            currentAssignedDriver: activeOrder.driver != null
+                ? OperationResult.success(activeOrder.driver)
+                : state.currentAssignedDriver,
+          ),
+        );
+      }
+
+      // Check if order is in terminal state, stop polling
+      if (_isTerminalStatus(order.status)) {
+        logger.i(
+          '[UserOrderCubit] Poll: Order in terminal state (${order.status}), '
+          'stopping polling',
+        );
+        stopPolling();
+      }
+    } catch (e, st) {
+      logger.e('[UserOrderCubit] Poll error: $e', error: e, stackTrace: st);
+      // Don't stop polling on error, let it retry
+    }
+  }
+
+  /// Check if driver location has changed
+  bool _hasDriverLocationChanged(Driver? current, Driver? incoming) {
+    if (current == null && incoming == null) return false;
+    if (current == null || incoming == null) return true;
+
+    final currentLoc = current.currentLocation;
+    final incomingLoc = incoming.currentLocation;
+
+    if (currentLoc == null && incomingLoc == null) return false;
+    if (currentLoc == null || incomingLoc == null) return true;
+
+    return currentLoc.x != incomingLoc.x || currentLoc.y != incomingLoc.y;
+  }
+
+  /// Check if order status is terminal (completed, cancelled, etc.)
+  bool _isTerminalStatus(OrderStatus status) {
+    return [
+      OrderStatus.COMPLETED,
+      OrderStatus.CANCELLED_BY_USER,
+      OrderStatus.CANCELLED_BY_DRIVER,
+      OrderStatus.CANCELLED_BY_SYSTEM,
+    ].contains(status);
+  }
+
+  /// Fetch active order once without starting continuous polling
+  /// Useful for manual refresh or initial load
+  Future<void> fetchActiveOrder() async {
+    try {
+      logger.d('[UserOrderCubit] Fetching active order...');
+
+      final res = await _orderRepository.getActiveOrder();
+      final activeOrder = res.data;
+
+      if (activeOrder == null) {
+        logger.d('[UserOrderCubit] No active order found');
+        return;
+      }
+
+      logger.i(
+        '[UserOrderCubit] Found active order: ${activeOrder.order.id} '
+        'with status: ${activeOrder.order.status}',
+      );
+
+      _orderId = activeOrder.order.id;
+
+      emit(
+        state.copyWith(
+          currentOrder: OperationResult.success(activeOrder.order),
+          currentPayment: activeOrder.payment != null
+              ? OperationResult.success(activeOrder.payment!)
+              : const OperationResult.idle(),
+          currentTransaction: activeOrder.transaction != null
+              ? OperationResult.success(activeOrder.transaction!)
+              : const OperationResult.idle(),
+          currentAssignedDriver: activeOrder.driver != null
+              ? OperationResult.success(activeOrder.driver)
+              : const OperationResult.idle(),
+        ),
+      );
+    } catch (e, st) {
+      logger.e(
+        '[UserOrderCubit] - Error fetching active order: $e',
+        error: e,
+        stackTrace: st,
+      );
+    }
   }
 
   // ==================== Scheduled Orders ====================

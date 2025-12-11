@@ -94,6 +94,8 @@ class WebSocketService with WidgetsBindingObserver {
     String key,
     String url, {
     void Function(dynamic msg)? onMessage,
+    void Function()? onDone,
+    void Function(Object error)? onError,
     bool autoReconnect = true,
   }) async {
     try {
@@ -102,6 +104,8 @@ class WebSocketService with WidgetsBindingObserver {
       _configs[key] = _ConnectionConfig(
         url: url,
         onMessage: onMessage,
+        onDone: onDone,
+        onError: onError,
         autoReconnect: autoReconnect,
       );
 
@@ -150,12 +154,16 @@ class WebSocketService with WidgetsBindingObserver {
         },
         onError: (Object? error, _) {
           _handleStreamError(key, error);
+          if (error != null) {
+            config.onError?.call(error);
+          }
         },
         onDone: () {
           _logInfo(key, 'Connection closed (done event)');
           if (config.autoReconnect && _configs.containsKey(key)) {
             _scheduleReconnect(key);
           }
+          config.onDone?.call();
         },
         cancelOnError: false,
       );
@@ -359,9 +367,13 @@ class _ConnectionConfig {
     required this.url,
     required this.autoReconnect,
     this.onMessage,
+    this.onDone,
+    this.onError,
   });
 
   final String url;
   final void Function(dynamic)? onMessage;
+  final void Function()? onDone;
+  final void Function(Object error)? onError;
   final bool autoReconnect;
 }
