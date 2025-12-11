@@ -44,6 +44,12 @@ const PAYMENT_ROOM = DurableObjectNamespace("payment-rooms", {
 	sqlite: true,
 });
 
+const MERCHANT_ROOM = DurableObjectNamespace("merchant-rooms", {
+	className: "MerchantRoom",
+	environment: alchemy.env.NODE_ENV,
+	sqlite: true,
+});
+
 const ORDER_DLQ = await Queue("order-dlq", {
 	name: `${APP_NAME}-order-dlq`,
 	settings: {
@@ -103,6 +109,7 @@ export const [server, web] = await Promise.all([
 			FIREBASE_SERVICE_ACCOUNT: alchemy.secret.env.FIREBASE_SERVICE_ACCOUNT,
 			ORDER_ROOM,
 			PAYMENT_ROOM,
+			MERCHANT_ROOM,
 			DB_URL: alchemy.secret.env.DATABASE_URL,
 			MAIN_DB: mainDB,
 			MAIN_KV: mainKV,
