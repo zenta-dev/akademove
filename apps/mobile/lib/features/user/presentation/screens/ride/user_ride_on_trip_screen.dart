@@ -601,9 +601,11 @@ class _UserRideOnTripScreenState extends State<UserRideOnTripScreen> {
                         return MapWrapperWidget(
                           onMapCreated: (controller) {
                             _mapController = controller;
+                            setState(() {});
                             // Initial map update
                             final state = context.read<UserOrderCubit>().state;
                             _updateMapWithOrderData(state);
+                            setState(() {});
                           },
                           markers: locationState.markers,
                           polylines: locationState.polylines,

@@ -290,7 +290,7 @@ export class OrderRoom extends BaseDurableObject {
 		const msg = JSON.stringify(envelope);
 
 		const tasks: Promise<unknown>[] = [];
-		const driverIds: string[] = [];
+		const driverUserIds: string[] = [];
 		for (const driver of nearbyDrivers) {
 			// Skip drivers without required fields
 			if (!driver.userId || !driver.id) {
@@ -304,13 +304,13 @@ export class OrderRoom extends BaseDurableObject {
 			const driverWs = this.findById(driver.userId);
 			if (driverWs) {
 				driverWs.send(msg);
-				driverIds.push(driver.id);
+				driverUserIds.push(driver.userId);
 			}
 			const orderUrl = `${env.CORS_ORIGIN}/dash/merchant/orders/${findOrder.id}`;
 			tasks.push(
 				this.#repo.notification.sendNotificationToUserId({
 					fromUserId: findOrder.userId,
-					toUserId: driver.id,
+					toUserId: driver.userId,
 					title: "New Order",
 					body: `Order ${findOrder.type} with id #${findOrder.id}`,
 					data: {
@@ -329,7 +329,7 @@ export class OrderRoom extends BaseDurableObject {
 				}),
 			);
 		}
-		const driversWs = this.findByIds(driverIds);
+		const driversWs = this.findByIds(driverUserIds);
 		this.#broadcasted.set(findOrder.id, driversWs);
 
 		await Promise.allSettled(tasks);

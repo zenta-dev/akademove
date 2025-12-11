@@ -75,6 +75,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
           ],
         ),
       ],
+      scrollable: false,
       body: BlocProvider.value(
         value: _cubit,
         child: BlocBuilder<NotificationCubit, NotificationState>(
@@ -139,10 +140,11 @@ class _NotificationScreenState extends State<NotificationScreen> {
 
             return RefreshTrigger(
               onRefresh: _onRefresh,
-              child: ListView.builder(
+              child: ListView.separated(
                 controller: _scrollController,
-                padding: EdgeInsets.all(16.dg),
+                padding: EdgeInsets.zero,
                 itemCount: items.length + (hasMore ? 1 : 0),
+                separatorBuilder: (context, index) => Gap(16.h),
                 itemBuilder: (context, index) {
                   if (index >= items.length) {
                     return Padding(
