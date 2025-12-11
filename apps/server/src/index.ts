@@ -6,6 +6,7 @@ import { setupOrpcRouter } from "./core/router/orpc";
 import { handleAutoOfflineCron } from "./features/driver/cron/auto-offline-handler";
 import { handleLeaderboardCron } from "./features/leaderboard/leaderboard-cron";
 import { handleOrderCheckerCron } from "./features/order/order-checker-cron";
+import { handleOrderRebroadcastCron } from "./features/order/order-rebroadcast-cron";
 import { handleScheduledOrderCron } from "./features/order/scheduled-order-cron";
 import { handleQueue } from "./features/queue/queue-handler";
 import { setupWebsocketRouter } from "./features/ws";
@@ -34,6 +35,14 @@ export default {
 			ctx.waitUntil(
 				handleScheduledOrderCron(env, ctx).catch((error) => {
 					logger.error({ error }, "[Cron] Scheduled order handler failed");
+				}),
+			);
+
+			// Every minute: Rebroadcast active order states for clients that may have missed updates
+			// Ensures clients stay in sync with server state even if WebSocket messages were missed
+			ctx.waitUntil(
+				handleOrderRebroadcastCron(env, ctx).catch((error) => {
+					logger.error({ error }, "[Cron] Order rebroadcast handler failed");
 				}),
 			);
 		}

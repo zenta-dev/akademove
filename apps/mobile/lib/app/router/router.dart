@@ -64,6 +64,7 @@ enum Routes {
   userWalletTopUpBankTransfer('/user/home/wallet/topup/bank-transfer'),
   userWalletTransfer('/user/home/wallet/transfer'),
   userWalletTransferScan('/user/home/wallet/transfer/scan'),
+  userWalletWithdraw('/user/home/wallet/withdraw'),
   userWalletMyQr('/user/home/wallet/my-qr'),
   userVoucher('/user/home/voucher'),
   userNotifications('/user/home/notifications'),
@@ -110,6 +111,7 @@ enum Routes {
   merchantSetUpOutlet('/merchant/set/up/outlet'),
   merchantEditProfile('/merchant/edit/profile'),
   merchantChangePassword('/merchant/change/password'),
+  merchantWalletWithdraw('/merchant/wallet/withdraw'),
 
   ///
   /// Shared Routes

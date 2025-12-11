@@ -35,6 +35,8 @@ export interface ChargePaymentRequest {
 	metadata?: Record<string, unknown>;
 	bank?: BankProvider;
 	va_number?: string;
+	/** Reference ID (e.g., orderId) for linking transaction to the order - required for refunds */
+	referenceId?: string;
 }
 
 /**
@@ -56,6 +58,8 @@ export interface WalletPaymentRequest {
 	orderType: OrderType | "TOPUP";
 	transactionType: TransactionType;
 	metadata?: Record<string, unknown>;
+	/** Reference ID (e.g., orderId) for linking transaction to the order - required for refunds */
+	referenceId?: string;
 }
 
 /**
@@ -135,12 +139,20 @@ export class PaymentChargeService {
 				status: "PENDING" | "SUCCESS" | "FAILED" | "EXPIRED";
 				description?: string;
 				metadata?: Record<string, unknown>;
+				referenceId?: string;
 			}) => Promise<Transaction>;
 		},
 	): Promise<ChargePaymentResult> {
 		try {
-			const { provider, method, amount, userId, orderType, transactionType } =
-				request;
+			const {
+				provider,
+				method,
+				amount,
+				userId,
+				orderType,
+				transactionType,
+				referenceId,
+			} = request;
 			const { tx, wallet, user, insertPayment, createTransaction } = deps;
 
 			// Generate description based on order type
@@ -159,6 +171,7 @@ export class PaymentChargeService {
 			const metadata = { ...request.metadata, type: orderType, desc };
 
 			// Create transaction record (PENDING)
+			// IMPORTANT: referenceId links this transaction to the order for refund processing
 			const transaction = await createTransaction({
 				walletId: wallet.id,
 				type: transactionType,
@@ -166,6 +179,7 @@ export class PaymentChargeService {
 				status: "PENDING",
 				description: desc,
 				metadata,
+				referenceId,
 			});
 
 			const expiresAt = new Date(
@@ -283,11 +297,19 @@ export class PaymentChargeService {
 				metadata?: Record<string, unknown>;
 				balanceBefore?: number;
 				balanceAfter?: number;
+				referenceId?: string;
 			}) => Promise<Transaction>;
 		},
 	): Promise<ChargePaymentResult> {
-		const { wallet, amount, orderType, transactionType, metadata, userId } =
-			request;
+		const {
+			wallet,
+			amount,
+			orderType,
+			transactionType,
+			metadata,
+			userId,
+			referenceId,
+		} = request;
 		const { tx, insertPayment, createTransaction } = deps;
 
 		try {
@@ -334,6 +356,7 @@ export class PaymentChargeService {
 			const balanceAfter = toNumberSafe(newBalance);
 
 			// Create transaction with SUCCESS status and balance info
+			// IMPORTANT: referenceId links this transaction to the order for refund processing
 			const transaction = await createTransaction({
 				walletId: wallet.id,
 				type: transactionType,
@@ -343,6 +366,7 @@ export class PaymentChargeService {
 				metadata: fullMetadata,
 				balanceBefore,
 				balanceAfter,
+				referenceId,
 			});
 
 			// Create payment record

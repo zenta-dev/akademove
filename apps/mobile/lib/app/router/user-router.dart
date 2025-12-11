@@ -356,6 +356,14 @@ final userRouter = StatefulShellRoute.indexedStack(
           builder: (context, state) => const UserWalletMyQrScreen(),
         ),
         GoRoute(
+          name: Routes.userWalletWithdraw.name,
+          path: Routes.userWalletWithdraw.path,
+          builder: (context, state) => BlocProvider.value(
+            value: BlocProvider.of<UserWalletCubit>(context),
+            child: const UserWalletWithdrawScreen(),
+          ),
+        ),
+        GoRoute(
           name: Routes.userVoucher.name,
           path: Routes.userVoucher.path,
           builder: (context, state) => BlocProvider(
