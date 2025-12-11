@@ -318,14 +318,6 @@ class IncomingOrderListener extends StatelessWidget {
         ),
         // Listen for successful order acceptance
         BlocListener<DriverOrderCubit, DriverOrderState>(
-          listenWhen: (previous, current) {
-            // Navigate when order is successfully accepted
-            final prevOrder = previous.currentOrder;
-            final currOrder = current.currentOrder;
-            return prevOrder == null &&
-                currOrder != null &&
-                currOrder.status == OrderStatus.ACCEPTED;
-          },
           listener: (context, state) {
             final currentOrder = state.currentOrder;
             if (currentOrder != null) {

@@ -63,34 +63,6 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
     );
   }
 
-  void showIncomingOrderDialog(Order order) {
-    showDialog(
-      context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: Text(dialogContext.l10n.new_order_request),
-        content: Text(
-          dialogContext
-              .l10n
-              .you_have_a_new_order_request_from_customer_please_check_your_orders_page,
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(dialogContext).pop();
-            },
-            child: Text(dialogContext.l10n.dismiss),
-          ),
-          PrimaryButton(
-            onPressed: () {
-              Navigator.of(dialogContext).pop();
-            },
-            child: Text(dialogContext.l10n.view_order),
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget _buildWelcomeCard(BuildContext context, DriverState state) {
     return Card(
       child: Column(
