@@ -215,30 +215,6 @@ class _MerchantSetUpOutletScreenState extends State<MerchantSetUpOutletScreen> {
     return _weeklySchedule.any((schedule) => schedule.isEnabled);
   }
 
-  bool get _isStep3Valid {
-    // Validate form fields
-    final formValid = _validateFormFields([
-      _FormKeys.step3MenuName,
-      _FormKeys.step3MenuPrice,
-      _FormKeys.step3MenuStock,
-    ]);
-
-    // Validate menu photo
-    final hasMenuPhoto = _step3Docs[_Step3Docs.menuPhoto] != null;
-    if (!hasMenuPhoto) {
-      setState(() {
-        _step3DocsErrors[_Step3Docs.menuPhoto] =
-            context.l10n.error_menu_photo_required;
-      });
-    } else {
-      setState(() {
-        _step3DocsErrors[_Step3Docs.menuPhoto] = null;
-      });
-    }
-
-    return formValid && hasMenuPhoto;
-  }
-
   void _scrollToTop() {
     if (_scrollController.hasClients) {
       _scrollController.animateTo(
@@ -269,7 +245,7 @@ class _MerchantSetUpOutletScreenState extends State<MerchantSetUpOutletScreen> {
   Future<void> _handleSaveAndNavigateHome() async {
     _scrollToTop();
 
-    if (!_validateStep(2, () => _isStep3Valid)) {
+    if (!_validateStep(2, () => _isStep2Valid)) {
       _showToast(
         context,
         context.l10n.toast_validation_error,
@@ -343,28 +319,6 @@ class _MerchantSetUpOutletScreenState extends State<MerchantSetUpOutletScreen> {
         return;
       }
 
-      // Step 3: Create initial menu item
-      final menuImage = await _fileToMultipart(
-        _step3Docs[_Step3Docs.menuPhoto],
-      );
-      final menuName =
-          (_formController.values[_FormKeys.step3MenuName] as String?) ?? '';
-      final menuPriceStr =
-          (_formController.values[_FormKeys.step3MenuPrice] as String?) ?? '0';
-      final menuStockStr =
-          (_formController.values[_FormKeys.step3MenuStock] as String?) ?? '0';
-      final menuPrice = num.tryParse(menuPriceStr) ?? 0;
-      final menuStock = int.tryParse(menuStockStr) ?? 0;
-
-      await context.read<MerchantMenuCubit>().createMenu(
-        merchantId: merchant.id,
-        name: menuName,
-        price: menuPrice,
-        stock: menuStock,
-        category: _selectedMenuCategory,
-        image: menuImage,
-      );
-
       setState(() => _isLoading = false);
 
       _showToast(
@@ -420,11 +374,7 @@ class _MerchantSetUpOutletScreenState extends State<MerchantSetUpOutletScreen> {
                     direction: Axis.horizontal,
                     variant: StepVariant.line,
                     size: StepSize.small,
-                    steps: [
-                      _buildStep1(context),
-                      _buildStep2(context),
-                      _buildStep3(context),
-                    ],
+                    steps: [_buildStep1(context), _buildStep2(context)],
                   ),
                 ],
               ),
@@ -499,14 +449,11 @@ class _MerchantSetUpOutletScreenState extends State<MerchantSetUpOutletScreen> {
                 _handleStepNavigation(isNext: false, validator: () => true),
           ),
           _buildActionButton(
-            icon: LucideIcons.arrowRight,
-            label: context.l10n.button_next,
+            icon: LucideIcons.check,
+            label: context.l10n.button_save,
             isPrimary: true,
             isTrailing: true,
-            onPressed: () => _handleStepNavigation(
-              isNext: true,
-              validator: () => _validateStep(1, () => _isStep2Valid),
-            ),
+            onPressed: _handleSaveAndNavigateHome,
           ),
         ],
       ),
@@ -638,66 +585,6 @@ class _MerchantSetUpOutletScreenState extends State<MerchantSetUpOutletScreen> {
               ),
             ],
           ],
-        ],
-      ),
-    );
-  }
-
-  Step _buildStep3(BuildContext context) {
-    return Step(
-      title: Text(context.l10n.step_3),
-      contentBuilder: (context) => _buildStepContainer(
-        content: [
-          _buildMenuCategoryInput(
-            label: context.l10n.label_menu_category,
-            placeholder: context.l10n.placeholder_menu_category,
-            value: _selectedMenuCategory,
-            onChanged: (value) => setState(() => _selectedMenuCategory = value),
-          ),
-          _buildImagePicker(
-            context.l10n.label_menu_photo,
-            _Step3Docs.menuPhoto,
-            _step3Docs,
-            _step3DocsErrors,
-          ),
-          _buildTextField(
-            key: _FormKeys.step3MenuName,
-            label: context.l10n.label_menu_name,
-            placeholder: context.l10n.placeholder_menu_name,
-            icon: LucideIcons.utensils,
-            validator: const LengthValidator(min: 3),
-          ),
-          _buildTextField(
-            key: _FormKeys.step3MenuPrice,
-            label: context.l10n.label_menu_price,
-            placeholder: context.l10n.placeholder_menu_price,
-            icon: LucideIcons.dollarSign,
-            validator: const LengthValidator(min: 1),
-            keyboardType: TextInputType.number,
-          ),
-          _buildTextField(
-            key: _FormKeys.step3MenuStock,
-            label: context.l10n.label_menu_stock,
-            placeholder: context.l10n.placeholder_menu_stock,
-            icon: LucideIcons.package,
-            validator: const LengthValidator(min: 1),
-            keyboardType: TextInputType.number,
-          ),
-        ],
-        actions: [
-          _buildActionButton(
-            icon: LucideIcons.arrowLeft,
-            label: context.l10n.button_back,
-            onPressed: () =>
-                _handleStepNavigation(isNext: false, validator: () => true),
-          ),
-          _buildActionButton(
-            icon: LucideIcons.check,
-            label: context.l10n.button_save,
-            isPrimary: true,
-            isTrailing: true,
-            onPressed: _isLoading ? () {} : _handleSaveAndNavigateHome,
-          ),
         ],
       ),
     );
