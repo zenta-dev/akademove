@@ -70,13 +70,13 @@ class _UserRideScreenState extends State<UserRideScreen> {
     }
 
     // Check from server for active order
-    final hasActiveOrder = await orderCubit.recoverActiveOrder();
-    if (hasActiveOrder && mounted) {
-      final activeOrder = orderCubit.state.currentOrder.value;
-      if (activeOrder != null && activeOrder.type == OrderType.RIDE) {
-        context.pushReplacementNamed(Routes.userRideOnTrip.name);
-      }
-    }
+    // final hasActiveOrder = await orderCubit.recoverActiveOrder();
+    // if (hasActiveOrder && mounted) {
+    //   final activeOrder = orderCubit.state.currentOrder.value;
+    //   if (activeOrder != null && activeOrder.type == OrderType.RIDE) {
+    //     context.pushReplacementNamed(Routes.userRideOnTrip.name);
+    //   }
+    // }
   }
 
   @override

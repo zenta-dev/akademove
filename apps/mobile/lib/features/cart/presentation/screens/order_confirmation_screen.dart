@@ -62,12 +62,12 @@ class _OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
             );
 
             // Recover active order to setup WebSocket and state in UserOrderCubit
-            await context.read<UserOrderCubit>().recoverActiveOrder();
+            // await context.read<UserOrderCubit>().recoverActiveOrder();
 
-            // Navigate to food order tracking screen
-            if (context.mounted) {
-              context.go(Routes.userFoodOnTrip.path);
-            }
+            // // Navigate to food order tracking screen
+            // if (context.mounted) {
+            //   context.go(Routes.userFoodOnTrip.path);
+            // }
           } else if (state.placeFoodOrderResult.isFailed) {
             final error = state.placeFoodOrderResult.error;
             showToast(

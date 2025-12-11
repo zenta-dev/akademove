@@ -72,13 +72,13 @@ class _UserDeliveryScreenState extends State<UserDeliveryScreen> {
     }
 
     // Check from server for active order
-    final hasActiveOrder = await orderCubit.recoverActiveOrder();
-    if (hasActiveOrder && mounted) {
-      final activeOrder = orderCubit.state.currentOrder.value;
-      if (activeOrder != null && activeOrder.type == OrderType.DELIVERY) {
-        context.pushReplacementNamed(Routes.userDeliveryOnTrip.name);
-      }
-    }
+    // final hasActiveOrder = await orderCubit.recoverActiveOrder();
+    // if (hasActiveOrder && mounted) {
+    //   final activeOrder = orderCubit.state.currentOrder.value;
+    //   if (activeOrder != null && activeOrder.type == OrderType.DELIVERY) {
+    //     context.pushReplacementNamed(Routes.userDeliveryOnTrip.name);
+    //   }
+    // }
   }
 
   @override
