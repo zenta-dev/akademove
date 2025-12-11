@@ -62,7 +62,7 @@ try {
 
 ## Documentation for API Endpoints
 
-All URIs are relative to *http://localhost:3000/api*
+All URIs are relative to *http://10.86.19.105:3000/api*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------

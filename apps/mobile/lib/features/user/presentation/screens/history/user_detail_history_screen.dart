@@ -32,6 +32,17 @@ class UserDetailHistoryScreen extends StatelessWidget {
           },
         ),
       ],
+      onRefresh: () async {
+        final orderId = context
+            .read<UserOrderCubit>()
+            .state
+            .selectedOrder
+            .value
+            ?.id;
+        if (orderId != null) {
+          await context.read<UserOrderCubit>().maybeGet(orderId);
+        }
+      },
       body: BlocBuilder<UserOrderCubit, UserOrderState>(
         builder: (context, state) {
           if (state.selectedOrder.isLoading) {

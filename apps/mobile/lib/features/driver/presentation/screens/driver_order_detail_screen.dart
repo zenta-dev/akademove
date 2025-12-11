@@ -41,6 +41,10 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
     }
   }
 
+  Future<void> _onRefresh() async {
+    await _initializeOrder();
+  }
+
   @override
   void dispose() {
     _mapController?.dispose();
@@ -124,18 +128,22 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
               // Order details and actions
               Expanded(
                 flex: 3,
-                child: SingleChildScrollView(
-                  padding: EdgeInsets.all(16.dg),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    spacing: 20.h,
-                    children: [
-                      if (status != null)
-                        _buildStatusIndicator(context, status),
-                      _buildOrderInfo(order),
-                      _buildCustomerInfo(order),
-                      _buildActionButtons(state, order),
-                    ],
+                child: RefreshTrigger(
+                  onRefresh: _onRefresh,
+                  child: SingleChildScrollView(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    padding: EdgeInsets.all(16.dg),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      spacing: 20.h,
+                      children: [
+                        if (status != null)
+                          _buildStatusIndicator(context, status),
+                        _buildOrderInfo(order),
+                        _buildCustomerInfo(order),
+                        _buildActionButtons(state, order),
+                      ],
+                    ),
                   ),
                 ),
               ),

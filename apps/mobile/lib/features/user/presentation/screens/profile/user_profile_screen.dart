@@ -15,6 +15,9 @@ class UserProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return MyScaffold(
       safeArea: true,
+      onRefresh: () async {
+        await context.read<AuthCubit>().authenticate();
+      },
       body: Column(
         spacing: 16.h,
         crossAxisAlignment: .start,

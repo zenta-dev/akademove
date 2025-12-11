@@ -24,6 +24,10 @@ class _UserMartScreenState extends State<UserMartScreen> {
     context.read<UserMartCubit>().loadMartHome();
   }
 
+  Future<void> _onRefresh() async {
+    await context.read<UserMartCubit>().loadMartHome();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MyScaffold(
@@ -52,6 +56,7 @@ class _UserMartScreenState extends State<UserMartScreen> {
         ),
       ],
       padding: EdgeInsets.zero,
+      onRefresh: _onRefresh,
       body: BlocBuilder<UserMartCubit, UserMartState>(
         builder: (context, state) {
           if (state.bestSellers.isLoading) {

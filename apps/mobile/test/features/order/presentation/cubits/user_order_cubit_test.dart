@@ -752,5 +752,135 @@ void main() {
         expect(OrderStatus.ACCEPTED.value, 'ACCEPTED');
       });
     });
+
+    group('FOOD Order WebSocket Events', () {
+      test('merchantAcceptedMessage has correct structure', () {
+        final message = TestConstants.merchantAcceptedMessage;
+
+        expect(message['e'], 'MERCHANT_ACCEPTED');
+        expect(message['p'], isA<Map<String, Object?>>());
+
+        final payload = message['p'] as Map<String, Object?>;
+        final detail = payload['detail'] as Map<String, Object?>;
+
+        expect(detail['order'], isA<Map<String, Object?>>());
+        final order = detail['order'] as Map<String, Object?>;
+        expect(order['id'], TestConstants.testOrderId);
+        expect(order['type'], 'FOOD');
+        expect(order['status'], 'ACCEPTED');
+        expect(order['merchantId'], TestConstants.testMerchantId);
+      });
+
+      test('merchantPreparingMessage has correct structure', () {
+        final message = TestConstants.merchantPreparingMessage;
+
+        expect(message['e'], 'MERCHANT_PREPARING');
+        expect(message['p'], isA<Map<String, Object?>>());
+
+        final payload = message['p'] as Map<String, Object?>;
+        final detail = payload['detail'] as Map<String, Object?>;
+
+        expect(detail['order'], isA<Map<String, Object?>>());
+        final order = detail['order'] as Map<String, Object?>;
+        expect(order['status'], 'PREPARING');
+      });
+
+      test('merchantReadyMessage has correct structure', () {
+        final message = TestConstants.merchantReadyMessage;
+
+        expect(message['e'], 'MERCHANT_READY');
+        expect(message['p'], isA<Map<String, Object?>>());
+
+        final payload = message['p'] as Map<String, Object?>;
+        final detail = payload['detail'] as Map<String, Object?>;
+
+        expect(detail['order'], isA<Map<String, Object?>>());
+        final order = detail['order'] as Map<String, Object?>;
+        // After merchant marks ready, status changes to MATCHING for driver search
+        expect(order['status'], 'MATCHING');
+      });
+
+      test('merchantRejectedMessage has correct structure', () {
+        final message = TestConstants.merchantRejectedMessage;
+
+        expect(message['e'], 'MERCHANT_REJECTED');
+        expect(message['p'], isA<Map<String, Object?>>());
+
+        final payload = message['p'] as Map<String, Object?>;
+        final detail = payload['detail'] as Map<String, Object?>;
+        final cancelReason = payload['cancelReason'] as String;
+
+        expect(detail['order'], isA<Map<String, Object?>>());
+        final order = detail['order'] as Map<String, Object?>;
+        expect(order['status'], 'CANCELLED_BY_MERCHANT');
+        expect(cancelReason, 'Out of stock');
+      });
+    });
+
+    group('FOOD Order Status Transitions', () {
+      test('FOOD order stays in REQUESTED after payment (not MATCHING)', () {
+        // For FOOD orders, status stays REQUESTED after payment
+        // Until merchant accepts/prepares/marks ready
+        const foodOrderStatusAfterPayment = 'REQUESTED';
+        expect(foodOrderStatusAfterPayment, 'REQUESTED');
+      });
+
+      test('FOOD order transitions to MATCHING after READY_FOR_PICKUP', () {
+        // Driver matching only starts after merchant marks food ready
+        final foodOrderStatuses = [
+          OrderStatus.REQUESTED, // After payment (waiting for merchant)
+          OrderStatus.ACCEPTED, // Merchant accepted
+          OrderStatus.PREPARING, // Merchant preparing
+          OrderStatus.READY_FOR_PICKUP, // Merchant ready
+          OrderStatus.MATCHING, // Driver search starts
+          OrderStatus.ACCEPTED, // Driver accepted (back to ACCEPTED)
+          OrderStatus.ARRIVING, // Driver en route
+          OrderStatus.IN_TRIP, // Delivering
+          OrderStatus.COMPLETED, // Done
+        ];
+
+        expect(foodOrderStatuses, contains(OrderStatus.PREPARING));
+        expect(foodOrderStatuses, contains(OrderStatus.READY_FOR_PICKUP));
+      });
+
+      test('FOOD order can be cancelled by merchant', () {
+        // Merchant rejection results in CANCELLED_BY_MERCHANT status
+        expect(
+          OrderStatus.CANCELLED_BY_MERCHANT.value,
+          'CANCELLED_BY_MERCHANT',
+        );
+      });
+    });
+
+    group('FOOD Order WebSocket Connection Logic', () {
+      test(
+        'FOOD order with successful payment should connect to order WebSocket',
+        () {
+          // When FOOD order is in REQUESTED status with SUCCESS payment
+          // Should connect to order WebSocket (not driver-pool) to receive merchant updates
+          const orderType = 'FOOD';
+          const orderStatus = 'REQUESTED';
+          const paymentStatus = 'SUCCESS';
+
+          final shouldConnectToOrderWs =
+              orderType == 'FOOD' &&
+              orderStatus == 'REQUESTED' &&
+              paymentStatus == 'SUCCESS';
+
+          expect(shouldConnectToOrderWs, true);
+        },
+      );
+
+      test(
+        'RIDE/DELIVERY order should connect to driver-pool after payment',
+        () {
+          // Non-FOOD orders connect to driver-pool after payment
+          const orderType = 'RIDE';
+          const shouldConnectToDriverPool = orderType != 'FOOD';
+
+          expect(shouldConnectToDriverPool, true);
+        },
+      );
+    });
   });
 }

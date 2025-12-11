@@ -60,6 +60,15 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
     super.dispose();
   }
 
+  Future<void> _onRefresh() async {
+    _notificationCubit.getUnreadCount();
+    await Future.wait([
+      context.read<UserHomeCubit>().getPopulars(),
+      context.read<ConfigurationCubit>().getBanners(placement: 'USER_HOME'),
+      context.read<UserWalletCubit>().getMine(),
+    ]);
+  }
+
   @override
   Widget build(BuildContext context) {
     return MyScaffold(
@@ -134,6 +143,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
         ),
       ],
       padding: EdgeInsets.zero,
+      onRefresh: _onRefresh,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [_buildBanners(), _buildBody(context)],

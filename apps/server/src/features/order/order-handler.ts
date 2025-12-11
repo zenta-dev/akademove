@@ -1,9 +1,13 @@
 import { m } from "@repo/i18n";
+import type { Driver, Payment, Transaction } from "@repo/schema";
 import type { OrderStatus } from "@repo/schema/order";
 import { trimObjectValues } from "@repo/shared";
 import { AuthError } from "@/core/error";
 import { createORPCRouter } from "@/core/router/orpc";
 import { logger } from "@/utils/logger";
+import { DriverMainRepository } from "../driver/main/driver-main-repository";
+import { PaymentRepository } from "../payment/payment-repository";
+import { TransactionRepository } from "../transaction/transaction-repository";
 import { OrderSpec } from "./order-spec";
 
 const { priv } = createORPCRouter(OrderSpec);
@@ -637,9 +641,9 @@ export const OrderHandler = priv.router({
 		}
 
 		// Get associated payment and transaction
-		let payment: unknown;
-		let transaction: unknown;
-		let driver: unknown;
+		let payment: Payment | undefined;
+		let transaction: Transaction | undefined;
+		let driver: Driver | undefined;
 
 		try {
 			// Try to get payment info
@@ -653,7 +657,7 @@ export const OrderHandler = priv.router({
 					),
 			});
 			if (paymentResult) {
-				payment = paymentResult;
+				payment = PaymentRepository.composeEntity(paymentResult);
 				// Get associated transaction
 				if (paymentResult.transactionId) {
 					const txResult = await context.svc.db.query.transaction.findFirst({
@@ -661,7 +665,7 @@ export const OrderHandler = priv.router({
 							op.eq(f.id, paymentResult.transactionId as string),
 					});
 					if (txResult) {
-						transaction = txResult;
+						transaction = TransactionRepository.composeEntity(txResult);
 					}
 				}
 			}

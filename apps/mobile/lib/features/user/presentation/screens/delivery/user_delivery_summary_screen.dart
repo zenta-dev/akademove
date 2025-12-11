@@ -82,6 +82,7 @@ class _UserDeliverySummaryScreenState extends State<UserDeliverySummaryScreen> {
                 ),
               ),
           ],
+          scrollable: false,
           body: _buildBody(context, state),
         );
       },

@@ -30,7 +30,7 @@ import 'package:api_client/src/api/user_api.dart';
 import 'package:api_client/src/api/wallet_api.dart';
 
 class ApiClient {
-  static const String basePath = r'http://localhost:3000/api';
+  static const String basePath = r'http://10.86.19.105:3000/api';
 
   final Dio dio;
   ApiClient({

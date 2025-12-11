@@ -961,9 +961,3 @@ lib/src/model/weight_size.dart
 lib/src/model/withdraw_request.dart
 lib/src/model/withdraw_response.dart
 pubspec.yaml
-test/merchant_envelope_action_test.dart
-test/merchant_envelope_event_test.dart
-test/merchant_envelope_payload_test.dart
-test/merchant_envelope_test.dart
-test/order_get_active200_response_data_test.dart
-test/order_get_active200_response_test.dart

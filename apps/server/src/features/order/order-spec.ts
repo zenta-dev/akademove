@@ -1,4 +1,5 @@
 import { oc } from "@orpc/contract";
+import { DriverSchema, PaymentSchema, TransactionSchema } from "@repo/schema";
 import {
 	InsertOrderChatMessageSchema,
 	OrderChatMessageListQuerySchema,
@@ -335,9 +336,9 @@ export const OrderSpec = {
 				z
 					.object({
 						order: OrderSchema.optional(),
-						payment: z.unknown().optional(),
-						transaction: z.unknown().optional(),
-						driver: z.unknown().optional(),
+						payment: PaymentSchema.optional(),
+						transaction: TransactionSchema.optional(),
+						driver: DriverSchema.optional(),
 					})
 					.optional(),
 				"Successfully retrieved active order",

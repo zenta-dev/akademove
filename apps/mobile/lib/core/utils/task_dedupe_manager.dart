@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:isolate';
 
+import 'package:akademove/core/utils/operation.dart';
+
 /// A manager that prevents duplicate execution of tasks with the same key.
 /// If multiple requests come in for the same task, they all wait for and share
 /// the result of a single execution.
@@ -36,8 +38,8 @@ class TaskDedupeManager {
       completer.completeError(e, stackTrace);
       rethrow;
     } finally {
-      Future.delayed(const Duration(milliseconds: 10), () async {
-        await _activeTasks.remove(key);
+      Future.delayed(const Duration(milliseconds: 10), () {
+        safeSync(() => _activeTasks.remove(key));
       });
     }
   }
@@ -59,8 +61,8 @@ class TaskDedupeManager {
       completer.completeError(e, stackTrace);
       rethrow;
     } finally {
-      Future.delayed(const Duration(milliseconds: 10), () async {
-        await _activeTasks.remove(key);
+      Future.delayed(const Duration(milliseconds: 10), () {
+        safeSync(() => _activeTasks.remove(key));
       });
     }
   }
@@ -219,8 +221,8 @@ class _CachedTaskDedupeManager {
       completer.completeError(e, stackTrace);
       rethrow;
     } finally {
-      Future.delayed(const Duration(milliseconds: 10), () async {
-        await _activeTasks.remove(key);
+      Future.delayed(const Duration(milliseconds: 10), () {
+        safeSync(() => _activeTasks.remove(key));
       });
     }
   }

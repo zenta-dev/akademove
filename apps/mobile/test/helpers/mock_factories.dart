@@ -1,5 +1,6 @@
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/auth/data/auth_repository.dart';
+import 'package:akademove/features/cart/data/_export.dart';
 import 'package:akademove/features/configuration/data/repositories/configuration_repository.dart';
 import 'package:akademove/features/coupon/data/repositories/coupon_repository.dart';
 import 'package:akademove/features/driver/data/repositories/driver_repository.dart';
@@ -61,6 +62,8 @@ class MockNotificationRepository extends Mock
 class MockCouponRepository extends Mock implements CouponRepository {}
 
 class MockOrderChatRepository extends Mock implements OrderChatRepository {}
+
+class MockCartRepository extends Mock implements CartRepository {}
 
 // ============================================================================
 // Service Mocks

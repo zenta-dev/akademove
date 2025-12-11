@@ -25,6 +25,10 @@ class _CartScreenState extends State<CartScreen> {
     context.read<CartCubit>().loadCart();
   }
 
+  Future<void> _onRefresh() async {
+    await context.read<CartCubit>().loadCart();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MyScaffold(
@@ -57,6 +61,7 @@ class _CartScreenState extends State<CartScreen> {
         ),
       ],
       padding: EdgeInsets.zero,
+      onRefresh: _onRefresh,
       body: BlocConsumer<CartCubit, CartState>(
         listener: (context, state) {
           // Listen to cart load failures

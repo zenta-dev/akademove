@@ -9,11 +9,11 @@ part of 'order_get_active200_response_data.dart';
 abstract class _$OrderGetActive200ResponseDataCWProxy {
   OrderGetActive200ResponseData order(Order? order);
 
-  OrderGetActive200ResponseData payment(Object? payment);
+  OrderGetActive200ResponseData payment(Payment? payment);
 
-  OrderGetActive200ResponseData transaction(Object? transaction);
+  OrderGetActive200ResponseData transaction(Transaction? transaction);
 
-  OrderGetActive200ResponseData driver(Object? driver);
+  OrderGetActive200ResponseData driver(Driver? driver);
 
   /// Creates a new instance with the provided field values.
   /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `OrderGetActive200ResponseData(...).copyWith.fieldName(value)`.
@@ -24,9 +24,9 @@ abstract class _$OrderGetActive200ResponseDataCWProxy {
   /// ```
   OrderGetActive200ResponseData call({
     Order? order,
-    Object? payment,
-    Object? transaction,
-    Object? driver,
+    Payment? payment,
+    Transaction? transaction,
+    Driver? driver,
   });
 }
 
@@ -42,15 +42,15 @@ class _$OrderGetActive200ResponseDataCWProxyImpl
   OrderGetActive200ResponseData order(Order? order) => call(order: order);
 
   @override
-  OrderGetActive200ResponseData payment(Object? payment) =>
+  OrderGetActive200ResponseData payment(Payment? payment) =>
       call(payment: payment);
 
   @override
-  OrderGetActive200ResponseData transaction(Object? transaction) =>
+  OrderGetActive200ResponseData transaction(Transaction? transaction) =>
       call(transaction: transaction);
 
   @override
-  OrderGetActive200ResponseData driver(Object? driver) => call(driver: driver);
+  OrderGetActive200ResponseData driver(Driver? driver) => call(driver: driver);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -74,15 +74,15 @@ class _$OrderGetActive200ResponseDataCWProxyImpl
       payment: payment == const $CopyWithPlaceholder()
           ? _value.payment
           // ignore: cast_nullable_to_non_nullable
-          : payment as Object?,
+          : payment as Payment?,
       transaction: transaction == const $CopyWithPlaceholder()
           ? _value.transaction
           // ignore: cast_nullable_to_non_nullable
-          : transaction as Object?,
+          : transaction as Transaction?,
       driver: driver == const $CopyWithPlaceholder()
           ? _value.driver
           // ignore: cast_nullable_to_non_nullable
-          : driver as Object?,
+          : driver as Driver?,
     );
   }
 }
@@ -108,9 +108,18 @@ OrderGetActive200ResponseData _$OrderGetActive200ResponseDataFromJson(
       'order',
       (v) => v == null ? null : Order.fromJson(v as Map<String, dynamic>),
     ),
-    payment: $checkedConvert('payment', (v) => v),
-    transaction: $checkedConvert('transaction', (v) => v),
-    driver: $checkedConvert('driver', (v) => v),
+    payment: $checkedConvert(
+      'payment',
+      (v) => v == null ? null : Payment.fromJson(v as Map<String, dynamic>),
+    ),
+    transaction: $checkedConvert(
+      'transaction',
+      (v) => v == null ? null : Transaction.fromJson(v as Map<String, dynamic>),
+    ),
+    driver: $checkedConvert(
+      'driver',
+      (v) => v == null ? null : Driver.fromJson(v as Map<String, dynamic>),
+    ),
   );
   return val;
 });
@@ -119,7 +128,7 @@ Map<String, dynamic> _$OrderGetActive200ResponseDataToJson(
   OrderGetActive200ResponseData instance,
 ) => <String, dynamic>{
   'order': ?instance.order?.toJson(),
-  'payment': ?instance.payment,
-  'transaction': ?instance.transaction,
-  'driver': ?instance.driver,
+  'payment': ?instance.payment?.toJson(),
+  'transaction': ?instance.transaction?.toJson(),
+  'driver': ?instance.driver?.toJson(),
 };

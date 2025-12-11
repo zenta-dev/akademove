@@ -61,6 +61,16 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
     }
   }
 
+  Future<void> _onRefresh() async {
+    final result = await context.read<OrderRepository>().get(_currentOrder.id);
+    final order = result.data;
+    if (mounted && order != null) {
+      setState(() {
+        _currentOrder = order;
+      });
+    }
+  }
+
   Future<void> _subscribeToOrderUpdates() async {
     await context.read<MerchantOrderCubit>().subscribeToOrder(_currentOrder.id);
   }
@@ -685,16 +695,20 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
             ],
             padding: EdgeInsets.all(16.w),
             body: SafeArea(
-              child: SingleChildScrollView(
-                padding: EdgeInsets.only(bottom: 120.h),
-                child: Column(
-                  spacing: 16.h,
-                  children: [
-                    _buildCustomerInfo(context),
-                    _buildDriverInfo(context),
-                    _buildOrderDetails(context),
-                    _buildOrderInfo(context),
-                  ],
+              child: RefreshTrigger(
+                onRefresh: _onRefresh,
+                child: SingleChildScrollView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  padding: EdgeInsets.only(bottom: 120.h),
+                  child: Column(
+                    spacing: 16.h,
+                    children: [
+                      _buildCustomerInfo(context),
+                      _buildDriverInfo(context),
+                      _buildOrderDetails(context),
+                      _buildOrderInfo(context),
+                    ],
+                  ),
                 ),
               ),
             ),

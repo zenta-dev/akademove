@@ -175,6 +175,88 @@ class TestConstants {
     },
   };
 
+  // FOOD order specific WebSocket events
+  static Map<String, Object?> get merchantAcceptedMessage => {
+    'e': 'MERCHANT_ACCEPTED',
+    'p': {
+      'detail': {
+        'order': {
+          'id': testOrderId,
+          'userId': testUserId,
+          'type': 'FOOD',
+          'status': 'ACCEPTED',
+          'pickupLocation': {'x': testPickupLng, 'y': testPickupLat},
+          'dropoffLocation': {'x': testDropoffLng, 'y': testDropoffLat},
+          'totalPrice': testOrderPrice,
+          'merchantId': testMerchantId,
+        },
+        'payment': {'id': testPaymentId, 'status': 'SUCCESS'},
+        'transaction': {'id': testTransactionId, 'status': 'SUCCESS'},
+      },
+    },
+  };
+
+  static Map<String, Object?> get merchantPreparingMessage => {
+    'e': 'MERCHANT_PREPARING',
+    'p': {
+      'detail': {
+        'order': {
+          'id': testOrderId,
+          'userId': testUserId,
+          'type': 'FOOD',
+          'status': 'PREPARING',
+          'pickupLocation': {'x': testPickupLng, 'y': testPickupLat},
+          'dropoffLocation': {'x': testDropoffLng, 'y': testDropoffLat},
+          'totalPrice': testOrderPrice,
+          'merchantId': testMerchantId,
+        },
+        'payment': {'id': testPaymentId, 'status': 'SUCCESS'},
+        'transaction': {'id': testTransactionId, 'status': 'SUCCESS'},
+      },
+    },
+  };
+
+  static Map<String, Object?> get merchantReadyMessage => {
+    'e': 'MERCHANT_READY',
+    'p': {
+      'detail': {
+        'order': {
+          'id': testOrderId,
+          'userId': testUserId,
+          'type': 'FOOD',
+          'status': 'MATCHING',
+          'pickupLocation': {'x': testPickupLng, 'y': testPickupLat},
+          'dropoffLocation': {'x': testDropoffLng, 'y': testDropoffLat},
+          'totalPrice': testOrderPrice,
+          'merchantId': testMerchantId,
+        },
+        'payment': {'id': testPaymentId, 'status': 'SUCCESS'},
+        'transaction': {'id': testTransactionId, 'status': 'SUCCESS'},
+      },
+    },
+  };
+
+  static Map<String, Object?> get merchantRejectedMessage => {
+    'e': 'MERCHANT_REJECTED',
+    'p': {
+      'detail': {
+        'order': {
+          'id': testOrderId,
+          'userId': testUserId,
+          'type': 'FOOD',
+          'status': 'CANCELLED_BY_MERCHANT',
+          'pickupLocation': {'x': testPickupLng, 'y': testPickupLat},
+          'dropoffLocation': {'x': testDropoffLng, 'y': testDropoffLat},
+          'totalPrice': testOrderPrice,
+          'merchantId': testMerchantId,
+        },
+        'payment': {'id': testPaymentId, 'status': 'SUCCESS'},
+        'transaction': {'id': testTransactionId, 'status': 'SUCCESS'},
+      },
+      'cancelReason': 'Out of stock',
+    },
+  };
+
   // Helper to create generic success response map
   static Map<String, Object?> successResponse<T>(T data, {String? message}) => {
     'message': message ?? successMessage,

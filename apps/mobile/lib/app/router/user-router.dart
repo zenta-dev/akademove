@@ -230,6 +230,14 @@ final userRouter = StatefulShellRoute.indexedStack(
           ),
         ),
         GoRoute(
+          name: Routes.userFoodOnTrip.name,
+          path: Routes.userFoodOnTrip.path,
+          builder: (context, state) => BlocProvider.value(
+            value: context.read<EmergencyCubit>(),
+            child: const UserFoodOnTripScreen(),
+          ),
+        ),
+        GoRoute(
           name: Routes.userMerchantDetail.name,
           path: Routes.userMerchantDetail.path,
           builder: (context, state) {

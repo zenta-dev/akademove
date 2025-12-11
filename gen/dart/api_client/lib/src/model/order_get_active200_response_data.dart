@@ -3,7 +3,10 @@
 //
 
 // ignore_for_file: unused_element
+import 'package:api_client/src/model/transaction.dart';
 import 'package:api_client/src/model/order.dart';
+import 'package:api_client/src/model/driver.dart';
+import 'package:api_client/src/model/payment.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
 
@@ -28,13 +31,13 @@ class OrderGetActive200ResponseData {
   final Order? order;
   
   @JsonKey(name: r'payment', required: false, includeIfNull: false)
-  final Object? payment;
+  final Payment? payment;
   
   @JsonKey(name: r'transaction', required: false, includeIfNull: false)
-  final Object? transaction;
+  final Transaction? transaction;
   
   @JsonKey(name: r'driver', required: false, includeIfNull: false)
-  final Object? driver;
+  final Driver? driver;
   
   @override
   bool operator ==(Object other) => identical(this, other) || other is OrderGetActive200ResponseData &&
@@ -46,9 +49,9 @@ class OrderGetActive200ResponseData {
   @override
   int get hashCode =>
       order.hashCode +
-      (payment == null ? 0 : payment.hashCode) +
-      (transaction == null ? 0 : transaction.hashCode) +
-      (driver == null ? 0 : driver.hashCode);
+      payment.hashCode +
+      transaction.hashCode +
+      driver.hashCode;
 
   factory OrderGetActive200ResponseData.fromJson(Map<String, dynamic> json) => _$OrderGetActive200ResponseDataFromJson(json);
 

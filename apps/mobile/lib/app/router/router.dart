@@ -56,6 +56,7 @@ enum Routes {
   userCart('/user/home/cart'),
   userOrderConfirm('/user/home/cart/confirm'),
   userListMerchant('/user/home/mart/list-merchant'),
+  userFoodOnTrip('/user/home/mart/on-trip'),
   userWallet('/user/home/wallet'),
   userWalletTopUp('/user/home/wallet/topup'),
   userWalletTopUpInsertAmount('/user/home/wallet/topup/insert-amount'),

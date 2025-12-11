@@ -1,8 +1,10 @@
+import 'package:akademove/app/router/router.dart';
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/cart/data/models/cart_models.dart'
     show Cart, CartItem;
 import 'package:akademove/features/cart/presentation/cubits/cart_cubit.dart';
 import 'package:akademove/features/cart/presentation/states/_export.dart';
+import 'package:akademove/features/order/presentation/cubits/_export.dart';
 import 'package:akademove/features/user/presentation/cubits/_export.dart';
 import 'package:akademove/l10n/l10n.dart';
 import 'package:api_client/api_client.dart' hide Cart, CartItem;
@@ -47,7 +49,7 @@ class _OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
       body: BlocConsumer<CartCubit, CartState>(
         listenWhen: (prev, curr) =>
             prev.placeFoodOrderResult != curr.placeFoodOrderResult,
-        listener: (context, state) {
+        listener: (context, state) async {
           if (state.placeFoodOrderResult.isSuccess) {
             // Show success message
             showToast(
@@ -59,8 +61,13 @@ class _OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
               location: ToastLocation.topCenter,
             );
 
-            // Navigate to home
-            context.go('/user/home');
+            // Recover active order to setup WebSocket and state in UserOrderCubit
+            await context.read<UserOrderCubit>().recoverActiveOrder();
+
+            // Navigate to food order tracking screen
+            if (context.mounted) {
+              context.go(Routes.userFoodOnTrip.path);
+            }
           } else if (state.placeFoodOrderResult.isFailed) {
             final error = state.placeFoodOrderResult.error;
             showToast(

@@ -1,4 +1,5 @@
 import 'package:akademove/core/_export.dart';
+import 'package:akademove/features/features.dart';
 import 'package:api_client/api_client.dart';
 
 class ListOrderQuery extends UnifiedQuery {
@@ -309,60 +310,22 @@ class OrderRepository extends BaseRepository {
   /// Returns the active order with associated payment, transaction, and driver
   Future<BaseResponse<ActiveOrderResponse?>> getActiveOrder() {
     return guard(() async {
-      final res = await _apiClient.dio.get<Map<String, dynamic>>(
-        '/orders/active',
-      );
+      final res = await _apiClient.getOrderApi().orderGetActive();
 
       final data = res.data;
-      if (data == null) {
-        throw const RepositoryError(
-          'Failed to get active order',
-          code: ErrorCode.unknown,
-        );
-      }
-
-      final body = data['body'] as Map<String, dynamic>?;
-      if (body == null) {
-        throw const RepositoryError(
-          'Invalid response format',
-          code: ErrorCode.unknown,
-        );
-      }
-
-      final orderData = body['data'] as Map<String, dynamic>?;
-      if (orderData == null) {
-        // No active order found
-        return SuccessResponse(
-          message: body['message'] as String? ?? 'No active order found',
-          data: null,
-        );
-      }
-
-      // Parse the active order response
-      final orderJson = orderData['order'] as Map<String, dynamic>?;
-      final paymentJson = orderData['payment'] as Map<String, dynamic>?;
-      final transactionJson = orderData['transaction'] as Map<String, dynamic>?;
-      final driverJson = orderData['driver'] as Map<String, dynamic>?;
-
-      final order = orderJson != null ? Order.fromJson(orderJson) : null;
-      final payment = paymentJson != null
-          ? Payment.fromJson(paymentJson)
-          : null;
-      final transaction = transactionJson != null
-          ? Transaction.fromJson(transactionJson)
-          : null;
-      final driver = driverJson != null ? Driver.fromJson(driverJson) : null;
-
+      final order = data?.data?.order;
+      final payment = data?.data?.payment;
+      final transaction = data?.data?.transaction;
+      final driver = data?.data?.driver;
       if (order == null) {
         return SuccessResponse(
-          message: body['message'] as String? ?? 'No active order found',
+          message: data?.message ?? 'No active order found',
           data: null,
         );
       }
 
       return SuccessResponse(
-        message:
-            body['message'] as String? ?? 'Successfully retrieved active order',
+        message: data?.message ?? 'Successfully retrieved active order',
         data: ActiveOrderResponse(
           order: order,
           payment: payment,
