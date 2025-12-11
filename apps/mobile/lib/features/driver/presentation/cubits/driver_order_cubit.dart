@@ -316,7 +316,7 @@ class DriverOrderCubit extends BaseCubit<DriverOrderState> {
     _locationUpdateTimer = Timer.periodic(const Duration(seconds: 10), (
       _,
     ) async {
-      await _updateLocation();
+      await safeAsync(() => _updateLocation());
     });
     _updateLocation();
   }
