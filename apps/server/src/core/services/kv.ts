@@ -73,7 +73,7 @@ export class CloudflareKVService implements KeyValueService {
 
 			const encoded = encode(value);
 			await this.namespace.put(key, encoded, {
-				expirationTtl: 5, // 5 seconds TTL to reduce stale reads
+				expirationTtl: 60, // 60 seconds TTL to reduce stale reads
 			});
 		} catch (error) {
 			throw new KeyValueError(
