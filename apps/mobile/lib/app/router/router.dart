@@ -47,6 +47,8 @@ enum Routes {
   userDeliveryDetailsEditDetail('/user/home/delivery/details/edit/detail'),
   userDeliverySummary('/user/home/delivery/summary'),
   userDeliveryPayment('/user/home/delivery/payment'),
+  userDeliveryPaymentGateway('/user/home/delivery/payment-gateway'),
+  userDeliveryOnTrip('/user/home/delivery/on-trip'),
   userMart('/user/home/mart'),
   userMerchantDetail('/user/home/merchant/:merchantId'),
   userMartCategory('/user/home/mart/category'),

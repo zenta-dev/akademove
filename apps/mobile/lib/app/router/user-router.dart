@@ -169,6 +169,33 @@ final userRouter = StatefulShellRoute.indexedStack(
               path: Routes.userDeliveryPayment.path,
               builder: (context, state) => const UserDeliveryPaymentScreen(),
             ),
+            GoRoute(
+              name: Routes.userDeliveryPaymentGateway.name,
+              path: Routes.userDeliveryPaymentGateway.path,
+              builder: (context, state) {
+                final paymentMethod =
+                    state.uri.queryParameters['paymentMethod'];
+                final bankProvider = state.uri.queryParameters['bankProvider'];
+                return UserDeliveryPaymentGatewayScreen(
+                  paymentMethod: PaymentMethod.values.firstWhere(
+                    (e) => e.name.toLowerCase() == paymentMethod?.toLowerCase(),
+                    orElse: () => PaymentMethod.QRIS,
+                  ),
+                  bankProvider: bankProvider != null
+                      ? BankProvider.values.firstWhere(
+                          (e) =>
+                              e.name.toLowerCase() ==
+                              bankProvider.toLowerCase(),
+                        )
+                      : null,
+                );
+              },
+            ),
+            GoRoute(
+              name: Routes.userDeliveryOnTrip.name,
+              path: Routes.userDeliveryOnTrip.path,
+              builder: (context, state) => const UserDeliveryOnTripScreen(),
+            ),
           ],
         ),
         GoRoute(
