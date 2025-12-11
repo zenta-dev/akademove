@@ -1,30 +1,37 @@
 part of 'router.dart';
 
 final userRouter = StatefulShellRoute.indexedStack(
-  builder: (context, state, navigationShell) => MultiBlocProvider(
+  builder: (context, state, navigationShell) => MultiRepositoryProvider(
     providers: [
-      BlocProvider(create: (_) => sl<BottomNavBarCubit>()),
-      BlocProvider(create: (_) => sl<UserHomeCubit>()),
-      BlocProvider(create: (_) => sl<UserLocationCubit>()),
-      BlocProvider(create: (_) => sl<UserRideCubit>()),
-      BlocProvider(create: (_) => sl<UserDeliveryCubit>()),
-      BlocProvider(create: (_) => sl<UserMartCubit>()),
-      BlocProvider(create: (_) => sl<CartCubit>()..loadCart()),
-      BlocProvider(create: (_) => sl<UserWalletCubit>()),
-      BlocProvider(create: (_) => sl<UserWalletTopUpCubit>()),
-      BlocProvider(create: (_) => sl<UserOrderCubit>()),
-      BlocProvider(create: (_) => sl<UserMapCubit>()),
+      RepositoryProvider<LocationService>.value(value: sl<LocationService>()),
     ],
-    child: BottomNavbar(
-      shell: navigationShell,
-      tabs: [
-        BottomNavBarItem(label: context.l10n.home, icon: LucideIcons.house),
-        BottomNavBarItem(
-          label: context.l10n.history,
-          icon: LucideIcons.history,
-        ),
-        BottomNavBarItem(label: context.l10n.profile, icon: LucideIcons.user),
+    child: MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => sl<BottomNavBarCubit>()),
+        BlocProvider(create: (_) => sl<UserHomeCubit>()),
+        BlocProvider(create: (_) => sl<UserLocationCubit>()),
+        BlocProvider(create: (_) => sl<UserRideCubit>()),
+        BlocProvider(create: (_) => sl<UserDeliveryCubit>()),
+        BlocProvider(create: (_) => sl<UserMartCubit>()),
+        BlocProvider(create: (_) => sl<CartCubit>()..loadCart()),
+        BlocProvider(create: (_) => sl<UserWalletCubit>()),
+        BlocProvider(create: (_) => sl<UserWalletTopUpCubit>()),
+        BlocProvider(create: (_) => sl<UserOrderCubit>()),
+        BlocProvider(create: (_) => sl<UserMapCubit>()),
+        BlocProvider(create: (_) => sl<NotificationCubit>()),
+        BlocProvider(create: (_) => sl<EmergencyCubit>()),
       ],
+      child: BottomNavbar(
+        shell: navigationShell,
+        tabs: [
+          BottomNavBarItem(label: context.l10n.home, icon: LucideIcons.house),
+          BottomNavBarItem(
+            label: context.l10n.history,
+            icon: LucideIcons.history,
+          ),
+          BottomNavBarItem(label: context.l10n.profile, icon: LucideIcons.user),
+        ],
+      ),
     ),
   ),
   branches: [
@@ -92,7 +99,10 @@ final userRouter = StatefulShellRoute.indexedStack(
             GoRoute(
               name: Routes.userRideOnTrip.name,
               path: Routes.userRideOnTrip.path,
-              builder: (context, state) => const UserRideOnTripScreen(),
+              builder: (context, state) => BlocProvider.value(
+                value: context.read<EmergencyCubit>(),
+                child: const UserRideOnTripScreen(),
+              ),
             ),
             GoRoute(
               name: Routes.userRating.name,
@@ -194,7 +204,10 @@ final userRouter = StatefulShellRoute.indexedStack(
             GoRoute(
               name: Routes.userDeliveryOnTrip.name,
               path: Routes.userDeliveryOnTrip.path,
-              builder: (context, state) => const UserDeliveryOnTripScreen(),
+              builder: (context, state) => BlocProvider.value(
+                value: context.read<EmergencyCubit>(),
+                child: const UserDeliveryOnTripScreen(),
+              ),
             ),
           ],
         ),
@@ -342,7 +355,10 @@ final userRouter = StatefulShellRoute.indexedStack(
         GoRoute(
           name: Routes.userNotifications.name,
           path: Routes.userNotifications.path,
-          builder: (context, state) => const NotificationScreen(),
+          builder: (context, state) => BlocProvider.value(
+            value: context.read<NotificationCubit>()..refreshNotifications(),
+            child: const NotificationScreen(),
+          ),
         ),
       ],
     ),

@@ -3,7 +3,6 @@ import 'package:akademove/app/widgets/_export.dart';
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/l10n/l10n.dart';
-import 'package:akademove/locator.dart';
 import 'package:api_client/api_client.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -27,7 +26,7 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
   }
 
   Future<void> _loadProfile() async {
-    await sl<DriverRepository>().getMine();
+    await context.read<DriverCubit>().refreshProfile();
   }
 
   Future<void> _onRefresh() async {

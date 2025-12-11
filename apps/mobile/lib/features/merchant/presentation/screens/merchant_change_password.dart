@@ -1,7 +1,6 @@
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/l10n/l10n.dart';
-import 'package:akademove/locator.dart';
 import 'package:api_client/api_client.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -15,18 +14,15 @@ class MerchantChangePasswordScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    return BlocProvider(
-      create: (_) => sl<UserProfileCubit>(),
-      child: MyScaffold(
-        headers: [DefaultAppBar(title: context.l10n.title_change_password)],
-        body: Card(
-          padding: EdgeInsets.all(8.dg),
-          child: SizedBox(
-            width: size.width.w,
-            child: const _ChangePasswordFormView(),
-          ),
-        ).intrinsic(),
-      ),
+    return MyScaffold(
+      headers: [DefaultAppBar(title: context.l10n.title_change_password)],
+      body: Card(
+        padding: EdgeInsets.all(8.dg),
+        child: SizedBox(
+          width: size.width.w,
+          child: const _ChangePasswordFormView(),
+        ),
+      ).intrinsic(),
     );
   }
 }

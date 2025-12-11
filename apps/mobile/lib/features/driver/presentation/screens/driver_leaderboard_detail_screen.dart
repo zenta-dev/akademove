@@ -1,7 +1,6 @@
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/l10n/l10n.dart';
-import 'package:akademove/locator.dart';
 import 'package:api_client/api_client.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -18,20 +17,15 @@ class DriverLeaderboardDetailScreen extends StatefulWidget {
 
 class _DriverLeaderboardDetailScreenState
     extends State<DriverLeaderboardDetailScreen> {
-  late LeaderboardCubit _cubit;
+  LeaderboardCubit get _cubit => context.read<LeaderboardCubit>();
   bool _isLoading = false;
 
   @override
   void initState() {
     super.initState();
-    _cubit = sl<LeaderboardCubit>();
-    _loadMyRankings();
-  }
-
-  @override
-  void dispose() {
-    _cubit.close();
-    super.dispose();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadMyRankings();
+    });
   }
 
   Future<void> _loadMyRankings() async {
@@ -81,86 +75,83 @@ class _DriverLeaderboardDetailScreenState
           ],
         ),
       ],
-      body: BlocProvider.value(
-        value: _cubit,
-        child: BlocBuilder<LeaderboardCubit, LeaderboardState>(
-          builder: (context, state) {
-            final myRankingsResult = state.myRankings;
+      body: BlocBuilder<LeaderboardCubit, LeaderboardState>(
+        builder: (context, state) {
+          final myRankingsResult = state.myRankings;
 
-            if (_isLoading && myRankingsResult.data == null) {
-              return const Center(child: CircularProgressIndicator());
-            }
+          if (_isLoading && myRankingsResult.data == null) {
+            return const Center(child: CircularProgressIndicator());
+          }
 
-            if (myRankingsResult.isFailure) {
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  spacing: 16.h,
-                  children: [
-                    Icon(
-                      LucideIcons.circleAlert,
-                      size: 48.sp,
-                      color: context.colorScheme.destructive,
-                    ),
-                    Text(
-                      myRankingsResult.error?.message ??
-                          'Failed to load rankings',
-                      style: context.typography.small,
-                      textAlign: TextAlign.center,
-                    ),
-                    PrimaryButton(
-                      onPressed: _onRefresh,
-                      child: Text(context.l10n.retry),
-                    ),
-                  ],
-                ),
-              );
-            }
-
-            final myRankings = myRankingsResult.value ?? [];
-
-            if (myRankings.isEmpty) {
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  spacing: 16.h,
-                  children: [
-                    Icon(
-                      LucideIcons.trophy,
-                      size: 48.sp,
-                      color: context.colorScheme.mutedForeground,
-                    ),
-                    Text(
-                      context.l10n.text_no_rankings_yet,
-                      style: context.typography.p.copyWith(
-                        color: context.colorScheme.mutedForeground,
-                      ),
-                    ),
-                    PrimaryButton(
-                      onPressed: _onRefresh,
-                      child: Text(context.l10n.retry),
-                    ),
-                  ],
-                ),
-              );
-            }
-
-            return RefreshTrigger(
-              onRefresh: _onRefresh,
-              child: SingleChildScrollView(
-                padding: EdgeInsets.all(16.dg),
-                child: Column(
-                  spacing: 16.h,
-                  children: [
-                    _buildOverallStats(myRankings),
-                    _buildRankingsByCategory(myRankings),
-                    _buildPerformanceMetrics(myRankings),
-                  ],
-                ),
+          if (myRankingsResult.isFailure) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                spacing: 16.h,
+                children: [
+                  Icon(
+                    LucideIcons.circleAlert,
+                    size: 48.sp,
+                    color: context.colorScheme.destructive,
+                  ),
+                  Text(
+                    myRankingsResult.error?.message ??
+                        'Failed to load rankings',
+                    style: context.typography.small,
+                    textAlign: TextAlign.center,
+                  ),
+                  PrimaryButton(
+                    onPressed: _onRefresh,
+                    child: Text(context.l10n.retry),
+                  ),
+                ],
               ),
             );
-          },
-        ),
+          }
+
+          final myRankings = myRankingsResult.value ?? [];
+
+          if (myRankings.isEmpty) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                spacing: 16.h,
+                children: [
+                  Icon(
+                    LucideIcons.trophy,
+                    size: 48.sp,
+                    color: context.colorScheme.mutedForeground,
+                  ),
+                  Text(
+                    context.l10n.text_no_rankings_yet,
+                    style: context.typography.p.copyWith(
+                      color: context.colorScheme.mutedForeground,
+                    ),
+                  ),
+                  PrimaryButton(
+                    onPressed: _onRefresh,
+                    child: Text(context.l10n.retry),
+                  ),
+                ],
+              ),
+            );
+          }
+
+          return RefreshTrigger(
+            onRefresh: _onRefresh,
+            child: SingleChildScrollView(
+              padding: EdgeInsets.all(16.dg),
+              child: Column(
+                spacing: 16.h,
+                children: [
+                  _buildOverallStats(myRankings),
+                  _buildRankingsByCategory(myRankings),
+                  _buildPerformanceMetrics(myRankings),
+                ],
+              ),
+            ),
+          );
+        },
       ),
     );
   }

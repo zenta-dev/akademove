@@ -2,7 +2,6 @@ import 'package:akademove/app/router/router.dart';
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/l10n/l10n.dart';
-import 'package:akademove/locator.dart';
 import 'package:api_client/api_client.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -287,7 +286,7 @@ class UserDetailHistoryScreen extends StatelessWidget {
               ),
               Gap(4.h),
               FutureBuilder(
-                future: sl<LocationService>().getPlacemark(
+                future: context.read<LocationService>().getPlacemark(
                   lat: coordinate.y.toDouble(),
                   lng: coordinate.x.toDouble(),
                 ),

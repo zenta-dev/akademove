@@ -1,21 +1,29 @@
 part of 'router.dart';
 
 final merchantRouter = StatefulShellRoute.indexedStack(
-  builder: (context, state, navigationShell) => MultiBlocProvider(
+  builder: (context, state, navigationShell) => MultiRepositoryProvider(
     providers: [
-      BlocProvider(create: (_) => sl<BottomNavBarCubit>()),
-      BlocProvider(create: (_) => sl<MerchantCubit>()),
-      BlocProvider(create: (_) => sl<MerchantMenuCubit>()),
-      BlocProvider(create: (_) => sl<MerchantOrderCubit>()),
+      RepositoryProvider<LocationService>.value(value: sl<LocationService>()),
     ],
-    child: BottomNavbar(
-      shell: navigationShell,
-      tabs: const [
-        BottomNavBarItem(label: 'Home', icon: LucideIcons.house),
-        BottomNavBarItem(label: 'Order', icon: LucideIcons.book),
-        BottomNavBarItem(label: 'Menu', icon: LucideIcons.listOrdered),
-        BottomNavBarItem(label: 'Profile', icon: LucideIcons.user),
+    child: MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => sl<BottomNavBarCubit>()),
+        BlocProvider(create: (_) => sl<MerchantCubit>()),
+        BlocProvider(create: (_) => sl<MerchantMenuCubit>()),
+        BlocProvider(create: (_) => sl<MerchantOrderCubit>()),
+        BlocProvider(create: (_) => sl<UserProfileCubit>()),
+        BlocProvider(create: (_) => sl<OrderChatCubit>()),
+        BlocProvider(create: (_) => sl<QuickMessageCubit>()),
       ],
+      child: BottomNavbar(
+        shell: navigationShell,
+        tabs: const [
+          BottomNavBarItem(label: 'Home', icon: LucideIcons.house),
+          BottomNavBarItem(label: 'Order', icon: LucideIcons.book),
+          BottomNavBarItem(label: 'Menu', icon: LucideIcons.listOrdered),
+          BottomNavBarItem(label: 'Profile', icon: LucideIcons.user),
+        ],
+      ),
     ),
   ),
   branches: [
@@ -106,7 +114,10 @@ final merchantRouter = StatefulShellRoute.indexedStack(
         GoRoute(
           name: Routes.merchantChangePassword.name,
           path: Routes.merchantChangePassword.path,
-          builder: (context, state) => const MerchantChangePasswordScreen(),
+          builder: (context, state) => BlocProvider.value(
+            value: context.read<UserProfileCubit>(),
+            child: const MerchantChangePasswordScreen(),
+          ),
         ),
       ],
     ),

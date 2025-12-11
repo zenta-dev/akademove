@@ -103,7 +103,10 @@ final authRouter = ShellRoute(
     GoRoute(
       name: Routes.driverApproval.name,
       path: Routes.driverApproval.path,
-      builder: (context, state) => const DriverApprovalScreen(),
+      builder: (context, state) => BlocProvider(
+        create: (_) => sl<DriverApprovalCubit>()..load(),
+        child: const DriverApprovalScreen(),
+      ),
     ),
   ],
 );

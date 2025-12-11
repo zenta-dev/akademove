@@ -1,7 +1,6 @@
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/l10n/l10n.dart';
-import 'package:akademove/locator.dart';
 import 'package:api_client/api_client.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -25,17 +24,16 @@ class _OrderChatWidgetState extends State<OrderChatWidget> {
   @override
   void initState() {
     super.initState();
-    _cubit = sl<OrderChatCubit>();
-    _quickMessageCubit = sl<QuickMessageCubit>();
+    _cubit = context.read<OrderChatCubit>();
+    _quickMessageCubit = context.read<QuickMessageCubit>();
     _cubit.init(widget.orderId);
     _scrollController.addListener(_onScroll);
 
     // Fetch quick message templates for current user's role
-    final currentUser = sl<AuthCubit>().state.user.data?.value;
-    if (currentUser != null) {
-      // Get app locale from Flutter localization context
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        final currentUser = context.read<AuthCubit>().state.user.data?.value;
+        if (currentUser != null) {
           final appLocalizations = context.l10n;
           final locale = appLocalizations.localeName.split('_').first;
           _quickMessageCubit.fetchTemplates(
@@ -43,16 +41,14 @@ class _OrderChatWidgetState extends State<OrderChatWidget> {
             locale: locale,
           );
         }
-      });
-    }
+      }
+    });
   }
 
   @override
   void dispose() {
     _messageController.dispose();
     _scrollController.dispose();
-    _cubit.close();
-    _quickMessageCubit.close();
     super.dispose();
   }
 

@@ -53,7 +53,7 @@ extension BuildContextExt on BuildContext {
   }
 
   Future<void> ensureLocation() async {
-    final svc = sl<LocationService>();
+    final svc = read<LocationService>();
 
     Future<void> showPermissionDialog() async {
       var isLoading = false;

@@ -4,7 +4,6 @@ import 'package:akademove/features/features.dart';
 import 'package:akademove/gen/assets.gen.dart';
 
 import 'package:akademove/l10n/l10n.dart';
-import 'package:akademove/locator.dart';
 import 'package:api_client/api_client.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -35,28 +34,29 @@ class UserHomeScreen extends StatefulWidget {
 class _UserHomeScreenState extends State<UserHomeScreen> {
   late final TextEditingController _searchController;
   late final CarouselController _bannerController;
-  late final NotificationCubit _notificationCubit;
+
+  NotificationCubit get _notificationCubit => context.read<NotificationCubit>();
 
   @override
   void initState() {
     super.initState();
     _searchController = TextEditingController();
     _bannerController = CarouselController();
-    _notificationCubit = sl<NotificationCubit>();
-    _notificationCubit.getUnreadCount();
     // Location is auto-initialized by UserLocationCubit, no need to fetch here
-    Future.wait([
-      context.read<UserHomeCubit>().getPopulars(),
-      context.read<ConfigurationCubit>().getBanners(placement: 'USER_HOME'),
-      context.read<UserWalletCubit>().getMine(),
-    ]);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _notificationCubit.getUnreadCount();
+      Future.wait([
+        context.read<UserHomeCubit>().getPopulars(),
+        context.read<ConfigurationCubit>().getBanners(placement: 'USER_HOME'),
+        context.read<UserWalletCubit>().getMine(),
+      ]);
+    });
   }
 
   @override
   void dispose() {
     _searchController.dispose();
     _bannerController.dispose();
-    _notificationCubit.close();
     super.dispose();
   }
 
@@ -69,7 +69,6 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
           padding: EdgeInsets.all(16.r),
           trailing: [
             BlocBuilder<NotificationCubit, NotificationState>(
-              bloc: _notificationCubit,
               builder: (context, state) {
                 final unreadCount = state.unreadCount.value ?? 0;
                 return IconButton(

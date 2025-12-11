@@ -2,7 +2,6 @@ import 'package:akademove/app/router/router.dart';
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/l10n/l10n.dart';
-import 'package:akademove/locator.dart';
 import 'package:api_client/api_client.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -50,105 +49,99 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(create: (context) => sl<DriverOrderCubit>()),
-        BlocProvider(create: (context) => sl<EmergencyCubit>()),
-      ],
-      child: BlocConsumer<DriverOrderCubit, DriverOrderState>(
-        listener: (context, state) {
-          // Show error messages
-          if (state.fetchOrderResult.isFailure) {
-            context.showMyToast(
-              state.fetchOrderResult.error?.message ??
-                  context.l10n.an_error_occurred,
-              type: ToastType.failed,
-            );
-          }
+    return BlocConsumer<DriverOrderCubit, DriverOrderState>(
+      listener: (context, state) {
+        // Show error messages
+        if (state.fetchOrderResult.isFailure) {
+          context.showMyToast(
+            state.fetchOrderResult.error?.message ??
+                context.l10n.an_error_occurred,
+            type: ToastType.failed,
+          );
+        }
 
-          // Show success messages
-          final message = state.updateStatusResult.data != null
-              ? "Status updated"
-              : null;
-          if (message != null && message.isNotEmpty) {
-            context.showMyToast(message, type: ToastType.success);
-          }
+        // Show success messages
+        final message = state.updateStatusResult.data != null
+            ? "Status updated"
+            : null;
+        if (message != null && message.isNotEmpty) {
+          context.showMyToast(message, type: ToastType.success);
+        }
 
-          // Navigate back when order is completed or cancelled
-          if (state.orderStatus == OrderStatus.COMPLETED ||
-              state.orderStatus == OrderStatus.CANCELLED_BY_DRIVER ||
-              state.orderStatus == OrderStatus.CANCELLED_BY_USER ||
-              state.orderStatus == OrderStatus.CANCELLED_BY_SYSTEM) {
-            Future.delayed(const Duration(seconds: 2), () {
-              if (mounted && context.mounted) {
-                context.goNamed(Routes.driverHome.name);
-              }
-            });
-          }
+        // Navigate back when order is completed or cancelled
+        if (state.orderStatus == OrderStatus.COMPLETED ||
+            state.orderStatus == OrderStatus.CANCELLED_BY_DRIVER ||
+            state.orderStatus == OrderStatus.CANCELLED_BY_USER ||
+            state.orderStatus == OrderStatus.CANCELLED_BY_SYSTEM) {
+          Future.delayed(const Duration(seconds: 2), () {
+            if (mounted && context.mounted) {
+              context.goNamed(Routes.driverHome.name);
+            }
+          });
+        }
 
-          // Update map when order data changes
-          final currentOrder = state.currentOrder;
-          if (currentOrder != null) {
-            _updateMapWithOrderData(currentOrder);
-          }
-        },
-        builder: (context, state) {
-          if (state.currentOrder == null) {
-            return const MyScaffold(
-              body: Center(child: CircularProgressIndicator()),
-            );
-          }
+        // Update map when order data changes
+        final currentOrder = state.currentOrder;
+        if (currentOrder != null) {
+          _updateMapWithOrderData(currentOrder);
+        }
+      },
+      builder: (context, state) {
+        if (state.currentOrder == null) {
+          return const MyScaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
 
-          final order = state.currentOrder;
-          if (order == null) {
-            return const MyScaffold(
-              body: Center(child: CircularProgressIndicator()),
-            );
-          }
-          final status = state.orderStatus;
+        final order = state.currentOrder;
+        if (order == null) {
+          return const MyScaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
+        final status = state.orderStatus;
 
-          return MyScaffold(
-            headers: [
-              AppBar(
-                leading: [
-                  IconButton(
-                    icon: const Icon(LucideIcons.arrowLeft),
-                    onPressed: () => context.pop(),
-                    variance: ButtonVariance.ghost,
+        return MyScaffold(
+          headers: [
+            AppBar(
+              leading: [
+                IconButton(
+                  icon: const Icon(LucideIcons.arrowLeft),
+                  onPressed: () => context.pop(),
+                  variance: ButtonVariance.ghost,
+                ),
+              ],
+              title: Text(
+                context.l10n.text_order_id_short(order.id.substring(0, 8)),
+              ),
+            ),
+          ],
+          body: Column(
+            children: [
+              // Map view
+              Expanded(flex: 2, child: _buildMap(order)),
+              // Order details and actions
+              Expanded(
+                flex: 3,
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.all(16.dg),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    spacing: 20.h,
+                    children: [
+                      if (status != null)
+                        _buildStatusIndicator(context, status),
+                      _buildOrderInfo(order),
+                      _buildCustomerInfo(order),
+                      _buildActionButtons(state, order),
+                    ],
                   ),
-                ],
-                title: Text(
-                  context.l10n.text_order_id_short(order.id.substring(0, 8)),
                 ),
               ),
             ],
-            body: Column(
-              children: [
-                // Map view
-                Expanded(flex: 2, child: _buildMap(order)),
-                // Order details and actions
-                Expanded(
-                  flex: 3,
-                  child: SingleChildScrollView(
-                    padding: EdgeInsets.all(16.dg),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      spacing: 20.h,
-                      children: [
-                        if (status != null)
-                          _buildStatusIndicator(context, status),
-                        _buildOrderInfo(order),
-                        _buildCustomerInfo(order),
-                        _buildActionButtons(state, order),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 

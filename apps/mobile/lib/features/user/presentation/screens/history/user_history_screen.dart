@@ -3,7 +3,6 @@ import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/gen/assets.gen.dart';
 import 'package:akademove/l10n/l10n.dart';
-import 'package:akademove/locator.dart';
 import 'package:api_client/api_client.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -97,12 +96,12 @@ class UserOrderCardWidget extends StatelessWidget {
   const UserOrderCardWidget({required this.order, super.key});
   final Order order;
 
-  Widget _buildDestAddres() {
+  Widget _buildDestAddres(BuildContext context) {
     if (order.type == OrderType.DELIVERY && order.merchant?.name != null) {
       return DefaultText(order.merchant?.name ?? '', fontSize: 14.sp);
     }
     return FutureBuilder(
-      future: sl<LocationService>().getPlacemark(
+      future: context.read<LocationService>().getPlacemark(
         lat: order.pickupLocation.y.toDouble(),
         lng: order.pickupLocation.x.toDouble(),
       ),
@@ -182,7 +181,7 @@ class UserOrderCardWidget extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       spacing: 6.w,
                       children: [
-                        Flexible(flex: 2, child: _buildDestAddres()),
+                        Flexible(flex: 2, child: _buildDestAddres(context)),
                         DefaultText(
                           context.formatCurrency(order.totalPrice),
                           fontSize: 14.sp,

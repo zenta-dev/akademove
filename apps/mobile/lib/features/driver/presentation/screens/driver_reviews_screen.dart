@@ -1,7 +1,6 @@
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/l10n/l10n.dart';
-import 'package:akademove/locator.dart';
 import 'package:api_client/api_client.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -16,21 +15,19 @@ class DriverReviewsScreen extends StatefulWidget {
 }
 
 class _DriverReviewsScreenState extends State<DriverReviewsScreen> {
-  late DriverReviewCubit _cubit;
   final _scrollController = ScrollController();
+
+  DriverReviewCubit get _cubit => context.read<DriverReviewCubit>();
 
   @override
   void initState() {
     super.initState();
-    _cubit = sl<DriverReviewCubit>();
-    _cubit.loadMyReviews(refresh: true);
     _scrollController.addListener(_onScroll);
   }
 
   @override
   void dispose() {
     _scrollController.dispose();
-    _cubit.close();
     super.dispose();
   }
 
@@ -49,82 +46,79 @@ class _DriverReviewsScreenState extends State<DriverReviewsScreen> {
   Widget build(BuildContext context) {
     return MyScaffold(
       headers: [AppBar(title: Text(context.l10n.my_reviews))],
-      body: BlocProvider.value(
-        value: _cubit,
-        child: BlocBuilder<DriverReviewCubit, DriverReviewState>(
-          builder: (context, state) {
-            if (state.fetchReviewsResult.isLoading && state.reviews.isEmpty) {
-              return Center(child: CircularProgressIndicator());
-            }
+      body: BlocBuilder<DriverReviewCubit, DriverReviewState>(
+        builder: (context, state) {
+          if (state.fetchReviewsResult.isLoading && state.reviews.isEmpty) {
+            return Center(child: CircularProgressIndicator());
+          }
 
-            if (state.fetchReviewsResult.isFailure && state.reviews.isEmpty) {
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  spacing: 16.h,
-                  children: [
-                    Icon(
-                      LucideIcons.circleAlert,
-                      size: 48.sp,
-                      color: context.colorScheme.destructive,
-                    ),
-                    Text(
-                      state.fetchReviewsResult.error?.message ??
-                          context.l10n.failed_to_load,
-                      style: context.typography.small,
-                      textAlign: TextAlign.center,
-                    ),
-                    PrimaryButton(
-                      onPressed: _onRefresh,
-                      child: Text(context.l10n.retry),
-                    ),
-                  ],
-                ),
-              );
-            }
-
-            if (state.reviews.isEmpty) {
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  spacing: 16.h,
-                  children: [
-                    Icon(
-                      LucideIcons.star,
-                      size: 48.sp,
-                      color: context.colorScheme.muted,
-                    ),
-                    Text(
-                      context.l10n.no_reviews_yet,
-                      style: context.typography.small,
-                      textAlign: TextAlign.center,
-                    ),
-                  ],
-                ),
-              );
-            }
-
-            return RefreshTrigger(
-              onRefresh: _onRefresh,
-              child: ListView.builder(
-                controller: _scrollController,
-                padding: EdgeInsets.all(16.dg),
-                itemCount: state.reviews.length + (state.hasMore ? 1 : 0),
-                itemBuilder: (context, index) {
-                  if (index >= state.reviews.length) {
-                    return Padding(
-                      padding: EdgeInsets.symmetric(vertical: 16.h),
-                      child: Center(child: CircularProgressIndicator()),
-                    );
-                  }
-
-                  final review = state.reviews[index];
-                  return _ReviewCard(review: review);
-                },
+          if (state.fetchReviewsResult.isFailure && state.reviews.isEmpty) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                spacing: 16.h,
+                children: [
+                  Icon(
+                    LucideIcons.circleAlert,
+                    size: 48.sp,
+                    color: context.colorScheme.destructive,
+                  ),
+                  Text(
+                    state.fetchReviewsResult.error?.message ??
+                        context.l10n.failed_to_load,
+                    style: context.typography.small,
+                    textAlign: TextAlign.center,
+                  ),
+                  PrimaryButton(
+                    onPressed: _onRefresh,
+                    child: Text(context.l10n.retry),
+                  ),
+                ],
               ),
             );
-          },
-        ),
+          }
+
+          if (state.reviews.isEmpty) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                spacing: 16.h,
+                children: [
+                  Icon(
+                    LucideIcons.star,
+                    size: 48.sp,
+                    color: context.colorScheme.muted,
+                  ),
+                  Text(
+                    context.l10n.no_reviews_yet,
+                    style: context.typography.small,
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
+            );
+          }
+
+          return RefreshTrigger(
+            onRefresh: _onRefresh,
+            child: ListView.builder(
+              controller: _scrollController,
+              padding: EdgeInsets.all(16.dg),
+              itemCount: state.reviews.length + (state.hasMore ? 1 : 0),
+              itemBuilder: (context, index) {
+                if (index >= state.reviews.length) {
+                  return Padding(
+                    padding: EdgeInsets.symmetric(vertical: 16.h),
+                    child: Center(child: CircularProgressIndicator()),
+                  );
+                }
+
+                final review = state.reviews[index];
+                return _ReviewCard(review: review);
+              },
+            ),
+          );
+        },
       ),
     );
   }

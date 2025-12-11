@@ -1,26 +1,35 @@
 part of 'router.dart';
 
 final driverRouter = StatefulShellRoute.indexedStack(
-  builder: (context, state, navigationShell) => MultiBlocProvider(
+  builder: (context, state, navigationShell) => MultiRepositoryProvider(
     providers: [
-      BlocProvider(create: (_) => sl<BottomNavBarCubit>()),
-      BlocProvider(create: (_) => sl<DriverCubit>()),
-      BlocProvider(create: (_) => sl<DriverHomeCubit>()..init()),
-      BlocProvider(create: (_) => sl<DriverOrderCubit>()),
-      BlocProvider(create: (_) => sl<DriverScheduleCubit>()),
-      BlocProvider(create: (_) => sl<DriverProfileCubit>()),
-      BlocProvider(create: (_) => sl<DriverProfileCubit>()),
-      BlocProvider(create: (_) => sl<DriverListHistoryCubit>()),
+      RepositoryProvider<LocationService>.value(value: sl<LocationService>()),
     ],
-    child: IncomingOrderListener(
-      child: BottomNavbar(
-        shell: navigationShell,
-        tabs: const [
-          BottomNavBarItem(label: 'Home', icon: LucideIcons.house),
-          BottomNavBarItem(label: 'KRS', icon: LucideIcons.book),
-          BottomNavBarItem(label: 'History', icon: LucideIcons.history),
-          BottomNavBarItem(label: 'Profile', icon: LucideIcons.user),
-        ],
+    child: MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => sl<BottomNavBarCubit>()),
+        BlocProvider(create: (_) => sl<DriverCubit>()),
+        BlocProvider(create: (_) => sl<DriverHomeCubit>()..init()),
+        BlocProvider(create: (_) => sl<DriverOrderCubit>()),
+        BlocProvider(create: (_) => sl<DriverScheduleCubit>()),
+        BlocProvider(create: (_) => sl<DriverProfileCubit>()),
+        BlocProvider(create: (_) => sl<DriverListHistoryCubit>()),
+        BlocProvider(create: (_) => sl<LeaderboardCubit>()),
+        BlocProvider(create: (_) => sl<DriverReviewCubit>()),
+        BlocProvider(create: (_) => sl<EmergencyCubit>()),
+        BlocProvider(create: (_) => sl<OrderChatCubit>()),
+        BlocProvider(create: (_) => sl<QuickMessageCubit>()),
+      ],
+      child: IncomingOrderListener(
+        child: BottomNavbar(
+          shell: navigationShell,
+          tabs: const [
+            BottomNavBarItem(label: 'Home', icon: LucideIcons.house),
+            BottomNavBarItem(label: 'KRS', icon: LucideIcons.book),
+            BottomNavBarItem(label: 'History', icon: LucideIcons.history),
+            BottomNavBarItem(label: 'Profile', icon: LucideIcons.user),
+          ],
+        ),
       ),
     ),
   ),
@@ -40,7 +49,13 @@ final driverRouter = StatefulShellRoute.indexedStack(
               path: 'order/:orderId',
               builder: (context, state) {
                 final orderId = state.pathParameters['orderId']!;
-                return DriverOrderDetailScreen(orderId: orderId);
+                return MultiBlocProvider(
+                  providers: [
+                    BlocProvider.value(value: context.read<DriverOrderCubit>()),
+                    BlocProvider.value(value: context.read<EmergencyCubit>()),
+                  ],
+                  child: DriverOrderDetailScreen(orderId: orderId),
+                );
               },
             ),
             GoRoute(
@@ -59,26 +74,37 @@ final driverRouter = StatefulShellRoute.indexedStack(
             GoRoute(
               name: Routes.driverLeaderboard.name,
               path: 'leaderboard',
-              builder: (context, state) => const LeaderboardScreen(),
+              builder: (context, state) => BlocProvider.value(
+                value: context.read<LeaderboardCubit>()..init(),
+                child: const LeaderboardScreen(),
+              ),
               routes: [
                 GoRoute(
                   name: Routes.driverLeaderboardDetail.name,
                   path: 'detail',
-                  builder: (context, state) =>
-                      const DriverLeaderboardDetailScreen(),
+                  builder: (context, state) => BlocProvider.value(
+                    value: context.read<LeaderboardCubit>(),
+                    child: const DriverLeaderboardDetailScreen(),
+                  ),
                 ),
               ],
             ),
             GoRoute(
               name: Routes.driverReviews.name,
               path: 'reviews',
-              builder: (context, state) => const DriverReviewsScreen(),
+              builder: (context, state) => BlocProvider.value(
+                value: context.read<DriverReviewCubit>()
+                  ..loadMyReviews(refresh: true),
+                child: const DriverReviewsScreen(),
+              ),
               routes: [
                 GoRoute(
                   name: Routes.driverReviewsDetail.name,
                   path: 'detail',
-                  builder: (context, state) =>
-                      const DriverReviewsDetailScreen(),
+                  builder: (context, state) => BlocProvider.value(
+                    value: context.read<DriverReviewCubit>(),
+                    child: const DriverReviewsDetailScreen(),
+                  ),
                 ),
               ],
             ),

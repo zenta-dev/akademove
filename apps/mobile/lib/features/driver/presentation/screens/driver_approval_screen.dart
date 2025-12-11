@@ -2,79 +2,49 @@ import 'package:akademove/app/_export.dart';
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/l10n/l10n.dart';
-import 'package:akademove/locator.dart';
 import 'package:api_client/api_client.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 
-class DriverApprovalScreen extends StatefulWidget {
+class DriverApprovalScreen extends StatelessWidget {
   const DriverApprovalScreen({super.key});
 
   @override
-  State<DriverApprovalScreen> createState() => _DriverApprovalScreenState();
-}
-
-class _DriverApprovalScreenState extends State<DriverApprovalScreen> {
-  late final DriverApprovalCubit _cubit;
-
-  @override
-  void initState() {
-    super.initState();
-    _cubit = DriverApprovalCubit(driverRepository: sl<DriverRepository>());
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _cubit.load();
-    });
-  }
-
-  @override
-  void dispose() {
-    _cubit.close();
-    super.dispose();
-  }
-
-  Future<void> _onRefresh() async {
-    await _cubit.load();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return BlocProvider.value(
-      value: _cubit,
-      child: BlocConsumer<DriverApprovalCubit, DriverApprovalState>(
-        listener: (context, state) {
-          if (state.driver.isFailure || state.approvalReview.isFailure) {
-            final errorMessage =
-                state.driver.error?.message ??
-                state.approvalReview.error?.message ??
-                context.l10n.an_error_occurred;
-            context.showMyToast("Your approval is failed: $errorMessage");
-          } else if (state.allDocumentsApproved &&
-              state.quizPassed &&
-              state.quizVerified) {
-            context.showMyToast(
-              "Congratulations! Your driver application has been approved.",
-            );
-            delay(Duration(seconds: 1));
-            context.pushReplacementNamed(Routes.driverHome.name);
-          }
-        },
-        builder: (context, state) {
-          return MyScaffold(
-            headers: [
-              DefaultAppBar(
-                title: context.l10n.pending_approval,
-                padding: EdgeInsets.all(16.r),
-              ),
-            ],
-            onRefresh: () async {
-              context.read<DriverApprovalCubit>().load();
-            },
-            body: _buildContent(context, state),
+    return BlocConsumer<DriverApprovalCubit, DriverApprovalState>(
+      listener: (context, state) {
+        if (state.driver.isFailure || state.approvalReview.isFailure) {
+          final errorMessage =
+              state.driver.error?.message ??
+              state.approvalReview.error?.message ??
+              context.l10n.an_error_occurred;
+          context.showMyToast("Your approval is failed: $errorMessage");
+        } else if (state.allDocumentsApproved &&
+            state.quizPassed &&
+            state.quizVerified) {
+          context.showMyToast(
+            "Congratulations! Your driver application has been approved.",
           );
-        },
-      ),
+          delay(Duration(seconds: 1));
+          context.pushReplacementNamed(Routes.driverHome.name);
+        }
+      },
+      builder: (context, state) {
+        return MyScaffold(
+          headers: [
+            DefaultAppBar(
+              title: context.l10n.pending_approval,
+              padding: EdgeInsets.all(16.r),
+            ),
+          ],
+          onRefresh: () async {
+            context.read<DriverApprovalCubit>().load();
+          },
+          body: _buildContent(context, state),
+        );
+      },
     );
   }
 
@@ -151,7 +121,7 @@ class _DriverApprovalScreenState extends State<DriverApprovalScreen> {
             ),
             SizedBox(height: 16.h),
             PrimaryButton(
-              onPressed: _onRefresh,
+              onPressed: () => context.read<DriverApprovalCubit>().load(),
               child: Text(context.l10n.retry),
             ),
           ],
