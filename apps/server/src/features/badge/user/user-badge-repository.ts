@@ -161,27 +161,28 @@ export class UserBadgeRepository extends BaseRepository {
 				return UserBadgeRepository.composeEntity(existing, this.#storage);
 			}
 
-			const [operation, badge] = await Promise.all([
-				tx
-					.insert(tables.userBadge)
-					.values({
-						...item,
-						id: v7(),
-						earnedAt: new Date(),
-						createdAt: new Date(),
-					})
-					.returning()
-					.then(([r]) => r),
-				tx.query.badge.findFirst({
-					where: (f, op) => op.eq(f.id, item.badgeId),
-				}),
-			]);
+			// Validate badge exists first (sequential to avoid transaction abort issues)
+			const badge = await tx.query.badge.findFirst({
+				where: (f, op) => op.eq(f.id, item.badgeId),
+			});
 
 			if (!badge) {
 				throw new RepositoryError(`Badge with id ${item.badgeId} not found`, {
 					code: "NOT_FOUND",
 				});
 			}
+
+			// Then perform the insert
+			const operation = await tx
+				.insert(tables.userBadge)
+				.values({
+					...item,
+					id: v7(),
+					earnedAt: new Date(),
+					createdAt: new Date(),
+				})
+				.returning()
+				.then(([r]) => r);
 
 			const result = UserBadgeRepository.composeEntity(
 				{ ...operation, badge },
@@ -205,26 +206,26 @@ export class UserBadgeRepository extends BaseRepository {
 			if (!existing)
 				throw new RepositoryError(`User badge with id "${id}" not found`);
 
-			const [operation, badge] = await Promise.all([
-				tx
-					.update(tables.userBadge)
-					.set({
-						...item,
-					})
-					.where(eq(tables.userBadge.id, id))
-					.returning()
-					.then(([r]) => r),
-
-				tx.query.badge.findFirst({
-					where: (f, op) => op.eq(f.id, item.badgeId ?? existing.badgeId),
-				}),
-			]);
+			// Validate badge exists first (sequential to avoid transaction abort issues)
+			const badge = await tx.query.badge.findFirst({
+				where: (f, op) => op.eq(f.id, item.badgeId ?? existing.badgeId),
+			});
 
 			if (!badge) {
 				throw new RepositoryError(`Badge with id ${item.badgeId} not found`, {
 					code: "NOT_FOUND",
 				});
 			}
+
+			// Then perform the update
+			const operation = await tx
+				.update(tables.userBadge)
+				.set({
+					...item,
+				})
+				.where(eq(tables.userBadge.id, id))
+				.returning()
+				.then(([r]) => r);
 
 			const result = UserBadgeRepository.composeEntity(
 				{ ...operation, badge },
