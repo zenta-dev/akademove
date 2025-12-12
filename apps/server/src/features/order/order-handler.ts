@@ -74,7 +74,7 @@ export const OrderHandler = priv.router({
 			context.user.role !== "ADMIN" &&
 			context.user.role !== "OPERATOR"
 		) {
-			const isOwner = result.userId === context.user.id;
+			const _isOwner = result.userId === context.user.id;
 
 			// Check if driver is assigned to this order
 			let _isAssignedDriver = false;
