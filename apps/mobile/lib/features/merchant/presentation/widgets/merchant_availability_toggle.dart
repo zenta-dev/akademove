@@ -21,11 +21,11 @@ class MerchantAvailabilityToggle extends StatelessWidget {
   });
 
   Color get statusColor {
-    if (!isOnline) return Colors.red;
-    if (operatingStatus == 'BREAK') return Colors.orange;
-    if (operatingStatus == 'OPEN') return Colors.green;
-    if (operatingStatus == 'MAINTENANCE') return Colors.amber;
-    return Colors.red; // CLOSED
+    if (!isOnline) return AppColors.statusError;
+    if (operatingStatus == 'BREAK') return AppColors.storeBreak;
+    if (operatingStatus == 'OPEN') return AppColors.storeOpen;
+    if (operatingStatus == 'MAINTENANCE') return AppColors.storeMaintenance;
+    return AppColors.statusError; // CLOSED
   }
 
   String get statusText {
@@ -102,7 +102,7 @@ class MerchantAvailabilityToggle extends StatelessWidget {
                       vertical: 6.h,
                     ),
                     decoration: BoxDecoration(
-                      color: Colors.blue.withValues(alpha: 0.1),
+                      color: AppColors.statusInfo.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(16.r),
                     ),
                     child: Row(
@@ -111,13 +111,13 @@ class MerchantAvailabilityToggle extends StatelessWidget {
                         Icon(
                           LucideIcons.shoppingBag,
                           size: 14.sp,
-                          color: Colors.blue,
+                          color: AppColors.statusInfo,
                         ),
                         SizedBox(width: 4.w),
                         Text(
                           '$activeOrderCount',
                           style: context.typography.small.copyWith(
-                            color: Colors.blue,
+                            color: AppColors.statusInfo,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -220,13 +220,7 @@ class MerchantAvailabilityToggle extends StatelessWidget {
   }
 
   Color _getStatusColor(String status) {
-    return switch (status) {
-      'OPEN' => Colors.green,
-      'BREAK' => Colors.orange,
-      'MAINTENANCE' => Colors.amber,
-      'CLOSED' => Colors.red,
-      _ => Colors.neutral,
-    };
+    return AppColors.getStoreStatusColor(status);
   }
 
   String _getStatusLabel(String status) {

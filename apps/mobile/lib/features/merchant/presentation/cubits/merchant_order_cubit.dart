@@ -33,6 +33,11 @@ class MerchantOrderCubit extends BaseCubit<MerchantOrderState> {
 
   void reset() => emit(const MerchantOrderState());
 
+  /// Clear the incoming order from state (used after dialog is shown/dismissed)
+  void clearIncomingOrder() {
+    emit(state.copyWith(clearIncomingOrder: true));
+  }
+
   @override
   Future<void> close() {
     unsubscribeFromOrder();
@@ -60,9 +65,10 @@ class MerchantOrderCubit extends BaseCubit<MerchantOrderState> {
       await _webSocketService.connect(
         wsKey,
         '${UrlConstants.wsBaseUrl}/merchant/$merchantId/orders',
-        onMessage: (dynamic msg) {
+        onMessage: (Object? msg) {
           try {
-            final json = jsonDecode(msg.toString()) as Map<String, dynamic>;
+            if (msg == null) return;
+            final json = jsonDecode(msg.toString()) as Map<String, Object?>;
             final envelope = MerchantEnvelope.fromJson(json);
             _handleMerchantUpdate(envelope);
           } catch (e, st) {
@@ -135,6 +141,8 @@ class MerchantOrderCubit extends BaseCubit<MerchantOrderState> {
             updatedList,
             message: 'New order received!',
           ),
+          // Set incoming order to trigger dialog
+          incomingOrder: newOrder,
         ),
       );
 
@@ -163,6 +171,9 @@ class MerchantOrderCubit extends BaseCubit<MerchantOrderState> {
 
     final existingOrders = state.orders.value ?? [];
 
+    // Check if the cancelled order is the current incoming order
+    final isIncomingOrder = state.incomingOrder?.id == targetOrderId;
+
     if (cancelledOrder != null) {
       // Update the order with cancelled status
       final updatedList = existingOrders.map((o) {
@@ -184,6 +195,8 @@ class MerchantOrderCubit extends BaseCubit<MerchantOrderState> {
                   message: 'Order was cancelled',
                 )
               : state.order,
+          // Clear incoming order if it was cancelled
+          clearIncomingOrder: isIncomingOrder,
         ),
       );
     } else if (targetOrderId != null) {
@@ -198,6 +211,8 @@ class MerchantOrderCubit extends BaseCubit<MerchantOrderState> {
             updatedList,
             message: 'Order was cancelled',
           ),
+          // Clear incoming order if it was cancelled
+          clearIncomingOrder: isIncomingOrder,
         ),
       );
     }
@@ -273,11 +288,12 @@ class MerchantOrderCubit extends BaseCubit<MerchantOrderState> {
 
   /// Unsubscribe from merchant-level WebSocket
   Future<void> unsubscribeFromMerchantOrders() async {
-    if (_merchantId == null) return;
+    final merchantId = _merchantId;
+    if (merchantId == null) return;
 
     try {
       logger.i('[MerchantOrderCubit] - Unsubscribing from merchant WebSocket');
-      final wsKey = _getMerchantWsKey(_merchantId!);
+      final wsKey = _getMerchantWsKey(merchantId);
       await _webSocketService.disconnect(wsKey);
       _merchantId = null;
       emit(state.copyWith(isMerchantWsConnected: false));
@@ -300,9 +316,10 @@ class MerchantOrderCubit extends BaseCubit<MerchantOrderState> {
       await _webSocketService.connect(
         orderId,
         '${UrlConstants.wsBaseUrl}/order/$orderId',
-        onMessage: (dynamic msg) {
+        onMessage: (Object? msg) {
           try {
-            final json = jsonDecode(msg.toString()) as Map<String, dynamic>;
+            if (msg == null) return;
+            final json = jsonDecode(msg.toString()) as Map<String, Object?>;
             final envelope = OrderEnvelope.fromJson(json);
             _handleOrderUpdate(envelope);
           } catch (e, st) {

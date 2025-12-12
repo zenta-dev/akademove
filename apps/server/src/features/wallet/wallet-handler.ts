@@ -5,6 +5,7 @@ import { RepositoryError } from "@/core/error";
 import { createORPCRouter } from "@/core/router/orpc";
 import { BusinessConfigurationService } from "@/features/configuration/services";
 import { logger } from "@/utils/logger";
+import { CommissionReportService } from "./services";
 import { WalletSpec } from "./wallet-spec";
 
 const { pub, priv } = createORPCRouter(WalletSpec);
@@ -452,4 +453,26 @@ export const WalletHandler = pub.router({
 			},
 		};
 	}),
+	getCommissionReport: priv.getCommissionReport.handler(
+		async ({ context, input: { query } }) => {
+			// Get user's wallet first
+			const wallet = await context.repo.wallet.getByUserId(context.user.id);
+
+			// Get commission report using the service
+			const report = await CommissionReportService.getCommissionReport(
+				context.svc.db,
+				wallet.id,
+				wallet.balance,
+				query,
+			);
+
+			return {
+				status: 200,
+				body: {
+					message: m.server_wallet_retrieved(),
+					data: report,
+				},
+			};
+		},
+	),
 });

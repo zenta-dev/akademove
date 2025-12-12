@@ -10,6 +10,37 @@ abstract class BaseCubit<T> extends Cubit<T> {
   @protected
   final taskManager = TaskDedupeManager();
 
+  /// Guard helper for async operations with proper error handling.
+  /// Use this to wrap cubit operations that need error handling with logging.
+  ///
+  /// Example:
+  /// ```dart
+  /// Future<void> loadData() async {
+  ///   await guard(
+  ///     () async {
+  ///       emit(state.copyWith(status: Status.loading));
+  ///       final data = await repository.getData();
+  ///       emit(state.copyWith(status: Status.success, data: data));
+  ///     },
+  ///     onError: (e, st) {
+  ///       logger.e('Failed to load data', error: e, stackTrace: st);
+  ///       emit(state.copyWith(status: Status.error));
+  ///     },
+  ///   );
+  /// }
+  /// ```
+  @protected
+  Future<void> guard(
+    Future<void> Function() action, {
+    required void Function(Object error, StackTrace stackTrace) onError,
+  }) async {
+    try {
+      await action();
+    } catch (e, st) {
+      onError(e, st);
+    }
+  }
+
   // Future<void> init();
   // void reset();
 

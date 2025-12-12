@@ -268,12 +268,14 @@ class MerchantRepository extends BaseRepository {
 
   /// Helper to get merchant ID (cached for performance)
   Future<String> _getMerchantId() async {
-    if (_cachedMerchantId != null) {
-      return _cachedMerchantId!;
+    final cachedId = _cachedMerchantId;
+    if (cachedId != null) {
+      return cachedId;
     }
     final res = await getMine();
-    _cachedMerchantId = res.data.id;
-    return _cachedMerchantId!;
+    final merchantId = res.data.id;
+    _cachedMerchantId = merchantId;
+    return merchantId;
   }
 
   /// Clear cached merchant ID (call on logout)

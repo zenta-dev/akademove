@@ -3564,4 +3564,118 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get button_confirm_location => 'Confirm Location';
+
+  @override
+  String get store_status => 'Store Status';
+
+  @override
+  String get store_status_open => 'Open';
+
+  @override
+  String get store_status_break => 'On Break';
+
+  @override
+  String get store_status_maintenance => 'Maintenance';
+
+  @override
+  String get store_status_closed => 'Closed';
+
+  @override
+  String get store_status_unknown => 'Unknown';
+
+  @override
+  String store_status_online(String status) {
+    return 'Online - $status';
+  }
+
+  @override
+  String get store_status_offline => 'Offline';
+
+  @override
+  String get store_status_online_toggle => 'Online';
+
+  @override
+  String get store_status_offline_toggle => 'Offline';
+
+  @override
+  String get store_status_available_for_orders => 'Available for orders';
+
+  @override
+  String get store_status_not_available => 'Not available';
+
+  @override
+  String get store_status_not_receiving_orders => 'Not receiving orders';
+
+  @override
+  String store_status_processing_orders(int count) {
+    return 'Processing $count order(s)';
+  }
+
+  @override
+  String get store_status_ready_to_receive => 'Ready to receive orders';
+
+  @override
+  String get store_status_temp_not_accepting => 'Temporarily not accepting new orders';
+
+  @override
+  String get store_status_desc_open => 'Accepting new orders from customers';
+
+  @override
+  String get store_status_desc_break => 'Temporarily not accepting new orders. Toggle when you\'re busy.';
+
+  @override
+  String get store_status_desc_maintenance => 'Store is under maintenance';
+
+  @override
+  String get store_status_desc_closed => 'Store is closed, not accepting orders';
+
+  @override
+  String get store_status_desc_default => 'Let customers know your store status';
+
+  @override
+  String active_orders_count(int count) {
+    return '$count active';
+  }
+
+  @override
+  String get status_updated => 'Status updated';
+
+  @override
+  String get failed_update_status => 'Failed to update status';
+
+  @override
+  String get current_saldo => 'Current Balance';
+
+  @override
+  String get incoming_balance => 'Incoming';
+
+  @override
+  String get outgoing_balance => 'Outgoing';
+
+  @override
+  String get income_outcome_chart => 'Income & Outcome Chart';
+
+  @override
+  String get balance_details => 'Balance Details';
+
+  @override
+  String get daily => 'Daily';
+
+  @override
+  String get weekly => 'Weekly';
+
+  @override
+  String get monthly => 'Monthly';
+
+  @override
+  String get outcome => 'Outcome';
+
+  @override
+  String get export_pdf => 'Export PDF';
+
+  @override
+  String get export_coming_soon => 'Export feature coming soon!';
+
+  @override
+  String get no_data_available => 'No data available';
 }

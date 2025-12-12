@@ -1510,5 +1510,66 @@
 	"view_active_order": "View Trip",
 	"title_select_pickup_location": "Select Pickup Location",
 	"title_select_dropoff_location": "Select Dropoff Location",
-	"button_confirm_location": "Confirm Location"
+	"button_confirm_location": "Confirm Location",
+	"store_status": "Store Status",
+	"store_status_open": "Open",
+	"store_status_break": "On Break",
+	"store_status_maintenance": "Maintenance",
+	"store_status_closed": "Closed",
+	"store_status_unknown": "Unknown",
+	"store_status_online": "Online - {status}",
+	"@store_status_online": {
+		"placeholders": {
+			"status": {
+				"type": "String"
+			}
+		}
+	},
+	"store_status_offline": "Offline",
+	"store_status_online_toggle": "Online",
+	"store_status_offline_toggle": "Offline",
+	"store_status_available_for_orders": "Available for orders",
+	"store_status_not_available": "Not available",
+	"store_status_not_receiving_orders": "Not receiving orders",
+	"store_status_processing_orders": "Processing {count} order(s)",
+	"@store_status_processing_orders": {
+		"placeholders": {
+			"count": {
+				"type": "int"
+			}
+		}
+	},
+	"store_status_ready_to_receive": "Ready to receive orders",
+	"store_status_temp_not_accepting": "Temporarily not accepting new orders",
+	"store_status_desc_open": "Accepting new orders from customers",
+	"store_status_desc_break": "Temporarily not accepting new orders. Toggle when you're busy.",
+	"store_status_desc_maintenance": "Store is under maintenance",
+	"store_status_desc_closed": "Store is closed, not accepting orders",
+	"store_status_desc_default": "Let customers know your store status",
+	"active_orders_count": "{count} active",
+	"@active_orders_count": {
+		"placeholders": {
+			"count": {
+				"type": "int"
+			}
+		}
+	},
+	"status_updated": "Status updated",
+	"failed_update_status": "Failed to update status",
+	"title_commission_report": "Commission Report",
+	"current_saldo": "Current Balance",
+	"incoming_balance": "Incoming",
+	"outgoing_balance": "Outgoing",
+	"income_outcome_chart": "Income & Outcome Chart",
+	"balance_details": "Balance Details",
+	"daily": "Daily",
+	"weekly": "Weekly",
+	"monthly": "Monthly",
+	"income": "Income",
+	"outcome": "Outcome",
+	"export_pdf": "Export PDF",
+	"export_coming_soon": "Export feature coming soon!",
+	"no_transactions_yet": "No transactions yet",
+	"withdrawal": "Withdrawal",
+	"no_data_available": "No data available"
 }

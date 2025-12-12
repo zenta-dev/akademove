@@ -3,7 +3,6 @@ import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/l10n/l10n.dart';
 import 'package:api_client/api_client.dart';
-import 'package:flutter/material.dart' show RefreshIndicator;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -26,7 +25,7 @@ class _MerchantHomeScreenState extends State<MerchantHomeScreen> {
   }
 
   /// Load all required data for the home screen
-  void _loadData() {
+  Future<void> _loadData() async {
     // Load merchant profile
     context.read<MerchantCubit>().getMine();
     // Load today's analytics
@@ -59,14 +58,7 @@ class _MerchantHomeScreenState extends State<MerchantHomeScreen> {
   }
 
   Color _getStatusColor(bool isOnline, String? operatingStatus) {
-    if (!isOnline) return Colors.red;
-    return switch (operatingStatus) {
-      'OPEN' => Colors.green,
-      'BREAK' => Colors.orange,
-      'MAINTENANCE' => Colors.amber,
-      'CLOSED' => Colors.red,
-      _ => Colors.neutral,
-    };
+    return AppColors.getStoreStatusColor(operatingStatus, isOnline: isOnline);
   }
 
   String _getStatusLabel(String? operatingStatus) {
@@ -82,38 +74,33 @@ class _MerchantHomeScreenState extends State<MerchantHomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      child: SafeArea(
-        child: RefreshIndicator(
-          onRefresh: () async => _loadData(),
-          child: SingleChildScrollView(
-            physics: const AlwaysScrollableScrollPhysics(),
+      headers: [DefaultAppBar(title: context.l10n.home)],
+      child: RefreshTrigger(
+        onRefresh: _loadData,
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: Padding(
+            padding: EdgeInsets.all(16.dg),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              spacing: 16.h,
               children: [
                 // Header Section with greeting and availability controls
                 _buildHeaderSection(context),
-                Gap(16.h),
                 // Availability Status Card
                 _buildAvailabilityStatusCard(context),
-                Gap(16.h),
                 // Sales Recap Section
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16.w),
-                  child: Text(
-                    context.l10n.sales_recap,
-                    style: context.typography.h2.copyWith(
-                      fontSize: 20.sp,
-                      fontWeight: FontWeight.w600,
-                    ),
+                Text(
+                  context.l10n.sales_recap,
+                  style: context.typography.h2.copyWith(
+                    fontSize: 20.sp,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
-                Gap(12.h),
                 // Today's Stats Cards
                 _buildStatsCards(context),
-                Gap(16.h),
                 // Report Cards
                 _buildReportCards(context),
-                Gap(16.h),
               ],
             ),
           ),
@@ -163,15 +150,15 @@ class _MerchantHomeScreenState extends State<MerchantHomeScreen> {
                               child: Basic(
                                 title: Text(
                                   state.setOnlineStatus.message ??
-                                      'Status updated',
+                                      context.l10n.profile_updated_successfully,
                                 ),
                                 leading: Icon(
                                   state.isOnline
                                       ? LucideIcons.circleCheck
                                       : LucideIcons.circleX,
                                   color: state.isOnline
-                                      ? Colors.green
-                                      : Colors.red,
+                                      ? AppColors.statusSuccess
+                                      : AppColors.statusError,
                                 ),
                               ),
                             );
@@ -186,11 +173,11 @@ class _MerchantHomeScreenState extends State<MerchantHomeScreen> {
                               child: Basic(
                                 title: Text(
                                   state.setOnlineStatus.error?.message ??
-                                      'Failed to update status',
+                                      context.l10n.an_error_occurred,
                                 ),
                                 leading: const Icon(
                                   LucideIcons.circleAlert,
-                                  color: Colors.red,
+                                  color: AppColors.statusError,
                                 ),
                               ),
                             );
@@ -219,7 +206,9 @@ class _MerchantHomeScreenState extends State<MerchantHomeScreen> {
                             : Icon(
                                 LucideIcons.power,
                                 size: 20.sp,
-                                color: isOnline ? Colors.green : Colors.red,
+                                color: isOnline
+                                    ? AppColors.statusSuccess
+                                    : AppColors.statusError,
                               ),
                         variance: ButtonStyle.ghostIcon(
                           density: ButtonDensity.compact,
@@ -311,66 +300,63 @@ class _MerchantHomeScreenState extends State<MerchantHomeScreen> {
           return const SizedBox.shrink();
         }
 
-        return Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16.w),
-          child: Card(
-            padding: EdgeInsets.all(12.w),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Store Status',
-                        style: context.typography.small.copyWith(
-                          color: context.colorScheme.mutedForeground,
+        return Card(
+          padding: EdgeInsets.all(12.w),
+          child: Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Store Status',
+                      style: context.typography.small.copyWith(
+                        color: context.colorScheme.mutedForeground,
+                      ),
+                    ),
+                    Gap(4.h),
+                    Select<String>(
+                      itemBuilder: (context, item) =>
+                          Text(_getStatusLabel(item)),
+                      value: operatingStatus,
+                      onChanged: isLoading
+                          ? null
+                          : (String? newValue) {
+                              if (newValue != null) {
+                                final status =
+                                    MerchantSetOperatingStatusRequestOperatingStatusEnum
+                                        .values
+                                        .firstWhere(
+                                          (e) => e.value == newValue,
+                                          orElse: () =>
+                                              MerchantSetOperatingStatusRequestOperatingStatusEnum
+                                                  .OPEN,
+                                        );
+                                _onOperatingStatusChanged(status);
+                              }
+                            },
+                      popup: SelectPopup(
+                        autoClose: true,
+                        items: SelectItemList(
+                          children: [
+                            _buildStatusItem(context, 'OPEN'),
+                            _buildStatusItem(context, 'BREAK'),
+                            _buildStatusItem(context, 'MAINTENANCE'),
+                            _buildStatusItem(context, 'CLOSED'),
+                          ],
                         ),
-                      ),
-                      Gap(4.h),
-                      Select<String>(
-                        itemBuilder: (context, item) =>
-                            Text(_getStatusLabel(item)),
-                        value: operatingStatus,
-                        onChanged: isLoading
-                            ? null
-                            : (String? newValue) {
-                                if (newValue != null) {
-                                  final status =
-                                      MerchantSetOperatingStatusRequestOperatingStatusEnum
-                                          .values
-                                          .firstWhere(
-                                            (e) => e.value == newValue,
-                                            orElse: () =>
-                                                MerchantSetOperatingStatusRequestOperatingStatusEnum
-                                                    .OPEN,
-                                          );
-                                  _onOperatingStatusChanged(status);
-                                }
-                              },
-                        popup: SelectPopup(
-                          autoClose: true,
-                          items: SelectItemList(
-                            children: [
-                              _buildStatusItem(context, 'OPEN'),
-                              _buildStatusItem(context, 'BREAK'),
-                              _buildStatusItem(context, 'MAINTENANCE'),
-                              _buildStatusItem(context, 'CLOSED'),
-                            ],
-                          ),
-                        ).call,
-                      ),
-                    ],
-                  ),
+                      ).call,
+                    ),
+                  ],
                 ),
-                if (isLoading)
-                  SizedBox(
-                    width: 20.sp,
-                    height: 20.sp,
-                    child: const CircularProgressIndicator(strokeWidth: 2),
-                  ),
-              ],
-            ),
+              ),
+              if (isLoading)
+                SizedBox(
+                  width: 20.sp,
+                  height: 20.sp,
+                  child: const CircularProgressIndicator(strokeWidth: 2),
+                ),
+            ],
           ),
         );
       },
@@ -410,90 +396,90 @@ class _MerchantHomeScreenState extends State<MerchantHomeScreen> {
         final totalRevenue = state.totalRevenue;
 
         if (isFailed) {
-          return Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.w),
-            child: Card(
-              padding: EdgeInsets.all(16.w),
-              child: Column(
-                children: [
-                  Icon(LucideIcons.circleAlert, size: 32.sp, color: Colors.red),
-                  Gap(8.h),
-                  Text(
-                    state.analytics.error?.message ?? 'Failed to load stats',
-                    style: context.typography.p.copyWith(color: Colors.red),
-                    textAlign: TextAlign.center,
+          return Card(
+            padding: EdgeInsets.all(16.w),
+            child: Column(
+              children: [
+                Icon(
+                  LucideIcons.circleAlert,
+                  size: 32.sp,
+                  color: AppColors.statusError,
+                ),
+                Gap(8.h),
+                Text(
+                  state.analytics.error?.message ?? 'Failed to load stats',
+                  style: context.typography.p.copyWith(
+                    color: AppColors.statusError,
                   ),
-                  Gap(8.h),
-                  OutlineButton(
-                    onPressed: () => context
-                        .read<MerchantAnalyticsCubit>()
-                        .getAnalytics(period: 'today'),
-                    child: const Text('Retry'),
-                  ),
-                ],
-              ),
+                  textAlign: TextAlign.center,
+                ),
+                Gap(8.h),
+                OutlineButton(
+                  onPressed: () => context
+                      .read<MerchantAnalyticsCubit>()
+                      .getAnalytics(period: 'today'),
+                  child: Text(context.l10n.retry),
+                ),
+              ],
             ),
           );
         }
 
-        return Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16.w),
-          child: Row(
-            spacing: 12.w,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: Card(
-                  child: Column(
-                    spacing: 4.h,
-                    children: [
-                      Icon(LucideIcons.shoppingCart, size: 32.sp),
-                      Text(
-                        context.l10n.today_transaction,
-                        style: context.typography.p.copyWith(
-                          fontSize: 12.sp,
-                          fontWeight: FontWeight.w500,
-                        ),
-                        textAlign: TextAlign.center,
+        return Row(
+          spacing: 12.w,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: Card(
+                child: Column(
+                  spacing: 4.h,
+                  children: [
+                    Icon(LucideIcons.shoppingCart, size: 32.sp),
+                    Text(
+                      context.l10n.today_transaction,
+                      style: context.typography.p.copyWith(
+                        fontSize: 12.sp,
+                        fontWeight: FontWeight.w500,
                       ),
-                      Text(
-                        '${totalOrders.toInt()}',
-                        style: context.typography.p.copyWith(
-                          fontSize: 16.sp,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ).asSkeleton(enabled: isLoading),
-                    ],
-                  ),
+                      textAlign: TextAlign.center,
+                    ),
+                    Text(
+                      '${totalOrders.toInt()}',
+                      style: context.typography.p.copyWith(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ).asSkeleton(enabled: isLoading),
+                  ],
                 ),
               ),
-              Expanded(
-                child: Card(
-                  child: Column(
-                    spacing: 4.h,
-                    children: [
-                      Icon(LucideIcons.circleDollarSign, size: 32.sp),
-                      Text(
-                        context.l10n.today_gross_sales,
-                        style: context.typography.p.copyWith(
-                          fontSize: 12.sp,
-                          fontWeight: FontWeight.w500,
-                        ),
-                        textAlign: TextAlign.center,
+            ),
+            Expanded(
+              child: Card(
+                child: Column(
+                  spacing: 4.h,
+                  children: [
+                    Icon(LucideIcons.circleDollarSign, size: 32.sp),
+                    Text(
+                      context.l10n.today_gross_sales,
+                      style: context.typography.p.copyWith(
+                        fontSize: 12.sp,
+                        fontWeight: FontWeight.w500,
                       ),
-                      Text(
-                        _formatCurrency(totalRevenue),
-                        style: context.typography.p.copyWith(
-                          fontSize: 16.sp,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ).asSkeleton(enabled: isLoading),
-                    ],
-                  ),
+                      textAlign: TextAlign.center,
+                    ),
+                    Text(
+                      _formatCurrency(totalRevenue),
+                      style: context.typography.p.copyWith(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ).asSkeleton(enabled: isLoading),
+                  ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         );
       },
     );
@@ -501,94 +487,91 @@ class _MerchantHomeScreenState extends State<MerchantHomeScreen> {
 
   /// Build report navigation cards
   Widget _buildReportCards(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16.w),
-      child: Row(
-        spacing: 12.w,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Expanded(
-            child: Button(
-              style: ButtonVariance.ghost.copyWith(
-                padding: (context, states, value) => EdgeInsetsGeometry.zero,
-              ),
-              onPressed: () {
-                context.pushNamed(Routes.merchantSalesReportDetail.name);
-              },
-              child: Card(
-                child: Column(
-                  spacing: 4.h,
-                  children: [
-                    Icon(LucideIcons.chartArea, size: 32.sp),
-                    Text(
-                      context.l10n.sales_report,
-                      style: context.typography.p.copyWith(
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.w500,
+    return Row(
+      spacing: 12.w,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Expanded(
+          child: Button(
+            style: ButtonVariance.ghost.copyWith(
+              padding: (context, states, value) => EdgeInsetsGeometry.zero,
+            ),
+            onPressed: () {
+              context.pushNamed(Routes.merchantSalesReportDetail.name);
+            },
+            child: Card(
+              child: Column(
+                spacing: 4.h,
+                children: [
+                  Icon(LucideIcons.chartArea, size: 32.sp),
+                  Text(
+                    context.l10n.sales_report,
+                    style: context.typography.p.copyWith(
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  SizedBox(
+                    width: double.infinity,
+                    child: OutlineButton(
+                      onPressed: () {},
+                      density: ButtonDensity.iconDense,
+                      child: Row(
+                        spacing: 4.w,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(context.l10n.see_detail).xSmall,
+                          Icon(LucideIcons.chevronRight, size: 16.sp),
+                        ],
                       ),
                     ),
-                    SizedBox(
-                      width: double.infinity,
-                      child: OutlineButton(
-                        onPressed: () {},
-                        density: ButtonDensity.iconDense,
-                        child: Row(
-                          spacing: 4.w,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(context.l10n.see_detail).xSmall,
-                            Icon(LucideIcons.chevronRight, size: 16.sp),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ),
-          Expanded(
-            child: Button(
-              style: ButtonVariance.ghost.copyWith(
-                padding: (context, states, value) => EdgeInsetsGeometry.zero,
-              ),
-              onPressed: () {
-                context.pushNamed(Routes.merchantCommissionReportDetail.name);
-              },
-              child: Card(
-                child: Column(
-                  spacing: 4.h,
-                  children: [
-                    Icon(LucideIcons.badgeDollarSign, size: 32.sp),
-                    Text(
-                      context.l10n.commission_report,
-                      style: context.typography.p.copyWith(
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.w500,
+        ),
+        Expanded(
+          child: Button(
+            style: ButtonVariance.ghost.copyWith(
+              padding: (context, states, value) => EdgeInsetsGeometry.zero,
+            ),
+            onPressed: () {
+              context.pushNamed(Routes.merchantCommissionReportDetail.name);
+            },
+            child: Card(
+              child: Column(
+                spacing: 4.h,
+                children: [
+                  Icon(LucideIcons.badgeDollarSign, size: 32.sp),
+                  Text(
+                    context.l10n.commission_report,
+                    style: context.typography.p.copyWith(
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  SizedBox(
+                    width: double.infinity,
+                    child: OutlineButton(
+                      onPressed: () {},
+                      density: ButtonDensity.iconDense,
+                      child: Row(
+                        spacing: 4.w,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(context.l10n.see_detail).xSmall,
+                          Icon(LucideIcons.chevronRight, size: 16.sp),
+                        ],
                       ),
                     ),
-                    SizedBox(
-                      width: double.infinity,
-                      child: OutlineButton(
-                        onPressed: () {},
-                        density: ButtonDensity.iconDense,
-                        child: Row(
-                          spacing: 4.w,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(context.l10n.see_detail).xSmall,
-                            Icon(LucideIcons.chevronRight, size: 16.sp),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

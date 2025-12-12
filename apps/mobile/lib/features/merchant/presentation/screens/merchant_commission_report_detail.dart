@@ -1,7 +1,6 @@
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/l10n/l10n.dart';
-import 'package:flutter/material.dart' show RefreshIndicator;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
@@ -75,7 +74,7 @@ class _MerchantCommissionReportDetailScreenState
                         maxLines: 2,
                       ),
                     ),
-                    const Icon(Icons.arrow_outward_rounded),
+                    const Icon(LucideIcons.arrowUpRight),
                   ],
                 ),
                 Text(
@@ -109,7 +108,7 @@ class _MerchantCommissionReportDetailScreenState
                         maxLines: 2,
                       ),
                     ),
-                    const Icon(Icons.arrow_outward_rounded),
+                    const Icon(LucideIcons.arrowUpRight),
                   ],
                 ),
                 Text(
@@ -377,106 +376,67 @@ class _MerchantCommissionReportDetailScreenState
         final totalCommission = state.totalCommission;
         final netIncome = state.netIncome;
 
-        return Stack(
-          children: [
-            Scaffold(
-              headers: [
-                DefaultAppBar(title: context.l10n.title_commission_report),
-              ],
-              child: SafeArea(
-                child: Padding(
-                  padding: EdgeInsets.all(16.w),
-                  child: isLoading
-                      ? const Center(child: CircularProgressIndicator())
-                      : RefreshIndicator(
-                          onRefresh: () => context
-                              .read<MerchantAnalyticsCubit>()
-                              .getMonthlyAnalytics(),
-                          child: SingleChildScrollView(
-                            padding: EdgeInsets.only(bottom: 120.h),
-                            child: Column(
-                              spacing: 16.h,
-                              children: [
-                                _buildBalanceCards(
-                                  context,
-                                  totalRevenue,
-                                  totalCommission,
-                                ),
-                                _buildBalanceDetail(
-                                  context,
-                                  totalRevenue,
-                                  totalCommission,
-                                ),
-                                _buildSummarySection(
-                                  context,
-                                  totalRevenue,
-                                  totalCommission,
-                                  netIncome,
-                                ),
-                                _buildCommissionChart(
-                                  context,
-                                  netIncome,
-                                  totalCommission,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                ),
-              ),
-            ),
-            Positioned(
-              bottom: 0,
-              left: 16,
-              right: 16,
-              child: SafeArea(
-                child: Container(
-                  padding: EdgeInsets.all(16.w),
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.background,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Row(
-                    children: [
-                      // Expanded(
-                      //   child: Button.outline(
-                      //     onPressed: () {
-                      //       context.push(Routes.merchantWalletWithdraw.path);
-                      //     },
-                      //     child: Text(
-                      //       context.l10n.withdrawal,
-                      //       style: context.typography.small.copyWith(
-                      //         fontSize: 16.sp,
-                      //       ),
-                      //     ),
-                      //   ),
-                      // ),
-                      // SizedBox(width: 12.w),
-                      Expanded(
-                        child: Button.primary(
-                          onPressed: _isExporting ? null : _handleExport,
-                          child: _isExporting
-                              ? const SizedBox(
-                                  width: 20,
-                                  height: 20,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                  ),
-                                )
-                              : Text(
-                                  context.l10n.button_export_pdf,
-                                  style: context.typography.small.copyWith(
-                                    fontSize: 16.sp,
-                                  ),
-                                ),
+        return Scaffold(
+          headers: [DefaultAppBar(title: context.l10n.title_commission_report)],
+          footers: [
+            Padding(
+              padding: EdgeInsets.all(16.dg),
+              child: Button.primary(
+                onPressed: _isExporting ? null : _handleExport,
+                child: _isExporting
+                    ? const SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : Text(
+                        context.l10n.button_export_pdf,
+                        style: context.typography.small.copyWith(
+                          fontSize: 16.sp,
                         ),
                       ),
-                    ],
-                  ),
-                ),
               ),
             ),
           ],
+          child: isLoading
+              ? const Center(child: CircularProgressIndicator())
+              : RefreshTrigger(
+                  onRefresh: () => context
+                      .read<MerchantAnalyticsCubit>()
+                      .getMonthlyAnalytics(),
+                  child: SingleChildScrollView(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    child: Padding(
+                      padding: EdgeInsets.all(16.dg),
+                      child: Column(
+                        spacing: 16.h,
+                        children: [
+                          _buildBalanceCards(
+                            context,
+                            totalRevenue,
+                            totalCommission,
+                          ),
+                          _buildBalanceDetail(
+                            context,
+                            totalRevenue,
+                            totalCommission,
+                          ),
+                          _buildSummarySection(
+                            context,
+                            totalRevenue,
+                            totalCommission,
+                            netIncome,
+                          ),
+                          _buildCommissionChart(
+                            context,
+                            netIncome,
+                            totalCommission,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
         );
       },
     );

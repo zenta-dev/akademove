@@ -22,29 +22,8 @@ class _MerchantOrderScreenState extends State<MerchantOrderScreen> {
   void initState() {
     super.initState();
     _fetchOrdersForTab(0);
-    _subscribeToMerchantOrders();
-  }
-
-  @override
-  void dispose() {
-    // Unsubscribe from merchant WebSocket when screen is disposed
-    context.read<MerchantOrderCubit>().unsubscribeFromMerchantOrders();
-    super.dispose();
-  }
-
-  /// Subscribe to merchant-level WebSocket for real-time order notifications
-  void _subscribeToMerchantOrders() {
-    // Get merchant ID from MerchantCubit state
-    final merchantState = context.read<MerchantCubit>().state;
-    final merchantId = merchantState.mine.value?.id;
-
-    if (merchantId != null) {
-      context.read<MerchantOrderCubit>().subscribeToMerchantOrders(merchantId);
-    } else {
-      logger.w(
-        '[MerchantOrderScreen] - Cannot subscribe to WebSocket: merchantId is null',
-      );
-    }
+    // WebSocket subscription is now handled by MerchantIncomingOrderListener
+    // at the router level, so we don't need to subscribe/unsubscribe here
   }
 
   void _fetchOrdersForTab(int index) {
@@ -84,6 +63,7 @@ class _MerchantOrderScreenState extends State<MerchantOrderScreen> {
     ];
 
     return Scaffold(
+      headers: [DefaultAppBar(title: context.l10n.order_history)],
       child: Column(
         children: [
           _buildTabBar(context, tabs),

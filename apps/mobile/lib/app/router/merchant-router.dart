@@ -17,14 +17,16 @@ final merchantRouter = StatefulShellRoute.indexedStack(
         BlocProvider(create: (_) => sl<OrderChatCubit>()),
         BlocProvider(create: (_) => sl<QuickMessageCubit>()),
       ],
-      child: BottomNavbar(
-        shell: navigationShell,
-        tabs: const [
-          BottomNavBarItem(label: 'Home', icon: LucideIcons.house),
-          BottomNavBarItem(label: 'Order', icon: LucideIcons.book),
-          BottomNavBarItem(label: 'Menu', icon: LucideIcons.listOrdered),
-          BottomNavBarItem(label: 'Profile', icon: LucideIcons.user),
-        ],
+      child: MerchantIncomingOrderListener(
+        child: BottomNavbar(
+          shell: navigationShell,
+          tabs: const [
+            BottomNavBarItem(label: 'Home', icon: LucideIcons.house),
+            BottomNavBarItem(label: 'Order', icon: LucideIcons.book),
+            BottomNavBarItem(label: 'Menu', icon: LucideIcons.listOrdered),
+            BottomNavBarItem(label: 'Profile', icon: LucideIcons.user),
+          ],
+        ),
       ),
     ),
   ),

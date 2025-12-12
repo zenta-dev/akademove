@@ -1,6 +1,5 @@
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
-import 'package:akademove/features/merchant/presentation/widgets/order_rejection_dialog.dart';
 import 'package:akademove/l10n/l10n.dart';
 import 'package:akademove/locator.dart';
 import 'package:api_client/api_client.dart';
@@ -143,8 +142,8 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
       context.read<MerchantOrderCubit>().rejectOrder(
         merchantId: merchantId,
         orderId: _currentOrder.id,
-        reason: result['reason'] as String,
-        note: result['note'] as String?,
+        reason: result.reason,
+        note: result.note,
       );
     }
   }
@@ -309,7 +308,7 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
               ],
             ),
           ),
-          if (_currentOrder.note case final note?) ...[
+          if (_currentOrder.note != null) ...[
             Gap(8.h),
             Container(
               width: double.infinity,
@@ -320,18 +319,7 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
               ),
               child: Row(
                 spacing: 8.w,
-                children: [
-                  const Icon(LucideIcons.bookOpen),
-                  // Expanded(
-                  //   child: Text(
-                  //     note.instructions ,
-                  //     style: context.typography.small.copyWith(
-                  //       fontSize: 12.sp,
-                  //       fontWeight: FontWeight.w500,
-                  //     ),
-                  //   ),
-                  // ),
-                ],
+                children: [const Icon(LucideIcons.bookOpen)],
               ),
             ),
           ],
@@ -398,7 +386,7 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
                 ),
               ),
               Text(
-                _currentOrder.id.substring(0, 8),
+                _currentOrder.id.prefix(8),
                 style: context.typography.small.copyWith(
                   fontSize: 14.sp,
                   fontWeight: FontWeight.w500,
@@ -473,13 +461,13 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
     }
   }
 
-  Widget _buildActionButtons(BuildContext context) {
+  Widget? _buildActionButtons(BuildContext context) {
     final status = _currentOrder.status;
 
     // Only show actions for food orders that belong to this merchant
     if (_currentOrder.type != OrderType.FOOD ||
         _currentOrder.merchantId == null) {
-      return const SizedBox.shrink();
+      return null;
     }
 
     Widget? primaryButton;
@@ -565,7 +553,7 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
         );
 
       default:
-        return const SizedBox.shrink();
+        return null;
     }
 
     // At this point, primaryButton is guaranteed to be non-null
@@ -589,6 +577,8 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final actionButtons = _buildActionButtons(context);
+
     return BlocListener<MerchantOrderCubit, MerchantOrderState>(
       listenWhen: (previous, current) => previous.order != current.order,
       listener: (context, state) {
@@ -631,44 +621,34 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
           );
         }
       },
-      child: Stack(
-        children: [
-          Scaffold(
-            headers: [
-              DefaultAppBar(
-                title: context.l10n.order_detail,
-                subtitle: 'F-${_currentOrder.id.substring(0, 8)}',
-              ),
-            ],
-            child: SafeArea(
-              child: Padding(
-                padding: EdgeInsets.all(16.w),
-                child: RefreshTrigger(
-                  onRefresh: _onRefresh,
-                  child: SingleChildScrollView(
-                    physics: const AlwaysScrollableScrollPhysics(),
-                    padding: EdgeInsets.only(bottom: 120.h),
-                    child: Column(
-                      spacing: 16.h,
-                      children: [
-                        _buildCustomerInfo(context),
-                        _buildDriverInfo(context),
-                        _buildOrderDetails(context),
-                        _buildOrderInfo(context),
-                      ],
-                    ),
-                  ),
-                ),
+      child: Scaffold(
+        headers: [
+          DefaultAppBar(
+            title: context.l10n.order_detail,
+            subtitle: 'F-${_currentOrder.id.prefix(8)}',
+          ),
+        ],
+        footers: [?actionButtons],
+        child: RefreshTrigger(
+          onRefresh: _onRefresh,
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            child: Padding(
+              padding: EdgeInsets.all(16.dg),
+              child: Column(
+                spacing: 16.h,
+                children: [
+                  _buildCustomerInfo(context),
+                  _buildDriverInfo(context),
+                  _buildOrderDetails(context),
+                  _buildOrderInfo(context),
+                  // Add bottom padding if there are action buttons
+                  if (actionButtons != null) SizedBox(height: 80.h),
+                ],
               ),
             ),
           ),
-          Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
-            child: SafeArea(child: _buildActionButtons(context)),
-          ),
-        ],
+        ),
       ),
     );
   }

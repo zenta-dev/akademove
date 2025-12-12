@@ -2,7 +2,6 @@ import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/l10n/l10n.dart';
 import 'package:api_client/api_client.dart';
-import 'package:flutter/material.dart' show RefreshIndicator;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
@@ -398,81 +397,61 @@ class _MerchantSalesReportDetailScreenState
         final totalRevenue = analytics?.totalRevenue.toDouble() ?? 0;
         final topItems = analytics?.topSellingItems ?? [];
 
-        return Stack(
-          children: [
-            Scaffold(
-              headers: [DefaultAppBar(title: context.l10n.title_sales_report)],
-              child: SafeArea(
-                child: Padding(
-                  padding: EdgeInsets.all(16.w),
-                  child: isLoading
-                      ? const Center(child: CircularProgressIndicator())
-                      : RefreshIndicator(
-                          onRefresh: () => context
-                              .read<MerchantAnalyticsCubit>()
-                              .getMonthlyAnalytics(),
-                          child: SingleChildScrollView(
-                            padding: EdgeInsets.only(bottom: 100.h),
-                            child: Column(
-                              spacing: 16.h,
-                              children: [
-                                _buildSalesGauge(
-                                  context: context,
-                                  title: context.l10n.label_weekly_sales,
-                                  value: completionRate.clamp(0, 100),
-                                  amount: _currencyFormat.format(
-                                    totalRevenue * 0.25,
-                                  ),
-                                ),
-                                _buildSalesGauge(
-                                  context: context,
-                                  title: context.l10n.label_monthly_sales,
-                                  value: completionRate.clamp(0, 100),
-                                  amount: _currencyFormat.format(totalRevenue),
-                                ),
-                                _buildTopOrderedCategories(context, topItems),
-                                _buildTopOrderedProducts(context, topItems),
-                              ],
-                            ),
-                          ),
+        return Scaffold(
+          headers: [DefaultAppBar(title: context.l10n.title_sales_report)],
+          footers: [
+            Padding(
+              padding: EdgeInsets.all(16.dg),
+              child: Button.primary(
+                onPressed: _isExporting ? null : _handleExport,
+                child: _isExporting
+                    ? const SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : Text(
+                        context.l10n.button_export_pdf,
+                        style: context.typography.small.copyWith(
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.normal,
                         ),
-                ),
-              ),
-            ),
-            Positioned(
-              bottom: 0,
-              left: 16,
-              right: 16,
-              child: SafeArea(
-                child: SizedBox(
-                  width: double.infinity,
-                  child: Container(
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.card,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Button.primary(
-                      onPressed: _isExporting ? null : _handleExport,
-                      child: _isExporting
-                          ? const SizedBox(
-                              width: 20,
-                              height: 20,
-                              child: CircularProgressIndicator(strokeWidth: 2),
-                            )
-                          : Text(
-                              context.l10n.button_export_pdf,
-                              style: context.typography.small.copyWith(
-                                fontSize: 16.sp,
-                                fontWeight: FontWeight.normal,
-                              ),
-                            ),
-                    ),
-                  ),
-                ),
+                      ),
               ),
             ),
           ],
+          child: isLoading
+              ? const Center(child: CircularProgressIndicator())
+              : RefreshTrigger(
+                  onRefresh: () => context
+                      .read<MerchantAnalyticsCubit>()
+                      .getMonthlyAnalytics(),
+                  child: SingleChildScrollView(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    child: Padding(
+                      padding: EdgeInsets.all(16.dg),
+                      child: Column(
+                        spacing: 16.h,
+                        children: [
+                          _buildSalesGauge(
+                            context: context,
+                            title: context.l10n.label_weekly_sales,
+                            value: completionRate.clamp(0, 100),
+                            amount: _currencyFormat.format(totalRevenue * 0.25),
+                          ),
+                          _buildSalesGauge(
+                            context: context,
+                            title: context.l10n.label_monthly_sales,
+                            value: completionRate.clamp(0, 100),
+                            amount: _currencyFormat.format(totalRevenue),
+                          ),
+                          _buildTopOrderedCategories(context, topItems),
+                          _buildTopOrderedProducts(context, topItems),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
         );
       },
     );

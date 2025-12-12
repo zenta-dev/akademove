@@ -59,101 +59,103 @@ class _MerchantMenuScreenState extends State<MerchantMenuScreen> {
     final width = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 16),
-            child: Row(
-              spacing: 16.w,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: _searchController,
-                    placeholder: Text(
-                      context.l10n.placeholder_search_menu_hint,
-                    ),
-                    onChanged: (value) {
-                      setState(() => _query = value);
-                    },
-                  ),
+      headers: [
+        AppBar(
+          title: Row(
+            spacing: 16.w,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: TextField(
+                  controller: _searchController,
+                  placeholder: Text(context.l10n.placeholder_search_menu_hint),
+                  onChanged: (value) {
+                    setState(() => _query = value);
+                  },
                 ),
-                IconButton(
-                  onPressed: () =>
-                      context.pushNamed(Routes.merchantCreateMenu.name),
-                  icon: const Icon(LucideIcons.plus, size: 18),
-                  variance: ButtonVariance.primary,
-                ),
-              ],
-            ),
+              ),
+              IconButton(
+                onPressed: () =>
+                    context.pushNamed(Routes.merchantCreateMenu.name),
+                icon: const Icon(LucideIcons.plus, size: 18),
+                variance: ButtonVariance.primary,
+              ),
+            ],
           ),
-          Expanded(
-            child: RefreshTrigger(
-              onRefresh: _initializeMenu,
-              child: BlocBuilder<MerchantMenuCubit, MerchantMenuState>(
-                builder: (context, state) {
-                  if (state.menus.isLoading) {
-                    return const Center(child: CircularProgressIndicator());
-                  }
+        ),
+      ],
+      child: Padding(
+        padding: EdgeInsets.all(16.dg),
+        child: Column(
+          children: [
+            Expanded(
+              child: RefreshTrigger(
+                onRefresh: _initializeMenu,
+                child: BlocBuilder<MerchantMenuCubit, MerchantMenuState>(
+                  builder: (context, state) {
+                    if (state.menus.isLoading) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
 
-                  if (state.menus.isFailure) {
-                    return Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            '${context.l10n.error}: ${state.menus.error?.message ?? context.l10n.an_error_occurred}',
-                          ),
-                          const SizedBox(height: 16),
-                          PrimaryButton(
-                            onPressed: _initializeMenu,
-                            child: Text(context.l10n.retry),
-                          ),
-                        ],
+                    if (state.menus.isFailure) {
+                      return Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              '${context.l10n.error}: ${state.menus.error?.message ?? context.l10n.an_error_occurred}',
+                            ),
+                            const SizedBox(height: 16),
+                            PrimaryButton(
+                              onPressed: _initializeMenu,
+                              child: Text(context.l10n.retry),
+                            ),
+                          ],
+                        ),
+                      );
+                    }
+
+                    // Filter menus based on search query
+                    final filteredMenus = _query.isEmpty
+                        ? state.menus.data?.value ?? []
+                        : (state.menus.data?.value ?? [])
+                              .where(
+                                (menu) => menu.name.toLowerCase().contains(
+                                  _query.toLowerCase(),
+                                ),
+                              )
+                              .toList();
+
+                    if (filteredMenus.isEmpty) {
+                      return Center(
+                        child: Text(
+                          _query.isEmpty
+                              ? context.l10n.no_menu_items_yet
+                              : context.l10n.no_menu_items_found(_query),
+                        ),
+                      );
+                    }
+
+                    return GridView.builder(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      itemCount: filteredMenus.length,
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        mainAxisSpacing: 12.h,
+                        crossAxisSpacing: 12.w,
+                        childAspectRatio: (width / 2) / (120.h + 58.h),
                       ),
+                      itemBuilder: (context, index) {
+                        final menu = filteredMenus[index];
+                        return _MenuCard(menu: menu);
+                      },
                     );
-                  }
-
-                  // Filter menus based on search query
-                  final filteredMenus = _query.isEmpty
-                      ? state.menus.data?.value ?? []
-                      : (state.menus.data?.value ?? [])
-                            .where(
-                              (menu) => menu.name.toLowerCase().contains(
-                                _query.toLowerCase(),
-                              ),
-                            )
-                            .toList();
-
-                  if (filteredMenus.isEmpty) {
-                    return Center(
-                      child: Text(
-                        _query.isEmpty
-                            ? context.l10n.no_menu_items_yet
-                            : context.l10n.no_menu_items_found(_query),
-                      ),
-                    );
-                  }
-
-                  return GridView.builder(
-                    physics: const AlwaysScrollableScrollPhysics(),
-                    itemCount: filteredMenus.length,
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      mainAxisSpacing: 12.h,
-                      crossAxisSpacing: 12.w,
-                      childAspectRatio: (width / 2) / (120.h + 58.h),
-                    ),
-                    itemBuilder: (context, index) {
-                      final menu = filteredMenus[index];
-                      return _MenuCard(menu: menu);
-                    },
-                  );
-                },
+                  },
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

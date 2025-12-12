@@ -3,6 +3,14 @@ import 'package:akademove/l10n/l10n.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 
+/// Typed result class for order rejection dialog
+class OrderRejectionResult {
+  const OrderRejectionResult({required this.reason, this.note});
+
+  final String reason;
+  final String? note;
+}
+
 /// Dialog for rejecting a food order with predefined reasons and optional note
 class OrderRejectionDialog extends StatefulWidget {
   const OrderRejectionDialog({super.key});
@@ -68,10 +76,12 @@ class _OrderRejectionDialogState extends State<OrderRejectionDialog> {
         DestructiveButton(
           onPressed: () {
             final note = _noteController.text.trim();
-            Navigator.of(context).pop({
-              'reason': _selectedReason,
-              'note': note.isEmpty ? null : note,
-            });
+            Navigator.of(context).pop(
+              OrderRejectionResult(
+                reason: _selectedReason,
+                note: note.isEmpty ? null : note,
+              ),
+            );
           },
           child: Text(context.l10n.button_reject_order),
         ),
@@ -135,10 +145,10 @@ class _OrderRejectionDialogState extends State<OrderRejectionDialog> {
 }
 
 /// Helper function to show the rejection dialog
-Future<Map<String, dynamic>?> showOrderRejectionDialog({
+Future<OrderRejectionResult?> showOrderRejectionDialog({
   required BuildContext context,
 }) async {
-  return showDialog<Map<String, dynamic>>(
+  return showDialog<OrderRejectionResult>(
     context: context,
     barrierDismissible: false,
     builder: (context) => const OrderRejectionDialog(),

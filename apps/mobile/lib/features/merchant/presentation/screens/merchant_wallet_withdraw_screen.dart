@@ -71,8 +71,13 @@ class _MerchantWalletWithdrawScreenState
           }
         });
       }
-    } catch (_) {
-      // Ignore error, user can enter manually
+    } catch (e, stackTrace) {
+      // Log error but allow user to enter bank details manually
+      logger.w(
+        '[MerchantWalletWithdrawScreen] Failed to load saved bank account',
+        error: e,
+        stackTrace: stackTrace,
+      );
     } finally {
       if (mounted) {
         setState(() => _isLoadingSavedBank = false);

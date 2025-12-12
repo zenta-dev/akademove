@@ -35,6 +35,57 @@ export const WalletMonthlySummaryResponseSchema = z.object({
 	net: z.coerce.number(),
 });
 
+// Commission Report schemas
+export const CommissionReportPeriodSchema = z.enum([
+	"daily",
+	"weekly",
+	"monthly",
+]);
+export type CommissionReportPeriod = z.infer<
+	typeof CommissionReportPeriodSchema
+>;
+
+export const CommissionReportQuerySchema = z.object({
+	period: CommissionReportPeriodSchema.default("daily"),
+	startDate: z.coerce.date().optional(),
+	endDate: z.coerce.date().optional(),
+});
+
+export const CommissionTransactionSchema = z.object({
+	id: z.uuid(),
+	type: z.enum(["EARNING", "COMMISSION"]),
+	amount: z.coerce.number(),
+	description: z.string().optional(),
+	orderType: z.string().optional(),
+	createdAt: DateSchema,
+});
+
+export const ChartDataPointSchema = z.object({
+	label: z.string(),
+	income: z.coerce.number(),
+	outcome: z.coerce.number(),
+});
+
+export const CommissionReportResponseSchema = z.object({
+	currentBalance: z.coerce.number(),
+	incomingBalance: z.coerce.number(),
+	outgoingBalance: z.coerce.number(),
+	totalEarnings: z.coerce.number(),
+	totalCommission: z.coerce.number(),
+	netIncome: z.coerce.number(),
+	commissionRate: z.coerce.number(),
+	chartData: z.array(ChartDataPointSchema),
+	transactions: z.array(CommissionTransactionSchema),
+	period: CommissionReportPeriodSchema,
+});
+
+export type CommissionReportQuery = z.infer<typeof CommissionReportQuerySchema>;
+export type CommissionTransaction = z.infer<typeof CommissionTransactionSchema>;
+export type ChartDataPoint = z.infer<typeof ChartDataPointSchema>;
+export type CommissionReportResponse = z.infer<
+	typeof CommissionReportResponseSchema
+>;
+
 export type WalletCurrency = z.infer<typeof CurrencySchema>;
 export type Wallet = z.infer<typeof WalletSchema>;
 export type UpdateWallet = z.infer<typeof UpdateWalletSchema>;
@@ -58,4 +109,24 @@ export const walletSchemaRegistries = {
 		strategy: "input",
 	},
 	walletKey: { schema: WalletKeySchema, strategy: "input" },
+	CommissionReportPeriod: {
+		schema: CommissionReportPeriodSchema,
+		strategy: "input",
+	},
+	CommissionReportQuery: {
+		schema: CommissionReportQuerySchema,
+		strategy: "input",
+	},
+	CommissionTransaction: {
+		schema: CommissionTransactionSchema,
+		strategy: "output",
+	},
+	ChartDataPoint: {
+		schema: ChartDataPointSchema,
+		strategy: "output",
+	},
+	CommissionReportResponse: {
+		schema: CommissionReportResponseSchema,
+		strategy: "output",
+	},
 } satisfies SchemaRegistries;

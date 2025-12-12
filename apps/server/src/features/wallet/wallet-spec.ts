@@ -9,6 +9,8 @@ import {
 	WithdrawRequestSchema,
 } from "@repo/schema/payment";
 import {
+	CommissionReportQuerySchema,
+	CommissionReportResponseSchema,
 	WalletMonthlySummaryQuerySchema,
 	WalletMonthlySummaryResponseSchema,
 	WalletSchema,
@@ -124,6 +126,23 @@ export const WalletSpec = {
 			createSuccesSchema(
 				SavedBankAccountSchema,
 				"Successfully retrieved saved bank account",
+			),
+		),
+	getCommissionReport: oc
+		.route({
+			tags: [FEATURE_TAGS.wallet],
+			method: "GET",
+			path: "/commission-report",
+			inputStructure: "detailed",
+			outputStructure: "detailed",
+			description:
+				"Get commission report for drivers with balance summary, chart data, and transaction history",
+		})
+		.input(z.object({ query: CommissionReportQuerySchema }))
+		.output(
+			createSuccesSchema(
+				CommissionReportResponseSchema,
+				"Successfully retrieved commission report",
 			),
 		),
 };

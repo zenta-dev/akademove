@@ -161,7 +161,7 @@ class _DriverKrsUpsertScreenState extends State<DriverKrsUpsertScreen> {
                             fontWeight: FontWeight.w500,
                           ),
                         ),
-                        SizedBox(height: 8.h),
+                        Gap(8.h),
                         TextField(
                           controller: _nameController,
                           placeholder: Text(
@@ -169,7 +169,7 @@ class _DriverKrsUpsertScreenState extends State<DriverKrsUpsertScreen> {
                           ),
                           enabled: !isLoading,
                         ),
-                        SizedBox(height: 24.h),
+                        Gap(24.h),
 
                         // Day of week
                         Text(
@@ -179,83 +179,106 @@ class _DriverKrsUpsertScreenState extends State<DriverKrsUpsertScreen> {
                             fontWeight: FontWeight.w500,
                           ),
                         ),
-                        SizedBox(height: 8.h),
-                        Select<DayOfWeek>(
-                          value: _selectedDay,
-                          onChanged: isLoading
-                              ? null
-                              : (value) {
-                                  if (value != null) {
-                                    setState(() => _selectedDay = value);
-                                  }
-                                },
-                          placeholder: Text(context.l10n.day_of_week),
-                          itemBuilder: (itemContext, item) {
-                            return Text(_getDayFullText(context, item));
-                          },
-                          popupConstraints: BoxConstraints(
-                            maxHeight: 300.h,
-                            maxWidth: 300.w,
-                          ),
-                          popup: SelectPopup(
-                            items: SelectItemList(
-                              children: [
-                                for (final day in DayOfWeek.values)
-                                  SelectItemButton(
-                                    value: day,
-                                    child: Text(_getDayFullText(context, day)),
-                                  ),
-                              ],
+                        Gap(8.h),
+                        SizedBox(
+                          width: 1.sw,
+                          child: Select<DayOfWeek>(
+                            value: _selectedDay,
+                            onChanged: isLoading
+                                ? null
+                                : (value) {
+                                    if (value != null) {
+                                      setState(() => _selectedDay = value);
+                                    }
+                                  },
+                            placeholder: Text(context.l10n.day_of_week),
+                            itemBuilder: (itemContext, item) {
+                              return Text(_getDayFullText(context, item));
+                            },
+                            popupConstraints: BoxConstraints(
+                              maxHeight: 300.h,
+                              maxWidth: 1.sw,
                             ),
-                          ).call,
+                            popup: SelectPopup(
+                              items: SelectItemList(
+                                children: [
+                                  for (final day in DayOfWeek.values)
+                                    SelectItemButton(
+                                      value: day,
+                                      child: Text(
+                                        _getDayFullText(context, day),
+                                      ),
+                                    ),
+                                ],
+                              ),
+                            ).call,
+                          ),
                         ),
-                        SizedBox(height: 24.h),
+                        Gap(24.h),
 
                         // Start time
-                        Text(
-                          context.l10n.start_time,
-                          style: context.typography.p.copyWith(
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.w500,
-                          ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              crossAxisAlignment: .start,
+                              children: [
+                                Text(
+                                  context.l10n.start_time,
+                                  style: context.typography.p.copyWith(
+                                    fontSize: 14.sp,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                Gap(8.h),
+                                SizedBox(
+                                  width: 0.4.sw,
+                                  child: TimePicker(
+                                    value: _startTime,
+                                    mode: PromptMode.dialog,
+                                    dialogTitle: Text(context.l10n.start_time),
+                                    onChanged: isLoading
+                                        ? null
+                                        : (value) {
+                                            setState(() {
+                                              _startTime = value ?? _startTime;
+                                            });
+                                          },
+                                  ),
+                                ),
+                              ],
+                            ), // End time
+                            Column(
+                              crossAxisAlignment: .start,
+                              children: [
+                                Text(
+                                  context.l10n.end_time,
+                                  style: context.typography.p.copyWith(
+                                    fontSize: 14.sp,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                Gap(8.h),
+                                SizedBox(
+                                  width: 0.4.sw,
+                                  child: TimePicker(
+                                    value: _endTime,
+                                    mode: PromptMode.dialog,
+                                    dialogTitle: Text(context.l10n.end_time),
+                                    onChanged: isLoading
+                                        ? null
+                                        : (value) {
+                                            setState(() {
+                                              _endTime = value ?? _endTime;
+                                            });
+                                          },
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
-                        SizedBox(height: 8.h),
-                        TimePicker(
-                          value: _startTime,
-                          mode: PromptMode.dialog,
-                          dialogTitle: Text(context.l10n.start_time),
-                          onChanged: isLoading
-                              ? null
-                              : (value) {
-                                  setState(() {
-                                    _startTime = value ?? _startTime;
-                                  });
-                                },
-                        ),
-                        SizedBox(height: 24.h),
-
-                        // End time
-                        Text(
-                          context.l10n.end_time,
-                          style: context.typography.p.copyWith(
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        SizedBox(height: 8.h),
-                        TimePicker(
-                          value: _endTime,
-                          mode: PromptMode.dialog,
-                          dialogTitle: Text(context.l10n.end_time),
-                          onChanged: isLoading
-                              ? null
-                              : (value) {
-                                  setState(() {
-                                    _endTime = value ?? _endTime;
-                                  });
-                                },
-                        ),
-                        SizedBox(height: 24.h),
+                        Gap(24.h),
 
                         // Recurring switch
                         _buildSwitchTile(
@@ -266,7 +289,7 @@ class _DriverKrsUpsertScreenState extends State<DriverKrsUpsertScreen> {
                           onChanged: (value) =>
                               setState(() => _isRecurring = value),
                         ),
-                        SizedBox(height: 16.h),
+                        Gap(16.h),
 
                         // Active switch
                         _buildSwitchTile(
@@ -336,7 +359,7 @@ class _DriverKrsUpsertScreenState extends State<DriverKrsUpsertScreen> {
                     fontWeight: FontWeight.w500,
                   ),
                 ),
-                SizedBox(height: 4.h),
+                Gap(4.h),
                 Text(
                   subtitle,
                   style: context.typography.small.copyWith(

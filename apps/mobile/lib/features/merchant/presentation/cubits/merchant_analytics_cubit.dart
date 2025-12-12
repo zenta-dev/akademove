@@ -40,12 +40,11 @@ class MerchantAnalyticsCubit extends BaseCubit<MerchantAnalyticsState> {
   });
 
   /// Get weekly analytics
-  Future<void> getWeeklyAnalytics() async =>
-      await getAnalytics(period: 'weekly');
+  Future<void> getWeeklyAnalytics() async => await getAnalytics(period: 'week');
 
   /// Get monthly analytics
   Future<void> getMonthlyAnalytics() async =>
-      await getAnalytics(period: 'monthly');
+      await getAnalytics(period: 'month');
 
   /// Get analytics for a custom date range
   Future<void> getAnalyticsForDateRange({

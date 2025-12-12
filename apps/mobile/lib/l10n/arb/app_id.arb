@@ -1511,5 +1511,66 @@
 	"view_active_order": "Lihat Perjalanan",
 	"title_select_pickup_location": "Pilih Lokasi Penjemputan",
 	"title_select_dropoff_location": "Pilih Lokasi Tujuan",
-	"button_confirm_location": "Konfirmasi Lokasi"
+	"button_confirm_location": "Konfirmasi Lokasi",
+	"store_status": "Status Toko",
+	"store_status_open": "Buka",
+	"store_status_break": "Istirahat",
+	"store_status_maintenance": "Pemeliharaan",
+	"store_status_closed": "Tutup",
+	"store_status_unknown": "Tidak Diketahui",
+	"store_status_online": "Online - {status}",
+	"@store_status_online": {
+		"placeholders": {
+			"status": {
+				"type": "String"
+			}
+		}
+	},
+	"store_status_offline": "Offline",
+	"store_status_online_toggle": "Online",
+	"store_status_offline_toggle": "Offline",
+	"store_status_available_for_orders": "Tersedia untuk pesanan",
+	"store_status_not_available": "Tidak tersedia",
+	"store_status_not_receiving_orders": "Tidak menerima pesanan",
+	"store_status_processing_orders": "Memproses {count} pesanan",
+	"@store_status_processing_orders": {
+		"placeholders": {
+			"count": {
+				"type": "int"
+			}
+		}
+	},
+	"store_status_ready_to_receive": "Siap menerima pesanan",
+	"store_status_temp_not_accepting": "Sementara tidak menerima pesanan baru",
+	"store_status_desc_open": "Menerima pesanan baru dari pelanggan",
+	"store_status_desc_break": "Sementara tidak menerima pesanan baru. Aktifkan saat Anda sibuk.",
+	"store_status_desc_maintenance": "Toko sedang dalam pemeliharaan",
+	"store_status_desc_closed": "Toko tutup, tidak menerima pesanan",
+	"store_status_desc_default": "Beritahu pelanggan tentang status toko Anda",
+	"active_orders_count": "{count} aktif",
+	"@active_orders_count": {
+		"placeholders": {
+			"count": {
+				"type": "int"
+			}
+		}
+	},
+	"status_updated": "Status diperbarui",
+	"failed_update_status": "Gagal memperbarui status",
+	"title_commission_report": "Laporan Komisi",
+	"current_saldo": "Saldo Saat Ini",
+	"incoming_balance": "Pemasukan",
+	"outgoing_balance": "Pengeluaran",
+	"income_outcome_chart": "Grafik Pemasukan & Pengeluaran",
+	"balance_details": "Detail Saldo",
+	"daily": "Harian",
+	"weekly": "Mingguan",
+	"monthly": "Bulanan",
+	"income": "Pemasukan",
+	"outcome": "Pengeluaran",
+	"export_pdf": "Export PDF",
+	"export_coming_soon": "Fitur export segera hadir!",
+	"no_transactions_yet": "Belum ada transaksi",
+	"withdrawal": "Penarikan",
+	"no_data_available": "Tidak ada data"
 }

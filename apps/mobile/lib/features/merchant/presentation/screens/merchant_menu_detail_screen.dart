@@ -40,26 +40,25 @@ class _MerchantMenuDetailScreenState extends State<MerchantMenuDetailScreen> {
     if (menu == null) {
       return Scaffold(
         headers: [DefaultAppBar(title: context.l10n.title_menu_detail)],
-        child: SafeArea(
-          child: Padding(
-            padding: EdgeInsets.all(16.dg),
-            child: Center(child: Text(context.l10n.error_menu_not_found)),
-          ),
+        child: Padding(
+          padding: EdgeInsets.all(16.dg),
+          child: Center(child: Text(context.l10n.error_menu_not_found)),
         ),
       );
     }
 
     return Scaffold(
       headers: [DefaultAppBar(title: context.l10n.title_menu_detail)],
-      child: SafeArea(
-        child: RefreshTrigger(
-          onRefresh: _onRefresh,
-          child: BlocBuilder<MerchantMenuCubit, MerchantMenuState>(
-            builder: (context, state) {
-              // Use selected menu from state if available, otherwise use passed menu
-              final displayMenu = state.menu.data?.value ?? menu;
+      child: RefreshTrigger(
+        onRefresh: _onRefresh,
+        child: BlocBuilder<MerchantMenuCubit, MerchantMenuState>(
+          builder: (context, state) {
+            // Use selected menu from state if available, otherwise use passed menu
+            final displayMenu = state.menu.data?.value ?? menu;
 
-              return SingleChildScrollView(
+            return SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              child: Padding(
                 padding: EdgeInsets.all(16.dg),
                 child: Column(
                   spacing: 16.h,
@@ -209,9 +208,9 @@ class _MerchantMenuDetailScreenState extends State<MerchantMenuDetailScreen> {
                       ),
                   ],
                 ),
-              );
-            },
-          ),
+              ),
+            );
+          },
         ),
       ),
     );

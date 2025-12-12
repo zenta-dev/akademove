@@ -36,6 +36,11 @@ class SplashScreen extends StatelessWidget {
               case UserRole.USER:
                 context.pushReplacementNamed(Routes.userHome.name);
               case UserRole.MERCHANT:
+                // Check if merchant has completed outlet setup
+                if (!state.isMerchantOutletSetup) {
+                  context.pushReplacementNamed(Routes.merchantSetUpOutlet.name);
+                  return;
+                }
                 context.pushReplacementNamed(Routes.merchantHome.name);
               case UserRole.DRIVER:
                 if (state.driver.value == null) {

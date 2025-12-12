@@ -4,5 +4,6 @@ export 'extension/_export.dart';
 export 'file.dart';
 export 'logger.dart';
 export 'operation.dart';
+export 'string_utils.dart';
 export 'task_dedupe_manager.dart';
 export 'uuid.dart';

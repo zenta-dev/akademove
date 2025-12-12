@@ -732,146 +732,130 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
       listenWhen: (previous, current) =>
           previous.updateProfile != current.updateProfile,
       listener: (context, state) => _onUpdateProfileStateChanged(state),
-      child: Stack(
-        children: [
-          Scaffold(
-            headers: [DefaultAppBar(title: context.l10n.title_edit_profile)],
-            child: Padding(
-              padding: EdgeInsets.all(16.dg),
-              child: NotificationListener<ScrollNotification>(
-                onNotification: (notification) {
-                  if (_isDraggingMarker) {
-                    return true;
-                  }
-                  return false;
-                },
-                child: Form(
-                  controller: _formController,
-                  child: SingleChildScrollView(
-                    padding: EdgeInsets.only(bottom: 100.h),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      spacing: 20.h,
-                      children: [
-                        AuthTextField(
-                          formKey: _FormKeys.ownerName,
-                          label: context.l10n.label_owner_name,
-                          placeholder: context.l10n.placeholder_owner_name,
-                          icon: LucideIcons.user,
-                          validator: const LengthValidator(min: 3),
-                          enabled: !_isLoading,
-                          labelStyle: _labelStyle,
-                          placeholderStyle: _placeholderStyle,
-                        ),
-                        AuthTextField(
-                          formKey: _FormKeys.ownerEmail,
-                          label: context.l10n.label_owner_email,
-                          placeholder: context.l10n.placeholder_owner_email,
-                          icon: LucideIcons.mail,
-                          validator: const EmailValidator(),
-                          keyboardType: TextInputType.emailAddress,
-                          enabled: !_isLoading,
-                          labelStyle: _labelStyle,
-                          placeholderStyle: _placeholderStyle,
-                        ),
-                        AuthPhoneField(
-                          label: context.l10n.label_owner_phone,
-                          labelStyle: _labelStyle,
-                          // Owner phone is read-only display - not editable via merchant update API
-                          enabled: false,
-                        ),
-                        AuthTextField(
-                          formKey: _FormKeys.outletName,
-                          label: context.l10n.label_outlet_name,
-                          placeholder: context.l10n.placeholder_outlet_name,
-                          icon: LucideIcons.store,
-                          validator: const LengthValidator(min: 3),
-                          enabled: !_isLoading,
-                          labelStyle: _labelStyle,
-                          placeholderStyle: _placeholderStyle,
-                        ),
-                        _buildOutletLocationField(),
-                        AuthPhoneField(
-                          label: context.l10n.label_outlet_phone,
-                          labelStyle: _labelStyle,
-                          enabled: !_isLoading,
-                          onChanged: (_, phoneNumber) {
-                            _outletPhoneNumber = phoneNumber;
-                            setState(() {});
-                          },
-                        ),
-                        AuthTextField(
-                          formKey: _FormKeys.outletEmail,
-                          label: context.l10n.label_outlet_email,
-                          placeholder: context.l10n.placeholder_outlet_email,
-                          icon: LucideIcons.mail,
-                          validator: const EmailValidator(),
-                          keyboardType: TextInputType.emailAddress,
-                          enabled: !_isLoading,
-                          labelStyle: _labelStyle,
-                          placeholderStyle: _placeholderStyle,
-                        ),
-                        AuthImagePicker(
-                          label: context.l10n.label_outlet_document,
-                          labelStyle: _labelStyle,
-                          error: _documentsErrors[_Documents.outletDocument],
-                          onChanged: (file) => setState(
-                            () => _documents[_Documents.outletDocument] = file,
-                          ),
-                        ),
-                        AuthEnumSelect<BankProvider>(
-                          label: context.l10n.label_choose_bank,
-                          labelStyle: _labelStyle,
-                          placeholder: "Select bank provider",
-                          placeholderStyle: _placeholderStyle,
-                          value: _selectedBankProvider,
-                          items: BankProvider.values,
-                          enabled: !_isLoading,
-                          onChanged: (value) =>
-                              setState(() => _selectedBankProvider = value),
-                        ),
-                        _buildBankAccountField(),
-                      ],
+      child: Scaffold(
+        headers: [DefaultAppBar(title: context.l10n.title_edit_profile)],
+        footers: [
+          Padding(
+            padding: EdgeInsets.all(16.dg),
+            child: Button.primary(
+              onPressed: _isLoading ? null : _handleSaveProfile,
+              child: _isLoading
+                  ? const SizedBox(
+                      height: 20,
+                      width: 20,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                  : Text(
+                      context.l10n.save_changes,
+                      style: context.typography.small.copyWith(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.normal,
+                      ),
                     ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-          Positioned(
-            bottom: 0,
-            left: 16,
-            right: 16,
-            child: SafeArea(
-              child: SizedBox(
-                width: double.infinity,
-                child: Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.card,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Button.primary(
-                    onPressed: _isLoading ? null : _handleSaveProfile,
-                    child: _isLoading
-                        ? const SizedBox(
-                            height: 20,
-                            width: 20,
-                            child: CircularProgressIndicator(strokeWidth: 2),
-                          )
-                        : Text(
-                            context.l10n.save_changes,
-                            style: context.typography.small.copyWith(
-                              fontSize: 16.sp,
-                              fontWeight: FontWeight.normal,
-                            ),
-                          ),
-                  ),
-                ),
-              ),
             ),
           ),
         ],
+        child: Padding(
+          padding: EdgeInsets.all(16.dg),
+          child: NotificationListener<ScrollNotification>(
+            onNotification: (notification) {
+              if (_isDraggingMarker) {
+                return true;
+              }
+              return false;
+            },
+            child: Form(
+              controller: _formController,
+              child: SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  spacing: 20.h,
+                  children: [
+                    AuthTextField(
+                      formKey: _FormKeys.ownerName,
+                      label: context.l10n.label_owner_name,
+                      placeholder: context.l10n.placeholder_owner_name,
+                      icon: LucideIcons.user,
+                      validator: const LengthValidator(min: 3),
+                      enabled: !_isLoading,
+                      labelStyle: _labelStyle,
+                      placeholderStyle: _placeholderStyle,
+                    ),
+                    AuthTextField(
+                      formKey: _FormKeys.ownerEmail,
+                      label: context.l10n.label_owner_email,
+                      placeholder: context.l10n.placeholder_owner_email,
+                      icon: LucideIcons.mail,
+                      validator: const EmailValidator(),
+                      keyboardType: TextInputType.emailAddress,
+                      enabled: !_isLoading,
+                      labelStyle: _labelStyle,
+                      placeholderStyle: _placeholderStyle,
+                    ),
+                    AuthPhoneField(
+                      label: context.l10n.label_owner_phone,
+                      labelStyle: _labelStyle,
+                      // Owner phone is read-only display - not editable via merchant update API
+                      enabled: false,
+                    ),
+                    AuthTextField(
+                      formKey: _FormKeys.outletName,
+                      label: context.l10n.label_outlet_name,
+                      placeholder: context.l10n.placeholder_outlet_name,
+                      icon: LucideIcons.store,
+                      validator: const LengthValidator(min: 3),
+                      enabled: !_isLoading,
+                      labelStyle: _labelStyle,
+                      placeholderStyle: _placeholderStyle,
+                    ),
+                    _buildOutletLocationField(),
+                    AuthPhoneField(
+                      label: context.l10n.label_outlet_phone,
+                      labelStyle: _labelStyle,
+                      enabled: !_isLoading,
+                      onChanged: (_, phoneNumber) {
+                        _outletPhoneNumber = phoneNumber;
+                        setState(() {});
+                      },
+                    ),
+                    AuthTextField(
+                      formKey: _FormKeys.outletEmail,
+                      label: context.l10n.label_outlet_email,
+                      placeholder: context.l10n.placeholder_outlet_email,
+                      icon: LucideIcons.mail,
+                      validator: const EmailValidator(),
+                      keyboardType: TextInputType.emailAddress,
+                      enabled: !_isLoading,
+                      labelStyle: _labelStyle,
+                      placeholderStyle: _placeholderStyle,
+                    ),
+                    AuthImagePicker(
+                      label: context.l10n.label_outlet_document,
+                      labelStyle: _labelStyle,
+                      error: _documentsErrors[_Documents.outletDocument],
+                      onChanged: (file) => setState(
+                        () => _documents[_Documents.outletDocument] = file,
+                      ),
+                    ),
+                    AuthEnumSelect<BankProvider>(
+                      label: context.l10n.label_choose_bank,
+                      labelStyle: _labelStyle,
+                      placeholder: "Select bank provider",
+                      placeholderStyle: _placeholderStyle,
+                      value: _selectedBankProvider,
+                      items: BankProvider.values,
+                      enabled: !_isLoading,
+                      onChanged: (value) =>
+                          setState(() => _selectedBankProvider = value),
+                    ),
+                    _buildBankAccountField(),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }

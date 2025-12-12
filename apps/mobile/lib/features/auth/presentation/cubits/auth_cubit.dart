@@ -29,11 +29,21 @@ class AuthCubit extends BaseCubit<AuthState> {
 
           Driver? driver;
           Merchant? merchant;
+          List<MerchantOperatingHours>? operatingHours;
           final role = res.data.role;
           if (role == UserRole.DRIVER) {
             driver = (await _driverRepository.getMine()).data;
           } else if (role == UserRole.MERCHANT) {
             merchant = (await _merchantRepository.getMine()).data;
+            // Fetch operating hours to check outlet setup status
+            try {
+              operatingHours = (await _merchantRepository.getOperatingHours(
+                merchantId: merchant.id,
+              )).data;
+            } catch (e) {
+              // Operating hours might not exist yet, that's okay
+              operatingHours = [];
+            }
           }
 
           emit(
@@ -41,6 +51,7 @@ class AuthCubit extends BaseCubit<AuthState> {
               user: OperationResult.success(res.data, message: res.message),
               driver: OperationResult.success(driver),
               merchant: OperationResult.success(merchant),
+              merchantOperatingHours: OperationResult.success(operatingHours),
             ),
           );
         } on BaseError catch (e, st) {
@@ -200,12 +211,22 @@ class AuthCubit extends BaseCubit<AuthState> {
 
         Driver? driver;
         Merchant? merchant;
+        List<MerchantOperatingHours>? operatingHours;
 
         final role = res.data.role;
         if (role == UserRole.DRIVER) {
           driver = (await _driverRepository.getMine()).data;
         } else if (role == UserRole.MERCHANT) {
           merchant = (await _merchantRepository.getMine()).data;
+          // Fetch operating hours to check outlet setup status
+          try {
+            operatingHours = (await _merchantRepository.getOperatingHours(
+              merchantId: merchant.id,
+            )).data;
+          } catch (e) {
+            // Operating hours might not exist yet, that's okay
+            operatingHours = [];
+          }
         }
 
         emit(
@@ -213,6 +234,7 @@ class AuthCubit extends BaseCubit<AuthState> {
             user: OperationResult.success(res.data, message: res.message),
             driver: OperationResult.success(driver),
             merchant: OperationResult.success(merchant),
+            merchantOperatingHours: OperationResult.success(operatingHours),
           ),
         );
       } on BaseError catch (e, st) {

@@ -7044,6 +7044,222 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Confirm Location'**
   String get button_confirm_location;
+
+  /// No description provided for @store_status.
+  ///
+  /// In en, this message translates to:
+  /// **'Store Status'**
+  String get store_status;
+
+  /// No description provided for @store_status_open.
+  ///
+  /// In en, this message translates to:
+  /// **'Open'**
+  String get store_status_open;
+
+  /// No description provided for @store_status_break.
+  ///
+  /// In en, this message translates to:
+  /// **'On Break'**
+  String get store_status_break;
+
+  /// No description provided for @store_status_maintenance.
+  ///
+  /// In en, this message translates to:
+  /// **'Maintenance'**
+  String get store_status_maintenance;
+
+  /// No description provided for @store_status_closed.
+  ///
+  /// In en, this message translates to:
+  /// **'Closed'**
+  String get store_status_closed;
+
+  /// No description provided for @store_status_unknown.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown'**
+  String get store_status_unknown;
+
+  /// No description provided for @store_status_online.
+  ///
+  /// In en, this message translates to:
+  /// **'Online - {status}'**
+  String store_status_online(String status);
+
+  /// No description provided for @store_status_offline.
+  ///
+  /// In en, this message translates to:
+  /// **'Offline'**
+  String get store_status_offline;
+
+  /// No description provided for @store_status_online_toggle.
+  ///
+  /// In en, this message translates to:
+  /// **'Online'**
+  String get store_status_online_toggle;
+
+  /// No description provided for @store_status_offline_toggle.
+  ///
+  /// In en, this message translates to:
+  /// **'Offline'**
+  String get store_status_offline_toggle;
+
+  /// No description provided for @store_status_available_for_orders.
+  ///
+  /// In en, this message translates to:
+  /// **'Available for orders'**
+  String get store_status_available_for_orders;
+
+  /// No description provided for @store_status_not_available.
+  ///
+  /// In en, this message translates to:
+  /// **'Not available'**
+  String get store_status_not_available;
+
+  /// No description provided for @store_status_not_receiving_orders.
+  ///
+  /// In en, this message translates to:
+  /// **'Not receiving orders'**
+  String get store_status_not_receiving_orders;
+
+  /// No description provided for @store_status_processing_orders.
+  ///
+  /// In en, this message translates to:
+  /// **'Processing {count} order(s)'**
+  String store_status_processing_orders(int count);
+
+  /// No description provided for @store_status_ready_to_receive.
+  ///
+  /// In en, this message translates to:
+  /// **'Ready to receive orders'**
+  String get store_status_ready_to_receive;
+
+  /// No description provided for @store_status_temp_not_accepting.
+  ///
+  /// In en, this message translates to:
+  /// **'Temporarily not accepting new orders'**
+  String get store_status_temp_not_accepting;
+
+  /// No description provided for @store_status_desc_open.
+  ///
+  /// In en, this message translates to:
+  /// **'Accepting new orders from customers'**
+  String get store_status_desc_open;
+
+  /// No description provided for @store_status_desc_break.
+  ///
+  /// In en, this message translates to:
+  /// **'Temporarily not accepting new orders. Toggle when you\'re busy.'**
+  String get store_status_desc_break;
+
+  /// No description provided for @store_status_desc_maintenance.
+  ///
+  /// In en, this message translates to:
+  /// **'Store is under maintenance'**
+  String get store_status_desc_maintenance;
+
+  /// No description provided for @store_status_desc_closed.
+  ///
+  /// In en, this message translates to:
+  /// **'Store is closed, not accepting orders'**
+  String get store_status_desc_closed;
+
+  /// No description provided for @store_status_desc_default.
+  ///
+  /// In en, this message translates to:
+  /// **'Let customers know your store status'**
+  String get store_status_desc_default;
+
+  /// No description provided for @active_orders_count.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} active'**
+  String active_orders_count(int count);
+
+  /// No description provided for @status_updated.
+  ///
+  /// In en, this message translates to:
+  /// **'Status updated'**
+  String get status_updated;
+
+  /// No description provided for @failed_update_status.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to update status'**
+  String get failed_update_status;
+
+  /// No description provided for @current_saldo.
+  ///
+  /// In en, this message translates to:
+  /// **'Current Balance'**
+  String get current_saldo;
+
+  /// No description provided for @incoming_balance.
+  ///
+  /// In en, this message translates to:
+  /// **'Incoming'**
+  String get incoming_balance;
+
+  /// No description provided for @outgoing_balance.
+  ///
+  /// In en, this message translates to:
+  /// **'Outgoing'**
+  String get outgoing_balance;
+
+  /// No description provided for @income_outcome_chart.
+  ///
+  /// In en, this message translates to:
+  /// **'Income & Outcome Chart'**
+  String get income_outcome_chart;
+
+  /// No description provided for @balance_details.
+  ///
+  /// In en, this message translates to:
+  /// **'Balance Details'**
+  String get balance_details;
+
+  /// No description provided for @daily.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily'**
+  String get daily;
+
+  /// No description provided for @weekly.
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly'**
+  String get weekly;
+
+  /// No description provided for @monthly.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly'**
+  String get monthly;
+
+  /// No description provided for @outcome.
+  ///
+  /// In en, this message translates to:
+  /// **'Outcome'**
+  String get outcome;
+
+  /// No description provided for @export_pdf.
+  ///
+  /// In en, this message translates to:
+  /// **'Export PDF'**
+  String get export_pdf;
+
+  /// No description provided for @export_coming_soon.
+  ///
+  /// In en, this message translates to:
+  /// **'Export feature coming soon!'**
+  String get export_coming_soon;
+
+  /// No description provided for @no_data_available.
+  ///
+  /// In en, this message translates to:
+  /// **'No data available'**
+  String get no_data_available;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

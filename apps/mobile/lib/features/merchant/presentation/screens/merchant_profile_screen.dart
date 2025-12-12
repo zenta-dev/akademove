@@ -134,7 +134,7 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
                           height: 80.r,
                           placeholder: (context, url) => Center(
                             child: Text(
-                              merchant.name.substring(0, 1).toUpperCase(),
+                              merchant.name.firstChar.toUpperCase(),
                               style: context.typography.h1.copyWith(
                                 fontSize: 32.sp,
                                 color: context.colorScheme.primary,
@@ -143,7 +143,7 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
                           ),
                           errorWidget: (context, url, error) => Center(
                             child: Text(
-                              merchant.name.substring(0, 1).toUpperCase(),
+                              merchant.name.firstChar.toUpperCase(),
                               style: context.typography.h1.copyWith(
                                 fontSize: 32.sp,
                                 color: context.colorScheme.primary,
@@ -153,7 +153,7 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
                         )
                       : Center(
                           child: Text(
-                            merchant.name.substring(0, 1).toUpperCase(),
+                            merchant.name.firstChar.toUpperCase(),
                             style: context.typography.h1.copyWith(
                               fontSize: 32.sp,
                               color: context.colorScheme.primary,
@@ -270,7 +270,7 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
                 ),
                 Text(
                   merchant.userId.length > 8
-                      ? '${merchant.userId.substring(0, 8)}...'
+                      ? '${merchant.userId.prefix(8)}...'
                       : merchant.userId,
                   style: context.typography.p.copyWith(
                     fontSize: 14.sp,

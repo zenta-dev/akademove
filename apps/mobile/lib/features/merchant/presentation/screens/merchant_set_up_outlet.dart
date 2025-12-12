@@ -335,11 +335,11 @@ class _MerchantSetUpOutletScreenState extends State<MerchantSetUpOutletScreen> {
           }
         }
       },
-      child: Stack(
-        children: [
-          Scaffold(
-            headers: [DefaultAppBar(title: context.l10n.title_set_up_outlet)],
-            child: Padding(
+      child: Scaffold(
+        headers: [DefaultAppBar(title: context.l10n.title_set_up_outlet)],
+        child: Stack(
+          children: [
+            Padding(
               padding: EdgeInsets.all(16.dg),
               child: Form(
                 controller: _formController,
@@ -357,13 +357,15 @@ class _MerchantSetUpOutletScreenState extends State<MerchantSetUpOutletScreen> {
                 ),
               ),
             ),
-          ),
-          if (_isLoading)
-            Container(
-              color: Colors.black.withValues(alpha: 0.3),
-              child: const Center(child: CircularProgressIndicator()),
-            ),
-        ],
+            if (_isLoading)
+              Positioned.fill(
+                child: Container(
+                  color: Colors.black.withValues(alpha: 0.3),
+                  child: const Center(child: CircularProgressIndicator()),
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }

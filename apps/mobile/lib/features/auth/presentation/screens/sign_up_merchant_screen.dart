@@ -538,14 +538,21 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
     return keys.every((key) => _formController.errors[key] == null);
   }
 
-  bool _validateDocuments<T>(Map<T, File?> docs, Map<T, String?> errors) {
+  bool _validateDocuments<T>(
+    Map<T, File?> docs,
+    Map<T, String?> errors, {
+    Set<T>? requiredDocs,
+  }) {
     errors.updateAll((key, _) => null);
     var isValid = true;
 
     docs.forEach((key, file) {
-      if (file == null) {
-        errors[key] = context.l10n.error_file_required;
-        isValid = false;
+      // Only validate if requiredDocs is null (all required) or key is in requiredDocs
+      if (requiredDocs == null || requiredDocs.contains(key)) {
+        if (file == null) {
+          errors[key] = context.l10n.error_file_required;
+          isValid = false;
+        }
       }
     });
 
@@ -565,7 +572,8 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
         _FormKeys.step2OutletName,
         _FormKeys.step2OutletEmail,
       ]) &&
-      _validateDocuments(_step2Docs, _step2DocsErrors) &&
+      // Document upload is optional - pass empty set for requiredDocs
+      _validateDocuments(_step2Docs, _step2DocsErrors, requiredDocs: {}) &&
       _selectedCategory != null;
 
   bool get _isStep3Valid =>
@@ -641,10 +649,7 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
     final bankProvider = _selectedBankProvider;
     final document = _step2Docs[_Step2Docs.governmentDocument];
 
-    if (!_termsAccepted ||
-        category == null ||
-        bankProvider == null ||
-        document == null) {
+    if (!_termsAccepted || category == null || bankProvider == null) {
       _showToast(
         context,
         context.l10n.error,
@@ -676,7 +681,7 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
       bankProvider: bankProvider,
       bankNumber: int.parse(formData["bankNumber"]!),
       photoPath: null,
-      documentPath: document.path,
+      documentPath: document?.path,
     );
   }
 
@@ -693,9 +698,8 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
       "bankNumber": _FormKeys.step3BankNumber[values],
     };
 
-    // Validate all fields are present
+    // Validate all fields are present (documents are optional)
     if (data.values.any((v) => v == null) ||
-        _step2Docs.values.any((v) => v == null) ||
         _selectedBankProvider == null ||
         _selectedCategory == null) {
       return null;

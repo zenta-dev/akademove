@@ -1368,5 +1368,20 @@
   "server_operating_hours_created": "Operating hours created successfully",
   "server_operating_hours_updated": "Operating hours updated successfully",
   "server_operating_hours_deleted": "Operating hours deleted successfully",
-  "view_active_order": "View Trip"
+  "view_active_order": "View Trip",
+  "title_commission_report": "Commission Report",
+  "current_saldo": "Current Balance",
+  "incoming_balance": "Incoming",
+  "outgoing_balance": "Outgoing",
+  "income_outcome_chart": "Income & Outcome Chart",
+  "balance_details": "Balance Details",
+  "daily": "Daily",
+  "weekly": "Weekly",
+  "monthly": "Monthly",
+  "income": "Income",
+  "outcome": "Outcome",
+  "export_pdf": "Export PDF",
+  "export_coming_soon": "Export feature coming soon!",
+  "no_transactions_yet": "No transactions yet",
+  "withdrawal": "Withdrawal"
 }

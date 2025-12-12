@@ -3564,4 +3564,118 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get button_confirm_location => 'Konfirmasi Lokasi';
+
+  @override
+  String get store_status => 'Status Toko';
+
+  @override
+  String get store_status_open => 'Buka';
+
+  @override
+  String get store_status_break => 'Istirahat';
+
+  @override
+  String get store_status_maintenance => 'Pemeliharaan';
+
+  @override
+  String get store_status_closed => 'Tutup';
+
+  @override
+  String get store_status_unknown => 'Tidak Diketahui';
+
+  @override
+  String store_status_online(String status) {
+    return 'Online - $status';
+  }
+
+  @override
+  String get store_status_offline => 'Offline';
+
+  @override
+  String get store_status_online_toggle => 'Online';
+
+  @override
+  String get store_status_offline_toggle => 'Offline';
+
+  @override
+  String get store_status_available_for_orders => 'Tersedia untuk pesanan';
+
+  @override
+  String get store_status_not_available => 'Tidak tersedia';
+
+  @override
+  String get store_status_not_receiving_orders => 'Tidak menerima pesanan';
+
+  @override
+  String store_status_processing_orders(int count) {
+    return 'Memproses $count pesanan';
+  }
+
+  @override
+  String get store_status_ready_to_receive => 'Siap menerima pesanan';
+
+  @override
+  String get store_status_temp_not_accepting => 'Sementara tidak menerima pesanan baru';
+
+  @override
+  String get store_status_desc_open => 'Menerima pesanan baru dari pelanggan';
+
+  @override
+  String get store_status_desc_break => 'Sementara tidak menerima pesanan baru. Aktifkan saat Anda sibuk.';
+
+  @override
+  String get store_status_desc_maintenance => 'Toko sedang dalam pemeliharaan';
+
+  @override
+  String get store_status_desc_closed => 'Toko tutup, tidak menerima pesanan';
+
+  @override
+  String get store_status_desc_default => 'Beritahu pelanggan tentang status toko Anda';
+
+  @override
+  String active_orders_count(int count) {
+    return '$count aktif';
+  }
+
+  @override
+  String get status_updated => 'Status diperbarui';
+
+  @override
+  String get failed_update_status => 'Gagal memperbarui status';
+
+  @override
+  String get current_saldo => 'Saldo Saat Ini';
+
+  @override
+  String get incoming_balance => 'Pemasukan';
+
+  @override
+  String get outgoing_balance => 'Pengeluaran';
+
+  @override
+  String get income_outcome_chart => 'Grafik Pemasukan & Pengeluaran';
+
+  @override
+  String get balance_details => 'Detail Saldo';
+
+  @override
+  String get daily => 'Harian';
+
+  @override
+  String get weekly => 'Mingguan';
+
+  @override
+  String get monthly => 'Bulanan';
+
+  @override
+  String get outcome => 'Pengeluaran';
+
+  @override
+  String get export_pdf => 'Export PDF';
+
+  @override
+  String get export_coming_soon => 'Fitur export segera hadir!';
+
+  @override
+  String get no_data_available => 'Tidak ada data';
 }
