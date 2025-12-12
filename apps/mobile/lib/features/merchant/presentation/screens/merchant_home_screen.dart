@@ -20,7 +20,9 @@ class _MerchantHomeScreenState extends State<MerchantHomeScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _loadData();
+      _loadData().then((_) {
+        checkAndNavigateToSetup();
+      });
     });
   }
 
@@ -32,6 +34,15 @@ class _MerchantHomeScreenState extends State<MerchantHomeScreen> {
     context.read<MerchantAnalyticsCubit>().getAnalytics(period: 'today');
     // Load availability status
     context.read<MerchantAvailabilityCubit>().getAvailabilityStatus();
+  }
+
+  // Unsafe navigation to setup screen if outlet not set up
+  void checkAndNavigateToSetup() {
+    final merchantState = context.read<MerchantCubit>().state;
+
+    if (!merchantState.isMerchantOutletSetup) {
+      context.pushNamed(Routes.merchantSetUpOutlet.name);
+    }
   }
 
   /// Handle online status toggle
@@ -74,7 +85,9 @@ class _MerchantHomeScreenState extends State<MerchantHomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      headers: [DefaultAppBar(title: context.l10n.home)],
+      headers: [
+        DefaultAppBar(title: context.l10n.home, padding: EdgeInsets.all(16.r)),
+      ],
       child: RefreshTrigger(
         onRefresh: _loadData,
         child: SingleChildScrollView(
@@ -315,37 +328,40 @@ class _MerchantHomeScreenState extends State<MerchantHomeScreen> {
                       ),
                     ),
                     Gap(4.h),
-                    Select<String>(
-                      itemBuilder: (context, item) =>
-                          Text(_getStatusLabel(item)),
-                      value: operatingStatus,
-                      onChanged: isLoading
-                          ? null
-                          : (String? newValue) {
-                              if (newValue != null) {
-                                final status =
-                                    MerchantSetOperatingStatusRequestOperatingStatusEnum
-                                        .values
-                                        .firstWhere(
-                                          (e) => e.value == newValue,
-                                          orElse: () =>
-                                              MerchantSetOperatingStatusRequestOperatingStatusEnum
-                                                  .OPEN,
-                                        );
-                                _onOperatingStatusChanged(status);
-                              }
-                            },
-                      popup: SelectPopup(
-                        autoClose: true,
-                        items: SelectItemList(
-                          children: [
-                            _buildStatusItem(context, 'OPEN'),
-                            _buildStatusItem(context, 'BREAK'),
-                            _buildStatusItem(context, 'MAINTENANCE'),
-                            _buildStatusItem(context, 'CLOSED'),
-                          ],
-                        ),
-                      ).call,
+                    SizedBox(
+                      width: double.infinity,
+                      child: Select<String>(
+                        itemBuilder: (context, item) =>
+                            Text(_getStatusLabel(item)),
+                        value: operatingStatus,
+                        onChanged: isLoading
+                            ? null
+                            : (String? newValue) {
+                                if (newValue != null) {
+                                  final status =
+                                      MerchantSetOperatingStatusRequestOperatingStatusEnum
+                                          .values
+                                          .firstWhere(
+                                            (e) => e.value == newValue,
+                                            orElse: () =>
+                                                MerchantSetOperatingStatusRequestOperatingStatusEnum
+                                                    .OPEN,
+                                          );
+                                  _onOperatingStatusChanged(status);
+                                }
+                              },
+                        popup: SelectPopup(
+                          autoClose: true,
+                          items: SelectItemList(
+                            children: [
+                              _buildStatusItem(context, 'OPEN'),
+                              _buildStatusItem(context, 'BREAK'),
+                              _buildStatusItem(context, 'MAINTENANCE'),
+                              _buildStatusItem(context, 'CLOSED'),
+                            ],
+                          ),
+                        ).call,
+                      ),
                     ),
                   ],
                 ),

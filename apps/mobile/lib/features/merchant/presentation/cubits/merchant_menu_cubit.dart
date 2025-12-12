@@ -90,8 +90,11 @@ class MerchantMenuCubit extends BaseCubit<MerchantMenuState> {
     MultipartFile? image,
   }) async => await taskManager.execute('createMenu-$merchantId', () async {
     try {
-      // PERBAIKAN: Simpan data lama, JANGAN emit loading
+      // Preserve current list, emit loading for selectedMerchantMenu
       final currentList = state.menus.data?.value ?? [];
+      emit(
+        state.copyWith(selectedMerchantMenu: const OperationResult.loading()),
+      );
 
       final res = await _merchantRepository.createMenu(
         merchantId: merchantId,
@@ -123,7 +126,7 @@ class MerchantMenuCubit extends BaseCubit<MerchantMenuState> {
         error: e,
         stackTrace: st,
       );
-      emit(state.copyWith(merchantMenus: OperationResult.failed(e)));
+      emit(state.copyWith(selectedMerchantMenu: OperationResult.failed(e)));
     }
   });
 
@@ -135,51 +138,56 @@ class MerchantMenuCubit extends BaseCubit<MerchantMenuState> {
     int? stock,
     String? category,
     MultipartFile? image,
-  }) async =>
-      await taskManager.execute('updateMenu-$merchantId-$menuId', () async {
-        try {
-          // PERBAIKAN: Simpan data lama, JANGAN emit loading
-          final currentList = state.menus.data?.value ?? [];
+  }) async => await taskManager.execute(
+    'updateMenu-$merchantId-$menuId',
+    () async {
+      try {
+        // Preserve current list, emit loading for selectedMerchantMenu
+        final currentList = state.menus.data?.value ?? [];
+        emit(
+          state.copyWith(selectedMerchantMenu: const OperationResult.loading()),
+        );
 
-          final res = await _merchantRepository.updateMenu(
-            merchantId: merchantId,
-            menuId: menuId,
-            name: name,
-            price: price,
-            stock: stock,
-            category: category,
-            image: image,
-          );
+        final res = await _merchantRepository.updateMenu(
+          merchantId: merchantId,
+          menuId: menuId,
+          name: name,
+          price: price,
+          stock: stock,
+          category: category,
+          image: image,
+        );
 
-          // Update the menu in the list
-          final updatedList = currentList.map((menu) {
-            if (menu.id == menuId) {
-              return res.data;
-            }
-            return menu;
-          }).toList();
+        // Update the menu in the list
+        final updatedList = currentList.map((menu) {
+          if (menu.id == menuId) {
+            return res.data;
+          }
+          return menu;
+        }).toList();
 
-          emit(
-            state.copyWith(
-              merchantMenus: OperationResult.success(
-                updatedList,
-                message: res.message,
-              ),
-              selectedMerchantMenu: OperationResult.success(
-                res.data,
-                message: res.message,
-              ),
+        emit(
+          state.copyWith(
+            merchantMenus: OperationResult.success(
+              updatedList,
+              message: res.message,
             ),
-          );
-        } on BaseError catch (e, st) {
-          logger.e(
-            '[MerchantMenuCubit] - Update menu error: ${e.message}',
-            error: e,
-            stackTrace: st,
-          );
-          emit(state.copyWith(merchantMenus: OperationResult.failed(e)));
-        }
-      });
+            selectedMerchantMenu: OperationResult.success(
+              res.data,
+              message: res.message,
+            ),
+          ),
+        );
+      } on BaseError catch (e, st) {
+        logger.e(
+          '[MerchantMenuCubit] - Update menu error: ${e.message}',
+          error: e,
+          stackTrace: st,
+        );
+        emit(state.copyWith(selectedMerchantMenu: OperationResult.failed(e)));
+      }
+    },
+  );
 
   Future<void> deleteMenu({
     required String merchantId,

@@ -145,6 +145,7 @@ class _MerchantMenuScreenState extends State<MerchantMenuScreen> {
                         crossAxisSpacing: 12.w,
                         childAspectRatio: (width / 2) / (120.h + 58.h),
                       ),
+                      padding: EdgeInsets.zero,
                       itemBuilder: (context, index) {
                         final menu = filteredMenus[index];
                         return _MenuCard(menu: menu);

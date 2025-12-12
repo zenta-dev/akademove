@@ -305,7 +305,7 @@ class _MerchantSetUpOutletScreenState extends State<MerchantSetUpOutletScreen> {
 
         // Handle operating hours result (stage 2)
         if (_setupStage == 2) {
-          if (state.setupOperatingHours.isSuccess) {
+          if (state.operatingHours.isSuccess) {
             setState(() {
               _isLoading = false;
               _setupStage = 0;
@@ -315,13 +315,9 @@ class _MerchantSetUpOutletScreenState extends State<MerchantSetUpOutletScreen> {
               context.l10n.toast_success,
               context.l10n.toast_success_set_up_merchant,
             );
-            // Navigate to home after a short delay to show the toast
-            Future.delayed(const Duration(milliseconds: 800), () {
-              if (mounted) {
-                context.goNamed(Routes.merchantHome.name);
-              }
-            });
-          } else if (state.setupOperatingHours.isFailed) {
+            delay(Duration(milliseconds: 800));
+            context.popUntilRoot();
+          } else if (state.operatingHours.isFailed) {
             setState(() {
               _isLoading = false;
               _setupStage = 0;
@@ -329,7 +325,7 @@ class _MerchantSetUpOutletScreenState extends State<MerchantSetUpOutletScreen> {
             _showToast(
               context,
               context.l10n.toast_error,
-              state.setupOperatingHours.error?.message ??
+              state.operatingHours.error?.message ??
                   'Failed to save operating hours',
             );
           }
@@ -339,21 +335,23 @@ class _MerchantSetUpOutletScreenState extends State<MerchantSetUpOutletScreen> {
         headers: [DefaultAppBar(title: context.l10n.title_set_up_outlet)],
         child: Stack(
           children: [
-            Padding(
-              padding: EdgeInsets.all(16.dg),
-              child: Form(
-                controller: _formController,
-                child: Column(
-                  children: [
-                    Gap(12.h),
-                    Stepper(
-                      controller: _stepController,
-                      direction: Axis.horizontal,
-                      variant: StepVariant.line,
-                      size: StepSize.small,
-                      steps: [_buildStep1(context), _buildStep2(context)],
-                    ),
-                  ],
+            SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.all(16.dg),
+                child: Form(
+                  controller: _formController,
+                  child: Column(
+                    children: [
+                      Gap(12.h),
+                      Stepper(
+                        controller: _stepController,
+                        direction: Axis.horizontal,
+                        variant: StepVariant.line,
+                        size: StepSize.small,
+                        steps: [_buildStep1(context), _buildStep2(context)],
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),

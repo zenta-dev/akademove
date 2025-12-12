@@ -9,7 +9,7 @@ class MerchantState extends Equatable {
     this.updateProfile = const OperationResult.idle(),
     this.updatePasswordResult = const OperationResult.idle(),
     this.setupOutlet = const OperationResult.idle(),
-    this.setupOperatingHours = const OperationResult.idle(),
+    this.operatingHours = const OperationResult.idle(),
     this.merchant,
   });
 
@@ -32,7 +32,28 @@ class MerchantState extends Equatable {
   final OperationResult<Merchant> setupOutlet;
 
   /// Operation result for operating hours setup
-  final OperationResult<List<MerchantOperatingHours>> setupOperatingHours;
+  final OperationResult<List<MerchantOperatingHours>> operatingHours;
+
+  /// Check if merchant has completed outlet setup
+  /// Outlet is considered setup if merchant has an image and at least one operating hour configured
+  bool get isMerchantOutletSetup {
+    final merchantData = mine.value;
+    final operatingHours = this.operatingHours.value;
+
+    if (merchantData == null) return false;
+
+    // Check if merchant has an image (outlet photo)
+    final hasImage =
+        merchantData.image != null && merchantData.image!.isNotEmpty;
+
+    // Check if merchant has at least one operating hour with isOpen = true
+    final hasOperatingHours =
+        operatingHours != null &&
+        operatingHours.isNotEmpty &&
+        operatingHours.any((oh) => oh.isOpen);
+
+    return hasImage && hasOperatingHours;
+  }
 
   @override
   List<Object?> get props => [
@@ -41,7 +62,7 @@ class MerchantState extends Equatable {
     updateProfile,
     updatePasswordResult,
     setupOutlet,
-    setupOperatingHours,
+    operatingHours,
     merchant,
   ];
 
@@ -51,7 +72,7 @@ class MerchantState extends Equatable {
     OperationResult<Merchant>? updateProfile,
     OperationResult<bool>? updatePasswordResult,
     OperationResult<Merchant>? setupOutlet,
-    OperationResult<List<MerchantOperatingHours>>? setupOperatingHours,
+    OperationResult<List<MerchantOperatingHours>>? operatingHours,
     Merchant? merchant,
   }) {
     return MerchantState(
@@ -60,7 +81,7 @@ class MerchantState extends Equatable {
       updateProfile: updateProfile ?? this.updateProfile,
       updatePasswordResult: updatePasswordResult ?? this.updatePasswordResult,
       setupOutlet: setupOutlet ?? this.setupOutlet,
-      setupOperatingHours: setupOperatingHours ?? this.setupOperatingHours,
+      operatingHours: operatingHours ?? this.operatingHours,
       merchant: merchant ?? this.merchant,
     );
   }

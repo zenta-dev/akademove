@@ -63,10 +63,11 @@ class _MerchantOrderScreenState extends State<MerchantOrderScreen> {
     ];
 
     return Scaffold(
-      headers: [DefaultAppBar(title: context.l10n.order_history)],
+      headers: [
+        AppBar(title: _buildTabBar(context, tabs), padding: EdgeInsets.zero),
+      ],
       child: Column(
         children: [
-          _buildTabBar(context, tabs),
           Expanded(
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.dg),
@@ -106,14 +107,11 @@ class _MerchantOrderScreenState extends State<MerchantOrderScreen> {
       borderRadius: BorderRadius.zero,
       padding: EdgeInsets.zero,
       borderWidth: 0,
-      child: Padding(
-        padding: EdgeInsets.only(top: 20.h, bottom: 4.h),
-        child: Row(
-          children: List.generate(
-            tabs.length,
-            (i) => Expanded(
-              child: _buildTabButton(context, i, tabs[i], _currentIndex == i),
-            ),
+      child: Row(
+        children: List.generate(
+          tabs.length,
+          (i) => Expanded(
+            child: _buildTabButton(context, i, tabs[i], _currentIndex == i),
           ),
         ),
       ),

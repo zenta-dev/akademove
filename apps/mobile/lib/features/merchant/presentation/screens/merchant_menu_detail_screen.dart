@@ -157,7 +157,7 @@ class _MerchantMenuDetailScreenState extends State<MerchantMenuDetailScreen> {
                     ),
 
                     // Action Buttons
-                    if (state.menus.isLoading)
+                    if (state.menu.isLoading)
                       const Center(child: CircularProgressIndicator())
                     else
                       Row(
@@ -195,12 +195,12 @@ class _MerchantMenuDetailScreenState extends State<MerchantMenuDetailScreen> {
                       ),
 
                     // Error Message
-                    if (state.menus.isFailure && state.menus.error != null)
+                    if (state.menu.isFailure && state.menu.error != null)
                       Card(
                         child: Padding(
                           padding: const EdgeInsets.all(12),
                           child: Text(
-                            state.menus.error?.message ??
+                            state.menu.error?.message ??
                                 context.l10n.an_error_occurred,
                             style: const TextStyle(color: Color(0xFFF44336)),
                           ),

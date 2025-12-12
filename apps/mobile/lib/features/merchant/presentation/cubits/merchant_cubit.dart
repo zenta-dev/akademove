@@ -47,25 +47,34 @@ class MerchantCubit extends BaseCubit<MerchantState> {
   Future<void> refreshProfile() async => loadProfile();
 
   /// Legacy getMine method - kept for backward compatibility
-  Future<void> getMine() async => await taskManager.execute('MC-gM1', () async {
-    try {
-      emit(state.copyWith(mine: const OperationResult.loading()));
-      final res = await _merchantRepository.getMine();
-      emit(
-        state.copyWith(
-          mine: OperationResult.success(res.data, message: res.message),
-          merchant: res.data,
-        ),
-      );
-    } on BaseError catch (e, st) {
-      logger.e(
-        '[MerchantCubit] - Error: ${e.message}',
-        error: e,
-        stackTrace: st,
-      );
-      emit(state.copyWith(mine: OperationResult.failed(e)));
-    }
-  });
+  Future<MerchantState?> getMine() async =>
+      await taskManager.execute('MC-gM1', () async {
+        try {
+          emit(state.copyWith(mine: const OperationResult.loading()));
+          final mine = await _merchantRepository.getMine();
+          final ohRes = await safeAsync(
+            () =>
+                _merchantRepository.getOperatingHours(merchantId: mine.data.id),
+          );
+          final oh = ohRes.data?.data ?? [];
+          emit(
+            state.copyWith(
+              mine: OperationResult.success(mine.data, message: mine.message),
+              operatingHours: OperationResult.success(oh),
+              merchant: mine.data,
+            ),
+          );
+          return state;
+        } on BaseError catch (e, st) {
+          logger.e(
+            '[MerchantCubit] - Error: ${e.message}',
+            error: e,
+            stackTrace: st,
+          );
+          emit(state.copyWith(mine: OperationResult.failed(e)));
+        }
+        return null;
+      });
 
   /// Update merchant profile
   Future<void> updateProfile({
@@ -207,16 +216,14 @@ class MerchantCubit extends BaseCubit<MerchantState> {
     required List<MerchantOperatingHoursCreateRequest> hours,
   }) async => await taskManager.execute('MC-setupOperatingHours', () async {
     try {
-      emit(
-        state.copyWith(setupOperatingHours: const OperationResult.loading()),
-      );
+      emit(state.copyWith(operatingHours: const OperationResult.loading()));
       final res = await _merchantRepository.bulkUpsertOperatingHours(
         merchantId: merchantId,
         hours: hours,
       );
       emit(
         state.copyWith(
-          setupOperatingHours: OperationResult.success(
+          operatingHours: OperationResult.success(
             res.data,
             message: res.message,
           ),
@@ -228,13 +235,13 @@ class MerchantCubit extends BaseCubit<MerchantState> {
         error: e,
         stackTrace: st,
       );
-      emit(state.copyWith(setupOperatingHours: OperationResult.failed(e)));
+      emit(state.copyWith(operatingHours: OperationResult.failed(e)));
     }
   });
 
   /// Clear the setup operating hours result
   void clearSetupOperatingHoursResult() {
-    emit(state.copyWith(setupOperatingHours: const OperationResult.idle()));
+    emit(state.copyWith(operatingHours: const OperationResult.idle()));
   }
 
   void reset() => emit(const MerchantState());
