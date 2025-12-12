@@ -45,6 +45,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
     // Location is auto-initialized by UserLocationCubit, no need to fetch here
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _notificationCubit.getUnreadCount();
+      context.read<UserOrderCubit>().fetchActiveOrder();
       Future.wait([
         context.read<UserHomeCubit>().getPopulars(),
         context.read<ConfigurationCubit>().getBanners(placement: 'USER_HOME'),
@@ -62,6 +63,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
 
   Future<void> _onRefresh() async {
     _notificationCubit.getUnreadCount();
+    context.read<UserOrderCubit>().fetchActiveOrder();
     await Future.wait([
       context.read<UserHomeCubit>().getPopulars(),
       context.read<ConfigurationCubit>().getBanners(placement: 'USER_HOME'),
@@ -161,6 +163,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 12.h,
         children: [
+          _buildActiveOrder(context),
           Text(
             context.l10n.choose_the_service_that_you_want,
             style: context.typography.h4.copyWith(fontSize: 16.sp),
@@ -197,6 +200,22 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
           _buildPopularMerchants(),
         ],
       ),
+    );
+  }
+
+  Widget _buildActiveOrder(BuildContext context) {
+    return BlocBuilder<UserOrderCubit, UserOrderState>(
+      builder: (context, state) {
+        final order = state.currentOrder.value;
+        final driver = state.currentAssignedDriver.value;
+
+        // Only show if there's an active order
+        if (order == null || !order.status.isActive) {
+          return const SizedBox.shrink();
+        }
+
+        return ActiveOrderCardWidget(order: order, driver: driver);
+      },
     );
   }
 
