@@ -13,6 +13,7 @@ class AuthActionButton extends StatelessWidget {
     super.key,
     this.isPrimary = false,
     this.isTrailing = false,
+    this.textStyle,
   });
 
   /// The icon to display.
@@ -30,6 +31,9 @@ class AuthActionButton extends StatelessWidget {
   /// Whether the icon should be trailing (after text).
   final bool isTrailing;
 
+  /// Optional custom text style for the label.
+  final TextStyle? textStyle;
+
   @override
   Widget build(BuildContext context) {
     final iconWidget = Icon(
@@ -37,12 +41,11 @@ class AuthActionButton extends StatelessWidget {
       size: 16.sp,
       color: isPrimary ? Colors.white : null,
     );
-    final textWidget = Text(
-      label,
-      style: isPrimary
-          ? context.theme.typography.small.copyWith(color: Colors.white)
-          : null,
-    );
+
+    final defaultStyle = isPrimary
+        ? context.theme.typography.small.copyWith(color: Colors.white)
+        : null;
+    final textWidget = Text(label, style: textStyle ?? defaultStyle);
 
     final content = Row(
       mainAxisAlignment: MainAxisAlignment.center,

@@ -19,16 +19,13 @@ class SignInScreen extends StatelessWidget {
     return Scaffold(
       child: Stack(
         children: [
-          SvgTiledBackground(
-            asset: Assets.images.bg.signIn.path,
-            tileSize: 400.w,
-            colorFilter: ColorFilter.mode(
-              context.isDarkMode
-                  ? Colors.neutral.shade900
-                  : Colors.neutral.shade100,
-              BlendMode.srcIn,
-            ),
-          ),
+          // Opacity(
+          //   opacity: context.isDarkMode ? 1 : 0.2,
+          //   child: SvgTiledBackground(
+          //     asset: Assets.images.bg.signIn.path,
+          //     tileSize: 400.w,
+          //   ),
+          // ),
           Center(
             child: Padding(
               padding: EdgeInsets.all(8.dg),

@@ -17,6 +17,8 @@ class AuthEnumSelect<T extends Enum> extends StatelessWidget {
     this.showError = false,
     this.errorMessage,
     this.itemBuilder,
+    this.labelStyle,
+    this.placeholderStyle,
   });
 
   /// Optional label displayed above the select.
@@ -46,20 +48,28 @@ class AuthEnumSelect<T extends Enum> extends StatelessWidget {
   /// Optional custom item builder.
   final Widget Function(BuildContext context, T item)? itemBuilder;
 
+  /// Optional custom style for the label.
+  final TextStyle? labelStyle;
+
+  /// Optional custom style for the placeholder.
+  final TextStyle? placeholderStyle;
+
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: 8.h,
       children: [
-        if (label != null) Text(label!),
+        if (label != null) Text(label!, style: labelStyle),
         SizedBox(
           width: double.infinity,
           child: Select<T>(
             enabled: enabled,
             itemBuilder: itemBuilder ?? (context, item) => Text(item.name),
             value: value,
-            placeholder: placeholder != null ? Text(placeholder!) : null,
+            placeholder: placeholder != null
+                ? Text(placeholder!, style: placeholderStyle)
+                : null,
             onChanged: onChanged,
             popup: SelectPopup<T>(
               items: SelectItemList(

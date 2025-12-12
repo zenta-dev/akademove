@@ -1,45 +1,45 @@
-import 'dart:async';
-import 'dart:io';
+import "dart:async";
+import "dart:io";
 
-import 'package:akademove/app/router/router.dart';
-import 'package:akademove/core/_export.dart';
-import 'package:akademove/features/features.dart';
-import 'package:akademove/gen/assets.gen.dart';
-import 'package:akademove/l10n/l10n.dart';
-import 'package:api_client/api_client.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:geocoding/geocoding.dart' hide Location;
-import 'package:geolocator/geolocator.dart';
-import 'package:go_router/go_router.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:shadcn_flutter/shadcn_flutter.dart';
+import "package:akademove/app/router/router.dart";
+import "package:akademove/core/_export.dart";
+import "package:akademove/features/features.dart";
+import "package:akademove/gen/assets.gen.dart";
+import "package:akademove/l10n/l10n.dart";
+import "package:api_client/api_client.dart";
+import "package:flutter_bloc/flutter_bloc.dart";
+import "package:flutter_screenutil/flutter_screenutil.dart";
+import "package:geocoding/geocoding.dart" hide Location;
+import "package:geolocator/geolocator.dart";
+import "package:go_router/go_router.dart";
+import "package:google_maps_flutter/google_maps_flutter.dart";
+import "package:shadcn_flutter/shadcn_flutter.dart";
 
 abstract class _FormKeys {
   static const FormKey<String> step1OwnerName = TextFieldKey(
-    'step-1-owner-name',
+    "step-1-owner-name",
   );
   static const FormKey<String> step1OwnerEmail = TextFieldKey(
-    'step-1-owner-email',
+    "step-1-owner-email",
   );
   static const FormKey<String> step1OwnerPassword = TextFieldKey(
-    'step-1-owner-password',
+    "step-1-owner-password",
   );
   static const FormKey<String> step1OwnerConfirmPassword = TextFieldKey(
-    'step-1-owner-confirm_password',
+    "step-1-owner-confirm_password",
   );
 
   static const FormKey<String> step2OutletName = TextFieldKey(
-    'step-2-outlet-name',
+    "step-2-outlet-name",
   );
   static const FormKey<String> step2OutletEmail = TextFieldKey(
-    'step-2-outlet-email',
+    "step-2-outlet-email",
   );
   static const step3BankProvider = SelectKey<BankProvider>(
-    'step-3-bank-provider',
+    "step-3-bank-provider",
   );
   static const FormKey<String> step3BankNumber = TextFieldKey(
-    'step-3-bank-number',
+    "step-3-bank-number",
   );
 }
 
@@ -63,7 +63,7 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
   BankProvider? _selectedBankProvider;
   MerchantCategory? _selectedCategory;
   Coordinate _outletLocation = MapConstants.defaultCoordinate;
-  String _outletAddress = '';
+  String _outletAddress = "";
   CountryCode _selectedOwnerCountryCode = CountryCode.ID;
   CountryCode _selectedOutletCountryCode = CountryCode.ID;
   bool _isLocationLoaded = false;
@@ -147,7 +147,7 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
         ),
       );
     } catch (e) {
-      logger.e('[SignUpMerchantScreen] Error loading location', error: e);
+      logger.e("[SignUpMerchantScreen] Error loading location", error: e);
       if (mounted) {
         setState(() {
           _isLocationLoaded = true;
@@ -275,7 +275,7 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
     _outletLocation = location;
     _markers = {
       Marker(
-        markerId: const MarkerId('outletLocation'),
+        markerId: const MarkerId("outletLocation"),
         position: LatLng(location.y.toDouble(), location.x.toDouble()),
         infoWindow: InfoWindow(
           title: context.l10n.label_outlet_location,
@@ -336,11 +336,11 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
             place.locality,
             place.administrativeArea,
             place.country,
-          ].where((e) => e != null && e.isNotEmpty).join(', ');
+          ].where((e) => e != null && e.isNotEmpty).join(", ");
         });
       }
     } catch (e) {
-      logger.e('[SignUpMerchantScreen] Error getting address', error: e);
+      logger.e("[SignUpMerchantScreen] Error getting address", error: e);
       if (mounted) {
         setState(() => _outletAddress = context.l10n.label_unable_get_address);
       }
@@ -384,7 +384,7 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
         }
       }
     } catch (e) {
-      logger.e('[SignUpMerchantScreen] Error searching location', error: e);
+      logger.e("[SignUpMerchantScreen] Error searching location", error: e);
       if (mounted) {
         setState(() => _isSearching = false);
         _showToast(
@@ -455,7 +455,7 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
             }
           } catch (e) {
             logger.e(
-              '[SignUpMerchantScreen] Error getting placemark',
+              "[SignUpMerchantScreen] Error getting placemark",
               error: e,
             );
           }
@@ -478,7 +478,7 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
         }
       }
     } catch (e) {
-      logger.e('[SignUpMerchantScreen] Error fetching suggestions', error: e);
+      logger.e("[SignUpMerchantScreen] Error fetching suggestions", error: e);
       if (mounted) {
         setState(() {
           _searchSuggestions = [];
@@ -496,7 +496,7 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
       placemark.locality,
       placemark.administrativeArea,
       placemark.country,
-    ].where((e) => e != null && e.isNotEmpty).join(', ');
+    ].where((e) => e != null && e.isNotEmpty).join(", ");
 
     _searchController.text = address;
 
@@ -511,7 +511,7 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
       }
     } catch (e) {
       logger.e(
-        '[SignUpMerchantScreen] Error getting location from suggestion',
+        "[SignUpMerchantScreen] Error getting location from suggestion",
         error: e,
       );
     }
@@ -524,7 +524,7 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
       placemark.administrativeArea,
     ].where((e) => e != null && e.isNotEmpty).toList();
 
-    return parts.join(', ');
+    return parts.join(", ");
   }
 
   bool _validateStep(int stepIndex, bool Function() validator) {
@@ -606,7 +606,7 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
     );
     context.pushReplacementNamed(
       Routes.authEmailVerificationPending.name,
-      queryParameters: {'email': email},
+      queryParameters: {"email": email},
     );
   }
 
@@ -653,28 +653,28 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
       return;
     }
 
-    _submittedEmail = formData['ownerEmail'];
+    _submittedEmail = formData["ownerEmail"];
 
     cubit.signUpMerchant(
-      ownerName: formData['ownerName']!,
-      ownerEmail: formData['ownerEmail']!,
+      ownerName: formData["ownerName"]!,
+      ownerEmail: formData["ownerEmail"]!,
       ownerPhone: Phone(
         countryCode: _selectedOwnerCountryCode,
-        number: int.parse(formData['ownerPhoneNumber']!),
+        number: int.parse(formData["ownerPhoneNumber"]!),
       ),
-      ownerPassword: formData['ownerPassword']!,
-      ownerConfirmPassword: formData['ownerConfirmPassword']!,
-      outletName: formData['outletName']!,
-      outletEmail: formData['outletEmail']!,
+      ownerPassword: formData["ownerPassword"]!,
+      ownerConfirmPassword: formData["ownerConfirmPassword"]!,
+      outletName: formData["outletName"]!,
+      outletEmail: formData["outletEmail"]!,
       outletPhone: Phone(
         countryCode: _selectedOutletCountryCode,
-        number: int.parse(formData['outletPhoneNumber']!),
+        number: int.parse(formData["outletPhoneNumber"]!),
       ),
       outletLocation: _outletLocation,
       outletAddress: _outletAddress,
       category: category,
       bankProvider: bankProvider,
-      bankNumber: int.parse(formData['bankNumber']!),
+      bankNumber: int.parse(formData["bankNumber"]!),
       photoPath: null,
       documentPath: document.path,
     );
@@ -682,15 +682,15 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
 
   Map<String, String>? _extractFormData<T>(Map<FormKey<T>, dynamic> values) {
     final data = {
-      'ownerName': _FormKeys.step1OwnerName[values],
-      'ownerEmail': _FormKeys.step1OwnerEmail[values],
-      'ownerPhoneNumber': _ownerPhoneNumber,
-      'ownerPassword': _FormKeys.step1OwnerPassword[values],
-      'ownerConfirmPassword': _FormKeys.step1OwnerConfirmPassword[values],
-      'outletName': _FormKeys.step2OutletName[values],
-      'outletEmail': _FormKeys.step2OutletEmail[values],
-      'outletPhoneNumber': _outletPhoneNumber,
-      'bankNumber': _FormKeys.step3BankNumber[values],
+      "ownerName": _FormKeys.step1OwnerName[values],
+      "ownerEmail": _FormKeys.step1OwnerEmail[values],
+      "ownerPhoneNumber": _ownerPhoneNumber,
+      "ownerPassword": _FormKeys.step1OwnerPassword[values],
+      "ownerConfirmPassword": _FormKeys.step1OwnerConfirmPassword[values],
+      "outletName": _FormKeys.step2OutletName[values],
+      "outletEmail": _FormKeys.step2OutletEmail[values],
+      "outletPhoneNumber": _outletPhoneNumber,
+      "bankNumber": _FormKeys.step3BankNumber[values],
     };
 
     // Validate all fields are present
@@ -703,7 +703,7 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
 
     return data.map((k, v) {
       if (v == null) {
-        throw Exception('Form field $k is null');
+        throw Exception("Form field $k is null");
       }
       return MapEntry(k, v);
     });
@@ -786,47 +786,50 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
   }
 
   Step _buildStep1(BuildContext context, AuthState state) {
+    final isLoading = state.user.isLoading;
+
     return Step(
       title: Text(context.l10n.step_1),
-      contentBuilder: (context) => _buildStepContainer(
+      contentBuilder: (context) => AuthStepContainer(
         heroImage: Assets.images.hero.signUpMerchant1.image(height: 200.h),
         title: context.l10n.merchant_step_1_description,
         content: [
-          _buildTextField(
-            key: _FormKeys.step1OwnerName,
+          AuthTextField(
+            formKey: _FormKeys.step1OwnerName,
             label: context.l10n.label_owner_name,
             placeholder: context.l10n.placeholder_name,
             icon: LucideIcons.user,
             validator: const LengthValidator(min: 3),
-            enabled: !state.user.isLoading,
+            enabled: !isLoading,
           ),
-          _buildTextField(
-            key: _FormKeys.step1OwnerEmail,
+          AuthTextField(
+            formKey: _FormKeys.step1OwnerEmail,
             label: context.l10n.label_email,
             placeholder: context.l10n.placeholder_email,
             icon: LucideIcons.mail,
             validator: const EmailValidator(),
             keyboardType: TextInputType.emailAddress,
-            enabled: !state.user.isLoading,
+            enabled: !isLoading,
           ),
-          _buildPhoneField(context, state, (val) {
-            if (val.country == Country.indonesia) {
-              _selectedOwnerCountryCode = CountryCode.ID;
-            }
-            _ownerPhoneNumber = val.number;
-            setState(() {});
-          }),
-          _buildTextField(
-            key: _FormKeys.step1OwnerPassword,
+          AuthPhoneField(
+            enabled: !isLoading,
+            onChanged: (countryCode, phoneNumber) {
+              _selectedOwnerCountryCode = countryCode;
+              _ownerPhoneNumber = phoneNumber;
+              setState(() {});
+            },
+          ),
+          AuthTextField(
+            formKey: _FormKeys.step1OwnerPassword,
             label: context.l10n.password,
             placeholder: context.l10n.placeholder_password,
             icon: LucideIcons.key,
             validator: const SafePasswordValidator(),
-            enabled: !state.user.isLoading,
+            enabled: !isLoading,
             isPassword: true,
           ),
-          _buildTextField(
-            key: _FormKeys.step1OwnerConfirmPassword,
+          AuthTextField(
+            formKey: _FormKeys.step1OwnerConfirmPassword,
             label: context.l10n.label_confirm_password,
             placeholder: context.l10n.placeholder_password,
             icon: LucideIcons.key,
@@ -834,58 +837,22 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
               _FormKeys.step1OwnerPassword,
               message: context.l10n.error_passwords_not_match,
             ),
-            enabled: !state.user.isLoading,
+            enabled: !isLoading,
             isPassword: true,
           ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            spacing: 8.w,
-            children: [
-              Checkbox(
-                state: _termsAccepted
-                    ? CheckboxState.checked
-                    : CheckboxState.unchecked,
-                enabled: !state.user.isLoading,
-                onChanged: (checkboxState) {
-                  setState(() {
-                    _termsAccepted = checkboxState == CheckboxState.checked;
-                  });
-                },
-              ),
-              Expanded(
-                child: GestureDetector(
-                  onTap: () async {
-                    await context.pushNamed(Routes.termsOfService.name);
-                  },
-                  child: RichText(
-                    text: TextSpan(
-                      style: context.theme.typography.small.copyWith(
-                        fontSize: 12.sp,
-                      ),
-                      children: [
-                        TextSpan(text: context.l10n.i_agree_to_the),
-                        TextSpan(
-                          text: ' ${context.l10n.terms_and_conditions}',
-                          style: TextStyle(
-                            color: context.theme.colorScheme.primary,
-                            decoration: TextDecoration.underline,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ],
+          AuthTermsCheckbox(
+            value: _termsAccepted,
+            enabled: !isLoading,
+            onChanged: (value) => setState(() => _termsAccepted = value),
           ),
         ],
         actions: [
-          _buildActionButton(
+          AuthActionButton(
             icon: LucideIcons.arrowLeft,
             label: context.l10n.back,
             onPressed: () => context.pop(),
           ),
-          _buildActionButton(
+          AuthActionButton(
             icon: LucideIcons.arrowRight,
             label: context.l10n.next,
             isPrimary: true,
@@ -901,533 +868,116 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
   }
 
   Step _buildStep2(BuildContext context, AuthState state) {
+    final isLoading = state.user.isLoading;
+
     return Step(
       title: Text(context.l10n.step_2),
-      contentBuilder: (context) => _buildStepContainer(
+      contentBuilder: (context) => AuthStepContainer(
         heroImage: Assets.images.hero.signUpMerchant2.image(height: 200.h),
         title: context.l10n.merchant_step_2_description,
         content: [
-          _buildTextField(
-            key: _FormKeys.step2OutletName,
+          AuthTextField(
+            formKey: _FormKeys.step2OutletName,
             label: context.l10n.label_outlet_name,
             placeholder: context.l10n.placeholder_outlet_name,
             icon: LucideIcons.store,
             validator: const LengthValidator(min: 3),
-            enabled: !state.user.isLoading,
+            enabled: !isLoading,
           ),
-          _buildTextField(
-            key: _FormKeys.step2OutletEmail,
+          AuthTextField(
+            formKey: _FormKeys.step2OutletEmail,
             label: context.l10n.label_email,
             placeholder: context.l10n.placeholder_outlet_email,
             icon: LucideIcons.mail,
             validator: const EmailValidator(),
-            enabled: !state.user.isLoading,
+            enabled: !isLoading,
           ),
-          _buildPhoneField(context, state, (val) {
-            if (val.country == Country.indonesia) {
-              _selectedOutletCountryCode = CountryCode.ID;
-            }
-            _outletPhoneNumber = val.number;
-            setState(() {});
-          }),
-          _buildCategorySelect(state),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            spacing: 8.h,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(context.l10n.label_outlet_location),
-                  if (_isDraggingMarker)
-                    Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 8.w,
-                        vertical: 4.h,
-                      ),
-                      decoration: BoxDecoration(
-                        color: context.theme.colorScheme.primary.withValues(
-                          alpha: 0.1,
-                        ),
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      child: Row(
-                        spacing: 4.w,
-                        children: [
-                          Icon(
-                            LucideIcons.move,
-                            size: 12.sp,
-                            color: context.theme.colorScheme.primary,
-                          ),
-                          Text(
-                            context.l10n.label_dragging,
-                            style: context.theme.typography.small.copyWith(
-                              color: context.theme.colorScheme.primary,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                ],
-              ),
-              Text(
-                context.l10n.helper_outlet_location,
-                style: context.theme.typography.small,
-              ).muted(),
-              // Search bar with suggestions
-              Stack(
-                children: [
-                  Column(
-                    children: [
-                      Row(
-                        spacing: 8.w,
-                        children: [
-                          Expanded(
-                            child: TextField(
-                              controller: _searchController,
-                              placeholder: Text(
-                                context.l10n.placeholder_search_location,
-                              ),
-                              enabled: !state.user.isLoading,
-                              onChanged: _onSearchChanged,
-                              onSubmitted: (_) =>
-                                  _searchLocation(_searchController.text),
-                              features: [
-                                InputFeature.leading(
-                                  _isSearching
-                                      ? SizedBox(
-                                          width: 16.w,
-                                          height: 16.h,
-                                          child:
-                                              const CircularProgressIndicator(
-                                                strokeWidth: 2,
-                                              ),
-                                        )
-                                      : const Icon(LucideIcons.search),
-                                ),
-                                if (_searchController.text.isNotEmpty)
-                                  InputFeature.trailing(
-                                    IconButton.ghost(
-                                      icon: const Icon(LucideIcons.x, size: 16),
-                                      onPressed: () {
-                                        setState(() {
-                                          _searchController.clear();
-                                          _showSuggestions = false;
-                                          _searchSuggestions.clear();
-                                        });
-                                      },
-                                    ),
-                                  ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      // Suggestions dropdown
-                      if (_showSuggestions && _searchSuggestions.isNotEmpty)
-                        Container(
-                          margin: EdgeInsets.only(top: 4.h),
-                          decoration: BoxDecoration(
-                            color: context.theme.colorScheme.background,
-                            borderRadius: BorderRadius.circular(8),
-                            border: Border.all(
-                              color: context.theme.colorScheme.border,
-                            ),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withValues(alpha: .1),
-                                blurRadius: 8,
-                                offset: const Offset(0, 2),
-                              ),
-                            ],
-                          ),
-                          constraints: BoxConstraints(maxHeight: 200.h),
-                          child: ListView.separated(
-                            shrinkWrap: true,
-                            padding: EdgeInsets.zero,
-                            itemCount: _searchSuggestions.length,
-                            separatorBuilder: (context, index) => Divider(
-                              height: 1,
-                              color: context.theme.colorScheme.border,
-                            ),
-                            itemBuilder: (context, index) {
-                              final suggestion = _searchSuggestions[index];
-                              final displayText = _formatPlacemark(suggestion);
-
-                              return GestureDetector(
-                                onTap: () => _selectSuggestion(suggestion),
-                                child: Padding(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: 12.w,
-                                    vertical: 12.h,
-                                  ),
-                                  child: Row(
-                                    spacing: 8.w,
-                                    children: [
-                                      Icon(
-                                        LucideIcons.mapPin,
-                                        size: 16.sp,
-                                        color: context
-                                            .theme
-                                            .colorScheme
-                                            .mutedForeground,
-                                      ),
-                                      Expanded(
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          spacing: 2.h,
-                                          children: [
-                                            Text(
-                                              displayText,
-                                              style: context
-                                                  .theme
-                                                  .typography
-                                                  .small,
-                                              maxLines: 1,
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
-                                            if (suggestion.country
-                                                case final country?)
-                                              Text(
-                                                country,
-                                                style: context
-                                                    .theme
-                                                    .typography
-                                                    .xSmall
-                                                    .copyWith(
-                                                      color: context
-                                                          .theme
-                                                          .colorScheme
-                                                          .mutedForeground,
-                                                    ),
-                                              ),
-                                          ],
-                                        ),
-                                      ),
-                                      Icon(
-                                        LucideIcons.arrowUpRight,
-                                        size: 14.sp,
-                                        color: context
-                                            .theme
-                                            .colorScheme
-                                            .mutedForeground,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-                    ],
-                  ),
-                ],
-              ),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: SizedBox(
-                  width: double.infinity,
-                  height: 250.h,
-                  child: _isLocationLoaded
-                      ? AbsorbPointer(
-                          absorbing: false,
-                          child: GoogleMap(
-                            initialCameraPosition: CameraPosition(
-                              target: LatLng(
-                                _outletLocation.y.toDouble(),
-                                _outletLocation.x.toDouble(),
-                              ),
-                              zoom: 16,
-                            ),
-                            markers: _markers,
-                            onMapCreated: (controller) {
-                              _mapController = controller;
-                              // Ensure marker is visible after map is created
-                              Future.delayed(
-                                const Duration(milliseconds: 300),
-                                () {
-                                  final controller = _mapController;
-                                  if (controller != null && mounted) {
-                                    controller.animateCamera(
-                                      CameraUpdate.newLatLngZoom(
-                                        LatLng(
-                                          _outletLocation.y.toDouble(),
-                                          _outletLocation.x.toDouble(),
-                                        ),
-                                        16,
-                                      ),
-                                    );
-                                  }
-                                },
-                              );
-                            },
-                            onTap: (position) {
-                              setState(() {
-                                _updateLocationAndMarker(
-                                  Coordinate(
-                                    x: position.longitude,
-                                    y: position.latitude,
-                                  ),
-                                );
-                              });
-                              _getAddressFromLatLng(position);
-                            },
-                            onCameraMoveStarted: () {
-                              if (mounted) {
-                                setState(() => _isDraggingMarker = true);
-                              }
-                            },
-                            onCameraIdle: () {
-                              Future.delayed(
-                                const Duration(milliseconds: 300),
-                                () {
-                                  if (mounted) {
-                                    setState(() => _isDraggingMarker = false);
-                                  }
-                                },
-                              );
-                            },
-                            myLocationEnabled: true,
-                            zoomControlsEnabled: false,
-                            rotateGesturesEnabled: false,
-                            tiltGesturesEnabled: false,
-                            mapToolbarEnabled: false,
-                          ),
-                        )
-                      : const Center(child: CircularProgressIndicator()),
-                ),
-              ),
-              if (_outletAddress.isNotEmpty)
-                Container(
-                  padding: EdgeInsets.all(8.w),
-                  decoration: BoxDecoration(
-                    color: context.theme.colorScheme.secondary.withValues(
-                      alpha: .1,
-                    ),
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: context.theme.colorScheme.border),
-                  ),
-                  child: Row(
-                    spacing: 8.w,
-                    children: [
-                      Icon(
-                        LucideIcons.mapPin,
-                        size: 16.sp,
-                        color: context.theme.colorScheme.primary,
-                      ),
-                      Expanded(
-                        child: Text(
-                          _outletAddress,
-                          style: context.theme.typography.small,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-            ],
+          AuthPhoneField(
+            enabled: !isLoading,
+            onChanged: (countryCode, phoneNumber) {
+              _selectedOutletCountryCode = countryCode;
+              _outletPhoneNumber = phoneNumber;
+              setState(() {});
+            },
           ),
-          _buildImagePicker(
-            context.l10n.government_document,
-            _Step2Docs.governmentDocument,
-            _step2Docs,
-            _step2DocsErrors,
-            context,
-          ),
-        ],
-        actions: _buildNavigationActions(
-          () => _validateStep(1, () => _isStep2Valid),
-        ),
-      ),
-    );
-  }
-
-  Step _buildStep3(BuildContext context, AuthState state) {
-    return Step(
-      title: Text(context.l10n.step_3),
-      contentBuilder: (context) => _buildStepContainer(
-        heroImage: Assets.images.hero.signUpMerchant3.image(height: 200.h),
-        title: context.l10n.merchant_step_3_description,
-        content: [
-          _buildBankProviderSelect(state),
-          _buildTextField(
-            key: _FormKeys.step3BankNumber,
-            label: context.l10n.label_bank_account_number,
-            placeholder: context.l10n.placeholder_bank_account,
-            keyboardType: TextInputType.number,
-            icon: LucideIcons.wallet,
-            validator: const LengthValidator(min: 5),
-            enabled: !state.user.isLoading,
+          _buildCategorySelect(isLoading),
+          _buildLocationPicker(isLoading),
+          AuthImagePicker(
+            label: context.l10n.government_document,
+            error: _step2DocsErrors[_Step2Docs.governmentDocument],
+            onChanged: (file) => setState(
+              () => _step2Docs[_Step2Docs.governmentDocument] = file,
+            ),
           ),
         ],
         actions: [
-          _buildActionButton(
+          AuthActionButton(
             icon: LucideIcons.arrowLeft,
             label: context.l10n.back,
             onPressed: () =>
                 _handleStepNavigation(isNext: false, validator: () => true),
           ),
-          _buildSubmitButton(state),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildStepContainer({
-    required Widget heroImage,
-    required String title,
-    required List<Widget> content,
-    required List<Widget> actions,
-  }) {
-    return StepContainer(
-      actions: actions,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        spacing: 8.h,
-        children: [
-          heroImage,
-          Text(
-            title,
-            textAlign: TextAlign.center,
-            style: context.theme.typography.h3.copyWith(fontSize: 20.sp),
+          AuthActionButton(
+            icon: LucideIcons.arrowRight,
+            label: context.l10n.next,
+            isPrimary: true,
+            isTrailing: true,
+            onPressed: () => _handleStepNavigation(
+              isNext: true,
+              validator: () => _validateStep(1, () => _isStep2Valid),
+            ),
           ),
-          ...content,
         ],
       ),
     );
   }
 
-  Widget _buildActionButton({
-    required IconData icon,
-    required String label,
-    required VoidCallback onPressed,
-    bool isPrimary = false,
-    bool isTrailing = false,
-  }) {
-    final iconWidget = Icon(
-      icon,
-      size: 16.sp,
-      color: isPrimary ? Colors.white : null,
-    );
-    final textWidget = Text(
-      label,
-      style: isPrimary
-          ? context.theme.typography.small.copyWith(color: Colors.white)
-          : null,
-    );
+  Step _buildStep3(BuildContext context, AuthState state) {
+    final isLoading = state.user.isLoading;
 
-    final content = Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      spacing: 4.w,
-      children: isTrailing
-          ? [textWidget, iconWidget]
-          : [iconWidget, textWidget],
-    );
-
-    return Expanded(
-      child: isPrimary
-          ? PrimaryButton(onPressed: onPressed, child: content)
-          : OutlineButton(onPressed: onPressed, child: content),
-    );
-  }
-
-  List<Widget> _buildNavigationActions(bool Function() validator) {
-    return [
-      _buildActionButton(
-        icon: LucideIcons.arrowLeft,
-        label: context.l10n.back,
-        onPressed: () =>
-            _handleStepNavigation(isNext: false, validator: () => true),
-      ),
-      _buildActionButton(
-        icon: LucideIcons.arrowRight,
-        label: context.l10n.next,
-        isPrimary: true,
-        isTrailing: true,
-        onPressed: () =>
-            _handleStepNavigation(isNext: true, validator: validator),
-      ),
-    ];
-  }
-
-  Widget _buildSubmitButton(AuthState state) {
-    return Expanded(
-      child: FormErrorBuilder(
-        builder: (context, errors, child) {
-          final hasErrors = errors.isNotEmpty;
-          final isLoading = state.user.isLoading;
-
-          return Button(
-            style: isLoading || hasErrors
-                ? const ButtonStyle.outline()
-                : const ButtonStyle.primary(),
-            onPressed: (!hasErrors && !isLoading)
-                ? () => context.submitForm()
-                : null,
-            child: isLoading
-                ? const Submiting(simpleText: true)
-                : Text(
-                    context.l10n.sign_up,
-                    style: context.theme.typography.medium.copyWith(
-                      color: Colors.white,
-                    ),
-                  ),
-          );
-        },
-      ),
-    );
-  }
-
-  Widget _buildTextField<T>({
-    required FormKey<String> key,
-    required String label,
-    required String placeholder,
-    required IconData icon,
-    required Validator<T> validator,
-    required bool enabled,
-    TextInputType? keyboardType,
-    bool isPassword = false,
-  }) {
-    return FormField(
-      key: key,
-      label: Text(label),
-      validator: validator,
-      showErrors: const {
-        FormValidationMode.changed,
-        FormValidationMode.submitted,
-      },
-      child: TextField(
-        placeholder: Text(placeholder),
-        enabled: enabled,
-        keyboardType: keyboardType,
-        features: [
-          InputFeature.leading(Icon(icon)),
-          if (isPassword) const InputFeature.passwordToggle(),
+    return Step(
+      title: Text(context.l10n.step_3),
+      contentBuilder: (context) => AuthStepContainer(
+        heroImage: Assets.images.hero.signUpMerchant3.image(height: 200.h),
+        title: context.l10n.merchant_step_3_description,
+        content: [
+          AuthEnumSelect<BankProvider>(
+            label: context.l10n.label_bank_provider,
+            placeholder: context.l10n.hint_bank_provider,
+            value: _selectedBankProvider,
+            items: BankProvider.values,
+            enabled: !isLoading,
+            onChanged: (value) => setState(() => _selectedBankProvider = value),
+          ),
+          AuthTextField(
+            formKey: _FormKeys.step3BankNumber,
+            label: context.l10n.label_bank_account_number,
+            placeholder: context.l10n.placeholder_bank_account,
+            keyboardType: TextInputType.number,
+            icon: LucideIcons.wallet,
+            validator: const LengthValidator(min: 5),
+            enabled: !isLoading,
+          ),
+        ],
+        actions: [
+          AuthActionButton(
+            icon: LucideIcons.arrowLeft,
+            label: context.l10n.back,
+            onPressed: () =>
+                _handleStepNavigation(isNext: false, validator: () => true),
+          ),
+          Expanded(
+            child: AuthSubmitButton(
+              label: context.l10n.sign_up,
+              isLoading: isLoading,
+            ),
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildBankProviderSelect(AuthState state) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      spacing: 4.h,
-      children: [
-        Text(context.l10n.label_bank_provider),
-        _buildEnumSelect<BankProvider>(
-          key: _FormKeys.step3BankProvider,
-          placeholder: context.l10n.hint_bank_provider,
-          value: _selectedBankProvider,
-          items: BankProvider.values,
-          enabled: !state.user.isLoading,
-          onChanged: (value) => setState(() => _selectedBankProvider = value),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildCategorySelect(AuthState state) {
+  Widget _buildCategorySelect(bool isLoading) {
     const categories = MerchantCategory.values;
     final categoryIcons = {
       MerchantCategory.ATK: LucideIcons.pencil,
@@ -1452,7 +1002,7 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
         SizedBox(
           width: double.infinity,
           child: Select<MerchantCategory>(
-            enabled: !state.user.isLoading,
+            enabled: !isLoading,
             itemBuilder: (context, item) => Row(
               spacing: 8.w,
               children: [
@@ -1487,78 +1037,278 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
     );
   }
 
-  Widget _buildEnumSelect<T extends Enum>({
-    required FormKey<T> key,
-    required String placeholder,
-    required T? value,
-    required List<T> items,
-    required bool enabled,
-    required void Function(T?) onChanged,
-  }) {
-    return SizedBox(
-      width: double.infinity,
-      child: Select<T>(
-        enabled: enabled,
-        itemBuilder: (context, item) => Text(item.name),
-        value: value,
-        placeholder: Text(placeholder),
-        onChanged: onChanged,
-        popup: SelectPopup<T>(
-          items: SelectItemList(
-            children: items
-                .map((e) => SelectItemButton(value: e, child: Text(e.name)))
-                .toList(),
-          ),
-        ).call,
-      ),
-    );
-  }
-
-  Widget _buildPhoneField<T extends String>(
-    BuildContext context,
-    AuthState state,
-    void Function(PhoneNumber val) onChanged,
-  ) {
+  Widget _buildLocationPicker(bool isLoading) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: 8.h,
       children: [
-        Text(context.l10n.phone).small(fontWeight: FontWeight.w500),
-        ComponentTheme(
-          data: PhoneInputTheme(
-            flagWidth: 22.w,
-            popupConstraints: BoxConstraints(maxHeight: 0.2.sh),
-          ),
-          child: PhoneInput(
-            initialCountry: Country.indonesia,
-            countries: const [Country.indonesia],
-            onChanged: onChanged,
-          ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(context.l10n.label_outlet_location),
+            if (_isDraggingMarker)
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                decoration: BoxDecoration(
+                  color: context.theme.colorScheme.primary.withValues(
+                    alpha: 0.1,
+                  ),
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: Row(
+                  spacing: 4.w,
+                  children: [
+                    Icon(
+                      LucideIcons.move,
+                      size: 12.sp,
+                      color: context.theme.colorScheme.primary,
+                    ),
+                    Text(
+                      context.l10n.label_dragging,
+                      style: context.theme.typography.small.copyWith(
+                        color: context.theme.colorScheme.primary,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+          ],
         ),
-      ],
-    );
-  }
+        Text(
+          context.l10n.helper_outlet_location,
+          style: context.theme.typography.small,
+        ).muted(),
+        // Search bar with suggestions
+        Stack(
+          children: [
+            Column(
+              children: [
+                Row(
+                  spacing: 8.w,
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: _searchController,
+                        placeholder: Text(
+                          context.l10n.placeholder_search_location,
+                        ),
+                        enabled: !isLoading,
+                        onChanged: _onSearchChanged,
+                        onSubmitted: (_) =>
+                            _searchLocation(_searchController.text),
+                        features: [
+                          InputFeature.leading(
+                            _isSearching
+                                ? SizedBox(
+                                    width: 16.w,
+                                    height: 16.h,
+                                    child: const CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                    ),
+                                  )
+                                : const Icon(LucideIcons.search),
+                          ),
+                          if (_searchController.text.isNotEmpty)
+                            InputFeature.trailing(
+                              IconButton.ghost(
+                                icon: const Icon(LucideIcons.x, size: 16),
+                                onPressed: () {
+                                  setState(() {
+                                    _searchController.clear();
+                                    _showSuggestions = false;
+                                    _searchSuggestions.clear();
+                                  });
+                                },
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                // Suggestions dropdown
+                if (_showSuggestions && _searchSuggestions.isNotEmpty)
+                  Container(
+                    margin: EdgeInsets.only(top: 4.h),
+                    decoration: BoxDecoration(
+                      color: context.theme.colorScheme.background,
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(
+                        color: context.theme.colorScheme.border,
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: .1),
+                          blurRadius: 8,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    constraints: BoxConstraints(maxHeight: 200.h),
+                    child: ListView.separated(
+                      shrinkWrap: true,
+                      padding: EdgeInsets.zero,
+                      itemCount: _searchSuggestions.length,
+                      separatorBuilder: (context, index) => Divider(
+                        height: 1,
+                        color: context.theme.colorScheme.border,
+                      ),
+                      itemBuilder: (context, index) {
+                        final suggestion = _searchSuggestions[index];
+                        final displayText = _formatPlacemark(suggestion);
 
-  Widget _buildImagePicker<T>(
-    String label,
-    T key,
-    Map<T, File?> docs,
-    Map<T, String?> errors,
-    BuildContext context,
-  ) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      spacing: 8.h,
-      children: [
-        Text(label),
-        ImagePickerWidget(
-          size: Size(double.infinity, 64.h),
-          onValueChanged: (file) => setState(() => docs[key] = file),
+                        return GestureDetector(
+                          onTap: () => _selectSuggestion(suggestion),
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 12.w,
+                              vertical: 12.h,
+                            ),
+                            child: Row(
+                              spacing: 8.w,
+                              children: [
+                                Icon(
+                                  LucideIcons.mapPin,
+                                  size: 16.sp,
+                                  color:
+                                      context.theme.colorScheme.mutedForeground,
+                                ),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    spacing: 2.h,
+                                    children: [
+                                      Text(
+                                        displayText,
+                                        style: context.theme.typography.small,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                      if (suggestion.country
+                                          case final country?)
+                                        Text(
+                                          country,
+                                          style: context.theme.typography.xSmall
+                                              .copyWith(
+                                                color: context
+                                                    .theme
+                                                    .colorScheme
+                                                    .mutedForeground,
+                                              ),
+                                        ),
+                                    ],
+                                  ),
+                                ),
+                                Icon(
+                                  LucideIcons.arrowUpRight,
+                                  size: 14.sp,
+                                  color:
+                                      context.theme.colorScheme.mutedForeground,
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+              ],
+            ),
+          ],
         ),
-        if (errors[key] != null)
-          DefaultTextStyle.merge(
-            style: TextStyle(color: context.theme.colorScheme.destructive),
-            child: Text(errors[key]!).xSmall().medium(),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(8),
+          child: SizedBox(
+            width: double.infinity,
+            height: 250.h,
+            child: _isLocationLoaded
+                ? AbsorbPointer(
+                    absorbing: false,
+                    child: GoogleMap(
+                      initialCameraPosition: CameraPosition(
+                        target: LatLng(
+                          _outletLocation.y.toDouble(),
+                          _outletLocation.x.toDouble(),
+                        ),
+                        zoom: 16,
+                      ),
+                      markers: _markers,
+                      onMapCreated: (controller) {
+                        _mapController = controller;
+                        // Ensure marker is visible after map is created
+                        Future.delayed(const Duration(milliseconds: 300), () {
+                          final controller = _mapController;
+                          if (controller != null && mounted) {
+                            controller.animateCamera(
+                              CameraUpdate.newLatLngZoom(
+                                LatLng(
+                                  _outletLocation.y.toDouble(),
+                                  _outletLocation.x.toDouble(),
+                                ),
+                                16,
+                              ),
+                            );
+                          }
+                        });
+                      },
+                      onTap: (position) {
+                        setState(() {
+                          _updateLocationAndMarker(
+                            Coordinate(
+                              x: position.longitude,
+                              y: position.latitude,
+                            ),
+                          );
+                        });
+                        _getAddressFromLatLng(position);
+                      },
+                      onCameraMoveStarted: () {
+                        if (mounted) {
+                          setState(() => _isDraggingMarker = true);
+                        }
+                      },
+                      onCameraIdle: () {
+                        Future.delayed(const Duration(milliseconds: 300), () {
+                          if (mounted) {
+                            setState(() => _isDraggingMarker = false);
+                          }
+                        });
+                      },
+                      myLocationEnabled: true,
+                      zoomControlsEnabled: false,
+                      rotateGesturesEnabled: false,
+                      tiltGesturesEnabled: false,
+                      mapToolbarEnabled: false,
+                    ),
+                  )
+                : const Center(child: CircularProgressIndicator()),
+          ),
+        ),
+        if (_outletAddress.isNotEmpty)
+          Container(
+            padding: EdgeInsets.all(8.w),
+            decoration: BoxDecoration(
+              color: context.theme.colorScheme.secondary.withValues(alpha: .1),
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: context.theme.colorScheme.border),
+            ),
+            child: Row(
+              spacing: 8.w,
+              children: [
+                Icon(
+                  LucideIcons.mapPin,
+                  size: 16.sp,
+                  color: context.theme.colorScheme.primary,
+                ),
+                Expanded(
+                  child: Text(
+                    _outletAddress,
+                    style: context.theme.typography.small,
+                  ),
+                ),
+              ],
+            ),
           ),
       ],
     );

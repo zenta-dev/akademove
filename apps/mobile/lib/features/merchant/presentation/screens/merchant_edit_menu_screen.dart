@@ -36,8 +36,6 @@ enum MenuCategoryEnumEdit {
 }
 
 abstract class _FormKeys {
-  static const FormKey<MenuCategoryEnumEdit> menuCategory =
-      SelectKey<MenuCategoryEnumEdit>('menu-category');
   static const FormKey<String> menuName = TextFieldKey('menu-name');
   static const FormKey<String> menuPrice = TextFieldKey('menu-price');
   static const FormKey<String> menuStock = TextFieldKey('menu-stock');
@@ -61,10 +59,6 @@ class _MerchantEditMenuScreenState extends State<MerchantEditMenuScreen> {
   MerchantMenu? _menu;
 
   final Map<MenuPhotosEdit, File?> _menuPhoto = {
-    for (final doc in MenuPhotosEdit.values) doc: null,
-  };
-
-  final Map<MenuPhotosEdit, String?> _menuPhotosErrors = {
     for (final doc in MenuPhotosEdit.values) doc: null,
   };
 
@@ -284,29 +278,28 @@ class _MerchantEditMenuScreenState extends State<MerchantEditMenuScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         spacing: 16.h,
                         children: [
-                          _buildEnumSelect<MenuCategoryEnumEdit>(
+                          AuthEnumSelect<MenuCategoryEnumEdit>(
                             label: context.l10n.label_menu_category,
-                            key: _FormKeys.menuCategory,
                             placeholder:
                                 context.l10n.placeholder_select_category,
-                            icon: LucideIcons.store,
                             value: _selectedMenuCategory,
                             items: MenuCategoryEnumEdit.values,
                             enabled: !isLoading,
+                            itemBuilder: (context, item) =>
+                                Text(_formatEnumName(item.name)),
                             onChanged: (value) =>
                                 setState(() => _selectedMenuCategory = value),
                           ),
-                          _buildImagePicker(
-                            context.l10n.label_menu_photo,
-                            MenuPhotosEdit.menuPhoto,
-                            _menuPhoto,
-                            _menuPhotosErrors,
-                            context,
-                            isOptional: true,
+                          AuthImagePicker(
+                            label: context.l10n.label_menu_photo,
                             previewUrl: menu.image,
+                            value: _menuPhoto[MenuPhotosEdit.menuPhoto],
+                            onChanged: (file) => setState(
+                              () => _menuPhoto[MenuPhotosEdit.menuPhoto] = file,
+                            ),
                           ),
-                          _buildTextField(
-                            key: _FormKeys.menuName,
+                          AuthTextField(
+                            formKey: _FormKeys.menuName,
                             controller: _nameController,
                             label: context.l10n.label_menu_name,
                             placeholder: context.l10n.placeholder_menu_name,
@@ -315,8 +308,8 @@ class _MerchantEditMenuScreenState extends State<MerchantEditMenuScreen> {
                             enabled: !isLoading,
                             maxLength: 150,
                           ),
-                          _buildTextField(
-                            key: _FormKeys.menuPrice,
+                          AuthTextField(
+                            formKey: _FormKeys.menuPrice,
                             controller: _priceController,
                             label: context.l10n.label_menu_price,
                             placeholder: context.l10n.placeholder_menu_price,
@@ -369,129 +362,6 @@ class _MerchantEditMenuScreenState extends State<MerchantEditMenuScreen> {
           ],
         );
       },
-    );
-  }
-
-  Widget _buildTextField({
-    required FormKey<String> key,
-    required TextEditingController controller,
-    required String label,
-    required String placeholder,
-    required IconData icon,
-    required Validator validator,
-    required bool enabled,
-    TextInputType? keyboardType,
-    int? maxLength,
-    int maxLines = 1,
-  }) {
-    return FormField(
-      key: key,
-      label: Text(
-        label,
-        style: context.typography.p.copyWith(
-          fontSize: 16.sp,
-          fontWeight: FontWeight.w500,
-        ),
-      ),
-      validator: validator,
-      showErrors: const {
-        FormValidationMode.changed,
-        FormValidationMode.submitted,
-      },
-      child: TextField(
-        controller: controller,
-        placeholder: Text(
-          placeholder,
-          style: context.typography.small.copyWith(
-            fontSize: 14.sp,
-            fontWeight: FontWeight.normal,
-          ),
-        ),
-        enabled: enabled,
-        keyboardType: keyboardType,
-        maxLines: maxLines,
-        maxLength: maxLength,
-        features: [InputFeature.leading(Icon(icon))],
-      ),
-    );
-  }
-
-  Widget _buildImagePicker<T>(
-    String label,
-    T key,
-    Map<T, File?> docs,
-    Map<T, String?> errors,
-    BuildContext context, {
-    bool isOptional = false,
-    String? previewUrl,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      spacing: 8.h,
-      children: [
-        Text(
-          label,
-          style: context.theme.typography.small.copyWith(
-            fontSize: 16.sp,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        ImagePickerWidget(
-          size: Size(double.infinity, 64.h),
-          previewUrl: previewUrl,
-          value: docs[key],
-          onValueChanged: (file) => setState(() => docs[key] = file),
-        ),
-        if (!isOptional && errors[key] != null)
-          DefaultTextStyle.merge(
-            style: TextStyle(color: context.theme.colorScheme.destructive),
-            child: Text(errors[key]!).xSmall().medium(),
-          ),
-      ],
-    );
-  }
-
-  Widget _buildEnumSelect<T extends Enum>({
-    required String label,
-    required FormKey key,
-    required String placeholder,
-    required IconData icon,
-    required T? value,
-    required List<T> items,
-    required bool enabled,
-    required void Function(T?) onChanged,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      spacing: 8.h,
-      children: [
-        Text(
-          label,
-          style: context.typography.semiBold.copyWith(fontSize: 14.sp),
-        ),
-        SizedBox(
-          width: double.infinity,
-          child: Select<T>(
-            enabled: enabled,
-            itemBuilder: (context, item) => Text(_formatEnumName(item.name)),
-            value: value,
-            placeholder: Text(placeholder),
-            onChanged: onChanged,
-            popup: SelectPopup<T>(
-              items: SelectItemList(
-                children: items
-                    .map(
-                      (e) => SelectItemButton(
-                        value: e,
-                        child: Text(_formatEnumName(e.name)),
-                      ),
-                    )
-                    .toList(),
-              ),
-            ).call,
-          ),
-        ),
-      ],
     );
   }
 

@@ -15,6 +15,9 @@ class AuthImagePicker extends StatelessWidget {
     super.key,
     this.error,
     this.height,
+    this.labelStyle,
+    this.previewUrl,
+    this.value,
   });
 
   /// The label displayed above the picker.
@@ -29,15 +32,26 @@ class AuthImagePicker extends StatelessWidget {
   /// Optional height for the picker.
   final double? height;
 
+  /// Optional custom style for the label.
+  final TextStyle? labelStyle;
+
+  /// Optional URL to preview an existing image.
+  final String? previewUrl;
+
+  /// Optional current file value.
+  final File? value;
+
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: 8.h,
       children: [
-        Text(label),
+        Text(label, style: labelStyle),
         ImagePickerWidget(
           size: Size(double.infinity, height ?? 64.h),
+          previewUrl: previewUrl,
+          value: value,
           onValueChanged: onChanged,
         ),
         if (error != null)

@@ -31,6 +31,7 @@ class SvgTiledBackground extends StatelessWidget {
                 height: tileSize,
                 fit: BoxFit.cover,
                 colorFilter: colorFilter,
+                
               ),
             ),
       ],

@@ -19,6 +19,11 @@ class AuthTextField<T> extends StatelessWidget {
     this.textInputAction,
     this.focusNode,
     this.onSubmitted,
+    this.labelStyle,
+    this.placeholderStyle,
+    this.controller,
+    this.maxLength,
+    this.maxLines = 1,
   });
 
   /// The form key for this field.
@@ -54,23 +59,41 @@ class AuthTextField<T> extends StatelessWidget {
   /// Callback when the field is submitted.
   final ValueChanged<String>? onSubmitted;
 
+  /// Optional custom style for the label.
+  final TextStyle? labelStyle;
+
+  /// Optional custom style for the placeholder.
+  final TextStyle? placeholderStyle;
+
+  /// Optional text editing controller.
+  final TextEditingController? controller;
+
+  /// Maximum length of text input.
+  final int? maxLength;
+
+  /// Maximum number of lines for the text field.
+  final int maxLines;
+
   @override
   Widget build(BuildContext context) {
     return FormField(
       key: formKey,
-      label: Text(label),
+      label: Text(label, style: labelStyle),
       validator: validator,
       showErrors: const {
         FormValidationMode.changed,
         FormValidationMode.submitted,
       },
       child: TextField(
-        placeholder: Text(placeholder),
+        controller: controller,
+        placeholder: Text(placeholder, style: placeholderStyle),
         enabled: enabled,
         keyboardType: keyboardType,
         textInputAction: textInputAction,
         focusNode: focusNode,
         onSubmitted: onSubmitted,
+        maxLength: maxLength,
+        maxLines: maxLines,
         features: [
           InputFeature.leading(Icon(icon)),
           if (isPassword) const InputFeature.passwordToggle(),

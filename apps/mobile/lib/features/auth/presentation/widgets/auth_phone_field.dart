@@ -9,15 +9,17 @@ import "package:shadcn_flutter/shadcn_flutter.dart";
 /// configurations used across auth screens.
 class AuthPhoneField extends StatelessWidget {
   const AuthPhoneField({
-    required this.onChanged,
+    this.onChanged,
     super.key,
     this.enabled = true,
     this.label,
+    this.labelStyle,
   });
 
   /// Callback when the phone number changes.
   /// Returns the country code and phone number.
-  final void Function(CountryCode countryCode, String? phoneNumber) onChanged;
+  /// If null, the field is read-only.
+  final void Function(CountryCode countryCode, String? phoneNumber)? onChanged;
 
   /// Whether the field is enabled.
   final bool enabled;
@@ -25,13 +27,20 @@ class AuthPhoneField extends StatelessWidget {
   /// Optional label override.
   final String? label;
 
+  /// Optional custom style for the label.
+  final TextStyle? labelStyle;
+
   @override
   Widget build(BuildContext context) {
+    final labelWidget = labelStyle != null
+        ? Text(label ?? context.l10n.phone, style: labelStyle)
+        : Text(label ?? context.l10n.phone).small(fontWeight: FontWeight.w500);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: 8.h,
       children: [
-        Text(label ?? context.l10n.phone).small(fontWeight: FontWeight.w500),
+        labelWidget,
         ComponentTheme(
           data: PhoneInputTheme(
             flagWidth: 22.w,
@@ -41,13 +50,15 @@ class AuthPhoneField extends StatelessWidget {
             initialCountry: Country.indonesia,
             countries: const [Country.indonesia],
             onChanged: (value) {
+              final callback = onChanged;
+              if (callback == null) return;
               CountryCode countryCode = CountryCode.ID;
               switch (value.country) {
                 case Country.indonesia:
                   countryCode = CountryCode.ID;
                 default:
               }
-              onChanged(countryCode, value.number);
+              callback(countryCode, value.number);
             },
           ),
         ),

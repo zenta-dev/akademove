@@ -11,31 +11,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 
-abstract class _FormKeys {
-  static const FormKey<String> step1OutletPhotoProfile = TextFieldKey(
-    'step-1-outlet-photo-profile',
-  );
-  static const FormKey<String> step1OutletCategory = TextFieldKey(
-    'step-1-outlet-category',
-  );
-  static const FormKey<String> step3MenuCategory = TextFieldKey(
-    'step-3-menu-category',
-  );
-  static const FormKey<String> step3MenuName = TextFieldKey('step-3-menu-name');
-  static const FormKey<String> step3MenuDescription = TextFieldKey(
-    'step-3-menu-description',
-  );
-  static const FormKey<String> step3MenuPrice = TextFieldKey(
-    'step-3-menu-price',
-  );
-  static const FormKey<String> step3MenuStock = TextFieldKey(
-    'step-3-menu-stock',
-  );
-}
-
 enum _Step1Docs { outletPhotoProfile }
-
-enum _Step3Docs { menuPhoto }
 
 class DailySchedule {
   DailySchedule({
@@ -105,13 +81,10 @@ class _MerchantSetUpOutletScreenState extends State<MerchantSetUpOutletScreen> {
   late final StepperController _stepController;
 
   MerchantCategory? _selectedOutletCategory;
-  String? _selectedMenuCategory;
 
   // Image picker state
   final Map<_Step1Docs, File?> _step1Docs = {};
   final Map<_Step1Docs, String?> _step1DocsErrors = {};
-  final Map<_Step3Docs, File?> _step3Docs = {};
-  final Map<_Step3Docs, String?> _step3DocsErrors = {};
 
   List<DailySchedule> _weeklySchedule = [];
 
@@ -185,15 +158,7 @@ class _MerchantSetUpOutletScreenState extends State<MerchantSetUpOutletScreen> {
     return isValid;
   }
 
-  bool _validateFormFields<T>(List<FormKey<T>> keys) {
-    return keys.every((key) => _formController.errors[key] == null);
-  }
-
   bool get _isStep1Valid {
-    // Validate form fields
-    final formValid =
-        _formController.errors[_FormKeys.step1OutletPhotoProfile] == null;
-
     // Validate outlet photo
     final hasOutletPhoto = _step1Docs[_Step1Docs.outletPhotoProfile] != null;
     if (!hasOutletPhoto) {
@@ -210,7 +175,7 @@ class _MerchantSetUpOutletScreenState extends State<MerchantSetUpOutletScreen> {
     // Validate outlet category
     final hasOutletCategory = _selectedOutletCategory != null;
 
-    return formValid && hasOutletPhoto && hasOutletCategory;
+    return hasOutletPhoto && hasOutletCategory;
   }
 
   bool get _isStep2Valid {
@@ -408,22 +373,30 @@ class _MerchantSetUpOutletScreenState extends State<MerchantSetUpOutletScreen> {
       title: Text(context.l10n.step_1),
       contentBuilder: (context) => _buildStepContainer(
         content: [
-          _buildImagePicker(
-            context.l10n.label_outlet_photo_profile,
-            _Step1Docs.outletPhotoProfile,
-            _step1Docs,
-            _step1DocsErrors,
+          AuthImagePicker(
+            label: context.l10n.label_outlet_photo_profile,
+            height: 200.h,
+            error: _step1DocsErrors[_Step1Docs.outletPhotoProfile],
+            onChanged: (file) {
+              setState(() {
+                _step1Docs[_Step1Docs.outletPhotoProfile] = file;
+                _step1DocsErrors[_Step1Docs.outletPhotoProfile] = null;
+              });
+            },
           ),
-          _buildMerchantCategorySelect(
+          AuthEnumSelect<MerchantCategory>(
             label: context.l10n.label_outlet_category,
             placeholder: context.l10n.placeholder_outlet_category,
             value: _selectedOutletCategory,
+            items: MerchantCategory.values,
+            itemBuilder: (context, item) =>
+                Text(_getMerchantCategoryLabel(item)),
             onChanged: (value) =>
                 setState(() => _selectedOutletCategory = value),
           ),
         ],
         actions: [
-          _buildActionButton(
+          AuthActionButton(
             icon: LucideIcons.arrowRight,
             label: context.l10n.button_next,
             isPrimary: true,
@@ -455,13 +428,13 @@ class _MerchantSetUpOutletScreenState extends State<MerchantSetUpOutletScreen> {
           ),
         ],
         actions: [
-          _buildActionButton(
+          AuthActionButton(
             icon: LucideIcons.arrowLeft,
             label: context.l10n.button_back,
             onPressed: () =>
                 _handleStepNavigation(isNext: false, validator: () => true),
           ),
-          _buildActionButton(
+          AuthActionButton(
             icon: LucideIcons.check,
             label: context.l10n.button_save,
             isPrimary: true,
@@ -618,41 +591,6 @@ class _MerchantSetUpOutletScreenState extends State<MerchantSetUpOutletScreen> {
     );
   }
 
-  Widget _buildActionButton({
-    required IconData icon,
-    required String label,
-    required VoidCallback onPressed,
-    bool isPrimary = false,
-    bool isTrailing = false,
-  }) {
-    final iconWidget = Icon(
-      icon,
-      size: 16.sp,
-      color: isPrimary ? Colors.white : null,
-    );
-    final textWidget = Text(
-      label,
-      style: context.typography.p.copyWith(
-        fontSize: 16.sp,
-        fontWeight: FontWeight.w500,
-      ),
-    );
-
-    final content = Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      spacing: 4.w,
-      children: isTrailing
-          ? [textWidget, iconWidget]
-          : [iconWidget, textWidget],
-    );
-
-    return Expanded(
-      child: isPrimary
-          ? PrimaryButton(onPressed: onPressed, child: content)
-          : OutlineButton(onPressed: onPressed, child: content),
-    );
-  }
-
   void _handleStepNavigation({
     required bool isNext,
     required bool Function() validator,
@@ -673,71 +611,6 @@ class _MerchantSetUpOutletScreenState extends State<MerchantSetUpOutletScreen> {
     }
   }
 
-  Widget _buildTextField({
-    required FormKey<String> key,
-    required String label,
-    required String placeholder,
-    required IconData icon,
-    required Validator<String> validator,
-    bool enabled = true,
-    TextInputType? keyboardType,
-  }) {
-    return FormField(
-      key: key,
-      label: Text(label),
-      validator: validator,
-      showErrors: const {
-        FormValidationMode.changed,
-        FormValidationMode.submitted,
-      },
-      child: TextField(
-        placeholder: Text(placeholder),
-        enabled: enabled,
-        keyboardType: keyboardType,
-      ),
-    );
-  }
-
-  Widget _buildMerchantCategorySelect({
-    required String label,
-    required String placeholder,
-    required MerchantCategory? value,
-    required void Function(MerchantCategory?) onChanged,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      spacing: 8.h,
-      children: [
-        Text(
-          label,
-          style: context.typography.semiBold.copyWith(fontSize: 14.sp),
-        ),
-        SizedBox(
-          width: double.infinity,
-          child: Select<MerchantCategory>(
-            itemBuilder: (context, item) =>
-                Text(_getMerchantCategoryLabel(item)),
-            value: value,
-            placeholder: Text(placeholder),
-            onChanged: onChanged,
-            popup: SelectPopup<MerchantCategory>(
-              items: SelectItemList(
-                children: MerchantCategory.values
-                    .map(
-                      (e) => SelectItemButton(
-                        value: e,
-                        child: Text(_getMerchantCategoryLabel(e)),
-                      ),
-                    )
-                    .toList(),
-              ),
-            ).call,
-          ),
-        ),
-      ],
-    );
-  }
-
   String _getMerchantCategoryLabel(MerchantCategory category) {
     switch (category) {
       case MerchantCategory.ATK:
@@ -747,69 +620,5 @@ class _MerchantSetUpOutletScreenState extends State<MerchantSetUpOutletScreen> {
       case MerchantCategory.food:
         return context.l10n.merchant_category_food;
     }
-  }
-
-  Widget _buildMenuCategoryInput({
-    required String label,
-    required String placeholder,
-    required String? value,
-    required void Function(String?) onChanged,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      spacing: 8.h,
-      children: [
-        Text(
-          label,
-          style: context.typography.semiBold.copyWith(fontSize: 14.sp),
-        ),
-        TextField(
-          initialValue: value,
-          placeholder: Text(placeholder),
-          onChanged: onChanged,
-        ),
-        Text(
-          context.l10n.hint_menu_category,
-          style: context.typography.small.copyWith(
-            color: context.theme.colorScheme.mutedForeground,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildImagePicker<T>(
-    String label,
-    T key,
-    Map<T, File?> docs,
-    Map<T, String?> errors,
-  ) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      spacing: 8.h,
-      children: [
-        Text(
-          label,
-          style: context.typography.semiBold.copyWith(fontSize: 14.sp),
-        ),
-        ImagePickerWidget(
-          size: Size(double.infinity, 200.h),
-          onValueChanged: (file) {
-            setState(() {
-              docs[key] = file;
-              errors[key] = null; // Clear error when image is picked
-            });
-          },
-        ),
-        if (errors[key] != null)
-          DefaultTextStyle.merge(
-            style: TextStyle(
-              color: context.theme.colorScheme.destructive,
-              fontSize: 12.sp,
-            ),
-            child: Text(errors[key]!),
-          ),
-      ],
-    );
   }
 }
