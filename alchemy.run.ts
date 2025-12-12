@@ -199,19 +199,19 @@ export const [server, web] = await Promise.all([
 	}),
 ]);
 
-if (isDev) {
-	await Tunnel("server-app", {
-		name: "server-app-tunnel",
-		configSrc: "cloudflare",
-		ingress: [
-			{
-				hostname: "dev-server.akademove.com",
-				service: "http://localhost:3000",
-			},
-			{ service: "http_status:404" },
-		],
-	});
-}
+// if (isDev) {
+// 	await Tunnel("server-app", {
+// 		name: "server-app-tunnel",
+// 		configSrc: "cloudflare",
+// 		ingress: [
+// 			{
+// 				hostname: "dev-server.akademove.com",
+// 				service: "http://localhost:3000",
+// 			},
+// 			{ service: "http_status:404" },
+// 		],
+// 	});
+// }
 
 export type ServerEnv = typeof server.Env;
 
