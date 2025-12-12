@@ -120,7 +120,7 @@ export class DriverStatsService {
 				COALESCE(SUM(CASE WHEN status = 'COMPLETED' THEN driver_earning END), 0)::text AS total_earnings,
 				COALESCE(SUM(CASE WHEN status = 'COMPLETED' THEN platform_commission END), 0)::text AS total_commission,
 				COUNT(CASE WHEN status = 'COMPLETED' THEN 1 END)::int AS completed_orders,
-				COUNT(CASE WHEN status LIKE 'CANCELLED%' THEN 1 END)::int AS cancelled_orders,
+				COUNT(CASE WHEN status::text LIKE 'CANCELLED%' THEN 1 END)::int AS cancelled_orders,
 				COALESCE(AVG(CASE WHEN driver_rating IS NOT NULL THEN driver_rating END), 0)::text AS average_rating
 			FROM am_orders
 			WHERE driver_id = ${driverId}
