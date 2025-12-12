@@ -126,7 +126,7 @@ class _UserMerchantListScreenState extends State<UserMerchantListScreen> {
           merchant: merchant,
           onTap: () {
             context.pushNamed(
-              Routes.userMerchantDetail.name,
+              Routes.userMartDetail.name,
               pathParameters: {'merchantId': merchant.id},
               extra: {'merchant': merchant},
             );

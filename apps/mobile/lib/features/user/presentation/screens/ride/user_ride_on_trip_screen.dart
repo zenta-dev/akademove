@@ -220,35 +220,6 @@ class _UserRideOnTripScreenState extends State<UserRideOnTripScreen> {
     }
   }
 
-  /// Check if the order state has changed in a way that requires UI update
-  bool _shouldRebuildForOrder(UserOrderState previous, UserOrderState current) {
-    final prevOrder = previous.currentOrder.value;
-    final currOrder = current.currentOrder.value;
-    final prevDriver = previous.currentAssignedDriver.value;
-    final currDriver = current.currentAssignedDriver.value;
-    final prevPayment = previous.currentPayment.value;
-    final currPayment = current.currentPayment.value;
-
-    // Check order changes
-    if (prevOrder?.id != currOrder?.id) return true;
-    if (prevOrder?.status != currOrder?.status) return true;
-
-    // Check driver changes
-    if (prevDriver?.userId != currDriver?.userId) return true;
-    if (prevDriver?.currentLocation?.x != currDriver?.currentLocation?.x) {
-      return true;
-    }
-    if (prevDriver?.currentLocation?.y != currDriver?.currentLocation?.y) {
-      return true;
-    }
-
-    // Check payment changes
-    if (prevPayment?.id != currPayment?.id) return true;
-    if (prevPayment?.status != currPayment?.status) return true;
-
-    return false;
-  }
-
   /// Handle order status changes (navigation, toasts, etc.)
   Future<void> _handleOrderStatusChange(
     BuildContext context,
@@ -277,7 +248,6 @@ class _UserRideOnTripScreenState extends State<UserRideOnTripScreen> {
             context.l10n.text_trip_completed,
             type: ToastType.success,
           );
-          // context.goNamed(Routes.userHome.name);
           context.popUntilRoot();
         }
       } else {
@@ -285,7 +255,6 @@ class _UserRideOnTripScreenState extends State<UserRideOnTripScreen> {
           context.l10n.text_trip_completed,
           type: ToastType.success,
         );
-        // context.goNamed(Routes.userHome.name);
         context.popUntilRoot();
       }
     } else if (_isOrderCancelled(currentOrder?.status) &&
@@ -364,7 +333,6 @@ class _UserRideOnTripScreenState extends State<UserRideOnTripScreen> {
           context.l10n.order_cancelled_successfully,
           type: ToastType.success,
         );
-        // context.goNamed(Routes.userHome.name);
         context.popUntilRoot();
       } else if (context.mounted) {
         context.showMyToast(
@@ -382,60 +350,87 @@ class _UserRideOnTripScreenState extends State<UserRideOnTripScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       headers: [DefaultAppBar(title: context.l10n.text_on_trip)],
-      child: BlocConsumer<UserOrderCubit, UserOrderState>(
-        listenWhen: _shouldRebuildForOrder,
-        buildWhen: _shouldRebuildForOrder,
-        listener: (context, state) async {
-          // Update map data when order/driver state changes
-          await _updateMapWithOrderData(state);
-          // Handle navigation and toasts
-          if (context.mounted) {
-            await _handleOrderStatusChange(context, state);
-          }
-        },
-        builder: (context, orderState) {
-          return Column(
-            children: [
-              // Map Section
-              _MapSection(
-                mapController: _mapController,
-                onMapCreated: (controller) {
-                  _mapController = controller;
-                  setState(() {});
-                  _updateMapWithOrderData(orderState);
-                },
-                orderState: orderState,
-              ),
-              // Content Section
-              Expanded(
-                child: SingleChildScrollView(
-                  padding: EdgeInsets.all(16.w),
-                  child: _ContentSection(
-                    state: orderState,
-                    onCancelOrder: _showCancelDialog,
-                    canCancelOrder: _canCancelOrder,
-                  ),
+      child: MultiBlocListener(
+        listeners: [
+          // Listener for map updates (includes driver location changes)
+          BlocListener<UserOrderCubit, UserOrderState>(
+            listenWhen: (previous, current) {
+              final prevDriver = previous.currentAssignedDriver.value;
+              final currDriver = current.currentAssignedDriver.value;
+              final prevOrder = previous.currentOrder.value;
+              final currOrder = current.currentOrder.value;
+
+              // Listen for order changes
+              if (prevOrder?.id != currOrder?.id) return true;
+
+              // Listen for driver assignment changes
+              if (prevDriver?.userId != currDriver?.userId) return true;
+
+              // Listen for driver location changes (for map updates)
+              if (prevDriver?.currentLocation?.x !=
+                  currDriver?.currentLocation?.x) {
+                return true;
+              }
+              if (prevDriver?.currentLocation?.y !=
+                  currDriver?.currentLocation?.y) {
+                return true;
+              }
+
+              return false;
+            },
+            listener: (context, state) async {
+              await _updateMapWithOrderData(state);
+            },
+          ),
+          // Listener for navigation/toasts (only on status changes)
+          BlocListener<UserOrderCubit, UserOrderState>(
+            listenWhen: (previous, current) {
+              final prevOrder = previous.currentOrder.value;
+              final currOrder = current.currentOrder.value;
+              return prevOrder?.status != currOrder?.status;
+            },
+            listener: (context, state) async {
+              if (context.mounted) {
+                await _handleOrderStatusChange(context, state);
+              }
+            },
+          ),
+        ],
+        child: Column(
+          children: [
+            // Map Section - rebuilds only when map data changes
+            _MapSection(
+              mapController: _mapController,
+              onMapCreated: (controller) {
+                _mapController = controller;
+                setState(() {});
+                final state = context.read<UserOrderCubit>().state;
+                _updateMapWithOrderData(state);
+              },
+            ),
+            // Content Section - uses selectors to rebuild only what's needed
+            Expanded(
+              child: SingleChildScrollView(
+                padding: EdgeInsets.all(16.w),
+                child: _ContentSection(
+                  onCancelOrder: _showCancelDialog,
+                  canCancelOrder: _canCancelOrder,
                 ),
               ),
-            ],
-          );
-        },
+            ),
+          ],
+        ),
       ),
     );
   }
 }
 
-/// Map section widget
+/// Map section widget - uses BlocSelector to only rebuild on order status changes
 class _MapSection extends StatelessWidget {
-  const _MapSection({
-    required this.mapController,
-    required this.onMapCreated,
-    required this.orderState,
-  });
+  const _MapSection({required this.mapController, required this.onMapCreated});
 
   final GoogleMapController? mapController;
   final void Function(GoogleMapController) onMapCreated;
-  final UserOrderState orderState;
 
   @override
   Widget build(BuildContext context) {
@@ -465,100 +460,188 @@ class _MapSection extends StatelessWidget {
               ).asSkeleton(),
             ),
           // Emergency button - only show during IN_TRIP status
-          _EmergencyButtonOverlay(orderState: orderState),
+          BlocSelector<UserOrderCubit, UserOrderState, OrderStatus?>(
+            selector: (state) => state.currentOrder.value?.status,
+            builder: (context, status) {
+              if (status != OrderStatus.IN_TRIP) {
+                return const SizedBox.shrink();
+              }
+              return BlocSelector<
+                UserOrderCubit,
+                UserOrderState,
+                EmergencyLocation
+              >(
+                selector: (state) {
+                  final order = state.currentOrder.value;
+                  final driverLocation =
+                      state.currentAssignedDriver.value?.currentLocation;
+                  if (driverLocation != null) {
+                    return EmergencyLocation(
+                      latitude: driverLocation.y.toDouble(),
+                      longitude: driverLocation.x.toDouble(),
+                    );
+                  }
+                  return EmergencyLocation(
+                    latitude: order?.pickupLocation.y.toDouble() ?? 0,
+                    longitude: order?.pickupLocation.x.toDouble() ?? 0,
+                  );
+                },
+                builder: (context, emergencyLocation) {
+                  final order = context
+                      .read<UserOrderCubit>()
+                      .state
+                      .currentOrder
+                      .value;
+                  if (order == null) return const SizedBox.shrink();
+                  return Positioned(
+                    bottom: 16,
+                    right: 16,
+                    child: EmergencyButton(
+                      orderId: order.id,
+                      currentLocation: emergencyLocation,
+                    ),
+                  );
+                },
+              );
+            },
+          ),
         ],
       ),
     );
   }
 }
 
-/// Emergency button overlay
-class _EmergencyButtonOverlay extends StatelessWidget {
-  const _EmergencyButtonOverlay({required this.orderState});
-
-  final UserOrderState orderState;
-
-  @override
-  Widget build(BuildContext context) {
-    final order = orderState.currentOrder.value;
-    if (order == null || order.status != OrderStatus.IN_TRIP) {
-      return const SizedBox.shrink();
-    }
-
-    // Get current location from driver or order
-    final driverLocation =
-        orderState.currentAssignedDriver.value?.currentLocation;
-    final emergencyLocation = driverLocation != null
-        ? EmergencyLocation(
-            latitude: driverLocation.y.toDouble(),
-            longitude: driverLocation.x.toDouble(),
-          )
-        : EmergencyLocation(
-            latitude: order.pickupLocation.y.toDouble(),
-            longitude: order.pickupLocation.x.toDouble(),
-          );
-
-    return Positioned(
-      bottom: 16,
-      right: 16,
-      child: EmergencyButton(
-        orderId: order.id,
-        currentLocation: emergencyLocation,
-      ),
-    );
-  }
-}
-
-/// Content section widget
+/// Content section widget - uses BlocSelector for granular rebuilds
 class _ContentSection extends StatelessWidget {
   const _ContentSection({
-    required this.state,
     required this.onCancelOrder,
     required this.canCancelOrder,
   });
 
-  final UserOrderState state;
   final Future<void> Function(BuildContext, Order) onCancelOrder;
   final bool Function(OrderStatus?) canCancelOrder;
 
   @override
   Widget build(BuildContext context) {
-    final order = state.currentOrder.value;
-    final orderStatus = order?.status;
-    final isSearching =
-        orderStatus == OrderStatus.MATCHING ||
-        orderStatus == OrderStatus.REQUESTED;
-
     return Column(
       spacing: 16.h,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Status progress indicator
-        _RideStatusIndicator(status: orderStatus),
-        // Driver section title
-        DefaultText(
-          isSearching
-              ? context.l10n.text_finding_driver_title
-              : context.l10n.text_your_driver_title,
-          fontWeight: FontWeight.w600,
-          fontSize: 16.sp,
+        // Status progress indicator - rebuilds only on status change
+        BlocSelector<UserOrderCubit, UserOrderState, OrderStatus?>(
+          selector: (state) => state.currentOrder.value?.status,
+          builder: (context, status) => _RideStatusIndicator(status: status),
         ),
-        // Driver info card
-        _DriverInfoCard(
-          driver: state.currentAssignedDriver.value,
-          orderStatus: orderStatus,
+        // Driver section title - rebuilds only on status change
+        BlocSelector<UserOrderCubit, UserOrderState, OrderStatus?>(
+          selector: (state) => state.currentOrder.value?.status,
+          builder: (context, status) {
+            final isSearching =
+                status == OrderStatus.MATCHING ||
+                status == OrderStatus.REQUESTED;
+            return DefaultText(
+              isSearching
+                  ? context.l10n.text_finding_driver_title
+                  : context.l10n.text_your_driver_title,
+              fontWeight: FontWeight.w600,
+              fontSize: 16.sp,
+            );
+          },
         ),
-        // Order details
-        _OrderDetailsCard(state: state),
-        // Cancel button
-        _CancelButton(
-          order: order,
-          canCancel: canCancelOrder(orderStatus),
-          onCancel: onCancelOrder,
+        // Driver info card - rebuilds on driver info or status change (NOT location)
+        BlocSelector<UserOrderCubit, UserOrderState, _DriverInfoData>(
+          selector: (state) => _DriverInfoData(
+            driver: state.currentAssignedDriver.value,
+            orderStatus: state.currentOrder.value?.status,
+          ),
+          builder: (context, data) => _DriverInfoCard(
+            driver: data.driver,
+            orderStatus: data.orderStatus,
+          ),
+        ),
+        // Order details - rebuilds on order/payment change
+        BlocSelector<UserOrderCubit, UserOrderState, _OrderDetailsData>(
+          selector: (state) => _OrderDetailsData(
+            order: state.currentOrder.value,
+            payment: state.currentPayment.value,
+            estimateOrder: state.estimateOrder.value,
+          ),
+          builder: (context, data) => _OrderDetailsCard(
+            order: data.order,
+            payment: data.payment,
+            estimateOrder: data.estimateOrder,
+          ),
+        ),
+        // Cancel button - rebuilds on order/status change
+        BlocSelector<UserOrderCubit, UserOrderState, Order?>(
+          selector: (state) => state.currentOrder.value,
+          builder: (context, order) => _CancelButton(
+            order: order,
+            canCancel: canCancelOrder(order?.status),
+            onCancel: onCancelOrder,
+          ),
         ),
       ],
     );
   }
+}
+
+/// Data class for driver info selector (excludes location)
+class _DriverInfoData {
+  const _DriverInfoData({this.driver, this.orderStatus});
+  final Driver? driver;
+  final OrderStatus? orderStatus;
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is _DriverInfoData &&
+        other.driver?.userId == driver?.userId &&
+        other.driver?.user?.name == driver?.user?.name &&
+        other.driver?.licensePlate == driver?.licensePlate &&
+        other.driver?.rating == driver?.rating &&
+        other.orderStatus == orderStatus;
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    driver?.userId,
+    driver?.user?.name,
+    driver?.licensePlate,
+    driver?.rating,
+    orderStatus,
+  );
+}
+
+/// Data class for order details selector
+class _OrderDetailsData {
+  const _OrderDetailsData({this.order, this.payment, this.estimateOrder});
+  final Order? order;
+  final Payment? payment;
+  final EstimateOrderResult? estimateOrder;
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is _OrderDetailsData &&
+        other.order?.id == order?.id &&
+        other.order?.status == order?.status &&
+        other.order?.totalPrice == order?.totalPrice &&
+        other.order?.distanceKm == order?.distanceKm &&
+        other.payment?.id == payment?.id &&
+        other.payment?.method == payment?.method &&
+        other.estimateOrder?.pickup.name == estimateOrder?.pickup.name &&
+        other.estimateOrder?.dropoff.name == estimateOrder?.dropoff.name;
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    order?.id,
+    order?.status,
+    order?.totalPrice,
+    payment?.id,
+    estimateOrder?.pickup.name,
+  );
 }
 
 /// Ride status indicator widget
@@ -859,29 +942,31 @@ class _DriverInfoContent extends StatelessWidget {
 
 /// Order details card widget
 class _OrderDetailsCard extends StatelessWidget {
-  const _OrderDetailsCard({required this.state});
+  const _OrderDetailsCard({
+    required this.order,
+    required this.payment,
+    required this.estimateOrder,
+  });
 
-  final UserOrderState state;
+  final Order? order;
+  final Payment? payment;
+  final EstimateOrderResult? estimateOrder;
 
   @override
   Widget build(BuildContext context) {
-    final order = state.currentOrder.value;
-    final payment = state.currentPayment.value;
-    final estimateOrder = state.estimateOrder.value;
-
     // Use estimateOrder locations if available (has proper names)
     final pickupName =
         estimateOrder?.pickup.vicinity ??
         estimateOrder?.pickup.name ??
         (order != null
-            ? "${order.pickupLocation.y.toStringAsFixed(4)}, ${order.pickupLocation.x.toStringAsFixed(4)}"
+            ? "${order!.pickupLocation.y.toStringAsFixed(4)}, ${order!.pickupLocation.x.toStringAsFixed(4)}"
             : "-");
 
     final dropoffName =
         estimateOrder?.dropoff.vicinity ??
         estimateOrder?.dropoff.name ??
         (order != null
-            ? "${order.dropoffLocation.y.toStringAsFixed(4)}, ${order.dropoffLocation.x.toStringAsFixed(4)}"
+            ? "${order!.dropoffLocation.y.toStringAsFixed(4)}, ${order!.dropoffLocation.x.toStringAsFixed(4)}"
             : "-");
 
     return Column(
@@ -912,7 +997,7 @@ class _OrderDetailsCard extends StatelessWidget {
               const Divider(),
               _DetailCell(
                 title: context.l10n.label_distance,
-                value: order != null ? "${order.distanceKm} Km" : "-",
+                value: order != null ? "${order!.distanceKm} Km" : "-",
               ),
               const Divider(),
               _DetailCell(
@@ -923,7 +1008,7 @@ class _OrderDetailsCard extends StatelessWidget {
               _DetailCell(
                 title: context.l10n.label_total_price,
                 value: order != null
-                    ? context.formatCurrency(order.totalPrice)
+                    ? context.formatCurrency(order!.totalPrice)
                     : "-",
               ),
               const Divider(),

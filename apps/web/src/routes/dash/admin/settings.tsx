@@ -339,7 +339,7 @@ function RouteComponent() {
 	return (
 		<>
 			<div>
-				<h2 className="text-xl font-medium">Business Settings</h2>
+				<h2 className="font-medium text-xl">Business Settings</h2>
 				<p className="text-muted-foreground">
 					Configure platform-wide business rules and parameters
 				</p>
@@ -498,7 +498,7 @@ function BusinessSettingsForm() {
 															<FormLabel className="flex items-center gap-2">
 																{def.label}
 																{def.unit && (
-																	<span className="text-xs text-muted-foreground">
+																	<span className="text-muted-foreground text-xs">
 																		({def.unit})
 																	</span>
 																)}
@@ -550,7 +550,7 @@ function BusinessSettingsForm() {
 																			name={field.name}
 																			className="pr-8"
 																		/>
-																		<span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground">
+																		<span className="-translate-y-1/2 pointer-events-none absolute top-1/2 right-3 text-muted-foreground">
 																			%
 																		</span>
 																	</div>
@@ -634,7 +634,7 @@ function MatchingPreview({ form }: { form: any }) {
 
 	return (
 		<div className="mt-6 rounded-lg bg-muted/50 p-4">
-			<h4 className="mb-3 text-sm font-medium">Matching Algorithm Preview</h4>
+			<h4 className="mb-3 font-medium text-sm">Matching Algorithm Preview</h4>
 			<div className="space-y-2 text-sm">
 				<div className="flex items-center justify-between border-b pb-2">
 					<span className="text-muted-foreground">
@@ -649,21 +649,21 @@ function MatchingPreview({ form }: { form: any }) {
 					<span className="font-medium">{expansionSteps.length} attempts</span>
 				</div>
 				<div className="mt-3">
-					<p className="mb-2 text-xs text-muted-foreground">
+					<p className="mb-2 text-muted-foreground text-xs">
 						Radius expansion timeline:
 					</p>
 					<div className="flex flex-wrap gap-2">
 						{expansionSteps.slice(0, 6).map((step) => (
 							<div
 								key={step.attempt}
-								className="rounded bg-blue-500/10 px-2 py-1 text-xs text-blue-600 dark:text-blue-400"
+								className="rounded bg-blue-500/10 px-2 py-1 text-blue-600 text-xs dark:text-blue-400"
 							>
 								{step.radius.toFixed(1)}km @ {Math.floor(step.time / 60)}m
 								{step.time % 60}s
 							</div>
 						))}
 						{expansionSteps.length > 6 && (
-							<div className="rounded bg-muted px-2 py-1 text-xs text-muted-foreground">
+							<div className="rounded bg-muted px-2 py-1 text-muted-foreground text-xs">
 								+{expansionSteps.length - 6} more
 							</div>
 						)}
@@ -687,44 +687,44 @@ function CancellationPreview({ form }: { form: any }) {
 
 	return (
 		<div className="mt-6 rounded-lg bg-muted/50 p-4">
-			<h4 className="mb-3 text-sm font-medium">
+			<h4 className="mb-3 font-medium text-sm">
 				Fee Calculation Example (Rp {exampleOrderAmount.toLocaleString("id-ID")}{" "}
 				order)
 			</h4>
 			<div className="grid grid-cols-1 gap-4 text-sm md:grid-cols-3">
 				<div className="rounded-lg border bg-background p-3">
-					<p className="mb-1 text-xs text-muted-foreground">
+					<p className="mb-1 text-muted-foreground text-xs">
 						Cancel before driver accepts
 					</p>
 					<p className="font-medium">
 						Fee: Rp{" "}
 						{(exampleOrderAmount * beforeAccept).toLocaleString("id-ID")}
 					</p>
-					<p className="text-xs text-green-600">
+					<p className="text-green-600 text-xs">
 						Refund: Rp{" "}
 						{(exampleOrderAmount * (1 - beforeAccept)).toLocaleString("id-ID")}
 					</p>
 				</div>
 				<div className="rounded-lg border bg-background p-3">
-					<p className="mb-1 text-xs text-muted-foreground">
+					<p className="mb-1 text-muted-foreground text-xs">
 						Cancel after driver accepts
 					</p>
 					<p className="font-medium">
 						Fee: Rp {(exampleOrderAmount * afterAccept).toLocaleString("id-ID")}
 					</p>
-					<p className="text-xs text-green-600">
+					<p className="text-green-600 text-xs">
 						Refund: Rp{" "}
 						{(exampleOrderAmount * (1 - afterAccept)).toLocaleString("id-ID")}
 					</p>
 				</div>
 				<div className="rounded-lg border bg-background p-3">
-					<p className="mb-1 text-xs text-muted-foreground">
+					<p className="mb-1 text-muted-foreground text-xs">
 						No-show (driver arrives, user absent)
 					</p>
 					<p className="font-medium">
 						Fee: Rp {(exampleOrderAmount * noShow).toLocaleString("id-ID")}
 					</p>
-					<p className="text-xs text-blue-600">
+					<p className="text-blue-600 text-xs">
 						Driver gets: Rp{" "}
 						{(exampleOrderAmount * noShow * driverComp).toLocaleString("id-ID")}
 					</p>

@@ -788,6 +788,32 @@ export class OrderRoom extends BaseDurableObject {
 			},
 		};
 		this.broadcast(completedPayload, { excludes: [ws] });
+
+		// Send push notification to user as fallback for when WebSocket is disconnected
+		// This ensures user is notified even if their app is in background or WebSocket failed
+		await this.#repo.notification.sendNotificationToUserId({
+			fromUserId: order.driverId ?? "",
+			toUserId: order.userId,
+			title: "Trip Completed",
+			body: `Your ${order.type.toLowerCase()} order has been completed. Please rate your driver.`,
+			data: {
+				type: "ORDER_COMPLETED",
+				orderId: order.id,
+				deeplink: `akademove://order/${order.id}/rate`,
+			},
+			android: {
+				priority: "high",
+				notification: { clickAction: "USER_RATE_DRIVER" },
+			},
+			apns: {
+				payload: { aps: { category: "ORDER_COMPLETED", sound: "default" } },
+			},
+		});
+
+		logger.info(
+			{ orderId: order.id, userId: order.userId },
+			"[OrderRoom] Order completion notification sent to user",
+		);
 	}
 
 	async #handleChatMessage(

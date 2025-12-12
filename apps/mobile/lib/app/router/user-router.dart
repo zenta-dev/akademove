@@ -255,8 +255,8 @@ final userRouter = StatefulShellRoute.indexedStack(
           ),
         ),
         GoRoute(
-          name: Routes.userMerchantDetail.name,
-          path: Routes.userMerchantDetail.path,
+          name: Routes.userMartDetail.name,
+          path: Routes.userMartDetail.path,
           builder: (context, state) {
             final merchantId = state.pathParameters['merchantId'] ?? '';
             final extra = state.extra as Map<String, dynamic>?;
@@ -413,11 +413,13 @@ final userRouter = StatefulShellRoute.indexedStack(
           path: Routes.userHistoryDetail.path,
           builder: (context, state) {
             final orderId = state.pathParameters['orderId'];
+            final extra = state.extra as Map<String, dynamic>?;
+            final action = extra?['action'] as String?;
 
             return BlocProvider.value(
               value: BlocProvider.of<UserOrderCubit>(context)
                 ..maybeGet(orderId),
-              child: const UserDetailHistoryScreen(),
+              child: UserDetailHistoryScreen(action: action),
             );
           },
         ),

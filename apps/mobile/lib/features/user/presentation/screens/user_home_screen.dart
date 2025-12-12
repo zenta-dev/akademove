@@ -234,7 +234,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                 style: const ButtonStyle.ghost(density: ButtonDensity.compact),
                 onPressed: () {
                   context.pushNamed(
-                    Routes.userMerchantDetail.name,
+                    Routes.userMartDetail.name,
                     pathParameters: {'merchantId': merchants[index].id},
                     extra: {'merchant': merchants[index]},
                   );

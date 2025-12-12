@@ -1,12 +1,15 @@
 import { m } from "@repo/i18n";
 import type { PlaceOrder, PlaceOrderResponse } from "@repo/schema/order";
 import { v7 } from "uuid";
-import { CACHE_TTLS, DRIVER_POOL_KEY } from "@/core/constants";
+import { CACHE_TTLS } from "@/core/constants";
 import { RepositoryError } from "@/core/error";
 import type { WithTx, WithUserId } from "@/core/interface";
 import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
-import { OrderQueueService } from "@/core/services/queue";
+import {
+	NotificationQueueService,
+	OrderQueueService,
+} from "@/core/services/queue";
 import { BusinessConfigurationService } from "@/features/configuration/services";
 import type {
 	ChargePayload,
@@ -302,6 +305,47 @@ export class OrderPlacementRepository extends OrderBaseRepository {
 							totalAmount: finalTotalCost,
 						},
 					});
+
+					// Get merchant's user ID for push notification
+					const merchantUserId = menus[0]?.merchant?.user?.id;
+					if (merchantUserId) {
+						// Also send push notification for when merchant is not connected to WebSocket
+						const itemCount = params.items?.length ?? 0;
+						try {
+							await NotificationQueueService.enqueuePushNotification({
+								fromUserId: params.userId,
+								toUserId: merchantUserId,
+								title: "New Order Received",
+								body: `You have a new order with ${itemCount} item${itemCount > 1 ? "s" : ""}. Tap to view details.`,
+								data: {
+									type: "NEW_ORDER",
+									orderId: order.id,
+									merchantId,
+									deeplink: "akademove://merchant/order",
+								},
+								android: {
+									priority: "high",
+									notification: { clickAction: "MERCHANT_OPEN_ORDER_DETAIL" },
+								},
+								apns: {
+									payload: {
+										aps: { category: "ORDER_DETAIL", sound: "default" },
+									},
+								},
+							});
+
+							logger.info(
+								{ orderId: order.id, merchantId, merchantUserId },
+								"[OrderPlacementRepository] Push notification enqueued for merchant (wallet payment)",
+							);
+						} catch (notifError) {
+							// Log but don't fail the order - WebSocket notification was already sent
+							logger.error(
+								{ error: notifError, orderId: order.id, merchantId },
+								"[OrderPlacementRepository] Failed to enqueue merchant push notification",
+							);
+						}
+					}
 				} else {
 					// RIDE/DELIVERY orders: Move to MATCHING for driver matching
 					order = await this.#writeRepo.update(
@@ -394,33 +438,58 @@ export class OrderPlacementRepository extends OrderBaseRepository {
 				m.server_order_placed(),
 			);
 
-			// Only broadcast to driver pool for wallet payments that succeeded immediately
-			// For non-wallet payments (BANK_TRANSFER, QRIS), the webhook handler will broadcast
-			// after payment success to avoid race condition where drivers see unpaid orders
+			// For wallet payments that succeeded immediately, enqueue driver matching
+			// For non-wallet payments (BANK_TRANSFER, QRIS), the webhook handler will handle this
 			// For FOOD orders, driver matching only starts after merchant marks order as READY_FOR_PICKUP
 			if (
 				params.payment.method === "wallet" &&
 				payment.status === "SUCCESS" &&
 				params.type !== "FOOD"
 			) {
-				const stub = OrderBaseRepository.getRoomStubByName(DRIVER_POOL_KEY);
-				stub.broadcast({
-					f: "s",
-					t: "s",
-					a: "MATCHING",
-					p: {
-						detail: {
-							order,
-							payment,
-							transaction,
-						},
-					},
-				});
+				try {
+					// Fetch driver matching config from database
+					const matchingConfig =
+						await BusinessConfigurationService.getDriverMatchingConfig(
+							this.db,
+							this.kv,
+						);
 
-				logger.debug(
-					{ orderId: order.id },
-					"[OrderPlacementRepository] Broadcast to driver pool after wallet payment success",
-				);
+					// Enqueue driver matching job (which handles push notifications to drivers)
+					await OrderQueueService.enqueueDriverMatching({
+						orderId: order.id,
+						pickupLocation: order.pickupLocation,
+						orderType: order.type,
+						genderPreference: order.genderPreference ?? undefined,
+						userGender: order.gender ?? undefined,
+						initialRadiusKm: matchingConfig.initialRadiusKm,
+						maxRadiusKm: matchingConfig.maxRadiusKm,
+						maxMatchingDurationMinutes: matchingConfig.timeoutMinutes,
+						currentAttempt: 1,
+						maxExpansionAttempts: Math.ceil(
+							Math.log(
+								matchingConfig.maxRadiusKm / matchingConfig.initialRadiusKm,
+							) / Math.log(1 + matchingConfig.expansionRate),
+						),
+						expansionRate: matchingConfig.expansionRate,
+						matchingIntervalSeconds: matchingConfig.intervalSeconds,
+						broadcastLimit: matchingConfig.broadcastLimit,
+						maxCancellationsPerDay: matchingConfig.maxCancellationsPerDay,
+						paymentId: payment.id,
+						excludedDriverIds: [],
+						isRetry: false,
+					});
+
+					logger.info(
+						{ orderId: order.id },
+						"[OrderPlacementRepository] Driver matching job enqueued after wallet payment success",
+					);
+				} catch (matchingError) {
+					// Log but don't fail the order - the timeout handler will handle stuck orders
+					logger.error(
+						{ error: matchingError, orderId: order.id },
+						"[OrderPlacementRepository] Failed to enqueue driver matching job - cron will handle",
+					);
+				}
 			}
 
 			return { order, payment, transaction, autoAppliedCoupon };
