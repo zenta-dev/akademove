@@ -27,6 +27,7 @@ class ItemCardWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isOutOfStock = item.stock == 0;
+    final image = item.image;
 
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
@@ -43,38 +44,48 @@ class ItemCardWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Item photo
-          CachedNetworkImage(
-            imageUrl: item.image ?? '',
-            width: 80.w,
-            height: 80.h,
-            fit: BoxFit.cover,
-            imageBuilder: (context, imageProvider) {
-              return Opacity(
-                opacity: isOutOfStock ? 0.5 : 1.0,
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8.r),
-                    image: DecorationImage(
-                      image: imageProvider,
-                      fit: BoxFit.cover,
+          ClipRRect(
+            borderRadius: BorderRadius.circular(8.r),
+            child: SizedBox(
+              width: 80.w,
+              height: 80.h,
+              child: image != null && image.isNotEmpty
+                  ? Opacity(
+                      opacity: isOutOfStock ? 0.5 : 1.0,
+                      child: CachedNetworkImage(
+                        imageUrl: image,
+                        fit: BoxFit.cover,
+                        placeholder: (context, url) => Container(
+                          color: context.colorScheme.muted,
+                          child: const Center(
+                            child: CircularProgressIndicator(),
+                          ),
+                        ),
+                        errorWidget: (context, url, error) => Container(
+                          color: context.colorScheme.muted,
+                          child: Center(
+                            child: Icon(
+                              LucideIcons.image,
+                              size: 24.sp,
+                              color: context.colorScheme.mutedForeground,
+                            ),
+                          ),
+                        ),
+                      ),
+                    )
+                  : Opacity(
+                      opacity: isOutOfStock ? 0.5 : 1.0,
+                      child: Container(
+                        color: context.colorScheme.muted,
+                        child: Center(
+                          child: Icon(
+                            LucideIcons.image,
+                            size: 24.sp,
+                            color: context.colorScheme.mutedForeground,
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-              );
-            },
-            placeholder: (context, url) => Container(
-              decoration: BoxDecoration(
-                color: Colors.gray[300],
-                borderRadius: BorderRadius.circular(8.r),
-              ),
-              child: const Center(child: CircularProgressIndicator()),
-            ),
-            errorWidget: (context, url, error) => Container(
-              decoration: BoxDecoration(
-                color: Colors.gray[300],
-                borderRadius: BorderRadius.circular(8.r),
-              ),
-              child: const Center(child: Icon(Icons.image_not_supported)),
             ),
           ),
           SizedBox(width: 12.w),

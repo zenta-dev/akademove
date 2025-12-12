@@ -1,5 +1,6 @@
 import 'package:akademove/core/_export.dart';
 import 'package:api_client/api_client.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 
@@ -17,6 +18,7 @@ class MerchantCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final image = merchant.image;
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -27,49 +29,95 @@ class MerchantCardWidget extends StatelessWidget {
           borderRadius: BorderRadius.circular(12.r),
           border: Border.all(color: context.colorScheme.border, width: 1),
         ),
-        child: Column(
+        child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Top row: Merchant name and availability badge
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: Text(
-                    merchant.name,
-                    style: context.typography.h4.copyWith(
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.w600,
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-                SizedBox(width: 8.w),
-                _AvailabilityBadge(isActive: merchant.isActive),
-              ],
-            ),
-            SizedBox(height: 8.h),
-
-            // Middle row: Rating and distance
-            Row(
-              children: [
-                // Rating
-                _RatingWidget(rating: (merchant.rating).toDouble()),
-                SizedBox(width: 12.w),
-              ],
-            ),
-            SizedBox(height: 8.h),
-
-            // Categories chips
-            if ((merchant.categories).isNotEmpty)
-              Wrap(
-                spacing: 6.w,
-                runSpacing: 4.h,
-                children: merchant.categories.take(3).map((category) {
-                  return _CategoryChip(category: category);
-                }).toList(),
+            // Merchant image
+            ClipRRect(
+              borderRadius: BorderRadius.circular(8.r),
+              child: SizedBox(
+                width: 80.w,
+                height: 80.w,
+                child: image != null && image.isNotEmpty
+                    ? CachedNetworkImage(
+                        imageUrl: image,
+                        fit: BoxFit.cover,
+                        placeholder: (context, url) => Container(
+                          color: context.colorScheme.muted,
+                          child: Center(
+                            child: Icon(
+                              LucideIcons.store,
+                              size: 24.sp,
+                              color: context.colorScheme.mutedForeground,
+                            ),
+                          ),
+                        ),
+                        errorWidget: (context, url, error) => Container(
+                          color: context.colorScheme.muted,
+                          child: Center(
+                            child: Icon(
+                              LucideIcons.store,
+                              size: 24.sp,
+                              color: context.colorScheme.mutedForeground,
+                            ),
+                          ),
+                        ),
+                      )
+                    : Container(
+                        color: context.colorScheme.muted,
+                        child: Center(
+                          child: Icon(
+                            LucideIcons.store,
+                            size: 24.sp,
+                            color: context.colorScheme.mutedForeground,
+                          ),
+                        ),
+                      ),
               ),
+            ),
+            SizedBox(width: 12.w),
+            // Merchant info
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Top row: Merchant name and availability badge
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: Text(
+                          merchant.name,
+                          style: context.typography.h4.copyWith(
+                            fontSize: 16.sp,
+                            fontWeight: FontWeight.w600,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      SizedBox(width: 8.w),
+                      _AvailabilityBadge(isActive: merchant.isActive),
+                    ],
+                  ),
+                  SizedBox(height: 8.h),
+
+                  // Middle row: Rating
+                  _RatingWidget(rating: (merchant.rating).toDouble()),
+                  SizedBox(height: 8.h),
+
+                  // Categories chips
+                  if ((merchant.categories).isNotEmpty)
+                    Wrap(
+                      spacing: 6.w,
+                      runSpacing: 4.h,
+                      children: merchant.categories.take(3).map((category) {
+                        return _CategoryChip(category: category);
+                      }).toList(),
+                    ),
+                ],
+              ),
+            ),
           ],
         ),
       ),

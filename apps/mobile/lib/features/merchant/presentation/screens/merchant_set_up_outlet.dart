@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:akademove/app/router/router.dart';
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/l10n/l10n.dart';
@@ -8,7 +7,6 @@ import 'package:api_client/api_client.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 
 enum _Step1Docs { outletPhotoProfile }
@@ -86,9 +84,13 @@ class _MerchantSetUpOutletScreenState extends State<MerchantSetUpOutletScreen> {
   final Map<_Step1Docs, File?> _step1Docs = {};
   final Map<_Step1Docs, String?> _step1DocsErrors = {};
 
+  // Existing image URL from merchant data (for preloading)
+  String? _existingImageUrl;
+
   List<DailySchedule> _weeklySchedule = [];
 
   bool _isLoading = false;
+  bool _hasPreloadedData = false;
 
   // Track setup flow stage: 0 = idle, 1 = outlet setup in progress, 2 = operating hours setup in progress
   int _setupStage = 0;
@@ -159,8 +161,10 @@ class _MerchantSetUpOutletScreenState extends State<MerchantSetUpOutletScreen> {
   }
 
   bool get _isStep1Valid {
-    // Validate outlet photo
-    final hasOutletPhoto = _step1Docs[_Step1Docs.outletPhotoProfile] != null;
+    // Validate outlet photo - either new file or existing URL is valid
+    final hasOutletPhoto =
+        _step1Docs[_Step1Docs.outletPhotoProfile] != null ||
+        (_existingImageUrl != null && _existingImageUrl!.isNotEmpty);
     if (!hasOutletPhoto) {
       setState(() {
         _step1DocsErrors[_Step1Docs.outletPhotoProfile] =
@@ -181,6 +185,51 @@ class _MerchantSetUpOutletScreenState extends State<MerchantSetUpOutletScreen> {
   bool get _isStep2Valid {
     // Check if at least one day is enabled
     return _weeklySchedule.any((schedule) => schedule.isEnabled);
+  }
+
+  /// Preload existing merchant data into form fields
+  void _preloadMerchantData(MerchantState state) {
+    if (_hasPreloadedData) return;
+
+    final merchant = state.mine.value;
+    final operatingHours = state.operatingHours.value;
+
+    if (merchant == null) return;
+
+    setState(() {
+      _hasPreloadedData = true;
+
+      // Preload category
+      _selectedOutletCategory = merchant.category;
+
+      // Preload existing image URL
+      _existingImageUrl = merchant.image;
+
+      // Preload operating hours into weekly schedule
+      if (operatingHours != null && operatingHours.isNotEmpty) {
+        for (final oh in operatingHours) {
+          final index = _weeklySchedule.indexWhere(
+            (s) => s.dayOfWeek == oh.dayOfWeek,
+          );
+          if (index != -1) {
+            _weeklySchedule[index] = _weeklySchedule[index].copyWith(
+              isEnabled: oh.isOpen,
+              is24Hours: oh.is24Hours,
+              startTime: _formatTime(oh.openTime),
+              endTime: _formatTime(oh.closeTime),
+            );
+          }
+        }
+      }
+    });
+  }
+
+  /// Format Time object to HH:mm string
+  String _formatTime(Time? time) {
+    if (time == null) return '10:00';
+    final h = time.h.toString().padLeft(2, '0');
+    final m = time.m.toString().padLeft(2, '0');
+    return '$h:$m';
   }
 
   void _scrollToTop() {
@@ -285,6 +334,11 @@ class _MerchantSetUpOutletScreenState extends State<MerchantSetUpOutletScreen> {
   Widget build(BuildContext context) {
     return BlocListener<MerchantCubit, MerchantState>(
       listener: (context, state) {
+        // Preload merchant data when getMine succeeds
+        if (state.mine.isSuccess && !_hasPreloadedData) {
+          _preloadMerchantData(state);
+        }
+
         // Handle setup outlet result (stage 1)
         if (_setupStage == 1) {
           if (state.setupOutlet.isSuccess) {
@@ -377,6 +431,8 @@ class _MerchantSetUpOutletScreenState extends State<MerchantSetUpOutletScreen> {
             label: context.l10n.label_outlet_photo_profile,
             height: 200.h,
             error: _step1DocsErrors[_Step1Docs.outletPhotoProfile],
+            previewUrl: _existingImageUrl,
+            value: _step1Docs[_Step1Docs.outletPhotoProfile],
             onChanged: (file) {
               setState(() {
                 _step1Docs[_Step1Docs.outletPhotoProfile] = file;

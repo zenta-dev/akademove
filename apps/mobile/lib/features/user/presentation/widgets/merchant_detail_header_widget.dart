@@ -13,23 +13,45 @@ class MerchantDetailHeaderWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final image = merchant.image;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Cover photo
-        CachedNetworkImage(
-          imageUrl: merchant.image ?? '',
+        SizedBox(
           width: double.infinity,
           height: 200.h,
-          fit: BoxFit.cover,
-          placeholder: (context, url) => Container(
-            color: Colors.gray[300],
-            child: const Center(child: CircularProgressIndicator()),
-          ),
-          errorWidget: (context, url, error) => Container(
-            color: Colors.gray[300],
-            child: const Center(child: Icon(Icons.image_not_supported)),
-          ),
+          child: image != null && image.isNotEmpty
+              ? CachedNetworkImage(
+                  imageUrl: image,
+                  width: double.infinity,
+                  height: 200.h,
+                  fit: BoxFit.cover,
+                  placeholder: (context, url) => Container(
+                    color: context.colorScheme.muted,
+                    child: const Center(child: CircularProgressIndicator()),
+                  ),
+                  errorWidget: (context, url, error) => Container(
+                    color: context.colorScheme.muted,
+                    child: Center(
+                      child: Icon(
+                        LucideIcons.store,
+                        size: 48.sp,
+                        color: context.colorScheme.mutedForeground,
+                      ),
+                    ),
+                  ),
+                )
+              : Container(
+                  color: context.colorScheme.muted,
+                  child: Center(
+                    child: Icon(
+                      LucideIcons.store,
+                      size: 48.sp,
+                      color: context.colorScheme.mutedForeground,
+                    ),
+                  ),
+                ),
         ),
 
         Padding(
@@ -49,7 +71,7 @@ class MerchantDetailHeaderWidget extends StatelessWidget {
               // Rating display: "⭐ 4.5"
               Row(
                 children: [
-                  Icon(Icons.star_rounded, color: Colors.amber, size: 18.sp),
+                  Icon(LucideIcons.star, color: Colors.amber, size: 18.sp),
                   SizedBox(width: 6.w),
                   Text(
                     '${merchant.rating}',

@@ -20,11 +20,7 @@ class UserAvatarWidget extends StatelessWidget {
       backgroundColor: context.colorScheme.primary,
       size: size ?? 24.sp,
       initials: Avatar.getInitials(name),
-      provider: image != null
-          ? CachedNetworkImageProvider(
-              image ?? UrlConstants.placeholderImageUrl,
-            )
-          : null,
+      provider: image != null ? CachedNetworkImageProvider(image!) : null,
     );
   }
 }

@@ -298,19 +298,34 @@ class _RecentOrderCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final merchantImage = order.merchant?.image;
     return Card(
       child: Padding(
         padding: EdgeInsets.all(12.dg),
         child: Row(
           children: [
-            Container(
-              width: 48.sp,
-              height: 48.sp,
-              decoration: BoxDecoration(
-                color: context.colorScheme.muted,
-                borderRadius: BorderRadius.circular(8.r),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(8.r),
+              child: SizedBox(
+                width: 48.sp,
+                height: 48.sp,
+                child: merchantImage != null && merchantImage.isNotEmpty
+                    ? CachedNetworkImage(
+                        imageUrl: merchantImage,
+                        fit: BoxFit.cover,
+                        errorWidget: (context, url, error) => Container(
+                          color: context.colorScheme.muted,
+                          child: Icon(LucideIcons.shoppingBag, size: 24.sp),
+                        ),
+                      )
+                    : Container(
+                        decoration: BoxDecoration(
+                          color: context.colorScheme.muted,
+                          borderRadius: BorderRadius.circular(8.r),
+                        ),
+                        child: Icon(LucideIcons.shoppingBag, size: 24.sp),
+                      ),
               ),
-              child: Icon(LucideIcons.shoppingBag, size: 24.sp),
             ),
             Gap(12.w),
             Expanded(

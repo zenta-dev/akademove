@@ -403,7 +403,7 @@ class _MerchantCardWidget extends StatelessWidget {
         children: [
           if (merchant.image != null) ...[
             CachedNetworkImage(
-              imageUrl: merchant.image ?? UrlConstants.placeholderImageUrl,
+              imageUrl: merchant.image!,
               width: 135.w,
               height: 100.h,
               imageBuilder: (context, imageProvider) {

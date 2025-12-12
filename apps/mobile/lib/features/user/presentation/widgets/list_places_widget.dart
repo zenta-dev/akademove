@@ -49,23 +49,28 @@ class ListPlacesWidget extends StatelessWidget {
           Column(
             spacing: 4.h,
             children: [
-              CachedNetworkImage(
-                imageUrl: place.icon,
-                imageBuilder: (context, imageProvider) => Container(
-                  width: 24.w,
-                  height: 24.w,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(image: imageProvider),
+              if (place.icon.isNotEmpty)
+                CachedNetworkImage(
+                  imageUrl: place.icon,
+                  imageBuilder: (context, imageProvider) => Container(
+                    width: 24.w,
+                    height: 24.w,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(image: imageProvider),
+                    ),
                   ),
-                ),
-                placeholder: (context, url) => Container(
-                  width: 24.w,
-                  height: 24.w,
-                  decoration: BoxDecoration(color: context.colorScheme.primary),
-                ).asSkeleton(),
-                errorWidget: (context, url, error) =>
-                    Icon(LucideIcons.info, size: 24.sp),
-              ),
+                  placeholder: (context, url) => Container(
+                    width: 24.w,
+                    height: 24.w,
+                    decoration: BoxDecoration(
+                      color: context.colorScheme.primary,
+                    ),
+                  ).asSkeleton(),
+                  errorWidget: (context, url, error) =>
+                      Icon(LucideIcons.mapPin, size: 24.sp),
+                )
+              else
+                Icon(LucideIcons.mapPin, size: 24.sp),
               DefaultText(
                 place.distance.toString(),
                 fontSize: 12.sp,

@@ -165,13 +165,13 @@ class UserOrderCardWidget extends StatelessWidget {
                   children: [
                     if (order.type == OrderType.RIDE) ...[
                       Assets.images.hero.orderRide.image(height: 24.h),
-                    ] else if (order.type == OrderType.DELIVERY &&
+                    ] else if ((order.type == OrderType.DELIVERY ||
+                            order.type == OrderType.FOOD) &&
                         order.merchant != null &&
-                        order.merchant?.image != null) ...[
+                        order.merchant!.image != null &&
+                        order.merchant!.image!.isNotEmpty) ...[
                       CachedNetworkImage(
-                        imageUrl:
-                            order.merchant?.image ??
-                            UrlConstants.placeholderImageUrl,
+                        imageUrl: order.merchant!.image!,
                         height: 24.h,
                       ),
                     ] else ...[

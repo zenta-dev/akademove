@@ -74,9 +74,7 @@ class UserProfileCardWidget extends StatelessWidget {
         initials: Avatar.getInitials(e.badge.name),
         backgroundColor: randColor,
         provider: e.badge.icon != null
-            ? CachedNetworkImageProvider(
-                e.badge.icon ?? UrlConstants.placeholderImageUrl,
-              )
+            ? CachedNetworkImageProvider(e.badge.icon!)
             : null,
       );
     }).toList();
