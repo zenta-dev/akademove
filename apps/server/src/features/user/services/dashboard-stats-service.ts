@@ -1,4 +1,17 @@
+import { getTableName } from "drizzle-orm";
+import { user } from "@/core/tables/auth";
+import { driver } from "@/core/tables/driver";
+import { merchant } from "@/core/tables/merchant";
+import { order } from "@/core/tables/order";
 import { logger } from "@/utils/logger";
+
+// Get the actual table names with the am_ prefix
+const TABLES = {
+	users: getTableName(user),
+	drivers: getTableName(driver),
+	merchants: getTableName(merchant),
+	orders: getTableName(order),
+} as const;
 
 export interface DashboardStatsOptions {
 	startDate?: Date;
@@ -264,17 +277,17 @@ export class DashboardStatsService {
 	static getBasicStatsSQL(today: Date): string {
 		return /* sql */ `
 			SELECT
-				(SELECT COUNT(*)::int FROM am_users WHERE role = 'USER') AS total_users,
-				(SELECT COUNT(*)::int FROM am_drivers) AS total_drivers,
-				(SELECT COUNT(*)::int FROM am_merchants) AS total_merchants,
-				(SELECT COUNT(*)::int FROM am_orders WHERE status NOT IN ('COMPLETED', 'CANCELLED_BY_USER', 'CANCELLED_BY_DRIVER', 'CANCELLED_BY_MERCHANT', 'CANCELLED_BY_SYSTEM')) AS active_orders,
-				(SELECT COUNT(*)::int FROM am_orders) AS total_orders,
-				(SELECT COUNT(*)::int FROM am_orders WHERE status = 'COMPLETED') AS completed_orders,
-				(SELECT COUNT(*)::int FROM am_orders WHERE status IN ('CANCELLED_BY_USER', 'CANCELLED_BY_DRIVER', 'CANCELLED_BY_MERCHANT', 'CANCELLED_BY_SYSTEM')) AS cancelled_orders,
-				(SELECT COALESCE(SUM(total_price), 0)::text FROM am_orders WHERE status = 'COMPLETED') AS total_revenue,
-				(SELECT COALESCE(SUM(total_price), 0)::text FROM am_orders WHERE status = 'COMPLETED' AND requested_at >= '${today.toISOString()}') AS today_revenue,
-				(SELECT COUNT(*)::int FROM am_orders WHERE requested_at >= '${today.toISOString()}') AS today_orders,
-				(SELECT COUNT(*)::int FROM am_drivers WHERE is_online = true) AS online_drivers
+				(SELECT COUNT(*)::int FROM ${TABLES.users} WHERE role = 'USER') AS total_users,
+				(SELECT COUNT(*)::int FROM ${TABLES.drivers}) AS total_drivers,
+				(SELECT COUNT(*)::int FROM ${TABLES.merchants}) AS total_merchants,
+				(SELECT COUNT(*)::int FROM ${TABLES.orders} WHERE status NOT IN ('COMPLETED', 'CANCELLED_BY_USER', 'CANCELLED_BY_DRIVER', 'CANCELLED_BY_MERCHANT', 'CANCELLED_BY_SYSTEM')) AS active_orders,
+				(SELECT COUNT(*)::int FROM ${TABLES.orders}) AS total_orders,
+				(SELECT COUNT(*)::int FROM ${TABLES.orders} WHERE status = 'COMPLETED') AS completed_orders,
+				(SELECT COUNT(*)::int FROM ${TABLES.orders} WHERE status IN ('CANCELLED_BY_USER', 'CANCELLED_BY_DRIVER', 'CANCELLED_BY_MERCHANT', 'CANCELLED_BY_SYSTEM')) AS cancelled_orders,
+				(SELECT COALESCE(SUM(total_price), 0)::text FROM ${TABLES.orders} WHERE status = 'COMPLETED') AS total_revenue,
+				(SELECT COALESCE(SUM(total_price), 0)::text FROM ${TABLES.orders} WHERE status = 'COMPLETED' AND requested_at >= '${today.toISOString()}') AS today_revenue,
+				(SELECT COUNT(*)::int FROM ${TABLES.orders} WHERE requested_at >= '${today.toISOString()}') AS today_orders,
+				(SELECT COUNT(*)::int FROM ${TABLES.drivers} WHERE is_online = true) AS online_drivers
 		`;
 	}
 
@@ -287,7 +300,7 @@ export class DashboardStatsService {
 				TO_CHAR(DATE(requested_at), 'YYYY-MM-DD') AS date,
 				COALESCE(SUM(total_price), 0)::text AS revenue,
 				COUNT(*)::int AS orders
-			FROM am_orders
+			FROM ${TABLES.orders}
 			WHERE status = 'COMPLETED'
 				AND requested_at >= '${startDate.toISOString()}'
 				AND requested_at <= '${endDate.toISOString()}'
@@ -306,7 +319,7 @@ export class DashboardStatsService {
 				COUNT(*)::int AS total,
 				COUNT(*) FILTER (WHERE status = 'COMPLETED')::int AS completed,
 				COUNT(*) FILTER (WHERE status IN ('CANCELLED_BY_USER', 'CANCELLED_BY_DRIVER', 'CANCELLED_BY_MERCHANT', 'CANCELLED_BY_SYSTEM'))::int AS cancelled
-			FROM am_orders
+			FROM ${TABLES.orders}
 			WHERE requested_at >= '${startDate.toISOString()}'
 				AND requested_at <= '${endDate.toISOString()}'
 			GROUP BY DATE(requested_at)
@@ -323,7 +336,7 @@ export class DashboardStatsService {
 				type,
 				COUNT(*)::int AS orders,
 				COALESCE(SUM(total_price), 0)::text AS revenue
-			FROM am_orders
+			FROM ${TABLES.orders}
 			WHERE status = 'COMPLETED'
 				AND requested_at >= '${startDate.toISOString()}'
 				AND requested_at <= '${endDate.toISOString()}'
@@ -343,9 +356,9 @@ export class DashboardStatsService {
 				COALESCE(SUM(o.total_price), 0)::text AS earnings,
 				COUNT(o.id)::int AS orders,
 				d.rating::text AS rating
-			FROM am_drivers d
-			JOIN am_users u ON d.user_id = u.id
-			LEFT JOIN am_orders o ON o.driver_id = d.id
+			FROM ${TABLES.drivers} d
+			JOIN ${TABLES.users} u ON d.user_id = u.id
+			LEFT JOIN ${TABLES.orders} o ON o.driver_id = d.id
 				AND o.status = 'COMPLETED'
 				AND o.requested_at >= '${startDate.toISOString()}'
 				AND o.requested_at <= '${endDate.toISOString()}'
@@ -367,8 +380,8 @@ export class DashboardStatsService {
 				COALESCE(SUM(o.total_price), 0)::text AS revenue,
 				COUNT(o.id)::int AS orders,
 				m.rating::text AS rating
-			FROM am_merchants m
-			LEFT JOIN am_orders o ON o.merchant_id = m.id
+			FROM ${TABLES.merchants} m
+			LEFT JOIN ${TABLES.orders} o ON o.merchant_id = m.id
 				AND o.status = 'COMPLETED'
 				AND o.requested_at >= '${startDate.toISOString()}'
 				AND o.requested_at <= '${endDate.toISOString()}'
@@ -389,9 +402,9 @@ export class DashboardStatsService {
 				u.name,
 				COUNT(o.id)::int AS total_orders,
 				COUNT(*) FILTER (WHERE o.status = 'CANCELLED_BY_DRIVER')::int AS cancelled_orders
-			FROM am_drivers d
-			JOIN am_users u ON d.user_id = u.id
-			LEFT JOIN am_orders o ON o.driver_id = d.id
+			FROM ${TABLES.drivers} d
+			JOIN ${TABLES.users} u ON d.user_id = u.id
+			LEFT JOIN ${TABLES.orders} o ON o.driver_id = d.id
 				AND o.requested_at >= '${startDate.toISOString()}'
 				AND o.requested_at <= '${endDate.toISOString()}'
 			GROUP BY d.id, u.name
