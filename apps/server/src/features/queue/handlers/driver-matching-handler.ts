@@ -16,6 +16,7 @@
 import type { DriverMatchingJob } from "@repo/schema/queue";
 import { sql } from "drizzle-orm";
 import { OrderQueueService } from "@/core/services/queue";
+import { order } from "@/core/tables/order";
 import type { MatchingConfig } from "@/features/order/services/order-matching-service";
 import { logger } from "@/utils/logger";
 import type { QueueHandlerContext } from "../queue-handler";
@@ -66,10 +67,10 @@ export async function handleDriverMatching(
 			// 1. Lock the order row to prevent concurrent modifications
 			// 2. Skip if already locked by another matching job (avoid blocking)
 			const lockedOrderResult = await tx.execute(
-				sql`SELECT id, status, "userId" FROM "order" WHERE id = ${orderId} FOR UPDATE SKIP LOCKED`,
+				sql`SELECT ${order.id}, ${order.status}, ${order.userId} FROM ${order} WHERE ${order.id} = ${orderId} FOR UPDATE SKIP LOCKED`,
 			);
 			const lockedOrder = lockedOrderResult[0] as
-				| { id: string; status: string; userId: string }
+				| { id: string; status: string; user_id: string }
 				| undefined;
 
 			// If order not found or locked by another job, skip
@@ -155,7 +156,7 @@ export async function handleDriverMatching(
 				// Send push notifications to nearby drivers
 				if (driverUserIds.length > 0) {
 					await context.repo.notification.sendNotificationToUserIds({
-						fromUserId: lockedOrder.userId,
+						fromUserId: lockedOrder.user_id,
 						toUserIds: driverUserIds,
 						title: "New Order Available",
 						body: `${orderType} order available near you`,

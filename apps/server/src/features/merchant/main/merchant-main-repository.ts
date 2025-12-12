@@ -10,6 +10,7 @@ import {
 	and,
 	count,
 	eq,
+	getTableName,
 	gt,
 	gte,
 	ilike,
@@ -422,6 +423,10 @@ export class MerchantMainRepository extends BaseRepository {
 				paginationClause = sql`LIMIT ${limit}`;
 			}
 
+			// Get table names for raw SQL
+			const merchantTable = getTableName(tables.merchant);
+			const orderTable = getTableName(tables.order);
+
 			// Use LEFT JOIN to include merchants without orders
 			// Merchants without orders get a base score based on rating and recency
 			const rows = await this.db.execute<{
@@ -430,20 +435,20 @@ export class MerchantMainRepository extends BaseRepository {
 			}>(sql`
 			WITH merchant_stats AS (
 				SELECT
-					m.id AS merchant_id,
-					COALESCE(COUNT(o.id), 0) AS total_orders,
-					COALESCE(SUM(o.total_price), 0) AS total_revenue,
-					MAX(o.requested_at) AS last_order_date,
-					m.rating,
-					m.created_at
-				FROM am_merchants m
-				LEFT JOIN am_orders o ON o.merchant_id = m.id
-					AND o.status = 'COMPLETED'
-					AND o.requested_at > NOW() - INTERVAL '30 days'
-				WHERE m.status = 'APPROVED'
-					AND m.is_active = true
-					AND m.operating_status = 'OPEN'
-				GROUP BY m.id, m.rating, m.created_at
+					m.${sql.identifier(tables.merchant.id.name)} AS merchant_id,
+					COALESCE(COUNT(o.${sql.identifier(tables.order.id.name)}), 0) AS total_orders,
+					COALESCE(SUM(o.${sql.identifier(tables.order.totalPrice.name)}), 0) AS total_revenue,
+					MAX(o.${sql.identifier(tables.order.requestedAt.name)}) AS last_order_date,
+					m.${sql.identifier(tables.merchant.rating.name)},
+					m.${sql.identifier(tables.merchant.createdAt.name)}
+				FROM ${sql.identifier(merchantTable)} m
+				LEFT JOIN ${sql.identifier(orderTable)} o ON o.${sql.identifier(tables.order.merchantId.name)} = m.${sql.identifier(tables.merchant.id.name)}
+					AND o.${sql.identifier(tables.order.status.name)} = 'COMPLETED'
+					AND o.${sql.identifier(tables.order.requestedAt.name)} > NOW() - INTERVAL '30 days'
+				WHERE m.${sql.identifier(tables.merchant.status.name)} = 'APPROVED'
+					AND m.${sql.identifier(tables.merchant.isActive.name)} = true
+					AND m.${sql.identifier(tables.merchant.operatingStatus.name)} = 'OPEN'
+				GROUP BY m.${sql.identifier(tables.merchant.id.name)}, m.${sql.identifier(tables.merchant.rating.name)}, m.${sql.identifier(tables.merchant.createdAt.name)}
 			),
 			normalized AS (
 				SELECT
@@ -459,15 +464,15 @@ export class MerchantMainRepository extends BaseRepository {
 						0
 					) AS revenue_score,
 					COALESCE(
-						(rating - MIN(rating) OVER()) /
-						NULLIF((MAX(rating) OVER() - MIN(rating) OVER()), 0),
+						(${sql.identifier(tables.merchant.rating.name)} - MIN(${sql.identifier(tables.merchant.rating.name)}) OVER()) /
+						NULLIF((MAX(${sql.identifier(tables.merchant.rating.name)}) OVER() - MIN(${sql.identifier(tables.merchant.rating.name)}) OVER()), 0),
 						0.5
 					) AS rating_score,
 					CASE
 						WHEN last_order_date IS NULL THEN NULL
 						ELSE EXTRACT(EPOCH FROM (NOW() - last_order_date))
 					END AS seconds_since_last_order,
-					created_at
+					${sql.identifier(tables.merchant.createdAt.name)}
 				FROM merchant_stats
 			),
 			recency AS (
@@ -484,7 +489,7 @@ export class MerchantMainRepository extends BaseRepository {
 							0
 						)
 					END AS recency_score,
-					created_at
+					${sql.identifier(tables.merchant.createdAt.name)}
 				FROM normalized
 			)
 			SELECT
@@ -496,7 +501,7 @@ export class MerchantMainRepository extends BaseRepository {
 					0.15 * COALESCE(r.recency_score, 0.3)
 				) AS popularity_score
 			FROM recency r
-			ORDER BY popularity_score DESC, r.created_at DESC
+			ORDER BY popularity_score DESC, r.${sql.identifier(tables.merchant.createdAt.name)} DESC
 			${paginationClause};
 		`);
 

@@ -11,6 +11,8 @@ import { CONFIGURATION_KEYS } from "@/core/constants";
 import { getManagers, getRepositories, getServices } from "@/core/factory";
 import type { RepositoryContext, ServiceContext } from "@/core/interface";
 import type { DatabaseTransaction } from "@/core/services/db";
+import { driver } from "@/core/tables/driver";
+import { order } from "@/core/tables/order";
 import { BadgeAwardService } from "@/features/badge/services/badge-award-service";
 import { BusinessConfigurationService } from "@/features/configuration/services";
 import { DriverPriorityService } from "@/features/driver/services/driver-priority-service";
@@ -410,12 +412,11 @@ export class OrderRoom extends BaseDurableObject {
 
 		// Use SELECT FOR UPDATE to prevent race condition when multiple drivers accept
 		// This locks the order row until the transaction completes
-		// FIX: Use parameterized query to prevent SQL injection
 		const lockedOrderResult = await tx.execute(
-			sql`SELECT * FROM "order" WHERE id = ${orderId} FOR UPDATE NOWAIT`,
+			sql`SELECT ${order.id}, ${order.status}, ${order.type}, ${order.driverId} FROM ${order} WHERE ${order.id} = ${orderId} FOR UPDATE NOWAIT`,
 		);
 		const lockedOrder = lockedOrderResult[0] as
-			| { id: string; status: string; type: string; driverId: string | null }
+			| { id: string; status: string; type: string; driver_id: string | null }
 			| undefined;
 
 		// Check if order is still available (not already accepted by another driver)
@@ -476,10 +477,10 @@ export class OrderRoom extends BaseDurableObject {
 		// Use SELECT FOR UPDATE NOWAIT on driver to prevent race condition
 		// where driver could accept multiple orders simultaneously
 		const lockedDriverResult = await tx.execute(
-			sql`SELECT id, "isTakingOrder" FROM "driver" WHERE id = ${driverId} FOR UPDATE NOWAIT`,
+			sql`SELECT ${driver.id}, ${driver.isTakingOrder} FROM ${driver} WHERE ${driver.id} = ${driverId} FOR UPDATE NOWAIT`,
 		);
 		const lockedDriver = lockedDriverResult[0] as
-			| { id: string; isTakingOrder: boolean }
+			| { id: string; is_taking_order: boolean }
 			| undefined;
 
 		if (!lockedDriver) {
@@ -496,7 +497,7 @@ export class OrderRoom extends BaseDurableObject {
 		}
 
 		// Check if driver is already taking an order
-		if (lockedDriver.isTakingOrder) {
+		if (lockedDriver.is_taking_order) {
 			logger.warn(
 				{ orderId, driverId },
 				"[OrderRoom] Driver is already taking another order",

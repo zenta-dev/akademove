@@ -162,9 +162,9 @@ export class DriverLocationService {
 			await this.#db.execute(sql`
 				UPDATE ${tables.driver}
 				SET 
-					current_location = ST_SetSRID(ST_MakePoint(${lng}, ${lat}), 4326),
-					last_location_update = ${new Date()}
-				WHERE id = ${driverId}
+					${tables.driver.currentLocation} = ST_SetSRID(ST_MakePoint(${lng}, ${lat}), 4326),
+					${tables.driver.lastLocationUpdate} = ${new Date()}
+				WHERE ${tables.driver.id} = ${driverId}
 			`);
 
 			logger.info(

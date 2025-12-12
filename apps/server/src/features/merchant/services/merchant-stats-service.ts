@@ -1,5 +1,12 @@
-import { sql } from "drizzle-orm";
+import { getTableName, sql } from "drizzle-orm";
+import { merchantMenu } from "@/core/tables/merchant";
+import { order, orderItem } from "@/core/tables/order";
 import { logger } from "@/utils/logger";
+
+// Get table names for complex raw SQL queries with JOINs
+const orderTable = getTableName(order);
+const orderItemTable = getTableName(orderItem);
+const merchantMenuTable = getTableName(merchantMenu);
 
 export interface MerchantStatsOptions {
 	startDate?: Date;
@@ -118,15 +125,15 @@ export class MerchantStatsService {
 		return sql`
 			SELECT
 				COUNT(*)::int AS total_orders,
-				COALESCE(SUM(total_price), 0)::text AS total_revenue,
-				COALESCE(SUM(merchant_commission), 0)::text AS total_commission,
-				COUNT(CASE WHEN status = 'COMPLETED' THEN 1 END)::int AS completed_orders,
-				COUNT(CASE WHEN status IN ('CANCELLED_BY_USER', 'CANCELLED_BY_DRIVER', 'CANCELLED_BY_SYSTEM') THEN 1 END)::int AS cancelled_orders,
-				COALESCE(AVG(CASE WHEN status = 'COMPLETED' THEN total_price END), 0)::text AS average_order_value
-			FROM am_orders
-			WHERE merchant_id = ${merchantId}
-				AND requested_at >= ${startDate.toISOString()}
-				AND requested_at <= ${endDate.toISOString()}
+				COALESCE(SUM(${order.totalPrice}), 0)::text AS total_revenue,
+				COALESCE(SUM(${order.merchantCommission}), 0)::text AS total_commission,
+				COUNT(CASE WHEN ${order.status} = 'COMPLETED' THEN 1 END)::int AS completed_orders,
+				COUNT(CASE WHEN ${order.status} IN ('CANCELLED_BY_USER', 'CANCELLED_BY_DRIVER', 'CANCELLED_BY_SYSTEM') THEN 1 END)::int AS cancelled_orders,
+				COALESCE(AVG(CASE WHEN ${order.status} = 'COMPLETED' THEN ${order.totalPrice} END), 0)::text AS average_order_value
+			FROM ${order}
+			WHERE ${order.merchantId} = ${merchantId}
+				AND ${order.requestedAt} >= ${startDate.toISOString()}
+				AND ${order.requestedAt} <= ${endDate.toISOString()}
 		`;
 	}
 
@@ -141,19 +148,19 @@ export class MerchantStatsService {
 	) {
 		return sql`
 			SELECT
-				oi."menuId" AS menu_id,
-				mm.name AS menu_name,
-				mm.image AS menu_image,
-				COUNT(DISTINCT o.id)::int AS total_orders,
-				COALESCE(SUM(oi.unit_price * oi.quantity), 0)::text AS total_revenue
-			FROM am_orders o
-			INNER JOIN am_order_items oi ON o.id = oi."orderId"
-			INNER JOIN am_merchant_menus mm ON oi."menuId" = mm.id
-			WHERE o.merchant_id = ${merchantId}
-				AND o.status = 'COMPLETED'
-				AND o.requested_at >= ${startDate.toISOString()}
-				AND o.requested_at <= ${endDate.toISOString()}
-			GROUP BY oi."menuId", mm.name, mm.image
+				oi.${sql.identifier(orderItem.menuId.name)} AS menu_id,
+				mm.${sql.identifier(merchantMenu.name.name)} AS menu_name,
+				mm.${sql.identifier(merchantMenu.image.name)} AS menu_image,
+				COUNT(DISTINCT o.${sql.identifier(order.id.name)})::int AS total_orders,
+				COALESCE(SUM(oi.${sql.identifier(orderItem.unitPrice.name)} * oi.${sql.identifier(orderItem.quantity.name)}), 0)::text AS total_revenue
+			FROM ${sql.identifier(orderTable)} o
+			INNER JOIN ${sql.identifier(orderItemTable)} oi ON o.${sql.identifier(order.id.name)} = oi.${sql.identifier(orderItem.orderId.name)}
+			INNER JOIN ${sql.identifier(merchantMenuTable)} mm ON oi.${sql.identifier(orderItem.menuId.name)} = mm.${sql.identifier(merchantMenu.id.name)}
+			WHERE o.${sql.identifier(order.merchantId.name)} = ${merchantId}
+				AND o.${sql.identifier(order.status.name)} = 'COMPLETED'
+				AND o.${sql.identifier(order.requestedAt.name)} >= ${startDate.toISOString()}
+				AND o.${sql.identifier(order.requestedAt.name)} <= ${endDate.toISOString()}
+			GROUP BY oi.${sql.identifier(orderItem.menuId.name)}, mm.${sql.identifier(merchantMenu.name.name)}, mm.${sql.identifier(merchantMenu.image.name)}
 			ORDER BY total_orders DESC
 			LIMIT ${limit}
 		`;
@@ -169,16 +176,16 @@ export class MerchantStatsService {
 	) {
 		return sql`
 			SELECT
-				TO_CHAR(DATE(requested_at), 'YYYY-MM-DD') AS date,
-				COALESCE(SUM(total_price), 0)::text AS revenue,
+				TO_CHAR(DATE(${order.requestedAt}), 'YYYY-MM-DD') AS date,
+				COALESCE(SUM(${order.totalPrice}), 0)::text AS revenue,
 				COUNT(*)::int AS orders
-			FROM am_orders
-			WHERE merchant_id = ${merchantId}
-				AND status = 'COMPLETED'
-				AND requested_at >= ${startDate.toISOString()}
-				AND requested_at <= ${endDate.toISOString()}
-			GROUP BY DATE(requested_at)
-			ORDER BY DATE(requested_at) ASC
+			FROM ${order}
+			WHERE ${order.merchantId} = ${merchantId}
+				AND ${order.status} = 'COMPLETED'
+				AND ${order.requestedAt} >= ${startDate.toISOString()}
+				AND ${order.requestedAt} <= ${endDate.toISOString()}
+			GROUP BY DATE(${order.requestedAt})
+			ORDER BY DATE(${order.requestedAt}) ASC
 		`;
 	}
 
