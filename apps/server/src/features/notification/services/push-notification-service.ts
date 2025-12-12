@@ -73,6 +73,8 @@ export class PushNotificationService {
 		opts?: PartialWithTx,
 	): Promise<NotificationResult> {
 		const { toUserId, fromUserId } = params;
+		// Convert "system" to undefined for FCM logs (system-generated notifications)
+		const logUserId = fromUserId === "system" ? undefined : fromUserId;
 
 		try {
 			logger.debug(
@@ -109,7 +111,7 @@ export class PushNotificationService {
 
 			const logs: InsertFCMNotificationLog[] = messageIds.map((messageId) => ({
 				...params,
-				userId: fromUserId,
+				userId: logUserId,
 				messageId,
 				status: "SUCCESS",
 				sentAt,
@@ -140,7 +142,7 @@ export class PushNotificationService {
 
 			const failLog: InsertFCMNotificationLog = {
 				...params,
-				userId: fromUserId,
+				userId: logUserId,
 				status: "FAILED",
 				sentAt: new Date(),
 				error: msg,
@@ -174,6 +176,8 @@ export class PushNotificationService {
 		opts?: PartialWithTx,
 	): Promise<NotificationResult> {
 		const { toUserIds, fromUserId } = params;
+		// Convert "system" to undefined for FCM logs (system-generated notifications)
+		const logUserId = fromUserId === "system" ? undefined : fromUserId;
 
 		try {
 			logger.debug(
@@ -210,7 +214,7 @@ export class PushNotificationService {
 
 			const logs: InsertFCMNotificationLog[] = messageIds.map((messageId) => ({
 				...params,
-				userId: fromUserId,
+				userId: logUserId,
 				messageId,
 				status: "SUCCESS",
 				sentAt,
@@ -242,7 +246,7 @@ export class PushNotificationService {
 
 			const failLog: InsertFCMNotificationLog = {
 				...params,
-				userId: fromUserId,
+				userId: logUserId,
 				status: "FAILED",
 				sentAt: new Date(),
 				error: msg,

@@ -289,8 +289,7 @@ class _UserRideScreenState extends State<UserRideScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return MyScaffold(
-      scrollable: true,
+    return Scaffold(
       headers: [
         AppBar(
           padding: EdgeInsets.all(4.dg),
@@ -307,116 +306,122 @@ class _UserRideScreenState extends State<UserRideScreen> {
           ],
         ),
       ],
-      body: BlocConsumer<UserOrderCubit, UserOrderState>(
-        listener: (context, state) {
-          if (state.estimateOrder.isFailure &&
-              state.estimateOrder.error != null) {
-            context.showMyToast(
-              state.estimateOrder.error?.message ??
-                  context.l10n.toast_failed_estimate_order,
-              type: ToastType.failed,
-            );
-          }
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.all(16.dg),
+          child: BlocConsumer<UserOrderCubit, UserOrderState>(
+            listener: (context, state) {
+              if (state.estimateOrder.isFailure &&
+                  state.estimateOrder.error != null) {
+                context.showMyToast(
+                  state.estimateOrder.error?.message ??
+                      context.l10n.toast_failed_estimate_order,
+                  type: ToastType.failed,
+                );
+              }
 
-          if (state.estimateOrder.isSuccess && state.estimateOrder.hasData) {
-            context.popUntilRoot();
-            context.pushNamed(Routes.userRideSummary.name);
-          }
-        },
-        builder: (context, state) {
-          return Column(
-            spacing: 16.h,
-            children: [
-              Text(
-                context.l10n.text_choose_pickup_destination,
-                style: context.typography.h4.copyWith(
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.w500,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              Card(
-                child: Column(
-                  spacing: 16.h,
-                  children: [
-                    _buildMapSection(),
-                    PickLocationCardWidget(
-                      padding: EdgeInsets.zero,
-                      borderColor: context.colorScheme.card,
-                      pickup: PickLocationParameters(
-                        enabled: false,
-                        controller: pickupController,
-                        onPresesed: () async {
-                          pickup = await context.pushNamed(
-                            Routes.userRidePickup.name,
-                            extra: {
-                              LocationType.pickup.name: pickupController,
-                              LocationType.dropoff.name: dropoffController,
-                            },
-                          );
-                          pickupController.text = pickup?.vicinity ?? '';
-                          await _updateMapMarkers();
-                        },
-                      ),
-                      dropoff: PickLocationParameters(
-                        enabled: false,
-                        controller: dropoffController,
-                        onPresesed: () async {
-                          dropoff = await context.pushNamed(
-                            Routes.userRideDropoff.name,
-                            extra: {
-                              LocationType.pickup.name: pickupController,
-                              LocationType.dropoff.name: dropoffController,
-                            },
-                          );
-                          dropoffController.text = dropoff?.vicinity ?? '';
-                          await _updateMapMarkers();
-                        },
-                      ),
+              if (state.estimateOrder.isSuccess &&
+                  state.estimateOrder.hasData) {
+                context.popUntilRoot();
+                context.pushNamed(Routes.userRideSummary.name);
+              }
+            },
+            builder: (context, state) {
+              return Column(
+                spacing: 16.h,
+                children: [
+                  Text(
+                    context.l10n.text_choose_pickup_destination,
+                    style: context.typography.h4.copyWith(
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.w500,
                     ),
-                  ],
-                ),
-              ),
-              SizedBox(
-                width: double.infinity,
-                child: Button.primary(
-                  enabled: !state.estimateOrder.isLoading,
-                  onPressed: state.estimateOrder.isLoading
-                      ? null
-                      : () {
-                          final pickupLoc = pickup;
-                          final dropoffLoc = dropoff;
+                    textAlign: TextAlign.center,
+                  ),
+                  Card(
+                    child: Column(
+                      spacing: 16.h,
+                      children: [
+                        _buildMapSection(),
+                        PickLocationCardWidget(
+                          padding: EdgeInsets.zero,
+                          borderColor: context.colorScheme.card,
+                          pickup: PickLocationParameters(
+                            enabled: false,
+                            controller: pickupController,
+                            onPresesed: () async {
+                              pickup = await context.pushNamed(
+                                Routes.userRidePickup.name,
+                                extra: {
+                                  LocationType.pickup.name: pickupController,
+                                  LocationType.dropoff.name: dropoffController,
+                                },
+                              );
+                              pickupController.text = pickup?.vicinity ?? '';
+                              await _updateMapMarkers();
+                            },
+                          ),
+                          dropoff: PickLocationParameters(
+                            enabled: false,
+                            controller: dropoffController,
+                            onPresesed: () async {
+                              dropoff = await context.pushNamed(
+                                Routes.userRideDropoff.name,
+                                extra: {
+                                  LocationType.pickup.name: pickupController,
+                                  LocationType.dropoff.name: dropoffController,
+                                },
+                              );
+                              dropoffController.text = dropoff?.vicinity ?? '';
+                              await _updateMapMarkers();
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    width: double.infinity,
+                    child: Button.primary(
+                      enabled: !state.estimateOrder.isLoading,
+                      onPressed: state.estimateOrder.isLoading
+                          ? null
+                          : () {
+                              final pickupLoc = pickup;
+                              final dropoffLoc = dropoff;
 
-                          if (pickupLoc == null || dropoffLoc == null) {
-                            context.showMyToast(
-                              "Pickup and dropoff locations are required",
-                            );
-                            return;
-                          }
-                          context.read<UserOrderCubit>().estimate(
-                            req: EstimateOrder(
-                              type: OrderType.RIDE,
-                              pickupLocation: Coordinate(
-                                x: pickupLoc.lng,
-                                y: pickupLoc.lat,
-                              ),
-                              dropoffLocation: Coordinate(
-                                x: dropoffLoc.lng,
-                                y: dropoffLoc.lat,
-                              ),
-                            ),
-                            pickup: pickupLoc,
-                            dropoff: dropoffLoc,
-                          );
-                        },
-                  child: state.estimateOrder.isLoading
-                      ? const Submiting()
-                      : DefaultText(context.l10n.button_proceed),
-                ),
-              ),
-            ],
-          );
-        },
+                              if (pickupLoc == null || dropoffLoc == null) {
+                                context.showMyToast(
+                                  "Pickup and dropoff locations are required",
+                                );
+                                return;
+                              }
+                              context.read<UserOrderCubit>().estimate(
+                                req: EstimateOrder(
+                                  type: OrderType.RIDE,
+                                  pickupLocation: Coordinate(
+                                    x: pickupLoc.lng,
+                                    y: pickupLoc.lat,
+                                  ),
+                                  dropoffLocation: Coordinate(
+                                    x: dropoffLoc.lng,
+                                    y: dropoffLoc.lat,
+                                  ),
+                                ),
+                                pickup: pickupLoc,
+                                dropoff: dropoffLoc,
+                              );
+                            },
+                      child: state.estimateOrder.isLoading
+                          ? const Submiting()
+                          : DefaultText(context.l10n.button_proceed),
+                    ),
+                  ),
+                ],
+              );
+            },
+          ),
+        ),
       ),
     );
   }
@@ -504,10 +509,9 @@ class _UserRidePickupScreenState extends State<UserRidePickupScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return MyScaffold(
-      scrollable: false,
+    return Scaffold(
       headers: [DefaultAppBar(title: context.l10n.title_where_you_at)],
-      body: PickLocationWidget(
+      child: PickLocationWidget(
         type: LocationType.pickup,
         pickupController: pickupController,
         dropoffController: dropoffController,
@@ -545,10 +549,9 @@ class _UserRideDropoffScreenState extends State<UserRideDropoffScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return MyScaffold(
-      scrollable: false,
+    return Scaffold(
       headers: [DefaultAppBar(title: context.l10n.title_where_going)],
-      body: PickLocationWidget(
+      child: PickLocationWidget(
         type: LocationType.dropoff,
         pickupController: pickupController,
         dropoffController: dropoffController,

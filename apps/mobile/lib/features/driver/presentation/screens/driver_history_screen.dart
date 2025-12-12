@@ -97,98 +97,102 @@ class _DriverHistoryScreenState extends State<DriverHistoryScreen> {
       builder: (context, state) {
         // Orders are now filtered server-side, no need for client-side filtering
         final orders = state.orders;
-        return MyScaffold(
+        return Scaffold(
           headers: [
             DefaultAppBar(
               title: context.l10n.order_history,
               padding: EdgeInsets.all(16.r),
             ),
           ],
-          scrollable: false,
-          body: Column(
-            spacing: 8.h,
-            children: [
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  spacing: 8.w,
-                  children: [
-                    _buildStatusFilterChip(context.l10n.all, null),
-                    _buildStatusFilterChip(
-                      context.l10n.completed,
-                      OrderStatus.COMPLETED,
-                    ),
-                    _buildStatusFilterChip(
-                      context.l10n.in_progress,
-                      OrderStatus.IN_TRIP,
-                    ),
-                    _buildStatusFilterChip(
-                      context.l10n.cancelled,
-                      OrderStatus.CANCELLED_BY_USER,
-                    ),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: RefreshTrigger(
-                  onRefresh: _onRefresh,
-                  child: Column(
-                    spacing: 8.h,
+          child: Padding(
+            padding: EdgeInsets.all(16.dg),
+            child: Column(
+              spacing: 8.h,
+              children: [
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    spacing: 8.w,
                     children: [
-                      // Filter chips
-                      SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          spacing: 8.w,
-                          children: [
-                            _buildTypeFilterChip(context.l10n.all_types, null),
-                            _buildTypeFilterChip(
-                              context.l10n.ride,
-                              OrderType.RIDE,
-                            ),
-                            _buildTypeFilterChip(
-                              context.l10n.delivery,
-                              OrderType.DELIVERY,
-                            ),
-                            _buildTypeFilterChip(
-                              context.l10n.order_type_food,
-                              OrderType.FOOD,
-                            ),
-                          ],
-                        ),
+                      _buildStatusFilterChip(context.l10n.all, null),
+                      _buildStatusFilterChip(
+                        context.l10n.completed,
+                        OrderStatus.COMPLETED,
                       ),
-                      const Divider(),
-                      // Order list
-                      Expanded(
-                        child: orders.isEmpty
-                            ? _buildEmptyState()
-                            : ListView.separated(
-                                controller: _scrollController,
-                                padding: EdgeInsets.all(16.dg),
-                                itemCount: orders.length,
-                                separatorBuilder: (context, index) =>
-                                    SizedBox(height: 12.h),
-                                itemBuilder: (context, index) {
-                                  if (index >= orders.length) {
-                                    return const Center(
-                                      child: Padding(
-                                        padding: EdgeInsets.all(16),
-                                        child: CircularProgressIndicator(),
-                                      ),
-                                    );
-                                  }
-                                  return _buildOrderCard(
-                                    context,
-                                    orders[index],
-                                  );
-                                },
-                              ),
+                      _buildStatusFilterChip(
+                        context.l10n.in_progress,
+                        OrderStatus.IN_TRIP,
+                      ),
+                      _buildStatusFilterChip(
+                        context.l10n.cancelled,
+                        OrderStatus.CANCELLED_BY_USER,
                       ),
                     ],
                   ),
                 ),
-              ),
-            ],
+                Expanded(
+                  child: RefreshTrigger(
+                    onRefresh: _onRefresh,
+                    child: Column(
+                      spacing: 8.h,
+                      children: [
+                        // Filter chips
+                        SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            spacing: 8.w,
+                            children: [
+                              _buildTypeFilterChip(
+                                context.l10n.all_types,
+                                null,
+                              ),
+                              _buildTypeFilterChip(
+                                context.l10n.ride,
+                                OrderType.RIDE,
+                              ),
+                              _buildTypeFilterChip(
+                                context.l10n.delivery,
+                                OrderType.DELIVERY,
+                              ),
+                              _buildTypeFilterChip(
+                                context.l10n.order_type_food,
+                                OrderType.FOOD,
+                              ),
+                            ],
+                          ),
+                        ),
+                        const Divider(),
+                        // Order list
+                        Expanded(
+                          child: orders.isEmpty
+                              ? _buildEmptyState()
+                              : ListView.separated(
+                                  controller: _scrollController,
+                                  itemCount: orders.length,
+                                  separatorBuilder: (context, index) =>
+                                      SizedBox(height: 12.h),
+                                  itemBuilder: (context, index) {
+                                    if (index >= orders.length) {
+                                      return const Center(
+                                        child: Padding(
+                                          padding: EdgeInsets.all(16),
+                                          child: CircularProgressIndicator(),
+                                        ),
+                                      );
+                                    }
+                                    return _buildOrderCard(
+                                      context,
+                                      orders[index],
+                                    );
+                                  },
+                                ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         );
       },

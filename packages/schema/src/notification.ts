@@ -32,7 +32,8 @@ export type InsertFCMTopicSubscription = z.infer<
 
 export const FCMNotificationLogSchema = z.object({
 	id: z.uuid(),
-	userId: z.string(),
+	// userId is optional for system-generated notifications (e.g., order timeout, broadcasts)
+	userId: z.string().optional(),
 	token: z.string().optional(),
 	topic: z.string().optional(),
 	title: z.string(),

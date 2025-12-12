@@ -78,7 +78,7 @@ class _OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return MyScaffold(
+    return Scaffold(
       headers: [
         AppBar(
           padding: EdgeInsets.all(4.dg),
@@ -95,8 +95,7 @@ class _OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
           ],
         ),
       ],
-      padding: EdgeInsets.zero,
-      body: BlocConsumer<CartCubit, CartState>(
+      child: BlocConsumer<CartCubit, CartState>(
         listenWhen: (prev, curr) =>
             prev.placeFoodOrderResult != curr.placeFoodOrderResult,
         listener: (context, state) async {

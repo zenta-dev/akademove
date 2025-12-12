@@ -14,8 +14,7 @@ class UserWalletScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MyScaffold(
-      scrollable: true,
+    return Scaffold(
       headers: [
         AppBar(
           title: Text(
@@ -56,54 +55,62 @@ class UserWalletScreen extends StatelessWidget {
           ],
         ),
       ],
-      onRefresh: () async {
-        context.read<UserWalletCubit>().getMine();
-      },
-      body: Column(
-        spacing: 16.h,
-        children: [
-          BlocBuilder<AuthCubit, AuthState>(
-            builder: (context, authState) {
-              return BlocBuilder<UserWalletCubit, UserWalletState>(
-                builder: (context, state) {
-                  return WalletBalanceCardWidget(
-                    balance: (state.myWallet.value?.balance ?? 0).toDouble(),
-                    userId: authState.user.data?.value.id,
-                  ).asSkeleton(enabled: state.myWallet.isLoading);
-                },
-              );
-            },
-          ),
-          Card(
-            padding: EdgeInsets.all(8.dg),
+      child: RefreshTrigger(
+        onRefresh: () async {
+          context.read<UserWalletCubit>().getMine();
+        },
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.all(16.dg),
             child: Column(
-              spacing: 8.h,
+              spacing: 16.h,
               children: [
-                // BlocBuilder<UserWalletCubit, UserWalletState>(
-                //   builder: (context, state) {
-                //     return WalletMonthlySummaryCardWidget(
-                //       summary:
-                //           state.thisMonthSummary.value ?? dummyWalletSummary,
-                //     ).asSkeleton(enabled: state.myWallet.isLoading);
-                //   },
-                // ),
-                // const Divider(),
-                SizedBox(
-                  height: context.mediaQuerySize.height * 0.4,
-                  child: BlocBuilder<UserWalletCubit, UserWalletState>(
-                    builder: (context, state) {
-                      return WalletListTransactionWidget(
-                        transactions: state.myWallet.isLoading
-                            ? List.generate(10, (_) => dummyTransaction)
-                            : state.myTransactions.value ?? [],
-                      ).asSkeleton(enabled: state.myWallet.isLoading);
-                    },
+                BlocBuilder<AuthCubit, AuthState>(
+                  builder: (context, authState) {
+                    return BlocBuilder<UserWalletCubit, UserWalletState>(
+                      builder: (context, state) {
+                        return WalletBalanceCardWidget(
+                          balance: (state.myWallet.value?.balance ?? 0)
+                              .toDouble(),
+                          userId: authState.user.data?.value.id,
+                        ).asSkeleton(enabled: state.myWallet.isLoading);
+                      },
+                    );
+                  },
+                ),
+                Card(
+                  padding: EdgeInsets.all(8.dg),
+                  child: Column(
+                    spacing: 8.h,
+                    children: [
+                      // BlocBuilder<UserWalletCubit, UserWalletState>(
+                      //   builder: (context, state) {
+                      //     return WalletMonthlySummaryCardWidget(
+                      //       summary:
+                      //           state.thisMonthSummary.value ?? dummyWalletSummary,
+                      //     ).asSkeleton(enabled: state.myWallet.isLoading);
+                      //   },
+                      // ),
+                      // const Divider(),
+                      SizedBox(
+                        height: context.mediaQuerySize.height * 0.4,
+                        child: BlocBuilder<UserWalletCubit, UserWalletState>(
+                          builder: (context, state) {
+                            return WalletListTransactionWidget(
+                              transactions: state.myWallet.isLoading
+                                  ? List.generate(10, (_) => dummyTransaction)
+                                  : state.myTransactions.value ?? [],
+                            ).asSkeleton(enabled: state.myWallet.isLoading);
+                          },
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
             ),
           ),
-        ],
+        ),
       ),
     );
   }

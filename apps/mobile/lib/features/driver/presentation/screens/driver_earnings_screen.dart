@@ -59,7 +59,7 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
         final transactions = state.transactions;
         final monthlySummary = state.monthlySummary;
 
-        return MyScaffold(
+        return Scaffold(
           headers: [
             AppBar(
               title: Text(context.l10n.earnings_wallet),
@@ -72,7 +72,7 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
               ],
             ),
           ],
-          body: isLoading && wallet == null
+          child: isLoading && wallet == null
               ? const Center(child: CircularProgressIndicator())
               : RefreshTrigger(
                   onRefresh: _onRefresh,

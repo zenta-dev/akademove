@@ -43,7 +43,7 @@ class _UserDeliverySummaryScreenState extends State<UserDeliverySummaryScreen> {
     return BlocBuilder<UserOrderCubit, UserOrderState>(
       builder: (context, state) {
         final estimate = state.estimateOrder.value;
-        return MyScaffold(
+        return Scaffold(
           headers: [
             AppBar(
               padding: EdgeInsets.all(4.dg),
@@ -82,8 +82,12 @@ class _UserDeliverySummaryScreenState extends State<UserDeliverySummaryScreen> {
                 ),
               ),
           ],
-          scrollable: false,
-          body: _buildBody(context, state),
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.all(16.dg),
+              child: _buildBody(context, state),
+            ),
+          ),
         );
       },
     );

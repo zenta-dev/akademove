@@ -400,41 +400,43 @@ class _MerchantSalesReportDetailScreenState
 
         return Stack(
           children: [
-            MyScaffold(
+            Scaffold(
               headers: [DefaultAppBar(title: context.l10n.title_sales_report)],
-              padding: EdgeInsets.all(16.w),
-              body: SafeArea(
-                child: isLoading
-                    ? const Center(child: CircularProgressIndicator())
-                    : RefreshIndicator(
-                        onRefresh: () => context
-                            .read<MerchantAnalyticsCubit>()
-                            .getMonthlyAnalytics(),
-                        child: SingleChildScrollView(
-                          padding: EdgeInsets.only(bottom: 100.h),
-                          child: Column(
-                            spacing: 16.h,
-                            children: [
-                              _buildSalesGauge(
-                                context: context,
-                                title: context.l10n.label_weekly_sales,
-                                value: completionRate.clamp(0, 100),
-                                amount: _currencyFormat.format(
-                                  totalRevenue * 0.25,
+              child: SafeArea(
+                child: Padding(
+                  padding: EdgeInsets.all(16.w),
+                  child: isLoading
+                      ? const Center(child: CircularProgressIndicator())
+                      : RefreshIndicator(
+                          onRefresh: () => context
+                              .read<MerchantAnalyticsCubit>()
+                              .getMonthlyAnalytics(),
+                          child: SingleChildScrollView(
+                            padding: EdgeInsets.only(bottom: 100.h),
+                            child: Column(
+                              spacing: 16.h,
+                              children: [
+                                _buildSalesGauge(
+                                  context: context,
+                                  title: context.l10n.label_weekly_sales,
+                                  value: completionRate.clamp(0, 100),
+                                  amount: _currencyFormat.format(
+                                    totalRevenue * 0.25,
+                                  ),
                                 ),
-                              ),
-                              _buildSalesGauge(
-                                context: context,
-                                title: context.l10n.label_monthly_sales,
-                                value: completionRate.clamp(0, 100),
-                                amount: _currencyFormat.format(totalRevenue),
-                              ),
-                              _buildTopOrderedCategories(context, topItems),
-                              _buildTopOrderedProducts(context, topItems),
-                            ],
+                                _buildSalesGauge(
+                                  context: context,
+                                  title: context.l10n.label_monthly_sales,
+                                  value: completionRate.clamp(0, 100),
+                                  amount: _currencyFormat.format(totalRevenue),
+                                ),
+                                _buildTopOrderedCategories(context, topItems),
+                                _buildTopOrderedProducts(context, topItems),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
+                ),
               ),
             ),
             Positioned(

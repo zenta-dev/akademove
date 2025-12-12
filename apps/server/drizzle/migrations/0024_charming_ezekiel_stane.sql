@@ -1,0 +1,1 @@
+ALTER TABLE "am_fcm_notification_logs" ALTER COLUMN "user_id" DROP NOT NULL;

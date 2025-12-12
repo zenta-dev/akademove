@@ -23,37 +23,40 @@ class UserWalletTopUpScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MyScaffold(
-      scrollable: false,
+    return Scaffold(
       headers: [DefaultAppBar(title: context.l10n.top_up)],
-      body: ListView.separated(
-        padding: EdgeInsets.zero,
-        itemCount: _options.length,
-        separatorBuilder: (context, index) => Gap(4.h),
-        itemBuilder: (context, index) {
-          final option = _options[index];
-          return Button(
-            style: const ButtonStyle.secondary().copyWith(
-              decoration: (context, states, value) =>
-                  value.copyWithIfBoxDecoration(
-                    color: context.colorScheme.primary.withValues(alpha: 0.2),
-                  ),
-            ),
-            onPressed: () {
-              context.pushNamed(
-                Routes.userWalletTopUpInsertAmount.name,
-                queryParameters: {'method': option.method.value},
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.all(16.dg),
+          child: Column(
+            spacing: 4.h,
+            children: _options.map((option) {
+              return Button(
+                style: const ButtonStyle.secondary().copyWith(
+                  decoration: (context, states, value) =>
+                      value.copyWithIfBoxDecoration(
+                        color: context.colorScheme.primary.withValues(
+                          alpha: 0.2,
+                        ),
+                      ),
+                ),
+                onPressed: () {
+                  context.pushNamed(
+                    Routes.userWalletTopUpInsertAmount.name,
+                    queryParameters: {'method': option.method.value},
+                  );
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    DefaultText(option.name),
+                    const Icon(LucideIcons.chevronRight),
+                  ],
+                ),
               );
-            },
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                DefaultText(option.name),
-                const Icon(LucideIcons.chevronRight),
-              ],
-            ),
-          );
-        },
+            }).toList(),
+          ),
+        ),
       ),
     );
   }

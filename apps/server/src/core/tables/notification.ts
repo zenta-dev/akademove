@@ -44,9 +44,8 @@ export const fcmNotificationLog = pgTable(
 	"fcm_notification_logs",
 	{
 		id: uuid().primaryKey(),
-		userId: text("user_id")
-			.notNull()
-			.references(() => user.id, { onDelete: "cascade" }),
+		// userId is nullable for system-generated notifications (e.g., order timeout, broadcasts)
+		userId: text("user_id").references(() => user.id, { onDelete: "cascade" }),
 		token: text(),
 		topic: text(),
 		title: text().notNull(),

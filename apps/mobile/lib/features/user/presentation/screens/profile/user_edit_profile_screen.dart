@@ -77,149 +77,158 @@ class _UserEditProfileScreenState extends State<UserEditProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return MyScaffold(
+    return Scaffold(
       headers: [DefaultAppBar(title: context.l10n.title_edit_profile)],
-      body: BlocBuilder<AuthCubit, AuthState>(
-        builder: (context, authState) {
-          return BlocConsumer<UserProfileCubit, UserProfileState>(
-            listener: (context, profileState) {
-              profileState.updateProfileResult.whenOr(
-                success: (user, message) {
-                  context.showMyToast(message, type: ToastType.success);
-                  delay(const Duration(seconds: 3), () {
-                    context.read<UserProfileCubit>().reset();
-                    context.read<AuthCubit>().authenticate();
-                    context.pop();
-                  });
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.all(16.dg),
+          child: BlocBuilder<AuthCubit, AuthState>(
+            builder: (context, authState) {
+              return BlocConsumer<UserProfileCubit, UserProfileState>(
+                listener: (context, profileState) {
+                  profileState.updateProfileResult.whenOr(
+                    success: (user, message) {
+                      context.showMyToast(message, type: ToastType.success);
+                      delay(const Duration(seconds: 3), () {
+                        context.read<UserProfileCubit>().reset();
+                        context.read<AuthCubit>().authenticate();
+                        context.pop();
+                      });
+                    },
+                    failure: (error) {
+                      context.showMyToast(
+                        error.message,
+                        type: ToastType.failed,
+                      );
+                    },
+                    orElse: noop,
+                  );
                 },
-                failure: (error) {
-                  context.showMyToast(error.message, type: ToastType.failed);
-                },
-                orElse: noop,
-              );
-            },
-            builder: (context, profileState) {
-              final isLoading = profileState.updateProfileResult.isLoading;
-              return Form(
-                onSubmit: _handleFormSubmit,
-                child: Column(
-                  spacing: 8.h,
-                  children: [
-                    Column(
+                builder: (context, profileState) {
+                  final isLoading = profileState.updateProfileResult.isLoading;
+                  return Form(
+                    onSubmit: _handleFormSubmit,
+                    child: Column(
                       spacing: 8.h,
                       children: [
-                        Text(context.l10n.label_photo_profile).small(),
-                        ImagePickerWidget(
-                          enabled: !isLoading,
-                          previewUrl: authState.user.data?.value.image,
-                          value: _pickedPhoto,
-                          size: Size(86.h, 86.h),
-                          onValueChanged: (file) =>
-                              setState(() => _pickedPhoto = file),
+                        Column(
+                          spacing: 8.h,
+                          children: [
+                            Text(context.l10n.label_photo_profile).small(),
+                            ImagePickerWidget(
+                              enabled: !isLoading,
+                              previewUrl: authState.user.data?.value.image,
+                              value: _pickedPhoto,
+                              size: Size(86.h, 86.h),
+                              onValueChanged: (file) =>
+                                  setState(() => _pickedPhoto = file),
+                            ),
+                          ],
+                        ),
+                        FormField(
+                          key: _nameKey,
+                          label: Text(context.l10n.label_name).small(),
+                          showErrors: _showErrors,
+                          child: TextField(
+                            enabled: !isLoading,
+                            focusNode: _nameFn,
+                            initialValue: authState.user.data?.value.name,
+                            placeholder: Text(
+                              authState.user.data?.value.name ??
+                                  context.l10n.placeholder_full_name,
+                            ),
+                            keyboardType: TextInputType.name,
+                            textInputAction: TextInputAction.next,
+                            autofillHints: const [AutofillHints.name],
+                            onSubmitted: (value) {
+                              _emailFn.requestFocus();
+                            },
+                            features: const [
+                              InputFeature.leading(Icon(LucideIcons.user)),
+                            ],
+                          ),
+                        ),
+                        FormField(
+                          key: _emailKey,
+                          label: Text(context.l10n.label_email).small(),
+                          validator: _emailValidator,
+                          showErrors: _showErrors,
+                          child: TextField(
+                            enabled: !isLoading,
+                            focusNode: _emailFn,
+                            initialValue: authState.user.data?.value.email,
+                            placeholder: Text(
+                              authState.user.data?.value.email ??
+                                  'john@gmail.com',
+                            ),
+                            keyboardType: TextInputType.emailAddress,
+                            textInputAction: TextInputAction.next,
+                            autofillHints: const [AutofillHints.email],
+
+                            features: const [
+                              InputFeature.leading(Icon(LucideIcons.mail)),
+                            ],
+                          ),
+                        ),
+                        FormField(
+                          key: _phoneKey,
+                          label: Text(context.l10n.label_phone).small(),
+                          showErrors: const {
+                            FormValidationMode.changed,
+                            FormValidationMode.submitted,
+                          },
+                          child: ComponentTheme(
+                            data: PhoneInputTheme(
+                              maxWidth: 200 * context.theme.scaling,
+                              flagWidth: 22.w,
+                            ),
+                            child: PhoneInput(
+                              initialCountry: Country.indonesia,
+                              countries: const [Country.indonesia],
+                              initialValue: authState.user.data?.value.phone
+                                  .toPhoneNumber(),
+                              onChanged: (value) {
+                                switch (value.country) {
+                                  case Country.indonesia:
+                                    _selectedCountryCode = CountryCode.ID;
+                                  default:
+                                }
+                              },
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          width: double.infinity,
+                          child: FormErrorBuilder(
+                            builder: (context, errors, child) {
+                              final hasErrors = errors.isNotEmpty;
+
+                              return Button(
+                                style: isLoading || hasErrors
+                                    ? const ButtonStyle.outline()
+                                    : const ButtonStyle.primary(),
+                                onPressed: (!hasErrors && !isLoading)
+                                    ? () => context.submitForm()
+                                    : null,
+                                child: isLoading
+                                    ? const Submiting()
+                                    : Text(
+                                        context.l10n.button_save_changes,
+                                        style: context.theme.typography.medium
+                                            .copyWith(color: Colors.white),
+                                      ),
+                              );
+                            },
+                          ),
                         ),
                       ],
                     ),
-                    FormField(
-                      key: _nameKey,
-                      label: Text(context.l10n.label_name).small(),
-                      showErrors: _showErrors,
-                      child: TextField(
-                        enabled: !isLoading,
-                        focusNode: _nameFn,
-                        initialValue: authState.user.data?.value.name,
-                        placeholder: Text(
-                          authState.user.data?.value.name ??
-                              context.l10n.placeholder_full_name,
-                        ),
-                        keyboardType: TextInputType.name,
-                        textInputAction: TextInputAction.next,
-                        autofillHints: const [AutofillHints.name],
-                        onSubmitted: (value) {
-                          _emailFn.requestFocus();
-                        },
-                        features: const [
-                          InputFeature.leading(Icon(LucideIcons.user)),
-                        ],
-                      ),
-                    ),
-                    FormField(
-                      key: _emailKey,
-                      label: Text(context.l10n.label_email).small(),
-                      validator: _emailValidator,
-                      showErrors: _showErrors,
-                      child: TextField(
-                        enabled: !isLoading,
-                        focusNode: _emailFn,
-                        initialValue: authState.user.data?.value.email,
-                        placeholder: Text(
-                          authState.user.data?.value.email ?? 'john@gmail.com',
-                        ),
-                        keyboardType: TextInputType.emailAddress,
-                        textInputAction: TextInputAction.next,
-                        autofillHints: const [AutofillHints.email],
-
-                        features: const [
-                          InputFeature.leading(Icon(LucideIcons.mail)),
-                        ],
-                      ),
-                    ),
-                    FormField(
-                      key: _phoneKey,
-                      label: Text(context.l10n.label_phone).small(),
-                      showErrors: const {
-                        FormValidationMode.changed,
-                        FormValidationMode.submitted,
-                      },
-                      child: ComponentTheme(
-                        data: PhoneInputTheme(
-                          maxWidth: 200 * context.theme.scaling,
-                          flagWidth: 22.w,
-                        ),
-                        child: PhoneInput(
-                          initialCountry: Country.indonesia,
-                          countries: const [Country.indonesia],
-                          initialValue: authState.user.data?.value.phone
-                              .toPhoneNumber(),
-                          onChanged: (value) {
-                            switch (value.country) {
-                              case Country.indonesia:
-                                _selectedCountryCode = CountryCode.ID;
-                              default:
-                            }
-                          },
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: double.infinity,
-                      child: FormErrorBuilder(
-                        builder: (context, errors, child) {
-                          final hasErrors = errors.isNotEmpty;
-
-                          return Button(
-                            style: isLoading || hasErrors
-                                ? const ButtonStyle.outline()
-                                : const ButtonStyle.primary(),
-                            onPressed: (!hasErrors && !isLoading)
-                                ? () => context.submitForm()
-                                : null,
-                            child: isLoading
-                                ? const Submiting()
-                                : Text(
-                                    context.l10n.button_save_changes,
-                                    style: context.theme.typography.medium
-                                        .copyWith(color: Colors.white),
-                                  ),
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                ),
+                  );
+                },
               );
             },
-          );
-        },
+          ),
+        ),
       ),
     );
   }

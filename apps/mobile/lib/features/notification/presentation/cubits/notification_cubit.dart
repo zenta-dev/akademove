@@ -1,4 +1,5 @@
 import 'package:akademove/core/_export.dart';
+import 'package:akademove/features/notification/data/models/notification_models.dart';
 import 'package:akademove/features/notification/data/repositories/notification_repository.dart';
 import 'package:akademove/features/notification/presentation/states/_export.dart';
 
@@ -21,16 +22,15 @@ class NotificationCubit extends BaseCubit<NotificationState> {
           page: page,
         );
 
-        final notificationData = response.data;
+        final (notifications, totalPages) = response.data;
         emit(
           state.copyWith(
             notifications: OperationResult.success(
               NotificationListData(
-                items: notificationData.notifications,
-                currentPage: notificationData.page,
-                totalPages: (notificationData.total / notificationData.limit)
-                    .ceil(),
-                totalCount: notificationData.total,
+                items: notifications,
+                currentPage: page,
+                totalPages: totalPages,
+                totalCount: notifications.length,
               ),
               message: response.message,
             ),
@@ -68,21 +68,17 @@ class NotificationCubit extends BaseCubit<NotificationState> {
           page: nextPage,
         );
 
-        final notificationData = response.data;
-        final updatedItems = [
-          ...currentData.items,
-          ...notificationData.notifications,
-        ];
+        final (notifications, totalPages) = response.data;
+        final updatedItems = [...currentData.items, ...notifications];
 
         emit(
           state.copyWith(
             notifications: OperationResult.success(
               NotificationListData(
                 items: updatedItems,
-                currentPage: notificationData.page,
-                totalPages: (notificationData.total / notificationData.limit)
-                    .ceil(),
-                totalCount: notificationData.total,
+                currentPage: nextPage,
+                totalPages: totalPages,
+                totalCount: updatedItems.length,
                 isLoadingMore: false,
               ),
             ),
@@ -134,7 +130,10 @@ class NotificationCubit extends BaseCubit<NotificationState> {
         // Update the notification in local state
         final updatedItems = currentData.items.map((notification) {
           if (notification.id == notificationId) {
-            return notification.copyWith(isRead: true, readAt: DateTime.now());
+            return notification.copyWithUpdated(
+              isRead: true,
+              readAt: DateTime.now(),
+            );
           }
           return notification;
         }).toList();
@@ -171,7 +170,10 @@ class NotificationCubit extends BaseCubit<NotificationState> {
 
         // Update all notifications to read
         final updatedItems = currentData.items.map((notification) {
-          return notification.copyWith(isRead: true, readAt: DateTime.now());
+          return notification.copyWithUpdated(
+            isRead: true,
+            readAt: DateTime.now(),
+          );
         }).toList();
 
         emit(

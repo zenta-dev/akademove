@@ -225,10 +225,14 @@ class _MerchantEditMenuScreenState extends State<MerchantEditMenuScreen> {
     final menu = _menu;
 
     if (menu == null) {
-      return MyScaffold(
-        safeArea: true,
+      return Scaffold(
         headers: [DefaultAppBar(title: context.l10n.title_edit_menu)],
-        body: Center(child: Text(context.l10n.error_menu_info_not_found)),
+        child: SafeArea(
+          child: Padding(
+            padding: EdgeInsets.all(16.dg),
+            child: Center(child: Text(context.l10n.error_menu_info_not_found)),
+          ),
+        ),
       );
     }
 
@@ -267,59 +271,64 @@ class _MerchantEditMenuScreenState extends State<MerchantEditMenuScreen> {
 
         return Stack(
           children: [
-            MyScaffold(
-              safeArea: true,
+            Scaffold(
               headers: [DefaultAppBar(title: context.l10n.title_edit_menu)],
-              body: Form(
-                controller: _formController,
-                child: SingleChildScrollView(
-                  padding: EdgeInsets.only(bottom: 100.h),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    spacing: 16.h,
-                    children: [
-                      _buildEnumSelect<MenuCategoryEnumEdit>(
-                        label: context.l10n.label_menu_category,
-                        key: _FormKeys.menuCategory,
-                        placeholder: context.l10n.placeholder_select_category,
-                        icon: LucideIcons.store,
-                        value: _selectedMenuCategory,
-                        items: MenuCategoryEnumEdit.values,
-                        enabled: !isLoading,
-                        onChanged: (value) =>
-                            setState(() => _selectedMenuCategory = value),
+              child: SafeArea(
+                child: Padding(
+                  padding: EdgeInsets.all(16.dg),
+                  child: Form(
+                    controller: _formController,
+                    child: SingleChildScrollView(
+                      padding: EdgeInsets.only(bottom: 100.h),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        spacing: 16.h,
+                        children: [
+                          _buildEnumSelect<MenuCategoryEnumEdit>(
+                            label: context.l10n.label_menu_category,
+                            key: _FormKeys.menuCategory,
+                            placeholder:
+                                context.l10n.placeholder_select_category,
+                            icon: LucideIcons.store,
+                            value: _selectedMenuCategory,
+                            items: MenuCategoryEnumEdit.values,
+                            enabled: !isLoading,
+                            onChanged: (value) =>
+                                setState(() => _selectedMenuCategory = value),
+                          ),
+                          _buildImagePicker(
+                            context.l10n.label_menu_photo,
+                            MenuPhotosEdit.menuPhoto,
+                            _menuPhoto,
+                            _menuPhotosErrors,
+                            context,
+                            isOptional: true,
+                            previewUrl: menu.image,
+                          ),
+                          _buildTextField(
+                            key: _FormKeys.menuName,
+                            controller: _nameController,
+                            label: context.l10n.label_menu_name,
+                            placeholder: context.l10n.placeholder_menu_name,
+                            icon: LucideIcons.coffee,
+                            validator: const LengthValidator(min: 3),
+                            enabled: !isLoading,
+                            maxLength: 150,
+                          ),
+                          _buildTextField(
+                            key: _FormKeys.menuPrice,
+                            controller: _priceController,
+                            label: context.l10n.label_menu_price,
+                            placeholder: context.l10n.placeholder_menu_price,
+                            icon: LucideIcons.dollarSign,
+                            validator: const LengthValidator(min: 1),
+                            enabled: !isLoading,
+                            keyboardType: TextInputType.number,
+                          ),
+                          _buildStockField(isLoading),
+                        ],
                       ),
-                      _buildImagePicker(
-                        context.l10n.label_menu_photo,
-                        MenuPhotosEdit.menuPhoto,
-                        _menuPhoto,
-                        _menuPhotosErrors,
-                        context,
-                        isOptional: true,
-                        previewUrl: menu.image,
-                      ),
-                      _buildTextField(
-                        key: _FormKeys.menuName,
-                        controller: _nameController,
-                        label: context.l10n.label_menu_name,
-                        placeholder: context.l10n.placeholder_menu_name,
-                        icon: LucideIcons.coffee,
-                        validator: const LengthValidator(min: 3),
-                        enabled: !isLoading,
-                        maxLength: 150,
-                      ),
-                      _buildTextField(
-                        key: _FormKeys.menuPrice,
-                        controller: _priceController,
-                        label: context.l10n.label_menu_price,
-                        placeholder: context.l10n.placeholder_menu_price,
-                        icon: LucideIcons.dollarSign,
-                        validator: const LengthValidator(min: 1),
-                        enabled: !isLoading,
-                        keyboardType: TextInputType.number,
-                      ),
-                      _buildStockField(isLoading),
-                    ],
+                    ),
                   ),
                 ),
               ),

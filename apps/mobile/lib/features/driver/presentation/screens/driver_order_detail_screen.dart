@@ -92,20 +92,20 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
       },
       builder: (context, state) {
         if (state.currentOrder == null) {
-          return const MyScaffold(
-            body: Center(child: CircularProgressIndicator()),
+          return const Scaffold(
+            child: Center(child: CircularProgressIndicator()),
           );
         }
 
         final order = state.currentOrder;
         if (order == null) {
-          return const MyScaffold(
-            body: Center(child: CircularProgressIndicator()),
+          return const Scaffold(
+            child: Center(child: CircularProgressIndicator()),
           );
         }
         final status = state.orderStatus;
 
-        return MyScaffold(
+        return Scaffold(
           headers: [
             AppBar(
               leading: [
@@ -120,8 +120,7 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
               ),
             ),
           ],
-          scrollable: false,
-          body: Column(
+          child: Column(
             children: [
               // Map view
               Expanded(flex: 2, child: _buildMap(order)),

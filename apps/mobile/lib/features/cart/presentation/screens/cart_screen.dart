@@ -31,7 +31,7 @@ class _CartScreenState extends State<CartScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return MyScaffold(
+    return Scaffold(
       headers: [
         AppBar(
           padding: EdgeInsets.all(4.dg),
@@ -60,42 +60,43 @@ class _CartScreenState extends State<CartScreen> {
           ],
         ),
       ],
-      padding: EdgeInsets.zero,
-      onRefresh: _onRefresh,
-      body: BlocConsumer<CartCubit, CartState>(
-        listener: (context, state) {
-          // Listen to cart load failures
-          state.cart.whenOr(
-            failure: (error) {
-              showToast(
-                context: context,
-                builder: (context, overlay) => context.buildToast(
-                  title: context.l10n.error,
-                  message: error.message ?? context.l10n.an_error_occurred,
+      child: RefreshTrigger(
+        onRefresh: _onRefresh,
+        child: BlocConsumer<CartCubit, CartState>(
+          listener: (context, state) {
+            // Listen to cart load failures
+            state.cart.whenOr(
+              failure: (error) {
+                showToast(
+                  context: context,
+                  builder: (context, overlay) => context.buildToast(
+                    title: context.l10n.error,
+                    message: error.message ?? context.l10n.an_error_occurred,
+                  ),
+                  location: ToastLocation.topCenter,
+                );
+              },
+              orElse: () {},
+            );
+          },
+          builder: (context, state) {
+            return state.cart.whenOr(
+              success: (cart, _) {
+                if (state.isEmpty) {
+                  return _buildEmptyCart(context);
+                }
+                return _buildContent(context, state);
+              },
+              failure: (error) => Center(
+                child: OopsAlertWidget(
+                  message: error.message ?? context.l10n.cart_failed_to_load,
+                  onRefresh: () => context.read<CartCubit>().loadCart(),
                 ),
-                location: ToastLocation.topCenter,
-              );
-            },
-            orElse: () {},
-          );
-        },
-        builder: (context, state) {
-          return state.cart.whenOr(
-            success: (cart, _) {
-              if (state.isEmpty) {
-                return _buildEmptyCart(context);
-              }
-              return _buildContent(context, state);
-            },
-            failure: (error) => Center(
-              child: OopsAlertWidget(
-                message: error.message ?? context.l10n.cart_failed_to_load,
-                onRefresh: () => context.read<CartCubit>().loadCart(),
               ),
-            ),
-            orElse: () => const Center(child: CircularProgressIndicator()),
-          );
-        },
+              orElse: () => const Center(child: CircularProgressIndicator()),
+            );
+          },
+        ),
       ),
     );
   }
@@ -103,41 +104,47 @@ class _CartScreenState extends State<CartScreen> {
   Widget _buildEmptyCart(BuildContext context) {
     final mutedColor = context.colorScheme.mutedForeground;
 
-    return Center(
-      child: Padding(
-        padding: EdgeInsets.all(24.dg),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              LucideIcons.shoppingCart,
-              size: 80.sp,
-              color: mutedColor.withValues(alpha: 0.4),
+    return SingleChildScrollView(
+      physics: const AlwaysScrollableScrollPhysics(),
+      child: SizedBox(
+        height: MediaQuery.of(context).size.height * 0.7,
+        child: Center(
+          child: Padding(
+            padding: EdgeInsets.all(24.dg),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  LucideIcons.shoppingCart,
+                  size: 80.sp,
+                  color: mutedColor.withValues(alpha: 0.4),
+                ),
+                Gap(16.h),
+                Text(
+                  context.l10n.cart_your_cart_is_empty,
+                  style: context.typography.h3.copyWith(
+                    fontSize: 20.sp,
+                    color: mutedColor.withValues(alpha: 0.7),
+                  ),
+                ),
+                Gap(8.h),
+                Text(
+                  context.l10n.cart_add_items_to_see_here,
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    color: mutedColor.withValues(alpha: 0.6),
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                Gap(24.h),
+                Button(
+                  style: const ButtonStyle.primary(),
+                  onPressed: () => context.pop(),
+                  child: Text(context.l10n.cart_browse_amart),
+                ),
+              ],
             ),
-            Gap(16.h),
-            Text(
-              context.l10n.cart_your_cart_is_empty,
-              style: context.typography.h3.copyWith(
-                fontSize: 20.sp,
-                color: mutedColor.withValues(alpha: 0.7),
-              ),
-            ),
-            Gap(8.h),
-            Text(
-              context.l10n.cart_add_items_to_see_here,
-              style: TextStyle(
-                fontSize: 14.sp,
-                color: mutedColor.withValues(alpha: 0.6),
-              ),
-              textAlign: TextAlign.center,
-            ),
-            Gap(24.h),
-            Button(
-              style: const ButtonStyle.primary(),
-              onPressed: () => context.pop(),
-              child: Text(context.l10n.cart_browse_amart),
-            ),
-          ],
+          ),
         ),
       ),
     );

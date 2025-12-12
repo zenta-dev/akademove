@@ -372,22 +372,24 @@ class _MerchantSetUpOutletScreenState extends State<MerchantSetUpOutletScreen> {
       },
       child: Stack(
         children: [
-          MyScaffold(
-            controller: _scrollController,
+          Scaffold(
             headers: [DefaultAppBar(title: context.l10n.title_set_up_outlet)],
-            body: Form(
-              controller: _formController,
-              child: Column(
-                children: [
-                  Gap(12.h),
-                  Stepper(
-                    controller: _stepController,
-                    direction: Axis.horizontal,
-                    variant: StepVariant.line,
-                    size: StepSize.small,
-                    steps: [_buildStep1(context), _buildStep2(context)],
-                  ),
-                ],
+            child: Padding(
+              padding: EdgeInsets.all(16.dg),
+              child: Form(
+                controller: _formController,
+                child: Column(
+                  children: [
+                    Gap(12.h),
+                    Stepper(
+                      controller: _stepController,
+                      direction: Axis.horizontal,
+                      variant: StepVariant.line,
+                      size: StepSize.small,
+                      steps: [_buildStep1(context), _buildStep2(context)],
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

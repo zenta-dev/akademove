@@ -40,9 +40,7 @@ class _UserWalletTransferScanScreenState
 
   @override
   Widget build(BuildContext context) {
-    return MyScaffold(
-      padding: EdgeInsets.zero,
-      scrollable: false,
+    return Scaffold(
       headers: [
         DefaultAppBar(
           title: context.l10n.scan_qr,
@@ -55,7 +53,7 @@ class _UserWalletTransferScanScreenState
           ],
         ),
       ],
-      body: Stack(
+      child: Stack(
         children: [
           // Camera preview
           MobileScanner(controller: _controller, onDetect: _onDetect),

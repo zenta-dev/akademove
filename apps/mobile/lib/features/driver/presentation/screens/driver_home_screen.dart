@@ -33,27 +33,29 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
         }
       },
       builder: (context, state) {
-        return MyScaffold(
+        return Scaffold(
           headers: [
             DefaultAppBar(
               padding: EdgeInsets.all(16.r),
               title: context.l10n.driver_dashboard,
             ),
           ],
-          scrollable: false,
-          body: RefreshTrigger(
+          child: RefreshTrigger(
             onRefresh: () => context.read<DriverCubit>().init(),
             child: SingleChildScrollView(
               physics: const AlwaysScrollableScrollPhysics(),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                spacing: 20.h,
-                children: [
-                  _buildWelcomeCard(context, state),
-                  _buildOnlineToggle(context, state),
-                  _buildTodayStats(context, state),
-                  _buildQuickActions(context),
-                ],
+              child: Padding(
+                padding: EdgeInsets.all(16.dg),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  spacing: 20.h,
+                  children: [
+                    _buildWelcomeCard(context, state),
+                    _buildOnlineToggle(context, state),
+                    _buildTodayStats(context, state),
+                    _buildQuickActions(context),
+                  ],
+                ),
               ),
             ),
           ),

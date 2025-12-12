@@ -77,7 +77,7 @@ class _UserMenuDetailScreenState extends State<UserMenuDetailScreen> {
           context.pop(); // Go back after success
         }
       },
-      child: MyScaffold(
+      child: Scaffold(
         headers: [
           DefaultAppBar(
             title: context.l10n.menu_details,
@@ -93,8 +93,7 @@ class _UserMenuDetailScreenState extends State<UserMenuDetailScreen> {
             ],
           ),
         ],
-        padding: EdgeInsets.zero,
-        body: _buildContent(context),
+        child: _buildContent(context),
       ),
     );
   }

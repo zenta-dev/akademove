@@ -50,6 +50,16 @@ class NotificationRepository extends BaseRepository {
     });
   }
 
+  /// Set up handler for notification taps when app was in background
+  void onMessageOpenedApp(void Function(RemoteMessage message) handler) {
+    FirebaseMessaging.onMessageOpenedApp.listen(handler);
+  }
+
+  /// Get initial message if app was opened from a notification tap (terminated state)
+  Future<RemoteMessage?> getInitialMessage() {
+    return FirebaseMessaging.instance.getInitialMessage();
+  }
+
   /// Remove FCM token from server (call on logout)
   Future<void> removeToken() {
     return guard(() async {
@@ -72,7 +82,8 @@ class NotificationRepository extends BaseRepository {
   }
 
   /// Get user notifications with pagination
-  Future<BaseResponse<NotificationListResponse>> getNotifications({
+  /// Returns a tuple of (notifications, totalPages)
+  Future<BaseResponse<(List<NotificationData>, int)>> getNotifications({
     int page = 1,
     int limit = 20,
     String readFilter = 'all',
@@ -98,30 +109,17 @@ class NotificationRepository extends BaseRepository {
         );
       }
 
-      final notifications = data.data
-          .map((dto) => NotificationModel.fromDto(dto))
-          .toList();
-
       final totalPages = data.totalPages ?? data.pagination?.totalPages ?? 1;
-      final total = notifications.length;
-
-      final notificationListResponse = NotificationListResponse(
-        notifications: notifications,
-        total: total,
-        page: page,
-        limit: limit,
-        totalPages: totalPages,
-      );
 
       return SuccessResponse(
         message: data.message,
-        data: notificationListResponse,
+        data: (data.data, totalPages),
       );
     });
   }
 
   /// Mark notification as read
-  Future<BaseResponse<NotificationModel>> markAsRead(String notificationId) {
+  Future<BaseResponse<NotificationData>> markAsRead(String notificationId) {
     return guard(() async {
       logger.i('[$tag] Marking notification $notificationId as read');
 
@@ -137,7 +135,8 @@ class NotificationRepository extends BaseRepository {
         );
       }
 
-      final notification = NotificationModel.fromMarkAsReadDto(data.data);
+      // Convert to NotificationData using extension method
+      final notification = data.data.toNotificationData();
 
       return SuccessResponse(message: data.message, data: notification);
     });

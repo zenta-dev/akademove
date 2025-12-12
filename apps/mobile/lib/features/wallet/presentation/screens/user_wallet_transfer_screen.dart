@@ -54,7 +54,7 @@ class _UserWalletTransferScreenState extends State<UserWalletTransferScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return MyScaffold(
+    return Scaffold(
       headers: [
         DefaultAppBar(
           title: context.l10n.transfer,
@@ -67,79 +67,84 @@ class _UserWalletTransferScreenState extends State<UserWalletTransferScreen> {
           ],
         ),
       ],
-      body: BlocConsumer<UserWalletTransferCubit, UserWalletTransferState>(
-        listener: (context, state) {
-          if (state.transfer.isSuccess) {
-            context.showMyToast(
-              context.l10n.transfer_success,
-              type: ToastType.success,
-            );
-            context.read<UserWalletCubit>().getMine();
-            context.pop(true);
-          } else if (state.transfer.isFailed) {
-            context.showMyToast(
-              state.transfer.error?.message ?? context.l10n.transfer_failed,
-              type: ToastType.failed,
-            );
-          }
-        },
-        builder: (context, state) {
-          final isLoading = state.transfer.isLoading;
-          final isLookupLoading = state.recipientLookup.isLoading;
-          final selectedRecipient = state.selectedRecipient;
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.all(16.dg),
+          child: BlocConsumer<UserWalletTransferCubit, UserWalletTransferState>(
+            listener: (context, state) {
+              if (state.transfer.isSuccess) {
+                context.showMyToast(
+                  context.l10n.transfer_success,
+                  type: ToastType.success,
+                );
+                context.read<UserWalletCubit>().getMine();
+                context.pop(true);
+              } else if (state.transfer.isFailed) {
+                context.showMyToast(
+                  state.transfer.error?.message ?? context.l10n.transfer_failed,
+                  type: ToastType.failed,
+                );
+              }
+            },
+            builder: (context, state) {
+              final isLoading = state.transfer.isLoading;
+              final isLookupLoading = state.recipientLookup.isLoading;
+              final selectedRecipient = state.selectedRecipient;
 
-          return Column(
-            spacing: 16.h,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // Recipient Section
-              if (!useUserId) ...[
-                _buildPhoneInput(context, state, isLookupLoading),
-                if (selectedRecipient != null)
-                  _buildRecipientPreview(context, selectedRecipient),
-                if (state.recipientLookup.isSuccess &&
-                    selectedRecipient == null &&
-                    phoneController.text.trim().isNotEmpty)
-                  _buildRecipientNotFound(context),
-              ] else ...[
-                _buildUserIdInput(context, isLoading),
-              ],
+              return Column(
+                spacing: 16.h,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Recipient Section
+                  if (!useUserId) ...[
+                    _buildPhoneInput(context, state, isLookupLoading),
+                    if (selectedRecipient != null)
+                      _buildRecipientPreview(context, selectedRecipient),
+                    if (state.recipientLookup.isSuccess &&
+                        selectedRecipient == null &&
+                        phoneController.text.trim().isNotEmpty)
+                      _buildRecipientNotFound(context),
+                  ] else ...[
+                    _buildUserIdInput(context, isLoading),
+                  ],
 
-              // Toggle between phone and user ID
-              _buildToggleInputMode(context),
+                  // Toggle between phone and user ID
+                  _buildToggleInputMode(context),
 
-              // Amount quick templates
-              Row(
-                spacing: 16.w,
-                children: [_buildTemplate(10000), _buildTemplate(20000)],
-              ),
-              Row(
-                spacing: 16.w,
-                children: [_buildTemplate(50000), _buildTemplate(100000)],
-              ),
+                  // Amount quick templates
+                  Row(
+                    spacing: 16.w,
+                    children: [_buildTemplate(10000), _buildTemplate(20000)],
+                  ),
+                  Row(
+                    spacing: 16.w,
+                    children: [_buildTemplate(50000), _buildTemplate(100000)],
+                  ),
 
-              // Amount Input
-              _buildAmountInput(context, isLoading),
+                  // Amount Input
+                  _buildAmountInput(context, isLoading),
 
-              // Note Input (optional)
-              _buildNoteInput(context, isLoading),
+                  // Note Input (optional)
+                  _buildNoteInput(context, isLoading),
 
-              // Transfer button
-              SizedBox(
-                width: double.infinity,
-                child: Button.primary(
-                  enabled: !isLoading,
-                  onPressed: _canTransfer(state) && !isLoading
-                      ? () => _handleTransfer(context, state)
-                      : null,
-                  child: isLoading
-                      ? const Submiting()
-                      : DefaultText(context.l10n.transfer),
-                ),
-              ),
-            ],
-          );
-        },
+                  // Transfer button
+                  SizedBox(
+                    width: double.infinity,
+                    child: Button.primary(
+                      enabled: !isLoading,
+                      onPressed: _canTransfer(state) && !isLoading
+                          ? () => _handleTransfer(context, state)
+                          : null,
+                      child: isLoading
+                          ? const Submiting()
+                          : DefaultText(context.l10n.transfer),
+                    ),
+                  ),
+                ],
+              );
+            },
+          ),
+        ),
       ),
     );
   }

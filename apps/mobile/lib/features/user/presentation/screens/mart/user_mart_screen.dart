@@ -30,7 +30,7 @@ class _UserMartScreenState extends State<UserMartScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return MyScaffold(
+    return Scaffold(
       headers: [
         AppBar(
           padding: EdgeInsets.all(4.dg),
@@ -55,25 +55,26 @@ class _UserMartScreenState extends State<UserMartScreen> {
           ],
         ),
       ],
-      padding: EdgeInsets.zero,
-      onRefresh: _onRefresh,
-      body: BlocBuilder<UserMartCubit, UserMartState>(
-        builder: (context, state) {
-          if (state.bestSellers.isLoading) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          if (state.bestSellers.isFailure) {
-            return Center(
-              child: OopsAlertWidget(
-                message:
-                    state.bestSellers.message ??
-                    context.l10n.toast_failed_load_mart_data,
-                onRefresh: () => context.read<UserMartCubit>().loadMartHome(),
-              ),
-            );
-          }
-          return _buildContent(context, state);
-        },
+      child: RefreshTrigger(
+        onRefresh: _onRefresh,
+        child: BlocBuilder<UserMartCubit, UserMartState>(
+          builder: (context, state) {
+            if (state.bestSellers.isLoading) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            if (state.bestSellers.isFailure) {
+              return Center(
+                child: OopsAlertWidget(
+                  message:
+                      state.bestSellers.message ??
+                      context.l10n.toast_failed_load_mart_data,
+                  onRefresh: () => context.read<UserMartCubit>().loadMartHome(),
+                ),
+              );
+            }
+            return _buildContent(context, state);
+          },
+        ),
       ),
     );
   }

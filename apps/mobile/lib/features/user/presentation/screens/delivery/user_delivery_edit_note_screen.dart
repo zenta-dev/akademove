@@ -84,7 +84,7 @@ class _UserDeliveryEditDetailScreenState
 
   @override
   Widget build(BuildContext context) {
-    return MyScaffold(
+    return Scaffold(
       headers: [
         AppBar(
           title: Text(
@@ -100,168 +100,173 @@ class _UserDeliveryEditDetailScreenState
           ],
         ),
       ],
-      body: Column(
-        spacing: 16.h,
-        children: [
-          SizedBox(
-            width: double.infinity,
-            height: 150.h,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(12.r),
-              child: BlocBuilder<UserMapCubit, UserMapState>(
-                builder: (context, state) {
-                  if (state.routeCoordinates.isLoading) {
-                    return Container(
-                      width: double.infinity,
-                      height: 150.h,
-                      color: context.colorScheme.mutedForeground,
-                    ).asSkeleton(enabled: true);
-                  }
-                  return MapWrapperWidget(
-                    onMapCreated: (controller) async {
-                      _mapController = controller;
-                      setState(() {});
-                      await _fitMapToBounds();
-                    },
-                    markers: state.markers,
-                    polylines: state.polylines,
-                    myLocationEnabled: true,
-                    myLocationButtonEnabled: false,
-                    zoomControlsEnabled: false,
-                    scrollGesturesEnabled: false,
-                    zoomGesturesEnabled: false,
-                    rotateGesturesEnabled: false,
-                    tiltGesturesEnabled: false,
-                  );
-                },
-              ),
-            ),
-          ),
-          Form(
-            onSubmit: (context, values) async {
-              if (_submitting) return;
-              _submitting = true;
-
-              final name = _nameKey[values];
-              final phone = _phoneKey[values];
-              final ins = _insKey[values];
-
-              setState(() {
-                if (widget.isPickup) {
-                  _note = _note.copyWith(
-                    senderName: name,
-                    senderPhone: phone,
-                    pickup: ins,
-                  );
-                } else {
-                  _note = _note.copyWith(
-                    recevierName: name,
-                    recevierPhone: phone,
-                    dropoff: ins,
-                  );
-                }
-              });
-
-              final valid = await context.submitForm();
-
-              if (valid.errors.isEmpty && context.mounted) {
-                context.pop(_note);
-              }
-
-              _submitting = false;
-            },
-            child: Column(
-              spacing: 16.h,
-              children: [
-                FormField(
-                  key: _nameKey,
-                  label: DefaultText(
-                    context.l10n.name,
-                    fontWeight: FontWeight.w500,
-                  ),
-                  validator: LengthValidator(min: 5),
-                  showErrors: const {
-                    FormValidationMode.changed,
-                    FormValidationMode.submitted,
-                  },
-                  child: TextField(
-                    initialValue: widget.isPickup
-                        ? widget.initialNote.senderName
-                        : widget.initialNote.recevierName,
-                    focusNode: _nameFocusNode,
-                    textInputAction: TextInputAction.next,
-                  ),
-                ),
-                FormField(
-                  key: _phoneKey,
-                  label: DefaultText(
-                    context.l10n.phone,
-                    fontWeight: FontWeight.w500,
-                  ),
-                  validator: LengthValidator(min: 10),
-                  showErrors: const {
-                    FormValidationMode.changed,
-                    FormValidationMode.submitted,
-                  },
-                  child: TextField(
-                    initialValue: widget.isPickup
-                        ? widget.initialNote.senderPhone
-                        : widget.initialNote.recevierPhone,
-                    focusNode: _phoneFocusNode,
-                    keyboardType: TextInputType.phone,
-                    textInputAction: TextInputAction.next,
-                  ),
-                ),
-                FormField(
-                  key: _insKey,
-                  label: DefaultText(
-                    "Notes & Instructions",
-                    fontWeight: FontWeight.w500,
-                  ),
-                  validator: NotEmptyValidator(),
-                  showErrors: const {
-                    FormValidationMode.changed,
-                    FormValidationMode.submitted,
-                  },
-                  child: TextArea(
-                    initialValue: widget.isPickup
-                        ? widget.initialNote.pickup
-                        : widget.initialNote.dropoff,
-                    focusNode: _insFocusNode,
-                    textInputAction: TextInputAction.next,
-                  ),
-                ),
-                SizedBox(
-                  width: double.infinity,
-                  child: FormErrorBuilder(
-                    builder: (context, errors, child) {
-                      return Button(
-                        style: _submitting
-                            ? const ButtonStyle.ghost()
-                            : const ButtonStyle.primary(),
-                        onPressed: _submitting
-                            ? null
-                            : () {
-                                context.submitForm();
-                                setState(() {
-                                  _submitting = true;
-                                });
-                              },
-                        child: _submitting
-                            ? Submiting()
-                            : DefaultText(
-                                context.l10n.confirm,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.white,
-                              ),
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.all(16.dg),
+          child: Column(
+            spacing: 16.h,
+            children: [
+              SizedBox(
+                width: double.infinity,
+                height: 150.h,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(12.r),
+                  child: BlocBuilder<UserMapCubit, UserMapState>(
+                    builder: (context, state) {
+                      if (state.routeCoordinates.isLoading) {
+                        return Container(
+                          width: double.infinity,
+                          height: 150.h,
+                          color: context.colorScheme.mutedForeground,
+                        ).asSkeleton(enabled: true);
+                      }
+                      return MapWrapperWidget(
+                        onMapCreated: (controller) async {
+                          _mapController = controller;
+                          setState(() {});
+                          await _fitMapToBounds();
+                        },
+                        markers: state.markers,
+                        polylines: state.polylines,
+                        myLocationEnabled: true,
+                        myLocationButtonEnabled: false,
+                        zoomControlsEnabled: false,
+                        scrollGesturesEnabled: false,
+                        zoomGesturesEnabled: false,
+                        rotateGesturesEnabled: false,
+                        tiltGesturesEnabled: false,
                       );
                     },
                   ),
                 ),
-              ],
-            ),
+              ),
+              Form(
+                onSubmit: (context, values) async {
+                  if (_submitting) return;
+                  _submitting = true;
+
+                  final name = _nameKey[values];
+                  final phone = _phoneKey[values];
+                  final ins = _insKey[values];
+
+                  setState(() {
+                    if (widget.isPickup) {
+                      _note = _note.copyWith(
+                        senderName: name,
+                        senderPhone: phone,
+                        pickup: ins,
+                      );
+                    } else {
+                      _note = _note.copyWith(
+                        recevierName: name,
+                        recevierPhone: phone,
+                        dropoff: ins,
+                      );
+                    }
+                  });
+
+                  final valid = await context.submitForm();
+
+                  if (valid.errors.isEmpty && context.mounted) {
+                    context.pop(_note);
+                  }
+
+                  _submitting = false;
+                },
+                child: Column(
+                  spacing: 16.h,
+                  children: [
+                    FormField(
+                      key: _nameKey,
+                      label: DefaultText(
+                        context.l10n.name,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      validator: LengthValidator(min: 5),
+                      showErrors: const {
+                        FormValidationMode.changed,
+                        FormValidationMode.submitted,
+                      },
+                      child: TextField(
+                        initialValue: widget.isPickup
+                            ? widget.initialNote.senderName
+                            : widget.initialNote.recevierName,
+                        focusNode: _nameFocusNode,
+                        textInputAction: TextInputAction.next,
+                      ),
+                    ),
+                    FormField(
+                      key: _phoneKey,
+                      label: DefaultText(
+                        context.l10n.phone,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      validator: LengthValidator(min: 10),
+                      showErrors: const {
+                        FormValidationMode.changed,
+                        FormValidationMode.submitted,
+                      },
+                      child: TextField(
+                        initialValue: widget.isPickup
+                            ? widget.initialNote.senderPhone
+                            : widget.initialNote.recevierPhone,
+                        focusNode: _phoneFocusNode,
+                        keyboardType: TextInputType.phone,
+                        textInputAction: TextInputAction.next,
+                      ),
+                    ),
+                    FormField(
+                      key: _insKey,
+                      label: DefaultText(
+                        "Notes & Instructions",
+                        fontWeight: FontWeight.w500,
+                      ),
+                      validator: NotEmptyValidator(),
+                      showErrors: const {
+                        FormValidationMode.changed,
+                        FormValidationMode.submitted,
+                      },
+                      child: TextArea(
+                        initialValue: widget.isPickup
+                            ? widget.initialNote.pickup
+                            : widget.initialNote.dropoff,
+                        focusNode: _insFocusNode,
+                        textInputAction: TextInputAction.next,
+                      ),
+                    ),
+                    SizedBox(
+                      width: double.infinity,
+                      child: FormErrorBuilder(
+                        builder: (context, errors, child) {
+                          return Button(
+                            style: _submitting
+                                ? const ButtonStyle.ghost()
+                                : const ButtonStyle.primary(),
+                            onPressed: _submitting
+                                ? null
+                                : () {
+                                    context.submitForm();
+                                    setState(() {
+                                      _submitting = true;
+                                    });
+                                  },
+                            child: _submitting
+                                ? Submiting()
+                                : DefaultText(
+                                    context.l10n.confirm,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.white,
+                                  ),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

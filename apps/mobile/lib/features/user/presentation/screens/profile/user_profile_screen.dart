@@ -13,168 +13,199 @@ class UserProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MyScaffold(
-      safeArea: true,
-      onRefresh: () async {
-        await context.read<AuthCubit>().authenticate();
-      },
-      body: Column(
-        spacing: 16.h,
-        crossAxisAlignment: .start,
-        children: [
-          BlocBuilder<AuthCubit, AuthState>(
-            builder: (context, state) {
-              return UserProfileCardWidget(
-                user: state.user.data?.value ?? dummyUser,
-              ).asSkeleton(enabled: state.user.isLoading);
-            },
-          ),
-          DefaultText(
-            context.l10n.account_settings,
-            fontSize: 16.sp,
-            fontWeight: FontWeight.w600,
-          ),
-          Button(
-            style:
-                ButtonStyle.card(
-                  density: ButtonDensity(
-                    (val) =>
-                        EdgeInsets.symmetric(horizontal: 12.dg, vertical: 8.h),
-                  ),
-                ).copyWith(
-                  decoration: (context, states, value) =>
-                      value.copyWithIfBoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                ),
-            onPressed: () async {
-              await context.pushNamed(Routes.userEditProfile.name);
-            },
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                DefaultText(context.l10n.edit_profile, fontSize: 14.sp),
-                Icon(LucideIcons.pencil, size: 14.sp),
-              ],
-            ),
-          ),
-          Button(
-            style:
-                ButtonStyle.card(
-                  density: ButtonDensity(
-                    (val) =>
-                        EdgeInsets.symmetric(horizontal: 12.dg, vertical: 8.h),
-                  ),
-                ).copyWith(
-                  decoration: (context, states, value) =>
-                      value.copyWithIfBoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                ),
-            onPressed: () async {
-              await context.pushNamed(Routes.userChangePassword.name);
-            },
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                DefaultText(context.l10n.change_password, fontSize: 14.sp),
-                Icon(LucideIcons.pencil, size: 14.sp),
-              ],
-            ),
-          ),
-          Button(
-            style:
-                ButtonStyle.card(
-                  density: ButtonDensity(
-                    (val) =>
-                        EdgeInsets.symmetric(horizontal: 12.dg, vertical: 8.h),
-                  ),
-                ).copyWith(
-                  decoration: (context, states, value) =>
-                      value.copyWithIfBoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                ),
-            onPressed: () async {
-              await context.pushNamed(Routes.termsOfService.name);
-            },
-            child: Row(
-              children: [
-                DefaultText(context.l10n.terms_of_service, fontSize: 14.sp),
-              ],
-            ),
-          ),
-          Button(
-            style:
-                ButtonStyle.card(
-                  density: ButtonDensity(
-                    (val) =>
-                        EdgeInsets.symmetric(horizontal: 12.dg, vertical: 8.h),
-                  ),
-                ).copyWith(
-                  decoration: (context, states, value) =>
-                      value.copyWithIfBoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                ),
-            onPressed: () async {
-              await context.pushNamed(Routes.privacyPolicies.name);
-            },
-            child: Row(
-              children: [
-                DefaultText(context.l10n.privacy_policy, fontSize: 14.sp),
-              ],
-            ),
-          ),
-          Button(
-            style:
-                ButtonStyle.card(
-                  density: ButtonDensity(
-                    (val) =>
-                        EdgeInsets.symmetric(horizontal: 12.dg, vertical: 8.h),
-                  ),
-                ).copyWith(
-                  decoration: (context, states, value) =>
-                      value.copyWithIfBoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                ),
-            onPressed: () async {
-              await context.pushNamed(Routes.faq.name);
-            },
-            child: Row(
-              children: [DefaultText(context.l10n.faq, fontSize: 14.sp)],
-            ),
-          ),
-          // const DeleteAccountButtonWidget(accountType: 'USER'),
-          const SignOutButtonWidget(),
-          DefaultText(
-            context.l10n.app_settings,
-            fontSize: 16.sp,
-            fontWeight: FontWeight.w600,
-          ),
-          Column(
-            spacing: 8.h,
-            children: [
-              Column(
-                spacing: 4.h,
-                crossAxisAlignment: .start,
+    Future<void> onRefresh() async {
+      await context.read<AuthCubit>().authenticate();
+    }
+
+    return Scaffold(
+      child: SafeArea(
+        child: RefreshTrigger(
+          onRefresh: onRefresh,
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.all(16.dg),
+              child: Column(
+                spacing: 16.h,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  DefaultText(context.l10n.language, fontSize: 14.sp),
-                  const AppSelectLocaleWidget(),
+                  BlocBuilder<AuthCubit, AuthState>(
+                    builder: (context, state) {
+                      return UserProfileCardWidget(
+                        user: state.user.data?.value ?? dummyUser,
+                      ).asSkeleton(enabled: state.user.isLoading);
+                    },
+                  ),
+                  DefaultText(
+                    context.l10n.account_settings,
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  Button(
+                    style:
+                        ButtonStyle.card(
+                          density: ButtonDensity(
+                            (val) => EdgeInsets.symmetric(
+                              horizontal: 12.dg,
+                              vertical: 8.h,
+                            ),
+                          ),
+                        ).copyWith(
+                          decoration: (context, states, value) =>
+                              value.copyWithIfBoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                        ),
+                    onPressed: () async {
+                      await context.pushNamed(Routes.userEditProfile.name);
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        DefaultText(context.l10n.edit_profile, fontSize: 14.sp),
+                        Icon(LucideIcons.pencil, size: 14.sp),
+                      ],
+                    ),
+                  ),
+                  Button(
+                    style:
+                        ButtonStyle.card(
+                          density: ButtonDensity(
+                            (val) => EdgeInsets.symmetric(
+                              horizontal: 12.dg,
+                              vertical: 8.h,
+                            ),
+                          ),
+                        ).copyWith(
+                          decoration: (context, states, value) =>
+                              value.copyWithIfBoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                        ),
+                    onPressed: () async {
+                      await context.pushNamed(Routes.userChangePassword.name);
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        DefaultText(
+                          context.l10n.change_password,
+                          fontSize: 14.sp,
+                        ),
+                        Icon(LucideIcons.pencil, size: 14.sp),
+                      ],
+                    ),
+                  ),
+                  Button(
+                    style:
+                        ButtonStyle.card(
+                          density: ButtonDensity(
+                            (val) => EdgeInsets.symmetric(
+                              horizontal: 12.dg,
+                              vertical: 8.h,
+                            ),
+                          ),
+                        ).copyWith(
+                          decoration: (context, states, value) =>
+                              value.copyWithIfBoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                        ),
+                    onPressed: () async {
+                      await context.pushNamed(Routes.termsOfService.name);
+                    },
+                    child: Row(
+                      children: [
+                        DefaultText(
+                          context.l10n.terms_of_service,
+                          fontSize: 14.sp,
+                        ),
+                      ],
+                    ),
+                  ),
+                  Button(
+                    style:
+                        ButtonStyle.card(
+                          density: ButtonDensity(
+                            (val) => EdgeInsets.symmetric(
+                              horizontal: 12.dg,
+                              vertical: 8.h,
+                            ),
+                          ),
+                        ).copyWith(
+                          decoration: (context, states, value) =>
+                              value.copyWithIfBoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                        ),
+                    onPressed: () async {
+                      await context.pushNamed(Routes.privacyPolicies.name);
+                    },
+                    child: Row(
+                      children: [
+                        DefaultText(
+                          context.l10n.privacy_policy,
+                          fontSize: 14.sp,
+                        ),
+                      ],
+                    ),
+                  ),
+                  Button(
+                    style:
+                        ButtonStyle.card(
+                          density: ButtonDensity(
+                            (val) => EdgeInsets.symmetric(
+                              horizontal: 12.dg,
+                              vertical: 8.h,
+                            ),
+                          ),
+                        ).copyWith(
+                          decoration: (context, states, value) =>
+                              value.copyWithIfBoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                        ),
+                    onPressed: () async {
+                      await context.pushNamed(Routes.faq.name);
+                    },
+                    child: Row(
+                      children: [
+                        DefaultText(context.l10n.faq, fontSize: 14.sp),
+                      ],
+                    ),
+                  ),
+                  // const DeleteAccountButtonWidget(accountType: 'USER'),
+                  const SignOutButtonWidget(),
+                  DefaultText(
+                    context.l10n.app_settings,
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  Column(
+                    spacing: 8.h,
+                    children: [
+                      Column(
+                        spacing: 4.h,
+                        crossAxisAlignment: .start,
+                        children: [
+                          DefaultText(context.l10n.language, fontSize: 14.sp),
+                          const AppSelectLocaleWidget(),
+                        ],
+                      ),
+                      Column(
+                        spacing: 4.h,
+                        crossAxisAlignment: .start,
+                        children: [
+                          DefaultText(context.l10n.theme, fontSize: 14.sp),
+                          const AppSelectThemeWidget(),
+                        ],
+                      ),
+                    ],
+                  ),
                 ],
               ),
-              Column(
-                spacing: 4.h,
-                crossAxisAlignment: .start,
-                children: [
-                  DefaultText(context.l10n.theme, fontSize: 14.sp),
-                  const AppSelectThemeWidget(),
-                ],
-              ),
-            ],
+            ),
           ),
-        ],
+        ),
       ),
     );
   }

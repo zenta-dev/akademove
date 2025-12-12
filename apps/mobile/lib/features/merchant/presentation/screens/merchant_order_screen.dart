@@ -83,10 +83,8 @@ class _MerchantOrderScreenState extends State<MerchantOrderScreen> {
       _TabItem(label: context.l10n.tab_canceled),
     ];
 
-    return MyScaffold(
-      padding: EdgeInsets.zero,
-      scrollable: false,
-      body: Column(
+    return Scaffold(
+      child: Column(
         children: [
           _buildTabBar(context, tabs),
           Expanded(

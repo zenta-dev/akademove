@@ -147,6 +147,21 @@ export class BroadcastService {
 			// Create notifications for all target users one by one
 			let createdCount = 0;
 
+			// Determine deeplink based on broadcast type
+			const getDeeplinkForBroadcast = (type: string): string => {
+				switch (type.toUpperCase()) {
+					case "PROMO":
+					case "PROMOTION":
+						return "akademove://voucher";
+					case "ORDER":
+						return "akademove://history";
+					default:
+						return "akademove://notifications";
+				}
+			};
+
+			const deeplink = getDeeplinkForBroadcast(broadcast.type);
+
 			for (const targetUser of targetUsers) {
 				try {
 					await this.notificationRepository.sendNotificationToUserId(
@@ -157,7 +172,9 @@ export class BroadcastService {
 							body: broadcast.message,
 							data: {
 								broadcastId: broadcast.id,
-								type: broadcast.type,
+								type: "BROADCAST",
+								broadcastType: broadcast.type,
+								deeplink,
 							},
 						},
 						opts,

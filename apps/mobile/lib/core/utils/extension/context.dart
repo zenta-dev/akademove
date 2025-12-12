@@ -233,6 +233,8 @@ extension BuildContextExt on BuildContext {
 
     final repo = sl<NotificationRepository>();
     await safeAsync(() => repo.syncToken());
+
+    // Handle foreground messages - show local notification
     repo.onMessage((msg) async {
       logger.i('[NotificationRepository] - onMessage: ${msg.messageId}');
       final title = msg.notification?.title ?? 'Akademove';
@@ -242,6 +244,25 @@ extension BuildContextExt on BuildContext {
       logger.f('📨 Foreground FCM: ${msg.toMap()}');
       await safeAsync(() => ntfSvc.show(title: title, body: body, data: data));
     });
+
+    // Handle notification taps when app was in background
+    repo.onMessageOpenedApp((msg) {
+      logger.i(
+        '[NotificationRepository] - onMessageOpenedApp: ${msg.messageId}',
+      );
+      logger.f('📨 Background FCM tap: ${msg.toMap()}');
+      ntfSvc.handleMessageData(msg.data);
+    });
+
+    // Handle notification tap that launched the app (from terminated state)
+    final initialMessage = await repo.getInitialMessage();
+    if (initialMessage != null) {
+      logger.i(
+        '[NotificationRepository] - getInitialMessage: ${initialMessage.messageId}',
+      );
+      logger.f('📨 Initial FCM (app launch): ${initialMessage.toMap()}');
+      ntfSvc.handleMessageData(initialMessage.data);
+    }
   }
 
   void popUntilRoot() {

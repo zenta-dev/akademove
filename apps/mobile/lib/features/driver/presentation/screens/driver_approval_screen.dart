@@ -32,17 +32,26 @@ class DriverApprovalScreen extends StatelessWidget {
         }
       },
       builder: (context, state) {
-        return MyScaffold(
+        return Scaffold(
           headers: [
             DefaultAppBar(
               title: context.l10n.pending_approval,
               padding: EdgeInsets.all(16.r),
             ),
           ],
-          onRefresh: () async {
-            context.read<DriverApprovalCubit>().load();
-          },
-          body: _buildContent(context, state),
+          child: SafeArea(
+            child: RefreshTrigger(
+              onRefresh: () async {
+                context.read<DriverApprovalCubit>().load();
+              },
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: EdgeInsets.all(16.dg),
+                  child: _buildContent(context, state),
+                ),
+              ),
+            ),
+          ),
         );
       },
     );

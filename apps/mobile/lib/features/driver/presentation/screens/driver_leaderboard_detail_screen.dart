@@ -62,7 +62,7 @@ class _DriverLeaderboardDetailScreenState
 
   @override
   Widget build(BuildContext context) {
-    return MyScaffold(
+    return Scaffold(
       headers: [
         AppBar(
           title: Text(context.l10n.leaderboard_title),
@@ -75,83 +75,104 @@ class _DriverLeaderboardDetailScreenState
           ],
         ),
       ],
-      body: BlocBuilder<LeaderboardCubit, LeaderboardState>(
-        builder: (context, state) {
-          final myRankingsResult = state.myRankings;
+      child: RefreshTrigger(
+        onRefresh: _onRefresh,
+        child: BlocBuilder<LeaderboardCubit, LeaderboardState>(
+          builder: (context, state) {
+            final myRankingsResult = state.myRankings;
 
-          if (_isLoading && myRankingsResult.data == null) {
-            return const Center(child: CircularProgressIndicator());
-          }
+            if (_isLoading && myRankingsResult.data == null) {
+              return const Center(child: CircularProgressIndicator());
+            }
 
-          if (myRankingsResult.isFailure) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                spacing: 16.h,
-                children: [
-                  Icon(
-                    LucideIcons.circleAlert,
-                    size: 48.sp,
-                    color: context.colorScheme.destructive,
-                  ),
-                  Text(
-                    myRankingsResult.error?.message ??
-                        'Failed to load rankings',
-                    style: context.typography.small,
-                    textAlign: TextAlign.center,
-                  ),
-                  PrimaryButton(
-                    onPressed: _onRefresh,
-                    child: Text(context.l10n.retry),
-                  ),
-                ],
-              ),
-            );
-          }
-
-          final myRankings = myRankingsResult.value ?? [];
-
-          if (myRankings.isEmpty) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                spacing: 16.h,
-                children: [
-                  Icon(
-                    LucideIcons.trophy,
-                    size: 48.sp,
-                    color: context.colorScheme.mutedForeground,
-                  ),
-                  Text(
-                    context.l10n.text_no_rankings_yet,
-                    style: context.typography.p.copyWith(
-                      color: context.colorScheme.mutedForeground,
+            if (myRankingsResult.isFailure) {
+              return SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                child: Padding(
+                  padding: EdgeInsets.all(16.dg),
+                  child: SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.7,
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        spacing: 16.h,
+                        children: [
+                          Icon(
+                            LucideIcons.circleAlert,
+                            size: 48.sp,
+                            color: context.colorScheme.destructive,
+                          ),
+                          Text(
+                            myRankingsResult.error?.message ??
+                                'Failed to load rankings',
+                            style: context.typography.small,
+                            textAlign: TextAlign.center,
+                          ),
+                          PrimaryButton(
+                            onPressed: _onRefresh,
+                            child: Text(context.l10n.retry),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                  PrimaryButton(
-                    onPressed: _onRefresh,
-                    child: Text(context.l10n.retry),
+                ),
+              );
+            }
+
+            final myRankings = myRankingsResult.value ?? [];
+
+            if (myRankings.isEmpty) {
+              return SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                child: Padding(
+                  padding: EdgeInsets.all(16.dg),
+                  child: SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.7,
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        spacing: 16.h,
+                        children: [
+                          Icon(
+                            LucideIcons.trophy,
+                            size: 48.sp,
+                            color: context.colorScheme.mutedForeground,
+                          ),
+                          Text(
+                            context.l10n.text_no_rankings_yet,
+                            style: context.typography.p.copyWith(
+                              color: context.colorScheme.mutedForeground,
+                            ),
+                          ),
+                          PrimaryButton(
+                            onPressed: _onRefresh,
+                            child: Text(context.l10n.retry),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
-                ],
+                ),
+              );
+            }
+
+            return SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              child: Padding(
+                padding: EdgeInsets.all(16.dg),
+                child: Column(
+                  spacing: 16.h,
+                  children: [
+                    _buildOverallStats(myRankings),
+                    _buildRankingsByCategory(myRankings),
+                    _buildPerformanceMetrics(myRankings),
+                  ],
+                ),
               ),
             );
-          }
-
-          return RefreshTrigger(
-            onRefresh: _onRefresh,
-            child: SingleChildScrollView(
-              padding: EdgeInsets.all(16.dg),
-              child: Column(
-                spacing: 16.h,
-                children: [
-                  _buildOverallStats(myRankings),
-                  _buildRankingsByCategory(myRankings),
-                  _buildPerformanceMetrics(myRankings),
-                ],
-              ),
-            ),
-          );
-        },
+          },
+        ),
       ),
     );
   }

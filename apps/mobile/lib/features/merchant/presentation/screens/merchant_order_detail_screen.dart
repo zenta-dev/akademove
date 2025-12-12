@@ -633,28 +633,30 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
       },
       child: Stack(
         children: [
-          MyScaffold(
+          Scaffold(
             headers: [
               DefaultAppBar(
                 title: context.l10n.order_detail,
                 subtitle: 'F-${_currentOrder.id.substring(0, 8)}',
               ),
             ],
-            padding: EdgeInsets.all(16.w),
-            body: SafeArea(
-              child: RefreshTrigger(
-                onRefresh: _onRefresh,
-                child: SingleChildScrollView(
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  padding: EdgeInsets.only(bottom: 120.h),
-                  child: Column(
-                    spacing: 16.h,
-                    children: [
-                      _buildCustomerInfo(context),
-                      _buildDriverInfo(context),
-                      _buildOrderDetails(context),
-                      _buildOrderInfo(context),
-                    ],
+            child: SafeArea(
+              child: Padding(
+                padding: EdgeInsets.all(16.w),
+                child: RefreshTrigger(
+                  onRefresh: _onRefresh,
+                  child: SingleChildScrollView(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    padding: EdgeInsets.only(bottom: 120.h),
+                    child: Column(
+                      spacing: 16.h,
+                      children: [
+                        _buildCustomerInfo(context),
+                        _buildDriverInfo(context),
+                        _buildOrderDetails(context),
+                        _buildOrderInfo(context),
+                      ],
+                    ),
                   ),
                 ),
               ),

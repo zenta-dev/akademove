@@ -13,7 +13,19 @@ class UserDetailHistoryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MyScaffold(
+    Future<void> onRefresh() async {
+      final orderId = context
+          .read<UserOrderCubit>()
+          .state
+          .selectedOrder
+          .value
+          ?.id;
+      if (orderId != null) {
+        await context.read<UserOrderCubit>().maybeGet(orderId);
+      }
+    }
+
+    return Scaffold(
       headers: [
         BlocBuilder<UserOrderCubit, UserOrderState>(
           builder: (context, state) {
@@ -32,103 +44,98 @@ class UserDetailHistoryScreen extends StatelessWidget {
           },
         ),
       ],
-      onRefresh: () async {
-        final orderId = context
-            .read<UserOrderCubit>()
-            .state
-            .selectedOrder
-            .value
-            ?.id;
-        if (orderId != null) {
-          await context.read<UserOrderCubit>().maybeGet(orderId);
-        }
-      },
-      body: BlocBuilder<UserOrderCubit, UserOrderState>(
-        builder: (context, state) {
-          if (state.selectedOrder.isLoading) {
-            return _buildLoadingSkeleton(context);
-          }
+      child: RefreshTrigger(
+        onRefresh: onRefresh,
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.all(16.dg),
+            child: BlocBuilder<UserOrderCubit, UserOrderState>(
+              builder: (context, state) {
+                if (state.selectedOrder.isLoading) {
+                  return _buildLoadingSkeleton(context);
+                }
 
-          if (state.selectedOrder.isFailure) {
-            return Center(
-              child: OopsAlertWidget(
-                message:
-                    state.selectedOrder.error?.message ??
-                    'Failed to load order',
-                onRefresh: () {
-                  final orderId = state.selectedOrder.value?.id;
-                  if (orderId != null) {
-                    context.read<UserOrderCubit>().maybeGet(orderId);
-                  }
-                },
-              ),
-            );
-          }
+                if (state.selectedOrder.isFailure) {
+                  return Center(
+                    child: OopsAlertWidget(
+                      message:
+                          state.selectedOrder.error?.message ??
+                          'Failed to load order',
+                      onRefresh: () {
+                        final orderId = state.selectedOrder.value?.id;
+                        if (orderId != null) {
+                          context.read<UserOrderCubit>().maybeGet(orderId);
+                        }
+                      },
+                    ),
+                  );
+                }
 
-          final order = state.selectedOrder.value;
-          if (order == null) {
-            return Center(
-              child: DefaultText('Order not found', fontSize: 16.sp),
-            );
-          }
+                final order = state.selectedOrder.value;
+                if (order == null) {
+                  return Center(
+                    child: DefaultText('Order not found', fontSize: 16.sp),
+                  );
+                }
 
-          return SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Status Card
-                _buildStatusCard(context, order),
-                Gap(16.h),
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Status Card
+                    _buildStatusCard(context, order),
+                    Gap(16.h),
 
-                // Location Card
-                _buildLocationCard(context, order),
-                Gap(16.h),
+                    // Location Card
+                    _buildLocationCard(context, order),
+                    Gap(16.h),
 
-                // Order Details Card
-                _buildOrderDetailsCard(context, order),
-                Gap(16.h),
+                    // Order Details Card
+                    _buildOrderDetailsCard(context, order),
+                    Gap(16.h),
 
-                // Price Breakdown Card
-                _buildPriceBreakdownCard(context, order),
+                    // Price Breakdown Card
+                    _buildPriceBreakdownCard(context, order),
 
-                // Driver Info Card (if assigned)
-                if (order.driverId != null && order.driver != null) ...[
-                  Gap(16.h),
-                  _buildDriverCard(context, order),
-                ],
+                    // Driver Info Card (if assigned)
+                    if (order.driverId != null && order.driver != null) ...[
+                      Gap(16.h),
+                      _buildDriverCard(context, order),
+                    ],
 
-                // Merchant Info Card (for FOOD orders)
-                if (order.merchantId != null && order.merchant != null) ...[
-                  Gap(16.h),
-                  _buildMerchantCard(context, order),
-                ],
+                    // Merchant Info Card (for FOOD orders)
+                    if (order.merchantId != null && order.merchant != null) ...[
+                      Gap(16.h),
+                      _buildMerchantCard(context, order),
+                    ],
 
-                // Order Items (for FOOD orders)
-                if (order.items != null && order.items!.isNotEmpty) ...[
-                  Gap(16.h),
-                  _buildOrderItemsCard(context, order),
-                ],
+                    // Order Items (for FOOD orders)
+                    if (order.items != null && order.items!.isNotEmpty) ...[
+                      Gap(16.h),
+                      _buildOrderItemsCard(context, order),
+                    ],
 
-                // Notes Card (if any)
-                if (order.note != null) ...[
-                  Gap(16.h),
-                  _buildNotesCard(context, order),
-                ],
+                    // Notes Card (if any)
+                    if (order.note != null) ...[
+                      Gap(16.h),
+                      _buildNotesCard(context, order),
+                    ],
 
-                // Cancel Reason (if cancelled)
-                if (order.cancelReason != null) ...[
-                  Gap(16.h),
-                  _buildCancelReasonCard(context, order),
-                ],
+                    // Cancel Reason (if cancelled)
+                    if (order.cancelReason != null) ...[
+                      Gap(16.h),
+                      _buildCancelReasonCard(context, order),
+                    ],
 
-                // Action Buttons
-                Gap(24.h),
-                _buildActionButtons(context, order),
-                Gap(16.h),
-              ],
+                    // Action Buttons
+                    Gap(24.h),
+                    _buildActionButtons(context, order),
+                    Gap(16.h),
+                  ],
+                );
+              },
             ),
-          );
-        },
+          ),
+        ),
       ),
     );
   }

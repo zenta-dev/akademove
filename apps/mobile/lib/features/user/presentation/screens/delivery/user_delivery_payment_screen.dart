@@ -50,7 +50,7 @@ class _UserDeliveryPaymentScreenState extends State<UserDeliveryPaymentScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return MyScaffold(
+    return Scaffold(
       headers: [
         AppBar(
           padding: EdgeInsets.all(4.dg),
@@ -67,147 +67,153 @@ class _UserDeliveryPaymentScreenState extends State<UserDeliveryPaymentScreen> {
           ],
         ),
       ],
-      body: BlocConsumer<UserOrderCubit, UserOrderState>(
-        listener: (context, state) {
-          // Handle order placement errors
-          if (state.currentOrder.isFailure || state.currentPayment.isFailure) {
-            final errorMsg =
-                state.currentOrder.error?.message ??
-                state.currentPayment.error?.message ??
-                context.l10n.toast_failed_place_order;
-            context.showMyToast(errorMsg, type: ToastType.failed);
-          }
-
-          // Handle successful order placement
-          if (state.currentOrder.isSuccess &&
-              state.currentPayment.isSuccess &&
-              state.currentPayment.hasData) {
-            final payment = state.currentPayment.value;
-
-            if (payment == null) {
-              context.showMyToast(
-                context.l10n.toast_payment_info_not_available,
-                type: ToastType.failed,
-              );
-              return;
+      child: Padding(
+        padding: EdgeInsets.all(16.dg),
+        child: BlocConsumer<UserOrderCubit, UserOrderState>(
+          listener: (context, state) {
+            // Handle order placement errors
+            if (state.currentOrder.isFailure ||
+                state.currentPayment.isFailure) {
+              final errorMsg =
+                  state.currentOrder.error?.message ??
+                  state.currentPayment.error?.message ??
+                  context.l10n.toast_failed_place_order;
+              context.showMyToast(errorMsg, type: ToastType.failed);
             }
 
-            switch (payment.method) {
-              case PaymentMethod.QRIS:
-                context.popUntilRoot();
-                context.pushNamed(
-                  Routes.userDeliveryPaymentGateway.name,
-                  queryParameters: {'paymentMethod': PaymentMethod.QRIS.name},
+            // Handle successful order placement
+            if (state.currentOrder.isSuccess &&
+                state.currentPayment.isSuccess &&
+                state.currentPayment.hasData) {
+              final payment = state.currentPayment.value;
+
+              if (payment == null) {
+                context.showMyToast(
+                  context.l10n.toast_payment_info_not_available,
+                  type: ToastType.failed,
                 );
-              case PaymentMethod.BANK_TRANSFER:
-                context.popUntilRoot();
-                context.pushNamed(
-                  Routes.userDeliveryPaymentGateway.name,
-                  queryParameters: {
-                    'paymentMethod': PaymentMethod.BANK_TRANSFER.name,
-                    'bankProvider': payment.bankProvider?.name,
-                  },
-                );
-              case PaymentMethod.wallet:
-                // wallet payment is instant, navigate directly to trip screen
-                context.popUntilRoot();
-                if (payment.status == TransactionStatus.SUCCESS) {
-                  context.pushReplacementNamed(Routes.userDeliveryOnTrip.name);
-                } else {
-                  context.showMyToast(
-                    context.l10n.toast_wallet_payment_failed,
-                    type: ToastType.failed,
+                return;
+              }
+
+              switch (payment.method) {
+                case PaymentMethod.QRIS:
+                  context.popUntilRoot();
+                  context.pushNamed(
+                    Routes.userDeliveryPaymentGateway.name,
+                    queryParameters: {'paymentMethod': PaymentMethod.QRIS.name},
                   );
-                }
+                case PaymentMethod.BANK_TRANSFER:
+                  context.popUntilRoot();
+                  context.pushNamed(
+                    Routes.userDeliveryPaymentGateway.name,
+                    queryParameters: {
+                      'paymentMethod': PaymentMethod.BANK_TRANSFER.name,
+                      'bankProvider': payment.bankProvider?.name,
+                    },
+                  );
+                case PaymentMethod.wallet:
+                  // wallet payment is instant, navigate directly to trip screen
+                  context.popUntilRoot();
+                  if (payment.status == TransactionStatus.SUCCESS) {
+                    context.pushReplacementNamed(
+                      Routes.userDeliveryOnTrip.name,
+                    );
+                  } else {
+                    context.showMyToast(
+                      context.l10n.toast_wallet_payment_failed,
+                      type: ToastType.failed,
+                    );
+                  }
+              }
             }
-          }
-        },
-        builder: (context, orderState) {
-          final estimate = orderState.estimateOrder.value;
+          },
+          builder: (context, orderState) {
+            final estimate = orderState.estimateOrder.value;
 
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            spacing: 16.h,
-            children: [
-              // Order summary
-              if (estimate != null) ...[
-                Card(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    spacing: 8.h,
-                    children: [
-                      DefaultText(
-                        context.l10n.label_delivery_details,
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.w600,
-                      ),
-                      _buildDetailRow(
-                        context,
-                        context.l10n.label_from,
-                        estimate.pickup.vicinity,
-                      ),
-                      _buildDetailRow(
-                        context,
-                        context.l10n.label_to,
-                        estimate.dropoff.vicinity,
-                      ),
-                      const Divider(),
-                      _buildDetailRow(
-                        context,
-                        context.l10n.label_total,
-                        context.formatCurrency(estimate.summary.totalCost),
-                        isBold: true,
-                      ),
-                    ],
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              spacing: 16.h,
+              children: [
+                // Order summary
+                if (estimate != null) ...[
+                  Card(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      spacing: 8.h,
+                      children: [
+                        DefaultText(
+                          context.l10n.label_delivery_details,
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w600,
+                        ),
+                        _buildDetailRow(
+                          context,
+                          context.l10n.label_from,
+                          estimate.pickup.vicinity,
+                        ),
+                        _buildDetailRow(
+                          context,
+                          context.l10n.label_to,
+                          estimate.dropoff.vicinity,
+                        ),
+                        const Divider(),
+                        _buildDetailRow(
+                          context,
+                          context.l10n.label_total,
+                          context.formatCurrency(estimate.summary.totalCost),
+                          isBold: true,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+                // Gender preference
+                PickGenderWidget(
+                  value: gender,
+                  onChanged: (val) => setState(() {
+                    gender = val;
+                  }),
+                ),
+                // Payment method
+                DefaultText(
+                  context.l10n.title_payment_method,
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.w500,
+                ),
+                BlocBuilder<UserWalletCubit, UserWalletState>(
+                  builder: (context, walletState) {
+                    return PaymentMethodPickerWidget(
+                      value: method,
+                      onChanged: (val, {BankProvider? bankProvider}) =>
+                          setState(() {
+                            method = val;
+                            this.bankProvider = bankProvider;
+                          }),
+                      bankProvider: bankProvider,
+                      walletBalance:
+                          walletState.myWallet.value?.balance.toDouble() ?? 0,
+                      totalCost: estimate?.summary.totalCost.toDouble() ?? 0,
+                    );
+                  },
+                ),
+                const Spacer(),
+                // Place order button
+                SizedBox(
+                  width: double.infinity,
+                  child: Button.primary(
+                    enabled: !orderState.currentOrder.isLoading,
+                    onPressed: orderState.currentOrder.isLoading
+                        ? null
+                        : _placeOrder,
+                    child: orderState.currentOrder.isLoading
+                        ? const Submiting()
+                        : Text(context.l10n.button_place_order),
                   ),
                 ),
               ],
-              // Gender preference
-              PickGenderWidget(
-                value: gender,
-                onChanged: (val) => setState(() {
-                  gender = val;
-                }),
-              ),
-              // Payment method
-              DefaultText(
-                context.l10n.title_payment_method,
-                fontSize: 16.sp,
-                fontWeight: FontWeight.w500,
-              ),
-              BlocBuilder<UserWalletCubit, UserWalletState>(
-                builder: (context, walletState) {
-                  return PaymentMethodPickerWidget(
-                    value: method,
-                    onChanged: (val, {BankProvider? bankProvider}) =>
-                        setState(() {
-                          method = val;
-                          this.bankProvider = bankProvider;
-                        }),
-                    bankProvider: bankProvider,
-                    walletBalance:
-                        walletState.myWallet.value?.balance.toDouble() ?? 0,
-                    totalCost: estimate?.summary.totalCost.toDouble() ?? 0,
-                  );
-                },
-              ),
-              const Spacer(),
-              // Place order button
-              SizedBox(
-                width: double.infinity,
-                child: Button.primary(
-                  enabled: !orderState.currentOrder.isLoading,
-                  onPressed: orderState.currentOrder.isLoading
-                      ? null
-                      : _placeOrder,
-                  child: orderState.currentOrder.isLoading
-                      ? const Submiting()
-                      : Text(context.l10n.button_place_order),
-                ),
-              ),
-            ],
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }
@@ -255,72 +261,77 @@ class UserDeliveryPaymentGatewayScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MyScaffold(
+    return Scaffold(
       headers: [DefaultAppBar(title: context.l10n.title_payment_method)],
-      body: Column(
-        spacing: 8.h,
-        children: [
-          Text(context.l10n.label_total_fare),
-          BlocBuilder<UserOrderCubit, UserOrderState>(
-            builder: (context, state) {
-              return Text(
-                    context.formatCurrency(
-                      state.currentPayment.value?.amount ?? dummyAmount,
-                    ),
-                  )
-                  .large(color: context.colorScheme.primary)
-                  .asSkeleton(enabled: state.currentOrder.isLoading);
-            },
-          ),
-          BlocConsumer<UserOrderCubit, UserOrderState>(
-            listener: (context, state) {
-              final payment = state.currentPayment.value;
-              if (payment == null) return;
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.all(16.dg),
+          child: Column(
+            spacing: 8.h,
+            children: [
+              Text(context.l10n.label_total_fare),
+              BlocBuilder<UserOrderCubit, UserOrderState>(
+                builder: (context, state) {
+                  return Text(
+                        context.formatCurrency(
+                          state.currentPayment.value?.amount ?? dummyAmount,
+                        ),
+                      )
+                      .large(color: context.colorScheme.primary)
+                      .asSkeleton(enabled: state.currentOrder.isLoading);
+                },
+              ),
+              BlocConsumer<UserOrderCubit, UserOrderState>(
+                listener: (context, state) {
+                  final payment = state.currentPayment.value;
+                  if (payment == null) return;
 
-              if (state.currentPayment.isSuccess &&
-                  payment.status == TransactionStatus.SUCCESS) {
-                context
-                  ..showMyToast(
-                    context.l10n.text_payment_successful,
-                    type: ToastType.success,
-                  )
-                  ..pushReplacementNamed(Routes.userDeliveryOnTrip.name);
-              } else if (state.currentOrder.isFailure ||
-                  payment.status == TransactionStatus.FAILED) {
-                context.showMyToast(
-                  context.l10n.text_payment_failed,
-                  type: ToastType.failed,
-                );
-              }
-            },
-            builder: (context, state) {
-              if (paymentMethod == PaymentMethod.QRIS) {
-                return QRISPaymentWidget(
-                  payment: state.currentPayment.value ?? dummyPayment,
-                  transactionType: TransactionType.PAYMENT,
-                  onExpired: () {
-                    context.pop();
-                  },
-                ).asSkeleton(enabled: state.currentOrder.isLoading);
-              }
-              if (paymentMethod == PaymentMethod.BANK_TRANSFER) {
-                return BankTransferPaymentWidget(
-                  payment: state.currentPayment.value ?? dummyPayment,
-                  bankProvider: bankProvider,
-                  onExpired: () {
-                    context.pop();
-                  },
-                ).asSkeleton(enabled: state.currentOrder.isLoading);
-              }
-              return Alert.destructive(
-                title: Text(context.l10n.text_unsupported_payment_method),
-                content: Text(
-                  context.l10n.text_unsupported_payment_method_description,
-                ),
-              );
-            },
+                  if (state.currentPayment.isSuccess &&
+                      payment.status == TransactionStatus.SUCCESS) {
+                    context
+                      ..showMyToast(
+                        context.l10n.text_payment_successful,
+                        type: ToastType.success,
+                      )
+                      ..pushReplacementNamed(Routes.userDeliveryOnTrip.name);
+                  } else if (state.currentOrder.isFailure ||
+                      payment.status == TransactionStatus.FAILED) {
+                    context.showMyToast(
+                      context.l10n.text_payment_failed,
+                      type: ToastType.failed,
+                    );
+                  }
+                },
+                builder: (context, state) {
+                  if (paymentMethod == PaymentMethod.QRIS) {
+                    return QRISPaymentWidget(
+                      payment: state.currentPayment.value ?? dummyPayment,
+                      transactionType: TransactionType.PAYMENT,
+                      onExpired: () {
+                        context.pop();
+                      },
+                    ).asSkeleton(enabled: state.currentOrder.isLoading);
+                  }
+                  if (paymentMethod == PaymentMethod.BANK_TRANSFER) {
+                    return BankTransferPaymentWidget(
+                      payment: state.currentPayment.value ?? dummyPayment,
+                      bankProvider: bankProvider,
+                      onExpired: () {
+                        context.pop();
+                      },
+                    ).asSkeleton(enabled: state.currentOrder.isLoading);
+                  }
+                  return Alert.destructive(
+                    title: Text(context.l10n.text_unsupported_payment_method),
+                    content: Text(
+                      context.l10n.text_unsupported_payment_method_description,
+                    ),
+                  );
+                },
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

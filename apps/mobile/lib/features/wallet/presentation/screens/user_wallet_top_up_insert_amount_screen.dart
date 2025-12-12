@@ -98,7 +98,7 @@ class _UserWalletTopUpInsertAmountScreenState
           );
         }
       },
-      child: MyScaffold(
+      child: Scaffold(
         headers: [
           DefaultAppBar(
             title: _isBankTransfer
@@ -106,83 +106,95 @@ class _UserWalletTopUpInsertAmountScreenState
                 : context.l10n.top_up_qris,
           ),
         ],
-        body: Column(
-          spacing: 16.h,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
-              spacing: 16.w,
-              children: [_buildTemplate(10_000), _buildTemplate(20_000)],
-            ),
-            Row(
-              spacing: 16.w,
-              children: [_buildTemplate(50_000), _buildTemplate(100_000)],
-            ),
-            Row(
-              spacing: 16.w,
-              children: [_buildTemplate(500_000), _buildTemplate(1_000_000)],
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              spacing: 4.h,
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.all(16.dg),
+            child: Column(
+              spacing: 16.h,
+              mainAxisSize: MainAxisSize.min,
               children: [
-                Label(child: DefaultText(context.l10n.amount, fontSize: 14.sp)),
-                TextField(
-                  controller: amountController,
-                  onChanged: (value) {
-                    final parsed = int.tryParse(value, radix: 10);
-                    amountController.text = '$parsed';
-                    setState(() {
-                      if (parsed != null) {
-                        amount = parsed;
-                      } else {
-                        amount = 0;
-                      }
-                    });
-                  },
-                  keyboardType: const TextInputType.numberWithOptions(
-                    signed: true,
-                  ),
-                  textInputAction: TextInputAction.done,
-                  features: [
-                    InputFeature.clear(
-                      icon: IconButton(
-                        density: ButtonDensity.compact,
-                        onPressed: amountController.text.isEmpty
-                            ? null
-                            : () {
-                                amountController.text = '';
-                                setState(() {
-                                  amount = 0;
-                                });
-                              },
-                        icon: const Icon(LucideIcons.x),
-                        variance: amountController.text.isEmpty
-                            ? const ButtonStyle.ghost()
-                            : const ButtonStyle.textIcon(),
+                Row(
+                  spacing: 16.w,
+                  children: [_buildTemplate(10_000), _buildTemplate(20_000)],
+                ),
+                Row(
+                  spacing: 16.w,
+                  children: [_buildTemplate(50_000), _buildTemplate(100_000)],
+                ),
+                Row(
+                  spacing: 16.w,
+                  children: [
+                    _buildTemplate(500_000),
+                    _buildTemplate(1_000_000),
+                  ],
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  spacing: 4.h,
+                  children: [
+                    Label(
+                      child: DefaultText(context.l10n.amount, fontSize: 14.sp),
+                    ),
+                    TextField(
+                      controller: amountController,
+                      onChanged: (value) {
+                        final parsed = int.tryParse(value, radix: 10);
+                        amountController.text = '$parsed';
+                        setState(() {
+                          if (parsed != null) {
+                            amount = parsed;
+                          } else {
+                            amount = 0;
+                          }
+                        });
+                      },
+                      keyboardType: const TextInputType.numberWithOptions(
+                        signed: true,
                       ),
+                      textInputAction: TextInputAction.done,
+                      features: [
+                        InputFeature.clear(
+                          icon: IconButton(
+                            density: ButtonDensity.compact,
+                            onPressed: amountController.text.isEmpty
+                                ? null
+                                : () {
+                                    amountController.text = '';
+                                    setState(() {
+                                      amount = 0;
+                                    });
+                                  },
+                            icon: const Icon(LucideIcons.x),
+                            variance: amountController.text.isEmpty
+                                ? const ButtonStyle.ghost()
+                                : const ButtonStyle.textIcon(),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
+                if (_isBankTransfer) _buildBankProviderSelector(context),
+                BlocBuilder<UserWalletTopUpCubit, UserWalletTopUpState>(
+                  builder: (context, state) {
+                    final isLoading = state.payment.isLoading || _isSubmitting;
+                    return SizedBox(
+                      width: double.infinity,
+                      child: Button.primary(
+                        enabled: !isLoading,
+                        onPressed: !_canSubmit || isLoading
+                            ? null
+                            : _handleSubmit,
+                        child: isLoading
+                            ? const Submiting()
+                            : DefaultText(context.l10n.next),
+                      ),
+                    );
+                  },
+                ),
               ],
             ),
-            if (_isBankTransfer) _buildBankProviderSelector(context),
-            BlocBuilder<UserWalletTopUpCubit, UserWalletTopUpState>(
-              builder: (context, state) {
-                final isLoading = state.payment.isLoading || _isSubmitting;
-                return SizedBox(
-                  width: double.infinity,
-                  child: Button.primary(
-                    enabled: !isLoading,
-                    onPressed: !_canSubmit || isLoading ? null : _handleSubmit,
-                    child: isLoading
-                        ? const Submiting()
-                        : DefaultText(context.l10n.next),
-                  ),
-                );
-              },
-            ),
-          ],
+          ),
         ),
       ),
     );

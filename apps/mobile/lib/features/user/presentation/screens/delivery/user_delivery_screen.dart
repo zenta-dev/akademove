@@ -275,7 +275,7 @@ class _UserDeliveryScreenState extends State<UserDeliveryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return MyScaffold(
+    return Scaffold(
       headers: [
         AppBar(
           padding: EdgeInsets.all(4.dg),
@@ -292,116 +292,125 @@ class _UserDeliveryScreenState extends State<UserDeliveryScreen> {
           ],
         ),
       ],
-      body: BlocListener<UserOrderCubit, UserOrderState>(
-        listener: (context, state) {
-          if (state.estimateOrder.isFailure &&
-              state.estimateOrder.error != null) {
-            context.showMyToast(
-              state.estimateOrder.error?.message ??
-                  context.l10n.toast_failed_estimate_order,
-              type: ToastType.failed,
-            );
-          }
-        },
-        child: Column(
-          spacing: 16.h,
-          children: [
-            Text(
-              context.l10n.text_choose_pickup_destination,
-              style: context.typography.h4.copyWith(
-                fontSize: 16.sp,
-                fontWeight: FontWeight.w500,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            Card(
-              child: Column(
-                spacing: 16.h,
-                children: [
-                  _buildMapSection(),
-                  PickLocationCardWidget(
-                    padding: EdgeInsets.zero,
-                    borderColor: context.colorScheme.card,
-                    pickup: PickLocationParameters(
-                      enabled: false,
-                      controller: pickupController,
-                      onPresesed: () async {
-                        pickupLocation = await context.pushNamed(
-                          Routes.userDeliveryPickup.name,
-                          extra: {
-                            LocationType.pickup.name: pickupController,
-                            LocationType.dropoff.name: dropoffController,
-                          },
-                        );
-                        pickupController.text = pickupLocation?.vicinity ?? '';
-                        await _updateMapMarkers();
-                      },
-                    ),
-                    dropoff: PickLocationParameters(
-                      enabled: false,
-                      controller: dropoffController,
-                      onPresesed: () async {
-                        dropoffLocation = await context.pushNamed(
-                          Routes.userDeliveryDropoff.name,
-                          extra: {
-                            LocationType.pickup.name: pickupController,
-                            LocationType.dropoff.name: dropoffController,
-                          },
-                        );
-                        dropoffController.text =
-                            dropoffLocation?.vicinity ?? '';
-                        await _updateMapMarkers();
-                      },
-                    ),
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.all(16.dg),
+          child: BlocListener<UserOrderCubit, UserOrderState>(
+            listener: (context, state) {
+              if (state.estimateOrder.isFailure &&
+                  state.estimateOrder.error != null) {
+                context.showMyToast(
+                  state.estimateOrder.error?.message ??
+                      context.l10n.toast_failed_estimate_order,
+                  type: ToastType.failed,
+                );
+              }
+            },
+            child: Column(
+              spacing: 16.h,
+              children: [
+                Text(
+                  context.l10n.text_choose_pickup_destination,
+                  style: context.typography.h4.copyWith(
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.w500,
                   ),
-                ],
-              ),
-            ),
-            SizedBox(
-              width: double.infinity,
-              child: Button.primary(
-                onPressed: () async {
-                  final pickupLoc = pickupLocation;
-                  final dropoffLoc = dropoffLocation;
-                  if (pickupLoc == null || dropoffLoc == null) {
-                    context.showMyToast(
-                      context.l10n.pickup_and_dropoff_must_be_set,
-                      type: ToastType.failed,
-                    );
-                    return;
-                  }
-                  context.read<UserOrderCubit>().setLocation(
-                    pickup: pickupLoc,
-                    dropoff: dropoffLoc,
-                  );
-                  final origin = Coordinate(x: pickupLoc.lng, y: pickupLoc.lat);
-                  final destination = Coordinate(
-                    x: dropoffLoc.lng,
-                    y: dropoffLoc.lat,
-                  );
-                  // Ensure location is loaded (uses cache if available)
-                  await context
-                      .read<UserLocationCubit>()
-                      .ensureLocationLoaded();
+                  textAlign: TextAlign.center,
+                ),
+                Card(
+                  child: Column(
+                    spacing: 16.h,
+                    children: [
+                      _buildMapSection(),
+                      PickLocationCardWidget(
+                        padding: EdgeInsets.zero,
+                        borderColor: context.colorScheme.card,
+                        pickup: PickLocationParameters(
+                          enabled: false,
+                          controller: pickupController,
+                          onPresesed: () async {
+                            pickupLocation = await context.pushNamed(
+                              Routes.userDeliveryPickup.name,
+                              extra: {
+                                LocationType.pickup.name: pickupController,
+                                LocationType.dropoff.name: dropoffController,
+                              },
+                            );
+                            pickupController.text =
+                                pickupLocation?.vicinity ?? '';
+                            await _updateMapMarkers();
+                          },
+                        ),
+                        dropoff: PickLocationParameters(
+                          enabled: false,
+                          controller: dropoffController,
+                          onPresesed: () async {
+                            dropoffLocation = await context.pushNamed(
+                              Routes.userDeliveryDropoff.name,
+                              extra: {
+                                LocationType.pickup.name: pickupController,
+                                LocationType.dropoff.name: dropoffController,
+                              },
+                            );
+                            dropoffController.text =
+                                dropoffLocation?.vicinity ?? '';
+                            await _updateMapMarkers();
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  width: double.infinity,
+                  child: Button.primary(
+                    onPressed: () async {
+                      final pickupLoc = pickupLocation;
+                      final dropoffLoc = dropoffLocation;
+                      if (pickupLoc == null || dropoffLoc == null) {
+                        context.showMyToast(
+                          context.l10n.pickup_and_dropoff_must_be_set,
+                          type: ToastType.failed,
+                        );
+                        return;
+                      }
+                      context.read<UserOrderCubit>().setLocation(
+                        pickup: pickupLoc,
+                        dropoff: dropoffLoc,
+                      );
+                      final origin = Coordinate(
+                        x: pickupLoc.lng,
+                        y: pickupLoc.lat,
+                      );
+                      final destination = Coordinate(
+                        x: dropoffLoc.lng,
+                        y: dropoffLoc.lat,
+                      );
+                      // Ensure location is loaded (uses cache if available)
+                      await context
+                          .read<UserLocationCubit>()
+                          .ensureLocationLoaded();
 
-                  if (!context.mounted) return;
-                  await Future.wait([
-                    context.read<UserMapCubit>().getRoutes(
-                      origin: origin,
-                      destination: destination,
-                    ),
-                    context.read<UserMapCubit>().getDistanceAndDuration(
-                      origin: origin,
-                      destination: destination,
-                    ),
-                  ]);
-                  if (!context.mounted) return;
-                  await context.pushNamed(Routes.userDeliveryDetails.name);
-                },
-                child: DefaultText(context.l10n.button_proceed),
-              ),
+                      if (!context.mounted) return;
+                      await Future.wait([
+                        context.read<UserMapCubit>().getRoutes(
+                          origin: origin,
+                          destination: destination,
+                        ),
+                        context.read<UserMapCubit>().getDistanceAndDuration(
+                          origin: origin,
+                          destination: destination,
+                        ),
+                      ]);
+                      if (!context.mounted) return;
+                      await context.pushNamed(Routes.userDeliveryDetails.name);
+                    },
+                    child: DefaultText(context.l10n.button_proceed),
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );
@@ -491,10 +500,9 @@ class _UserDeliveryPickupScreenState extends State<UserDeliveryPickupScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return MyScaffold(
-      scrollable: false,
+    return Scaffold(
       headers: [DefaultAppBar(title: context.l10n.title_where_you_at)],
-      body: PickLocationWidget(
+      child: PickLocationWidget(
         type: LocationType.pickup,
         pickupController: pickupController,
         dropoffController: dropoffController,
@@ -533,10 +541,9 @@ class _UserDeliveryDropoffScreenState extends State<UserDeliveryDropoffScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return MyScaffold(
-      scrollable: false,
+    return Scaffold(
       headers: [DefaultAppBar(title: context.l10n.title_where_are_you_going)],
-      body: PickLocationWidget(
+      child: PickLocationWidget(
         type: LocationType.dropoff,
         pickupController: pickupController,
         dropoffController: dropoffController,

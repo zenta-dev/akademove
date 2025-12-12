@@ -45,7 +45,7 @@ class _DriverReviewsDetailScreenState extends State<DriverReviewsDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return MyScaffold(
+    return Scaffold(
       headers: [
         AppBar(
           title: Text(context.l10n.my_reviews),
@@ -58,77 +58,98 @@ class _DriverReviewsDetailScreenState extends State<DriverReviewsDetailScreen> {
           ],
         ),
       ],
-      body: BlocBuilder<DriverReviewCubit, DriverReviewState>(
-        builder: (context, state) {
-          if (state.fetchReviewsResult.isLoading && state.reviews.isEmpty) {
-            return const Center(child: CircularProgressIndicator());
-          }
+      child: RefreshTrigger(
+        onRefresh: _onRefresh,
+        child: BlocBuilder<DriverReviewCubit, DriverReviewState>(
+          builder: (context, state) {
+            if (state.fetchReviewsResult.isLoading && state.reviews.isEmpty) {
+              return const Center(child: CircularProgressIndicator());
+            }
 
-          if (state.fetchReviewsResult.isFailure && state.reviews.isEmpty) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                spacing: 16.h,
-                children: [
-                  Icon(
-                    LucideIcons.circleAlert,
-                    size: 48.sp,
-                    color: context.colorScheme.destructive,
-                  ),
-                  Text(
-                    state.fetchReviewsResult.error?.message ??
-                        context.l10n.failed_to_load,
-                    style: context.typography.small,
-                    textAlign: TextAlign.center,
-                  ),
-                  PrimaryButton(
-                    onPressed: _onRefresh,
-                    child: Text(context.l10n.retry),
-                  ),
-                ],
-              ),
-            );
-          }
-
-          if (state.reviews.isEmpty) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                spacing: 16.h,
-                children: [
-                  Icon(
-                    LucideIcons.star,
-                    size: 48.sp,
-                    color: context.colorScheme.mutedForeground,
-                  ),
-                  Text(
-                    context.l10n.no_reviews_yet,
-                    style: context.typography.p.copyWith(
-                      color: context.colorScheme.mutedForeground,
+            if (state.fetchReviewsResult.isFailure && state.reviews.isEmpty) {
+              return SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                child: Padding(
+                  padding: EdgeInsets.all(16.dg),
+                  child: SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.7,
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        spacing: 16.h,
+                        children: [
+                          Icon(
+                            LucideIcons.circleAlert,
+                            size: 48.sp,
+                            color: context.colorScheme.destructive,
+                          ),
+                          Text(
+                            state.fetchReviewsResult.error?.message ??
+                                context.l10n.failed_to_load,
+                            style: context.typography.small,
+                            textAlign: TextAlign.center,
+                          ),
+                          PrimaryButton(
+                            onPressed: _onRefresh,
+                            child: Text(context.l10n.retry),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ],
+                ),
+              );
+            }
+
+            if (state.reviews.isEmpty) {
+              return SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                child: Padding(
+                  padding: EdgeInsets.all(16.dg),
+                  child: SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.7,
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        spacing: 16.h,
+                        children: [
+                          Icon(
+                            LucideIcons.star,
+                            size: 48.sp,
+                            color: context.colorScheme.mutedForeground,
+                          ),
+                          Text(
+                            context.l10n.no_reviews_yet,
+                            style: context.typography.p.copyWith(
+                              color: context.colorScheme.mutedForeground,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            }
+
+            return SingleChildScrollView(
+              controller: _scrollController,
+              physics: const AlwaysScrollableScrollPhysics(),
+              child: Padding(
+                padding: EdgeInsets.all(16.dg),
+                child: Column(
+                  spacing: 16.h,
+                  children: [
+                    _buildOverallRating(state.reviews),
+                    _buildRatingBreakdown(state.reviews),
+                    _buildCategoryBreakdown(state.reviews),
+                    _buildRecentReviews(state),
+                  ],
+                ),
               ),
             );
-          }
-
-          return RefreshTrigger(
-            onRefresh: _onRefresh,
-            child: SingleChildScrollView(
-              controller: _scrollController,
-              padding: EdgeInsets.all(16.dg),
-              child: Column(
-                spacing: 16.h,
-                children: [
-                  _buildOverallRating(state.reviews),
-                  _buildRatingBreakdown(state.reviews),
-                  _buildCategoryBreakdown(state.reviews),
-                  _buildRecentReviews(state),
-                ],
-              ),
-            ),
-          );
-        },
+          },
+        ),
       ),
     );
   }

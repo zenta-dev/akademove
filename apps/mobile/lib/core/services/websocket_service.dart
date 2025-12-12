@@ -104,7 +104,7 @@ class WebSocketService with WidgetsBindingObserver {
       await _subscriptions[key]?.cancel();
       _subscriptions.remove(key);
 
-      await _connections[key]?.sink.close(status.goingAway);
+      await _connections[key]?.sink.close(status.normalClosure);
       _connections.remove(key);
     } catch (error) {
       _logDebug(key, 'Error during pause cleanup: $error');
@@ -302,7 +302,7 @@ class WebSocketService with WidgetsBindingObserver {
       _logDebug(key, 'Performing reconnect attempt ${attempts + 1}');
       try {
         await _subscriptions[key]?.cancel();
-        await _connections[key]?.sink.close(status.goingAway);
+        await _connections[key]?.sink.close(status.normalClosure);
       } catch (_) {}
 
       _subscriptions.remove(key);

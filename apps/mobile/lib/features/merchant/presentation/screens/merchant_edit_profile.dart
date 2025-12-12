@@ -742,90 +742,92 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
       listener: (context, state) => _onUpdateProfileStateChanged(state),
       child: Stack(
         children: [
-          MyScaffold(
-            controller: _scrollController,
+          Scaffold(
             headers: [DefaultAppBar(title: context.l10n.title_edit_profile)],
-            body: NotificationListener<ScrollNotification>(
-              onNotification: (notification) {
-                if (_isDraggingMarker) {
-                  return true;
-                }
-                return false;
-              },
-              child: Form(
-                controller: _formController,
-                child: SingleChildScrollView(
-                  padding: EdgeInsets.only(bottom: 100.h),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    spacing: 20.h,
-                    children: [
-                      _buildTextField(
-                        key: _FormKeys.ownerName,
-                        label: context.l10n.label_owner_name,
-                        placeholder: context.l10n.placeholder_owner_name,
-                        icon: LucideIcons.user,
-                        validator: const LengthValidator(min: 3),
-                        enabled: !_isLoading,
-                      ),
-                      _buildTextField(
-                        key: _FormKeys.ownerEmail,
-                        label: context.l10n.label_owner_email,
-                        placeholder: context.l10n.placeholder_owner_email,
-                        icon: LucideIcons.mail,
-                        validator: const EmailValidator(),
-                        keyboardType: TextInputType.emailAddress,
-                        enabled: !_isLoading,
-                      ),
-                      _buildPhoneField(
-                        context,
-                        _FormKeys.ownerPhoneNumber,
-                        context.l10n.label_owner_phone,
-                        (val) {
-                          setState(() {
-                            _ownerPhoneNumber = val.number;
-                          });
-                        },
-                      ),
-                      _buildTextField(
-                        key: _FormKeys.outletName,
-                        label: context.l10n.label_outlet_name,
-                        placeholder: context.l10n.placeholder_outlet_name,
-                        icon: LucideIcons.store,
-                        validator: const LengthValidator(min: 3),
-                        enabled: !_isLoading,
-                      ),
-                      _buildOutletLocationField(),
-                      _buildPhoneField(
-                        context,
-                        _FormKeys.outletPhoneNumber,
-                        context.l10n.label_outlet_phone,
-                        (val) {
-                          setState(() {
-                            _outletPhoneNumber = val.number;
-                          });
-                        },
-                      ),
-                      _buildTextField(
-                        key: _FormKeys.outletEmail,
-                        label: context.l10n.label_outlet_email,
-                        placeholder: context.l10n.placeholder_outlet_email,
-                        icon: LucideIcons.mail,
-                        validator: const EmailValidator(),
-                        keyboardType: TextInputType.emailAddress,
-                        enabled: !_isLoading,
-                      ),
-                      _buildImagePicker(
-                        context.l10n.label_outlet_document,
-                        _Documents.outletDocument,
-                        _documents,
-                        _documentsErrors,
-                        context,
-                        isOptional: true,
-                      ),
-                      _buildBankProviderSelect(),
-                      _buildBankAccountField(),
-                    ],
+            child: Padding(
+              padding: EdgeInsets.all(16.dg),
+              child: NotificationListener<ScrollNotification>(
+                onNotification: (notification) {
+                  if (_isDraggingMarker) {
+                    return true;
+                  }
+                  return false;
+                },
+                child: Form(
+                  controller: _formController,
+                  child: SingleChildScrollView(
+                    padding: EdgeInsets.only(bottom: 100.h),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      spacing: 20.h,
+                      children: [
+                        _buildTextField(
+                          key: _FormKeys.ownerName,
+                          label: context.l10n.label_owner_name,
+                          placeholder: context.l10n.placeholder_owner_name,
+                          icon: LucideIcons.user,
+                          validator: const LengthValidator(min: 3),
+                          enabled: !_isLoading,
+                        ),
+                        _buildTextField(
+                          key: _FormKeys.ownerEmail,
+                          label: context.l10n.label_owner_email,
+                          placeholder: context.l10n.placeholder_owner_email,
+                          icon: LucideIcons.mail,
+                          validator: const EmailValidator(),
+                          keyboardType: TextInputType.emailAddress,
+                          enabled: !_isLoading,
+                        ),
+                        _buildPhoneField(
+                          context,
+                          _FormKeys.ownerPhoneNumber,
+                          context.l10n.label_owner_phone,
+                          (val) {
+                            setState(() {
+                              _ownerPhoneNumber = val.number;
+                            });
+                          },
+                        ),
+                        _buildTextField(
+                          key: _FormKeys.outletName,
+                          label: context.l10n.label_outlet_name,
+                          placeholder: context.l10n.placeholder_outlet_name,
+                          icon: LucideIcons.store,
+                          validator: const LengthValidator(min: 3),
+                          enabled: !_isLoading,
+                        ),
+                        _buildOutletLocationField(),
+                        _buildPhoneField(
+                          context,
+                          _FormKeys.outletPhoneNumber,
+                          context.l10n.label_outlet_phone,
+                          (val) {
+                            setState(() {
+                              _outletPhoneNumber = val.number;
+                            });
+                          },
+                        ),
+                        _buildTextField(
+                          key: _FormKeys.outletEmail,
+                          label: context.l10n.label_outlet_email,
+                          placeholder: context.l10n.placeholder_outlet_email,
+                          icon: LucideIcons.mail,
+                          validator: const EmailValidator(),
+                          keyboardType: TextInputType.emailAddress,
+                          enabled: !_isLoading,
+                        ),
+                        _buildImagePicker(
+                          context.l10n.label_outlet_document,
+                          _Documents.outletDocument,
+                          _documents,
+                          _documentsErrors,
+                          context,
+                          isOptional: true,
+                        ),
+                        _buildBankProviderSelect(),
+                        _buildBankAccountField(),
+                      ],
+                    ),
                   ),
                 ),
               ),

@@ -217,10 +217,16 @@ class _MerchantWalletWithdrawScreenState
     }
   }
 
+  Future<void> _onRefresh() async {
+    final merchantId = _merchantId;
+    if (merchantId != null) {
+      await context.read<MerchantWalletCubit>().init(merchantId);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return MyScaffold(
-      scrollable: true,
+    return Scaffold(
       headers: [
         AppBar(
           title: Text(
@@ -236,280 +242,292 @@ class _MerchantWalletWithdrawScreenState
           ],
         ),
       ],
-      body: BlocBuilder<MerchantWalletCubit, MerchantWalletState>(
-        builder: (context, state) {
-          final wallet = state.wallet.value;
-          final isLoading = state.wallet.isLoading || _isLoadingSavedBank;
-
-          if (isLoading) {
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          return Padding(
+      child: RefreshTrigger(
+        onRefresh: _onRefresh,
+        child: SingleChildScrollView(
+          child: Padding(
             padding: EdgeInsets.all(16.dg),
-            child: Column(
-              spacing: 16.h,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Balance info card
-                Container(
-                  width: double.infinity,
-                  padding: EdgeInsets.all(16.dg),
-                  decoration: BoxDecoration(
-                    color: context.colorScheme.primary.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(12.r),
-                    border: Border.all(color: context.colorScheme.primary),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    spacing: 8.h,
-                    children: [
-                      Row(
-                        spacing: 8.w,
+            child: BlocBuilder<MerchantWalletCubit, MerchantWalletState>(
+              builder: (context, state) {
+                final wallet = state.wallet.value;
+                final isLoading = state.wallet.isLoading || _isLoadingSavedBank;
+
+                if (isLoading) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+
+                return Column(
+                  spacing: 16.h,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Balance info card
+                    Container(
+                      width: double.infinity,
+                      padding: EdgeInsets.all(16.dg),
+                      decoration: BoxDecoration(
+                        color: context.colorScheme.primary.withValues(
+                          alpha: 0.1,
+                        ),
+                        borderRadius: BorderRadius.circular(12.r),
+                        border: Border.all(color: context.colorScheme.primary),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        spacing: 8.h,
                         children: [
-                          Icon(
-                            LucideIcons.wallet,
-                            size: 20.sp,
-                            color: context.colorScheme.primary,
+                          Row(
+                            spacing: 8.w,
+                            children: [
+                              Icon(
+                                LucideIcons.wallet,
+                                size: 20.sp,
+                                color: context.colorScheme.primary,
+                              ),
+                              Text(
+                                context.l10n.available_balance,
+                                style: context.typography.small.copyWith(
+                                  fontSize: 14.sp,
+                                  fontWeight: FontWeight.w600,
+                                  color: context.colorScheme.primary,
+                                ),
+                              ),
+                            ],
                           ),
                           Text(
-                            context.l10n.available_balance,
-                            style: context.typography.small.copyWith(
-                              fontSize: 14.sp,
-                              fontWeight: FontWeight.w600,
+                            context.formatCurrency(wallet?.balance ?? 0),
+                            style: context.typography.h2.copyWith(
+                              fontSize: 28.sp,
+                              fontWeight: FontWeight.bold,
                               color: context.colorScheme.primary,
                             ),
                           ),
                         ],
                       ),
-                      Text(
-                        context.formatCurrency(wallet?.balance ?? 0),
-                        style: context.typography.h2.copyWith(
-                          fontSize: 28.sp,
-                          fontWeight: FontWeight.bold,
-                          color: context.colorScheme.primary,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                    ),
 
-                // Amount input
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  spacing: 8.h,
-                  children: [
-                    Text(
-                      context.l10n.amount,
-                      style: context.typography.small.copyWith(
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    TextField(
-                      controller: _amountController,
-                      placeholder: Text(context.l10n.enter_withdrawal_amount),
-                      keyboardType: TextInputType.number,
-                    ),
-                  ],
-                ),
-
-                // Bank selection
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  spacing: 8.h,
-                  children: [
-                    Text(
-                      context.l10n.select_bank,
-                      style: context.typography.small.copyWith(
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    Select<BankProvider>(
-                      value: _selectedBank,
-                      onChanged: (value) {
-                        if (value != null) {
-                          setState(() {
-                            _selectedBank = value;
-                            _isValidated = false;
-                          });
-                        }
-                      },
-                      placeholder: Text(context.l10n.select_bank),
-                      itemBuilder: (context, item) => Text(item.name),
-                      popupConstraints: const BoxConstraints(
-                        maxHeight: 300,
-                        maxWidth: 300,
-                      ),
-                      popup: SelectPopup(
-                        items: SelectItemList(
-                          children: [
-                            for (final bank in BankProvider.values)
-                              SelectItemButton(
-                                value: bank,
-                                child: Text(bank.name),
-                              ),
-                          ],
-                        ),
-                      ).call,
-                    ),
-                  ],
-                ),
-
-                // Account number input with validation
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  spacing: 8.h,
-                  children: [
-                    Text(
-                      context.l10n.bank_account,
-                      style: context.typography.small.copyWith(
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    Row(
-                      spacing: 8.w,
+                    // Amount input
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      spacing: 8.h,
                       children: [
-                        Expanded(
-                          child: TextField(
-                            controller: _accountNumberController,
-                            placeholder: Text(
-                              context.l10n.hint_bank_account_number,
-                            ),
-                            keyboardType: TextInputType.number,
-                            onChanged: (_) {
-                              if (_isValidated) {
-                                setState(() => _isValidated = false);
-                              }
-                            },
+                        Text(
+                          context.l10n.amount,
+                          style: context.typography.small.copyWith(
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
-                        Button(
-                          onPressed:
-                              _isValidating ||
-                                  _isValidated ||
-                                  _accountNumberController.text.trim().length <
-                                      5
-                              ? null
-                              : _validateBankAccount,
-                          style: _isValidated
-                              ? ButtonStyle.outline(
-                                  density: ButtonDensity.compact,
-                                )
-                              : ButtonStyle.secondary(
-                                  density: ButtonDensity.compact,
-                                ),
-                          child: _isValidating
-                              ? SizedBox(
-                                  width: 16.sp,
-                                  height: 16.sp,
-                                  child: const CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                  ),
-                                )
-                              : _isValidated
-                              ? Icon(
-                                  LucideIcons.check,
-                                  size: 16.sp,
-                                  color: const Color(0xFF4CAF50),
-                                )
-                              : Text(context.l10n.confirm),
+                        TextField(
+                          controller: _amountController,
+                          placeholder: Text(
+                            context.l10n.enter_withdrawal_amount,
+                          ),
+                          keyboardType: TextInputType.number,
                         ),
                       ],
                     ),
-                  ],
-                ),
 
-                // Account name input
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  spacing: 8.h,
-                  children: [
-                    Text(
-                      context.l10n.account_name,
-                      style: context.typography.small.copyWith(
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    TextField(
-                      controller: _accountNameController,
-                      placeholder: Text(context.l10n.hint_account_name),
-                      readOnly: _isValidated,
-                    ),
-                    if (_isValidated && _accountNameController.text.isNotEmpty)
-                      Text(
-                        _accountNameController.text,
-                        style: context.typography.small.copyWith(
-                          fontSize: 12.sp,
-                          color: const Color(0xFF4CAF50),
-                        ),
-                      ),
-                  ],
-                ),
-
-                // Save bank checkbox
-                Row(
-                  spacing: 8.w,
-                  children: [
-                    Checkbox(
-                      state: _saveBank
-                          ? CheckboxState.checked
-                          : CheckboxState.unchecked,
-                      onChanged: (state) {
-                        setState(
-                          () => _saveBank = state == CheckboxState.checked,
-                        );
-                      },
-                    ),
-                    Expanded(
-                      child: GestureDetector(
-                        onTap: () => setState(() => _saveBank = !_saveBank),
-                        child: Text(
-                          context.l10n.withdraw_wallet_save_bank,
+                    // Bank selection
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      spacing: 8.h,
+                      children: [
+                        Text(
+                          context.l10n.select_bank,
                           style: context.typography.small.copyWith(
                             fontSize: 14.sp,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
+                        Select<BankProvider>(
+                          value: _selectedBank,
+                          onChanged: (value) {
+                            if (value != null) {
+                              setState(() {
+                                _selectedBank = value;
+                                _isValidated = false;
+                              });
+                            }
+                          },
+                          placeholder: Text(context.l10n.select_bank),
+                          itemBuilder: (context, item) => Text(item.name),
+                          popupConstraints: const BoxConstraints(
+                            maxHeight: 300,
+                            maxWidth: 300,
+                          ),
+                          popup: SelectPopup(
+                            items: SelectItemList(
+                              children: [
+                                for (final bank in BankProvider.values)
+                                  SelectItemButton(
+                                    value: bank,
+                                    child: Text(bank.name),
+                                  ),
+                              ],
+                            ),
+                          ).call,
+                        ),
+                      ],
+                    ),
+
+                    // Account number input with validation
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      spacing: 8.h,
+                      children: [
+                        Text(
+                          context.l10n.bank_account,
+                          style: context.typography.small.copyWith(
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        Row(
+                          spacing: 8.w,
+                          children: [
+                            Expanded(
+                              child: TextField(
+                                controller: _accountNumberController,
+                                placeholder: Text(
+                                  context.l10n.hint_bank_account_number,
+                                ),
+                                keyboardType: TextInputType.number,
+                                onChanged: (_) {
+                                  if (_isValidated) {
+                                    setState(() => _isValidated = false);
+                                  }
+                                },
+                              ),
+                            ),
+                            Button(
+                              onPressed:
+                                  _isValidating ||
+                                      _isValidated ||
+                                      _accountNumberController.text
+                                              .trim()
+                                              .length <
+                                          5
+                                  ? null
+                                  : _validateBankAccount,
+                              style: _isValidated
+                                  ? ButtonStyle.outline(
+                                      density: ButtonDensity.compact,
+                                    )
+                                  : ButtonStyle.secondary(
+                                      density: ButtonDensity.compact,
+                                    ),
+                              child: _isValidating
+                                  ? SizedBox(
+                                      width: 16.sp,
+                                      height: 16.sp,
+                                      child: const CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                      ),
+                                    )
+                                  : _isValidated
+                                  ? Icon(
+                                      LucideIcons.check,
+                                      size: 16.sp,
+                                      color: const Color(0xFF4CAF50),
+                                    )
+                                  : Text(context.l10n.confirm),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+
+                    // Account name input
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      spacing: 8.h,
+                      children: [
+                        Text(
+                          context.l10n.account_name,
+                          style: context.typography.small.copyWith(
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        TextField(
+                          controller: _accountNameController,
+                          placeholder: Text(context.l10n.hint_account_name),
+                          readOnly: _isValidated,
+                        ),
+                        if (_isValidated &&
+                            _accountNameController.text.isNotEmpty)
+                          Text(
+                            _accountNameController.text,
+                            style: context.typography.small.copyWith(
+                              fontSize: 12.sp,
+                              color: const Color(0xFF4CAF50),
+                            ),
+                          ),
+                      ],
+                    ),
+
+                    // Save bank checkbox
+                    Row(
+                      spacing: 8.w,
+                      children: [
+                        Checkbox(
+                          state: _saveBank
+                              ? CheckboxState.checked
+                              : CheckboxState.unchecked,
+                          onChanged: (state) {
+                            setState(
+                              () => _saveBank = state == CheckboxState.checked,
+                            );
+                          },
+                        ),
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () => setState(() => _saveBank = !_saveBank),
+                            child: Text(
+                              context.l10n.withdraw_wallet_save_bank,
+                              style: context.typography.small.copyWith(
+                                fontSize: 14.sp,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    Gap(16.h),
+
+                    // Withdraw button
+                    SizedBox(
+                      width: double.infinity,
+                      child: PrimaryButton(
+                        onPressed: _isWithdrawing || _isValidating
+                            ? null
+                            : _processWithdrawal,
+                        child: _isWithdrawing
+                            ? SizedBox(
+                                width: 20.sp,
+                                height: 20.sp,
+                                child: const CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  color: Colors.white,
+                                ),
+                              )
+                            : Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                spacing: 8.w,
+                                children: [
+                                  const Icon(LucideIcons.banknote),
+                                  Text(context.l10n.withdraw),
+                                ],
+                              ),
                       ),
                     ),
                   ],
-                ),
-
-                Gap(16.h),
-
-                // Withdraw button
-                SizedBox(
-                  width: double.infinity,
-                  child: PrimaryButton(
-                    onPressed: _isWithdrawing || _isValidating
-                        ? null
-                        : _processWithdrawal,
-                    child: _isWithdrawing
-                        ? SizedBox(
-                            width: 20.sp,
-                            height: 20.sp,
-                            child: const CircularProgressIndicator(
-                              strokeWidth: 2,
-                              color: Colors.white,
-                            ),
-                          )
-                        : Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            spacing: 8.w,
-                            children: [
-                              const Icon(LucideIcons.banknote),
-                              Text(context.l10n.withdraw),
-                            ],
-                          ),
-                  ),
-                ),
-              ],
+                );
+              },
             ),
-          );
-        },
+          ),
+        ),
       ),
     );
   }

@@ -375,11 +375,9 @@ class _UserRideOnTripScreenState extends State<UserRideOnTripScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return MyScaffold(
-      scrollable: false,
-      padding: EdgeInsets.zero,
+    return Scaffold(
       headers: [DefaultAppBar(title: context.l10n.text_on_trip)],
-      body: BlocConsumer<UserOrderCubit, UserOrderState>(
+      child: BlocConsumer<UserOrderCubit, UserOrderState>(
         listenWhen: _shouldRebuildForOrder,
         buildWhen: _shouldRebuildForOrder,
         listener: (context, state) async {

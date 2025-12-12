@@ -25,78 +25,93 @@ class _DriverQuizScreenState extends State<DriverQuizScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return MyScaffold(
+    return Scaffold(
       headers: [
         DefaultAppBar(
           title: context.l10n.driver_knowledge_quiz,
           padding: EdgeInsets.all(16.r),
         ),
       ],
-      onRefresh: () async {
-        context.read<DriverQuizCubit2>().getLatestAttempt();
-      },
-      body: BlocConsumer<DriverQuizCubit2, DriverQuizState2>(
-        listenWhen: (previous, current) {
-          // Only trigger listener when answerFeedback changes from non-success to success
-          return !previous.answerFeedback.isSuccess &&
-              current.answerFeedback.isSuccess;
-        },
-        listener: (context, state) {
-          // Show toast for answer feedback
-          final feedback = state.answerFeedback.data?.value;
-          if (feedback != null) {
-            if (feedback.isCorrect) {
-              showToast(
-                context: context,
-                builder: (context, overlay) => SurfaceCard(
-                  child: Basic(
-                    leading: Icon(
-                      Icons.check_circle,
-                      color: Colors.green,
-                      size: 24.sp,
-                    ),
-                    title: Text('Correct! +${feedback.pointsEarned} points'),
-                  ),
-                ),
-                location: ToastLocation.bottomCenter,
-              );
-            } else {
-              showToast(
-                context: context,
-                builder: (context, overlay) => SurfaceCard(
-                  child: Basic(
-                    leading: Icon(Icons.cancel, color: Colors.red, size: 24.sp),
-                    title: const Text('Incorrect answer'),
-                  ),
-                ),
-                location: ToastLocation.bottomCenter,
-              );
-            }
-          }
-        },
-        builder: (context, state) {
-          // Check if driver has already passed the quiz
-          final authState = context.watch<AuthCubit>().state;
-          final driver = authState.driver.data?.value;
+      child: SafeArea(
+        child: RefreshTrigger(
+          onRefresh: () async {
+            context.read<DriverQuizCubit2>().getLatestAttempt();
+          },
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.all(16.dg),
+              child: BlocConsumer<DriverQuizCubit2, DriverQuizState2>(
+                listenWhen: (previous, current) {
+                  // Only trigger listener when answerFeedback changes from non-success to success
+                  return !previous.answerFeedback.isSuccess &&
+                      current.answerFeedback.isSuccess;
+                },
+                listener: (context, state) {
+                  // Show toast for answer feedback
+                  final feedback = state.answerFeedback.data?.value;
+                  if (feedback != null) {
+                    if (feedback.isCorrect) {
+                      showToast(
+                        context: context,
+                        builder: (context, overlay) => SurfaceCard(
+                          child: Basic(
+                            leading: Icon(
+                              Icons.check_circle,
+                              color: Colors.green,
+                              size: 24.sp,
+                            ),
+                            title: Text(
+                              'Correct! +${feedback.pointsEarned} points',
+                            ),
+                          ),
+                        ),
+                        location: ToastLocation.bottomCenter,
+                      );
+                    } else {
+                      showToast(
+                        context: context,
+                        builder: (context, overlay) => SurfaceCard(
+                          child: Basic(
+                            leading: Icon(
+                              Icons.cancel,
+                              color: Colors.red,
+                              size: 24.sp,
+                            ),
+                            title: const Text('Incorrect answer'),
+                          ),
+                        ),
+                        location: ToastLocation.bottomCenter,
+                      );
+                    }
+                  }
+                },
+                builder: (context, state) {
+                  // Check if driver has already passed the quiz
+                  final authState = context.watch<AuthCubit>().state;
+                  final driver = authState.driver.data?.value;
 
-          if (driver?.quizStatus == DriverQuizStatus.PASSED) {
-            return _buildAlreadyPassedScreen(driver);
-          }
+                  if (driver?.quizStatus == DriverQuizStatus.PASSED) {
+                    return _buildAlreadyPassedScreen(driver);
+                  }
 
-          if (state.attempt.isLoading) {
-            return const Center(child: CircularProgressIndicator());
-          }
+                  if (state.attempt.isLoading) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
 
-          if (state.result.isSuccess && state.result.hasData) {
-            return _buildResultScreen(state.result.data?.value, state);
-          }
+                  if (state.result.isSuccess && state.result.hasData) {
+                    return _buildResultScreen(state.result.data?.value, state);
+                  }
 
-          if (state.attempt.isSuccess && state.attempt.hasData) {
-            return _buildQuizScreen(state);
-          }
+                  if (state.attempt.isSuccess && state.attempt.hasData) {
+                    return _buildQuizScreen(state);
+                  }
 
-          return _buildStartScreen(state);
-        },
+                  return _buildStartScreen(state);
+                },
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }

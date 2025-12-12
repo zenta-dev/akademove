@@ -54,9 +54,9 @@ class _ReportUserScreenState extends State<ReportUserScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return MyScaffold(
+    return Scaffold(
       headers: [DefaultAppBar(title: context.l10n.report_user)],
-      body: BlocListener<ReportCubit, ReportState>(
+      child: BlocListener<ReportCubit, ReportState>(
         listenWhen: (previous, current) => previous.status != current.status,
         listener: (context, state) {
           if (state.status.isSuccess) {
@@ -74,25 +74,28 @@ class _ReportUserScreenState extends State<ReportUserScreen> {
           }
         },
         child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            spacing: 24.h,
-            children: [
-              // Target user info
-              _buildTargetUserInfo(),
+          child: Padding(
+            padding: EdgeInsets.all(16.dg),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              spacing: 24.h,
+              children: [
+                // Target user info
+                _buildTargetUserInfo(),
 
-              // Category selector
-              _buildCategorySelector(),
+                // Category selector
+                _buildCategorySelector(),
 
-              // Description section
-              _buildDescriptionSection(),
+                // Description section
+                _buildDescriptionSection(),
 
-              // Guidelines
-              _buildGuidelines(),
+                // Guidelines
+                _buildGuidelines(),
 
-              // Submit button
-              _buildSubmitButton(),
-            ],
+                // Submit button
+                _buildSubmitButton(),
+              ],
+            ),
           ),
         ),
       ),

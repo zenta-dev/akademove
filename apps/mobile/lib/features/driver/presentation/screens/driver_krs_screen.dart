@@ -36,7 +36,7 @@ class _DriverKrsScreenState extends State<DriverKrsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return MyScaffold(
+    return Scaffold(
       headers: [
         DefaultAppBar(
           title: context.l10n.my_schedule,
@@ -50,99 +50,101 @@ class _DriverKrsScreenState extends State<DriverKrsScreen> {
           ],
         ),
       ],
-      scrollable: false,
-      body: RefreshTrigger(
-        onRefresh: _onRefresh,
-        child: BlocConsumer<DriverScheduleCubit, DriverScheduleState>(
-          listener: (context, state) {
-            // Handle fetch schedules failure
-            if (state.fetchSchedulesResult.isFailure) {
-              context.showMyToast(
-                state.fetchSchedulesResult.error?.message ??
-                    context.l10n.an_error_occurred,
-                type: ToastType.failed,
-              );
-            }
+      child: Padding(
+        padding: EdgeInsets.all(16.dg),
+        child: RefreshTrigger(
+          onRefresh: _onRefresh,
+          child: BlocConsumer<DriverScheduleCubit, DriverScheduleState>(
+            listener: (context, state) {
+              // Handle fetch schedules failure
+              if (state.fetchSchedulesResult.isFailure) {
+                context.showMyToast(
+                  state.fetchSchedulesResult.error?.message ??
+                      context.l10n.an_error_occurred,
+                  type: ToastType.failed,
+                );
+              }
 
-            // Handle create schedule result
-            if (state.createScheduleResult.isSuccess &&
-                _isEditingSchedule == false) {
-              _isEditingSchedule = null;
-              context.showMyToast(
-                context.l10n.schedule_added_successfully,
-                type: ToastType.success,
-              );
-              _loadDriverAndSchedules();
-            }
-            if (state.createScheduleResult.isFailure &&
-                _isEditingSchedule == false) {
-              _isEditingSchedule = null;
-              context.showMyToast(
-                state.createScheduleResult.error?.message ??
-                    context.l10n.failed_to_add_schedule,
-                type: ToastType.failed,
-              );
-            }
+              // Handle create schedule result
+              if (state.createScheduleResult.isSuccess &&
+                  _isEditingSchedule == false) {
+                _isEditingSchedule = null;
+                context.showMyToast(
+                  context.l10n.schedule_added_successfully,
+                  type: ToastType.success,
+                );
+                _loadDriverAndSchedules();
+              }
+              if (state.createScheduleResult.isFailure &&
+                  _isEditingSchedule == false) {
+                _isEditingSchedule = null;
+                context.showMyToast(
+                  state.createScheduleResult.error?.message ??
+                      context.l10n.failed_to_add_schedule,
+                  type: ToastType.failed,
+                );
+              }
 
-            // Handle update schedule result
-            if (state.updateScheduleResult.isSuccess &&
-                _isEditingSchedule == true) {
-              _isEditingSchedule = null;
-              context.showMyToast(
-                context.l10n.schedule_updated_successfully,
-                type: ToastType.success,
-              );
-              _loadDriverAndSchedules();
-            }
-            if (state.updateScheduleResult.isFailure &&
-                _isEditingSchedule == true) {
-              _isEditingSchedule = null;
-              context.showMyToast(
-                state.updateScheduleResult.error?.message ??
-                    context.l10n.failed_to_update_schedule,
-                type: ToastType.failed,
-              );
-            }
+              // Handle update schedule result
+              if (state.updateScheduleResult.isSuccess &&
+                  _isEditingSchedule == true) {
+                _isEditingSchedule = null;
+                context.showMyToast(
+                  context.l10n.schedule_updated_successfully,
+                  type: ToastType.success,
+                );
+                _loadDriverAndSchedules();
+              }
+              if (state.updateScheduleResult.isFailure &&
+                  _isEditingSchedule == true) {
+                _isEditingSchedule = null;
+                context.showMyToast(
+                  state.updateScheduleResult.error?.message ??
+                      context.l10n.failed_to_update_schedule,
+                  type: ToastType.failed,
+                );
+              }
 
-            // Handle delete schedule result
-            if (state.deleteScheduleResult.isSuccess) {
-              context.showMyToast(
-                context.l10n.schedule_deleted_successfully,
-                type: ToastType.success,
-              );
-            }
-            if (state.deleteScheduleResult.isFailure) {
-              context.showMyToast(
-                state.deleteScheduleResult.error?.message ??
-                    context.l10n.failed_to_delete_schedule,
-                type: ToastType.failed,
-              );
-            }
-          },
-          builder: (context, state) {
-            if (state.fetchSchedulesResult.isLoading) {
+              // Handle delete schedule result
+              if (state.deleteScheduleResult.isSuccess) {
+                context.showMyToast(
+                  context.l10n.schedule_deleted_successfully,
+                  type: ToastType.success,
+                );
+              }
+              if (state.deleteScheduleResult.isFailure) {
+                context.showMyToast(
+                  state.deleteScheduleResult.error?.message ??
+                      context.l10n.failed_to_delete_schedule,
+                  type: ToastType.failed,
+                );
+              }
+            },
+            builder: (context, state) {
+              if (state.fetchSchedulesResult.isLoading) {
+                return ListView.separated(
+                  padding: EdgeInsets.zero,
+                  itemCount: 4,
+                  separatorBuilder: (context, index) => SizedBox(height: 12.h),
+                  itemBuilder: (context, index) {
+                    return _buildScheduleCard(dummyDriverSchedule).asSkeleton();
+                  },
+                );
+              }
+
+              if (state.schedules.isEmpty) {
+                return _buildEmptyState();
+              }
               return ListView.separated(
                 padding: EdgeInsets.zero,
-                itemCount: 4,
+                itemCount: state.schedules.length,
                 separatorBuilder: (context, index) => SizedBox(height: 12.h),
                 itemBuilder: (context, index) {
-                  return _buildScheduleCard(dummyDriverSchedule).asSkeleton();
+                  return _buildScheduleCard(state.schedules[index]);
                 },
               );
-            }
-
-            if (state.schedules.isEmpty) {
-              return _buildEmptyState();
-            }
-            return ListView.separated(
-              padding: EdgeInsets.zero,
-              itemCount: state.schedules.length,
-              separatorBuilder: (context, index) => SizedBox(height: 12.h),
-              itemBuilder: (context, index) {
-                return _buildScheduleCard(state.schedules[index]);
-              },
-            );
-          },
+            },
+          ),
         ),
       ),
     );

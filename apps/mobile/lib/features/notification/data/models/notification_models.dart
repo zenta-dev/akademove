@@ -1,168 +1,57 @@
-/// Notification data models for the app
-library;
-
 import 'package:api_client/api_client.dart';
 
-/// Notification model representing a user notification
-class NotificationModel {
-  const NotificationModel({
-    required this.id,
-    required this.userId,
-    required this.title,
-    required this.body,
-    this.data,
-    this.messageId,
-    required this.isRead,
-    required this.createdAt,
-    this.readAt,
-  });
+/// Type alias for notification data
+typedef NotificationData = NotificationList200ResponseDataInner;
 
-  factory NotificationModel.fromDto(NotificationList200ResponseDataInner dto) {
-    return NotificationModel(
-      id: dto.id,
-      userId: dto.userId,
-      title: dto.title,
-      body: dto.body,
-      data: dto.data is Map<String, dynamic>
-          ? dto.data as Map<String, dynamic>
-          : null,
-      messageId: dto.messageId,
-      isRead: dto.isRead,
-      createdAt: dto.createdAt ?? DateTime.now(),
-      readAt: dto.readAt,
-    );
+/// Extension to add helper methods to notification data
+extension NotificationDataExtension on NotificationList200ResponseDataInner {
+  /// Get notification type from data field
+  String get type {
+    if (data == null) return 'general';
+    if (data is Map<String, dynamic>) {
+      final dataMap = data as Map<String, dynamic>;
+      return (dataMap['type'] as String?) ?? 'general';
+    }
+    return 'general';
   }
 
-  factory NotificationModel.fromMarkAsReadDto(
-    NotificationMarkAsRead200ResponseData dto,
-  ) {
-    return NotificationModel(
-      id: dto.id,
-      userId: dto.userId,
-      title: dto.title,
-      body: dto.body,
-      data: dto.data is Map<String, dynamic>
-          ? dto.data as Map<String, dynamic>
-          : null,
-      messageId: dto.messageId,
-      isRead: dto.isRead,
-      createdAt: dto.createdAt,
-      readAt: dto.readAt,
-    );
+  /// Get navigation route from data field
+  String? get route {
+    if (data == null) return null;
+    if (data is Map<String, dynamic>) {
+      final dataMap = data as Map<String, dynamic>;
+      return dataMap['route'] as String?;
+    }
+    return null;
   }
 
-  factory NotificationModel.fromJson(Map<String, dynamic> json) {
-    return NotificationModel(
-      id: json['id'] as String,
-      userId: json['userId'] as String,
-      title: json['title'] as String,
-      body: json['body'] as String,
-      data: json['data'] as Map<String, dynamic>?,
-      messageId: json['messageId'] as String?,
-      isRead: json['isRead'] as bool,
-      createdAt: DateTime.parse(json['createdAt'] as String),
-      readAt: json['readAt'] != null
-          ? DateTime.parse(json['readAt'] as String)
-          : null,
-    );
-  }
-
-  final String id;
-  final String userId;
-  final String title;
-  final String body;
-  final Map<String, dynamic>? data;
-  final String? messageId;
-  final bool isRead;
-  final DateTime createdAt;
-  final DateTime? readAt;
-
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'userId': userId,
-      'title': title,
-      'body': body,
-      'data': data,
-      'messageId': messageId,
-      'isRead': isRead,
-      'createdAt': createdAt.toIso8601String(),
-      'readAt': readAt?.toIso8601String(),
-    };
-  }
-
-  NotificationModel copyWith({
-    String? id,
-    String? userId,
-    String? title,
-    String? body,
-    Map<String, dynamic>? data,
-    String? messageId,
+  /// Create a copy with updated read status
+  NotificationList200ResponseDataInner copyWithUpdated({
     bool? isRead,
-    DateTime? createdAt,
     DateTime? readAt,
   }) {
-    return NotificationModel(
-      id: id ?? this.id,
-      userId: userId ?? this.userId,
-      title: title ?? this.title,
-      body: body ?? this.body,
-      data: data ?? this.data,
-      messageId: messageId ?? this.messageId,
+    return copyWith(
       isRead: isRead ?? this.isRead,
-      createdAt: createdAt ?? this.createdAt,
       readAt: readAt ?? this.readAt,
     );
   }
-
-  /// Get the notification type from data
-  String get type => data?['type'] as String? ?? 'general';
-
-  /// Get the order ID from data if available
-  String? get orderId => data?['orderId'] as String?;
-
-  /// Get the target screen from data if available
-  String? get screen => data?['screen'] as String?;
-
-  /// Get the target route from data if available
-  String? get route => data?['route'] as String?;
 }
 
-/// Response model for notification list API
-class NotificationListResponse {
-  const NotificationListResponse({
-    required this.notifications,
-    required this.total,
-    required this.page,
-    required this.limit,
-    this.totalPages = 1,
-  });
-
-  factory NotificationListResponse.fromJson(Map<String, dynamic> json) {
-    return NotificationListResponse(
-      notifications: (json['notifications'] as List<dynamic>)
-          .map((e) => NotificationModel.fromJson(e as Map<String, dynamic>))
-          .toList(),
-      total: json['total'] as int,
-      page: json['page'] as int,
-      limit: json['limit'] as int,
-      totalPages: json['totalPages'] as int? ?? 1,
+/// Extension to add helper methods to mark as read response
+extension NotificationMarkAsReadDataExtension
+    on NotificationMarkAsRead200ResponseData {
+  /// Convert response data to NotificationData
+  NotificationData toNotificationData() {
+    return NotificationList200ResponseDataInner(
+      id: id,
+      userId: userId,
+      title: title,
+      body: body,
+      data: data,
+      messageId: messageId,
+      isRead: isRead,
+      createdAt: createdAt,
+      readAt: readAt,
     );
-  }
-
-  final List<NotificationModel> notifications;
-  final int total;
-  final int page;
-  final int limit;
-  final int totalPages;
-
-  Map<String, dynamic> toJson() {
-    return {
-      'notifications': notifications.map((e) => e.toJson()).toList(),
-      'total': total,
-      'page': page,
-      'limit': limit,
-      'totalPages': totalPages,
-    };
   }
 }

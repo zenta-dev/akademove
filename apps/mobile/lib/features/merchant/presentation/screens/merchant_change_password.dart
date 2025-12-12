@@ -14,15 +14,18 @@ class MerchantChangePasswordScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    return MyScaffold(
+    return Scaffold(
       headers: [DefaultAppBar(title: context.l10n.title_change_password)],
-      body: Card(
-        padding: EdgeInsets.all(8.dg),
-        child: SizedBox(
-          width: size.width.w,
-          child: const _ChangePasswordFormView(),
-        ),
-      ).intrinsic(),
+      child: SingleChildScrollView(
+        padding: EdgeInsets.all(16.dg),
+        child: Card(
+          padding: EdgeInsets.all(8.dg),
+          child: SizedBox(
+            width: size.width.w,
+            child: const _ChangePasswordFormView(),
+          ),
+        ).intrinsic(),
+      ),
     );
   }
 }

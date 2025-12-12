@@ -7,7 +7,7 @@ export 'default_text.dart';
 export 'floating_action_button.dart';
 export 'image_picker.dart';
 export 'map_wrapper_widget.dart';
-export 'my_scaffold.dart';
+
 export 'oops_alert_widget.dart';
 export 'option_tile.dart';
 export 'qris_payment_widget.dart';

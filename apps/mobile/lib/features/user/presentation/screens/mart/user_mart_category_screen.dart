@@ -18,7 +18,7 @@ class UserMartCategoryScreen extends StatelessWidget {
       builder: (context, state) {
         final category = state.selectedCategory ?? 'All';
 
-        return MyScaffold(
+        return Scaffold(
           headers: [
             AppBar(
               padding: EdgeInsets.all(4.dg),
@@ -35,7 +35,7 @@ class UserMartCategoryScreen extends StatelessWidget {
               ],
             ),
           ],
-          body: () {
+          child: () {
             final result = state.categoryMerchants;
 
             if (result.isLoading) {

@@ -16,56 +16,58 @@ class ResetPasswordScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    return MyScaffold(
-      scrollable: false,
-      body: Stack(
-        children: [
-          SvgTiledBackground(
-            asset: Assets.images.bg.signIn.path,
-            tileSize: 400.w,
-            colorFilter: ColorFilter.mode(
-              context.isDarkMode
-                  ? Colors.neutral.shade900
-                  : Colors.neutral.shade100,
-              BlendMode.srcIn,
-            ),
-          ),
-          Center(
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Column(
-                    children: [
-                      Assets.icons.brand.svg(width: 48.w),
-                      DefaultText(
-                        context.l10n.reset_password,
-                        fontSize: 20.sp,
-                        fontWeight: FontWeight.w600,
-                      ),
-                      Text(
-                        context.l10n.description_reset_password,
-                        style: TextStyle(
-                          fontSize: 14.sp,
-                          color: context.colorScheme.mutedForeground,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ],
-                  ).gap(8.h),
-                  Gap(16.h),
-                  Card(
-                    padding: EdgeInsets.all(8.dg),
-                    child: SizedBox(
-                      width: size.width.w,
-                      child: _ResetPasswordFormView(email: email),
-                    ),
-                  ).intrinsic(),
-                ],
+    return Scaffold(
+      child: Padding(
+        padding: EdgeInsets.all(16.dg),
+        child: Stack(
+          children: [
+            SvgTiledBackground(
+              asset: Assets.images.bg.signIn.path,
+              tileSize: 400.w,
+              colorFilter: ColorFilter.mode(
+                context.isDarkMode
+                    ? Colors.neutral.shade900
+                    : Colors.neutral.shade100,
+                BlendMode.srcIn,
               ),
             ),
-          ),
-        ],
+            Center(
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Column(
+                      children: [
+                        Assets.icons.brand.svg(width: 48.w),
+                        DefaultText(
+                          context.l10n.reset_password,
+                          fontSize: 20.sp,
+                          fontWeight: FontWeight.w600,
+                        ),
+                        Text(
+                          context.l10n.description_reset_password,
+                          style: TextStyle(
+                            fontSize: 14.sp,
+                            color: context.colorScheme.mutedForeground,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ).gap(8.h),
+                    Gap(16.h),
+                    Card(
+                      padding: EdgeInsets.all(8.dg),
+                      child: SizedBox(
+                        width: size.width.w,
+                        child: _ResetPasswordFormView(email: email),
+                      ),
+                    ).intrinsic(),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

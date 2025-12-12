@@ -13,7 +13,7 @@ class NotificationListItem extends StatelessWidget {
     super.key,
   });
 
-  final NotificationModel notification;
+  final NotificationData notification;
   final VoidCallback onTap;
   final VoidCallback onDismiss;
 
@@ -92,7 +92,10 @@ class NotificationListItem extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                       ),
                       Text(
-                        _formatTimeAgo(context, notification.createdAt),
+                        _formatTimeAgo(
+                          context,
+                          notification.createdAt ?? DateTime.now(),
+                        ),
                         style: context.typography.small.copyWith(
                           color: context.colorScheme.mutedForeground,
                           fontSize: 12.sp,

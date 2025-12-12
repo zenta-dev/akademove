@@ -210,10 +210,9 @@ class _MapLocationPickerScreenState extends State<MapLocationPickerScreen> {
         ? context.l10n.title_select_pickup_location
         : context.l10n.title_select_dropoff_location;
 
-    return MyScaffold(
-      scrollable: false,
+    return Scaffold(
       headers: [DefaultAppBar(title: title)],
-      body: Stack(
+      child: Stack(
         children: [
           // Map
           Positioned.fill(

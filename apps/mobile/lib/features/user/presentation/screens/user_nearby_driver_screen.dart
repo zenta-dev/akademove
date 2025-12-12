@@ -221,8 +221,7 @@ class _UserNearbyDriverScreenState extends State<UserNearbyDriverScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return MyScaffold(
-      scrollable: false,
+    return Scaffold(
       headers: [
         AppBar(
           padding: EdgeInsets.all(4.dg),
@@ -239,8 +238,7 @@ class _UserNearbyDriverScreenState extends State<UserNearbyDriverScreen> {
           ],
         ),
       ],
-      padding: EdgeInsets.zero,
-      body: Column(
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(

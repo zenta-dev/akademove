@@ -36,7 +36,7 @@ class NotificationListData extends Equatable {
     this.isLoadingMore = false,
   });
 
-  final List<NotificationModel> items;
+  final List<NotificationList200ResponseDataInner> items;
   final int currentPage;
   final int totalPages;
   final int totalCount;
@@ -52,7 +52,7 @@ class NotificationListData extends Equatable {
   ];
 
   NotificationListData copyWith({
-    List<NotificationModel>? items,
+    List<NotificationList200ResponseDataInner>? items,
     int? currentPage,
     int? totalPages,
     int? totalCount,

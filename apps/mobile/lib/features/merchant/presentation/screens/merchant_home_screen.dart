@@ -81,8 +81,8 @@ class _MerchantHomeScreenState extends State<MerchantHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return MyScaffold(
-      body: SafeArea(
+    return Scaffold(
+      child: SafeArea(
         child: RefreshIndicator(
           onRefresh: () async => _loadData(),
           child: SingleChildScrollView(

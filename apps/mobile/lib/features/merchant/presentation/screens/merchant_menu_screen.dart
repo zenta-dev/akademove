@@ -58,9 +58,8 @@ class _MerchantMenuScreenState extends State<MerchantMenuScreen> {
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
 
-    return MyScaffold(
-      scrollable: false,
-      body: Column(
+    return Scaffold(
+      child: Column(
         children: [
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 16),

@@ -29,7 +29,7 @@ class UserHistoryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MyScaffold(
+    return Scaffold(
       headers: [
         DefaultAppBar(
           title: context.l10n.history,
@@ -44,49 +44,57 @@ class UserHistoryScreen extends StatelessWidget {
           ],
         ),
       ],
-      scrollable: false,
-      onRefresh: () async {
-        context.read<UserOrderCubit>().list();
-      },
-      body: BlocBuilder<UserOrderCubit, UserOrderState>(
-        builder: (context, state) {
-          final result = state.orderHistories;
-
-          if (result.isLoading) {
-            return ListView.separated(
-              padding: EdgeInsets.zero,
-              separatorBuilder: (context, index) => Gap(16.h),
-              itemCount: 10,
-              itemBuilder: (context, index) => const UserOrderCardWidget(
-                order: dummyOrder,
-              ).sized(width: double.infinity).asSkeleton(),
-            );
-          }
-
-          if (result.isFailure) {
-            return _buildFail(
-              context,
-              message: result.error?.message ?? 'An unexpected error occurred',
-            );
-          }
-
-          final orders = result.value;
-
-          if (orders == null || orders.isEmpty) {
-            return _buildFail(
-              context,
-              message: context.l10n.text_no_order_history,
-            );
-          }
-
-          return ListView.separated(
-            padding: EdgeInsets.zero,
-            separatorBuilder: (context, index) => Gap(16.h),
-            itemCount: orders.length,
-            itemBuilder: (context, index) =>
-                UserOrderCardWidget(order: orders[index]).sized(width: 1.sw),
-          );
+      child: RefreshTrigger(
+        onRefresh: () async {
+          context.read<UserOrderCubit>().list();
         },
+        child: BlocBuilder<UserOrderCubit, UserOrderState>(
+          builder: (context, state) {
+            final result = state.orderHistories;
+
+            if (result.isLoading) {
+              return ListView.separated(
+                padding: EdgeInsets.all(16.dg),
+                separatorBuilder: (context, index) => Gap(16.h),
+                itemCount: 10,
+                itemBuilder: (context, index) => const UserOrderCardWidget(
+                  order: dummyOrder,
+                ).sized(width: double.infinity).asSkeleton(),
+              );
+            }
+
+            if (result.isFailure) {
+              return Padding(
+                padding: EdgeInsets.all(16.dg),
+                child: _buildFail(
+                  context,
+                  message:
+                      result.error?.message ?? 'An unexpected error occurred',
+                ),
+              );
+            }
+
+            final orders = result.value;
+
+            if (orders == null || orders.isEmpty) {
+              return Padding(
+                padding: EdgeInsets.all(16.dg),
+                child: _buildFail(
+                  context,
+                  message: context.l10n.text_no_order_history,
+                ),
+              );
+            }
+
+            return ListView.separated(
+              padding: EdgeInsets.all(16.dg),
+              separatorBuilder: (context, index) => Gap(16.h),
+              itemCount: orders.length,
+              itemBuilder: (context, index) =>
+                  UserOrderCardWidget(order: orders[index]).sized(width: 1.sw),
+            );
+          },
+        ),
       ),
     );
   }

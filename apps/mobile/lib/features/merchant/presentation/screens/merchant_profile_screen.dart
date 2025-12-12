@@ -39,33 +39,36 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
   Widget build(BuildContext context) {
     return BlocBuilder<MerchantCubit, MerchantState>(
       builder: (context, state) {
-        return MyScaffold(
+        return Scaffold(
           headers: [
             DefaultAppBar(
               title: context.l10n.profile,
               padding: EdgeInsets.all(16.r),
             ),
           ],
-          body: RefreshTrigger(
-            onRefresh: _onRefresh,
-            child: SingleChildScrollView(
-              child: Builder(
-                builder: (context) {
-                  final merchant = state.merchant ?? state.mine.value;
-                  if (merchant == null) return _buildErrorState();
+          child: Padding(
+            padding: EdgeInsets.all(16.dg),
+            child: RefreshTrigger(
+              onRefresh: _onRefresh,
+              child: SingleChildScrollView(
+                child: Builder(
+                  builder: (context) {
+                    final merchant = state.merchant ?? state.mine.value;
+                    if (merchant == null) return _buildErrorState();
 
-                  return Column(
-                    spacing: 16.h,
-                    children: [
-                      _buildProfileHeader(merchant),
-                      _buildStatsCards(merchant),
-                      _buildDocumentSection(merchant),
-                      _buildBankSection(merchant),
-                      _buildContactSection(merchant),
-                      _buildActionButtons(),
-                    ],
-                  );
-                },
+                    return Column(
+                      spacing: 16.h,
+                      children: [
+                        _buildProfileHeader(merchant),
+                        _buildStatsCards(merchant),
+                        _buildDocumentSection(merchant),
+                        _buildBankSection(merchant),
+                        _buildContactSection(merchant),
+                        _buildActionButtons(),
+                      ],
+                    );
+                  },
+                ),
               ),
             ),
           ),

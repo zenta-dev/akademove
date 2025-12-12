@@ -30,9 +30,16 @@ class _UserVoucherScreenState extends State<UserVoucherScreen> {
     });
   }
 
+  Future<void> _onRefresh() async {
+    await context.read<CouponCubit>().loadEligibleCoupons(
+      serviceType: OrderType.RIDE,
+      totalAmount: 10000,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return MyScaffold(
+    return Scaffold(
       headers: [
         AppBar(
           padding: EdgeInsets.all(4.dg),
@@ -49,99 +56,102 @@ class _UserVoucherScreenState extends State<UserVoucherScreen> {
           ],
         ),
       ],
-      body: BlocBuilder<CouponCubit, CouponState>(
-        builder: (context, state) {
-          if (state.eligibleCoupons.isLoading) {
-            return const Center(child: CircularProgressIndicator());
-          }
+      child: RefreshTrigger(
+        onRefresh: _onRefresh,
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.all(16.dg),
+            child: BlocBuilder<CouponCubit, CouponState>(
+              builder: (context, state) {
+                if (state.eligibleCoupons.isLoading) {
+                  return const Center(child: CircularProgressIndicator());
+                }
 
-          if (state.eligibleCoupons.isFailure) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                spacing: 16.h,
-                children: [
-                  Icon(
-                    LucideIcons.triangleAlert,
-                    size: 64.sp,
-                    color: context.colorScheme.destructive,
-                  ),
-                  Text(
-                    state.eligibleCoupons.error?.message ??
-                        context.l10n.failed_to_load,
-                    style: context.typography.p.copyWith(fontSize: 14.sp),
-                    textAlign: TextAlign.center,
-                  ),
-                  OutlineButton(
-                    onPressed: () {
-                      context.read<CouponCubit>().loadEligibleCoupons(
-                        serviceType: OrderType.RIDE,
-                        totalAmount: 10000,
-                      );
-                    },
-                    child: Text(context.l10n.retry),
-                  ),
-                ],
-              ),
-            );
-          }
-
-          final data = state.eligibleCoupons.value;
-          if (data == null || data.coupons.isEmpty) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                spacing: 16.h,
-                children: [
-                  Icon(
-                    LucideIcons.tag,
-                    size: 64.sp,
-                    color: context.colorScheme.mutedForeground,
-                  ),
-                  Text(
-                    context.l10n.no_vouchers_available,
-                    style: context.typography.h4.copyWith(
-                      fontSize: 18.sp,
-                      fontWeight: FontWeight.w600,
+                if (state.eligibleCoupons.isFailure) {
+                  return Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      spacing: 16.h,
+                      children: [
+                        Icon(
+                          LucideIcons.triangleAlert,
+                          size: 64.sp,
+                          color: context.colorScheme.destructive,
+                        ),
+                        Text(
+                          state.eligibleCoupons.error?.message ??
+                              context.l10n.failed_to_load,
+                          style: context.typography.p.copyWith(fontSize: 14.sp),
+                          textAlign: TextAlign.center,
+                        ),
+                        OutlineButton(
+                          onPressed: () {
+                            context.read<CouponCubit>().loadEligibleCoupons(
+                              serviceType: OrderType.RIDE,
+                              totalAmount: 10000,
+                            );
+                          },
+                          child: Text(context.l10n.retry),
+                        ),
+                      ],
                     ),
-                  ),
-                  Text(
-                    context.l10n.check_back_later_for_promotions,
-                    style: context.typography.p.copyWith(
-                      fontSize: 14.sp,
-                      color: context.colorScheme.mutedForeground,
+                  );
+                }
+
+                final data = state.eligibleCoupons.value;
+                if (data == null || data.coupons.isEmpty) {
+                  return Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      spacing: 16.h,
+                      children: [
+                        Icon(
+                          LucideIcons.tag,
+                          size: 64.sp,
+                          color: context.colorScheme.mutedForeground,
+                        ),
+                        Text(
+                          context.l10n.no_vouchers_available,
+                          style: context.typography.h4.copyWith(
+                            fontSize: 18.sp,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        Text(
+                          context.l10n.check_back_later_for_promotions,
+                          style: context.typography.p.copyWith(
+                            fontSize: 14.sp,
+                            color: context.colorScheme.mutedForeground,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
                     ),
-                    textAlign: TextAlign.center,
-                  ),
-                ],
-              ),
-            );
-          }
+                  );
+                }
 
-          return RefreshTrigger(
-            onRefresh: () async {
-              await context.read<CouponCubit>().loadEligibleCoupons(
-                serviceType: OrderType.RIDE,
-                totalAmount: 10000,
-              );
-            },
-            child: ListView.separated(
-              padding: EdgeInsets.all(16.w),
-              itemCount: data.coupons.length,
-              separatorBuilder: (_, _) => SizedBox(height: 12.h),
-              itemBuilder: (context, index) {
-                final coupon = data.coupons[index];
-                final isBestCoupon = data.bestCoupon?.id == coupon.id;
+                return Column(
+                  children: data.coupons.asMap().entries.map((entry) {
+                    final index = entry.key;
+                    final coupon = entry.value;
+                    final isBestCoupon = data.bestCoupon?.id == coupon.id;
 
-                return _VoucherCard(
-                  coupon: coupon,
-                  isBestCoupon: isBestCoupon,
-                  onTap: () => _showCouponDetails(context, coupon),
+                    return Padding(
+                      padding: EdgeInsets.only(
+                        bottom: index < data.coupons.length - 1 ? 12.h : 0,
+                      ),
+                      child: _VoucherCard(
+                        coupon: coupon,
+                        isBestCoupon: isBestCoupon,
+                        onTap: () => _showCouponDetails(context, coupon),
+                      ),
+                    );
+                  }).toList(),
                 );
               },
             ),
-          );
-        },
+          ),
+        ),
       ),
     );
   }

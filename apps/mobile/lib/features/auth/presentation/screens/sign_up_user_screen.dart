@@ -1,31 +1,36 @@
-import 'package:akademove/app/router/router.dart';
-import 'package:akademove/core/_export.dart';
-import 'package:akademove/features/features.dart';
-import 'package:akademove/gen/assets.gen.dart';
-import 'package:akademove/l10n/l10n.dart';
-import 'package:api_client/api_client.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
-import 'package:shadcn_flutter/shadcn_flutter.dart';
+import "package:akademove/app/router/router.dart";
+import "package:akademove/core/_export.dart";
+import "package:akademove/features/features.dart";
+import "package:akademove/gen/assets.gen.dart";
+import "package:akademove/l10n/l10n.dart";
+import "package:api_client/api_client.dart";
+import "package:flutter_bloc/flutter_bloc.dart";
+import "package:flutter_screenutil/flutter_screenutil.dart";
+import "package:go_router/go_router.dart";
+import "package:shadcn_flutter/shadcn_flutter.dart";
 
 class SignUpUserScreen extends StatelessWidget {
   const SignUpUserScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MyScaffold(
-      body: Column(
-        spacing: 16.h,
-        children: [
-          Assets.images.hero.signUpUser.svg(height: 200.h),
-          Text(
-            context.l10n.user_sign_up,
-            textAlign: TextAlign.center,
-            style: context.theme.typography.h3.copyWith(fontSize: 20.sp),
+    return Scaffold(
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.all(16.dg),
+          child: Column(
+            spacing: 16.h,
+            children: [
+              Assets.images.hero.signUpUser.svg(height: 200.h),
+              Text(
+                context.l10n.user_sign_up,
+                textAlign: TextAlign.center,
+                style: context.theme.typography.h3.copyWith(fontSize: 20.sp),
+              ),
+              const _SignUpUserFormView(),
+            ],
           ),
-          const _SignUpUserFormView(),
-        ],
+        ),
       ),
     );
   }
@@ -39,270 +44,167 @@ class _SignUpUserFormView extends StatefulWidget {
 }
 
 class _SignUpUserFormViewState extends State<_SignUpUserFormView> {
-  static const FormKey<String> _nameKey = TextFieldKey('name');
-  static const FormKey<String> _emailKey = TextFieldKey('email');
-  static const FormKey<String> _passwordKey = TextFieldKey('password');
+  static const FormKey<String> _nameKey = TextFieldKey("name");
+  static const FormKey<String> _emailKey = TextFieldKey("email");
+  static const FormKey<String> _passwordKey = TextFieldKey("password");
   static const FormKey<String> _confirmPasswordKey = TextFieldKey(
-    'confirm_password',
+    "confirm_password",
   );
 
   UserGender _selectedGender = UserGender.MALE;
   CountryCode _selectedCountryCode = CountryCode.ID;
-  String? phoneNumber;
+  String? _phoneNumber;
   bool _termsAccepted = false;
-  String _submittedEmail = '';
+  String _submittedEmail = "";
+
+  void _handleSignUpSuccess(BuildContext context, AuthState state) {
+    context.showMyToast(
+      state.user.message ?? context.l10n.success_sign_up,
+      type: ToastType.success,
+    );
+    context.pushReplacementNamed(
+      Routes.authEmailVerificationPending.name,
+      queryParameters: {"email": _submittedEmail},
+    );
+  }
+
+  void _handleSignUpFailure(BuildContext context, AuthState state) {
+    context.showMyToast(
+      state.user.error?.message ?? context.l10n.error_unknown,
+      type: ToastType.failed,
+    );
+  }
+
+  void _handleFormSubmit(
+    BuildContext context,
+    Map<FormKey<dynamic>, dynamic> values,
+    AuthState state,
+  ) {
+    if (state.user.isLoading) return;
+
+    final name = _nameKey[values];
+    final email = _emailKey[values];
+    final password = _passwordKey[values];
+    final confirmPassword = _confirmPasswordKey[values];
+    final phoneNumber = _phoneNumber;
+
+    if (name == null ||
+        email == null ||
+        password == null ||
+        phoneNumber == null ||
+        confirmPassword == null ||
+        !_termsAccepted) {
+      return;
+    }
+
+    _submittedEmail = email;
+    context.read<AuthCubit>().signUpUser(
+      name: name,
+      email: email,
+      phone: Phone(
+        countryCode: _selectedCountryCode,
+        number: int.parse(phoneNumber),
+      ),
+      gender: _selectedGender,
+      password: password,
+      confirmPassword: confirmPassword,
+      photoPath: null,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AuthCubit, AuthState>(
       listener: (context, state) {
         if (state.user.isFailure) {
-          showToast(
-            context: context,
-            builder: (context, overlay) => context.buildToast(
-              title: context.l10n.sign_up_failed,
-              message: state.user.error?.message ?? context.l10n.error_unknown,
-            ),
-            location: ToastLocation.topCenter,
-          );
+          _handleSignUpFailure(context, state);
         }
         if (state.user.isSuccess) {
-          showToast(
-            context: context,
-            builder: (context, overlay) => context.buildToast(
-              title: context.l10n.sign_up_success,
-              message: state.user.message ?? context.l10n.success_sign_up,
-            ),
-            location: ToastLocation.topCenter,
-          );
-          context.pushReplacementNamed(
-            Routes.authEmailVerificationPending.name,
-            queryParameters: {'email': _submittedEmail},
-          );
+          _handleSignUpSuccess(context, state);
         }
       },
       builder: (context, state) {
-        return Form(
-          onSubmit: (context, values) {
-            if (state.user.isLoading) return;
-            final name = _nameKey[values];
-            final email = _emailKey[values];
-            final password = _passwordKey[values];
-            final confirmPassword = _confirmPasswordKey[values];
-            if (name == null ||
-                email == null ||
-                password == null ||
-                phoneNumber == null ||
-                confirmPassword == null ||
-                !_termsAccepted) {
-              return;
-            }
+        final isLoading = state.user.isLoading;
 
-            _submittedEmail = email;
-            context.read<AuthCubit>().signUpUser(
-              name: name,
-              email: email,
-              phone: Phone(
-                countryCode: _selectedCountryCode,
-                number: int.parse(phoneNumber ?? ''),
-              ),
-              gender: _selectedGender,
-              password: password,
-              confirmPassword: confirmPassword,
-              photoPath: null,
-            );
-          },
+        return Form(
+          onSubmit: (context, values) =>
+              _handleFormSubmit(context, values, state),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             spacing: 8.h,
             children: [
-              FormField(
-                key: _nameKey,
-
-                label: Text(context.l10n.name),
+              AuthTextField(
+                formKey: _nameKey,
+                label: context.l10n.name,
+                placeholder: context.l10n.placeholder_name,
+                icon: LucideIcons.user,
                 validator: const LengthValidator(min: 3),
-                showErrors: const {
-                  FormValidationMode.changed,
-                  FormValidationMode.submitted,
-                },
-                child: TextField(
-                  placeholder: Text(context.l10n.placeholder_name),
-                  enabled: !state.user.isLoading,
-                  features: const [
-                    InputFeature.leading(Icon(LucideIcons.user)),
-                  ],
-                ),
+                enabled: !isLoading,
               ),
-              FormField(
-                key: _emailKey,
-                label: Text(context.l10n.email),
+              AuthTextField(
+                formKey: _emailKey,
+                label: context.l10n.email,
+                placeholder: context.l10n.placeholder_email,
+                icon: LucideIcons.mail,
                 validator: const EmailValidator(),
-                showErrors: const {
-                  FormValidationMode.changed,
-                  FormValidationMode.submitted,
+                keyboardType: TextInputType.emailAddress,
+                enabled: !isLoading,
+              ),
+              AuthGenderSelect(
+                value: _selectedGender,
+                enabled: !isLoading,
+                onChanged: (value) {
+                  if (value != null) {
+                    setState(() {
+                      _selectedGender = value;
+                    });
+                  }
                 },
-                child: TextField(
-                  placeholder: Text(context.l10n.placeholder_email),
-                  enabled: !state.user.isLoading,
-                  keyboardType: TextInputType.emailAddress,
-                  features: const [
-                    InputFeature.leading(Icon(LucideIcons.mail)),
-                  ],
-                ),
               ),
-
-              Text(context.l10n.gender).small(fontWeight: FontWeight.w500),
-              SizedBox(
-                width: double.infinity,
-                child: Select<UserGender>(
-                  enabled: !state.user.isLoading,
-                  itemBuilder: (context, item) {
-                    return Text(item.name);
-                  },
-                  value: _selectedGender,
-                  onChanged: (value) {
-                    if (value != null) {
-                      setState(() {
-                        _selectedGender = value;
-                      });
-                    }
-                  },
-                  popup: SelectPopup<UserGender>(
-                    items: SelectItemList(
-                      children: UserGender.values
-                          .map(
-                            (e) =>
-                                SelectItemButton(value: e, child: Text(e.name)),
-                          )
-                          .toList(),
-                    ),
-                  ).call,
-                ),
+              AuthPhoneField(
+                enabled: !isLoading,
+                onChanged: (countryCode, phoneNumber) {
+                  setState(() {
+                    _selectedCountryCode = countryCode;
+                    _phoneNumber = phoneNumber;
+                  });
+                },
               ),
-
-              Text(context.l10n.phone).small(fontWeight: FontWeight.w500),
-              ComponentTheme(
-                data: PhoneInputTheme(
-                  flagWidth: 22.w,
-                  popupConstraints: BoxConstraints(maxHeight: 0.2.sh),
-                ),
-                child: PhoneInput(
-                  initialCountry: Country.indonesia,
-                  countries: const [Country.indonesia],
-                  onChanged: (value) {
-                    switch (value.country) {
-                      case Country.indonesia:
-                        _selectedCountryCode = CountryCode.ID;
-                      default:
-                    }
-                    phoneNumber = value.number;
-                    setState(() {});
-                  },
-                ),
-              ),
-              FormField(
-                key: _passwordKey,
-
-                label: Text(context.l10n.password),
+              AuthTextField(
+                formKey: _passwordKey,
+                label: context.l10n.password,
+                placeholder: "********",
+                icon: LucideIcons.key,
                 validator: const SafePasswordValidator(),
-                showErrors: const {
-                  FormValidationMode.changed,
-                  FormValidationMode.submitted,
-                },
-                child: TextField(
-                  placeholder: Text("********"),
-                  enabled: !state.user.isLoading,
-                  features: const [
-                    InputFeature.leading(Icon(LucideIcons.key)),
-                    InputFeature.passwordToggle(),
-                  ],
-                ),
+                enabled: !isLoading,
+                isPassword: true,
               ),
-              FormField(
-                key: _confirmPasswordKey,
-
-                label: Text(context.l10n.confirm_password),
+              AuthTextField(
+                formKey: _confirmPasswordKey,
+                label: context.l10n.confirm_password,
+                placeholder: context.l10n.placeholder_confirm_password,
+                icon: LucideIcons.key,
                 validator: CompareWith.equal(
                   _passwordKey,
                   message: context.l10n.error_password_mismatch,
                 ),
-                showErrors: const {
-                  FormValidationMode.changed,
-                  FormValidationMode.submitted,
-                },
-                child: TextField(
-                  placeholder: Text(context.l10n.placeholder_confirm_password),
-                  enabled: !state.user.isLoading,
-                  features: const [
-                    InputFeature.leading(Icon(LucideIcons.key)),
-                    InputFeature.passwordToggle(),
-                  ],
-                ),
+                enabled: !isLoading,
+                isPassword: true,
               ),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                spacing: 8.w,
-                children: [
-                  Checkbox(
-                    state: _termsAccepted
-                        ? CheckboxState.checked
-                        : CheckboxState.unchecked,
-                    enabled: !state.user.isLoading,
-                    onChanged: (checkboxState) {
-                      setState(() {
-                        _termsAccepted = checkboxState == CheckboxState.checked;
-                      });
-                    },
-                  ),
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: () async {
-                        await context.pushNamed(Routes.termsOfService.name);
-                      },
-                      child: RichText(
-                        text: TextSpan(
-                          style: context.theme.typography.small.copyWith(
-                            fontSize: 12.sp,
-                          ),
-                          children: [
-                            TextSpan(text: context.l10n.i_agree_to_the),
-                            TextSpan(
-                              text: ' ${context.l10n.terms_and_conditions}',
-                              style: TextStyle(
-                                color: context.theme.colorScheme.primary,
-                                decoration: TextDecoration.underline,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              FormErrorBuilder(
-                builder: (context, errors, child) {
-                  final hasErrors = errors.isNotEmpty;
-                  final isLoading = state.user.isLoading;
-
-                  return Button(
-                    style: isLoading || hasErrors || !_termsAccepted
-                        ? const ButtonStyle.outline()
-                        : const ButtonStyle.primary(),
-                    onPressed: (!hasErrors && !isLoading && _termsAccepted)
-                        ? () => context.submitForm()
-                        : null,
-                    child: isLoading
-                        ? const Submiting(simpleText: true)
-                        : Text(
-                            context.l10n.sign_up,
-                            style: context.theme.typography.medium.copyWith(
-                              color: Colors.white,
-                            ),
-                          ),
-                  );
+              AuthTermsCheckbox(
+                value: _termsAccepted,
+                enabled: !isLoading,
+                onChanged: (value) {
+                  setState(() {
+                    _termsAccepted = value;
+                  });
                 },
+              ),
+              AuthSubmitButton(
+                label: context.l10n.sign_up,
+                isLoading: isLoading,
+                isDisabled: !_termsAccepted,
               ),
             ],
           ),

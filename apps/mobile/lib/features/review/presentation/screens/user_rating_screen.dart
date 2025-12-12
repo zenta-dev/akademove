@@ -82,9 +82,9 @@ class _UserRatingScreenState extends State<UserRatingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return MyScaffold(
+    return Scaffold(
       headers: [DefaultAppBar(title: context.l10n.rate_your_driver)],
-      body: BlocListener<UserReviewCubit, UserReviewState>(
+      child: BlocListener<UserReviewCubit, UserReviewState>(
         listenWhen: (previous, current) =>
             previous.submittedReview != current.submittedReview,
         listener: (context, state) {
@@ -104,25 +104,28 @@ class _UserRatingScreenState extends State<UserRatingScreen> {
           }
         },
         child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            spacing: 24.h,
-            children: [
-              // Driver info
-              _buildDriverInfo(),
+          child: Padding(
+            padding: EdgeInsets.all(16.dg),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              spacing: 24.h,
+              children: [
+                // Driver info
+                _buildDriverInfo(),
 
-              // Category selector
-              _buildCategorySelector(),
+                // Category selector
+                _buildCategorySelector(),
 
-              // Rating stars for selected category
-              if (_selectedCategory != null) _buildRatingSection(),
+                // Rating stars for selected category
+                if (_selectedCategory != null) _buildRatingSection(),
 
-              // Comment section
-              _buildCommentSection(),
+                // Comment section
+                _buildCommentSection(),
 
-              // Submit button
-              _buildSubmitButton(),
-            ],
+                // Submit button
+                _buildSubmitButton(),
+              ],
+            ),
           ),
         ),
       ),

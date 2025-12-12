@@ -71,8 +71,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return MyScaffold(
-      scrollable: true,
+    return Scaffold(
       headers: [
         DefaultAppBar(
           title: context.l10n.home,
@@ -143,11 +142,14 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
           ],
         ),
       ],
-      padding: EdgeInsets.zero,
-      onRefresh: _onRefresh,
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [_buildBanners(), _buildBody(context)],
+      child: RefreshTrigger(
+        onRefresh: _onRefresh,
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [_buildBanners(), _buildBody(context)],
+          ),
+        ),
       ),
     );
   }

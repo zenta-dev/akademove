@@ -93,7 +93,7 @@ class _UserMerchantDetailScreenState extends State<UserMerchantDetailScreen> {
           context.pop();
         }
       },
-      child: MyScaffold(
+      child: Scaffold(
         headers: [
           DefaultAppBar(
             title: 'Merchant Details',
@@ -109,8 +109,7 @@ class _UserMerchantDetailScreenState extends State<UserMerchantDetailScreen> {
             ],
           ),
         ],
-        scrollable: false,
-        body: BlocConsumer<UserMerchantDetailCubit, UserMerchantDetailState>(
+        child: BlocConsumer<UserMerchantDetailCubit, UserMerchantDetailState>(
           listener: (context, state) {
             // Show error toast if failed
             if (state.menuByCategory.isFailure &&

@@ -9,8 +9,28 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 
-class MerchantMenuDetailScreen extends StatelessWidget {
+class MerchantMenuDetailScreen extends StatefulWidget {
   const MerchantMenuDetailScreen({super.key});
+
+  @override
+  State<MerchantMenuDetailScreen> createState() =>
+      _MerchantMenuDetailScreenState();
+}
+
+class _MerchantMenuDetailScreenState extends State<MerchantMenuDetailScreen> {
+  Future<void> _onRefresh() async {
+    final menu = GoRouterState.of(context).extra as MerchantMenu?;
+    if (menu == null) return;
+
+    final merchantCubit = context.read<MerchantCubit>();
+    final merchantId = merchantCubit.state.mine.value?.id;
+    if (merchantId == null) return;
+
+    await context.read<MerchantMenuCubit>().getMenu(
+      merchantId: merchantId,
+      menuId: menu.id,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -18,169 +38,181 @@ class MerchantMenuDetailScreen extends StatelessWidget {
     final menu = GoRouterState.of(context).extra as MerchantMenu?;
 
     if (menu == null) {
-      return MyScaffold(
-        safeArea: true,
+      return Scaffold(
         headers: [DefaultAppBar(title: context.l10n.title_menu_detail)],
-        body: Center(child: Text(context.l10n.error_menu_not_found)),
+        child: SafeArea(
+          child: Padding(
+            padding: EdgeInsets.all(16.dg),
+            child: Center(child: Text(context.l10n.error_menu_not_found)),
+          ),
+        ),
       );
     }
 
-    return MyScaffold(
-      safeArea: true,
+    return Scaffold(
       headers: [DefaultAppBar(title: context.l10n.title_menu_detail)],
-      body: BlocBuilder<MerchantMenuCubit, MerchantMenuState>(
-        builder: (context, state) {
-          // Use selected menu from state if available, otherwise use passed menu
-          final displayMenu = state.menu.data?.value ?? menu;
+      child: SafeArea(
+        child: RefreshTrigger(
+          onRefresh: _onRefresh,
+          child: BlocBuilder<MerchantMenuCubit, MerchantMenuState>(
+            builder: (context, state) {
+              // Use selected menu from state if available, otherwise use passed menu
+              final displayMenu = state.menu.data?.value ?? menu;
 
-          return SingleChildScrollView(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              spacing: 16.h,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                // Image
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(12.r),
-                  child: displayMenu.image != null
-                      ? Image.network(
-                          displayMenu.image!,
-                          width: double.infinity,
-                          height: 200.h,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            return Container(
+              return SingleChildScrollView(
+                padding: EdgeInsets.all(16.dg),
+                child: Column(
+                  spacing: 16.h,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    // Image
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(12.r),
+                      child: displayMenu.image != null
+                          ? Image.network(
+                              displayMenu.image!,
+                              width: double.infinity,
+                              height: 200.h,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) {
+                                return Container(
+                                  width: double.infinity,
+                                  height: 200.h,
+                                  color: const Color(0xFFE0E0E0),
+                                  child: const Icon(
+                                    LucideIcons.image,
+                                    size: 64,
+                                  ),
+                                );
+                              },
+                              loadingBuilder:
+                                  (context, child, loadingProgress) {
+                                    if (loadingProgress == null) return child;
+                                    return Container(
+                                      width: double.infinity,
+                                      height: 200.h,
+                                      color: const Color(0xFFEEEEEE),
+                                      child: const Center(
+                                        child: CircularProgressIndicator(),
+                                      ),
+                                    );
+                                  },
+                            )
+                          : Container(
                               width: double.infinity,
                               height: 200.h,
                               color: const Color(0xFFE0E0E0),
                               child: const Icon(LucideIcons.image, size: 64),
-                            );
-                          },
-                          loadingBuilder: (context, child, loadingProgress) {
-                            if (loadingProgress == null) return child;
-                            return Container(
-                              width: double.infinity,
-                              height: 200.h,
-                              color: const Color(0xFFEEEEEE),
-                              child: const Center(
-                                child: CircularProgressIndicator(),
+                            ),
+                    ),
+
+                    // Details Card
+                    Card(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Column(
+                          spacing: 12.h,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _buildDetailRow(
+                              context,
+                              '${context.l10n.label_name}:',
+                              displayMenu.name,
+                            ),
+                            if (displayMenu.category != null)
+                              _buildDetailRow(
+                                context,
+                                '${context.l10n.label_category}:',
+                                displayMenu.category!,
                               ),
-                            );
-                          },
-                        )
-                      : Container(
-                          width: double.infinity,
-                          height: 200.h,
-                          color: const Color(0xFFE0E0E0),
-                          child: const Icon(LucideIcons.image, size: 64),
-                        ),
-                ),
-
-                // Details Card
-                Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Column(
-                      spacing: 12.h,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _buildDetailRow(
-                          context,
-                          '${context.l10n.label_name}:',
-                          displayMenu.name,
-                        ),
-                        if (displayMenu.category != null)
-                          _buildDetailRow(
-                            context,
-                            '${context.l10n.label_category}:',
-                            displayMenu.category!,
-                          ),
-                        _buildDetailRow(
-                          context,
-                          '${context.l10n.label_price}:',
-                          'Rp ${NumberFormat('#,###', 'id_ID').format(displayMenu.price)}',
-                        ),
-                        _buildDetailRow(
-                          context,
-                          '${context.l10n.label_stock}:',
-                          '${displayMenu.stock}',
-                          valueColor: displayMenu.stock > 0
-                              ? const Color(0xFF4CAF50)
-                              : const Color(0xFFF44336),
-                        ),
-                        _buildDetailRow(
-                          context,
-                          '${context.l10n.label_created}:',
-                          DateFormat(
-                            'dd MMM yyyy, HH:mm',
-                          ).format(displayMenu.createdAt.toLocal()),
-                        ),
-                        _buildDetailRow(
-                          context,
-                          '${context.l10n.label_updated}:',
-                          DateFormat(
-                            'dd MMM yyyy, HH:mm',
-                          ).format(displayMenu.updatedAt.toLocal()),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-
-                // Action Buttons
-                if (state.menus.isLoading)
-                  const Center(child: CircularProgressIndicator())
-                else
-                  Row(
-                    spacing: 16.w,
-                    children: [
-                      Expanded(
-                        child: Button.primary(
-                          onPressed: () {
-                            context.pushNamed(
-                              Routes.merchantEditMenu.name,
-                              extra: displayMenu,
-                            );
-                          },
-                          child: Text(
-                            context.l10n.edit_menu,
-                            style: context.typography.small.copyWith(
-                              fontSize: 16.sp,
+                            _buildDetailRow(
+                              context,
+                              '${context.l10n.label_price}:',
+                              'Rp ${NumberFormat('#,###', 'id_ID').format(displayMenu.price)}',
                             ),
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Button.destructive(
-                          onPressed: () =>
-                              _showDeleteConfirmation(context, displayMenu),
-                          child: Text(
-                            context.l10n.delete_menu,
-                            style: context.typography.small.copyWith(
-                              fontSize: 16.sp,
+                            _buildDetailRow(
+                              context,
+                              '${context.l10n.label_stock}:',
+                              '${displayMenu.stock}',
+                              valueColor: displayMenu.stock > 0
+                                  ? const Color(0xFF4CAF50)
+                                  : const Color(0xFFF44336),
                             ),
-                          ),
+                            _buildDetailRow(
+                              context,
+                              '${context.l10n.label_created}:',
+                              DateFormat(
+                                'dd MMM yyyy, HH:mm',
+                              ).format(displayMenu.createdAt.toLocal()),
+                            ),
+                            _buildDetailRow(
+                              context,
+                              '${context.l10n.label_updated}:',
+                              DateFormat(
+                                'dd MMM yyyy, HH:mm',
+                              ).format(displayMenu.updatedAt.toLocal()),
+                            ),
+                          ],
                         ),
-                      ),
-                    ],
-                  ),
-
-                // Error Message
-                if (state.menus.isFailure && state.menus.error != null)
-                  Card(
-                    child: Padding(
-                      padding: const EdgeInsets.all(12),
-                      child: Text(
-                        state.menus.error?.message ??
-                            context.l10n.an_error_occurred,
-                        style: const TextStyle(color: Color(0xFFF44336)),
                       ),
                     ),
-                  ),
-              ],
-            ),
-          );
-        },
+
+                    // Action Buttons
+                    if (state.menus.isLoading)
+                      const Center(child: CircularProgressIndicator())
+                    else
+                      Row(
+                        spacing: 16.w,
+                        children: [
+                          Expanded(
+                            child: Button.primary(
+                              onPressed: () {
+                                context.pushNamed(
+                                  Routes.merchantEditMenu.name,
+                                  extra: displayMenu,
+                                );
+                              },
+                              child: Text(
+                                context.l10n.edit_menu,
+                                style: context.typography.small.copyWith(
+                                  fontSize: 16.sp,
+                                ),
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: Button.destructive(
+                              onPressed: () =>
+                                  _showDeleteConfirmation(context, displayMenu),
+                              child: Text(
+                                context.l10n.delete_menu,
+                                style: context.typography.small.copyWith(
+                                  fontSize: 16.sp,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+
+                    // Error Message
+                    if (state.menus.isFailure && state.menus.error != null)
+                      Card(
+                        child: Padding(
+                          padding: const EdgeInsets.all(12),
+                          child: Text(
+                            state.menus.error?.message ??
+                                context.l10n.an_error_occurred,
+                            style: const TextStyle(color: Color(0xFFF44336)),
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              );
+            },
+          ),
+        ),
       ),
     );
   }

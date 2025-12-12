@@ -373,264 +373,273 @@ class _UserRideSummaryScreenState extends State<UserRideSummaryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return MyScaffold(
-      scrollable: true,
+    return Scaffold(
       headers: [DefaultAppBar(title: context.l10n.title_trip_details)],
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        spacing: 16.h,
-        children: [
-          BlocBuilder<UserOrderCubit, UserOrderState>(
-            builder: (context, state) {
-              return PickLocationCardWidget(
-                pickup: PickLocationParameters(
-                  enabled: false,
-                  text: state.estimateOrder.value?.pickup.vicinity,
-                ),
-                dropoff: PickLocationParameters(
-                  enabled: false,
-                  text: state.estimateOrder.value?.dropoff.vicinity,
-                ),
-              ).asSkeleton(enabled: state.currentOrder.isLoading);
-            },
-          ),
-          PickGenderWidget(
-            value: gender,
-            onChanged: (val) => setState(() {
-              gender = val;
-            }),
-          ),
-          DefaultText(
-            context.l10n.label_payment_method,
-            fontSize: 16.sp,
-            fontWeight: FontWeight.w500,
-          ),
-          BlocConsumer<UserOrderCubit, UserOrderState>(
-            listener: (context, state) {
-              if (state.currentOrder.isFailure ||
-                  state.currentPayment.isFailure) {
-                final errorMsg =
-                    state.currentOrder.error?.message ??
-                    state.currentPayment.error?.message ??
-                    context.l10n.toast_failed_place_order;
-                context.showMyToast(errorMsg, type: ToastType.failed);
-              }
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.all(16.dg),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: 16.h,
+            children: [
+              BlocBuilder<UserOrderCubit, UserOrderState>(
+                builder: (context, state) {
+                  return PickLocationCardWidget(
+                    pickup: PickLocationParameters(
+                      enabled: false,
+                      text: state.estimateOrder.value?.pickup.vicinity,
+                    ),
+                    dropoff: PickLocationParameters(
+                      enabled: false,
+                      text: state.estimateOrder.value?.dropoff.vicinity,
+                    ),
+                  ).asSkeleton(enabled: state.currentOrder.isLoading);
+                },
+              ),
+              PickGenderWidget(
+                value: gender,
+                onChanged: (val) => setState(() {
+                  gender = val;
+                }),
+              ),
+              DefaultText(
+                context.l10n.label_payment_method,
+                fontSize: 16.sp,
+                fontWeight: FontWeight.w500,
+              ),
+              BlocConsumer<UserOrderCubit, UserOrderState>(
+                listener: (context, state) {
+                  if (state.currentOrder.isFailure ||
+                      state.currentPayment.isFailure) {
+                    final errorMsg =
+                        state.currentOrder.error?.message ??
+                        state.currentPayment.error?.message ??
+                        context.l10n.toast_failed_place_order;
+                    context.showMyToast(errorMsg, type: ToastType.failed);
+                  }
 
-              if (state.currentOrder.isSuccess &&
-                  state.currentPayment.isSuccess &&
-                  state.currentPayment.hasData) {
-                setState(() {
-                  scheduledAt = null;
-                });
+                  if (state.currentOrder.isSuccess &&
+                      state.currentPayment.isSuccess &&
+                      state.currentPayment.hasData) {
+                    setState(() {
+                      scheduledAt = null;
+                    });
 
-                final payment = state.currentPayment.value;
+                    final payment = state.currentPayment.value;
 
-                if (payment == null) {
-                  context.showMyToast(
-                    context.l10n.toast_payment_info_not_available,
-                    type: ToastType.failed,
-                  );
-                  return;
-                }
-
-                switch (payment.method) {
-                  case PaymentMethod.QRIS:
-                    context.popUntilRoot();
-                    context.pushNamed(
-                      Routes.userRidePayment.name,
-                      queryParameters: {
-                        'paymentMethod': PaymentMethod.QRIS.name,
-                      },
-                    );
-                  case PaymentMethod.BANK_TRANSFER:
-                    context.popUntilRoot();
-                    context.pushNamed(
-                      Routes.userRidePayment.name,
-                      queryParameters: {
-                        'paymentMethod': PaymentMethod.BANK_TRANSFER.name,
-                        'bankProvider': payment.bankProvider?.name,
-                      },
-                    );
-                  case PaymentMethod.wallet:
-                    // wallet payment is instant, navigate directly to trip screen
-                    if (payment.status == TransactionStatus.SUCCESS) {
-                      context.popUntilRoot();
-                      context.pushNamed(Routes.userRideOnTrip.name);
-                    } else {
+                    if (payment == null) {
                       context.showMyToast(
-                        context.l10n.toast_wallet_payment_failed,
+                        context.l10n.toast_payment_info_not_available,
                         type: ToastType.failed,
                       );
+                      return;
                     }
-                }
-              }
-            },
-            builder: (context, orderState) {
-              return BlocBuilder<UserWalletCubit, UserWalletState>(
-                builder: (context, walletState) {
-                  return Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: PaymentMethodPickerWidget(
-                          value: method,
-                          onChanged: (val, {BankProvider? bankProvider}) =>
-                              setState(() {
-                                method = val;
-                                this.bankProvider = bankProvider;
-                              }),
-                          bankProvider: bankProvider,
-                          walletBalance:
-                              walletState.myWallet.value?.balance.toDouble() ??
-                              0,
-                          totalCost:
-                              orderState.estimateOrder.value?.summary.totalCost
-                                  .toDouble() ??
-                              0,
-                        ),
-                      ),
-                    ],
+
+                    switch (payment.method) {
+                      case PaymentMethod.QRIS:
+                        context.popUntilRoot();
+                        context.pushNamed(
+                          Routes.userRidePayment.name,
+                          queryParameters: {
+                            'paymentMethod': PaymentMethod.QRIS.name,
+                          },
+                        );
+                      case PaymentMethod.BANK_TRANSFER:
+                        context.popUntilRoot();
+                        context.pushNamed(
+                          Routes.userRidePayment.name,
+                          queryParameters: {
+                            'paymentMethod': PaymentMethod.BANK_TRANSFER.name,
+                            'bankProvider': payment.bankProvider?.name,
+                          },
+                        );
+                      case PaymentMethod.wallet:
+                        // wallet payment is instant, navigate directly to trip screen
+                        if (payment.status == TransactionStatus.SUCCESS) {
+                          context.popUntilRoot();
+                          context.pushNamed(Routes.userRideOnTrip.name);
+                        } else {
+                          context.showMyToast(
+                            context.l10n.toast_wallet_payment_failed,
+                            type: ToastType.failed,
+                          );
+                        }
+                    }
+                  }
+                },
+                builder: (context, orderState) {
+                  return BlocBuilder<UserWalletCubit, UserWalletState>(
+                    builder: (context, walletState) {
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: PaymentMethodPickerWidget(
+                              value: method,
+                              onChanged: (val, {BankProvider? bankProvider}) =>
+                                  setState(() {
+                                    method = val;
+                                    this.bankProvider = bankProvider;
+                                  }),
+                              bankProvider: bankProvider,
+                              walletBalance:
+                                  walletState.myWallet.value?.balance
+                                      .toDouble() ??
+                                  0,
+                              totalCost:
+                                  orderState
+                                      .estimateOrder
+                                      .value
+                                      ?.summary
+                                      .totalCost
+                                      .toDouble() ??
+                                  0,
+                            ),
+                          ),
+                        ],
+                      );
+                    },
                   );
                 },
-              );
-            },
-          ),
-          // Coupon selector
-          BlocBuilder<CouponCubit, CouponState>(
-            builder: (context, couponState) {
-              return OutlineButton(
-                onPressed: _showCouponSelector,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: Text(
-                        selectedCoupon == null
-                            ? context.l10n.text_apply_coupon
-                            : context.l10n.text_coupon_applied(
-                                selectedCoupon?.code ?? "",
-                              ),
-                      ),
-                    ),
-                    Icon(
-                      selectedCoupon == null
-                          ? LucideIcons.chevronRight
-                          : LucideIcons.check,
-                      size: 16,
-                    ),
-                  ],
-                ),
-              );
-            },
-          ),
-          // Schedule for later option
-          OutlineButton(
-            onPressed: _selectScheduleDateTime,
-            child: Row(
-              children: [
-                Icon(LucideIcons.calendarClock, size: 20.sp),
-                SizedBox(width: 12.w),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Builder(
-                        builder: (context) {
-                          final scheduled = scheduledAt;
-                          return Text(
-                            scheduled != null
-                                ? context.l10n.scheduled_for(
-                                    _formatScheduledAt(scheduled),
-                                  )
-                                : context.l10n.schedule_for_later,
-                            style: context.typography.p.copyWith(
-                              fontSize: 14.sp,
-                            ),
-                          );
-                        },
-                      ),
-                      if (scheduledAt != null)
-                        Text(
-                          context.l10n.tap_to_change_schedule,
-                          style: context.typography.small.copyWith(
-                            fontSize: 12.sp,
-                            color: context.colorScheme.mutedForeground,
+              ),
+              // Coupon selector
+              BlocBuilder<CouponCubit, CouponState>(
+                builder: (context, couponState) {
+                  return OutlineButton(
+                    onPressed: _showCouponSelector,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            selectedCoupon == null
+                                ? context.l10n.text_apply_coupon
+                                : context.l10n.text_coupon_applied(
+                                    selectedCoupon?.code ?? "",
+                                  ),
                           ),
                         ),
-                    ],
-                  ),
-                ),
-                if (scheduledAt != null)
-                  IconButton(
-                    icon: Icon(LucideIcons.x, size: 16.sp),
-                    onPressed: () => setState(() => scheduledAt = null),
-                    variance: ButtonVariance.ghost,
-                  )
-                else
-                  Icon(LucideIcons.chevronRight, size: 20.sp),
-              ],
-            ),
-          ),
-          DefaultText(
-            context.l10n.label_payment_summary,
-            fontSize: 16.sp,
-            fontWeight: FontWeight.w500,
-          ),
-          BlocBuilder<UserOrderCubit, UserOrderState>(
-            builder: (context, state) {
-              return RideSummaryWidget(
-                summary: state.estimateOrder.value?.summary,
-                discountAmount: discountAmount,
-              ).asSkeleton(enabled: state.currentOrder.isLoading);
-            },
-          ),
-
-          BlocBuilder<UserOrderCubit, UserOrderState>(
-            builder: (context, state) {
-              final hasEstimate = state.estimateOrder.value != null;
-              final canProceed =
-                  state.estimateOrder.isSuccess &&
-                  hasEstimate &&
-                  !state.currentOrder.isLoading;
-
-              // If scheduled, show schedule button, otherwise show proceed button
-              if (scheduledAt != null) {
-                return SizedBox(
-                  width: double.infinity,
-                  child: Button(
-                    style: const ButtonStyle.primary(),
-                    enabled: canProceed,
-                    onPressed: canProceed
-                        ? () => placeScheduledOrder(state)
-                        : null,
-                    child: state.currentOrder.isLoading
-                        ? const Submiting()
-                        : Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            spacing: 8.w,
-                            children: [
-                              const Icon(LucideIcons.calendarCheck),
-                              Text(context.l10n.schedule_now),
-                            ],
+                        Icon(
+                          selectedCoupon == null
+                              ? LucideIcons.chevronRight
+                              : LucideIcons.check,
+                          size: 16,
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+              // Schedule for later option
+              OutlineButton(
+                onPressed: _selectScheduleDateTime,
+                child: Row(
+                  children: [
+                    Icon(LucideIcons.calendarClock, size: 20.sp),
+                    SizedBox(width: 12.w),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Builder(
+                            builder: (context) {
+                              final scheduled = scheduledAt;
+                              return Text(
+                                scheduled != null
+                                    ? context.l10n.scheduled_for(
+                                        _formatScheduledAt(scheduled),
+                                      )
+                                    : context.l10n.schedule_for_later,
+                                style: context.typography.p.copyWith(
+                                  fontSize: 14.sp,
+                                ),
+                              );
+                            },
                           ),
-                  ),
-                );
-              }
-
-              return SizedBox(
-                width: double.infinity,
-                child: Button(
-                  style: const ButtonStyle.primary(),
-                  enabled: canProceed,
-                  onPressed: canProceed ? () => placeOrder(state) : null,
-                  child: state.currentOrder.isLoading
-                      ? const Submiting()
-                      : Text(context.l10n.button_proceed),
+                          if (scheduledAt != null)
+                            Text(
+                              context.l10n.tap_to_change_schedule,
+                              style: context.typography.small.copyWith(
+                                fontSize: 12.sp,
+                                color: context.colorScheme.mutedForeground,
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                    if (scheduledAt != null)
+                      IconButton(
+                        icon: Icon(LucideIcons.x, size: 16.sp),
+                        onPressed: () => setState(() => scheduledAt = null),
+                        variance: ButtonVariance.ghost,
+                      )
+                    else
+                      Icon(LucideIcons.chevronRight, size: 20.sp),
+                  ],
                 ),
-              );
-            },
+              ),
+              DefaultText(
+                context.l10n.label_payment_summary,
+                fontSize: 16.sp,
+                fontWeight: FontWeight.w500,
+              ),
+              BlocBuilder<UserOrderCubit, UserOrderState>(
+                builder: (context, state) {
+                  return RideSummaryWidget(
+                    summary: state.estimateOrder.value?.summary,
+                    discountAmount: discountAmount,
+                  ).asSkeleton(enabled: state.currentOrder.isLoading);
+                },
+              ),
+
+              BlocBuilder<UserOrderCubit, UserOrderState>(
+                builder: (context, state) {
+                  final hasEstimate = state.estimateOrder.value != null;
+                  final canProceed =
+                      state.estimateOrder.isSuccess &&
+                      hasEstimate &&
+                      !state.currentOrder.isLoading;
+
+                  // If scheduled, show schedule button, otherwise show proceed button
+                  if (scheduledAt != null) {
+                    return SizedBox(
+                      width: double.infinity,
+                      child: Button(
+                        style: const ButtonStyle.primary(),
+                        enabled: canProceed,
+                        onPressed: canProceed
+                            ? () => placeScheduledOrder(state)
+                            : null,
+                        child: state.currentOrder.isLoading
+                            ? const Submiting()
+                            : Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                spacing: 8.w,
+                                children: [
+                                  const Icon(LucideIcons.calendarCheck),
+                                  Text(context.l10n.schedule_now),
+                                ],
+                              ),
+                      ),
+                    );
+                  }
+
+                  return SizedBox(
+                    width: double.infinity,
+                    child: Button(
+                      style: const ButtonStyle.primary(),
+                      enabled: canProceed,
+                      onPressed: canProceed ? () => placeOrder(state) : null,
+                      child: state.currentOrder.isLoading
+                          ? const Submiting()
+                          : Text(context.l10n.button_proceed),
+                    ),
+                  );
+                },
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

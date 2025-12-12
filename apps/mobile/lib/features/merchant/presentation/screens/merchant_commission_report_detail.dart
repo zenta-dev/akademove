@@ -379,48 +379,50 @@ class _MerchantCommissionReportDetailScreenState
 
         return Stack(
           children: [
-            MyScaffold(
+            Scaffold(
               headers: [
                 DefaultAppBar(title: context.l10n.title_commission_report),
               ],
-              padding: EdgeInsets.all(16.w),
-              body: SafeArea(
-                child: isLoading
-                    ? const Center(child: CircularProgressIndicator())
-                    : RefreshIndicator(
-                        onRefresh: () => context
-                            .read<MerchantAnalyticsCubit>()
-                            .getMonthlyAnalytics(),
-                        child: SingleChildScrollView(
-                          padding: EdgeInsets.only(bottom: 120.h),
-                          child: Column(
-                            spacing: 16.h,
-                            children: [
-                              _buildBalanceCards(
-                                context,
-                                totalRevenue,
-                                totalCommission,
-                              ),
-                              _buildBalanceDetail(
-                                context,
-                                totalRevenue,
-                                totalCommission,
-                              ),
-                              _buildSummarySection(
-                                context,
-                                totalRevenue,
-                                totalCommission,
-                                netIncome,
-                              ),
-                              _buildCommissionChart(
-                                context,
-                                netIncome,
-                                totalCommission,
-                              ),
-                            ],
+              child: SafeArea(
+                child: Padding(
+                  padding: EdgeInsets.all(16.w),
+                  child: isLoading
+                      ? const Center(child: CircularProgressIndicator())
+                      : RefreshIndicator(
+                          onRefresh: () => context
+                              .read<MerchantAnalyticsCubit>()
+                              .getMonthlyAnalytics(),
+                          child: SingleChildScrollView(
+                            padding: EdgeInsets.only(bottom: 120.h),
+                            child: Column(
+                              spacing: 16.h,
+                              children: [
+                                _buildBalanceCards(
+                                  context,
+                                  totalRevenue,
+                                  totalCommission,
+                                ),
+                                _buildBalanceDetail(
+                                  context,
+                                  totalRevenue,
+                                  totalCommission,
+                                ),
+                                _buildSummarySection(
+                                  context,
+                                  totalRevenue,
+                                  totalCommission,
+                                  netIncome,
+                                ),
+                                _buildCommissionChart(
+                                  context,
+                                  netIncome,
+                                  totalCommission,
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
+                ),
               ),
             ),
             Positioned(

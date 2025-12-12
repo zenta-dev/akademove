@@ -56,19 +56,11 @@ class _UserMerchantListScreenState extends State<UserMerchantListScreen> {
     });
   }
 
-  /// Handle pull-to-refresh
-  Future<void> _onRefresh() async {
-    await context.read<UserMerchantListCubit>().refresh();
-  }
-
   @override
   Widget build(BuildContext context) {
-    return MyScaffold(
-      scrollable: false,
-      padding: EdgeInsets.zero,
+    return Scaffold(
       headers: [DefaultAppBar(title: context.l10n.popular_merchants)],
-      onRefresh: _onRefresh,
-      body: BlocBuilder<UserMerchantListCubit, UserMerchantListState>(
+      child: BlocBuilder<UserMerchantListCubit, UserMerchantListState>(
         builder: (context, state) {
           // Error state
           if (state.merchants.isFailure) {

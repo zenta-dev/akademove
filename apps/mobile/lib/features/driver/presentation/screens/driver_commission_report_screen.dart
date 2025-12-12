@@ -41,7 +41,7 @@ class _DriverCommissionReportScreenState
         final wallet = state.wallet;
         final transactions = state.transactions;
 
-        return MyScaffold(
+        return Scaffold(
           headers: [
             AppBar(
               title: Text(context.l10n.title_commission_report),
@@ -54,7 +54,7 @@ class _DriverCommissionReportScreenState
               ],
             ),
           ],
-          body: isLoading && wallet == null
+          child: isLoading && wallet == null
               ? const Center(child: CircularProgressIndicator())
               : RefreshTrigger(
                   onRefresh: _onRefresh,

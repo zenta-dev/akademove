@@ -25,18 +25,24 @@ class _LeaderboardView extends StatefulWidget {
 class _LeaderboardViewState extends State<_LeaderboardView> {
   final int _tabIndex = 0;
 
+  Future<void> _onRefresh() async {
+    await context.read<LeaderboardCubit>().refresh();
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<LeaderboardCubit, LeaderboardState>(
       builder: (context, state) {
-        return MyScaffold(
-          scrollable: false,
-          padding: EdgeInsets.zero,
+        return Scaffold(
           headers: [DefaultAppBar(title: context.l10n.leaderboard_title)],
-          onRefresh: state.leaderboards.isLoading
-              ? null
-              : () => context.read<LeaderboardCubit>().refresh(),
-          body: _buildBody(context, state),
+          child: state.leaderboards.isLoading
+              ? _buildBody(context, state)
+              : RefreshTrigger(
+                  onRefresh: _onRefresh,
+                  child: SingleChildScrollView(
+                    child: _buildBody(context, state),
+                  ),
+                ),
         );
       },
     );
@@ -66,7 +72,7 @@ class _LeaderboardViewState extends State<_LeaderboardView> {
       );
     }
 
-    return Column(children: [Expanded(child: _buildLeaderboardTab(state))]);
+    return _buildLeaderboardTab(state);
   }
 
   Widget _buildLeaderboardTab(LeaderboardState state) {
@@ -76,13 +82,13 @@ class _LeaderboardViewState extends State<_LeaderboardView> {
       return Center(child: Text(context.l10n.text_no_rankings_yet));
     }
 
-    return ListView.builder(
+    return Padding(
       padding: EdgeInsets.all(16.w),
-      itemCount: leaderboards.length,
-      itemBuilder: (context, index) {
-        final leaderboard = leaderboards[index];
-        return _LeaderboardCard(leaderboard: leaderboard);
-      },
+      child: Column(
+        children: leaderboards
+            .map((leaderboard) => _LeaderboardCard(leaderboard: leaderboard))
+            .toList(),
+      ),
     );
   }
 

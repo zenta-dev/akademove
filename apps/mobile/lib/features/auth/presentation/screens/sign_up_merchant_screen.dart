@@ -731,51 +731,56 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return MyScaffold(
-      controller: _scrollController,
-      body: BlocConsumer<AuthCubit, AuthState>(
-        listener: (context, state) {
-          if (state.user.isFailure) {
-            _handleSignUpFailure(context, state.user.error?.message);
-          }
-          if (state.user.isSuccess) {
-            final email = _submittedEmail;
-            if (email != null) {
-              _handleSignUpSuccess(context, state.user.message, email);
-            }
-          }
-        },
-        builder: (context, state) {
-          return NotificationListener<ScrollNotification>(
-            onNotification: (notification) {
-              // Block scroll events when dragging marker
-              if (_isDraggingMarker) {
-                return true; // Consume the notification to prevent scrolling
+    return Scaffold(
+      child: SingleChildScrollView(
+        controller: _scrollController,
+        child: Padding(
+          padding: EdgeInsets.all(16.dg),
+          child: BlocConsumer<AuthCubit, AuthState>(
+            listener: (context, state) {
+              if (state.user.isFailure) {
+                _handleSignUpFailure(context, state.user.error?.message);
               }
-              return false; // Allow normal scrolling
+              if (state.user.isSuccess) {
+                final email = _submittedEmail;
+                if (email != null) {
+                  _handleSignUpSuccess(context, state.user.message, email);
+                }
+              }
             },
-            child: Form(
-              controller: _formController,
-              onSubmit: _handleFormSubmit,
-              child: Column(
-                children: [
-                  Gap(12.h),
-                  Stepper(
-                    controller: _stepController,
-                    direction: Axis.horizontal,
-                    variant: StepVariant.line,
-                    size: StepSize.small,
-                    steps: [
-                      _buildStep1(context, state),
-                      _buildStep2(context, state),
-                      _buildStep3(context, state),
+            builder: (context, state) {
+              return NotificationListener<ScrollNotification>(
+                onNotification: (notification) {
+                  // Block scroll events when dragging marker
+                  if (_isDraggingMarker) {
+                    return true; // Consume the notification to prevent scrolling
+                  }
+                  return false; // Allow normal scrolling
+                },
+                child: Form(
+                  controller: _formController,
+                  onSubmit: _handleFormSubmit,
+                  child: Column(
+                    children: [
+                      Gap(12.h),
+                      Stepper(
+                        controller: _stepController,
+                        direction: Axis.horizontal,
+                        variant: StepVariant.line,
+                        size: StepSize.small,
+                        steps: [
+                          _buildStep1(context, state),
+                          _buildStep2(context, state),
+                          _buildStep3(context, state),
+                        ],
+                      ),
                     ],
                   ),
-                ],
-              ),
-            ),
-          );
-        },
+                ),
+              );
+            },
+          ),
+        ),
       ),
     );
   }

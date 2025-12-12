@@ -17,10 +17,8 @@ class UserDetailProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MyScaffold(
-      scrollable: false,
-      padding: EdgeInsets.zero,
-      body: Column(
+    return Scaffold(
+      child: Column(
         spacing: 16.h,
         children: [_buildHeader(context), const SizedBox(), _buildDetail()],
       ),

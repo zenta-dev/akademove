@@ -38,32 +38,35 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
   Widget build(BuildContext context) {
     return BlocBuilder<DriverCubit, DriverState>(
       builder: (context, state) {
-        return MyScaffold(
+        return Scaffold(
           headers: [
             DefaultAppBar(
               title: context.l10n.profile,
               padding: EdgeInsets.all(16.r),
             ),
           ],
-          body: RefreshTrigger(
+          child: RefreshTrigger(
             onRefresh: _onRefresh,
             child: SingleChildScrollView(
-              child: Builder(
-                builder: (context) {
-                  final driver = state.driver;
-                  if (driver == null) return _buildErrorState();
+              child: Padding(
+                padding: EdgeInsets.all(16.dg),
+                child: Builder(
+                  builder: (context) {
+                    final driver = state.driver;
+                    if (driver == null) return _buildErrorState();
 
-                  return Column(
-                    spacing: 16.h,
-                    children: [
-                      _buildProfileHeader(driver),
-                      _buildStatsCards(driver),
-                      _buildDocumentSection(driver),
-                      _buildBankSection(driver),
-                      _buildActionButtons(),
-                    ],
-                  );
-                },
+                    return Column(
+                      spacing: 16.h,
+                      children: [
+                        _buildProfileHeader(driver),
+                        _buildStatsCards(driver),
+                        _buildDocumentSection(driver),
+                        _buildBankSection(driver),
+                        _buildActionButtons(),
+                      ],
+                    );
+                  },
+                ),
               ),
             ),
           ),

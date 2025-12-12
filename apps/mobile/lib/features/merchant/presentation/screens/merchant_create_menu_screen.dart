@@ -215,56 +215,61 @@ class _MerchantCreateMenuScreenState extends State<MerchantCreateMenuScreen> {
 
         return Stack(
           children: [
-            MyScaffold(
-              safeArea: true,
+            Scaffold(
               headers: [DefaultAppBar(title: context.l10n.title_create_menu)],
-              body: Form(
-                controller: _formController,
-                child: SingleChildScrollView(
-                  padding: EdgeInsets.only(bottom: 100.h),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    spacing: 16.h,
-                    children: [
-                      _buildEnumSelect<MenuCategoryEnum>(
-                        label: context.l10n.label_menu_category,
-                        key: _FormKeys.menuCategory,
-                        placeholder: context.l10n.placeholder_select_category,
-                        icon: LucideIcons.store,
-                        value: _selectedMenuCategory,
-                        items: MenuCategoryEnum.values,
-                        enabled: !isLoading,
-                        onChanged: (value) =>
-                            setState(() => _selectedMenuCategory = value),
+              child: SafeArea(
+                child: Padding(
+                  padding: EdgeInsets.all(16.dg),
+                  child: Form(
+                    controller: _formController,
+                    child: SingleChildScrollView(
+                      padding: EdgeInsets.only(bottom: 100.h),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        spacing: 16.h,
+                        children: [
+                          _buildEnumSelect<MenuCategoryEnum>(
+                            label: context.l10n.label_menu_category,
+                            key: _FormKeys.menuCategory,
+                            placeholder:
+                                context.l10n.placeholder_select_category,
+                            icon: LucideIcons.store,
+                            value: _selectedMenuCategory,
+                            items: MenuCategoryEnum.values,
+                            enabled: !isLoading,
+                            onChanged: (value) =>
+                                setState(() => _selectedMenuCategory = value),
+                          ),
+                          _buildImagePicker(
+                            context.l10n.label_menu_photo,
+                            MenuPhotos.menuPhoto,
+                            _menuPhoto,
+                            _menuPhotosErrors,
+                            context,
+                            isOptional: true,
+                          ),
+                          _buildTextField(
+                            key: _FormKeys.menuName,
+                            label: context.l10n.label_menu_name,
+                            placeholder: context.l10n.placeholder_menu_name,
+                            icon: LucideIcons.coffee,
+                            validator: const LengthValidator(min: 3),
+                            enabled: !isLoading,
+                            maxLength: 150,
+                          ),
+                          _buildTextField(
+                            key: _FormKeys.menuPrice,
+                            label: context.l10n.label_menu_price,
+                            placeholder: context.l10n.placeholder_menu_price,
+                            icon: LucideIcons.dollarSign,
+                            validator: const LengthValidator(min: 1),
+                            enabled: !isLoading,
+                            keyboardType: TextInputType.number,
+                          ),
+                          _buildStockField(isLoading),
+                        ],
                       ),
-                      _buildImagePicker(
-                        context.l10n.label_menu_photo,
-                        MenuPhotos.menuPhoto,
-                        _menuPhoto,
-                        _menuPhotosErrors,
-                        context,
-                        isOptional: true,
-                      ),
-                      _buildTextField(
-                        key: _FormKeys.menuName,
-                        label: context.l10n.label_menu_name,
-                        placeholder: context.l10n.placeholder_menu_name,
-                        icon: LucideIcons.coffee,
-                        validator: const LengthValidator(min: 3),
-                        enabled: !isLoading,
-                        maxLength: 150,
-                      ),
-                      _buildTextField(
-                        key: _FormKeys.menuPrice,
-                        label: context.l10n.label_menu_price,
-                        placeholder: context.l10n.placeholder_menu_price,
-                        icon: LucideIcons.dollarSign,
-                        validator: const LengthValidator(min: 1),
-                        enabled: !isLoading,
-                        keyboardType: TextInputType.number,
-                      ),
-                      _buildStockField(isLoading),
-                    ],
+                    ),
                   ),
                 ),
               ),

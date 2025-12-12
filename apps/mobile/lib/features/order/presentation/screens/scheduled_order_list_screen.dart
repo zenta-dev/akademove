@@ -108,38 +108,40 @@ class _ScheduledOrderListScreenState extends State<ScheduledOrderListScreen> {
         final scheduledOrders = state.scheduledOrders.value ?? [];
         final isLoading = state.scheduledOrders.isLoading;
 
-        return MyScaffold(
+        return Scaffold(
           headers: [
             DefaultAppBar(
               title: context.l10n.scheduled_orders,
               padding: EdgeInsets.all(16.r),
             ),
           ],
-          scrollable: false,
-          padding: EdgeInsets.zero,
-          body: isLoading
+          child: isLoading
               ? const Center(child: CircularProgressIndicator())
               : RefreshTrigger(
                   onRefresh: _onRefresh,
-                  child: scheduledOrders.isEmpty
-                      ? _buildEmptyState()
-                      : ListView.separated(
-                          padding: EdgeInsets.zero,
-                          itemCount: scheduledOrders.length,
-                          separatorBuilder: (context, index) =>
-                              SizedBox(height: 12.h),
-                          itemBuilder: (context, index) {
-                            final order = scheduledOrders[index];
-                            return ScheduledOrderCardWidget(
-                              order: order,
-                              onTap: () => context
-                                  .read<UserOrderCubit>()
-                                  .selectScheduledOrder(order),
-                              onEdit: () => _onEditScheduledOrder(order),
-                              onCancel: () => _onCancelScheduledOrder(order),
-                            );
-                          },
-                        ),
+                  child: SingleChildScrollView(
+                    child: scheduledOrders.isEmpty
+                        ? _buildEmptyState()
+                        : ListView.separated(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            padding: EdgeInsets.zero,
+                            itemCount: scheduledOrders.length,
+                            separatorBuilder: (context, index) =>
+                                SizedBox(height: 12.h),
+                            itemBuilder: (context, index) {
+                              final order = scheduledOrders[index];
+                              return ScheduledOrderCardWidget(
+                                order: order,
+                                onTap: () => context
+                                    .read<UserOrderCubit>()
+                                    .selectScheduledOrder(order),
+                                onEdit: () => _onEditScheduledOrder(order),
+                                onCancel: () => _onCancelScheduledOrder(order),
+                              );
+                            },
+                          ),
+                  ),
                 ),
         );
       },

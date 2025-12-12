@@ -72,130 +72,145 @@ class _DriverChangePasswordScreenState
 
   @override
   Widget build(BuildContext context) {
-    return MyScaffold(
+    return Scaffold(
       headers: [DefaultAppBar(title: context.l10n.title_change_password)],
-      body: Form(
-        onSubmit: _handleFormSubmit,
-        child: BlocConsumer<DriverProfileCubit, DriverProfileState>(
-          listener: (context, state) {
-            state.updatePasswordResult.whenOr(
-              success: (result, message) {
-                context.showMyToast(message, type: ToastType.success);
-                delay(const Duration(seconds: 3), () {
-                  context.read<DriverProfileCubit>().reset();
-                  context.pop();
-                });
-              },
-              failure: (error) {
-                context.showMyToast(error.message, type: ToastType.failed);
-              },
-              orElse: noop,
-            );
-          },
-          builder: (context, state) {
-            final isLoading = state.updatePasswordResult.isLoading;
-            return Column(
-              spacing: 8.h,
-              children: [
-                FormField(
-                  key: _oldPasswordKey,
-                  label: Text(context.l10n.label_old_password).small(),
-                  validator: const LengthValidator(min: 8),
-                  showErrors: const {
-                    FormValidationMode.changed,
-                    FormValidationMode.submitted,
-                  },
-                  child: TextField(
-                    enabled: !isLoading,
-                    focusNode: _oldPasswordFn,
-                    placeholder: Text(context.l10n.placeholder_old_password),
-                    textInputAction: TextInputAction.next,
-                    autofillHints: const [AutofillHints.password],
-                    onSubmitted: (value) {
-                      _newPasswordFn.requestFocus();
+      child: SafeArea(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.all(16.dg),
+            child: Form(
+              onSubmit: _handleFormSubmit,
+              child: BlocConsumer<DriverProfileCubit, DriverProfileState>(
+                listener: (context, state) {
+                  state.updatePasswordResult.whenOr(
+                    success: (result, message) {
+                      context.showMyToast(message, type: ToastType.success);
+                      delay(const Duration(seconds: 3), () {
+                        context.read<DriverProfileCubit>().reset();
+                        context.pop();
+                      });
                     },
-                    features: const [
-                      InputFeature.leading(Icon(LucideIcons.key)),
-                      InputFeature.passwordToggle(),
-                    ],
-                  ),
-                ),
-                FormField(
-                  key: _newPasswordKey,
-                  label: Text(context.l10n.label_new_password).small(),
-                  validator: const LengthValidator(min: 8),
-                  showErrors: const {
-                    FormValidationMode.changed,
-                    FormValidationMode.submitted,
-                  },
-                  child: TextField(
-                    enabled: !isLoading,
-                    focusNode: _newPasswordFn,
-                    placeholder: Text(context.l10n.placeholder_new_password),
-                    textInputAction: TextInputAction.next,
-                    autofillHints: const [AutofillHints.newPassword],
-                    onSubmitted: (value) {
-                      _confirmNewPasswordFn.requestFocus();
-                    },
-                    features: const [
-                      InputFeature.leading(Icon(LucideIcons.key)),
-                      InputFeature.passwordToggle(),
-                    ],
-                  ),
-                ),
-                FormField(
-                  key: _confirmNewPasswordKey,
-                  label: Text(context.l10n.label_confirm_new_password).small(),
-                  validator: const LengthValidator(min: 8),
-                  showErrors: const {
-                    FormValidationMode.changed,
-                    FormValidationMode.submitted,
-                  },
-                  child: TextField(
-                    enabled: !isLoading,
-                    focusNode: _confirmNewPasswordFn,
-                    placeholder: Text(
-                      context.l10n.placeholder_confirm_new_password,
-                    ),
-                    textInputAction: TextInputAction.done,
-                    autofillHints: const [AutofillHints.newPassword],
-                    onSubmitted: (value) {
-                      FocusScope.of(context).unfocus();
-                    },
-                    features: const [
-                      InputFeature.leading(Icon(LucideIcons.key)),
-                      InputFeature.passwordToggle(),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  width: double.infinity,
-                  child: FormErrorBuilder(
-                    builder: (context, errors, child) {
-                      final hasErrors = errors.isNotEmpty;
-
-                      return Button(
-                        style: isLoading || hasErrors
-                            ? const ButtonStyle.outline()
-                            : const ButtonStyle.primary(),
-                        onPressed: (!hasErrors && !isLoading)
-                            ? () => context.submitForm()
-                            : null,
-                        child: isLoading
-                            ? const Submiting()
-                            : Text(
-                                context.l10n.button_save_changes,
-                                style: context.theme.typography.medium.copyWith(
-                                  color: Colors.white,
-                                ),
-                              ),
+                    failure: (error) {
+                      context.showMyToast(
+                        error.message,
+                        type: ToastType.failed,
                       );
                     },
-                  ),
-                ),
-              ],
-            );
-          },
+                    orElse: noop,
+                  );
+                },
+                builder: (context, state) {
+                  final isLoading = state.updatePasswordResult.isLoading;
+                  return Column(
+                    spacing: 8.h,
+                    children: [
+                      FormField(
+                        key: _oldPasswordKey,
+                        label: Text(context.l10n.label_old_password).small(),
+                        validator: const LengthValidator(min: 8),
+                        showErrors: const {
+                          FormValidationMode.changed,
+                          FormValidationMode.submitted,
+                        },
+                        child: TextField(
+                          enabled: !isLoading,
+                          focusNode: _oldPasswordFn,
+                          placeholder: Text(
+                            context.l10n.placeholder_old_password,
+                          ),
+                          textInputAction: TextInputAction.next,
+                          autofillHints: const [AutofillHints.password],
+                          onSubmitted: (value) {
+                            _newPasswordFn.requestFocus();
+                          },
+                          features: const [
+                            InputFeature.leading(Icon(LucideIcons.key)),
+                            InputFeature.passwordToggle(),
+                          ],
+                        ),
+                      ),
+                      FormField(
+                        key: _newPasswordKey,
+                        label: Text(context.l10n.label_new_password).small(),
+                        validator: const LengthValidator(min: 8),
+                        showErrors: const {
+                          FormValidationMode.changed,
+                          FormValidationMode.submitted,
+                        },
+                        child: TextField(
+                          enabled: !isLoading,
+                          focusNode: _newPasswordFn,
+                          placeholder: Text(
+                            context.l10n.placeholder_new_password,
+                          ),
+                          textInputAction: TextInputAction.next,
+                          autofillHints: const [AutofillHints.newPassword],
+                          onSubmitted: (value) {
+                            _confirmNewPasswordFn.requestFocus();
+                          },
+                          features: const [
+                            InputFeature.leading(Icon(LucideIcons.key)),
+                            InputFeature.passwordToggle(),
+                          ],
+                        ),
+                      ),
+                      FormField(
+                        key: _confirmNewPasswordKey,
+                        label: Text(
+                          context.l10n.label_confirm_new_password,
+                        ).small(),
+                        validator: const LengthValidator(min: 8),
+                        showErrors: const {
+                          FormValidationMode.changed,
+                          FormValidationMode.submitted,
+                        },
+                        child: TextField(
+                          enabled: !isLoading,
+                          focusNode: _confirmNewPasswordFn,
+                          placeholder: Text(
+                            context.l10n.placeholder_confirm_new_password,
+                          ),
+                          textInputAction: TextInputAction.done,
+                          autofillHints: const [AutofillHints.newPassword],
+                          onSubmitted: (value) {
+                            FocusScope.of(context).unfocus();
+                          },
+                          features: const [
+                            InputFeature.leading(Icon(LucideIcons.key)),
+                            InputFeature.passwordToggle(),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        width: double.infinity,
+                        child: FormErrorBuilder(
+                          builder: (context, errors, child) {
+                            final hasErrors = errors.isNotEmpty;
+
+                            return Button(
+                              style: isLoading || hasErrors
+                                  ? const ButtonStyle.outline()
+                                  : const ButtonStyle.primary(),
+                              onPressed: (!hasErrors && !isLoading)
+                                  ? () => context.submitForm()
+                                  : null,
+                              child: isLoading
+                                  ? const Submiting()
+                                  : Text(
+                                      context.l10n.button_save_changes,
+                                      style: context.theme.typography.medium
+                                          .copyWith(color: Colors.white),
+                                    ),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              ),
+            ),
+          ),
         ),
       ),
     );

@@ -224,24 +224,29 @@ class _FaqScreenState extends State<FaqScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return MyScaffold(
+    return Scaffold(
       headers: [const DefaultAppBar(title: 'Frequently Asked Questions')],
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        spacing: 16.h,
-        children: [
-          _buildHeaderCard(context),
-          ..._categories.map((category) {
-            return _FaqCategoryWidget(
-              category: category,
-              isOpen: _openCategory == category.id,
-              openQuestion: _openQuestion,
-              onToggleCategory: () => _toggleCategory(category.id),
-              onToggleQuestion: (qId) => _toggleQuestion(category.id, qId),
-            );
-          }),
-          _buildContactCard(context),
-        ],
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.all(16.dg),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: 16.h,
+            children: [
+              _buildHeaderCard(context),
+              ..._categories.map((category) {
+                return _FaqCategoryWidget(
+                  category: category,
+                  isOpen: _openCategory == category.id,
+                  openQuestion: _openQuestion,
+                  onToggleCategory: () => _toggleCategory(category.id),
+                  onToggleQuestion: (qId) => _toggleQuestion(category.id, qId),
+                );
+              }),
+              _buildContactCard(context),
+            ],
+          ),
+        ),
       ),
     );
   }
