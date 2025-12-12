@@ -8,23 +8,56 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 
-class UserDetailHistoryScreen extends StatelessWidget {
-  const UserDetailHistoryScreen({super.key});
+class UserDetailHistoryScreen extends StatefulWidget {
+  const UserDetailHistoryScreen({super.key, this.action});
+
+  /// Optional action to perform when order is loaded.
+  /// Supported actions: 'rate' - auto-open rating dialog
+  final String? action;
+
+  @override
+  State<UserDetailHistoryScreen> createState() =>
+      _UserDetailHistoryScreenState();
+}
+
+class _UserDetailHistoryScreenState extends State<UserDetailHistoryScreen> {
+  bool _hasTriggeredAction = false;
+
+  Future<void> _onRefresh() async {
+    final orderId = context
+        .read<UserOrderCubit>()
+        .state
+        .selectedOrder
+        .value
+        ?.id;
+    if (orderId != null) {
+      await context.read<UserOrderCubit>().maybeGet(orderId);
+    }
+  }
+
+  void _handleAutoAction(Order order) {
+    if (_hasTriggeredAction) return;
+    if (widget.action == null) return;
+
+    switch (widget.action) {
+      case 'rate':
+        // Auto-open rating dialog if order is completed and has a driver
+        if (order.status == OrderStatus.COMPLETED && order.driverId != null) {
+          _hasTriggeredAction = true;
+          // Use post-frame callback to avoid building during build
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (mounted) {
+              _navigateToRating(context, order);
+            }
+          });
+        }
+      default:
+        break;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    Future<void> onRefresh() async {
-      final orderId = context
-          .read<UserOrderCubit>()
-          .state
-          .selectedOrder
-          .value
-          ?.id;
-      if (orderId != null) {
-        await context.read<UserOrderCubit>().maybeGet(orderId);
-      }
-    }
-
     return Scaffold(
       headers: [
         BlocBuilder<UserOrderCubit, UserOrderState>(
@@ -44,95 +77,110 @@ class UserDetailHistoryScreen extends StatelessWidget {
           },
         ),
       ],
-      child: RefreshTrigger(
-        onRefresh: onRefresh,
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.all(16.dg),
-            child: BlocBuilder<UserOrderCubit, UserOrderState>(
-              builder: (context, state) {
-                if (state.selectedOrder.isLoading) {
-                  return _buildLoadingSkeleton(context);
-                }
+      child: BlocListener<UserOrderCubit, UserOrderState>(
+        listenWhen: (previous, current) {
+          // Listen when order transitions from loading to success
+          return previous.selectedOrder.isLoading &&
+              current.selectedOrder.isSuccess &&
+              current.selectedOrder.value != null;
+        },
+        listener: (context, state) {
+          final order = state.selectedOrder.value;
+          if (order != null) {
+            _handleAutoAction(order);
+          }
+        },
+        child: RefreshTrigger(
+          onRefresh: _onRefresh,
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.all(16.dg),
+              child: BlocBuilder<UserOrderCubit, UserOrderState>(
+                builder: (context, state) {
+                  if (state.selectedOrder.isLoading) {
+                    return _buildLoadingSkeleton(context);
+                  }
 
-                if (state.selectedOrder.isFailure) {
-                  return Center(
-                    child: OopsAlertWidget(
-                      message:
-                          state.selectedOrder.error?.message ??
-                          'Failed to load order',
-                      onRefresh: () {
-                        final orderId = state.selectedOrder.value?.id;
-                        if (orderId != null) {
-                          context.read<UserOrderCubit>().maybeGet(orderId);
-                        }
-                      },
-                    ),
+                  if (state.selectedOrder.isFailure) {
+                    return Center(
+                      child: OopsAlertWidget(
+                        message:
+                            state.selectedOrder.error?.message ??
+                            'Failed to load order',
+                        onRefresh: () {
+                          final orderId = state.selectedOrder.value?.id;
+                          if (orderId != null) {
+                            context.read<UserOrderCubit>().maybeGet(orderId);
+                          }
+                        },
+                      ),
+                    );
+                  }
+
+                  final order = state.selectedOrder.value;
+                  if (order == null) {
+                    return Center(
+                      child: DefaultText('Order not found', fontSize: 16.sp),
+                    );
+                  }
+
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Status Card
+                      _buildStatusCard(context, order),
+                      Gap(16.h),
+
+                      // Location Card
+                      _buildLocationCard(context, order),
+                      Gap(16.h),
+
+                      // Order Details Card
+                      _buildOrderDetailsCard(context, order),
+                      Gap(16.h),
+
+                      // Price Breakdown Card
+                      _buildPriceBreakdownCard(context, order),
+
+                      // Driver Info Card (if assigned)
+                      if (order.driverId != null && order.driver != null) ...[
+                        Gap(16.h),
+                        _buildDriverCard(context, order),
+                      ],
+
+                      // Merchant Info Card (for FOOD orders)
+                      if (order.merchantId != null &&
+                          order.merchant != null) ...[
+                        Gap(16.h),
+                        _buildMerchantCard(context, order),
+                      ],
+
+                      // Order Items (for FOOD orders)
+                      if (order.items != null && order.items!.isNotEmpty) ...[
+                        Gap(16.h),
+                        _buildOrderItemsCard(context, order),
+                      ],
+
+                      // Notes Card (if any)
+                      if (order.note != null) ...[
+                        Gap(16.h),
+                        _buildNotesCard(context, order),
+                      ],
+
+                      // Cancel Reason (if cancelled)
+                      if (order.cancelReason != null) ...[
+                        Gap(16.h),
+                        _buildCancelReasonCard(context, order),
+                      ],
+
+                      // Action Buttons
+                      Gap(24.h),
+                      _buildActionButtons(context, order),
+                      Gap(16.h),
+                    ],
                   );
-                }
-
-                final order = state.selectedOrder.value;
-                if (order == null) {
-                  return Center(
-                    child: DefaultText('Order not found', fontSize: 16.sp),
-                  );
-                }
-
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Status Card
-                    _buildStatusCard(context, order),
-                    Gap(16.h),
-
-                    // Location Card
-                    _buildLocationCard(context, order),
-                    Gap(16.h),
-
-                    // Order Details Card
-                    _buildOrderDetailsCard(context, order),
-                    Gap(16.h),
-
-                    // Price Breakdown Card
-                    _buildPriceBreakdownCard(context, order),
-
-                    // Driver Info Card (if assigned)
-                    if (order.driverId != null && order.driver != null) ...[
-                      Gap(16.h),
-                      _buildDriverCard(context, order),
-                    ],
-
-                    // Merchant Info Card (for FOOD orders)
-                    if (order.merchantId != null && order.merchant != null) ...[
-                      Gap(16.h),
-                      _buildMerchantCard(context, order),
-                    ],
-
-                    // Order Items (for FOOD orders)
-                    if (order.items != null && order.items!.isNotEmpty) ...[
-                      Gap(16.h),
-                      _buildOrderItemsCard(context, order),
-                    ],
-
-                    // Notes Card (if any)
-                    if (order.note != null) ...[
-                      Gap(16.h),
-                      _buildNotesCard(context, order),
-                    ],
-
-                    // Cancel Reason (if cancelled)
-                    if (order.cancelReason != null) ...[
-                      Gap(16.h),
-                      _buildCancelReasonCard(context, order),
-                    ],
-
-                    // Action Buttons
-                    Gap(24.h),
-                    _buildActionButtons(context, order),
-                    Gap(16.h),
-                  ],
-                );
-              },
+                },
+              ),
             ),
           ),
         ),

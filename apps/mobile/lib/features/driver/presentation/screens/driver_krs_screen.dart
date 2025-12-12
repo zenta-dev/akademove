@@ -1,9 +1,11 @@
+import 'package:akademove/app/router/router.dart';
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/l10n/l10n.dart';
 import 'package:api_client/api_client.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 
 class DriverKrsScreen extends StatefulWidget {
@@ -14,9 +16,6 @@ class DriverKrsScreen extends StatefulWidget {
 }
 
 class _DriverKrsScreenState extends State<DriverKrsScreen> {
-  // Track whether we're editing or creating for toast messages in listener
-  bool? _isEditingSchedule;
-
   @override
   void initState() {
     super.initState();
@@ -34,6 +33,16 @@ class _DriverKrsScreenState extends State<DriverKrsScreen> {
     await _loadDriverAndSchedules();
   }
 
+  void _navigateToUpsert({DriverSchedule? schedule}) async {
+    final result = await context.pushNamed<bool>(
+      Routes.driverKrsUpsert.name,
+      extra: schedule,
+    );
+    if (result == true) {
+      await _loadDriverAndSchedules();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,7 +53,7 @@ class _DriverKrsScreenState extends State<DriverKrsScreen> {
           trailing: [
             IconButton(
               icon: const Icon(LucideIcons.plus),
-              onPressed: () => _showScheduleDialog(),
+              onPressed: () => _navigateToUpsert(),
               variance: ButtonVariance.ghost,
             ),
           ],
@@ -61,46 +70,6 @@ class _DriverKrsScreenState extends State<DriverKrsScreen> {
                 context.showMyToast(
                   state.fetchSchedulesResult.error?.message ??
                       context.l10n.an_error_occurred,
-                  type: ToastType.failed,
-                );
-              }
-
-              // Handle create schedule result
-              if (state.createScheduleResult.isSuccess &&
-                  _isEditingSchedule == false) {
-                _isEditingSchedule = null;
-                context.showMyToast(
-                  context.l10n.schedule_added_successfully,
-                  type: ToastType.success,
-                );
-                _loadDriverAndSchedules();
-              }
-              if (state.createScheduleResult.isFailure &&
-                  _isEditingSchedule == false) {
-                _isEditingSchedule = null;
-                context.showMyToast(
-                  state.createScheduleResult.error?.message ??
-                      context.l10n.failed_to_add_schedule,
-                  type: ToastType.failed,
-                );
-              }
-
-              // Handle update schedule result
-              if (state.updateScheduleResult.isSuccess &&
-                  _isEditingSchedule == true) {
-                _isEditingSchedule = null;
-                context.showMyToast(
-                  context.l10n.schedule_updated_successfully,
-                  type: ToastType.success,
-                );
-                _loadDriverAndSchedules();
-              }
-              if (state.updateScheduleResult.isFailure &&
-                  _isEditingSchedule == true) {
-                _isEditingSchedule = null;
-                context.showMyToast(
-                  state.updateScheduleResult.error?.message ??
-                      context.l10n.failed_to_update_schedule,
                   type: ToastType.failed,
                 );
               }
@@ -191,7 +160,7 @@ class _DriverKrsScreenState extends State<DriverKrsScreen> {
                   ),
                   SizedBox(height: 16.h),
                   PrimaryButton(
-                    onPressed: () => _showScheduleDialog(),
+                    onPressed: () => _navigateToUpsert(),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       spacing: 8,
@@ -305,7 +274,7 @@ class _DriverKrsScreenState extends State<DriverKrsScreen> {
               children: [
                 Expanded(
                   child: OutlineButton(
-                    onPressed: () => _showScheduleDialog(schedule: schedule),
+                    onPressed: () => _navigateToUpsert(schedule: schedule),
                     child: Text(context.l10n.button_edit),
                   ),
                 ),
@@ -321,329 +290,6 @@ class _DriverKrsScreenState extends State<DriverKrsScreen> {
         ),
       ),
     );
-  }
-
-  // -------------------------
-  // DIALOG (NO SCROLLABLE WIDGETS)
-  // -------------------------
-  void _showScheduleDialog({DriverSchedule? schedule}) {
-    final isEditing = schedule != null;
-
-    final nameController = TextEditingController(text: schedule?.name);
-    DayOfWeek selectedDay = schedule?.dayOfWeek ?? DayOfWeek.MONDAY;
-
-    TimeOfDay startTime = schedule != null
-        ? TimeOfDay(
-            hour: schedule.startTime.h.toInt(),
-            minute: schedule.startTime.m.toInt(),
-          )
-        : const TimeOfDay(hour: 8, minute: 0);
-
-    TimeOfDay endTime = schedule != null
-        ? TimeOfDay(
-            hour: schedule.endTime.h.toInt(),
-            minute: schedule.endTime.m.toInt(),
-          )
-        : const TimeOfDay(hour: 10, minute: 0);
-
-    bool isRecurring = schedule?.isRecurring ?? true;
-    bool isActive = schedule?.isActive ?? true;
-
-    showDialog(
-      context: context,
-      builder: (dialogContext) {
-        return StatefulBuilder(
-          builder: (context, setState) {
-            return AlertDialog(
-              title: Text(
-                isEditing
-                    ? context.l10n.title_edit_schedule
-                    : context.l10n.title_add_schedule,
-              ),
-              content: ConstrainedBox(
-                constraints: BoxConstraints(
-                  maxHeight: MediaQuery.of(context).size.height * 0.6,
-                ),
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      TextField(
-                        controller: nameController,
-                        placeholder: Text(context.l10n.placeholder_course_name),
-                      ),
-                      SizedBox(height: 16.h),
-
-                      Builder(
-                        builder: (selectContext) => Select<DayOfWeek>(
-                          value: selectedDay,
-                          onChanged: (value) {
-                            if (value != null) {
-                              setState(() => selectedDay = value);
-                            }
-                          },
-                          placeholder: Text(context.l10n.day_of_week),
-                          itemBuilder: (itemContext, item) {
-                            return Text(_getDayFullText(context, item));
-                          },
-                          popupConstraints: BoxConstraints(
-                            maxHeight: 300.h,
-                            maxWidth: 300.w,
-                          ),
-                          popup: SelectPopup(
-                            items: SelectItemList(
-                              children: [
-                                for (final day in DayOfWeek.values)
-                                  SelectItemButton(
-                                    value: day,
-                                    child: Text(_getDayFullText(context, day)),
-                                  ),
-                              ],
-                            ),
-                          ).call,
-                        ),
-                      ),
-                      SizedBox(height: 16.h),
-
-                      // _buildTimePicker(
-                      //   label: context.l10n.start_time,
-                      //   time: startTime,
-                      //   onTap: () async {
-                      //     final picked = await showTimePicker(
-                      //       context: context,
-                      //       initialTime: startTime,
-                      //     );
-                      //     if (picked != null) {
-                      //       setState(() => startTime = picked);
-                      //     }
-                      //   },
-                      // ),
-                      SizedBox(height: 16.h),
-
-                      // _buildTimePicker(
-                      //   label: context.l10n.end_time,
-                      //   time: endTime,
-                      //   onTap: () async {
-                      //     final picked = await showTimePicker(
-                      //       context: context,
-                      //       initialTime: endTime,
-                      //     );
-                      //     if (picked != null) {
-                      //       setState(() => endTime = picked);
-                      //     }
-                      //   },
-                      // ),
-                      SizedBox(height: 16.h),
-
-                      // Recurring switch
-                      GestureDetector(
-                        onTap: () => setState(() => isRecurring = !isRecurring),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    context.l10n.recurring,
-                                    style: context.typography.p.copyWith(
-                                      fontSize: 14.sp,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                  SizedBox(height: 4.h),
-                                  Text(
-                                    context.l10n.repeat_every_week,
-                                    style: context.typography.small.copyWith(
-                                      fontSize: 12.sp,
-                                      color:
-                                          context.colorScheme.mutedForeground,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Switch(
-                              value: isRecurring,
-                              onChanged: (value) =>
-                                  setState(() => isRecurring = value),
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: 8.h),
-
-                      // Active switch
-                      GestureDetector(
-                        onTap: () => setState(() => isActive = !isActive),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    context.l10n.active,
-                                    style: context.typography.p.copyWith(
-                                      fontSize: 14.sp,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                  SizedBox(height: 4.h),
-                                  Text(
-                                    context
-                                        .l10n
-                                        .disable_orders_during_this_time,
-                                    style: context.typography.small.copyWith(
-                                      fontSize: 12.sp,
-                                      color:
-                                          context.colorScheme.mutedForeground,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Switch(
-                              value: isActive,
-                              onChanged: (value) =>
-                                  setState(() => isActive = value),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              actions: [
-                OutlineButton(
-                  onPressed: () => Navigator.of(dialogContext).pop(),
-                  child: Text(context.l10n.cancel),
-                ),
-                PrimaryButton(
-                  onPressed: () {
-                    final name = nameController.text.trim();
-                    if (name.isEmpty) {
-                      context.showMyToast(
-                        context.l10n.please_enter_a_schedule_name,
-                        type: ToastType.failed,
-                      );
-                      return;
-                    }
-
-                    Navigator.of(dialogContext).pop();
-
-                    _saveSchedule(
-                      name: name,
-                      dayOfWeek: selectedDay,
-                      startTime: startTime,
-                      endTime: endTime,
-                      isRecurring: isRecurring,
-                      isActive: isActive,
-                      scheduleId: schedule?.id,
-                    );
-                  },
-                  child: Text(
-                    isEditing ? context.l10n.update : context.l10n.add,
-                  ),
-                ),
-              ],
-            );
-          },
-        );
-      },
-    );
-  }
-
-  // -------------------------
-  // TIME PICKER WIDGET
-  // -------------------------
-  Widget _buildTimePicker({
-    required String label,
-    required TimeOfDay time,
-    required VoidCallback onTap,
-  }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Card(
-        child: Padding(
-          padding: EdgeInsets.all(12.dg),
-          child: Row(
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  spacing: 4.h,
-                  children: [
-                    Text(
-                      label,
-                      style: context.typography.p.copyWith(
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    Text(
-                      _formatTimeOfDay(time),
-                      style: context.typography.small.copyWith(
-                        fontSize: 12.sp,
-                        color: context.colorScheme.mutedForeground,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const Icon(LucideIcons.clock),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  // -------------------------
-  // SAVE
-  // -------------------------
-  void _saveSchedule({
-    required String name,
-    required DayOfWeek dayOfWeek,
-    required TimeOfDay startTime,
-    required TimeOfDay endTime,
-    required bool isRecurring,
-    required bool isActive,
-    String? scheduleId,
-  }) {
-    final isEditing = scheduleId != null;
-    _isEditingSchedule = isEditing;
-
-    final timeStart = Time(h: startTime.hour, m: startTime.minute);
-    final timeEnd = Time(h: endTime.hour, m: endTime.minute);
-
-    if (isEditing) {
-      context.read<DriverScheduleCubit>().updateSchedule(
-        scheduleId: scheduleId,
-        request: DriverScheduleUpdateRequest(
-          name: name,
-          dayOfWeek: dayOfWeek,
-          startTime: timeStart,
-          endTime: timeEnd,
-          isRecurring: isRecurring,
-          isActive: isActive,
-        ),
-      );
-    } else {
-      context.read<DriverScheduleCubit>().createSchedule(
-        request: DriverScheduleCreateRequest(
-          name: name,
-          driverId: '',
-          dayOfWeek: dayOfWeek,
-          startTime: timeStart,
-          endTime: timeEnd,
-          isRecurring: isRecurring,
-          isActive: isActive,
-        ),
-      );
-    }
   }
 
   // -------------------------
@@ -676,29 +322,6 @@ class _DriverKrsScreenState extends State<DriverKrsScreen> {
     final h = time.h.toString().padLeft(2, '0');
     final m = time.m.toString().padLeft(2, '0');
     return '$h:$m';
-  }
-
-  String _formatTimeOfDay(TimeOfDay t) {
-    return '${t.hour.toString().padLeft(2, '0')}:${t.minute.toString().padLeft(2, '0')}';
-  }
-
-  String _getDayFullText(BuildContext context, DayOfWeek day) {
-    switch (day) {
-      case DayOfWeek.MONDAY:
-        return context.l10n.monday;
-      case DayOfWeek.TUESDAY:
-        return context.l10n.tuesday;
-      case DayOfWeek.WEDNESDAY:
-        return context.l10n.wednesday;
-      case DayOfWeek.THURSDAY:
-        return context.l10n.thursday;
-      case DayOfWeek.FRIDAY:
-        return context.l10n.friday;
-      case DayOfWeek.SATURDAY:
-        return context.l10n.saturday;
-      case DayOfWeek.SUNDAY:
-        return context.l10n.sunday;
-    }
   }
 
   void _showDeleteConfirmation(DriverSchedule schedule) {

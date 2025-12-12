@@ -118,6 +118,16 @@ final driverRouter = StatefulShellRoute.indexedStack(
           name: Routes.driverKRS.name,
           path: Routes.driverKRS.path,
           builder: (context, state) => const DriverKrsScreen(),
+          routes: [
+            GoRoute(
+              name: Routes.driverKrsUpsert.name,
+              path: 'upsert',
+              builder: (context, state) {
+                final schedule = state.extra as DriverSchedule?;
+                return DriverKrsUpsertScreen(schedule: schedule);
+              },
+            ),
+          ],
         ),
       ],
     ),

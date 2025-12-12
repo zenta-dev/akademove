@@ -116,7 +116,8 @@ class _UserMartScreenState extends State<UserMartScreen> {
             child: ListView.separated(
               scrollDirection: Axis.horizontal,
               itemCount: categories.length,
-              separatorBuilder: (context, index) => Gap(12.w),
+              separatorBuilder: (context, index) => Gap(10.w),
+              padding: EdgeInsets.zero,
               itemBuilder: (context, index) {
                 final category = categories[index];
                 return _CategoryCard(
@@ -237,7 +238,8 @@ class _CategoryCard extends StatelessWidget {
       style: const ButtonStyle.ghost(density: ButtonDensity.icon),
       onPressed: onTap,
       child: Container(
-        width: 80.w,
+        width: 90.w,
+        height: 90.h,
         padding: EdgeInsets.all(12.dg),
         decoration: BoxDecoration(
           color: color.withValues(alpha: 0.1),

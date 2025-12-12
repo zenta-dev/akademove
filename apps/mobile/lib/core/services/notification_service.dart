@@ -258,10 +258,13 @@ class NotificationService {
           final orderId = pathSegments.isNotEmpty
               ? pathSegments[0]
               : data['orderId'] as String?;
+          // Check if this is a rating deep link: akademove://order/{orderId}/rate
+          final isRating = pathSegments.length > 1 && pathSegments[1] == 'rate';
           if (orderId != null && orderId.isNotEmpty) {
             router.pushNamed(
               Routes.userHistoryDetail.name,
               pathParameters: {'orderId': orderId},
+              extra: isRating ? {'action': 'rate'} : null,
             );
             return true;
           }
