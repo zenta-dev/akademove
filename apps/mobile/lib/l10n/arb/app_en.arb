@@ -1507,5 +1507,8 @@
 	"cancel_reason_optional": "Reason (optional)",
 	"order_cancelled_successfully": "Order cancelled successfully",
 	"failed_to_cancel_order": "Failed to cancel order",
-	"view_active_order": "View Trip"
+	"view_active_order": "View Trip",
+	"title_select_pickup_location": "Select Pickup Location",
+	"title_select_dropoff_location": "Select Dropoff Location",
+	"button_confirm_location": "Confirm Location"
 }

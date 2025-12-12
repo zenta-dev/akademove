@@ -243,6 +243,10 @@ enum ListDriverQuizQuestionQuerySortByEnum {
   pickupLocation(r'pickupLocation'),
   @JsonValue(r'dropoffLocation')
   dropoffLocation(r'dropoffLocation'),
+  @JsonValue(r'pickupAddress')
+  pickupAddress(r'pickupAddress'),
+  @JsonValue(r'dropoffAddress')
+  dropoffAddress(r'dropoffAddress'),
   @JsonValue(r'distanceKm')
   distanceKm(r'distanceKm'),
   @JsonValue(r'basePrice')

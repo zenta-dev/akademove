@@ -321,6 +321,8 @@ const _$ListDriverQuizQuestionQuerySortByEnumEnumMap = {
   ListDriverQuizQuestionQuerySortByEnum.type: 'type',
   ListDriverQuizQuestionQuerySortByEnum.pickupLocation: 'pickupLocation',
   ListDriverQuizQuestionQuerySortByEnum.dropoffLocation: 'dropoffLocation',
+  ListDriverQuizQuestionQuerySortByEnum.pickupAddress: 'pickupAddress',
+  ListDriverQuizQuestionQuerySortByEnum.dropoffAddress: 'dropoffAddress',
   ListDriverQuizQuestionQuerySortByEnum.distanceKm: 'distanceKm',
   ListDriverQuizQuestionQuerySortByEnum.basePrice: 'basePrice',
   ListDriverQuizQuestionQuerySortByEnum.tip: 'tip',

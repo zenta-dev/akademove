@@ -337,7 +337,8 @@ export const OrderDetailDialog = ({
 									{m.order_detail_pickup()}
 								</span>
 								<span className="font-medium text-sm">
-									{`${order.pickupLocation.y}, ${order.pickupLocation.x}`}
+									{order.pickupAddress ||
+										`${order.pickupLocation.y.toFixed(4)}, ${order.pickupLocation.x.toFixed(4)}`}
 								</span>
 							</div>
 							<div className="flex justify-between">
@@ -345,7 +346,8 @@ export const OrderDetailDialog = ({
 									{m.order_detail_dropoff()}
 								</span>
 								<span className="font-medium text-sm">
-									{`${order.dropoffLocation.y}, ${order.dropoffLocation.x}`}
+									{order.dropoffAddress ||
+										`${order.dropoffLocation.y.toFixed(4)}, ${order.dropoffLocation.x.toFixed(4)}`}
 								</span>
 							</div>
 							<div className="flex justify-between">

@@ -51,7 +51,7 @@ class _UserRatingScreenState extends State<UserRatingScreen> {
         _selectedCategory != null;
   }
 
-  Future<void> _submitReview() async {
+  void _submitReview() {
     if (!_canSubmit) return;
 
     final category = _selectedCategory;
@@ -68,8 +68,8 @@ class _UserRatingScreenState extends State<UserRatingScreen> {
       return;
     }
 
-    final cubit = context.read<UserReviewCubit>();
-    await cubit.submitReview(
+    // BlocListener handles state changes
+    context.read<UserReviewCubit>().submitReview(
       orderId: widget.orderId,
       toUserId: widget.driverId,
       category: category,
@@ -78,24 +78,6 @@ class _UserRatingScreenState extends State<UserRatingScreen> {
           ? _commentController.text.trim()
           : null,
     );
-
-    if (!mounted) return;
-
-    final state = cubit.state;
-    if (state.submittedReview.isSuccess) {
-      context.showMyToast(
-        context.l10n.text_thank_you_for_review,
-        type: ToastType.success,
-      );
-      // Pop back to previous screen
-      context.pop(true);
-    } else if (state.submittedReview.isFailure) {
-      context.showMyToast(
-        state.submittedReview.error?.message ??
-            context.l10n.toast_failed_submit_review,
-        type: ToastType.failed,
-      );
-    }
   }
 
   @override
@@ -103,8 +85,17 @@ class _UserRatingScreenState extends State<UserRatingScreen> {
     return MyScaffold(
       headers: [DefaultAppBar(title: context.l10n.rate_your_driver)],
       body: BlocListener<UserReviewCubit, UserReviewState>(
+        listenWhen: (previous, current) =>
+            previous.submittedReview != current.submittedReview,
         listener: (context, state) {
-          if (state.submittedReview.isFailure) {
+          if (state.submittedReview.isSuccess) {
+            context.showMyToast(
+              context.l10n.text_thank_you_for_review,
+              type: ToastType.success,
+            );
+            // Pop back to previous screen
+            context.pop(true);
+          } else if (state.submittedReview.isFailure) {
             context.showMyToast(
               state.submittedReview.error?.message ??
                   context.l10n.toast_failed_submit_review,

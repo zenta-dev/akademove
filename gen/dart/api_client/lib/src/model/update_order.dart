@@ -31,6 +31,8 @@ class UpdateOrder {
      this.merchantId,
      this.type,
      this.status,
+     this.pickupAddress,
+     this.dropoffAddress,
      this.distanceKm,
      this.tip,
      this.totalPrice,
@@ -67,6 +69,12 @@ class UpdateOrder {
   
   @JsonKey(name: r'status', required: false, includeIfNull: false)
   final OrderStatus? status;
+  
+  @JsonKey(name: r'pickupAddress', required: false, includeIfNull: false)
+  final String? pickupAddress;
+  
+  @JsonKey(name: r'dropoffAddress', required: false, includeIfNull: false)
+  final String? dropoffAddress;
   
   @JsonKey(name: r'distanceKm', required: false, includeIfNull: false)
   final num? distanceKm;
@@ -148,6 +156,8 @@ class UpdateOrder {
     other.merchantId == merchantId &&
     other.type == type &&
     other.status == status &&
+    other.pickupAddress == pickupAddress &&
+    other.dropoffAddress == dropoffAddress &&
     other.distanceKm == distanceKm &&
     other.tip == tip &&
     other.totalPrice == totalPrice &&
@@ -179,6 +189,8 @@ class UpdateOrder {
       merchantId.hashCode +
       type.hashCode +
       status.hashCode +
+      pickupAddress.hashCode +
+      dropoffAddress.hashCode +
       distanceKm.hashCode +
       tip.hashCode +
       totalPrice.hashCode +

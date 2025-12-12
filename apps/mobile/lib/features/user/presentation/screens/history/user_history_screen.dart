@@ -126,7 +126,7 @@ class UserOrderCardWidget extends StatelessWidget {
       case OrderType.DELIVERY:
         context.pushNamed(Routes.userDeliveryOnTrip.name);
       case OrderType.FOOD:
-        context.pushNamed(Routes.userFoodOnTrip.name);
+        context.pushNamed(Routes.userMartOnTrip.name);
     }
   }
 

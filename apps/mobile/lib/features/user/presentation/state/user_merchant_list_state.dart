@@ -12,7 +12,10 @@ class UserMerchantListState extends Equatable {
   /// Current search query
   final String searchQuery;
 
-  bool get isEmpty => merchants.value == null || merchants.value!.isEmpty;
+  bool get isEmpty {
+    final value = merchants.value;
+    return value == null || value.isEmpty;
+  }
 
   @override
   List<Object> get props => [merchants, searchQuery];

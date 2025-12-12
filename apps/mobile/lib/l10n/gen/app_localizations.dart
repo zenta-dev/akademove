@@ -7026,6 +7026,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'View Trip'**
   String get view_active_order;
+
+  /// No description provided for @title_select_pickup_location.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Pickup Location'**
+  String get title_select_pickup_location;
+
+  /// No description provided for @title_select_dropoff_location.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Dropoff Location'**
+  String get title_select_dropoff_location;
+
+  /// No description provided for @button_confirm_location.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Location'**
+  String get button_confirm_location;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

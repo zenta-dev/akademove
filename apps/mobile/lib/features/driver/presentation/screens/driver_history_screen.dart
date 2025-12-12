@@ -270,7 +270,7 @@ class _DriverHistoryScreenState extends State<DriverHistoryScreen> {
                 _buildStatusBadge(statusText, statusColor),
                 const Spacer(),
                 Text(
-                  DateFormat('MMM dd, yyyy').format(order.createdAt),
+                  DateFormat('MMM dd, yyyy').format(order.createdAt.toLocal()),
                   style: context.typography.small.copyWith(
                     fontSize: 12.sp,
                     color: context.colorScheme.mutedForeground,
@@ -310,14 +310,16 @@ class _DriverHistoryScreenState extends State<DriverHistoryScreen> {
                     spacing: 8.h,
                     children: [
                       Text(
-                        '${order.pickupLocation.y.toStringAsFixed(4)}, ${order.pickupLocation.x.toStringAsFixed(4)}',
+                        order.pickupAddress ??
+                            '${order.pickupLocation.y.toStringAsFixed(4)}, ${order.pickupLocation.x.toStringAsFixed(4)}',
                         style: context.typography.p.copyWith(fontSize: 14.sp),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
                       SizedBox(height: 12.h),
                       Text(
-                        '${order.dropoffLocation.y.toStringAsFixed(4)}, ${order.dropoffLocation.x.toStringAsFixed(4)}',
+                        order.dropoffAddress ??
+                            '${order.dropoffLocation.y.toStringAsFixed(4)}, ${order.dropoffLocation.x.toStringAsFixed(4)}',
                         style: context.typography.p.copyWith(fontSize: 14.sp),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,

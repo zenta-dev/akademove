@@ -7,6 +7,7 @@ import 'package:api_client/api_client.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 
 class MerchantOrderDetailScreen extends StatefulWidget {
@@ -80,7 +81,7 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
     await context.read<MerchantOrderCubit>().unsubscribeFromOrder();
   }
 
-  Future<void> _handleAcceptOrder() async {
+  void _handleAcceptOrder() async {
     if (_isProcessing) return;
 
     final merchantId = _merchantId;
@@ -113,36 +114,15 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
     if (confirmed == true && mounted) {
       setState(() => _isProcessing = true);
 
-      await context.read<MerchantOrderCubit>().acceptOrder(
+      // Just trigger the cubit action - response handling is done via BlocListener
+      context.read<MerchantOrderCubit>().acceptOrder(
         merchantId: merchantId,
         orderId: _currentOrder.id,
       );
-
-      if (mounted) {
-        setState(() => _isProcessing = false);
-
-        final cubitState = context.read<MerchantOrderCubit>().state;
-        if (cubitState.order.isSuccess) {
-          final selected = cubitState.order.value;
-          if (selected != null) {
-            setState(() => _currentOrder = selected);
-            context.showMyToast(
-              cubitState.order.message ?? context.l10n.toast_order_accepted,
-              type: ToastType.success,
-            );
-          }
-        } else if (cubitState.order.isFailure) {
-          context.showMyToast(
-            cubitState.order.error?.message ??
-                context.l10n.toast_failed_accept_order,
-            type: ToastType.failed,
-          );
-        }
-      }
     }
   }
 
-  Future<void> _handleRejectOrder() async {
+  void _handleRejectOrder() async {
     if (_isProcessing) return;
 
     final merchantId = _merchantId;
@@ -159,36 +139,17 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
     if (result != null && mounted) {
       setState(() => _isProcessing = true);
 
-      await context.read<MerchantOrderCubit>().rejectOrder(
+      // Just trigger the cubit action - response handling is done via BlocListener
+      context.read<MerchantOrderCubit>().rejectOrder(
         merchantId: merchantId,
         orderId: _currentOrder.id,
         reason: result['reason'] as String,
         note: result['note'] as String?,
       );
-
-      if (mounted) {
-        setState(() => _isProcessing = false);
-
-        final cubitState = context.read<MerchantOrderCubit>().state;
-        if (cubitState.order.isSuccess) {
-          context.showMyToast(
-            cubitState.order.message ??
-                context.l10n.toast_order_rejected_success,
-            type: ToastType.success,
-          );
-          context.pop(); // Go back to order list
-        } else if (cubitState.order.isFailure) {
-          context.showMyToast(
-            cubitState.order.error?.message ??
-                context.l10n.toast_failed_reject_order,
-            type: ToastType.failed,
-          );
-        }
-      }
     }
   }
 
-  Future<void> _handleMarkPreparing() async {
+  void _handleMarkPreparing() {
     if (_isProcessing) return;
 
     final merchantId = _merchantId;
@@ -202,36 +163,14 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
 
     setState(() => _isProcessing = true);
 
-    await context.read<MerchantOrderCubit>().markPreparing(
+    // Just trigger the cubit action - response handling is done via BlocListener
+    context.read<MerchantOrderCubit>().markPreparing(
       merchantId: merchantId,
       orderId: _currentOrder.id,
     );
-
-    if (mounted) {
-      setState(() => _isProcessing = false);
-
-      final cubitState = context.read<MerchantOrderCubit>().state;
-      if (cubitState.order.isSuccess) {
-        final selected = cubitState.order.value;
-        if (selected != null) {
-          setState(() => _currentOrder = selected);
-          context.showMyToast(
-            cubitState.order.message ??
-                context.l10n.toast_order_marked_preparing,
-            type: ToastType.success,
-          );
-        }
-      } else if (cubitState.order.isFailure) {
-        context.showMyToast(
-          cubitState.order.error?.message ??
-              context.l10n.toast_failed_update_order,
-          type: ToastType.failed,
-        );
-      }
-    }
   }
 
-  Future<void> _handleMarkReady() async {
+  void _handleMarkReady() {
     if (_isProcessing) return;
 
     final merchantId = _merchantId;
@@ -245,32 +184,11 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
 
     setState(() => _isProcessing = true);
 
-    await context.read<MerchantOrderCubit>().markReady(
+    // Just trigger the cubit action - response handling is done via BlocListener
+    context.read<MerchantOrderCubit>().markReady(
       merchantId: merchantId,
       orderId: _currentOrder.id,
     );
-
-    if (mounted) {
-      setState(() => _isProcessing = false);
-
-      final cubitState = context.read<MerchantOrderCubit>().state;
-      if (cubitState.order.isSuccess) {
-        final selected = cubitState.order.value;
-        if (selected != null) {
-          setState(() => _currentOrder = selected);
-          context.showMyToast(
-            cubitState.order.message ?? context.l10n.toast_order_marked_ready,
-            type: ToastType.success,
-          );
-        }
-      } else if (cubitState.order.isFailure) {
-        context.showMyToast(
-          cubitState.order.error?.message ??
-              context.l10n.toast_failed_update_order,
-          type: ToastType.failed,
-        );
-      }
-    }
   }
 
   Widget _buildCustomerInfo(BuildContext context) {
@@ -521,7 +439,9 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
                 ),
               ),
               Text(
-                _currentOrder.requestedAt.toString().substring(0, 16),
+                DateFormat(
+                  'yyyy-MM-dd HH:mm',
+                ).format(_currentOrder.requestedAt.toLocal()),
                 style: context.typography.small.copyWith(
                   fontSize: 14.sp,
                   fontWeight: FontWeight.w500,
@@ -670,19 +590,45 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocListener<MerchantOrderCubit, MerchantOrderState>(
+      listenWhen: (previous, current) => previous.order != current.order,
       listener: (context, state) {
-        // Update current order when state changes (from WebSocket or actions)
-        final selectedOrder = state.order.value;
-        if (selectedOrder != null && selectedOrder.id == _currentOrder.id) {
-          setState(() {
-            _currentOrder = selectedOrder;
-          });
+        // Handle loading state end
+        if (!state.order.isLoading && _isProcessing) {
+          setState(() => _isProcessing = false);
+        }
 
-          // Show toast for important events
-          final message = state.order.message;
-          if (message != null && message.isNotEmpty) {
-            context.showMyToast(message, type: ToastType.success);
+        // Handle success
+        if (state.order.isSuccess) {
+          final selectedOrder = state.order.value;
+          if (selectedOrder != null && selectedOrder.id == _currentOrder.id) {
+            // Check if order was rejected (status changed to cancelled by merchant)
+            final wasRejected =
+                _currentOrder.status != selectedOrder.status &&
+                selectedOrder.status == OrderStatus.CANCELLED_BY_MERCHANT;
+
+            setState(() {
+              _currentOrder = selectedOrder;
+            });
+
+            // Show toast for important events
+            final message = state.order.message;
+            if (message != null && message.isNotEmpty) {
+              context.showMyToast(message, type: ToastType.success);
+            }
+
+            // Navigate back if order was rejected
+            if (wasRejected) {
+              context.pop();
+            }
           }
+        }
+
+        // Handle failure
+        if (state.order.isFailure) {
+          context.showMyToast(
+            state.order.error?.message ?? context.l10n.an_error_occurred,
+            type: ToastType.failed,
+          );
         }
       },
       child: Stack(

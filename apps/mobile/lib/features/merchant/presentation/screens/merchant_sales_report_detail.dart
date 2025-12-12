@@ -35,44 +35,17 @@ class _MerchantSalesReportDetailScreenState
     context.read<MerchantAnalyticsCubit>().getMonthlyAnalytics();
   }
 
-  Future<void> _handleExport() async {
+  void _handleExport() {
     setState(() => _isExporting = true);
 
     final now = DateTime.now();
     final startOfMonth = DateTime(now.year, now.month, 1);
 
-    await context.read<MerchantAnalyticsCubit>().exportAnalytics(
+    // Just trigger the cubit action - response handling is done via BlocListener
+    context.read<MerchantAnalyticsCubit>().exportAnalytics(
       startDate: startOfMonth,
       endDate: now,
     );
-
-    if (!mounted) return;
-
-    final state = context.read<MerchantAnalyticsCubit>().state;
-    setState(() => _isExporting = false);
-
-    if (state.exportResult.isSuccess) {
-      showToast(
-        context: context,
-        builder: (context, overlay) => context.buildToast(
-          title: context.l10n.success,
-          message: context.l10n.toast_success,
-        ),
-        location: ToastLocation.topCenter,
-      );
-      context.read<MerchantAnalyticsCubit>().clearExportResult();
-    } else if (state.exportResult.isFailed) {
-      showToast(
-        context: context,
-        builder: (context, overlay) => context.buildToast(
-          title: context.l10n.error,
-          message:
-              state.exportResult.error?.message ??
-              context.l10n.an_error_occurred,
-        ),
-        location: ToastLocation.topCenter,
-      );
-    }
   }
 
   Widget _buildSalesGauge({
@@ -375,7 +348,42 @@ class _MerchantSalesReportDetailScreenState
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<MerchantAnalyticsCubit, MerchantAnalyticsState>(
+    return BlocConsumer<MerchantAnalyticsCubit, MerchantAnalyticsState>(
+      listenWhen: (previous, current) =>
+          previous.exportResult != current.exportResult,
+      listener: (context, state) {
+        // Handle loading state end
+        if (!state.exportResult.isLoading && _isExporting) {
+          setState(() => _isExporting = false);
+        }
+
+        // Handle success
+        if (state.exportResult.isSuccess) {
+          showToast(
+            context: context,
+            builder: (context, overlay) => context.buildToast(
+              title: context.l10n.success,
+              message: context.l10n.toast_success,
+            ),
+            location: ToastLocation.topCenter,
+          );
+          context.read<MerchantAnalyticsCubit>().clearExportResult();
+        }
+
+        // Handle failure
+        if (state.exportResult.isFailed) {
+          showToast(
+            context: context,
+            builder: (context, overlay) => context.buildToast(
+              title: context.l10n.error,
+              message:
+                  state.exportResult.error?.message ??
+                  context.l10n.an_error_occurred,
+            ),
+            location: ToastLocation.topCenter,
+          );
+        }
+      },
       builder: (context, state) {
         final isLoading = state.analytics.isLoading;
         final analytics = state.analytics.value;

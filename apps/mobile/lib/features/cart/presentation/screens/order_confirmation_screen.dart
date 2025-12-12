@@ -4,8 +4,8 @@ import 'package:akademove/features/cart/data/models/cart_models.dart'
     show Cart, CartItem;
 import 'package:akademove/features/cart/presentation/cubits/cart_cubit.dart';
 import 'package:akademove/features/cart/presentation/states/_export.dart';
-import 'package:akademove/features/order/presentation/cubits/_export.dart';
 import 'package:akademove/features/user/presentation/cubits/_export.dart';
+import 'package:akademove/features/user/presentation/widgets/pick_location_widget.dart';
 import 'package:akademove/l10n/l10n.dart';
 import 'package:api_client/api_client.dart' hide Cart, CartItem;
 import 'package:cached_network_image/cached_network_image.dart';
@@ -25,6 +25,56 @@ class OrderConfirmationScreen extends StatefulWidget {
 
 class _OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
   PaymentMethod _selectedPaymentMethod = PaymentMethod.wallet;
+  Place? _deliveryLocation;
+
+  @override
+  void initState() {
+    super.initState();
+    _initDeliveryLocation();
+  }
+
+  void _initDeliveryLocation() {
+    // Initialize delivery location from user's current location
+    final userLocationCubit = context.read<UserLocationCubit>();
+    final coordinate = userLocationCubit.state.coordinate;
+    final placemark = userLocationCubit.state.placemark;
+
+    if (coordinate != null) {
+      _deliveryLocation = Place(
+        name: placemark?.name ?? 'Current Location',
+        vicinity: placemark?.street ?? 'Your current location',
+        lat: coordinate.y.toDouble(),
+        lng: coordinate.x.toDouble(),
+        icon: '',
+      );
+    }
+  }
+
+  Future<void> _selectDeliveryLocation() async {
+    final currentLocation = _deliveryLocation;
+    Coordinate? initialLocation;
+
+    if (currentLocation != null) {
+      initialLocation = Coordinate(
+        x: currentLocation.lng,
+        y: currentLocation.lat,
+      );
+    }
+
+    final result = await context.pushNamed<Place>(
+      Routes.userMapPicker.name,
+      extra: {
+        'locationType': LocationType.dropoff,
+        'initialLocation': initialLocation,
+      },
+    );
+
+    if (result != null && mounted) {
+      setState(() {
+        _deliveryLocation = result;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,12 +112,12 @@ class _OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
             );
 
             // Recover active order to setup WebSocket and state in UserOrderCubit
-            // await context.read<UserOrderCubit>().recoverActiveOrder();
+            await context.read<UserOrderCubit>().recoverActiveOrder();
 
-            // // Navigate to food order tracking screen
-            // if (context.mounted) {
-            //   context.go(Routes.userFoodOnTrip.path);
-            // }
+            // Navigate to mart order tracking screen
+            if (context.mounted) {
+              context.go(Routes.userMartOnTrip.path);
+            }
           } else if (state.placeFoodOrderResult.isFailed) {
             final error = state.placeFoodOrderResult.error;
             showToast(
@@ -104,6 +154,8 @@ class _OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                _buildDeliveryLocationSection(context),
+                Divider(height: 1, color: context.colorScheme.border),
                 _buildOrderSummarySection(context, cart),
                 Divider(height: 1, color: context.colorScheme.border),
                 _buildPaymentMethodSection(context),
@@ -115,6 +167,87 @@ class _OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
         ),
         _buildBottomBar(context, cart, state),
       ],
+    );
+  }
+
+  Widget _buildDeliveryLocationSection(BuildContext context) {
+    final mutedColor = context.colorScheme.mutedForeground;
+    final location = _deliveryLocation;
+
+    return Padding(
+      padding: EdgeInsets.all(16.dg),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            context.l10n.destination,
+            style: context.typography.h4.copyWith(fontSize: 16.sp),
+          ),
+          Gap(12.h),
+          GestureDetector(
+            onTap: _selectDeliveryLocation,
+            child: Container(
+              padding: EdgeInsets.all(12.dg),
+              decoration: BoxDecoration(
+                border: Border.all(color: context.colorScheme.border),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Row(
+                children: [
+                  Container(
+                    padding: EdgeInsets.all(8.dg),
+                    decoration: BoxDecoration(
+                      color: context.colorScheme.destructive.withValues(
+                        alpha: 0.1,
+                      ),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Icon(
+                      LucideIcons.mapPin,
+                      size: 20.sp,
+                      color: context.colorScheme.destructive,
+                    ),
+                  ),
+                  Gap(12.w),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          location?.name ?? context.l10n.dropoff_location,
+                          style: context.typography.semiBold.copyWith(
+                            fontSize: 14.sp,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        if (location?.vicinity != null) ...[
+                          Gap(2.h),
+                          Text(
+                            location!.vicinity,
+                            style: TextStyle(
+                              fontSize: 12.sp,
+                              color: mutedColor.withValues(alpha: 0.6),
+                            ),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
+                  Gap(8.w),
+                  Icon(
+                    LucideIcons.chevronRight,
+                    size: 20.sp,
+                    color: mutedColor,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -467,9 +600,13 @@ class _OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
     final userLocation = userLocationCubit.state.coordinate;
 
     // Pickup location = merchant location (where food is prepared)
-    // Dropoff location = user's current location (where food is delivered)
     final pickupLocation = cart.merchantLocation ?? userLocation;
-    final dropoffLocation = userLocation;
+
+    // Dropoff location = user's selected delivery location (where food is delivered)
+    final deliveryPlace = _deliveryLocation;
+    final dropoffLocation = deliveryPlace != null
+        ? Coordinate(x: deliveryPlace.lng, y: deliveryPlace.lat)
+        : userLocation;
 
     if (pickupLocation == null || dropoffLocation == null) {
       showToast(
@@ -478,6 +615,19 @@ class _OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
           title: context.l10n.order_confirm_failed,
           message:
               'Unable to determine location. Please enable location services.',
+        ),
+        location: ToastLocation.topCenter,
+      );
+      return;
+    }
+
+    // Validate that delivery location is set
+    if (_deliveryLocation == null) {
+      showToast(
+        context: context,
+        builder: (ctx, overlay) => ctx.buildToast(
+          title: context.l10n.order_confirm_failed,
+          message: context.l10n.pickup_and_dropoff_must_be_set,
         ),
         location: ToastLocation.topCenter,
       );

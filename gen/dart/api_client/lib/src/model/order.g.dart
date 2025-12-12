@@ -23,6 +23,10 @@ abstract class _$OrderCWProxy {
 
   Order dropoffLocation(Coordinate dropoffLocation);
 
+  Order pickupAddress(String? pickupAddress);
+
+  Order dropoffAddress(String? dropoffAddress);
+
   Order distanceKm(num distanceKm);
 
   Order basePrice(num basePrice);
@@ -103,6 +107,8 @@ abstract class _$OrderCWProxy {
     OrderStatus status,
     Coordinate pickupLocation,
     Coordinate dropoffLocation,
+    String? pickupAddress,
+    String? dropoffAddress,
     num distanceKm,
     num basePrice,
     num? tip,
@@ -170,6 +176,14 @@ class _$OrderCWProxyImpl implements _$OrderCWProxy {
   @override
   Order dropoffLocation(Coordinate dropoffLocation) =>
       call(dropoffLocation: dropoffLocation);
+
+  @override
+  Order pickupAddress(String? pickupAddress) =>
+      call(pickupAddress: pickupAddress);
+
+  @override
+  Order dropoffAddress(String? dropoffAddress) =>
+      call(dropoffAddress: dropoffAddress);
 
   @override
   Order distanceKm(num distanceKm) => call(distanceKm: distanceKm);
@@ -292,6 +306,8 @@ class _$OrderCWProxyImpl implements _$OrderCWProxy {
     Object? status = const $CopyWithPlaceholder(),
     Object? pickupLocation = const $CopyWithPlaceholder(),
     Object? dropoffLocation = const $CopyWithPlaceholder(),
+    Object? pickupAddress = const $CopyWithPlaceholder(),
+    Object? dropoffAddress = const $CopyWithPlaceholder(),
     Object? distanceKm = const $CopyWithPlaceholder(),
     Object? basePrice = const $CopyWithPlaceholder(),
     Object? tip = const $CopyWithPlaceholder(),
@@ -362,6 +378,14 @@ class _$OrderCWProxyImpl implements _$OrderCWProxy {
           ? _value.dropoffLocation
           // ignore: cast_nullable_to_non_nullable
           : dropoffLocation as Coordinate,
+      pickupAddress: pickupAddress == const $CopyWithPlaceholder()
+          ? _value.pickupAddress
+          // ignore: cast_nullable_to_non_nullable
+          : pickupAddress as String?,
+      dropoffAddress: dropoffAddress == const $CopyWithPlaceholder()
+          ? _value.dropoffAddress
+          // ignore: cast_nullable_to_non_nullable
+          : dropoffAddress as String?,
       distanceKm:
           distanceKm == const $CopyWithPlaceholder() || distanceKm == null
           ? _value.distanceKm
@@ -546,6 +570,8 @@ Order _$OrderFromJson(
       'dropoffLocation',
       (v) => Coordinate.fromJson(v as Map<String, dynamic>),
     ),
+    pickupAddress: $checkedConvert('pickupAddress', (v) => v as String?),
+    dropoffAddress: $checkedConvert('dropoffAddress', (v) => v as String?),
     distanceKm: $checkedConvert('distanceKm', (v) => v as num),
     basePrice: $checkedConvert('basePrice', (v) => v as num),
     tip: $checkedConvert('tip', (v) => v as num?),
@@ -645,6 +671,8 @@ Map<String, dynamic> _$OrderToJson(Order instance) => <String, dynamic>{
   'status': _$OrderStatusEnumMap[instance.status]!,
   'pickupLocation': instance.pickupLocation.toJson(),
   'dropoffLocation': instance.dropoffLocation.toJson(),
+  'pickupAddress': ?instance.pickupAddress,
+  'dropoffAddress': ?instance.dropoffAddress,
   'distanceKm': instance.distanceKm,
   'basePrice': instance.basePrice,
   'tip': ?instance.tip,

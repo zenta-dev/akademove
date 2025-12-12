@@ -17,8 +17,10 @@ class UserMerchantDetailState extends Equatable {
   /// Warning message for stock decreases
   final String? warningToast;
 
-  bool get isEmpty =>
-      menuByCategory.value == null || menuByCategory.value!.isEmpty;
+  bool get isEmpty {
+    final value = menuByCategory.value;
+    return value == null || value.isEmpty;
+  }
 
   @override
   List<Object?> get props => [merchant, menuByCategory, warningToast];

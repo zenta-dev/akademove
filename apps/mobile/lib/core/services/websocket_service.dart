@@ -36,7 +36,7 @@ class WebSocketService with WidgetsBindingObserver {
   }
 
   final Map<String, WebSocketChannel> _connections = {};
-  final Map<String, StreamSubscription<dynamic>> _subscriptions = {};
+  final Map<String, StreamSubscription<Object?>> _subscriptions = {};
   final Map<String, _ConnectionConfig> _configs = {};
   final Map<String, Timer> _reconnectTimers = {};
   final Map<String, int> _reconnectAttempts = {};
@@ -114,7 +114,7 @@ class WebSocketService with WidgetsBindingObserver {
   Future<void> connect(
     String key,
     String url, {
-    void Function(dynamic msg)? onMessage,
+    void Function(Object? msg)? onMessage,
     void Function()? onDone,
     void Function(Object error)? onError,
     bool autoReconnect = true,
@@ -329,7 +329,7 @@ class WebSocketService with WidgetsBindingObserver {
     }
   }
 
-  Stream<dynamic>? stream(String key) => _connections[key]?.stream;
+  Stream<Object?>? stream(String key) => _connections[key]?.stream;
 
   bool isConnected(String key) => _connections.containsKey(key);
 
@@ -455,7 +455,7 @@ class _ConnectionConfig {
   });
 
   final String url;
-  final void Function(dynamic)? onMessage;
+  final void Function(Object?)? onMessage;
   final void Function()? onDone;
   final void Function(Object error)? onError;
   final bool autoReconnect;

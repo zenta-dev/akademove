@@ -26,6 +26,9 @@ abstract class MapService extends BaseService {
     Coordinate origin,
     Coordinate destination,
   );
+
+  /// Reverse geocodes a coordinate to get a Place with address information.
+  Future<Place> reverseGeocode(Coordinate coordinate);
 }
 
 class IMapService implements MapService {
@@ -290,6 +293,73 @@ class IMapService implements MapService {
         cos(lat1Rad) * cos(lat2Rad) * sin(dLon / 2) * sin(dLon / 2);
 
     return _earthRadiusMeters * 2 * atan2(sqrt(a), sqrt(1 - a));
+  }
+
+  // ---------------------------------------------------------------------------
+  // Reverse Geocoding
+  // ---------------------------------------------------------------------------
+
+  @override
+  Future<Place> reverseGeocode(Coordinate coordinate) async {
+    final params = {
+      'latlng': '${coordinate.y},${coordinate.x}',
+      'key': _apiKey,
+      'result_type': 'street_address|route|premise|point_of_interest',
+    };
+
+    try {
+      final data = await _getValidatedJson('/geocode/json', params);
+      final results = (data['results'] as List?) ?? [];
+
+      if (results.isEmpty) {
+        // Return a fallback place with coordinates
+        return Place(
+          name: 'Selected location',
+          vicinity:
+              '${coordinate.y.toStringAsFixed(6)}, ${coordinate.x.toStringAsFixed(6)}',
+          lat: coordinate.y.toDouble(),
+          lng: coordinate.x.toDouble(),
+          icon: '',
+        );
+      }
+
+      final result = results.first as Map<String, dynamic>;
+      final formattedAddress = result['formatted_address'] as String? ?? '';
+      final geometry = result['geometry']?['location'];
+      final addressComponents =
+          (result['address_components'] as List?)
+              ?.cast<Map<String, dynamic>>() ??
+          [];
+
+      // Try to get a meaningful name from address components
+      String name = 'Selected location';
+      for (final component in addressComponents) {
+        final types = (component['types'] as List?)?.cast<String>() ?? [];
+        if (types.contains('point_of_interest') ||
+            types.contains('establishment') ||
+            types.contains('premise')) {
+          name = component['long_name'] as String? ?? name;
+          break;
+        }
+        if (types.contains('route') || types.contains('street_address')) {
+          name = component['long_name'] as String? ?? name;
+          // Continue looking for better names
+        }
+      }
+
+      return Place(
+        name: name,
+        vicinity: formattedAddress,
+        lat: (geometry?['lat'] as num?)?.toDouble() ?? coordinate.y.toDouble(),
+        lng: (geometry?['lng'] as num?)?.toDouble() ?? coordinate.x.toDouble(),
+        icon: '',
+      );
+    } catch (e) {
+      throw ServiceError(
+        'Failed to reverse geocode: $e',
+        code: ErrorCode.unknown,
+      );
+    }
   }
 }
 

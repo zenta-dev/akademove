@@ -24,6 +24,7 @@ class _UserWalletTopUpInsertAmountScreenState
   late TextEditingController amountController;
   int amount = 0;
   BankProvider? selectedBankProvider;
+  bool _isSubmitting = false;
 
   @override
   void initState() {
@@ -46,134 +47,143 @@ class _UserWalletTopUpInsertAmountScreenState
     return true;
   }
 
+  void _handleSubmit() {
+    final parsed = int.tryParse(amountController.text, radix: 10);
+    setState(() {
+      if (parsed != null) {
+        amount = parsed;
+      } else {
+        amount = 0;
+      }
+    });
+
+    if (parsed == null || amount < 10_000) {
+      context.showMyToast(
+        context.l10n.error_top_up_minimum,
+        type: ToastType.failed,
+      );
+      return;
+    }
+
+    setState(() => _isSubmitting = true);
+    context.read<UserWalletTopUpCubit>().reset();
+    context.read<UserWalletTopUpCubit>().topUp(
+      parsed,
+      widget.method,
+      bankProvider: selectedBankProvider,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return MyScaffold(
-      headers: [
-        DefaultAppBar(
-          title: _isBankTransfer
-              ? context.l10n.payment_method_bank_transfer
-              : context.l10n.top_up_qris,
-        ),
-      ],
-      body: Column(
-        spacing: 16.h,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Row(
-            spacing: 16.w,
-            children: [_buildTemplate(10_000), _buildTemplate(20_000)],
-          ),
-          Row(
-            spacing: 16.w,
-            children: [_buildTemplate(50_000), _buildTemplate(100_000)],
-          ),
-          Row(
-            spacing: 16.w,
-            children: [_buildTemplate(500_000), _buildTemplate(1_000_000)],
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            spacing: 4.h,
-            children: [
-              Label(child: DefaultText(context.l10n.amount, fontSize: 14.sp)),
-              TextField(
-                controller: amountController,
-                onChanged: (value) {
-                  final parsed = int.tryParse(value, radix: 10);
-                  amountController.text = '$parsed';
-                  setState(() {
-                    if (parsed != null) {
-                      amount = parsed;
-                    } else {
-                      amount = 0;
-                    }
-                  });
-                },
-                keyboardType: const TextInputType.numberWithOptions(
-                  signed: true,
-                ),
-                textInputAction: TextInputAction.done,
-                features: [
-                  InputFeature.clear(
-                    icon: IconButton(
-                      density: ButtonDensity.compact,
-                      onPressed: amountController.text.isEmpty
-                          ? null
-                          : () {
-                              amountController.text = '';
-                              setState(() {
-                                amount = 0;
-                              });
-                            },
-                      icon: const Icon(LucideIcons.x),
-                      variance: amountController.text.isEmpty
-                          ? const ButtonStyle.ghost()
-                          : const ButtonStyle.textIcon(),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          if (_isBankTransfer) _buildBankProviderSelector(context),
-          BlocBuilder<UserWalletTopUpCubit, UserWalletTopUpState>(
-            builder: (context, state) {
-              final isLoading = state.payment.isLoading;
-              return SizedBox(
-                width: double.infinity,
-                child: Button.primary(
-                  enabled: !isLoading,
-                  onPressed: !_canSubmit || isLoading
-                      ? null
-                      : () async {
-                          final parsed = int.tryParse(
-                            amountController.text,
-                            radix: 10,
-                          );
-                          setState(() {
-                            if (parsed != null) {
-                              amount = parsed;
-                            } else {
-                              amount = 0;
-                            }
-                          });
-                          if (parsed == null || amount < 10_000) {
-                            context.showMyToast(
-                              context.l10n.error_top_up_minimum,
-                              type: ToastType.failed,
-                            );
-                            return;
-                          }
+    return BlocListener<UserWalletTopUpCubit, UserWalletTopUpState>(
+      listener: (context, state) {
+        // Handle success - navigate to appropriate screen
+        if (state.payment.isSuccess && _isSubmitting) {
+          setState(() => _isSubmitting = false);
+          switch (widget.method) {
+            case TopUpRequestMethodEnum.QRIS:
+              context.pushNamed(Routes.userWalletTopUpQRIS.name);
+            case TopUpRequestMethodEnum.BANK_TRANSFER:
+              context.pushNamed(Routes.userWalletTopUpBankTransfer.name);
+          }
+        }
 
-                          context.read<UserWalletTopUpCubit>().reset();
-                          await context.read<UserWalletTopUpCubit>().topUp(
-                            parsed,
-                            widget.method,
-                            bankProvider: selectedBankProvider,
-                          );
-
-                          if (mounted && context.mounted) {
-                            switch (widget.method) {
-                              case TopUpRequestMethodEnum.QRIS:
-                                await context.pushNamed(
-                                  Routes.userWalletTopUpQRIS.name,
-                                );
-                              case TopUpRequestMethodEnum.BANK_TRANSFER:
-                                await context.pushNamed(
-                                  Routes.userWalletTopUpBankTransfer.name,
-                                );
-                            }
-                          }
-                        },
-                  child: isLoading
-                      ? const Submiting()
-                      : DefaultText(context.l10n.next),
-                ),
-              );
-            },
+        // Handle failure
+        if (state.payment.isFailed && _isSubmitting) {
+          setState(() => _isSubmitting = false);
+          context.showMyToast(
+            state.payment.error?.message ?? context.l10n.an_error_occurred,
+            type: ToastType.failed,
+          );
+        }
+      },
+      child: MyScaffold(
+        headers: [
+          DefaultAppBar(
+            title: _isBankTransfer
+                ? context.l10n.payment_method_bank_transfer
+                : context.l10n.top_up_qris,
           ),
         ],
+        body: Column(
+          spacing: 16.h,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              spacing: 16.w,
+              children: [_buildTemplate(10_000), _buildTemplate(20_000)],
+            ),
+            Row(
+              spacing: 16.w,
+              children: [_buildTemplate(50_000), _buildTemplate(100_000)],
+            ),
+            Row(
+              spacing: 16.w,
+              children: [_buildTemplate(500_000), _buildTemplate(1_000_000)],
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              spacing: 4.h,
+              children: [
+                Label(child: DefaultText(context.l10n.amount, fontSize: 14.sp)),
+                TextField(
+                  controller: amountController,
+                  onChanged: (value) {
+                    final parsed = int.tryParse(value, radix: 10);
+                    amountController.text = '$parsed';
+                    setState(() {
+                      if (parsed != null) {
+                        amount = parsed;
+                      } else {
+                        amount = 0;
+                      }
+                    });
+                  },
+                  keyboardType: const TextInputType.numberWithOptions(
+                    signed: true,
+                  ),
+                  textInputAction: TextInputAction.done,
+                  features: [
+                    InputFeature.clear(
+                      icon: IconButton(
+                        density: ButtonDensity.compact,
+                        onPressed: amountController.text.isEmpty
+                            ? null
+                            : () {
+                                amountController.text = '';
+                                setState(() {
+                                  amount = 0;
+                                });
+                              },
+                        icon: const Icon(LucideIcons.x),
+                        variance: amountController.text.isEmpty
+                            ? const ButtonStyle.ghost()
+                            : const ButtonStyle.textIcon(),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            if (_isBankTransfer) _buildBankProviderSelector(context),
+            BlocBuilder<UserWalletTopUpCubit, UserWalletTopUpState>(
+              builder: (context, state) {
+                final isLoading = state.payment.isLoading || _isSubmitting;
+                return SizedBox(
+                  width: double.infinity,
+                  child: Button.primary(
+                    enabled: !isLoading,
+                    onPressed: !_canSubmit || isLoading ? null : _handleSubmit,
+                    child: isLoading
+                        ? const Submiting()
+                        : DefaultText(context.l10n.next),
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
       ),
     );
   }

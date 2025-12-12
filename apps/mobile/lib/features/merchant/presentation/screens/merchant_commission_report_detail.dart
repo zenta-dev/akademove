@@ -1,11 +1,9 @@
-import 'package:akademove/app/router/router.dart';
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/l10n/l10n.dart';
 import 'package:flutter/material.dart' show RefreshIndicator;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 import 'package:syncfusion_flutter_charts/charts.dart' as charts;
@@ -35,44 +33,17 @@ class _MerchantCommissionReportDetailScreenState
     context.read<MerchantAnalyticsCubit>().getMonthlyAnalytics();
   }
 
-  Future<void> _handleExport() async {
+  void _handleExport() {
     setState(() => _isExporting = true);
 
     final now = DateTime.now();
     final startOfMonth = DateTime(now.year, now.month, 1);
 
-    await context.read<MerchantAnalyticsCubit>().exportAnalytics(
+    // Just trigger the cubit action - response handling is done via BlocListener
+    context.read<MerchantAnalyticsCubit>().exportAnalytics(
       startDate: startOfMonth,
       endDate: now,
     );
-
-    if (!mounted) return;
-
-    final state = context.read<MerchantAnalyticsCubit>().state;
-    setState(() => _isExporting = false);
-
-    if (state.exportResult.isSuccess) {
-      showToast(
-        context: context,
-        builder: (context, overlay) => context.buildToast(
-          title: context.l10n.success,
-          message: context.l10n.toast_success,
-        ),
-        location: ToastLocation.topCenter,
-      );
-      context.read<MerchantAnalyticsCubit>().clearExportResult();
-    } else if (state.exportResult.isFailed) {
-      showToast(
-        context: context,
-        builder: (context, overlay) => context.buildToast(
-          title: context.l10n.error,
-          message:
-              state.exportResult.error?.message ??
-              context.l10n.an_error_occurred,
-        ),
-        location: ToastLocation.topCenter,
-      );
-    }
   }
 
   Widget _buildBalanceCards(
@@ -364,7 +335,42 @@ class _MerchantCommissionReportDetailScreenState
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<MerchantAnalyticsCubit, MerchantAnalyticsState>(
+    return BlocConsumer<MerchantAnalyticsCubit, MerchantAnalyticsState>(
+      listenWhen: (previous, current) =>
+          previous.exportResult != current.exportResult,
+      listener: (context, state) {
+        // Handle loading state end
+        if (!state.exportResult.isLoading && _isExporting) {
+          setState(() => _isExporting = false);
+        }
+
+        // Handle success
+        if (state.exportResult.isSuccess) {
+          showToast(
+            context: context,
+            builder: (context, overlay) => context.buildToast(
+              title: context.l10n.success,
+              message: context.l10n.toast_success,
+            ),
+            location: ToastLocation.topCenter,
+          );
+          context.read<MerchantAnalyticsCubit>().clearExportResult();
+        }
+
+        // Handle failure
+        if (state.exportResult.isFailed) {
+          showToast(
+            context: context,
+            builder: (context, overlay) => context.buildToast(
+              title: context.l10n.error,
+              message:
+                  state.exportResult.error?.message ??
+                  context.l10n.an_error_occurred,
+            ),
+            location: ToastLocation.topCenter,
+          );
+        }
+      },
       builder: (context, state) {
         final isLoading = state.analytics.isLoading;
         final totalRevenue = state.totalRevenue;
@@ -430,20 +436,20 @@ class _MerchantCommissionReportDetailScreenState
                   ),
                   child: Row(
                     children: [
-                      Expanded(
-                        child: Button.outline(
-                          onPressed: () {
-                            context.push(Routes.merchantWalletWithdraw.path);
-                          },
-                          child: Text(
-                            context.l10n.withdrawal,
-                            style: context.typography.small.copyWith(
-                              fontSize: 16.sp,
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(width: 12.w),
+                      // Expanded(
+                      //   child: Button.outline(
+                      //     onPressed: () {
+                      //       context.push(Routes.merchantWalletWithdraw.path);
+                      //     },
+                      //     child: Text(
+                      //       context.l10n.withdrawal,
+                      //       style: context.typography.small.copyWith(
+                      //         fontSize: 16.sp,
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ),
+                      // SizedBox(width: 12.w),
                       Expanded(
                         child: Button.primary(
                           onPressed: _isExporting ? null : _handleExport,

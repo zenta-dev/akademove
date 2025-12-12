@@ -30,6 +30,9 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
   /// Faster polling interval when WebSocket is unhealthy
   static const int _fastPollingIntervalSeconds = 3;
 
+  /// Critical polling interval during MATCHING status for faster driver acceptance detection
+  static const int _criticalPollingIntervalSeconds = 2;
+
   /// Whether we're using polling as a fallback due to WebSocket issues
   bool _isPollingFallback = false;
 
@@ -514,6 +517,34 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
           }
         }
 
+        // Handle driver accepted event - driver has accepted the order
+        // This provides instant UI update when a driver accepts
+        if (data.e == OrderEnvelopeEvent.DRIVER_ACCEPTED) {
+          final detail = data.p.detail;
+          final driverAssigned = data.p.driverAssigned;
+
+          if (detail != null) {
+            emit(
+              state.copyWith(
+                currentOrder: OperationResult.success(detail.order),
+                currentPayment: detail.payment != null
+                    ? OperationResult.success(detail.payment!)
+                    : state.currentPayment,
+                currentTransaction: detail.transaction != null
+                    ? OperationResult.success(detail.transaction!)
+                    : state.currentTransaction,
+                currentAssignedDriver: driverAssigned != null
+                    ? OperationResult.success(driverAssigned)
+                    : state.currentAssignedDriver,
+              ),
+            );
+            logger.i(
+              '[UserOrderCubit] Driver accepted order: ${detail.order.id}, '
+              'driver: ${driverAssigned?.id}',
+            );
+          }
+        }
+
         // Handle generic order status change events from REST API updates
         // This catches status changes made via REST API (e.g., driver updating status)
         if (data.e == OrderEnvelopeEvent.ORDER_STATUS_CHANGED) {
@@ -788,9 +819,19 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
   /// [fast] - If true, use faster polling interval (for when WebSocket is unstable)
   void _startPollingFallback({bool fast = false}) {
     _isPollingFallback = true;
-    final interval = fast
-        ? _fastPollingIntervalSeconds
-        : _defaultPollingIntervalSeconds;
+
+    // Check if order is in critical status (MATCHING/REQUESTED) for faster polling
+    final currentOrder = state.currentOrder.value;
+    final isCriticalStatus =
+        currentOrder != null &&
+        (currentOrder.status == OrderStatus.MATCHING ||
+            currentOrder.status == OrderStatus.REQUESTED);
+
+    // Use critical interval if in MATCHING/REQUESTED, otherwise use fast/default
+    final interval = isCriticalStatus
+        ? _criticalPollingIntervalSeconds
+        : (fast ? _fastPollingIntervalSeconds : _defaultPollingIntervalSeconds);
+
     startPolling(intervalSeconds: interval);
   }
 
@@ -903,11 +944,48 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
           'stopping polling',
         );
         stopPolling();
+      } else {
+        // Adjust polling interval based on order status
+        // Use critical (faster) polling during MATCHING status for quicker driver detection
+        _adjustPollingIntervalForStatus(order.status);
       }
     } catch (e, st) {
       logger.e('[UserOrderCubit] Poll error: $e', error: e, stackTrace: st);
       // Don't stop polling on error, let it retry
     }
+  }
+
+  /// Adjust polling interval based on current order status
+  /// Uses faster polling during MATCHING to detect driver acceptance quickly
+  void _adjustPollingIntervalForStatus(OrderStatus status) {
+    final isCriticalStatus =
+        status == OrderStatus.MATCHING || status == OrderStatus.REQUESTED;
+
+    final currentInterval = _pollingTimer != null
+        ? _getCurrentPollingInterval()
+        : 0;
+    final targetInterval = isCriticalStatus
+        ? _criticalPollingIntervalSeconds
+        : _defaultPollingIntervalSeconds;
+
+    // Only restart if interval needs to change
+    if (currentInterval != targetInterval && state.isPolling) {
+      logger.d(
+        '[UserOrderCubit] Adjusting polling interval for status $status: '
+        '${currentInterval}s -> ${targetInterval}s',
+      );
+      stopPolling();
+      startPolling(intervalSeconds: targetInterval);
+    }
+  }
+
+  /// Get current polling interval (approximation based on state)
+  int _getCurrentPollingInterval() {
+    // This is tracked implicitly; for now return default
+    // The actual interval is determined when startPolling is called
+    return _isPollingFallback
+        ? _fastPollingIntervalSeconds
+        : _defaultPollingIntervalSeconds;
   }
 
   /// Check if driver location has changed

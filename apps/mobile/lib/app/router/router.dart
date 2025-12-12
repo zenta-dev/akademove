@@ -39,6 +39,7 @@ enum Routes {
   userRidePayment('/user/home/ride/payment'),
   userRideOnTrip('/user/home/ride/on-trip'),
   userRating('/user/home/ride/rating'),
+  userMapPicker('/user/home/map-picker'),
   userDriverNearMe('/user/home/driver/near-me'),
   userDelivery('/user/home/delivery'),
   userDeliveryPickup('/user/home/delivery/pickup'),
@@ -56,7 +57,7 @@ enum Routes {
   userCart('/user/home/cart'),
   userOrderConfirm('/user/home/cart/confirm'),
   userListMerchant('/user/home/mart/list-merchant'),
-  userFoodOnTrip('/user/home/mart/on-trip'),
+  userMartOnTrip('/user/home/mart/on-trip'),
   userWallet('/user/home/wallet'),
   userWalletTopUp('/user/home/wallet/topup'),
   userWalletTopUpInsertAmount('/user/home/wallet/topup/insert-amount'),
@@ -71,7 +72,7 @@ enum Routes {
 
   userHistory('/user/history'),
   userHistoryDetail('/user/history/:orderId'),
-  userScheduledOrders('/user/scheduled-orders'),
+  userScheduledOrders('/user/orders/scheduled'),
 
   userProfile('/user/profile'),
   userDetailProfile('/user/profile/detail'),

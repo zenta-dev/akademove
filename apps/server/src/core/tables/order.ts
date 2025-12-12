@@ -57,6 +57,8 @@ export const order = pgTable(
 			mode: "xy",
 			srid: 4326,
 		}).notNull(),
+		pickupAddress: text("pickup_address"),
+		dropoffAddress: text("dropoff_address"),
 		distanceKm: numeric("distance_km", {
 			precision: 10,
 			scale: 2,

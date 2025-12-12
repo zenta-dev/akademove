@@ -210,6 +210,8 @@ export class OrderPlacementRepository extends OrderBaseRepository {
 					note: params.note,
 					pickupLocation: params.pickupLocation,
 					dropoffLocation: params.dropoffLocation,
+					pickupAddress: params.pickupAddress,
+					dropoffAddress: params.dropoffAddress,
 					distanceKm: estimate.distanceKm,
 					basePrice: baseFare,
 					totalPrice: safeTotalCost,

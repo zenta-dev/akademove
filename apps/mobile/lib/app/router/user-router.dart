@@ -123,6 +123,23 @@ final userRouter = StatefulShellRoute.indexedStack(
                 );
               },
             ),
+            GoRoute(
+              name: Routes.userMapPicker.name,
+              path: Routes.userMapPicker.path,
+              builder: (context, state) {
+                final extra = state.extra as Map<String, dynamic>?;
+                final locationType =
+                    extra?['locationType'] as LocationType? ??
+                    LocationType.pickup;
+                final initialLocation =
+                    extra?['initialLocation'] as Coordinate?;
+
+                return MapLocationPickerScreen(
+                  locationType: locationType,
+                  initialLocation: initialLocation,
+                );
+              },
+            ),
           ],
         ),
 
@@ -230,11 +247,11 @@ final userRouter = StatefulShellRoute.indexedStack(
           ),
         ),
         GoRoute(
-          name: Routes.userFoodOnTrip.name,
-          path: Routes.userFoodOnTrip.path,
+          name: Routes.userMartOnTrip.name,
+          path: Routes.userMartOnTrip.path,
           builder: (context, state) => BlocProvider.value(
             value: context.read<EmergencyCubit>(),
-            child: const UserFoodOnTripScreen(),
+            child: const UserMartOnTripScreen(),
           ),
         ),
         GoRoute(

@@ -16,6 +16,8 @@ Name | Type | Description | Notes
 **status** | [**OrderStatus**](OrderStatus.md) |  | 
 **pickupLocation** | [**Coordinate**](Coordinate.md) |  | 
 **dropoffLocation** | [**Coordinate**](Coordinate.md) |  | 
+**pickupAddress** | **String** |  | [optional] 
+**dropoffAddress** | **String** |  | [optional] 
 **distanceKm** | **num** |  | 
 **basePrice** | **num** |  | 
 **tip** | **num** |  | [optional] 

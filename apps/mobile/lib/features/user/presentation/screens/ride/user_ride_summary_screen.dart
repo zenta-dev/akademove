@@ -142,9 +142,8 @@ class _UserRideSummaryScreenState extends State<UserRideSummaryScreen> {
       type: ToastType.success,
     );
 
-    // Pop back and navigate to scheduled orders
-    context.pop();
     if (!mounted || !context.mounted) return;
+    context.popUntilRoot();
     context.pushNamed(Routes.userScheduledOrders.name);
   }
 
@@ -304,7 +303,7 @@ class _UserRideSummaryScreenState extends State<UserRideSummaryScreen> {
                           tempTime.minute,
                         );
 
-                        // Validate
+                        // Validate using local time
                         final validMinTime = DateTime.now().add(
                           const Duration(minutes: 30),
                         );
@@ -316,7 +315,8 @@ class _UserRideSummaryScreenState extends State<UserRideSummaryScreen> {
                         }
 
                         setState(() {
-                          scheduledAt = newDateTime;
+                          // Convert to UTC for server consistency
+                          scheduledAt = newDateTime.toUtc();
                         });
                         closeDrawer(drawerContext);
                       },
@@ -333,7 +333,9 @@ class _UserRideSummaryScreenState extends State<UserRideSummaryScreen> {
   }
 
   String _formatScheduledAt(DateTime dt) {
-    return '${dt.day}/${dt.month}/${dt.year} ${dt.hour.toString().padLeft(2, '0')}:${dt.minute.toString().padLeft(2, '0')}';
+    // Convert UTC to local time for display
+    final local = dt.toLocal();
+    return '${local.day}/${local.month}/${local.year} ${local.hour.toString().padLeft(2, '0')}:${local.minute.toString().padLeft(2, '0')}';
   }
 
   void _showCouponSelector() {
@@ -372,6 +374,7 @@ class _UserRideSummaryScreenState extends State<UserRideSummaryScreen> {
   @override
   Widget build(BuildContext context) {
     return MyScaffold(
+      scrollable: true,
       headers: [DefaultAppBar(title: context.l10n.title_trip_details)],
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

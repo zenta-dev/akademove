@@ -47,14 +47,14 @@ final merchantRouter = StatefulShellRoute.indexedStack(
           builder: (context, state) =>
               const MerchantCommissionReportDetailScreen(),
         ),
-        GoRoute(
-          name: Routes.merchantWalletWithdraw.name,
-          path: Routes.merchantWalletWithdraw.path,
-          builder: (context, state) => BlocProvider(
-            create: (_) => sl<MerchantWalletCubit>(),
-            child: const MerchantWalletWithdrawScreen(),
-          ),
-        ),
+        // GoRoute(
+        //   name: Routes.merchantWalletWithdraw.name,
+        //   path: Routes.merchantWalletWithdraw.path,
+        //   builder: (context, state) => BlocProvider(
+        //     create: (_) => sl<MerchantWalletCubit>(),
+        //     child: const MerchantWalletWithdrawScreen(),
+        //   ),
+        // ),
       ],
     ),
     StatefulShellBranch(

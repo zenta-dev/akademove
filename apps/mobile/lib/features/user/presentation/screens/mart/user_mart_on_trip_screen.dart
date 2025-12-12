@@ -10,15 +10,17 @@ import "package:go_router/go_router.dart";
 import "package:google_maps_flutter/google_maps_flutter.dart";
 import "package:shadcn_flutter/shadcn_flutter.dart";
 
-class UserDeliveryOnTripScreen extends StatefulWidget {
-  const UserDeliveryOnTripScreen({super.key});
+/// Merchant/Mart order tracking screen with merchant-specific status updates.
+/// Shows the full merchant order flow:
+/// REQUESTED → ACCEPTED (merchant) → PREPARING → READY_FOR_PICKUP → MATCHING → ACCEPTED (driver) → ARRIVING → IN_TRIP → COMPLETED
+class UserMartOnTripScreen extends StatefulWidget {
+  const UserMartOnTripScreen({super.key});
 
   @override
-  State<UserDeliveryOnTripScreen> createState() =>
-      _UserDeliveryOnTripScreenState();
+  State<UserMartOnTripScreen> createState() => _UserMartOnTripScreenState();
 }
 
-class _UserDeliveryOnTripScreenState extends State<UserDeliveryOnTripScreen> {
+class _UserMartOnTripScreenState extends State<UserMartOnTripScreen> {
   GoogleMapController? _mapController;
   bool _isFirstLoad = true;
   bool _isUpdatingMap = false;
@@ -99,19 +101,19 @@ class _UserDeliveryOnTripScreenState extends State<UserDeliveryOnTripScreen> {
       final dropoffLng = order.dropoffLocation.x.toDouble();
 
       final newMarkers = <Marker>{
-        // Pickup marker
+        // Merchant/pickup marker
         Marker(
-          markerId: const MarkerId("pickup"),
+          markerId: const MarkerId("merchant"),
           position: LatLng(pickupLat, pickupLng),
           icon: BitmapDescriptor.defaultMarkerWithHue(
             BitmapDescriptor.hueGreen,
           ),
           infoWindow: InfoWindow(
-            title: context.l10n.origin,
+            title: context.l10n.order_confirm_merchant,
             snippet: context.l10n.text_pickup_location,
           ),
         ),
-        // Dropoff marker
+        // Delivery/dropoff marker
         Marker(
           markerId: const MarkerId("dropoff"),
           position: LatLng(dropoffLat, dropoffLng),
@@ -141,7 +143,7 @@ class _UserDeliveryOnTripScreenState extends State<UserDeliveryOnTripScreen> {
           );
         }
       } else if (_isFirstLoad) {
-        // If no driver location, center on pickup
+        // If no driver location, center on merchant/pickup
         _isFirstLoad = false;
         await _mapController?.animateCamera(
           CameraUpdate.newLatLng(LatLng(pickupLat, pickupLng)),
@@ -194,7 +196,7 @@ class _UserDeliveryOnTripScreenState extends State<UserDeliveryOnTripScreen> {
           );
         }
       } catch (e) {
-        logger.e("[UserDeliveryOnTripScreen] - Failed to get route: $e");
+        logger.e("[UserMartOnTripScreen] - Failed to get route: $e");
         // Fallback to straight line on error
         newPolylines.add(
           Polyline(
@@ -233,6 +235,7 @@ class _UserDeliveryOnTripScreenState extends State<UserDeliveryOnTripScreen> {
     // Check order changes
     if (prevOrder?.id != currOrder?.id) return true;
     if (prevOrder?.status != currOrder?.status) return true;
+    if (prevOrder?.driverId != currOrder?.driverId) return true;
 
     // Check driver changes
     if (prevDriver?.userId != currDriver?.userId) return true;
@@ -294,23 +297,26 @@ class _UserDeliveryOnTripScreenState extends State<UserDeliveryOnTripScreen> {
         context.l10n.text_trip_canceled,
         type: ToastType.failed,
       );
+      // Go back to home on cancellation
+      context.goNamed(Routes.userHome.name);
     }
   }
 
   bool _isOrderCancelled(OrderStatus? status) {
     return status == OrderStatus.CANCELLED_BY_USER ||
         status == OrderStatus.CANCELLED_BY_DRIVER ||
-        status == OrderStatus.CANCELLED_BY_SYSTEM;
+        status == OrderStatus.CANCELLED_BY_SYSTEM ||
+        status == OrderStatus.CANCELLED_BY_MERCHANT;
   }
 
   /// Check if the order can be cancelled by the user
+  /// For merchant orders, cancellation is allowed until the merchant starts preparing
   bool _canCancelOrder(OrderStatus? status) {
     if (status == null) return false;
     return [
       OrderStatus.REQUESTED,
-      OrderStatus.MATCHING,
       OrderStatus.ACCEPTED,
-      OrderStatus.ARRIVING,
+      OrderStatus.MATCHING,
     ].contains(status);
   }
 
@@ -379,7 +385,7 @@ class _UserDeliveryOnTripScreenState extends State<UserDeliveryOnTripScreen> {
     return MyScaffold(
       scrollable: false,
       padding: EdgeInsets.zero,
-      headers: [DefaultAppBar(title: context.l10n.title_delivery)],
+      headers: [DefaultAppBar(title: context.l10n.order_confirm_merchant)],
       body: BlocConsumer<UserOrderCubit, UserOrderState>(
         listenWhen: _shouldRebuildForOrder,
         buildWhen: _shouldRebuildForOrder,
@@ -439,7 +445,7 @@ class _MapSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
-      height: 280.h,
+      height: 250.h,
       child: Stack(
         children: [
           BlocBuilder<UserLocationCubit, UserLocationState>(
@@ -519,35 +525,59 @@ class _ContentSection extends StatelessWidget {
   final Future<void> Function(BuildContext, Order) onCancelOrder;
   final bool Function(OrderStatus?) canCancelOrder;
 
+  /// Checks if the order has moved past merchant acceptance to driver phase
+  bool _isInDriverPhase(Order order) {
+    final status = order.status;
+    return status == OrderStatus.MATCHING ||
+        status == OrderStatus.ARRIVING ||
+        status == OrderStatus.IN_TRIP ||
+        status == OrderStatus.COMPLETED ||
+        (status == OrderStatus.ACCEPTED && order.driverId != null);
+  }
+
   @override
   Widget build(BuildContext context) {
     final order = state.currentOrder.value;
     final orderStatus = order?.status;
-    final isSearching =
-        orderStatus == OrderStatus.MATCHING ||
-        orderStatus == OrderStatus.REQUESTED;
+    final isInDriverPhase = order != null && _isInDriverPhase(order);
 
     return Column(
       spacing: 16.h,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Status progress indicator
-        _DeliveryStatusIndicator(status: orderStatus),
-        // Driver section title
-        DefaultText(
-          isSearching
-              ? context.l10n.text_finding_driver_title
-              : context.l10n.text_your_driver_title,
-          fontWeight: FontWeight.w600,
-          fontSize: 16.sp,
-        ),
-        // Driver info card
-        _DriverInfoCard(
-          driver: state.currentAssignedDriver.value,
-          orderStatus: orderStatus,
-        ),
+        // Mart status progress indicator
+        _MartStatusIndicator(status: orderStatus, order: order),
+
+        // Merchant info section (always show for merchant orders)
+        if (!isInDriverPhase) ...[
+          DefaultText(
+            context.l10n.order_confirm_merchant,
+            fontWeight: FontWeight.w600,
+            fontSize: 16.sp,
+          ),
+          _MerchantInfoCard(order: order),
+        ],
+
+        // Driver info section (only show when in driver phase)
+        if (isInDriverPhase) ...[
+          DefaultText(
+            context.l10n.text_your_driver_title,
+            fontWeight: FontWeight.w600,
+            fontSize: 16.sp,
+          ),
+          _DriverInfoCard(
+            driver: state.currentAssignedDriver.value,
+            orderStatus: orderStatus,
+            order: order,
+          ),
+        ],
+
+        // Order items
+        _OrderItemsList(order: order),
+
         // Order details
         _OrderDetailsCard(state: state),
+
         // Cancel button
         _CancelButton(
           order: order,
@@ -559,75 +589,132 @@ class _ContentSection extends StatelessWidget {
   }
 }
 
-/// Delivery status indicator widget
-class _DeliveryStatusIndicator extends StatelessWidget {
-  const _DeliveryStatusIndicator({required this.status});
+/// Mart status indicator widget with merchant and driver phases
+class _MartStatusIndicator extends StatelessWidget {
+  const _MartStatusIndicator({required this.status, required this.order});
 
   final OrderStatus? status;
+  final Order? order;
 
-  @override
-  Widget build(BuildContext context) {
-    final steps = [
-      (context.l10n.status_searching, OrderStatus.MATCHING),
-      (context.l10n.status_driver_found, OrderStatus.ACCEPTED),
-      (context.l10n.arriving, OrderStatus.ARRIVING),
-      (context.l10n.in_trip, OrderStatus.IN_TRIP),
-    ];
-
-    int currentStep = _getCurrentStep(status);
-
-    return Card(
-      child: Padding(
-        padding: EdgeInsets.all(12.w),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: steps.asMap().entries.map((entry) {
-            final index = entry.key;
-            final stepLabel = entry.value.$1;
-            final isActive = index <= currentStep;
-            final isCurrent = index == currentStep;
-            final isSearchingStep =
-                isCurrent &&
-                (status == OrderStatus.MATCHING ||
-                    status == OrderStatus.REQUESTED);
-
-            return _StatusStepWidget(
-              label: stepLabel,
-              isActive: isActive,
-              isCurrent: isCurrent,
-              isSearching: isSearchingStep,
-            );
-          }).toList(),
-        ),
-      ),
-    );
-  }
-
-  int _getCurrentStep(OrderStatus? status) {
-    if (status == null) return 0;
-
-    // Map status to step index
+  /// Determines the current step index based on order status for merchant orders.
+  int _getMartStatusStep(OrderStatus? status) {
     switch (status) {
       case OrderStatus.REQUESTED:
-      case OrderStatus.MATCHING:
         return 0;
       case OrderStatus.ACCEPTED:
+        // For merchant orders, ACCEPTED means merchant accepted (before PREPARING)
+        // Unless driverId is set, then it's driver accepted
+        if (order?.driverId != null) return 5;
         return 1;
-      case OrderStatus.ARRIVING:
+      case OrderStatus.PREPARING:
         return 2;
-      case OrderStatus.IN_TRIP:
+      case OrderStatus.READY_FOR_PICKUP:
         return 3;
+      case OrderStatus.MATCHING:
+        return 4;
+      case OrderStatus.ARRIVING:
+        return 6;
+      case OrderStatus.IN_TRIP:
+        return 7;
       case OrderStatus.COMPLETED:
-        return 3; // Show all steps completed
+        return 8;
       default:
         return 0;
     }
   }
+
+  /// Checks if the order has moved past merchant acceptance to driver phase
+  bool _isInDriverPhase() {
+    final currentOrder = order;
+    if (currentOrder == null) return false;
+    final orderStatus = currentOrder.status;
+    return orderStatus == OrderStatus.MATCHING ||
+        orderStatus == OrderStatus.ARRIVING ||
+        orderStatus == OrderStatus.IN_TRIP ||
+        orderStatus == OrderStatus.COMPLETED ||
+        (orderStatus == OrderStatus.ACCEPTED && currentOrder.driverId != null);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // Define the steps for merchant order flow
+    final merchantSteps = [
+      (context.l10n.requested, 0),
+      (context.l10n.accepted, 1),
+      (context.l10n.preparing, 2),
+      (context.l10n.ready_for_pickup, 3),
+    ];
+
+    final driverSteps = [
+      (context.l10n.finding_driver, 4),
+      (context.l10n.status_driver_found, 5),
+      (context.l10n.arriving, 6),
+      (context.l10n.in_trip, 7),
+    ];
+
+    int currentStep = _getMartStatusStep(status);
+    final isInDriverPhase = _isInDriverPhase();
+
+    // Show only merchant steps if not yet in driver phase, otherwise show driver steps
+    final displaySteps = isInDriverPhase ? driverSteps : merchantSteps;
+
+    return Card(
+      child: Padding(
+        padding: EdgeInsets.all(12.w),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Phase indicator
+            Row(
+              children: [
+                Icon(
+                  isInDriverPhase ? LucideIcons.truck : LucideIcons.store,
+                  size: 16.sp,
+                  color: context.colorScheme.primary,
+                ),
+                Gap(8.w),
+                DefaultText(
+                  isInDriverPhase
+                      ? context.l10n.title_delivery
+                      : context.l10n.preparing_order,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 14.sp,
+                ),
+              ],
+            ),
+            Gap(12.h),
+            // Status steps
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: displaySteps.map((entry) {
+                final stepLabel = entry.$1;
+                final stepIndex = entry.$2;
+                final isActive = currentStep >= stepIndex;
+                final isCurrent = currentStep == stepIndex;
+                final isSearchingStep =
+                    isCurrent &&
+                    (status == OrderStatus.MATCHING ||
+                        status == OrderStatus.REQUESTED ||
+                        status == OrderStatus.PREPARING);
+
+                return _MartStatusStepWidget(
+                  label: stepLabel,
+                  isActive: isActive,
+                  isCurrent: isCurrent,
+                  isSearching: isSearchingStep,
+                );
+              }).toList(),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }
 
-/// Individual status step widget
-class _StatusStepWidget extends StatelessWidget {
-  const _StatusStepWidget({
+/// Individual mart status step widget
+class _MartStatusStepWidget extends StatelessWidget {
+  const _MartStatusStepWidget({
     required this.label,
     required this.isActive,
     required this.isCurrent,
@@ -641,28 +728,35 @@ class _StatusStepWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      spacing: 4.h,
-      children: [
-        Container(
-          width: 28.w,
-          height: 28.w,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: isActive
-                ? context.colorScheme.primary
-                : context.colorScheme.muted,
+    return Expanded(
+      child: Column(
+        spacing: 4.h,
+        children: [
+          Container(
+            width: 28.w,
+            height: 28.w,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: isActive
+                  ? context.colorScheme.primary
+                  : context.colorScheme.muted,
+            ),
+            child: _buildStepContent(context),
           ),
-          child: _buildStepContent(context),
-        ),
-        DefaultText(
-          label,
-          fontSize: 9.sp,
-          color: isActive
-              ? context.colorScheme.foreground
-              : context.colorScheme.mutedForeground,
-        ),
-      ],
+          Text(
+            label,
+            style: context.typography.small.copyWith(
+              fontSize: 8.sp,
+              color: isActive
+                  ? context.colorScheme.foreground
+                  : context.colorScheme.mutedForeground,
+            ),
+            textAlign: TextAlign.center,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ],
+      ),
     );
   }
 
@@ -692,18 +786,172 @@ class _StatusStepWidget extends StatelessWidget {
   }
 }
 
-/// Driver info card widget
-class _DriverInfoCard extends StatelessWidget {
-  const _DriverInfoCard({required this.driver, required this.orderStatus});
+/// Merchant info card widget
+class _MerchantInfoCard extends StatelessWidget {
+  const _MerchantInfoCard({required this.order});
 
-  final Driver? driver;
-  final OrderStatus? orderStatus;
+  final Order? order;
+
+  IconData _getMerchantStatusIcon(OrderStatus status, String? driverId) {
+    switch (status) {
+      case OrderStatus.REQUESTED:
+        return LucideIcons.clock;
+      case OrderStatus.ACCEPTED:
+        if (driverId != null) return LucideIcons.userCheck;
+        return LucideIcons.circleCheck;
+      case OrderStatus.PREPARING:
+        return LucideIcons.packageOpen;
+      case OrderStatus.READY_FOR_PICKUP:
+        return LucideIcons.package;
+      case OrderStatus.MATCHING:
+        return LucideIcons.search;
+      default:
+        return LucideIcons.store;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    if (order == null) {
+      return Card(
+        child: Padding(
+          padding: EdgeInsets.all(12.w),
+          child: Row(
+            children: [
+              Avatar(size: 48.w, initials: "?"),
+              SizedBox(width: 12.w),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  spacing: 4.h,
+                  children: [
+                    DefaultText(
+                      "Merchant name",
+                      fontWeight: FontWeight.w500,
+                      fontSize: 16.sp,
+                    ),
+                    DefaultText(context.l10n.preparing_order, fontSize: 12.sp),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ).asSkeleton();
+    }
+
+    // Get merchant name from order merchant if available
+    final currentOrder = order;
+    if (currentOrder == null) return const SizedBox.shrink();
+
+    final merchantName =
+        currentOrder.merchant?.name ?? context.l10n.order_confirm_merchant;
+    final merchantImage = currentOrder.merchant?.image;
+
+    String getMerchantStatusText() {
+      switch (currentOrder.status) {
+        case OrderStatus.REQUESTED:
+          return context.l10n.requested;
+        case OrderStatus.ACCEPTED:
+          if (currentOrder.driverId != null) {
+            return context.l10n.status_driver_found;
+          }
+          return context.l10n.accepted;
+        case OrderStatus.PREPARING:
+          return context.l10n.preparing;
+        case OrderStatus.READY_FOR_PICKUP:
+          return context.l10n.ready_for_pickup;
+        case OrderStatus.MATCHING:
+          return context.l10n.finding_driver;
+        default:
+          return currentOrder.status.name;
+      }
+    }
+
+    return Card(
+      child: Padding(
+        padding: EdgeInsets.all(12.w),
+        child: Row(
+          children: [
+            Avatar(
+              size: 48.w,
+              initials: Avatar.getInitials(merchantName),
+              provider: merchantImage != null
+                  ? CachedNetworkImageProvider(merchantImage)
+                  : null,
+            ),
+            SizedBox(width: 12.w),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                spacing: 4.h,
+                children: [
+                  DefaultText(
+                    merchantName,
+                    fontWeight: FontWeight.w500,
+                    fontSize: 16.sp,
+                  ),
+                  Row(
+                    children: [
+                      Icon(
+                        _getMerchantStatusIcon(
+                          currentOrder.status,
+                          currentOrder.driverId,
+                        ),
+                        size: 14.sp,
+                        color: context.colorScheme.primary,
+                      ),
+                      Gap(4.w),
+                      DefaultText(
+                        getMerchantStatusText(),
+                        fontSize: 12.sp,
+                        color: context.colorScheme.mutedForeground,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Driver info card widget
+class _DriverInfoCard extends StatelessWidget {
+  const _DriverInfoCard({
+    required this.driver,
+    required this.orderStatus,
+    required this.order,
+  });
+
+  final Driver? driver;
+  final OrderStatus? orderStatus;
+  final Order? order;
+
+  /// Checks if the order has moved past merchant acceptance to driver phase
+  bool _isInDriverPhase() {
+    if (order == null) return false;
+    final status = order!.status;
+    return status == OrderStatus.MATCHING ||
+        status == OrderStatus.ARRIVING ||
+        status == OrderStatus.IN_TRIP ||
+        status == OrderStatus.COMPLETED ||
+        (status == OrderStatus.ACCEPTED && order!.driverId != null);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // Only show driver info when in driver phase
+    if (order == null || !_isInDriverPhase()) {
+      return const SizedBox.shrink();
+    }
+
     // Show finding driver state when in matching phase
     if (orderStatus == OrderStatus.MATCHING ||
-        orderStatus == OrderStatus.REQUESTED) {
+        orderStatus == OrderStatus.READY_FOR_PICKUP) {
       return const _FindingDriverCard();
     }
 
@@ -855,6 +1103,128 @@ class _DriverInfoContent extends StatelessWidget {
   }
 }
 
+/// Order items list widget
+class _OrderItemsList extends StatelessWidget {
+  const _OrderItemsList({required this.order});
+
+  final Order? order;
+
+  @override
+  Widget build(BuildContext context) {
+    final currentOrder = order;
+    final items = currentOrder?.items;
+    if (currentOrder == null || items == null || items.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: 8.h,
+      children: [
+        DefaultText(
+          context.l10n.order_items,
+          fontWeight: FontWeight.w600,
+          fontSize: 16.sp,
+        ),
+        Card(
+          child: Column(
+            children: items.asMap().entries.map((entry) {
+              final index = entry.key;
+              final orderItem = entry.value;
+              final item = orderItem.item;
+              final isLast = index == items.length - 1;
+
+              return Column(
+                children: [
+                  _OrderItemRow(orderItem: orderItem, item: item),
+                  if (!isLast) const Divider(height: 1),
+                ],
+              );
+            }).toList(),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+/// Individual order item row widget
+class _OrderItemRow extends StatelessWidget {
+  const _OrderItemRow({required this.orderItem, required this.item});
+
+  final OrderItem orderItem;
+  final OrderItemItem item;
+
+  @override
+  Widget build(BuildContext context) {
+    final imageUrl = item.image;
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+      child: Row(
+        children: [
+          // Item image
+          ClipRRect(
+            borderRadius: BorderRadius.circular(6),
+            child: imageUrl != null
+                ? CachedNetworkImage(
+                    imageUrl: imageUrl,
+                    width: 40.w,
+                    height: 40.w,
+                    fit: BoxFit.cover,
+                    placeholder: (context, url) => _ItemImagePlaceholder(),
+                    errorWidget: (context, url, error) =>
+                        _ItemImagePlaceholder(),
+                  )
+                : _ItemImagePlaceholder(),
+          ),
+          Gap(12.w),
+          // Item details
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                DefaultText(
+                  item.name ?? context.l10n.unknown_item,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 14.sp,
+                ),
+                DefaultText(
+                  "${orderItem.quantity}x @ ${context.formatCurrency(item.price ?? 0)}",
+                  fontSize: 12.sp,
+                  color: context.colorScheme.mutedForeground,
+                ),
+              ],
+            ),
+          ),
+          // Item total
+          DefaultText(
+            context.formatCurrency((item.price ?? 0) * orderItem.quantity),
+            fontWeight: FontWeight.w500,
+            fontSize: 14.sp,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Item image placeholder widget
+class _ItemImagePlaceholder extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 40.w,
+      height: 40.w,
+      color: context.colorScheme.muted,
+      child: Icon(
+        LucideIcons.shoppingBag,
+        size: 20.sp,
+        color: context.colorScheme.mutedForeground,
+      ),
+    );
+  }
+}
+
 /// Order details card widget
 class _OrderDetailsCard extends StatelessWidget {
   const _OrderDetailsCard({required this.state});
@@ -865,22 +1235,6 @@ class _OrderDetailsCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final order = state.currentOrder.value;
     final payment = state.currentPayment.value;
-    final estimateOrder = state.estimateOrder.value;
-
-    // Use estimateOrder locations if available (has proper names)
-    final pickupName =
-        estimateOrder?.pickup.vicinity ??
-        estimateOrder?.pickup.name ??
-        (order != null
-            ? "${order.pickupLocation.y.toStringAsFixed(4)}, ${order.pickupLocation.x.toStringAsFixed(4)}"
-            : "-");
-
-    final dropoffName =
-        estimateOrder?.dropoff.vicinity ??
-        estimateOrder?.dropoff.name ??
-        (order != null
-            ? "${order.dropoffLocation.y.toStringAsFixed(4)}, ${order.dropoffLocation.x.toStringAsFixed(4)}"
-            : "-");
 
     return Column(
       spacing: 16.h,
@@ -896,23 +1250,6 @@ class _OrderDetailsCard extends StatelessWidget {
             spacing: 4.h,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _DetailCell(
-                title: context.l10n.origin,
-                value: pickupName,
-                allowMultiline: true,
-              ),
-              const Divider(),
-              _DetailCell(
-                title: context.l10n.destination,
-                value: dropoffName,
-                allowMultiline: true,
-              ),
-              const Divider(),
-              _DetailCell(
-                title: context.l10n.label_distance,
-                value: order != null ? "${order.distanceKm} Km" : "-",
-              ),
-              const Divider(),
               _DetailCell(
                 title: context.l10n.label_payment_method_lower,
                 value: _getPaymentMethodDisplay(payment),
@@ -953,44 +1290,13 @@ class _OrderDetailsCard extends StatelessWidget {
 
 /// Detail cell widget
 class _DetailCell extends StatelessWidget {
-  const _DetailCell({
-    required this.title,
-    required this.value,
-    this.allowMultiline = false,
-  });
+  const _DetailCell({required this.title, required this.value});
 
   final String title;
   final String value;
-  final bool allowMultiline;
 
   @override
   Widget build(BuildContext context) {
-    if (allowMultiline) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        spacing: 4.h,
-        children: [
-          Text(
-            title,
-            style: context.typography.small.copyWith(
-              fontSize: 12.sp,
-              color: context.colorScheme.mutedForeground,
-            ),
-          ),
-          Text(
-            value,
-            style: context.typography.small.copyWith(
-              fontWeight: FontWeight.w500,
-              fontSize: 14.sp,
-              color: context.colorScheme.foreground,
-            ),
-            maxLines: 3,
-            overflow: TextOverflow.ellipsis,
-          ),
-        ],
-      );
-    }
-
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [

@@ -142,7 +142,7 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
         ),
       );
     } catch (e) {
-      debugPrint('Error loading location: $e');
+      logger.e('Error loading location: $e');
       if (mounted) {
         setState(() {
           _isLocationLoaded = true;
@@ -334,7 +334,7 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
         });
       }
     } catch (e) {
-      debugPrint('Error getting address: $e');
+      logger.e('Error getting address: $e');
       if (mounted) {
         setState(() => _outletAddress = context.l10n.label_unable_get_address);
       }
@@ -378,7 +378,7 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
         }
       }
     } catch (e) {
-      debugPrint('Error searching location: $e');
+      logger.e('Error searching location: $e');
       if (mounted) {
         setState(() => _isSearching = false);
         _showToast(
@@ -444,7 +444,7 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
               suggestions.add(placemarks.first);
             }
           } catch (e) {
-            debugPrint('Error getting placemark: $e');
+            logger.e('Error getting placemark: $e');
           }
         }
 
@@ -465,7 +465,7 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
         }
       }
     } catch (e) {
-      debugPrint('Error fetching suggestions: $e');
+      logger.e('Error fetching suggestions: $e');
       if (mounted) {
         setState(() {
           _searchSuggestions = [];
@@ -495,7 +495,7 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
         );
       }
     } catch (e) {
-      debugPrint('Error getting location from suggestion: $e');
+      logger.e('Error getting location from suggestion: $e');
     }
   }
 
@@ -604,12 +604,24 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
       if (!mounted) return;
 
       // Parse outlet phone number
-      final outletPhoneNum = _outletPhoneNumber != null
-          ? num.tryParse(_outletPhoneNumber!.replaceAll(RegExp('[^0-9]'), ''))
+      final phoneNumber = _outletPhoneNumber;
+      final outletPhoneNum = phoneNumber != null
+          ? num.tryParse(phoneNumber.replaceAll(RegExp('[^0-9]'), ''))
           : null;
 
-      // Call update profile API
-      await merchantCubit.updateProfile(
+      // Call update profile API - BlocListener handles state changes
+      final bankProvider = _selectedBankProvider;
+      if (bankProvider == null) {
+        _showToast(
+          context,
+          context.l10n.error,
+          'Please select a bank provider',
+        );
+        setState(() => _isLoading = false);
+        return;
+      }
+
+      merchantCubit.updateProfile(
         merchantId: merchantId,
         name: outletName,
         email: outletEmail,
@@ -619,32 +631,31 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
         locationX: _outletLocation.x,
         locationY: _outletLocation.y,
         category: null,
-        bankProvider: _selectedBankProvider!.name,
+        bankProvider: bankProvider.name,
         bankNumber: bankNumber,
         bankAccountName: _accountHolderName,
         document: document,
       );
-
-      if (!mounted) return;
-
-      final state = merchantCubit.state;
-      setState(() => _isLoading = false);
-
-      if (state.updateProfile.isSuccess) {
-        _showToast(context, context.l10n.success, context.l10n.toast_success);
-        merchantCubit.clearUpdateProfileResult();
-      } else if (state.updateProfile.isFailed) {
-        _showToast(
-          context,
-          context.l10n.error,
-          state.updateProfile.error?.message ?? context.l10n.an_error_occurred,
-        );
-      }
     } catch (e) {
       if (mounted) {
         setState(() => _isLoading = false);
         _showToast(context, context.l10n.error, context.l10n.an_error_occurred);
       }
+    }
+  }
+
+  void _onUpdateProfileStateChanged(MerchantState state) {
+    if (state.updateProfile.isSuccess) {
+      setState(() => _isLoading = false);
+      _showToast(context, context.l10n.success, context.l10n.toast_success);
+      context.read<MerchantCubit>().clearUpdateProfileResult();
+    } else if (state.updateProfile.isFailed) {
+      setState(() => _isLoading = false);
+      _showToast(
+        context,
+        context.l10n.error,
+        state.updateProfile.error?.message ?? context.l10n.an_error_occurred,
+      );
     }
   }
 
@@ -725,131 +736,136 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        MyScaffold(
-          controller: _scrollController,
-          headers: [DefaultAppBar(title: context.l10n.title_edit_profile)],
-          body: NotificationListener<ScrollNotification>(
-            onNotification: (notification) {
-              if (_isDraggingMarker) {
-                return true;
-              }
-              return false;
-            },
-            child: Form(
-              controller: _formController,
-              child: SingleChildScrollView(
-                padding: EdgeInsets.only(bottom: 100.h),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  spacing: 20.h,
-                  children: [
-                    _buildTextField(
-                      key: _FormKeys.ownerName,
-                      label: context.l10n.label_owner_name,
-                      placeholder: context.l10n.placeholder_owner_name,
-                      icon: LucideIcons.user,
-                      validator: const LengthValidator(min: 3),
-                      enabled: !_isLoading,
-                    ),
-                    _buildTextField(
-                      key: _FormKeys.ownerEmail,
-                      label: context.l10n.label_owner_email,
-                      placeholder: context.l10n.placeholder_owner_email,
-                      icon: LucideIcons.mail,
-                      validator: const EmailValidator(),
-                      keyboardType: TextInputType.emailAddress,
-                      enabled: !_isLoading,
-                    ),
-                    _buildPhoneField(
-                      context,
-                      _FormKeys.ownerPhoneNumber,
-                      context.l10n.label_owner_phone,
-                      (val) {
-                        setState(() {
-                          _ownerPhoneNumber = val.number;
-                        });
-                      },
-                    ),
-                    _buildTextField(
-                      key: _FormKeys.outletName,
-                      label: context.l10n.label_outlet_name,
-                      placeholder: context.l10n.placeholder_outlet_name,
-                      icon: LucideIcons.store,
-                      validator: const LengthValidator(min: 3),
-                      enabled: !_isLoading,
-                    ),
-                    _buildOutletLocationField(),
-                    _buildPhoneField(
-                      context,
-                      _FormKeys.outletPhoneNumber,
-                      context.l10n.label_outlet_phone,
-                      (val) {
-                        setState(() {
-                          _outletPhoneNumber = val.number;
-                        });
-                      },
-                    ),
-                    _buildTextField(
-                      key: _FormKeys.outletEmail,
-                      label: context.l10n.label_outlet_email,
-                      placeholder: context.l10n.placeholder_outlet_email,
-                      icon: LucideIcons.mail,
-                      validator: const EmailValidator(),
-                      keyboardType: TextInputType.emailAddress,
-                      enabled: !_isLoading,
-                    ),
-                    _buildImagePicker(
-                      context.l10n.label_outlet_document,
-                      _Documents.outletDocument,
-                      _documents,
-                      _documentsErrors,
-                      context,
-                      isOptional: true,
-                    ),
-                    _buildBankProviderSelect(),
-                    _buildBankAccountField(),
-                  ],
+    return BlocListener<MerchantCubit, MerchantState>(
+      listenWhen: (previous, current) =>
+          previous.updateProfile != current.updateProfile,
+      listener: (context, state) => _onUpdateProfileStateChanged(state),
+      child: Stack(
+        children: [
+          MyScaffold(
+            controller: _scrollController,
+            headers: [DefaultAppBar(title: context.l10n.title_edit_profile)],
+            body: NotificationListener<ScrollNotification>(
+              onNotification: (notification) {
+                if (_isDraggingMarker) {
+                  return true;
+                }
+                return false;
+              },
+              child: Form(
+                controller: _formController,
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.only(bottom: 100.h),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    spacing: 20.h,
+                    children: [
+                      _buildTextField(
+                        key: _FormKeys.ownerName,
+                        label: context.l10n.label_owner_name,
+                        placeholder: context.l10n.placeholder_owner_name,
+                        icon: LucideIcons.user,
+                        validator: const LengthValidator(min: 3),
+                        enabled: !_isLoading,
+                      ),
+                      _buildTextField(
+                        key: _FormKeys.ownerEmail,
+                        label: context.l10n.label_owner_email,
+                        placeholder: context.l10n.placeholder_owner_email,
+                        icon: LucideIcons.mail,
+                        validator: const EmailValidator(),
+                        keyboardType: TextInputType.emailAddress,
+                        enabled: !_isLoading,
+                      ),
+                      _buildPhoneField(
+                        context,
+                        _FormKeys.ownerPhoneNumber,
+                        context.l10n.label_owner_phone,
+                        (val) {
+                          setState(() {
+                            _ownerPhoneNumber = val.number;
+                          });
+                        },
+                      ),
+                      _buildTextField(
+                        key: _FormKeys.outletName,
+                        label: context.l10n.label_outlet_name,
+                        placeholder: context.l10n.placeholder_outlet_name,
+                        icon: LucideIcons.store,
+                        validator: const LengthValidator(min: 3),
+                        enabled: !_isLoading,
+                      ),
+                      _buildOutletLocationField(),
+                      _buildPhoneField(
+                        context,
+                        _FormKeys.outletPhoneNumber,
+                        context.l10n.label_outlet_phone,
+                        (val) {
+                          setState(() {
+                            _outletPhoneNumber = val.number;
+                          });
+                        },
+                      ),
+                      _buildTextField(
+                        key: _FormKeys.outletEmail,
+                        label: context.l10n.label_outlet_email,
+                        placeholder: context.l10n.placeholder_outlet_email,
+                        icon: LucideIcons.mail,
+                        validator: const EmailValidator(),
+                        keyboardType: TextInputType.emailAddress,
+                        enabled: !_isLoading,
+                      ),
+                      _buildImagePicker(
+                        context.l10n.label_outlet_document,
+                        _Documents.outletDocument,
+                        _documents,
+                        _documentsErrors,
+                        context,
+                        isOptional: true,
+                      ),
+                      _buildBankProviderSelect(),
+                      _buildBankAccountField(),
+                    ],
+                  ),
                 ),
               ),
             ),
           ),
-        ),
-        Positioned(
-          bottom: 0,
-          left: 16,
-          right: 16,
-          child: SafeArea(
-            child: SizedBox(
-              width: double.infinity,
-              child: Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.card,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Button.primary(
-                  onPressed: _isLoading ? null : _handleSaveProfile,
-                  child: _isLoading
-                      ? const SizedBox(
-                          height: 20,
-                          width: 20,
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        )
-                      : Text(
-                          context.l10n.save_changes,
-                          style: context.typography.small.copyWith(
-                            fontSize: 16.sp,
-                            fontWeight: FontWeight.normal,
+          Positioned(
+            bottom: 0,
+            left: 16,
+            right: 16,
+            child: SafeArea(
+              child: SizedBox(
+                width: double.infinity,
+                child: Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.card,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Button.primary(
+                    onPressed: _isLoading ? null : _handleSaveProfile,
+                    child: _isLoading
+                        ? const SizedBox(
+                            height: 20,
+                            width: 20,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
+                        : Text(
+                            context.l10n.save_changes,
+                            style: context.typography.small.copyWith(
+                              fontSize: 16.sp,
+                              fontWeight: FontWeight.normal,
+                            ),
                           ),
-                        ),
+                  ),
                 ),
               ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 

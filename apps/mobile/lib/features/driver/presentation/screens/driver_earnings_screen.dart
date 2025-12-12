@@ -485,7 +485,7 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
                   Text(
                     DateFormat(
                       "MMM dd, yyyy HH:mm",
-                    ).format(transaction.createdAt),
+                    ).format(transaction.createdAt.toLocal()),
                     style: context.typography.small.copyWith(
                       fontSize: 11.sp,
                       color: context.colorScheme.mutedForeground,
@@ -893,8 +893,9 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
         accountName: accountName,
       );
 
-      final cubit = context.read<DriverEarningsCubit>();
-      final result = await cubit.withdraw(request);
+      final result = await context.read<DriverEarningsCubit>().withdraw(
+        request,
+      );
 
       if (mounted) {
         setState(() => _isWithdrawing = false);
@@ -1080,7 +1081,7 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
                                   Text(
                                     DateFormat(
                                       "MMM dd, yyyy HH:mm",
-                                    ).format(transaction.createdAt),
+                                    ).format(transaction.createdAt.toLocal()),
                                     style: TextStyle(
                                       fontSize: 11.sp,
                                       color:

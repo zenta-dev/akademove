@@ -12,6 +12,8 @@ Name | Type | Description | Notes
 **merchantId** | **String** |  | [optional] 
 **type** | [**OrderType**](OrderType.md) |  | [optional] 
 **status** | [**OrderStatus**](OrderStatus.md) |  | [optional] 
+**pickupAddress** | **String** |  | [optional] 
+**dropoffAddress** | **String** |  | [optional] 
 **distanceKm** | **num** |  | [optional] 
 **tip** | **num** |  | [optional] 
 **totalPrice** | **num** |  | [optional] 

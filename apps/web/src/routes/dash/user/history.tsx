@@ -281,8 +281,8 @@ function RouteComponent() {
 											<div className="flex-1">
 												<p className="font-medium text-sm">Pickup</p>
 												<p className="text-muted-foreground text-xs">
-													{order.pickupLocation.x.toFixed(4)},{" "}
-													{order.pickupLocation.y.toFixed(4)}
+													{order.pickupAddress ||
+														`${order.pickupLocation.y.toFixed(4)}, ${order.pickupLocation.x.toFixed(4)}`}
 													{order.note?.pickup && ` • ${order.note.pickup}`}
 												</p>
 											</div>
@@ -292,8 +292,8 @@ function RouteComponent() {
 											<div className="flex-1">
 												<p className="font-medium text-sm">Dropoff</p>
 												<p className="text-muted-foreground text-xs">
-													{order.dropoffLocation.x.toFixed(4)},{" "}
-													{order.dropoffLocation.y.toFixed(4)}
+													{order.dropoffAddress ||
+														`${order.dropoffLocation.y.toFixed(4)}, ${order.dropoffLocation.x.toFixed(4)}`}
 													{order.note?.dropoff && ` • ${order.note.dropoff}`}
 												</p>
 											</div>

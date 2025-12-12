@@ -467,7 +467,7 @@ class _DriverCommissionReportScreenState
                   Text(
                     DateFormat(
                       'MMM dd, yyyy HH:mm',
-                    ).format(transaction.createdAt),
+                    ).format(transaction.createdAt.toLocal()),
                     style: context.typography.small.copyWith(
                       fontSize: 12.sp,
                       color: context.colorScheme.mutedForeground,

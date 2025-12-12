@@ -3555,4 +3555,13 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get view_active_order => 'Lihat Perjalanan';
+
+  @override
+  String get title_select_pickup_location => 'Pilih Lokasi Penjemputan';
+
+  @override
+  String get title_select_dropoff_location => 'Pilih Lokasi Tujuan';
+
+  @override
+  String get button_confirm_location => 'Konfirmasi Lokasi';
 }

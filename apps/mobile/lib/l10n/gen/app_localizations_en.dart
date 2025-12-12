@@ -3555,4 +3555,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get view_active_order => 'View Trip';
+
+  @override
+  String get title_select_pickup_location => 'Select Pickup Location';
+
+  @override
+  String get title_select_dropoff_location => 'Select Dropoff Location';
+
+  @override
+  String get button_confirm_location => 'Confirm Location';
 }

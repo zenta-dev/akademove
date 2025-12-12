@@ -1508,5 +1508,8 @@
 	"cancel_reason_optional": "Alasan (opsional)",
 	"order_cancelled_successfully": "Pesanan berhasil dibatalkan",
 	"failed_to_cancel_order": "Gagal membatalkan pesanan",
-	"view_active_order": "Lihat Perjalanan"
+	"view_active_order": "Lihat Perjalanan",
+	"title_select_pickup_location": "Pilih Lokasi Penjemputan",
+	"title_select_dropoff_location": "Pilih Lokasi Tujuan",
+	"button_confirm_location": "Konfirmasi Lokasi"
 }

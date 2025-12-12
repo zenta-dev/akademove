@@ -117,6 +117,9 @@ class _MerchantSetUpOutletScreenState extends State<MerchantSetUpOutletScreen> {
 
   bool _isLoading = false;
 
+  // Track setup flow stage: 0 = idle, 1 = outlet setup in progress, 2 = operating hours setup in progress
+  int _setupStage = 0;
+
   @override
   void initState() {
     super.initState();
@@ -254,109 +257,117 @@ class _MerchantSetUpOutletScreenState extends State<MerchantSetUpOutletScreen> {
       return;
     }
 
-    setState(() => _isLoading = true);
+    final merchantState = context.read<MerchantCubit>().state;
+    final merchant = merchantState.mine.data?.value;
 
-    try {
-      final merchantState = context.read<MerchantCubit>().state;
-      final merchant = merchantState.mine.data?.value;
-
-      if (merchant == null) {
-        _showToast(
-          context,
-          context.l10n.toast_error,
-          'Merchant data not found. Please try again.',
-        );
-        setState(() => _isLoading = false);
-        return;
-      }
-
-      // Step 1: Update merchant profile (image and category)
-      final outletImage = await _fileToMultipart(
-        _step1Docs[_Step1Docs.outletPhotoProfile],
-      );
-
-      await context.read<MerchantCubit>().setupOutlet(
-        merchantId: merchant.id,
-        category: _selectedOutletCategory,
-        image: outletImage,
-      );
-
-      // Check if outlet setup was successful
-      final setupState = context.read<MerchantCubit>().state.setupOutlet;
-      if (setupState.isFailed) {
-        _showToast(
-          context,
-          context.l10n.toast_error,
-          setupState.error?.message ?? 'Failed to update outlet',
-        );
-        setState(() => _isLoading = false);
-        return;
-      }
-
-      // Step 2: Save operating hours
-      final operatingHours = _weeklySchedule
-          .map((schedule) => schedule.toCreateRequest())
-          .toList();
-
-      await context.read<MerchantCubit>().setupOperatingHours(
-        merchantId: merchant.id,
-        hours: operatingHours,
-      );
-
-      // Check if operating hours setup was successful
-      final operatingHoursState = context
-          .read<MerchantCubit>()
-          .state
-          .setupOperatingHours;
-      if (operatingHoursState.isFailed) {
-        _showToast(
-          context,
-          context.l10n.toast_error,
-          operatingHoursState.error?.message ??
-              'Failed to save operating hours',
-        );
-        setState(() => _isLoading = false);
-        return;
-      }
-
-      setState(() => _isLoading = false);
-
+    if (merchant == null) {
       _showToast(
         context,
-        context.l10n.toast_success,
-        context.l10n.toast_success_set_up_merchant,
+        context.l10n.toast_error,
+        'Merchant data not found. Please try again.',
       );
-
-      // Navigate to home after a short delay to show the toast
-      Future.delayed(const Duration(milliseconds: 800), () {
-        if (mounted) {
-          context.goNamed(Routes.merchantHome.name);
-        }
-      });
-    } catch (e) {
-      setState(() => _isLoading = false);
-      _showToast(context, context.l10n.toast_error, e.toString());
+      return;
     }
+
+    setState(() {
+      _isLoading = true;
+      _setupStage = 1; // Start outlet setup
+    });
+
+    // Step 1: Trigger outlet setup - listener will handle the response and chain step 2
+    final outletImage = await _fileToMultipart(
+      _step1Docs[_Step1Docs.outletPhotoProfile],
+    );
+
+    context.read<MerchantCubit>().setupOutlet(
+      merchantId: merchant.id,
+      category: _selectedOutletCategory,
+      image: outletImage,
+    );
+  }
+
+  /// Continue to step 2 of setup flow (called from listener after step 1 succeeds)
+  void _continueToOperatingHoursSetup() {
+    final merchantState = context.read<MerchantCubit>().state;
+    final merchant = merchantState.mine.data?.value;
+
+    if (merchant == null) {
+      setState(() {
+        _isLoading = false;
+        _setupStage = 0;
+      });
+      _showToast(
+        context,
+        context.l10n.toast_error,
+        'Merchant data not found. Please try again.',
+      );
+      return;
+    }
+
+    setState(() => _setupStage = 2); // Start operating hours setup
+
+    final operatingHours = _weeklySchedule
+        .map((schedule) => schedule.toCreateRequest())
+        .toList();
+
+    context.read<MerchantCubit>().setupOperatingHours(
+      merchantId: merchant.id,
+      hours: operatingHours,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocListener<MerchantCubit, MerchantState>(
       listener: (context, state) {
-        if (state.setupOutlet.isFailed) {
-          _showToast(
-            context,
-            context.l10n.toast_error,
-            state.setupOutlet.error?.message ?? 'Failed to setup outlet',
-          );
+        // Handle setup outlet result (stage 1)
+        if (_setupStage == 1) {
+          if (state.setupOutlet.isSuccess) {
+            // Step 1 succeeded, continue to step 2
+            _continueToOperatingHoursSetup();
+          } else if (state.setupOutlet.isFailed) {
+            setState(() {
+              _isLoading = false;
+              _setupStage = 0;
+            });
+            _showToast(
+              context,
+              context.l10n.toast_error,
+              state.setupOutlet.error?.message ?? 'Failed to setup outlet',
+            );
+          }
         }
-        if (state.setupOperatingHours.isFailed) {
-          _showToast(
-            context,
-            context.l10n.toast_error,
-            state.setupOperatingHours.error?.message ??
-                'Failed to save operating hours',
-          );
+
+        // Handle operating hours result (stage 2)
+        if (_setupStage == 2) {
+          if (state.setupOperatingHours.isSuccess) {
+            setState(() {
+              _isLoading = false;
+              _setupStage = 0;
+            });
+            _showToast(
+              context,
+              context.l10n.toast_success,
+              context.l10n.toast_success_set_up_merchant,
+            );
+            // Navigate to home after a short delay to show the toast
+            Future.delayed(const Duration(milliseconds: 800), () {
+              if (mounted) {
+                context.goNamed(Routes.merchantHome.name);
+              }
+            });
+          } else if (state.setupOperatingHours.isFailed) {
+            setState(() {
+              _isLoading = false;
+              _setupStage = 0;
+            });
+            _showToast(
+              context,
+              context.l10n.toast_error,
+              state.setupOperatingHours.error?.message ??
+                  'Failed to save operating hours',
+            );
+          }
         }
       },
       child: Stack(

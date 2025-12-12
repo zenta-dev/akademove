@@ -83,7 +83,8 @@ class DriverHomeCubit extends BaseCubit<DriverHomeState> {
           );
 
           final todayOrders = ordersRes.data.where((order) {
-            final orderDate = order.createdAt;
+            // Convert UTC timestamp to local time for comparison
+            final orderDate = order.createdAt.toLocal();
             return orderDate.isAfter(startOfDay);
           }).toList();
 

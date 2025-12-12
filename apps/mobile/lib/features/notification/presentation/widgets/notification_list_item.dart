@@ -171,8 +171,10 @@ class NotificationListItem extends StatelessWidget {
   }
 
   String _formatTimeAgo(BuildContext context, DateTime dateTime) {
+    // Convert UTC timestamp to local time for comparison and display
+    final localDateTime = dateTime.toLocal();
     final now = DateTime.now();
-    final difference = now.difference(dateTime);
+    final difference = now.difference(localDateTime);
 
     if (difference.inMinutes < 1) {
       return context.l10n.notification_time_ago('just now');
@@ -183,7 +185,7 @@ class NotificationListItem extends StatelessWidget {
     } else if (difference.inDays < 7) {
       return context.l10n.notification_time_ago('${difference.inDays}d');
     } else {
-      return DateFormat('MMM dd').format(dateTime);
+      return DateFormat('MMM dd').format(localDateTime);
     }
   }
 }
