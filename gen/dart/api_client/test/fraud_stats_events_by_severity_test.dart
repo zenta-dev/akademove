@@ -3,7 +3,8 @@ import 'package:api_client/api_client.dart';
 
 // tests for FraudStatsEventsBySeverity
 void main() {
-  final FraudStatsEventsBySeverity? instance = /* FraudStatsEventsBySeverity(...) */ null;
+  final FraudStatsEventsBySeverity?
+  instance = /* FraudStatsEventsBySeverity(...) */ null;
   // TODO add properties to the entity
 
   group(FraudStatsEventsBySeverity, () {
@@ -26,6 +27,5 @@ void main() {
     test('to test the property `CRITICAL`', () async {
       // TODO
     });
-
   });
 }

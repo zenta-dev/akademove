@@ -24,6 +24,5 @@ void main() {
     test('to test the property `hasMore`', () async {
       // TODO
     });
-
   });
 }

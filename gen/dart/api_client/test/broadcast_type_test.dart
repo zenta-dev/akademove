@@ -3,7 +3,5 @@ import 'package:api_client/api_client.dart';
 
 // tests for BroadcastType
 void main() {
-
-  group(BroadcastType, () {
-  });
+  group(BroadcastType, () {});
 }

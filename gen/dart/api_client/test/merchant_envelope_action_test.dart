@@ -3,7 +3,5 @@ import 'package:api_client/api_client.dart';
 
 // tests for MerchantEnvelopeAction
 void main() {
-
-  group(MerchantEnvelopeAction, () {
-  });
+  group(MerchantEnvelopeAction, () {});
 }

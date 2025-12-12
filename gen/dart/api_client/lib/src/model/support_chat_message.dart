@@ -24,54 +24,56 @@ class SupportChatMessage {
     required this.senderId,
     required this.message,
     required this.isFromSupport,
-     this.readAt,
+    this.readAt,
     required this.sentAt,
     required this.createdAt,
     required this.updatedAt,
-     this.sender,
+    this.sender,
   });
   @JsonKey(name: r'id', required: true, includeIfNull: false)
   final String id;
-  
+
   @JsonKey(name: r'ticketId', required: true, includeIfNull: false)
   final String ticketId;
-  
+
   @JsonKey(name: r'senderId', required: true, includeIfNull: false)
   final String senderId;
-  
+
   @JsonKey(name: r'message', required: true, includeIfNull: false)
   final String message;
-  
+
   @JsonKey(name: r'isFromSupport', required: true, includeIfNull: false)
   final bool isFromSupport;
-  
+
   @JsonKey(name: r'readAt', required: false, includeIfNull: false)
   final DateTime? readAt;
-  
+
   @JsonKey(name: r'sentAt', required: true, includeIfNull: true)
   final DateTime? sentAt;
-  
+
   @JsonKey(name: r'createdAt', required: true, includeIfNull: true)
   final DateTime? createdAt;
-  
+
   @JsonKey(name: r'updatedAt', required: true, includeIfNull: true)
   final DateTime? updatedAt;
-  
+
   @JsonKey(name: r'sender', required: false, includeIfNull: false)
   final OrderChatMessageSender? sender;
-  
+
   @override
-  bool operator ==(Object other) => identical(this, other) || other is SupportChatMessage &&
-    other.id == id &&
-    other.ticketId == ticketId &&
-    other.senderId == senderId &&
-    other.message == message &&
-    other.isFromSupport == isFromSupport &&
-    other.readAt == readAt &&
-    other.sentAt == sentAt &&
-    other.createdAt == createdAt &&
-    other.updatedAt == updatedAt &&
-    other.sender == sender;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is SupportChatMessage &&
+          other.id == id &&
+          other.ticketId == ticketId &&
+          other.senderId == senderId &&
+          other.message == message &&
+          other.isFromSupport == isFromSupport &&
+          other.readAt == readAt &&
+          other.sentAt == sentAt &&
+          other.createdAt == createdAt &&
+          other.updatedAt == updatedAt &&
+          other.sender == sender;
 
   @override
   int get hashCode =>
@@ -86,7 +88,8 @@ class SupportChatMessage {
       (updatedAt == null ? 0 : updatedAt.hashCode) +
       sender.hashCode;
 
-  factory SupportChatMessage.fromJson(Map<String, dynamic> json) => _$SupportChatMessageFromJson(json);
+  factory SupportChatMessage.fromJson(Map<String, dynamic> json) =>
+      _$SupportChatMessageFromJson(json);
 
   Map<String, dynamic> toJson() => _$SupportChatMessageToJson(this);
 
@@ -94,6 +97,4 @@ class SupportChatMessage {
   String toString() {
     return toJson().toString();
   }
-
 }
-

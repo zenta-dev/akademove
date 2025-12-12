@@ -17,21 +17,20 @@ part 'user_lookup_query.g.dart';
 )
 class UserLookupQuery {
   /// Returns a new [UserLookupQuery] instance.
-  const UserLookupQuery({
-    required this.phone,
-  });
+  const UserLookupQuery({required this.phone});
   @JsonKey(name: r'phone', required: true, includeIfNull: false)
   final String phone;
-  
-  @override
-  bool operator ==(Object other) => identical(this, other) || other is UserLookupQuery &&
-    other.phone == phone;
 
   @override
-  int get hashCode =>
-      phone.hashCode;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is UserLookupQuery && other.phone == phone;
 
-  factory UserLookupQuery.fromJson(Map<String, dynamic> json) => _$UserLookupQueryFromJson(json);
+  @override
+  int get hashCode => phone.hashCode;
+
+  factory UserLookupQuery.fromJson(Map<String, dynamic> json) =>
+      _$UserLookupQueryFromJson(json);
 
   Map<String, dynamic> toJson() => _$UserLookupQueryToJson(this);
 
@@ -39,6 +38,4 @@ class UserLookupQuery {
   String toString() {
     return toJson().toString();
   }
-
 }
-

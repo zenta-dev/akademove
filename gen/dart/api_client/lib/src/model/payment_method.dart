@@ -5,14 +5,13 @@
 // ignore_for_file: unused_element
 import 'package:json_annotation/json_annotation.dart';
 
-
 enum PaymentMethod {
-      @JsonValue(r'QRIS')
-      QRIS(r'QRIS'),
-      @JsonValue(r'BANK_TRANSFER')
-      BANK_TRANSFER(r'BANK_TRANSFER'),
-      @JsonValue(r'wallet')
-      wallet(r'wallet');
+  @JsonValue(r'QRIS')
+  QRIS(r'QRIS'),
+  @JsonValue(r'BANK_TRANSFER')
+  BANK_TRANSFER(r'BANK_TRANSFER'),
+  @JsonValue(r'wallet')
+  wallet(r'wallet');
 
   const PaymentMethod(this.value);
 

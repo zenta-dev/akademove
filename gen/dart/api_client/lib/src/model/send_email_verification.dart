@@ -17,21 +17,20 @@ part 'send_email_verification.g.dart';
 )
 class SendEmailVerification {
   /// Returns a new [SendEmailVerification] instance.
-  const SendEmailVerification({
-    required this.email,
-  });
+  const SendEmailVerification({required this.email});
   @JsonKey(name: r'email', required: true, includeIfNull: false)
   final String email;
-  
-  @override
-  bool operator ==(Object other) => identical(this, other) || other is SendEmailVerification &&
-    other.email == email;
 
   @override
-  int get hashCode =>
-      email.hashCode;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is SendEmailVerification && other.email == email;
 
-  factory SendEmailVerification.fromJson(Map<String, dynamic> json) => _$SendEmailVerificationFromJson(json);
+  @override
+  int get hashCode => email.hashCode;
+
+  factory SendEmailVerification.fromJson(Map<String, dynamic> json) =>
+      _$SendEmailVerificationFromJson(json);
 
   Map<String, dynamic> toJson() => _$SendEmailVerificationToJson(this);
 
@@ -39,6 +38,4 @@ class SendEmailVerification {
   String toString() {
     return toJson().toString();
   }
-
 }
-

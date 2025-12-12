@@ -3,7 +3,8 @@ import 'package:api_client/api_client.dart';
 
 // tests for OrderEnvelopePayloadDriverUpdateLocation
 void main() {
-  final OrderEnvelopePayloadDriverUpdateLocation? instance = /* OrderEnvelopePayloadDriverUpdateLocation(...) */ null;
+  final OrderEnvelopePayloadDriverUpdateLocation?
+  instance = /* OrderEnvelopePayloadDriverUpdateLocation(...) */ null;
   // TODO add properties to the entity
 
   group(OrderEnvelopePayloadDriverUpdateLocation, () {
@@ -23,6 +24,5 @@ void main() {
     test('to test the property `y`', () async {
       // TODO
     });
-
   });
 }

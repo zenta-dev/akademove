@@ -21,6 +21,5 @@ void main() {
     test('to test the property `streakDays`', () async {
       // TODO
     });
-
   });
 }

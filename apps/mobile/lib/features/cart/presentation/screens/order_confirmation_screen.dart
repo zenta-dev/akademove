@@ -1,4 +1,3 @@
-import 'package:akademove/app/router/router.dart';
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/cart/data/models/cart_models.dart'
     show Cart, CartItem;

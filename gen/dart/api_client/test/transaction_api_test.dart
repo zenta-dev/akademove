@@ -1,7 +1,6 @@
 import 'package:test/test.dart';
 import 'package:api_client/api_client.dart';
 
-
 /// tests for TransactionApi
 void main() {
   final instance = ApiClient().getTransactionApi();
@@ -16,6 +15,5 @@ void main() {
     test('test transactionList', () async {
       // TODO
     });
-
   });
 }

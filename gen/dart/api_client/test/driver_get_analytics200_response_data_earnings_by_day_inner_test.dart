@@ -3,7 +3,9 @@ import 'package:api_client/api_client.dart';
 
 // tests for DriverGetAnalytics200ResponseDataEarningsByDayInner
 void main() {
-  final DriverGetAnalytics200ResponseDataEarningsByDayInner? instance = /* DriverGetAnalytics200ResponseDataEarningsByDayInner(...) */ null;
+  final DriverGetAnalytics200ResponseDataEarningsByDayInner?
+  instance = /* DriverGetAnalytics200ResponseDataEarningsByDayInner(...) */
+      null;
   // TODO add properties to the entity
 
   group(DriverGetAnalytics200ResponseDataEarningsByDayInner, () {
@@ -26,6 +28,5 @@ void main() {
     test('to test the property `commission`', () async {
       // TODO
     });
-
   });
 }

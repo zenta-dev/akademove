@@ -3,7 +3,8 @@ import 'package:api_client/api_client.dart';
 
 // tests for BroadcastCreate201ResponseData
 void main() {
-  final BroadcastCreate201ResponseData? instance = /* BroadcastCreate201ResponseData(...) */ null;
+  final BroadcastCreate201ResponseData?
+  instance = /* BroadcastCreate201ResponseData(...) */ null;
   // TODO add properties to the entity
 
   group(BroadcastCreate201ResponseData, () {
@@ -81,6 +82,5 @@ void main() {
     test('to test the property `updatedAt`', () async {
       // TODO
     });
-
   });
 }

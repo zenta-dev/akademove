@@ -485,7 +485,7 @@ describe("FOOD Order Integration Tests", () => {
 		});
 
 		it("should mark driver as taking order", () => {
-			const driverBefore = { isTakingOrder: false };
+			const _driverBefore = { isTakingOrder: false };
 			const driverAfter = { isTakingOrder: true };
 
 			expect(driverAfter.isTakingOrder).toBe(true);
@@ -842,7 +842,7 @@ describe("FOOD Order Integration Tests", () => {
 		});
 
 		it("should handle merchant closing during preparation", () => {
-			const merchantOpen = false;
+			const _merchantOpen = false;
 			const orderStatus: OrderStatus = "PREPARING";
 
 			// Merchant can still complete existing orders

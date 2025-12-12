@@ -6,7 +6,6 @@ import { AuthError } from "@/core/error";
 import { shouldBypassAuthorization } from "@/core/middlewares/auth";
 import { createORPCRouter } from "@/core/router/orpc";
 import { logger } from "@/utils/logger";
-import { DriverMainRepository } from "../driver/main/driver-main-repository";
 import { PaymentRepository } from "../payment/payment-repository";
 import { TransactionRepository } from "../transaction/transaction-repository";
 import { OrderRepository } from "./order-repository";
@@ -78,21 +77,21 @@ export const OrderHandler = priv.router({
 			const isOwner = result.userId === context.user.id;
 
 			// Check if driver is assigned to this order
-			let isAssignedDriver = false;
+			let _isAssignedDriver = false;
 			if (context.user.role === "DRIVER" && result.driverId) {
 				const driver = await context.repo.driver.main.getByUserId(
 					context.user.id,
 				);
-				isAssignedDriver = result.driverId === driver.id;
+				_isAssignedDriver = result.driverId === driver.id;
 			}
 
 			// Check if merchant owns this order
-			let isMerchantOwner = false;
+			let _isMerchantOwner = false;
 			if (context.user.role === "MERCHANT" && result.merchantId) {
 				const merchant = await context.repo.merchant.main.getByUserId(
 					context.user.id,
 				);
-				isMerchantOwner = result.merchantId === merchant.id;
+				_isMerchantOwner = result.merchantId === merchant.id;
 			}
 
 			// if (!isOwner && !isAssignedDriver && !isMerchantOwner) {

@@ -48,116 +48,118 @@ class FraudEvent {
     required this.resolvedAt,
     required this.createdAt,
     required this.updatedAt,
-     this.user,
-     this.driver,
-     this.handledBy,
+    this.user,
+    this.driver,
+    this.handledBy,
   });
   @JsonKey(name: r'id', required: true, includeIfNull: false)
   final String id;
-  
+
   @JsonKey(name: r'eventType', required: true, includeIfNull: false)
   final FraudEventType eventType;
-  
+
   @JsonKey(name: r'severity', required: true, includeIfNull: false)
   final FraudSeverity severity;
-  
+
   @JsonKey(name: r'status', required: true, includeIfNull: false)
   final FraudStatus status;
-  
+
   @JsonKey(name: r'userId', required: true, includeIfNull: true)
   final String? userId;
-  
+
   @JsonKey(name: r'driverId', required: true, includeIfNull: true)
   final String? driverId;
-  
+
   @JsonKey(name: r'signals', required: true, includeIfNull: false)
   final List<FraudSignal> signals;
-  
-          // minimum: 0
-          // maximum: 100
+
+  // minimum: 0
+  // maximum: 100
   @JsonKey(name: r'score', required: true, includeIfNull: false)
   final num score;
-  
+
   @JsonKey(name: r'location', required: true, includeIfNull: true)
   final Location? location;
-  
+
   @JsonKey(name: r'previousLocation', required: true, includeIfNull: true)
   final Location? previousLocation;
-  
+
   @JsonKey(name: r'distanceKm', required: true, includeIfNull: true)
   final num? distanceKm;
-  
-          // minimum: -9007199254740991
-          // maximum: 9007199254740991
+
+  // minimum: -9007199254740991
+  // maximum: 9007199254740991
   @JsonKey(name: r'timeDeltaSeconds', required: true, includeIfNull: true)
   final int? timeDeltaSeconds;
-  
+
   @JsonKey(name: r'velocityKmh', required: true, includeIfNull: true)
   final num? velocityKmh;
-  
+
   @JsonKey(name: r'ipAddress', required: true, includeIfNull: true)
   final String? ipAddress;
-  
+
   @JsonKey(name: r'userAgent', required: true, includeIfNull: true)
   final String? userAgent;
-  
+
   @JsonKey(name: r'handledById', required: true, includeIfNull: true)
   final String? handledById;
-  
+
   @JsonKey(name: r'resolution', required: true, includeIfNull: true)
   final String? resolution;
-  
+
   @JsonKey(name: r'actionTaken', required: true, includeIfNull: true)
   final String? actionTaken;
-  
+
   @JsonKey(name: r'detectedAt', required: true, includeIfNull: false)
   final DateTime detectedAt;
-  
+
   @JsonKey(name: r'resolvedAt', required: true, includeIfNull: true)
   final DateTime? resolvedAt;
-  
+
   @JsonKey(name: r'createdAt', required: true, includeIfNull: false)
   final DateTime createdAt;
-  
+
   @JsonKey(name: r'updatedAt', required: true, includeIfNull: false)
   final DateTime updatedAt;
-  
+
   @JsonKey(name: r'user', required: false, includeIfNull: false)
   final FraudEventUser? user;
-  
+
   @JsonKey(name: r'driver', required: false, includeIfNull: false)
   final FraudEventDriver? driver;
-  
+
   @JsonKey(name: r'handledBy', required: false, includeIfNull: false)
   final FraudEventHandledBy? handledBy;
-  
+
   @override
-  bool operator ==(Object other) => identical(this, other) || other is FraudEvent &&
-    other.id == id &&
-    other.eventType == eventType &&
-    other.severity == severity &&
-    other.status == status &&
-    other.userId == userId &&
-    other.driverId == driverId &&
-    other.signals == signals &&
-    other.score == score &&
-    other.location == location &&
-    other.previousLocation == previousLocation &&
-    other.distanceKm == distanceKm &&
-    other.timeDeltaSeconds == timeDeltaSeconds &&
-    other.velocityKmh == velocityKmh &&
-    other.ipAddress == ipAddress &&
-    other.userAgent == userAgent &&
-    other.handledById == handledById &&
-    other.resolution == resolution &&
-    other.actionTaken == actionTaken &&
-    other.detectedAt == detectedAt &&
-    other.resolvedAt == resolvedAt &&
-    other.createdAt == createdAt &&
-    other.updatedAt == updatedAt &&
-    other.user == user &&
-    other.driver == driver &&
-    other.handledBy == handledBy;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is FraudEvent &&
+          other.id == id &&
+          other.eventType == eventType &&
+          other.severity == severity &&
+          other.status == status &&
+          other.userId == userId &&
+          other.driverId == driverId &&
+          other.signals == signals &&
+          other.score == score &&
+          other.location == location &&
+          other.previousLocation == previousLocation &&
+          other.distanceKm == distanceKm &&
+          other.timeDeltaSeconds == timeDeltaSeconds &&
+          other.velocityKmh == velocityKmh &&
+          other.ipAddress == ipAddress &&
+          other.userAgent == userAgent &&
+          other.handledById == handledById &&
+          other.resolution == resolution &&
+          other.actionTaken == actionTaken &&
+          other.detectedAt == detectedAt &&
+          other.resolvedAt == resolvedAt &&
+          other.createdAt == createdAt &&
+          other.updatedAt == updatedAt &&
+          other.user == user &&
+          other.driver == driver &&
+          other.handledBy == handledBy;
 
   @override
   int get hashCode =>
@@ -187,7 +189,8 @@ class FraudEvent {
       driver.hashCode +
       handledBy.hashCode;
 
-  factory FraudEvent.fromJson(Map<String, dynamic> json) => _$FraudEventFromJson(json);
+  factory FraudEvent.fromJson(Map<String, dynamic> json) =>
+      _$FraudEventFromJson(json);
 
   Map<String, dynamic> toJson() => _$FraudEventToJson(this);
 
@@ -195,6 +198,4 @@ class FraudEvent {
   String toString() {
     return toJson().toString();
   }
-
 }
-

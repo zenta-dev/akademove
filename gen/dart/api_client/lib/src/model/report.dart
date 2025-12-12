@@ -21,68 +21,70 @@ class Report {
   /// Returns a new [Report] instance.
   const Report({
     required this.id,
-     this.orderId,
+    this.orderId,
     required this.reporterId,
     required this.targetUserId,
     required this.category,
     required this.description,
-     this.evidenceUrl,
+    this.evidenceUrl,
     required this.status,
-     this.handledById,
-     this.resolution,
+    this.handledById,
+    this.resolution,
     required this.reportedAt,
-     this.resolvedAt,
+    this.resolvedAt,
   });
   @JsonKey(name: r'id', required: true, includeIfNull: false)
   final String id;
-  
+
   @JsonKey(name: r'orderId', required: false, includeIfNull: false)
   final String? orderId;
-  
+
   @JsonKey(name: r'reporterId', required: true, includeIfNull: false)
   final String reporterId;
-  
+
   @JsonKey(name: r'targetUserId', required: true, includeIfNull: false)
   final String targetUserId;
-  
+
   @JsonKey(name: r'category', required: true, includeIfNull: false)
   final ReportCategory category;
-  
+
   @JsonKey(name: r'description', required: true, includeIfNull: false)
   final String description;
-  
+
   @JsonKey(name: r'evidenceUrl', required: false, includeIfNull: false)
   final String? evidenceUrl;
-  
+
   @JsonKey(name: r'status', required: true, includeIfNull: false)
   final ReportStatus status;
-  
+
   @JsonKey(name: r'handledById', required: false, includeIfNull: false)
   final String? handledById;
-  
+
   @JsonKey(name: r'resolution', required: false, includeIfNull: false)
   final String? resolution;
-  
+
   @JsonKey(name: r'reportedAt', required: true, includeIfNull: false)
   final DateTime reportedAt;
-  
+
   @JsonKey(name: r'resolvedAt', required: false, includeIfNull: false)
   final DateTime? resolvedAt;
-  
+
   @override
-  bool operator ==(Object other) => identical(this, other) || other is Report &&
-    other.id == id &&
-    other.orderId == orderId &&
-    other.reporterId == reporterId &&
-    other.targetUserId == targetUserId &&
-    other.category == category &&
-    other.description == description &&
-    other.evidenceUrl == evidenceUrl &&
-    other.status == status &&
-    other.handledById == handledById &&
-    other.resolution == resolution &&
-    other.reportedAt == reportedAt &&
-    other.resolvedAt == resolvedAt;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Report &&
+          other.id == id &&
+          other.orderId == orderId &&
+          other.reporterId == reporterId &&
+          other.targetUserId == targetUserId &&
+          other.category == category &&
+          other.description == description &&
+          other.evidenceUrl == evidenceUrl &&
+          other.status == status &&
+          other.handledById == handledById &&
+          other.resolution == resolution &&
+          other.reportedAt == reportedAt &&
+          other.resolvedAt == resolvedAt;
 
   @override
   int get hashCode =>
@@ -107,6 +109,4 @@ class Report {
   String toString() {
     return toJson().toString();
   }
-
 }
-

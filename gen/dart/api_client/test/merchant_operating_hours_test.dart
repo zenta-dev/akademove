@@ -3,7 +3,8 @@ import 'package:api_client/api_client.dart';
 
 // tests for MerchantOperatingHours
 void main() {
-  final MerchantOperatingHours? instance = /* MerchantOperatingHours(...) */ null;
+  final MerchantOperatingHours? instance = /* MerchantOperatingHours(...) */
+      null;
   // TODO add properties to the entity
 
   group(MerchantOperatingHours, () {
@@ -55,6 +56,5 @@ void main() {
     test('to test the property `updatedAt`', () async {
       // TODO
     });
-
   });
 }

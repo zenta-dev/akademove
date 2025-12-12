@@ -62,7 +62,7 @@ export class CloudflareKVService implements KeyValueService {
 	async put<T>(
 		key: string,
 		value: T,
-		options?: KVNamespacePutOptions,
+		_options?: KVNamespacePutOptions,
 	): Promise<void> {
 		try {
 			if (typeof value !== "object" || value === null) {

@@ -3,7 +3,8 @@ import 'package:api_client/api_client.dart';
 
 // tests for AuthVerifyEmail200Response
 void main() {
-  final AuthVerifyEmail200Response? instance = /* AuthVerifyEmail200Response(...) */ null;
+  final AuthVerifyEmail200Response?
+  instance = /* AuthVerifyEmail200Response(...) */ null;
   // TODO add properties to the entity
 
   group(AuthVerifyEmail200Response, () {
@@ -26,6 +27,5 @@ void main() {
     test('to test the property `totalPages`', () async {
       // TODO
     });
-
   });
 }

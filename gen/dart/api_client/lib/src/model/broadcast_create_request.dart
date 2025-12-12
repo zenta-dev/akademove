@@ -22,35 +22,37 @@ class BroadcastCreateRequest {
     required this.message,
     required this.type,
     required this.targetAudience,
-     this.targetIds,
-     this.scheduledAt,
+    this.targetIds,
+    this.scheduledAt,
   });
   @JsonKey(name: r'title', required: true, includeIfNull: false)
   final String title;
-  
+
   @JsonKey(name: r'message', required: true, includeIfNull: false)
   final String message;
-  
+
   @JsonKey(name: r'type', required: true, includeIfNull: false)
   final BroadcastCreateRequestTypeEnum type;
-  
+
   @JsonKey(name: r'targetAudience', required: true, includeIfNull: false)
   final BroadcastCreateRequestTargetAudienceEnum targetAudience;
-  
+
   @JsonKey(name: r'targetIds', required: false, includeIfNull: false)
   final List<String>? targetIds;
-  
+
   @JsonKey(name: r'scheduledAt', required: false, includeIfNull: false)
   final DateTime? scheduledAt;
-  
+
   @override
-  bool operator ==(Object other) => identical(this, other) || other is BroadcastCreateRequest &&
-    other.title == title &&
-    other.message == message &&
-    other.type == type &&
-    other.targetAudience == targetAudience &&
-    other.targetIds == targetIds &&
-    other.scheduledAt == scheduledAt;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is BroadcastCreateRequest &&
+          other.title == title &&
+          other.message == message &&
+          other.type == type &&
+          other.targetAudience == targetAudience &&
+          other.targetIds == targetIds &&
+          other.scheduledAt == scheduledAt;
 
   @override
   int get hashCode =>
@@ -61,7 +63,8 @@ class BroadcastCreateRequest {
       targetIds.hashCode +
       (scheduledAt == null ? 0 : scheduledAt.hashCode);
 
-  factory BroadcastCreateRequest.fromJson(Map<String, dynamic> json) => _$BroadcastCreateRequestFromJson(json);
+  factory BroadcastCreateRequest.fromJson(Map<String, dynamic> json) =>
+      _$BroadcastCreateRequestFromJson(json);
 
   Map<String, dynamic> toJson() => _$BroadcastCreateRequestToJson(this);
 
@@ -69,7 +72,6 @@ class BroadcastCreateRequest {
   String toString() {
     return toJson().toString();
   }
-
 }
 
 enum BroadcastCreateRequestTypeEnum {
@@ -79,11 +81,11 @@ enum BroadcastCreateRequestTypeEnum {
   IN_APP(r'IN_APP'),
   @JsonValue(r'ALL')
   ALL(r'ALL');
-  
+
   const BroadcastCreateRequestTypeEnum(this.value);
-  
+
   final String value;
-  
+
   @override
   String toString() => value;
 }
@@ -101,12 +103,11 @@ enum BroadcastCreateRequestTargetAudienceEnum {
   ADMINS(r'ADMINS'),
   @JsonValue(r'OPERATORS')
   OPERATORS(r'OPERATORS');
-  
+
   const BroadcastCreateRequestTargetAudienceEnum(this.value);
-  
+
   final String value;
-  
+
   @override
   String toString() => value;
 }
-

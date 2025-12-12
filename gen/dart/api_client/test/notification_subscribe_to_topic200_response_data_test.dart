@@ -3,7 +3,8 @@ import 'package:api_client/api_client.dart';
 
 // tests for NotificationSubscribeToTopic200ResponseData
 void main() {
-  final NotificationSubscribeToTopic200ResponseData? instance = /* NotificationSubscribeToTopic200ResponseData(...) */ null;
+  final NotificationSubscribeToTopic200ResponseData?
+  instance = /* NotificationSubscribeToTopic200ResponseData(...) */ null;
   // TODO add properties to the entity
 
   group(NotificationSubscribeToTopic200ResponseData, () {
@@ -21,6 +22,5 @@ void main() {
     test('to test the property `errors`', () async {
       // TODO
     });
-
   });
 }

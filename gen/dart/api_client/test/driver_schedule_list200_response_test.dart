@@ -3,7 +3,8 @@ import 'package:api_client/api_client.dart';
 
 // tests for DriverScheduleList200Response
 void main() {
-  final DriverScheduleList200Response? instance = /* DriverScheduleList200Response(...) */ null;
+  final DriverScheduleList200Response?
+  instance = /* DriverScheduleList200Response(...) */ null;
   // TODO add properties to the entity
 
   group(DriverScheduleList200Response, () {
@@ -26,6 +27,5 @@ void main() {
     test('to test the property `totalPages`', () async {
       // TODO
     });
-
   });
 }

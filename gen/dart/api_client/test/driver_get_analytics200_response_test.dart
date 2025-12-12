@@ -3,7 +3,8 @@ import 'package:api_client/api_client.dart';
 
 // tests for DriverGetAnalytics200Response
 void main() {
-  final DriverGetAnalytics200Response? instance = /* DriverGetAnalytics200Response(...) */ null;
+  final DriverGetAnalytics200Response?
+  instance = /* DriverGetAnalytics200Response(...) */ null;
   // TODO add properties to the entity
 
   group(DriverGetAnalytics200Response, () {
@@ -26,6 +27,5 @@ void main() {
     test('to test the property `totalPages`', () async {
       // TODO
     });
-
   });
 }

@@ -25,22 +25,24 @@ class BankValidationResponse {
   });
   @JsonKey(name: r'isValid', required: true, includeIfNull: false)
   final bool isValid;
-  
+
   @JsonKey(name: r'accountName', required: true, includeIfNull: true)
   final String? accountName;
-  
+
   @JsonKey(name: r'bankCode', required: true, includeIfNull: false)
   final String bankCode;
-  
+
   @JsonKey(name: r'accountNumber', required: true, includeIfNull: false)
   final String accountNumber;
-  
+
   @override
-  bool operator ==(Object other) => identical(this, other) || other is BankValidationResponse &&
-    other.isValid == isValid &&
-    other.accountName == accountName &&
-    other.bankCode == bankCode &&
-    other.accountNumber == accountNumber;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is BankValidationResponse &&
+          other.isValid == isValid &&
+          other.accountName == accountName &&
+          other.bankCode == bankCode &&
+          other.accountNumber == accountNumber;
 
   @override
   int get hashCode =>
@@ -49,7 +51,8 @@ class BankValidationResponse {
       bankCode.hashCode +
       accountNumber.hashCode;
 
-  factory BankValidationResponse.fromJson(Map<String, dynamic> json) => _$BankValidationResponseFromJson(json);
+  factory BankValidationResponse.fromJson(Map<String, dynamic> json) =>
+      _$BankValidationResponseFromJson(json);
 
   Map<String, dynamic> toJson() => _$BankValidationResponseToJson(this);
 
@@ -57,6 +60,4 @@ class BankValidationResponse {
   String toString() {
     return toJson().toString();
   }
-
 }
-

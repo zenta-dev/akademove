@@ -1,7 +1,6 @@
 import 'package:test/test.dart';
 import 'package:api_client/api_client.dart';
 
-
 /// tests for ChatApi
 void main() {
   final instance = ApiClient().getChatApi();
@@ -31,6 +30,5 @@ void main() {
     test('test quickMessageUpdate', () async {
       // TODO
     });
-
   });
 }

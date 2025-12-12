@@ -22,29 +22,31 @@ class ConfigurationGetBusinessConfig200Response {
   const ConfigurationGetBusinessConfig200Response({
     required this.message,
     required this.data,
-     this.pagination,
-     this.totalPages,
+    this.pagination,
+    this.totalPages,
   });
   @JsonKey(name: r'message', required: true, includeIfNull: false)
   final String message;
-  
+
   @JsonKey(name: r'data', required: true, includeIfNull: false)
   final BusinessConfiguration data;
-  
+
   @JsonKey(name: r'pagination', required: false, includeIfNull: false)
   final PaginationResult? pagination;
-  
-          // minimum: 0
-          // maximum: 9007199254740991
+
+  // minimum: 0
+  // maximum: 9007199254740991
   @JsonKey(name: r'totalPages', required: false, includeIfNull: false)
   final int? totalPages;
-  
+
   @override
-  bool operator ==(Object other) => identical(this, other) || other is ConfigurationGetBusinessConfig200Response &&
-    other.message == message &&
-    other.data == data &&
-    other.pagination == pagination &&
-    other.totalPages == totalPages;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ConfigurationGetBusinessConfig200Response &&
+          other.message == message &&
+          other.data == data &&
+          other.pagination == pagination &&
+          other.totalPages == totalPages;
 
   @override
   int get hashCode =>
@@ -53,14 +55,15 @@ class ConfigurationGetBusinessConfig200Response {
       pagination.hashCode +
       totalPages.hashCode;
 
-  factory ConfigurationGetBusinessConfig200Response.fromJson(Map<String, dynamic> json) => _$ConfigurationGetBusinessConfig200ResponseFromJson(json);
+  factory ConfigurationGetBusinessConfig200Response.fromJson(
+    Map<String, dynamic> json,
+  ) => _$ConfigurationGetBusinessConfig200ResponseFromJson(json);
 
-  Map<String, dynamic> toJson() => _$ConfigurationGetBusinessConfig200ResponseToJson(this);
+  Map<String, dynamic> toJson() =>
+      _$ConfigurationGetBusinessConfig200ResponseToJson(this);
 
   @override
   String toString() {
     return toJson().toString();
   }
-
 }
-

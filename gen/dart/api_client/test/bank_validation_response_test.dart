@@ -3,7 +3,8 @@ import 'package:api_client/api_client.dart';
 
 // tests for BankValidationResponse
 void main() {
-  final BankValidationResponse? instance = /* BankValidationResponse(...) */ null;
+  final BankValidationResponse? instance = /* BankValidationResponse(...) */
+      null;
   // TODO add properties to the entity
 
   group(BankValidationResponse, () {
@@ -26,6 +27,5 @@ void main() {
     test('to test the property `accountNumber`', () async {
       // TODO
     });
-
   });
 }

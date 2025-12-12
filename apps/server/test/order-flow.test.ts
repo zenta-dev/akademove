@@ -411,7 +411,7 @@ describe("Order Flow", () => {
 			];
 
 			// Terminal statuses should not be recovered
-			const terminalStatuses = [
+			const _terminalStatuses = [
 				"COMPLETED",
 				"CANCELLED_BY_USER",
 				"CANCELLED_BY_DRIVER",
@@ -464,7 +464,7 @@ describe("Order Flow", () => {
 		it("should match all drivers when preference is ANY", () => {
 			const genderPreference = "ANY";
 
-			const matchesGender = (driverGender: string) => {
+			const matchesGender = (_driverGender: string) => {
 				if (genderPreference === "ANY") {
 					return true;
 				}

@@ -1,7 +1,6 @@
 import 'package:test/test.dart';
 import 'package:api_client/api_client.dart';
 
-
 /// tests for MerchantApi
 void main() {
   final instance = ApiClient().getMerchantApi();
@@ -82,6 +81,36 @@ void main() {
       // TODO
     });
 
+    //Future<MerchantOperatingHoursList200Response> merchantOperatingHoursBulkUpsert(String merchantId, MerchantOperatingHoursBulkUpsertRequest merchantOperatingHoursBulkUpsertRequest) async
+    test('test merchantOperatingHoursBulkUpsert', () async {
+      // TODO
+    });
+
+    //Future<MerchantOperatingHoursCreate200Response> merchantOperatingHoursCreate(String merchantId, MerchantOperatingHoursCreateRequest merchantOperatingHoursCreateRequest) async
+    test('test merchantOperatingHoursCreate', () async {
+      // TODO
+    });
+
+    //Future<MerchantOperatingHoursCreate200Response> merchantOperatingHoursGet(String merchantId, String id) async
+    test('test merchantOperatingHoursGet', () async {
+      // TODO
+    });
+
+    //Future<MerchantOperatingHoursList200Response> merchantOperatingHoursList(String merchantId) async
+    test('test merchantOperatingHoursList', () async {
+      // TODO
+    });
+
+    //Future<BadgeRemove200Response> merchantOperatingHoursRemove(String merchantId, String id) async
+    test('test merchantOperatingHoursRemove', () async {
+      // TODO
+    });
+
+    //Future<MerchantOperatingHoursCreate200Response> merchantOperatingHoursUpdate(String merchantId, String id, MerchantOperatingHoursUpdateRequest merchantOperatingHoursUpdateRequest) async
+    test('test merchantOperatingHoursUpdate', () async {
+      // TODO
+    });
+
     //Future<MerchantOrderAccept200Response> merchantOrderAccept(String merchantId, String id) async
     test('test merchantOrderAccept', () async {
       // TODO
@@ -141,6 +170,5 @@ void main() {
     test('test merchantUpdateDocumentStatus', () async {
       // TODO
     });
-
   });
 }

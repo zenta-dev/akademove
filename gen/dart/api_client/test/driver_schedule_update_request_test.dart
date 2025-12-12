@@ -3,7 +3,8 @@ import 'package:api_client/api_client.dart';
 
 // tests for DriverScheduleUpdateRequest
 void main() {
-  final DriverScheduleUpdateRequest? instance = /* DriverScheduleUpdateRequest(...) */ null;
+  final DriverScheduleUpdateRequest?
+  instance = /* DriverScheduleUpdateRequest(...) */ null;
   // TODO add properties to the entity
 
   group(DriverScheduleUpdateRequest, () {
@@ -41,6 +42,5 @@ void main() {
     test('to test the property `isActive`', () async {
       // TODO
     });
-
   });
 }

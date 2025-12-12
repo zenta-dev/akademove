@@ -3,7 +3,8 @@ import 'package:api_client/api_client.dart';
 
 // tests for OrderEnvelopePayloadRetryInfo
 void main() {
-  final OrderEnvelopePayloadRetryInfo? instance = /* OrderEnvelopePayloadRetryInfo(...) */ null;
+  final OrderEnvelopePayloadRetryInfo?
+  instance = /* OrderEnvelopePayloadRetryInfo(...) */ null;
   // TODO add properties to the entity
 
   group(OrderEnvelopePayloadRetryInfo, () {
@@ -26,6 +27,5 @@ void main() {
     test('to test the property `reason`', () async {
       // TODO
     });
-
   });
 }

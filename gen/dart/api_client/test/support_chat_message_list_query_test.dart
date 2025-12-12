@@ -3,7 +3,8 @@ import 'package:api_client/api_client.dart';
 
 // tests for SupportChatMessageListQuery
 void main() {
-  final SupportChatMessageListQuery? instance = /* SupportChatMessageListQuery(...) */ null;
+  final SupportChatMessageListQuery?
+  instance = /* SupportChatMessageListQuery(...) */ null;
   // TODO add properties to the entity
 
   group(SupportChatMessageListQuery, () {
@@ -21,6 +22,5 @@ void main() {
     test('to test the property `cursor`', () async {
       // TODO
     });
-
   });
 }

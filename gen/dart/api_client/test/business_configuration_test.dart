@@ -87,5 +87,9 @@ void main() {
       // TODO
     });
 
+    // num paymentPendingTimeoutMinutes (default value: 15)
+    test('to test the property `paymentPendingTimeoutMinutes`', () async {
+      // TODO
+    });
   });
 }

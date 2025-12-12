@@ -3,7 +3,8 @@ import 'package:api_client/api_client.dart';
 
 // tests for MerchantOperatingHoursList200Response
 void main() {
-  final MerchantOperatingHoursList200Response? instance = /* MerchantOperatingHoursList200Response(...) */ null;
+  final MerchantOperatingHoursList200Response?
+  instance = /* MerchantOperatingHoursList200Response(...) */ null;
   // TODO add properties to the entity
 
   group(MerchantOperatingHoursList200Response, () {
@@ -26,6 +27,5 @@ void main() {
     test('to test the property `totalPages`', () async {
       // TODO
     });
-
   });
 }

@@ -3,7 +3,8 @@ import 'package:api_client/api_client.dart';
 
 // tests for NotificationSubscribeToTopicRequest
 void main() {
-  final NotificationSubscribeToTopicRequest? instance = /* NotificationSubscribeToTopicRequest(...) */ null;
+  final NotificationSubscribeToTopicRequest?
+  instance = /* NotificationSubscribeToTopicRequest(...) */ null;
   // TODO add properties to the entity
 
   group(NotificationSubscribeToTopicRequest, () {
@@ -16,6 +17,5 @@ void main() {
     test('to test the property `token`', () async {
       // TODO
     });
-
   });
 }

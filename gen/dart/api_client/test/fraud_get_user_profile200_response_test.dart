@@ -3,7 +3,8 @@ import 'package:api_client/api_client.dart';
 
 // tests for FraudGetUserProfile200Response
 void main() {
-  final FraudGetUserProfile200Response? instance = /* FraudGetUserProfile200Response(...) */ null;
+  final FraudGetUserProfile200Response?
+  instance = /* FraudGetUserProfile200Response(...) */ null;
   // TODO add properties to the entity
 
   group(FraudGetUserProfile200Response, () {
@@ -26,6 +27,5 @@ void main() {
     test('to test the property `totalPages`', () async {
       // TODO
     });
-
   });
 }

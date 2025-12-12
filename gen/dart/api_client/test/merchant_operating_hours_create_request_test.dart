@@ -3,7 +3,8 @@ import 'package:api_client/api_client.dart';
 
 // tests for MerchantOperatingHoursCreateRequest
 void main() {
-  final MerchantOperatingHoursCreateRequest? instance = /* MerchantOperatingHoursCreateRequest(...) */ null;
+  final MerchantOperatingHoursCreateRequest?
+  instance = /* MerchantOperatingHoursCreateRequest(...) */ null;
   // TODO add properties to the entity
 
   group(MerchantOperatingHoursCreateRequest, () {
@@ -35,6 +36,5 @@ void main() {
     test('to test the property `closeTime`', () async {
       // TODO
     });
-
   });
 }

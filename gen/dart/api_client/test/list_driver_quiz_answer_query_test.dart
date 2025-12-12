@@ -3,7 +3,8 @@ import 'package:api_client/api_client.dart';
 
 // tests for ListDriverQuizAnswerQuery
 void main() {
-  final ListDriverQuizAnswerQuery? instance = /* ListDriverQuizAnswerQuery(...) */ null;
+  final ListDriverQuizAnswerQuery?
+  instance = /* ListDriverQuizAnswerQuery(...) */ null;
   // TODO add properties to the entity
 
   group(ListDriverQuizAnswerQuery, () {
@@ -26,6 +27,5 @@ void main() {
     test('to test the property `limit`', () async {
       // TODO
     });
-
   });
 }

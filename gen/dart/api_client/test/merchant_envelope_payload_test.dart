@@ -3,7 +3,8 @@ import 'package:api_client/api_client.dart';
 
 // tests for MerchantEnvelopePayload
 void main() {
-  final MerchantEnvelopePayload? instance = /* MerchantEnvelopePayload(...) */ null;
+  final MerchantEnvelopePayload? instance = /* MerchantEnvelopePayload(...) */
+      null;
   // TODO add properties to the entity
 
   group(MerchantEnvelopePayload, () {
@@ -46,6 +47,5 @@ void main() {
     test('to test the property `newStatus`', () async {
       // TODO
     });
-
   });
 }

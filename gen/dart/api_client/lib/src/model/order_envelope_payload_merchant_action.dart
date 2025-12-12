@@ -20,37 +20,37 @@ class OrderEnvelopePayloadMerchantAction {
   const OrderEnvelopePayloadMerchantAction({
     required this.orderId,
     required this.merchantId,
-     this.reason,
+    this.reason,
   });
   @JsonKey(name: r'orderId', required: true, includeIfNull: false)
   final String orderId;
-  
+
   @JsonKey(name: r'merchantId', required: true, includeIfNull: false)
   final String merchantId;
-  
+
   @JsonKey(name: r'reason', required: false, includeIfNull: false)
   final String? reason;
-  
-  @override
-  bool operator ==(Object other) => identical(this, other) || other is OrderEnvelopePayloadMerchantAction &&
-    other.orderId == orderId &&
-    other.merchantId == merchantId &&
-    other.reason == reason;
 
   @override
-  int get hashCode =>
-      orderId.hashCode +
-      merchantId.hashCode +
-      reason.hashCode;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is OrderEnvelopePayloadMerchantAction &&
+          other.orderId == orderId &&
+          other.merchantId == merchantId &&
+          other.reason == reason;
 
-  factory OrderEnvelopePayloadMerchantAction.fromJson(Map<String, dynamic> json) => _$OrderEnvelopePayloadMerchantActionFromJson(json);
+  @override
+  int get hashCode => orderId.hashCode + merchantId.hashCode + reason.hashCode;
 
-  Map<String, dynamic> toJson() => _$OrderEnvelopePayloadMerchantActionToJson(this);
+  factory OrderEnvelopePayloadMerchantAction.fromJson(
+    Map<String, dynamic> json,
+  ) => _$OrderEnvelopePayloadMerchantActionFromJson(json);
+
+  Map<String, dynamic> toJson() =>
+      _$OrderEnvelopePayloadMerchantActionToJson(this);
 
   @override
   String toString() {
     return toJson().toString();
   }
-
 }
-

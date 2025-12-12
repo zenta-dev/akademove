@@ -598,7 +598,7 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
                   isValidated = true;
                   isValidating = false;
                 });
-                if (this.mounted) {
+                if (mounted) {
                   context.showMyToast(
                     context.l10n.toast_bank_account_verified,
                     type: ToastType.success,
@@ -606,7 +606,7 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
                 }
               } else {
                 setState(() => isValidating = false);
-                if (this.mounted) {
+                if (mounted) {
                   context.showMyToast(
                     context.l10n.toast_failed_verify_bank,
                     type: ToastType.failed,
@@ -615,7 +615,7 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
               }
             } catch (e) {
               setState(() => isValidating = false);
-              if (this.mounted) {
+              if (mounted) {
                 context.showMyToast(
                   context.l10n.toast_failed_verify_bank,
                   type: ToastType.failed,
@@ -817,7 +817,7 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
                         final accountName = accountNameController.text.trim();
 
                         if (amountText.isEmpty) {
-                          if (this.mounted) {
+                          if (mounted) {
                             context.showMyToast(
                               context.l10n.enter_withdrawal_amount,
                               type: ToastType.failed,
@@ -828,7 +828,7 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
 
                         final amount = num.tryParse(amountText);
                         if (amount == null || amount <= 0) {
-                          if (this.mounted) {
+                          if (mounted) {
                             context.showMyToast(
                               context.l10n.invalid_amount,
                               type: ToastType.failed,
@@ -839,7 +839,7 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
 
                         final balance = wallet?.balance ?? 0;
                         if (amount > balance) {
-                          if (this.mounted) {
+                          if (mounted) {
                             context.showMyToast(
                               context.l10n.insufficient_balance,
                               type: ToastType.failed,
@@ -849,7 +849,7 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
                         }
 
                         if (accountNumber.isEmpty) {
-                          if (this.mounted) {
+                          if (mounted) {
                             context.showMyToast(
                               context.l10n.please_enter_bank_account_number,
                               type: ToastType.failed,

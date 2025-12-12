@@ -3,7 +3,8 @@ import 'package:api_client/api_client.dart';
 
 // tests for BroadcastCreateRequest
 void main() {
-  final BroadcastCreateRequest? instance = /* BroadcastCreateRequest(...) */ null;
+  final BroadcastCreateRequest? instance = /* BroadcastCreateRequest(...) */
+      null;
   // TODO add properties to the entity
 
   group(BroadcastCreateRequest, () {
@@ -36,6 +37,5 @@ void main() {
     test('to test the property `scheduledAt`', () async {
       // TODO
     });
-
   });
 }

@@ -24,33 +24,34 @@ class ReviewCheckCanReview200ResponseData {
   });
   @JsonKey(name: r'canReview', required: true, includeIfNull: false)
   final bool canReview;
-  
+
   @JsonKey(name: r'alreadyReviewed', required: true, includeIfNull: false)
   final bool alreadyReviewed;
-  
+
   @JsonKey(name: r'orderCompleted', required: true, includeIfNull: false)
   final bool orderCompleted;
-  
+
   @override
-  bool operator ==(Object other) => identical(this, other) || other is ReviewCheckCanReview200ResponseData &&
-    other.canReview == canReview &&
-    other.alreadyReviewed == alreadyReviewed &&
-    other.orderCompleted == orderCompleted;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ReviewCheckCanReview200ResponseData &&
+          other.canReview == canReview &&
+          other.alreadyReviewed == alreadyReviewed &&
+          other.orderCompleted == orderCompleted;
 
   @override
   int get hashCode =>
-      canReview.hashCode +
-      alreadyReviewed.hashCode +
-      orderCompleted.hashCode;
+      canReview.hashCode + alreadyReviewed.hashCode + orderCompleted.hashCode;
 
-  factory ReviewCheckCanReview200ResponseData.fromJson(Map<String, dynamic> json) => _$ReviewCheckCanReview200ResponseDataFromJson(json);
+  factory ReviewCheckCanReview200ResponseData.fromJson(
+    Map<String, dynamic> json,
+  ) => _$ReviewCheckCanReview200ResponseDataFromJson(json);
 
-  Map<String, dynamic> toJson() => _$ReviewCheckCanReview200ResponseDataToJson(this);
+  Map<String, dynamic> toJson() =>
+      _$ReviewCheckCanReview200ResponseDataToJson(this);
 
   @override
   String toString() {
     return toJson().toString();
   }
-
 }
-

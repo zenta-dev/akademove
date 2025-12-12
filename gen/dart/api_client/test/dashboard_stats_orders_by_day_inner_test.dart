@@ -3,7 +3,8 @@ import 'package:api_client/api_client.dart';
 
 // tests for DashboardStatsOrdersByDayInner
 void main() {
-  final DashboardStatsOrdersByDayInner? instance = /* DashboardStatsOrdersByDayInner(...) */ null;
+  final DashboardStatsOrdersByDayInner?
+  instance = /* DashboardStatsOrdersByDayInner(...) */ null;
   // TODO add properties to the entity
 
   group(DashboardStatsOrdersByDayInner, () {
@@ -26,6 +27,5 @@ void main() {
     test('to test the property `cancelled`', () async {
       // TODO
     });
-
   });
 }

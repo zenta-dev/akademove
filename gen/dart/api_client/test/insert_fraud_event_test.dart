@@ -101,6 +101,5 @@ void main() {
     test('to test the property `resolvedAt`', () async {
       // TODO
     });
-
   });
 }

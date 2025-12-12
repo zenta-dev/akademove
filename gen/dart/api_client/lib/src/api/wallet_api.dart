@@ -23,7 +23,6 @@ import 'package:api_client/src/model/transfer_request.dart';
 import 'package:api_client/src/model/withdraw_request.dart';
 
 class WalletApi {
-
   final Dio _dio;
 
   const WalletApi(this._dio);
@@ -1303,7 +1302,7 @@ _responseData = rawData == null ? null : deserialize<DriverWalletTopUp200Respons
   }
 
   /// walletGet
-  /// 
+  ///
   ///
   /// Parameters:
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
@@ -1315,7 +1314,7 @@ _responseData = rawData == null ? null : deserialize<DriverWalletTopUp200Respons
   ///
   /// Returns a [Future] containing a [Response] with a [DriverWalletGetWallet200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<DriverWalletGetWallet200Response>> walletGet({ 
+  Future<Response<WalletGet200Response>> walletGet({ 
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -1326,16 +1325,10 @@ _responseData = rawData == null ? null : deserialize<DriverWalletTopUp200Respons
     final _path = r'/wallets';
     final _options = Options(
       method: r'GET',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -1354,7 +1347,7 @@ _responseData = rawData == null ? null : deserialize<DriverWalletTopUp200Respons
 
     try {
       final rawData = _response.data;
-_responseData = rawData == null ? null : deserialize<DriverWalletGetWallet200Response, DriverWalletGetWallet200Response>(rawData, 'DriverWalletGetWallet200Response', growable: true);
+_responseData = rawData == null ? null : deserialize<WalletGet200Response, WalletGet200Response>(rawData, 'WalletGet200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -1378,11 +1371,11 @@ _responseData = rawData == null ? null : deserialize<DriverWalletGetWallet200Res
   }
 
   /// walletGetMonthlySummary
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [year] 
-  /// * [month] 
+  /// * [year]
+  /// * [month]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -1392,7 +1385,7 @@ _responseData = rawData == null ? null : deserialize<DriverWalletGetWallet200Res
   ///
   /// Returns a [Future] containing a [Response] with a [DriverWalletGetMonthlySummary200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<DriverWalletGetMonthlySummary200Response>> walletGetMonthlySummary({ 
+  Future<Response<WalletGetMonthlySummary200Response>> walletGetMonthlySummary({ 
     required num year,
     required num month,
     CancelToken? cancelToken,
@@ -1405,26 +1398,17 @@ _responseData = rawData == null ? null : deserialize<DriverWalletGetWallet200Res
     final _path = r'/wallets/summary';
     final _options = Options(
       method: r'GET',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
       validateStatus: validateStatus,
     );
 
-    final _queryParameters = <String, dynamic>{
-      r'year': year,
-      r'month': month,
-    };
+    final _queryParameters = <String, dynamic>{r'year': year, r'month': month};
 
     final _response = await _dio.request<Object>(
       _path,
@@ -1439,7 +1423,7 @@ _responseData = rawData == null ? null : deserialize<DriverWalletGetWallet200Res
 
     try {
       final rawData = _response.data;
-_responseData = rawData == null ? null : deserialize<DriverWalletGetMonthlySummary200Response, DriverWalletGetMonthlySummary200Response>(rawData, 'DriverWalletGetMonthlySummary200Response', growable: true);
+_responseData = rawData == null ? null : deserialize<WalletGetMonthlySummary200Response, WalletGetMonthlySummary200Response>(rawData, 'WalletGetMonthlySummary200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -1475,7 +1459,7 @@ _responseData = rawData == null ? null : deserialize<DriverWalletGetMonthlySumma
   ///
   /// Returns a [Future] containing a [Response] with a [DriverWalletGetSavedBankAccount200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<DriverWalletGetSavedBankAccount200Response>> walletGetSavedBankAccount({ 
+  Future<Response<WalletGetSavedBankAccount200Response>> walletGetSavedBankAccount({ 
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -1486,16 +1470,10 @@ _responseData = rawData == null ? null : deserialize<DriverWalletGetMonthlySumma
     final _path = r'/wallets/bank';
     final _options = Options(
       method: r'GET',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -1514,7 +1492,7 @@ _responseData = rawData == null ? null : deserialize<DriverWalletGetMonthlySumma
 
     try {
       final rawData = _response.data;
-_responseData = rawData == null ? null : deserialize<DriverWalletGetSavedBankAccount200Response, DriverWalletGetSavedBankAccount200Response>(rawData, 'DriverWalletGetSavedBankAccount200Response', growable: true);
+_responseData = rawData == null ? null : deserialize<WalletGetSavedBankAccount200Response, WalletGetSavedBankAccount200Response>(rawData, 'WalletGetSavedBankAccount200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -1538,10 +1516,10 @@ _responseData = rawData == null ? null : deserialize<DriverWalletGetSavedBankAcc
   }
 
   /// walletPay
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [payRequest] 
+  /// * [payRequest]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -1551,7 +1529,7 @@ _responseData = rawData == null ? null : deserialize<DriverWalletGetSavedBankAcc
   ///
   /// Returns a [Future] containing a [Response] with a [DriverWalletTopUp200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<DriverWalletTopUp200Response>> walletPay({ 
+  Future<Response<WalletTopUp200Response>> walletPay({ 
     required PayRequest payRequest,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -1563,16 +1541,10 @@ _responseData = rawData == null ? null : deserialize<DriverWalletGetSavedBankAcc
     final _path = r'/wallets/pay';
     final _options = Options(
       method: r'POST',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -1583,13 +1555,10 @@ _responseData = rawData == null ? null : deserialize<DriverWalletGetSavedBankAcc
     dynamic _bodyData;
 
     try {
-        _bodyData=jsonEncode(payRequest);
-    } catch(error, stackTrace) {
+      _bodyData = jsonEncode(payRequest);
+    } catch (error, stackTrace) {
       throw DioException(
-         requestOptions: _options.compose(
-          _dio.options,
-          _path,
-        ),
+        requestOptions: _options.compose(_dio.options, _path),
         type: DioExceptionType.unknown,
         error: error,
         stackTrace: stackTrace,
@@ -1609,7 +1578,7 @@ _responseData = rawData == null ? null : deserialize<DriverWalletGetSavedBankAcc
 
     try {
       final rawData = _response.data;
-_responseData = rawData == null ? null : deserialize<DriverWalletTopUp200Response, DriverWalletTopUp200Response>(rawData, 'DriverWalletTopUp200Response', growable: true);
+_responseData = rawData == null ? null : deserialize<WalletTopUp200Response, WalletTopUp200Response>(rawData, 'WalletTopUp200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -1633,10 +1602,10 @@ _responseData = rawData == null ? null : deserialize<DriverWalletTopUp200Respons
   }
 
   /// walletTopUp
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [topUpRequest] 
+  /// * [topUpRequest]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -1646,7 +1615,7 @@ _responseData = rawData == null ? null : deserialize<DriverWalletTopUp200Respons
   ///
   /// Returns a [Future] containing a [Response] with a [DriverWalletTopUp200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<DriverWalletTopUp200Response>> walletTopUp({ 
+  Future<Response<WalletTopUp200Response>> walletTopUp({ 
     required TopUpRequest topUpRequest,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -1658,16 +1627,10 @@ _responseData = rawData == null ? null : deserialize<DriverWalletTopUp200Respons
     final _path = r'/wallets/topup';
     final _options = Options(
       method: r'POST',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -1678,13 +1641,10 @@ _responseData = rawData == null ? null : deserialize<DriverWalletTopUp200Respons
     dynamic _bodyData;
 
     try {
-        _bodyData=jsonEncode(topUpRequest);
-    } catch(error, stackTrace) {
+      _bodyData = jsonEncode(topUpRequest);
+    } catch (error, stackTrace) {
       throw DioException(
-         requestOptions: _options.compose(
-          _dio.options,
-          _path,
-        ),
+        requestOptions: _options.compose(_dio.options, _path),
         type: DioExceptionType.unknown,
         error: error,
         stackTrace: stackTrace,
@@ -1704,7 +1664,7 @@ _responseData = rawData == null ? null : deserialize<DriverWalletTopUp200Respons
 
     try {
       final rawData = _response.data;
-_responseData = rawData == null ? null : deserialize<DriverWalletTopUp200Response, DriverWalletTopUp200Response>(rawData, 'DriverWalletTopUp200Response', growable: true);
+_responseData = rawData == null ? null : deserialize<WalletTopUp200Response, WalletTopUp200Response>(rawData, 'WalletTopUp200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -1728,10 +1688,10 @@ _responseData = rawData == null ? null : deserialize<DriverWalletTopUp200Respons
   }
 
   /// walletTransfer
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [transferRequest] 
+  /// * [transferRequest]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -1741,7 +1701,7 @@ _responseData = rawData == null ? null : deserialize<DriverWalletTopUp200Respons
   ///
   /// Returns a [Future] containing a [Response] with a [DriverWalletTransfer200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<DriverWalletTransfer200Response>> walletTransfer({ 
+  Future<Response<WalletTransfer200Response>> walletTransfer({ 
     required TransferRequest transferRequest,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -1753,16 +1713,10 @@ _responseData = rawData == null ? null : deserialize<DriverWalletTopUp200Respons
     final _path = r'/wallets/transfer';
     final _options = Options(
       method: r'POST',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -1773,13 +1727,10 @@ _responseData = rawData == null ? null : deserialize<DriverWalletTopUp200Respons
     dynamic _bodyData;
 
     try {
-        _bodyData=jsonEncode(transferRequest);
-    } catch(error, stackTrace) {
+      _bodyData = jsonEncode(transferRequest);
+    } catch (error, stackTrace) {
       throw DioException(
-         requestOptions: _options.compose(
-          _dio.options,
-          _path,
-        ),
+        requestOptions: _options.compose(_dio.options, _path),
         type: DioExceptionType.unknown,
         error: error,
         stackTrace: stackTrace,
@@ -1799,7 +1750,7 @@ _responseData = rawData == null ? null : deserialize<DriverWalletTopUp200Respons
 
     try {
       final rawData = _response.data;
-_responseData = rawData == null ? null : deserialize<DriverWalletTransfer200Response, DriverWalletTransfer200Response>(rawData, 'DriverWalletTransfer200Response', growable: true);
+_responseData = rawData == null ? null : deserialize<WalletTransfer200Response, WalletTransfer200Response>(rawData, 'WalletTransfer200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -1823,10 +1774,10 @@ _responseData = rawData == null ? null : deserialize<DriverWalletTransfer200Resp
   }
 
   /// walletWithdraw
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [withdrawRequest] 
+  /// * [withdrawRequest]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -1836,7 +1787,7 @@ _responseData = rawData == null ? null : deserialize<DriverWalletTransfer200Resp
   ///
   /// Returns a [Future] containing a [Response] with a [DriverWalletTopUp200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<DriverWalletTopUp200Response>> walletWithdraw({ 
+  Future<Response<WalletTopUp200Response>> walletWithdraw({ 
     required WithdrawRequest withdrawRequest,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -1848,16 +1799,10 @@ _responseData = rawData == null ? null : deserialize<DriverWalletTransfer200Resp
     final _path = r'/wallets/withdraw';
     final _options = Options(
       method: r'POST',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -1868,13 +1813,10 @@ _responseData = rawData == null ? null : deserialize<DriverWalletTransfer200Resp
     dynamic _bodyData;
 
     try {
-        _bodyData=jsonEncode(withdrawRequest);
-    } catch(error, stackTrace) {
+      _bodyData = jsonEncode(withdrawRequest);
+    } catch (error, stackTrace) {
       throw DioException(
-         requestOptions: _options.compose(
-          _dio.options,
-          _path,
-        ),
+        requestOptions: _options.compose(_dio.options, _path),
         type: DioExceptionType.unknown,
         error: error,
         stackTrace: stackTrace,
@@ -1894,7 +1836,7 @@ _responseData = rawData == null ? null : deserialize<DriverWalletTransfer200Resp
 
     try {
       final rawData = _response.data;
-_responseData = rawData == null ? null : deserialize<DriverWalletTopUp200Response, DriverWalletTopUp200Response>(rawData, 'DriverWalletTopUp200Response', growable: true);
+_responseData = rawData == null ? null : deserialize<WalletTopUp200Response, WalletTopUp200Response>(rawData, 'WalletTopUp200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -1916,5 +1858,4 @@ _responseData = rawData == null ? null : deserialize<DriverWalletTopUp200Respons
       extra: _response.extra,
     );
   }
-
 }

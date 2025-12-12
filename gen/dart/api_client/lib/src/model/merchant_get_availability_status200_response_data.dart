@@ -25,25 +25,28 @@ class MerchantGetAvailabilityStatus200ResponseData {
   });
   @JsonKey(name: r'id', required: true, includeIfNull: false)
   final String id;
-  
+
   @JsonKey(name: r'isOnline', required: true, includeIfNull: false)
   final bool isOnline;
-  
-      /// Merchant operating status
+
+  /// Merchant operating status
   @JsonKey(name: r'operatingStatus', required: true, includeIfNull: false)
-  final MerchantGetAvailabilityStatus200ResponseDataOperatingStatusEnum operatingStatus;
-  
-          // minimum: 0
-          // maximum: 9007199254740991
+  final MerchantGetAvailabilityStatus200ResponseDataOperatingStatusEnum
+  operatingStatus;
+
+  // minimum: 0
+  // maximum: 9007199254740991
   @JsonKey(name: r'activeOrderCount', required: true, includeIfNull: false)
   final int activeOrderCount;
-  
+
   @override
-  bool operator ==(Object other) => identical(this, other) || other is MerchantGetAvailabilityStatus200ResponseData &&
-    other.id == id &&
-    other.isOnline == isOnline &&
-    other.operatingStatus == operatingStatus &&
-    other.activeOrderCount == activeOrderCount;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is MerchantGetAvailabilityStatus200ResponseData &&
+          other.id == id &&
+          other.isOnline == isOnline &&
+          other.operatingStatus == operatingStatus &&
+          other.activeOrderCount == activeOrderCount;
 
   @override
   int get hashCode =>
@@ -52,36 +55,43 @@ class MerchantGetAvailabilityStatus200ResponseData {
       operatingStatus.hashCode +
       activeOrderCount.hashCode;
 
-  factory MerchantGetAvailabilityStatus200ResponseData.fromJson(Map<String, dynamic> json) => _$MerchantGetAvailabilityStatus200ResponseDataFromJson(json);
+  factory MerchantGetAvailabilityStatus200ResponseData.fromJson(
+    Map<String, dynamic> json,
+  ) => _$MerchantGetAvailabilityStatus200ResponseDataFromJson(json);
 
-  Map<String, dynamic> toJson() => _$MerchantGetAvailabilityStatus200ResponseDataToJson(this);
+  Map<String, dynamic> toJson() =>
+      _$MerchantGetAvailabilityStatus200ResponseDataToJson(this);
 
   @override
   String toString() {
     return toJson().toString();
   }
-
 }
+
 /// Merchant operating status
 enum MerchantGetAvailabilityStatus200ResponseDataOperatingStatusEnum {
-      /// Merchant operating status
+  /// Merchant operating status
   @JsonValue(r'OPEN')
   OPEN(r'OPEN'),
-      /// Merchant operating status
+
+  /// Merchant operating status
   @JsonValue(r'CLOSED')
   CLOSED(r'CLOSED'),
-      /// Merchant operating status
+
+  /// Merchant operating status
   @JsonValue(r'BREAK')
   BREAK(r'BREAK'),
-      /// Merchant operating status
+
+  /// Merchant operating status
   @JsonValue(r'MAINTENANCE')
   MAINTENANCE(r'MAINTENANCE');
-  
-  const MerchantGetAvailabilityStatus200ResponseDataOperatingStatusEnum(this.value);
-  
+
+  const MerchantGetAvailabilityStatus200ResponseDataOperatingStatusEnum(
+    this.value,
+  );
+
   final String value;
-  
+
   @override
   String toString() => value;
 }
-

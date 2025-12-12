@@ -15,16 +15,15 @@ import 'package:api_client/src/model/pagination_order.dart';
 import 'package:api_client/src/model/transaction_get200_response.dart';
 
 class TransactionApi {
-
   final Dio _dio;
 
   const TransactionApi(this._dio);
 
   /// transactionGet
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [id] 
+  /// * [id]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -34,7 +33,7 @@ class TransactionApi {
   ///
   /// Returns a [Future] containing a [Response] with a [TransactionGet200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<TransactionGet200Response>> transactionGet({ 
+  Future<Response<TransactionGet200Response>> transactionGet({
     required String id,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -43,19 +42,18 @@ class TransactionApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/transactions/{id}'.replaceAll('{' r'id' '}', id.toString());
+    final _path = r'/transactions/{id}'.replaceAll(
+      '{'
+      r'id'
+      '}',
+      id.toString(),
+    );
     final _options = Options(
       method: r'GET',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -74,7 +72,13 @@ class TransactionApi {
 
     try {
       final rawData = _response.data;
-_responseData = rawData == null ? null : deserialize<TransactionGet200Response, TransactionGet200Response>(rawData, 'TransactionGet200Response', growable: true);
+      _responseData = rawData == null
+          ? null
+          : deserialize<TransactionGet200Response, TransactionGet200Response>(
+              rawData,
+              'TransactionGet200Response',
+              growable: true,
+            );
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -98,17 +102,17 @@ _responseData = rawData == null ? null : deserialize<TransactionGet200Response, 
   }
 
   /// transactionList
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [cursor] 
-  /// * [limit] 
-  /// * [direction] 
-  /// * [page] 
-  /// * [query] 
-  /// * [sortBy] 
-  /// * [order] 
-  /// * [mode] 
+  /// * [cursor]
+  /// * [limit]
+  /// * [direction]
+  /// * [page]
+  /// * [query]
+  /// * [sortBy]
+  /// * [order]
+  /// * [mode]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -118,7 +122,7 @@ _responseData = rawData == null ? null : deserialize<TransactionGet200Response, 
   ///
   /// Returns a [Future] containing a [Response] with a [DriverWalletGetTransactions200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<DriverWalletGetTransactions200Response>> transactionList({ 
+  Future<Response<DriverWalletGetTransactions200Response>> transactionList({
     String? cursor,
     Object? limit,
     String? direction,
@@ -137,16 +141,10 @@ _responseData = rawData == null ? null : deserialize<TransactionGet200Response, 
     final _path = r'/transactions';
     final _options = Options(
       method: r'GET',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -177,7 +175,13 @@ _responseData = rawData == null ? null : deserialize<TransactionGet200Response, 
 
     try {
       final rawData = _response.data;
-_responseData = rawData == null ? null : deserialize<DriverWalletGetTransactions200Response, DriverWalletGetTransactions200Response>(rawData, 'DriverWalletGetTransactions200Response', growable: true);
+      _responseData = rawData == null
+          ? null
+          : deserialize<TransactionList200Response, TransactionList200Response>(
+              rawData,
+              'TransactionList200Response',
+              growable: true,
+            );
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -199,5 +203,4 @@ _responseData = rawData == null ? null : deserialize<DriverWalletGetTransactions
       extra: _response.extra,
     );
   }
-
 }

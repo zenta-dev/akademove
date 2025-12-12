@@ -3,7 +3,8 @@ import 'package:api_client/api_client.dart';
 
 // tests for BannerCreate201Response
 void main() {
-  final BannerCreate201Response? instance = /* BannerCreate201Response(...) */ null;
+  final BannerCreate201Response? instance = /* BannerCreate201Response(...) */
+      null;
   // TODO add properties to the entity
 
   group(BannerCreate201Response, () {
@@ -26,6 +27,5 @@ void main() {
     test('to test the property `totalPages`', () async {
       // TODO
     });
-
   });
 }

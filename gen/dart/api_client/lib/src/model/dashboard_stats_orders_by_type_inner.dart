@@ -24,33 +24,32 @@ class DashboardStatsOrdersByTypeInner {
   });
   @JsonKey(name: r'type', required: true, includeIfNull: false)
   final String type;
-  
+
   @JsonKey(name: r'orders', required: true, includeIfNull: false)
   final num orders;
-  
+
   @JsonKey(name: r'revenue', required: true, includeIfNull: false)
   final num revenue;
-  
-  @override
-  bool operator ==(Object other) => identical(this, other) || other is DashboardStatsOrdersByTypeInner &&
-    other.type == type &&
-    other.orders == orders &&
-    other.revenue == revenue;
 
   @override
-  int get hashCode =>
-      type.hashCode +
-      orders.hashCode +
-      revenue.hashCode;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is DashboardStatsOrdersByTypeInner &&
+          other.type == type &&
+          other.orders == orders &&
+          other.revenue == revenue;
 
-  factory DashboardStatsOrdersByTypeInner.fromJson(Map<String, dynamic> json) => _$DashboardStatsOrdersByTypeInnerFromJson(json);
+  @override
+  int get hashCode => type.hashCode + orders.hashCode + revenue.hashCode;
 
-  Map<String, dynamic> toJson() => _$DashboardStatsOrdersByTypeInnerToJson(this);
+  factory DashboardStatsOrdersByTypeInner.fromJson(Map<String, dynamic> json) =>
+      _$DashboardStatsOrdersByTypeInnerFromJson(json);
+
+  Map<String, dynamic> toJson() =>
+      _$DashboardStatsOrdersByTypeInnerToJson(this);
 
   @override
   String toString() {
     return toJson().toString();
   }
-
 }
-

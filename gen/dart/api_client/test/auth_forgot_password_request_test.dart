@@ -3,7 +3,8 @@ import 'package:api_client/api_client.dart';
 
 // tests for AuthForgotPasswordRequest
 void main() {
-  final AuthForgotPasswordRequest? instance = /* AuthForgotPasswordRequest(...) */ null;
+  final AuthForgotPasswordRequest?
+  instance = /* AuthForgotPasswordRequest(...) */ null;
   // TODO add properties to the entity
 
   group(AuthForgotPasswordRequest, () {
@@ -11,6 +12,5 @@ void main() {
     test('to test the property `email`', () async {
       // TODO
     });
-
   });
 }

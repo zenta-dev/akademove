@@ -18,28 +18,26 @@ part 'quick_message_list200_response_data.g.dart';
 )
 class QuickMessageList200ResponseData {
   /// Returns a new [QuickMessageList200ResponseData] instance.
-  const QuickMessageList200ResponseData({
-    required this.rows,
-  });
+  const QuickMessageList200ResponseData({required this.rows});
   @JsonKey(name: r'rows', required: true, includeIfNull: false)
   final List<QuickMessageTemplate> rows;
-  
-  @override
-  bool operator ==(Object other) => identical(this, other) || other is QuickMessageList200ResponseData &&
-    other.rows == rows;
 
   @override
-  int get hashCode =>
-      rows.hashCode;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is QuickMessageList200ResponseData && other.rows == rows;
 
-  factory QuickMessageList200ResponseData.fromJson(Map<String, dynamic> json) => _$QuickMessageList200ResponseDataFromJson(json);
+  @override
+  int get hashCode => rows.hashCode;
 
-  Map<String, dynamic> toJson() => _$QuickMessageList200ResponseDataToJson(this);
+  factory QuickMessageList200ResponseData.fromJson(Map<String, dynamic> json) =>
+      _$QuickMessageList200ResponseDataFromJson(json);
+
+  Map<String, dynamic> toJson() =>
+      _$QuickMessageList200ResponseDataToJson(this);
 
   @override
   String toString() {
     return toJson().toString();
   }
-
 }
-

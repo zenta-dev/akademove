@@ -3,7 +3,5 @@ import 'package:api_client/api_client.dart';
 
 // tests for UserGender
 void main() {
-
-  group(UserGender, () {
-  });
+  group(UserGender, () {});
 }

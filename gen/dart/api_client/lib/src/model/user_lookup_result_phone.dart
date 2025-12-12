@@ -23,21 +23,22 @@ class UserLookupResultPhone {
   });
   @JsonKey(name: r'countryCode', required: true, includeIfNull: false)
   final String countryCode;
-  
+
   @JsonKey(name: r'maskedNumber', required: true, includeIfNull: false)
   final String maskedNumber;
-  
-  @override
-  bool operator ==(Object other) => identical(this, other) || other is UserLookupResultPhone &&
-    other.countryCode == countryCode &&
-    other.maskedNumber == maskedNumber;
 
   @override
-  int get hashCode =>
-      countryCode.hashCode +
-      maskedNumber.hashCode;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is UserLookupResultPhone &&
+          other.countryCode == countryCode &&
+          other.maskedNumber == maskedNumber;
 
-  factory UserLookupResultPhone.fromJson(Map<String, dynamic> json) => _$UserLookupResultPhoneFromJson(json);
+  @override
+  int get hashCode => countryCode.hashCode + maskedNumber.hashCode;
+
+  factory UserLookupResultPhone.fromJson(Map<String, dynamic> json) =>
+      _$UserLookupResultPhoneFromJson(json);
 
   Map<String, dynamic> toJson() => _$UserLookupResultPhoneToJson(this);
 
@@ -45,6 +46,4 @@ class UserLookupResultPhone {
   String toString() {
     return toJson().toString();
   }
-
 }
-

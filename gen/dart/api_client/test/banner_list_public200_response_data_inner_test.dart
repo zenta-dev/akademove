@@ -3,7 +3,8 @@ import 'package:api_client/api_client.dart';
 
 // tests for BannerListPublic200ResponseDataInner
 void main() {
-  final BannerListPublic200ResponseDataInner? instance = /* BannerListPublic200ResponseDataInner(...) */ null;
+  final BannerListPublic200ResponseDataInner?
+  instance = /* BannerListPublic200ResponseDataInner(...) */ null;
   // TODO add properties to the entity
 
   group(BannerListPublic200ResponseDataInner, () {
@@ -66,6 +67,5 @@ void main() {
     test('to test the property `endAt`', () async {
       // TODO
     });
-
   });
 }

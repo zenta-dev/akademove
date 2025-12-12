@@ -3,7 +3,8 @@ import 'package:api_client/api_client.dart';
 
 // tests for PlaceOrderResponseAutoAppliedCoupon
 void main() {
-  final PlaceOrderResponseAutoAppliedCoupon? instance = /* PlaceOrderResponseAutoAppliedCoupon(...) */ null;
+  final PlaceOrderResponseAutoAppliedCoupon?
+  instance = /* PlaceOrderResponseAutoAppliedCoupon(...) */ null;
   // TODO add properties to the entity
 
   group(PlaceOrderResponseAutoAppliedCoupon, () {
@@ -16,6 +17,5 @@ void main() {
     test('to test the property `discountAmount`', () async {
       // TODO
     });
-
   });
 }

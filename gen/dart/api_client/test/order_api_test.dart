@@ -1,7 +1,6 @@
 import 'package:test/test.dart';
 import 'package:api_client/api_client.dart';
 
-
 /// tests for OrderApi
 void main() {
   final instance = ApiClient().getOrderApi();
@@ -34,6 +33,11 @@ void main() {
 
     //Future<MerchantOrderAccept200Response> orderGet(String id) async
     test('test orderGet', () async {
+      // TODO
+    });
+
+    //Future<OrderGetActive200Response> orderGetActive() async
+    test('test orderGetActive', () async {
       // TODO
     });
 
@@ -91,6 +95,5 @@ void main() {
     test('test orderVerifyDeliveryOTP', () async {
       // TODO
     });
-
   });
 }

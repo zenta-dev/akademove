@@ -3,7 +3,8 @@ import 'package:api_client/api_client.dart';
 
 // tests for MerchantGetReview200ResponseData
 void main() {
-  final MerchantGetReview200ResponseData? instance = /* MerchantGetReview200ResponseData(...) */ null;
+  final MerchantGetReview200ResponseData?
+  instance = /* MerchantGetReview200ResponseData(...) */ null;
   // TODO add properties to the entity
 
   group(MerchantGetReview200ResponseData, () {
@@ -56,6 +57,5 @@ void main() {
     test('to test the property `updatedAt`', () async {
       // TODO
     });
-
   });
 }

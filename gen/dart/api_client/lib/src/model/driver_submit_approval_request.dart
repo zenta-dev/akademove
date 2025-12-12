@@ -17,21 +17,20 @@ part 'driver_submit_approval_request.g.dart';
 )
 class DriverSubmitApprovalRequest {
   /// Returns a new [DriverSubmitApprovalRequest] instance.
-  const DriverSubmitApprovalRequest({
-     this.reviewNotes,
-  });
+  const DriverSubmitApprovalRequest({this.reviewNotes});
   @JsonKey(name: r'reviewNotes', required: false, includeIfNull: false)
   final String? reviewNotes;
-  
-  @override
-  bool operator ==(Object other) => identical(this, other) || other is DriverSubmitApprovalRequest &&
-    other.reviewNotes == reviewNotes;
 
   @override
-  int get hashCode =>
-      reviewNotes.hashCode;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is DriverSubmitApprovalRequest && other.reviewNotes == reviewNotes;
 
-  factory DriverSubmitApprovalRequest.fromJson(Map<String, dynamic> json) => _$DriverSubmitApprovalRequestFromJson(json);
+  @override
+  int get hashCode => reviewNotes.hashCode;
+
+  factory DriverSubmitApprovalRequest.fromJson(Map<String, dynamic> json) =>
+      _$DriverSubmitApprovalRequestFromJson(json);
 
   Map<String, dynamic> toJson() => _$DriverSubmitApprovalRequestToJson(this);
 
@@ -39,6 +38,4 @@ class DriverSubmitApprovalRequest {
   String toString() {
     return toJson().toString();
   }
-
 }
-

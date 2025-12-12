@@ -3,7 +3,8 @@ import 'package:api_client/api_client.dart';
 
 // tests for FraudStatsRecentTrendInner
 void main() {
-  final FraudStatsRecentTrendInner? instance = /* FraudStatsRecentTrendInner(...) */ null;
+  final FraudStatsRecentTrendInner?
+  instance = /* FraudStatsRecentTrendInner(...) */ null;
   // TODO add properties to the entity
 
   group(FraudStatsRecentTrendInner, () {
@@ -16,6 +17,5 @@ void main() {
     test('to test the property `count`', () async {
       // TODO
     });
-
   });
 }

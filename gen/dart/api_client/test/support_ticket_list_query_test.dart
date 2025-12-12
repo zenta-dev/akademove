@@ -3,7 +3,8 @@ import 'package:api_client/api_client.dart';
 
 // tests for SupportTicketListQuery
 void main() {
-  final SupportTicketListQuery? instance = /* SupportTicketListQuery(...) */ null;
+  final SupportTicketListQuery? instance = /* SupportTicketListQuery(...) */
+      null;
   // TODO add properties to the entity
 
   group(SupportTicketListQuery, () {
@@ -46,6 +47,5 @@ void main() {
     test('to test the property `cursor`', () async {
       // TODO
     });
-
   });
 }

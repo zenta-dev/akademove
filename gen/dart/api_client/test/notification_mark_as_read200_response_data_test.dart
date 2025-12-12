@@ -3,7 +3,8 @@ import 'package:api_client/api_client.dart';
 
 // tests for NotificationMarkAsRead200ResponseData
 void main() {
-  final NotificationMarkAsRead200ResponseData? instance = /* NotificationMarkAsRead200ResponseData(...) */ null;
+  final NotificationMarkAsRead200ResponseData?
+  instance = /* NotificationMarkAsRead200ResponseData(...) */ null;
   // TODO add properties to the entity
 
   group(NotificationMarkAsRead200ResponseData, () {
@@ -51,6 +52,5 @@ void main() {
     test('to test the property `readAt`', () async {
       // TODO
     });
-
   });
 }

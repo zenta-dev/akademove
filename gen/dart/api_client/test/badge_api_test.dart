@@ -1,7 +1,6 @@
 import 'package:test/test.dart';
 import 'package:api_client/api_client.dart';
 
-
 /// tests for BadgeApi
 void main() {
   final instance = ApiClient().getBadgeApi();
@@ -56,6 +55,5 @@ void main() {
     test('test badgeUserUpdate', () async {
       // TODO
     });
-
   });
 }
