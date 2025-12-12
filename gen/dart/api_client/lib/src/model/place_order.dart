@@ -26,6 +26,8 @@ class PlaceOrder {
   const PlaceOrder({
     required this.dropoffLocation,
     required this.pickupLocation,
+    this.pickupAddress,
+    this.dropoffAddress,
     this.note,
     required this.type,
     this.items,
@@ -39,6 +41,12 @@ class PlaceOrder {
 
   @JsonKey(name: r'pickupLocation', required: true, includeIfNull: false)
   final Coordinate pickupLocation;
+
+  @JsonKey(name: r'pickupAddress', required: false, includeIfNull: false)
+  final String? pickupAddress;
+
+  @JsonKey(name: r'dropoffAddress', required: false, includeIfNull: false)
+  final String? dropoffAddress;
 
   @JsonKey(name: r'note', required: false, includeIfNull: false)
   final OrderNote? note;
@@ -67,6 +75,8 @@ class PlaceOrder {
       other is PlaceOrder &&
           other.dropoffLocation == dropoffLocation &&
           other.pickupLocation == pickupLocation &&
+          other.pickupAddress == pickupAddress &&
+          other.dropoffAddress == dropoffAddress &&
           other.note == note &&
           other.type == type &&
           other.items == items &&

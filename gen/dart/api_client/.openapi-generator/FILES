@@ -1138,6 +1138,12 @@ test/driver_update_online_status_request_test.dart
 test/driver_update_taking_order_status_request_test.dart
 test/driver_user_test.dart
 test/driver_verify_quiz_request_test.dart
+test/driver_wallet_get_monthly_summary200_response_test.dart
+test/driver_wallet_get_saved_bank_account200_response_test.dart
+test/driver_wallet_get_transactions200_response_test.dart
+test/driver_wallet_get_wallet200_response_test.dart
+test/driver_wallet_top_up200_response_test.dart
+test/driver_wallet_transfer200_response_test.dart
 test/emergency_api_test.dart
 test/emergency_contact_configuration_test.dart
 test/emergency_key_test.dart
@@ -1375,7 +1381,6 @@ test/top_up_request_test.dart
 test/transaction_api_test.dart
 test/transaction_get200_response_test.dart
 test/transaction_key_test.dart
-test/transaction_list200_response_test.dart
 test/transaction_status_test.dart
 test/transaction_test.dart
 test/transaction_type_test.dart
@@ -1425,15 +1430,10 @@ test/user_test.dart
 test/va_number_test.dart
 test/verify_email_test.dart
 test/wallet_api_test.dart
-test/wallet_get200_response_test.dart
-test/wallet_get_monthly_summary200_response_test.dart
-test/wallet_get_saved_bank_account200_response_test.dart
 test/wallet_key_test.dart
 test/wallet_monthly_summary_query_test.dart
 test/wallet_monthly_summary_response_test.dart
 test/wallet_test.dart
-test/wallet_top_up200_response_test.dart
-test/wallet_transfer200_response_test.dart
 test/weight_size_test.dart
 test/withdraw_request_test.dart
 test/withdraw_response_test.dart

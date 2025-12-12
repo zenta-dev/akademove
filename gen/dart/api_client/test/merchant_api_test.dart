@@ -170,5 +170,54 @@ void main() {
     test('test merchantUpdateDocumentStatus', () async {
       // TODO
     });
+
+    // Get merchant wallet monthly summary
+    //
+    //Future<DriverWalletGetMonthlySummary200Response> merchantWalletGetMonthlySummary(String merchantId, num year, num month) async
+    test('test merchantWalletGetMonthlySummary', () async {
+      // TODO
+    });
+
+    // Get saved bank account details from merchant profile for pre-filling withdrawal forms
+    //
+    //Future<DriverWalletGetSavedBankAccount200Response> merchantWalletGetSavedBankAccount(String merchantId) async
+    test('test merchantWalletGetSavedBankAccount', () async {
+      // TODO
+    });
+
+    // Get merchant wallet transactions
+    //
+    //Future<DriverWalletGetTransactions200Response> merchantWalletGetTransactions(String merchantId, { String cursor, Object limit, String direction, Object page, String query, String sortBy, PaginationOrder order, PaginationMode mode }) async
+    test('test merchantWalletGetTransactions', () async {
+      // TODO
+    });
+
+    // Get merchant wallet by merchant ID
+    //
+    //Future<DriverWalletGetWallet200Response> merchantWalletGetWallet(String merchantId) async
+    test('test merchantWalletGetWallet', () async {
+      // TODO
+    });
+
+    // Top up merchant wallet
+    //
+    //Future<DriverWalletTopUp200Response> merchantWalletTopUp(String merchantId, TopUpRequest topUpRequest) async
+    test('test merchantWalletTopUp', () async {
+      // TODO
+    });
+
+    // Transfer from merchant wallet to another user
+    //
+    //Future<DriverWalletTransfer200Response> merchantWalletTransfer(String merchantId, TransferRequest transferRequest) async
+    test('test merchantWalletTransfer', () async {
+      // TODO
+    });
+
+    // Withdraw from merchant wallet to bank account
+    //
+    //Future<DriverWalletTopUp200Response> merchantWalletWithdraw(String merchantId, WithdrawRequest withdrawRequest) async
+    test('test merchantWalletWithdraw', () async {
+      // TODO
+    });
   });
 }

@@ -17,6 +17,16 @@ void main() {
       // TODO
     });
 
+    // String pickupAddress
+    test('to test the property `pickupAddress`', () async {
+      // TODO
+    });
+
+    // String dropoffAddress
+    test('to test the property `dropoffAddress`', () async {
+      // TODO
+    });
+
     // OrderNote note
     test('to test the property `note`', () async {
       // TODO

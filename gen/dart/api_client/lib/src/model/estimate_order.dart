@@ -25,11 +25,29 @@ class EstimateOrder {
   const EstimateOrder({
     required this.dropoffLocation,
     required this.pickupLocation,
-     this.note,
+    this.pickupAddress,
+    this.dropoffAddress,
+    this.note,
     required this.type,
     this.items,
-    this.gender,·
-  
+    this.gender,
+    this.genderPreference,
+    this.couponCode,
+    this.discountIds,
+    this.weight,
+  });
+  @JsonKey(name: r'dropoffLocation', required: true, includeIfNull: false)
+  final Coordinate dropoffLocation;
+
+  @JsonKey(name: r'pickupLocation', required: true, includeIfNull: false)
+  final Coordinate pickupLocation;
+
+  @JsonKey(name: r'pickupAddress', required: false, includeIfNull: false)
+  final String? pickupAddress;
+
+  @JsonKey(name: r'dropoffAddress', required: false, includeIfNull: false)
+  final String? dropoffAddress;
+
   @JsonKey(name: r'note', required: false, includeIfNull: false)
   final OrderNote? note;
 
@@ -57,17 +75,21 @@ class EstimateOrder {
   final int? weight;
 
   @override
-  bool operator ==(Object other) => identical(this, other) || other is EstimateOrder &&
-    other.dropoffLocation == dropoffLocation &&
-    other.pickupLocation == pickupLocation &&
-    other.note == note &&
-    other.type == type &&
-    other.items == items &&
-    other.gender == gender &&
-    other.genderPreference == genderPreference &&
-    other.couponCode == couponCode &&
-    other.discountIds == discountIds &&
-    other.weight == weight;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is EstimateOrder &&
+          other.dropoffLocation == dropoffLocation &&
+          other.pickupLocation == pickupLocation &&
+          other.pickupAddress == pickupAddress &&
+          other.dropoffAddress == dropoffAddress &&
+          other.note == note &&
+          other.type == type &&
+          other.items == items &&
+          other.gender == gender &&
+          other.genderPreference == genderPreference &&
+          other.couponCode == couponCode &&
+          other.discountIds == discountIds &&
+          other.weight == weight;
 
   @override
   int get hashCode =>

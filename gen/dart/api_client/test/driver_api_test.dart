@@ -110,5 +110,54 @@ void main() {
     test('test driverVerifyQuiz', () async {
       // TODO
     });
+
+    // Get driver wallet monthly summary
+    //
+    //Future<DriverWalletGetMonthlySummary200Response> driverWalletGetMonthlySummary(String driverId, num year, num month) async
+    test('test driverWalletGetMonthlySummary', () async {
+      // TODO
+    });
+
+    // Get saved bank account details from driver profile for pre-filling withdrawal forms
+    //
+    //Future<DriverWalletGetSavedBankAccount200Response> driverWalletGetSavedBankAccount(String driverId) async
+    test('test driverWalletGetSavedBankAccount', () async {
+      // TODO
+    });
+
+    // Get driver wallet transactions
+    //
+    //Future<DriverWalletGetTransactions200Response> driverWalletGetTransactions(String driverId, { String cursor, Object limit, String direction, Object page, String query, String sortBy, PaginationOrder order, PaginationMode mode }) async
+    test('test driverWalletGetTransactions', () async {
+      // TODO
+    });
+
+    // Get driver wallet by driver ID
+    //
+    //Future<DriverWalletGetWallet200Response> driverWalletGetWallet(String driverId) async
+    test('test driverWalletGetWallet', () async {
+      // TODO
+    });
+
+    // Top up driver wallet
+    //
+    //Future<DriverWalletTopUp200Response> driverWalletTopUp(String driverId, TopUpRequest topUpRequest) async
+    test('test driverWalletTopUp', () async {
+      // TODO
+    });
+
+    // Transfer from driver wallet to another user
+    //
+    //Future<DriverWalletTransfer200Response> driverWalletTransfer(String driverId, TransferRequest transferRequest) async
+    test('test driverWalletTransfer', () async {
+      // TODO
+    });
+
+    // Withdraw from driver wallet to bank account
+    //
+    //Future<DriverWalletTopUp200Response> driverWalletWithdraw(String driverId, WithdrawRequest withdrawRequest) async
+    test('test driverWalletWithdraw', () async {
+      // TODO
+    });
   });
 }

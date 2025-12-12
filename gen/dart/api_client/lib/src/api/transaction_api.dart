@@ -177,9 +177,12 @@ class TransactionApi {
       final rawData = _response.data;
       _responseData = rawData == null
           ? null
-          : deserialize<TransactionList200Response, TransactionList200Response>(
+          : deserialize<
+              DriverWalletGetTransactions200Response,
+              DriverWalletGetTransactions200Response
+            >(
               rawData,
-              'TransactionList200Response',
+              'DriverWalletGetTransactions200Response',
               growable: true,
             );
     } catch (error, stackTrace) {

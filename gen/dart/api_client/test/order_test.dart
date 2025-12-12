@@ -47,6 +47,16 @@ void main() {
       // TODO
     });
 
+    // String pickupAddress
+    test('to test the property `pickupAddress`', () async {
+      // TODO
+    });
+
+    // String dropoffAddress
+    test('to test the property `dropoffAddress`', () async {
+      // TODO
+    });
+
     // num distanceKm
     test('to test the property `distanceKm`', () async {
       // TODO

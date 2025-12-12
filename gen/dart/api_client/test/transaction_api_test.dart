@@ -11,7 +11,7 @@ void main() {
       // TODO
     });
 
-    //Future<TransactionList200Response> transactionList({ String cursor, Object limit, String direction, Object page, String query, String sortBy, PaginationOrder order, PaginationMode mode }) async
+    //Future<DriverWalletGetTransactions200Response> transactionList({ String cursor, Object limit, String direction, Object page, String query, String sortBy, PaginationOrder order, PaginationMode mode }) async
     test('test transactionList', () async {
       // TODO
     });

@@ -936,6 +936,36 @@ ReturnType deserialize<ReturnType, BaseType>(
     case 'DriverVerifyQuizRequest':
       return DriverVerifyQuizRequest.fromJson(value as Map<String, dynamic>)
           as ReturnType;
+    case 'DriverWalletGetMonthlySummary200Response':
+      return DriverWalletGetMonthlySummary200Response.fromJson(
+            value as Map<String, dynamic>,
+          )
+          as ReturnType;
+    case 'DriverWalletGetSavedBankAccount200Response':
+      return DriverWalletGetSavedBankAccount200Response.fromJson(
+            value as Map<String, dynamic>,
+          )
+          as ReturnType;
+    case 'DriverWalletGetTransactions200Response':
+      return DriverWalletGetTransactions200Response.fromJson(
+            value as Map<String, dynamic>,
+          )
+          as ReturnType;
+    case 'DriverWalletGetWallet200Response':
+      return DriverWalletGetWallet200Response.fromJson(
+            value as Map<String, dynamic>,
+          )
+          as ReturnType;
+    case 'DriverWalletTopUp200Response':
+      return DriverWalletTopUp200Response.fromJson(
+            value as Map<String, dynamic>,
+          )
+          as ReturnType;
+    case 'DriverWalletTransfer200Response':
+      return DriverWalletTransfer200Response.fromJson(
+            value as Map<String, dynamic>,
+          )
+          as ReturnType;
     case 'Emergency':
       return Emergency.fromJson(value as Map<String, dynamic>) as ReturnType;
     case 'EmergencyContactConfiguration':
@@ -1606,9 +1636,6 @@ ReturnType deserialize<ReturnType, BaseType>(
       return TransactionGet200Response.fromJson(value as Map<String, dynamic>)
           as ReturnType;
     case 'TransactionKey':
-    case 'TransactionList200Response':
-      return TransactionList200Response.fromJson(value as Map<String, dynamic>)
-          as ReturnType;
     case 'TransactionStatus':
     case 'TransactionType':
     case 'TransferRequest':
@@ -1734,19 +1761,6 @@ ReturnType deserialize<ReturnType, BaseType>(
       return VerifyEmail.fromJson(value as Map<String, dynamic>) as ReturnType;
     case 'Wallet':
       return Wallet.fromJson(value as Map<String, dynamic>) as ReturnType;
-    case 'WalletGet200Response':
-      return WalletGet200Response.fromJson(value as Map<String, dynamic>)
-          as ReturnType;
-    case 'WalletGetMonthlySummary200Response':
-      return WalletGetMonthlySummary200Response.fromJson(
-            value as Map<String, dynamic>,
-          )
-          as ReturnType;
-    case 'WalletGetSavedBankAccount200Response':
-      return WalletGetSavedBankAccount200Response.fromJson(
-            value as Map<String, dynamic>,
-          )
-          as ReturnType;
     case 'WalletKey':
     case 'WalletMonthlySummaryQuery':
       return WalletMonthlySummaryQuery.fromJson(value as Map<String, dynamic>)
@@ -1755,12 +1769,6 @@ ReturnType deserialize<ReturnType, BaseType>(
       return WalletMonthlySummaryResponse.fromJson(
             value as Map<String, dynamic>,
           )
-          as ReturnType;
-    case 'WalletTopUp200Response':
-      return WalletTopUp200Response.fromJson(value as Map<String, dynamic>)
-          as ReturnType;
-    case 'WalletTransfer200Response':
-      return WalletTransfer200Response.fromJson(value as Map<String, dynamic>)
           as ReturnType;
     case 'WeightSize':
     case 'WithdrawRequest':

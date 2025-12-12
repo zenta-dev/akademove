@@ -3,7 +3,8 @@ import 'package:api_client/api_client.dart';
 
 // tests for DriverWalletGetTransactions200Response
 void main() {
-  final DriverWalletGetTransactions200Response? instance = /* DriverWalletGetTransactions200Response(...) */ null;
+  final DriverWalletGetTransactions200Response?
+  instance = /* DriverWalletGetTransactions200Response(...) */ null;
   // TODO add properties to the entity
 
   group(DriverWalletGetTransactions200Response, () {
@@ -26,6 +27,5 @@ void main() {
     test('to test the property `totalPages`', () async {
       // TODO
     });
-
   });
 }
