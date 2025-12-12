@@ -11,6 +11,10 @@ abstract class _$EstimateOrderCWProxy {
 
   EstimateOrder pickupLocation(Coordinate pickupLocation);
 
+  EstimateOrder pickupAddress(String? pickupAddress);
+
+  EstimateOrder dropoffAddress(String? dropoffAddress);
+
   EstimateOrder note(OrderNote? note);
 
   EstimateOrder type(OrderType type);
@@ -39,6 +43,8 @@ abstract class _$EstimateOrderCWProxy {
   EstimateOrder call({
     Coordinate dropoffLocation,
     Coordinate pickupLocation,
+    String? pickupAddress,
+    String? dropoffAddress,
     OrderNote? note,
     OrderType type,
     List<OrderItem>? items,
@@ -64,6 +70,14 @@ class _$EstimateOrderCWProxyImpl implements _$EstimateOrderCWProxy {
   @override
   EstimateOrder pickupLocation(Coordinate pickupLocation) =>
       call(pickupLocation: pickupLocation);
+
+  @override
+  EstimateOrder pickupAddress(String? pickupAddress) =>
+      call(pickupAddress: pickupAddress);
+
+  @override
+  EstimateOrder dropoffAddress(String? dropoffAddress) =>
+      call(dropoffAddress: dropoffAddress);
 
   @override
   EstimateOrder note(OrderNote? note) => call(note: note);
@@ -103,6 +117,8 @@ class _$EstimateOrderCWProxyImpl implements _$EstimateOrderCWProxy {
   EstimateOrder call({
     Object? dropoffLocation = const $CopyWithPlaceholder(),
     Object? pickupLocation = const $CopyWithPlaceholder(),
+    Object? pickupAddress = const $CopyWithPlaceholder(),
+    Object? dropoffAddress = const $CopyWithPlaceholder(),
     Object? note = const $CopyWithPlaceholder(),
     Object? type = const $CopyWithPlaceholder(),
     Object? items = const $CopyWithPlaceholder(),
@@ -125,6 +141,14 @@ class _$EstimateOrderCWProxyImpl implements _$EstimateOrderCWProxy {
           ? _value.pickupLocation
           // ignore: cast_nullable_to_non_nullable
           : pickupLocation as Coordinate,
+      pickupAddress: pickupAddress == const $CopyWithPlaceholder()
+          ? _value.pickupAddress
+          // ignore: cast_nullable_to_non_nullable
+          : pickupAddress as String?,
+      dropoffAddress: dropoffAddress == const $CopyWithPlaceholder()
+          ? _value.dropoffAddress
+          // ignore: cast_nullable_to_non_nullable
+          : dropoffAddress as String?,
       note: note == const $CopyWithPlaceholder()
           ? _value.note
           // ignore: cast_nullable_to_non_nullable
@@ -188,6 +212,8 @@ EstimateOrder _$EstimateOrderFromJson(
       'pickupLocation',
       (v) => Coordinate.fromJson(v as Map<String, dynamic>),
     ),
+    pickupAddress: $checkedConvert('pickupAddress', (v) => v as String?),
+    dropoffAddress: $checkedConvert('dropoffAddress', (v) => v as String?),
     note: $checkedConvert(
       'note',
       (v) => v == null ? null : OrderNote.fromJson(v as Map<String, dynamic>),
@@ -222,6 +248,8 @@ Map<String, dynamic> _$EstimateOrderToJson(
 ) => <String, dynamic>{
   'dropoffLocation': instance.dropoffLocation.toJson(),
   'pickupLocation': instance.pickupLocation.toJson(),
+  'pickupAddress': ?instance.pickupAddress,
+  'dropoffAddress': ?instance.dropoffAddress,
   'note': ?instance.note?.toJson(),
   'type': _$OrderTypeEnumMap[instance.type]!,
   'items': ?instance.items?.map((e) => e.toJson()).toList(),

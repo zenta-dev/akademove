@@ -138,6 +138,12 @@ import 'package:api_client/src/model/driver_update_online_status_request.dart';
 import 'package:api_client/src/model/driver_update_taking_order_status_request.dart';
 import 'package:api_client/src/model/driver_user.dart';
 import 'package:api_client/src/model/driver_verify_quiz_request.dart';
+import 'package:api_client/src/model/driver_wallet_get_monthly_summary200_response.dart';
+import 'package:api_client/src/model/driver_wallet_get_saved_bank_account200_response.dart';
+import 'package:api_client/src/model/driver_wallet_get_transactions200_response.dart';
+import 'package:api_client/src/model/driver_wallet_get_wallet200_response.dart';
+import 'package:api_client/src/model/driver_wallet_top_up200_response.dart';
+import 'package:api_client/src/model/driver_wallet_transfer200_response.dart';
 import 'package:api_client/src/model/emergency.dart';
 import 'package:api_client/src/model/emergency_contact_configuration.dart';
 import 'package:api_client/src/model/emergency_list_by_order200_response.dart';
@@ -321,7 +327,6 @@ import 'package:api_client/src/model/time_rules.dart';
 import 'package:api_client/src/model/top_up_request.dart';
 import 'package:api_client/src/model/transaction.dart';
 import 'package:api_client/src/model/transaction_get200_response.dart';
-import 'package:api_client/src/model/transaction_list200_response.dart';
 import 'package:api_client/src/model/transfer_request.dart';
 import 'package:api_client/src/model/transfer_response.dart';
 import 'package:api_client/src/model/unban_user.dart';
@@ -364,13 +369,8 @@ import 'package:api_client/src/model/user_rules.dart';
 import 'package:api_client/src/model/va_number.dart';
 import 'package:api_client/src/model/verify_email.dart';
 import 'package:api_client/src/model/wallet.dart';
-import 'package:api_client/src/model/wallet_get200_response.dart';
-import 'package:api_client/src/model/wallet_get_monthly_summary200_response.dart';
-import 'package:api_client/src/model/wallet_get_saved_bank_account200_response.dart';
 import 'package:api_client/src/model/wallet_monthly_summary_query.dart';
 import 'package:api_client/src/model/wallet_monthly_summary_response.dart';
-import 'package:api_client/src/model/wallet_top_up200_response.dart';
-import 'package:api_client/src/model/wallet_transfer200_response.dart';
 import 'package:api_client/src/model/withdraw_request.dart';
 import 'package:api_client/src/model/withdraw_response.dart';
 
@@ -753,6 +753,18 @@ final _regMap = RegExp(r'^Map<String,(.*)>$');
           return DriverUser.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'DriverVerifyQuizRequest':
           return DriverVerifyQuizRequest.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'DriverWalletGetMonthlySummary200Response':
+          return DriverWalletGetMonthlySummary200Response.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'DriverWalletGetSavedBankAccount200Response':
+          return DriverWalletGetSavedBankAccount200Response.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'DriverWalletGetTransactions200Response':
+          return DriverWalletGetTransactions200Response.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'DriverWalletGetWallet200Response':
+          return DriverWalletGetWallet200Response.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'DriverWalletTopUp200Response':
+          return DriverWalletTopUp200Response.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'DriverWalletTransfer200Response':
+          return DriverWalletTransfer200Response.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'Emergency':
           return Emergency.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'EmergencyContactConfiguration':
@@ -1254,8 +1266,6 @@ final _regMap = RegExp(r'^Map<String,(.*)>$');
         case 'TransactionKey':
           
           
-        case 'TransactionList200Response':
-          return TransactionList200Response.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'TransactionStatus':
           
           
@@ -1355,12 +1365,6 @@ final _regMap = RegExp(r'^Map<String,(.*)>$');
           return VerifyEmail.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'Wallet':
           return Wallet.fromJson(value as Map<String, dynamic>) as ReturnType;
-        case 'WalletGet200Response':
-          return WalletGet200Response.fromJson(value as Map<String, dynamic>) as ReturnType;
-        case 'WalletGetMonthlySummary200Response':
-          return WalletGetMonthlySummary200Response.fromJson(value as Map<String, dynamic>) as ReturnType;
-        case 'WalletGetSavedBankAccount200Response':
-          return WalletGetSavedBankAccount200Response.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'WalletKey':
           
           
@@ -1368,10 +1372,6 @@ final _regMap = RegExp(r'^Map<String,(.*)>$');
           return WalletMonthlySummaryQuery.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'WalletMonthlySummaryResponse':
           return WalletMonthlySummaryResponse.fromJson(value as Map<String, dynamic>) as ReturnType;
-        case 'WalletTopUp200Response':
-          return WalletTopUp200Response.fromJson(value as Map<String, dynamic>) as ReturnType;
-        case 'WalletTransfer200Response':
-          return WalletTransfer200Response.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'WeightSize':
           
           

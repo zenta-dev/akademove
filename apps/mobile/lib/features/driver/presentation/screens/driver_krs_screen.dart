@@ -14,6 +14,9 @@ class DriverKrsScreen extends StatefulWidget {
 }
 
 class _DriverKrsScreenState extends State<DriverKrsScreen> {
+  // Track whether we're editing or creating for toast messages in listener
+  bool? _isEditingSchedule;
+
   @override
   void initState() {
     super.initState();
@@ -52,10 +55,66 @@ class _DriverKrsScreenState extends State<DriverKrsScreen> {
         onRefresh: _onRefresh,
         child: BlocConsumer<DriverScheduleCubit, DriverScheduleState>(
           listener: (context, state) {
+            // Handle fetch schedules failure
             if (state.fetchSchedulesResult.isFailure) {
               context.showMyToast(
                 state.fetchSchedulesResult.error?.message ??
                     context.l10n.an_error_occurred,
+                type: ToastType.failed,
+              );
+            }
+
+            // Handle create schedule result
+            if (state.createScheduleResult.isSuccess &&
+                _isEditingSchedule == false) {
+              _isEditingSchedule = null;
+              context.showMyToast(
+                context.l10n.schedule_added_successfully,
+                type: ToastType.success,
+              );
+              _loadDriverAndSchedules();
+            }
+            if (state.createScheduleResult.isFailure &&
+                _isEditingSchedule == false) {
+              _isEditingSchedule = null;
+              context.showMyToast(
+                state.createScheduleResult.error?.message ??
+                    context.l10n.failed_to_add_schedule,
+                type: ToastType.failed,
+              );
+            }
+
+            // Handle update schedule result
+            if (state.updateScheduleResult.isSuccess &&
+                _isEditingSchedule == true) {
+              _isEditingSchedule = null;
+              context.showMyToast(
+                context.l10n.schedule_updated_successfully,
+                type: ToastType.success,
+              );
+              _loadDriverAndSchedules();
+            }
+            if (state.updateScheduleResult.isFailure &&
+                _isEditingSchedule == true) {
+              _isEditingSchedule = null;
+              context.showMyToast(
+                state.updateScheduleResult.error?.message ??
+                    context.l10n.failed_to_update_schedule,
+                type: ToastType.failed,
+              );
+            }
+
+            // Handle delete schedule result
+            if (state.deleteScheduleResult.isSuccess) {
+              context.showMyToast(
+                context.l10n.schedule_deleted_successfully,
+                type: ToastType.success,
+              );
+            }
+            if (state.deleteScheduleResult.isFailure) {
+              context.showMyToast(
+                state.deleteScheduleResult.error?.message ??
+                    context.l10n.failed_to_delete_schedule,
                 type: ToastType.failed,
               );
             }
@@ -461,7 +520,7 @@ class _DriverKrsScreenState extends State<DriverKrsScreen> {
                   child: Text(context.l10n.cancel),
                 ),
                 PrimaryButton(
-                  onPressed: () async {
+                  onPressed: () {
                     final name = nameController.text.trim();
                     if (name.isEmpty) {
                       context.showMyToast(
@@ -473,7 +532,7 @@ class _DriverKrsScreenState extends State<DriverKrsScreen> {
 
                     Navigator.of(dialogContext).pop();
 
-                    await _saveSchedule(
+                    _saveSchedule(
                       name: name,
                       dayOfWeek: selectedDay,
                       startTime: startTime,
@@ -543,7 +602,7 @@ class _DriverKrsScreenState extends State<DriverKrsScreen> {
   // -------------------------
   // SAVE
   // -------------------------
-  Future<void> _saveSchedule({
+  void _saveSchedule({
     required String name,
     required DayOfWeek dayOfWeek,
     required TimeOfDay startTime,
@@ -551,64 +610,36 @@ class _DriverKrsScreenState extends State<DriverKrsScreen> {
     required bool isRecurring,
     required bool isActive,
     String? scheduleId,
-  }) async {
+  }) {
     final isEditing = scheduleId != null;
+    _isEditingSchedule = isEditing;
 
-    try {
-      final timeStart = Time(h: startTime.hour, m: startTime.minute);
-      final timeEnd = Time(h: endTime.hour, m: endTime.minute);
+    final timeStart = Time(h: startTime.hour, m: startTime.minute);
+    final timeEnd = Time(h: endTime.hour, m: endTime.minute);
 
-      if (isEditing) {
-        await context.read<DriverScheduleCubit>().updateSchedule(
-          scheduleId: scheduleId,
-          request: DriverScheduleUpdateRequest(
-            name: name,
-            dayOfWeek: dayOfWeek,
-            startTime: timeStart,
-            endTime: timeEnd,
-            isRecurring: isRecurring,
-            isActive: isActive,
-          ),
-        );
-      } else {
-        await context.read<DriverScheduleCubit>().createSchedule(
-          request: DriverScheduleCreateRequest(
-            name: name,
-            driverId: '',
-            dayOfWeek: dayOfWeek,
-            startTime: timeStart,
-            endTime: timeEnd,
-            isRecurring: isRecurring,
-            isActive: isActive,
-          ),
-        );
-      }
-
-      if (mounted) {
-        context.showMyToast(
-          isEditing
-              ? context.l10n.schedule_updated_successfully
-              : context.l10n.schedule_added_successfully,
-          type: ToastType.success,
-        );
-        _loadDriverAndSchedules();
-      }
-    } on BaseError catch (e) {
-      if (!mounted) return;
-      context.showMyToast(
-        e.message ??
-            (isEditing
-                ? context.l10n.failed_to_update_schedule
-                : context.l10n.failed_to_add_schedule),
-        type: ToastType.failed,
+    if (isEditing) {
+      context.read<DriverScheduleCubit>().updateSchedule(
+        scheduleId: scheduleId,
+        request: DriverScheduleUpdateRequest(
+          name: name,
+          dayOfWeek: dayOfWeek,
+          startTime: timeStart,
+          endTime: timeEnd,
+          isRecurring: isRecurring,
+          isActive: isActive,
+        ),
       );
-    } catch (_) {
-      if (!mounted) return;
-      context.showMyToast(
-        isEditing
-            ? context.l10n.failed_to_update_schedule
-            : context.l10n.failed_to_add_schedule,
-        type: ToastType.failed,
+    } else {
+      context.read<DriverScheduleCubit>().createSchedule(
+        request: DriverScheduleCreateRequest(
+          name: name,
+          driverId: '',
+          dayOfWeek: dayOfWeek,
+          startTime: timeStart,
+          endTime: timeEnd,
+          isRecurring: isRecurring,
+          isActive: isActive,
+        ),
       );
     }
   }

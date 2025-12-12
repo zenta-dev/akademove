@@ -39,6 +39,7 @@ enum Routes {
   userRidePayment('/user/home/ride/payment'),
   userRideOnTrip('/user/home/ride/on-trip'),
   userRating('/user/home/ride/rating'),
+  userMapPicker('/user/home/map-picker'),
   userDriverNearMe('/user/home/driver/near-me'),
   userDelivery('/user/home/delivery'),
   userDeliveryPickup('/user/home/delivery/pickup'),
@@ -56,7 +57,7 @@ enum Routes {
   userCart('/user/home/cart'),
   userOrderConfirm('/user/home/cart/confirm'),
   userListMerchant('/user/home/mart/list-merchant'),
-  userFoodOnTrip('/user/home/mart/on-trip'),
+  userMartOnTrip('/user/home/mart/on-trip'),
   userWallet('/user/home/wallet'),
   userWalletTopUp('/user/home/wallet/topup'),
   userWalletTopUpInsertAmount('/user/home/wallet/topup/insert-amount'),
@@ -64,13 +65,14 @@ enum Routes {
   userWalletTopUpBankTransfer('/user/home/wallet/topup/bank-transfer'),
   userWalletTransfer('/user/home/wallet/transfer'),
   userWalletTransferScan('/user/home/wallet/transfer/scan'),
+  userWalletWithdraw('/user/home/wallet/withdraw'),
   userWalletMyQr('/user/home/wallet/my-qr'),
   userVoucher('/user/home/voucher'),
   userNotifications('/user/home/notifications'),
 
   userHistory('/user/history'),
   userHistoryDetail('/user/history/:orderId'),
-  userScheduledOrders('/user/scheduled-orders'),
+  userScheduledOrders('/user/orders/scheduled'),
 
   userProfile('/user/profile'),
   userDetailProfile('/user/profile/detail'),
@@ -110,6 +112,7 @@ enum Routes {
   merchantSetUpOutlet('/merchant/set/up/outlet'),
   merchantEditProfile('/merchant/edit/profile'),
   merchantChangePassword('/merchant/change/password'),
+  merchantWalletWithdraw('/merchant/wallet/withdraw'),
 
   ///
   /// Shared Routes

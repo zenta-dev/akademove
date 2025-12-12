@@ -1,4 +1,5 @@
 import { RepositoryError } from "@/core/error";
+import { shouldBypassAuthorization } from "@/core/middlewares/auth";
 import { createORPCRouter } from "@/core/router/orpc";
 import { AnalyticsSpec } from "./analytics-spec";
 
@@ -9,6 +10,7 @@ export const AnalyticsHandler = priv.router({
 		async ({ context, input: { params, query } }) => {
 			// IDOR protection - drivers can only export their own data
 			if (
+				!shouldBypassAuthorization() &&
 				context.user.role === "DRIVER" &&
 				context.user.id !== params.driverId
 			) {
@@ -40,6 +42,7 @@ export const AnalyticsHandler = priv.router({
 		async ({ context, input: { params, query } }) => {
 			// IDOR protection - merchants can only export their own data
 			if (
+				!shouldBypassAuthorization() &&
 				context.user.role === "MERCHANT" &&
 				context.user.id !== params.merchantId
 			) {
@@ -70,7 +73,10 @@ export const AnalyticsHandler = priv.router({
 	exportOperatorAnalytics: priv.exportOperatorAnalytics.handler(
 		async ({ context, input: { query } }) => {
 			// Only operators and admins can export platform analytics
-			if (!["OPERATOR", "ADMIN"].includes(context.user.role)) {
+			if (
+				!shouldBypassAuthorization() &&
+				!["OPERATOR", "ADMIN"].includes(context.user.role)
+			) {
 				throw new RepositoryError(
 					"Forbidden: Only operators and admins can export platform analytics",
 					{

@@ -5,7 +5,7 @@
 import 'package:api_client/api.dart';
 ```
 
-All URIs are relative to *http://10.86.19.105:3000/api*
+All URIs are relative to *http://localhost:3000/api*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
@@ -30,6 +30,13 @@ Method | HTTP request | Description
 [**driverUpdateOnlineStatus**](DriverApi.md#driverupdateonlinestatus) | **POST** /drivers/{id}/update-online-status | 
 [**driverUpdateTakingOrderStatus**](DriverApi.md#driverupdatetakingorderstatus) | **POST** /drivers/{id}/update-taking-order-status | 
 [**driverVerifyQuiz**](DriverApi.md#driververifyquiz) | **POST** /drivers/{id}/approval-review/verify-quiz | 
+[**driverWalletGetMonthlySummary**](DriverApi.md#driverwalletgetmonthlysummary) | **GET** /drivers/{driverId}/wallet/summary | 
+[**driverWalletGetSavedBankAccount**](DriverApi.md#driverwalletgetsavedbankaccount) | **GET** /drivers/{driverId}/wallet/bank | 
+[**driverWalletGetTransactions**](DriverApi.md#driverwalletgettransactions) | **GET** /drivers/{driverId}/wallet/transactions | 
+[**driverWalletGetWallet**](DriverApi.md#driverwalletgetwallet) | **GET** /drivers/{driverId}/wallet | 
+[**driverWalletTopUp**](DriverApi.md#driverwallettopup) | **POST** /drivers/{driverId}/wallet/topup | 
+[**driverWalletTransfer**](DriverApi.md#driverwallettransfer) | **POST** /drivers/{driverId}/wallet/transfer | 
+[**driverWalletWithdraw**](DriverApi.md#driverwalletwithdraw) | **POST** /drivers/{driverId}/wallet/withdraw | 
 
 
 # **analyticsExportDriverAnalytics**
@@ -979,6 +986,333 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**DriverGetReview200Response**](DriverGetReview200Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **driverWalletGetMonthlySummary**
+> DriverWalletGetMonthlySummary200Response driverWalletGetMonthlySummary(driverId, year, month)
+
+
+
+Get driver wallet monthly summary
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getDriverApi();
+final String driverId = driverId_example; // String | 
+final num year = 8.14; // num | 
+final num month = 8.14; // num | 
+
+try {
+    final response = api.driverWalletGetMonthlySummary(driverId, year, month);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling DriverApi->driverWalletGetMonthlySummary: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **driverId** | **String**|  | 
+ **year** | **num**|  | 
+ **month** | **num**|  | 
+
+### Return type
+
+[**DriverWalletGetMonthlySummary200Response**](DriverWalletGetMonthlySummary200Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **driverWalletGetSavedBankAccount**
+> DriverWalletGetSavedBankAccount200Response driverWalletGetSavedBankAccount(driverId)
+
+
+
+Get saved bank account details from driver profile for pre-filling withdrawal forms
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getDriverApi();
+final String driverId = driverId_example; // String | 
+
+try {
+    final response = api.driverWalletGetSavedBankAccount(driverId);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling DriverApi->driverWalletGetSavedBankAccount: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **driverId** | **String**|  | 
+
+### Return type
+
+[**DriverWalletGetSavedBankAccount200Response**](DriverWalletGetSavedBankAccount200Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **driverWalletGetTransactions**
+> DriverWalletGetTransactions200Response driverWalletGetTransactions(driverId, cursor, limit, direction, page, query, sortBy, order, mode)
+
+
+
+Get driver wallet transactions
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getDriverApi();
+final String driverId = driverId_example; // String | 
+final String cursor = cursor_example; // String | 
+final Object limit = ; // Object | 
+final String direction = direction_example; // String | 
+final Object page = ; // Object | 
+final String query = query_example; // String | 
+final String sortBy = sortBy_example; // String | 
+final PaginationOrder order = ; // PaginationOrder | 
+final PaginationMode mode = ; // PaginationMode | 
+
+try {
+    final response = api.driverWalletGetTransactions(driverId, cursor, limit, direction, page, query, sortBy, order, mode);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling DriverApi->driverWalletGetTransactions: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **driverId** | **String**|  | 
+ **cursor** | **String**|  | [optional] 
+ **limit** | [**Object**](.md)|  | [optional] 
+ **direction** | **String**|  | [optional] 
+ **page** | [**Object**](.md)|  | [optional] 
+ **query** | **String**|  | [optional] 
+ **sortBy** | **String**|  | [optional] 
+ **order** | [**PaginationOrder**](.md)|  | [optional] [default to desc]
+ **mode** | [**PaginationMode**](.md)|  | [optional] [default to offset]
+
+### Return type
+
+[**DriverWalletGetTransactions200Response**](DriverWalletGetTransactions200Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **driverWalletGetWallet**
+> DriverWalletGetWallet200Response driverWalletGetWallet(driverId)
+
+
+
+Get driver wallet by driver ID
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getDriverApi();
+final String driverId = driverId_example; // String | 
+
+try {
+    final response = api.driverWalletGetWallet(driverId);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling DriverApi->driverWalletGetWallet: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **driverId** | **String**|  | 
+
+### Return type
+
+[**DriverWalletGetWallet200Response**](DriverWalletGetWallet200Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **driverWalletTopUp**
+> DriverWalletTopUp200Response driverWalletTopUp(driverId, topUpRequest)
+
+
+
+Top up driver wallet
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getDriverApi();
+final String driverId = driverId_example; // String | 
+final TopUpRequest topUpRequest = ; // TopUpRequest | 
+
+try {
+    final response = api.driverWalletTopUp(driverId, topUpRequest);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling DriverApi->driverWalletTopUp: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **driverId** | **String**|  | 
+ **topUpRequest** | [**TopUpRequest**](TopUpRequest.md)|  | 
+
+### Return type
+
+[**DriverWalletTopUp200Response**](DriverWalletTopUp200Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **driverWalletTransfer**
+> DriverWalletTransfer200Response driverWalletTransfer(driverId, transferRequest)
+
+
+
+Transfer from driver wallet to another user
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getDriverApi();
+final String driverId = driverId_example; // String | 
+final TransferRequest transferRequest = ; // TransferRequest | 
+
+try {
+    final response = api.driverWalletTransfer(driverId, transferRequest);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling DriverApi->driverWalletTransfer: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **driverId** | **String**|  | 
+ **transferRequest** | [**TransferRequest**](TransferRequest.md)|  | 
+
+### Return type
+
+[**DriverWalletTransfer200Response**](DriverWalletTransfer200Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **driverWalletWithdraw**
+> DriverWalletTopUp200Response driverWalletWithdraw(driverId, withdrawRequest)
+
+
+
+Withdraw from driver wallet to bank account
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getDriverApi();
+final String driverId = driverId_example; // String | 
+final WithdrawRequest withdrawRequest = ; // WithdrawRequest | 
+
+try {
+    final response = api.driverWalletWithdraw(driverId, withdrawRequest);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling DriverApi->driverWalletWithdraw: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **driverId** | **String**|  | 
+ **withdrawRequest** | [**WithdrawRequest**](WithdrawRequest.md)|  | 
+
+### Return type
+
+[**DriverWalletTopUp200Response**](DriverWalletTopUp200Response.md)
 
 ### Authorization
 

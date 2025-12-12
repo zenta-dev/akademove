@@ -229,7 +229,10 @@ class _MerchantHomeScreenState extends State<MerchantHomeScreen> {
                   ),
                   IconButton(
                     onPressed: () {
-                      // TODO: Navigate to notifications screen
+                      context.showMyToast(
+                        context.l10n.notifications,
+                        type: ToastType.info,
+                      );
                     },
                     icon: Icon(LucideIcons.bell, size: 20.sp),
                     variance: const ButtonStyle.ghostIcon(),

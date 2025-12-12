@@ -359,12 +359,14 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
             _buildInfoRow(
               LucideIcons.mapPin,
               context.l10n.pickup_location,
-              '${order.pickupLocation.y.toStringAsFixed(4)}, ${order.pickupLocation.x.toStringAsFixed(4)}',
+              order.pickupAddress ??
+                  '${order.pickupLocation.y.toStringAsFixed(4)}, ${order.pickupLocation.x.toStringAsFixed(4)}',
             ),
             _buildInfoRow(
               LucideIcons.navigation,
               context.l10n.dropoff_location,
-              '${order.dropoffLocation.y.toStringAsFixed(4)}, ${order.dropoffLocation.x.toStringAsFixed(4)}',
+              order.dropoffAddress ??
+                  '${order.dropoffLocation.y.toStringAsFixed(4)}, ${order.dropoffLocation.x.toStringAsFixed(4)}',
             ),
             _buildInfoRow(
               LucideIcons.ruler,

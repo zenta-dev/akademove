@@ -38,35 +38,18 @@ class _ReportUserScreenState extends State<ReportUserScreen> {
         _descriptionController.text.trim().length >= 10;
   }
 
-  Future<void> _submitReport() async {
+  void _submitReport() {
     if (!_canSubmit) return;
 
     final category = _selectedCategory;
     if (category == null) return;
 
-    final cubit = context.read<ReportCubit>();
-    await cubit.submitReport(
+    context.read<ReportCubit>().submitReport(
       targetUserId: widget.targetUserId,
       category: category,
       description: _descriptionController.text.trim(),
       orderId: widget.orderId,
     );
-
-    if (!mounted) return;
-
-    final state = cubit.state;
-    if (state.status.isSuccess) {
-      context.showMyToast(
-        context.l10n.toast_report_submitted,
-        type: ToastType.success,
-      );
-      context.pop(true);
-    } else if (state.status.isFailure) {
-      context.showMyToast(
-        state.status.error?.message ?? context.l10n.toast_failed_submit_report,
-        type: ToastType.failed,
-      );
-    }
   }
 
   @override
@@ -74,8 +57,15 @@ class _ReportUserScreenState extends State<ReportUserScreen> {
     return MyScaffold(
       headers: [DefaultAppBar(title: context.l10n.report_user)],
       body: BlocListener<ReportCubit, ReportState>(
+        listenWhen: (previous, current) => previous.status != current.status,
         listener: (context, state) {
-          if (state.status.isFailure) {
+          if (state.status.isSuccess) {
+            context.showMyToast(
+              context.l10n.toast_report_submitted,
+              type: ToastType.success,
+            );
+            context.pop(true);
+          } else if (state.status.isFailure) {
             context.showMyToast(
               state.status.error?.message ??
                   context.l10n.toast_failed_submit_report,

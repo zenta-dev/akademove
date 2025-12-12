@@ -27,6 +27,15 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
   /// Default polling interval in seconds
   static const int _defaultPollingIntervalSeconds = 5;
 
+  /// Faster polling interval when WebSocket is unhealthy
+  static const int _fastPollingIntervalSeconds = 3;
+
+  /// Critical polling interval during MATCHING status for faster driver acceptance detection
+  static const int _criticalPollingIntervalSeconds = 2;
+
+  /// Whether we're using polling as a fallback due to WebSocket issues
+  bool _isPollingFallback = false;
+
   Future<void> init() async {
     reset();
   }
@@ -49,124 +58,102 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
   /// Check if there's an active order for the current user and recover the state
   /// This should be called when the app is reopened or after authentication
   /// Returns true if an active order was found and recovered
-  // Future<bool> recoverActiveOrder() async {
-  //   try {
-  //     return await taskManager.execute('UOC-rao', () async {
-  //       logger.d('[UserOrderCubit] Checking for active order to recover...');
+  Future<bool> recoverActiveOrder() async {
+    try {
+      return await taskManager.execute('UOC-rao', () async {
+        logger.d('[UserOrderCubit] Checking for active order to recover...');
 
-  //       final res = await _orderRepository.getActiveOrder();
-  //       final activeOrder = res.data;
+        final res = await _orderRepository.getActiveOrder();
+        final activeOrder = res.data;
 
-  //       if (activeOrder == null) {
-  //         logger.d('[UserOrderCubit] No active order found');
-  //         // Clear any stored active order ID
-  //         await _keyValueService.remove(KeyValueKeys.activeOrderId);
-  //         return false;
-  //       }
+        if (activeOrder == null) {
+          logger.d('[UserOrderCubit] No active order found');
+          // Clear any stored active order ID
+          await _keyValueService.remove(KeyValueKeys.activeOrderId);
+          return false;
+        }
 
-  //       logger.i(
-  //         '[UserOrderCubit] Found active order: ${activeOrder.order.id} '
-  //         'with status: ${activeOrder.order.status}',
-  //       );
+        logger.i(
+          '[UserOrderCubit] Found active order: ${activeOrder.order.id} '
+          'with status: ${activeOrder.order.status}',
+        );
 
-  //       // Store the active order ID for future reference
-  //       await _keyValueService.set(
-  //         KeyValueKeys.activeOrderId,
-  //         activeOrder.order.id,
-  //       );
+        // Store the active order ID for future reference
+        await _keyValueService.set(
+          KeyValueKeys.activeOrderId,
+          activeOrder.order.id,
+        );
 
-  //       _orderId = activeOrder.order.id;
+        _orderId = activeOrder.order.id;
 
-  //       // Emit the recovered state
-  //       emit(
-  //         state.copyWith(
-  //           currentOrder: OperationResult.success(activeOrder.order),
-  //           currentPayment: activeOrder.payment != null
-  //               ? OperationResult.success(activeOrder.payment!)
-  //               : const OperationResult.idle(),
-  //           currentTransaction: activeOrder.transaction != null
-  //               ? OperationResult.success(activeOrder.transaction!)
-  //               : const OperationResult.idle(),
-  //           currentAssignedDriver: activeOrder.driver != null
-  //               ? OperationResult.success(activeOrder.driver)
-  //               : const OperationResult.idle(),
-  //         ),
-  //       );
+        // Emit the recovered state
+        emit(
+          state.copyWith(
+            currentOrder: OperationResult.success(activeOrder.order),
+            currentPayment: activeOrder.payment != null
+                ? OperationResult.success(activeOrder.payment!)
+                : const OperationResult.idle(),
+            currentTransaction: activeOrder.transaction != null
+                ? OperationResult.success(activeOrder.transaction!)
+                : const OperationResult.idle(),
+            currentAssignedDriver: activeOrder.driver != null
+                ? OperationResult.success(activeOrder.driver)
+                : const OperationResult.idle(),
+          ),
+        );
 
-  //       // Setup appropriate WebSocket connections based on order status
-  //       final status = activeOrder.order.status;
-  //       final orderType = activeOrder.order.type;
-  //       final paymentStatus = activeOrder.payment?.status;
+        // Setup WebSocket and polling based on order status
+        final pid = activeOrder.payment?.id;
+        if (pid != null) await _setupPaymentWebsocket(paymentId: pid);
 
-  //       // if (status == OrderStatus.REQUESTED) {
-  //       //   // For FOOD orders with successful payment, connect to order WebSocket
-  //       //   // to receive merchant updates (ACCEPTED, PREPARING, READY)
-  //       //   if (orderType == OrderType.FOOD &&
-  //       //       paymentStatus == TransactionStatus.SUCCESS) {
-  //       //     await _setupLiveOrderWebsocket(orderId: activeOrder.order.id);
-  //       //   } else if (activeOrder.payment != null) {
-  //       //     // Order is waiting for payment, setup payment WebSocket
-  //       //     _paymentId = activeOrder.payment!.id;
-  //       //   }
-  //       // } else if (status == OrderStatus.MATCHING) {
-  //       //   // Order is waiting for driver, setup driver pool WebSocket
-  //       //   // await _setupFindDriverWebsocket();
-  //       // } else if ([
-  //       //   OrderStatus.ACCEPTED,
-  //       //   OrderStatus.PREPARING,
-  //       //   OrderStatus.READY_FOR_PICKUP,
-  //       //   OrderStatus.ARRIVING,
-  //       //   OrderStatus.IN_TRIP,
-  //       // ].contains(status)) {
-  //       //   // Order has a driver, setup live order WebSocket
-  //       // }
+        // Setup live order WebSocket with polling fallback
+        await _setupLiveOrderWebsocketWithPolling(
+          orderId: activeOrder.order.id,
+        );
 
-  //       final pid = activeOrder.payment?.id;
-  //       if (pid != null) await _setupPaymentWebsocket(paymentId: pid);
-  //       startPolling();
-  //       await _setupLiveOrderWebsocket(orderId: activeOrder.order.id);
-
-  //       return true;
-  //     });
-  //   } on BaseError catch (e, st) {
-  //     logger.e(
-  //       '[UserOrderCubit] - Error recovering active order: ${e.message}',
-  //       error: e,
-  //       stackTrace: st,
-  //     );
-  //     // Clear any stored active order ID on error
-  //     await _keyValueService.remove(KeyValueKeys.activeOrderId);
-  //     return false;
-  //   }
-  // }
+        return true;
+      });
+    } on BaseError catch (e, st) {
+      logger.e(
+        '[UserOrderCubit] - Error recovering active order: ${e.message}',
+        error: e,
+        stackTrace: st,
+      );
+      // Clear any stored active order ID on error
+      await _keyValueService.remove(KeyValueKeys.activeOrderId);
+      return false;
+    }
+  }
 
   /// Check if user has an active order without full recovery
   /// Returns the active order ID if found, null otherwise
-  // Future<String?> checkActiveOrderId() async {
-  //   try {
-  //     final res = await _orderRepository.getActiveOrder();
-  //     return res.data?.order.id;
-  //   } catch (e) {
-  //     logger.e('[UserOrderCubit] - Error checking active order: $e');
-  //     return null;
-  //   }
-  // }
+  Future<String?> checkActiveOrderId() async {
+    try {
+      final res = await _orderRepository.getActiveOrder();
+      return res.data?.order.id;
+    } catch (e) {
+      logger.e('[UserOrderCubit] - Error checking active order: $e');
+      return null;
+    }
+  }
 
-  // /// Clear the active order state and stored ID
-  // Future<void> clearActiveOrder() async {
-  //   await _keyValueService.remove(KeyValueKeys.activeOrderId);
-  //   await teardownWebsocket();
-  //   _orderId = null;
-  //   _paymentId = null;
-  //   emit(
-  //     state.copyWith(
-  //       currentOrder: const OperationResult.idle(),
-  //       currentPayment: const OperationResult.idle(),
-  //       currentTransaction: const OperationResult.idle(),
-  //       currentAssignedDriver: const OperationResult.idle(),
-  //     ),
-  //   );
-  // }
+  /// Clear the active order state and stored ID
+  Future<void> clearActiveOrder() async {
+    await _keyValueService.remove(KeyValueKeys.activeOrderId);
+    stopPolling();
+    await teardownWebsocket();
+    _orderId = null;
+    _paymentId = null;
+    _isPollingFallback = false;
+    emit(
+      state.copyWith(
+        currentOrder: const OperationResult.idle(),
+        currentPayment: const OperationResult.idle(),
+        currentTransaction: const OperationResult.idle(),
+        currentAssignedDriver: const OperationResult.idle(),
+      ),
+    );
+  }
 
   Future<void> list() async => await taskManager.execute('UOC-l1', () async {
     try {
@@ -361,12 +348,14 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
 
           // For FOOD orders, connect to order WebSocket to receive merchant updates
           // For RIDE/DELIVERY orders, connect to driver pool for driver matching
+          // Use WebSocket with polling fallback for reliability
           final currentOrder = state.currentOrder.value;
           final orderId = _orderId;
           if (currentOrder?.type == OrderType.FOOD && orderId != null) {
-            await _setupLiveOrderWebsocket(orderId: orderId);
-          } else {
-            // await _setupFindDriverWebsocket();
+            await _setupLiveOrderWebsocketWithPolling(orderId: orderId);
+          } else if (orderId != null) {
+            // For RIDE/DELIVERY, also setup WebSocket with polling fallback
+            await _setupLiveOrderWebsocketWithPolling(orderId: orderId);
           }
         }
 
@@ -524,6 +513,34 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
               state.copyWith(
                 currentAssignedDriver: OperationResult.success(driver),
               ),
+            );
+          }
+        }
+
+        // Handle driver accepted event - driver has accepted the order
+        // This provides instant UI update when a driver accepts
+        if (data.e == OrderEnvelopeEvent.DRIVER_ACCEPTED) {
+          final detail = data.p.detail;
+          final driverAssigned = data.p.driverAssigned;
+
+          if (detail != null) {
+            emit(
+              state.copyWith(
+                currentOrder: OperationResult.success(detail.order),
+                currentPayment: detail.payment != null
+                    ? OperationResult.success(detail.payment!)
+                    : state.currentPayment,
+                currentTransaction: detail.transaction != null
+                    ? OperationResult.success(detail.transaction!)
+                    : state.currentTransaction,
+                currentAssignedDriver: driverAssigned != null
+                    ? OperationResult.success(driverAssigned)
+                    : state.currentAssignedDriver,
+              ),
+            );
+            logger.i(
+              '[UserOrderCubit] Driver accepted order: ${detail.order.id}, '
+              'driver: ${driverAssigned?.id}',
             );
           }
         }
@@ -734,10 +751,95 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
     }
   }
 
+  /// Setup live order WebSocket with automatic polling fallback
+  /// This provides reliable order updates even when WebSocket is unstable
+  Future<void> _setupLiveOrderWebsocketWithPolling({
+    required String orderId,
+  }) async {
+    _orderId = orderId;
+
+    // Setup WebSocket status listener for automatic polling fallback
+    _webSocketService.setStatusListener(orderId, _handleWebSocketStatusChange);
+
+    // Setup WebSocket connection
+    await _setupLiveOrderWebsocket(orderId: orderId);
+
+    // Always start polling as a backup mechanism
+    // This ensures we don't miss updates if WebSocket is slow or disconnects
+    _startPollingFallback();
+  }
+
+  /// Handle WebSocket connection status changes
+  void _handleWebSocketStatusChange(WebSocketConnectionStatus status) {
+    final orderId = _orderId;
+    if (orderId == null) return;
+
+    logger.d('[UserOrderCubit] WebSocket status changed: $status');
+
+    switch (status) {
+      case WebSocketConnectionStatus.connected:
+        // WebSocket is healthy, we can reduce polling frequency or keep it as backup
+        if (_isPollingFallback && state.isPolling) {
+          logger.i(
+            '[UserOrderCubit] WebSocket connected, '
+            'keeping polling as backup with normal interval',
+          );
+          // Restart polling with normal interval since WS is healthy
+          stopPolling();
+          startPolling(intervalSeconds: _defaultPollingIntervalSeconds);
+        }
+      case WebSocketConnectionStatus.reconnecting:
+      case WebSocketConnectionStatus.connecting:
+        // WebSocket is unstable, ensure polling is active with faster interval
+        if (!state.isPolling) {
+          logger.i(
+            '[UserOrderCubit] WebSocket unstable, '
+            'starting fast polling as fallback',
+          );
+          _startPollingFallback(fast: true);
+        } else if (!_isPollingFallback) {
+          // Switch to fast polling
+          stopPolling();
+          _startPollingFallback(fast: true);
+        }
+      case WebSocketConnectionStatus.failed:
+      case WebSocketConnectionStatus.disconnected:
+        // WebSocket is down, rely on polling entirely
+        if (!state.isPolling) {
+          logger.i(
+            '[UserOrderCubit] WebSocket failed/disconnected, '
+            'starting fast polling as primary update source',
+          );
+          _startPollingFallback(fast: true);
+        }
+    }
+  }
+
+  /// Start polling as a fallback mechanism
+  /// [fast] - If true, use faster polling interval (for when WebSocket is unstable)
+  void _startPollingFallback({bool fast = false}) {
+    _isPollingFallback = true;
+
+    // Check if order is in critical status (MATCHING/REQUESTED) for faster polling
+    final currentOrder = state.currentOrder.value;
+    final isCriticalStatus =
+        currentOrder != null &&
+        (currentOrder.status == OrderStatus.MATCHING ||
+            currentOrder.status == OrderStatus.REQUESTED);
+
+    // Use critical interval if in MATCHING/REQUESTED, otherwise use fast/default
+    final interval = isCriticalStatus
+        ? _criticalPollingIntervalSeconds
+        : (fast ? _fastPollingIntervalSeconds : _defaultPollingIntervalSeconds);
+
+    startPolling(intervalSeconds: interval);
+  }
+
   Future<void> teardownWebsocket() async {
     final futures = [_webSocketService.disconnect('driver-pool')];
     final orderId = _orderId;
     if (orderId != null) {
+      _webSocketService.removeStatusListener(orderId);
       futures.add(_webSocketService.disconnect(orderId));
     }
     final paymentId = _paymentId;
@@ -745,6 +847,7 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
       futures.add(_webSocketService.disconnect(paymentId));
     }
 
+    _isPollingFallback = false;
     await Future.wait(futures);
   }
 
@@ -841,11 +944,48 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
           'stopping polling',
         );
         stopPolling();
+      } else {
+        // Adjust polling interval based on order status
+        // Use critical (faster) polling during MATCHING status for quicker driver detection
+        _adjustPollingIntervalForStatus(order.status);
       }
     } catch (e, st) {
       logger.e('[UserOrderCubit] Poll error: $e', error: e, stackTrace: st);
       // Don't stop polling on error, let it retry
     }
+  }
+
+  /// Adjust polling interval based on current order status
+  /// Uses faster polling during MATCHING to detect driver acceptance quickly
+  void _adjustPollingIntervalForStatus(OrderStatus status) {
+    final isCriticalStatus =
+        status == OrderStatus.MATCHING || status == OrderStatus.REQUESTED;
+
+    final currentInterval = _pollingTimer != null
+        ? _getCurrentPollingInterval()
+        : 0;
+    final targetInterval = isCriticalStatus
+        ? _criticalPollingIntervalSeconds
+        : _defaultPollingIntervalSeconds;
+
+    // Only restart if interval needs to change
+    if (currentInterval != targetInterval && state.isPolling) {
+      logger.d(
+        '[UserOrderCubit] Adjusting polling interval for status $status: '
+        '${currentInterval}s -> ${targetInterval}s',
+      );
+      stopPolling();
+      startPolling(intervalSeconds: targetInterval);
+    }
+  }
+
+  /// Get current polling interval (approximation based on state)
+  int _getCurrentPollingInterval() {
+    // This is tracked implicitly; for now return default
+    // The actual interval is determined when startPolling is called
+    return _isPollingFallback
+        ? _fastPollingIntervalSeconds
+        : _defaultPollingIntervalSeconds;
   }
 
   /// Check if driver location has changed

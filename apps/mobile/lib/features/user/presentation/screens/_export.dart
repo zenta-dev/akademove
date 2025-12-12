@@ -1,5 +1,6 @@
 export 'delivery/_export.dart';
 export 'history/_export.dart';
+export 'map_location_picker_screen.dart';
 export 'mart/_export.dart';
 export 'profile/_export.dart';
 export 'ride/_export.dart';

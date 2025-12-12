@@ -41,6 +41,8 @@ export interface ChargePayload extends WithUserId {
 	metadata?: Record<string, unknown>;
 	bank?: BankProvider;
 	va_number?: string;
+	/** Reference ID (e.g., orderId) for linking transaction to the order - required for refunds */
+	referenceId?: string;
 }
 
 /**
@@ -277,6 +279,7 @@ export class PaymentRepository extends BaseRepository {
 						orderType: params.orderType,
 						transactionType: params.transactionType,
 						metadata: params.metadata,
+						referenceId: params.referenceId,
 					},
 					{
 						tx,
@@ -298,6 +301,7 @@ export class PaymentRepository extends BaseRepository {
 					metadata: params.metadata,
 					bank: params.bank,
 					va_number: params.va_number,
+					referenceId: params.referenceId,
 				},
 				{
 					tx,

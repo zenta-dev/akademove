@@ -201,7 +201,9 @@ class _CouponCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final discountText = _getDiscountText();
-    final expiryDate = DateFormat('dd MMM yyyy').format(coupon.periodEnd);
+    final expiryDate = DateFormat(
+      'dd MMM yyyy',
+    ).format(coupon.periodEnd.toLocal());
     final theme = Theme.of(context);
 
     return GestureDetector(
@@ -350,7 +352,7 @@ class CouponDetailDialog extends StatelessWidget {
             const SizedBox(height: 12),
             _buildInfoRow(
               'Valid Period',
-              '${DateFormat('dd MMM yyyy').format(coupon.periodStart)} - ${DateFormat('dd MMM yyyy').format(coupon.periodEnd)}',
+              '${DateFormat('dd MMM yyyy').format(coupon.periodStart.toLocal())} - ${DateFormat('dd MMM yyyy').format(coupon.periodEnd.toLocal())}',
             ),
             if (coupon.rules.general?.minOrderAmount != null) ...[
               const SizedBox(height: 12),

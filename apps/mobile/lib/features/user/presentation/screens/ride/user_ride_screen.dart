@@ -290,6 +290,7 @@ class _UserRideScreenState extends State<UserRideScreen> {
   @override
   Widget build(BuildContext context) {
     return MyScaffold(
+      scrollable: true,
       headers: [
         AppBar(
           padding: EdgeInsets.all(4.dg),
@@ -382,7 +383,7 @@ class _UserRideScreenState extends State<UserRideScreen> {
                   enabled: !state.estimateOrder.isLoading,
                   onPressed: state.estimateOrder.isLoading
                       ? null
-                      : () async {
+                      : () {
                           final pickupLoc = pickup;
                           final dropoffLoc = dropoff;
 
@@ -392,7 +393,7 @@ class _UserRideScreenState extends State<UserRideScreen> {
                             );
                             return;
                           }
-                          await context.read<UserOrderCubit>().estimate(
+                          context.read<UserOrderCubit>().estimate(
                             req: EstimateOrder(
                               type: OrderType.RIDE,
                               pickupLocation: Coordinate(

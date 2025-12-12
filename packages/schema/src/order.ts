@@ -89,6 +89,8 @@ export const OrderSchema = z.object({
 	status: OrderStatusSchema,
 	pickupLocation: CoordinateSchema,
 	dropoffLocation: CoordinateSchema,
+	pickupAddress: z.string().optional(),
+	dropoffAddress: z.string().optional(),
 	distanceKm: z.coerce.number(),
 	basePrice: z.coerce.number(),
 	tip: z.coerce.number().optional(),
@@ -162,6 +164,8 @@ export const OrderKeySchema = extractSchemaKeysAsEnum(OrderSchema).exclude([
 export const PlaceOrderSchema = OrderSchema.pick({
 	dropoffLocation: true,
 	pickupLocation: true,
+	pickupAddress: true,
+	dropoffAddress: true,
 	note: true,
 	type: true,
 	items: true,

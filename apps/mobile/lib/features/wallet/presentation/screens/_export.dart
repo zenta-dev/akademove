@@ -6,3 +6,4 @@ export 'user_wallet_top_up_qris_screen.dart';
 export 'user_wallet_top_up_screen.dart';
 export 'user_wallet_transfer_scan_screen.dart';
 export 'user_wallet_transfer_screen.dart';
+export 'user_wallet_withdraw_screen.dart';

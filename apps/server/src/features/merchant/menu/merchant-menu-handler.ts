@@ -1,6 +1,7 @@
 import { m } from "@repo/i18n";
 import { trimObjectValues } from "@repo/shared";
 import { AuthError } from "@/core/error";
+import { shouldBypassAuthorization } from "@/core/middlewares/auth";
 import { createORPCRouter } from "@/core/router/orpc";
 import { MerchantMenuSpec } from "./merchant-menu-spec";
 
@@ -35,6 +36,7 @@ export const MerchantMenuHandler = priv.router({
 	create: priv.create.handler(async ({ context, input: { body, params } }) => {
 		// Only MERCHANT, ADMIN, and OPERATOR can create menu items
 		if (
+			!shouldBypassAuthorization() &&
 			context.user.role !== "MERCHANT" &&
 			context.user.role !== "ADMIN" &&
 			context.user.role !== "OPERATOR"
@@ -48,7 +50,7 @@ export const MerchantMenuHandler = priv.router({
 		}
 
 		// IDOR protection: Merchants can only create menu items for their own merchant
-		if (context.user.role === "MERCHANT") {
+		if (!shouldBypassAuthorization() && context.user.role === "MERCHANT") {
 			const merchant = await context.repo.merchant.main.getByUserId(
 				context.user.id,
 			);
@@ -81,6 +83,7 @@ export const MerchantMenuHandler = priv.router({
 	update: priv.update.handler(async ({ context, input: { params, body } }) => {
 		// Only MERCHANT, ADMIN, and OPERATOR can update menu items
 		if (
+			!shouldBypassAuthorization() &&
 			context.user.role !== "MERCHANT" &&
 			context.user.role !== "ADMIN" &&
 			context.user.role !== "OPERATOR"
@@ -94,7 +97,7 @@ export const MerchantMenuHandler = priv.router({
 		}
 
 		// IDOR protection: Merchants can only update menu items for their own merchant
-		if (context.user.role === "MERCHANT") {
+		if (!shouldBypassAuthorization() && context.user.role === "MERCHANT") {
 			const merchant = await context.repo.merchant.main.getByUserId(
 				context.user.id,
 			);
@@ -128,6 +131,7 @@ export const MerchantMenuHandler = priv.router({
 	remove: priv.remove.handler(async ({ context, input: { params } }) => {
 		// Only MERCHANT, ADMIN, and OPERATOR can delete menu items
 		if (
+			!shouldBypassAuthorization() &&
 			context.user.role !== "MERCHANT" &&
 			context.user.role !== "ADMIN" &&
 			context.user.role !== "OPERATOR"
@@ -141,7 +145,7 @@ export const MerchantMenuHandler = priv.router({
 		}
 
 		// IDOR protection: Merchants can only delete menu items for their own merchant
-		if (context.user.role === "MERCHANT") {
+		if (!shouldBypassAuthorization() && context.user.role === "MERCHANT") {
 			const menu = await context.repo.merchant.menu.get(params.id);
 			const merchant = await context.repo.merchant.main.getByUserId(
 				context.user.id,

@@ -79,7 +79,7 @@ class _MerchantCreateMenuScreenState extends State<MerchantCreateMenuScreen> {
     super.dispose();
   }
 
-  Future<void> _handleCreateMenu() async {
+  void _handleCreateMenu() async {
     final isValid = _formController.errors.isEmpty;
 
     if (!isValid) {
@@ -139,11 +139,11 @@ class _MerchantCreateMenuScreenState extends State<MerchantCreateMenuScreen> {
         ? await MultipartFile.fromFile(imageFile.path)
         : null;
 
-    // Check if mounted before navigating
+    // Check if mounted before calling cubit
     if (!mounted) return;
-    // Create menu
-    final menuCubit = context.read<MerchantMenuCubit>();
-    await menuCubit.createMenu(
+
+    // Create menu - BlocConsumer listener handles state changes
+    context.read<MerchantMenuCubit>().createMenu(
       merchantId: merchantId,
       name: name,
       price: price,
@@ -151,39 +151,6 @@ class _MerchantCreateMenuScreenState extends State<MerchantCreateMenuScreen> {
       category: category?.name,
       image: image,
     );
-
-    final state = menuCubit.state;
-
-    // Check if mounted before navigating
-    if (!mounted) return;
-
-    if (state.menu.isSuccess) {
-      // Show success message
-      showToast(
-        context: context,
-        builder: (context, overlay) => context.buildToast(
-          title: context.l10n.success,
-          message:
-              state.menu.message ?? context.l10n.toast_menu_created_success,
-        ),
-        location: ToastLocation.topCenter,
-      );
-      if (context.canPop() && mounted) {}
-      // Navigate back to list
-      context.pop();
-    } else if (state.menu.isFailure) {
-      // Show error message
-      showToast(
-        context: context,
-        builder: (context, overlay) => context.buildToast(
-          title: context.l10n.error,
-          message:
-              state.menu.error?.message ??
-              context.l10n.toast_failed_create_menu,
-        ),
-        location: ToastLocation.topCenter,
-      );
-    }
   }
 
   void _showToast(String title, String message) {
@@ -213,7 +180,36 @@ class _MerchantCreateMenuScreenState extends State<MerchantCreateMenuScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<MerchantMenuCubit, MerchantMenuState>(
+    return BlocConsumer<MerchantMenuCubit, MerchantMenuState>(
+      listenWhen: (previous, current) => previous.menu != current.menu,
+      listener: (context, state) {
+        if (state.menu.isSuccess) {
+          // Show success message
+          showToast(
+            context: context,
+            builder: (context, overlay) => context.buildToast(
+              title: context.l10n.success,
+              message:
+                  state.menu.message ?? context.l10n.toast_menu_created_success,
+            ),
+            location: ToastLocation.topCenter,
+          );
+          // Navigate back to list
+          context.pop();
+        } else if (state.menu.isFailure) {
+          // Show error message
+          showToast(
+            context: context,
+            builder: (context, overlay) => context.buildToast(
+              title: context.l10n.error,
+              message:
+                  state.menu.error?.message ??
+                  context.l10n.toast_failed_create_menu,
+            ),
+            location: ToastLocation.topCenter,
+          );
+        }
+      },
       builder: (context, state) {
         final isLoading = state.menu.isLoading;
 

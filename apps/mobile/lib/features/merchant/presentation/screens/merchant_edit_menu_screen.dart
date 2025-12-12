@@ -118,7 +118,7 @@ class _MerchantEditMenuScreenState extends State<MerchantEditMenuScreen> {
     super.dispose();
   }
 
-  Future<void> _handleSaveChanges() async {
+  void _handleSaveChanges() async {
     final menu = _menu;
     if (menu == null) {
       _showToast(context.l10n.error, context.l10n.error_menu_info_not_found);
@@ -180,12 +180,11 @@ class _MerchantEditMenuScreenState extends State<MerchantEditMenuScreen> {
         ? await MultipartFile.fromFile(imageFile.path)
         : null;
 
-    // Check if mounted before navigating
+    // Check if mounted before calling cubit
     if (!mounted) return;
 
-    // Update menu
-    final menuCubit = context.read<MerchantMenuCubit>();
-    await menuCubit.updateMenu(
+    // Update menu - BlocConsumer listener handles state changes
+    context.read<MerchantMenuCubit>().updateMenu(
       merchantId: merchantId,
       menuId: menu.id,
       name: name,
@@ -194,39 +193,6 @@ class _MerchantEditMenuScreenState extends State<MerchantEditMenuScreen> {
       category: category?.name,
       image: image,
     );
-
-    // Check if mounted before navigating
-    if (!mounted) return;
-
-    final state = menuCubit.state;
-
-    if (state.menu.isSuccess) {
-      // Show success message
-      showToast(
-        context: context,
-        builder: (context, overlay) => context.buildToast(
-          title: context.l10n.success,
-          message:
-              state.menu.message ?? context.l10n.toast_menu_updated_success,
-        ),
-        location: ToastLocation.topCenter,
-      );
-
-      // Navigate back
-      context.pop();
-    } else if (state.menu.isFailure) {
-      // Show error message
-      showToast(
-        context: context,
-        builder: (context, overlay) => context.buildToast(
-          title: context.l10n.error,
-          message:
-              state.menu.error?.message ??
-              context.l10n.toast_failed_update_menu,
-        ),
-        location: ToastLocation.topCenter,
-      );
-    }
   }
 
   void _showToast(String title, String message) {
@@ -266,7 +232,36 @@ class _MerchantEditMenuScreenState extends State<MerchantEditMenuScreen> {
       );
     }
 
-    return BlocBuilder<MerchantMenuCubit, MerchantMenuState>(
+    return BlocConsumer<MerchantMenuCubit, MerchantMenuState>(
+      listenWhen: (previous, current) => previous.menu != current.menu,
+      listener: (context, state) {
+        if (state.menu.isSuccess) {
+          // Show success message
+          showToast(
+            context: context,
+            builder: (context, overlay) => context.buildToast(
+              title: context.l10n.success,
+              message:
+                  state.menu.message ?? context.l10n.toast_menu_updated_success,
+            ),
+            location: ToastLocation.topCenter,
+          );
+          // Navigate back
+          context.pop();
+        } else if (state.menu.isFailure) {
+          // Show error message
+          showToast(
+            context: context,
+            builder: (context, overlay) => context.buildToast(
+              title: context.l10n.error,
+              message:
+                  state.menu.error?.message ??
+                  context.l10n.toast_failed_update_menu,
+            ),
+            location: ToastLocation.topCenter,
+          );
+        }
+      },
       builder: (context, state) {
         final isLoading = state.menu.isLoading;
 

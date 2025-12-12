@@ -8,7 +8,7 @@ import 'package:akademove/core/utils/operation.dart';
 /// the result of a single execution.
 class TaskDedupeManager {
   TaskDedupeManager({Duration? timeout}) : _timeout = timeout;
-  final Map<String, Future<dynamic>> _activeTasks = {};
+  final Map<String, Future<Object?>> _activeTasks = {};
   final Duration? _timeout;
 
   Future<T> execute<T>(String key, FutureOr<T> Function() task) async {
@@ -171,7 +171,7 @@ class _CachedTaskDedupeManager {
       _CachedTaskDedupeManager._();
 
   final Map<String, _CachedResult> _cache = {};
-  final Map<String, Future<dynamic>> _activeTasks = {};
+  final Map<String, Future<Object?>> _activeTasks = {};
 
   Future<T> execute<T>(
     String key,
@@ -234,7 +234,7 @@ class _CachedTaskDedupeManager {
 
 class _CachedResult {
   _CachedResult({required this.result, required this.expiresAt});
-  final dynamic result;
+  final Object? result;
   final DateTime expiresAt;
 }
 

@@ -11,3 +11,4 @@ export 'merchant_order_screen.dart';
 export 'merchant_profile_screen.dart';
 export 'merchant_sales_report_detail.dart';
 export 'merchant_set_up_outlet.dart';
+export 'merchant_wallet_withdraw_screen.dart';

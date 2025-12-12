@@ -9,10 +9,10 @@ import 'dart:convert';
 import 'package:api_client/src/deserialize.dart';
 import 'package:dio/dio.dart';
 
+import 'package:api_client/src/model/driver_wallet_get_transactions200_response.dart';
 import 'package:api_client/src/model/pagination_mode.dart';
 import 'package:api_client/src/model/pagination_order.dart';
 import 'package:api_client/src/model/transaction_get200_response.dart';
-import 'package:api_client/src/model/transaction_list200_response.dart';
 
 class TransactionApi {
 
@@ -116,9 +116,9 @@ _responseData = rawData == null ? null : deserialize<TransactionGet200Response, 
   /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
   /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
   ///
-  /// Returns a [Future] containing a [Response] with a [TransactionList200Response] as data
+  /// Returns a [Future] containing a [Response] with a [DriverWalletGetTransactions200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<TransactionList200Response>> transactionList({ 
+  Future<Response<DriverWalletGetTransactions200Response>> transactionList({ 
     String? cursor,
     Object? limit,
     String? direction,
@@ -173,11 +173,11 @@ _responseData = rawData == null ? null : deserialize<TransactionGet200Response, 
       onReceiveProgress: onReceiveProgress,
     );
 
-    TransactionList200Response? _responseData;
+    DriverWalletGetTransactions200Response? _responseData;
 
     try {
       final rawData = _response.data;
-_responseData = rawData == null ? null : deserialize<TransactionList200Response, TransactionList200Response>(rawData, 'TransactionList200Response', growable: true);
+_responseData = rawData == null ? null : deserialize<DriverWalletGetTransactions200Response, DriverWalletGetTransactions200Response>(rawData, 'DriverWalletGetTransactions200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -188,7 +188,7 @@ _responseData = rawData == null ? null : deserialize<TransactionList200Response,
       );
     }
 
-    return Response<TransactionList200Response>(
+    return Response<DriverWalletGetTransactions200Response>(
       data: _responseData,
       headers: _response.headers,
       isRedirect: _response.isRedirect,

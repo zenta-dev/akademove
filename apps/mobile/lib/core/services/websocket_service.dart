@@ -7,6 +7,24 @@ import 'package:flutter/widgets.dart';
 import 'package:web_socket_channel/status.dart' as status;
 import 'package:web_socket_channel/web_socket_channel.dart';
 
+/// Connection status for a WebSocket connection
+enum WebSocketConnectionStatus {
+  /// Connection is not established
+  disconnected,
+
+  /// Connection is being established
+  connecting,
+
+  /// Connection is active and healthy
+  connected,
+
+  /// Connection failed and is attempting to reconnect
+  reconnecting,
+
+  /// Connection failed and max reconnect attempts reached
+  failed,
+}
+
 class WebSocketService with WidgetsBindingObserver {
   WebSocketService({
     this.maxReconnectAttempts = 5,
@@ -18,10 +36,13 @@ class WebSocketService with WidgetsBindingObserver {
   }
 
   final Map<String, WebSocketChannel> _connections = {};
-  final Map<String, StreamSubscription<dynamic>> _subscriptions = {};
+  final Map<String, StreamSubscription<Object?>> _subscriptions = {};
   final Map<String, _ConnectionConfig> _configs = {};
   final Map<String, Timer> _reconnectTimers = {};
   final Map<String, int> _reconnectAttempts = {};
+  final Map<String, WebSocketConnectionStatus> _connectionStatuses = {};
+  final Map<String, void Function(WebSocketConnectionStatus)?>
+  _statusListeners = {};
 
   String? sessionToken;
   bool _isPaused = false;
@@ -93,7 +114,7 @@ class WebSocketService with WidgetsBindingObserver {
   Future<void> connect(
     String key,
     String url, {
-    void Function(dynamic msg)? onMessage,
+    void Function(Object? msg)? onMessage,
     void Function()? onDone,
     void Function(Object error)? onError,
     bool autoReconnect = true,
@@ -133,6 +154,8 @@ class WebSocketService with WidgetsBindingObserver {
     if (config == null) return;
 
     try {
+      _updateConnectionStatus(key, WebSocketConnectionStatus.connecting);
+
       var uri = Uri.parse(config.url);
       final existingParams = Map<String, String>.from(uri.queryParameters);
 
@@ -149,6 +172,10 @@ class WebSocketService with WidgetsBindingObserver {
       // ignore: cancel_subscriptions
       final sub = channel.stream.listen(
         (data) {
+          // First successful message means connection is healthy
+          if (_connectionStatuses[key] != WebSocketConnectionStatus.connected) {
+            _updateConnectionStatus(key, WebSocketConnectionStatus.connected);
+          }
           _reconnectAttempts[key] = 0;
           _logDebug(key, 'Message received: ${_truncate(data.toString())}');
           config.onMessage?.call(data);
@@ -162,7 +189,16 @@ class WebSocketService with WidgetsBindingObserver {
         onDone: () {
           _logInfo(key, 'Connection closed (done event)');
           if (config.autoReconnect && _configs.containsKey(key)) {
+            _updateConnectionStatus(
+              key,
+              WebSocketConnectionStatus.reconnecting,
+            );
             _scheduleReconnect(key);
+          } else {
+            _updateConnectionStatus(
+              key,
+              WebSocketConnectionStatus.disconnected,
+            );
           }
           config.onDone?.call();
         },
@@ -170,6 +206,8 @@ class WebSocketService with WidgetsBindingObserver {
       );
 
       _subscriptions[key] = sub;
+      // Mark as connected - we'll get confirmation via first message
+      _updateConnectionStatus(key, WebSocketConnectionStatus.connected);
       _logInfo(key, 'Connected successfully');
     } on SocketException catch (e, st) {
       _logError(
@@ -181,11 +219,14 @@ class WebSocketService with WidgetsBindingObserver {
 
       if (e.osError?.errorCode == 7) {
         _logError(key, 'Permanent DNS error — will not retry further.');
+        _updateConnectionStatus(key, WebSocketConnectionStatus.failed);
         return;
       }
+      _updateConnectionStatus(key, WebSocketConnectionStatus.reconnecting);
       _scheduleReconnect(key);
     } on WebSocketChannelException catch (e, st) {
       _logError(key, 'WebSocket connection failed', error: e, stackTrace: st);
+      _updateConnectionStatus(key, WebSocketConnectionStatus.reconnecting);
       _scheduleReconnect(key);
     } catch (error, stackTrace) {
       _logError(
@@ -194,12 +235,14 @@ class WebSocketService with WidgetsBindingObserver {
         error: error,
         stackTrace: stackTrace,
       );
+      _updateConnectionStatus(key, WebSocketConnectionStatus.reconnecting);
       _scheduleReconnect(key);
     }
   }
 
   void _handleStreamError(String key, Object? error) {
     _logError(key, 'Stream error', error: error);
+    _updateConnectionStatus(key, WebSocketConnectionStatus.reconnecting);
 
     final config = _configs[key];
     if (config == null || !config.autoReconnect) return;
@@ -207,6 +250,7 @@ class WebSocketService with WidgetsBindingObserver {
     if (error is SocketException) {
       if (error.osError?.errorCode == 7) {
         _logError(key, 'DNS lookup failed — stopping reconnect attempts.');
+        _updateConnectionStatus(key, WebSocketConnectionStatus.failed);
         return;
       }
     }
@@ -232,6 +276,7 @@ class WebSocketService with WidgetsBindingObserver {
         key,
         'Max reconnect attempts ($maxReconnectAttempts) reached. Giving up.',
       );
+      _updateConnectionStatus(key, WebSocketConnectionStatus.failed);
       return;
     }
 
@@ -284,13 +329,46 @@ class WebSocketService with WidgetsBindingObserver {
     }
   }
 
-  Stream<dynamic>? stream(String key) => _connections[key]?.stream;
+  Stream<Object?>? stream(String key) => _connections[key]?.stream;
 
   bool isConnected(String key) => _connections.containsKey(key);
 
   int getReconnectAttempts(String key) => _reconnectAttempts[key] ?? 0;
 
   void resetReconnectAttempts(String key) => _reconnectAttempts[key] = 0;
+
+  /// Get the current connection status for a key
+  WebSocketConnectionStatus getConnectionStatus(String key) =>
+      _connectionStatuses[key] ?? WebSocketConnectionStatus.disconnected;
+
+  /// Check if the connection is healthy (connected and not reconnecting/failed)
+  bool isConnectionHealthy(String key) =>
+      _connectionStatuses[key] == WebSocketConnectionStatus.connected;
+
+  /// Set a listener for connection status changes
+  void setStatusListener(
+    String key,
+    void Function(WebSocketConnectionStatus)? listener,
+  ) {
+    _statusListeners[key] = listener;
+  }
+
+  /// Remove the status listener for a key
+  void removeStatusListener(String key) {
+    _statusListeners.remove(key);
+  }
+
+  void _updateConnectionStatus(
+    String key,
+    WebSocketConnectionStatus newStatus,
+  ) {
+    final oldStatus = _connectionStatuses[key];
+    if (oldStatus != newStatus) {
+      _connectionStatuses[key] = newStatus;
+      _logDebug(key, 'Status changed: $oldStatus -> $newStatus');
+      _statusListeners[key]?.call(newStatus);
+    }
+  }
 
   Future<void> disconnect(String key) async {
     try {
@@ -305,6 +383,10 @@ class WebSocketService with WidgetsBindingObserver {
 
       await _connections[key]?.sink.close(status.normalClosure);
       _connections.remove(key);
+
+      _updateConnectionStatus(key, WebSocketConnectionStatus.disconnected);
+      _connectionStatuses.remove(key);
+      _statusListeners.remove(key);
 
       _logInfo(key, 'Disconnected cleanly.');
     } catch (error, stackTrace) {
@@ -373,7 +455,7 @@ class _ConnectionConfig {
   });
 
   final String url;
-  final void Function(dynamic)? onMessage;
+  final void Function(Object?)? onMessage;
   final void Function()? onDone;
   final void Function(Object error)? onError;
   final bool autoReconnect;

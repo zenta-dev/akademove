@@ -1,3 +1,4 @@
+import 'package:akademove/app/router/router.dart';
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/l10n/l10n.dart';
@@ -144,7 +145,16 @@ class _PickLocationWidgetState extends State<PickLocationWidget> {
         ),
         Button(
           style: const ButtonStyle.secondary(density: ButtonDensity.dense),
-          onPressed: () {},
+          onPressed: () async {
+            final coord = context.read<UserLocationCubit>().state.coordinate;
+            final result = await context.pushNamed<Place>(
+              Routes.userMapPicker.name,
+              extra: {'locationType': widget.type, 'initialLocation': coord},
+            );
+            if (result != null && context.mounted) {
+              context.pop(result);
+            }
+          },
           child: Row(
             spacing: 4.h,
             mainAxisSize: MainAxisSize.min,

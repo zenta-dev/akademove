@@ -1,6 +1,7 @@
 import { m } from "@repo/i18n";
 import { trimObjectValues } from "@repo/shared";
 import { AuthError } from "@/core/error";
+import { shouldBypassAuthorization } from "@/core/middlewares/auth";
 import { createORPCRouter } from "@/core/router/orpc";
 import { MerchantOrderSpec } from "./merchant-order-spec";
 
@@ -10,6 +11,7 @@ export const MerchantOrderHandler = priv.router({
 	accept: priv.accept.handler(async ({ context, input: { params } }) => {
 		// Only MERCHANT, ADMIN, and OPERATOR can accept orders
 		if (
+			!shouldBypassAuthorization() &&
 			context.user.role !== "MERCHANT" &&
 			context.user.role !== "ADMIN" &&
 			context.user.role !== "OPERATOR"
@@ -41,6 +43,7 @@ export const MerchantOrderHandler = priv.router({
 	reject: priv.reject.handler(async ({ context, input: { params, body } }) => {
 		// Only MERCHANT, ADMIN, and OPERATOR can reject orders
 		if (
+			!shouldBypassAuthorization() &&
 			context.user.role !== "MERCHANT" &&
 			context.user.role !== "ADMIN" &&
 			context.user.role !== "OPERATOR"
@@ -77,6 +80,7 @@ export const MerchantOrderHandler = priv.router({
 		async ({ context, input: { params } }) => {
 			// Only MERCHANT, ADMIN, and OPERATOR can mark orders as preparing
 			if (
+				!shouldBypassAuthorization() &&
 				context.user.role !== "MERCHANT" &&
 				context.user.role !== "ADMIN" &&
 				context.user.role !== "OPERATOR"
@@ -115,6 +119,7 @@ export const MerchantOrderHandler = priv.router({
 	markReady: priv.markReady.handler(async ({ context, input: { params } }) => {
 		// Only MERCHANT, ADMIN, and OPERATOR can mark orders as ready
 		if (
+			!shouldBypassAuthorization() &&
 			context.user.role !== "MERCHANT" &&
 			context.user.role !== "ADMIN" &&
 			context.user.role !== "OPERATOR"

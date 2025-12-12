@@ -10,6 +10,8 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **dropoffLocation** | [**Coordinate**](Coordinate.md) |  | 
 **pickupLocation** | [**Coordinate**](Coordinate.md) |  | 
+**pickupAddress** | **String** |  | [optional] 
+**dropoffAddress** | **String** |  | [optional] 
 **note** | [**OrderNote**](OrderNote.md) |  | [optional] 
 **type** | [**OrderType**](OrderType.md) |  | 
 **items** | [**List&lt;OrderItem&gt;**](OrderItem.md) |  | [optional] 

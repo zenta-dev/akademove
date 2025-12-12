@@ -65,7 +65,7 @@ class _ChangePasswordFormViewState extends State<_ChangePasswordFormView> {
     super.dispose();
   }
 
-  Future<void> _handleChangePassword() async {
+  void _handleChangePassword() {
     // Validate form
     if (_formController.errors.isNotEmpty) {
       _showToast(
@@ -112,37 +112,14 @@ class _ChangePasswordFormViewState extends State<_ChangePasswordFormView> {
       return;
     }
 
-    // Call the cubit to update password
-    final cubit = context.read<UserProfileCubit>();
-    await cubit.updatePassword(
+    // Call the cubit to update password - BlocConsumer listener handles state changes
+    context.read<UserProfileCubit>().updatePassword(
       UserMeChangePasswordRequest(
         oldPassword: oldPassword,
         newPassword: newPassword,
         confirmNewPassword: confirmPassword,
       ),
     );
-
-    if (!mounted) return;
-
-    final state = cubit.state;
-    if (state.updatePasswordResult.isSuccess) {
-      _showToast(
-        context.l10n.success,
-        state.updatePasswordResult.message ?? context.l10n.toast_success,
-      );
-      // Navigate back after successful password change
-      Future.delayed(const Duration(milliseconds: 500), () {
-        if (mounted) {
-          context.pop();
-        }
-      });
-    } else if (state.updatePasswordResult.isFailure) {
-      _showToast(
-        context.l10n.error,
-        state.updatePasswordResult.error?.message ??
-            context.l10n.an_error_occurred,
-      );
-    }
   }
 
   void _showToast(String title, String message) {
@@ -157,7 +134,29 @@ class _ChangePasswordFormViewState extends State<_ChangePasswordFormView> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<UserProfileCubit, UserProfileState>(
+    return BlocConsumer<UserProfileCubit, UserProfileState>(
+      listenWhen: (previous, current) =>
+          previous.updatePasswordResult != current.updatePasswordResult,
+      listener: (context, state) {
+        if (state.updatePasswordResult.isSuccess) {
+          _showToast(
+            context.l10n.success,
+            state.updatePasswordResult.message ?? context.l10n.toast_success,
+          );
+          // Navigate back after successful password change
+          Future.delayed(const Duration(milliseconds: 500), () {
+            if (mounted) {
+              context.pop();
+            }
+          });
+        } else if (state.updatePasswordResult.isFailure) {
+          _showToast(
+            context.l10n.error,
+            state.updatePasswordResult.error?.message ??
+                context.l10n.an_error_occurred,
+          );
+        }
+      },
       builder: (context, state) {
         final isLoading = state.updatePasswordResult.isLoading;
 

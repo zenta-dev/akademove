@@ -11,6 +11,10 @@ abstract class _$PlaceScheduledOrderCWProxy {
 
   PlaceScheduledOrder pickupLocation(Coordinate pickupLocation);
 
+  PlaceScheduledOrder pickupAddress(String? pickupAddress);
+
+  PlaceScheduledOrder dropoffAddress(String? dropoffAddress);
+
   PlaceScheduledOrder note(OrderNote? note);
 
   PlaceScheduledOrder type(OrderType type);
@@ -39,6 +43,8 @@ abstract class _$PlaceScheduledOrderCWProxy {
   PlaceScheduledOrder call({
     Coordinate dropoffLocation,
     Coordinate pickupLocation,
+    String? pickupAddress,
+    String? dropoffAddress,
     OrderNote? note,
     OrderType type,
     List<OrderItem>? items,
@@ -64,6 +70,14 @@ class _$PlaceScheduledOrderCWProxyImpl implements _$PlaceScheduledOrderCWProxy {
   @override
   PlaceScheduledOrder pickupLocation(Coordinate pickupLocation) =>
       call(pickupLocation: pickupLocation);
+
+  @override
+  PlaceScheduledOrder pickupAddress(String? pickupAddress) =>
+      call(pickupAddress: pickupAddress);
+
+  @override
+  PlaceScheduledOrder dropoffAddress(String? dropoffAddress) =>
+      call(dropoffAddress: dropoffAddress);
 
   @override
   PlaceScheduledOrder note(OrderNote? note) => call(note: note);
@@ -105,6 +119,8 @@ class _$PlaceScheduledOrderCWProxyImpl implements _$PlaceScheduledOrderCWProxy {
   PlaceScheduledOrder call({
     Object? dropoffLocation = const $CopyWithPlaceholder(),
     Object? pickupLocation = const $CopyWithPlaceholder(),
+    Object? pickupAddress = const $CopyWithPlaceholder(),
+    Object? dropoffAddress = const $CopyWithPlaceholder(),
     Object? note = const $CopyWithPlaceholder(),
     Object? type = const $CopyWithPlaceholder(),
     Object? items = const $CopyWithPlaceholder(),
@@ -127,6 +143,14 @@ class _$PlaceScheduledOrderCWProxyImpl implements _$PlaceScheduledOrderCWProxy {
           ? _value.pickupLocation
           // ignore: cast_nullable_to_non_nullable
           : pickupLocation as Coordinate,
+      pickupAddress: pickupAddress == const $CopyWithPlaceholder()
+          ? _value.pickupAddress
+          // ignore: cast_nullable_to_non_nullable
+          : pickupAddress as String?,
+      dropoffAddress: dropoffAddress == const $CopyWithPlaceholder()
+          ? _value.dropoffAddress
+          // ignore: cast_nullable_to_non_nullable
+          : dropoffAddress as String?,
       note: note == const $CopyWithPlaceholder()
           ? _value.note
           // ignore: cast_nullable_to_non_nullable
@@ -197,6 +221,8 @@ PlaceScheduledOrder _$PlaceScheduledOrderFromJson(Map<String, dynamic> json) =>
           'pickupLocation',
           (v) => Coordinate.fromJson(v as Map<String, dynamic>),
         ),
+        pickupAddress: $checkedConvert('pickupAddress', (v) => v as String?),
+        dropoffAddress: $checkedConvert('dropoffAddress', (v) => v as String?),
         note: $checkedConvert(
           'note',
           (v) =>
@@ -241,6 +267,8 @@ Map<String, dynamic> _$PlaceScheduledOrderToJson(
 ) => <String, dynamic>{
   'dropoffLocation': instance.dropoffLocation.toJson(),
   'pickupLocation': instance.pickupLocation.toJson(),
+  'pickupAddress': ?instance.pickupAddress,
+  'dropoffAddress': ?instance.dropoffAddress,
   'note': ?instance.note?.toJson(),
   'type': _$OrderTypeEnumMap[instance.type]!,
   'items': ?instance.items?.map((e) => e.toJson()).toList(),

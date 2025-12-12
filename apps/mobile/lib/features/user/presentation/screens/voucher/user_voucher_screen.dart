@@ -168,10 +168,12 @@ class _VoucherCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final discountText = _getDiscountText();
-    final expiryDate = DateFormat('dd MMM yyyy').format(coupon.periodEnd);
+    final expiryDate = DateFormat(
+      'dd MMM yyyy',
+    ).format(coupon.periodEnd.toLocal());
     final theme = Theme.of(context);
     final isExpiringSoon =
-        coupon.periodEnd.difference(DateTime.now()).inDays <= 3;
+        coupon.periodEnd.toLocal().difference(DateTime.now()).inDays <= 3;
 
     return GestureDetector(
       onTap: onTap,
@@ -440,7 +442,7 @@ class _CouponDetailDialog extends StatelessWidget {
             _buildInfoRow(
               context,
               'Valid Period',
-              '${DateFormat('dd MMM yyyy').format(coupon.periodStart)} - ${DateFormat('dd MMM yyyy').format(coupon.periodEnd)}',
+              '${DateFormat('dd MMM yyyy').format(coupon.periodStart.toLocal())} - ${DateFormat('dd MMM yyyy').format(coupon.periodEnd.toLocal())}',
             ),
             if (coupon.rules.general?.minOrderAmount != null) ...[
               SizedBox(height: 12.h),

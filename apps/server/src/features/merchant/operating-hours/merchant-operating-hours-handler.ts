@@ -1,6 +1,7 @@
 import { m } from "@repo/i18n";
 import { trimObjectValues } from "@repo/shared";
 import { AuthError } from "@/core/error";
+import { shouldBypassAuthorization } from "@/core/middlewares/auth";
 import { createORPCRouter } from "@/core/router/orpc";
 import { MerchantOperatingHoursSpec } from "./merchant-operating-hours-spec";
 
@@ -33,6 +34,7 @@ export const MerchantOperatingHoursHandler = priv.router({
 	create: priv.create.handler(async ({ context, input: { body, params } }) => {
 		// Only MERCHANT, ADMIN, and OPERATOR can create operating hours
 		if (
+			!shouldBypassAuthorization() &&
 			context.user.role !== "MERCHANT" &&
 			context.user.role !== "ADMIN" &&
 			context.user.role !== "OPERATOR"
@@ -46,7 +48,7 @@ export const MerchantOperatingHoursHandler = priv.router({
 		}
 
 		// IDOR protection: Merchants can only create operating hours for their own merchant
-		if (context.user.role === "MERCHANT") {
+		if (!shouldBypassAuthorization() && context.user.role === "MERCHANT") {
 			const merchant = await context.repo.merchant.main.getByUserId(
 				context.user.id,
 			);
@@ -79,6 +81,7 @@ export const MerchantOperatingHoursHandler = priv.router({
 	update: priv.update.handler(async ({ context, input: { params, body } }) => {
 		// Only MERCHANT, ADMIN, and OPERATOR can update operating hours
 		if (
+			!shouldBypassAuthorization() &&
 			context.user.role !== "MERCHANT" &&
 			context.user.role !== "ADMIN" &&
 			context.user.role !== "OPERATOR"
@@ -92,7 +95,7 @@ export const MerchantOperatingHoursHandler = priv.router({
 		}
 
 		// IDOR protection: Merchants can only update operating hours for their own merchant
-		if (context.user.role === "MERCHANT") {
+		if (!shouldBypassAuthorization() && context.user.role === "MERCHANT") {
 			const merchant = await context.repo.merchant.main.getByUserId(
 				context.user.id,
 			);
@@ -123,6 +126,7 @@ export const MerchantOperatingHoursHandler = priv.router({
 	remove: priv.remove.handler(async ({ context, input: { params } }) => {
 		// Only MERCHANT, ADMIN, and OPERATOR can delete operating hours
 		if (
+			!shouldBypassAuthorization() &&
 			context.user.role !== "MERCHANT" &&
 			context.user.role !== "ADMIN" &&
 			context.user.role !== "OPERATOR"
@@ -136,7 +140,7 @@ export const MerchantOperatingHoursHandler = priv.router({
 		}
 
 		// IDOR protection: Merchants can only delete operating hours for their own merchant
-		if (context.user.role === "MERCHANT") {
+		if (!shouldBypassAuthorization() && context.user.role === "MERCHANT") {
 			const operatingHours = await context.repo.merchant.operatingHours.get(
 				params.id,
 			);
@@ -166,6 +170,7 @@ export const MerchantOperatingHoursHandler = priv.router({
 		async ({ context, input: { params, body } }) => {
 			// Only MERCHANT, ADMIN, and OPERATOR can bulk upsert operating hours
 			if (
+				!shouldBypassAuthorization() &&
 				context.user.role !== "MERCHANT" &&
 				context.user.role !== "ADMIN" &&
 				context.user.role !== "OPERATOR"
@@ -179,7 +184,7 @@ export const MerchantOperatingHoursHandler = priv.router({
 			}
 
 			// IDOR protection: Merchants can only update operating hours for their own merchant
-			if (context.user.role === "MERCHANT") {
+			if (!shouldBypassAuthorization() && context.user.role === "MERCHANT") {
 				const merchant = await context.repo.merchant.main.getByUserId(
 					context.user.id,
 				);

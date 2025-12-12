@@ -3543,4 +3543,25 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get toast_error => 'Error';
+
+  @override
+  String get cancel_reason_optional => 'Reason (optional)';
+
+  @override
+  String get order_cancelled_successfully => 'Order cancelled successfully';
+
+  @override
+  String get failed_to_cancel_order => 'Failed to cancel order';
+
+  @override
+  String get view_active_order => 'View Trip';
+
+  @override
+  String get title_select_pickup_location => 'Select Pickup Location';
+
+  @override
+  String get title_select_dropoff_location => 'Select Dropoff Location';
+
+  @override
+  String get button_confirm_location => 'Confirm Location';
 }

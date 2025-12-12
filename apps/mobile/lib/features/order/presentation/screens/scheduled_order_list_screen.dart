@@ -116,6 +116,7 @@ class _ScheduledOrderListScreenState extends State<ScheduledOrderListScreen> {
             ),
           ],
           scrollable: false,
+          padding: EdgeInsets.zero,
           body: isLoading
               ? const Center(child: CircularProgressIndicator())
               : RefreshTrigger(
@@ -123,7 +124,7 @@ class _ScheduledOrderListScreenState extends State<ScheduledOrderListScreen> {
                   child: scheduledOrders.isEmpty
                       ? _buildEmptyState()
                       : ListView.separated(
-                          padding: EdgeInsets.all(16.dg),
+                          padding: EdgeInsets.zero,
                           itemCount: scheduledOrders.length,
                           separatorBuilder: (context, index) =>
                               SizedBox(height: 12.h),
@@ -208,8 +209,9 @@ class _ScheduledOrderEditBottomSheetState
   @override
   void initState() {
     super.initState();
+    // Convert UTC to local time for editing
     final scheduledAt =
-        widget.order.scheduledAt ??
+        widget.order.scheduledAt?.toLocal() ??
         DateTime.now().add(const Duration(hours: 1));
     _selectedDate = scheduledAt;
     _selectedTime = TimeOfDay.fromDateTime(scheduledAt);
@@ -238,7 +240,7 @@ class _ScheduledOrderEditBottomSheetState
       _selectedTime.minute,
     );
 
-    // Validate the selected time
+    // Validate the selected time using local time
     final now = DateTime.now();
     final minTime = now.add(const Duration(minutes: 30));
     final maxTime = now.add(const Duration(days: 7));
@@ -256,7 +258,8 @@ class _ScheduledOrderEditBottomSheetState
     setState(() => _isSaving = true);
 
     try {
-      await widget.onSave(newDateTime);
+      // Convert to UTC for server consistency
+      await widget.onSave(newDateTime.toUtc());
       widget.onClose();
     } finally {
       if (mounted) {

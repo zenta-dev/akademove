@@ -247,8 +247,60 @@ export const PaymentHandler = pub.router({
 					"[PaymentHandler] Payout webhook - transaction status updated",
 				);
 
-				// TODO: Send push notification to user about withdrawal status
-				// await context.repo.notification.sendWithdrawalStatusNotification(...)
+				// Send push notification to user about withdrawal status
+				// Only notify on final states (SUCCESS or FAILED)
+				if (transactionStatus === "SUCCESS" || transactionStatus === "FAILED") {
+					// Get wallet to retrieve userId
+					const wallet = await tx.query.wallet.findFirst({
+						where: (f, op) => op.eq(f.id, transaction.walletId),
+						columns: { userId: true },
+					});
+
+					if (wallet?.userId) {
+						const isSuccess = transactionStatus === "SUCCESS";
+						const formattedAmount = new Intl.NumberFormat("id-ID", {
+							style: "currency",
+							currency: "IDR",
+							minimumFractionDigits: 0,
+						}).format(transaction.amount);
+
+						await context.repo.notification.sendNotificationToUserId(
+							{
+								fromUserId: "system",
+								toUserId: wallet.userId,
+								title: isSuccess
+									? m.withdraw_wallet_success()
+									: m.withdraw_wallet_error({
+											error: errorMessage ?? "Unknown error",
+										}),
+								body: isSuccess
+									? `${m.server_withdrawal_requested()} ${formattedAmount}`
+									: `${formattedAmount} - ${errorMessage ?? "Please try again or contact support."}`,
+								data: {
+									type: isSuccess ? "WITHDRAWAL_SUCCESS" : "WITHDRAWAL_FAILED",
+									transactionId: referenceNo,
+									amount: String(transaction.amount),
+									deeplink: "akademove://wallet",
+								},
+							},
+							opts,
+						);
+
+						logger.info(
+							{
+								referenceNo,
+								userId: wallet.userId,
+								status: transactionStatus,
+							},
+							"[PaymentHandler] Withdrawal status notification sent",
+						);
+					} else {
+						logger.warn(
+							{ referenceNo, walletId: transaction.walletId },
+							"[PaymentHandler] Could not find wallet owner for notification",
+						);
+					}
+				}
 			});
 
 			return {

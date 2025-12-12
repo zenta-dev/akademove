@@ -210,6 +210,8 @@ export class OrderPlacementRepository extends OrderBaseRepository {
 					note: params.note,
 					pickupLocation: params.pickupLocation,
 					dropoffLocation: params.dropoffLocation,
+					pickupAddress: params.pickupAddress,
+					dropoffAddress: params.dropoffAddress,
 					distanceKm: estimate.distanceKm,
 					basePrice: baseFare,
 					totalPrice: safeTotalCost,
@@ -239,6 +241,8 @@ export class OrderPlacementRepository extends OrderBaseRepository {
 				provider: params.payment.provider,
 				userId: params.userId,
 				orderType: params.type,
+				// IMPORTANT: referenceId links the transaction to the order for refund processing
+				referenceId: orderRow.id,
 				metadata: {
 					orderId: orderRow.id,
 					customerId: params.userId,

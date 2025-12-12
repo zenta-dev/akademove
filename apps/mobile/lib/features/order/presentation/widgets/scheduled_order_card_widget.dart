@@ -21,8 +21,8 @@ class ScheduledOrderCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final scheduledAt = order.scheduledAt;
-    final scheduledMatchingAt = order.scheduledMatchingAt;
+    final scheduledAt = order.scheduledAt?.toLocal();
+    final scheduledMatchingAt = order.scheduledMatchingAt?.toLocal();
 
     return GhostButton(
       onPressed: onTap,
@@ -141,14 +141,16 @@ class ScheduledOrderCardWidget extends StatelessWidget {
                     spacing: 8.h,
                     children: [
                       Text(
-                        '${order.pickupLocation.y.toStringAsFixed(4)}, ${order.pickupLocation.x.toStringAsFixed(4)}',
+                        order.pickupAddress ??
+                            '${order.pickupLocation.y.toStringAsFixed(4)}, ${order.pickupLocation.x.toStringAsFixed(4)}',
                         style: context.typography.p.copyWith(fontSize: 14.sp),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
                       SizedBox(height: 12.h),
                       Text(
-                        '${order.dropoffLocation.y.toStringAsFixed(4)}, ${order.dropoffLocation.x.toStringAsFixed(4)}',
+                        order.dropoffAddress ??
+                            '${order.dropoffLocation.y.toStringAsFixed(4)}, ${order.dropoffLocation.x.toStringAsFixed(4)}',
                         style: context.typography.p.copyWith(fontSize: 14.sp),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,

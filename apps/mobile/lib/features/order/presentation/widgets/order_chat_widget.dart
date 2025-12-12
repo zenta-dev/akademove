@@ -193,8 +193,10 @@ class _ChatMessageBubble extends StatelessWidget {
   }
 
   String _formatTimestamp(DateTime timestamp) {
+    // Convert UTC timestamp to local time for comparison
+    final localTimestamp = timestamp.toLocal();
     final now = DateTime.now();
-    final difference = now.difference(timestamp);
+    final difference = now.difference(localTimestamp);
 
     if (difference.inDays > 0) {
       return '${difference.inDays}d ago';

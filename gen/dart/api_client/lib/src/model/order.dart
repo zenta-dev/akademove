@@ -36,6 +36,8 @@ class Order {
     required this.status,
     required this.pickupLocation,
     required this.dropoffLocation,
+     this.pickupAddress,
+     this.dropoffAddress,
     required this.distanceKm,
     required this.basePrice,
      this.tip,
@@ -92,6 +94,12 @@ class Order {
   
   @JsonKey(name: r'dropoffLocation', required: true, includeIfNull: false)
   final Coordinate dropoffLocation;
+  
+  @JsonKey(name: r'pickupAddress', required: false, includeIfNull: false)
+  final String? pickupAddress;
+  
+  @JsonKey(name: r'dropoffAddress', required: false, includeIfNull: false)
+  final String? dropoffAddress;
   
   @JsonKey(name: r'distanceKm', required: true, includeIfNull: false)
   final num distanceKm;
@@ -201,6 +209,8 @@ class Order {
     other.status == status &&
     other.pickupLocation == pickupLocation &&
     other.dropoffLocation == dropoffLocation &&
+    other.pickupAddress == pickupAddress &&
+    other.dropoffAddress == dropoffAddress &&
     other.distanceKm == distanceKm &&
     other.basePrice == basePrice &&
     other.tip == tip &&
@@ -244,6 +254,8 @@ class Order {
       status.hashCode +
       pickupLocation.hashCode +
       dropoffLocation.hashCode +
+      pickupAddress.hashCode +
+      dropoffAddress.hashCode +
       distanceKm.hashCode +
       basePrice.hashCode +
       tip.hashCode +

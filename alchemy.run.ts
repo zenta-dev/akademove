@@ -92,6 +92,7 @@ export const [server, web] = await Promise.all([
 		bindings: {
 			NODE_ENV: alchemy.env.NODE_ENV,
 			RUNTIME: alchemy.env.RUNTIME,
+			BYPASS_AUTHORIZATION: alchemy.env.BYPASS_AUTHORIZATION,
 			ROOT_DOMAIN: alchemy.env.ROOT_DOMAIN,
 			CORS_ORIGIN: alchemy.env.WEB_URL,
 			AUTH_SECRET: alchemy.secret(alchemy.env.AUTH_SECRET),

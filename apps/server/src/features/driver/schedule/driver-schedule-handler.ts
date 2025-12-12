@@ -1,6 +1,7 @@
 import { m } from "@repo/i18n";
 import { trimObjectValues } from "@repo/shared";
 import { AuthError } from "@/core/error";
+import { shouldBypassAuthorization } from "@/core/middlewares/auth";
 import { createORPCRouter } from "@/core/router/orpc";
 import { DriverScheduleSpec } from "./driver-schedule-spec";
 
@@ -12,7 +13,7 @@ export const DriverScheduleHandler = priv.router({
 		// Admins/Operators can list all schedules
 		let driverId: string | undefined;
 
-		if (context.user.role === "DRIVER") {
+		if (!shouldBypassAuthorization() && context.user.role === "DRIVER") {
 			const driver = await context.repo.driver.main.getByUserId(
 				context.user.id,
 			);
@@ -37,7 +38,7 @@ export const DriverScheduleHandler = priv.router({
 		const result = await context.repo.driver.schedule.get(params.id);
 
 		// FIX: Drivers can only view their own schedules
-		if (context.user.role === "DRIVER") {
+		if (!shouldBypassAuthorization() && context.user.role === "DRIVER") {
 			const driver = await context.repo.driver.main.getByUserId(
 				context.user.id,
 			);
@@ -59,6 +60,7 @@ export const DriverScheduleHandler = priv.router({
 	create: priv.create.handler(async ({ context, input: { body } }) => {
 		// Only DRIVER role can create schedules for themselves
 		if (
+			!shouldBypassAuthorization() &&
 			context.user.role !== "DRIVER" &&
 			context.user.role !== "ADMIN" &&
 			context.user.role !== "OPERATOR"
@@ -90,7 +92,7 @@ export const DriverScheduleHandler = priv.router({
 	}),
 	update: priv.update.handler(async ({ context, input: { params, body } }) => {
 		// FIX: Drivers can only update their own schedules
-		if (context.user.role === "DRIVER") {
+		if (!shouldBypassAuthorization() && context.user.role === "DRIVER") {
 			const schedule = await context.repo.driver.schedule.get(params.id);
 			const driver = await context.repo.driver.main.getByUserId(
 				context.user.id,
@@ -121,7 +123,7 @@ export const DriverScheduleHandler = priv.router({
 	}),
 	remove: priv.remove.handler(async ({ context, input: { params } }) => {
 		// FIX: Drivers can only remove their own schedules
-		if (context.user.role === "DRIVER") {
+		if (!shouldBypassAuthorization() && context.user.role === "DRIVER") {
 			const schedule = await context.repo.driver.schedule.get(params.id);
 			const driver = await context.repo.driver.main.getByUserId(
 				context.user.id,

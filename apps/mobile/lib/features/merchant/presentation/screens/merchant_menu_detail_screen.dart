@@ -113,14 +113,14 @@ class MerchantMenuDetailScreen extends StatelessWidget {
                           '${context.l10n.label_created}:',
                           DateFormat(
                             'dd MMM yyyy, HH:mm',
-                          ).format(displayMenu.createdAt),
+                          ).format(displayMenu.createdAt.toLocal()),
                         ),
                         _buildDetailRow(
                           context,
                           '${context.l10n.label_updated}:',
                           DateFormat(
                             'dd MMM yyyy, HH:mm',
-                          ).format(displayMenu.updatedAt),
+                          ).format(displayMenu.updatedAt.toLocal()),
                         ),
                       ],
                     ),

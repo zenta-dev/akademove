@@ -172,7 +172,7 @@ class _ReviewCard extends StatelessWidget {
                 ),
                 SizedBox(width: 4.w),
                 Text(
-                  DateFormat('MMM dd, yyyy').format(review.createdAt),
+                  DateFormat('MMM dd, yyyy').format(review.createdAt.toLocal()),
                   style: context.typography.small.copyWith(
                     color: context.colorScheme.mutedForeground,
                   ),

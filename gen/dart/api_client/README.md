@@ -62,7 +62,7 @@ try {
 
 ## Documentation for API Endpoints
 
-All URIs are relative to *http://10.86.19.105:3000/api*
+All URIs are relative to *http://localhost:3000/api*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
@@ -162,6 +162,13 @@ Class | Method | HTTP request | Description
 [*DriverApi*](doc/DriverApi.md) | [**driverUpdateOnlineStatus**](doc/DriverApi.md#driverupdateonlinestatus) | **POST** /drivers/{id}/update-online-status | 
 [*DriverApi*](doc/DriverApi.md) | [**driverUpdateTakingOrderStatus**](doc/DriverApi.md#driverupdatetakingorderstatus) | **POST** /drivers/{id}/update-taking-order-status | 
 [*DriverApi*](doc/DriverApi.md) | [**driverVerifyQuiz**](doc/DriverApi.md#driververifyquiz) | **POST** /drivers/{id}/approval-review/verify-quiz | 
+[*DriverApi*](doc/DriverApi.md) | [**driverWalletGetMonthlySummary**](doc/DriverApi.md#driverwalletgetmonthlysummary) | **GET** /drivers/{driverId}/wallet/summary | 
+[*DriverApi*](doc/DriverApi.md) | [**driverWalletGetSavedBankAccount**](doc/DriverApi.md#driverwalletgetsavedbankaccount) | **GET** /drivers/{driverId}/wallet/bank | 
+[*DriverApi*](doc/DriverApi.md) | [**driverWalletGetTransactions**](doc/DriverApi.md#driverwalletgettransactions) | **GET** /drivers/{driverId}/wallet/transactions | 
+[*DriverApi*](doc/DriverApi.md) | [**driverWalletGetWallet**](doc/DriverApi.md#driverwalletgetwallet) | **GET** /drivers/{driverId}/wallet | 
+[*DriverApi*](doc/DriverApi.md) | [**driverWalletTopUp**](doc/DriverApi.md#driverwallettopup) | **POST** /drivers/{driverId}/wallet/topup | 
+[*DriverApi*](doc/DriverApi.md) | [**driverWalletTransfer**](doc/DriverApi.md#driverwallettransfer) | **POST** /drivers/{driverId}/wallet/transfer | 
+[*DriverApi*](doc/DriverApi.md) | [**driverWalletWithdraw**](doc/DriverApi.md#driverwalletwithdraw) | **POST** /drivers/{driverId}/wallet/withdraw | 
 [*DriverQuizAnswerApi*](doc/DriverQuizAnswerApi.md) | [**driverQuizAnswerCompleteQuiz**](doc/DriverQuizAnswerApi.md#driverquizanswercompletequiz) | **POST** /driver-quiz-answers/complete | 
 [*DriverQuizAnswerApi*](doc/DriverQuizAnswerApi.md) | [**driverQuizAnswerGetAttempt**](doc/DriverQuizAnswerApi.md#driverquizanswergetattempt) | **GET** /driver-quiz-answers/{attemptId} | 
 [*DriverQuizAnswerApi*](doc/DriverQuizAnswerApi.md) | [**driverQuizAnswerGetMyLatestAttempt**](doc/DriverQuizAnswerApi.md#driverquizanswergetmylatestattempt) | **GET** /driver-quiz-answers/me/latest | 
@@ -221,6 +228,13 @@ Class | Method | HTTP request | Description
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantSubmitRejection**](doc/MerchantApi.md#merchantsubmitrejection) | **POST** /merchants/{id}/approval-review/submit-rejection | 
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantUpdate**](doc/MerchantApi.md#merchantupdate) | **PUT** /merchants/{id} | 
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantUpdateDocumentStatus**](doc/MerchantApi.md#merchantupdatedocumentstatus) | **POST** /merchants/{id}/approval-review/update-document | 
+[*MerchantApi*](doc/MerchantApi.md) | [**merchantWalletGetMonthlySummary**](doc/MerchantApi.md#merchantwalletgetmonthlysummary) | **GET** /merchants/{merchantId}/wallet/summary | 
+[*MerchantApi*](doc/MerchantApi.md) | [**merchantWalletGetSavedBankAccount**](doc/MerchantApi.md#merchantwalletgetsavedbankaccount) | **GET** /merchants/{merchantId}/wallet/bank | 
+[*MerchantApi*](doc/MerchantApi.md) | [**merchantWalletGetTransactions**](doc/MerchantApi.md#merchantwalletgettransactions) | **GET** /merchants/{merchantId}/wallet/transactions | 
+[*MerchantApi*](doc/MerchantApi.md) | [**merchantWalletGetWallet**](doc/MerchantApi.md#merchantwalletgetwallet) | **GET** /merchants/{merchantId}/wallet | 
+[*MerchantApi*](doc/MerchantApi.md) | [**merchantWalletTopUp**](doc/MerchantApi.md#merchantwallettopup) | **POST** /merchants/{merchantId}/wallet/topup | 
+[*MerchantApi*](doc/MerchantApi.md) | [**merchantWalletTransfer**](doc/MerchantApi.md#merchantwallettransfer) | **POST** /merchants/{merchantId}/wallet/transfer | 
+[*MerchantApi*](doc/MerchantApi.md) | [**merchantWalletWithdraw**](doc/MerchantApi.md#merchantwalletwithdraw) | **POST** /merchants/{merchantId}/wallet/withdraw | 
 [*NotificationApi*](doc/NotificationApi.md) | [**notificationDelete**](doc/NotificationApi.md#notificationdelete) | **DELETE** /notifications/{id} | 
 [*NotificationApi*](doc/NotificationApi.md) | [**notificationGetUnreadCount**](doc/NotificationApi.md#notificationgetunreadcount) | **GET** /notifications/unread-count | 
 [*NotificationApi*](doc/NotificationApi.md) | [**notificationList**](doc/NotificationApi.md#notificationlist) | **GET** /notifications | 
@@ -273,6 +287,20 @@ Class | Method | HTTP request | Description
 [*UserApi*](doc/UserApi.md) | [**userLookupByPhone**](doc/UserApi.md#userlookupbyphone) | **GET** /users/lookup/phone | 
 [*UserApi*](doc/UserApi.md) | [**userMeChangePassword**](doc/UserApi.md#usermechangepassword) | **PUT** /users/me/change-password | 
 [*UserApi*](doc/UserApi.md) | [**userMeUpdate**](doc/UserApi.md#usermeupdate) | **PUT** /users/me | 
+[*WalletApi*](doc/WalletApi.md) | [**driverWalletGetMonthlySummary**](doc/WalletApi.md#driverwalletgetmonthlysummary) | **GET** /drivers/{driverId}/wallet/summary | 
+[*WalletApi*](doc/WalletApi.md) | [**driverWalletGetSavedBankAccount**](doc/WalletApi.md#driverwalletgetsavedbankaccount) | **GET** /drivers/{driverId}/wallet/bank | 
+[*WalletApi*](doc/WalletApi.md) | [**driverWalletGetTransactions**](doc/WalletApi.md#driverwalletgettransactions) | **GET** /drivers/{driverId}/wallet/transactions | 
+[*WalletApi*](doc/WalletApi.md) | [**driverWalletGetWallet**](doc/WalletApi.md#driverwalletgetwallet) | **GET** /drivers/{driverId}/wallet | 
+[*WalletApi*](doc/WalletApi.md) | [**driverWalletTopUp**](doc/WalletApi.md#driverwallettopup) | **POST** /drivers/{driverId}/wallet/topup | 
+[*WalletApi*](doc/WalletApi.md) | [**driverWalletTransfer**](doc/WalletApi.md#driverwallettransfer) | **POST** /drivers/{driverId}/wallet/transfer | 
+[*WalletApi*](doc/WalletApi.md) | [**driverWalletWithdraw**](doc/WalletApi.md#driverwalletwithdraw) | **POST** /drivers/{driverId}/wallet/withdraw | 
+[*WalletApi*](doc/WalletApi.md) | [**merchantWalletGetMonthlySummary**](doc/WalletApi.md#merchantwalletgetmonthlysummary) | **GET** /merchants/{merchantId}/wallet/summary | 
+[*WalletApi*](doc/WalletApi.md) | [**merchantWalletGetSavedBankAccount**](doc/WalletApi.md#merchantwalletgetsavedbankaccount) | **GET** /merchants/{merchantId}/wallet/bank | 
+[*WalletApi*](doc/WalletApi.md) | [**merchantWalletGetTransactions**](doc/WalletApi.md#merchantwalletgettransactions) | **GET** /merchants/{merchantId}/wallet/transactions | 
+[*WalletApi*](doc/WalletApi.md) | [**merchantWalletGetWallet**](doc/WalletApi.md#merchantwalletgetwallet) | **GET** /merchants/{merchantId}/wallet | 
+[*WalletApi*](doc/WalletApi.md) | [**merchantWalletTopUp**](doc/WalletApi.md#merchantwallettopup) | **POST** /merchants/{merchantId}/wallet/topup | 
+[*WalletApi*](doc/WalletApi.md) | [**merchantWalletTransfer**](doc/WalletApi.md#merchantwallettransfer) | **POST** /merchants/{merchantId}/wallet/transfer | 
+[*WalletApi*](doc/WalletApi.md) | [**merchantWalletWithdraw**](doc/WalletApi.md#merchantwalletwithdraw) | **POST** /merchants/{merchantId}/wallet/withdraw | 
 [*WalletApi*](doc/WalletApi.md) | [**walletGet**](doc/WalletApi.md#walletget) | **GET** /wallets | 
 [*WalletApi*](doc/WalletApi.md) | [**walletGetMonthlySummary**](doc/WalletApi.md#walletgetmonthlysummary) | **GET** /wallets/summary | 
 [*WalletApi*](doc/WalletApi.md) | [**walletGetSavedBankAccount**](doc/WalletApi.md#walletgetsavedbankaccount) | **GET** /wallets/bank | 
@@ -451,6 +479,12 @@ Class | Method | HTTP request | Description
  - [DriverUpdateTakingOrderStatusRequest](doc/DriverUpdateTakingOrderStatusRequest.md)
  - [DriverUser](doc/DriverUser.md)
  - [DriverVerifyQuizRequest](doc/DriverVerifyQuizRequest.md)
+ - [DriverWalletGetMonthlySummary200Response](doc/DriverWalletGetMonthlySummary200Response.md)
+ - [DriverWalletGetSavedBankAccount200Response](doc/DriverWalletGetSavedBankAccount200Response.md)
+ - [DriverWalletGetTransactions200Response](doc/DriverWalletGetTransactions200Response.md)
+ - [DriverWalletGetWallet200Response](doc/DriverWalletGetWallet200Response.md)
+ - [DriverWalletTopUp200Response](doc/DriverWalletTopUp200Response.md)
+ - [DriverWalletTransfer200Response](doc/DriverWalletTransfer200Response.md)
  - [Emergency](doc/Emergency.md)
  - [EmergencyContactConfiguration](doc/EmergencyContactConfiguration.md)
  - [EmergencyKey](doc/EmergencyKey.md)
@@ -679,7 +713,6 @@ Class | Method | HTTP request | Description
  - [Transaction](doc/Transaction.md)
  - [TransactionGet200Response](doc/TransactionGet200Response.md)
  - [TransactionKey](doc/TransactionKey.md)
- - [TransactionList200Response](doc/TransactionList200Response.md)
  - [TransactionStatus](doc/TransactionStatus.md)
  - [TransactionType](doc/TransactionType.md)
  - [TransferRequest](doc/TransferRequest.md)
@@ -727,14 +760,9 @@ Class | Method | HTTP request | Description
  - [VANumber](doc/VANumber.md)
  - [VerifyEmail](doc/VerifyEmail.md)
  - [Wallet](doc/Wallet.md)
- - [WalletGet200Response](doc/WalletGet200Response.md)
- - [WalletGetMonthlySummary200Response](doc/WalletGetMonthlySummary200Response.md)
- - [WalletGetSavedBankAccount200Response](doc/WalletGetSavedBankAccount200Response.md)
  - [WalletKey](doc/WalletKey.md)
  - [WalletMonthlySummaryQuery](doc/WalletMonthlySummaryQuery.md)
  - [WalletMonthlySummaryResponse](doc/WalletMonthlySummaryResponse.md)
- - [WalletTopUp200Response](doc/WalletTopUp200Response.md)
- - [WalletTransfer200Response](doc/WalletTransfer200Response.md)
  - [WeightSize](doc/WeightSize.md)
  - [WithdrawRequest](doc/WithdrawRequest.md)
  - [WithdrawResponse](doc/WithdrawResponse.md)

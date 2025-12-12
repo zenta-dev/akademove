@@ -5,7 +5,7 @@
 import 'package:api_client/api.dart';
 ```
 
-All URIs are relative to *http://10.86.19.105:3000/api*
+All URIs are relative to *http://localhost:3000/api*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
@@ -55,7 +55,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **transactionList**
-> TransactionList200Response transactionList(cursor, limit, direction, page, query, sortBy, order, mode)
+> DriverWalletGetTransactions200Response transactionList(cursor, limit, direction, page, query, sortBy, order, mode)
 
 
 
@@ -96,7 +96,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**TransactionList200Response**](TransactionList200Response.md)
+[**DriverWalletGetTransactions200Response**](DriverWalletGetTransactions200Response.md)
 
 ### Authorization
 

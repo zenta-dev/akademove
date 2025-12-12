@@ -1,5 +1,6 @@
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
+import 'package:api_client/api_client.dart';
 
 class UserWalletCubit extends BaseCubit<UserWalletState> {
   UserWalletCubit({
@@ -91,5 +92,43 @@ class UserWalletCubit extends BaseCubit<UserWalletState> {
         emit(state.copyWith(thisMonthSummary: OperationResult.failed(e)));
       }
     });
+  }
+
+  Future<BaseResponse<Payment>> withdraw(WithdrawRequest request) async {
+    return _walletRepository.withdraw(request);
+  }
+
+  Future<
+    BaseResponse<
+      ({
+        bool hasSavedBank,
+        BankProvider? bankProvider,
+        String? accountNumber,
+        String? accountName,
+      })
+    >
+  >
+  getSavedBankAccount() {
+    return _walletRepository.getSavedBankAccount();
+  }
+
+  Future<
+    BaseResponse<
+      ({
+        bool isValid,
+        String? accountName,
+        String bankCode,
+        String accountNumber,
+      })
+    >
+  >
+  validateBankAccount({
+    required BankProvider bankProvider,
+    required String accountNumber,
+  }) {
+    return _walletRepository.validateBankAccount(
+      bankProvider: bankProvider,
+      accountNumber: accountNumber,
+    );
   }
 }

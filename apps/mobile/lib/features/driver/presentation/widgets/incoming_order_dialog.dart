@@ -69,6 +69,7 @@ class IncomingOrderDialog extends StatelessWidget {
             icon: LucideIcons.mapPin,
             label: 'Pickup',
             value:
+                order.pickupAddress ??
                 '${order.pickupLocation.y.toStringAsFixed(5)}, ${order.pickupLocation.x.toStringAsFixed(5)}',
           ),
           SizedBox(height: 12.h),
@@ -77,6 +78,7 @@ class IncomingOrderDialog extends StatelessWidget {
             icon: LucideIcons.navigation,
             label: 'Dropoff',
             value:
+                order.dropoffAddress ??
                 '${order.dropoffLocation.y.toStringAsFixed(5)}, ${order.dropoffLocation.x.toStringAsFixed(5)}',
           ),
           SizedBox(height: 12.h),
@@ -316,15 +318,34 @@ class IncomingOrderListener extends StatelessWidget {
             }
           },
         ),
-        // Listen for successful order acceptance
+        // Listen for successful order acceptance or failure
         BlocListener<DriverOrderCubit, DriverOrderState>(
+          listenWhen: (previous, current) {
+            // Listen for acceptance result changes
+            return previous.acceptOrderResult != current.acceptOrderResult;
+          },
           listener: (context, state) {
-            final currentOrder = state.currentOrder;
-            if (currentOrder != null) {
-              // Navigate to order detail screen
-              context.pushNamed(
-                Routes.driverOrderDetail.name,
-                pathParameters: {'orderId': currentOrder.id},
+            // Handle success - navigate to order detail
+            if (state.acceptOrderResult.isSuccess) {
+              final currentOrder = state.currentOrder;
+              if (currentOrder != null) {
+                context.pushNamed(
+                  Routes.driverOrderDetail.name,
+                  pathParameters: {'orderId': currentOrder.id},
+                );
+              }
+            }
+
+            // Handle failure - show error toast
+            if (state.acceptOrderResult.isFailed) {
+              showToast(
+                context: context,
+                builder: (context, overlay) => context.buildToast(
+                  title: 'Error',
+                  message:
+                      state.acceptOrderResult.error?.message ??
+                      'Failed to accept order. Please try again.',
+                ),
               );
             }
           },
@@ -366,39 +387,24 @@ class IncomingOrderListener extends StatelessWidget {
           },
           child: IncomingOrderDialog(
             order: order,
-            onAccept: () async {
-              // Accept the order via DriverOrderCubit first
-              try {
-                await context.read<DriverOrderCubit>().acceptOrder(
-                  order.id,
-                  context.read<DriverHomeCubit>().state.myDriver?.id ?? '',
-                );
+            onAccept: () {
+              // Just trigger the accept action
+              // The parent BlocListener for DriverOrderCubit (lines 322-333) will
+              // handle navigation when currentOrder is set on successful acceptance
+              context.read<DriverOrderCubit>().acceptOrder(
+                order.id,
+                context.read<DriverHomeCubit>().state.myDriver?.id ?? '',
+              );
 
-                // Only close dialog and clear state after successful acceptance
-                if (dialogContext.mounted) {
-                  Navigator.of(dialogContext).pop();
-                }
+              // Close the dialog - acceptance is in progress
+              Navigator.of(dialogContext).pop();
 
-                if (context.mounted) {
-                  context.read<DriverHomeCubit>().clearIncomingOrder();
-                }
-
-                // Navigation will be handled by the listener above
-                // when the order state changes to ACCEPTED
-              } catch (e) {
-                // Handle error - show error message and keep dialog open
-                if (context.mounted) {
-                  showToast(
-                    context: context,
-                    builder: (context, overlay) => context.buildToast(
-                      title: 'Error',
-                      message: 'Failed to accept order. Please try again.',
-                    ),
-                  );
-                }
+              // Clear incoming order from state
+              if (context.mounted) {
+                context.read<DriverHomeCubit>().clearIncomingOrder();
               }
             },
-            onReject: () async {
+            onReject: () {
               // Close the dialog first
               Navigator.of(dialogContext).pop();
 
@@ -415,13 +421,8 @@ class IncomingOrderListener extends StatelessWidget {
                   ),
                 );
 
-                // Reject the order in background
-                try {
-                  await context.read<DriverOrderCubit>().rejectOrder(order.id);
-                } catch (e) {
-                  // Silently handle rejection errors since user already rejected
-                  // You could log this for debugging purposes
-                }
+                // Reject the order in background (fire and forget)
+                context.read<DriverOrderCubit>().rejectOrder(order.id);
               }
             },
           ),
