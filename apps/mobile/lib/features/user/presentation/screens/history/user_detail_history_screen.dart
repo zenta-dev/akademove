@@ -147,21 +147,21 @@ class UserDetailHistoryScreen extends StatelessWidget {
         children: [
           Card(
             child: SizedBox(height: 80.h, width: double.infinity),
-          ).asSkeleton(),
+          ),
           Gap(16.h),
           Card(
             child: SizedBox(height: 120.h, width: double.infinity),
-          ).asSkeleton(),
+          ),
           Gap(16.h),
           Card(
             child: SizedBox(height: 100.h, width: double.infinity),
-          ).asSkeleton(),
+          ),
           Gap(16.h),
           Card(
             child: SizedBox(height: 150.h, width: double.infinity),
-          ).asSkeleton(),
+          ),
         ],
-      ),
+      ).asSkeleton(),
     );
   }
 
@@ -815,6 +815,7 @@ class UserDetailHistoryScreen extends StatelessWidget {
         order.id,
         reason: reason.isNotEmpty ? reason : null,
       );
+      await cubit.clearActiveOrder();
 
       if (result != null && context.mounted) {
         context.showMyToast(

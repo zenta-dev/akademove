@@ -502,10 +502,13 @@ class _UserDeliveryPickupScreenState extends State<UserDeliveryPickupScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       headers: [DefaultAppBar(title: context.l10n.title_where_you_at)],
-      child: PickLocationWidget(
-        type: LocationType.pickup,
-        pickupController: pickupController,
-        dropoffController: dropoffController,
+      child: Padding(
+        padding: EdgeInsets.all(16.dg),
+        child: PickLocationWidget(
+          type: LocationType.pickup,
+          pickupController: pickupController,
+          dropoffController: dropoffController,
+        ),
       ),
     );
   }
@@ -543,10 +546,13 @@ class _UserDeliveryDropoffScreenState extends State<UserDeliveryDropoffScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       headers: [DefaultAppBar(title: context.l10n.title_where_are_you_going)],
-      child: PickLocationWidget(
-        type: LocationType.dropoff,
-        pickupController: pickupController,
-        dropoffController: dropoffController,
+      child: Padding(
+        padding: EdgeInsets.all(16.dg),
+        child: PickLocationWidget(
+          type: LocationType.dropoff,
+          pickupController: pickupController,
+          dropoffController: dropoffController,
+        ),
       ),
     );
   }

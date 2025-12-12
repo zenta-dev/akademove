@@ -1,14 +1,14 @@
-import 'dart:async';
+import "dart:async";
 
-import 'package:akademove/core/_export.dart';
-import 'package:akademove/firebase_options.dart';
-import 'package:akademove/locator.dart';
-import 'package:bloc/bloc.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/services.dart'
+import "package:akademove/core/_export.dart";
+import "package:akademove/firebase_options.dart";
+import "package:akademove/locator.dart";
+import "package:bloc/bloc.dart";
+import "package:firebase_core/firebase_core.dart";
+import "package:flutter/services.dart"
     show DeviceOrientation, SystemChannels, SystemChrome;
-import 'package:flutter/widgets.dart';
-import 'package:timezone/data/latest.dart' as tz;
+import "package:flutter/widgets.dart";
+import "package:timezone/data/latest.dart" as tz;
 
 class AppBlocObserver extends BlocObserver {
   const AppBlocObserver();
@@ -41,38 +41,43 @@ class AppBlocObserver extends BlocObserver {
 \t$stackTrace
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ''');
+
+    // Report bloc errors to Crashlytics
+    GlobalErrorHandler.instance.reportError(error, stackTrace: stackTrace);
   }
 }
 
 Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
-  WidgetsFlutterBinding.ensureInitialized();
+  // Use runZonedGuarded to catch all uncaught async errors
+  runZonedGuarded(
+    () async {
+      WidgetsFlutterBinding.ensureInitialized();
 
-  Bloc.observer = const AppBlocObserver();
+      Bloc.observer = const AppBlocObserver();
 
-  FlutterError.onError = (FlutterErrorDetails details) {
-    logger.e('''
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-💥 FLUTTER ERROR
-\tException: ${details.exceptionAsString()}
+      setupLocator();
 
-\tStack Trace:
-\t${details.stack}
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-''');
-  };
+      await Future.wait([
+        SystemChrome.setPreferredOrientations([
+          DeviceOrientation.portraitUp,
+          DeviceOrientation.portraitDown,
+        ]),
+        SystemChannels.textInput.invokeMethod("TextInput.hide"),
+      ]);
+      tz.initializeTimeZones();
 
-  setupLocator();
+      // Initialize Firebase first (required before Crashlytics)
+      await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform,
+      );
 
-  await Future.wait([
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
-    ]),
-    SystemChannels.textInput.invokeMethod('TextInput.hide'),
-  ]);
-  tz.initializeTimeZones();
+      // Initialize global error handler AFTER Firebase
+      // Sets FlutterError.onError, PlatformDispatcher.onError, and Crashlytics
+      await GlobalErrorHandler.instance.initialize();
 
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-
-  runApp(await builder());
+      runApp(await builder());
+    },
+    // Handle uncaught async errors
+    GlobalErrorHandler.instance.handleZoneError,
+  );
 }

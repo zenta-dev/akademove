@@ -86,6 +86,7 @@ class _UserMerchantDetailScreenState extends State<UserMerchantDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return PopScope(
+      key: ValueKey('pop_scope_${widget.isSummary}'),
       canPop: !widget.isSummary,
       onPopInvokedWithResult: (didPop, result) {
         if (!didPop && widget.isSummary) {
@@ -343,7 +344,10 @@ class _UserMerchantDetailScreenState extends State<UserMerchantDetailScreen> {
                         context.pushNamed(
                           Routes.userMerchantDetail.name,
                           pathParameters: {'merchantId': widget.merchantId},
-                          extra: {'isSummary': true},
+                          extra: {
+                            'isSummary': true,
+                            'merchant': widget.merchant,
+                          },
                         );
                       }
                     },

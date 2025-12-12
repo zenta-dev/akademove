@@ -1,4 +1,5 @@
 export 'firebase_service.dart';
+export 'global_error_handler.dart';
 export 'image_service.dart';
 export 'kv_service.dart';
 export 'location_service.dart';

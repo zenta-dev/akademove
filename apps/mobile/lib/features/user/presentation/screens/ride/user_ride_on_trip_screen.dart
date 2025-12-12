@@ -277,14 +277,16 @@ class _UserRideOnTripScreenState extends State<UserRideOnTripScreen> {
             context.l10n.text_trip_completed,
             type: ToastType.success,
           );
-          context.goNamed(Routes.userHome.name);
+          // context.goNamed(Routes.userHome.name);
+          context.popUntilRoot();
         }
       } else {
         context.showMyToast(
           context.l10n.text_trip_completed,
           type: ToastType.success,
         );
-        context.goNamed(Routes.userHome.name);
+        // context.goNamed(Routes.userHome.name);
+        context.popUntilRoot();
       }
     } else if (_isOrderCancelled(currentOrder?.status) &&
         mounted &&
@@ -355,12 +357,15 @@ class _UserRideOnTripScreenState extends State<UserRideOnTripScreen> {
         reason: reason.isNotEmpty ? reason : null,
       );
 
+      await cubit.clearActiveOrder();
+
       if (result != null && context.mounted) {
         context.showMyToast(
           context.l10n.order_cancelled_successfully,
           type: ToastType.success,
         );
-        context.goNamed(Routes.userHome.name);
+        // context.goNamed(Routes.userHome.name);
+        context.popUntilRoot();
       } else if (context.mounted) {
         context.showMyToast(
           cubit.state.currentOrder.error?.message ??

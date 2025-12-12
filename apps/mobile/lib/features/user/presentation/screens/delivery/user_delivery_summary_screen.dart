@@ -254,8 +254,12 @@ class _UserDeliverySummaryScreenState extends State<UserDeliverySummaryScreen> {
 
   Widget _buildDetailRow(BuildContext context, String label, String value) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [Text(label).small(), Text(value).small()],
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(label).small(),
+        SizedBox(width: 16.w),
+        Expanded(child: Text(value, textAlign: TextAlign.end).small()),
+      ],
     );
   }
 

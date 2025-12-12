@@ -126,6 +126,7 @@ enum Routes {
 }
 
 final router = GoRouter(
+  navigatorKey: GlobalErrorHandler.navigatorKey,
   initialLocation: Routes.authSplash.path,
   debugLogDiagnostics: true,
   routes: [
