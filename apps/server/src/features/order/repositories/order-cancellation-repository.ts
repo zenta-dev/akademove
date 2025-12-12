@@ -3,7 +3,6 @@ import type { Order } from "@repo/schema/order";
 import type { UserRole } from "@repo/schema/user";
 import type { OrderEnvelope } from "@repo/schema/ws";
 import { eq } from "drizzle-orm";
-import { BUSINESS_CONSTANTS } from "@/core/constants";
 import { RepositoryError } from "@/core/error";
 import type { WithTx } from "@/core/interface";
 import { type DatabaseService, tables } from "@/core/services/db";
@@ -240,6 +239,13 @@ export class OrderCancellationRepository extends OrderBaseRepository {
 			} as WithTx,
 		);
 
+		// Fetch driver matching config from database
+		const matchingConfig =
+			await BusinessConfigurationService.getDriverMatchingConfig(
+				this.db,
+				this.kv,
+			);
+
 		// Re-enqueue driver matching with excluded drivers
 		await OrderQueueService.enqueueDriverMatching({
 			orderId: order.id,
@@ -247,13 +253,18 @@ export class OrderCancellationRepository extends OrderBaseRepository {
 			orderType: order.type,
 			genderPreference: order.genderPreference ?? undefined,
 			userGender: order.gender ?? undefined,
-			initialRadiusKm: BUSINESS_CONSTANTS.DRIVER_MATCHING_RADIUS_KM,
-			maxMatchingDurationMinutes: 15,
+			initialRadiusKm: matchingConfig.initialRadiusKm,
+			maxRadiusKm: matchingConfig.maxRadiusKm,
+			maxMatchingDurationMinutes: matchingConfig.timeoutMinutes,
 			currentAttempt: 1,
-			maxExpansionAttempts:
-				BUSINESS_CONSTANTS.DRIVER_MATCHING_MAX_EXPANSION_ATTEMPTS,
-			expansionRate: BUSINESS_CONSTANTS.DRIVER_MATCHING_RADIUS_EXPANSION,
-			matchingIntervalSeconds: 30,
+			maxExpansionAttempts: Math.ceil(
+				Math.log(matchingConfig.maxRadiusKm / matchingConfig.initialRadiusKm) /
+					Math.log(1 + matchingConfig.expansionRate),
+			),
+			expansionRate: matchingConfig.expansionRate,
+			matchingIntervalSeconds: matchingConfig.intervalSeconds,
+			broadcastLimit: matchingConfig.broadcastLimit,
+			maxCancellationsPerDay: matchingConfig.maxCancellationsPerDay,
 			excludedDriverIds,
 			isRetry: true,
 		});

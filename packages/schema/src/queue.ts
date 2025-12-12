@@ -40,6 +40,7 @@ export type QueueMessageMeta = z.infer<typeof QueueMessageMetaSchema>;
 /**
  * Driver matching job - finds and broadcasts order to nearby drivers
  * This is the core matching logic that runs with configurable timeout
+ * All configuration values come from database (BusinessConfiguration)
  */
 export const DriverMatchingJobSchema = z.object({
 	type: z.literal("DRIVER_MATCHING"),
@@ -53,18 +54,24 @@ export const DriverMatchingJobSchema = z.object({
 		orderType: z.enum(["RIDE", "DELIVERY", "FOOD"]),
 		genderPreference: z.enum(["SAME", "ANY"]).optional(),
 		userGender: z.enum(["MALE", "FEMALE"]).optional(),
-		/** Initial search radius in km (configurable via admin) */
+		/** Initial search radius in km (from database config) */
 		initialRadiusKm: z.coerce.number().positive().default(5),
-		/** Maximum matching duration in minutes (default 15, configurable) */
+		/** Maximum search radius in km - hard limit (from database config) */
+		maxRadiusKm: z.coerce.number().positive().default(20),
+		/** Maximum matching duration in minutes (from database config) */
 		maxMatchingDurationMinutes: z.coerce.number().positive().default(15),
 		/** Current matching attempt (for radius expansion) */
 		currentAttempt: z.coerce.number().int().min(1).default(1),
 		/** Maximum expansion attempts before timeout */
 		maxExpansionAttempts: z.coerce.number().int().positive().default(10),
-		/** Radius expansion rate per attempt (e.g., 0.2 = 20%) */
+		/** Radius expansion rate per attempt (e.g., 0.2 = 20%) (from database config) */
 		expansionRate: z.coerce.number().positive().default(0.2),
-		/** Interval between matching attempts in seconds */
+		/** Interval between matching attempts in seconds (from database config) */
 		matchingIntervalSeconds: z.coerce.number().positive().default(30),
+		/** Maximum drivers to broadcast to (from database config) */
+		broadcastLimit: z.coerce.number().int().positive().default(10),
+		/** Maximum driver cancellations per day (from database config) */
+		maxCancellationsPerDay: z.coerce.number().int().positive().default(3),
 		/** Payment ID for refund if matching times out */
 		paymentId: z.string().optional(),
 		/** WebSocket room ID for real-time updates */

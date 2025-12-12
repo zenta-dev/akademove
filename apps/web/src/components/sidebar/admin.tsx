@@ -10,6 +10,7 @@ import {
 	ImageIcon,
 	MailIcon,
 	ReceiptIcon,
+	SettingsIcon,
 	StoreIcon,
 	UsersIcon,
 } from "lucide-react";
@@ -79,6 +80,11 @@ const navMain = Object.freeze([
 		title: m.banners(),
 		href: localizeHref("/dash/admin/banners"),
 		icon: ImageIcon,
+	},
+	{
+		title: m.configurations(),
+		href: localizeHref("/dash/admin/settings"),
+		icon: SettingsIcon,
 	},
 ] as const);
 

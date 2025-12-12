@@ -7,7 +7,7 @@ import { type OrderEnvelope, OrderEnvelopeSchema } from "@repo/schema/ws";
 import Decimal from "decimal.js";
 import { sql } from "drizzle-orm";
 import { BaseDurableObject, type BroadcastOptions } from "@/core/base";
-import { BUSINESS_CONSTANTS, CONFIGURATION_KEYS } from "@/core/constants";
+import { CONFIGURATION_KEYS } from "@/core/constants";
 import { getManagers, getRepositories, getServices } from "@/core/factory";
 import type { RepositoryContext, ServiceContext } from "@/core/interface";
 import type { DatabaseTransaction } from "@/core/services/db";
@@ -15,6 +15,7 @@ import { BadgeAwardService } from "@/features/badge/services/badge-award-service
 import { BusinessConfigurationService } from "@/features/configuration/services";
 import { DriverPriorityService } from "@/features/driver/services/driver-priority-service";
 import { OrderCancellationService } from "@/features/order/services/order-cancellation-service";
+import type { MatchingConfig } from "@/features/order/services/order-matching-service";
 import { OrderRefundService } from "@/features/order/services/order-refund-service";
 import { safeSync, toNumberSafe } from "@/utils";
 import { logger } from "@/utils/logger";
@@ -158,9 +159,32 @@ export class OrderRoom extends BaseDurableObject {
 
 		const findOrder = await this.#repo.order.get(detail.order.id, opts);
 
-		// REFACTOR: Use OrderMatchingService for driver discovery with timeout expansion
+		// Fetch matching configuration from database
+		const matchingConfigData =
+			await BusinessConfigurationService.getDriverMatchingConfig(
+				this.#svc.db,
+				this.#svc.kv,
+			);
+
+		// Build MatchingConfig for the service
+		const matchingConfig: MatchingConfig = {
+			initialRadiusKm: matchingConfigData.initialRadiusKm,
+			maxRadiusKm: matchingConfigData.maxRadiusKm,
+			expansionRate: matchingConfigData.expansionRate,
+			timeoutMs: matchingConfigData.intervalSeconds * 1000,
+			broadcastLimit: matchingConfigData.broadcastLimit,
+			maxCancellationsPerDay: matchingConfigData.maxCancellationsPerDay,
+		};
+
+		// Calculate max attempts based on how many expansions until max radius
+		// Formula: initialRadius * (1 + expansionRate)^attempts <= maxRadius
+		const maxAttempts = Math.ceil(
+			Math.log(matchingConfig.maxRadiusKm / matchingConfig.initialRadiusKm) /
+				Math.log(1 + matchingConfig.expansionRate),
+		);
+
+		// Use OrderMatchingService for driver discovery with timeout expansion
 		// Service encapsulates matching business logic (radius, gender preference, availability)
-		// Uses 30s timeout with 20% radius expansion on each attempt
 		const matchedDrivers =
 			await this.#svc.orderServices.matching.findDriversWithTimeoutExpansion(
 				{
@@ -169,9 +193,9 @@ export class OrderRoom extends BaseDurableObject {
 					orderType: findOrder.type,
 					genderPreference: findOrder.genderPreference,
 					userGender: findOrder.gender,
-					radiusKm: BUSINESS_CONSTANTS.DRIVER_MATCHING_RADIUS_KM, // Initial radius from constants
 				},
-				BUSINESS_CONSTANTS.DRIVER_MATCHING_MAX_EXPANSION_ATTEMPTS, // Max expansion attempts from constants
+				matchingConfig,
+				maxAttempts,
 				opts,
 			);
 

@@ -11,7 +11,7 @@ import type { Driver } from "@repo/schema/driver";
 import type { GenderPreference, OrderType } from "@repo/schema/order";
 import type { UserGender } from "@repo/schema/user";
 import { and, eq, isNull, lt, or, sql } from "drizzle-orm";
-import { BUSINESS_CONSTANTS, ERROR_MESSAGES } from "@/core/constants";
+import { ERROR_MESSAGES } from "@/core/constants";
 import { RepositoryError } from "@/core/error";
 import type { DatabaseService, DatabaseTransaction } from "@/core/services/db";
 import { tables } from "@/core/services/db";
@@ -26,6 +26,25 @@ export interface MatchingCriteria {
 	orderId?: string; // Optional for logging purposes
 	/** Driver IDs to exclude from matching (e.g., drivers who already cancelled this order) */
 	excludedDriverIds?: string[];
+}
+
+/**
+ * Configuration for driver matching from database
+ * All values should be fetched from BusinessConfigurationService
+ */
+export interface MatchingConfig {
+	/** Initial search radius in km */
+	initialRadiusKm: number;
+	/** Maximum search radius in km (hard limit) */
+	maxRadiusKm: number;
+	/** Radius expansion rate per attempt (e.g., 0.2 = 20%) */
+	expansionRate: number;
+	/** Timeout per attempt in ms */
+	timeoutMs: number;
+	/** Maximum drivers to broadcast to */
+	broadcastLimit: number;
+	/** Maximum cancellations per day before driver suspension */
+	maxCancellationsPerDay: number;
 }
 
 export interface MatchedDriver {
@@ -63,16 +82,17 @@ export class OrderMatchingService {
 	 * 9. Return top match
 	 *
 	 * @param criteria - Matching criteria
+	 * @param config - Matching configuration from database
 	 * @param opts - Transaction options
 	 * @returns Matched driver or null if none available
 	 */
 	async findBestDriver(
 		criteria: MatchingCriteria,
+		config: MatchingConfig,
 		opts?: { tx?: DatabaseTransaction },
 	): Promise<MatchedDriver | null> {
 		try {
-			const radiusKm =
-				criteria.radiusKm ?? BUSINESS_CONSTANTS.DRIVER_MATCHING_RADIUS_KM;
+			const radiusKm = criteria.radiusKm ?? config.initialRadiusKm;
 			const radiusMeters = radiusKm * 1000;
 
 			logger.debug(
@@ -124,7 +144,7 @@ export class OrderMatchingService {
 							isNull(tables.driver.lastCancellationDate),
 							lt(
 								tables.driver.cancellationCount,
-								BUSINESS_CONSTANTS.DRIVER_MAX_CANCELLATIONS_PER_DAY,
+								config.maxCancellationsPerDay,
 							),
 							// Reset count if last cancellation was yesterday
 							sql`DATE(${tables.driver.lastCancellationDate}) < CURRENT_DATE`,
@@ -178,18 +198,17 @@ export class OrderMatchingService {
 	 * Find multiple available drivers for broadcasting
 	 *
 	 * @param criteria - Matching criteria
-	 * @param limit - Maximum number of drivers to return
+	 * @param config - Matching configuration from database
 	 * @param opts - Transaction options
 	 * @returns List of matched drivers
 	 */
 	async findAvailableDrivers(
 		criteria: MatchingCriteria,
-		limit = BUSINESS_CONSTANTS.DRIVER_MATCHING_BROADCAST_LIMIT,
+		config: MatchingConfig,
 		opts?: { tx?: DatabaseTransaction },
 	): Promise<MatchedDriver[]> {
 		try {
-			const radiusKm =
-				criteria.radiusKm ?? BUSINESS_CONSTANTS.DRIVER_MATCHING_RADIUS_KM;
+			const radiusKm = criteria.radiusKm ?? config.initialRadiusKm;
 			const radiusMeters = radiusKm * 1000;
 
 			const db = opts?.tx ?? this.db;
@@ -228,7 +247,7 @@ export class OrderMatchingService {
 					),
 				)
 				.orderBy(sql`${tables.driver.rating} DESC`, sql`distance ASC`)
-				.limit(limit);
+				.limit(config.broadcastLimit);
 
 			return drivers.map((d) => ({
 				driver: d as unknown as Partial<Driver>,
@@ -246,28 +265,35 @@ export class OrderMatchingService {
 	 * Find drivers with timeout and radius expansion logic
 	 *
 	 * Algorithm:
-	 * 1. Try initial radius for 30 seconds
-	 * 2. If no drivers found, expand radius by 20% and retry
+	 * 1. Try initial radius for configured timeout
+	 * 2. If no drivers found, expand radius by configured rate and retry
 	 * 3. Continue expanding until max radius reached or drivers found
 	 *
 	 * @param criteria - Matching criteria
-	 * @param maxAttempts - Maximum expansion attempts (default: 3)
+	 * @param config - Matching configuration from database
+	 * @param maxAttempts - Maximum expansion attempts
 	 * @param opts - Transaction options
 	 * @returns Matched drivers or empty array
 	 */
 	async findDriversWithTimeoutExpansion(
 		criteria: MatchingCriteria,
-		maxAttempts = BUSINESS_CONSTANTS.DRIVER_MATCHING_MAX_EXPANSION_ATTEMPTS,
+		config: MatchingConfig,
+		maxAttempts: number,
 		opts?: { tx?: DatabaseTransaction },
 	): Promise<MatchedDriver[]> {
 		try {
-			const initialRadius =
-				criteria.radiusKm ?? BUSINESS_CONSTANTS.DRIVER_MATCHING_RADIUS_KM;
-			const expansionRate = BUSINESS_CONSTANTS.DRIVER_MATCHING_RADIUS_EXPANSION;
-			const timeoutMs = BUSINESS_CONSTANTS.DRIVER_MATCHING_TIMEOUT_MS;
+			const initialRadius = criteria.radiusKm ?? config.initialRadiusKm;
+			const { expansionRate, timeoutMs, maxRadiusKm } = config;
 
 			logger.debug(
-				{ criteria, initialRadius, expansionRate, timeoutMs, maxAttempts },
+				{
+					criteria,
+					initialRadius,
+					maxRadiusKm,
+					expansionRate,
+					timeoutMs,
+					maxAttempts,
+				},
 				"[OrderMatchingService] Starting timeout expansion matching",
 			);
 
@@ -278,11 +304,26 @@ export class OrderMatchingService {
 				attempt++;
 				const startTime = Date.now();
 
+				// Enforce max radius limit from config
+				if (currentRadius > maxRadiusKm) {
+					currentRadius = maxRadiusKm;
+					logger.info(
+						{
+							orderId: criteria.orderId || "unknown",
+							attempt,
+							cappedRadius: currentRadius,
+							maxRadiusKm,
+						},
+						"[OrderMatchingService] Radius capped at max limit",
+					);
+				}
+
 				logger.info(
 					{
 						orderId: criteria.orderId || "unknown",
 						attempt,
 						currentRadius,
+						maxRadiusKm,
 						timeoutMs,
 					},
 					"[OrderMatchingService] Attempting driver search",
@@ -291,7 +332,7 @@ export class OrderMatchingService {
 				// Search for drivers with current radius
 				const drivers = await this.findAvailableDrivers(
 					{ ...criteria, radiusKm: currentRadius },
-					BUSINESS_CONSTANTS.DRIVER_MATCHING_BROADCAST_LIMIT, // Get multiple drivers
+					config,
 					opts,
 				);
 
@@ -330,17 +371,21 @@ export class OrderMatchingService {
 					await new Promise((resolve) => setTimeout(resolve, remainingTime));
 				}
 
-				// Expand radius for next attempt
+				// Expand radius for next attempt (but don't exceed max)
 				if (attempt < maxAttempts) {
-					currentRadius = currentRadius * (1 + expansionRate);
+					const newRadius = currentRadius * (1 + expansionRate);
+					const previousRadius = currentRadius;
+					currentRadius = Math.min(newRadius, maxRadiusKm);
 
 					logger.info(
 						{
 							orderId: criteria.orderId || "unknown",
 							attempt,
-							previousRadius: currentRadius / (1 + expansionRate),
+							previousRadius,
 							newRadius: currentRadius,
 							expansionRate,
+							maxRadiusKm,
+							capped: newRadius > maxRadiusKm,
 						},
 						"[OrderMatchingService] Expanding search radius",
 					);
@@ -353,6 +398,7 @@ export class OrderMatchingService {
 					orderId: criteria.orderId || "unknown",
 					initialRadius,
 					finalRadius: currentRadius,
+					maxRadiusKm,
 					maxAttempts,
 					totalExpansion: (currentRadius / initialRadius - 1) * 100,
 				},

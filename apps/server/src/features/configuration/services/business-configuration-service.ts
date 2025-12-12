@@ -186,4 +186,32 @@ export class BusinessConfigurationService {
 		const config = await BusinessConfigurationService.getConfig(db, kv);
 		return config.highValueOrderThreshold;
 	}
+
+	/**
+	 * Get driver matching configuration
+	 * Returns all values needed for driver matching logic
+	 */
+	static async getDriverMatchingConfig(
+		db: DatabaseService,
+		kv: KeyValueService,
+	): Promise<{
+		initialRadiusKm: number;
+		maxRadiusKm: number;
+		expansionRate: number;
+		timeoutMinutes: number;
+		intervalSeconds: number;
+		broadcastLimit: number;
+		maxCancellationsPerDay: number;
+	}> {
+		const config = await BusinessConfigurationService.getConfig(db, kv);
+		return {
+			initialRadiusKm: config.driverMatchingInitialRadiusKm,
+			maxRadiusKm: config.driverMatchingMaxRadiusKm,
+			expansionRate: config.driverMatchingRadiusExpansionRate,
+			timeoutMinutes: config.driverMatchingTimeoutMinutes,
+			intervalSeconds: config.driverMatchingIntervalSeconds,
+			broadcastLimit: config.driverMatchingBroadcastLimit,
+			maxCancellationsPerDay: config.driverMaxCancellationsPerDay,
+		};
+	}
 }

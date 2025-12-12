@@ -3,6 +3,7 @@
  *
  * Handles DRIVER_MATCHING queue messages.
  * This is the core matching logic that runs with configurable timeout and radius expansion.
+ * All configuration values come from the queue job payload (originally from database).
  *
  * Flow:
  * 1. Search for drivers within current radius
@@ -14,8 +15,8 @@
 
 import type { DriverMatchingJob } from "@repo/schema/queue";
 import { sql } from "drizzle-orm";
-import { BUSINESS_CONSTANTS } from "@/core/constants";
 import { OrderQueueService } from "@/core/services/queue";
+import type { MatchingConfig } from "@/features/order/services/order-matching-service";
 import { logger } from "@/utils/logger";
 import type { QueueHandlerContext } from "../queue-handler";
 
@@ -32,11 +33,14 @@ export async function handleDriverMatching(
 		genderPreference,
 		userGender,
 		initialRadiusKm,
+		maxRadiusKm,
 		maxMatchingDurationMinutes,
 		currentAttempt,
 		maxExpansionAttempts,
 		expansionRate,
 		matchingIntervalSeconds,
+		broadcastLimit,
+		maxCancellationsPerDay,
 		excludedDriverIds,
 		isRetry,
 	} = payload;
@@ -46,6 +50,7 @@ export async function handleDriverMatching(
 			orderId,
 			attempt: currentAttempt,
 			radiusKm: initialRadiusKm,
+			maxRadiusKm,
 			maxMinutes: maxMatchingDurationMinutes,
 			isRetry: isRetry ?? false,
 			excludedDriverCount: excludedDriverIds?.length ?? 0,
@@ -88,9 +93,32 @@ export async function handleDriverMatching(
 				return;
 			}
 
-			// Calculate current radius based on attempt
-			const currentRadius =
+			// Calculate current radius based on attempt, but cap at max radius
+			let currentRadius =
 				initialRadiusKm * (1 + expansionRate) ** (currentAttempt - 1);
+
+			// Enforce max radius limit from config
+			if (maxRadiusKm && currentRadius > maxRadiusKm) {
+				logger.info(
+					{
+						orderId,
+						calculatedRadius: currentRadius,
+						maxRadiusKm,
+					},
+					"[DriverMatchingHandler] Capping radius at max limit",
+				);
+				currentRadius = maxRadiusKm;
+			}
+
+			// Build matching config from job payload (originally from database)
+			const matchingConfig: MatchingConfig = {
+				initialRadiusKm,
+				maxRadiusKm: maxRadiusKm ?? 20, // Default fallback
+				expansionRate,
+				timeoutMs: matchingIntervalSeconds * 1000,
+				broadcastLimit: broadcastLimit ?? 10, // Default fallback
+				maxCancellationsPerDay: maxCancellationsPerDay ?? 3, // Default fallback
+			};
 
 			// Search for available drivers (outside lock scope for performance)
 			const matchedDrivers =
@@ -104,7 +132,7 @@ export async function handleDriverMatching(
 						radiusKm: currentRadius,
 						excludedDriverIds,
 					},
-					BUSINESS_CONSTANTS.DRIVER_MATCHING_BROADCAST_LIMIT,
+					matchingConfig,
 				);
 
 			logger.info(
@@ -112,6 +140,7 @@ export async function handleDriverMatching(
 					orderId,
 					attempt: currentAttempt,
 					radiusKm: currentRadius,
+					maxRadiusKm,
 					driversFound: matchedDrivers.length,
 				},
 				"[DriverMatchingHandler] Driver search completed",
@@ -153,16 +182,26 @@ export async function handleDriverMatching(
 			}
 
 			// Check if we should continue matching
+			// Don't continue if we've reached max radius or max attempts
+			const atMaxRadius = maxRadiusKm && currentRadius >= maxRadiusKm;
 			const shouldContinue =
-				currentAttempt < maxExpansionAttempts && matchedDrivers.length === 0;
+				currentAttempt < maxExpansionAttempts &&
+				matchedDrivers.length === 0 &&
+				!atMaxRadius;
 
 			if (shouldContinue) {
+				// Calculate next radius (capped at max)
+				const nextRadius = Math.min(
+					currentRadius * (1 + expansionRate),
+					maxRadiusKm ?? Number.POSITIVE_INFINITY,
+				);
+
 				// Schedule next matching attempt with expanded radius
 				await OrderQueueService.enqueueDriverMatching(
 					{
 						...payload,
 						currentAttempt: currentAttempt + 1,
-						initialRadiusKm: currentRadius * (1 + expansionRate),
+						initialRadiusKm: nextRadius,
 					},
 					{ delaySeconds: matchingIntervalSeconds },
 				);
@@ -171,7 +210,8 @@ export async function handleDriverMatching(
 					{
 						orderId,
 						nextAttempt: currentAttempt + 1,
-						nextRadius: currentRadius * (1 + expansionRate),
+						nextRadius,
+						maxRadiusKm,
 						delaySeconds: matchingIntervalSeconds,
 					},
 					"[DriverMatchingHandler] Scheduled next matching attempt",
@@ -183,8 +223,10 @@ export async function handleDriverMatching(
 						orderId,
 						totalAttempts: currentAttempt,
 						finalRadius: currentRadius,
+						maxRadiusKm,
+						atMaxRadius,
 					},
-					"[DriverMatchingHandler] Max attempts reached with no drivers",
+					"[DriverMatchingHandler] Max attempts/radius reached with no drivers",
 				);
 			}
 			// If drivers were found, we just wait for them to accept

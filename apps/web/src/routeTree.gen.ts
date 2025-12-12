@@ -64,6 +64,7 @@ import { Route as DashDriverProfileRouteImport } from './routes/dash/driver/prof
 import { Route as DashDriverOrdersRouteImport } from './routes/dash/driver/orders'
 import { Route as DashDriverEarningsRouteImport } from './routes/dash/driver/earnings'
 import { Route as DashAdminUsersRouteImport } from './routes/dash/admin/users'
+import { Route as DashAdminSettingsRouteImport } from './routes/dash/admin/settings'
 import { Route as DashAdminProfileRouteImport } from './routes/dash/admin/profile'
 import { Route as DashAdminPricingRouteImport } from './routes/dash/admin/pricing'
 import { Route as DashAdminOrdersRouteImport } from './routes/dash/admin/orders'
@@ -373,6 +374,11 @@ const DashAdminUsersRoute = DashAdminUsersRouteImport.update({
   path: '/users',
   getParentRoute: () => DashAdminRouteRoute,
 } as any)
+const DashAdminSettingsRoute = DashAdminSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => DashAdminRouteRoute,
+} as any)
 const DashAdminProfileRoute = DashAdminProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
@@ -591,6 +597,7 @@ export interface FileRoutesByFullPath {
   '/dash/admin/orders': typeof DashAdminOrdersRoute
   '/dash/admin/pricing': typeof DashAdminPricingRoute
   '/dash/admin/profile': typeof DashAdminProfileRoute
+  '/dash/admin/settings': typeof DashAdminSettingsRoute
   '/dash/admin/users': typeof DashAdminUsersRoute
   '/dash/driver/earnings': typeof DashDriverEarningsRoute
   '/dash/driver/orders': typeof DashDriverOrdersRoute
@@ -675,6 +682,7 @@ export interface FileRoutesByTo {
   '/dash/admin/orders': typeof DashAdminOrdersRoute
   '/dash/admin/pricing': typeof DashAdminPricingRoute
   '/dash/admin/profile': typeof DashAdminProfileRoute
+  '/dash/admin/settings': typeof DashAdminSettingsRoute
   '/dash/admin/users': typeof DashAdminUsersRoute
   '/dash/driver/earnings': typeof DashDriverEarningsRoute
   '/dash/driver/orders': typeof DashDriverOrdersRoute
@@ -767,6 +775,7 @@ export interface FileRoutesById {
   '/dash/admin/orders': typeof DashAdminOrdersRoute
   '/dash/admin/pricing': typeof DashAdminPricingRoute
   '/dash/admin/profile': typeof DashAdminProfileRoute
+  '/dash/admin/settings': typeof DashAdminSettingsRoute
   '/dash/admin/users': typeof DashAdminUsersRoute
   '/dash/driver/earnings': typeof DashDriverEarningsRoute
   '/dash/driver/orders': typeof DashDriverOrdersRoute
@@ -858,6 +867,7 @@ export interface FileRouteTypes {
     | '/dash/admin/orders'
     | '/dash/admin/pricing'
     | '/dash/admin/profile'
+    | '/dash/admin/settings'
     | '/dash/admin/users'
     | '/dash/driver/earnings'
     | '/dash/driver/orders'
@@ -942,6 +952,7 @@ export interface FileRouteTypes {
     | '/dash/admin/orders'
     | '/dash/admin/pricing'
     | '/dash/admin/profile'
+    | '/dash/admin/settings'
     | '/dash/admin/users'
     | '/dash/driver/earnings'
     | '/dash/driver/orders'
@@ -1033,6 +1044,7 @@ export interface FileRouteTypes {
     | '/dash/admin/orders'
     | '/dash/admin/pricing'
     | '/dash/admin/profile'
+    | '/dash/admin/settings'
     | '/dash/admin/users'
     | '/dash/driver/earnings'
     | '/dash/driver/orders'
@@ -1494,6 +1506,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashAdminUsersRouteImport
       parentRoute: typeof DashAdminRouteRoute
     }
+    '/dash/admin/settings': {
+      id: '/dash/admin/settings'
+      path: '/settings'
+      fullPath: '/dash/admin/settings'
+      preLoaderRoute: typeof DashAdminSettingsRouteImport
+      parentRoute: typeof DashAdminRouteRoute
+    }
     '/dash/admin/profile': {
       id: '/dash/admin/profile'
       path: '/profile'
@@ -1788,6 +1807,7 @@ interface DashAdminRouteRouteChildren {
   DashAdminOrdersRoute: typeof DashAdminOrdersRoute
   DashAdminPricingRoute: typeof DashAdminPricingRoute
   DashAdminProfileRoute: typeof DashAdminProfileRoute
+  DashAdminSettingsRoute: typeof DashAdminSettingsRoute
   DashAdminUsersRoute: typeof DashAdminUsersRoute
   DashAdminIndexRoute: typeof DashAdminIndexRoute
   DashAdminBannersIdRoute: typeof DashAdminBannersIdRoute
@@ -1810,6 +1830,7 @@ const DashAdminRouteRouteChildren: DashAdminRouteRouteChildren = {
   DashAdminOrdersRoute: DashAdminOrdersRoute,
   DashAdminPricingRoute: DashAdminPricingRoute,
   DashAdminProfileRoute: DashAdminProfileRoute,
+  DashAdminSettingsRoute: DashAdminSettingsRoute,
   DashAdminUsersRoute: DashAdminUsersRoute,
   DashAdminIndexRoute: DashAdminIndexRoute,
   DashAdminBannersIdRoute: DashAdminBannersIdRoute,
