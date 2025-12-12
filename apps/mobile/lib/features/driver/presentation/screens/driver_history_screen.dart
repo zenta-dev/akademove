@@ -81,174 +81,102 @@ class _DriverHistoryScreenState extends State<DriverHistoryScreen> {
     await _loadOrders();
   }
 
-  void _onStatusFilterChanged(OrderStatus? status) {
-    setState(() => _selectedStatus = status);
-    _loadOrders();
-  }
-
-  void _onTypeFilterChanged(OrderType? type) {
-    setState(() => _selectedType = type);
-    _loadOrders();
-  }
-
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<DriverListHistoryCubit, DriverListHistoryState>(
-      builder: (context, state) {
-        // Orders are now filtered server-side, no need for client-side filtering
-        final orders = state.orders;
-        return Scaffold(
-          headers: [
-            DefaultAppBar(
-              title: context.l10n.order_history,
-              padding: EdgeInsets.all(16.r),
-            ),
-          ],
-          child: Padding(
-            padding: EdgeInsets.all(16.dg),
-            child: Column(
-              spacing: 8.h,
-              children: [
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    spacing: 8.w,
-                    children: [
-                      _buildStatusFilterChip(context.l10n.all, null),
-                      _buildStatusFilterChip(
-                        context.l10n.completed,
-                        OrderStatus.COMPLETED,
+    return Scaffold(
+      headers: [
+        DefaultAppBar(
+          title: context.l10n.order_history,
+          padding: EdgeInsets.all(16.r),
+        ),
+      ],
+      child: Padding(
+        padding: EdgeInsets.all(16.dg),
+        child: RefreshTrigger(
+          onRefresh: _onRefresh,
+          child: BlocBuilder<DriverListHistoryCubit, DriverListHistoryState>(
+            builder: (context, state) {
+              if (state.fetchHistoryResult.isLoading) {
+                return ListView.separated(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  itemCount: 5,
+                  separatorBuilder: (context, index) => SizedBox(height: 12.h),
+                  itemBuilder: (context, index) =>
+                      _buildOrderCard(context, dummyOrder),
+                ).asSkeleton();
+              }
+
+              final orders = state.fetchHistoryResult.value ?? [];
+              if (orders.isEmpty) {
+                return _buildEmptyState();
+              }
+
+              return ListView.separated(
+                physics: const AlwaysScrollableScrollPhysics(),
+                padding: EdgeInsets.zero,
+                itemCount: orders.length,
+                controller: _scrollController,
+                separatorBuilder: (context, index) => SizedBox(height: 12.h),
+                itemBuilder: (context, index) {
+                  if (index >= orders.length) {
+                    return const Center(
+                      child: Padding(
+                        padding: EdgeInsets.all(16),
+                        child: CircularProgressIndicator(),
                       ),
-                      _buildStatusFilterChip(
-                        context.l10n.in_progress,
-                        OrderStatus.IN_TRIP,
-                      ),
-                      _buildStatusFilterChip(
-                        context.l10n.cancelled,
-                        OrderStatus.CANCELLED_BY_USER,
-                      ),
-                    ],
-                  ),
-                ),
-                Expanded(
-                  child: RefreshTrigger(
-                    onRefresh: _onRefresh,
-                    child: Column(
-                      spacing: 8.h,
-                      children: [
-                        // Filter chips
-                        SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Row(
-                            spacing: 8.w,
-                            children: [
-                              _buildTypeFilterChip(
-                                context.l10n.all_types,
-                                null,
-                              ),
-                              _buildTypeFilterChip(
-                                context.l10n.ride,
-                                OrderType.RIDE,
-                              ),
-                              _buildTypeFilterChip(
-                                context.l10n.delivery,
-                                OrderType.DELIVERY,
-                              ),
-                              _buildTypeFilterChip(
-                                context.l10n.order_type_food,
-                                OrderType.FOOD,
-                              ),
-                            ],
-                          ),
-                        ),
-                        const Divider(),
-                        // Order list
-                        Expanded(
-                          child: orders.isEmpty
-                              ? _buildEmptyState()
-                              : ListView.separated(
-                                  controller: _scrollController,
-                                  itemCount: orders.length,
-                                  separatorBuilder: (context, index) =>
-                                      SizedBox(height: 12.h),
-                                  itemBuilder: (context, index) {
-                                    if (index >= orders.length) {
-                                      return const Center(
-                                        child: Padding(
-                                          padding: EdgeInsets.all(16),
-                                          child: CircularProgressIndicator(),
-                                        ),
-                                      );
-                                    }
-                                    return _buildOrderCard(
-                                      context,
-                                      orders[index],
-                                    );
-                                  },
-                                ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
+                    );
+                  }
+                  return _buildOrderCard(context, orders[index]);
+                },
+              );
+            },
           ),
-        );
-      },
-    );
-  }
-
-  Widget _buildStatusFilterChip(String label, OrderStatus? status) {
-    final isSelected = _selectedStatus == status;
-    return Chip(
-      style: isSelected ? ButtonStyle.primary() : ButtonStyle.outline(),
-      child: ChipButton(
-        child: Text(label),
-        onPressed: () => _onStatusFilterChanged(status),
-      ),
-    );
-  }
-
-  Widget _buildTypeFilterChip(String label, OrderType? type) {
-    final isSelected = _selectedType == type;
-    return Chip(
-      style: isSelected ? ButtonStyle.primary() : ButtonStyle.outline(),
-      child: ChipButton(
-        child: Text(label),
-        onPressed: () => _onTypeFilterChanged(type),
+        ),
       ),
     );
   }
 
   Widget _buildEmptyState() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        spacing: 16.h,
-        children: [
-          Icon(
-            LucideIcons.inbox,
-            size: 64.sp,
-            color: context.colorScheme.mutedForeground,
-          ),
-          Text(
-            context.l10n.no_orders_found,
-            style: context.typography.h3.copyWith(
-              fontSize: 20.sp,
-              fontWeight: FontWeight.bold,
+    return CustomScrollView(
+      physics: const AlwaysScrollableScrollPhysics(),
+      slivers: [
+        SliverFillRemaining(
+          hasScrollBody: false,
+          child: Center(
+            child: Padding(
+              padding: EdgeInsets.all(24.dg),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                spacing: 16.h,
+                children: [
+                  Icon(
+                    LucideIcons.inbox,
+                    size: 64.sp,
+                    color: context.colorScheme.mutedForeground,
+                  ),
+                  Text(
+                    context.l10n.no_orders_found,
+                    style: context.typography.h3.copyWith(
+                      fontSize: 20.sp,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    context
+                        .l10n
+                        .your_completed_and_cancelled_orders_will_appear_here,
+                    textAlign: TextAlign.center,
+                    style: context.typography.p.copyWith(
+                      fontSize: 14.sp,
+                      color: context.colorScheme.mutedForeground,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
-          Text(
-            context.l10n.your_completed_and_cancelled_orders_will_appear_here,
-            textAlign: TextAlign.center,
-            style: context.typography.p.copyWith(
-              fontSize: 14.sp,
-              color: context.colorScheme.mutedForeground,
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -257,7 +185,8 @@ class _DriverHistoryScreenState extends State<DriverHistoryScreen> {
     final statusText = _getStatusText(context, order.status);
 
     return GhostButton(
-      onPressed: () => context.goNamed(
+      density: ButtonDensity.compact,
+      onPressed: () => context.pushNamed(
         Routes.driverOrderDetail.name,
         pathParameters: {'orderId': order.id},
       ),
@@ -313,17 +242,17 @@ class _DriverHistoryScreenState extends State<DriverHistoryScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     spacing: 8.h,
                     children: [
-                      Text(
-                        order.pickupAddress ??
-                            '${order.pickupLocation.y.toStringAsFixed(4)}, ${order.pickupLocation.x.toStringAsFixed(4)}',
+                      AddressText(
+                        address: order.pickupAddress,
+                        coordinate: order.pickupLocation,
                         style: context.typography.p.copyWith(fontSize: 14.sp),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
                       SizedBox(height: 12.h),
-                      Text(
-                        order.dropoffAddress ??
-                            '${order.dropoffLocation.y.toStringAsFixed(4)}, ${order.dropoffLocation.x.toStringAsFixed(4)}',
+                      AddressText(
+                        address: order.dropoffAddress,
+                        coordinate: order.dropoffLocation,
                         style: context.typography.p.copyWith(fontSize: 14.sp),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,

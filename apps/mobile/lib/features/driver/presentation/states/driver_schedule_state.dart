@@ -6,7 +6,6 @@ class DriverScheduleState extends Equatable {
     this.createScheduleResult = const OperationResult.idle(),
     this.updateScheduleResult = const OperationResult.idle(),
     this.deleteScheduleResult = const OperationResult.idle(),
-    this.schedules = const [],
     this.selectedSchedule,
   });
 
@@ -15,7 +14,6 @@ class DriverScheduleState extends Equatable {
   final OperationResult<DriverSchedule> updateScheduleResult;
   final OperationResult<bool> deleteScheduleResult;
 
-  final List<DriverSchedule> schedules;
   final DriverSchedule? selectedSchedule;
 
   @override
@@ -24,7 +22,6 @@ class DriverScheduleState extends Equatable {
     createScheduleResult,
     updateScheduleResult,
     deleteScheduleResult,
-    schedules,
     selectedSchedule,
   ];
 
@@ -44,7 +41,6 @@ class DriverScheduleState extends Equatable {
       createScheduleResult: createScheduleResult ?? this.createScheduleResult,
       updateScheduleResult: updateScheduleResult ?? this.updateScheduleResult,
       deleteScheduleResult: deleteScheduleResult ?? this.deleteScheduleResult,
-      schedules: schedules ?? this.schedules,
       selectedSchedule: selectedSchedule ?? this.selectedSchedule,
     );
   }

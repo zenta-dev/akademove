@@ -108,18 +108,10 @@ class UserOrderCardWidget extends StatelessWidget {
     if (order.type == OrderType.DELIVERY && order.merchant?.name != null) {
       return DefaultText(order.merchant?.name ?? '', fontSize: 14.sp);
     }
-    return FutureBuilder(
-      future: context.read<LocationService>().getPlacemark(
-        lat: order.pickupLocation.y.toDouble(),
-        lng: order.pickupLocation.x.toDouble(),
-      ),
-      builder: (context, snapshot) {
-        final data = snapshot.data;
-        return DefaultText(
-          '${data?.name}, ${data?.street}',
-          fontSize: 14.sp,
-        ).asSkeleton(enabled: snapshot.connectionState != ConnectionState.done);
-      },
+    return AddressText(
+      address: order.pickupAddress,
+      coordinate: order.pickupLocation,
+      style: context.typography.p.copyWith(fontSize: 14.sp),
     );
   }
 

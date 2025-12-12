@@ -351,22 +351,10 @@ class _UserDetailHistoryScreenState extends State<UserDetailHistoryScreen> {
                 color: context.colorScheme.mutedForeground,
               ),
               Gap(4.h),
-              FutureBuilder(
-                future: context.read<LocationService>().getPlacemark(
-                  lat: coordinate.y.toDouble(),
-                  lng: coordinate.x.toDouble(),
-                ),
-                builder: (context, snapshot) {
-                  final data = snapshot.data;
-                  final isLoading =
-                      snapshot.connectionState != ConnectionState.done;
-                  return DefaultText(
-                    data != null
-                        ? '${data.name}, ${data.street}'
-                        : 'Loading...',
-                    fontSize: 14.sp,
-                  ).asSkeleton(enabled: isLoading);
-                },
+              AddressText(
+                address: null,
+                coordinate: coordinate,
+                style: context.typography.p.copyWith(fontSize: 14.sp),
               ),
             ],
           ),

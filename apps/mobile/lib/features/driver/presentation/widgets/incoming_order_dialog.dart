@@ -64,22 +64,20 @@ class IncomingOrderDialog extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           // Order Details
-          _buildDetailRow(
+          _buildLocationDetailRow(
             context,
             icon: LucideIcons.mapPin,
             label: 'Pickup',
-            value:
-                order.pickupAddress ??
-                '${order.pickupLocation.y.toStringAsFixed(5)}, ${order.pickupLocation.x.toStringAsFixed(5)}',
+            address: order.pickupAddress,
+            coordinate: order.pickupLocation,
           ),
           SizedBox(height: 12.h),
-          _buildDetailRow(
+          _buildLocationDetailRow(
             context,
             icon: LucideIcons.navigation,
             label: 'Dropoff',
-            value:
-                order.dropoffAddress ??
-                '${order.dropoffLocation.y.toStringAsFixed(5)}, ${order.dropoffLocation.x.toStringAsFixed(5)}',
+            address: order.dropoffAddress,
+            coordinate: order.dropoffLocation,
           ),
           SizedBox(height: 12.h),
           _buildDetailRow(
@@ -228,6 +226,44 @@ class IncomingOrderDialog extends StatelessWidget {
               SizedBox(height: 2.h),
               Text(
                 value,
+                style: context.typography.p.copyWith(
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildLocationDetailRow(
+    BuildContext context, {
+    required IconData icon,
+    required String label,
+    required String? address,
+    required Coordinate coordinate,
+  }) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Icon(icon, size: 20.sp, color: context.colorScheme.mutedForeground),
+        SizedBox(width: 12.w),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                label,
+                style: context.typography.small.copyWith(
+                  color: context.colorScheme.mutedForeground,
+                ),
+              ),
+              SizedBox(height: 2.h),
+              AddressText(
+                address: address,
+                coordinate: coordinate,
                 style: context.typography.p.copyWith(
                   fontSize: 14.sp,
                   fontWeight: FontWeight.w500,

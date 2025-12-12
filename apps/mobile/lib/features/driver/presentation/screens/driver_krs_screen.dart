@@ -96,20 +96,31 @@ class _DriverKrsScreenState extends State<DriverKrsScreen> {
                   itemCount: 4,
                   separatorBuilder: (context, index) => SizedBox(height: 12.h),
                   itemBuilder: (context, index) {
-                    return _buildScheduleCard(dummyDriverSchedule).asSkeleton();
+                    return _buildScheduleCard(dummyDriverSchedule);
                   },
-                );
+                ).asSkeleton();
               }
 
-              if (state.schedules.isEmpty) {
+              final schedules = state.fetchSchedulesResult.value ?? [];
+
+              if (schedules.isEmpty) {
                 return _buildEmptyState();
               }
+
               return ListView.separated(
                 padding: EdgeInsets.zero,
-                itemCount: state.schedules.length,
+                itemCount: schedules.length,
                 separatorBuilder: (context, index) => SizedBox(height: 12.h),
                 itemBuilder: (context, index) {
-                  return _buildScheduleCard(state.schedules[index]);
+                  if (index >= schedules.length) {
+                    return const Center(
+                      child: Padding(
+                        padding: EdgeInsets.all(16),
+                        child: CircularProgressIndicator(),
+                      ),
+                    );
+                  }
+                  return _buildScheduleCard(schedules[index]);
                 },
               );
             },

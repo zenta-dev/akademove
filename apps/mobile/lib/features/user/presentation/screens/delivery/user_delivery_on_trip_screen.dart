@@ -955,19 +955,15 @@ class _OrderDetailsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Use estimateOrder locations if available (has proper names)
-    final pickupName =
+    final pickupAddress =
         estimateOrder?.pickup.vicinity ??
         estimateOrder?.pickup.name ??
-        (order != null
-            ? "${order!.pickupLocation.y.toStringAsFixed(4)}, ${order!.pickupLocation.x.toStringAsFixed(4)}"
-            : "-");
+        order?.pickupAddress;
 
-    final dropoffName =
+    final dropoffAddress =
         estimateOrder?.dropoff.vicinity ??
         estimateOrder?.dropoff.name ??
-        (order != null
-            ? "${order!.dropoffLocation.y.toStringAsFixed(4)}, ${order!.dropoffLocation.x.toStringAsFixed(4)}"
-            : "-");
+        order?.dropoffAddress;
 
     return Column(
       spacing: 16.h,
@@ -983,17 +979,31 @@ class _OrderDetailsCard extends StatelessWidget {
             spacing: 4.h,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _DetailCell(
-                title: context.l10n.origin,
-                value: pickupName,
-                allowMultiline: true,
-              ),
+              if (order != null)
+                _LocationDetailCell(
+                  title: context.l10n.origin,
+                  address: pickupAddress,
+                  coordinate: order!.pickupLocation,
+                )
+              else
+                _DetailCell(
+                  title: context.l10n.origin,
+                  value: pickupAddress ?? "-",
+                  allowMultiline: true,
+                ),
               const Divider(),
-              _DetailCell(
-                title: context.l10n.destination,
-                value: dropoffName,
-                allowMultiline: true,
-              ),
+              if (order != null)
+                _LocationDetailCell(
+                  title: context.l10n.destination,
+                  address: dropoffAddress,
+                  coordinate: order!.dropoffLocation,
+                )
+              else
+                _DetailCell(
+                  title: context.l10n.destination,
+                  value: dropoffAddress ?? "-",
+                  allowMultiline: true,
+                ),
               const Divider(),
               _DetailCell(
                 title: context.l10n.label_distance,
@@ -1094,6 +1104,47 @@ class _DetailCell extends StatelessWidget {
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
           ),
+        ),
+      ],
+    );
+  }
+}
+
+/// Location detail cell widget - uses AddressText for reverse geocoding
+class _LocationDetailCell extends StatelessWidget {
+  const _LocationDetailCell({
+    required this.title,
+    required this.address,
+    required this.coordinate,
+  });
+
+  final String title;
+  final String? address;
+  final Coordinate coordinate;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: 4.h,
+      children: [
+        Text(
+          title,
+          style: context.typography.small.copyWith(
+            fontSize: 12.sp,
+            color: context.colorScheme.mutedForeground,
+          ),
+        ),
+        AddressText(
+          address: address,
+          coordinate: coordinate,
+          style: context.typography.small.copyWith(
+            fontWeight: FontWeight.w500,
+            fontSize: 14.sp,
+            color: context.colorScheme.foreground,
+          ),
+          maxLines: 3,
+          overflow: TextOverflow.ellipsis,
         ),
       ],
     );

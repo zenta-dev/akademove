@@ -140,17 +140,17 @@ class ScheduledOrderCardWidget extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     spacing: 8.h,
                     children: [
-                      Text(
-                        order.pickupAddress ??
-                            '${order.pickupLocation.y.toStringAsFixed(4)}, ${order.pickupLocation.x.toStringAsFixed(4)}',
+                      AddressText(
+                        address: order.pickupAddress,
+                        coordinate: order.pickupLocation,
                         style: context.typography.p.copyWith(fontSize: 14.sp),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
                       SizedBox(height: 12.h),
-                      Text(
-                        order.dropoffAddress ??
-                            '${order.dropoffLocation.y.toStringAsFixed(4)}, ${order.dropoffLocation.x.toStringAsFixed(4)}',
+                      AddressText(
+                        address: order.dropoffAddress,
+                        coordinate: order.dropoffLocation,
                         style: context.typography.p.copyWith(fontSize: 14.sp),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,

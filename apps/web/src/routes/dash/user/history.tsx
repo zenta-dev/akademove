@@ -282,7 +282,7 @@ function RouteComponent() {
 												<p className="font-medium text-sm">Pickup</p>
 												<p className="text-muted-foreground text-xs">
 													{order.pickupAddress ||
-														`${order.pickupLocation.y.toFixed(4)}, ${order.pickupLocation.x.toFixed(4)}`}
+														m.location_information_unavailable()}
 													{order.note?.pickup && ` • ${order.note.pickup}`}
 												</p>
 											</div>
@@ -293,7 +293,7 @@ function RouteComponent() {
 												<p className="font-medium text-sm">Dropoff</p>
 												<p className="text-muted-foreground text-xs">
 													{order.dropoffAddress ||
-														`${order.dropoffLocation.y.toFixed(4)}, ${order.dropoffLocation.x.toFixed(4)}`}
+														m.location_information_unavailable()}
 													{order.note?.dropoff && ` • ${order.note.dropoff}`}
 												</p>
 											</div>

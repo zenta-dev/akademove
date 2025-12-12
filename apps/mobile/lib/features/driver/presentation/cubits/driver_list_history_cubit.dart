@@ -21,7 +21,6 @@ class DriverListHistoryCubit extends BaseCubit<DriverListHistoryState> {
           emit(
             state.copyWith(
               fetchHistoryResult: OperationResult.success(orderRes.data),
-              orders: orderRes.data,
               paginationResult: orderRes.paginationResult,
             ),
           );
@@ -59,12 +58,14 @@ class DriverListHistoryCubit extends BaseCubit<DriverListHistoryState> {
           ),
         );
 
-        final updatedOrders = [...state.orders, ...orderRes.data];
+        final updatedOrders = [
+          ...?state.fetchHistoryResult.value,
+          ...orderRes.data,
+        ];
 
         emit(
           state.copyWith(
             fetchHistoryResult: OperationResult.success(updatedOrders),
-            orders: updatedOrders,
             paginationResult: orderRes.paginationResult,
           ),
         );

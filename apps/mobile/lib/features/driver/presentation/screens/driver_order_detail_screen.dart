@@ -355,17 +355,17 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
               context.l10n.service,
               order.type.name,
             ),
-            _buildInfoRow(
+            _buildLocationInfoRow(
               LucideIcons.mapPin,
               context.l10n.pickup_location,
-              order.pickupAddress ??
-                  '${order.pickupLocation.y.toStringAsFixed(4)}, ${order.pickupLocation.x.toStringAsFixed(4)}',
+              order.pickupAddress,
+              order.pickupLocation,
             ),
-            _buildInfoRow(
+            _buildLocationInfoRow(
               LucideIcons.navigation,
               context.l10n.dropoff_location,
-              order.dropoffAddress ??
-                  '${order.dropoffLocation.y.toStringAsFixed(4)}, ${order.dropoffLocation.x.toStringAsFixed(4)}',
+              order.dropoffAddress,
+              order.dropoffLocation,
             ),
             _buildInfoRow(
               LucideIcons.ruler,
@@ -661,6 +661,44 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
               ),
               Text(
                 value,
+                style: context.typography.p.copyWith(
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildLocationInfoRow(
+    IconData icon,
+    String label,
+    String? address,
+    Coordinate coordinate,
+  ) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: 12.w,
+      children: [
+        Icon(icon, size: 20.sp, color: context.colorScheme.mutedForeground),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: 2.h,
+            children: [
+              Text(
+                label,
+                style: context.typography.small.copyWith(
+                  fontSize: 12.sp,
+                  color: context.colorScheme.mutedForeground,
+                ),
+              ),
+              AddressText(
+                address: address,
+                coordinate: coordinate,
                 style: context.typography.p.copyWith(
                   fontSize: 14.sp,
                   fontWeight: FontWeight.w500,

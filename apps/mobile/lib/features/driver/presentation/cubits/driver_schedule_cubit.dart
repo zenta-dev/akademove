@@ -59,12 +59,7 @@ class DriverScheduleCubit extends BaseCubit<DriverScheduleState> {
             driverId: driver.id,
             scheduleId: scheduleId,
           );
-          emit(
-            state.copyWith(
-              fetchSchedulesResult: OperationResult.success(state.schedules),
-              selectedSchedule: res.data,
-            ),
-          );
+          emit(state.copyWith(selectedSchedule: res.data));
         } on BaseError catch (e, st) {
           logger.e(
             '[DriverScheduleCubit] - Error loading schedule: ${e.message}',
@@ -133,34 +128,38 @@ class DriverScheduleCubit extends BaseCubit<DriverScheduleState> {
     }
   });
 
-  Future<void> removeSchedule({
-    required String scheduleId,
-  }) async => await taskManager.execute('DSC-rS4-$scheduleId', () async {
-    try {
-      emit(
-        state.copyWith(deleteScheduleResult: const OperationResult.loading()),
-      );
+  Future<void> removeSchedule({required String scheduleId}) async =>
+      await taskManager.execute('DSC-rS4-$scheduleId', () async {
+        try {
+          emit(
+            state.copyWith(
+              deleteScheduleResult: const OperationResult.loading(),
+            ),
+          );
 
-      final driver = await ensureDriverLoaded();
-      await _driverRepository.removeSchedule(
-        driverId: driver.id,
-        scheduleId: scheduleId,
-      );
-      emit(
-        state.copyWith(
-          deleteScheduleResult: OperationResult.success(true),
-          schedules: state.schedules.where((s) => s.id != scheduleId).toList(),
-        ),
-      );
-    } on BaseError catch (e, st) {
-      logger.e(
-        '[DriverScheduleCubit] - Error removing schedule: ${e.message}',
-        error: e,
-        stackTrace: st,
-      );
-      emit(state.copyWith(deleteScheduleResult: OperationResult.failed(e)));
-    }
-  });
+          final driver = await ensureDriverLoaded();
+          await _driverRepository.removeSchedule(
+            driverId: driver.id,
+            scheduleId: scheduleId,
+          );
+
+          final schedules = state.fetchSchedulesResult.value ?? [];
+          final excluded = schedules.where((s) => s.id != scheduleId).toList();
+          emit(
+            state.copyWith(
+              deleteScheduleResult: OperationResult.success(true),
+              fetchSchedulesResult: OperationResult.success(excluded),
+            ),
+          );
+        } on BaseError catch (e, st) {
+          logger.e(
+            '[DriverScheduleCubit] - Error removing schedule: ${e.message}',
+            error: e,
+            stackTrace: st,
+          );
+          emit(state.copyWith(deleteScheduleResult: OperationResult.failed(e)));
+        }
+      });
 
   void reset() {
     emit(const DriverScheduleState());
