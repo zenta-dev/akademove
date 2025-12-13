@@ -156,7 +156,7 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
   Widget _buildMap(Order order) {
     return Stack(
       children: [
-        GoogleMap(
+        MapWrapperWidget(
           initialCameraPosition: CameraPosition(
             target: LatLng(
               order.pickupLocation.y.toDouble(),
@@ -593,7 +593,10 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
         child: PrimaryButton(
           onPressed: isLoading
               ? null
-              : () => context.read<DriverOrderCubit>().completeTrip(),
+              : () {
+                  context.read<DriverOrderCubit>().completeTrip();
+                  context.read<DriverHomeCubit>().init();
+                },
           child: isLoading
               ? const CircularProgressIndicator()
               : Text(context.l10n.complete_trip),

@@ -271,7 +271,7 @@ class _UserRatingScreenState extends State<UserRatingScreen> {
                   },
                   child: Icon(
                     starValue <= rating ? LucideIcons.star : LucideIcons.star,
-                    size: 48.sp,
+                    size: 24.sp,
                     color: starValue <= rating
                         ? const Color(0xFFFFA000)
                         : context.colorScheme.mutedForeground,

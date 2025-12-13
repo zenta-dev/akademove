@@ -7,6 +7,7 @@ import 'package:shadcn_flutter/shadcn_flutter.dart';
 class MapWrapperWidget extends StatefulWidget {
   const MapWrapperWidget({
     super.key,
+    this.initialCameraPosition,
     this.onMapCreated,
     this.gestureRecognizers = const <Factory<OneSequenceGestureRecognizer>>{},
     this.webGestureHandling,
@@ -46,6 +47,7 @@ class MapWrapperWidget extends StatefulWidget {
     this.onLongPress,
     this.cloudMapId,
   });
+  final CameraPosition? initialCameraPosition;
   final MapCreatedCallback? onMapCreated;
   final bool compassEnabled;
   final bool mapToolbarEnabled;
@@ -98,7 +100,8 @@ class _MapWrapperWidgetState extends State<MapWrapperWidget>
   Widget build(BuildContext context) {
     super.build(context);
     return GoogleMap(
-      initialCameraPosition: MapConstants.defaultCameraPosition,
+      initialCameraPosition:
+          widget.initialCameraPosition ?? MapConstants.defaultCameraPosition,
       style: context.isDarkMode ? MapConstants.darkStyle : null,
       onMapCreated: widget.onMapCreated,
       gestureRecognizers: widget.gestureRecognizers,
