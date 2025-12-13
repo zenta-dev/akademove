@@ -101,14 +101,15 @@ class _UserNearbyDriverScreenState extends State<UserNearbyDriverScreen> {
       return;
     }
 
-    final user = context.read<AuthCubit>().state.user.data?.value;
+    // final user = context.read<AuthCubit>().state.user.data?.value;
     await context.read<UserRideCubit>().getNearbyDrivers(
       GetDriverNearbyQuery(
         x: center.longitude,
         y: center.latitude,
         radiusKm: radiusKm,
         limit: 10,
-        gender: user?.gender,
+        // gender: user?.gender,
+        gender: null,
       ),
     );
 

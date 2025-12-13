@@ -149,7 +149,7 @@ class DriverHomeCubit extends BaseCubit<DriverHomeState> {
 
   Future<void> _startLocationTracking() async {
     _locationUpdateTimer?.cancel();
-    _locationUpdateTimer = Timer.periodic(const Duration(seconds: 10), (
+    _locationUpdateTimer = Timer.periodic(const Duration(seconds: 3), (
       _,
     ) async {
       await _updateLocation();
