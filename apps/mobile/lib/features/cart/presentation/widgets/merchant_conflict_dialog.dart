@@ -1,5 +1,5 @@
 import 'package:akademove/core/_export.dart';
-import 'package:akademove/features/cart/presentation/cubits/cart_cubit.dart';
+import 'package:akademove/features/cart/presentation/cubits/user_cart_cubit.dart';
 import 'package:akademove/l10n/l10n.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -65,14 +65,14 @@ class MerchantConflictDialog extends StatelessWidget {
       actions: [
         OutlineButton(
           onPressed: () {
-            context.read<CartCubit>().cancelReplaceCart();
+            context.read<UserCartCubit>().cancelReplaceCart();
             Navigator.of(context).pop();
           },
           child: Text(context.l10n.cancel),
         ),
         PrimaryButton(
           onPressed: () {
-            context.read<CartCubit>().confirmReplaceCart();
+            context.read<UserCartCubit>().confirmReplaceCart();
             Navigator.of(context).pop();
           },
           child: Text(context.l10n.cart_replace_cart),
