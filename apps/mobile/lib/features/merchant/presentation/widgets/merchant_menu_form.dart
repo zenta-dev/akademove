@@ -66,6 +66,7 @@ class _MerchantMenuFormState extends State<MerchantMenuForm> {
   MenuCategory? _selectedCategory;
   int _stock = 0;
   File? _imageFile;
+  bool _isFirstFrame = true;
 
   bool get _isEditMode => widget.initialMenu != null;
 
@@ -78,6 +79,14 @@ class _MerchantMenuFormState extends State<MerchantMenuForm> {
     _stockController = TextEditingController(text: "0");
 
     _initializeForm();
+
+    // Allow scroll notifications after first frame to prevent
+    // "Build scheduled during frame" error from RefreshTrigger
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        setState(() => _isFirstFrame = false);
+      }
+    });
   }
 
   void _initializeForm() {
