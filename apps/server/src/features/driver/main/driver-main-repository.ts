@@ -294,9 +294,7 @@ export class DriverMainRepository extends BaseRepository {
 
 	async nearby(query: NearbyQuery): Promise<Driver[]> {
 		try {
-			const { x, y, limit = 20, radiusKm = 10 } = query;
-
-			const gender = undefined;
+			const { x, y, limit = 20, radiusKm = 10, gender } = query;
 
 			// Delegate to DriverLocationService
 			return await this.#locationService.findNearby(

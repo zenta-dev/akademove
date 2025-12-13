@@ -201,6 +201,8 @@ class DriverOrderCubit extends BaseCubit<DriverOrderState> {
         ),
       );
 
+      await updateOrderStatus(OrderStatus.COMPLETED);
+
       // Send DONE action via WebSocket to trigger server-side:
       // - Commission calculation
       // - Driver wallet credit
