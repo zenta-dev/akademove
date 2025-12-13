@@ -185,22 +185,27 @@ class _MerchantMenuFormState extends State<MerchantMenuForm> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        SingleChildScrollView(
-          padding: EdgeInsets.only(bottom: 100.h),
-          child: Padding(
-            padding: EdgeInsets.all(16.dg),
-            child: Form(
-              controller: _formController,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                spacing: 16.h,
-                children: [
-                  _buildCategoryField(),
-                  _buildImagePicker(),
-                  _buildNameField(),
-                  _buildPriceField(),
-                  _buildStockField(),
-                ],
+        // Absorb scroll notifications during first frame to prevent
+        // "Build scheduled during frame" error from RefreshTrigger
+        NotificationListener<ScrollNotification>(
+          onNotification: _isFirstFrame ? (_) => true : null,
+          child: SingleChildScrollView(
+            padding: EdgeInsets.only(bottom: 100.h),
+            child: Padding(
+              padding: EdgeInsets.all(16.dg),
+              child: Form(
+                controller: _formController,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  spacing: 16.h,
+                  children: [
+                    _buildCategoryField(),
+                    _buildImagePicker(),
+                    _buildNameField(),
+                    _buildPriceField(),
+                    _buildStockField(),
+                  ],
+                ),
               ),
             ),
           ),
