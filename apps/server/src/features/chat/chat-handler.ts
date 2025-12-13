@@ -10,7 +10,10 @@ const { priv } = createORPCRouter(ChatSpec);
 
 export const ChatHandler = priv.router({
 	list: priv.list.handler(async ({ context, input: { query } }) => {
-		const result = await context.repo.chat.listMessages(query);
+		const result = await context.repo.chat.listMessages({
+			...query,
+			userId: context.user.id,
+		});
 
 		return {
 			status: 200,

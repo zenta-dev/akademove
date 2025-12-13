@@ -184,39 +184,10 @@ export const OrderHandler = priv.router({
 	}),
 	listMessages: priv.listMessages.handler(
 		async ({ context, input: { params, query } }) => {
-			// FIX: Add IDOR protection - users can only view messages for orders they're involved in
-			// const order = await context.repo.order.get(params.id);
-
-			// if (context.user.role !== "ADMIN" && context.user.role !== "OPERATOR") {
-			// 	const isOwner = order.userId === context.user.id;
-
-			// 	// Check if driver is assigned to this order
-			// 	let isAssignedDriver = false;
-			// 	if (context.user.role === "DRIVER" && order.driverId) {
-			// 		const driver = await context.repo.driver.main.getByUserId(
-			// 			context.user.id,
-			// 		);
-			// 		isAssignedDriver = order.driverId === driver.id;
-			// 	}
-
-			// 	// Check if merchant owns this order
-			// 	let isMerchantOwner = false;
-			// 	if (context.user.role === "MERCHANT" && order.merchantId) {
-			// 		const merchant = await context.repo.merchant.main.getByUserId(
-			// 			context.user.id,
-			// 		);
-			// 		isMerchantOwner = order.merchantId === merchant.id;
-			// 	}
-
-			// 	if (!isOwner && !isAssignedDriver && !isMerchantOwner) {
-			// 		throw new AuthError(m.error_only_update_own_orders(), {
-			// 			code: "FORBIDDEN",
-			// 		});
-			// 	}
-			// }
-
+			// Authorization is now handled in ChatRepository.listMessages via ChatAuthorizationService
 			const result = await context.repo.chat.listMessages({
 				orderId: params.id,
+				userId: context.user.id,
 				...query,
 			});
 

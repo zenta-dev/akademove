@@ -116,24 +116,53 @@ export class ChatRepository extends BaseRepository {
 	}
 
 	async listMessages(
-		query: OrderChatMessageListQuery,
+		query: OrderChatMessageListQuery & { userId: string },
 		opts?: PartialWithTx,
 	): Promise<{
 		rows: OrderChatMessage[];
 		hasMore: boolean;
 		nextCursor?: string;
 	}> {
-		const { orderId, limit = 50, cursor } = query;
+		const { orderId, userId, limit = 50, cursor } = query;
 		try {
 			const tx = opts?.tx ?? this.db;
 
-			// Get order participants for role determination
-			const participants = await this.#getOrderParticipants(orderId, opts);
-			if (!participants) {
+			// Get order for authorization and participants
+			const order = await tx.query.order.findFirst({
+				where: (f, op) => op.eq(f.id, orderId),
+				with: {
+					driver: { columns: { userId: true } },
+					merchant: { columns: { userId: true } },
+				},
+			});
+
+			if (!order) {
 				throw new RepositoryError(m.error_order_not_found(), {
 					code: "NOT_FOUND",
 				});
 			}
+
+			// Verify user is authorized to view messages
+			await ChatAuthorizationService.requireOrderParticipant(userId, order, {
+				getMerchantUserId: async (merchantId: string) => {
+					const merchant = await tx.query.merchant.findFirst({
+						where: (f, op) => op.eq(f.id, merchantId),
+					});
+					return merchant?.userId;
+				},
+				getDriverUserId: async (driverId: string) => {
+					const driver = await tx.query.driver.findFirst({
+						where: (f, op) => op.eq(f.id, driverId),
+					});
+					return driver?.userId;
+				},
+			});
+
+			const participants = {
+				userId: order.userId,
+				driverUserId: order.driver?.userId,
+				merchantUserId: order.merchant?.userId,
+			};
 
 			const clauses = [eq(tables.orderChatMessage.orderId, orderId)];
 
@@ -209,6 +238,12 @@ export class ChatRepository extends BaseRepository {
 							where: (f, op) => op.eq(f.id, merchantId),
 						});
 						return merchant?.userId;
+					},
+					getDriverUserId: async (driverId: string) => {
+						const driver = await opts.tx.query.driver.findFirst({
+							where: (f, op) => op.eq(f.id, driverId),
+						});
+						return driver?.userId;
 					},
 				},
 			);

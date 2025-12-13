@@ -18,6 +18,7 @@ export class ChatAuthorizationService {
 		order: OrderDatabase,
 		callbacks: {
 			getMerchantUserId: (merchantId: string) => Promise<string | undefined>;
+			getDriverUserId: (driverId: string) => Promise<string | undefined>;
 		},
 	): Promise<{
 		isAuthorized: boolean;
@@ -33,12 +34,17 @@ export class ChatAuthorizationService {
 		}
 
 		// Check if user is the driver
-		if (order.driverId === userId) {
-			logger.debug(
-				{ userId, orderId: order.id },
-				"[ChatAuthorizationService] User authorized as driver",
-			);
-			return { isAuthorized: true, role: "driver" };
+		// NOTE: order.driverId is the driver RECORD ID, not the user ID
+		// We need to look up the driver's userId to compare
+		if (order.driverId) {
+			const driverUserId = await callbacks.getDriverUserId(order.driverId);
+			if (driverUserId === userId) {
+				logger.debug(
+					{ userId, orderId: order.id, driverId: order.driverId },
+					"[ChatAuthorizationService] User authorized as driver",
+				);
+				return { isAuthorized: true, role: "driver" };
+			}
 		}
 
 		// Check if user is the merchant
@@ -77,6 +83,7 @@ export class ChatAuthorizationService {
 		order: OrderDatabase,
 		callbacks: {
 			getMerchantUserId: (merchantId: string) => Promise<string | undefined>;
+			getDriverUserId: (driverId: string) => Promise<string | undefined>;
 		},
 	): Promise<void> {
 		const { isAuthorized } =

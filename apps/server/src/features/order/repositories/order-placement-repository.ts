@@ -271,6 +271,18 @@ export class OrderPlacementRepository extends OrderBaseRepository {
 			if (!order)
 				throw new RepositoryError(m.error_failed_retrieve_placed_order());
 
+			logger.debug(
+				{
+					orderId: order.id,
+					initialStatus: order.status,
+					paymentMethod: params.payment.method,
+					paymentStatus: payment.status,
+					orderType: params.type,
+					merchantId,
+				},
+				"[OrderPlacementRepository] Order created - checking if status update needed",
+			);
+
 			// For wallet payments, automatically update order status
 			// FOOD orders: Notify merchant first (stay in REQUESTED status until merchant accepts)
 			// RIDE/DELIVERY orders: Move directly to MATCHING for driver matching
@@ -348,6 +360,11 @@ export class OrderPlacementRepository extends OrderBaseRepository {
 					}
 				} else {
 					// RIDE/DELIVERY orders: Move to MATCHING for driver matching
+					logger.debug(
+						{ orderId: order.id, currentStatus: order.status },
+						"[OrderPlacementRepository] Attempting to update order status to MATCHING",
+					);
+
 					order = await this.#writeRepo.update(
 						order.id,
 						{ status: "MATCHING" },
@@ -359,6 +376,7 @@ export class OrderPlacementRepository extends OrderBaseRepository {
 							orderId: order.id,
 							userId: params.userId,
 							amount: estimate.totalCost,
+							updatedStatus: order.status,
 						},
 						"[OrderPlacementRepository] wallet payment successful - Order moved to MATCHING",
 					);
@@ -404,6 +422,18 @@ export class OrderPlacementRepository extends OrderBaseRepository {
 						);
 					}
 				}
+			} else {
+				// Non-wallet payment or wallet payment not successful - status stays REQUESTED
+				// Status will be updated when webhook confirms payment success
+				logger.debug(
+					{
+						orderId: order.id,
+						paymentMethod: params.payment.method,
+						paymentStatus: payment.status,
+						orderStatus: order.status,
+					},
+					"[OrderPlacementRepository] Status update skipped - non-wallet or payment not SUCCESS",
+				);
 			}
 
 			await Promise.allSettled([
