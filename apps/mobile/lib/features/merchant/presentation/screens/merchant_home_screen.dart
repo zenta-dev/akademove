@@ -228,7 +228,7 @@ class _MerchantHomeScreenState extends State<MerchantHomeScreen> {
                       );
                     },
                   ),
-                  BlocBuilder<NotificationCubit, NotificationState>(
+                  BlocBuilder<SharedNotificationCubit, SharedNotificationState>(
                     builder: (context, state) {
                       final unreadCount = state.unreadCount.value ?? 0;
                       return Stack(
