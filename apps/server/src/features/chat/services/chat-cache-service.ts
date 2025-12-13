@@ -19,4 +19,14 @@ export class ChatCacheService {
 	static generateCountCacheKey(orderId: string): string {
 		return `order:${orderId}:count`;
 	}
+
+	/**
+	 * Generate cache key for unread message count per user
+	 * @param orderId - Order ID
+	 * @param userId - User ID
+	 * @returns Cache key string
+	 */
+	static generateUnreadCountCacheKey(orderId: string, userId: string): string {
+		return `order:${orderId}:unread:${userId}`;
+	}
 }

@@ -249,6 +249,46 @@ export const OrderHandler = priv.router({
 						},
 						"[OrderHandler] Broadcast chat message to WebSocket room",
 					);
+
+					// Broadcast unread count updates to all participants except the sender
+					const participantUserIds =
+						await context.repo.chat.getOrderParticipantUserIds(params.id, {
+							tx,
+						});
+
+					for (const participantUserId of participantUserIds) {
+						if (participantUserId === context.user.id) {
+							// Skip sender - they don't need unread count for their own message
+							continue;
+						}
+
+						const unreadCountData = await context.repo.chat.getUnreadCount(
+							{ orderId: params.id, userId: participantUserId },
+							{ tx },
+						);
+
+						const unreadPayload: OrderEnvelope = {
+							e: "CHAT_UNREAD_COUNT",
+							f: "s",
+							t: "c",
+							tg: "USER",
+							p: {
+								chatUnreadCount: {
+									orderId: params.id,
+									userId: participantUserId,
+									unreadCount: unreadCountData.unreadCount,
+								},
+							},
+						};
+
+						await stub.fetch(
+							new Request("http://internal/broadcast", {
+								method: "POST",
+								headers: { "Content-Type": "application/json" },
+								body: JSON.stringify(unreadPayload),
+							}),
+						);
+					}
 				} catch (broadcastError) {
 					// Log but don't fail the request - message is already saved to DB
 					logger.error(

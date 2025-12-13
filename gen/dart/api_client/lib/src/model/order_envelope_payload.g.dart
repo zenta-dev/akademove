@@ -19,6 +19,10 @@ abstract class _$OrderEnvelopePayloadCWProxy {
 
   OrderEnvelopePayload message(OrderEnvelopePayloadMessage? message);
 
+  OrderEnvelopePayload chatUnreadCount(
+    OrderEnvelopePayloadChatUnreadCount? chatUnreadCount,
+  );
+
   OrderEnvelopePayload merchantAction(
     OrderEnvelopePayloadMerchantAction? merchantAction,
   );
@@ -42,6 +46,7 @@ abstract class _$OrderEnvelopePayloadCWProxy {
     OrderEnvelopePayloadDriverUpdateLocation? driverUpdateLocation,
     OrderEnvelopePayloadDone? done,
     OrderEnvelopePayloadMessage? message,
+    OrderEnvelopePayloadChatUnreadCount? chatUnreadCount,
     OrderEnvelopePayloadMerchantAction? merchantAction,
     String? cancelReason,
     OrderEnvelopePayloadNoShow? noShow,
@@ -78,6 +83,11 @@ class _$OrderEnvelopePayloadCWProxyImpl
       call(message: message);
 
   @override
+  OrderEnvelopePayload chatUnreadCount(
+    OrderEnvelopePayloadChatUnreadCount? chatUnreadCount,
+  ) => call(chatUnreadCount: chatUnreadCount);
+
+  @override
   OrderEnvelopePayload merchantAction(
     OrderEnvelopePayloadMerchantAction? merchantAction,
   ) => call(merchantAction: merchantAction);
@@ -108,6 +118,7 @@ class _$OrderEnvelopePayloadCWProxyImpl
     Object? driverUpdateLocation = const $CopyWithPlaceholder(),
     Object? done = const $CopyWithPlaceholder(),
     Object? message = const $CopyWithPlaceholder(),
+    Object? chatUnreadCount = const $CopyWithPlaceholder(),
     Object? merchantAction = const $CopyWithPlaceholder(),
     Object? cancelReason = const $CopyWithPlaceholder(),
     Object? noShow = const $CopyWithPlaceholder(),
@@ -134,6 +145,10 @@ class _$OrderEnvelopePayloadCWProxyImpl
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
           : message as OrderEnvelopePayloadMessage?,
+      chatUnreadCount: chatUnreadCount == const $CopyWithPlaceholder()
+          ? _value.chatUnreadCount
+          // ignore: cast_nullable_to_non_nullable
+          : chatUnreadCount as OrderEnvelopePayloadChatUnreadCount?,
       merchantAction: merchantAction == const $CopyWithPlaceholder()
           ? _value.merchantAction
           // ignore: cast_nullable_to_non_nullable
@@ -200,6 +215,14 @@ OrderEnvelopePayload _$OrderEnvelopePayloadFromJson(
           ? null
           : OrderEnvelopePayloadMessage.fromJson(v as Map<String, dynamic>),
     ),
+    chatUnreadCount: $checkedConvert(
+      'chatUnreadCount',
+      (v) => v == null
+          ? null
+          : OrderEnvelopePayloadChatUnreadCount.fromJson(
+              v as Map<String, dynamic>,
+            ),
+    ),
     merchantAction: $checkedConvert(
       'merchantAction',
       (v) => v == null
@@ -233,6 +256,7 @@ Map<String, dynamic> _$OrderEnvelopePayloadToJson(
   'driverUpdateLocation': ?instance.driverUpdateLocation?.toJson(),
   'done': ?instance.done?.toJson(),
   'message': ?instance.message?.toJson(),
+  'chatUnreadCount': ?instance.chatUnreadCount?.toJson(),
   'merchantAction': ?instance.merchantAction?.toJson(),
   'cancelReason': ?instance.cancelReason,
   'noShow': ?instance.noShow?.toJson(),

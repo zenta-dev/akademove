@@ -9,7 +9,9 @@ All URIs are relative to *http://localhost:3000/api*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
+[**chatGetUnreadCount**](OrderApi.md#chatgetunreadcount) | **GET** /chat/unread-count | 
 [**chatList**](OrderApi.md#chatlist) | **GET** /chat | 
+[**chatMarkAsRead**](OrderApi.md#chatmarkasread) | **POST** /chat/mark-read | 
 [**chatSend**](OrderApi.md#chatsend) | **POST** /chat | 
 [**orderCancel**](OrderApi.md#ordercancel) | **POST** /orders/{id}/cancel | 
 [**orderCancelScheduledOrder**](OrderApi.md#ordercancelscheduledorder) | **POST** /orders/scheduled/{id}/cancel | 
@@ -28,6 +30,47 @@ Method | HTTP request | Description
 [**orderUploadDeliveryProof**](OrderApi.md#orderuploaddeliveryproof) | **POST** /orders/{id}/delivery-proof | 
 [**orderVerifyDeliveryOTP**](OrderApi.md#orderverifydeliveryotp) | **POST** /orders/{id}/verify-otp | 
 
+
+# **chatGetUnreadCount**
+> ChatGetUnreadCount200Response chatGetUnreadCount(orderId)
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getOrderApi();
+final String orderId = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
+
+try {
+    final response = api.chatGetUnreadCount(orderId);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling OrderApi->chatGetUnreadCount: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **orderId** | **String**|  | 
+
+### Return type
+
+[**ChatGetUnreadCount200Response**](ChatGetUnreadCount200Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **chatList**
 > ChatList200Response chatList(orderId, limit, cursor)
@@ -70,6 +113,47 @@ Name | Type | Description  | Notes
 ### HTTP request headers
 
  - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **chatMarkAsRead**
+> ChatMarkAsRead200Response chatMarkAsRead(markChatAsRead)
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getOrderApi();
+final MarkChatAsRead markChatAsRead = ; // MarkChatAsRead | 
+
+try {
+    final response = api.chatMarkAsRead(markChatAsRead);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling OrderApi->chatMarkAsRead: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **markChatAsRead** | [**MarkChatAsRead**](MarkChatAsRead.md)|  | 
+
+### Return type
+
+[**ChatMarkAsRead200Response**](ChatMarkAsRead200Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)

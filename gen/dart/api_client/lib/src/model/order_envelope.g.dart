@@ -162,6 +162,7 @@ const _$OrderEnvelopeEventEnumMap = {
   OrderEnvelopeEvent.COMPLETED: 'COMPLETED',
   OrderEnvelopeEvent.MATCHING: 'MATCHING',
   OrderEnvelopeEvent.CHAT_MESSAGE: 'CHAT_MESSAGE',
+  OrderEnvelopeEvent.CHAT_UNREAD_COUNT: 'CHAT_UNREAD_COUNT',
   OrderEnvelopeEvent.MERCHANT_ACCEPTED: 'MERCHANT_ACCEPTED',
   OrderEnvelopeEvent.MERCHANT_REJECTED: 'MERCHANT_REJECTED',
   OrderEnvelopeEvent.MERCHANT_PREPARING: 'MERCHANT_PREPARING',

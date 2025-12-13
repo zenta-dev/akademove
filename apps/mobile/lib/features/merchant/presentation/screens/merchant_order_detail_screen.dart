@@ -218,11 +218,11 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
               ],
             ),
           ),
-          IconButton(
+          ChatButtonWithBadge(
+            orderId: _currentOrder.id,
             onPressed: () {
               _showChatDialog(context, _currentOrder.id);
             },
-            icon: const Icon(LucideIcons.messageCircle),
             variance: ButtonVariance.primary,
           ),
         ],
@@ -258,11 +258,11 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              IconButton(
+              ChatButtonWithBadge(
+                orderId: _currentOrder.id,
                 onPressed: () {
                   _showChatDialog(context, _currentOrder.id);
                 },
-                icon: const Icon(LucideIcons.messageCircle),
                 variance: ButtonVariance.primary,
               ),
             ],

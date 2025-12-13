@@ -67,6 +67,46 @@ export const ChatHandler = priv.router({
 					},
 					"[ChatHandler] Broadcast chat message to WebSocket room",
 				);
+
+				// Broadcast unread count updates to all participants except the sender
+				const participantUserIds =
+					await context.repo.chat.getOrderParticipantUserIds(result.orderId, {
+						tx,
+					});
+
+				for (const participantUserId of participantUserIds) {
+					if (participantUserId === context.user.id) {
+						// Skip sender - they don't need unread count for their own message
+						continue;
+					}
+
+					const unreadCountData = await context.repo.chat.getUnreadCount(
+						{ orderId: result.orderId, userId: participantUserId },
+						{ tx },
+					);
+
+					const unreadPayload: OrderEnvelope = {
+						e: "CHAT_UNREAD_COUNT",
+						f: "s",
+						t: "c",
+						tg: "USER", // Target specific user
+						p: {
+							chatUnreadCount: {
+								orderId: result.orderId,
+								userId: participantUserId,
+								unreadCount: unreadCountData.unreadCount,
+							},
+						},
+					};
+
+					await stub.fetch(
+						new Request("http://internal/broadcast", {
+							method: "POST",
+							headers: { "Content-Type": "application/json" },
+							body: JSON.stringify(unreadPayload),
+						}),
+					);
+				}
 			} catch (broadcastError) {
 				// Log but don't fail the request - message is already saved to DB
 				logger.error(
@@ -82,6 +122,39 @@ export const ChatHandler = priv.router({
 			return {
 				status: 200,
 				body: { message: m.server_message_sent(), data: result },
+			};
+		});
+	}),
+	getUnreadCount: priv.getUnreadCount.handler(
+		async ({ context, input: { query } }) => {
+			const result = await context.repo.chat.getUnreadCount({
+				orderId: query.orderId,
+				userId: context.user.id,
+			});
+
+			return {
+				status: 200,
+				body: {
+					message: m.server_unread_count_retrieved(),
+					data: result,
+				},
+			};
+		},
+	),
+	markAsRead: priv.markAsRead.handler(async ({ context, input: { body } }) => {
+		return await context.svc.db.transaction(async (tx) => {
+			const data = trimObjectValues(body);
+			const result = await context.repo.chat.markAsRead(
+				{ ...data, userId: context.user.id },
+				{ tx },
+			);
+
+			return {
+				status: 200,
+				body: {
+					message: m.server_messages_marked_read(),
+					data: result,
+				},
 			};
 		});
 	}),

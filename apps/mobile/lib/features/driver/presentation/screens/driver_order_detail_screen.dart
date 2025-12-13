@@ -875,12 +875,11 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
                   },
                   variance: ButtonVariance.ghost,
                 ),
-                IconButton(
-                  icon: const Icon(LucideIcons.messageCircle),
+                ChatButtonWithBadge(
+                  orderId: order.id,
                   onPressed: () {
                     _showChatDialog(context, order.id);
                   },
-                  variance: ButtonVariance.ghost,
                 ),
               ],
             ),

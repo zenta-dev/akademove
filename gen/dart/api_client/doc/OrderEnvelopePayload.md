@@ -13,6 +13,7 @@ Name | Type | Description | Notes
 **driverUpdateLocation** | [**OrderEnvelopePayloadDriverUpdateLocation**](OrderEnvelopePayloadDriverUpdateLocation.md) |  | [optional] 
 **done** | [**OrderEnvelopePayloadDone**](OrderEnvelopePayloadDone.md) |  | [optional] 
 **message** | [**OrderEnvelopePayloadMessage**](OrderEnvelopePayloadMessage.md) |  | [optional] 
+**chatUnreadCount** | [**OrderEnvelopePayloadChatUnreadCount**](OrderEnvelopePayloadChatUnreadCount.md) |  | [optional] 
 **merchantAction** | [**OrderEnvelopePayloadMerchantAction**](OrderEnvelopePayloadMerchantAction.md) |  | [optional] 
 **cancelReason** | **String** |  | [optional] 
 **noShow** | [**OrderEnvelopePayloadNoShow**](OrderEnvelopePayloadNoShow.md) |  | [optional] 

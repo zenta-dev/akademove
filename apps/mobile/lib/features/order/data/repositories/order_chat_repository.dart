@@ -35,6 +35,13 @@ class OrderChatMessagesResponse {
   final String? nextCursor;
 }
 
+class MarkChatAsReadRequest {
+  const MarkChatAsReadRequest({required this.orderId, this.lastReadMessageId});
+
+  final String orderId;
+  final String? lastReadMessageId;
+}
+
 class OrderChatRepository extends BaseRepository {
   OrderChatRepository({required ApiClient apiClient}) : _apiClient = apiClient;
 
@@ -94,6 +101,40 @@ class OrderChatRepository extends BaseRepository {
         data: responseData.data,
         message: responseData.message,
       );
+    });
+  }
+
+  Future<BaseResponse<int>> getUnreadCount(String orderId) {
+    return guard(() async {
+      final orderApi = _apiClient.getOrderApi();
+      final response = await orderApi.chatGetUnreadCount(orderId: orderId);
+
+      final responseData = response.data;
+      if (responseData == null) {
+        throw const RepositoryError(
+          'Failed to get unread count',
+          code: ErrorCode.internalServerError,
+        );
+      }
+
+      return SuccessResponse(
+        data: responseData.data.unreadCount,
+        message: responseData.message,
+      );
+    });
+  }
+
+  Future<BaseResponse<void>> markAsRead(MarkChatAsReadRequest request) {
+    return guard(() async {
+      final orderApi = _apiClient.getOrderApi();
+      await orderApi.chatMarkAsRead(
+        markChatAsRead: MarkChatAsRead(
+          orderId: request.orderId,
+          lastReadMessageId: request.lastReadMessageId,
+        ),
+      );
+
+      return const SuccessResponse(data: null, message: 'Marked as read');
     });
   }
 }

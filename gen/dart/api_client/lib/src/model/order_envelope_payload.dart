@@ -7,6 +7,7 @@ import 'package:api_client/src/model/order_envelope_payload_done.dart';
 import 'package:api_client/src/model/order_envelope_payload_detail.dart';
 import 'package:api_client/src/model/order_envelope_payload_retry_info.dart';
 import 'package:api_client/src/model/order_envelope_payload_driver_update_location.dart';
+import 'package:api_client/src/model/order_envelope_payload_chat_unread_count.dart';
 import 'package:api_client/src/model/driver.dart';
 import 'package:api_client/src/model/order_envelope_payload_merchant_action.dart';
 import 'package:api_client/src/model/order_envelope_payload_no_show.dart';
@@ -31,6 +32,7 @@ class OrderEnvelopePayload {
     this.driverUpdateLocation,
     this.done,
     this.message,
+    this.chatUnreadCount,
     this.merchantAction,
     this.cancelReason,
     this.noShow,
@@ -50,6 +52,9 @@ class OrderEnvelopePayload {
 
   @JsonKey(name: r'message', required: false, includeIfNull: false)
   final OrderEnvelopePayloadMessage? message;
+
+  @JsonKey(name: r'chatUnreadCount', required: false, includeIfNull: false)
+  final OrderEnvelopePayloadChatUnreadCount? chatUnreadCount;
 
   @JsonKey(name: r'merchantAction', required: false, includeIfNull: false)
   final OrderEnvelopePayloadMerchantAction? merchantAction;
@@ -72,6 +77,7 @@ class OrderEnvelopePayload {
           other.driverUpdateLocation == driverUpdateLocation &&
           other.done == done &&
           other.message == message &&
+          other.chatUnreadCount == chatUnreadCount &&
           other.merchantAction == merchantAction &&
           other.cancelReason == cancelReason &&
           other.noShow == noShow &&
@@ -84,6 +90,7 @@ class OrderEnvelopePayload {
       driverUpdateLocation.hashCode +
       done.hashCode +
       message.hashCode +
+      chatUnreadCount.hashCode +
       merchantAction.hashCode +
       cancelReason.hashCode +
       noShow.hashCode +

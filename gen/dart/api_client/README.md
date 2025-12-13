@@ -244,7 +244,9 @@ Class | Method | HTTP request | Description
 [*NotificationApi*](doc/NotificationApi.md) | [**notificationSaveToken**](doc/NotificationApi.md#notificationsavetoken) | **POST** /notifications/token | 
 [*NotificationApi*](doc/NotificationApi.md) | [**notificationSubscribeToTopic**](doc/NotificationApi.md#notificationsubscribetotopic) | **POST** /notifications/subscribe | 
 [*NotificationApi*](doc/NotificationApi.md) | [**notificationUnsubscribeToTopic**](doc/NotificationApi.md#notificationunsubscribetotopic) | **POST** /notifications/unsubscribe | 
+[*OrderApi*](doc/OrderApi.md) | [**chatGetUnreadCount**](doc/OrderApi.md#chatgetunreadcount) | **GET** /chat/unread-count | 
 [*OrderApi*](doc/OrderApi.md) | [**chatList**](doc/OrderApi.md#chatlist) | **GET** /chat | 
+[*OrderApi*](doc/OrderApi.md) | [**chatMarkAsRead**](doc/OrderApi.md#chatmarkasread) | **POST** /chat/mark-read | 
 [*OrderApi*](doc/OrderApi.md) | [**chatSend**](doc/OrderApi.md#chatsend) | **POST** /chat | 
 [*OrderApi*](doc/OrderApi.md) | [**orderCancel**](doc/OrderApi.md#ordercancel) | **POST** /orders/{id}/cancel | 
 [*OrderApi*](doc/OrderApi.md) | [**orderCancelScheduledOrder**](doc/OrderApi.md#ordercancelscheduledorder) | **POST** /orders/scheduled/{id}/cancel | 
@@ -386,10 +388,13 @@ Class | Method | HTTP request | Description
  - [Cart](doc/Cart.md)
  - [CartItem](doc/CartItem.md)
  - [ChartDataPoint](doc/ChartDataPoint.md)
+ - [ChatGetUnreadCount200Response](doc/ChatGetUnreadCount200Response.md)
  - [ChatList200Response](doc/ChatList200Response.md)
  - [ChatList200ResponseData](doc/ChatList200ResponseData.md)
+ - [ChatMarkAsRead200Response](doc/ChatMarkAsRead200Response.md)
  - [ChatSend200Response](doc/ChatSend200Response.md)
  - [ChatSenderRole](doc/ChatSenderRole.md)
+ - [ChatUnreadCount](doc/ChatUnreadCount.md)
  - [CommissionReportPeriod](doc/CommissionReportPeriod.md)
  - [CommissionReportQuery](doc/CommissionReportQuery.md)
  - [CommissionReportResponse](doc/CommissionReportResponse.md)
@@ -553,6 +558,7 @@ Class | Method | HTTP request | Description
  - [ListDriverQuizQuestionQuery](doc/ListDriverQuizQuestionQuery.md)
  - [ListQuickMessageQuery](doc/ListQuickMessageQuery.md)
  - [Location](doc/Location.md)
+ - [MarkChatAsRead](doc/MarkChatAsRead.md)
  - [Merchant](doc/Merchant.md)
  - [MerchantAnalytics200Response](doc/MerchantAnalytics200Response.md)
  - [MerchantAnalytics200ResponseData](doc/MerchantAnalytics200ResponseData.md)
@@ -609,11 +615,13 @@ Class | Method | HTTP request | Description
  - [OrderChatMessage](doc/OrderChatMessage.md)
  - [OrderChatMessageListQuery](doc/OrderChatMessageListQuery.md)
  - [OrderChatMessageSender](doc/OrderChatMessageSender.md)
+ - [OrderChatReadStatus](doc/OrderChatReadStatus.md)
  - [OrderDriver](doc/OrderDriver.md)
  - [OrderEnvelope](doc/OrderEnvelope.md)
  - [OrderEnvelopeAction](doc/OrderEnvelopeAction.md)
  - [OrderEnvelopeEvent](doc/OrderEnvelopeEvent.md)
  - [OrderEnvelopePayload](doc/OrderEnvelopePayload.md)
+ - [OrderEnvelopePayloadChatUnreadCount](doc/OrderEnvelopePayloadChatUnreadCount.md)
  - [OrderEnvelopePayloadDetail](doc/OrderEnvelopePayloadDetail.md)
  - [OrderEnvelopePayloadDone](doc/OrderEnvelopePayloadDone.md)
  - [OrderEnvelopePayloadDriverUpdateLocation](doc/OrderEnvelopePayloadDriverUpdateLocation.md)

@@ -60,9 +60,12 @@ import 'package:api_client/src/model/business_configuration.dart';
 import 'package:api_client/src/model/cart.dart';
 import 'package:api_client/src/model/cart_item.dart';
 import 'package:api_client/src/model/chart_data_point.dart';
+import 'package:api_client/src/model/chat_get_unread_count200_response.dart';
 import 'package:api_client/src/model/chat_list200_response.dart';
 import 'package:api_client/src/model/chat_list200_response_data.dart';
+import 'package:api_client/src/model/chat_mark_as_read200_response.dart';
 import 'package:api_client/src/model/chat_send200_response.dart';
+import 'package:api_client/src/model/chat_unread_count.dart';
 import 'package:api_client/src/model/commission_report_query.dart';
 import 'package:api_client/src/model/commission_report_response.dart';
 import 'package:api_client/src/model/commission_transaction.dart';
@@ -200,6 +203,7 @@ import 'package:api_client/src/model/list_driver_quiz_answer_query.dart';
 import 'package:api_client/src/model/list_driver_quiz_question_query.dart';
 import 'package:api_client/src/model/list_quick_message_query.dart';
 import 'package:api_client/src/model/location.dart';
+import 'package:api_client/src/model/mark_chat_as_read.dart';
 import 'package:api_client/src/model/merchant.dart';
 import 'package:api_client/src/model/merchant_analytics200_response.dart';
 import 'package:api_client/src/model/merchant_analytics200_response_data.dart';
@@ -247,9 +251,11 @@ import 'package:api_client/src/model/order_cancel_request.dart';
 import 'package:api_client/src/model/order_chat_message.dart';
 import 'package:api_client/src/model/order_chat_message_list_query.dart';
 import 'package:api_client/src/model/order_chat_message_sender.dart';
+import 'package:api_client/src/model/order_chat_read_status.dart';
 import 'package:api_client/src/model/order_driver.dart';
 import 'package:api_client/src/model/order_envelope.dart';
 import 'package:api_client/src/model/order_envelope_payload.dart';
+import 'package:api_client/src/model/order_envelope_payload_chat_unread_count.dart';
 import 'package:api_client/src/model/order_envelope_payload_detail.dart';
 import 'package:api_client/src/model/order_envelope_payload_done.dart';
 import 'package:api_client/src/model/order_envelope_payload_driver_update_location.dart';
@@ -624,16 +630,27 @@ ReturnType deserialize<ReturnType, BaseType>(
     case 'ChartDataPoint':
       return ChartDataPoint.fromJson(value as Map<String, dynamic>)
           as ReturnType;
+    case 'ChatGetUnreadCount200Response':
+      return ChatGetUnreadCount200Response.fromJson(
+            value as Map<String, dynamic>,
+          )
+          as ReturnType;
     case 'ChatList200Response':
       return ChatList200Response.fromJson(value as Map<String, dynamic>)
           as ReturnType;
     case 'ChatList200ResponseData':
       return ChatList200ResponseData.fromJson(value as Map<String, dynamic>)
           as ReturnType;
+    case 'ChatMarkAsRead200Response':
+      return ChatMarkAsRead200Response.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
     case 'ChatSend200Response':
       return ChatSend200Response.fromJson(value as Map<String, dynamic>)
           as ReturnType;
     case 'ChatSenderRole':
+    case 'ChatUnreadCount':
+      return ChatUnreadCount.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
     case 'CommissionReportPeriod':
     case 'CommissionReportQuery':
       return CommissionReportQuery.fromJson(value as Map<String, dynamic>)
@@ -1149,6 +1166,9 @@ ReturnType deserialize<ReturnType, BaseType>(
           as ReturnType;
     case 'Location':
       return Location.fromJson(value as Map<String, dynamic>) as ReturnType;
+    case 'MarkChatAsRead':
+      return MarkChatAsRead.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
     case 'Merchant':
       return Merchant.fromJson(value as Map<String, dynamic>) as ReturnType;
     case 'MerchantAnalytics200Response':
@@ -1357,6 +1377,9 @@ ReturnType deserialize<ReturnType, BaseType>(
     case 'OrderChatMessageSender':
       return OrderChatMessageSender.fromJson(value as Map<String, dynamic>)
           as ReturnType;
+    case 'OrderChatReadStatus':
+      return OrderChatReadStatus.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
     case 'OrderDriver':
       return OrderDriver.fromJson(value as Map<String, dynamic>) as ReturnType;
     case 'OrderEnvelope':
@@ -1366,6 +1389,11 @@ ReturnType deserialize<ReturnType, BaseType>(
     case 'OrderEnvelopeEvent':
     case 'OrderEnvelopePayload':
       return OrderEnvelopePayload.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
+    case 'OrderEnvelopePayloadChatUnreadCount':
+      return OrderEnvelopePayloadChatUnreadCount.fromJson(
+            value as Map<String, dynamic>,
+          )
           as ReturnType;
     case 'OrderEnvelopePayloadDetail':
       return OrderEnvelopePayloadDetail.fromJson(value as Map<String, dynamic>)

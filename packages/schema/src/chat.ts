@@ -39,6 +39,31 @@ export type OrderChatMessageListQuery = z.infer<
 	typeof OrderChatMessageListQuerySchema
 >;
 
+// --- Read Status Schemas --- //
+
+export const OrderChatReadStatusSchema = z.object({
+	id: z.uuid(),
+	orderId: z.uuid(),
+	userId: z.string(),
+	lastReadMessageId: z.uuid().nullable(),
+	lastReadAt: DateSchema.nullable(),
+	createdAt: DateSchema,
+	updatedAt: DateSchema,
+});
+export type OrderChatReadStatus = z.infer<typeof OrderChatReadStatusSchema>;
+
+export const MarkChatAsReadSchema = z.object({
+	orderId: z.uuid(),
+	lastReadMessageId: z.uuid().optional(),
+});
+export type MarkChatAsRead = z.infer<typeof MarkChatAsReadSchema>;
+
+export const ChatUnreadCountSchema = z.object({
+	orderId: z.uuid(),
+	unreadCount: z.number().int().min(0),
+});
+export type ChatUnreadCount = z.infer<typeof ChatUnreadCountSchema>;
+
 export const ChatSchemaRegistries = {
 	ChatSenderRole: { schema: ChatSenderRoleSchema, strategy: "output" },
 	OrderChatMessage: { schema: OrderChatMessageSchema, strategy: "output" },
@@ -50,4 +75,10 @@ export const ChatSchemaRegistries = {
 		schema: OrderChatMessageListQuerySchema,
 		strategy: "input",
 	},
+	OrderChatReadStatus: {
+		schema: OrderChatReadStatusSchema,
+		strategy: "output",
+	},
+	MarkChatAsRead: { schema: MarkChatAsReadSchema, strategy: "input" },
+	ChatUnreadCount: { schema: ChatUnreadCountSchema, strategy: "output" },
 } satisfies SchemaRegistries;

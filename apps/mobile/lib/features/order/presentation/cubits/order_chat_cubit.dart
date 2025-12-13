@@ -22,6 +22,16 @@ class OrderChatCubit extends BaseCubit<OrderChatState> {
     reset();
     await loadMessages();
     _subscribeToWebSocket(orderId);
+    // Mark messages as read when chat is opened
+    await markAsRead();
+  }
+
+  /// Initialize only for unread count tracking (without loading messages)
+  /// Use this when you just want to show the badge on the chat button
+  Future<void> initUnreadCountOnly(String orderId) async {
+    _currentOrderId = orderId;
+    await getUnreadCount();
+    _subscribeToWebSocket(orderId);
   }
 
   void _subscribeToWebSocket(String orderId) {
@@ -57,39 +67,15 @@ class OrderChatCubit extends BaseCubit<OrderChatState> {
       if (json is! Map<String, dynamic>) return;
 
       final envelope = OrderEnvelope.fromJson(json);
-      if (envelope.e != OrderEnvelopeEvent.CHAT_MESSAGE) return;
 
-      final messagePayload = envelope.p.message;
-      if (messagePayload == null) return;
+      // Handle chat message event
+      if (envelope.e == OrderEnvelopeEvent.CHAT_MESSAGE) {
+        _handleChatMessageEvent(envelope);
+      }
 
-      logger.d(
-        '[OrderChatCubit] Received chat message via WebSocket: '
-        '${messagePayload.id}',
-      );
-
-      // Convert WebSocket message to OrderChatMessage
-      final newMessage = OrderChatMessage(
-        id: messagePayload.id,
-        orderId: messagePayload.orderId,
-        senderId: messagePayload.senderId,
-        message: messagePayload.message,
-        sentAt: messagePayload.sentAt,
-        createdAt: messagePayload.sentAt,
-        updatedAt: messagePayload.sentAt,
-        sender: OrderChatMessageSender(
-          name: messagePayload.senderName,
-          role: _convertSenderRole(messagePayload.senderRole),
-        ),
-      );
-
-      // Add message to state if not already present (avoid duplicates)
-      final existingMessages = state.messages.value ?? [];
-      final isDuplicate = existingMessages.any((m) => m.id == newMessage.id);
-      if (!isDuplicate) {
-        final updatedMessages = [newMessage, ...existingMessages];
-        emit(
-          state.copyWith(messages: OperationResult.success(updatedMessages)),
-        );
+      // Handle unread count update event
+      if (envelope.e == OrderEnvelopeEvent.CHAT_UNREAD_COUNT) {
+        _handleUnreadCountEvent(envelope);
       }
     } catch (e, st) {
       logger.e(
@@ -98,6 +84,58 @@ class OrderChatCubit extends BaseCubit<OrderChatState> {
         stackTrace: st,
       );
     }
+  }
+
+  void _handleChatMessageEvent(OrderEnvelope envelope) {
+    final messagePayload = envelope.p.message;
+    if (messagePayload == null) return;
+
+    logger.d(
+      '[OrderChatCubit] Received chat message via WebSocket: '
+      '${messagePayload.id}',
+    );
+
+    // Convert WebSocket message to OrderChatMessage
+    final newMessage = OrderChatMessage(
+      id: messagePayload.id,
+      orderId: messagePayload.orderId,
+      senderId: messagePayload.senderId,
+      message: messagePayload.message,
+      sentAt: messagePayload.sentAt,
+      createdAt: messagePayload.sentAt,
+      updatedAt: messagePayload.sentAt,
+      sender: OrderChatMessageSender(
+        name: messagePayload.senderName,
+        role: _convertSenderRole(messagePayload.senderRole),
+      ),
+    );
+
+    // Add message to state if not already present (avoid duplicates)
+    final existingMessages = state.messages.value ?? [];
+    final isDuplicate = existingMessages.any((m) => m.id == newMessage.id);
+    if (!isDuplicate) {
+      final updatedMessages = [newMessage, ...existingMessages];
+      emit(state.copyWith(messages: OperationResult.success(updatedMessages)));
+    }
+  }
+
+  void _handleUnreadCountEvent(OrderEnvelope envelope) {
+    final unreadPayload = envelope.p.chatUnreadCount;
+    if (unreadPayload == null) return;
+
+    // Only update if this is for our current order
+    if (unreadPayload.orderId != _currentOrderId) return;
+
+    logger.d(
+      '[OrderChatCubit] Received unread count update via WebSocket: '
+      '${unreadPayload.unreadCount}',
+    );
+
+    emit(
+      state.copyWith(
+        unreadCount: OperationResult.success(unreadPayload.unreadCount),
+      ),
+    );
   }
 
   /// Converts WebSocket sender role enum to ChatSenderRole
@@ -209,4 +247,47 @@ class OrderChatCubit extends BaseCubit<OrderChatState> {
     if (!state.hasMore) return;
     await loadMessages(loadMore: true);
   }
+
+  Future<void> getUnreadCount() async =>
+      await taskManager.execute('ORC-gUC', () async {
+        final orderId = _currentOrderId;
+        if (orderId == null) return;
+
+        try {
+          emit(state.copyWith(unreadCount: const OperationResult.loading()));
+
+          final res = await _orderChatRepository.getUnreadCount(orderId);
+
+          emit(state.copyWith(unreadCount: OperationResult.success(res.data)));
+        } on BaseError catch (e, st) {
+          logger.e(
+            '[OrderChatCubit] - Error getting unread count: ${e.message}',
+            error: e,
+            stackTrace: st,
+          );
+          emit(state.copyWith(unreadCount: OperationResult.failed(e)));
+        }
+      });
+
+  Future<void> markAsRead() async =>
+      await taskManager.execute('ORC-mAR', () async {
+        final orderId = _currentOrderId;
+        if (orderId == null) return;
+
+        try {
+          await _orderChatRepository.markAsRead(
+            MarkChatAsReadRequest(orderId: orderId),
+          );
+
+          // Reset unread count to 0 after marking as read
+          emit(state.copyWith(unreadCount: OperationResult.success(0)));
+        } on BaseError catch (e, st) {
+          logger.e(
+            '[OrderChatCubit] - Error marking as read: ${e.message}',
+            error: e,
+            stackTrace: st,
+          );
+          // Don't emit failure - this is a non-critical operation
+        }
+      });
 }

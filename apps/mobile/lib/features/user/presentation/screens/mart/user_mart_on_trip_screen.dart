@@ -1309,12 +1309,11 @@ class _DriverInfoContent extends StatelessWidget {
                 ],
               ),
             ),
-            // Chat button
+            // Chat button with unread badge
             if (orderId != null)
-              IconButton(
-                icon: const Icon(LucideIcons.messageCircle),
+              ChatButtonWithBadge(
+                orderId: orderId!,
                 onPressed: () => _showChatDialog(context),
-                variance: ButtonVariance.ghost,
               ),
           ],
         ),

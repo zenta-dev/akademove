@@ -47,6 +47,7 @@ export const OrderEnvelopeEventSchema = z.enum([
 	"COMPLETED",
 	"MATCHING",
 	"CHAT_MESSAGE",
+	"CHAT_UNREAD_COUNT",
 	"MERCHANT_ACCEPTED",
 	"MERCHANT_REJECTED",
 	"MERCHANT_PREPARING",
@@ -99,6 +100,13 @@ export const OrderEnvelopePayloadSchema = z.object({
 			senderRole: z.enum(["USER", "DRIVER", "MERCHANT"]),
 			message: z.string(),
 			sentAt: z.date(),
+		})
+		.optional(),
+	chatUnreadCount: z
+		.object({
+			orderId: z.uuid(),
+			userId: z.string(),
+			unreadCount: z.number().int().min(0),
 		})
 		.optional(),
 	merchantAction: z
