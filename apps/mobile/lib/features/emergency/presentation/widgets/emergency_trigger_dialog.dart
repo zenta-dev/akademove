@@ -1,6 +1,6 @@
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/auth/presentation/cubits/auth_cubit.dart';
-import 'package:akademove/features/emergency/presentation/cubits/emergency_cubit.dart';
+import 'package:akademove/features/emergency/presentation/cubits/shared_emergency_cubit.dart';
 import 'package:akademove/l10n/l10n.dart';
 import 'package:api_client/api_client.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -75,7 +75,7 @@ class _EmergencyTriggerDialogState extends State<EmergencyTriggerDialog> {
       return;
     }
 
-    final cubit = context.read<EmergencyCubit>();
+    final cubit = context.read<SharedEmergencyCubit>();
     final userId = context.read<AuthCubit>().state.user.data?.value.id;
 
     if (userId == null) {

@@ -23,7 +23,7 @@ class EmergencyButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<EmergencyCubit, EmergencyState>(
+    return BlocListener<SharedEmergencyCubit, SharedEmergencyState>(
       listener: (context, state) {
         if (state.triggerEmergency.isSuccess) {
           context.showMyToast(
@@ -50,7 +50,7 @@ class EmergencyButton extends StatelessWidget {
 
   void _showEmergencyDialog(BuildContext context) {
     // Capture cubits from parent context before showing dialog
-    final emergencyCubit = context.read<EmergencyCubit>();
+    final emergencyCubit = context.read<SharedEmergencyCubit>();
     final authCubit = context.read<AuthCubit>();
 
     showDialog<void>(

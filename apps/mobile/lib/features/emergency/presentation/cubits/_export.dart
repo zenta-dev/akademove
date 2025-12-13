@@ -1,1 +1,1 @@
-export 'emergency_cubit.dart';
+export 'shared_emergency_cubit.dart';
