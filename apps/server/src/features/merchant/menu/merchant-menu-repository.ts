@@ -145,7 +145,7 @@ export class MerchantMenuRepository extends BaseRepository {
 	}
 
 	async list(
-		query?: UnifiedPaginationQuery & { merchantId?: string },
+		query?: UnifiedPaginationQuery & { merchantId: string },
 	): Promise<ListResult<MerchantMenu>> {
 		try {
 			const {

@@ -61,6 +61,28 @@ class _UserRideOnTripScreenState extends State<UserRideOnTripScreen> {
     final locationCubit = context.read<UserLocationCubit>();
     final currentMarkers = locationCubit.state.markers;
 
+    // Check if driver marker actually changed position
+    final existingDriverMarker = currentMarkers.cast<Marker?>().firstWhere(
+      (m) => m?.markerId.value == "driver",
+      orElse: () => null,
+    );
+
+    if (existingDriverMarker != null) {
+      // Skip update if position hasn't changed significantly
+      const threshold = 0.00001;
+      final latDiff =
+          (existingDriverMarker.position.latitude -
+                  driverMarker.position.latitude)
+              .abs();
+      final lngDiff =
+          (existingDriverMarker.position.longitude -
+                  driverMarker.position.longitude)
+              .abs();
+      if (latDiff < threshold && lngDiff < threshold) {
+        return; // Position hasn't changed enough, skip update
+      }
+    }
+
     // Replace/add driver marker while keeping other markers
     final newMarkers =
         currentMarkers.where((m) => m.markerId.value != "driver").toSet()
@@ -419,7 +441,37 @@ class _UserRideOnTripScreenState extends State<UserRideOnTripScreen> {
       headers: [DefaultAppBar(title: context.l10n.text_on_trip)],
       child: MultiBlocListener(
         listeners: [
-          // Listener for map updates (includes driver location changes)
+          // Listener for driver location changes ONLY - update driver marker without recreating others
+          BlocListener<UserOrderCubit, UserOrderState>(
+            listenWhen: (previous, current) {
+              final prevDriver = previous.currentAssignedDriver.value;
+              final currDriver = current.currentAssignedDriver.value;
+
+              // Only listen for driver location changes (not assignment changes)
+              if (prevDriver?.userId != currDriver?.userId) return false;
+
+              final prevLoc = prevDriver?.currentLocation;
+              final currLoc = currDriver?.currentLocation;
+
+              // Check if location actually changed
+              if (prevLoc == null && currLoc == null) return false;
+              if (prevLoc == null || currLoc == null) return true;
+
+              return prevLoc.x != currLoc.x || prevLoc.y != currLoc.y;
+            },
+            listener: (context, state) {
+              // Only update the driver marker, not all markers
+              final driver = state.currentAssignedDriver.value;
+              final driverLocation = driver?.currentLocation;
+              if (driver != null && driverLocation != null) {
+                _animatedDriverMarker.updateDriverLocation(
+                  driverLocation,
+                  driver: driver,
+                );
+              }
+            },
+          ),
+          // Listener for full map updates (order changes, driver assignment, status changes)
           BlocListener<UserOrderCubit, UserOrderState>(
             listenWhen: (previous, current) {
               final prevDriver = previous.currentAssignedDriver.value;
@@ -430,18 +482,11 @@ class _UserRideOnTripScreenState extends State<UserRideOnTripScreen> {
               // Listen for order changes
               if (prevOrder?.id != currOrder?.id) return true;
 
-              // Listen for driver assignment changes
-              if (prevDriver?.userId != currDriver?.userId) return true;
+              // Listen for order status changes (may need polyline updates)
+              if (prevOrder?.status != currOrder?.status) return true;
 
-              // Listen for driver location changes (for map updates)
-              if (prevDriver?.currentLocation?.x !=
-                  currDriver?.currentLocation?.x) {
-                return true;
-              }
-              if (prevDriver?.currentLocation?.y !=
-                  currDriver?.currentLocation?.y) {
-                return true;
-              }
+              // Listen for driver assignment changes (new driver assigned)
+              if (prevDriver?.userId != currDriver?.userId) return true;
 
               return false;
             },
