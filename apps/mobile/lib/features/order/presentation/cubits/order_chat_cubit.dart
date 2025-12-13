@@ -78,8 +78,7 @@ class OrderChatCubit extends BaseCubit<OrderChatState> {
         updatedAt: messagePayload.sentAt,
         sender: OrderChatMessageSender(
           name: messagePayload.senderName,
-          // Note: senderRole will be available after regenerating API client
-          // For now, use a placeholder - the UI will need to handle missing role
+          role: _convertSenderRole(messagePayload.senderRole),
         ),
       );
 
@@ -98,6 +97,20 @@ class OrderChatCubit extends BaseCubit<OrderChatState> {
         error: e,
         stackTrace: st,
       );
+    }
+  }
+
+  /// Converts WebSocket sender role enum to ChatSenderRole
+  ChatSenderRole _convertSenderRole(
+    OrderEnvelopePayloadMessageSenderRoleEnum role,
+  ) {
+    switch (role) {
+      case OrderEnvelopePayloadMessageSenderRoleEnum.USER:
+        return ChatSenderRole.USER;
+      case OrderEnvelopePayloadMessageSenderRoleEnum.DRIVER:
+        return ChatSenderRole.DRIVER;
+      case OrderEnvelopePayloadMessageSenderRoleEnum.MERCHANT:
+        return ChatSenderRole.MERCHANT;
     }
   }
 
