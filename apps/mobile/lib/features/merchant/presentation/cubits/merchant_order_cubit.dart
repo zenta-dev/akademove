@@ -481,7 +481,7 @@ class MerchantOrderCubit extends BaseCubit<MerchantOrderState> {
     required String orderId,
   }) async => await taskManager.execute("MOC2-aO1-$orderId", () async {
     try {
-      emit(state.copyWith(order: const OperationResult.loading()));
+      emit(state.copyWith(acceptOrderResult: const OperationResult.loading()));
 
       final res = await _merchantOrderRepository.acceptOrder(
         merchantId: merchantId,
@@ -500,6 +500,10 @@ class MerchantOrderCubit extends BaseCubit<MerchantOrderState> {
         state.copyWith(
           orders: OperationResult.success(updatedList, message: res.message),
           order: OperationResult.success(res.data, message: res.message),
+          acceptOrderResult: OperationResult.success(
+            res.data,
+            message: res.message,
+          ),
         ),
       );
     } on BaseError catch (e, st) {
@@ -508,7 +512,7 @@ class MerchantOrderCubit extends BaseCubit<MerchantOrderState> {
         error: e,
         stackTrace: st,
       );
-      emit(state.copyWith(order: OperationResult.failed(e)));
+      emit(state.copyWith(acceptOrderResult: OperationResult.failed(e)));
     }
   });
 
@@ -519,7 +523,7 @@ class MerchantOrderCubit extends BaseCubit<MerchantOrderState> {
     String? note,
   }) async => await taskManager.execute("MOC2-rO1-$orderId", () async {
     try {
-      emit(state.copyWith(order: const OperationResult.loading()));
+      emit(state.copyWith(rejectOrderResult: const OperationResult.loading()));
 
       final res = await _merchantOrderRepository.rejectOrder(
         merchantId: merchantId,
@@ -537,6 +541,10 @@ class MerchantOrderCubit extends BaseCubit<MerchantOrderState> {
         state.copyWith(
           orders: OperationResult.success(updatedList, message: res.message),
           order: OperationResult.success(res.data, message: res.message),
+          rejectOrderResult: OperationResult.success(
+            res.data,
+            message: res.message,
+          ),
         ),
       );
     } on BaseError catch (e, st) {
@@ -545,7 +553,7 @@ class MerchantOrderCubit extends BaseCubit<MerchantOrderState> {
         error: e,
         stackTrace: st,
       );
-      emit(state.copyWith(order: OperationResult.failed(e)));
+      emit(state.copyWith(rejectOrderResult: OperationResult.failed(e)));
     }
   });
 
@@ -554,7 +562,9 @@ class MerchantOrderCubit extends BaseCubit<MerchantOrderState> {
     required String orderId,
   }) async => await taskManager.execute("MOC2-mP1-$orderId", () async {
     try {
-      emit(state.copyWith(order: const OperationResult.loading()));
+      emit(
+        state.copyWith(markPreparingResult: const OperationResult.loading()),
+      );
 
       final res = await _merchantOrderRepository.markPreparing(
         merchantId: merchantId,
@@ -573,6 +583,10 @@ class MerchantOrderCubit extends BaseCubit<MerchantOrderState> {
         state.copyWith(
           orders: OperationResult.success(updatedList, message: res.message),
           order: OperationResult.success(res.data, message: res.message),
+          markPreparingResult: OperationResult.success(
+            res.data,
+            message: res.message,
+          ),
         ),
       );
     } on BaseError catch (e, st) {
@@ -581,7 +595,7 @@ class MerchantOrderCubit extends BaseCubit<MerchantOrderState> {
         error: e,
         stackTrace: st,
       );
-      emit(state.copyWith(order: OperationResult.failed(e)));
+      emit(state.copyWith(markPreparingResult: OperationResult.failed(e)));
     }
   });
 
@@ -590,7 +604,7 @@ class MerchantOrderCubit extends BaseCubit<MerchantOrderState> {
     required String orderId,
   }) async => await taskManager.execute("MOC2-mR1-$orderId", () async {
     try {
-      emit(state.copyWith(order: const OperationResult.loading()));
+      emit(state.copyWith(markReadyResult: const OperationResult.loading()));
 
       final res = await _merchantOrderRepository.markReady(
         merchantId: merchantId,
@@ -609,6 +623,10 @@ class MerchantOrderCubit extends BaseCubit<MerchantOrderState> {
         state.copyWith(
           orders: OperationResult.success(updatedList, message: res.message),
           order: OperationResult.success(res.data, message: res.message),
+          markReadyResult: OperationResult.success(
+            res.data,
+            message: res.message,
+          ),
         ),
       );
     } on BaseError catch (e, st) {
@@ -617,7 +635,7 @@ class MerchantOrderCubit extends BaseCubit<MerchantOrderState> {
         error: e,
         stackTrace: st,
       );
-      emit(state.copyWith(order: OperationResult.failed(e)));
+      emit(state.copyWith(markReadyResult: OperationResult.failed(e)));
     }
   });
 }

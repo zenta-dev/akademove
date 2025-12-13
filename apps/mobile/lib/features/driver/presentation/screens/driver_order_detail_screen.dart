@@ -266,12 +266,12 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
           );
         }
 
-        // Show success messages
-        final message = state.updateStatusResult.data != null
-            ? "Status updated"
-            : null;
-        if (message != null && message.isNotEmpty) {
-          context.showMyToast(message, type: ToastType.success);
+        // Show success messages for various actions
+        if (state.acceptOrderResult.isSuccess ||
+            state.markArrivedResult.isSuccess ||
+            state.startTripResult.isSuccess ||
+            state.completeTripResult.isSuccess) {
+          context.showMyToast("Status updated", type: ToastType.success);
         }
 
         // Navigate back when order is completed or cancelled
@@ -891,48 +891,42 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
 
   Widget _buildActionButtons(DriverOrderState state, Order order) {
     final status = state.orderStatus;
-    final isLoading =
-        state.fetchOrderResult.isLoading ||
-        state.updateStatusResult.isLoading ||
-        state.acceptOrderResult.isLoading;
 
     // Pending order - show accept/reject
     if (status == OrderStatus.REQUESTED || status == OrderStatus.MATCHING) {
+      final isAccepting = state.acceptOrderResult.isLoading;
+      final isRejecting = state.rejectOrderResult.isLoading;
+
       return Row(
         spacing: 12.w,
         children: [
           Expanded(
             child: SizedBox(
               width: double.infinity,
-              child: OutlineButton(
-                onPressed: isLoading
-                    ? null
-                    : () => _showRejectDialog(context, order.id),
-                child: isLoading
-                    ? const Submiting()
-                    : Text(context.l10n.reject_order),
+              child: ActionButton.outline(
+                isLoading: isRejecting,
+                enabled: !isAccepting,
+                onPressed: () => _showRejectDialog(context, order.id),
+                child: Text(context.l10n.reject_order),
               ),
             ),
           ),
           Expanded(
             child: SizedBox(
               width: double.infinity,
-              child: PrimaryButton(
-                onPressed: isLoading
-                    ? null
-                    : () {
-                        final orderId = order.id;
-                        final driverId =
-                            context.read<AuthCubit>().state.driver.value?.id ??
-                            '';
-                        context.read<DriverOrderCubit>().acceptOrder(
-                          orderId,
-                          driverId,
-                        );
-                      },
-                child: isLoading
-                    ? const Submiting()
-                    : Text(context.l10n.accept_order),
+              child: ActionButton.primary(
+                isLoading: isAccepting,
+                enabled: !isRejecting,
+                onPressed: () {
+                  final orderId = order.id;
+                  final driverId =
+                      context.read<AuthCubit>().state.driver.value?.id ?? '';
+                  context.read<DriverOrderCubit>().acceptOrder(
+                    orderId,
+                    driverId,
+                  );
+                },
+                child: Text(context.l10n.accept_order),
               ),
             ),
           ),
@@ -942,29 +936,28 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
 
     // Accepted - show arriving button
     if (status == OrderStatus.ACCEPTED) {
+      final isMarkingArrived = state.markArrivedResult.isLoading;
+      final isCanceling = state.cancelOrderResult.isLoading;
+
       return Column(
         spacing: 12.h,
         children: [
           SizedBox(
             width: double.infinity,
-            child: PrimaryButton(
-              onPressed: isLoading
-                  ? null
-                  : () => context.read<DriverOrderCubit>().markArrived(),
-              child: isLoading
-                  ? const Submiting()
-                  : Text(context.l10n.mark_as_arrived),
+            child: ActionButton.primary(
+              isLoading: isMarkingArrived,
+              enabled: !isCanceling,
+              onPressed: () => context.read<DriverOrderCubit>().markArrived(),
+              child: Text(context.l10n.mark_as_arrived),
             ),
           ),
           SizedBox(
             width: double.infinity,
-            child: OutlineButton(
-              onPressed: isLoading
-                  ? null
-                  : () => _showCancelDialog(context, order.id),
-              child: isLoading
-                  ? const Submiting()
-                  : Text(context.l10n.cancel_order),
+            child: ActionButton.outline(
+              isLoading: isCanceling,
+              enabled: !isMarkingArrived,
+              onPressed: () => _showCancelDialog(context, order.id),
+              child: Text(context.l10n.cancel_order),
             ),
           ),
         ],
@@ -973,29 +966,28 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
 
     // Arriving - show start trip button
     if (status == OrderStatus.ARRIVING) {
+      final isStartingTrip = state.startTripResult.isLoading;
+      final isCanceling = state.cancelOrderResult.isLoading;
+
       return Column(
         spacing: 12.h,
         children: [
           SizedBox(
             width: double.infinity,
-            child: PrimaryButton(
-              onPressed: isLoading
-                  ? null
-                  : () => context.read<DriverOrderCubit>().startTrip(),
-              child: isLoading
-                  ? const Submiting()
-                  : Text(context.l10n.start_trip),
+            child: ActionButton.primary(
+              isLoading: isStartingTrip,
+              enabled: !isCanceling,
+              onPressed: () => context.read<DriverOrderCubit>().startTrip(),
+              child: Text(context.l10n.start_trip),
             ),
           ),
           SizedBox(
             width: double.infinity,
-            child: OutlineButton(
-              onPressed: isLoading
-                  ? null
-                  : () => _showCancelDialog(context, order.id),
-              child: isLoading
-                  ? const Submiting()
-                  : Text(context.l10n.cancel_order),
+            child: ActionButton.outline(
+              isLoading: isCanceling,
+              enabled: !isStartingTrip,
+              onPressed: () => _showCancelDialog(context, order.id),
+              child: Text(context.l10n.cancel_order),
             ),
           ),
         ],
@@ -1004,18 +996,17 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
 
     // In trip - show complete trip button
     if (status == OrderStatus.IN_TRIP) {
+      final isCompletingTrip = state.completeTripResult.isLoading;
+
       return SizedBox(
         width: double.infinity,
-        child: PrimaryButton(
-          onPressed: isLoading
-              ? null
-              : () {
-                  context.read<DriverOrderCubit>().completeTrip();
-                  context.read<DriverHomeCubit>().init();
-                },
-          child: isLoading
-              ? const Submiting()
-              : Text(context.l10n.complete_trip),
+        child: ActionButton.primary(
+          isLoading: isCompletingTrip,
+          onPressed: () {
+            context.read<DriverOrderCubit>().completeTrip();
+            context.read<DriverHomeCubit>().init();
+          },
+          child: Text(context.l10n.complete_trip),
         ),
       );
     }
@@ -1036,18 +1027,14 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
                   toUserName: order.user?.name ?? context.l10n.text_customer,
                 );
               },
-              child: isLoading
-                  ? const Submiting()
-                  : Text(context.l10n.rate_customer),
+              child: Text(context.l10n.rate_customer),
             ),
           ),
           SizedBox(
             width: double.infinity,
             child: OutlineButton(
               onPressed: () => context.goNamed(Routes.driverHome.name),
-              child: isLoading
-                  ? const Submiting()
-                  : Text(context.l10n.back_to_home),
+              child: Text(context.l10n.back_to_home),
             ),
           ),
         ],
@@ -1059,7 +1046,7 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
       width: double.infinity,
       child: PrimaryButton(
         onPressed: () => context.goNamed(Routes.driverHome.name),
-        child: isLoading ? const Submiting() : Text(context.l10n.back_to_home),
+        child: Text(context.l10n.back_to_home),
       ),
     );
   }

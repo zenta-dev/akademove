@@ -91,10 +91,10 @@ class DriverOrderCubit extends BaseCubit<DriverOrderState> {
       await taskManager.execute('DOC-rO2-$orderId', () async {
         try {
           emit(
-            state.copyWith(updateStatusResult: const OperationResult.loading()),
+            state.copyWith(rejectOrderResult: const OperationResult.loading()),
           );
 
-          await _orderRepository.update(
+          final res = await _orderRepository.update(
             orderId,
             const UpdateOrder(
               status: OrderStatus.CANCELLED_BY_DRIVER,
@@ -102,64 +102,86 @@ class DriverOrderCubit extends BaseCubit<DriverOrderState> {
             ),
           );
 
-          emit(const DriverOrderState());
+          emit(
+            state.copyWith(
+              rejectOrderResult: OperationResult.success(res.data),
+              currentOrder: res.data,
+              orderStatus: res.data.status,
+            ),
+          );
         } on BaseError catch (e, st) {
           logger.e(
             '[DriverOrderCubit] - Error rejecting order: ${e.message}',
             error: e,
             stackTrace: st,
           );
-          emit(state.copyWith(updateStatusResult: OperationResult.failed(e)));
+          emit(state.copyWith(rejectOrderResult: OperationResult.failed(e)));
         }
       });
 
-  Future<void> updateOrderStatus(OrderStatus newStatus) async =>
-      await taskManager.execute('DOC-uOS5-$newStatus', () async {
+  Future<void> markArrived() async =>
+      await taskManager.execute('DOC-mA-arrived', () async {
         final orderId = _currentOrderId;
         if (orderId == null) return;
 
         try {
           emit(
-            state.copyWith(updateStatusResult: const OperationResult.loading()),
+            state.copyWith(markArrivedResult: const OperationResult.loading()),
           );
 
           final res = await _orderRepository.update(
             orderId,
-            UpdateOrder(status: newStatus),
+            const UpdateOrder(status: OrderStatus.ARRIVING),
           );
 
           emit(
             state.copyWith(
-              updateStatusResult: OperationResult.success(res.data),
+              markArrivedResult: OperationResult.success(res.data),
               currentOrder: res.data,
               orderStatus: res.data.status,
             ),
           );
-
-          if (newStatus == OrderStatus.COMPLETED ||
-              newStatus == OrderStatus.CANCELLED_BY_USER ||
-              newStatus == OrderStatus.CANCELLED_BY_DRIVER ||
-              newStatus == OrderStatus.CANCELLED_BY_SYSTEM) {
-            _stopLocationTracking();
-            await teardownWebSocket();
-          }
         } on BaseError catch (e, st) {
           logger.e(
-            '[DriverOrderCubit] - Error updating order status: ${e.message}',
+            '[DriverOrderCubit] - Error marking arrived: ${e.message}',
             error: e,
             stackTrace: st,
           );
-          emit(state.copyWith(updateStatusResult: OperationResult.failed(e)));
+          emit(state.copyWith(markArrivedResult: OperationResult.failed(e)));
         }
       });
 
-  Future<void> markArrived() async {
-    await updateOrderStatus(OrderStatus.ARRIVING);
-  }
+  Future<void> startTrip() async => await taskManager.execute(
+    'DOC-sT-start',
+    () async {
+      final orderId = _currentOrderId;
+      if (orderId == null) return;
 
-  Future<void> startTrip() async {
-    await updateOrderStatus(OrderStatus.IN_TRIP);
-  }
+      try {
+        emit(state.copyWith(startTripResult: const OperationResult.loading()));
+
+        final res = await _orderRepository.update(
+          orderId,
+          const UpdateOrder(status: OrderStatus.IN_TRIP),
+        );
+
+        emit(
+          state.copyWith(
+            startTripResult: OperationResult.success(res.data),
+            currentOrder: res.data,
+            orderStatus: res.data.status,
+          ),
+        );
+      } on BaseError catch (e, st) {
+        logger.e(
+          '[DriverOrderCubit] - Error starting trip: ${e.message}',
+          error: e,
+          stackTrace: st,
+        );
+        emit(state.copyWith(startTripResult: OperationResult.failed(e)));
+      }
+    },
+  );
 
   /// Complete the trip by sending a WebSocket 'DONE' action.
   /// This triggers server-side commission calculation, driver wallet credit,
@@ -178,7 +200,7 @@ class DriverOrderCubit extends BaseCubit<DriverOrderState> {
     }
 
     try {
-      emit(state.copyWith(updateStatusResult: const OperationResult.loading()));
+      emit(state.copyWith(completeTripResult: const OperationResult.loading()));
 
       // Get current location for the DONE payload
       final permission = await Geolocator.checkPermission();
@@ -187,7 +209,7 @@ class DriverOrderCubit extends BaseCubit<DriverOrderState> {
         logger.w('[DriverOrderCubit] - Location permission denied');
         emit(
           state.copyWith(
-            updateStatusResult: OperationResult.failed(
+            completeTripResult: OperationResult.failed(
               const UnknownError('Location permission required'),
             ),
           ),
@@ -201,7 +223,11 @@ class DriverOrderCubit extends BaseCubit<DriverOrderState> {
         ),
       );
 
-      await updateOrderStatus(OrderStatus.COMPLETED);
+      // Update status via API first
+      final res = await _orderRepository.update(
+        orderId,
+        const UpdateOrder(status: OrderStatus.COMPLETED),
+      );
 
       // Send DONE action via WebSocket to trigger server-side:
       // - Commission calculation
@@ -230,20 +256,14 @@ class DriverOrderCubit extends BaseCubit<DriverOrderState> {
         '[DriverOrderCubit] - Sent DONE action via WebSocket for order: $orderId',
       );
 
-      // Update local state optimistically
-      // The actual confirmation comes via WebSocket COMPLETED event
-      final currentOrder = state.currentOrder;
-      if (currentOrder != null) {
-        emit(
-          state.copyWith(
-            updateStatusResult: OperationResult.success(
-              currentOrder.copyWith(status: OrderStatus.COMPLETED),
-            ),
-            currentOrder: currentOrder.copyWith(status: OrderStatus.COMPLETED),
-            orderStatus: OrderStatus.COMPLETED,
-          ),
-        );
-      }
+      // Update local state with result
+      emit(
+        state.copyWith(
+          completeTripResult: OperationResult.success(res.data),
+          currentOrder: res.data,
+          orderStatus: res.data.status,
+        ),
+      );
 
       _stopLocationTracking();
       // Don't teardown WebSocket immediately - wait for COMPLETED confirmation
@@ -255,7 +275,7 @@ class DriverOrderCubit extends BaseCubit<DriverOrderState> {
       );
       emit(
         state.copyWith(
-          updateStatusResult: OperationResult.failed(
+          completeTripResult: OperationResult.failed(
             e is BaseError ? e : UnknownError(e.toString()),
           ),
         ),
@@ -263,11 +283,40 @@ class DriverOrderCubit extends BaseCubit<DriverOrderState> {
     }
   });
 
-  Future<void> cancelOrder({String? reason}) async {
-    final orderId = _currentOrderId;
-    if (orderId == null) return;
-    await rejectOrder(orderId, reason: reason);
-  }
+  Future<void> cancelOrder({String? reason}) async =>
+      await taskManager.execute('DOC-cO-cancel', () async {
+        final orderId = _currentOrderId;
+        if (orderId == null) return;
+
+        try {
+          emit(
+            state.copyWith(cancelOrderResult: const OperationResult.loading()),
+          );
+
+          final res = await _orderRepository.update(
+            orderId,
+            const UpdateOrder(status: OrderStatus.CANCELLED_BY_DRIVER),
+          );
+
+          emit(
+            state.copyWith(
+              cancelOrderResult: OperationResult.success(res.data),
+              currentOrder: res.data,
+              orderStatus: res.data.status,
+            ),
+          );
+
+          _stopLocationTracking();
+          await teardownWebSocket();
+        } on BaseError catch (e, st) {
+          logger.e(
+            '[DriverOrderCubit] - Error canceling order: ${e.message}',
+            error: e,
+            stackTrace: st,
+          );
+          emit(state.copyWith(cancelOrderResult: OperationResult.failed(e)));
+        }
+      });
 
   /// Upload delivery proof photo (for high-value orders > 100k IDR)
   Future<void> uploadDeliveryProof(
@@ -280,7 +329,7 @@ class DriverOrderCubit extends BaseCubit<DriverOrderState> {
     }
 
     try {
-      emit(state.copyWith(updateStatusResult: const OperationResult.loading()));
+      emit(state.copyWith(uploadProofResult: const OperationResult.loading()));
 
       final res = await _orderRepository.uploadDeliveryProof(
         orderId,
@@ -292,7 +341,7 @@ class DriverOrderCubit extends BaseCubit<DriverOrderState> {
       final currentOrder = state.currentOrder;
       emit(
         state.copyWith(
-          updateStatusResult: currentOrder != null
+          uploadProofResult: currentOrder != null
               ? OperationResult.success(currentOrder)
               : const OperationResult.idle(),
           currentOrder: currentOrder,
@@ -309,7 +358,7 @@ class DriverOrderCubit extends BaseCubit<DriverOrderState> {
         error: e,
         stackTrace: st,
       );
-      emit(state.copyWith(updateStatusResult: OperationResult.failed(e)));
+      emit(state.copyWith(uploadProofResult: OperationResult.failed(e)));
     }
   });
 
@@ -419,7 +468,7 @@ class DriverOrderCubit extends BaseCubit<DriverOrderState> {
             if (completedOrder != null) {
               emit(
                 state.copyWith(
-                  updateStatusResult: OperationResult.success(completedOrder),
+                  completeTripResult: OperationResult.success(completedOrder),
                   currentOrder: completedOrder,
                   orderStatus: completedOrder.status,
                 ),

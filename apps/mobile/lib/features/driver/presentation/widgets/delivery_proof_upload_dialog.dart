@@ -64,16 +64,16 @@ class _DeliveryProofUploadDialogState extends State<DeliveryProofUploadDialog> {
   }
 
   void _onUploadStateChanged(DriverOrderState state) {
-    if (state.updateStatusResult.isSuccess) {
+    if (state.uploadProofResult.isSuccess) {
       Navigator.of(context).pop(true);
       context.showMyToast(
         'Delivery proof uploaded successfully',
         type: ToastType.success,
       );
-    } else if (state.updateStatusResult.isFailure) {
+    } else if (state.uploadProofResult.isFailure) {
       setState(() => _isUploading = false);
       context.showMyToast(
-        state.updateStatusResult.error?.message ??
+        state.uploadProofResult.error?.message ??
             'Failed to upload delivery proof',
         type: ToastType.failed,
       );
@@ -84,7 +84,7 @@ class _DeliveryProofUploadDialogState extends State<DeliveryProofUploadDialog> {
   Widget build(BuildContext context) {
     return BlocListener<DriverOrderCubit, DriverOrderState>(
       listenWhen: (previous, current) =>
-          previous.updateStatusResult != current.updateStatusResult,
+          previous.uploadProofResult != current.uploadProofResult,
       listener: (context, state) => _onUploadStateChanged(state),
       child: AlertDialog(
         title: const Text('Upload Delivery Proof'),

@@ -200,15 +200,14 @@ class _MerchantHomeScreenState extends State<MerchantHomeScreen> {
                     },
                     builder: (context, state) {
                       final isOnline = state.isOnline;
-                      final isLoading =
-                          state.setOnlineStatus.isLoading ||
-                          state.availabilityStatus.isLoading;
+                      // Only listen to setOnlineStatus loading for this button's action
+                      final isTogglingOnline = state.setOnlineStatus.isLoading;
 
                       return IconButton(
-                        onPressed: isLoading
+                        onPressed: isTogglingOnline
                             ? null
                             : () => _onOnlineStatusChanged(!isOnline),
-                        icon: isLoading
+                        icon: isTogglingOnline
                             ? SizedBox(
                                 width: 20.sp,
                                 height: 20.sp,

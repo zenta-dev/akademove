@@ -22,7 +22,6 @@ class MerchantOrderDetailScreen extends StatefulWidget {
 class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
   late Order _currentOrder;
   String? _merchantId;
-  bool _isProcessing = false;
 
   @override
   void initState() {
@@ -80,9 +79,7 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
     await context.read<MerchantOrderCubit>().unsubscribeFromOrder();
   }
 
-  void _handleAcceptOrder() async {
-    if (_isProcessing) return;
-
+  Future<void> _handleAcceptOrder() async {
     final merchantId = _merchantId;
     if (merchantId == null) {
       context.showMyToast(
@@ -111,9 +108,6 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
     );
 
     if (confirmed == true && mounted) {
-      setState(() => _isProcessing = true);
-
-      // Just trigger the cubit action - response handling is done via BlocListener
       context.read<MerchantOrderCubit>().acceptOrder(
         merchantId: merchantId,
         orderId: _currentOrder.id,
@@ -121,9 +115,7 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
     }
   }
 
-  void _handleRejectOrder() async {
-    if (_isProcessing) return;
-
+  Future<void> _handleRejectOrder() async {
     final merchantId = _merchantId;
     if (merchantId == null) {
       context.showMyToast(
@@ -136,9 +128,6 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
     final result = await showOrderRejectionDialog(context: context);
 
     if (result != null && mounted) {
-      setState(() => _isProcessing = true);
-
-      // Just trigger the cubit action - response handling is done via BlocListener
       context.read<MerchantOrderCubit>().rejectOrder(
         merchantId: merchantId,
         orderId: _currentOrder.id,
@@ -149,8 +138,6 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
   }
 
   void _handleMarkPreparing() {
-    if (_isProcessing) return;
-
     final merchantId = _merchantId;
     if (merchantId == null) {
       context.showMyToast(
@@ -160,9 +147,6 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
       return;
     }
 
-    setState(() => _isProcessing = true);
-
-    // Just trigger the cubit action - response handling is done via BlocListener
     context.read<MerchantOrderCubit>().markPreparing(
       merchantId: merchantId,
       orderId: _currentOrder.id,
@@ -170,8 +154,6 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
   }
 
   void _handleMarkReady() {
-    if (_isProcessing) return;
-
     final merchantId = _merchantId;
     if (merchantId == null) {
       context.showMyToast(
@@ -181,9 +163,6 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
       return;
     }
 
-    setState(() => _isProcessing = true);
-
-    // Just trigger the cubit action - response handling is done via BlocListener
     context.read<MerchantOrderCubit>().markReady(
       merchantId: merchantId,
       orderId: _currentOrder.id,
@@ -461,7 +440,7 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
     }
   }
 
-  Widget? _buildActionButtons(BuildContext context) {
+  Widget? _buildActionButtons(BuildContext context, MerchantOrderState state) {
     final status = _currentOrder.status;
 
     // Only show actions for food orders that belong to this merchant
@@ -470,6 +449,12 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
       return null;
     }
 
+    // Extract action-specific loading states
+    final isAccepting = state.acceptOrderResult.isLoading;
+    final isRejecting = state.rejectOrderResult.isLoading;
+    final isPreparing = state.markPreparingResult.isLoading;
+    final isMarkingReady = state.markReadyResult.isLoading;
+
     Widget? primaryButton;
     Widget? secondaryButton;
 
@@ -477,21 +462,19 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
       case OrderStatus.REQUESTED:
       case OrderStatus.MATCHING:
         // Show accept/reject buttons
-        primaryButton = Button.primary(
-          onPressed: _isProcessing ? null : _handleAcceptOrder,
-          child: _isProcessing
-              ? SizedBox(
-                  width: 20.w,
-                  height: 20.h,
-                  child: const CircularProgressIndicator(),
-                )
-              : Text(
-                  context.l10n.accept_order,
-                  style: context.typography.small.copyWith(fontSize: 16.sp),
-                ),
+        primaryButton = ActionButton.primary(
+          isLoading: isAccepting,
+          enabled: !isRejecting,
+          onPressed: _handleAcceptOrder,
+          child: Text(
+            context.l10n.accept_order,
+            style: context.typography.small.copyWith(fontSize: 16.sp),
+          ),
         );
-        secondaryButton = Button.destructive(
-          onPressed: _isProcessing ? null : _handleRejectOrder,
+        secondaryButton = ActionButton.destructive(
+          isLoading: isRejecting,
+          enabled: !isAccepting,
+          onPressed: _handleRejectOrder,
           child: Text(
             context.l10n.reject_order,
             style: context.typography.small.copyWith(fontSize: 16.sp),
@@ -501,35 +484,25 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
 
       case OrderStatus.ACCEPTED:
         // Show start preparing button
-        primaryButton = Button.primary(
-          onPressed: _isProcessing ? null : _handleMarkPreparing,
-          child: _isProcessing
-              ? SizedBox(
-                  width: 20.w,
-                  height: 20.h,
-                  child: const CircularProgressIndicator(),
-                )
-              : Text(
-                  context.l10n.start_preparing,
-                  style: context.typography.small.copyWith(fontSize: 16.sp),
-                ),
+        primaryButton = ActionButton.primary(
+          isLoading: isPreparing,
+          onPressed: _handleMarkPreparing,
+          child: Text(
+            context.l10n.start_preparing,
+            style: context.typography.small.copyWith(fontSize: 16.sp),
+          ),
         );
         break;
 
       case OrderStatus.PREPARING:
         // Show order ready button
-        primaryButton = Button.primary(
-          onPressed: _isProcessing ? null : _handleMarkReady,
-          child: _isProcessing
-              ? SizedBox(
-                  width: 20.w,
-                  height: 20.h,
-                  child: const CircularProgressIndicator(),
-                )
-              : Text(
-                  context.l10n.order_ready,
-                  style: context.typography.small.copyWith(fontSize: 16.sp),
-                ),
+        primaryButton = ActionButton.primary(
+          isLoading: isMarkingReady,
+          onPressed: _handleMarkReady,
+          child: Text(
+            context.l10n.order_ready,
+            style: context.typography.small.copyWith(fontSize: 16.sp),
+          ),
         );
         break;
 
@@ -577,78 +550,158 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final actionButtons = _buildActionButtons(context);
-
-    return BlocListener<MerchantOrderCubit, MerchantOrderState>(
-      listenWhen: (previous, current) => previous.order != current.order,
-      listener: (context, state) {
-        // Handle loading state end
-        if (!state.order.isLoading && _isProcessing) {
-          setState(() => _isProcessing = false);
-        }
-
-        // Handle success
-        if (state.order.isSuccess) {
-          final selectedOrder = state.order.value;
-          if (selectedOrder != null && selectedOrder.id == _currentOrder.id) {
-            // Check if order was rejected (status changed to cancelled by merchant)
-            final wasRejected =
-                _currentOrder.status != selectedOrder.status &&
-                selectedOrder.status == OrderStatus.CANCELLED_BY_MERCHANT;
-
-            setState(() {
-              _currentOrder = selectedOrder;
-            });
-
-            // Show toast for important events
-            final message = state.order.message;
-            if (message != null && message.isNotEmpty) {
-              context.showMyToast(message, type: ToastType.success);
+    return MultiBlocListener(
+      listeners: [
+        // Listen for accept order result
+        BlocListener<MerchantOrderCubit, MerchantOrderState>(
+          listenWhen: (previous, current) =>
+              previous.acceptOrderResult != current.acceptOrderResult,
+          listener: (context, state) {
+            if (state.acceptOrderResult.isSuccess) {
+              final updatedOrder = state.acceptOrderResult.value;
+              if (updatedOrder != null && updatedOrder.id == _currentOrder.id) {
+                setState(() => _currentOrder = updatedOrder);
+                final message = state.acceptOrderResult.message;
+                if (message != null && message.isNotEmpty) {
+                  context.showMyToast(message, type: ToastType.success);
+                }
+              }
             }
-
-            // Navigate back if order was rejected
-            if (wasRejected) {
-              context.pop();
+            if (state.acceptOrderResult.isFailure) {
+              context.showMyToast(
+                state.acceptOrderResult.error?.message ??
+                    context.l10n.an_error_occurred,
+                type: ToastType.failed,
+              );
             }
-          }
-        }
+          },
+        ),
+        // Listen for reject order result
+        BlocListener<MerchantOrderCubit, MerchantOrderState>(
+          listenWhen: (previous, current) =>
+              previous.rejectOrderResult != current.rejectOrderResult,
+          listener: (context, state) {
+            if (state.rejectOrderResult.isSuccess) {
+              final updatedOrder = state.rejectOrderResult.value;
+              if (updatedOrder != null && updatedOrder.id == _currentOrder.id) {
+                final message = state.rejectOrderResult.message;
+                if (message != null && message.isNotEmpty) {
+                  context.showMyToast(message, type: ToastType.success);
+                }
+                // Navigate back after rejection
+                context.pop();
+              }
+            }
+            if (state.rejectOrderResult.isFailure) {
+              context.showMyToast(
+                state.rejectOrderResult.error?.message ??
+                    context.l10n.an_error_occurred,
+                type: ToastType.failed,
+              );
+            }
+          },
+        ),
+        // Listen for mark preparing result
+        BlocListener<MerchantOrderCubit, MerchantOrderState>(
+          listenWhen: (previous, current) =>
+              previous.markPreparingResult != current.markPreparingResult,
+          listener: (context, state) {
+            if (state.markPreparingResult.isSuccess) {
+              final updatedOrder = state.markPreparingResult.value;
+              if (updatedOrder != null && updatedOrder.id == _currentOrder.id) {
+                setState(() => _currentOrder = updatedOrder);
+                final message = state.markPreparingResult.message;
+                if (message != null && message.isNotEmpty) {
+                  context.showMyToast(message, type: ToastType.success);
+                }
+              }
+            }
+            if (state.markPreparingResult.isFailure) {
+              context.showMyToast(
+                state.markPreparingResult.error?.message ??
+                    context.l10n.an_error_occurred,
+                type: ToastType.failed,
+              );
+            }
+          },
+        ),
+        // Listen for mark ready result
+        BlocListener<MerchantOrderCubit, MerchantOrderState>(
+          listenWhen: (previous, current) =>
+              previous.markReadyResult != current.markReadyResult,
+          listener: (context, state) {
+            if (state.markReadyResult.isSuccess) {
+              final updatedOrder = state.markReadyResult.value;
+              if (updatedOrder != null && updatedOrder.id == _currentOrder.id) {
+                setState(() => _currentOrder = updatedOrder);
+                final message = state.markReadyResult.message;
+                if (message != null && message.isNotEmpty) {
+                  context.showMyToast(message, type: ToastType.success);
+                }
+              }
+            }
+            if (state.markReadyResult.isFailure) {
+              context.showMyToast(
+                state.markReadyResult.error?.message ??
+                    context.l10n.an_error_occurred,
+                type: ToastType.failed,
+              );
+            }
+          },
+        ),
+        // Listen for WebSocket order updates
+        BlocListener<MerchantOrderCubit, MerchantOrderState>(
+          listenWhen: (previous, current) => previous.order != current.order,
+          listener: (context, state) {
+            if (state.order.isSuccess) {
+              final selectedOrder = state.order.value;
+              if (selectedOrder != null &&
+                  selectedOrder.id == _currentOrder.id) {
+                setState(() => _currentOrder = selectedOrder);
+              }
+            }
+          },
+        ),
+      ],
+      child: BlocBuilder<MerchantOrderCubit, MerchantOrderState>(
+        buildWhen: (previous, current) =>
+            previous.acceptOrderResult != current.acceptOrderResult ||
+            previous.rejectOrderResult != current.rejectOrderResult ||
+            previous.markPreparingResult != current.markPreparingResult ||
+            previous.markReadyResult != current.markReadyResult,
+        builder: (context, state) {
+          final actionButtons = _buildActionButtons(context, state);
 
-        // Handle failure
-        if (state.order.isFailure) {
-          context.showMyToast(
-            state.order.error?.message ?? context.l10n.an_error_occurred,
-            type: ToastType.failed,
-          );
-        }
-      },
-      child: Scaffold(
-        headers: [
-          DefaultAppBar(
-            title: context.l10n.order_detail,
-            subtitle: 'F-${_currentOrder.id.prefix(8)}',
-          ),
-        ],
-        footers: [?actionButtons],
-        child: RefreshTrigger(
-          onRefresh: _onRefresh,
-          child: SingleChildScrollView(
-            physics: const AlwaysScrollableScrollPhysics(),
-            child: Padding(
-              padding: EdgeInsets.all(16.dg),
-              child: Column(
-                spacing: 16.h,
-                children: [
-                  _buildCustomerInfo(context),
-                  _buildDriverInfo(context),
-                  _buildOrderDetails(context),
-                  _buildOrderInfo(context),
-                  // Add bottom padding if there are action buttons
-                  if (actionButtons != null) SizedBox(height: 80.h),
-                ],
+          return Scaffold(
+            headers: [
+              DefaultAppBar(
+                title: context.l10n.order_detail,
+                subtitle: 'F-${_currentOrder.id.prefix(8)}',
+              ),
+            ],
+            footers: [?actionButtons],
+            child: RefreshTrigger(
+              onRefresh: _onRefresh,
+              child: SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                child: Padding(
+                  padding: EdgeInsets.all(16.dg),
+                  child: Column(
+                    spacing: 16.h,
+                    children: [
+                      _buildCustomerInfo(context),
+                      _buildDriverInfo(context),
+                      _buildOrderDetails(context),
+                      _buildOrderInfo(context),
+                      // Add bottom padding if there are action buttons
+                      if (actionButtons != null) SizedBox(height: 80.h),
+                    ],
+                  ),
+                ),
               ),
             ),
-          ),
-        ),
+          );
+        },
       ),
     );
   }
