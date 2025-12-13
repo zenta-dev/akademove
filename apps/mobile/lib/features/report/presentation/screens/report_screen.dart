@@ -44,7 +44,7 @@ class _ReportUserScreenState extends State<ReportUserScreen> {
     final category = _selectedCategory;
     if (category == null) return;
 
-    context.read<ReportCubit>().submitReport(
+    context.read<SharedReportCubit>().submitReport(
       targetUserId: widget.targetUserId,
       category: category,
       description: _descriptionController.text.trim(),
@@ -56,7 +56,7 @@ class _ReportUserScreenState extends State<ReportUserScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       headers: [DefaultAppBar(title: context.l10n.report_user)],
-      child: BlocListener<ReportCubit, ReportState>(
+      child: BlocListener<SharedReportCubit, SharedReportState>(
         listenWhen: (previous, current) => previous.status != current.status,
         listener: (context, state) {
           if (state.status.isSuccess) {
@@ -265,7 +265,7 @@ class _ReportUserScreenState extends State<ReportUserScreen> {
   }
 
   Widget _buildSubmitButton() {
-    return BlocBuilder<ReportCubit, ReportState>(
+    return BlocBuilder<SharedReportCubit, SharedReportState>(
       builder: (context, state) {
         return SizedBox(
           width: double.infinity,
