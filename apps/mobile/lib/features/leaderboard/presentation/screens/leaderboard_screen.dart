@@ -26,12 +26,12 @@ class _LeaderboardViewState extends State<_LeaderboardView> {
   final int _tabIndex = 0;
 
   Future<void> _onRefresh() async {
-    await context.read<LeaderboardCubit>().refresh();
+    await context.read<DriverLeaderboardCubit>().refresh();
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<LeaderboardCubit, LeaderboardState>(
+    return BlocBuilder<DriverLeaderboardCubit, DriverLeaderboardState>(
       builder: (context, state) {
         return Scaffold(
           headers: [DefaultAppBar(title: context.l10n.leaderboard_title)],
@@ -48,7 +48,7 @@ class _LeaderboardViewState extends State<_LeaderboardView> {
     );
   }
 
-  Widget _buildBody(BuildContext context, LeaderboardState state) {
+  Widget _buildBody(BuildContext context, DriverLeaderboardState state) {
     if (state.leaderboards.isLoading) {
       return const Center(child: CircularProgressIndicator());
     }
@@ -64,7 +64,7 @@ class _LeaderboardViewState extends State<_LeaderboardView> {
             ),
             SizedBox(height: 16.h),
             PrimaryButton(
-              onPressed: () => context.read<LeaderboardCubit>().init(),
+              onPressed: () => context.read<DriverLeaderboardCubit>().init(),
               child: Text(context.l10n.retry),
             ),
           ],
@@ -75,7 +75,7 @@ class _LeaderboardViewState extends State<_LeaderboardView> {
     return _buildLeaderboardTab(state);
   }
 
-  Widget _buildLeaderboardTab(LeaderboardState state) {
+  Widget _buildLeaderboardTab(DriverLeaderboardState state) {
     final leaderboards = state.leaderboards.value ?? [];
 
     if (leaderboards.isEmpty) {
@@ -92,7 +92,7 @@ class _LeaderboardViewState extends State<_LeaderboardView> {
     );
   }
 
-  Widget _buildBadgesTab(LeaderboardState state) {
+  Widget _buildBadgesTab(DriverLeaderboardState state) {
     final badges = state.badges.value ?? [];
     final userBadges = state.userBadges.value ?? [];
 
