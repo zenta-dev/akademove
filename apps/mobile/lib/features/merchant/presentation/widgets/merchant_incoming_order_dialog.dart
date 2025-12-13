@@ -467,6 +467,15 @@ class _MerchantIncomingOrderListenerState
   }
 
   void _showIncomingOrderDialog(BuildContext context, Order order) {
+    var isDialogClosed = false;
+
+    void closeDialog(BuildContext dialogContext) {
+      if (!isDialogClosed && dialogContext.mounted) {
+        isDialogClosed = true;
+        Navigator.of(dialogContext).pop();
+      }
+    }
+
     showDialog<void>(
       context: context,
       barrierDismissible: false,
@@ -483,7 +492,7 @@ class _MerchantIncomingOrderListenerState
           },
           listener: (context, state) {
             // Order was cancelled/unavailable, close dialog
-            Navigator.of(dialogContext).pop();
+            closeDialog(dialogContext);
 
             // Use a post-frame callback to ensure context is still valid
             WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -515,7 +524,7 @@ class _MerchantIncomingOrderListenerState
               }
 
               // Close the dialog - acceptance is in progress
-              Navigator.of(dialogContext).pop();
+              closeDialog(dialogContext);
 
               // Clear incoming order from state
               if (context.mounted) {
@@ -524,7 +533,7 @@ class _MerchantIncomingOrderListenerState
             },
             onReject: () async {
               // Close the dialog first
-              Navigator.of(dialogContext).pop();
+              closeDialog(dialogContext);
 
               // Show rejection dialog to get reason
               final result = await showOrderRejectionDialog(context: context);
