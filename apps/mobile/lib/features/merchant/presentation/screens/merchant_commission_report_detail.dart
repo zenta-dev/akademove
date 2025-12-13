@@ -166,9 +166,13 @@ class _MerchantCommissionReportDetailScreenState
                     height: 40.w,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(8),
-                      image: const DecorationImage(
-                        image: AssetImage('assets/images/drink.png'),
-                        fit: BoxFit.cover,
+                      color: Colors.gray.shade100,
+                    ),
+                    child: const Center(
+                      child: Icon(
+                        LucideIcons.receipt,
+                        size: 24,
+                        color: Colors.gray,
                       ),
                     ),
                   ),

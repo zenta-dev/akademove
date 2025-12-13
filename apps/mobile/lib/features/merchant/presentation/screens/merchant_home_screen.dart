@@ -38,11 +38,13 @@ class _MerchantHomeScreenState extends State<MerchantHomeScreen> {
 
   // Unsafe navigation to setup screen if outlet not set up
   void checkAndNavigateToSetup() {
-    final merchantState = context.read<MerchantCubit>().state;
+    delay(Duration(seconds: 1), () {
+      final merchantState = context.read<MerchantCubit>().state;
 
-    if (!merchantState.isMerchantOutletSetup) {
-      context.pushNamed(Routes.merchantSetUpOutlet.name);
-    }
+      if (!merchantState.isMerchantOutletSetup) {
+        context.pushNamed(Routes.merchantSetUpOutlet.name);
+      }
+    });
   }
 
   /// Handle online status toggle
