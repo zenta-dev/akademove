@@ -10,6 +10,38 @@ class NotificationCubit extends BaseCubit<NotificationState> {
 
   final NotificationRepository _notificationRepository;
 
+  /// Subscribe to a notification topic (e.g., 'merchant-announcements')
+  Future<void> subscribeToTopic(String topic) async {
+    await taskManager.execute('NC-subscribeToTopic-$topic', () async {
+      try {
+        await _notificationRepository.subscribeToTopic(topic);
+        logger.i('Subscribed to topic: $topic');
+      } on BaseError catch (e, st) {
+        logger.e(
+          'Failed to subscribe to topic: $topic',
+          error: e,
+          stackTrace: st,
+        );
+      }
+    });
+  }
+
+  /// Unsubscribe from a notification topic
+  Future<void> unsubscribeFromTopic(String topic) async {
+    await taskManager.execute('NC-unsubscribeFromTopic-$topic', () async {
+      try {
+        await _notificationRepository.unsubscribeFromTopic(topic);
+        logger.i('Unsubscribed from topic: $topic');
+      } on BaseError catch (e, st) {
+        logger.e(
+          'Failed to unsubscribe from topic: $topic',
+          error: e,
+          stackTrace: st,
+        );
+      }
+    });
+  }
+
   /// Get notifications for the current page
   Future<void> getNotifications({int page = 1, bool refresh = false}) async {
     await taskManager.execute('NC-getNotifications', () async {

@@ -229,15 +229,59 @@ class _MerchantHomeScreenState extends State<MerchantHomeScreen> {
                       );
                     },
                   ),
-                  IconButton(
-                    onPressed: () {
-                      context.showMyToast(
-                        context.l10n.notifications,
-                        type: ToastType.info,
+                  BlocBuilder<NotificationCubit, NotificationState>(
+                    builder: (context, state) {
+                      final unreadCount = state.unreadCount.value ?? 0;
+                      return Stack(
+                        clipBehavior: Clip.none,
+                        children: [
+                          IconButton(
+                            onPressed: () {
+                              context.pushNamed(
+                                Routes.merchantNotifications.name,
+                              );
+                            },
+                            icon: Icon(LucideIcons.bell, size: 20.sp),
+                            variance: const ButtonStyle.ghostIcon(),
+                          ),
+                          if (unreadCount > 0)
+                            Positioned(
+                              right: 0,
+                              top: 0,
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: unreadCount > 9 ? 4.w : 6.w,
+                                  vertical: 2.h,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: context.colorScheme.destructive,
+                                  borderRadius: BorderRadius.circular(10.r),
+                                  border: Border.all(
+                                    color: context.colorScheme.background,
+                                    width: 1.5,
+                                  ),
+                                ),
+                                constraints: BoxConstraints(
+                                  minWidth: 18.w,
+                                  minHeight: 18.h,
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    unreadCount > 99
+                                        ? '99+'
+                                        : unreadCount.toString(),
+                                    style: context.typography.xSmall.copyWith(
+                                      color: Colors.white,
+                                      fontSize: 10.sp,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                        ],
                       );
                     },
-                    icon: Icon(LucideIcons.bell, size: 20.sp),
-                    variance: const ButtonStyle.ghostIcon(),
                   ),
                 ],
               ),

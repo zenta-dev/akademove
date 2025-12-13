@@ -385,6 +385,7 @@ class NotificationService {
   /// Handle merchant-specific deep links
   /// akademove://merchant/order
   /// akademove://merchant/home
+  /// akademove://merchant/notifications
   bool _handleMerchantDeepLink(
     List<String> pathSegments,
     Map<String, dynamic> data,
@@ -411,6 +412,10 @@ class NotificationService {
 
       case 'profile':
         router.pushNamed(Routes.merchantProfile.name);
+        return true;
+
+      case 'notifications':
+        router.pushNamed(Routes.merchantNotifications.name);
         return true;
 
       default:

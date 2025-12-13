@@ -48,9 +48,7 @@ class MerchantState extends Equatable {
 
     // Check if merchant has at least one operating hour with isOpen = true
     final hasOperatingHours =
-        operatingHours != null &&
-        operatingHours.isNotEmpty &&
-        operatingHours.any((oh) => oh.isOpen);
+        operatingHours != null && operatingHours.isNotEmpty;
 
     return hasImage && hasOperatingHours;
   }

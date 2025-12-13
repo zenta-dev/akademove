@@ -206,6 +206,19 @@ class OrderChatCubit extends BaseCubit<OrderChatState> {
             stackTrace: st,
           );
           emit(state.copyWith(messages: OperationResult.failed(e)));
+        } catch (e, st) {
+          logger.e(
+            '[OrderChatCubit] - Unexpected error loading messages',
+            error: e,
+            stackTrace: st,
+          );
+          emit(
+            state.copyWith(
+              messages: OperationResult.failed(
+                RepositoryError(e.toString(), code: ErrorCode.unknown),
+              ),
+            ),
+          );
         }
       });
 
@@ -240,6 +253,19 @@ class OrderChatCubit extends BaseCubit<OrderChatState> {
             stackTrace: st,
           );
           emit(state.copyWith(sendMessage: OperationResult.failed(e)));
+        } catch (e, st) {
+          logger.e(
+            '[OrderChatCubit] - Unexpected error sending message',
+            error: e,
+            stackTrace: st,
+          );
+          emit(
+            state.copyWith(
+              sendMessage: OperationResult.failed(
+                RepositoryError(e.toString(), code: ErrorCode.unknown),
+              ),
+            ),
+          );
         }
       });
 
@@ -266,6 +292,19 @@ class OrderChatCubit extends BaseCubit<OrderChatState> {
             stackTrace: st,
           );
           emit(state.copyWith(unreadCount: OperationResult.failed(e)));
+        } catch (e, st) {
+          logger.e(
+            '[OrderChatCubit] - Unexpected error getting unread count',
+            error: e,
+            stackTrace: st,
+          );
+          emit(
+            state.copyWith(
+              unreadCount: OperationResult.failed(
+                RepositoryError(e.toString(), code: ErrorCode.unknown),
+              ),
+            ),
+          );
         }
       });
 

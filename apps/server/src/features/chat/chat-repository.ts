@@ -8,7 +8,7 @@ import type {
 	OrderChatMessageListQuery,
 	OrderChatReadStatus,
 } from "@repo/schema/chat";
-import { and, count, desc, eq, gt, lt } from "drizzle-orm";
+import { and, count, desc, eq, gt, lt, ne } from "drizzle-orm";
 import { v7 } from "uuid";
 import { BaseRepository } from "@/core/base";
 import { CACHE_TTLS } from "@/core/constants";
@@ -327,6 +327,7 @@ export class ChatRepository extends BaseRepository {
 
 	/**
 	 * Get the unread message count for a user in an order chat
+	 * Only counts messages sent by OTHER participants (not the user's own messages)
 	 */
 	async getUnreadCount(
 		params: { orderId: string; userId: string },
@@ -344,7 +345,7 @@ export class ChatRepository extends BaseRepository {
 			let unreadCount = 0;
 
 			if (readStatus?.lastReadMessageId) {
-				// Count messages after the last read message
+				// Count messages after the last read message, excluding user's own messages
 				const [result] = await tx
 					.select({ count: count(tables.orderChatMessage.id) })
 					.from(tables.orderChatMessage)
@@ -352,11 +353,13 @@ export class ChatRepository extends BaseRepository {
 						and(
 							eq(tables.orderChatMessage.orderId, orderId),
 							gt(tables.orderChatMessage.id, readStatus.lastReadMessageId),
+							// Don't count messages sent by the user themselves
+							ne(tables.orderChatMessage.senderId, userId),
 						),
 					);
 				unreadCount = result?.count ?? 0;
 			} else {
-				// No read status exists - all messages except user's own are unread
+				// No read status exists - count all messages except user's own
 				const [result] = await tx
 					.select({ count: count(tables.orderChatMessage.id) })
 					.from(tables.orderChatMessage)
@@ -364,8 +367,7 @@ export class ChatRepository extends BaseRepository {
 						and(
 							eq(tables.orderChatMessage.orderId, orderId),
 							// Don't count messages sent by the user themselves
-							// Actually, we should count all messages for simplicity
-							// Users need to mark as read to reset the count
+							ne(tables.orderChatMessage.senderId, userId),
 						),
 					);
 				unreadCount = result?.count ?? 0;
