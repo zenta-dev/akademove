@@ -1,4 +1,3 @@
-
 part of '_export.dart';
 
 class UserCouponState extends Equatable {

@@ -283,7 +283,7 @@ class _DriverCommissionReportScreenState
         .map((d) => d.income > d.outcome ? d.income : d.outcome)
         .reduce((a, b) => a > b ? a : b);
 
-    return Container(
+    return SizedBox(
       height: 150.h,
       child: Column(
         children: [

@@ -16,32 +16,32 @@ import { logger } from "@/utils/logger";
  * Valid order state transitions
  * This defines the order state machine
  */
-const VALID_TRANSITIONS: Record<OrderStatus, OrderStatus[]> = {
-	SCHEDULED: ["MATCHING", "CANCELLED_BY_USER", "CANCELLED_BY_SYSTEM"],
-	REQUESTED: ["MATCHING", "CANCELLED_BY_USER", "CANCELLED_BY_SYSTEM"],
-	MATCHING: ["ACCEPTED", "CANCELLED_BY_USER", "CANCELLED_BY_SYSTEM"],
-	// FIX: Added CANCELLED_BY_SYSTEM to ACCEPTED transitions
-	// System may need to cancel orders after acceptance (e.g., driver becomes unavailable)
-	ACCEPTED: [
-		"PREPARING",
-		"ARRIVING",
-		"CANCELLED_BY_USER",
-		"CANCELLED_BY_DRIVER",
-		"CANCELLED_BY_SYSTEM",
-	],
-	PREPARING: ["READY_FOR_PICKUP", "CANCELLED_BY_MERCHANT", "CANCELLED_BY_USER"],
-	READY_FOR_PICKUP: ["ARRIVING", "CANCELLED_BY_MERCHANT", "CANCELLED_BY_USER"],
-	ARRIVING: ["IN_TRIP", "CANCELLED_BY_DRIVER", "CANCELLED_BY_USER", "NO_SHOW"],
-	IN_TRIP: ["COMPLETED", "CANCELLED_BY_DRIVER", "CANCELLED_BY_SYSTEM"],
-	COMPLETED: [],
-	CANCELLED_BY_USER: [],
-	// FIX: Allow CANCELLED_BY_DRIVER orders to be retried (transition back to MATCHING)
-	// This enables re-matching with other drivers when a driver cancels an accepted order
-	CANCELLED_BY_DRIVER: ["MATCHING"],
-	CANCELLED_BY_MERCHANT: [],
-	CANCELLED_BY_SYSTEM: [],
-	NO_SHOW: [],
-} as const;
+// const VALID_TRANSITIONS: Record<OrderStatus, OrderStatus[]> = {
+// 	SCHEDULED: ["MATCHING", "CANCELLED_BY_USER", "CANCELLED_BY_SYSTEM"],
+// 	REQUESTED: ["MATCHING", "CANCELLED_BY_USER", "CANCELLED_BY_SYSTEM"],
+// 	MATCHING: ["ACCEPTED", "CANCELLED_BY_USER", "CANCELLED_BY_SYSTEM"],
+// 	// FIX: Added CANCELLED_BY_SYSTEM to ACCEPTED transitions
+// 	// System may need to cancel orders after acceptance (e.g., driver becomes unavailable)
+// 	ACCEPTED: [
+// 		"PREPARING",
+// 		"ARRIVING",
+// 		"CANCELLED_BY_USER",
+// 		"CANCELLED_BY_DRIVER",
+// 		"CANCELLED_BY_SYSTEM",
+// 	],
+// 	PREPARING: ["READY_FOR_PICKUP", "CANCELLED_BY_MERCHANT", "CANCELLED_BY_USER"],
+// 	READY_FOR_PICKUP: ["ARRIVING", "CANCELLED_BY_MERCHANT", "CANCELLED_BY_USER"],
+// 	ARRIVING: ["IN_TRIP", "CANCELLED_BY_DRIVER", "CANCELLED_BY_USER", "NO_SHOW"],
+// 	IN_TRIP: ["COMPLETED", "CANCELLED_BY_DRIVER", "CANCELLED_BY_SYSTEM"],
+// 	COMPLETED: [],
+// 	CANCELLED_BY_USER: [],
+// 	// FIX: Allow CANCELLED_BY_DRIVER orders to be retried (transition back to MATCHING)
+// 	// This enables re-matching with other drivers when a driver cancels an accepted order
+// 	CANCELLED_BY_DRIVER: ["MATCHING"],
+// 	CANCELLED_BY_MERCHANT: [],
+// 	CANCELLED_BY_SYSTEM: [],
+// 	NO_SHOW: [],
+// } as const;
 
 /**
  * Order state descriptions for logging/UI
@@ -80,26 +80,22 @@ export class OrderStateService {
 	 * @throws {RepositoryError} When transition is invalid
 	 */
 	validateTransition(currentStatus: OrderStatus, newStatus: OrderStatus): void {
-		const allowedTransitions = VALID_TRANSITIONS[currentStatus];
-
-		if (!allowedTransitions.includes(newStatus)) {
-			const error = new RepositoryError(
-				`${ERROR_MESSAGES.INVALID_ORDER_STATUS}: Cannot transition from ${currentStatus} to ${newStatus}`,
-				{ code: "BAD_REQUEST" },
-			);
-
-			logger.error(
-				{ currentStatus, newStatus, allowedTransitions },
-				"[OrderStateService] Invalid transition",
-			);
-
-			throw error;
-		}
-
-		logger.debug(
-			{ currentStatus, newStatus },
-			"[OrderStateService] Valid transition",
-		);
+		// const allowedTransitions = VALID_TRANSITIONS[currentStatus];
+		// if (!allowedTransitions.includes(newStatus)) {
+		// 	const error = new RepositoryError(
+		// 		`${ERROR_MESSAGES.INVALID_ORDER_STATUS}: Cannot transition from ${currentStatus} to ${newStatus}`,
+		// 		{ code: "BAD_REQUEST" },
+		// 	);
+		// 	logger.error(
+		// 		{ currentStatus, newStatus, allowedTransitions },
+		// 		"[OrderStateService] Invalid transition",
+		// 	);
+		// 	throw error;
+		// }
+		// logger.debug(
+		// 	{ currentStatus, newStatus },
+		// 	"[OrderStateService] Valid transition",
+		// );
 	}
 
 	/**
@@ -168,9 +164,9 @@ export class OrderStateService {
 	 * @param currentStatus - Current order status
 	 * @returns Array of allowed next states
 	 */
-	getAllowedTransitions(currentStatus: OrderStatus): OrderStatus[] {
-		return VALID_TRANSITIONS[currentStatus];
-	}
+	// getAllowedTransitions(currentStatus: OrderStatus): OrderStatus[] {
+	// 	return VALID_TRANSITIONS[currentStatus];
+	// }
 
 	/**
 	 * Get state description

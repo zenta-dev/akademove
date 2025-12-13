@@ -863,6 +863,7 @@ export class OrderRoom extends BaseDurableObject {
 						orderId: chatMessage.orderId,
 						senderId: chatMessage.senderId,
 						senderName: chatMessage.sender?.name ?? "Unknown",
+						senderRole: chatMessage.sender?.role ?? "USER",
 						message: chatMessage.message,
 						sentAt: chatMessage.sentAt,
 					},
@@ -982,6 +983,16 @@ export class OrderRoom extends BaseDurableObject {
 					refundAmount: toNumberSafe(refundAmount.toString()),
 				},
 				"[OrderRoom] Refund processed for merchant rejection",
+			);
+
+			// Decrement merchant active order count since order is being cancelled
+			await this.#repo.merchant.main.decrementActiveOrderCount(
+				merchantAction.merchantId,
+				opts,
+			);
+			logger.info(
+				{ orderId: updatedOrder.id, merchantId: merchantAction.merchantId },
+				"[OrderRoom] Decremented merchant active order count after rejection",
 			);
 
 			const response: OrderEnvelope = {
@@ -1391,6 +1402,18 @@ export class OrderRoom extends BaseDurableObject {
 				{ isTakingOrder: false },
 				opts,
 			);
+
+			// Decrement merchant active order count if this is a FOOD order
+			if (order.merchantId) {
+				await this.#repo.merchant.main.decrementActiveOrderCount(
+					order.merchantId,
+					opts,
+				);
+				logger.info(
+					{ orderId, merchantId: order.merchantId },
+					"[OrderRoom] Decremented merchant active order count after no-show",
+				);
+			}
 
 			// Notify user about no-show
 			const userWs = this.findById(order.userId);

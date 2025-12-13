@@ -59,9 +59,13 @@ import 'package:api_client/src/model/broadcast_update_request.dart';
 import 'package:api_client/src/model/business_configuration.dart';
 import 'package:api_client/src/model/cart.dart';
 import 'package:api_client/src/model/cart_item.dart';
+import 'package:api_client/src/model/chart_data_point.dart';
 import 'package:api_client/src/model/chat_list200_response.dart';
 import 'package:api_client/src/model/chat_list200_response_data.dart';
 import 'package:api_client/src/model/chat_send200_response.dart';
+import 'package:api_client/src/model/commission_report_query.dart';
+import 'package:api_client/src/model/commission_report_response.dart';
+import 'package:api_client/src/model/commission_transaction.dart';
 import 'package:api_client/src/model/complete_driver_quiz.dart';
 import 'package:api_client/src/model/configuration.dart';
 import 'package:api_client/src/model/configuration_get200_response.dart';
@@ -319,6 +323,7 @@ import 'package:api_client/src/model/support_chat_envelope_payload.dart';
 import 'package:api_client/src/model/support_chat_message.dart';
 import 'package:api_client/src/model/support_chat_message_list_query.dart';
 import 'package:api_client/src/model/support_ticket.dart';
+import 'package:api_client/src/model/support_ticket_assigned_to.dart';
 import 'package:api_client/src/model/support_ticket_list_query.dart';
 import 'package:api_client/src/model/support_ticket_user.dart';
 import 'package:api_client/src/model/suspend_driver.dart';
@@ -369,6 +374,7 @@ import 'package:api_client/src/model/user_rules.dart';
 import 'package:api_client/src/model/va_number.dart';
 import 'package:api_client/src/model/verify_email.dart';
 import 'package:api_client/src/model/wallet.dart';
+import 'package:api_client/src/model/wallet_get_commission_report200_response.dart';
 import 'package:api_client/src/model/wallet_monthly_summary_query.dart';
 import 'package:api_client/src/model/wallet_monthly_summary_response.dart';
 import 'package:api_client/src/model/withdraw_request.dart';
@@ -615,6 +621,9 @@ ReturnType deserialize<ReturnType, BaseType>(
       return Cart.fromJson(value as Map<String, dynamic>) as ReturnType;
     case 'CartItem':
       return CartItem.fromJson(value as Map<String, dynamic>) as ReturnType;
+    case 'ChartDataPoint':
+      return ChartDataPoint.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
     case 'ChatList200Response':
       return ChatList200Response.fromJson(value as Map<String, dynamic>)
           as ReturnType;
@@ -623,6 +632,17 @@ ReturnType deserialize<ReturnType, BaseType>(
           as ReturnType;
     case 'ChatSend200Response':
       return ChatSend200Response.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
+    case 'ChatSenderRole':
+    case 'CommissionReportPeriod':
+    case 'CommissionReportQuery':
+      return CommissionReportQuery.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
+    case 'CommissionReportResponse':
+      return CommissionReportResponse.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
+    case 'CommissionTransaction':
+      return CommissionTransaction.fromJson(value as Map<String, dynamic>)
           as ReturnType;
     case 'CompleteDriverQuiz':
       return CompleteDriverQuiz.fromJson(value as Map<String, dynamic>)
@@ -1611,6 +1631,9 @@ ReturnType deserialize<ReturnType, BaseType>(
     case 'SupportTicket':
       return SupportTicket.fromJson(value as Map<String, dynamic>)
           as ReturnType;
+    case 'SupportTicketAssignedTo':
+      return SupportTicketAssignedTo.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
     case 'SupportTicketCategory':
     case 'SupportTicketKey':
     case 'SupportTicketListQuery':
@@ -1761,6 +1784,11 @@ ReturnType deserialize<ReturnType, BaseType>(
       return VerifyEmail.fromJson(value as Map<String, dynamic>) as ReturnType;
     case 'Wallet':
       return Wallet.fromJson(value as Map<String, dynamic>) as ReturnType;
+    case 'WalletGetCommissionReport200Response':
+      return WalletGetCommissionReport200Response.fromJson(
+            value as Map<String, dynamic>,
+          )
+          as ReturnType;
     case 'WalletKey':
     case 'WalletMonthlySummaryQuery':
       return WalletMonthlySummaryQuery.fromJson(value as Map<String, dynamic>)

@@ -601,6 +601,12 @@ abstract class AppLocalizations {
   /// **'Chat with Customer'**
   String get chat_with_customer;
 
+  /// No description provided for @chat_with_driver.
+  ///
+  /// In en, this message translates to:
+  /// **'Chat with Driver'**
+  String get chat_with_driver;
+
   /// No description provided for @tap_the_phone_number_to_copy_it_then_use_your_phone_app_to_call.
   ///
   /// In en, this message translates to:

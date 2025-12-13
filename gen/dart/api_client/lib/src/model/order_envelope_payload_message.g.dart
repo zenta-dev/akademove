@@ -15,6 +15,10 @@ abstract class _$OrderEnvelopePayloadMessageCWProxy {
 
   OrderEnvelopePayloadMessage senderName(String senderName);
 
+  OrderEnvelopePayloadMessage senderRole(
+    OrderEnvelopePayloadMessageSenderRoleEnum senderRole,
+  );
+
   OrderEnvelopePayloadMessage message(String message);
 
   OrderEnvelopePayloadMessage sentAt(DateTime sentAt);
@@ -31,6 +35,7 @@ abstract class _$OrderEnvelopePayloadMessageCWProxy {
     String orderId,
     String senderId,
     String senderName,
+    OrderEnvelopePayloadMessageSenderRoleEnum senderRole,
     String message,
     DateTime sentAt,
   });
@@ -59,6 +64,11 @@ class _$OrderEnvelopePayloadMessageCWProxyImpl
       call(senderName: senderName);
 
   @override
+  OrderEnvelopePayloadMessage senderRole(
+    OrderEnvelopePayloadMessageSenderRoleEnum senderRole,
+  ) => call(senderRole: senderRole);
+
+  @override
   OrderEnvelopePayloadMessage message(String message) => call(message: message);
 
   @override
@@ -77,6 +87,7 @@ class _$OrderEnvelopePayloadMessageCWProxyImpl
     Object? orderId = const $CopyWithPlaceholder(),
     Object? senderId = const $CopyWithPlaceholder(),
     Object? senderName = const $CopyWithPlaceholder(),
+    Object? senderRole = const $CopyWithPlaceholder(),
     Object? message = const $CopyWithPlaceholder(),
     Object? sentAt = const $CopyWithPlaceholder(),
   }) {
@@ -98,6 +109,11 @@ class _$OrderEnvelopePayloadMessageCWProxyImpl
           ? _value.senderName
           // ignore: cast_nullable_to_non_nullable
           : senderName as String,
+      senderRole:
+          senderRole == const $CopyWithPlaceholder() || senderRole == null
+          ? _value.senderRole
+          // ignore: cast_nullable_to_non_nullable
+          : senderRole as OrderEnvelopePayloadMessageSenderRoleEnum,
       message: message == const $CopyWithPlaceholder() || message == null
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
@@ -132,6 +148,7 @@ OrderEnvelopePayloadMessage _$OrderEnvelopePayloadMessageFromJson(
       'orderId',
       'senderId',
       'senderName',
+      'senderRole',
       'message',
       'sentAt',
     ],
@@ -141,6 +158,10 @@ OrderEnvelopePayloadMessage _$OrderEnvelopePayloadMessageFromJson(
     orderId: $checkedConvert('orderId', (v) => v as String),
     senderId: $checkedConvert('senderId', (v) => v as String),
     senderName: $checkedConvert('senderName', (v) => v as String),
+    senderRole: $checkedConvert(
+      'senderRole',
+      (v) => $enumDecode(_$OrderEnvelopePayloadMessageSenderRoleEnumEnumMap, v),
+    ),
     message: $checkedConvert('message', (v) => v as String),
     sentAt: $checkedConvert('sentAt', (v) => DateTime.parse(v as String)),
   );
@@ -154,6 +175,14 @@ Map<String, dynamic> _$OrderEnvelopePayloadMessageToJson(
   'orderId': instance.orderId,
   'senderId': instance.senderId,
   'senderName': instance.senderName,
+  'senderRole':
+      _$OrderEnvelopePayloadMessageSenderRoleEnumEnumMap[instance.senderRole]!,
   'message': instance.message,
   'sentAt': instance.sentAt.toIso8601String(),
+};
+
+const _$OrderEnvelopePayloadMessageSenderRoleEnumEnumMap = {
+  OrderEnvelopePayloadMessageSenderRoleEnum.USER: 'USER',
+  OrderEnvelopePayloadMessageSenderRoleEnum.DRIVER: 'DRIVER',
+  OrderEnvelopePayloadMessageSenderRoleEnum.MERCHANT: 'MERCHANT',
 };

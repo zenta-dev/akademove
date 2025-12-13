@@ -33,7 +33,7 @@ abstract class _$SupportTicketCWProxy {
 
   SupportTicket user(SupportTicketUser? user);
 
-  SupportTicket assignedTo(OrderChatMessageSender? assignedTo);
+  SupportTicket assignedTo(SupportTicketAssignedTo? assignedTo);
 
   /// Creates a new instance with the provided field values.
   /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `SupportTicket(...).copyWith.fieldName(value)`.
@@ -56,7 +56,7 @@ abstract class _$SupportTicketCWProxy {
     DateTime? createdAt,
     DateTime? updatedAt,
     SupportTicketUser? user,
-    OrderChatMessageSender? assignedTo,
+    SupportTicketAssignedTo? assignedTo,
   });
 }
 
@@ -112,7 +112,7 @@ class _$SupportTicketCWProxyImpl implements _$SupportTicketCWProxy {
   SupportTicket user(SupportTicketUser? user) => call(user: user);
 
   @override
-  SupportTicket assignedTo(OrderChatMessageSender? assignedTo) =>
+  SupportTicket assignedTo(SupportTicketAssignedTo? assignedTo) =>
       call(assignedTo: assignedTo);
 
   @override
@@ -195,7 +195,7 @@ class _$SupportTicketCWProxyImpl implements _$SupportTicketCWProxy {
       assignedTo: assignedTo == const $CopyWithPlaceholder()
           ? _value.assignedTo
           // ignore: cast_nullable_to_non_nullable
-          : assignedTo as OrderChatMessageSender?,
+          : assignedTo as SupportTicketAssignedTo?,
     );
   }
 }
@@ -270,7 +270,7 @@ SupportTicket _$SupportTicketFromJson(Map<String, dynamic> json) =>
           'assignedTo',
           (v) => v == null
               ? null
-              : OrderChatMessageSender.fromJson(v as Map<String, dynamic>),
+              : SupportTicketAssignedTo.fromJson(v as Map<String, dynamic>),
         ),
       );
       return val;

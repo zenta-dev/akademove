@@ -1,5 +1,6 @@
 import { m } from "@repo/i18n";
 import type {
+	ChatSenderRole,
 	InsertOrderChatMessage,
 	OrderChatMessage,
 	OrderChatMessageListQuery,
@@ -16,15 +17,48 @@ import type { OrderChatMessageDatabase } from "@/core/tables/chat";
 import { logger } from "@/utils/logger";
 import { ChatAuthorizationService, ChatCacheService } from "./services";
 
+interface OrderParticipants {
+	userId: string;
+	driverUserId?: string;
+	merchantUserId?: string;
+}
+
 export class ChatRepository extends BaseRepository {
 	constructor(db: DatabaseService, kv: KeyValueService) {
 		super("orderChatMessage", kv, db);
+	}
+
+	/**
+	 * Determine the sender's role based on order participants
+	 */
+	static determineSenderRole(
+		senderId: string,
+		participants: OrderParticipants,
+	): ChatSenderRole {
+		if (senderId === participants.userId) {
+			return "USER";
+		}
+		if (
+			participants.driverUserId !== undefined &&
+			senderId === participants.driverUserId
+		) {
+			return "DRIVER";
+		}
+		if (
+			participants.merchantUserId !== undefined &&
+			senderId === participants.merchantUserId
+		) {
+			return "MERCHANT";
+		}
+		// Default fallback - should not happen in normal flow
+		return "USER";
 	}
 
 	static composeEntity(
 		item: OrderChatMessageDatabase & {
 			sender: { name: string; image: string | null } | null;
 		},
+		senderRole?: ChatSenderRole,
 	): OrderChatMessage {
 		return {
 			...item,
@@ -32,6 +66,7 @@ export class ChatRepository extends BaseRepository {
 				? {
 						name: item.sender.name,
 						image: item.sender.image ?? undefined,
+						role: senderRole ?? "USER",
 					}
 				: undefined,
 		};
@@ -39,6 +74,7 @@ export class ChatRepository extends BaseRepository {
 
 	async #getFromDB(
 		id: string,
+		participants: OrderParticipants,
 		opts?: PartialWithTx,
 	): Promise<OrderChatMessage | undefined> {
 		const result = await (opts?.tx ?? this.db).query.orderChatMessage.findFirst(
@@ -49,7 +85,34 @@ export class ChatRepository extends BaseRepository {
 				where: (f, op) => op.eq(f.id, id),
 			},
 		);
-		return result ? ChatRepository.composeEntity(result) : undefined;
+		if (!result) return undefined;
+		const role = ChatRepository.determineSenderRole(
+			result.senderId,
+			participants,
+		);
+		return ChatRepository.composeEntity(result, role);
+	}
+
+	/**
+	 * Get order participants (userIds) for role determination
+	 */
+	async #getOrderParticipants(
+		orderId: string,
+		opts?: PartialWithTx,
+	): Promise<OrderParticipants | undefined> {
+		const order = await (opts?.tx ?? this.db).query.order.findFirst({
+			where: (f, op) => op.eq(f.id, orderId),
+			with: {
+				driver: { columns: { userId: true } },
+				merchant: { columns: { userId: true } },
+			},
+		});
+		if (!order) return undefined;
+		return {
+			userId: order.userId,
+			driverUserId: order.driver?.userId,
+			merchantUserId: order.merchant?.userId,
+		};
 	}
 
 	async listMessages(
@@ -63,6 +126,14 @@ export class ChatRepository extends BaseRepository {
 		const { orderId, limit = 50, cursor } = query;
 		try {
 			const tx = opts?.tx ?? this.db;
+
+			// Get order participants for role determination
+			const participants = await this.#getOrderParticipants(orderId, opts);
+			if (!participants) {
+				throw new RepositoryError(m.error_order_not_found(), {
+					code: "NOT_FOUND",
+				});
+			}
 
 			const clauses = [eq(tables.orderChatMessage.orderId, orderId)];
 
@@ -79,7 +150,13 @@ export class ChatRepository extends BaseRepository {
 				limit: limit + 1,
 			});
 
-			const mapped = res.map((item) => ChatRepository.composeEntity(item));
+			const mapped = res.map((item) => {
+				const role = ChatRepository.determineSenderRole(
+					item.senderId,
+					participants,
+				);
+				return ChatRepository.composeEntity(item, role);
+			});
 			const hasMore = mapped.length > limit;
 			const rows = hasMore ? mapped.slice(0, limit) : mapped;
 			const nextCursor = hasMore ? rows[rows.length - 1].id : undefined;
@@ -101,9 +178,13 @@ export class ChatRepository extends BaseRepository {
 		try {
 			const now = new Date();
 
-			// Verify order exists
+			// Verify order exists and get participants
 			const order = await opts.tx.query.order.findFirst({
 				where: (f, op) => op.eq(f.id, params.orderId),
+				with: {
+					driver: { columns: { userId: true } },
+					merchant: { columns: { userId: true } },
+				},
 			});
 
 			if (!order) {
@@ -111,6 +192,12 @@ export class ChatRepository extends BaseRepository {
 					code: "NOT_FOUND",
 				});
 			}
+
+			const participants: OrderParticipants = {
+				userId: order.userId,
+				driverUserId: order.driver?.userId,
+				merchantUserId: order.merchant?.userId,
+			};
 
 			// Verify user is authorized (delegated to service)
 			await ChatAuthorizationService.requireOrderParticipant(
@@ -139,7 +226,7 @@ export class ChatRepository extends BaseRepository {
 				})
 				.returning({ id: tables.orderChatMessage.id });
 
-			const message = await this.#getFromDB(result.id, opts);
+			const message = await this.#getFromDB(result.id, participants, opts);
 			if (!message) {
 				throw new RepositoryError(m.error_failed_retrieve_created_message());
 			}

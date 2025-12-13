@@ -11,6 +11,8 @@ abstract class _$OrderChatMessageSenderCWProxy {
 
   OrderChatMessageSender image(String? image);
 
+  OrderChatMessageSender role(ChatSenderRole role);
+
   /// Creates a new instance with the provided field values.
   /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `OrderChatMessageSender(...).copyWith.fieldName(value)`.
   ///
@@ -18,7 +20,11 @@ abstract class _$OrderChatMessageSenderCWProxy {
   /// ```dart
   /// OrderChatMessageSender(...).copyWith(id: 12, name: "My name")
   /// ```
-  OrderChatMessageSender call({String name, String? image});
+  OrderChatMessageSender call({
+    String name,
+    String? image,
+    ChatSenderRole role,
+  });
 }
 
 /// Callable proxy for `copyWith` functionality.
@@ -36,6 +42,9 @@ class _$OrderChatMessageSenderCWProxyImpl
   OrderChatMessageSender image(String? image) => call(image: image);
 
   @override
+  OrderChatMessageSender role(ChatSenderRole role) => call(role: role);
+
+  @override
   /// Creates a new instance with the provided field values.
   /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `OrderChatMessageSender(...).copyWith.fieldName(value)`.
   ///
@@ -46,6 +55,7 @@ class _$OrderChatMessageSenderCWProxyImpl
   OrderChatMessageSender call({
     Object? name = const $CopyWithPlaceholder(),
     Object? image = const $CopyWithPlaceholder(),
+    Object? role = const $CopyWithPlaceholder(),
   }) {
     return OrderChatMessageSender(
       name: name == const $CopyWithPlaceholder() || name == null
@@ -56,6 +66,10 @@ class _$OrderChatMessageSenderCWProxyImpl
           ? _value.image
           // ignore: cast_nullable_to_non_nullable
           : image as String?,
+      role: role == const $CopyWithPlaceholder() || role == null
+          ? _value.role
+          // ignore: cast_nullable_to_non_nullable
+          : role as ChatSenderRole,
     );
   }
 }
@@ -75,14 +89,28 @@ extension $OrderChatMessageSenderCopyWith on OrderChatMessageSender {
 OrderChatMessageSender _$OrderChatMessageSenderFromJson(
   Map<String, dynamic> json,
 ) => $checkedCreate('OrderChatMessageSender', json, ($checkedConvert) {
-  $checkKeys(json, requiredKeys: const ['name']);
+  $checkKeys(json, requiredKeys: const ['name', 'role']);
   final val = OrderChatMessageSender(
     name: $checkedConvert('name', (v) => v as String),
     image: $checkedConvert('image', (v) => v as String?),
+    role: $checkedConvert(
+      'role',
+      (v) => $enumDecode(_$ChatSenderRoleEnumMap, v),
+    ),
   );
   return val;
 });
 
 Map<String, dynamic> _$OrderChatMessageSenderToJson(
   OrderChatMessageSender instance,
-) => <String, dynamic>{'name': instance.name, 'image': ?instance.image};
+) => <String, dynamic>{
+  'name': instance.name,
+  'image': ?instance.image,
+  'role': _$ChatSenderRoleEnumMap[instance.role]!,
+};
+
+const _$ChatSenderRoleEnumMap = {
+  ChatSenderRole.USER: 'USER',
+  ChatSenderRole.DRIVER: 'DRIVER',
+  ChatSenderRole.MERCHANT: 'MERCHANT',
+};

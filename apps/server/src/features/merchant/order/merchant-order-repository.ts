@@ -29,6 +29,8 @@ export class MerchantOrderRepository extends BaseRepository {
 			...item,
 			driverId: item.driverId ?? undefined,
 			merchantId: item.merchantId ?? undefined,
+			pickupAddress: item.pickupAddress ?? undefined,
+			dropoffAddress: item.dropoffAddress ?? undefined,
 			note: item.note ?? undefined,
 			basePrice: toNumberSafe(item.basePrice),
 			totalPrice: toNumberSafe(item.totalPrice),

@@ -21,6 +21,8 @@ final userRouter = StatefulShellRoute.indexedStack(
         BlocProvider(create: (_) => sl<NotificationCubit>()),
         BlocProvider(create: (_) => sl<EmergencyCubit>()),
         BlocProvider(create: (_) => sl<UserCouponCubit>()),
+        BlocProvider(create: (_) => sl<OrderChatCubit>()),
+        BlocProvider(create: (_) => sl<QuickMessageCubit>()),
       ],
       child: BottomNavbar(
         shell: navigationShell,

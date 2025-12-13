@@ -1136,7 +1136,7 @@ class _DriverInfoCard extends StatelessWidget {
       return const _DriverInfoSkeleton();
     }
 
-    return _DriverInfoContent(driver: driver!);
+    return _DriverInfoContent(driver: driver!, orderId: order?.id);
   }
 }
 
@@ -1218,9 +1218,46 @@ class _DriverInfoSkeleton extends StatelessWidget {
 
 /// Driver info content widget
 class _DriverInfoContent extends StatelessWidget {
-  const _DriverInfoContent({required this.driver});
+  const _DriverInfoContent({required this.driver, this.orderId});
 
   final Driver driver;
+  final String? orderId;
+
+  void _showChatDialog(BuildContext context) {
+    if (orderId == null) return;
+    openDrawer(
+      context: context,
+      position: OverlayPosition.bottom,
+      expands: true,
+      builder: (drawerContext) => Container(
+        padding: EdgeInsets.all(16.w),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  context.l10n.chat_with_driver,
+                  style: TextStyle(
+                    fontSize: 18.sp,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                IconButton(
+                  icon: const Icon(LucideIcons.x),
+                  onPressed: () => closeDrawer(drawerContext),
+                  variance: ButtonVariance.ghost,
+                ),
+              ],
+            ),
+            SizedBox(height: 16.h),
+            Expanded(child: OrderChatWidget(orderId: orderId!)),
+          ],
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -1272,6 +1309,13 @@ class _DriverInfoContent extends StatelessWidget {
                 ],
               ),
             ),
+            // Chat button
+            if (orderId != null)
+              IconButton(
+                icon: const Icon(LucideIcons.messageCircle),
+                onPressed: () => _showChatDialog(context),
+                variance: ButtonVariance.ghost,
+              ),
           ],
         ),
       ),

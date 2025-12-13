@@ -5,8 +5,8 @@
 // ignore_for_file: unused_element
 import 'package:api_client/src/model/support_ticket_user.dart';
 import 'package:api_client/src/model/support_ticket_priority.dart';
-import 'package:api_client/src/model/order_chat_message_sender.dart';
 import 'package:api_client/src/model/support_ticket_category.dart';
+import 'package:api_client/src/model/support_ticket_assigned_to.dart';
 import 'package:api_client/src/model/support_ticket_status.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
@@ -78,7 +78,7 @@ class SupportTicket {
   final SupportTicketUser? user;
 
   @JsonKey(name: r'assignedTo', required: false, includeIfNull: false)
-  final OrderChatMessageSender? assignedTo;
+  final SupportTicketAssignedTo? assignedTo;
 
   @override
   bool operator ==(Object other) =>

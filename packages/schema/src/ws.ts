@@ -96,6 +96,7 @@ export const OrderEnvelopePayloadSchema = z.object({
 			orderId: z.uuid(),
 			senderId: z.string(),
 			senderName: z.string(),
+			senderRole: z.enum(["USER", "DRIVER", "MERCHANT"]),
 			message: z.string(),
 			sentAt: z.date(),
 		})

@@ -25,7 +25,7 @@ abstract class _$SupportChatMessageCWProxy {
 
   SupportChatMessage updatedAt(DateTime? updatedAt);
 
-  SupportChatMessage sender(OrderChatMessageSender? sender);
+  SupportChatMessage sender(SupportTicketAssignedTo? sender);
 
   /// Creates a new instance with the provided field values.
   /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `SupportChatMessage(...).copyWith.fieldName(value)`.
@@ -44,7 +44,7 @@ abstract class _$SupportChatMessageCWProxy {
     DateTime? sentAt,
     DateTime? createdAt,
     DateTime? updatedAt,
-    OrderChatMessageSender? sender,
+    SupportTicketAssignedTo? sender,
   });
 }
 
@@ -86,7 +86,7 @@ class _$SupportChatMessageCWProxyImpl implements _$SupportChatMessageCWProxy {
       call(updatedAt: updatedAt);
 
   @override
-  SupportChatMessage sender(OrderChatMessageSender? sender) =>
+  SupportChatMessage sender(SupportTicketAssignedTo? sender) =>
       call(sender: sender);
 
   @override
@@ -150,7 +150,7 @@ class _$SupportChatMessageCWProxyImpl implements _$SupportChatMessageCWProxy {
       sender: sender == const $CopyWithPlaceholder()
           ? _value.sender
           // ignore: cast_nullable_to_non_nullable
-          : sender as OrderChatMessageSender?,
+          : sender as SupportTicketAssignedTo?,
     );
   }
 }
@@ -208,7 +208,7 @@ SupportChatMessage _$SupportChatMessageFromJson(Map<String, dynamic> json) =>
           'sender',
           (v) => v == null
               ? null
-              : OrderChatMessageSender.fromJson(v as Map<String, dynamic>),
+              : SupportTicketAssignedTo.fromJson(v as Map<String, dynamic>),
         ),
       );
       return val;

@@ -3,7 +3,7 @@
 //
 
 // ignore_for_file: unused_element
-import 'package:api_client/src/model/order_chat_message_sender.dart';
+import 'package:api_client/src/model/support_ticket_assigned_to.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
 
@@ -58,7 +58,7 @@ class SupportChatMessage {
   final DateTime? updatedAt;
 
   @JsonKey(name: r'sender', required: false, includeIfNull: false)
-  final OrderChatMessageSender? sender;
+  final SupportTicketAssignedTo? sender;
 
   @override
   bool operator ==(Object other) =>

@@ -264,6 +264,9 @@ class AppLocalizationsId extends AppLocalizations {
   String get chat_with_customer => 'Chat dengan Pelanggan';
 
   @override
+  String get chat_with_driver => 'Chat dengan Driver';
+
+  @override
   String get tap_the_phone_number_to_copy_it_then_use_your_phone_app_to_call => 'Ketuk nomor telepon untuk menyalinnya, lalu gunakan aplikasi telepon Anda untuk menelepon.';
 
   @override

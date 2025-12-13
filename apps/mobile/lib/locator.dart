@@ -212,7 +212,10 @@ void _setupCubit() {
       () => UserCouponCubit(couponRepository: sl<CouponRepository>()),
     )
     ..registerFactory(
-      () => OrderChatCubit(orderChatRepository: sl<OrderChatRepository>()),
+      () => OrderChatCubit(
+        orderChatRepository: sl<OrderChatRepository>(),
+        webSocketService: sl<WebSocketService>(),
+      ),
     )
     ..registerFactory(
       () => UserProfileCubit(userRepository: sl<UserRepository>()),

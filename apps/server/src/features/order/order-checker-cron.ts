@@ -2,7 +2,7 @@ import type { ExecutionContext } from "@cloudflare/workers-types";
 import type { OrderStatus } from "@repo/schema/order";
 import Decimal from "decimal.js";
 import { and, eq, inArray, lte } from "drizzle-orm";
-import { getServices } from "@/core/factory";
+import { getManagers, getRepositories, getServices } from "@/core/factory";
 import { tables } from "@/core/services/db";
 import { BusinessConfigurationService } from "@/features/configuration/services";
 import { OrderRefundService } from "@/features/order/services/order-refund-service";
@@ -32,6 +32,7 @@ export async function handleOrderCheckerCron(
 		);
 
 		const svc = getServices();
+		const repo = getRepositories(svc, getManagers());
 		const stateService = new OrderStateService();
 
 		// Get configurable timeouts from business configuration
@@ -152,6 +153,20 @@ export async function handleOrderCheckerCron(
 						reason: cancelReason,
 						changedAt: now,
 					});
+
+					// Decrement merchant active order count if this is a FOOD order
+					if (order.merchantId) {
+						await repo.merchant.main.decrementActiveOrderCount(
+							order.merchantId,
+							{
+								tx,
+							},
+						);
+						logger.info(
+							{ orderId: order.id, merchantId: order.merchantId },
+							"[OrderCheckerCron] Decremented merchant active order count after REQUESTED timeout",
+						);
+					}
 				});
 
 				logger.info(
@@ -231,6 +246,20 @@ export async function handleOrderCheckerCron(
 						reason: cancelReason,
 						changedAt: now,
 					});
+
+					// Decrement merchant active order count if this is a FOOD order
+					if (order.merchantId) {
+						await repo.merchant.main.decrementActiveOrderCount(
+							order.merchantId,
+							{
+								tx,
+							},
+						);
+						logger.info(
+							{ orderId: order.id, merchantId: order.merchantId },
+							"[OrderCheckerCron] Decremented merchant active order count after MATCHING timeout",
+						);
+					}
 				});
 
 				logger.info(

@@ -139,6 +139,42 @@ class _ChatMessageBubble extends StatelessWidget {
 
   final OrderChatMessage message;
 
+  String _getRoleDisplayName(BuildContext context, ChatSenderRole? role) {
+    if (role == null) return "";
+    switch (role) {
+      case ChatSenderRole.USER:
+        return context.l10n.user_role;
+      case ChatSenderRole.DRIVER:
+        return context.l10n.driver_role;
+      case ChatSenderRole.MERCHANT:
+        return context.l10n.merchant_role;
+    }
+  }
+
+  Color _getRoleBadgeColor(BuildContext context, ChatSenderRole? role) {
+    if (role == null) return context.colorScheme.muted;
+    switch (role) {
+      case ChatSenderRole.USER:
+        return context.colorScheme.primary.withValues(alpha: 0.2);
+      case ChatSenderRole.DRIVER:
+        return Colors.green.withValues(alpha: 0.2);
+      case ChatSenderRole.MERCHANT:
+        return Colors.orange.withValues(alpha: 0.2);
+    }
+  }
+
+  Color _getRoleTextColor(BuildContext context, ChatSenderRole? role) {
+    if (role == null) return context.colorScheme.foreground;
+    switch (role) {
+      case ChatSenderRole.USER:
+        return context.colorScheme.primary;
+      case ChatSenderRole.DRIVER:
+        return Colors.green;
+      case ChatSenderRole.MERCHANT:
+        return Colors.orange;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     // Determine if message is from current user
@@ -147,6 +183,7 @@ class _ChatMessageBubble extends StatelessWidget {
     );
     final isCurrentUser = currentUser?.id == message.senderId;
     final senderName = message.sender?.name ?? 'Unknown';
+    final senderRole = message.sender?.role;
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
@@ -156,11 +193,37 @@ class _ChatMessageBubble extends StatelessWidget {
             : CrossAxisAlignment.start,
         children: [
           if (!isCurrentUser)
-            Text(
-              senderName,
-              style: context.typography.small.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  senderName,
+                  style: context.typography.small.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                if (senderRole != null) ...[
+                  SizedBox(width: 6.w),
+                  Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 6.w,
+                      vertical: 2.h,
+                    ),
+                    decoration: BoxDecoration(
+                      color: _getRoleBadgeColor(context, senderRole),
+                      borderRadius: BorderRadius.circular(4.r),
+                    ),
+                    child: Text(
+                      _getRoleDisplayName(context, senderRole),
+                      style: context.typography.xSmall.copyWith(
+                        fontSize: 10.sp,
+                        fontWeight: FontWeight.w500,
+                        color: _getRoleTextColor(context, senderRole),
+                      ),
+                    ),
+                  ),
+                ],
+              ],
             ),
           SizedBox(height: 4.h),
           Container(

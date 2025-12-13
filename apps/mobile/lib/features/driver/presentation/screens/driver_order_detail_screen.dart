@@ -222,6 +222,13 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
         fromCache: false,
       );
 
+      String pickupTitle = 'Pickup';
+      String dropoffTitle = 'Dropoff';
+      if (context.mounted && mounted) {
+        pickupTitle = context.l10n.pickup_location;
+        dropoffTitle = context.l10n.dropoff_location;
+      }
+
       final newMarkers = <Marker>{}
         ..add(
           Marker(
@@ -230,11 +237,7 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
             icon: BitmapDescriptor.defaultMarkerWithHue(
               BitmapDescriptor.hueGreen,
             ),
-            infoWindow: InfoWindow(
-              title: (context.mounted && mounted)
-                  ? context.l10n.pickup_location
-                  : 'Pickup',
-            ),
+            infoWindow: InfoWindow(title: pickupTitle),
           ),
         )
         ..add(
@@ -244,11 +247,7 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
             icon: BitmapDescriptor.defaultMarkerWithHue(
               BitmapDescriptor.hueRed,
             ),
-            infoWindow: InfoWindow(
-              title: (context.mounted && mounted)
-                  ? context.l10n.dropoff_location
-                  : 'Dropoff',
-            ),
+            infoWindow: InfoWindow(title: dropoffTitle),
           ),
         );
 

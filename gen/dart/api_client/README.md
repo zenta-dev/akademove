@@ -302,6 +302,7 @@ Class | Method | HTTP request | Description
 [*WalletApi*](doc/WalletApi.md) | [**merchantWalletTransfer**](doc/WalletApi.md#merchantwallettransfer) | **POST** /merchants/{merchantId}/wallet/transfer | 
 [*WalletApi*](doc/WalletApi.md) | [**merchantWalletWithdraw**](doc/WalletApi.md#merchantwalletwithdraw) | **POST** /merchants/{merchantId}/wallet/withdraw | 
 [*WalletApi*](doc/WalletApi.md) | [**walletGet**](doc/WalletApi.md#walletget) | **GET** /wallets | 
+[*WalletApi*](doc/WalletApi.md) | [**walletGetCommissionReport**](doc/WalletApi.md#walletgetcommissionreport) | **GET** /wallets/commission-report | 
 [*WalletApi*](doc/WalletApi.md) | [**walletGetMonthlySummary**](doc/WalletApi.md#walletgetmonthlysummary) | **GET** /wallets/summary | 
 [*WalletApi*](doc/WalletApi.md) | [**walletGetSavedBankAccount**](doc/WalletApi.md#walletgetsavedbankaccount) | **GET** /wallets/bank | 
 [*WalletApi*](doc/WalletApi.md) | [**walletPay**](doc/WalletApi.md#walletpay) | **POST** /wallets/pay | 
@@ -384,9 +385,15 @@ Class | Method | HTTP request | Description
  - [BusinessConfiguration](doc/BusinessConfiguration.md)
  - [Cart](doc/Cart.md)
  - [CartItem](doc/CartItem.md)
+ - [ChartDataPoint](doc/ChartDataPoint.md)
  - [ChatList200Response](doc/ChatList200Response.md)
  - [ChatList200ResponseData](doc/ChatList200ResponseData.md)
  - [ChatSend200Response](doc/ChatSend200Response.md)
+ - [ChatSenderRole](doc/ChatSenderRole.md)
+ - [CommissionReportPeriod](doc/CommissionReportPeriod.md)
+ - [CommissionReportQuery](doc/CommissionReportQuery.md)
+ - [CommissionReportResponse](doc/CommissionReportResponse.md)
+ - [CommissionTransaction](doc/CommissionTransaction.md)
  - [CompleteDriverQuiz](doc/CompleteDriverQuiz.md)
  - [Configuration](doc/Configuration.md)
  - [ConfigurationGet200Response](doc/ConfigurationGet200Response.md)
@@ -700,6 +707,7 @@ Class | Method | HTTP request | Description
  - [SupportChatMessage](doc/SupportChatMessage.md)
  - [SupportChatMessageListQuery](doc/SupportChatMessageListQuery.md)
  - [SupportTicket](doc/SupportTicket.md)
+ - [SupportTicketAssignedTo](doc/SupportTicketAssignedTo.md)
  - [SupportTicketCategory](doc/SupportTicketCategory.md)
  - [SupportTicketKey](doc/SupportTicketKey.md)
  - [SupportTicketListQuery](doc/SupportTicketListQuery.md)
@@ -760,6 +768,7 @@ Class | Method | HTTP request | Description
  - [VANumber](doc/VANumber.md)
  - [VerifyEmail](doc/VerifyEmail.md)
  - [Wallet](doc/Wallet.md)
+ - [WalletGetCommissionReport200Response](doc/WalletGetCommissionReport200Response.md)
  - [WalletKey](doc/WalletKey.md)
  - [WalletMonthlySummaryQuery](doc/WalletMonthlySummaryQuery.md)
  - [WalletMonthlySummaryResponse](doc/WalletMonthlySummaryResponse.md)

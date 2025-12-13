@@ -12,6 +12,7 @@ Name | Type | Description | Notes
 **orderId** | **String** |  | 
 **senderId** | **String** |  | 
 **senderName** | **String** |  | 
+**senderRole** | **String** |  | 
 **message** | **String** |  | 
 **sentAt** | [**DateTime**](DateTime.md) |  | 
 

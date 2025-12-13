@@ -3,6 +3,9 @@ import type { SchemaRegistries } from "./common.js";
 import { DateSchema } from "./common.js";
 import { UserSchema } from "./user.js";
 
+export const ChatSenderRoleSchema = z.enum(["USER", "DRIVER", "MERCHANT"]);
+export type ChatSenderRole = z.infer<typeof ChatSenderRoleSchema>;
+
 export const OrderChatMessageSchema = z.object({
 	id: z.uuid(),
 	orderId: z.uuid(),
@@ -13,7 +16,9 @@ export const OrderChatMessageSchema = z.object({
 	updatedAt: DateSchema,
 
 	// relations
-	sender: UserSchema.pick({ name: true, image: true }).optional(),
+	sender: UserSchema.pick({ name: true, image: true })
+		.extend({ role: ChatSenderRoleSchema })
+		.optional(),
 });
 export type OrderChatMessage = z.infer<typeof OrderChatMessageSchema>;
 
@@ -35,6 +40,7 @@ export type OrderChatMessageListQuery = z.infer<
 >;
 
 export const ChatSchemaRegistries = {
+	ChatSenderRole: { schema: ChatSenderRoleSchema, strategy: "output" },
 	OrderChatMessage: { schema: OrderChatMessageSchema, strategy: "output" },
 	InsertOrderChatMessage: {
 		schema: InsertOrderChatMessageSchema,

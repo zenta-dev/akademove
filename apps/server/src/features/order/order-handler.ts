@@ -251,6 +251,10 @@ export const OrderHandler = priv.router({
 		return await context.svc.db.transaction(async (tx) => {
 			// FIX: Sanitize input with trimObjectValues
 			const data = trimObjectValues(body);
+
+			// Get order before cancellation to access merchantId
+			const orderBefore = await context.repo.order.get(params.id, { tx });
+
 			const result = await context.repo.order.cancelOrder(
 				params.id,
 				context.user.id,
@@ -258,6 +262,18 @@ export const OrderHandler = priv.router({
 				data.reason,
 				{ tx },
 			);
+
+			// Decrement merchant active order count if this is a FOOD order
+			if (orderBefore.merchantId) {
+				await context.repo.merchant.main.decrementActiveOrderCount(
+					orderBefore.merchantId,
+					{ tx },
+				);
+				logger.info(
+					{ orderId: params.id, merchantId: orderBefore.merchantId },
+					"[OrderHandler] Decremented merchant active order count after cancellation",
+				);
+			}
 
 			return {
 				status: 200,
@@ -512,6 +528,18 @@ export const OrderHandler = priv.router({
 					data.reason,
 					{ tx },
 				);
+
+				// Decrement merchant active order count if this is a FOOD order
+				if (order.merchantId) {
+					await context.repo.merchant.main.decrementActiveOrderCount(
+						order.merchantId,
+						{ tx },
+					);
+					logger.info(
+						{ orderId: params.id, merchantId: order.merchantId },
+						"[OrderHandler] Decremented merchant active order count after scheduled order cancellation",
+					);
+				}
 
 				logger.info(
 					{

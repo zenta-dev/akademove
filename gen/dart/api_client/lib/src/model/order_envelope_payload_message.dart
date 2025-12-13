@@ -22,6 +22,7 @@ class OrderEnvelopePayloadMessage {
     required this.orderId,
     required this.senderId,
     required this.senderName,
+    required this.senderRole,
     required this.message,
     required this.sentAt,
   });
@@ -37,6 +38,9 @@ class OrderEnvelopePayloadMessage {
   @JsonKey(name: r'senderName', required: true, includeIfNull: false)
   final String senderName;
 
+  @JsonKey(name: r'senderRole', required: true, includeIfNull: false)
+  final OrderEnvelopePayloadMessageSenderRoleEnum senderRole;
+
   @JsonKey(name: r'message', required: true, includeIfNull: false)
   final String message;
 
@@ -51,6 +55,7 @@ class OrderEnvelopePayloadMessage {
           other.orderId == orderId &&
           other.senderId == senderId &&
           other.senderName == senderName &&
+          other.senderRole == senderRole &&
           other.message == message &&
           other.sentAt == sentAt;
 
@@ -60,6 +65,7 @@ class OrderEnvelopePayloadMessage {
       orderId.hashCode +
       senderId.hashCode +
       senderName.hashCode +
+      senderRole.hashCode +
       message.hashCode +
       sentAt.hashCode;
 
@@ -72,4 +78,20 @@ class OrderEnvelopePayloadMessage {
   String toString() {
     return toJson().toString();
   }
+}
+
+enum OrderEnvelopePayloadMessageSenderRoleEnum {
+  @JsonValue(r'USER')
+  USER(r'USER'),
+  @JsonValue(r'DRIVER')
+  DRIVER(r'DRIVER'),
+  @JsonValue(r'MERCHANT')
+  MERCHANT(r'MERCHANT');
+
+  const OrderEnvelopePayloadMessageSenderRoleEnum(this.value);
+
+  final String value;
+
+  @override
+  String toString() => value;
 }

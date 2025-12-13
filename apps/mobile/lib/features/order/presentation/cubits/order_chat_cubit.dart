@@ -1,23 +1,117 @@
+import 'dart:async';
+
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:api_client/api_client.dart';
 
 class OrderChatCubit extends BaseCubit<OrderChatState> {
-  OrderChatCubit({required OrderChatRepository orderChatRepository})
-    : _orderChatRepository = orderChatRepository,
-      super(const OrderChatState());
+  OrderChatCubit({
+    required OrderChatRepository orderChatRepository,
+    required WebSocketService webSocketService,
+  }) : _orderChatRepository = orderChatRepository,
+       _webSocketService = webSocketService,
+       super(const OrderChatState());
 
   final OrderChatRepository _orderChatRepository;
+  final WebSocketService _webSocketService;
   String? _currentOrderId;
+  StreamSubscription<Object?>? _wsSubscription;
 
   Future<void> init(String orderId) async {
     _currentOrderId = orderId;
     reset();
     await loadMessages();
+    _subscribeToWebSocket(orderId);
+  }
+
+  void _subscribeToWebSocket(String orderId) {
+    // Listen for messages from the WebSocket stream
+    // The WebSocket is already connected by the UserOrderCubit/DriverOrderCubit
+    // We just need to listen to it
+    final stream = _webSocketService.stream(orderId);
+    if (stream == null) {
+      logger.d(
+        '[OrderChatCubit] No WebSocket stream for order $orderId, '
+        'messages will update via HTTP only',
+      );
+      return;
+    }
+
+    _wsSubscription?.cancel();
+    _wsSubscription = stream.listen(
+      (data) {
+        if (data is String) {
+          _handleWebSocketMessage(data);
+        }
+      },
+      onError: (Object error) {
+        logger.e('[OrderChatCubit] WebSocket error', error: error);
+      },
+    );
+    logger.d('[OrderChatCubit] Subscribed to WebSocket for order $orderId');
+  }
+
+  void _handleWebSocketMessage(String data) {
+    try {
+      final json = data.parseJson();
+      if (json is! Map<String, dynamic>) return;
+
+      final envelope = OrderEnvelope.fromJson(json);
+      if (envelope.e != OrderEnvelopeEvent.CHAT_MESSAGE) return;
+
+      final messagePayload = envelope.p.message;
+      if (messagePayload == null) return;
+
+      logger.d(
+        '[OrderChatCubit] Received chat message via WebSocket: '
+        '${messagePayload.id}',
+      );
+
+      // Convert WebSocket message to OrderChatMessage
+      final newMessage = OrderChatMessage(
+        id: messagePayload.id,
+        orderId: messagePayload.orderId,
+        senderId: messagePayload.senderId,
+        message: messagePayload.message,
+        sentAt: messagePayload.sentAt,
+        createdAt: messagePayload.sentAt,
+        updatedAt: messagePayload.sentAt,
+        sender: OrderChatMessageSender(
+          name: messagePayload.senderName,
+          // Note: senderRole will be available after regenerating API client
+          // For now, use a placeholder - the UI will need to handle missing role
+        ),
+      );
+
+      // Add message to state if not already present (avoid duplicates)
+      final existingMessages = state.messages.value ?? [];
+      final isDuplicate = existingMessages.any((m) => m.id == newMessage.id);
+      if (!isDuplicate) {
+        final updatedMessages = [newMessage, ...existingMessages];
+        emit(
+          state.copyWith(messages: OperationResult.success(updatedMessages)),
+        );
+      }
+    } catch (e, st) {
+      logger.e(
+        '[OrderChatCubit] Error parsing WebSocket message',
+        error: e,
+        stackTrace: st,
+      );
+    }
   }
 
   void reset() {
+    _wsSubscription?.cancel();
+    _wsSubscription = null;
     emit(const OrderChatState());
+  }
+
+  @override
+  Future<void> close() async {
+    _wsSubscription?.cancel();
+    _wsSubscription = null;
+    return super.close();
   }
 
   Future<void> loadMessages({bool loadMore = false}) async =>

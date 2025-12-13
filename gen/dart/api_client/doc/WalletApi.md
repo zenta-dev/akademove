@@ -24,6 +24,7 @@ Method | HTTP request | Description
 [**merchantWalletTransfer**](WalletApi.md#merchantwallettransfer) | **POST** /merchants/{merchantId}/wallet/transfer | 
 [**merchantWalletWithdraw**](WalletApi.md#merchantwalletwithdraw) | **POST** /merchants/{merchantId}/wallet/withdraw | 
 [**walletGet**](WalletApi.md#walletget) | **GET** /wallets | 
+[**walletGetCommissionReport**](WalletApi.md#walletgetcommissionreport) | **GET** /wallets/commission-report | 
 [**walletGetMonthlySummary**](WalletApi.md#walletgetmonthlysummary) | **GET** /wallets/summary | 
 [**walletGetSavedBankAccount**](WalletApi.md#walletgetsavedbankaccount) | **GET** /wallets/bank | 
 [**walletPay**](WalletApi.md#walletpay) | **POST** /wallets/pay | 
@@ -711,6 +712,53 @@ This endpoint does not need any parameter.
 ### Return type
 
 [**DriverWalletGetWallet200Response**](DriverWalletGetWallet200Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **walletGetCommissionReport**
+> WalletGetCommissionReport200Response walletGetCommissionReport(period, startDate, endDate)
+
+
+
+Get commission report for drivers with balance summary, chart data, and transaction history
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getWalletApi();
+final CommissionReportPeriod period = ; // CommissionReportPeriod | 
+final DateTime startDate = 2013-10-20T19:20:30+01:00; // DateTime | 
+final DateTime endDate = 2013-10-20T19:20:30+01:00; // DateTime | 
+
+try {
+    final response = api.walletGetCommissionReport(period, startDate, endDate);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling WalletApi->walletGetCommissionReport: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **period** | [**CommissionReportPeriod**](.md)|  | [optional] [default to daily]
+ **startDate** | **DateTime**|  | [optional] 
+ **endDate** | **DateTime**|  | [optional] 
+
+### Return type
+
+[**WalletGetCommissionReport200Response**](WalletGetCommissionReport200Response.md)
 
 ### Authorization
 
