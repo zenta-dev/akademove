@@ -1,1 +1,1 @@
-export 'configuration_state.dart';
+export 'shared_configuration_state.dart';

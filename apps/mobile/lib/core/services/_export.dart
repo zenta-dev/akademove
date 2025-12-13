@@ -7,3 +7,4 @@ export 'map_service.dart';
 export 'notification_service.dart';
 export 'state_reset_service.dart';
 export 'websocket_service.dart';
+export 'websocket_sync_service.dart';
