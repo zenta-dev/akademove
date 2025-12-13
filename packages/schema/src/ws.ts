@@ -55,6 +55,9 @@ export const OrderEnvelopeEventSchema = z.enum([
 	"NO_SHOW",
 	"DRIVER_CANCELLED_REMATCHING",
 	"ORDER_STATUS_CHANGED",
+	// Data sync events (replaces polling)
+	"NEW_DATA",
+	"NO_DATA",
 ]);
 export const OrderEnvelopeActionSchema = z.enum([
 	"MATCHING",
@@ -67,6 +70,8 @@ export const OrderEnvelopeActionSchema = z.enum([
 	"MERCHANT_MARK_PREPARING",
 	"MERCHANT_MARK_READY",
 	"REPORT_NO_SHOW",
+	// Data sync action (replaces polling)
+	"CHECK_NEW_DATA",
 ]);
 export const OrderEnvelopePayloadSchema = z.object({
 	detail: z
@@ -132,6 +137,14 @@ export const OrderEnvelopePayloadSchema = z.object({
 			reason: z.string().optional(),
 		})
 		.optional(),
+	// Data sync payload - client sends last known version hash/timestamp
+	// Server compares and responds with NEW_DATA or NO_DATA
+	syncRequest: z
+		.object({
+			orderId: z.uuid(),
+			lastKnownVersion: z.string().optional(), // ISO timestamp or version hash
+		})
+		.optional(),
 });
 export const OrderEnvelopeSchema = createWsMinEnvelopeSchema({
 	event: OrderEnvelopeEventSchema,
@@ -145,13 +158,27 @@ export const PaymentEnvelopeEventSchema = z.enum([
 	"PAYMENT_SUCCESS",
 	"TOP_UP_FAILED",
 	"PAYMENT_FAILED",
+	// Data sync events (replaces polling)
+	"NEW_DATA",
+	"NO_DATA",
 ]);
-export const PaymentEnvelopeActionSchema = z.enum(["NONE"]);
+export const PaymentEnvelopeActionSchema = z.enum([
+	"NONE",
+	// Data sync action (replaces polling)
+	"CHECK_NEW_DATA",
+]);
 export const PaymentEnvelopePayloadSchema = z.object({
 	failReason: z.string().optional(),
-	payment: PaymentSchema,
-	transaction: TransactionSchema,
+	payment: PaymentSchema.optional(),
+	transaction: TransactionSchema.optional(),
 	wallet: WalletSchema.optional(),
+	// Data sync payload
+	syncRequest: z
+		.object({
+			paymentId: z.uuid(),
+			lastKnownVersion: z.string().optional(),
+		})
+		.optional(),
 });
 export const PaymentEnvelopeSchema = createWsMinEnvelopeSchema({
 	event: PaymentEnvelopeEventSchema,
@@ -167,8 +194,15 @@ export const MerchantEnvelopeEventSchema = z.enum([
 	"DRIVER_ASSIGNED",
 	"ORDER_COMPLETED",
 	"ORDER_STATUS_CHANGED",
+	// Data sync events (replaces polling)
+	"NEW_DATA",
+	"NO_DATA",
 ]);
-export const MerchantEnvelopeActionSchema = z.enum(["NONE"]);
+export const MerchantEnvelopeActionSchema = z.enum([
+	"NONE",
+	// Data sync action (replaces polling)
+	"CHECK_NEW_DATA",
+]);
 export const MerchantEnvelopePayloadSchema = z.object({
 	order: OrderSchema.optional(),
 	orderId: z.uuid().optional(),
@@ -178,6 +212,15 @@ export const MerchantEnvelopePayloadSchema = z.object({
 	cancelReason: z.string().optional(),
 	driverName: z.string().optional(),
 	newStatus: z.string().optional(),
+	// Data sync payload
+	syncRequest: z
+		.object({
+			merchantId: z.uuid(),
+			lastKnownVersion: z.string().optional(),
+		})
+		.optional(),
+	// List of orders for NEW_DATA response
+	orders: z.array(OrderSchema).optional(),
 });
 export const MerchantEnvelopeSchema = createWsMinEnvelopeSchema({
 	event: MerchantEnvelopeEventSchema,
