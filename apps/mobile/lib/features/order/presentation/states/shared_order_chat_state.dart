@@ -1,5 +1,12 @@
 part of '_export.dart';
 
+/// Sentinel class for explicitly setting nullable values in copyWith
+class _CopyWithSentinel {
+  const _CopyWithSentinel();
+}
+
+const _sentinel = _CopyWithSentinel();
+
 class SharedOrderChatState extends Equatable {
   const SharedOrderChatState({
     this.messages = const OperationResult.idle(),
@@ -28,14 +35,16 @@ class SharedOrderChatState extends Equatable {
     OperationResult<List<OrderChatMessage>>? messages,
     OperationResult<OrderChatMessage>? sendMessage,
     OperationResult<int>? unreadCount,
-    String? nextCursor,
+    Object? nextCursor = _sentinel,
     bool? hasMore,
   }) {
     return SharedOrderChatState(
       messages: messages ?? this.messages,
       sendMessage: sendMessage ?? this.sendMessage,
       unreadCount: unreadCount ?? this.unreadCount,
-      nextCursor: nextCursor ?? this.nextCursor,
+      nextCursor: nextCursor == _sentinel
+          ? this.nextCursor
+          : nextCursor as String?,
       hasMore: hasMore ?? this.hasMore,
     );
   }

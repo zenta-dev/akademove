@@ -3681,4 +3681,22 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get no_data_available => 'Tidak ada data';
+
+  @override
+  String chat_time_days_ago(int count) {
+    return '$count hari lalu';
+  }
+
+  @override
+  String chat_time_hours_ago(int count) {
+    return '$count jam lalu';
+  }
+
+  @override
+  String chat_time_minutes_ago(int count) {
+    return '$count menit lalu';
+  }
+
+  @override
+  String get chat_time_just_now => 'Baru saja';
 }

@@ -1573,5 +1573,30 @@
 	"export_coming_soon": "Fitur export segera hadir!",
 	"no_transactions_yet": "Belum ada transaksi",
 	"withdrawal": "Penarikan",
-	"no_data_available": "Tidak ada data"
+	"no_data_available": "Tidak ada data",
+	"chat_time_days_ago": "{count} hari lalu",
+	"@chat_time_days_ago": {
+		"placeholders": {
+			"count": {
+				"type": "int"
+			}
+		}
+	},
+	"chat_time_hours_ago": "{count} jam lalu",
+	"@chat_time_hours_ago": {
+		"placeholders": {
+			"count": {
+				"type": "int"
+			}
+		}
+	},
+	"chat_time_minutes_ago": "{count} menit lalu",
+	"@chat_time_minutes_ago": {
+		"placeholders": {
+			"count": {
+				"type": "int"
+			}
+		}
+	},
+	"chat_time_just_now": "Baru saja"
 }

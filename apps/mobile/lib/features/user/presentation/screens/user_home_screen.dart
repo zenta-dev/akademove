@@ -410,7 +410,7 @@ class _MerchantCardWidget extends StatelessWidget {
             CachedNetworkImage(
               imageUrl: merchant.image!,
               width: 135.w,
-              height: 100.h,
+              height: 95.h,
               imageBuilder: (context, imageProvider) {
                 return Container(
                   decoration: BoxDecoration(
@@ -427,10 +427,10 @@ class _MerchantCardWidget extends StatelessWidget {
                 );
               },
               errorWidget: (context, url, error) =>
-                  Assets.images.noImage.svg(width: 135.w, height: 100.h),
+                  Assets.images.noImage.svg(width: 135.w, height: 95.h),
             ),
           ] else ...[
-            Assets.images.noImage.svg(width: 135.w, height: 100.h),
+            Assets.images.noImage.svg(width: 135.w, height: 95.h),
           ],
           Padding(
             padding: EdgeInsetsGeometry.all(8.dg),
@@ -447,7 +447,7 @@ class _MerchantCardWidget extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  merchant.categories.join(', '),
+                  merchant.category.localizedName(context),
                   overflow: TextOverflow.ellipsis,
                   style: context.typography.textMuted.copyWith(
                     fontSize: 10.sp,
@@ -455,7 +455,7 @@ class _MerchantCardWidget extends StatelessWidget {
                     color: context.colorScheme.mutedForeground,
                   ),
                 ),
-                Gap(2.h),
+                Gap(4.h),
                 StarRating(
                   starSize: 12.sp,
                   value: merchant.rating.toDouble(),

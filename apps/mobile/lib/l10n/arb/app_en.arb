@@ -1572,5 +1572,30 @@
 	"export_coming_soon": "Export feature coming soon!",
 	"no_transactions_yet": "No transactions yet",
 	"withdrawal": "Withdrawal",
-	"no_data_available": "No data available"
+	"no_data_available": "No data available",
+	"chat_time_days_ago": "{count}d ago",
+	"@chat_time_days_ago": {
+		"placeholders": {
+			"count": {
+				"type": "int"
+			}
+		}
+	},
+	"chat_time_hours_ago": "{count}h ago",
+	"@chat_time_hours_ago": {
+		"placeholders": {
+			"count": {
+				"type": "int"
+			}
+		}
+	},
+	"chat_time_minutes_ago": "{count}m ago",
+	"@chat_time_minutes_ago": {
+		"placeholders": {
+			"count": {
+				"type": "int"
+			}
+		}
+	},
+	"chat_time_just_now": "Just now"
 }

@@ -3681,4 +3681,22 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get no_data_available => 'No data available';
+
+  @override
+  String chat_time_days_ago(int count) {
+    return '${count}d ago';
+  }
+
+  @override
+  String chat_time_hours_ago(int count) {
+    return '${count}h ago';
+  }
+
+  @override
+  String chat_time_minutes_ago(int count) {
+    return '${count}m ago';
+  }
+
+  @override
+  String get chat_time_just_now => 'Just now';
 }

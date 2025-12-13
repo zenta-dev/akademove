@@ -245,7 +245,7 @@ class _ChatMessageBubble extends StatelessWidget {
           ),
           SizedBox(height: 4.h),
           Text(
-            _formatTimestamp(message.sentAt),
+            _formatTimestamp(context, message.sentAt),
             style: context.typography.small.copyWith(
               color: context.colorScheme.mutedForeground,
             ),
@@ -255,20 +255,20 @@ class _ChatMessageBubble extends StatelessWidget {
     );
   }
 
-  String _formatTimestamp(DateTime timestamp) {
+  String _formatTimestamp(BuildContext context, DateTime timestamp) {
     // Convert UTC timestamp to local time for comparison
     final localTimestamp = timestamp.toLocal();
     final now = DateTime.now();
     final difference = now.difference(localTimestamp);
 
     if (difference.inDays > 0) {
-      return '${difference.inDays}d ago';
+      return context.l10n.chat_time_days_ago(difference.inDays);
     } else if (difference.inHours > 0) {
-      return '${difference.inHours}h ago';
+      return context.l10n.chat_time_hours_ago(difference.inHours);
     } else if (difference.inMinutes > 0) {
-      return '${difference.inMinutes}m ago';
+      return context.l10n.chat_time_minutes_ago(difference.inMinutes);
     } else {
-      return 'Just now';
+      return context.l10n.chat_time_just_now;
     }
   }
 }

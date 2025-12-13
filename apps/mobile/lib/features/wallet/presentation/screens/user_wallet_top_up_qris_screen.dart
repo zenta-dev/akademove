@@ -38,9 +38,9 @@ class UserWalletTopUpQRISScreen extends StatelessWidget {
                     await Future.delayed(const Duration(seconds: 3), () {
                       if (!context.mounted) return;
                       context
-                        ..pop()
-                        ..pop()
-                        ..pop();
+                        ..pop(true)
+                        ..pop(true)
+                        ..pop(true);
                     });
                   }
                   if (state.payment.isFailure && context.mounted) {
@@ -64,7 +64,7 @@ class UserWalletTopUpQRISScreen extends StatelessWidget {
                       context.read<UserWalletTopUpCubit>().teardownWebsocket();
                       await Future.delayed(const Duration(seconds: 3), () {
                         if (!context.mounted) return;
-                        context.pop();
+                        context.pop(true);
                       });
                     },
                   ).asSkeleton(enabled: state.payment.isLoading);

@@ -7266,6 +7266,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No data available'**
   String get no_data_available;
+
+  /// No description provided for @chat_time_days_ago.
+  ///
+  /// In en, this message translates to:
+  /// **'{count}d ago'**
+  String chat_time_days_ago(int count);
+
+  /// No description provided for @chat_time_hours_ago.
+  ///
+  /// In en, this message translates to:
+  /// **'{count}h ago'**
+  String chat_time_hours_ago(int count);
+
+  /// No description provided for @chat_time_minutes_ago.
+  ///
+  /// In en, this message translates to:
+  /// **'{count}m ago'**
+  String chat_time_minutes_ago(int count);
+
+  /// No description provided for @chat_time_just_now.
+  ///
+  /// In en, this message translates to:
+  /// **'Just now'**
+  String get chat_time_just_now;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

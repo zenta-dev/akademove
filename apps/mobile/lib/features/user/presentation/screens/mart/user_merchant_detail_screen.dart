@@ -596,6 +596,7 @@ class _UserMerchantDetailScreenState extends State<UserMerchantDetailScreen> {
                     onPressed: () => _onQuantityChanged(
                       item: item,
                       newQty: 1,
+                      currentQty: currentQty,
                       merchant: merchant,
                     ),
                     child: Row(
@@ -688,6 +689,7 @@ class _UserMerchantDetailScreenState extends State<UserMerchantDetailScreen> {
             onTap: () => _onQuantityChanged(
               item: item,
               newQty: currentQty - 1,
+              currentQty: currentQty,
               merchant: merchant,
             ),
             child: Container(
@@ -714,6 +716,7 @@ class _UserMerchantDetailScreenState extends State<UserMerchantDetailScreen> {
                 ? () => _onQuantityChanged(
                     item: item,
                     newQty: currentQty + 1,
+                    currentQty: currentQty,
                     merchant: merchant,
                   )
                 : null,
@@ -738,6 +741,7 @@ class _UserMerchantDetailScreenState extends State<UserMerchantDetailScreen> {
   void _onQuantityChanged({
     required MerchantMenu item,
     required int newQty,
+    required int currentQty,
     required Merchant merchant,
   }) {
     if (newQty > item.stock) {
@@ -753,12 +757,19 @@ class _UserMerchantDetailScreenState extends State<UserMerchantDetailScreen> {
     }
 
     if (newQty > 0) {
-      _cartCubit.addItem(
-        menu: item,
-        merchantName: merchant.name,
-        quantity: newQty,
-        merchantLocation: merchant.location,
-      );
+      if (currentQty == 0) {
+        // Adding new item to cart
+        _cartCubit.addItem(
+          menu: item,
+          merchantName: merchant.name,
+          quantity: newQty,
+          merchantLocation: merchant.location,
+        );
+      } else {
+        // Updating existing item - use delta
+        final delta = newQty - currentQty;
+        _cartCubit.updateQuantity(menuId: item.id, delta: delta);
+      }
     } else {
       _cartCubit.removeItem(item.id);
     }
