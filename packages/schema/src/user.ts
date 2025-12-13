@@ -22,7 +22,7 @@ export const UserSchema = z.object({
 		.email(m.invalid_placeholder({ field: m.email_address().toLowerCase() }))
 		.max(256),
 	emailVerified: z.boolean(),
-	image: z.url().optional(),
+	image: z.url().nullish(),
 	role: UserRoleSchema,
 	banned: z.boolean(),
 	banReason: z.string().optional(),
@@ -211,7 +211,7 @@ export const UserLookupResultSchema = z.object({
 			maskedNumber: z.string(),
 		})
 		.optional(),
-	image: z.url().optional(),
+	image: z.url().nullish(),
 });
 export type UserLookupResult = z.infer<typeof UserLookupResultSchema>;
 
