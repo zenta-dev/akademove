@@ -621,15 +621,7 @@ export const OrderHandler = priv.router({
 		);
 
 		// Active order statuses - orders that are in progress
-		const activeStatuses: (
-			| "REQUESTED"
-			| "MATCHING"
-			| "ACCEPTED"
-			| "PREPARING"
-			| "READY_FOR_PICKUP"
-			| "ARRIVING"
-			| "IN_TRIP"
-		)[] = [
+		const activeStatuses: OrderStatus[] = [
 			"REQUESTED",
 			"MATCHING",
 			"ACCEPTED",
@@ -656,7 +648,7 @@ export const OrderHandler = priv.router({
 		const { rows } = await context.repo.order.list({
 			id,
 			role,
-			statuses: [...activeStatuses] as OrderStatus[],
+			statuses: activeStatuses,
 			limit: 1,
 			order: "desc",
 			mode: "offset",

@@ -224,7 +224,7 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
 
       String pickupTitle = 'Pickup';
       String dropoffTitle = 'Dropoff';
-      if (context.mounted && mounted) {
+      if (mounted && context.mounted) {
         pickupTitle = context.l10n.pickup_location;
         dropoffTitle = context.l10n.dropoff_location;
       }

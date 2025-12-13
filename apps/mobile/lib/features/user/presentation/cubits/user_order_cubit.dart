@@ -68,8 +68,19 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
 
         if (activeOrder == null) {
           logger.d('[UserOrderCubit] No active order found');
-          // Clear any stored active order ID
-          await _keyValueService.remove(KeyValueKeys.activeOrderId);
+          // Clear any stored active order ID and stale state
+          await clearActiveOrder();
+          return false;
+        }
+
+        // Check if the returned order is in a terminal state
+        // This shouldn't happen normally, but handle it defensively
+        if (_isTerminalStatus(activeOrder.order.status)) {
+          logger.i(
+            '[UserOrderCubit] Recovered order ${activeOrder.order.id} is in '
+            'terminal state (${activeOrder.order.status}), clearing active order',
+          );
+          await clearActiveOrder();
           return false;
         }
 
@@ -569,9 +580,11 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
         }
 
         // Handle order completion - update order status to COMPLETED
+        // and clear active order state
         if (data.e == OrderEnvelopeEvent.COMPLETED) {
           final detail = data.p.detail;
           if (detail != null) {
+            // Emit completed order state first so UI can react to completion
             emit(
               state.copyWith(
                 currentOrder: OperationResult.success(detail.order),
@@ -584,6 +597,14 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
               ),
             );
             logger.i('[UserOrderCubit] Order completed: ${detail.order.id}');
+
+            // Clear active order after a short delay to allow UI to process
+            // the completion state change before cleaning up
+            Future.delayed(const Duration(milliseconds: 500), () {
+              if (!isClosed) {
+                clearActiveOrder();
+              }
+            });
           }
         }
 
@@ -937,13 +958,19 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
         );
       }
 
-      // Check if order is in terminal state, stop polling
+      // Check if order is in terminal state, stop polling and clear active order
       if (_isTerminalStatus(order.status)) {
         logger.i(
           '[UserOrderCubit] Poll: Order in terminal state (${order.status}), '
-          'stopping polling',
+          'clearing active order',
         );
-        stopPolling();
+        // Clear active order after a short delay to allow UI to process
+        // the terminal state change before cleaning up
+        Future.delayed(const Duration(milliseconds: 500), () {
+          if (!isClosed) {
+            clearActiveOrder();
+          }
+        });
       } else {
         // Adjust polling interval based on order status
         // Use critical (faster) polling during MATCHING status for quicker driver detection
@@ -1023,6 +1050,22 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
 
       if (activeOrder == null) {
         logger.d('[UserOrderCubit] No active order found');
+        // Clear any stale active order state if server says no active order
+        if (state.currentOrder.value != null) {
+          logger.i('[UserOrderCubit] Clearing stale active order state');
+          await clearActiveOrder();
+        }
+        return;
+      }
+
+      // Check if the returned order is in a terminal state
+      // This shouldn't happen normally, but handle it defensively
+      if (_isTerminalStatus(activeOrder.order.status)) {
+        logger.i(
+          '[UserOrderCubit] Fetched order ${activeOrder.order.id} is in '
+          'terminal state (${activeOrder.order.status}), clearing active order',
+        );
+        await clearActiveOrder();
         return;
       }
 
