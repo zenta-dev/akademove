@@ -8,19 +8,18 @@ final driverRouter = StatefulShellRoute.indexedStack(
     child: MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => sl<BottomNavBarCubit>()),
-        BlocProvider(create: (_) => sl<DriverCubit>()),
-        BlocProvider(create: (_) => sl<DriverHomeCubit>()..init()),
+        BlocProvider(create: (_) => sl<DriverProfileCubit>()),
+        BlocProvider(create: (_) => sl<DriverHomeCubit>()),
         BlocProvider(create: (_) => sl<DriverOrderCubit>()),
         BlocProvider(create: (_) => sl<DriverScheduleCubit>()),
-        BlocProvider(create: (_) => sl<DriverProfileCubit>()),
         BlocProvider(create: (_) => sl<DriverListHistoryCubit>()),
-        BlocProvider(create: (_) => sl<LeaderboardCubit>()),
+        BlocProvider(create: (_) => sl<DriverLeaderboardCubit>()),
         BlocProvider(create: (_) => sl<DriverReviewCubit>()),
-        BlocProvider(create: (_) => sl<EmergencyCubit>()),
-        BlocProvider(create: (_) => sl<OrderChatCubit>()),
-        BlocProvider(create: (_) => sl<QuickMessageCubit>()),
+        BlocProvider(create: (_) => sl<SharedEmergencyCubit>()),
+        BlocProvider(create: (_) => sl<SharedOrderChatCubit>()),
+        BlocProvider(create: (_) => sl<SharedQuickMessageCubit>()),
         BlocProvider(
-          create: (_) => sl<NotificationCubit>()
+          create: (_) => sl<SharedNotificationCubit>()
             ..getUnreadCount()
             ..subscribeToTopic('driver-announcements'),
         ),
@@ -54,7 +53,9 @@ final driverRouter = StatefulShellRoute.indexedStack(
                 return MultiBlocProvider(
                   providers: [
                     BlocProvider.value(value: context.read<DriverOrderCubit>()),
-                    BlocProvider.value(value: context.read<EmergencyCubit>()),
+                    BlocProvider.value(
+                      value: context.read<SharedEmergencyCubit>(),
+                    ),
                   ],
                   child: DriverOrderDetailScreen(orderId: orderId),
                 );
@@ -77,7 +78,7 @@ final driverRouter = StatefulShellRoute.indexedStack(
               name: Routes.driverLeaderboard.name,
               path: 'leaderboard',
               builder: (context, state) => BlocProvider.value(
-                value: context.read<LeaderboardCubit>()..init(),
+                value: context.read<DriverLeaderboardCubit>()..init(),
                 child: const LeaderboardScreen(),
               ),
               routes: [
@@ -85,7 +86,7 @@ final driverRouter = StatefulShellRoute.indexedStack(
                   name: Routes.driverLeaderboardDetail.name,
                   path: 'detail',
                   builder: (context, state) => BlocProvider.value(
-                    value: context.read<LeaderboardCubit>(),
+                    value: context.read<DriverLeaderboardCubit>(),
                     child: const DriverLeaderboardDetailScreen(),
                   ),
                 ),
@@ -114,7 +115,7 @@ final driverRouter = StatefulShellRoute.indexedStack(
               name: Routes.driverNotifications.name,
               path: 'notifications',
               builder: (context, state) => BlocProvider.value(
-                value: context.read<NotificationCubit>()
+                value: context.read<SharedNotificationCubit>()
                   ..refreshNotifications(),
                 child: const NotificationScreen(),
               ),
