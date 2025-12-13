@@ -19,18 +19,21 @@ class _DriverKrsScreenState extends State<DriverKrsScreen> {
   @override
   void initState() {
     super.initState();
-    _loadDriverAndSchedules();
+    _initSchedules();
   }
 
-  Future<void> _loadDriverAndSchedules() async {
-    await Future.wait([
-      context.read<DriverScheduleCubit>().ensureDriverLoaded(),
-      context.read<DriverScheduleCubit>().getSchedules(),
-    ]);
+  void _initSchedules() {
+    // Get driverId from DriverProfileCubit (single source of truth)
+    final driverId = context.read<DriverProfileCubit>().driver?.id;
+    if (driverId != null) {
+      final scheduleCubit = context.read<DriverScheduleCubit>();
+      scheduleCubit.setDriverId(driverId);
+      scheduleCubit.getSchedules();
+    }
   }
 
   Future<void> _onRefresh() async {
-    await _loadDriverAndSchedules();
+    await context.read<DriverScheduleCubit>().getSchedules();
   }
 
   void _navigateToUpsert({DriverSchedule? schedule}) async {
@@ -39,7 +42,7 @@ class _DriverKrsScreenState extends State<DriverKrsScreen> {
       extra: schedule,
     );
     if (result == true) {
-      await _loadDriverAndSchedules();
+      await context.read<DriverScheduleCubit>().getSchedules();
     }
   }
 

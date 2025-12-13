@@ -25,17 +25,17 @@ class _DriverCommissionReportScreenState
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<DriverEarningsCubit>().init();
+      context.read<DriverWalletCubit>().init();
     });
   }
 
   Future<void> _onRefresh() async {
-    await context.read<DriverEarningsCubit>().init();
+    await context.read<DriverWalletCubit>().init();
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<DriverEarningsCubit, DriverEarningsState>(
+    return BlocBuilder<DriverWalletCubit, DriverWalletState>(
       builder: (context, state) {
         final isLoading =
             state.fetchWalletResult.isLoading ||
@@ -460,7 +460,7 @@ class _DriverCommissionReportScreenState
         setState(() {
           _selectedPeriod = period;
         });
-        context.read<DriverEarningsCubit>().setSelectedPeriod(period);
+        context.read<DriverWalletCubit>().setSelectedPeriod(period);
       },
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 10.h),

@@ -18,18 +18,28 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
   @override
   void initState() {
     super.initState();
-    context.read<DriverCubit>().init();
+    context.read<DriverProfileCubit>().init();
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<DriverCubit, DriverState>(
+    return BlocConsumer<DriverProfileCubit, DriverProfileState>(
       listener: (context, state) {
         if (state.initResult.isFailure) {
           context.showMyToast(
             state.initResult.error?.message ?? context.l10n.an_error_occurred,
             type: ToastType.failed,
           );
+        }
+
+        // Initialize DriverHomeCubit with driver when init succeeds
+        if (state.initResult.isSuccess) {
+          context.read<DriverHomeCubit>().initWithDriver(state.driver);
+        }
+
+        // Sync driver state to DriverHomeCubit when online status changes
+        if (state.toggleOnlineResult.isSuccess) {
+          context.read<DriverHomeCubit>().updateDriver(state.driver);
         }
       },
       builder: (context, state) {
@@ -39,7 +49,7 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
               padding: EdgeInsets.all(16.r),
               title: context.l10n.driver_dashboard,
               trailing: [
-                BlocBuilder<NotificationCubit, NotificationState>(
+                BlocBuilder<SharedNotificationCubit, SharedNotificationState>(
                   builder: (context, notificationState) {
                     final unreadCount =
                         notificationState.unreadCount.value ?? 0;
@@ -96,7 +106,7 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
             ),
           ],
           child: RefreshTrigger(
-            onRefresh: () => context.read<DriverCubit>().init(),
+            onRefresh: () => context.read<DriverProfileCubit>().init(),
             child: SingleChildScrollView(
               physics: const AlwaysScrollableScrollPhysics(),
               child: Padding(
@@ -119,7 +129,9 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
     );
   }
 
-  Widget _buildWelcomeCard(BuildContext context, DriverState state) {
+  Widget _buildWelcomeCard(BuildContext context, DriverProfileState state) {
+    final driver = state.driver;
+
     return Card(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -135,53 +147,46 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
               SizedBox(width: 8.w),
               Expanded(
                 child: Text(
-                  context.l10n.hello(state.driver?.user?.name ?? 'Folks'),
+                  context.l10n.hello(driver?.user?.name ?? 'Folks'),
                   style: context.typography.h4.copyWith(fontSize: 18.sp),
                 ),
               ),
             ],
           ),
-          if (state.driver != null)
-            Builder(
-              builder: (context) {
-                final driver = state.driver;
-                if (driver == null) return const SizedBox.shrink();
-
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  spacing: 8.h,
+          if (driver != null)
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              spacing: 8.h,
+              children: [
+                Text(
+                  '${context.l10n.license_plate} ${driver.licensePlate}',
+                  style: context.typography.small.copyWith(
+                    color: context.colorScheme.mutedForeground,
+                  ),
+                ),
+                Row(
                   children: [
-                    Text(
-                      '${context.l10n.license_plate} ${driver.licensePlate}',
-                      style: context.typography.small.copyWith(
-                        color: context.colorScheme.mutedForeground,
-                      ),
+                    Icon(
+                      LucideIcons.star,
+                      size: 16.sp,
+                      color: const Color(0xFFFFC107),
                     ),
-                    Row(
-                      children: [
-                        Icon(
-                          LucideIcons.star,
-                          size: 16.sp,
-                          color: const Color(0xFFFFC107),
-                        ),
-                        SizedBox(width: 4.w),
-                        Text(
-                          '${driver.rating.toStringAsFixed(1)} rating',
-                          style: context.typography.small,
-                        ),
-                      ],
+                    SizedBox(width: 4.w),
+                    Text(
+                      '${driver.rating.toStringAsFixed(1)} rating',
+                      style: context.typography.small,
                     ),
                   ],
-                );
-              },
+                ),
+              ],
             ),
         ],
       ),
     );
   }
 
-  Widget _buildOnlineToggle(BuildContext context, DriverState state) {
-    final isOnline = state.driver?.isOnline ?? false;
+  Widget _buildOnlineToggle(BuildContext context, DriverProfileState state) {
+    final isOnline = state.isOnline;
     final isLoading = state.initResult.isLoading;
 
     return Card(
@@ -214,7 +219,9 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
                 value: isOnline,
                 onChanged: isLoading
                     ? null
-                    : (_) => context.read<DriverCubit>().toggleOnlineStatus(),
+                    : (_) => context
+                          .read<DriverProfileCubit>()
+                          .toggleOnlineStatus(),
               ),
             ],
           ),
@@ -256,7 +263,7 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
     );
   }
 
-  Widget _buildTodayStats(BuildContext context, DriverState state) {
+  Widget _buildTodayStats(BuildContext context, DriverProfileState state) {
     return Card(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

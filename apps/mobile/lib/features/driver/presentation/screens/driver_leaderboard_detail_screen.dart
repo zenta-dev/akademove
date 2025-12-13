@@ -17,7 +17,7 @@ class DriverLeaderboardDetailScreen extends StatefulWidget {
 
 class _DriverLeaderboardDetailScreenState
     extends State<DriverLeaderboardDetailScreen> {
-  LeaderboardCubit get _cubit => context.read<LeaderboardCubit>();
+  DriverLeaderboardCubit get _cubit => context.read<DriverLeaderboardCubit>();
   bool _isLoading = false;
 
   @override
@@ -32,9 +32,8 @@ class _DriverLeaderboardDetailScreenState
     setState(() => _isLoading = true);
 
     try {
-      // Get current user ID from driver cubit
-      final driverState = context.read<DriverCubit>().state;
-      final userId = driverState.driver?.user?.id ?? '';
+      // Get current user ID from DriverProfileCubit
+      final userId = context.read<DriverProfileCubit>().driver?.user?.id ?? '';
 
       if (userId.isEmpty) {
         if (mounted) {
@@ -77,7 +76,7 @@ class _DriverLeaderboardDetailScreenState
       ],
       child: RefreshTrigger(
         onRefresh: _onRefresh,
-        child: BlocBuilder<LeaderboardCubit, LeaderboardState>(
+        child: BlocBuilder<DriverLeaderboardCubit, DriverLeaderboardState>(
           builder: (context, state) {
             final myRankingsResult = state.myRankings;
 

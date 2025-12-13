@@ -1004,7 +1004,8 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
           isLoading: isCompletingTrip,
           onPressed: () {
             context.read<DriverOrderCubit>().completeTrip();
-            context.read<DriverHomeCubit>().init();
+            // Refresh stats after trip completion
+            context.read<DriverProfileCubit>().refreshStats();
           },
           child: Text(context.l10n.complete_trip),
         ),

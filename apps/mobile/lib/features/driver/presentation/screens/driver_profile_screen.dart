@@ -27,7 +27,7 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
   }
 
   Future<void> _loadProfile() async {
-    await context.read<DriverCubit>().refreshProfile();
+    await context.read<DriverProfileCubit>().loadProfile();
   }
 
   Future<void> _onRefresh() async {
@@ -36,7 +36,7 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<DriverCubit, DriverState>(
+    return BlocBuilder<DriverProfileCubit, DriverProfileState>(
       builder: (context, state) {
         return Scaffold(
           headers: [

@@ -429,7 +429,7 @@ class IncomingOrderListener extends StatelessWidget {
               // handle navigation when currentOrder is set on successful acceptance
               context.read<DriverOrderCubit>().acceptOrder(
                 order.id,
-                context.read<DriverHomeCubit>().state.myDriver?.id ?? '',
+                context.read<DriverProfileCubit>().driver?.id ?? '',
               );
 
               // Close the dialog - acceptance is in progress

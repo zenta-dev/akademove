@@ -27,7 +27,7 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
   }
 
   Future<void> _loadData() async {
-    await context.read<DriverEarningsCubit>().init(
+    await context.read<DriverWalletCubit>().init(
       month: _selectedMonth.month,
       year: _selectedMonth.year,
     );
@@ -44,7 +44,7 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
         _selectedMonth.month + delta,
       );
     });
-    await context.read<DriverEarningsCubit>().getMonthlySummary(
+    await context.read<DriverWalletCubit>().getMonthlySummary(
       month: _selectedMonth.month,
       year: _selectedMonth.year,
     );
@@ -52,7 +52,7 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<DriverEarningsCubit, DriverEarningsState>(
+    return BlocBuilder<DriverWalletCubit, DriverWalletState>(
       builder: (context, state) {
         final isLoading = state.fetchWalletResult.isLoading;
         final wallet = state.wallet;
@@ -537,7 +537,7 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
     var isValidated = false;
     var saveBank = false;
 
-    final cubit = context.read<DriverEarningsCubit>();
+    final cubit = context.read<DriverWalletCubit>();
 
     showDialog(
       context: context,
@@ -893,7 +893,7 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
         accountName: accountName,
       );
 
-      final result = await context.read<DriverEarningsCubit>().withdraw(
+      final result = await context.read<DriverWalletCubit>().withdraw(
         request,
       );
 
