@@ -898,7 +898,7 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
         // No active order, stop polling and clear state
         logger.d('[UserOrderCubit] Poll: No active order found');
         stopPolling();
-        // await clearActiveOrder();
+        await clearActiveOrder();
         return;
       }
 
