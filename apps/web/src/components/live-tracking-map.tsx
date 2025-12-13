@@ -8,9 +8,10 @@ import {
 	Pin,
 	useAdvancedMarkerRef,
 	useMap,
+	useMapsLibrary,
 } from "@vis.gl/react-google-maps";
 import { useTheme } from "next-themes";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Badge } from "./ui/badge";
 import { Card, CardContent } from "./ui/card";
 
@@ -100,12 +101,13 @@ export const LiveTrackingMap = ({
 						delivery={delivery}
 						driverLocation={driverLocation}
 						driverName={driverName}
+						orderStatus={orderStatus}
 					/>
 				</MapView>
 			</APIProvider>
 
 			{/* Legend */}
-			<div className="flex items-center justify-center gap-6 text-sm">
+			<div className="flex flex-wrap items-center justify-center gap-6 text-sm">
 				<div className="flex items-center gap-2">
 					<div className="h-3 w-3 rounded-full bg-green-500" />
 					<span className="text-muted-foreground">{m.tracking_pickup()}</span>
@@ -120,6 +122,10 @@ export const LiveTrackingMap = ({
 						<span className="text-muted-foreground">{m.tracking_driver()}</span>
 					</div>
 				)}
+				<div className="flex items-center gap-2">
+					<div className="h-0.5 w-6 bg-blue-500" />
+					<span className="text-muted-foreground">{m.tracking_route()}</span>
+				</div>
 			</div>
 		</div>
 	);
@@ -130,6 +136,7 @@ interface MapLogicProps {
 	delivery: Location;
 	driverLocation?: Location | null;
 	driverName?: string;
+	orderStatus?: string;
 }
 
 const MapLogic = ({
@@ -137,10 +144,25 @@ const MapLogic = ({
 	delivery,
 	driverLocation,
 	driverName,
+	orderStatus,
 }: MapLogicProps) => {
 	const map = useMap();
+	const routesLibrary = useMapsLibrary("routes");
 	const [driverMarkerRef, driverMarker] = useAdvancedMarkerRef();
 	const [showDriverInfo, setShowDriverInfo] = useState(false);
+
+	// Refs for polyline instances
+	const activeRouteRef = useRef<google.maps.Polyline | null>(null);
+	const plannedRouteRef = useRef<google.maps.Polyline | null>(null);
+
+	// Determine which route to show based on order status
+	const isDriverHeadingToPickup = useMemo(() => {
+		return orderStatus === "ACCEPTED" || orderStatus === "ARRIVING";
+	}, [orderStatus]);
+
+	const isInTrip = useMemo(() => {
+		return orderStatus === "IN_TRIP";
+	}, [orderStatus]);
 
 	// Fit bounds to show all markers
 	useEffect(() => {
@@ -159,6 +181,144 @@ const MapLogic = ({
 			console.error("Failed to fit map bounds:", error);
 		}
 	}, [map, pickup, delivery, driverLocation]);
+
+	// Fetch and render polylines
+	useEffect(() => {
+		if (!map || !routesLibrary) return;
+
+		const directionsService = new routesLibrary.DirectionsService();
+
+		// Cleanup function to remove polylines
+		const cleanup = () => {
+			if (activeRouteRef.current) {
+				activeRouteRef.current.setMap(null);
+				activeRouteRef.current = null;
+			}
+			if (plannedRouteRef.current) {
+				plannedRouteRef.current.setMap(null);
+				plannedRouteRef.current = null;
+			}
+		};
+
+		// Clean up existing polylines before creating new ones
+		cleanup();
+
+		const fetchAndDrawRoutes = async () => {
+			try {
+				// If driver is heading to pickup, show driver→pickup (highlighted) and pickup→delivery (dimmed)
+				if (isDriverHeadingToPickup && driverLocation) {
+					// Fetch driver to pickup route
+					const driverToPickupResponse = await directionsService.route({
+						origin: { lat: driverLocation.lat, lng: driverLocation.lng },
+						destination: { lat: pickup.lat, lng: pickup.lng },
+						travelMode: google.maps.TravelMode.DRIVING,
+					});
+
+					if (driverToPickupResponse.routes[0]) {
+						activeRouteRef.current = new google.maps.Polyline({
+							path: driverToPickupResponse.routes[0].overview_path,
+							strokeColor: "#3b82f6", // Blue - active route
+							strokeOpacity: 1.0,
+							strokeWeight: 5,
+							map,
+						});
+					}
+
+					// Fetch pickup to delivery route (dimmed)
+					const pickupToDeliveryResponse = await directionsService.route({
+						origin: { lat: pickup.lat, lng: pickup.lng },
+						destination: { lat: delivery.lat, lng: delivery.lng },
+						travelMode: google.maps.TravelMode.DRIVING,
+					});
+
+					if (pickupToDeliveryResponse.routes[0]) {
+						plannedRouteRef.current = new google.maps.Polyline({
+							path: pickupToDeliveryResponse.routes[0].overview_path,
+							strokeColor: "#3b82f6",
+							strokeOpacity: 0.4, // Dimmed
+							strokeWeight: 4,
+							map,
+							icons: [
+								{
+									icon: {
+										path: "M 0,-1 0,1",
+										strokeOpacity: 1,
+										scale: 4,
+									},
+									offset: "0",
+									repeat: "20px",
+								},
+							],
+						});
+					}
+				}
+				// If in trip, show driver→delivery (highlighted)
+				else if (isInTrip && driverLocation) {
+					const driverToDeliveryResponse = await directionsService.route({
+						origin: { lat: driverLocation.lat, lng: driverLocation.lng },
+						destination: { lat: delivery.lat, lng: delivery.lng },
+						travelMode: google.maps.TravelMode.DRIVING,
+					});
+
+					if (driverToDeliveryResponse.routes[0]) {
+						activeRouteRef.current = new google.maps.Polyline({
+							path: driverToDeliveryResponse.routes[0].overview_path,
+							strokeColor: "#3b82f6",
+							strokeOpacity: 1.0,
+							strokeWeight: 5,
+							map,
+						});
+					}
+				}
+				// Fallback: show pickup→delivery
+				else {
+					const pickupToDeliveryResponse = await directionsService.route({
+						origin: { lat: pickup.lat, lng: pickup.lng },
+						destination: { lat: delivery.lat, lng: delivery.lng },
+						travelMode: google.maps.TravelMode.DRIVING,
+					});
+
+					if (pickupToDeliveryResponse.routes[0]) {
+						activeRouteRef.current = new google.maps.Polyline({
+							path: pickupToDeliveryResponse.routes[0].overview_path,
+							strokeColor: "#3b82f6",
+							strokeOpacity: 1.0,
+							strokeWeight: 4,
+							map,
+						});
+					}
+				}
+			} catch (error) {
+				console.error("Failed to fetch directions:", error);
+				// Fallback to straight lines
+				if (driverLocation && (isDriverHeadingToPickup || isInTrip)) {
+					const destination = isDriverHeadingToPickup ? pickup : delivery;
+					activeRouteRef.current = new google.maps.Polyline({
+						path: [
+							{ lat: driverLocation.lat, lng: driverLocation.lng },
+							{ lat: destination.lat, lng: destination.lng },
+						],
+						strokeColor: "#3b82f6",
+						strokeOpacity: 1.0,
+						strokeWeight: 4,
+						map,
+					});
+				}
+			}
+		};
+
+		fetchAndDrawRoutes();
+
+		return cleanup;
+	}, [
+		map,
+		routesLibrary,
+		pickup,
+		delivery,
+		driverLocation,
+		isDriverHeadingToPickup,
+		isInTrip,
+	]);
 
 	return (
 		<>

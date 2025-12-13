@@ -150,7 +150,7 @@ class _UserMartOnTripScreenState extends State<UserMartOnTripScreen> {
         );
       }
 
-      // Build polylines
+      // Build polylines based on order status
       final newPolylines = <Polyline>{};
 
       if (!mounted) {
@@ -158,39 +158,106 @@ class _UserMartOnTripScreenState extends State<UserMartOnTripScreen> {
         return;
       }
 
-      final color = context.colorScheme.primary;
+      final primaryColor = context.colorScheme.primary;
+      final dimmedColor = primaryColor.withValues(alpha: 0.4);
       final deliveryCubit = context.read<UserDeliveryCubit>();
+      final orderStatus = order.status;
+
+      // Determine if driver is heading to pickup (merchant) or already picked up
+      // For food orders: driver phase starts at MATCHING/ACCEPTED (with driverId)
+      final isDriverHeadingToPickup =
+          (orderStatus == OrderStatus.ACCEPTED && order.driverId != null) ||
+          orderStatus == OrderStatus.ARRIVING;
+      final isInTrip = orderStatus == OrderStatus.IN_TRIP;
 
       try {
-        // Get actual route from MapService via cubit
-        final routeCoordinates = await deliveryCubit.getRoutes(
+        // Always get pickup-to-dropoff route (merchant to customer)
+        final pickupToDropoffRoute = await deliveryCubit.getRoutes(
           order.pickupLocation,
           order.dropoffLocation,
         );
 
-        if (routeCoordinates.isNotEmpty) {
-          final routePoints = routeCoordinates
-              .map((coord) => LatLng(coord.y.toDouble(), coord.x.toDouble()))
-              .toList();
+        final pickupToDropoffPoints = pickupToDropoffRoute.isNotEmpty
+            ? pickupToDropoffRoute
+                  .map((c) => LatLng(c.y.toDouble(), c.x.toDouble()))
+                  .toList()
+            : [LatLng(pickupLat, pickupLng), LatLng(dropoffLat, dropoffLng)];
+
+        // If driver is heading to pickup (merchant), show driver-to-pickup route (highlighted)
+        // and pickup-to-dropoff route (dimmed)
+        if (isDriverHeadingToPickup && driverLocation != null) {
+          // Get driver-to-pickup (merchant) route
+          final driverToPickupRoute = await deliveryCubit.getRoutes(
+            driverLocation,
+            order.pickupLocation,
+          );
+
+          final driverToPickupPoints = driverToPickupRoute.isNotEmpty
+              ? driverToPickupRoute
+                    .map((c) => LatLng(c.y.toDouble(), c.x.toDouble()))
+                    .toList()
+              : [
+                  LatLng(
+                    driverLocation.y.toDouble(),
+                    driverLocation.x.toDouble(),
+                  ),
+                  LatLng(pickupLat, pickupLng),
+                ];
+
+          // Driver to pickup (merchant) - highlighted (active route)
+          newPolylines.add(
+            Polyline(
+              polylineId: const PolylineId("driver_to_pickup"),
+              points: driverToPickupPoints,
+              color: primaryColor,
+              width: 5,
+            ),
+          );
+
+          // Pickup (merchant) to dropoff (customer) - dimmed (planned route)
+          newPolylines.add(
+            Polyline(
+              polylineId: const PolylineId("pickup_to_dropoff"),
+              points: pickupToDropoffPoints,
+              color: dimmedColor,
+              width: 4,
+              patterns: [PatternItem.dash(10), PatternItem.gap(5)],
+            ),
+          );
+        } else if (isInTrip && driverLocation != null) {
+          // During trip: show driver-to-dropoff route (highlighted)
+          final driverToDropoffRoute = await deliveryCubit.getRoutes(
+            driverLocation,
+            order.dropoffLocation,
+          );
+
+          final driverToDropoffPoints = driverToDropoffRoute.isNotEmpty
+              ? driverToDropoffRoute
+                    .map((c) => LatLng(c.y.toDouble(), c.x.toDouble()))
+                    .toList()
+              : [
+                  LatLng(
+                    driverLocation.y.toDouble(),
+                    driverLocation.x.toDouble(),
+                  ),
+                  LatLng(dropoffLat, dropoffLng),
+                ];
 
           newPolylines.add(
             Polyline(
-              polylineId: const PolylineId("route"),
-              points: routePoints,
-              color: color,
-              width: 4,
+              polylineId: const PolylineId("driver_to_dropoff"),
+              points: driverToDropoffPoints,
+              color: primaryColor,
+              width: 5,
             ),
           );
         } else {
-          // Fallback to straight line if no route available
+          // Fallback: just show pickup-to-dropoff route (merchant preparing phase)
           newPolylines.add(
             Polyline(
-              polylineId: const PolylineId("route"),
-              points: [
-                LatLng(pickupLat, pickupLng),
-                LatLng(dropoffLat, dropoffLng),
-              ],
-              color: color,
+              polylineId: const PolylineId("pickup_to_dropoff"),
+              points: pickupToDropoffPoints,
+              color: primaryColor,
               width: 4,
             ),
           );
@@ -205,7 +272,7 @@ class _UserMartOnTripScreenState extends State<UserMartOnTripScreen> {
               LatLng(pickupLat, pickupLng),
               LatLng(dropoffLat, dropoffLng),
             ],
-            color: color,
+            color: primaryColor,
             width: 4,
           ),
         );

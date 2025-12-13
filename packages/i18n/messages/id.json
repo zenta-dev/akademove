@@ -1257,6 +1257,7 @@
   "tracking_enroute": "Dalam perjalanan ke penjemputan/pengiriman",
   "tracking_eta": "ETA:",
   "tracking_pickup": "Penjemputan",
+  "tracking_route": "Rute",
   "tracking_status": "Status:",
   "tracking_status_accepted": "Driver Menerima",
   "tracking_status_arriving": "Driver Tiba",

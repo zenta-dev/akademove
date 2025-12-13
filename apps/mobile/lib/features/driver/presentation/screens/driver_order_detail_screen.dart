@@ -6,6 +6,7 @@ import 'package:akademove/locator.dart';
 import 'package:api_client/api_client.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
@@ -24,6 +25,8 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
   GoogleMapController? _mapController;
   final Set<Marker> _markers = {};
   final Set<Polyline> _polylines = {};
+  bool _isUpdatingMap = false;
+  Coordinate? _currentDriverLocation;
 
   @override
   void initState() {
@@ -202,53 +205,234 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
   }
 
   Future<void> _updateMapWithOrderData(Order order) async {
-    final pickupLat = order.pickupLocation.y.toDouble();
-    final pickupLng = order.pickupLocation.x.toDouble();
-    final dropoffLat = order.dropoffLocation.y.toDouble();
-    final dropoffLng = order.dropoffLocation.x.toDouble();
+    // Prevent concurrent updates
+    if (_isUpdatingMap) return;
+    _isUpdatingMap = true;
 
-    final newMarkers = <Marker>{}
-      ..add(
-        Marker(
-          markerId: const MarkerId('pickup'),
-          position: LatLng(pickupLat, pickupLng),
-          icon: BitmapDescriptor.defaultMarkerWithHue(
-            BitmapDescriptor.hueGreen,
+    try {
+      final pickupLat = order.pickupLocation.y.toDouble();
+      final pickupLng = order.pickupLocation.x.toDouble();
+      final dropoffLat = order.dropoffLocation.y.toDouble();
+      final dropoffLng = order.dropoffLocation.x.toDouble();
+
+      // Get driver's current location
+      final locationService = sl<LocationService>();
+      _currentDriverLocation = await locationService.getMyLocation(
+        accuracy: LocationAccuracy.high,
+        fromCache: false,
+      );
+
+      final newMarkers = <Marker>{}
+        ..add(
+          Marker(
+            markerId: const MarkerId('pickup'),
+            position: LatLng(pickupLat, pickupLng),
+            icon: BitmapDescriptor.defaultMarkerWithHue(
+              BitmapDescriptor.hueGreen,
+            ),
+            infoWindow: InfoWindow(
+              title: (context.mounted && mounted)
+                  ? context.l10n.pickup_location
+                  : 'Pickup',
+            ),
           ),
-          infoWindow: InfoWindow(title: context.l10n.pickup_location),
-        ),
-      )
-      ..add(
-        Marker(
-          markerId: const MarkerId('dropoff'),
-          position: LatLng(dropoffLat, dropoffLng),
-          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
-          infoWindow: InfoWindow(title: context.l10n.dropoff_location),
-        ),
-      );
+        )
+        ..add(
+          Marker(
+            markerId: const MarkerId('dropoff'),
+            position: LatLng(dropoffLat, dropoffLng),
+            icon: BitmapDescriptor.defaultMarkerWithHue(
+              BitmapDescriptor.hueRed,
+            ),
+            infoWindow: InfoWindow(
+              title: (context.mounted && mounted)
+                  ? context.l10n.dropoff_location
+                  : 'Dropoff',
+            ),
+          ),
+        );
 
-    setState(() {
-      _markers
-        ..clear()
-        ..addAll(newMarkers);
-    });
+      // Build polylines based on order status
+      final newPolylines = <Polyline>{};
 
-    // Fit bounds to show both markers
-    final mapController = _mapController;
-    if (mapController != null) {
-      final bounds = LatLngBounds(
-        southwest: LatLng(
-          pickupLat < dropoffLat ? pickupLat : dropoffLat,
-          pickupLng < dropoffLng ? pickupLng : dropoffLng,
-        ),
-        northeast: LatLng(
-          pickupLat > dropoffLat ? pickupLat : dropoffLat,
-          pickupLng > dropoffLng ? pickupLng : dropoffLng,
-        ),
-      );
-      await mapController.animateCamera(
-        CameraUpdate.newLatLngBounds(bounds, 100),
-      );
+      if (!mounted) {
+        _isUpdatingMap = false;
+        return;
+      }
+
+      final primaryColor = context.colorScheme.primary;
+      final dimmedColor = primaryColor.withValues(alpha: 0.4);
+      final mapService = sl<MapService>();
+      final orderStatus = order.status;
+      final driverLocation = _currentDriverLocation;
+
+      // Determine route based on order status
+      // ACCEPTED/ARRIVING: Driver heading to pickup
+      // IN_TRIP: Driver heading to dropoff
+      final isDriverHeadingToPickup =
+          orderStatus == OrderStatus.ACCEPTED ||
+          orderStatus == OrderStatus.ARRIVING;
+      final isInTrip = orderStatus == OrderStatus.IN_TRIP;
+
+      try {
+        // Always get pickup-to-dropoff route
+        final pickupToDropoffRoute = await mapService.getRoutes(
+          order.pickupLocation,
+          order.dropoffLocation,
+        );
+
+        final pickupToDropoffPoints = pickupToDropoffRoute.isNotEmpty
+            ? pickupToDropoffRoute
+                  .map((c) => LatLng(c.y.toDouble(), c.x.toDouble()))
+                  .toList()
+            : [LatLng(pickupLat, pickupLng), LatLng(dropoffLat, dropoffLng)];
+
+        // If driver is heading to pickup, show driver-to-pickup route (highlighted)
+        // and pickup-to-dropoff route (dimmed)
+        if (isDriverHeadingToPickup && driverLocation != null) {
+          // Get driver-to-pickup route
+          final driverToPickupRoute = await mapService.getRoutes(
+            driverLocation,
+            order.pickupLocation,
+          );
+
+          final driverToPickupPoints = driverToPickupRoute.isNotEmpty
+              ? driverToPickupRoute
+                    .map((c) => LatLng(c.y.toDouble(), c.x.toDouble()))
+                    .toList()
+              : [
+                  LatLng(
+                    driverLocation.y.toDouble(),
+                    driverLocation.x.toDouble(),
+                  ),
+                  LatLng(pickupLat, pickupLng),
+                ];
+
+          // Driver to pickup - highlighted (active route)
+          newPolylines.add(
+            Polyline(
+              polylineId: const PolylineId('driver_to_pickup'),
+              points: driverToPickupPoints,
+              color: primaryColor,
+              width: 5,
+            ),
+          );
+
+          // Pickup to dropoff - dimmed (planned route)
+          newPolylines.add(
+            Polyline(
+              polylineId: const PolylineId('pickup_to_dropoff'),
+              points: pickupToDropoffPoints,
+              color: dimmedColor,
+              width: 4,
+              patterns: [PatternItem.dash(10), PatternItem.gap(5)],
+            ),
+          );
+        } else if (isInTrip && driverLocation != null) {
+          // During trip: show driver-to-dropoff route (highlighted)
+          final driverToDropoffRoute = await mapService.getRoutes(
+            driverLocation,
+            order.dropoffLocation,
+          );
+
+          final driverToDropoffPoints = driverToDropoffRoute.isNotEmpty
+              ? driverToDropoffRoute
+                    .map((c) => LatLng(c.y.toDouble(), c.x.toDouble()))
+                    .toList()
+              : [
+                  LatLng(
+                    driverLocation.y.toDouble(),
+                    driverLocation.x.toDouble(),
+                  ),
+                  LatLng(dropoffLat, dropoffLng),
+                ];
+
+          newPolylines.add(
+            Polyline(
+              polylineId: const PolylineId('driver_to_dropoff'),
+              points: driverToDropoffPoints,
+              color: primaryColor,
+              width: 5,
+            ),
+          );
+        } else {
+          // Fallback: just show pickup-to-dropoff route
+          newPolylines.add(
+            Polyline(
+              polylineId: const PolylineId('pickup_to_dropoff'),
+              points: pickupToDropoffPoints,
+              color: primaryColor,
+              width: 4,
+            ),
+          );
+        }
+      } catch (e) {
+        logger.e('[DriverOrderDetailScreen] - Failed to get route: $e');
+        // Fallback to straight line on error
+        newPolylines.add(
+          Polyline(
+            polylineId: const PolylineId('route'),
+            points: [
+              LatLng(pickupLat, pickupLng),
+              LatLng(dropoffLat, dropoffLng),
+            ],
+            color: primaryColor,
+            width: 4,
+          ),
+        );
+      }
+
+      if (!mounted) {
+        _isUpdatingMap = false;
+        return;
+      }
+
+      setState(() {
+        _markers
+          ..clear()
+          ..addAll(newMarkers);
+        _polylines
+          ..clear()
+          ..addAll(newPolylines);
+      });
+
+      // Fit bounds to show all relevant points
+      final mapController = _mapController;
+      if (mapController != null) {
+        final allPoints = <LatLng>[
+          LatLng(pickupLat, pickupLng),
+          LatLng(dropoffLat, dropoffLng),
+        ];
+
+        // Include driver location in bounds if available
+        if (driverLocation != null) {
+          allPoints.add(
+            LatLng(driverLocation.y.toDouble(), driverLocation.x.toDouble()),
+          );
+        }
+
+        double minLat = allPoints.first.latitude;
+        double maxLat = allPoints.first.latitude;
+        double minLng = allPoints.first.longitude;
+        double maxLng = allPoints.first.longitude;
+
+        for (final point in allPoints) {
+          if (point.latitude < minLat) minLat = point.latitude;
+          if (point.latitude > maxLat) maxLat = point.latitude;
+          if (point.longitude < minLng) minLng = point.longitude;
+          if (point.longitude > maxLng) maxLng = point.longitude;
+        }
+
+        final bounds = LatLngBounds(
+          southwest: LatLng(minLat, minLng),
+          northeast: LatLng(maxLat, maxLng),
+        );
+        await mapController.animateCamera(
+          CameraUpdate.newLatLngBounds(bounds, 100),
+        );
+      }
+    } finally {
+      _isUpdatingMap = false;
     }
   }
 
@@ -484,7 +668,10 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
 
   Widget _buildActionButtons(DriverOrderState state, Order order) {
     final status = state.orderStatus;
-    final isLoading = state.fetchOrderResult.isLoading;
+    final isLoading =
+        state.fetchOrderResult.isLoading ||
+        state.updateStatusResult.isLoading ||
+        state.acceptOrderResult.isLoading;
 
     // Pending order - show accept/reject
     if (status == OrderStatus.REQUESTED || status == OrderStatus.MATCHING) {
@@ -498,7 +685,9 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
                 onPressed: isLoading
                     ? null
                     : () => _showRejectDialog(context, order.id),
-                child: Text(context.l10n.reject_order),
+                child: isLoading
+                    ? const Submiting()
+                    : Text(context.l10n.reject_order),
               ),
             ),
           ),
@@ -519,7 +708,7 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
                         );
                       },
                 child: isLoading
-                    ? const CircularProgressIndicator()
+                    ? const Submiting()
                     : Text(context.l10n.accept_order),
               ),
             ),
@@ -540,7 +729,7 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
                   ? null
                   : () => context.read<DriverOrderCubit>().markArrived(),
               child: isLoading
-                  ? const CircularProgressIndicator()
+                  ? const Submiting()
                   : Text(context.l10n.mark_as_arrived),
             ),
           ),
@@ -550,7 +739,9 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
               onPressed: isLoading
                   ? null
                   : () => _showCancelDialog(context, order.id),
-              child: Text(context.l10n.cancel_order),
+              child: isLoading
+                  ? const Submiting()
+                  : Text(context.l10n.cancel_order),
             ),
           ),
         ],
@@ -569,7 +760,7 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
                   ? null
                   : () => context.read<DriverOrderCubit>().startTrip(),
               child: isLoading
-                  ? const CircularProgressIndicator()
+                  ? const Submiting()
                   : Text(context.l10n.start_trip),
             ),
           ),
@@ -579,7 +770,9 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
               onPressed: isLoading
                   ? null
                   : () => _showCancelDialog(context, order.id),
-              child: Text(context.l10n.cancel_order),
+              child: isLoading
+                  ? const Submiting()
+                  : Text(context.l10n.cancel_order),
             ),
           ),
         ],
@@ -598,7 +791,7 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
                   context.read<DriverHomeCubit>().init();
                 },
           child: isLoading
-              ? const CircularProgressIndicator()
+              ? const Submiting()
               : Text(context.l10n.complete_trip),
         ),
       );
@@ -620,14 +813,18 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
                   toUserName: order.user?.name ?? context.l10n.text_customer,
                 );
               },
-              child: Text(context.l10n.rate_customer),
+              child: isLoading
+                  ? const Submiting()
+                  : Text(context.l10n.rate_customer),
             ),
           ),
           SizedBox(
             width: double.infinity,
             child: OutlineButton(
               onPressed: () => context.goNamed(Routes.driverHome.name),
-              child: Text(context.l10n.back_to_home),
+              child: isLoading
+                  ? const Submiting()
+                  : Text(context.l10n.back_to_home),
             ),
           ),
         ],
@@ -639,7 +836,7 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
       width: double.infinity,
       child: PrimaryButton(
         onPressed: () => context.goNamed(Routes.driverHome.name),
-        child: Text(context.l10n.back_to_home),
+        child: isLoading ? const Submiting() : Text(context.l10n.back_to_home),
       ),
     );
   }
