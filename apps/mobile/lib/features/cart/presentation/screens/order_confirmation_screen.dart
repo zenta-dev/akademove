@@ -648,7 +648,7 @@ class _OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
                         ? () {
                             context.read<CartCubit>().updateQuantity(
                               menuId: item.menuId,
-                              quantity: item.quantity - 1,
+                              delta: -1,
                             );
                           }
                         : null,
@@ -669,7 +669,7 @@ class _OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
                     onPressed: () {
                       context.read<CartCubit>().updateQuantity(
                         menuId: item.menuId,
-                        quantity: item.quantity + 1,
+                        delta: 1,
                       );
                     },
                   ),

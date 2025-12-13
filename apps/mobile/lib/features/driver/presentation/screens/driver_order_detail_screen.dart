@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:akademove/app/router/router.dart';
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
@@ -23,15 +25,210 @@ class DriverOrderDetailScreen extends StatefulWidget {
 
 class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
   GoogleMapController? _mapController;
-  final Set<Marker> _markers = {};
-  final Set<Polyline> _polylines = {};
+  Set<Marker> _markers = {};
+  Set<Polyline> _polylines = {};
   bool _isUpdatingMap = false;
   Coordinate? _currentDriverLocation;
+
+  /// Animated driver marker for smooth location updates with bike icon
+  late final AnimatedDriverMarker _animatedDriverMarker;
+
+  /// Stream subscription for real-time location tracking
+  StreamSubscription<Coordinate>? _locationStreamSubscription;
 
   @override
   void initState() {
     super.initState();
+    _animatedDriverMarker = AnimatedDriverMarker(
+      onMarkerUpdated: _onDriverMarkerUpdated,
+      markerId: 'driver',
+    );
+    _initializeMarkerAndLocation();
     _initializeOrder();
+  }
+
+  /// Initialize marker icon and start location streaming
+  Future<void> _initializeMarkerAndLocation() async {
+    await _animatedDriverMarker.loadDriverIcon();
+    _startLocationStream();
+  }
+
+  /// Start real-time location streaming for driver marker
+  void _startLocationStream() {
+    final locationService = sl<LocationService>();
+    _locationStreamSubscription = locationService
+        .getLocationStream(
+          accuracy: LocationAccuracy.high,
+          interval: const Duration(seconds: 3),
+        )
+        .listen(
+          (coordinate) {
+            _currentDriverLocation = coordinate;
+            _animatedDriverMarker.updateDriverLocation(coordinate);
+
+            // Update polylines when driver location changes during active order
+            final state = context.read<DriverOrderCubit>().state;
+            final order = state.currentOrder;
+            if (order != null &&
+                _shouldUpdateRouteForStatus(state.orderStatus)) {
+              _updatePolylinesOnly(order);
+            }
+          },
+          onError: (error) {
+            logger.e('[DriverOrderDetailScreen] Location stream error: $error');
+          },
+        );
+  }
+
+  /// Check if we should update route for the current order status
+  bool _shouldUpdateRouteForStatus(OrderStatus? status) {
+    return status == OrderStatus.ACCEPTED ||
+        status == OrderStatus.ARRIVING ||
+        status == OrderStatus.IN_TRIP;
+  }
+
+  /// Callback when animated driver marker position updates
+  void _onDriverMarkerUpdated(Marker driverMarker) {
+    if (!mounted) return;
+
+    setState(() {
+      // Remove old driver marker and add updated one
+      _markers = _markers.where((m) => m.markerId.value != 'driver').toSet()
+        ..add(driverMarker);
+    });
+  }
+
+  /// Update only polylines when driver location changes (without full map rebuild)
+  Future<void> _updatePolylinesOnly(Order order) async {
+    if (_isUpdatingMap) return;
+    _isUpdatingMap = true;
+
+    try {
+      final driverLocation = _currentDriverLocation;
+      if (driverLocation == null || !mounted) {
+        _isUpdatingMap = false;
+        return;
+      }
+
+      final pickupLat = order.pickupLocation.y.toDouble();
+      final pickupLng = order.pickupLocation.x.toDouble();
+      final dropoffLat = order.dropoffLocation.y.toDouble();
+      final dropoffLng = order.dropoffLocation.x.toDouble();
+
+      final primaryColor = context.colorScheme.primary;
+      final dimmedColor = primaryColor.withValues(alpha: 0.4);
+      final mapService = sl<MapService>();
+      final orderStatus = order.status;
+
+      final isDriverHeadingToPickup =
+          orderStatus == OrderStatus.ACCEPTED ||
+          orderStatus == OrderStatus.ARRIVING;
+      final isInTrip = orderStatus == OrderStatus.IN_TRIP;
+
+      final newPolylines = <Polyline>{};
+
+      try {
+        // Always get pickup-to-dropoff route
+        final pickupToDropoffRoute = await mapService.getRoutes(
+          order.pickupLocation,
+          order.dropoffLocation,
+        );
+
+        final pickupToDropoffPoints = pickupToDropoffRoute.isNotEmpty
+            ? pickupToDropoffRoute
+                  .map((c) => LatLng(c.y.toDouble(), c.x.toDouble()))
+                  .toList()
+            : [LatLng(pickupLat, pickupLng), LatLng(dropoffLat, dropoffLng)];
+
+        if (isDriverHeadingToPickup) {
+          final driverToPickupRoute = await mapService.getRoutes(
+            driverLocation,
+            order.pickupLocation,
+          );
+
+          final driverToPickupPoints = driverToPickupRoute.isNotEmpty
+              ? driverToPickupRoute
+                    .map((c) => LatLng(c.y.toDouble(), c.x.toDouble()))
+                    .toList()
+              : [
+                  LatLng(
+                    driverLocation.y.toDouble(),
+                    driverLocation.x.toDouble(),
+                  ),
+                  LatLng(pickupLat, pickupLng),
+                ];
+
+          newPolylines
+            ..add(
+              Polyline(
+                polylineId: const PolylineId('driver_to_pickup'),
+                points: driverToPickupPoints,
+                color: primaryColor,
+                width: 5,
+              ),
+            )
+            ..add(
+              Polyline(
+                polylineId: const PolylineId('pickup_to_dropoff'),
+                points: pickupToDropoffPoints,
+                color: dimmedColor,
+                width: 4,
+                patterns: [PatternItem.dash(10), PatternItem.gap(5)],
+              ),
+            );
+        } else if (isInTrip) {
+          final driverToDropoffRoute = await mapService.getRoutes(
+            driverLocation,
+            order.dropoffLocation,
+          );
+
+          final driverToDropoffPoints = driverToDropoffRoute.isNotEmpty
+              ? driverToDropoffRoute
+                    .map((c) => LatLng(c.y.toDouble(), c.x.toDouble()))
+                    .toList()
+              : [
+                  LatLng(
+                    driverLocation.y.toDouble(),
+                    driverLocation.x.toDouble(),
+                  ),
+                  LatLng(dropoffLat, dropoffLng),
+                ];
+
+          newPolylines.add(
+            Polyline(
+              polylineId: const PolylineId('driver_to_dropoff'),
+              points: driverToDropoffPoints,
+              color: primaryColor,
+              width: 5,
+            ),
+          );
+        } else {
+          newPolylines.add(
+            Polyline(
+              polylineId: const PolylineId('pickup_to_dropoff'),
+              points: pickupToDropoffPoints,
+              color: primaryColor,
+              width: 4,
+            ),
+          );
+        }
+      } catch (e) {
+        logger.e('[DriverOrderDetailScreen] - Failed to update polylines: $e');
+      }
+
+      if (!mounted) {
+        _isUpdatingMap = false;
+        return;
+      }
+
+      if (newPolylines.isNotEmpty) {
+        setState(() {
+          _polylines = newPolylines;
+        });
+      }
+    } finally {
+      _isUpdatingMap = false;
+    }
   }
 
   Future<void> _initializeOrder() async {
@@ -50,6 +247,8 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
 
   @override
   void dispose() {
+    _locationStreamSubscription?.cancel();
+    _animatedDriverMarker.dispose();
     _mapController?.dispose();
     super.dispose();
   }
@@ -169,13 +368,22 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
           ),
           markers: _markers,
           polylines: _polylines,
-          myLocationEnabled: true,
-          myLocationButtonEnabled: true,
+          myLocationEnabled: false, // Use bike marker instead of blue dot
+          myLocationButtonEnabled: false,
           zoomControlsEnabled: false,
           onMapCreated: (controller) {
             _mapController = controller;
             _updateMapWithOrderData(order);
           },
+        ),
+        // Center on driver location button
+        Positioned(
+          bottom: 80,
+          right: 16,
+          child: IconButton.primary(
+            onPressed: _centerOnDriverLocation,
+            icon: const Icon(LucideIcons.locateFixed),
+          ),
         ),
         // Emergency button - only show during IN_TRIP status
         BlocBuilder<DriverOrderCubit, DriverOrderState>(
@@ -202,6 +410,19 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
         ),
       ],
     );
+  }
+
+  /// Center map on driver's current location
+  Future<void> _centerOnDriverLocation() async {
+    final driverLocation = _currentDriverLocation;
+    if (driverLocation != null && _mapController != null) {
+      await _mapController!.animateCamera(
+        CameraUpdate.newLatLngZoom(
+          LatLng(driverLocation.y.toDouble(), driverLocation.x.toDouble()),
+          16,
+        ),
+      );
+    }
   }
 
   Future<void> _updateMapWithOrderData(Order order) async {
@@ -251,6 +472,15 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
           ),
         );
 
+      // Initialize driver marker with current location using bike icon
+      final driverLocation = _currentDriverLocation;
+      if (driverLocation != null) {
+        _animatedDriverMarker.updateDriverLocation(
+          driverLocation,
+          animate: false, // No animation on initial load
+        );
+      }
+
       // Build polylines based on order status
       final newPolylines = <Polyline>{};
 
@@ -263,7 +493,6 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
       final dimmedColor = primaryColor.withValues(alpha: 0.4);
       final mapService = sl<MapService>();
       final orderStatus = order.status;
-      final driverLocation = _currentDriverLocation;
 
       // Determine route based on order status
       // ACCEPTED/ARRIVING: Driver heading to pickup
@@ -387,12 +616,8 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
       }
 
       setState(() {
-        _markers
-          ..clear()
-          ..addAll(newMarkers);
-        _polylines
-          ..clear()
-          ..addAll(newPolylines);
+        _markers = newMarkers;
+        _polylines = newPolylines;
       });
 
       // Fit bounds to show all relevant points

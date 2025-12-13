@@ -185,45 +185,53 @@ class CartCubit extends BaseCubit<CartState> {
     emit(state.copyWith(clearPending: true));
   }
 
-  /// Update item quantity (or remove if quantity <= 0)
+  /// Update item quantity by delta (positive to increment, negative to decrement)
+  /// Removes item if resulting quantity <= 0
   Future<void> updateQuantity({
     required String menuId,
-    required int quantity,
-  }) async => await taskManager.execute('CC-uQ-$menuId', () async {
-    try {
-      final result = await _cartRepository.updateItemQuantity(
-        menuId: menuId,
-        quantity: quantity,
-      );
+    required int delta,
+  }) async {
+    // Use a unique key per call to avoid deduplication blocking rapid updates
+    // Each delta update is a distinct operation that should execute
+    final taskKey = 'CC-uQ-$menuId-${DateTime.now().microsecondsSinceEpoch}';
+    await taskManager.execute(taskKey, () async {
+      try {
+        final result = await _cartRepository.updateItemQuantityByDelta(
+          menuId: menuId,
+          delta: delta,
+        );
 
-      result.when(
-        success: (cart, message) {
-          emit(
-            state.copyWith(
-              updateQuantityResult: OperationResult.success(
-                cart,
-                message: message,
+        result.when(
+          success: (cart, message) {
+            emit(
+              state.copyWith(
+                updateQuantityResult: OperationResult.success(
+                  cart,
+                  message: message,
+                ),
+                cart: OperationResult.success(cart),
               ),
-              cart: OperationResult.success(cart),
-            ),
-          );
-        },
-        failed: (code, message) {
-          final error = RepositoryError(message, code: code);
-          emit(
-            state.copyWith(updateQuantityResult: OperationResult.failed(error)),
-          );
-        },
-      );
-    } on BaseError catch (e, st) {
-      logger.e(
-        '[CartCubit] - updateQuantity Error: ${e.message}',
-        error: e,
-        stackTrace: st,
-      );
-      emit(state.copyWith(updateQuantityResult: OperationResult.failed(e)));
-    }
-  });
+            );
+          },
+          failed: (code, message) {
+            final error = RepositoryError(message, code: code);
+            emit(
+              state.copyWith(
+                updateQuantityResult: OperationResult.failed(error),
+              ),
+            );
+          },
+        );
+      } on BaseError catch (e, st) {
+        logger.e(
+          '[CartCubit] - updateQuantity Error: ${e.message}',
+          error: e,
+          stackTrace: st,
+        );
+        emit(state.copyWith(updateQuantityResult: OperationResult.failed(e)));
+      }
+    });
+  }
 
   /// Remove item from cart
   Future<void> removeItem(

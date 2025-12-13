@@ -399,7 +399,7 @@ class _QuantityControls extends StatelessWidget {
           onTap: () {
             context.read<CartCubit>().updateQuantity(
               menuId: item.menuId,
-              quantity: item.quantity - 1,
+              delta: -1,
             );
           },
           child: Container(
@@ -426,7 +426,7 @@ class _QuantityControls extends StatelessWidget {
           onTap: () {
             context.read<CartCubit>().updateQuantity(
               menuId: item.menuId,
-              quantity: item.quantity + 1,
+              delta: 1,
             );
           },
           child: Container(

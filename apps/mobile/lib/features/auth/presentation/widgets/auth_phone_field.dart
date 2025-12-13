@@ -14,6 +14,7 @@ class AuthPhoneField extends StatelessWidget {
     this.enabled = true,
     this.label,
     this.labelStyle,
+    this.initialValue,
   });
 
   /// Callback when the phone number changes.
@@ -29,6 +30,9 @@ class AuthPhoneField extends StatelessWidget {
 
   /// Optional custom style for the label.
   final TextStyle? labelStyle;
+
+  /// Optional initial phone number value to prefill.
+  final PhoneNumber? initialValue;
 
   @override
   Widget build(BuildContext context) {
@@ -48,18 +52,21 @@ class AuthPhoneField extends StatelessWidget {
           ),
           child: PhoneInput(
             initialCountry: Country.indonesia,
+            initialValue: initialValue,
             countries: const [Country.indonesia],
-            onChanged: (value) {
-              final callback = onChanged;
-              if (callback == null) return;
-              CountryCode countryCode = CountryCode.ID;
-              switch (value.country) {
-                case Country.indonesia:
-                  countryCode = CountryCode.ID;
-                default:
-              }
-              callback(countryCode, value.number);
-            },
+            onChanged: enabled
+                ? (value) {
+                    final callback = onChanged;
+                    if (callback == null) return;
+                    CountryCode countryCode = CountryCode.ID;
+                    switch (value.country) {
+                      case Country.indonesia:
+                        countryCode = CountryCode.ID;
+                      default:
+                    }
+                    callback(countryCode, value.number);
+                  }
+                : null,
           ),
         ),
       ],

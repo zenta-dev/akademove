@@ -38,6 +38,12 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
   late final ScrollController _scrollController;
   late final FormController _formController;
 
+  // Text controllers for form fields
+  late final TextEditingController _ownerNameController;
+  late final TextEditingController _ownerEmailController;
+  late final TextEditingController _outletNameController;
+  late final TextEditingController _outletEmailController;
+
   GoogleMapController? _mapController;
   Set<Marker> _markers = {};
 
@@ -58,6 +64,8 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
 
   // Phone number state (outlet phone - used in updateProfile)
   String? _outletPhoneNumber;
+  PhoneNumber? _initialOutletPhone;
+  PhoneNumber? _initialOwnerPhone;
 
   final TextEditingController _searchController = TextEditingController();
   bool _isSearching = false;
@@ -89,11 +97,97 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
     super.initState();
     _scrollController = ScrollController();
     _formController = FormController();
-    _loadCurrentLocation();
+
+    // Initialize text controllers
+    _ownerNameController = TextEditingController();
+    _ownerEmailController = TextEditingController();
+    _outletNameController = TextEditingController();
+    _outletEmailController = TextEditingController();
+
+    // Prefill data after build
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _prefillMerchantData();
+    });
+  }
+
+  void _prefillMerchantData() {
+    final merchantCubit = context.read<MerchantCubit>();
+    final authCubit = context.read<AuthCubit>();
+
+    final merchant =
+        merchantCubit.state.merchant ?? merchantCubit.state.mine.value;
+    final user = authCubit.state.user.value;
+
+    if (merchant != null) {
+      setState(() {
+        // Prefill outlet info from merchant
+        _outletNameController.text = merchant.name;
+        _outletEmailController.text = merchant.email;
+
+        // Prefill bank info
+        _selectedBankProvider = merchant.bank.provider;
+        _bankAccountController.text = merchant.bank.number.toInt().toString();
+        _accountHolderName = merchant.bank.accountName;
+        _ownerBankName = merchant.bank.accountName;
+        _verifiedBankAccountNumber = merchant.bank.number.toInt().toString();
+        _isBankAccountVerified = true;
+
+        // Prefill outlet phone
+        if (merchant.phone != null) {
+          _initialOutletPhone = merchant.phone.toPhoneNumber();
+          _outletPhoneNumber = merchant.phone!.number.toString();
+        }
+
+        // Prefill location and address
+        if (merchant.location != null) {
+          _outletLocation = merchant.location!;
+          _isLocationLoaded = true;
+          _updateLocationAndMarker(_outletLocation);
+        }
+        _outletAddress = merchant.address;
+      });
+    }
+
+    // Prefill owner info from user
+    if (user != null) {
+      setState(() {
+        _ownerNameController.text = user.name;
+        _ownerEmailController.text = user.email;
+
+        // Prefill owner phone
+        if (user.phone != null) {
+          _initialOwnerPhone = user.phone.toPhoneNumber();
+        }
+      });
+    }
+
+    // Load current location if merchant doesn't have a saved location
+    if (merchant?.location == null) {
+      _loadCurrentLocation();
+    } else {
+      // Animate to the saved location
+      Future.delayed(const Duration(milliseconds: 500), () {
+        if (mounted && _mapController != null) {
+          _mapController!.animateCamera(
+            CameraUpdate.newLatLngZoom(
+              LatLng(
+                _outletLocation.y.toDouble(),
+                _outletLocation.x.toDouble(),
+              ),
+              16,
+            ),
+          );
+        }
+      });
+    }
   }
 
   @override
   void dispose() {
+    _ownerNameController.dispose();
+    _ownerEmailController.dispose();
+    _outletNameController.dispose();
+    _outletEmailController.dispose();
     _mapController?.dispose();
     _scrollController.dispose();
     _formController.dispose();
@@ -529,12 +623,11 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
       return;
     }
 
-    final values = _formController.values;
-    final outletName = _FormKeys.outletName[values];
-    final outletEmail = _FormKeys.outletEmail[values];
+    final outletName = _outletNameController.text.trim();
+    final outletEmail = _outletEmailController.text.trim();
     final bankAccountNumber = _bankAccountController.text.trim();
 
-    if (outletName == null || outletName.isEmpty) {
+    if (outletName.isEmpty) {
       _showToast(
         context,
         context.l10n.error_validation,
@@ -778,9 +871,10 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
                       placeholder: context.l10n.placeholder_owner_name,
                       icon: LucideIcons.user,
                       validator: const LengthValidator(min: 3),
-                      enabled: !_isLoading,
+                      enabled: false,
                       labelStyle: _labelStyle,
                       placeholderStyle: _placeholderStyle,
+                      controller: _ownerNameController,
                     ),
                     AuthTextField(
                       formKey: _FormKeys.ownerEmail,
@@ -789,15 +883,17 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
                       icon: LucideIcons.mail,
                       validator: const EmailValidator(),
                       keyboardType: TextInputType.emailAddress,
-                      enabled: !_isLoading,
+                      enabled: false,
                       labelStyle: _labelStyle,
                       placeholderStyle: _placeholderStyle,
+                      controller: _ownerEmailController,
                     ),
                     AuthPhoneField(
                       label: context.l10n.label_owner_phone,
                       labelStyle: _labelStyle,
                       // Owner phone is read-only display - not editable via merchant update API
                       enabled: false,
+                      initialValue: _initialOwnerPhone,
                     ),
                     AuthTextField(
                       formKey: _FormKeys.outletName,
@@ -808,12 +904,14 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
                       enabled: !_isLoading,
                       labelStyle: _labelStyle,
                       placeholderStyle: _placeholderStyle,
+                      controller: _outletNameController,
                     ),
                     _buildOutletLocationField(),
                     AuthPhoneField(
                       label: context.l10n.label_outlet_phone,
                       labelStyle: _labelStyle,
                       enabled: !_isLoading,
+                      initialValue: _initialOutletPhone,
                       onChanged: (_, phoneNumber) {
                         _outletPhoneNumber = phoneNumber;
                         setState(() {});
@@ -829,6 +927,7 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
                       enabled: !_isLoading,
                       labelStyle: _labelStyle,
                       placeholderStyle: _placeholderStyle,
+                      controller: _outletEmailController,
                     ),
                     AuthImagePicker(
                       label: context.l10n.label_outlet_document,

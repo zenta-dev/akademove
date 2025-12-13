@@ -1,6 +1,7 @@
 import { m } from "@repo/i18n";
 import type { Driver, Payment, Transaction } from "@repo/schema";
 import type { OrderStatus } from "@repo/schema/order";
+import type { OrderEnvelope } from "@repo/schema/ws";
 import { trimObjectValues } from "@repo/shared";
 import { AuthError } from "@/core/error";
 import { shouldBypassAuthorization } from "@/core/middlewares/auth";
@@ -10,6 +11,7 @@ import { PaymentRepository } from "../payment/payment-repository";
 import { TransactionRepository } from "../transaction/transaction-repository";
 import { OrderRepository } from "./order-repository";
 import { OrderSpec } from "./order-spec";
+import { OrderBaseRepository } from "./repositories/order-base-repository";
 
 const { priv } = createORPCRouter(OrderSpec);
 
@@ -239,6 +241,54 @@ export const OrderHandler = priv.router({
 					},
 					{ tx },
 				);
+
+				// Broadcast the message to WebSocket room so other participants receive it in real-time
+				try {
+					const stub = OrderBaseRepository.getRoomStubByName(params.id);
+					const broadcastPayload: OrderEnvelope = {
+						e: "CHAT_MESSAGE",
+						f: "s",
+						t: "c",
+						p: {
+							message: {
+								id: result.id,
+								orderId: result.orderId,
+								senderId: result.senderId,
+								senderName: result.sender?.name ?? "Unknown",
+								senderRole: result.sender?.role ?? "USER",
+								message: result.message,
+								sentAt: result.sentAt,
+							},
+						},
+					};
+
+					await stub.fetch(
+						new Request("http://internal/broadcast", {
+							method: "POST",
+							headers: { "Content-Type": "application/json" },
+							body: JSON.stringify(broadcastPayload),
+						}),
+					);
+
+					logger.info(
+						{
+							messageId: result.id,
+							orderId: result.orderId,
+							senderId: result.senderId,
+						},
+						"[OrderHandler] Broadcast chat message to WebSocket room",
+					);
+				} catch (broadcastError) {
+					// Log but don't fail the request - message is already saved to DB
+					logger.error(
+						{
+							error: broadcastError,
+							messageId: result.id,
+							orderId: result.orderId,
+						},
+						"[OrderHandler] Failed to broadcast chat message to WebSocket",
+					);
+				}
 
 				return {
 					status: 200,

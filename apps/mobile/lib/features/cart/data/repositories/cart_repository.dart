@@ -122,10 +122,12 @@ class CartRepository extends BaseRepository {
     });
   }
 
-  /// Update item quantity in cart
-  Future<BaseResponse<models.Cart?>> updateItemQuantity({
+  /// Update item quantity in cart by delta (increment/decrement)
+  /// Use positive delta to increase quantity, negative to decrease
+  /// Removes item if resulting quantity <= 0
+  Future<BaseResponse<models.Cart?>> updateItemQuantityByDelta({
     required String menuId,
-    required int quantity,
+    required int delta,
   }) async {
     return guard(() async {
       final currentCart = await getCart();
@@ -145,15 +147,15 @@ class CartRepository extends BaseRepository {
       }
 
       final updatedItems = List<models.CartItem>.from(currentCart.items);
+      final currentItem = updatedItems[itemIndex];
+      final newQuantity = currentItem.quantity + delta;
 
-      if (quantity <= 0) {
+      if (newQuantity <= 0) {
         // Remove item if quantity is 0 or less
         updatedItems.removeAt(itemIndex);
       } else {
         // Update quantity
-        updatedItems[itemIndex] = updatedItems[itemIndex].copyWith(
-          quantity: quantity,
-        );
+        updatedItems[itemIndex] = currentItem.copyWith(quantity: newQuantity);
       }
 
       // If cart is empty after update, clear it
