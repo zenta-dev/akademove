@@ -297,4 +297,62 @@ class UserLocationCubit extends BaseCubit<UserLocationState> {
     }
     emit(state.copyWith(markers: newMarkers));
   }
+
+  /// Efficiently update driver markers by only replacing markers that changed.
+  ///
+  /// This method prevents unnecessary re-renders by:
+  /// - Comparing marker positions to detect actual changes
+  /// - Only updating the Set when markers actually differ
+  /// - Preserving marker object identity for unchanged drivers
+  void updateDriverMarkersEfficiently(Set<Marker> newDriverMarkers) {
+    final currentMarkers = state.markers;
+
+    // Separate driver markers from other markers
+    final nonDriverMarkers = currentMarkers
+        .where((m) => !m.markerId.value.startsWith('driver_'))
+        .toSet();
+
+    final currentDriverMarkers = currentMarkers
+        .where((m) => m.markerId.value.startsWith('driver_'))
+        .toSet();
+
+    // Check if driver markers actually changed
+    if (_areMarkerSetsEqual(currentDriverMarkers, newDriverMarkers)) {
+      // No change - don't emit
+      return;
+    }
+
+    // Build new marker set with non-driver markers + new driver markers
+    final updatedMarkers = <Marker>{...nonDriverMarkers, ...newDriverMarkers};
+    emit(state.copyWith(markers: updatedMarkers));
+  }
+
+  /// Compare two marker sets for equality based on position
+  bool _areMarkerSetsEqual(Set<Marker> set1, Set<Marker> set2) {
+    if (set1.length != set2.length) return false;
+
+    // Build a map of marker positions for set1
+    final positions1 = <String, LatLng>{};
+    for (final marker in set1) {
+      positions1[marker.markerId.value] = marker.position;
+    }
+
+    // Check if all markers in set2 have matching positions in set1
+    for (final marker in set2) {
+      final existingPosition = positions1[marker.markerId.value];
+      if (existingPosition == null) return false;
+
+      // Check if positions are close enough (within threshold)
+      const threshold = 0.00001;
+      final latDiff = (existingPosition.latitude - marker.position.latitude)
+          .abs();
+      final lngDiff = (existingPosition.longitude - marker.position.longitude)
+          .abs();
+      if (latDiff > threshold || lngDiff > threshold) {
+        return false;
+      }
+    }
+
+    return true;
+  }
 }

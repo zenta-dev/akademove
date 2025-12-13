@@ -2,7 +2,6 @@ import 'dart:math' as math;
 
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
-import 'package:akademove/gen/assets.gen.dart';
 import 'package:akademove/l10n/l10n.dart';
 import 'package:api_client/api_client.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -27,31 +26,35 @@ class _UserNearbyDriverScreenState extends State<UserNearbyDriverScreen> {
   LatLng? _lastCenter;
   CameraPosition? _currentCameraPosition;
 
-  BitmapDescriptor _driverIcon = BitmapDescriptor.defaultMarkerWithHue(
-    BitmapDescriptor.hueBlue,
-  );
+  /// Manager for efficient driver marker updates
+  late final DriverMarkersManager _driverMarkersManager;
 
   @override
   void initState() {
     super.initState();
-    _loadCustomMarkerIcon();
+    _driverMarkersManager = DriverMarkersManager(
+      onMarkersUpdated: _onDriverMarkersUpdated,
+    );
+    _loadMarkerIcon();
   }
 
   @override
   void dispose() {
+    _driverMarkersManager.dispose();
     _mapController?.dispose();
     super.dispose();
   }
 
-  Future<void> _loadCustomMarkerIcon() async {
-    final BitmapDescriptor bitmap = await BitmapDescriptor.asset(
-      const ImageConfiguration(size: Size(64, 64)),
-      Assets.images.motorcycleAbove.path,
-    );
+  Future<void> _loadMarkerIcon() async {
+    await _driverMarkersManager.loadDriverIcon();
+  }
+
+  /// Callback when driver markers are updated by the manager
+  void _onDriverMarkersUpdated(Set<Marker> markers) {
     if (!mounted) return;
-    setState(() {
-      _driverIcon = bitmap;
-    });
+    final locationCubit = context.read<UserLocationCubit>();
+    // Use efficient update method that only emits if markers actually changed
+    locationCubit.updateDriverMarkersEfficiently(markers);
   }
 
   Future<void> _setupLocation() async {
@@ -125,28 +128,8 @@ class _UserNearbyDriverScreenState extends State<UserNearbyDriverScreen> {
     UserLocationCubit locationCubit,
     List<Driver> drivers,
   ) {
-    final newMarkers = drivers
-        .where((driver) => driver.currentLocation != null)
-        .map((driver) {
-          final loc = driver.currentLocation;
-          if (loc == null) return null;
-
-          return Marker(
-            markerId: MarkerId('driver_${driver.id}'),
-            position: LatLng(loc.y.toDouble(), loc.x.toDouble()),
-            infoWindow: InfoWindow(
-              title: driver.user?.name ?? context.l10n.text_driver,
-              snippet: driver.rating != 0
-                  ? '${context.l10n.text_rating}: ${driver.rating.toStringAsFixed(1)}'
-                  : context.l10n.text_no_rating_yet,
-            ),
-            icon: _driverIcon,
-          );
-        })
-        .whereType<Marker>()
-        .toList();
-
-    locationCubit.setDriverMarkers(newMarkers);
+    // Use the efficient driver markers manager
+    _driverMarkersManager.updateDrivers(drivers);
   }
 
   Future<void> _onCameraIdle() async {

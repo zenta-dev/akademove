@@ -1,5 +1,6 @@
 export 'address_text.dart';
 export 'animated_driver_marker.dart';
+export 'driver_markers_manager.dart';
 export 'avatar.dart';
 export 'bank_transfer_payment_widget.dart';
 export 'bottom_navbar.dart';
