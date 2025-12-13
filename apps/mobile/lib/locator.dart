@@ -209,6 +209,9 @@ void _setupCubit() {
       ),
     )
     ..registerFactory(
+      () => UserCouponCubit(couponRepository: sl<CouponRepository>()),
+    )
+    ..registerFactory(
       () => OrderChatCubit(orderChatRepository: sl<OrderChatRepository>()),
     )
     ..registerFactory(
@@ -263,9 +266,6 @@ void _setupCubit() {
     )
     ..registerFactory(
       () => UserReviewCubit(reviewRepository: sl<UserReviewRepository>()),
-    )
-    ..registerFactory(
-      () => CouponCubit(couponRepository: sl<CouponRepository>()),
     )
     ..registerFactory(
       () => EmergencyCubit(repository: sl<EmergencyRepository>()),

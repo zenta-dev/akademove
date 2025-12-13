@@ -20,6 +20,7 @@ final userRouter = StatefulShellRoute.indexedStack(
         BlocProvider(create: (_) => sl<UserMapCubit>()),
         BlocProvider(create: (_) => sl<NotificationCubit>()),
         BlocProvider(create: (_) => sl<EmergencyCubit>()),
+        BlocProvider(create: (_) => sl<UserCouponCubit>()),
       ],
       child: BottomNavbar(
         shell: navigationShell,
@@ -69,10 +70,7 @@ final userRouter = StatefulShellRoute.indexedStack(
             GoRoute(
               name: Routes.userRideSummary.name,
               path: Routes.userRideSummary.path,
-              builder: (context, state) => BlocProvider(
-                create: (_) => sl<CouponCubit>(),
-                child: const UserRideSummaryScreen(),
-              ),
+              builder: (context, state) => const UserRideSummaryScreen(),
             ),
             GoRoute(
               name: Routes.userRidePayment.name,
@@ -170,10 +168,7 @@ final userRouter = StatefulShellRoute.indexedStack(
             GoRoute(
               name: Routes.userDeliverySummary.name,
               path: Routes.userDeliverySummary.path,
-              builder: (context, state) => BlocProvider(
-                create: (_) => sl<CouponCubit>(),
-                child: const UserDeliverySummaryScreen(),
-              ),
+              builder: (context, state) => const UserDeliverySummaryScreen(),
             ),
             GoRoute(
               name: Routes.userDeliveryDetailsEditDetail.name,
@@ -261,7 +256,6 @@ final userRouter = StatefulShellRoute.indexedStack(
             final merchantId = state.pathParameters['merchantId'] ?? '';
             final extra = state.extra as Map<String, dynamic>?;
             final merchant = extra?['merchant'] as Merchant?;
-            final isSummary = extra?['isSummary'] as bool? ?? false;
             if (merchant == null) {
               // Fallback if merchant data not passed
               return const UserMartScreen();
@@ -272,7 +266,6 @@ final userRouter = StatefulShellRoute.indexedStack(
               child: UserMerchantDetailScreen(
                 merchantId: merchantId,
                 merchant: merchant,
-                isSummary: isSummary,
               ),
             );
           },
@@ -383,10 +376,7 @@ final userRouter = StatefulShellRoute.indexedStack(
         GoRoute(
           name: Routes.userVoucher.name,
           path: Routes.userVoucher.path,
-          builder: (context, state) => BlocProvider(
-            create: (_) => sl<CouponCubit>(),
-            child: const UserVoucherScreen(),
-          ),
+          builder: (context, state) => const UserVoucherScreen(),
         ),
         GoRoute(
           name: Routes.userNotifications.name,

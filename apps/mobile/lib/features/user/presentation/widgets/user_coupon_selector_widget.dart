@@ -1,5 +1,4 @@
-import 'package:akademove/features/coupon/presentation/cubits/_export.dart';
-import 'package:akademove/features/coupon/presentation/states/_export.dart';
+import 'package:akademove/features/features.dart';
 import 'package:akademove/l10n/l10n.dart';
 import 'package:api_client/api_client.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -7,14 +6,14 @@ import 'package:shadcn_flutter/shadcn_flutter.dart';
 import 'package:intl/intl.dart';
 
 /// Bottom sheet for selecting coupons
-class CouponSelectorWidget extends StatelessWidget {
-  const CouponSelectorWidget({required this.onCouponSelected, super.key});
+class UserCouponSelectorWidget extends StatelessWidget {
+  const UserCouponSelectorWidget({required this.onCouponSelected, super.key});
 
   final void Function(Coupon?) onCouponSelected;
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<CouponCubit, CouponState>(
+    return BlocBuilder<UserCouponCubit, UserCouponState>(
       builder: (context, state) {
         if (state.eligibleCoupons.isLoading) {
           return const Center(child: CircularProgressIndicator());
@@ -138,7 +137,7 @@ class CouponSelectorWidget extends StatelessWidget {
                     coupon: coupon,
                     isSelected: isSelected,
                     onTap: () {
-                      context.read<CouponCubit>().selectCoupon(coupon);
+                      context.read<UserCouponCubit>().selectCoupon(coupon);
                       onCouponSelected(coupon);
                       Navigator.pop(context);
                     },
@@ -154,7 +153,7 @@ class CouponSelectorWidget extends StatelessWidget {
                 padding: const EdgeInsets.all(16),
                 child: OutlineButton(
                   onPressed: () {
-                    context.read<CouponCubit>().clearCoupon();
+                    context.read<UserCouponCubit>().clearCoupon();
                     onCouponSelected(null);
                     Navigator.pop(context);
                   },

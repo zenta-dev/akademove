@@ -30,7 +30,7 @@ class _UserDeliverySummaryScreenState extends State<UserDeliverySummaryScreen> {
       final totalAmount =
           orderState.estimateOrder.value?.summary.totalCost ?? 0;
       if (totalAmount > 0) {
-        context.read<CouponCubit>().loadEligibleCoupons(
+        context.read<UserCouponCubit>().loadEligibleCoupons(
           serviceType: OrderType.DELIVERY,
           totalAmount: totalAmount,
         );
@@ -140,7 +140,7 @@ class _UserDeliverySummaryScreenState extends State<UserDeliverySummaryScreen> {
           ),
         ),
         // Coupon selector
-        BlocBuilder<CouponCubit, CouponState>(
+        BlocBuilder<UserCouponCubit, UserCouponState>(
           builder: (context, couponState) {
             return OutlineButton(
               onPressed: () {
@@ -148,15 +148,15 @@ class _UserDeliverySummaryScreenState extends State<UserDeliverySummaryScreen> {
                   context: context,
                   position: OverlayPosition.bottom,
                   builder: (drawerContext) => BlocProvider.value(
-                    value: context.read<CouponCubit>(),
+                    value: context.read<UserCouponCubit>(),
                     child: SizedBox(
                       height: MediaQuery.of(context).size.height * 0.7,
-                      child: CouponSelectorWidget(
+                      child: UserCouponSelectorWidget(
                         onCouponSelected: (coupon) {
                           setState(() {
                             selectedCoupon = coupon;
                             if (coupon != null) {
-                              final cubit = context.read<CouponCubit>();
+                              final cubit = context.read<UserCouponCubit>();
                               discountAmount =
                                   cubit
                                       .state

@@ -21,7 +21,7 @@ class _UserVoucherScreenState extends State<UserVoucherScreen> {
     super.initState();
     // Load all coupons when screen loads
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<CouponCubit>().loadEligibleCoupons(
+      context.read<UserCouponCubit>().loadEligibleCoupons(
         serviceType: OrderType.RIDE,
         // Use a reasonable default amount to show available coupons
         // The actual eligibility will be checked when applying to an order
@@ -31,7 +31,7 @@ class _UserVoucherScreenState extends State<UserVoucherScreen> {
   }
 
   Future<void> _onRefresh() async {
-    await context.read<CouponCubit>().loadEligibleCoupons(
+    await context.read<UserCouponCubit>().loadEligibleCoupons(
       serviceType: OrderType.RIDE,
       totalAmount: 10000,
     );
@@ -61,7 +61,7 @@ class _UserVoucherScreenState extends State<UserVoucherScreen> {
         child: SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.all(16.dg),
-            child: BlocBuilder<CouponCubit, CouponState>(
+            child: BlocBuilder<UserCouponCubit, UserCouponState>(
               builder: (context, state) {
                 if (state.eligibleCoupons.isLoading) {
                   return const Center(child: CircularProgressIndicator());
@@ -86,7 +86,7 @@ class _UserVoucherScreenState extends State<UserVoucherScreen> {
                         ),
                         OutlineButton(
                           onPressed: () {
-                            context.read<CouponCubit>().loadEligibleCoupons(
+                            context.read<UserCouponCubit>().loadEligibleCoupons(
                               serviceType: OrderType.RIDE,
                               totalAmount: 10000,
                             );

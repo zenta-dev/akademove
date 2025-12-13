@@ -11,3 +11,4 @@ export 'pick_location_widget.dart';
 export 'ride_summary_widget.dart';
 export 'user_avatar_widget.dart';
 export 'user_profile_card_widget.dart';
+export 'user_coupon_selector_widget.dart';

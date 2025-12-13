@@ -1,12 +1,11 @@
 import 'package:akademove/core/_export.dart';
-import 'package:akademove/features/coupon/data/repositories/coupon_repository.dart';
-import 'package:akademove/features/coupon/presentation/states/coupon_state.dart';
+import 'package:akademove/features/features.dart';
 import 'package:api_client/api_client.dart';
 
-class CouponCubit extends BaseCubit<CouponState> {
-  CouponCubit({required CouponRepository couponRepository})
+class UserCouponCubit extends BaseCubit<UserCouponState> {
+  UserCouponCubit({required CouponRepository couponRepository})
     : _couponRepository = couponRepository,
-      super(const CouponState());
+      super(const UserCouponState());
 
   final CouponRepository _couponRepository;
 

@@ -68,7 +68,7 @@ class _OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
       final cartState = context.read<CartCubit>().state;
       final totalAmount = cartState.currentCart?.subtotal ?? 0;
       if (totalAmount > 0) {
-        context.read<CouponCubit>().loadEligibleCoupons(
+        context.read<UserCouponCubit>().loadEligibleCoupons(
           serviceType: OrderType.FOOD,
           totalAmount: totalAmount,
         );
@@ -208,7 +208,7 @@ class _OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
   }
 
   void _showCouponSelector() {
-    final couponCubit = context.read<CouponCubit>();
+    final couponCubit = context.read<UserCouponCubit>();
     openDrawer(
       context: context,
       position: OverlayPosition.bottom,
@@ -217,7 +217,7 @@ class _OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
         value: couponCubit,
         child: SizedBox(
           height: MediaQuery.of(context).size.height * 0.7,
-          child: CouponSelectorWidget(
+          child: UserCouponSelectorWidget(
             onCouponSelected: (coupon) {
               setState(() {
                 _selectedCoupon = coupon;
@@ -979,7 +979,7 @@ class _OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
   Widget _buildApplyCouponRow(BuildContext context) {
     return _buildCard(
       context,
-      child: BlocBuilder<CouponCubit, CouponState>(
+      child: BlocBuilder<UserCouponCubit, UserCouponState>(
         builder: (context, couponState) {
           final hasSelectedCoupon = _selectedCoupon != null;
 

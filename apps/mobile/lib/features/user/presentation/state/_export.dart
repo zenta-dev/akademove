@@ -1,4 +1,5 @@
 import 'package:akademove/core/_export.dart';
+import 'package:akademove/features/features.dart';
 import 'package:api_client/api_client.dart';
 import 'package:equatable/equatable.dart';
 import 'package:geocoding/geocoding.dart';
@@ -13,3 +14,4 @@ part 'user_mart_state.dart';
 part 'user_merchant_list_state.dart';
 part 'user_merchant_detail_state.dart';
 part 'user_map_state.dart';
+part 'user_coupon_state.dart';

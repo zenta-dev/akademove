@@ -16,13 +16,9 @@ class UserMerchantDetailScreen extends StatefulWidget {
   final String merchantId;
   final Merchant merchant;
 
-  /// If true, shows read-only summary mode (no quantity adjustment)
-  final bool isSummary;
-
   const UserMerchantDetailScreen({
     required this.merchantId,
     required this.merchant,
-    this.isSummary = false,
     super.key,
   });
 
@@ -81,59 +77,50 @@ class _UserMerchantDetailScreenState extends State<UserMerchantDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return PopScope(
-      key: ValueKey("pop_scope_${widget.isSummary}"),
-      canPop: !widget.isSummary,
-      onPopInvokedWithResult: (didPop, result) {
-        if (!didPop && widget.isSummary) {
-          context.pop();
-        }
-      },
-      child: Scaffold(
-        headers: [
-          AppBar(
-            padding: EdgeInsets.all(4.dg),
-            leading: [
-              IconButton(
-                onPressed: () => context.pop(),
-                icon: Icon(LucideIcons.chevronLeft, size: 20.sp),
-                variance: const ButtonStyle.ghost(),
-              ),
-            ],
-          ),
-        ],
-        child: BlocConsumer<UserMerchantDetailCubit, UserMerchantDetailState>(
-          listener: (context, state) {
-            if (state.menuByCategory.isFailure &&
-                state.menuByCategory.message != null) {
-              showToast(
-                context: context,
-                location: ToastLocation.bottomCenter,
-                builder: (context, overlay) => context.buildToast(
-                  title: context.l10n.error,
-                  message: state.menuByCategory.message!,
-                ),
-              );
-            }
-          },
-          builder: (context, state) {
-            if (state.menuByCategory.isLoading &&
-                state.menuByCategory.value == null) {
-              return const Center(child: CircularProgressIndicator());
-            }
-
-            if (state.menuByCategory.isFailure &&
-                state.menuByCategory.value == null) {
-              return _buildErrorState(context, state);
-            }
-
-            if (state.isEmpty) {
-              return _buildEmptyState(context);
-            }
-
-            return _buildDetailContent(context, state);
-          },
+    return Scaffold(
+      headers: [
+        AppBar(
+          padding: EdgeInsets.all(4.dg),
+          leading: [
+            IconButton(
+              onPressed: () => context.pop(),
+              icon: Icon(LucideIcons.chevronLeft, size: 20.sp),
+              variance: const ButtonStyle.ghost(),
+            ),
+          ],
         ),
+      ],
+      child: BlocConsumer<UserMerchantDetailCubit, UserMerchantDetailState>(
+        listener: (context, state) {
+          if (state.menuByCategory.isFailure &&
+              state.menuByCategory.message != null) {
+            showToast(
+              context: context,
+              location: ToastLocation.bottomCenter,
+              builder: (context, overlay) => context.buildToast(
+                title: context.l10n.error,
+                message: state.menuByCategory.message!,
+              ),
+            );
+          }
+        },
+        builder: (context, state) {
+          if (state.menuByCategory.isLoading &&
+              state.menuByCategory.value == null) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          if (state.menuByCategory.isFailure &&
+              state.menuByCategory.value == null) {
+            return _buildErrorState(context, state);
+          }
+
+          if (state.isEmpty) {
+            return _buildEmptyState(context);
+          }
+
+          return _buildDetailContent(context, state);
+        },
       ),
     );
   }
@@ -195,14 +182,15 @@ class _UserMerchantDetailScreenState extends State<UserMerchantDetailScreen> {
     BuildContext context,
     UserMerchantDetailState detailState,
   ) {
-    return BlocBuilder<CartCubit, CartState>(
-      builder: (context, cartState) {
-        final itemCount = cartState.totalItems;
-        final merchant = detailState.merchant.value ?? widget.merchant;
+    final merchant = detailState.merchant.value ?? widget.merchant;
 
-        return Stack(
-          children: [
-            RefreshTrigger(
+    return Stack(
+      children: [
+        // Use BlocSelector to only get totalItems for padding calculation
+        BlocSelector<CartCubit, CartState, int>(
+          selector: (state) => state.totalItems,
+          builder: (context, itemCount) {
+            return RefreshTrigger(
               onRefresh: _onRefresh,
               child: ListView(
                 physics: const AlwaysScrollableScrollPhysics(),
@@ -224,27 +212,38 @@ class _UserMerchantDetailScreenState extends State<UserMerchantDetailScreen> {
 
                   // Product List (Stack of Cards)
                   if (detailState.menuByCategory.hasData)
-                    _buildProductList(
-                      context,
-                      detailState,
-                      cartState,
-                      merchant,
+                    BlocBuilder<CartCubit, CartState>(
+                      builder: (context, cartState) {
+                        return _buildProductList(
+                          context,
+                          detailState,
+                          cartState,
+                          merchant,
+                        );
+                      },
                     ),
                 ],
               ),
-            ),
+            );
+          },
+        ),
 
-            // Bottom Floating Action Bar
-            if (itemCount > 0)
-              Positioned(
+        // Bottom Floating Action Bar - separate builder to avoid RefreshTrigger rebuilds
+        BlocBuilder<CartCubit, CartState>(
+          builder: (context, cartState) {
+            final itemCount = cartState.totalItems;
+            if (itemCount > 0) {
+              return Positioned(
                 bottom: 0,
                 left: 0,
                 right: 0,
                 child: _buildBottomActionBar(context, cartState),
-              ),
-          ],
-        );
-      },
+              );
+            }
+            return const SizedBox.shrink();
+          },
+        ),
+      ],
     );
   }
 
@@ -793,15 +792,7 @@ class _UserMerchantDetailScreenState extends State<UserMerchantDetailScreen> {
           child: Button(
             style: const ButtonStyle.primary(),
             onPressed: () {
-              if (widget.isSummary) {
-                context.pushNamed(Routes.userOrderConfirm.name);
-              } else {
-                context.pushNamed(
-                  Routes.userMartDetail.name,
-                  pathParameters: {"merchantId": widget.merchantId},
-                  extra: {"isSummary": true, "merchant": widget.merchant},
-                );
-              }
+              context.pushNamed(Routes.userOrderConfirm.name);
             },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
