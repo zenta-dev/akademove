@@ -12,8 +12,8 @@ import '../../../../helpers/mock_factories.dart';
 import '../../../../helpers/test_constants.dart';
 
 void main() {
-  group('CartCubit', () {
-    late CartCubit cubit;
+  group('UserCartCubit', () {
+    late UserCartCubit cubit;
     late MockCartRepository mockCartRepository;
     late MockOrderRepository mockOrderRepository;
 
@@ -21,7 +21,7 @@ void main() {
       mockCartRepository = MockCartRepository();
       mockOrderRepository = MockOrderRepository();
 
-      cubit = CartCubit(
+      cubit = UserCartCubit(
         cartRepository: mockCartRepository,
         orderRepository: mockOrderRepository,
       );
@@ -32,7 +32,7 @@ void main() {
     });
 
     test('initial state is correct', () {
-      expect(cubit.state, isA<CartState>());
+      expect(cubit.state, isA<UserCartState>());
       expect(cubit.state.cart.isIdle, true);
       expect(cubit.state.addItemResult.isIdle, true);
       expect(cubit.state.removeItemResult.isIdle, true);
@@ -44,7 +44,7 @@ void main() {
     });
 
     group('loadCart', () {
-      blocTest<CartCubit, CartState>(
+      blocTest<UserCartCubit, UserCartState>(
         'emits [loading, success] when loadCart succeeds',
         build: () {
           final cart = Cart(
@@ -77,8 +77,8 @@ void main() {
         },
         act: (cubit) => cubit.loadCart(),
         expect: () => [
-          isA<CartState>().having((s) => s.cart.isLoading, 'isLoading', true),
-          isA<CartState>()
+          isA<UserCartState>().having((s) => s.cart.isLoading, 'isLoading', true),
+          isA<UserCartState>()
               .having((s) => s.cart.isSuccess, 'isSuccess', true)
               .having(
                 (s) => s.cart.value?.merchantId,
@@ -92,7 +92,7 @@ void main() {
         },
       );
 
-      blocTest<CartCubit, CartState>(
+      blocTest<UserCartCubit, UserCartState>(
         'emits [loading, failure] when loadCart fails',
         build: () {
           when(() => mockCartRepository.getCart()).thenThrow(
@@ -105,14 +105,14 @@ void main() {
         },
         act: (cubit) => cubit.loadCart(),
         expect: () => [
-          isA<CartState>().having((s) => s.cart.isLoading, 'isLoading', true),
-          isA<CartState>().having((s) => s.cart.isFailure, 'isFailure', true),
+          isA<UserCartState>().having((s) => s.cart.isLoading, 'isLoading', true),
+          isA<UserCartState>().having((s) => s.cart.isFailure, 'isFailure', true),
         ],
       );
     });
 
     group('clearCart', () {
-      blocTest<CartCubit, CartState>(
+      blocTest<UserCartCubit, UserCartState>(
         'emits [loading, success] when clearCart succeeds',
         build: () {
           when(() => mockCartRepository.clearCart()).thenAnswer((_) async {});
@@ -120,12 +120,12 @@ void main() {
         },
         act: (cubit) => cubit.clearCart(),
         expect: () => [
-          isA<CartState>().having(
+          isA<UserCartState>().having(
             (s) => s.clearCartResult.isLoading,
             'isLoading',
             true,
           ),
-          isA<CartState>()
+          isA<UserCartState>()
               .having((s) => s.clearCartResult.isSuccess, 'isSuccess', true)
               .having((s) => s.cart.value, 'cart.value', isNull),
         ],
@@ -134,7 +134,7 @@ void main() {
         },
       );
 
-      blocTest<CartCubit, CartState>(
+      blocTest<UserCartCubit, UserCartState>(
         'emits [loading, failure] when clearCart fails',
         build: () {
           when(() => mockCartRepository.clearCart()).thenThrow(
@@ -147,12 +147,12 @@ void main() {
         },
         act: (cubit) => cubit.clearCart(),
         expect: () => [
-          isA<CartState>().having(
+          isA<UserCartState>().having(
             (s) => s.clearCartResult.isLoading,
             'isLoading',
             true,
           ),
-          isA<CartState>().having(
+          isA<UserCartState>().having(
             (s) => s.clearCartResult.isFailure,
             'isFailure',
             true,
