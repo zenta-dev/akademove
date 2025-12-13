@@ -110,6 +110,10 @@ class MerchantOrderCubit extends BaseCubit<MerchantOrderState> {
         _handleOrderCompletedEvent(envelope.p);
       case MerchantEnvelopeEvent.ORDER_STATUS_CHANGED:
         _handleOrderStatusChangedEvent(envelope.p);
+      case MerchantEnvelopeEvent.NEW_DATA:
+      case MerchantEnvelopeEvent.NO_DATA:
+        // These events are handled by WebSocket sync service, skip here
+        logger.d('[MerchantOrderCubit] - Sync event received: ${envelope.e}');
       case null:
         logger.w('[MerchantOrderCubit] - Received envelope with null event');
     }

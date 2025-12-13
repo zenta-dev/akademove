@@ -20,48 +20,49 @@ class MerchantUpdateDocumentStatusRequest {
   const MerchantUpdateDocumentStatusRequest({
     required this.document,
     required this.status,
-     this.reason,
+    this.reason,
   });
   @JsonKey(name: r'document', required: true, includeIfNull: false)
   final MerchantUpdateDocumentStatusRequestDocumentEnum document;
-  
+
   @JsonKey(name: r'status', required: true, includeIfNull: false)
   final MerchantUpdateDocumentStatusRequestStatusEnum status;
-  
+
   @JsonKey(name: r'reason', required: false, includeIfNull: false)
   final String? reason;
-  
-  @override
-  bool operator ==(Object other) => identical(this, other) || other is MerchantUpdateDocumentStatusRequest &&
-    other.document == document &&
-    other.status == status &&
-    other.reason == reason;
 
   @override
-  int get hashCode =>
-      document.hashCode +
-      status.hashCode +
-      reason.hashCode;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is MerchantUpdateDocumentStatusRequest &&
+          other.document == document &&
+          other.status == status &&
+          other.reason == reason;
 
-  factory MerchantUpdateDocumentStatusRequest.fromJson(Map<String, dynamic> json) => _$MerchantUpdateDocumentStatusRequestFromJson(json);
+  @override
+  int get hashCode => document.hashCode + status.hashCode + reason.hashCode;
 
-  Map<String, dynamic> toJson() => _$MerchantUpdateDocumentStatusRequestToJson(this);
+  factory MerchantUpdateDocumentStatusRequest.fromJson(
+    Map<String, dynamic> json,
+  ) => _$MerchantUpdateDocumentStatusRequestFromJson(json);
+
+  Map<String, dynamic> toJson() =>
+      _$MerchantUpdateDocumentStatusRequestToJson(this);
 
   @override
   String toString() {
     return toJson().toString();
   }
-
 }
 
 enum MerchantUpdateDocumentStatusRequestDocumentEnum {
   @JsonValue(r'businessDocument')
   businessDocument(r'businessDocument');
-  
+
   const MerchantUpdateDocumentStatusRequestDocumentEnum(this.value);
-  
+
   final String value;
-  
+
   @override
   String toString() => value;
 }
@@ -71,12 +72,11 @@ enum MerchantUpdateDocumentStatusRequestStatusEnum {
   APPROVED(r'APPROVED'),
   @JsonValue(r'REJECTED')
   REJECTED(r'REJECTED');
-  
+
   const MerchantUpdateDocumentStatusRequestStatusEnum(this.value);
-  
+
   final String value;
-  
+
   @override
   String toString() => value;
 }
-

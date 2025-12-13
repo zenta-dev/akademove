@@ -8,7 +8,6 @@ export 'package:api_client/src/auth/basic_auth.dart';
 export 'package:api_client/src/auth/bearer_auth.dart';
 export 'package:api_client/src/auth/oauth.dart';
 
-
 export 'package:api_client/src/api/admin_api.dart';
 export 'package:api_client/src/api/auth_api.dart';
 export 'package:api_client/src/api/badge_api.dart';
@@ -502,4 +501,3 @@ export 'package:api_client/src/model/wallet_monthly_summary_response.dart';
 export 'package:api_client/src/model/weight_size.dart';
 export 'package:api_client/src/model/withdraw_request.dart';
 export 'package:api_client/src/model/withdraw_response.dart';
-

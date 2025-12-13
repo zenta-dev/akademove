@@ -18,7 +18,6 @@ class DriverEarningsScreen extends StatefulWidget {
 
 class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
   DateTime _selectedMonth = DateTime.now();
-  bool _isWithdrawing = false;
 
   @override
   void initState() {
@@ -884,8 +883,6 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
     bool saveBank = false,
   }) async {
     try {
-      setState(() => _isWithdrawing = true);
-
       final request = WithdrawRequest(
         amount: amount,
         bankProvider: bankProvider,
@@ -896,13 +893,11 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
       final result = await context.read<DriverWalletCubit>().withdraw(request);
 
       if (mounted) {
-        setState(() => _isWithdrawing = false);
         context.showMyToast(result.message, type: ToastType.success);
         _loadData();
       }
     } catch (e) {
       if (mounted) {
-        setState(() => _isWithdrawing = false);
         context.showMyToast(
           context.l10n.failed_to_withdraw,
           type: ToastType.failed,

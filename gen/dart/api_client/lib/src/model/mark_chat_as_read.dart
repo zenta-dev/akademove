@@ -17,27 +17,25 @@ part 'mark_chat_as_read.g.dart';
 )
 class MarkChatAsRead {
   /// Returns a new [MarkChatAsRead] instance.
-  const MarkChatAsRead({
-    required this.orderId,
-     this.lastReadMessageId,
-  });
+  const MarkChatAsRead({required this.orderId, this.lastReadMessageId});
   @JsonKey(name: r'orderId', required: true, includeIfNull: false)
   final String orderId;
-  
+
   @JsonKey(name: r'lastReadMessageId', required: false, includeIfNull: false)
   final String? lastReadMessageId;
-  
-  @override
-  bool operator ==(Object other) => identical(this, other) || other is MarkChatAsRead &&
-    other.orderId == orderId &&
-    other.lastReadMessageId == lastReadMessageId;
 
   @override
-  int get hashCode =>
-      orderId.hashCode +
-      lastReadMessageId.hashCode;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is MarkChatAsRead &&
+          other.orderId == orderId &&
+          other.lastReadMessageId == lastReadMessageId;
 
-  factory MarkChatAsRead.fromJson(Map<String, dynamic> json) => _$MarkChatAsReadFromJson(json);
+  @override
+  int get hashCode => orderId.hashCode + lastReadMessageId.hashCode;
+
+  factory MarkChatAsRead.fromJson(Map<String, dynamic> json) =>
+      _$MarkChatAsReadFromJson(json);
 
   Map<String, dynamic> toJson() => _$MarkChatAsReadToJson(this);
 
@@ -45,6 +43,4 @@ class MarkChatAsRead {
   String toString() {
     return toJson().toString();
   }
-
 }
-

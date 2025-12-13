@@ -22,29 +22,31 @@ class FraudGetUserProfile200Response {
   const FraudGetUserProfile200Response({
     required this.message,
     required this.data,
-     this.pagination,
-     this.totalPages,
+    this.pagination,
+    this.totalPages,
   });
   @JsonKey(name: r'message', required: true, includeIfNull: false)
   final String message;
-  
+
   @JsonKey(name: r'data', required: true, includeIfNull: true)
   final UserFraudProfile? data;
-  
+
   @JsonKey(name: r'pagination', required: false, includeIfNull: false)
   final PaginationResult? pagination;
-  
-          // minimum: 0
-          // maximum: 9007199254740991
+
+  // minimum: 0
+  // maximum: 9007199254740991
   @JsonKey(name: r'totalPages', required: false, includeIfNull: false)
   final int? totalPages;
-  
+
   @override
-  bool operator ==(Object other) => identical(this, other) || other is FraudGetUserProfile200Response &&
-    other.message == message &&
-    other.data == data &&
-    other.pagination == pagination &&
-    other.totalPages == totalPages;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is FraudGetUserProfile200Response &&
+          other.message == message &&
+          other.data == data &&
+          other.pagination == pagination &&
+          other.totalPages == totalPages;
 
   @override
   int get hashCode =>
@@ -53,7 +55,8 @@ class FraudGetUserProfile200Response {
       pagination.hashCode +
       totalPages.hashCode;
 
-  factory FraudGetUserProfile200Response.fromJson(Map<String, dynamic> json) => _$FraudGetUserProfile200ResponseFromJson(json);
+  factory FraudGetUserProfile200Response.fromJson(Map<String, dynamic> json) =>
+      _$FraudGetUserProfile200ResponseFromJson(json);
 
   Map<String, dynamic> toJson() => _$FraudGetUserProfile200ResponseToJson(this);
 
@@ -61,6 +64,4 @@ class FraudGetUserProfile200Response {
   String toString() {
     return toJson().toString();
   }
-
 }
-

@@ -4,15 +4,12 @@ import 'package:api_client/api_client.dart';
 
 class UserDeliveryCubit extends BaseCubit<UserDeliveryState> {
   UserDeliveryCubit({
-    required OrderRepository orderRepository,
     required DriverRepository driverRepository,
     required MapService mapService,
-  }) : _orderRepository = orderRepository,
-       _driverRepository = driverRepository,
+  }) : _driverRepository = driverRepository,
        _mapService = mapService,
        super(const UserDeliveryState());
 
-  final OrderRepository _orderRepository;
   final DriverRepository _driverRepository;
   final MapService _mapService;
 

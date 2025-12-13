@@ -23,28 +23,30 @@ class FraudSignal {
     required this.type,
     required this.severity,
     required this.confidence,
-     this.metadata,
+    this.metadata,
   });
   @JsonKey(name: r'type', required: true, includeIfNull: false)
   final FraudEventType type;
-  
+
   @JsonKey(name: r'severity', required: true, includeIfNull: false)
   final FraudSeverity severity;
-  
-          // minimum: 0
-          // maximum: 100
+
+  // minimum: 0
+  // maximum: 100
   @JsonKey(name: r'confidence', required: true, includeIfNull: false)
   final num confidence;
-  
+
   @JsonKey(name: r'metadata', required: false, includeIfNull: false)
   final Map<String, Object>? metadata;
-  
+
   @override
-  bool operator ==(Object other) => identical(this, other) || other is FraudSignal &&
-    other.type == type &&
-    other.severity == severity &&
-    other.confidence == confidence &&
-    other.metadata == metadata;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is FraudSignal &&
+          other.type == type &&
+          other.severity == severity &&
+          other.confidence == confidence &&
+          other.metadata == metadata;
 
   @override
   int get hashCode =>
@@ -53,7 +55,8 @@ class FraudSignal {
       confidence.hashCode +
       metadata.hashCode;
 
-  factory FraudSignal.fromJson(Map<String, dynamic> json) => _$FraudSignalFromJson(json);
+  factory FraudSignal.fromJson(Map<String, dynamic> json) =>
+      _$FraudSignalFromJson(json);
 
   Map<String, dynamic> toJson() => _$FraudSignalToJson(this);
 
@@ -61,6 +64,4 @@ class FraudSignal {
   String toString() {
     return toJson().toString();
   }
-
 }
-

@@ -22,31 +22,33 @@ class WithdrawRequest {
     required this.amount,
     required this.bankProvider,
     required this.accountNumber,
-     this.accountName,
-     this.saveBank,
+    this.accountName,
+    this.saveBank,
   });
   @JsonKey(name: r'amount', required: true, includeIfNull: false)
   final num amount;
-  
+
   @JsonKey(name: r'bankProvider', required: true, includeIfNull: false)
   final BankProvider bankProvider;
-  
+
   @JsonKey(name: r'accountNumber', required: true, includeIfNull: false)
   final String accountNumber;
-  
+
   @JsonKey(name: r'accountName', required: false, includeIfNull: false)
   final String? accountName;
-  
+
   @JsonKey(name: r'saveBank', required: false, includeIfNull: false)
   final bool? saveBank;
-  
+
   @override
-  bool operator ==(Object other) => identical(this, other) || other is WithdrawRequest &&
-    other.amount == amount &&
-    other.bankProvider == bankProvider &&
-    other.accountNumber == accountNumber &&
-    other.accountName == accountName &&
-    other.saveBank == saveBank;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is WithdrawRequest &&
+          other.amount == amount &&
+          other.bankProvider == bankProvider &&
+          other.accountNumber == accountNumber &&
+          other.accountName == accountName &&
+          other.saveBank == saveBank;
 
   @override
   int get hashCode =>
@@ -56,7 +58,8 @@ class WithdrawRequest {
       accountName.hashCode +
       saveBank.hashCode;
 
-  factory WithdrawRequest.fromJson(Map<String, dynamic> json) => _$WithdrawRequestFromJson(json);
+  factory WithdrawRequest.fromJson(Map<String, dynamic> json) =>
+      _$WithdrawRequestFromJson(json);
 
   Map<String, dynamic> toJson() => _$WithdrawRequestToJson(this);
 
@@ -64,6 +67,4 @@ class WithdrawRequest {
   String toString() {
     return toJson().toString();
   }
-
 }
-

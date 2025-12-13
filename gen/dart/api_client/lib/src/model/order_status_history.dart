@@ -30,52 +30,54 @@ class OrderStatusHistory {
     required this.reason,
     required this.metadata,
     required this.changedAt,
-     this.changedByUser,
+    this.changedByUser,
   });
-          // minimum: 0
-          // maximum: 9007199254740991
+  // minimum: 0
+  // maximum: 9007199254740991
   @JsonKey(name: r'id', required: true, includeIfNull: false)
   final int id;
-  
+
   @JsonKey(name: r'orderId', required: true, includeIfNull: false)
   final String orderId;
-  
+
   @JsonKey(name: r'previousStatus', required: true, includeIfNull: true)
   final OrderStatus? previousStatus;
-  
+
   @JsonKey(name: r'newStatus', required: true, includeIfNull: false)
   final OrderStatus newStatus;
-  
+
   @JsonKey(name: r'changedBy', required: true, includeIfNull: true)
   final String? changedBy;
-  
+
   @JsonKey(name: r'changedByRole', required: true, includeIfNull: true)
   final OrderStatusHistoryRole? changedByRole;
-  
+
   @JsonKey(name: r'reason', required: true, includeIfNull: true)
   final String? reason;
-  
+
   @JsonKey(name: r'metadata', required: true, includeIfNull: true)
   final Map<String, Object>? metadata;
-  
+
   @JsonKey(name: r'changedAt', required: true, includeIfNull: false)
   final DateTime changedAt;
-  
+
   @JsonKey(name: r'changedByUser', required: false, includeIfNull: false)
   final DriverUser? changedByUser;
-  
+
   @override
-  bool operator ==(Object other) => identical(this, other) || other is OrderStatusHistory &&
-    other.id == id &&
-    other.orderId == orderId &&
-    other.previousStatus == previousStatus &&
-    other.newStatus == newStatus &&
-    other.changedBy == changedBy &&
-    other.changedByRole == changedByRole &&
-    other.reason == reason &&
-    other.metadata == metadata &&
-    other.changedAt == changedAt &&
-    other.changedByUser == changedByUser;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is OrderStatusHistory &&
+          other.id == id &&
+          other.orderId == orderId &&
+          other.previousStatus == previousStatus &&
+          other.newStatus == newStatus &&
+          other.changedBy == changedBy &&
+          other.changedByRole == changedByRole &&
+          other.reason == reason &&
+          other.metadata == metadata &&
+          other.changedAt == changedAt &&
+          other.changedByUser == changedByUser;
 
   @override
   int get hashCode =>
@@ -90,7 +92,8 @@ class OrderStatusHistory {
       changedAt.hashCode +
       changedByUser.hashCode;
 
-  factory OrderStatusHistory.fromJson(Map<String, dynamic> json) => _$OrderStatusHistoryFromJson(json);
+  factory OrderStatusHistory.fromJson(Map<String, dynamic> json) =>
+      _$OrderStatusHistoryFromJson(json);
 
   Map<String, dynamic> toJson() => _$OrderStatusHistoryToJson(this);
 
@@ -98,6 +101,4 @@ class OrderStatusHistory {
   String toString() {
     return toJson().toString();
   }
-
 }
-

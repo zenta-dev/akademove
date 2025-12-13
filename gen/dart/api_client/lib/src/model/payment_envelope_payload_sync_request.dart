@@ -19,32 +19,33 @@ class PaymentEnvelopePayloadSyncRequest {
   /// Returns a new [PaymentEnvelopePayloadSyncRequest] instance.
   const PaymentEnvelopePayloadSyncRequest({
     required this.paymentId,
-     this.lastKnownVersion,
+    this.lastKnownVersion,
   });
   @JsonKey(name: r'paymentId', required: true, includeIfNull: false)
   final String paymentId;
-  
+
   @JsonKey(name: r'lastKnownVersion', required: false, includeIfNull: false)
   final String? lastKnownVersion;
-  
-  @override
-  bool operator ==(Object other) => identical(this, other) || other is PaymentEnvelopePayloadSyncRequest &&
-    other.paymentId == paymentId &&
-    other.lastKnownVersion == lastKnownVersion;
 
   @override
-  int get hashCode =>
-      paymentId.hashCode +
-      lastKnownVersion.hashCode;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is PaymentEnvelopePayloadSyncRequest &&
+          other.paymentId == paymentId &&
+          other.lastKnownVersion == lastKnownVersion;
 
-  factory PaymentEnvelopePayloadSyncRequest.fromJson(Map<String, dynamic> json) => _$PaymentEnvelopePayloadSyncRequestFromJson(json);
+  @override
+  int get hashCode => paymentId.hashCode + lastKnownVersion.hashCode;
 
-  Map<String, dynamic> toJson() => _$PaymentEnvelopePayloadSyncRequestToJson(this);
+  factory PaymentEnvelopePayloadSyncRequest.fromJson(
+    Map<String, dynamic> json,
+  ) => _$PaymentEnvelopePayloadSyncRequestFromJson(json);
+
+  Map<String, dynamic> toJson() =>
+      _$PaymentEnvelopePayloadSyncRequestToJson(this);
 
   @override
   String toString() {
     return toJson().toString();
   }
-
 }
-

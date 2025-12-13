@@ -70,24 +70,39 @@ class UserWalletTopUpCubit extends BaseCubit<UserWalletTopUpState> {
       final data = PaymentEnvelope.fromJson(json);
 
       if (data.e == PaymentEnvelopeEvent.TOP_UP_SUCCESS) {
+        final payment = data.p.payment;
+        final transaction = data.p.transaction;
+        final wallet = data.p.wallet;
         emit(
           state.copyWith(
-            payment: OperationResult.success(data.p.payment),
-            transaction: OperationResult.success(data.p.transaction),
-            wallet: OperationResult.success(data.p.wallet),
+            payment: payment != null
+                ? OperationResult.success(payment)
+                : state.payment,
+            transaction: transaction != null
+                ? OperationResult.success(transaction)
+                : state.transaction,
+            wallet: wallet != null
+                ? OperationResult.success(wallet)
+                : state.wallet,
           ),
         );
         return;
       }
 
       if (data.e == PaymentEnvelopeEvent.TOP_UP_FAILED) {
+        final transaction = data.p.transaction;
+        final wallet = data.p.wallet;
         emit(
           state.copyWith(
             payment: OperationResult.failed(
               const UnknownError('Top up failed'),
             ),
-            transaction: OperationResult.success(data.p.transaction),
-            wallet: OperationResult.success(data.p.wallet),
+            transaction: transaction != null
+                ? OperationResult.success(transaction)
+                : state.transaction,
+            wallet: wallet != null
+                ? OperationResult.success(wallet)
+                : state.wallet,
           ),
         );
         return;

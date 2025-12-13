@@ -3,7 +3,8 @@ import 'package:api_client/api_client.dart';
 
 // tests for OrderEnvelopePayloadSyncRequest
 void main() {
-  final OrderEnvelopePayloadSyncRequest? instance = /* OrderEnvelopePayloadSyncRequest(...) */ null;
+  final OrderEnvelopePayloadSyncRequest?
+  instance = /* OrderEnvelopePayloadSyncRequest(...) */ null;
   // TODO add properties to the entity
 
   group(OrderEnvelopePayloadSyncRequest, () {
@@ -16,6 +17,5 @@ void main() {
     test('to test the property `lastKnownVersion`', () async {
       // TODO
     });
-
   });
 }

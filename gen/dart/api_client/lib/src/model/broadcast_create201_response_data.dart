@@ -24,84 +24,101 @@ class BroadcastCreate201ResponseData {
     required this.type,
     required this.status,
     required this.targetAudience,
-     this.targetIds,
-     this.scheduledAt,
-     this.sentAt,
-     this.totalRecipients = 0,
-     this.sentCount = 0,
-     this.failedCount = 0,
+    this.targetIds,
+    this.scheduledAt,
+    this.sentAt,
+    this.totalRecipients = 0,
+    this.sentCount = 0,
+    this.failedCount = 0,
     required this.createdBy,
     required this.createdAt,
     required this.updatedAt,
   });
   @JsonKey(name: r'id', required: true, includeIfNull: false)
   final String id;
-  
+
   @JsonKey(name: r'title', required: true, includeIfNull: false)
   final String title;
-  
+
   @JsonKey(name: r'message', required: true, includeIfNull: false)
   final String message;
-  
+
   @JsonKey(name: r'type', required: true, includeIfNull: false)
   final BroadcastCreate201ResponseDataTypeEnum type;
-  
+
   @JsonKey(name: r'status', required: true, includeIfNull: false)
   final BroadcastCreate201ResponseDataStatusEnum status;
-  
+
   @JsonKey(name: r'targetAudience', required: true, includeIfNull: false)
   final BroadcastCreate201ResponseDataTargetAudienceEnum targetAudience;
-  
+
   @JsonKey(name: r'targetIds', required: false, includeIfNull: false)
   final List<String>? targetIds;
-  
+
   @JsonKey(name: r'scheduledAt', required: false, includeIfNull: false)
   final DateTime? scheduledAt;
-  
+
   @JsonKey(name: r'sentAt', required: false, includeIfNull: false)
   final DateTime? sentAt;
-  
-          // minimum: 0
-          // maximum: 9007199254740991
-  @JsonKey(defaultValue: 0,name: r'totalRecipients', required: false, includeIfNull: false)
+
+  // minimum: 0
+  // maximum: 9007199254740991
+  @JsonKey(
+    defaultValue: 0,
+    name: r'totalRecipients',
+    required: false,
+    includeIfNull: false,
+  )
   final int? totalRecipients;
-  
-          // minimum: 0
-          // maximum: 9007199254740991
-  @JsonKey(defaultValue: 0,name: r'sentCount', required: false, includeIfNull: false)
+
+  // minimum: 0
+  // maximum: 9007199254740991
+  @JsonKey(
+    defaultValue: 0,
+    name: r'sentCount',
+    required: false,
+    includeIfNull: false,
+  )
   final int? sentCount;
-  
-          // minimum: 0
-          // maximum: 9007199254740991
-  @JsonKey(defaultValue: 0,name: r'failedCount', required: false, includeIfNull: false)
+
+  // minimum: 0
+  // maximum: 9007199254740991
+  @JsonKey(
+    defaultValue: 0,
+    name: r'failedCount',
+    required: false,
+    includeIfNull: false,
+  )
   final int? failedCount;
-  
+
   @JsonKey(name: r'createdBy', required: true, includeIfNull: false)
   final String createdBy;
-  
+
   @JsonKey(name: r'createdAt', required: true, includeIfNull: false)
   final DateTime createdAt;
-  
+
   @JsonKey(name: r'updatedAt', required: true, includeIfNull: false)
   final DateTime updatedAt;
-  
+
   @override
-  bool operator ==(Object other) => identical(this, other) || other is BroadcastCreate201ResponseData &&
-    other.id == id &&
-    other.title == title &&
-    other.message == message &&
-    other.type == type &&
-    other.status == status &&
-    other.targetAudience == targetAudience &&
-    other.targetIds == targetIds &&
-    other.scheduledAt == scheduledAt &&
-    other.sentAt == sentAt &&
-    other.totalRecipients == totalRecipients &&
-    other.sentCount == sentCount &&
-    other.failedCount == failedCount &&
-    other.createdBy == createdBy &&
-    other.createdAt == createdAt &&
-    other.updatedAt == updatedAt;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is BroadcastCreate201ResponseData &&
+          other.id == id &&
+          other.title == title &&
+          other.message == message &&
+          other.type == type &&
+          other.status == status &&
+          other.targetAudience == targetAudience &&
+          other.targetIds == targetIds &&
+          other.scheduledAt == scheduledAt &&
+          other.sentAt == sentAt &&
+          other.totalRecipients == totalRecipients &&
+          other.sentCount == sentCount &&
+          other.failedCount == failedCount &&
+          other.createdBy == createdBy &&
+          other.createdAt == createdAt &&
+          other.updatedAt == updatedAt;
 
   @override
   int get hashCode =>
@@ -121,7 +138,8 @@ class BroadcastCreate201ResponseData {
       createdAt.hashCode +
       updatedAt.hashCode;
 
-  factory BroadcastCreate201ResponseData.fromJson(Map<String, dynamic> json) => _$BroadcastCreate201ResponseDataFromJson(json);
+  factory BroadcastCreate201ResponseData.fromJson(Map<String, dynamic> json) =>
+      _$BroadcastCreate201ResponseDataFromJson(json);
 
   Map<String, dynamic> toJson() => _$BroadcastCreate201ResponseDataToJson(this);
 
@@ -129,7 +147,6 @@ class BroadcastCreate201ResponseData {
   String toString() {
     return toJson().toString();
   }
-
 }
 
 enum BroadcastCreate201ResponseDataTypeEnum {
@@ -139,11 +156,11 @@ enum BroadcastCreate201ResponseDataTypeEnum {
   IN_APP(r'IN_APP'),
   @JsonValue(r'ALL')
   ALL(r'ALL');
-  
+
   const BroadcastCreate201ResponseDataTypeEnum(this.value);
-  
+
   final String value;
-  
+
   @override
   String toString() => value;
 }
@@ -157,11 +174,11 @@ enum BroadcastCreate201ResponseDataStatusEnum {
   SENT(r'SENT'),
   @JsonValue(r'FAILED')
   FAILED(r'FAILED');
-  
+
   const BroadcastCreate201ResponseDataStatusEnum(this.value);
-  
+
   final String value;
-  
+
   @override
   String toString() => value;
 }
@@ -179,12 +196,11 @@ enum BroadcastCreate201ResponseDataTargetAudienceEnum {
   ADMINS(r'ADMINS'),
   @JsonValue(r'OPERATORS')
   OPERATORS(r'OPERATORS');
-  
+
   const BroadcastCreate201ResponseDataTargetAudienceEnum(this.value);
-  
+
   final String value;
-  
+
   @override
   String toString() => value;
 }
-

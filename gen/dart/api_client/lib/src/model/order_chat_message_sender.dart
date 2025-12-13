@@ -20,31 +20,32 @@ class OrderChatMessageSender {
   /// Returns a new [OrderChatMessageSender] instance.
   const OrderChatMessageSender({
     required this.name,
-     this.image,
+    this.image,
     required this.role,
   });
   @JsonKey(name: r'name', required: true, includeIfNull: false)
   final String name;
-  
+
   @JsonKey(name: r'image', required: false, includeIfNull: false)
   final String? image;
-  
+
   @JsonKey(name: r'role', required: true, includeIfNull: false)
   final ChatSenderRole role;
-  
+
   @override
-  bool operator ==(Object other) => identical(this, other) || other is OrderChatMessageSender &&
-    other.name == name &&
-    other.image == image &&
-    other.role == role;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is OrderChatMessageSender &&
+          other.name == name &&
+          other.image == image &&
+          other.role == role;
 
   @override
   int get hashCode =>
-      name.hashCode +
-      image.hashCode +
-      role.hashCode;
+      name.hashCode + (image == null ? 0 : image.hashCode) + role.hashCode;
 
-  factory OrderChatMessageSender.fromJson(Map<String, dynamic> json) => _$OrderChatMessageSenderFromJson(json);
+  factory OrderChatMessageSender.fromJson(Map<String, dynamic> json) =>
+      _$OrderChatMessageSenderFromJson(json);
 
   Map<String, dynamic> toJson() => _$OrderChatMessageSenderToJson(this);
 
@@ -52,6 +53,4 @@ class OrderChatMessageSender {
   String toString() {
     return toJson().toString();
   }
-
 }
-

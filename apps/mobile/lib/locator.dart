@@ -178,7 +178,6 @@ void _setupCubit() {
     )
     ..registerFactory(
       () => UserDeliveryCubit(
-        orderRepository: sl<OrderRepository>(),
         driverRepository: sl<DriverRepository>(),
         mapService: sl<MapService>(),
       ),

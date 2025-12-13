@@ -23,8 +23,6 @@ class _LeaderboardView extends StatefulWidget {
 }
 
 class _LeaderboardViewState extends State<_LeaderboardView> {
-  final int _tabIndex = 0;
-
   Future<void> _onRefresh() async {
     await context.read<DriverLeaderboardCubit>().refresh();
   }
@@ -89,31 +87,6 @@ class _LeaderboardViewState extends State<_LeaderboardView> {
             .map((leaderboard) => _LeaderboardCard(leaderboard: leaderboard))
             .toList(),
       ),
-    );
-  }
-
-  Widget _buildBadgesTab(DriverLeaderboardState state) {
-    final badges = state.badges.value ?? [];
-    final userBadges = state.userBadges.value ?? [];
-
-    if (badges.isEmpty) {
-      return Center(child: Text(context.l10n.leaderboard_no_badges));
-    }
-
-    return GridView.builder(
-      padding: EdgeInsets.all(16.w),
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        crossAxisSpacing: 12.w,
-        mainAxisSpacing: 12.h,
-        childAspectRatio: 0.85,
-      ),
-      itemCount: badges.length,
-      itemBuilder: (context, index) {
-        final badge = badges[index];
-        final isEarned = userBadges.any((ub) => ub.badgeId == badge.id);
-        return _BadgeCard(badge: badge, isEarned: isEarned);
-      },
     );
   }
 }
@@ -240,131 +213,5 @@ class _LeaderboardCard extends StatelessWidget {
         ],
       ),
     );
-  }
-}
-
-class _BadgeCard extends StatelessWidget {
-  const _BadgeCard({required this.badge, required this.isEarned});
-
-  final api_client.Badge badge;
-  final bool isEarned;
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: EdgeInsets.all(12.w),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            // Badge Icon
-            Container(
-              width: 80.w,
-              height: 80.w,
-              decoration: BoxDecoration(
-                color: _getBadgeLevelColor(badge.level).withAlpha(51),
-                shape: BoxShape.circle,
-                border: Border.all(
-                  color: _getBadgeLevelColor(badge.level),
-                  width: isEarned ? 3 : 1,
-                ),
-              ),
-              child: Center(
-                child: Builder(
-                  builder: (context) {
-                    final icon = badge.icon;
-                    if (icon != null) {
-                      return Text(icon, style: TextStyle(fontSize: 40.sp));
-                    }
-                    return Icon(
-                      LucideIcons.trophy,
-                      size: 40.sp,
-                      color: _getBadgeLevelColor(badge.level),
-                    );
-                  },
-                ),
-              ),
-            ),
-            SizedBox(height: 12.h),
-
-            // Badge Name
-            Text(
-              badge.name,
-              textAlign: TextAlign.center,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              style: context.typography.p.copyWith(
-                fontWeight: FontWeight.bold,
-                fontSize: 14.sp,
-              ),
-            ),
-            SizedBox(height: 4.h),
-
-            // Badge Level
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
-              decoration: BoxDecoration(
-                color: _getBadgeLevelColor(badge.level).withAlpha(51),
-                borderRadius: BorderRadius.circular(12.r),
-              ),
-              child: Text(
-                badge.level.value,
-                style: TextStyle(
-                  fontSize: 10.sp,
-                  fontWeight: FontWeight.bold,
-                  color: _getBadgeLevelColor(badge.level),
-                ),
-              ),
-            ),
-
-            // Earned Status
-            if (isEarned) ...[
-              SizedBox(height: 8.h),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
-                decoration: BoxDecoration(
-                  color: const Color(0xFF22C55E).withAlpha(51),
-                  borderRadius: BorderRadius.circular(12.r),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      LucideIcons.check,
-                      size: 12.sp,
-                      color: const Color(0xFF22C55E),
-                    ),
-                    SizedBox(width: 4.w),
-                    Text(
-                      context.l10n.text_earned,
-                      style: TextStyle(
-                        fontSize: 10.sp,
-                        fontWeight: FontWeight.bold,
-                        color: const Color(0xFF22C55E),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ],
-        ),
-      ),
-    );
-  }
-
-  Color _getBadgeLevelColor(api_client.BadgeLevel level) {
-    switch (level) {
-      case api_client.BadgeLevel.BRONZE:
-        return const Color(0xFFCD7F32);
-      case api_client.BadgeLevel.SILVER:
-        return const Color(0xFFC0C0C0);
-      case api_client.BadgeLevel.GOLD:
-        return const Color(0xFFFFD700);
-      case api_client.BadgeLevel.PLATINUM:
-        return const Color(0xFFE5E4E2);
-      case api_client.BadgeLevel.DIAMOND:
-        return const Color(0xFFB9F2FF);
-    }
   }
 }

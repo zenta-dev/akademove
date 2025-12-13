@@ -24,31 +24,33 @@ class InsertUser {
     required this.name,
     required this.email,
     required this.role,
-     this.gender,
-     this.phone,
+    this.gender,
+    this.phone,
   });
   @JsonKey(name: r'name', required: true, includeIfNull: false)
   final String name;
-  
+
   @JsonKey(name: r'email', required: true, includeIfNull: false)
   final String email;
-  
+
   @JsonKey(name: r'role', required: true, includeIfNull: false)
   final UserRole role;
-  
+
   @JsonKey(name: r'gender', required: false, includeIfNull: false)
   final UserGender? gender;
-  
+
   @JsonKey(name: r'phone', required: false, includeIfNull: false)
   final Phone? phone;
-  
+
   @override
-  bool operator ==(Object other) => identical(this, other) || other is InsertUser &&
-    other.name == name &&
-    other.email == email &&
-    other.role == role &&
-    other.gender == gender &&
-    other.phone == phone;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is InsertUser &&
+          other.name == name &&
+          other.email == email &&
+          other.role == role &&
+          other.gender == gender &&
+          other.phone == phone;
 
   @override
   int get hashCode =>
@@ -58,7 +60,8 @@ class InsertUser {
       gender.hashCode +
       phone.hashCode;
 
-  factory InsertUser.fromJson(Map<String, dynamic> json) => _$InsertUserFromJson(json);
+  factory InsertUser.fromJson(Map<String, dynamic> json) =>
+      _$InsertUserFromJson(json);
 
   Map<String, dynamic> toJson() => _$InsertUserToJson(this);
 
@@ -66,6 +69,4 @@ class InsertUser {
   String toString() {
     return toJson().toString();
   }
-
 }
-

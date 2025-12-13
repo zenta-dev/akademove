@@ -25,26 +25,28 @@ class PlaceOrderResponse {
     required this.order,
     required this.payment,
     required this.transaction,
-     this.autoAppliedCoupon,
+    this.autoAppliedCoupon,
   });
   @JsonKey(name: r'order', required: true, includeIfNull: false)
   final Order order;
-  
+
   @JsonKey(name: r'payment', required: true, includeIfNull: false)
   final Payment payment;
-  
+
   @JsonKey(name: r'transaction', required: true, includeIfNull: false)
   final Transaction transaction;
-  
+
   @JsonKey(name: r'autoAppliedCoupon', required: false, includeIfNull: false)
   final PlaceOrderResponseAutoAppliedCoupon? autoAppliedCoupon;
-  
+
   @override
-  bool operator ==(Object other) => identical(this, other) || other is PlaceOrderResponse &&
-    other.order == order &&
-    other.payment == payment &&
-    other.transaction == transaction &&
-    other.autoAppliedCoupon == autoAppliedCoupon;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is PlaceOrderResponse &&
+          other.order == order &&
+          other.payment == payment &&
+          other.transaction == transaction &&
+          other.autoAppliedCoupon == autoAppliedCoupon;
 
   @override
   int get hashCode =>
@@ -53,7 +55,8 @@ class PlaceOrderResponse {
       transaction.hashCode +
       autoAppliedCoupon.hashCode;
 
-  factory PlaceOrderResponse.fromJson(Map<String, dynamic> json) => _$PlaceOrderResponseFromJson(json);
+  factory PlaceOrderResponse.fromJson(Map<String, dynamic> json) =>
+      _$PlaceOrderResponseFromJson(json);
 
   Map<String, dynamic> toJson() => _$PlaceOrderResponseToJson(this);
 
@@ -61,6 +64,4 @@ class PlaceOrderResponse {
   String toString() {
     return toJson().toString();
   }
-
 }
-

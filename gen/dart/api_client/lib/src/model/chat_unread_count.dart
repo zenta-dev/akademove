@@ -17,29 +17,27 @@ part 'chat_unread_count.g.dart';
 )
 class ChatUnreadCount {
   /// Returns a new [ChatUnreadCount] instance.
-  const ChatUnreadCount({
-    required this.orderId,
-    required this.unreadCount,
-  });
+  const ChatUnreadCount({required this.orderId, required this.unreadCount});
   @JsonKey(name: r'orderId', required: true, includeIfNull: false)
   final String orderId;
-  
-          // minimum: 0
-          // maximum: 9007199254740991
+
+  // minimum: 0
+  // maximum: 9007199254740991
   @JsonKey(name: r'unreadCount', required: true, includeIfNull: false)
   final int unreadCount;
-  
-  @override
-  bool operator ==(Object other) => identical(this, other) || other is ChatUnreadCount &&
-    other.orderId == orderId &&
-    other.unreadCount == unreadCount;
 
   @override
-  int get hashCode =>
-      orderId.hashCode +
-      unreadCount.hashCode;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ChatUnreadCount &&
+          other.orderId == orderId &&
+          other.unreadCount == unreadCount;
 
-  factory ChatUnreadCount.fromJson(Map<String, dynamic> json) => _$ChatUnreadCountFromJson(json);
+  @override
+  int get hashCode => orderId.hashCode + unreadCount.hashCode;
+
+  factory ChatUnreadCount.fromJson(Map<String, dynamic> json) =>
+      _$ChatUnreadCountFromJson(json);
 
   Map<String, dynamic> toJson() => _$ChatUnreadCountToJson(this);
 
@@ -47,6 +45,4 @@ class ChatUnreadCount {
   String toString() {
     return toJson().toString();
   }
-
 }
-

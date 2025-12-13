@@ -360,10 +360,16 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
         logger.d('Payment WebSocket Message: $data');
 
         if (data.e == PaymentEnvelopeEvent.PAYMENT_SUCCESS) {
+          final payment = data.p.payment;
+          final transaction = data.p.transaction;
           emit(
             state.copyWith(
-              currentPayment: OperationResult.success(data.p.payment),
-              currentTransaction: OperationResult.success(data.p.transaction),
+              currentPayment: payment != null
+                  ? OperationResult.success(payment)
+                  : state.currentPayment,
+              currentTransaction: transaction != null
+                  ? OperationResult.success(transaction)
+                  : state.currentTransaction,
             ),
           );
 
@@ -383,10 +389,16 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
         }
 
         if (data.e == PaymentEnvelopeEvent.PAYMENT_FAILED) {
+          final payment = data.p.payment;
+          final transaction = data.p.transaction;
           emit(
             state.copyWith(
-              currentPayment: OperationResult.success(data.p.payment),
-              currentTransaction: OperationResult.success(data.p.transaction),
+              currentPayment: payment != null
+                  ? OperationResult.success(payment)
+                  : state.currentPayment,
+              currentTransaction: transaction != null
+                  ? OperationResult.success(transaction)
+                  : state.currentTransaction,
             ),
           );
           emit(

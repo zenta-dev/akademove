@@ -17,28 +17,26 @@ part 'order_upload_delivery_proof_request.g.dart';
 )
 class OrderUploadDeliveryProofRequest {
   /// Returns a new [OrderUploadDeliveryProofRequest] instance.
-  const OrderUploadDeliveryProofRequest({
-    required this.file,
-  });
+  const OrderUploadDeliveryProofRequest({required this.file});
   @JsonKey(name: r'file', required: true, includeIfNull: true)
   final Object? file;
-  
-  @override
-  bool operator ==(Object other) => identical(this, other) || other is OrderUploadDeliveryProofRequest &&
-    other.file == file;
 
   @override
-  int get hashCode =>
-      (file == null ? 0 : file.hashCode);
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is OrderUploadDeliveryProofRequest && other.file == file;
 
-  factory OrderUploadDeliveryProofRequest.fromJson(Map<String, dynamic> json) => _$OrderUploadDeliveryProofRequestFromJson(json);
+  @override
+  int get hashCode => (file == null ? 0 : file.hashCode);
 
-  Map<String, dynamic> toJson() => _$OrderUploadDeliveryProofRequestToJson(this);
+  factory OrderUploadDeliveryProofRequest.fromJson(Map<String, dynamic> json) =>
+      _$OrderUploadDeliveryProofRequestFromJson(json);
+
+  Map<String, dynamic> toJson() =>
+      _$OrderUploadDeliveryProofRequestToJson(this);
 
   @override
   String toString() {
     return toJson().toString();
   }
-
 }
-

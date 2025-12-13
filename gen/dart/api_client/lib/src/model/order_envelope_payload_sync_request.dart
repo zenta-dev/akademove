@@ -19,32 +19,32 @@ class OrderEnvelopePayloadSyncRequest {
   /// Returns a new [OrderEnvelopePayloadSyncRequest] instance.
   const OrderEnvelopePayloadSyncRequest({
     required this.orderId,
-     this.lastKnownVersion,
+    this.lastKnownVersion,
   });
   @JsonKey(name: r'orderId', required: true, includeIfNull: false)
   final String orderId;
-  
+
   @JsonKey(name: r'lastKnownVersion', required: false, includeIfNull: false)
   final String? lastKnownVersion;
-  
-  @override
-  bool operator ==(Object other) => identical(this, other) || other is OrderEnvelopePayloadSyncRequest &&
-    other.orderId == orderId &&
-    other.lastKnownVersion == lastKnownVersion;
 
   @override
-  int get hashCode =>
-      orderId.hashCode +
-      lastKnownVersion.hashCode;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is OrderEnvelopePayloadSyncRequest &&
+          other.orderId == orderId &&
+          other.lastKnownVersion == lastKnownVersion;
 
-  factory OrderEnvelopePayloadSyncRequest.fromJson(Map<String, dynamic> json) => _$OrderEnvelopePayloadSyncRequestFromJson(json);
+  @override
+  int get hashCode => orderId.hashCode + lastKnownVersion.hashCode;
 
-  Map<String, dynamic> toJson() => _$OrderEnvelopePayloadSyncRequestToJson(this);
+  factory OrderEnvelopePayloadSyncRequest.fromJson(Map<String, dynamic> json) =>
+      _$OrderEnvelopePayloadSyncRequestFromJson(json);
+
+  Map<String, dynamic> toJson() =>
+      _$OrderEnvelopePayloadSyncRequestToJson(this);
 
   @override
   String toString() {
     return toJson().toString();
   }
-
 }
-

@@ -20,89 +20,96 @@ class BannerCreate201ResponseData {
   const BannerCreate201ResponseData({
     required this.id,
     required this.title,
-     this.description,
+    this.description,
     required this.imageUrl,
     required this.actionType,
-     this.actionValue,
+    this.actionValue,
     required this.placement,
     required this.targetAudience,
     required this.isActive,
-     this.priority = 0,
-     this.startAt,
-     this.endAt,
+    this.priority = 0,
+    this.startAt,
+    this.endAt,
     required this.createdById,
-     this.updatedById,
+    this.updatedById,
     required this.createdAt,
     required this.updatedAt,
   });
   @JsonKey(name: r'id', required: true, includeIfNull: false)
   final String id;
-  
+
   @JsonKey(name: r'title', required: true, includeIfNull: false)
   final String title;
-  
+
   @JsonKey(name: r'description', required: false, includeIfNull: false)
   final String? description;
-  
+
   @JsonKey(name: r'imageUrl', required: true, includeIfNull: false)
   final String imageUrl;
-  
+
   @JsonKey(name: r'actionType', required: true, includeIfNull: false)
   final BannerCreate201ResponseDataActionTypeEnum actionType;
-  
+
   @JsonKey(name: r'actionValue', required: false, includeIfNull: false)
   final String? actionValue;
-  
+
   @JsonKey(name: r'placement', required: true, includeIfNull: false)
   final BannerCreate201ResponseDataPlacementEnum placement;
-  
+
   @JsonKey(name: r'targetAudience', required: true, includeIfNull: false)
   final BannerCreate201ResponseDataTargetAudienceEnum targetAudience;
-  
+
   @JsonKey(name: r'isActive', required: true, includeIfNull: false)
   final bool isActive;
-  
-          // minimum: 0
-          // maximum: 9007199254740991
-  @JsonKey(defaultValue: 0,name: r'priority', required: false, includeIfNull: false)
+
+  // minimum: 0
+  // maximum: 9007199254740991
+  @JsonKey(
+    defaultValue: 0,
+    name: r'priority',
+    required: false,
+    includeIfNull: false,
+  )
   final int? priority;
-  
+
   @JsonKey(name: r'startAt', required: false, includeIfNull: false)
   final DateTime? startAt;
-  
+
   @JsonKey(name: r'endAt', required: false, includeIfNull: false)
   final DateTime? endAt;
-  
+
   @JsonKey(name: r'createdById', required: true, includeIfNull: false)
   final String createdById;
-  
+
   @JsonKey(name: r'updatedById', required: false, includeIfNull: false)
   final String? updatedById;
-  
+
   @JsonKey(name: r'createdAt', required: true, includeIfNull: false)
   final DateTime createdAt;
-  
+
   @JsonKey(name: r'updatedAt', required: true, includeIfNull: false)
   final DateTime updatedAt;
-  
+
   @override
-  bool operator ==(Object other) => identical(this, other) || other is BannerCreate201ResponseData &&
-    other.id == id &&
-    other.title == title &&
-    other.description == description &&
-    other.imageUrl == imageUrl &&
-    other.actionType == actionType &&
-    other.actionValue == actionValue &&
-    other.placement == placement &&
-    other.targetAudience == targetAudience &&
-    other.isActive == isActive &&
-    other.priority == priority &&
-    other.startAt == startAt &&
-    other.endAt == endAt &&
-    other.createdById == createdById &&
-    other.updatedById == updatedById &&
-    other.createdAt == createdAt &&
-    other.updatedAt == updatedAt;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is BannerCreate201ResponseData &&
+          other.id == id &&
+          other.title == title &&
+          other.description == description &&
+          other.imageUrl == imageUrl &&
+          other.actionType == actionType &&
+          other.actionValue == actionValue &&
+          other.placement == placement &&
+          other.targetAudience == targetAudience &&
+          other.isActive == isActive &&
+          other.priority == priority &&
+          other.startAt == startAt &&
+          other.endAt == endAt &&
+          other.createdById == createdById &&
+          other.updatedById == updatedById &&
+          other.createdAt == createdAt &&
+          other.updatedAt == updatedAt;
 
   @override
   int get hashCode =>
@@ -123,7 +130,8 @@ class BannerCreate201ResponseData {
       createdAt.hashCode +
       updatedAt.hashCode;
 
-  factory BannerCreate201ResponseData.fromJson(Map<String, dynamic> json) => _$BannerCreate201ResponseDataFromJson(json);
+  factory BannerCreate201ResponseData.fromJson(Map<String, dynamic> json) =>
+      _$BannerCreate201ResponseDataFromJson(json);
 
   Map<String, dynamic> toJson() => _$BannerCreate201ResponseDataToJson(this);
 
@@ -131,7 +139,6 @@ class BannerCreate201ResponseData {
   String toString() {
     return toJson().toString();
   }
-
 }
 
 enum BannerCreate201ResponseDataActionTypeEnum {
@@ -141,11 +148,11 @@ enum BannerCreate201ResponseDataActionTypeEnum {
   LINK(r'LINK'),
   @JsonValue(r'ROUTE')
   ROUTE(r'ROUTE');
-  
+
   const BannerCreate201ResponseDataActionTypeEnum(this.value);
-  
+
   final String value;
-  
+
   @override
   String toString() => value;
 }
@@ -157,11 +164,11 @@ enum BannerCreate201ResponseDataPlacementEnum {
   DRIVER_HOME(r'DRIVER_HOME'),
   @JsonValue(r'MERCHANT_HOME')
   MERCHANT_HOME(r'MERCHANT_HOME');
-  
+
   const BannerCreate201ResponseDataPlacementEnum(this.value);
-  
+
   final String value;
-  
+
   @override
   String toString() => value;
 }
@@ -175,12 +182,11 @@ enum BannerCreate201ResponseDataTargetAudienceEnum {
   DRIVERS(r'DRIVERS'),
   @JsonValue(r'MERCHANTS')
   MERCHANTS(r'MERCHANTS');
-  
+
   const BannerCreate201ResponseDataTargetAudienceEnum(this.value);
-  
+
   final String value;
-  
+
   @override
   String toString() => value;
 }
-

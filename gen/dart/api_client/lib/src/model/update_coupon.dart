@@ -20,74 +20,81 @@ part 'update_coupon.g.dart';
 class UpdateCoupon {
   /// Returns a new [UpdateCoupon] instance.
   const UpdateCoupon({
-     this.name,
-     this.code,
-     this.couponType = CouponType.GENERAL,
-     this.rules,
-     this.discountAmount,
-     this.discountPercentage,
-     this.usageLimit,
-     this.periodStart,
-     this.periodEnd,
-     this.isActive,
-     this.merchantId,
-     this.eventName,
-     this.eventDescription,
+    this.name,
+    this.code,
+    this.couponType = CouponType.GENERAL,
+    this.rules,
+    this.discountAmount,
+    this.discountPercentage,
+    this.usageLimit,
+    this.periodStart,
+    this.periodEnd,
+    this.isActive,
+    this.merchantId,
+    this.eventName,
+    this.eventDescription,
   });
   @JsonKey(name: r'name', required: false, includeIfNull: false)
   final String? name;
-  
+
   @JsonKey(name: r'code', required: false, includeIfNull: false)
   final String? code;
-  
-  @JsonKey(defaultValue: CouponType.GENERAL,name: r'couponType', required: false, includeIfNull: false)
+
+  @JsonKey(
+    defaultValue: CouponType.GENERAL,
+    name: r'couponType',
+    required: false,
+    includeIfNull: false,
+  )
   final CouponType? couponType;
-  
+
   @JsonKey(name: r'rules', required: false, includeIfNull: false)
   final CouponRules? rules;
-  
+
   @JsonKey(name: r'discountAmount', required: false, includeIfNull: false)
   final num? discountAmount;
-  
+
   @JsonKey(name: r'discountPercentage', required: false, includeIfNull: false)
   final num? discountPercentage;
-  
+
   @JsonKey(name: r'usageLimit', required: false, includeIfNull: false)
   final num? usageLimit;
-  
+
   @JsonKey(name: r'periodStart', required: false, includeIfNull: false)
   final DateTime? periodStart;
-  
+
   @JsonKey(name: r'periodEnd', required: false, includeIfNull: false)
   final DateTime? periodEnd;
-  
+
   @JsonKey(name: r'isActive', required: false, includeIfNull: false)
   final bool? isActive;
-  
+
   @JsonKey(name: r'merchantId', required: false, includeIfNull: false)
   final String? merchantId;
-  
+
   @JsonKey(name: r'eventName', required: false, includeIfNull: false)
   final String? eventName;
-  
+
   @JsonKey(name: r'eventDescription', required: false, includeIfNull: false)
   final String? eventDescription;
-  
+
   @override
-  bool operator ==(Object other) => identical(this, other) || other is UpdateCoupon &&
-    other.name == name &&
-    other.code == code &&
-    other.couponType == couponType &&
-    other.rules == rules &&
-    other.discountAmount == discountAmount &&
-    other.discountPercentage == discountPercentage &&
-    other.usageLimit == usageLimit &&
-    other.periodStart == periodStart &&
-    other.periodEnd == periodEnd &&
-    other.isActive == isActive &&
-    other.merchantId == merchantId &&
-    other.eventName == eventName &&
-    other.eventDescription == eventDescription;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is UpdateCoupon &&
+          other.name == name &&
+          other.code == code &&
+          other.couponType == couponType &&
+          other.rules == rules &&
+          other.discountAmount == discountAmount &&
+          other.discountPercentage == discountPercentage &&
+          other.usageLimit == usageLimit &&
+          other.periodStart == periodStart &&
+          other.periodEnd == periodEnd &&
+          other.isActive == isActive &&
+          other.merchantId == merchantId &&
+          other.eventName == eventName &&
+          other.eventDescription == eventDescription;
 
   @override
   int get hashCode =>
@@ -105,7 +112,8 @@ class UpdateCoupon {
       eventName.hashCode +
       eventDescription.hashCode;
 
-  factory UpdateCoupon.fromJson(Map<String, dynamic> json) => _$UpdateCouponFromJson(json);
+  factory UpdateCoupon.fromJson(Map<String, dynamic> json) =>
+      _$UpdateCouponFromJson(json);
 
   Map<String, dynamic> toJson() => _$UpdateCouponToJson(this);
 
@@ -113,6 +121,4 @@ class UpdateCoupon {
   String toString() {
     return toJson().toString();
   }
-
 }
-

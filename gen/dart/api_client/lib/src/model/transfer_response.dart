@@ -24,39 +24,41 @@ class TransferResponse {
     required this.status,
     required this.recipientName,
     required this.recipientUserId,
-     this.note,
+    this.note,
     required this.createdAt,
   });
   @JsonKey(name: r'transactionId', required: true, includeIfNull: false)
   final String transactionId;
-  
+
   @JsonKey(name: r'amount', required: true, includeIfNull: false)
   final num amount;
-  
+
   @JsonKey(name: r'status', required: true, includeIfNull: false)
   final TransactionStatus status;
-  
+
   @JsonKey(name: r'recipientName', required: true, includeIfNull: false)
   final String recipientName;
-  
+
   @JsonKey(name: r'recipientUserId', required: true, includeIfNull: false)
   final String recipientUserId;
-  
+
   @JsonKey(name: r'note', required: false, includeIfNull: false)
   final String? note;
-  
+
   @JsonKey(name: r'createdAt', required: true, includeIfNull: false)
   final DateTime createdAt;
-  
+
   @override
-  bool operator ==(Object other) => identical(this, other) || other is TransferResponse &&
-    other.transactionId == transactionId &&
-    other.amount == amount &&
-    other.status == status &&
-    other.recipientName == recipientName &&
-    other.recipientUserId == recipientUserId &&
-    other.note == note &&
-    other.createdAt == createdAt;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is TransferResponse &&
+          other.transactionId == transactionId &&
+          other.amount == amount &&
+          other.status == status &&
+          other.recipientName == recipientName &&
+          other.recipientUserId == recipientUserId &&
+          other.note == note &&
+          other.createdAt == createdAt;
 
   @override
   int get hashCode =>
@@ -68,7 +70,8 @@ class TransferResponse {
       note.hashCode +
       createdAt.hashCode;
 
-  factory TransferResponse.fromJson(Map<String, dynamic> json) => _$TransferResponseFromJson(json);
+  factory TransferResponse.fromJson(Map<String, dynamic> json) =>
+      _$TransferResponseFromJson(json);
 
   Map<String, dynamic> toJson() => _$TransferResponseToJson(this);
 
@@ -76,6 +79,4 @@ class TransferResponse {
   String toString() {
     return toJson().toString();
   }
-
 }
-

@@ -20,27 +20,29 @@ class SubmitDriverQuizAnswerResponse {
   const SubmitDriverQuizAnswerResponse({
     required this.isCorrect,
     required this.pointsEarned,
-     this.correctOptionId,
+    this.correctOptionId,
     required this.explanation,
   });
   @JsonKey(name: r'isCorrect', required: true, includeIfNull: false)
   final bool isCorrect;
-  
+
   @JsonKey(name: r'pointsEarned', required: true, includeIfNull: false)
   final num pointsEarned;
-  
+
   @JsonKey(name: r'correctOptionId', required: false, includeIfNull: false)
   final String? correctOptionId;
-  
+
   @JsonKey(name: r'explanation', required: true, includeIfNull: true)
   final String? explanation;
-  
+
   @override
-  bool operator ==(Object other) => identical(this, other) || other is SubmitDriverQuizAnswerResponse &&
-    other.isCorrect == isCorrect &&
-    other.pointsEarned == pointsEarned &&
-    other.correctOptionId == correctOptionId &&
-    other.explanation == explanation;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is SubmitDriverQuizAnswerResponse &&
+          other.isCorrect == isCorrect &&
+          other.pointsEarned == pointsEarned &&
+          other.correctOptionId == correctOptionId &&
+          other.explanation == explanation;
 
   @override
   int get hashCode =>
@@ -49,7 +51,8 @@ class SubmitDriverQuizAnswerResponse {
       correctOptionId.hashCode +
       (explanation == null ? 0 : explanation.hashCode);
 
-  factory SubmitDriverQuizAnswerResponse.fromJson(Map<String, dynamic> json) => _$SubmitDriverQuizAnswerResponseFromJson(json);
+  factory SubmitDriverQuizAnswerResponse.fromJson(Map<String, dynamic> json) =>
+      _$SubmitDriverQuizAnswerResponseFromJson(json);
 
   Map<String, dynamic> toJson() => _$SubmitDriverQuizAnswerResponseToJson(this);
 
@@ -57,6 +60,4 @@ class SubmitDriverQuizAnswerResponse {
   String toString() {
     return toJson().toString();
   }
-
 }
-

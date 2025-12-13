@@ -995,6 +995,3 @@ lib/src/model/weight_size.dart
 lib/src/model/withdraw_request.dart
 lib/src/model/withdraw_response.dart
 pubspec.yaml
-test/merchant_envelope_payload_sync_request_test.dart
-test/order_envelope_payload_sync_request_test.dart
-test/payment_envelope_payload_sync_request_test.dart

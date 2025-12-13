@@ -20,30 +20,30 @@ class OrderEnvelopePayloadNoShow {
   const OrderEnvelopePayloadNoShow({
     required this.orderId,
     required this.driverId,
-     this.reason,
+    this.reason,
   });
   @JsonKey(name: r'orderId', required: true, includeIfNull: false)
   final String orderId;
-  
+
   @JsonKey(name: r'driverId', required: true, includeIfNull: false)
   final String driverId;
-  
+
   @JsonKey(name: r'reason', required: false, includeIfNull: false)
   final String? reason;
-  
-  @override
-  bool operator ==(Object other) => identical(this, other) || other is OrderEnvelopePayloadNoShow &&
-    other.orderId == orderId &&
-    other.driverId == driverId &&
-    other.reason == reason;
 
   @override
-  int get hashCode =>
-      orderId.hashCode +
-      driverId.hashCode +
-      reason.hashCode;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is OrderEnvelopePayloadNoShow &&
+          other.orderId == orderId &&
+          other.driverId == driverId &&
+          other.reason == reason;
 
-  factory OrderEnvelopePayloadNoShow.fromJson(Map<String, dynamic> json) => _$OrderEnvelopePayloadNoShowFromJson(json);
+  @override
+  int get hashCode => orderId.hashCode + driverId.hashCode + reason.hashCode;
+
+  factory OrderEnvelopePayloadNoShow.fromJson(Map<String, dynamic> json) =>
+      _$OrderEnvelopePayloadNoShowFromJson(json);
 
   Map<String, dynamic> toJson() => _$OrderEnvelopePayloadNoShowToJson(this);
 
@@ -51,6 +51,4 @@ class OrderEnvelopePayloadNoShow {
   String toString() {
     return toJson().toString();
   }
-
 }
-

@@ -34,46 +34,48 @@ class CommissionReportResponse {
   });
   @JsonKey(name: r'currentBalance', required: true, includeIfNull: false)
   final num currentBalance;
-  
+
   @JsonKey(name: r'incomingBalance', required: true, includeIfNull: false)
   final num incomingBalance;
-  
+
   @JsonKey(name: r'outgoingBalance', required: true, includeIfNull: false)
   final num outgoingBalance;
-  
+
   @JsonKey(name: r'totalEarnings', required: true, includeIfNull: false)
   final num totalEarnings;
-  
+
   @JsonKey(name: r'totalCommission', required: true, includeIfNull: false)
   final num totalCommission;
-  
+
   @JsonKey(name: r'netIncome', required: true, includeIfNull: false)
   final num netIncome;
-  
+
   @JsonKey(name: r'commissionRate', required: true, includeIfNull: false)
   final num commissionRate;
-  
+
   @JsonKey(name: r'chartData', required: true, includeIfNull: false)
   final List<ChartDataPoint> chartData;
-  
+
   @JsonKey(name: r'transactions', required: true, includeIfNull: false)
   final List<CommissionTransaction> transactions;
-  
+
   @JsonKey(name: r'period', required: true, includeIfNull: false)
   final CommissionReportPeriod period;
-  
+
   @override
-  bool operator ==(Object other) => identical(this, other) || other is CommissionReportResponse &&
-    other.currentBalance == currentBalance &&
-    other.incomingBalance == incomingBalance &&
-    other.outgoingBalance == outgoingBalance &&
-    other.totalEarnings == totalEarnings &&
-    other.totalCommission == totalCommission &&
-    other.netIncome == netIncome &&
-    other.commissionRate == commissionRate &&
-    other.chartData == chartData &&
-    other.transactions == transactions &&
-    other.period == period;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is CommissionReportResponse &&
+          other.currentBalance == currentBalance &&
+          other.incomingBalance == incomingBalance &&
+          other.outgoingBalance == outgoingBalance &&
+          other.totalEarnings == totalEarnings &&
+          other.totalCommission == totalCommission &&
+          other.netIncome == netIncome &&
+          other.commissionRate == commissionRate &&
+          other.chartData == chartData &&
+          other.transactions == transactions &&
+          other.period == period;
 
   @override
   int get hashCode =>
@@ -88,7 +90,8 @@ class CommissionReportResponse {
       transactions.hashCode +
       period.hashCode;
 
-  factory CommissionReportResponse.fromJson(Map<String, dynamic> json) => _$CommissionReportResponseFromJson(json);
+  factory CommissionReportResponse.fromJson(Map<String, dynamic> json) =>
+      _$CommissionReportResponseFromJson(json);
 
   Map<String, dynamic> toJson() => _$CommissionReportResponseToJson(this);
 
@@ -96,6 +99,4 @@ class CommissionReportResponse {
   String toString() {
     return toJson().toString();
   }
-
 }
-

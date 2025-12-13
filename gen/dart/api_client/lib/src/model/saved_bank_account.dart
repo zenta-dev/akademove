@@ -20,28 +20,30 @@ class SavedBankAccount {
   /// Returns a new [SavedBankAccount] instance.
   const SavedBankAccount({
     required this.hasSavedBank,
-     this.bankProvider,
-     this.accountNumber,
-     this.accountName,
+    this.bankProvider,
+    this.accountNumber,
+    this.accountName,
   });
   @JsonKey(name: r'hasSavedBank', required: true, includeIfNull: false)
   final bool hasSavedBank;
-  
+
   @JsonKey(name: r'bankProvider', required: false, includeIfNull: false)
   final BankProvider? bankProvider;
-  
+
   @JsonKey(name: r'accountNumber', required: false, includeIfNull: false)
   final String? accountNumber;
-  
+
   @JsonKey(name: r'accountName', required: false, includeIfNull: false)
   final String? accountName;
-  
+
   @override
-  bool operator ==(Object other) => identical(this, other) || other is SavedBankAccount &&
-    other.hasSavedBank == hasSavedBank &&
-    other.bankProvider == bankProvider &&
-    other.accountNumber == accountNumber &&
-    other.accountName == accountName;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is SavedBankAccount &&
+          other.hasSavedBank == hasSavedBank &&
+          other.bankProvider == bankProvider &&
+          other.accountNumber == accountNumber &&
+          other.accountName == accountName;
 
   @override
   int get hashCode =>
@@ -50,7 +52,8 @@ class SavedBankAccount {
       accountNumber.hashCode +
       accountName.hashCode;
 
-  factory SavedBankAccount.fromJson(Map<String, dynamic> json) => _$SavedBankAccountFromJson(json);
+  factory SavedBankAccount.fromJson(Map<String, dynamic> json) =>
+      _$SavedBankAccountFromJson(json);
 
   Map<String, dynamic> toJson() => _$SavedBankAccountToJson(this);
 
@@ -58,6 +61,4 @@ class SavedBankAccount {
   String toString() {
     return toJson().toString();
   }
-
 }
-

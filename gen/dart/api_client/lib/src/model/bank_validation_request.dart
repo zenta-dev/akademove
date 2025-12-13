@@ -24,21 +24,22 @@ class BankValidationRequest {
   });
   @JsonKey(name: r'bankProvider', required: true, includeIfNull: false)
   final BankProvider bankProvider;
-  
+
   @JsonKey(name: r'accountNumber', required: true, includeIfNull: false)
   final String accountNumber;
-  
-  @override
-  bool operator ==(Object other) => identical(this, other) || other is BankValidationRequest &&
-    other.bankProvider == bankProvider &&
-    other.accountNumber == accountNumber;
 
   @override
-  int get hashCode =>
-      bankProvider.hashCode +
-      accountNumber.hashCode;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is BankValidationRequest &&
+          other.bankProvider == bankProvider &&
+          other.accountNumber == accountNumber;
 
-  factory BankValidationRequest.fromJson(Map<String, dynamic> json) => _$BankValidationRequestFromJson(json);
+  @override
+  int get hashCode => bankProvider.hashCode + accountNumber.hashCode;
+
+  factory BankValidationRequest.fromJson(Map<String, dynamic> json) =>
+      _$BankValidationRequestFromJson(json);
 
   Map<String, dynamic> toJson() => _$BankValidationRequestToJson(this);
 
@@ -46,6 +47,4 @@ class BankValidationRequest {
   String toString() {
     return toJson().toString();
   }
-
 }
-

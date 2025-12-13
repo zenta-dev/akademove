@@ -22,34 +22,36 @@ part 'payment_envelope_payload.g.dart';
 class PaymentEnvelopePayload {
   /// Returns a new [PaymentEnvelopePayload] instance.
   const PaymentEnvelopePayload({
-     this.failReason,
-     this.payment,
-     this.transaction,
-     this.wallet,
-     this.syncRequest,
+    this.failReason,
+    this.payment,
+    this.transaction,
+    this.wallet,
+    this.syncRequest,
   });
   @JsonKey(name: r'failReason', required: false, includeIfNull: false)
   final String? failReason;
-  
+
   @JsonKey(name: r'payment', required: false, includeIfNull: false)
   final Payment? payment;
-  
+
   @JsonKey(name: r'transaction', required: false, includeIfNull: false)
   final Transaction? transaction;
-  
+
   @JsonKey(name: r'wallet', required: false, includeIfNull: false)
   final Wallet? wallet;
-  
+
   @JsonKey(name: r'syncRequest', required: false, includeIfNull: false)
   final PaymentEnvelopePayloadSyncRequest? syncRequest;
-  
+
   @override
-  bool operator ==(Object other) => identical(this, other) || other is PaymentEnvelopePayload &&
-    other.failReason == failReason &&
-    other.payment == payment &&
-    other.transaction == transaction &&
-    other.wallet == wallet &&
-    other.syncRequest == syncRequest;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is PaymentEnvelopePayload &&
+          other.failReason == failReason &&
+          other.payment == payment &&
+          other.transaction == transaction &&
+          other.wallet == wallet &&
+          other.syncRequest == syncRequest;
 
   @override
   int get hashCode =>
@@ -59,7 +61,8 @@ class PaymentEnvelopePayload {
       wallet.hashCode +
       syncRequest.hashCode;
 
-  factory PaymentEnvelopePayload.fromJson(Map<String, dynamic> json) => _$PaymentEnvelopePayloadFromJson(json);
+  factory PaymentEnvelopePayload.fromJson(Map<String, dynamic> json) =>
+      _$PaymentEnvelopePayloadFromJson(json);
 
   Map<String, dynamic> toJson() => _$PaymentEnvelopePayloadToJson(this);
 
@@ -67,6 +70,4 @@ class PaymentEnvelopePayload {
   String toString() {
     return toJson().toString();
   }
-
 }
-

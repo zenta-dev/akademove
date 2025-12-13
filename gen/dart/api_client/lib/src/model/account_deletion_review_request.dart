@@ -17,27 +17,25 @@ part 'account_deletion_review_request.g.dart';
 )
 class AccountDeletionReviewRequest {
   /// Returns a new [AccountDeletionReviewRequest] instance.
-  const AccountDeletionReviewRequest({
-    required this.status,
-     this.reviewNotes,
-  });
+  const AccountDeletionReviewRequest({required this.status, this.reviewNotes});
   @JsonKey(name: r'status', required: true, includeIfNull: false)
   final AccountDeletionReviewRequestStatusEnum status;
-  
+
   @JsonKey(name: r'reviewNotes', required: false, includeIfNull: false)
   final String? reviewNotes;
-  
-  @override
-  bool operator ==(Object other) => identical(this, other) || other is AccountDeletionReviewRequest &&
-    other.status == status &&
-    other.reviewNotes == reviewNotes;
 
   @override
-  int get hashCode =>
-      status.hashCode +
-      reviewNotes.hashCode;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is AccountDeletionReviewRequest &&
+          other.status == status &&
+          other.reviewNotes == reviewNotes;
 
-  factory AccountDeletionReviewRequest.fromJson(Map<String, dynamic> json) => _$AccountDeletionReviewRequestFromJson(json);
+  @override
+  int get hashCode => status.hashCode + reviewNotes.hashCode;
+
+  factory AccountDeletionReviewRequest.fromJson(Map<String, dynamic> json) =>
+      _$AccountDeletionReviewRequestFromJson(json);
 
   Map<String, dynamic> toJson() => _$AccountDeletionReviewRequestToJson(this);
 
@@ -45,7 +43,6 @@ class AccountDeletionReviewRequest {
   String toString() {
     return toJson().toString();
   }
-
 }
 
 enum AccountDeletionReviewRequestStatusEnum {
@@ -57,12 +54,11 @@ enum AccountDeletionReviewRequestStatusEnum {
   REJECTED(r'REJECTED'),
   @JsonValue(r'COMPLETED')
   COMPLETED(r'COMPLETED');
-  
+
   const AccountDeletionReviewRequestStatusEnum(this.value);
-  
+
   final String value;
-  
+
   @override
   String toString() => value;
 }
-

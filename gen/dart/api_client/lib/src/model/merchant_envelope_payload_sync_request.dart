@@ -19,32 +19,33 @@ class MerchantEnvelopePayloadSyncRequest {
   /// Returns a new [MerchantEnvelopePayloadSyncRequest] instance.
   const MerchantEnvelopePayloadSyncRequest({
     required this.merchantId,
-     this.lastKnownVersion,
+    this.lastKnownVersion,
   });
   @JsonKey(name: r'merchantId', required: true, includeIfNull: false)
   final String merchantId;
-  
+
   @JsonKey(name: r'lastKnownVersion', required: false, includeIfNull: false)
   final String? lastKnownVersion;
-  
-  @override
-  bool operator ==(Object other) => identical(this, other) || other is MerchantEnvelopePayloadSyncRequest &&
-    other.merchantId == merchantId &&
-    other.lastKnownVersion == lastKnownVersion;
 
   @override
-  int get hashCode =>
-      merchantId.hashCode +
-      lastKnownVersion.hashCode;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is MerchantEnvelopePayloadSyncRequest &&
+          other.merchantId == merchantId &&
+          other.lastKnownVersion == lastKnownVersion;
 
-  factory MerchantEnvelopePayloadSyncRequest.fromJson(Map<String, dynamic> json) => _$MerchantEnvelopePayloadSyncRequestFromJson(json);
+  @override
+  int get hashCode => merchantId.hashCode + lastKnownVersion.hashCode;
 
-  Map<String, dynamic> toJson() => _$MerchantEnvelopePayloadSyncRequestToJson(this);
+  factory MerchantEnvelopePayloadSyncRequest.fromJson(
+    Map<String, dynamic> json,
+  ) => _$MerchantEnvelopePayloadSyncRequestFromJson(json);
+
+  Map<String, dynamic> toJson() =>
+      _$MerchantEnvelopePayloadSyncRequestToJson(this);
 
   @override
   String toString() {
     return toJson().toString();
   }
-
 }
-
