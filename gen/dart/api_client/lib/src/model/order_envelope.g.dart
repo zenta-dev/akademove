@@ -170,6 +170,8 @@ const _$OrderEnvelopeEventEnumMap = {
   OrderEnvelopeEvent.NO_SHOW: 'NO_SHOW',
   OrderEnvelopeEvent.DRIVER_CANCELLED_REMATCHING: 'DRIVER_CANCELLED_REMATCHING',
   OrderEnvelopeEvent.ORDER_STATUS_CHANGED: 'ORDER_STATUS_CHANGED',
+  OrderEnvelopeEvent.NEW_DATA: 'NEW_DATA',
+  OrderEnvelopeEvent.NO_DATA: 'NO_DATA',
 };
 
 const _$OrderEnvelopeActionEnumMap = {
@@ -183,6 +185,7 @@ const _$OrderEnvelopeActionEnumMap = {
   OrderEnvelopeAction.MERCHANT_MARK_PREPARING: 'MERCHANT_MARK_PREPARING',
   OrderEnvelopeAction.MERCHANT_MARK_READY: 'MERCHANT_MARK_READY',
   OrderEnvelopeAction.REPORT_NO_SHOW: 'REPORT_NO_SHOW',
+  OrderEnvelopeAction.CHECK_NEW_DATA: 'CHECK_NEW_DATA',
 };
 
 const _$EnvelopeTargetEnumMap = {

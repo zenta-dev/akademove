@@ -17,25 +17,27 @@ part 'support_ticket_assigned_to.g.dart';
 )
 class SupportTicketAssignedTo {
   /// Returns a new [SupportTicketAssignedTo] instance.
-  const SupportTicketAssignedTo({required this.name, this.image});
+  const SupportTicketAssignedTo({
+    required this.name,
+     this.image,
+  });
   @JsonKey(name: r'name', required: true, includeIfNull: false)
   final String name;
-
+  
   @JsonKey(name: r'image', required: false, includeIfNull: false)
   final String? image;
+  
+  @override
+  bool operator ==(Object other) => identical(this, other) || other is SupportTicketAssignedTo &&
+    other.name == name &&
+    other.image == image;
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is SupportTicketAssignedTo &&
-          other.name == name &&
-          other.image == image;
+  int get hashCode =>
+      name.hashCode +
+      image.hashCode;
 
-  @override
-  int get hashCode => name.hashCode + image.hashCode;
-
-  factory SupportTicketAssignedTo.fromJson(Map<String, dynamic> json) =>
-      _$SupportTicketAssignedToFromJson(json);
+  factory SupportTicketAssignedTo.fromJson(Map<String, dynamic> json) => _$SupportTicketAssignedToFromJson(json);
 
   Map<String, dynamic> toJson() => _$SupportTicketAssignedToToJson(this);
 
@@ -43,4 +45,6 @@ class SupportTicketAssignedTo {
   String toString() {
     return toJson().toString();
   }
+
 }
+

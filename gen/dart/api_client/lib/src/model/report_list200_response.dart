@@ -22,31 +22,29 @@ class ReportList200Response {
   const ReportList200Response({
     required this.message,
     required this.data,
-    this.pagination,
-    this.totalPages,
+     this.pagination,
+     this.totalPages,
   });
   @JsonKey(name: r'message', required: true, includeIfNull: false)
   final String message;
-
+  
   @JsonKey(name: r'data', required: true, includeIfNull: false)
   final List<Report> data;
-
+  
   @JsonKey(name: r'pagination', required: false, includeIfNull: false)
   final PaginationResult? pagination;
-
-  // minimum: 0
-  // maximum: 9007199254740991
+  
+          // minimum: 0
+          // maximum: 9007199254740991
   @JsonKey(name: r'totalPages', required: false, includeIfNull: false)
   final int? totalPages;
-
+  
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is ReportList200Response &&
-          other.message == message &&
-          other.data == data &&
-          other.pagination == pagination &&
-          other.totalPages == totalPages;
+  bool operator ==(Object other) => identical(this, other) || other is ReportList200Response &&
+    other.message == message &&
+    other.data == data &&
+    other.pagination == pagination &&
+    other.totalPages == totalPages;
 
   @override
   int get hashCode =>
@@ -55,8 +53,7 @@ class ReportList200Response {
       pagination.hashCode +
       totalPages.hashCode;
 
-  factory ReportList200Response.fromJson(Map<String, dynamic> json) =>
-      _$ReportList200ResponseFromJson(json);
+  factory ReportList200Response.fromJson(Map<String, dynamic> json) => _$ReportList200ResponseFromJson(json);
 
   Map<String, dynamic> toJson() => _$ReportList200ResponseToJson(this);
 
@@ -64,4 +61,6 @@ class ReportList200Response {
   String toString() {
     return toJson().toString();
   }
+
 }
+

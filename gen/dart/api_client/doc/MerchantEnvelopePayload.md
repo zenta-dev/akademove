@@ -16,6 +16,8 @@ Name | Type | Description | Notes
 **cancelReason** | **String** |  | [optional] 
 **driverName** | **String** |  | [optional] 
 **newStatus** | **String** |  | [optional] 
+**syncRequest** | [**MerchantEnvelopePayloadSyncRequest**](MerchantEnvelopePayloadSyncRequest.md) |  | [optional] 
+**orders** | [**List&lt;Order&gt;**](Order.md) |  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

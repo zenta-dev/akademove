@@ -18,48 +18,41 @@ part 'update_quick_message_template.g.dart';
 class UpdateQuickMessageTemplate {
   /// Returns a new [UpdateQuickMessageTemplate] instance.
   const UpdateQuickMessageTemplate({
-    this.role,
-    this.message,
-    this.orderType,
-    this.locale = 'en',
-    this.isActive,
-    this.displayOrder,
+     this.role,
+     this.message,
+     this.orderType,
+     this.locale = 'en',
+     this.isActive,
+     this.displayOrder,
   });
   @JsonKey(name: r'role', required: false, includeIfNull: false)
   final UpdateQuickMessageTemplateRoleEnum? role;
-
+  
   @JsonKey(name: r'message', required: false, includeIfNull: false)
   final String? message;
-
+  
   @JsonKey(name: r'orderType', required: false, includeIfNull: false)
   final UpdateQuickMessageTemplateOrderTypeEnum? orderType;
-
-  @JsonKey(
-    defaultValue: 'en',
-    name: r'locale',
-    required: false,
-    includeIfNull: false,
-  )
+  
+  @JsonKey(defaultValue: 'en',name: r'locale', required: false, includeIfNull: false)
   final String? locale;
-
+  
   @JsonKey(name: r'isActive', required: false, includeIfNull: false)
   final bool? isActive;
-
-  // minimum: -9007199254740991
-  // maximum: 9007199254740991
+  
+          // minimum: -9007199254740991
+          // maximum: 9007199254740991
   @JsonKey(name: r'displayOrder', required: false, includeIfNull: false)
   final int? displayOrder;
-
+  
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is UpdateQuickMessageTemplate &&
-          other.role == role &&
-          other.message == message &&
-          other.orderType == orderType &&
-          other.locale == locale &&
-          other.isActive == isActive &&
-          other.displayOrder == displayOrder;
+  bool operator ==(Object other) => identical(this, other) || other is UpdateQuickMessageTemplate &&
+    other.role == role &&
+    other.message == message &&
+    other.orderType == orderType &&
+    other.locale == locale &&
+    other.isActive == isActive &&
+    other.displayOrder == displayOrder;
 
   @override
   int get hashCode =>
@@ -70,8 +63,7 @@ class UpdateQuickMessageTemplate {
       isActive.hashCode +
       displayOrder.hashCode;
 
-  factory UpdateQuickMessageTemplate.fromJson(Map<String, dynamic> json) =>
-      _$UpdateQuickMessageTemplateFromJson(json);
+  factory UpdateQuickMessageTemplate.fromJson(Map<String, dynamic> json) => _$UpdateQuickMessageTemplateFromJson(json);
 
   Map<String, dynamic> toJson() => _$UpdateQuickMessageTemplateToJson(this);
 
@@ -79,6 +71,7 @@ class UpdateQuickMessageTemplate {
   String toString() {
     return toJson().toString();
   }
+
 }
 
 enum UpdateQuickMessageTemplateRoleEnum {
@@ -92,11 +85,11 @@ enum UpdateQuickMessageTemplateRoleEnum {
   DRIVER(r'DRIVER'),
   @JsonValue(r'USER')
   USER(r'USER');
-
+  
   const UpdateQuickMessageTemplateRoleEnum(this.value);
-
+  
   final String value;
-
+  
   @override
   String toString() => value;
 }
@@ -108,11 +101,12 @@ enum UpdateQuickMessageTemplateOrderTypeEnum {
   DELIVERY(r'DELIVERY'),
   @JsonValue(r'FOOD')
   FOOD(r'FOOD');
-
+  
   const UpdateQuickMessageTemplateOrderTypeEnum(this.value);
-
+  
   final String value;
-
+  
   @override
   String toString() => value;
 }
+

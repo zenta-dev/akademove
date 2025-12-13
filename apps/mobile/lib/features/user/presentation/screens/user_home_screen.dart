@@ -35,7 +35,8 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
   late final TextEditingController _searchController;
   late final CarouselController _bannerController;
 
-  SharedNotificationCubit get _notificationCubit => context.read<SharedNotificationCubit>();
+  SharedNotificationCubit get _notificationCubit =>
+      context.read<SharedNotificationCubit>();
 
   @override
   void initState() {
@@ -48,7 +49,9 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
       context.read<UserOrderCubit>().fetchActiveOrder();
       Future.wait([
         context.read<UserHomeCubit>().getPopulars(),
-        context.read<SharedConfigurationCubit>().getBanners(placement: 'USER_HOME'),
+        context.read<SharedConfigurationCubit>().getBanners(
+          placement: 'USER_HOME',
+        ),
         context.read<UserWalletCubit>().getMine(),
       ]);
     });
@@ -66,7 +69,9 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
     context.read<UserOrderCubit>().fetchActiveOrder();
     await Future.wait([
       context.read<UserHomeCubit>().getPopulars(),
-      context.read<SharedConfigurationCubit>().getBanners(placement: 'USER_HOME'),
+      context.read<SharedConfigurationCubit>().getBanners(
+        placement: 'USER_HOME',
+      ),
       context.read<UserWalletCubit>().getMine(),
     ]);
   }

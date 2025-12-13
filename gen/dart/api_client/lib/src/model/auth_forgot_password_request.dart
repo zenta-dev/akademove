@@ -17,20 +17,21 @@ part 'auth_forgot_password_request.g.dart';
 )
 class AuthForgotPasswordRequest {
   /// Returns a new [AuthForgotPasswordRequest] instance.
-  const AuthForgotPasswordRequest({required this.email});
+  const AuthForgotPasswordRequest({
+    required this.email,
+  });
   @JsonKey(name: r'email', required: true, includeIfNull: false)
   final String email;
+  
+  @override
+  bool operator ==(Object other) => identical(this, other) || other is AuthForgotPasswordRequest &&
+    other.email == email;
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is AuthForgotPasswordRequest && other.email == email;
+  int get hashCode =>
+      email.hashCode;
 
-  @override
-  int get hashCode => email.hashCode;
-
-  factory AuthForgotPasswordRequest.fromJson(Map<String, dynamic> json) =>
-      _$AuthForgotPasswordRequestFromJson(json);
+  factory AuthForgotPasswordRequest.fromJson(Map<String, dynamic> json) => _$AuthForgotPasswordRequestFromJson(json);
 
   Map<String, dynamic> toJson() => _$AuthForgotPasswordRequestToJson(this);
 
@@ -38,4 +39,6 @@ class AuthForgotPasswordRequest {
   String toString() {
     return toJson().toString();
   }
+
 }
+

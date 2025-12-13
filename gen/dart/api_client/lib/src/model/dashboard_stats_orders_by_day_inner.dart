@@ -25,31 +25,31 @@ class DashboardStatsOrdersByDayInner {
   });
   @JsonKey(name: r'date', required: true, includeIfNull: false)
   final String date;
-
+  
   @JsonKey(name: r'total', required: true, includeIfNull: false)
   final num total;
-
+  
   @JsonKey(name: r'completed', required: true, includeIfNull: false)
   final num completed;
-
+  
   @JsonKey(name: r'cancelled', required: true, includeIfNull: false)
   final num cancelled;
-
+  
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is DashboardStatsOrdersByDayInner &&
-          other.date == date &&
-          other.total == total &&
-          other.completed == completed &&
-          other.cancelled == cancelled;
+  bool operator ==(Object other) => identical(this, other) || other is DashboardStatsOrdersByDayInner &&
+    other.date == date &&
+    other.total == total &&
+    other.completed == completed &&
+    other.cancelled == cancelled;
 
   @override
   int get hashCode =>
-      date.hashCode + total.hashCode + completed.hashCode + cancelled.hashCode;
+      date.hashCode +
+      total.hashCode +
+      completed.hashCode +
+      cancelled.hashCode;
 
-  factory DashboardStatsOrdersByDayInner.fromJson(Map<String, dynamic> json) =>
-      _$DashboardStatsOrdersByDayInnerFromJson(json);
+  factory DashboardStatsOrdersByDayInner.fromJson(Map<String, dynamic> json) => _$DashboardStatsOrdersByDayInnerFromJson(json);
 
   Map<String, dynamic> toJson() => _$DashboardStatsOrdersByDayInnerToJson(this);
 
@@ -57,4 +57,6 @@ class DashboardStatsOrdersByDayInner {
   String toString() {
     return toJson().toString();
   }
+
 }
+

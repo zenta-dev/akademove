@@ -3,6 +3,7 @@
 //
 
 // ignore_for_file: unused_element
+import 'package:api_client/src/model/order_envelope_payload_sync_request.dart';
 import 'package:api_client/src/model/order_envelope_payload_done.dart';
 import 'package:api_client/src/model/order_envelope_payload_detail.dart';
 import 'package:api_client/src/model/order_envelope_payload_retry_info.dart';
@@ -27,61 +28,64 @@ part 'order_envelope_payload.g.dart';
 class OrderEnvelopePayload {
   /// Returns a new [OrderEnvelopePayload] instance.
   const OrderEnvelopePayload({
-    this.detail,
-    this.driverAssigned,
-    this.driverUpdateLocation,
-    this.done,
-    this.message,
-    this.chatUnreadCount,
-    this.merchantAction,
-    this.cancelReason,
-    this.noShow,
-    this.retryInfo,
+     this.detail,
+     this.driverAssigned,
+     this.driverUpdateLocation,
+     this.done,
+     this.message,
+     this.chatUnreadCount,
+     this.merchantAction,
+     this.cancelReason,
+     this.noShow,
+     this.retryInfo,
+     this.syncRequest,
   });
   @JsonKey(name: r'detail', required: false, includeIfNull: false)
   final OrderEnvelopePayloadDetail? detail;
-
+  
   @JsonKey(name: r'driverAssigned', required: false, includeIfNull: false)
   final Driver? driverAssigned;
-
+  
   @JsonKey(name: r'driverUpdateLocation', required: false, includeIfNull: false)
   final OrderEnvelopePayloadDriverUpdateLocation? driverUpdateLocation;
-
+  
   @JsonKey(name: r'done', required: false, includeIfNull: false)
   final OrderEnvelopePayloadDone? done;
-
+  
   @JsonKey(name: r'message', required: false, includeIfNull: false)
   final OrderEnvelopePayloadMessage? message;
-
+  
   @JsonKey(name: r'chatUnreadCount', required: false, includeIfNull: false)
   final OrderEnvelopePayloadChatUnreadCount? chatUnreadCount;
-
+  
   @JsonKey(name: r'merchantAction', required: false, includeIfNull: false)
   final OrderEnvelopePayloadMerchantAction? merchantAction;
-
+  
   @JsonKey(name: r'cancelReason', required: false, includeIfNull: false)
   final String? cancelReason;
-
+  
   @JsonKey(name: r'noShow', required: false, includeIfNull: false)
   final OrderEnvelopePayloadNoShow? noShow;
-
+  
   @JsonKey(name: r'retryInfo', required: false, includeIfNull: false)
   final OrderEnvelopePayloadRetryInfo? retryInfo;
-
+  
+  @JsonKey(name: r'syncRequest', required: false, includeIfNull: false)
+  final OrderEnvelopePayloadSyncRequest? syncRequest;
+  
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is OrderEnvelopePayload &&
-          other.detail == detail &&
-          other.driverAssigned == driverAssigned &&
-          other.driverUpdateLocation == driverUpdateLocation &&
-          other.done == done &&
-          other.message == message &&
-          other.chatUnreadCount == chatUnreadCount &&
-          other.merchantAction == merchantAction &&
-          other.cancelReason == cancelReason &&
-          other.noShow == noShow &&
-          other.retryInfo == retryInfo;
+  bool operator ==(Object other) => identical(this, other) || other is OrderEnvelopePayload &&
+    other.detail == detail &&
+    other.driverAssigned == driverAssigned &&
+    other.driverUpdateLocation == driverUpdateLocation &&
+    other.done == done &&
+    other.message == message &&
+    other.chatUnreadCount == chatUnreadCount &&
+    other.merchantAction == merchantAction &&
+    other.cancelReason == cancelReason &&
+    other.noShow == noShow &&
+    other.retryInfo == retryInfo &&
+    other.syncRequest == syncRequest;
 
   @override
   int get hashCode =>
@@ -94,10 +98,10 @@ class OrderEnvelopePayload {
       merchantAction.hashCode +
       cancelReason.hashCode +
       noShow.hashCode +
-      retryInfo.hashCode;
+      retryInfo.hashCode +
+      syncRequest.hashCode;
 
-  factory OrderEnvelopePayload.fromJson(Map<String, dynamic> json) =>
-      _$OrderEnvelopePayloadFromJson(json);
+  factory OrderEnvelopePayload.fromJson(Map<String, dynamic> json) => _$OrderEnvelopePayloadFromJson(json);
 
   Map<String, dynamic> toJson() => _$OrderEnvelopePayloadToJson(this);
 
@@ -105,4 +109,6 @@ class OrderEnvelopePayload {
   String toString() {
     return toJson().toString();
   }
+
 }
+

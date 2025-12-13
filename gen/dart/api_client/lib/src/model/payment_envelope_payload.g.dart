@@ -9,11 +9,15 @@ part of 'payment_envelope_payload.dart';
 abstract class _$PaymentEnvelopePayloadCWProxy {
   PaymentEnvelopePayload failReason(String? failReason);
 
-  PaymentEnvelopePayload payment(Payment payment);
+  PaymentEnvelopePayload payment(Payment? payment);
 
-  PaymentEnvelopePayload transaction(Transaction transaction);
+  PaymentEnvelopePayload transaction(Transaction? transaction);
 
   PaymentEnvelopePayload wallet(Wallet? wallet);
+
+  PaymentEnvelopePayload syncRequest(
+    PaymentEnvelopePayloadSyncRequest? syncRequest,
+  );
 
   /// Creates a new instance with the provided field values.
   /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `PaymentEnvelopePayload(...).copyWith.fieldName(value)`.
@@ -24,9 +28,10 @@ abstract class _$PaymentEnvelopePayloadCWProxy {
   /// ```
   PaymentEnvelopePayload call({
     String? failReason,
-    Payment payment,
-    Transaction transaction,
+    Payment? payment,
+    Transaction? transaction,
     Wallet? wallet,
+    PaymentEnvelopePayloadSyncRequest? syncRequest,
   });
 }
 
@@ -43,14 +48,19 @@ class _$PaymentEnvelopePayloadCWProxyImpl
       call(failReason: failReason);
 
   @override
-  PaymentEnvelopePayload payment(Payment payment) => call(payment: payment);
+  PaymentEnvelopePayload payment(Payment? payment) => call(payment: payment);
 
   @override
-  PaymentEnvelopePayload transaction(Transaction transaction) =>
+  PaymentEnvelopePayload transaction(Transaction? transaction) =>
       call(transaction: transaction);
 
   @override
   PaymentEnvelopePayload wallet(Wallet? wallet) => call(wallet: wallet);
+
+  @override
+  PaymentEnvelopePayload syncRequest(
+    PaymentEnvelopePayloadSyncRequest? syncRequest,
+  ) => call(syncRequest: syncRequest);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -65,25 +75,29 @@ class _$PaymentEnvelopePayloadCWProxyImpl
     Object? payment = const $CopyWithPlaceholder(),
     Object? transaction = const $CopyWithPlaceholder(),
     Object? wallet = const $CopyWithPlaceholder(),
+    Object? syncRequest = const $CopyWithPlaceholder(),
   }) {
     return PaymentEnvelopePayload(
       failReason: failReason == const $CopyWithPlaceholder()
           ? _value.failReason
           // ignore: cast_nullable_to_non_nullable
           : failReason as String?,
-      payment: payment == const $CopyWithPlaceholder() || payment == null
+      payment: payment == const $CopyWithPlaceholder()
           ? _value.payment
           // ignore: cast_nullable_to_non_nullable
-          : payment as Payment,
-      transaction:
-          transaction == const $CopyWithPlaceholder() || transaction == null
+          : payment as Payment?,
+      transaction: transaction == const $CopyWithPlaceholder()
           ? _value.transaction
           // ignore: cast_nullable_to_non_nullable
-          : transaction as Transaction,
+          : transaction as Transaction?,
       wallet: wallet == const $CopyWithPlaceholder()
           ? _value.wallet
           // ignore: cast_nullable_to_non_nullable
           : wallet as Wallet?,
+      syncRequest: syncRequest == const $CopyWithPlaceholder()
+          ? _value.syncRequest
+          // ignore: cast_nullable_to_non_nullable
+          : syncRequest as PaymentEnvelopePayloadSyncRequest?,
     );
   }
 }
@@ -103,20 +117,27 @@ extension $PaymentEnvelopePayloadCopyWith on PaymentEnvelopePayload {
 PaymentEnvelopePayload _$PaymentEnvelopePayloadFromJson(
   Map<String, dynamic> json,
 ) => $checkedCreate('PaymentEnvelopePayload', json, ($checkedConvert) {
-  $checkKeys(json, requiredKeys: const ['payment', 'transaction']);
   final val = PaymentEnvelopePayload(
     failReason: $checkedConvert('failReason', (v) => v as String?),
     payment: $checkedConvert(
       'payment',
-      (v) => Payment.fromJson(v as Map<String, dynamic>),
+      (v) => v == null ? null : Payment.fromJson(v as Map<String, dynamic>),
     ),
     transaction: $checkedConvert(
       'transaction',
-      (v) => Transaction.fromJson(v as Map<String, dynamic>),
+      (v) => v == null ? null : Transaction.fromJson(v as Map<String, dynamic>),
     ),
     wallet: $checkedConvert(
       'wallet',
       (v) => v == null ? null : Wallet.fromJson(v as Map<String, dynamic>),
+    ),
+    syncRequest: $checkedConvert(
+      'syncRequest',
+      (v) => v == null
+          ? null
+          : PaymentEnvelopePayloadSyncRequest.fromJson(
+              v as Map<String, dynamic>,
+            ),
     ),
   );
   return val;
@@ -126,7 +147,8 @@ Map<String, dynamic> _$PaymentEnvelopePayloadToJson(
   PaymentEnvelopePayload instance,
 ) => <String, dynamic>{
   'failReason': ?instance.failReason,
-  'payment': instance.payment.toJson(),
-  'transaction': instance.transaction.toJson(),
+  'payment': ?instance.payment?.toJson(),
+  'transaction': ?instance.transaction?.toJson(),
   'wallet': ?instance.wallet?.toJson(),
+  'syncRequest': ?instance.syncRequest?.toJson(),
 };

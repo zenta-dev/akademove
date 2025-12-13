@@ -77,7 +77,11 @@ void main() {
         },
         act: (cubit) => cubit.loadCart(),
         expect: () => [
-          isA<UserCartState>().having((s) => s.cart.isLoading, 'isLoading', true),
+          isA<UserCartState>().having(
+            (s) => s.cart.isLoading,
+            'isLoading',
+            true,
+          ),
           isA<UserCartState>()
               .having((s) => s.cart.isSuccess, 'isSuccess', true)
               .having(
@@ -105,8 +109,16 @@ void main() {
         },
         act: (cubit) => cubit.loadCart(),
         expect: () => [
-          isA<UserCartState>().having((s) => s.cart.isLoading, 'isLoading', true),
-          isA<UserCartState>().having((s) => s.cart.isFailure, 'isFailure', true),
+          isA<UserCartState>().having(
+            (s) => s.cart.isLoading,
+            'isLoading',
+            true,
+          ),
+          isA<UserCartState>().having(
+            (s) => s.cart.isFailure,
+            'isFailure',
+            true,
+          ),
         ],
       );
     });

@@ -23,6 +23,12 @@ abstract class _$MerchantEnvelopePayloadCWProxy {
 
   MerchantEnvelopePayload newStatus(String? newStatus);
 
+  MerchantEnvelopePayload syncRequest(
+    MerchantEnvelopePayloadSyncRequest? syncRequest,
+  );
+
+  MerchantEnvelopePayload orders(List<Order>? orders);
+
   /// Creates a new instance with the provided field values.
   /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `MerchantEnvelopePayload(...).copyWith.fieldName(value)`.
   ///
@@ -39,6 +45,8 @@ abstract class _$MerchantEnvelopePayloadCWProxy {
     String? cancelReason,
     String? driverName,
     String? newStatus,
+    MerchantEnvelopePayloadSyncRequest? syncRequest,
+    List<Order>? orders,
   });
 }
 
@@ -81,6 +89,14 @@ class _$MerchantEnvelopePayloadCWProxyImpl
       call(newStatus: newStatus);
 
   @override
+  MerchantEnvelopePayload syncRequest(
+    MerchantEnvelopePayloadSyncRequest? syncRequest,
+  ) => call(syncRequest: syncRequest);
+
+  @override
+  MerchantEnvelopePayload orders(List<Order>? orders) => call(orders: orders);
+
+  @override
   /// Creates a new instance with the provided field values.
   /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `MerchantEnvelopePayload(...).copyWith.fieldName(value)`.
   ///
@@ -97,6 +113,8 @@ class _$MerchantEnvelopePayloadCWProxyImpl
     Object? cancelReason = const $CopyWithPlaceholder(),
     Object? driverName = const $CopyWithPlaceholder(),
     Object? newStatus = const $CopyWithPlaceholder(),
+    Object? syncRequest = const $CopyWithPlaceholder(),
+    Object? orders = const $CopyWithPlaceholder(),
   }) {
     return MerchantEnvelopePayload(
       order: order == const $CopyWithPlaceholder()
@@ -131,6 +149,14 @@ class _$MerchantEnvelopePayloadCWProxyImpl
           ? _value.newStatus
           // ignore: cast_nullable_to_non_nullable
           : newStatus as String?,
+      syncRequest: syncRequest == const $CopyWithPlaceholder()
+          ? _value.syncRequest
+          // ignore: cast_nullable_to_non_nullable
+          : syncRequest as MerchantEnvelopePayloadSyncRequest?,
+      orders: orders == const $CopyWithPlaceholder()
+          ? _value.orders
+          // ignore: cast_nullable_to_non_nullable
+          : orders as List<Order>?,
     );
   }
 }
@@ -162,6 +188,20 @@ MerchantEnvelopePayload _$MerchantEnvelopePayloadFromJson(
     cancelReason: $checkedConvert('cancelReason', (v) => v as String?),
     driverName: $checkedConvert('driverName', (v) => v as String?),
     newStatus: $checkedConvert('newStatus', (v) => v as String?),
+    syncRequest: $checkedConvert(
+      'syncRequest',
+      (v) => v == null
+          ? null
+          : MerchantEnvelopePayloadSyncRequest.fromJson(
+              v as Map<String, dynamic>,
+            ),
+    ),
+    orders: $checkedConvert(
+      'orders',
+      (v) => (v as List<dynamic>?)
+          ?.map((e) => Order.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    ),
   );
   return val;
 });
@@ -177,4 +217,6 @@ Map<String, dynamic> _$MerchantEnvelopePayloadToJson(
   'cancelReason': ?instance.cancelReason,
   'driverName': ?instance.driverName,
   'newStatus': ?instance.newStatus,
+  'syncRequest': ?instance.syncRequest?.toJson(),
+  'orders': ?instance.orders?.map((e) => e.toJson()).toList(),
 };

@@ -4,9 +4,10 @@ import 'package:akademove/features/notification/data/repositories/notification_r
 import 'package:akademove/features/notification/presentation/states/_export.dart';
 
 class SharedNotificationCubit extends BaseCubit<SharedNotificationState> {
-  SharedNotificationCubit({required NotificationRepository notificationRepository})
-    : _notificationRepository = notificationRepository,
-      super(const SharedNotificationState());
+  SharedNotificationCubit({
+    required NotificationRepository notificationRepository,
+  }) : _notificationRepository = notificationRepository,
+       super(const SharedNotificationState());
 
   final NotificationRepository _notificationRepository;
 

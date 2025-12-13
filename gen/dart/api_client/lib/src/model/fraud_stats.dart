@@ -30,58 +30,56 @@ class FraudStats {
     required this.highRiskUsers,
     required this.recentTrend,
   });
-  // minimum: -9007199254740991
-  // maximum: 9007199254740991
+          // minimum: -9007199254740991
+          // maximum: 9007199254740991
   @JsonKey(name: r'totalEvents', required: true, includeIfNull: false)
   final int totalEvents;
-
-  // minimum: -9007199254740991
-  // maximum: 9007199254740991
+  
+          // minimum: -9007199254740991
+          // maximum: 9007199254740991
   @JsonKey(name: r'pendingEvents', required: true, includeIfNull: false)
   final int pendingEvents;
-
-  // minimum: -9007199254740991
-  // maximum: 9007199254740991
+  
+          // minimum: -9007199254740991
+          // maximum: 9007199254740991
   @JsonKey(name: r'reviewingEvents', required: true, includeIfNull: false)
   final int reviewingEvents;
-
-  // minimum: -9007199254740991
-  // maximum: 9007199254740991
+  
+          // minimum: -9007199254740991
+          // maximum: 9007199254740991
   @JsonKey(name: r'confirmedEvents', required: true, includeIfNull: false)
   final int confirmedEvents;
-
-  // minimum: -9007199254740991
-  // maximum: 9007199254740991
+  
+          // minimum: -9007199254740991
+          // maximum: 9007199254740991
   @JsonKey(name: r'dismissedEvents', required: true, includeIfNull: false)
   final int dismissedEvents;
-
+  
   @JsonKey(name: r'eventsBySeverity', required: true, includeIfNull: false)
   final FraudStatsEventsBySeverity eventsBySeverity;
-
+  
   @JsonKey(name: r'eventsByType', required: true, includeIfNull: false)
   final Map<String, int> eventsByType;
-
-  // minimum: -9007199254740991
-  // maximum: 9007199254740991
+  
+          // minimum: -9007199254740991
+          // maximum: 9007199254740991
   @JsonKey(name: r'highRiskUsers', required: true, includeIfNull: false)
   final int highRiskUsers;
-
+  
   @JsonKey(name: r'recentTrend', required: true, includeIfNull: false)
   final List<FraudStatsRecentTrendInner> recentTrend;
-
+  
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is FraudStats &&
-          other.totalEvents == totalEvents &&
-          other.pendingEvents == pendingEvents &&
-          other.reviewingEvents == reviewingEvents &&
-          other.confirmedEvents == confirmedEvents &&
-          other.dismissedEvents == dismissedEvents &&
-          other.eventsBySeverity == eventsBySeverity &&
-          other.eventsByType == eventsByType &&
-          other.highRiskUsers == highRiskUsers &&
-          other.recentTrend == recentTrend;
+  bool operator ==(Object other) => identical(this, other) || other is FraudStats &&
+    other.totalEvents == totalEvents &&
+    other.pendingEvents == pendingEvents &&
+    other.reviewingEvents == reviewingEvents &&
+    other.confirmedEvents == confirmedEvents &&
+    other.dismissedEvents == dismissedEvents &&
+    other.eventsBySeverity == eventsBySeverity &&
+    other.eventsByType == eventsByType &&
+    other.highRiskUsers == highRiskUsers &&
+    other.recentTrend == recentTrend;
 
   @override
   int get hashCode =>
@@ -95,8 +93,7 @@ class FraudStats {
       highRiskUsers.hashCode +
       recentTrend.hashCode;
 
-  factory FraudStats.fromJson(Map<String, dynamic> json) =>
-      _$FraudStatsFromJson(json);
+  factory FraudStats.fromJson(Map<String, dynamic> json) => _$FraudStatsFromJson(json);
 
   Map<String, dynamic> toJson() => _$FraudStatsToJson(this);
 
@@ -104,4 +101,6 @@ class FraudStats {
   String toString() {
     return toJson().toString();
   }
+
 }
+

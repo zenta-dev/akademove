@@ -18,27 +18,28 @@ part 'merchant_operating_hours_bulk_upsert_request.g.dart';
 )
 class MerchantOperatingHoursBulkUpsertRequest {
   /// Returns a new [MerchantOperatingHoursBulkUpsertRequest] instance.
-  const MerchantOperatingHoursBulkUpsertRequest({required this.hours});
+  const MerchantOperatingHoursBulkUpsertRequest({
+    required this.hours,
+  });
   @JsonKey(name: r'hours', required: true, includeIfNull: false)
   final List<MerchantOperatingHoursCreateRequest> hours;
+  
+  @override
+  bool operator ==(Object other) => identical(this, other) || other is MerchantOperatingHoursBulkUpsertRequest &&
+    other.hours == hours;
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is MerchantOperatingHoursBulkUpsertRequest && other.hours == hours;
+  int get hashCode =>
+      hours.hashCode;
 
-  @override
-  int get hashCode => hours.hashCode;
+  factory MerchantOperatingHoursBulkUpsertRequest.fromJson(Map<String, dynamic> json) => _$MerchantOperatingHoursBulkUpsertRequestFromJson(json);
 
-  factory MerchantOperatingHoursBulkUpsertRequest.fromJson(
-    Map<String, dynamic> json,
-  ) => _$MerchantOperatingHoursBulkUpsertRequestFromJson(json);
-
-  Map<String, dynamic> toJson() =>
-      _$MerchantOperatingHoursBulkUpsertRequestToJson(this);
+  Map<String, dynamic> toJson() => _$MerchantOperatingHoursBulkUpsertRequestToJson(this);
 
   @override
   String toString() {
     return toJson().toString();
   }
+
 }
+

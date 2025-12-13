@@ -23,28 +23,26 @@ class TopUpRequest {
     required this.amount,
     required this.provider,
     required this.method,
-    this.bankProvider,
+     this.bankProvider,
   });
   @JsonKey(name: r'amount', required: true, includeIfNull: false)
   final num amount;
-
+  
   @JsonKey(name: r'provider', required: true, includeIfNull: false)
   final PaymentProvider provider;
-
+  
   @JsonKey(name: r'method', required: true, includeIfNull: false)
   final TopUpRequestMethodEnum method;
-
+  
   @JsonKey(name: r'bankProvider', required: false, includeIfNull: false)
   final BankProvider? bankProvider;
-
+  
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is TopUpRequest &&
-          other.amount == amount &&
-          other.provider == provider &&
-          other.method == method &&
-          other.bankProvider == bankProvider;
+  bool operator ==(Object other) => identical(this, other) || other is TopUpRequest &&
+    other.amount == amount &&
+    other.provider == provider &&
+    other.method == method &&
+    other.bankProvider == bankProvider;
 
   @override
   int get hashCode =>
@@ -53,8 +51,7 @@ class TopUpRequest {
       method.hashCode +
       bankProvider.hashCode;
 
-  factory TopUpRequest.fromJson(Map<String, dynamic> json) =>
-      _$TopUpRequestFromJson(json);
+  factory TopUpRequest.fromJson(Map<String, dynamic> json) => _$TopUpRequestFromJson(json);
 
   Map<String, dynamic> toJson() => _$TopUpRequestToJson(this);
 
@@ -62,6 +59,7 @@ class TopUpRequest {
   String toString() {
     return toJson().toString();
   }
+
 }
 
 enum TopUpRequestMethodEnum {
@@ -69,11 +67,12 @@ enum TopUpRequestMethodEnum {
   QRIS(r'QRIS'),
   @JsonValue(r'BANK_TRANSFER')
   BANK_TRANSFER(r'BANK_TRANSFER');
-
+  
   const TopUpRequestMethodEnum(this.value);
-
+  
   final String value;
-
+  
   @override
   String toString() => value;
 }
+

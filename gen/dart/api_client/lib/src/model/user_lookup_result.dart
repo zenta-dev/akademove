@@ -21,36 +21,36 @@ class UserLookupResult {
   const UserLookupResult({
     required this.id,
     required this.name,
-    this.phone,
-    this.image,
+     this.phone,
+     this.image,
   });
   @JsonKey(name: r'id', required: true, includeIfNull: false)
   final String id;
-
+  
   @JsonKey(name: r'name', required: true, includeIfNull: false)
   final String name;
-
+  
   @JsonKey(name: r'phone', required: false, includeIfNull: false)
   final UserLookupResultPhone? phone;
-
+  
   @JsonKey(name: r'image', required: false, includeIfNull: false)
   final String? image;
-
+  
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is UserLookupResult &&
-          other.id == id &&
-          other.name == name &&
-          other.phone == phone &&
-          other.image == image;
+  bool operator ==(Object other) => identical(this, other) || other is UserLookupResult &&
+    other.id == id &&
+    other.name == name &&
+    other.phone == phone &&
+    other.image == image;
 
   @override
   int get hashCode =>
-      id.hashCode + name.hashCode + phone.hashCode + image.hashCode;
+      id.hashCode +
+      name.hashCode +
+      phone.hashCode +
+      image.hashCode;
 
-  factory UserLookupResult.fromJson(Map<String, dynamic> json) =>
-      _$UserLookupResultFromJson(json);
+  factory UserLookupResult.fromJson(Map<String, dynamic> json) => _$UserLookupResultFromJson(json);
 
   Map<String, dynamic> toJson() => _$UserLookupResultToJson(this);
 
@@ -58,4 +58,6 @@ class UserLookupResult {
   String toString() {
     return toJson().toString();
   }
+
 }
+

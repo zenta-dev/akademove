@@ -24,35 +24,35 @@ class OrderEnvelopePayloadChatUnreadCount {
   });
   @JsonKey(name: r'orderId', required: true, includeIfNull: false)
   final String orderId;
-
+  
   @JsonKey(name: r'userId', required: true, includeIfNull: false)
   final String userId;
-
-  // minimum: 0
-  // maximum: 9007199254740991
+  
+          // minimum: 0
+          // maximum: 9007199254740991
   @JsonKey(name: r'unreadCount', required: true, includeIfNull: false)
   final int unreadCount;
+  
+  @override
+  bool operator ==(Object other) => identical(this, other) || other is OrderEnvelopePayloadChatUnreadCount &&
+    other.orderId == orderId &&
+    other.userId == userId &&
+    other.unreadCount == unreadCount;
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is OrderEnvelopePayloadChatUnreadCount &&
-          other.orderId == orderId &&
-          other.userId == userId &&
-          other.unreadCount == unreadCount;
+  int get hashCode =>
+      orderId.hashCode +
+      userId.hashCode +
+      unreadCount.hashCode;
 
-  @override
-  int get hashCode => orderId.hashCode + userId.hashCode + unreadCount.hashCode;
+  factory OrderEnvelopePayloadChatUnreadCount.fromJson(Map<String, dynamic> json) => _$OrderEnvelopePayloadChatUnreadCountFromJson(json);
 
-  factory OrderEnvelopePayloadChatUnreadCount.fromJson(
-    Map<String, dynamic> json,
-  ) => _$OrderEnvelopePayloadChatUnreadCountFromJson(json);
-
-  Map<String, dynamic> toJson() =>
-      _$OrderEnvelopePayloadChatUnreadCountToJson(this);
+  Map<String, dynamic> toJson() => _$OrderEnvelopePayloadChatUnreadCountToJson(this);
 
   @override
   String toString() {
     return toJson().toString();
   }
+
 }
+

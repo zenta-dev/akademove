@@ -159,9 +159,14 @@ const _$MerchantEnvelopeEventEnumMap = {
   MerchantEnvelopeEvent.DRIVER_ASSIGNED: 'DRIVER_ASSIGNED',
   MerchantEnvelopeEvent.ORDER_COMPLETED: 'ORDER_COMPLETED',
   MerchantEnvelopeEvent.ORDER_STATUS_CHANGED: 'ORDER_STATUS_CHANGED',
+  MerchantEnvelopeEvent.NEW_DATA: 'NEW_DATA',
+  MerchantEnvelopeEvent.NO_DATA: 'NO_DATA',
 };
 
-const _$MerchantEnvelopeActionEnumMap = {MerchantEnvelopeAction.NONE: 'NONE'};
+const _$MerchantEnvelopeActionEnumMap = {
+  MerchantEnvelopeAction.NONE: 'NONE',
+  MerchantEnvelopeAction.CHECK_NEW_DATA: 'CHECK_NEW_DATA',
+};
 
 const _$EnvelopeTargetEnumMap = {
   EnvelopeTarget.ADMIN: 'ADMIN',

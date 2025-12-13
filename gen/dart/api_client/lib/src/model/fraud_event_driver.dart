@@ -24,26 +24,26 @@ class FraudEventDriver {
   });
   @JsonKey(name: r'id', required: true, includeIfNull: false)
   final String id;
-
+  
   @JsonKey(name: r'studentId', required: true, includeIfNull: false)
   final num studentId;
-
+  
   @JsonKey(name: r'licensePlate', required: true, includeIfNull: false)
   final String licensePlate;
+  
+  @override
+  bool operator ==(Object other) => identical(this, other) || other is FraudEventDriver &&
+    other.id == id &&
+    other.studentId == studentId &&
+    other.licensePlate == licensePlate;
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is FraudEventDriver &&
-          other.id == id &&
-          other.studentId == studentId &&
-          other.licensePlate == licensePlate;
+  int get hashCode =>
+      id.hashCode +
+      studentId.hashCode +
+      licensePlate.hashCode;
 
-  @override
-  int get hashCode => id.hashCode + studentId.hashCode + licensePlate.hashCode;
-
-  factory FraudEventDriver.fromJson(Map<String, dynamic> json) =>
-      _$FraudEventDriverFromJson(json);
+  factory FraudEventDriver.fromJson(Map<String, dynamic> json) => _$FraudEventDriverFromJson(json);
 
   Map<String, dynamic> toJson() => _$FraudEventDriverToJson(this);
 
@@ -51,4 +51,6 @@ class FraudEventDriver {
   String toString() {
     return toJson().toString();
   }
+
 }
+

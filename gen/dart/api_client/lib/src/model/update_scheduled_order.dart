@@ -17,25 +17,27 @@ part 'update_scheduled_order.g.dart';
 )
 class UpdateScheduledOrder {
   /// Returns a new [UpdateScheduledOrder] instance.
-  const UpdateScheduledOrder({this.scheduledAt, this.cancelReason});
+  const UpdateScheduledOrder({
+     this.scheduledAt,
+     this.cancelReason,
+  });
   @JsonKey(name: r'scheduledAt', required: false, includeIfNull: false)
   final DateTime? scheduledAt;
-
+  
   @JsonKey(name: r'cancelReason', required: false, includeIfNull: false)
   final String? cancelReason;
+  
+  @override
+  bool operator ==(Object other) => identical(this, other) || other is UpdateScheduledOrder &&
+    other.scheduledAt == scheduledAt &&
+    other.cancelReason == cancelReason;
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is UpdateScheduledOrder &&
-          other.scheduledAt == scheduledAt &&
-          other.cancelReason == cancelReason;
+  int get hashCode =>
+      scheduledAt.hashCode +
+      cancelReason.hashCode;
 
-  @override
-  int get hashCode => scheduledAt.hashCode + cancelReason.hashCode;
-
-  factory UpdateScheduledOrder.fromJson(Map<String, dynamic> json) =>
-      _$UpdateScheduledOrderFromJson(json);
+  factory UpdateScheduledOrder.fromJson(Map<String, dynamic> json) => _$UpdateScheduledOrderFromJson(json);
 
   Map<String, dynamic> toJson() => _$UpdateScheduledOrderToJson(this);
 
@@ -43,4 +45,6 @@ class UpdateScheduledOrder {
   String toString() {
     return toJson().toString();
   }
+
 }
+

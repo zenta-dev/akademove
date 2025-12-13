@@ -21,28 +21,26 @@ class OrderEnvelopePayloadRetryInfo {
     required this.orderId,
     required this.cancelledDriverId,
     required this.excludedDriverCount,
-    this.reason,
+     this.reason,
   });
   @JsonKey(name: r'orderId', required: true, includeIfNull: false)
   final String orderId;
-
+  
   @JsonKey(name: r'cancelledDriverId', required: true, includeIfNull: false)
   final String cancelledDriverId;
-
+  
   @JsonKey(name: r'excludedDriverCount', required: true, includeIfNull: false)
   final num excludedDriverCount;
-
+  
   @JsonKey(name: r'reason', required: false, includeIfNull: false)
   final String? reason;
-
+  
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is OrderEnvelopePayloadRetryInfo &&
-          other.orderId == orderId &&
-          other.cancelledDriverId == cancelledDriverId &&
-          other.excludedDriverCount == excludedDriverCount &&
-          other.reason == reason;
+  bool operator ==(Object other) => identical(this, other) || other is OrderEnvelopePayloadRetryInfo &&
+    other.orderId == orderId &&
+    other.cancelledDriverId == cancelledDriverId &&
+    other.excludedDriverCount == excludedDriverCount &&
+    other.reason == reason;
 
   @override
   int get hashCode =>
@@ -51,8 +49,7 @@ class OrderEnvelopePayloadRetryInfo {
       excludedDriverCount.hashCode +
       reason.hashCode;
 
-  factory OrderEnvelopePayloadRetryInfo.fromJson(Map<String, dynamic> json) =>
-      _$OrderEnvelopePayloadRetryInfoFromJson(json);
+  factory OrderEnvelopePayloadRetryInfo.fromJson(Map<String, dynamic> json) => _$OrderEnvelopePayloadRetryInfoFromJson(json);
 
   Map<String, dynamic> toJson() => _$OrderEnvelopePayloadRetryInfoToJson(this);
 
@@ -60,4 +57,6 @@ class OrderEnvelopePayloadRetryInfo {
   String toString() {
     return toJson().toString();
   }
+
 }
+

@@ -17,27 +17,29 @@ part 'fraud_stats_recent_trend_inner.g.dart';
 )
 class FraudStatsRecentTrendInner {
   /// Returns a new [FraudStatsRecentTrendInner] instance.
-  const FraudStatsRecentTrendInner({required this.date, required this.count});
+  const FraudStatsRecentTrendInner({
+    required this.date,
+    required this.count,
+  });
   @JsonKey(name: r'date', required: true, includeIfNull: false)
   final String date;
-
-  // minimum: -9007199254740991
-  // maximum: 9007199254740991
+  
+          // minimum: -9007199254740991
+          // maximum: 9007199254740991
   @JsonKey(name: r'count', required: true, includeIfNull: false)
   final int count;
+  
+  @override
+  bool operator ==(Object other) => identical(this, other) || other is FraudStatsRecentTrendInner &&
+    other.date == date &&
+    other.count == count;
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is FraudStatsRecentTrendInner &&
-          other.date == date &&
-          other.count == count;
+  int get hashCode =>
+      date.hashCode +
+      count.hashCode;
 
-  @override
-  int get hashCode => date.hashCode + count.hashCode;
-
-  factory FraudStatsRecentTrendInner.fromJson(Map<String, dynamic> json) =>
-      _$FraudStatsRecentTrendInnerFromJson(json);
+  factory FraudStatsRecentTrendInner.fromJson(Map<String, dynamic> json) => _$FraudStatsRecentTrendInnerFromJson(json);
 
   Map<String, dynamic> toJson() => _$FraudStatsRecentTrendInnerToJson(this);
 
@@ -45,4 +47,6 @@ class FraudStatsRecentTrendInner {
   String toString() {
     return toJson().toString();
   }
+
 }
+

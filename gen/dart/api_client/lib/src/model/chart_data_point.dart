@@ -24,26 +24,26 @@ class ChartDataPoint {
   });
   @JsonKey(name: r'label', required: true, includeIfNull: false)
   final String label;
-
+  
   @JsonKey(name: r'income', required: true, includeIfNull: false)
   final num income;
-
+  
   @JsonKey(name: r'outcome', required: true, includeIfNull: false)
   final num outcome;
+  
+  @override
+  bool operator ==(Object other) => identical(this, other) || other is ChartDataPoint &&
+    other.label == label &&
+    other.income == income &&
+    other.outcome == outcome;
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is ChartDataPoint &&
-          other.label == label &&
-          other.income == income &&
-          other.outcome == outcome;
+  int get hashCode =>
+      label.hashCode +
+      income.hashCode +
+      outcome.hashCode;
 
-  @override
-  int get hashCode => label.hashCode + income.hashCode + outcome.hashCode;
-
-  factory ChartDataPoint.fromJson(Map<String, dynamic> json) =>
-      _$ChartDataPointFromJson(json);
+  factory ChartDataPoint.fromJson(Map<String, dynamic> json) => _$ChartDataPointFromJson(json);
 
   Map<String, dynamic> toJson() => _$ChartDataPointToJson(this);
 
@@ -51,4 +51,6 @@ class ChartDataPoint {
   String toString() {
     return toJson().toString();
   }
+
 }
+

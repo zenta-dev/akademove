@@ -274,6 +274,7 @@ doc/MerchantEnvelope.md
 doc/MerchantEnvelopeAction.md
 doc/MerchantEnvelopeEvent.md
 doc/MerchantEnvelopePayload.md
+doc/MerchantEnvelopePayloadSyncRequest.md
 doc/MerchantGetAvailabilityStatus200Response.md
 doc/MerchantGetAvailabilityStatus200ResponseData.md
 doc/MerchantGetMine200Response.md
@@ -331,6 +332,7 @@ doc/OrderEnvelopePayloadMerchantAction.md
 doc/OrderEnvelopePayloadMessage.md
 doc/OrderEnvelopePayloadNoShow.md
 doc/OrderEnvelopePayloadRetryInfo.md
+doc/OrderEnvelopePayloadSyncRequest.md
 doc/OrderEstimate200Response.md
 doc/OrderGetActive200Response.md
 doc/OrderGetActive200ResponseData.md
@@ -366,6 +368,7 @@ doc/PaymentEnvelope.md
 doc/PaymentEnvelopeAction.md
 doc/PaymentEnvelopeEvent.md
 doc/PaymentEnvelopePayload.md
+doc/PaymentEnvelopePayloadSyncRequest.md
 doc/PaymentKey.md
 doc/PaymentMethod.md
 doc/PaymentProvider.md
@@ -779,6 +782,7 @@ lib/src/model/merchant_envelope.dart
 lib/src/model/merchant_envelope_action.dart
 lib/src/model/merchant_envelope_event.dart
 lib/src/model/merchant_envelope_payload.dart
+lib/src/model/merchant_envelope_payload_sync_request.dart
 lib/src/model/merchant_get_availability_status200_response.dart
 lib/src/model/merchant_get_availability_status200_response_data.dart
 lib/src/model/merchant_get_mine200_response.dart
@@ -834,6 +838,7 @@ lib/src/model/order_envelope_payload_merchant_action.dart
 lib/src/model/order_envelope_payload_message.dart
 lib/src/model/order_envelope_payload_no_show.dart
 lib/src/model/order_envelope_payload_retry_info.dart
+lib/src/model/order_envelope_payload_sync_request.dart
 lib/src/model/order_estimate200_response.dart
 lib/src/model/order_get_active200_response.dart
 lib/src/model/order_get_active200_response_data.dart
@@ -868,6 +873,7 @@ lib/src/model/payment_envelope.dart
 lib/src/model/payment_envelope_action.dart
 lib/src/model/payment_envelope_event.dart
 lib/src/model/payment_envelope_payload.dart
+lib/src/model/payment_envelope_payload_sync_request.dart
 lib/src/model/payment_key.dart
 lib/src/model/payment_method.dart
 lib/src/model/payment_provider.dart
@@ -989,9 +995,6 @@ lib/src/model/weight_size.dart
 lib/src/model/withdraw_request.dart
 lib/src/model/withdraw_response.dart
 pubspec.yaml
-test/chat_get_unread_count200_response_test.dart
-test/chat_mark_as_read200_response_test.dart
-test/chat_unread_count_test.dart
-test/mark_chat_as_read_test.dart
-test/order_chat_read_status_test.dart
-test/order_envelope_payload_chat_unread_count_test.dart
+test/merchant_envelope_payload_sync_request_test.dart
+test/order_envelope_payload_sync_request_test.dart
+test/payment_envelope_payload_sync_request_test.dart

@@ -384,7 +384,8 @@ final userRouter = StatefulShellRoute.indexedStack(
           name: Routes.userNotifications.name,
           path: Routes.userNotifications.path,
           builder: (context, state) => BlocProvider.value(
-            value: context.read<SharedNotificationCubit>()..refreshNotifications(),
+            value: context.read<SharedNotificationCubit>()
+              ..refreshNotifications(),
             child: const NotificationScreen(),
           ),
         ),

@@ -27,38 +27,32 @@ class FoodPricingConfiguration {
   });
   @JsonKey(name: r'baseFare', required: true, includeIfNull: false)
   final num baseFare;
-
+  
   @JsonKey(name: r'perKmRate', required: true, includeIfNull: false)
   final num perKmRate;
-
+  
   @JsonKey(name: r'minimumFare', required: true, includeIfNull: false)
   final num minimumFare;
-
+  
   @JsonKey(name: r'platformFeeRate', required: true, includeIfNull: false)
   final num platformFeeRate;
-
+  
   @JsonKey(name: r'taxRate', required: true, includeIfNull: false)
   final num taxRate;
-
-  // minimum: 0
-  // maximum: 1
-  @JsonKey(
-    name: r'merchantCommissionRate',
-    required: true,
-    includeIfNull: false,
-  )
+  
+          // minimum: 0
+          // maximum: 1
+  @JsonKey(name: r'merchantCommissionRate', required: true, includeIfNull: false)
   final num merchantCommissionRate;
-
+  
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is FoodPricingConfiguration &&
-          other.baseFare == baseFare &&
-          other.perKmRate == perKmRate &&
-          other.minimumFare == minimumFare &&
-          other.platformFeeRate == platformFeeRate &&
-          other.taxRate == taxRate &&
-          other.merchantCommissionRate == merchantCommissionRate;
+  bool operator ==(Object other) => identical(this, other) || other is FoodPricingConfiguration &&
+    other.baseFare == baseFare &&
+    other.perKmRate == perKmRate &&
+    other.minimumFare == minimumFare &&
+    other.platformFeeRate == platformFeeRate &&
+    other.taxRate == taxRate &&
+    other.merchantCommissionRate == merchantCommissionRate;
 
   @override
   int get hashCode =>
@@ -69,8 +63,7 @@ class FoodPricingConfiguration {
       taxRate.hashCode +
       merchantCommissionRate.hashCode;
 
-  factory FoodPricingConfiguration.fromJson(Map<String, dynamic> json) =>
-      _$FoodPricingConfigurationFromJson(json);
+  factory FoodPricingConfiguration.fromJson(Map<String, dynamic> json) => _$FoodPricingConfigurationFromJson(json);
 
   Map<String, dynamic> toJson() => _$FoodPricingConfigurationToJson(this);
 
@@ -78,4 +71,6 @@ class FoodPricingConfiguration {
   String toString() {
     return toJson().toString();
   }
+
 }
+

@@ -8,6 +8,7 @@ export 'package:api_client/src/auth/basic_auth.dart';
 export 'package:api_client/src/auth/bearer_auth.dart';
 export 'package:api_client/src/auth/oauth.dart';
 
+
 export 'package:api_client/src/api/admin_api.dart';
 export 'package:api_client/src/api/auth_api.dart';
 export 'package:api_client/src/api/badge_api.dart';
@@ -289,6 +290,7 @@ export 'package:api_client/src/model/merchant_envelope.dart';
 export 'package:api_client/src/model/merchant_envelope_action.dart';
 export 'package:api_client/src/model/merchant_envelope_event.dart';
 export 'package:api_client/src/model/merchant_envelope_payload.dart';
+export 'package:api_client/src/model/merchant_envelope_payload_sync_request.dart';
 export 'package:api_client/src/model/merchant_get_availability_status200_response.dart';
 export 'package:api_client/src/model/merchant_get_availability_status200_response_data.dart';
 export 'package:api_client/src/model/merchant_get_mine200_response.dart';
@@ -344,6 +346,7 @@ export 'package:api_client/src/model/order_envelope_payload_merchant_action.dart
 export 'package:api_client/src/model/order_envelope_payload_message.dart';
 export 'package:api_client/src/model/order_envelope_payload_no_show.dart';
 export 'package:api_client/src/model/order_envelope_payload_retry_info.dart';
+export 'package:api_client/src/model/order_envelope_payload_sync_request.dart';
 export 'package:api_client/src/model/order_estimate200_response.dart';
 export 'package:api_client/src/model/order_get_active200_response.dart';
 export 'package:api_client/src/model/order_get_active200_response_data.dart';
@@ -378,6 +381,7 @@ export 'package:api_client/src/model/payment_envelope.dart';
 export 'package:api_client/src/model/payment_envelope_action.dart';
 export 'package:api_client/src/model/payment_envelope_event.dart';
 export 'package:api_client/src/model/payment_envelope_payload.dart';
+export 'package:api_client/src/model/payment_envelope_payload_sync_request.dart';
 export 'package:api_client/src/model/payment_key.dart';
 export 'package:api_client/src/model/payment_method.dart';
 export 'package:api_client/src/model/payment_provider.dart';
@@ -498,3 +502,4 @@ export 'package:api_client/src/model/wallet_monthly_summary_response.dart';
 export 'package:api_client/src/model/weight_size.dart';
 export 'package:api_client/src/model/withdraw_request.dart';
 export 'package:api_client/src/model/withdraw_response.dart';
+

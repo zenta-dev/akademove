@@ -24,33 +24,33 @@ class DriverGetAnalytics200ResponseDataTopEarningDaysInner {
   });
   @JsonKey(name: r'date', required: true, includeIfNull: false)
   final String date;
-
+  
   @JsonKey(name: r'earnings', required: true, includeIfNull: false)
   final num earnings;
-
+  
   @JsonKey(name: r'orders', required: true, includeIfNull: false)
   final num orders;
+  
+  @override
+  bool operator ==(Object other) => identical(this, other) || other is DriverGetAnalytics200ResponseDataTopEarningDaysInner &&
+    other.date == date &&
+    other.earnings == earnings &&
+    other.orders == orders;
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is DriverGetAnalytics200ResponseDataTopEarningDaysInner &&
-          other.date == date &&
-          other.earnings == earnings &&
-          other.orders == orders;
+  int get hashCode =>
+      date.hashCode +
+      earnings.hashCode +
+      orders.hashCode;
 
-  @override
-  int get hashCode => date.hashCode + earnings.hashCode + orders.hashCode;
+  factory DriverGetAnalytics200ResponseDataTopEarningDaysInner.fromJson(Map<String, dynamic> json) => _$DriverGetAnalytics200ResponseDataTopEarningDaysInnerFromJson(json);
 
-  factory DriverGetAnalytics200ResponseDataTopEarningDaysInner.fromJson(
-    Map<String, dynamic> json,
-  ) => _$DriverGetAnalytics200ResponseDataTopEarningDaysInnerFromJson(json);
-
-  Map<String, dynamic> toJson() =>
-      _$DriverGetAnalytics200ResponseDataTopEarningDaysInnerToJson(this);
+  Map<String, dynamic> toJson() => _$DriverGetAnalytics200ResponseDataTopEarningDaysInnerToJson(this);
 
   @override
   String toString() {
     return toJson().toString();
   }
+
 }
+

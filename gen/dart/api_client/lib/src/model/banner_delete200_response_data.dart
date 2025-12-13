@@ -17,20 +17,21 @@ part 'banner_delete200_response_data.g.dart';
 )
 class BannerDelete200ResponseData {
   /// Returns a new [BannerDelete200ResponseData] instance.
-  const BannerDelete200ResponseData({required this.ok});
+  const BannerDelete200ResponseData({
+    required this.ok,
+  });
   @JsonKey(name: r'ok', required: true, includeIfNull: false)
   final bool ok;
+  
+  @override
+  bool operator ==(Object other) => identical(this, other) || other is BannerDelete200ResponseData &&
+    other.ok == ok;
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is BannerDelete200ResponseData && other.ok == ok;
+  int get hashCode =>
+      ok.hashCode;
 
-  @override
-  int get hashCode => ok.hashCode;
-
-  factory BannerDelete200ResponseData.fromJson(Map<String, dynamic> json) =>
-      _$BannerDelete200ResponseDataFromJson(json);
+  factory BannerDelete200ResponseData.fromJson(Map<String, dynamic> json) => _$BannerDelete200ResponseDataFromJson(json);
 
   Map<String, dynamic> toJson() => _$BannerDelete200ResponseDataToJson(this);
 
@@ -38,4 +39,6 @@ class BannerDelete200ResponseData {
   String toString() {
     return toJson().toString();
   }
+
 }
+

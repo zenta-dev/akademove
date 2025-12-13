@@ -20,8 +20,8 @@ class Leaderboard {
   const Leaderboard({
     required this.id,
     required this.userId,
-    this.driverId,
-    this.merchantId,
+     this.driverId,
+     this.merchantId,
     required this.category,
     required this.period,
     required this.rank,
@@ -33,60 +33,58 @@ class Leaderboard {
   });
   @JsonKey(name: r'id', required: true, includeIfNull: false)
   final String id;
-
+  
   @JsonKey(name: r'userId', required: true, includeIfNull: false)
   final String userId;
-
+  
   @JsonKey(name: r'driverId', required: false, includeIfNull: false)
   final String? driverId;
-
+  
   @JsonKey(name: r'merchantId', required: false, includeIfNull: false)
   final String? merchantId;
-
+  
   @JsonKey(name: r'category', required: true, includeIfNull: false)
   final LeaderboardCategoryEnum category;
-
+  
   @JsonKey(name: r'period', required: true, includeIfNull: false)
   final LeaderboardPeriodEnum period;
-
-  // minimum: 1
-  // maximum: 9007199254740991
+  
+          // minimum: 1
+          // maximum: 9007199254740991
   @JsonKey(name: r'rank', required: true, includeIfNull: false)
   final int rank;
-
-  // minimum: 0
-  // maximum: 9007199254740991
+  
+          // minimum: 0
+          // maximum: 9007199254740991
   @JsonKey(name: r'score', required: true, includeIfNull: false)
   final int score;
-
+  
   @JsonKey(name: r'periodStart', required: true, includeIfNull: false)
   final DateTime periodStart;
-
+  
   @JsonKey(name: r'periodEnd', required: true, includeIfNull: false)
   final DateTime periodEnd;
-
+  
   @JsonKey(name: r'createdAt', required: true, includeIfNull: false)
   final DateTime createdAt;
-
+  
   @JsonKey(name: r'updatedAt', required: true, includeIfNull: false)
   final DateTime updatedAt;
-
+  
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is Leaderboard &&
-          other.id == id &&
-          other.userId == userId &&
-          other.driverId == driverId &&
-          other.merchantId == merchantId &&
-          other.category == category &&
-          other.period == period &&
-          other.rank == rank &&
-          other.score == score &&
-          other.periodStart == periodStart &&
-          other.periodEnd == periodEnd &&
-          other.createdAt == createdAt &&
-          other.updatedAt == updatedAt;
+  bool operator ==(Object other) => identical(this, other) || other is Leaderboard &&
+    other.id == id &&
+    other.userId == userId &&
+    other.driverId == driverId &&
+    other.merchantId == merchantId &&
+    other.category == category &&
+    other.period == period &&
+    other.rank == rank &&
+    other.score == score &&
+    other.periodStart == periodStart &&
+    other.periodEnd == periodEnd &&
+    other.createdAt == createdAt &&
+    other.updatedAt == updatedAt;
 
   @override
   int get hashCode =>
@@ -103,8 +101,7 @@ class Leaderboard {
       createdAt.hashCode +
       updatedAt.hashCode;
 
-  factory Leaderboard.fromJson(Map<String, dynamic> json) =>
-      _$LeaderboardFromJson(json);
+  factory Leaderboard.fromJson(Map<String, dynamic> json) => _$LeaderboardFromJson(json);
 
   Map<String, dynamic> toJson() => _$LeaderboardToJson(this);
 
@@ -112,6 +109,7 @@ class Leaderboard {
   String toString() {
     return toJson().toString();
   }
+
 }
 
 enum LeaderboardCategoryEnum {
@@ -127,11 +125,11 @@ enum LeaderboardCategoryEnum {
   ON_TIME(r'ON-TIME'),
   @JsonValue(r'COMPLETION-RATE')
   COMPLETION_RATE(r'COMPLETION-RATE');
-
+  
   const LeaderboardCategoryEnum(this.value);
-
+  
   final String value;
-
+  
   @override
   String toString() => value;
 }
@@ -149,11 +147,12 @@ enum LeaderboardPeriodEnum {
   YEARLY(r'YEARLY'),
   @JsonValue(r'ALL-TIME')
   ALL_TIME(r'ALL-TIME');
-
+  
   const LeaderboardPeriodEnum(this.value);
-
+  
   final String value;
-
+  
   @override
   String toString() => value;
 }
+

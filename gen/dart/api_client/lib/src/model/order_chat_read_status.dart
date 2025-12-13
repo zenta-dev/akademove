@@ -28,36 +28,34 @@ class OrderChatReadStatus {
   });
   @JsonKey(name: r'id', required: true, includeIfNull: false)
   final String id;
-
+  
   @JsonKey(name: r'orderId', required: true, includeIfNull: false)
   final String orderId;
-
+  
   @JsonKey(name: r'userId', required: true, includeIfNull: false)
   final String userId;
-
+  
   @JsonKey(name: r'lastReadMessageId', required: true, includeIfNull: true)
   final String? lastReadMessageId;
-
+  
   @JsonKey(name: r'lastReadAt', required: true, includeIfNull: true)
   final DateTime? lastReadAt;
-
+  
   @JsonKey(name: r'createdAt', required: true, includeIfNull: false)
   final DateTime createdAt;
-
+  
   @JsonKey(name: r'updatedAt', required: true, includeIfNull: false)
   final DateTime updatedAt;
-
+  
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is OrderChatReadStatus &&
-          other.id == id &&
-          other.orderId == orderId &&
-          other.userId == userId &&
-          other.lastReadMessageId == lastReadMessageId &&
-          other.lastReadAt == lastReadAt &&
-          other.createdAt == createdAt &&
-          other.updatedAt == updatedAt;
+  bool operator ==(Object other) => identical(this, other) || other is OrderChatReadStatus &&
+    other.id == id &&
+    other.orderId == orderId &&
+    other.userId == userId &&
+    other.lastReadMessageId == lastReadMessageId &&
+    other.lastReadAt == lastReadAt &&
+    other.createdAt == createdAt &&
+    other.updatedAt == updatedAt;
 
   @override
   int get hashCode =>
@@ -69,8 +67,7 @@ class OrderChatReadStatus {
       createdAt.hashCode +
       updatedAt.hashCode;
 
-  factory OrderChatReadStatus.fromJson(Map<String, dynamic> json) =>
-      _$OrderChatReadStatusFromJson(json);
+  factory OrderChatReadStatus.fromJson(Map<String, dynamic> json) => _$OrderChatReadStatusFromJson(json);
 
   Map<String, dynamic> toJson() => _$OrderChatReadStatusToJson(this);
 
@@ -78,4 +75,6 @@ class OrderChatReadStatus {
   String toString() {
     return toJson().toString();
   }
+
 }
+

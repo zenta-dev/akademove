@@ -17,56 +17,51 @@ part 'merchant_set_operating_status_request.g.dart';
 )
 class MerchantSetOperatingStatusRequest {
   /// Returns a new [MerchantSetOperatingStatusRequest] instance.
-  const MerchantSetOperatingStatusRequest({required this.operatingStatus});
-
-  /// Merchant operating status
+  const MerchantSetOperatingStatusRequest({
+    required this.operatingStatus,
+  });
+      /// Merchant operating status
   @JsonKey(name: r'operatingStatus', required: true, includeIfNull: false)
   final MerchantSetOperatingStatusRequestOperatingStatusEnum operatingStatus;
+  
+  @override
+  bool operator ==(Object other) => identical(this, other) || other is MerchantSetOperatingStatusRequest &&
+    other.operatingStatus == operatingStatus;
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is MerchantSetOperatingStatusRequest &&
-          other.operatingStatus == operatingStatus;
+  int get hashCode =>
+      operatingStatus.hashCode;
 
-  @override
-  int get hashCode => operatingStatus.hashCode;
+  factory MerchantSetOperatingStatusRequest.fromJson(Map<String, dynamic> json) => _$MerchantSetOperatingStatusRequestFromJson(json);
 
-  factory MerchantSetOperatingStatusRequest.fromJson(
-    Map<String, dynamic> json,
-  ) => _$MerchantSetOperatingStatusRequestFromJson(json);
-
-  Map<String, dynamic> toJson() =>
-      _$MerchantSetOperatingStatusRequestToJson(this);
+  Map<String, dynamic> toJson() => _$MerchantSetOperatingStatusRequestToJson(this);
 
   @override
   String toString() {
     return toJson().toString();
   }
-}
 
+}
 /// Merchant operating status
 enum MerchantSetOperatingStatusRequestOperatingStatusEnum {
-  /// Merchant operating status
+      /// Merchant operating status
   @JsonValue(r'OPEN')
   OPEN(r'OPEN'),
-
-  /// Merchant operating status
+      /// Merchant operating status
   @JsonValue(r'CLOSED')
   CLOSED(r'CLOSED'),
-
-  /// Merchant operating status
+      /// Merchant operating status
   @JsonValue(r'BREAK')
   BREAK(r'BREAK'),
-
-  /// Merchant operating status
+      /// Merchant operating status
   @JsonValue(r'MAINTENANCE')
   MAINTENANCE(r'MAINTENANCE');
-
+  
   const MerchantSetOperatingStatusRequestOperatingStatusEnum(this.value);
-
+  
   final String value;
-
+  
   @override
   String toString() => value;
 }
+

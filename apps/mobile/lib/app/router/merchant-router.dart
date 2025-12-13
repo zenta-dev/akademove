@@ -58,7 +58,8 @@ final merchantRouter = StatefulShellRoute.indexedStack(
           name: Routes.merchantNotifications.name,
           path: Routes.merchantNotifications.path,
           builder: (context, state) => BlocProvider.value(
-            value: context.read<SharedNotificationCubit>()..refreshNotifications(),
+            value: context.read<SharedNotificationCubit>()
+              ..refreshNotifications(),
             child: const NotificationScreen(),
           ),
         ),

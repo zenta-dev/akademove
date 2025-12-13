@@ -893,9 +893,7 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
         accountName: accountName,
       );
 
-      final result = await context.read<DriverWalletCubit>().withdraw(
-        request,
-      );
+      final result = await context.read<DriverWalletCubit>().withdraw(request);
 
       if (mounted) {
         setState(() => _isWithdrawing = false);

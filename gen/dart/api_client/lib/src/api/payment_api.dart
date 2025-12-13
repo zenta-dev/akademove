@@ -14,6 +14,7 @@ import 'package:api_client/src/model/bank_validate_account200_response.dart';
 import 'package:api_client/src/model/bank_validation_request.dart';
 
 class PaymentApi {
+
   final Dio _dio;
 
   const PaymentApi(this._dio);
@@ -22,7 +23,7 @@ class PaymentApi {
   /// Validate a bank account using Midtrans Iris API. Returns account holder name if valid.
   ///
   /// Parameters:
-  /// * [bankValidationRequest]
+  /// * [bankValidationRequest] 
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -32,7 +33,7 @@ class PaymentApi {
   ///
   /// Returns a [Future] containing a [Response] with a [BankValidateAccount200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<BankValidateAccount200Response>> bankValidateAccount({
+  Future<Response<BankValidateAccount200Response>> bankValidateAccount({ 
     required BankValidationRequest bankValidationRequest,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -44,10 +45,16 @@ class PaymentApi {
     final _path = r'/bank/validate';
     final _options = Options(
       method: r'POST',
-      headers: <String, dynamic>{...?headers},
+      headers: <String, dynamic>{
+        ...?headers,
+      },
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
+          {
+            'type': 'http',
+            'scheme': 'bearer',
+            'name': 'bearer_auth',
+          },
         ],
         ...?extra,
       },
@@ -58,10 +65,13 @@ class PaymentApi {
     dynamic _bodyData;
 
     try {
-      _bodyData = jsonEncode(bankValidationRequest);
-    } catch (error, stackTrace) {
+        _bodyData=jsonEncode(bankValidationRequest);
+    } catch(error, stackTrace) {
       throw DioException(
-        requestOptions: _options.compose(_dio.options, _path),
+         requestOptions: _options.compose(
+          _dio.options,
+          _path,
+        ),
         type: DioExceptionType.unknown,
         error: error,
         stackTrace: stackTrace,
@@ -81,12 +91,7 @@ class PaymentApi {
 
     try {
       final rawData = _response.data;
-      _responseData = rawData == null
-          ? null
-          : deserialize<
-              BankValidateAccount200Response,
-              BankValidateAccount200Response
-            >(rawData, 'BankValidateAccount200Response', growable: true);
+_responseData = rawData == null ? null : deserialize<BankValidateAccount200Response, BankValidateAccount200Response>(rawData, 'BankValidateAccount200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -110,10 +115,10 @@ class PaymentApi {
   }
 
   /// paymentWebhookMidtrans
-  ///
+  /// 
   ///
   /// Parameters:
-  /// * [requestBody]
+  /// * [requestBody] 
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -123,7 +128,7 @@ class PaymentApi {
   ///
   /// Returns a [Future] containing a [Response] with a [BadgeRemove200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<BadgeRemove200Response>> paymentWebhookMidtrans({
+  Future<Response<BadgeRemove200Response>> paymentWebhookMidtrans({ 
     required Map<String, Object> requestBody,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -135,10 +140,16 @@ class PaymentApi {
     final _path = r'/payments/webhook/midtrans';
     final _options = Options(
       method: r'POST',
-      headers: <String, dynamic>{...?headers},
+      headers: <String, dynamic>{
+        ...?headers,
+      },
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
+          {
+            'type': 'http',
+            'scheme': 'bearer',
+            'name': 'bearer_auth',
+          },
         ],
         ...?extra,
       },
@@ -149,10 +160,13 @@ class PaymentApi {
     dynamic _bodyData;
 
     try {
-      _bodyData = jsonEncode(requestBody);
-    } catch (error, stackTrace) {
+        _bodyData=jsonEncode(requestBody);
+    } catch(error, stackTrace) {
       throw DioException(
-        requestOptions: _options.compose(_dio.options, _path),
+         requestOptions: _options.compose(
+          _dio.options,
+          _path,
+        ),
         type: DioExceptionType.unknown,
         error: error,
         stackTrace: stackTrace,
@@ -172,13 +186,7 @@ class PaymentApi {
 
     try {
       final rawData = _response.data;
-      _responseData = rawData == null
-          ? null
-          : deserialize<BadgeRemove200Response, BadgeRemove200Response>(
-              rawData,
-              'BadgeRemove200Response',
-              growable: true,
-            );
+_responseData = rawData == null ? null : deserialize<BadgeRemove200Response, BadgeRemove200Response>(rawData, 'BadgeRemove200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -205,7 +213,7 @@ class PaymentApi {
   /// Webhook endpoint for Midtrans Iris payout/disbursement status updates
   ///
   /// Parameters:
-  /// * [requestBody]
+  /// * [requestBody] 
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -215,7 +223,7 @@ class PaymentApi {
   ///
   /// Returns a [Future] containing a [Response] with a [BadgeRemove200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<BadgeRemove200Response>> paymentWebhookMidtransPayout({
+  Future<Response<BadgeRemove200Response>> paymentWebhookMidtransPayout({ 
     required Map<String, Object> requestBody,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -227,10 +235,16 @@ class PaymentApi {
     final _path = r'/payments/webhook/midtrans/payout';
     final _options = Options(
       method: r'POST',
-      headers: <String, dynamic>{...?headers},
+      headers: <String, dynamic>{
+        ...?headers,
+      },
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
+          {
+            'type': 'http',
+            'scheme': 'bearer',
+            'name': 'bearer_auth',
+          },
         ],
         ...?extra,
       },
@@ -241,10 +255,13 @@ class PaymentApi {
     dynamic _bodyData;
 
     try {
-      _bodyData = jsonEncode(requestBody);
-    } catch (error, stackTrace) {
+        _bodyData=jsonEncode(requestBody);
+    } catch(error, stackTrace) {
       throw DioException(
-        requestOptions: _options.compose(_dio.options, _path),
+         requestOptions: _options.compose(
+          _dio.options,
+          _path,
+        ),
         type: DioExceptionType.unknown,
         error: error,
         stackTrace: stackTrace,
@@ -264,13 +281,7 @@ class PaymentApi {
 
     try {
       final rawData = _response.data;
-      _responseData = rawData == null
-          ? null
-          : deserialize<BadgeRemove200Response, BadgeRemove200Response>(
-              rawData,
-              'BadgeRemove200Response',
-              growable: true,
-            );
+_responseData = rawData == null ? null : deserialize<BadgeRemove200Response, BadgeRemove200Response>(rawData, 'BadgeRemove200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -292,4 +303,5 @@ class PaymentApi {
       extra: _response.extra,
     );
   }
+
 }

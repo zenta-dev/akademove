@@ -22,38 +22,36 @@ class Newsletter {
     required this.id,
     required this.email,
     required this.status,
-    this.userId,
+     this.userId,
     required this.createdAt,
     required this.updatedAt,
   });
   @JsonKey(name: r'id', required: true, includeIfNull: false)
   final String id;
-
+  
   @JsonKey(name: r'email', required: true, includeIfNull: false)
   final String email;
-
+  
   @JsonKey(name: r'status', required: true, includeIfNull: false)
   final NewsletterStatus status;
-
+  
   @JsonKey(name: r'userId', required: false, includeIfNull: false)
   final String? userId;
-
+  
   @JsonKey(name: r'createdAt', required: true, includeIfNull: true)
   final DateTime? createdAt;
-
+  
   @JsonKey(name: r'updatedAt', required: true, includeIfNull: true)
   final DateTime? updatedAt;
-
+  
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is Newsletter &&
-          other.id == id &&
-          other.email == email &&
-          other.status == status &&
-          other.userId == userId &&
-          other.createdAt == createdAt &&
-          other.updatedAt == updatedAt;
+  bool operator ==(Object other) => identical(this, other) || other is Newsletter &&
+    other.id == id &&
+    other.email == email &&
+    other.status == status &&
+    other.userId == userId &&
+    other.createdAt == createdAt &&
+    other.updatedAt == updatedAt;
 
   @override
   int get hashCode =>
@@ -64,8 +62,7 @@ class Newsletter {
       (createdAt == null ? 0 : createdAt.hashCode) +
       (updatedAt == null ? 0 : updatedAt.hashCode);
 
-  factory Newsletter.fromJson(Map<String, dynamic> json) =>
-      _$NewsletterFromJson(json);
+  factory Newsletter.fromJson(Map<String, dynamic> json) => _$NewsletterFromJson(json);
 
   Map<String, dynamic> toJson() => _$NewsletterToJson(this);
 
@@ -73,4 +70,6 @@ class Newsletter {
   String toString() {
     return toJson().toString();
   }
+
 }
+

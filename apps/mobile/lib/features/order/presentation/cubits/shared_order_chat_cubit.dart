@@ -58,7 +58,9 @@ class SharedOrderChatCubit extends BaseCubit<SharedOrderChatState> {
         logger.e('[SharedOrderChatCubit] WebSocket error', error: error);
       },
     );
-    logger.d('[SharedOrderChatCubit] Subscribed to WebSocket for order $orderId');
+    logger.d(
+      '[SharedOrderChatCubit] Subscribed to WebSocket for order $orderId',
+    );
   }
 
   void _handleWebSocketMessage(String data) {

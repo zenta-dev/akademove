@@ -5,13 +5,14 @@
 // ignore_for_file: unused_element
 import 'package:json_annotation/json_annotation.dart';
 
+
 enum ChatSenderRole {
-  @JsonValue(r'USER')
-  USER(r'USER'),
-  @JsonValue(r'DRIVER')
-  DRIVER(r'DRIVER'),
-  @JsonValue(r'MERCHANT')
-  MERCHANT(r'MERCHANT');
+      @JsonValue(r'USER')
+      USER(r'USER'),
+      @JsonValue(r'DRIVER')
+      DRIVER(r'DRIVER'),
+      @JsonValue(r'MERCHANT')
+      MERCHANT(r'MERCHANT');
 
   const ChatSenderRole(this.value);
 

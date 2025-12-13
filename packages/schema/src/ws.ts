@@ -86,7 +86,7 @@ export const OrderEnvelopePayloadSchema = z.object({
 		.object({
 			driverId: z.string(),
 			...CoordinateSchema.shape,
-		})
+		})  
 		.optional(),
 	done: z
 		.object({
