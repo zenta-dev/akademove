@@ -34,7 +34,7 @@ class DefaultAppBar extends StatelessWidget {
       leading: [
         if (context.canPop()) ...[
           IconButton(
-            onPressed: () => context.pop(),
+            onPressed: () => safeSync(() => context.pop()),
             icon: Icon(LucideIcons.chevronLeft, size: 20.sp),
             variance: const ButtonStyle.ghost(),
           ),
