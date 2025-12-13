@@ -236,6 +236,7 @@ class _UserMartOnTripScreenState extends State<UserMartOnTripScreen> {
       // Navigate to rating/review screen
       final driver = state.currentAssignedDriver.value;
       if (driver != null && currentOrder != null) {
+        context.read<UserOrderCubit>().clearActiveOrder();
         final result = await context.pushNamed(
           Routes.userRating.name,
           extra: {
