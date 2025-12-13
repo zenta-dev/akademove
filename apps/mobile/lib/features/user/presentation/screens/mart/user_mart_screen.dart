@@ -47,7 +47,7 @@ class _UserMartScreenState extends State<UserMartScreen> {
           ],
           trailing: [
             BlocProvider.value(
-              value: context.read<CartCubit>(),
+              value: context.read<UserCartCubit>(),
               child: CartBadge(
                 onTap: () => context.pushNamed(Routes.userCart.name),
               ),

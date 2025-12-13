@@ -35,7 +35,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
   late final TextEditingController _searchController;
   late final CarouselController _bannerController;
 
-  NotificationCubit get _notificationCubit => context.read<NotificationCubit>();
+  SharedNotificationCubit get _notificationCubit => context.read<SharedNotificationCubit>();
 
   @override
   void initState() {
@@ -48,7 +48,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
       context.read<UserOrderCubit>().fetchActiveOrder();
       Future.wait([
         context.read<UserHomeCubit>().getPopulars(),
-        context.read<ConfigurationCubit>().getBanners(placement: 'USER_HOME'),
+        context.read<SharedConfigurationCubit>().getBanners(placement: 'USER_HOME'),
         context.read<UserWalletCubit>().getMine(),
       ]);
     });
@@ -66,7 +66,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
     context.read<UserOrderCubit>().fetchActiveOrder();
     await Future.wait([
       context.read<UserHomeCubit>().getPopulars(),
-      context.read<ConfigurationCubit>().getBanners(placement: 'USER_HOME'),
+      context.read<SharedConfigurationCubit>().getBanners(placement: 'USER_HOME'),
       context.read<UserWalletCubit>().getMine(),
     ]);
   }
@@ -79,7 +79,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
           title: context.l10n.home,
           padding: EdgeInsets.all(16.r),
           trailing: [
-            BlocBuilder<NotificationCubit, NotificationState>(
+            BlocBuilder<SharedNotificationCubit, SharedNotificationState>(
               builder: (context, state) {
                 final unreadCount = state.unreadCount.value ?? 0;
                 return IconButton(
@@ -346,7 +346,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
     return Container(
       height: 180.h,
       padding: EdgeInsets.only(top: 8.dg),
-      child: BlocBuilder<ConfigurationCubit, ConfigurationState>(
+      child: BlocBuilder<SharedConfigurationCubit, SharedConfigurationState>(
         builder: (context, state) {
           return state.banners.whenOr(
             success: (banners, _) {

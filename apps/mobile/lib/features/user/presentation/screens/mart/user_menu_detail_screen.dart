@@ -41,7 +41,7 @@ class _UserMenuDetailScreenState extends State<UserMenuDetailScreen> {
   }
 
   void _addToCart(BuildContext context) {
-    context.read<CartCubit>().addItem(
+    context.read<UserCartCubit>().addItem(
       menu: widget.menu,
       merchantName: widget.merchantName,
       quantity: _quantity,
@@ -54,7 +54,7 @@ class _UserMenuDetailScreenState extends State<UserMenuDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<CartCubit, CartState>(
+    return BlocListener<UserCartCubit, UserCartState>(
       listener: (context, state) {
         // Show merchant conflict dialog
         if (state.showMerchantConflict) {
@@ -83,7 +83,7 @@ class _UserMenuDetailScreenState extends State<UserMenuDetailScreen> {
             title: context.l10n.menu_details,
             trailing: [
               BlocProvider.value(
-                value: context.read<CartCubit>(),
+                value: context.read<UserCartCubit>(),
                 child: CartBadge(
                   onTap: () {
                     // Cart navigation handled at parent level

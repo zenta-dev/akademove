@@ -21,7 +21,13 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
   String? _paymentId;
   String? _orderId;
 
-  /// Timer for polling active order updates
+  /// WebSocket sync service for CHECK_NEW_DATA pattern (replaces Timer polling)
+  WebSocketSyncService<Map<String, Object?>>? _wsSyncService;
+
+  /// Last known order version for WebSocket sync
+  String? _lastKnownVersion;
+
+  /// Timer for polling active order updates (fallback only)
   Timer? _pollingTimer;
 
   /// Default polling interval in seconds
@@ -32,6 +38,12 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
 
   /// Critical polling interval during MATCHING status for faster driver acceptance detection
   static const int _criticalPollingIntervalSeconds = 2;
+
+  /// WebSocket sync interval in seconds (replaces Timer polling)
+  static const int _wsSyncIntervalSeconds = 3;
+
+  /// Max NO_DATA count before HTTP fallback
+  static const int _maxNoDataCount = 5;
 
   /// Whether we're using polling as a fallback due to WebSocket issues
   bool _isPollingFallback = false;
@@ -505,251 +517,74 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
   //   }
   // }
 
-  Future<void> _setupLiveOrderWebsocket({required String orderId}) async {
+  /// Setup live order WebSocket with WebSocket-based sync (replaces Timer polling)
+  /// Uses CHECK_NEW_DATA pattern with HTTP fallback after 5 consecutive NO_DATA
+  Future<void> _setupLiveOrderWebsocketWithPolling({
+    required String orderId,
+  }) async {
+    _orderId = orderId;
+
+    // Setup WebSocket status listener for automatic fallback
+    _webSocketService.setStatusListener(orderId, _handleWebSocketStatusChange);
+
+    // Setup WebSocket connection with custom message handler
+    await _setupLiveOrderWebsocketWithSync(orderId: orderId);
+  }
+
+  /// Setup live order WebSocket with WebSocket sync service
+  Future<void> _setupLiveOrderWebsocketWithSync({
+    required String orderId,
+  }) async {
     try {
       _orderId = orderId;
+
+      // Create WebSocket sync service for CHECK_NEW_DATA pattern
+      _wsSyncService = WebSocketSyncService<Map<String, Object?>>(
+        webSocketService: _webSocketService,
+        connectionKey: orderId,
+        config: WebSocketSyncConfig(
+          syncIntervalSeconds: _wsSyncIntervalSeconds,
+          maxNoDataCount: _maxNoDataCount,
+        ),
+        buildCheckNewDataMessage: () => {
+          'a': 'CHECK_NEW_DATA',
+          'f': 'c',
+          't': 's',
+          'p': {
+            'syncRequest': {
+              'orderId': orderId,
+              'lastKnownVersion': _lastKnownVersion,
+            },
+          },
+        },
+        isNewDataEvent: (data) => data['e'] == 'NEW_DATA',
+        isNoDataEvent: (data) => data['e'] == 'NO_DATA',
+        parseNewData: (data) => data,
+        onNewData: _handleNewDataFromSync,
+        onHttpFallback: _pollActiveOrder,
+        onVersionUpdate: (version) => _lastKnownVersion = version,
+      );
+
+      // Custom message handler that handles both sync events and regular events
       void handleMessage(Map<String, dynamic> json) {
-        final data = OrderEnvelope.fromJson(json);
-        logger.d('Live Order WebSocket Message: $data');
+        final eventType = json['e'] as String?;
 
-        if (data.e == OrderEnvelopeEvent.DRIVER_LOCATION_UPDATE) {
-          final x = data.p.driverUpdateLocation?.x;
-          final y = data.p.driverUpdateLocation?.y;
-          var driver = state.currentAssignedDriver.value ?? dummyDriver;
-          if (x != null && y != null) {
-            driver = driver.copyWith(
-              currentLocation: Coordinate(x: x, y: y),
-            );
-            emit(
-              state.copyWith(
-                currentAssignedDriver: OperationResult.success(driver),
-              ),
-            );
-          }
+        // Handle NEW_DATA and NO_DATA via sync service (skip normal parsing)
+        if (eventType == 'NEW_DATA' || eventType == 'NO_DATA') {
+          // These are handled by WebSocketSyncService stream listener
+          return;
         }
 
-        // Handle driver accepted event - driver has accepted the order
-        // This provides instant UI update when a driver accepts
-        if (data.e == OrderEnvelopeEvent.DRIVER_ACCEPTED) {
-          final detail = data.p.detail;
-          final driverAssigned = data.p.driverAssigned;
-
-          if (detail != null) {
-            emit(
-              state.copyWith(
-                currentOrder: OperationResult.success(detail.order),
-                currentPayment: detail.payment != null
-                    ? OperationResult.success(detail.payment!)
-                    : state.currentPayment,
-                currentTransaction: detail.transaction != null
-                    ? OperationResult.success(detail.transaction!)
-                    : state.currentTransaction,
-                currentAssignedDriver: driverAssigned != null
-                    ? OperationResult.success(driverAssigned)
-                    : state.currentAssignedDriver,
-              ),
-            );
-            logger.i(
-              '[UserOrderCubit] Driver accepted order: ${detail.order.id}, '
-              'driver: ${driverAssigned?.id}',
-            );
-          }
-        }
-
-        // Handle generic order status change events from REST API updates
-        // This catches status changes made via REST API (e.g., driver updating status)
-        if (data.e == OrderEnvelopeEvent.ORDER_STATUS_CHANGED) {
-          final detail = data.p.detail;
-          if (detail != null) {
-            emit(
-              state.copyWith(
-                currentOrder: OperationResult.success(detail.order),
-                currentPayment: detail.payment != null
-                    ? OperationResult.success(detail.payment!)
-                    : state.currentPayment,
-                currentTransaction: detail.transaction != null
-                    ? OperationResult.success(detail.transaction!)
-                    : state.currentTransaction,
-              ),
-            );
-            logger.i(
-              '[UserOrderCubit] Order status changed: ${detail.order.id}, '
-              'new status: ${detail.order.status}',
-            );
-          }
-        }
-
-        // Handle order completion - update order status to COMPLETED
-        // and clear active order state
-        if (data.e == OrderEnvelopeEvent.COMPLETED) {
-          final detail = data.p.detail;
-          if (detail != null) {
-            // Emit completed order state first so UI can react to completion
-            emit(
-              state.copyWith(
-                currentOrder: OperationResult.success(detail.order),
-                currentPayment: detail.payment != null
-                    ? OperationResult.success(detail.payment!)
-                    : state.currentPayment,
-                currentTransaction: detail.transaction != null
-                    ? OperationResult.success(detail.transaction!)
-                    : state.currentTransaction,
-              ),
-            );
-            logger.i('[UserOrderCubit] Order completed: ${detail.order.id}');
-
-            // Clear active order after a short delay to allow UI to process
-            // the completion state change before cleaning up
-            Future.delayed(const Duration(milliseconds: 500), () {
-              if (!isClosed) {
-                clearActiveOrder();
-              }
-            });
-          }
-        }
-
-        // Handle order cancellation events
-        if (data.e == OrderEnvelopeEvent.CANCELED) {
-          final detail = data.p.detail;
-          if (detail != null) {
-            emit(
-              state.copyWith(
-                currentOrder: OperationResult.success(detail.order),
-                currentPayment: detail.payment != null
-                    ? OperationResult.success(detail.payment!)
-                    : state.currentPayment,
-                currentTransaction: detail.transaction != null
-                    ? OperationResult.success(detail.transaction!)
-                    : state.currentTransaction,
-              ),
-            );
-            logger.i(
-              '[UserOrderCubit] Order cancelled: ${detail.order.id}, '
-              'reason: ${data.p.cancelReason}',
-            );
-          }
-        }
-
-        // Handle no-show event (driver reported user not present)
-        if (data.e == OrderEnvelopeEvent.NO_SHOW) {
-          final detail = data.p.detail;
-          if (detail != null) {
-            emit(
-              state.copyWith(
-                currentOrder: OperationResult.success(detail.order),
-                currentPayment: detail.payment != null
-                    ? OperationResult.success(detail.payment!)
-                    : state.currentPayment,
-                currentTransaction: detail.transaction != null
-                    ? OperationResult.success(detail.transaction!)
-                    : state.currentTransaction,
-              ),
-            );
-            logger.i(
-              '[UserOrderCubit] No-show reported for order: ${detail.order.id}',
-            );
-          }
-        }
-
-        // Handle driver cancelled and rematching event
-        if (data.e == OrderEnvelopeEvent.DRIVER_CANCELLED_REMATCHING) {
-          final retryInfo = data.p.retryInfo;
-          if (retryInfo != null) {
-            // Clear current driver and update order to MATCHING status
-            emit(
-              state.copyWith(
-                currentAssignedDriver: const OperationResult.idle(),
-              ),
-            );
-            logger.i(
-              '[UserOrderCubit] Driver cancelled, rematching: ${retryInfo.orderId}',
-            );
-          }
-        }
-
-        // Handle merchant accepted event (FOOD orders)
-        if (data.e == OrderEnvelopeEvent.MERCHANT_ACCEPTED) {
-          final detail = data.p.detail;
-          if (detail != null) {
-            emit(
-              state.copyWith(
-                currentOrder: OperationResult.success(detail.order),
-                currentPayment: detail.payment != null
-                    ? OperationResult.success(detail.payment!)
-                    : state.currentPayment,
-                currentTransaction: detail.transaction != null
-                    ? OperationResult.success(detail.transaction!)
-                    : state.currentTransaction,
-              ),
-            );
-            logger.i(
-              '[UserOrderCubit] Merchant accepted order: ${detail.order.id}',
-            );
-          }
-        }
-
-        // Handle merchant preparing event (FOOD orders)
-        if (data.e == OrderEnvelopeEvent.MERCHANT_PREPARING) {
-          final detail = data.p.detail;
-          if (detail != null) {
-            emit(
-              state.copyWith(
-                currentOrder: OperationResult.success(detail.order),
-                currentPayment: detail.payment != null
-                    ? OperationResult.success(detail.payment!)
-                    : state.currentPayment,
-                currentTransaction: detail.transaction != null
-                    ? OperationResult.success(detail.transaction!)
-                    : state.currentTransaction,
-              ),
-            );
-            logger.i(
-              '[UserOrderCubit] Merchant preparing order: ${detail.order.id}',
-            );
-          }
-        }
-
-        // Handle merchant ready event (FOOD orders - triggers driver matching)
-        if (data.e == OrderEnvelopeEvent.MERCHANT_READY) {
-          final detail = data.p.detail;
-          if (detail != null) {
-            emit(
-              state.copyWith(
-                currentOrder: OperationResult.success(detail.order),
-                currentPayment: detail.payment != null
-                    ? OperationResult.success(detail.payment!)
-                    : state.currentPayment,
-                currentTransaction: detail.transaction != null
-                    ? OperationResult.success(detail.transaction!)
-                    : state.currentTransaction,
-              ),
-            );
-            logger.i(
-              '[UserOrderCubit] Merchant ready, driver matching started: ${detail.order.id}',
-            );
-          }
-        }
-
-        // Handle merchant rejected event (FOOD orders)
-        if (data.e == OrderEnvelopeEvent.MERCHANT_REJECTED) {
-          final detail = data.p.detail;
-          if (detail != null) {
-            emit(
-              state.copyWith(
-                currentOrder: OperationResult.success(detail.order),
-                currentPayment: detail.payment != null
-                    ? OperationResult.success(detail.payment!)
-                    : state.currentPayment,
-                currentTransaction: detail.transaction != null
-                    ? OperationResult.success(detail.transaction!)
-                    : state.currentTransaction,
-              ),
-            );
-            logger.i(
-              '[UserOrderCubit] Merchant rejected order: ${detail.order.id}, '
-              'reason: ${data.p.cancelReason}',
-            );
-          }
+        // Handle all other events via normal OrderEnvelope parsing
+        try {
+          final data = OrderEnvelope.fromJson(json);
+          _handleOrderEnvelopeEvent(data);
+        } catch (e, st) {
+          logger.e(
+            '[UserOrderCubit] Failed to parse OrderEnvelope',
+            error: e,
+            stackTrace: st,
+          );
         }
       }
 
@@ -761,33 +596,358 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
           if (json is Map<String, dynamic>) handleMessage(json);
         },
       );
+
+      // Start WebSocket sync after connection is established
+      _wsSyncService?.start();
+
+      // Initialize version from current order if available
+      final currentOrder = state.currentOrder.value;
+      if (currentOrder != null) {
+        _lastKnownVersion = currentOrder.updatedAt.toIso8601String();
+        _wsSyncService?.setLastKnownVersion(_lastKnownVersion);
+      }
     } catch (e, st) {
       logger.e(
         '[UserOrderCubit] - Live Order WebSocket error: $e',
         error: e,
         stackTrace: st,
       );
-      // Don't emit failure here as it would disrupt the active trip
-      // Just log the error and let the app continue
+      // Fallback to HTTP polling on WebSocket failure
+      _startPollingFallback(fast: true);
     }
   }
 
-  /// Setup live order WebSocket with automatic polling fallback
-  /// This provides reliable order updates even when WebSocket is unstable
-  Future<void> _setupLiveOrderWebsocketWithPolling({
-    required String orderId,
-  }) async {
-    _orderId = orderId;
+  /// Handle NEW_DATA event from WebSocket sync service
+  void _handleNewDataFromSync(Map<String, Object?> data) {
+    try {
+      final payload = data['p'] as Map<String, Object?>?;
+      final detail = payload?['detail'] as Map<String, Object?>?;
+      final driverAssigned =
+          payload?['driverAssigned'] as Map<String, Object?>?;
 
-    // Setup WebSocket status listener for automatic polling fallback
-    _webSocketService.setStatusListener(orderId, _handleWebSocketStatusChange);
+      if (detail == null) {
+        logger.d('[UserOrderCubit] NEW_DATA received but no detail');
+        return;
+      }
 
-    // Setup WebSocket connection
-    await _setupLiveOrderWebsocket(orderId: orderId);
+      // Parse order, payment, transaction from detail
+      final orderJson = detail['order'] as Map<String, dynamic>?;
+      final paymentJson = detail['payment'] as Map<String, dynamic>?;
+      final transactionJson = detail['transaction'] as Map<String, dynamic>?;
 
-    // Always start polling as a backup mechanism
-    // This ensures we don't miss updates if WebSocket is slow or disconnects
-    _startPollingFallback();
+      if (orderJson == null) {
+        logger.d('[UserOrderCubit] NEW_DATA has no order in detail');
+        return;
+      }
+
+      final order = Order.fromJson(orderJson);
+      final payment = paymentJson != null
+          ? Payment.fromJson(paymentJson)
+          : null;
+      final transaction = transactionJson != null
+          ? Transaction.fromJson(transactionJson)
+          : null;
+      final driver = driverAssigned != null
+          ? Driver.fromJson(driverAssigned as Map<String, dynamic>)
+          : null;
+
+      // Check if we actually have new data
+      final currentOrder = state.currentOrder.value;
+      final hasChanges =
+          currentOrder == null ||
+          currentOrder.id != order.id ||
+          currentOrder.status != order.status ||
+          currentOrder.updatedAt != order.updatedAt;
+
+      if (hasChanges) {
+        logger.d(
+          '[UserOrderCubit] NEW_DATA sync: Order updated - '
+          'status: ${order.status}, driver: ${driver?.id}',
+        );
+
+        emit(
+          state.copyWith(
+            currentOrder: OperationResult.success(order),
+            currentPayment: payment != null
+                ? OperationResult.success(payment)
+                : state.currentPayment,
+            currentTransaction: transaction != null
+                ? OperationResult.success(transaction)
+                : state.currentTransaction,
+            currentAssignedDriver: driver != null
+                ? OperationResult.success(driver)
+                : state.currentAssignedDriver,
+          ),
+        );
+
+        // Update version for next sync
+        _lastKnownVersion = order.updatedAt.toIso8601String();
+        _wsSyncService?.setLastKnownVersion(_lastKnownVersion);
+
+        // Check if order is in terminal state
+        if (_isTerminalStatus(order.status)) {
+          logger.i(
+            '[UserOrderCubit] Sync: Order in terminal state (${order.status}), '
+            'clearing active order',
+          );
+          Future.delayed(const Duration(milliseconds: 500), () {
+            if (!isClosed) {
+              clearActiveOrder();
+            }
+          });
+        }
+      }
+    } catch (e, st) {
+      logger.e(
+        '[UserOrderCubit] Failed to handle NEW_DATA',
+        error: e,
+        stackTrace: st,
+      );
+    }
+  }
+
+  /// Handle OrderEnvelope events from WebSocket
+  /// This is extracted from _setupLiveOrderWebsocket for reuse with sync pattern
+  void _handleOrderEnvelopeEvent(OrderEnvelope data) {
+    logger.d('Live Order WebSocket Message: $data');
+
+    if (data.e == OrderEnvelopeEvent.DRIVER_LOCATION_UPDATE) {
+      final x = data.p.driverUpdateLocation?.x;
+      final y = data.p.driverUpdateLocation?.y;
+      var driver = state.currentAssignedDriver.value ?? dummyDriver;
+      if (x != null && y != null) {
+        driver = driver.copyWith(
+          currentLocation: Coordinate(x: x, y: y),
+        );
+        emit(
+          state.copyWith(
+            currentAssignedDriver: OperationResult.success(driver),
+          ),
+        );
+      }
+    }
+
+    // Handle driver accepted event - driver has accepted the order
+    // This provides instant UI update when a driver accepts
+    if (data.e == OrderEnvelopeEvent.DRIVER_ACCEPTED) {
+      final detail = data.p.detail;
+      final driverAssigned = data.p.driverAssigned;
+
+      if (detail != null) {
+        emit(
+          state.copyWith(
+            currentOrder: OperationResult.success(detail.order),
+            currentPayment: detail.payment != null
+                ? OperationResult.success(detail.payment!)
+                : state.currentPayment,
+            currentTransaction: detail.transaction != null
+                ? OperationResult.success(detail.transaction!)
+                : state.currentTransaction,
+            currentAssignedDriver: driverAssigned != null
+                ? OperationResult.success(driverAssigned)
+                : state.currentAssignedDriver,
+          ),
+        );
+        logger.i(
+          '[UserOrderCubit] Driver accepted order: ${detail.order.id}, '
+          'driver: ${driverAssigned?.id}',
+        );
+      }
+    }
+
+    // Handle generic order status change events from REST API updates
+    // This catches status changes made via REST API (e.g., driver updating status)
+    if (data.e == OrderEnvelopeEvent.ORDER_STATUS_CHANGED) {
+      final detail = data.p.detail;
+      if (detail != null) {
+        emit(
+          state.copyWith(
+            currentOrder: OperationResult.success(detail.order),
+            currentPayment: detail.payment != null
+                ? OperationResult.success(detail.payment!)
+                : state.currentPayment,
+            currentTransaction: detail.transaction != null
+                ? OperationResult.success(detail.transaction!)
+                : state.currentTransaction,
+          ),
+        );
+        logger.i(
+          '[UserOrderCubit] Order status changed: ${detail.order.id}, '
+          'new status: ${detail.order.status}',
+        );
+      }
+    }
+
+    // Handle order completion - update order status to COMPLETED
+    // and clear active order state
+    if (data.e == OrderEnvelopeEvent.COMPLETED) {
+      final detail = data.p.detail;
+      if (detail != null) {
+        // Emit completed order state first so UI can react to completion
+        emit(
+          state.copyWith(
+            currentOrder: OperationResult.success(detail.order),
+            currentPayment: detail.payment != null
+                ? OperationResult.success(detail.payment!)
+                : state.currentPayment,
+            currentTransaction: detail.transaction != null
+                ? OperationResult.success(detail.transaction!)
+                : state.currentTransaction,
+          ),
+        );
+        logger.i('[UserOrderCubit] Order completed: ${detail.order.id}');
+
+        // Clear active order after a short delay to allow UI to process
+        // the completion state change before cleaning up
+        Future.delayed(const Duration(milliseconds: 500), () {
+          if (!isClosed) {
+            clearActiveOrder();
+          }
+        });
+      }
+    }
+
+    // Handle order cancellation events
+    if (data.e == OrderEnvelopeEvent.CANCELED) {
+      final detail = data.p.detail;
+      if (detail != null) {
+        emit(
+          state.copyWith(
+            currentOrder: OperationResult.success(detail.order),
+            currentPayment: detail.payment != null
+                ? OperationResult.success(detail.payment!)
+                : state.currentPayment,
+            currentTransaction: detail.transaction != null
+                ? OperationResult.success(detail.transaction!)
+                : state.currentTransaction,
+          ),
+        );
+        logger.i(
+          '[UserOrderCubit] Order cancelled: ${detail.order.id}, '
+          'reason: ${data.p.cancelReason}',
+        );
+      }
+    }
+
+    // Handle no-show event (driver reported user not present)
+    if (data.e == OrderEnvelopeEvent.NO_SHOW) {
+      final detail = data.p.detail;
+      if (detail != null) {
+        emit(
+          state.copyWith(
+            currentOrder: OperationResult.success(detail.order),
+            currentPayment: detail.payment != null
+                ? OperationResult.success(detail.payment!)
+                : state.currentPayment,
+            currentTransaction: detail.transaction != null
+                ? OperationResult.success(detail.transaction!)
+                : state.currentTransaction,
+          ),
+        );
+        logger.i(
+          '[UserOrderCubit] No-show reported for order: ${detail.order.id}',
+        );
+      }
+    }
+
+    // Handle driver cancelled and rematching event
+    if (data.e == OrderEnvelopeEvent.DRIVER_CANCELLED_REMATCHING) {
+      final retryInfo = data.p.retryInfo;
+      if (retryInfo != null) {
+        // Clear current driver and update order to MATCHING status
+        emit(
+          state.copyWith(currentAssignedDriver: const OperationResult.idle()),
+        );
+        logger.i(
+          '[UserOrderCubit] Driver cancelled, rematching: ${retryInfo.orderId}',
+        );
+      }
+    }
+
+    // Handle merchant accepted event (FOOD orders)
+    if (data.e == OrderEnvelopeEvent.MERCHANT_ACCEPTED) {
+      final detail = data.p.detail;
+      if (detail != null) {
+        emit(
+          state.copyWith(
+            currentOrder: OperationResult.success(detail.order),
+            currentPayment: detail.payment != null
+                ? OperationResult.success(detail.payment!)
+                : state.currentPayment,
+            currentTransaction: detail.transaction != null
+                ? OperationResult.success(detail.transaction!)
+                : state.currentTransaction,
+          ),
+        );
+        logger.i(
+          '[UserOrderCubit] Merchant accepted order: ${detail.order.id}',
+        );
+      }
+    }
+
+    // Handle merchant preparing event (FOOD orders)
+    if (data.e == OrderEnvelopeEvent.MERCHANT_PREPARING) {
+      final detail = data.p.detail;
+      if (detail != null) {
+        emit(
+          state.copyWith(
+            currentOrder: OperationResult.success(detail.order),
+            currentPayment: detail.payment != null
+                ? OperationResult.success(detail.payment!)
+                : state.currentPayment,
+            currentTransaction: detail.transaction != null
+                ? OperationResult.success(detail.transaction!)
+                : state.currentTransaction,
+          ),
+        );
+        logger.i(
+          '[UserOrderCubit] Merchant preparing order: ${detail.order.id}',
+        );
+      }
+    }
+
+    // Handle merchant ready event (FOOD orders - triggers driver matching)
+    if (data.e == OrderEnvelopeEvent.MERCHANT_READY) {
+      final detail = data.p.detail;
+      if (detail != null) {
+        emit(
+          state.copyWith(
+            currentOrder: OperationResult.success(detail.order),
+            currentPayment: detail.payment != null
+                ? OperationResult.success(detail.payment!)
+                : state.currentPayment,
+            currentTransaction: detail.transaction != null
+                ? OperationResult.success(detail.transaction!)
+                : state.currentTransaction,
+          ),
+        );
+        logger.i(
+          '[UserOrderCubit] Merchant ready, driver matching started: ${detail.order.id}',
+        );
+      }
+    }
+
+    // Handle merchant rejected event (FOOD orders)
+    if (data.e == OrderEnvelopeEvent.MERCHANT_REJECTED) {
+      final detail = data.p.detail;
+      if (detail != null) {
+        emit(
+          state.copyWith(
+            currentOrder: OperationResult.success(detail.order),
+            currentPayment: detail.payment != null
+                ? OperationResult.success(detail.payment!)
+                : state.currentPayment,
+            currentTransaction: detail.transaction != null
+                ? OperationResult.success(detail.transaction!)
+                : state.currentTransaction,
+          ),
+        );
+        logger.i(
+          '[UserOrderCubit] Merchant rejected order: ${detail.order.id}, '
+          'reason: ${data.p.cancelReason}',
+        );
+      }
+    }
   }
 
   /// Handle WebSocket connection status changes
@@ -799,37 +959,33 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
 
     switch (status) {
       case WebSocketConnectionStatus.connected:
-        // WebSocket is healthy, we can reduce polling frequency or keep it as backup
+        // WebSocket is healthy, restart sync service if it was stopped
+        if (_wsSyncService != null && !_wsSyncService!.isRunning) {
+          logger.i('[UserOrderCubit] WebSocket connected, restarting sync');
+          _wsSyncService!.start();
+        }
+        // Stop HTTP polling if it was running as fallback
         if (_isPollingFallback && state.isPolling) {
           logger.i(
-            '[UserOrderCubit] WebSocket connected, '
-            'keeping polling as backup with normal interval',
+            '[UserOrderCubit] WebSocket connected, stopping HTTP fallback',
           );
-          // Restart polling with normal interval since WS is healthy
           stopPolling();
-          startPolling(intervalSeconds: _defaultPollingIntervalSeconds);
+          _isPollingFallback = false;
         }
       case WebSocketConnectionStatus.reconnecting:
       case WebSocketConnectionStatus.connecting:
-        // WebSocket is unstable, ensure polling is active with faster interval
-        if (!state.isPolling) {
-          logger.i(
-            '[UserOrderCubit] WebSocket unstable, '
-            'starting fast polling as fallback',
-          );
-          _startPollingFallback(fast: true);
-        } else if (!_isPollingFallback) {
-          // Switch to fast polling
-          stopPolling();
-          _startPollingFallback(fast: true);
-        }
+        // WebSocket is unstable, sync service will handle this internally
+        // via NO_DATA counter and HTTP fallback
+        logger.d(
+          '[UserOrderCubit] WebSocket reconnecting, sync will fallback if needed',
+        );
       case WebSocketConnectionStatus.failed:
       case WebSocketConnectionStatus.disconnected:
-        // WebSocket is down, rely on polling entirely
+        // WebSocket is down, start HTTP polling as primary update source
         if (!state.isPolling) {
           logger.i(
             '[UserOrderCubit] WebSocket failed/disconnected, '
-            'starting fast polling as primary update source',
+            'starting HTTP polling as primary update source',
           );
           _startPollingFallback(fast: true);
         }
@@ -857,6 +1013,11 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
   }
 
   Future<void> teardownWebsocket() async {
+    // Stop WebSocket sync service
+    _wsSyncService?.dispose();
+    _wsSyncService = null;
+    _lastKnownVersion = null;
+
     final futures = [_webSocketService.disconnect('driver-pool')];
     final orderId = _orderId;
     if (orderId != null) {
