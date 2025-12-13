@@ -231,10 +231,10 @@ class _UserDeliveryOnTripScreenState extends State<UserDeliveryOnTripScreen> {
     if (currentOrder?.status == OrderStatus.COMPLETED &&
         mounted &&
         context.mounted) {
+      context.read<UserOrderCubit>().clearActiveOrder();
       // Navigate to rating/review screen
       final driver = state.currentAssignedDriver.value;
       if (driver != null && currentOrder != null) {
-        context.read<UserOrderCubit>().clearActiveOrder();
         final result = await context.pushNamed(
           Routes.userRating.name,
           extra: {

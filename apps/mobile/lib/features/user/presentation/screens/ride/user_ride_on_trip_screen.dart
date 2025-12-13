@@ -147,7 +147,7 @@ class _UserRideOnTripScreenState extends State<UserRideOnTripScreen> {
         );
       }
 
-      // Build polylines
+      // Build polylines based on order status
       final newPolylines = <Polyline>{};
 
       if (!mounted) {
@@ -155,39 +155,105 @@ class _UserRideOnTripScreenState extends State<UserRideOnTripScreen> {
         return;
       }
 
-      final color = context.colorScheme.primary;
+      final primaryColor = context.colorScheme.primary;
+      final dimmedColor = primaryColor.withValues(alpha: 0.4);
       final rideCubit = context.read<UserRideCubit>();
+      final orderStatus = order.status;
+
+      // Determine if driver is heading to pickup or already picked up
+      final isDriverHeadingToPickup =
+          orderStatus == OrderStatus.ACCEPTED ||
+          orderStatus == OrderStatus.ARRIVING;
+      final isInTrip = orderStatus == OrderStatus.IN_TRIP;
 
       try {
-        // Get actual route from MapService via cubit
-        final routeCoordinates = await rideCubit.getRoutes(
+        // Always get pickup-to-dropoff route
+        final pickupToDropoffRoute = await rideCubit.getRoutes(
           order.pickupLocation,
           order.dropoffLocation,
         );
 
-        if (routeCoordinates.isNotEmpty) {
-          final routePoints = routeCoordinates
-              .map((coord) => LatLng(coord.y.toDouble(), coord.x.toDouble()))
-              .toList();
+        final pickupToDropoffPoints = pickupToDropoffRoute.isNotEmpty
+            ? pickupToDropoffRoute
+                  .map((c) => LatLng(c.y.toDouble(), c.x.toDouble()))
+                  .toList()
+            : [LatLng(pickupLat, pickupLng), LatLng(dropoffLat, dropoffLng)];
+
+        // If driver is heading to pickup, show driver-to-pickup route (highlighted)
+        // and pickup-to-dropoff route (dimmed)
+        if (isDriverHeadingToPickup && driverLocation != null) {
+          // Get driver-to-pickup route
+          final driverToPickupRoute = await rideCubit.getRoutes(
+            driverLocation,
+            order.pickupLocation,
+          );
+
+          final driverToPickupPoints = driverToPickupRoute.isNotEmpty
+              ? driverToPickupRoute
+                    .map((c) => LatLng(c.y.toDouble(), c.x.toDouble()))
+                    .toList()
+              : [
+                  LatLng(
+                    driverLocation.y.toDouble(),
+                    driverLocation.x.toDouble(),
+                  ),
+                  LatLng(pickupLat, pickupLng),
+                ];
+
+          // Driver to pickup - highlighted (active route)
+          newPolylines.add(
+            Polyline(
+              polylineId: const PolylineId("driver_to_pickup"),
+              points: driverToPickupPoints,
+              color: primaryColor,
+              width: 5,
+            ),
+          );
+
+          // Pickup to dropoff - dimmed (planned route)
+          newPolylines.add(
+            Polyline(
+              polylineId: const PolylineId("pickup_to_dropoff"),
+              points: pickupToDropoffPoints,
+              color: dimmedColor,
+              width: 4,
+              patterns: [PatternItem.dash(10), PatternItem.gap(5)],
+            ),
+          );
+        } else if (isInTrip && driverLocation != null) {
+          // During trip: show driver-to-dropoff route (highlighted)
+          final driverToDropoffRoute = await rideCubit.getRoutes(
+            driverLocation,
+            order.dropoffLocation,
+          );
+
+          final driverToDropoffPoints = driverToDropoffRoute.isNotEmpty
+              ? driverToDropoffRoute
+                    .map((c) => LatLng(c.y.toDouble(), c.x.toDouble()))
+                    .toList()
+              : [
+                  LatLng(
+                    driverLocation.y.toDouble(),
+                    driverLocation.x.toDouble(),
+                  ),
+                  LatLng(dropoffLat, dropoffLng),
+                ];
 
           newPolylines.add(
             Polyline(
-              polylineId: const PolylineId("route"),
-              points: routePoints,
-              color: color,
-              width: 4,
+              polylineId: const PolylineId("driver_to_dropoff"),
+              points: driverToDropoffPoints,
+              color: primaryColor,
+              width: 5,
             ),
           );
         } else {
-          // Fallback to straight line if no route available
+          // Fallback: just show pickup-to-dropoff route
           newPolylines.add(
             Polyline(
-              polylineId: const PolylineId("route"),
-              points: [
-                LatLng(pickupLat, pickupLng),
-                LatLng(dropoffLat, dropoffLng),
-              ],
-              color: color,
+              polylineId: const PolylineId("pickup_to_dropoff"),
+              points: pickupToDropoffPoints,
+              color: primaryColor,
               width: 4,
             ),
           );
@@ -202,7 +268,7 @@ class _UserRideOnTripScreenState extends State<UserRideOnTripScreen> {
               LatLng(pickupLat, pickupLng),
               LatLng(dropoffLat, dropoffLng),
             ],
-            color: color,
+            color: primaryColor,
             width: 4,
           ),
         );
@@ -230,10 +296,10 @@ class _UserRideOnTripScreenState extends State<UserRideOnTripScreen> {
     if (currentOrder?.status == OrderStatus.COMPLETED &&
         mounted &&
         context.mounted) {
+      context.read<UserOrderCubit>().clearActiveOrder();
       // Navigate to rating/review screen
       final driver = state.currentAssignedDriver.value;
       if (driver != null && currentOrder != null) {
-        context.read<UserOrderCubit>().clearActiveOrder();
         final result = await context.pushNamed(
           Routes.userRating.name,
           extra: {
