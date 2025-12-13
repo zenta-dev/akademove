@@ -43,6 +43,7 @@ class WebSocketService with WidgetsBindingObserver {
   final Map<String, WebSocketConnectionStatus> _connectionStatuses = {};
   final Map<String, void Function(WebSocketConnectionStatus)?>
   _statusListeners = {};
+  final Map<String, StreamController<Object?>> _broadcastControllers = {};
 
   String? sessionToken;
   bool _isPaused = false;
@@ -103,6 +104,9 @@ class WebSocketService with WidgetsBindingObserver {
 
       await _subscriptions[key]?.cancel();
       _subscriptions.remove(key);
+
+      await _broadcastControllers[key]?.close();
+      _broadcastControllers.remove(key);
 
       await _connections[key]?.sink.close(status.normalClosure);
       _connections.remove(key);
@@ -169,6 +173,10 @@ class WebSocketService with WidgetsBindingObserver {
       final channel = WebSocketChannel.connect(uri);
       _connections[key] = channel;
 
+      // Create broadcast controller for this connection
+      _broadcastControllers[key]?.close();
+      _broadcastControllers[key] = StreamController<Object?>.broadcast();
+
       // ignore: cancel_subscriptions
       final sub = channel.stream.listen(
         (data) {
@@ -179,11 +187,14 @@ class WebSocketService with WidgetsBindingObserver {
           _reconnectAttempts[key] = 0;
           _logDebug(key, 'Message received: ${_truncate(data.toString())}');
           config.onMessage?.call(data);
+          // Forward to broadcast stream for multiple listeners
+          _broadcastControllers[key]?.add(data);
         },
         onError: (Object? error, _) {
           _handleStreamError(key, error);
           if (error != null) {
             config.onError?.call(error);
+            _broadcastControllers[key]?.addError(error);
           }
         },
         onDone: () {
@@ -329,7 +340,9 @@ class WebSocketService with WidgetsBindingObserver {
     }
   }
 
-  Stream<Object?>? stream(String key) => _connections[key]?.stream;
+  /// Returns a broadcast stream that can be listened to by multiple subscribers.
+  /// Returns null if there's no active connection for the given key.
+  Stream<Object?>? stream(String key) => _broadcastControllers[key]?.stream;
 
   bool isConnected(String key) => _connections.containsKey(key);
 
@@ -381,6 +394,9 @@ class WebSocketService with WidgetsBindingObserver {
       await _subscriptions[key]?.cancel();
       _subscriptions.remove(key);
 
+      await _broadcastControllers[key]?.close();
+      _broadcastControllers.remove(key);
+
       await _connections[key]?.sink.close(status.normalClosure);
       _connections.remove(key);
 
@@ -417,6 +433,11 @@ class WebSocketService with WidgetsBindingObserver {
         await _subscriptions[key]?.cancel();
       }
       _subscriptions.clear();
+
+      for (final key in _broadcastControllers.keys.toList()) {
+        await _broadcastControllers[key]?.close();
+      }
+      _broadcastControllers.clear();
 
       for (final key in _connections.keys.toList()) {
         await _connections[key]?.sink.close(status.normalClosure);

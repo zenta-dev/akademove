@@ -483,6 +483,40 @@ export class OrderPlacementRepository extends OrderBaseRepository {
 						{ orderId: order.id },
 						"[OrderPlacementRepository] Driver matching job enqueued after wallet payment success",
 					);
+
+					// Broadcast to driver pool room via WebSocket for real-time driver matching
+					// This ensures drivers connected via WebSocket receive the order offer immediately
+					// The queue-based matching handles push notifications for offline drivers
+					const { OrderBaseRepository } = await import(
+						"./order-base-repository"
+					);
+					const { DRIVER_POOL_KEY } = await import("@/core/constants");
+
+					const orderStub =
+						OrderBaseRepository.getRoomStubByName(DRIVER_POOL_KEY);
+
+					// Payment is already composed from charge() - use it directly
+					orderStub.broadcast({
+						a: "MATCHING",
+						f: "s",
+						t: "s",
+						tg: "SYSTEM",
+						p: {
+							detail: {
+								payment,
+								order: {
+									...order,
+									status: "MATCHING",
+								},
+								transaction,
+							},
+						},
+					});
+
+					logger.info(
+						{ orderId: order.id },
+						"[OrderPlacementRepository] Broadcast to driver pool for RIDE/DELIVERY order after wallet payment",
+					);
 				} catch (matchingError) {
 					// Log but don't fail the order - the timeout handler will handle stuck orders
 					logger.error(
