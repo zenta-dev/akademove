@@ -1,59 +1,26 @@
 part of '_export.dart';
 
+/// State for [DriverHomeCubit].
+///
+/// This state contains WebSocket-related data and order state for the home screen.
+/// For driver profile data and stats, use [DriverProfileState] from [DriverProfileCubit].
 class DriverHomeState extends Equatable {
-  const DriverHomeState({
-    this.initResult = const OperationResult.idle(),
-    this.toggleOnlineResult = const OperationResult.idle(),
-    this.myDriver,
-    this.isOnline = false,
-    this.todayEarnings = 0,
-    this.todayTrips = 0,
-    this.currentOrder,
-    this.incomingOrder,
-  });
+  const DriverHomeState({this.currentOrder, this.incomingOrder});
 
-  final OperationResult<Driver> initResult;
-  final OperationResult<Driver> toggleOnlineResult;
-
-  final Driver? myDriver;
-  final bool isOnline;
-  final num todayEarnings;
-  final int todayTrips;
+  /// Current active order being handled by the driver.
   final Order? currentOrder;
+
+  /// Incoming order offer from WebSocket.
   final Order? incomingOrder;
 
   @override
-  List<Object?> get props => [
-    initResult,
-    toggleOnlineResult,
-    myDriver,
-    isOnline,
-    todayEarnings,
-    todayTrips,
-    currentOrder,
-    incomingOrder,
-  ];
+  List<Object?> get props => [currentOrder, incomingOrder];
 
   @override
   bool get stringify => true;
 
-  DriverHomeState copyWith({
-    OperationResult<Driver>? initResult,
-    OperationResult<Driver>? toggleOnlineResult,
-    Driver? myDriver,
-    bool? isOnline,
-    num? todayEarnings,
-    int? todayTrips,
-    Order? currentOrder,
-    Order? incomingOrder,
-  }) {
+  DriverHomeState copyWith({Order? currentOrder, Order? incomingOrder}) {
     return DriverHomeState(
-      initResult: initResult ?? this.initResult,
-      toggleOnlineResult: toggleOnlineResult ?? this.toggleOnlineResult,
-      myDriver: myDriver ?? this.myDriver,
-      isOnline: isOnline ?? this.isOnline,
-      todayEarnings: todayEarnings ?? this.todayEarnings,
-      todayTrips: todayTrips ?? this.todayTrips,
       currentOrder: currentOrder ?? this.currentOrder,
       incomingOrder: incomingOrder ?? this.incomingOrder,
     );

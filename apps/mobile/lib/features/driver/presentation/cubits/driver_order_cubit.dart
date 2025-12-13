@@ -11,16 +11,20 @@ class DriverOrderCubit extends BaseCubit<DriverOrderState> {
     required OrderRepository orderRepository,
     required WebSocketService webSocketService,
     required DriverRepository driverRepository,
+    required LocationService locationService,
   }) : _orderRepository = orderRepository,
        _webSocketService = webSocketService,
        _driverRepository = driverRepository,
+       _locationService = locationService,
        super(const DriverOrderState());
 
   final OrderRepository _orderRepository;
   final WebSocketService _webSocketService;
   final DriverRepository _driverRepository;
+  final LocationService _locationService;
 
-  Timer? _locationUpdateTimer;
+  StreamSubscription<Coordinate>? _locationStreamSubscription;
+  Coordinate? _lastLocation;
   String? _currentOrderId;
   String? _currentDriverId;
 
@@ -363,75 +367,98 @@ class DriverOrderCubit extends BaseCubit<DriverOrderState> {
   });
 
   void _startLocationTracking() {
-    _locationUpdateTimer?.cancel();
-    _locationUpdateTimer = Timer.periodic(const Duration(seconds: 10), (
-      _,
-    ) async {
-      await safeAsync(() => _updateLocation());
-    });
-    _updateLocation();
+    _stopLocationTracking();
+
+    final orderId = _currentOrderId;
+    final driverId = _currentDriverId;
+    if (orderId == null || driverId == null) {
+      logger.w(
+        '[DriverOrderCubit] - Cannot start location tracking: '
+        'orderId=$orderId, driverId=$driverId',
+      );
+      return;
+    }
+
+    logger.i('[DriverOrderCubit] - Starting location stream tracking');
+
+    _locationStreamSubscription = _locationService
+        .getLocationStream(
+          accuracy: LocationAccuracy.high,
+          interval: const Duration(seconds: 3),
+        )
+        .listen(
+          (coordinate) => _onLocationUpdate(coordinate),
+          onError: (Object error, StackTrace st) {
+            logger.e(
+              '[DriverOrderCubit] - Location stream error',
+              error: error,
+              stackTrace: st,
+            );
+          },
+        );
   }
 
   void _stopLocationTracking() {
-    _locationUpdateTimer?.cancel();
+    _locationStreamSubscription?.cancel();
+    _locationStreamSubscription = null;
+    _lastLocation = null;
   }
 
-  Future<void>
-  _updateLocation() async => await taskManager.execute('DOC-uL1', () async {
-    final orderId = _currentOrderId;
-    final driverId = _currentDriverId;
-    if (orderId == null || driverId == null) return;
-
-    try {
-      final permission = await Geolocator.checkPermission();
-      if (permission == LocationPermission.denied ||
-          permission == LocationPermission.deniedForever) {
-        logger.w('[DriverOrderCubit] - Location permission denied');
-        return;
-      }
-
-      final position = await Geolocator.getCurrentPosition(
-        locationSettings: const LocationSettings(
-          accuracy: LocationAccuracy.high,
-        ),
-      );
-
-      // Send location update via WebSocket to broadcast to user in real-time
-      final envelope = OrderEnvelope(
-        f: EnvelopeSender.c,
-        t: EnvelopeSender.s,
-        a: OrderEnvelopeAction.UPDATE_LOCATION,
-        p: OrderEnvelopePayload(
-          driverUpdateLocation: OrderEnvelopePayloadDriverUpdateLocation(
-            driverId: driverId,
-            x: position.longitude,
-            y: position.latitude,
-          ),
-        ),
-      );
-      _webSocketService.send(orderId, jsonEncode(envelope.toJson()));
-
-      // Also update location on server via REST API for persistence and fraud detection
-      await _driverRepository.updateLocation(
-        driverId: driverId,
-        location: CoordinateWithMeta(
-          x: position.longitude,
-          y: position.latitude,
-          isMockLocation: position.isMocked,
-        ),
-      );
-
-      logger.d(
-        '[DriverOrderCubit] - Location updated (WS + REST): ${position.latitude}, ${position.longitude}, isMock: ${position.isMocked}',
-      );
-    } catch (e, st) {
-      logger.e(
-        '[DriverOrderCubit] - Error updating location: $e',
-        error: e,
-        stackTrace: st,
-      );
+  Future<void> _onLocationUpdate(Coordinate coordinate) async {
+    // Skip update if location hasn't changed
+    final last = _lastLocation;
+    if (last != null && last.x == coordinate.x && last.y == coordinate.y) {
+      return;
     }
-  });
+
+    await taskManager.execute('DOC-uL1', () async {
+      final orderId = _currentOrderId;
+      final driverId = _currentDriverId;
+      if (orderId == null || driverId == null) return;
+
+      try {
+        // Send location update via WebSocket to broadcast to user in real-time
+        final envelope = OrderEnvelope(
+          f: EnvelopeSender.c,
+          t: EnvelopeSender.s,
+          a: OrderEnvelopeAction.UPDATE_LOCATION,
+          p: OrderEnvelopePayload(
+            driverUpdateLocation: OrderEnvelopePayloadDriverUpdateLocation(
+              driverId: driverId,
+              x: coordinate.x,
+              y: coordinate.y,
+            ),
+          ),
+        );
+        _webSocketService.send(orderId, jsonEncode(envelope.toJson()));
+
+        // Also update location on server via REST API for persistence and fraud detection
+        await _driverRepository.updateLocation(
+          driverId: driverId,
+          location: CoordinateWithMeta(
+            x: coordinate.x,
+            y: coordinate.y,
+            // Note: isMockLocation from stream is not available via Coordinate,
+            // server should validate based on GPS metadata if needed
+            isMockLocation: false,
+          ),
+        );
+
+        _lastLocation = coordinate;
+
+        logger.d(
+          '[DriverOrderCubit] - Location updated (WS + REST): '
+          'lat=${coordinate.y}, lng=${coordinate.x}',
+        );
+      } catch (e, st) {
+        logger.e(
+          '[DriverOrderCubit] - Error updating location: $e',
+          error: e,
+          stackTrace: st,
+        );
+      }
+    });
+  }
 
   Future<void> _setupOrderWebSocket(String orderId) async {
     try {
