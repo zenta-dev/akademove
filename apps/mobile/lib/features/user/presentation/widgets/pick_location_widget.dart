@@ -63,7 +63,7 @@ class _PickLocationWidgetState extends State<PickLocationWidget> {
   }
 
   Future<void> refresh() async {
-    final cubit = context.read<UserRideCubit>();
+    final cubit = context.read<OrderLocationCubit>();
     final coord = context.read<UserLocationCubit>().state.coordinate;
     final isSearchMode =
         (widget.type.isPickup ? pickupController : dropoffController)
@@ -83,7 +83,7 @@ class _PickLocationWidgetState extends State<PickLocationWidget> {
 
   Future<void> _onScroll() async {
     if (_isBottom) {
-      final cubit = context.read<UserRideCubit>();
+      final cubit = context.read<OrderLocationCubit>();
       final state = cubit.state;
       if (pickupController.text.isNotEmpty ||
           dropoffController.text.isNotEmpty) {
@@ -122,7 +122,7 @@ class _PickLocationWidgetState extends State<PickLocationWidget> {
             enabled: widget.type.isPickup,
             controller: pickupController,
             onChanged: (value) => searchDebouncer.run(() async {
-              final cubit = context.read<UserRideCubit>();
+              final cubit = context.read<OrderLocationCubit>();
               if (value.isEmpty) {
                 return cubit.clearSearchPlaces();
               }
@@ -134,7 +134,7 @@ class _PickLocationWidgetState extends State<PickLocationWidget> {
             enabled: widget.type.isDropoff,
             controller: dropoffController,
             onChanged: (value) => searchDebouncer.run(() async {
-              final cubit = context.read<UserRideCubit>();
+              final cubit = context.read<OrderLocationCubit>();
               if (value.isEmpty) {
                 return cubit.clearSearchPlaces();
               }
@@ -168,7 +168,7 @@ class _PickLocationWidgetState extends State<PickLocationWidget> {
             ],
           ),
         ),
-        BlocBuilder<UserRideCubit, UserRideState>(
+        BlocBuilder<OrderLocationCubit, OrderLocationState>(
           builder: (context, state) {
             if (state.searchPlaces.isLoading) {
               return Expanded(

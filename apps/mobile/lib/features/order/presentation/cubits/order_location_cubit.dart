@@ -3,23 +3,44 @@ import 'package:akademove/features/features.dart';
 import 'package:api_client/api_client.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-class UserRideCubit extends BaseCubit<UserRideState> {
-  UserRideCubit({
+/// Unified cubit for order location-related operations.
+/// Replaces UserRideCubit and UserDeliveryCubit by merging common functionality:
+/// - Fetching nearby drivers
+/// - Fetching and searching places
+/// - Getting routes between coordinates
+/// - Managing map controller
+class OrderLocationCubit extends BaseCubit<OrderLocationState> {
+  OrderLocationCubit({
     required DriverRepository driverRepository,
     required MapService mapService,
   }) : _driverRepository = driverRepository,
        _mapService = mapService,
-       super(const UserRideState());
+       super(const OrderLocationState());
 
   final DriverRepository _driverRepository;
   final MapService _mapService;
 
-  void reset() => emit(const UserRideState());
+  String? _searchQuery;
+  String? _selectedCouponCode;
+
+  /// Get the currently selected coupon code (used in delivery flow)
+  String? get selectedCouponCode => _selectedCouponCode;
+
+  /// Set the selected coupon code for order placement
+  void setSelectedCoupon(String? couponCode) {
+    _selectedCouponCode = couponCode;
+  }
+
+  void reset() {
+    _searchQuery = null;
+    _selectedCouponCode = null;
+    emit(const OrderLocationState());
+  }
 
   void clearSearchPlaces() => emit(
     state.copyWith(
       searchPlaces: OperationResult.success(
-        PageTokenPaginationResult(data: []),
+        const PageTokenPaginationResult(data: []),
       ),
     ),
   );
@@ -28,55 +49,53 @@ class UserRideCubit extends BaseCubit<UserRideState> {
     emit(state.copyWith(mapController: controller));
   }
 
-  Future<void> getNearbyDrivers(
-    GetDriverNearbyQuery req,
-  ) async => await taskManager.execute("URC-gND-${req.hashCode}", () async {
-    try {
-      emit(state.copyWith(nearbyDrivers: const OperationResult.loading()));
+  Future<void> getNearbyDrivers(GetDriverNearbyQuery req) async =>
+      await taskManager.execute("OLC-gND-${req.hashCode}", () async {
+        try {
+          emit(state.copyWith(nearbyDrivers: const OperationResult.loading()));
 
-      final res = await _driverRepository.getDriverNearby(req);
+          final res = await _driverRepository.getDriverNearby(req);
 
-      final currentList = state.nearbyDrivers.value ?? [];
-      final mergedList = {
-        for (final item in currentList) item.id: item,
-        for (final item in res.data) item.id: item,
-      }.values.toList();
+          final currentList = state.nearbyDrivers.value ?? [];
+          final mergedList = {
+            for (final item in currentList) item.id: item,
+            for (final item in res.data) item.id: item,
+          }.values.toList();
 
-      emit(
-        state.copyWith(
-          nearbyDrivers: OperationResult.success(
-            mergedList,
-            message: res.message,
-          ),
-        ),
-      );
-    } on BaseError catch (e, st) {
-      logger.e(
-        '[UserRideCubit] - Error: ${e.message}',
-        error: e,
-        stackTrace: st,
-      );
-      // Keep previous data on error if available, or emit failure
-      if (state.nearbyDrivers.value != null) {
-        // Just keep success state with old data? Or maybe not emit anything?
-        // If we emit failed, UI might show error screen.
-        // Let's emit success with old data to avoid disrupting map
-        emit(
-          state.copyWith(
-            nearbyDrivers: OperationResult.success(state.nearbyDrivers.value!),
-          ),
-        );
-      } else {
-        emit(state.copyWith(nearbyDrivers: OperationResult.failed(e)));
-      }
-    }
-  });
+          emit(
+            state.copyWith(
+              nearbyDrivers: OperationResult.success(
+                mergedList,
+                message: res.message,
+              ),
+            ),
+          );
+        } on BaseError catch (e, st) {
+          logger.e(
+            "[OrderLocationCubit] - getNearbyDrivers error: ${e.message}",
+            error: e,
+            stackTrace: st,
+          );
+          // Keep previous data on error if available, or emit failure
+          if (state.nearbyDrivers.value != null) {
+            emit(
+              state.copyWith(
+                nearbyDrivers: OperationResult.success(
+                  state.nearbyDrivers.value!,
+                ),
+              ),
+            );
+          } else {
+            emit(state.copyWith(nearbyDrivers: OperationResult.failed(e)));
+          }
+        }
+      });
 
   Future<void> getNearbyPlaces(
     Coordinate coord, {
     bool isRefresh = false,
   }) async => await taskManager.execute(
-    'URC-gNP-${coord.hashCode}-$isRefresh',
+    "OLC-gNP-${coord.hashCode}-$isRefresh",
     () async {
       try {
         final currentToken = state.nearbyPlaces.value?.token;
@@ -101,7 +120,7 @@ class UserRideCubit extends BaseCubit<UserRideState> {
         );
       } on BaseError catch (e, st) {
         logger.e(
-          '[UserRideCubit] - Error: ${e.message}',
+          "[OrderLocationCubit] - getNearbyPlaces error: ${e.message}",
           error: e,
           stackTrace: st,
         );
@@ -118,12 +137,11 @@ class UserRideCubit extends BaseCubit<UserRideState> {
     },
   );
 
-  String? _searchQuery;
   Future<void> searchPlaces(
     String query, {
     Coordinate? coordinate,
     bool isRefresh = false,
-  }) async => await taskManager.execute('URC-sP-$query', () async {
+  }) async => await taskManager.execute("OLC-sP-$query", () async {
     try {
       final isNewQuery = _searchQuery != query;
       final currentToken = state.searchPlaces.value?.token;
@@ -154,7 +172,7 @@ class UserRideCubit extends BaseCubit<UserRideState> {
       );
     } on BaseError catch (e, st) {
       logger.e(
-        '[UserRideCubit] - Error: ${e.message}',
+        "[OrderLocationCubit] - searchPlaces error: ${e.message}",
         error: e,
         stackTrace: st,
       );
@@ -178,7 +196,7 @@ class UserRideCubit extends BaseCubit<UserRideState> {
       return await _mapService.getRoutes(origin, destination);
     } on BaseError catch (e, st) {
       logger.e(
-        '[UserRideCubit] - getRoutes error: ${e.message}',
+        "[OrderLocationCubit] - getRoutes error: ${e.message}",
         error: e,
         stackTrace: st,
       );

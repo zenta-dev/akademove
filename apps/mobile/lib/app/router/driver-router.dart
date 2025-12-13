@@ -18,8 +18,8 @@ final driverRouter = StatefulShellRoute.indexedStack(
         BlocProvider(create: (_) => sl<SharedEmergencyCubit>()),
         BlocProvider(create: (_) => sl<SharedOrderChatCubit>()),
         BlocProvider(create: (_) => sl<SharedQuickMessageCubit>()),
-        BlocProvider(
-          create: (_) => sl<SharedNotificationCubit>()
+        BlocProvider.value(
+          value: sl<SharedNotificationCubit>()
             ..getUnreadCount()
             ..subscribeToTopic('driver-announcements'),
         ),

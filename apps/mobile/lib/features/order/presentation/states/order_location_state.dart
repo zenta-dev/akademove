@@ -1,7 +1,13 @@
 part of '_export.dart';
 
-class UserRideState extends Equatable {
-  const UserRideState({
+/// Unified state for order location-related operations.
+/// Used by both Ride and Delivery order flows for:
+/// - Fetching nearby drivers
+/// - Fetching nearby places
+/// - Searching places
+/// - Managing map controller
+class OrderLocationState extends Equatable {
+  const OrderLocationState({
     this.nearbyDrivers = const OperationResult.idle(),
     this.nearbyPlaces = const OperationResult.idle(),
     this.searchPlaces = const OperationResult.idle(),
@@ -21,13 +27,13 @@ class UserRideState extends Equatable {
     mapController,
   ];
 
-  UserRideState copyWith({
+  OrderLocationState copyWith({
     OperationResult<List<Driver>>? nearbyDrivers,
     OperationResult<PageTokenPaginationResult<List<Place>>>? nearbyPlaces,
     OperationResult<PageTokenPaginationResult<List<Place>>>? searchPlaces,
     GoogleMapController? mapController,
   }) {
-    return UserRideState(
+    return OrderLocationState(
       nearbyDrivers: nearbyDrivers ?? this.nearbyDrivers,
       nearbyPlaces: nearbyPlaces ?? this.nearbyPlaces,
       searchPlaces: searchPlaces ?? this.searchPlaces,

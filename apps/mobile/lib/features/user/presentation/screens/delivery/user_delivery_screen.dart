@@ -128,7 +128,7 @@ class _UserDeliveryScreenState extends State<UserDeliveryScreen> {
 
   Future<void> _fetchDriversAtLocation(LatLng center, int radiusKm) async {
     // final user = context.read<AuthCubit>().state.user.data?.value;
-    await context.read<UserDeliveryCubit>().getNearbyDrivers(
+    await context.read<OrderLocationCubit>().getNearbyDrivers(
       GetDriverNearbyQuery(
         x: center.longitude,
         y: center.latitude,
@@ -193,9 +193,9 @@ class _UserDeliveryScreenState extends State<UserDeliveryScreen> {
       if (!mounted) return; // Check mounted before async operation
 
       try {
-        // Use UserDeliveryCubit to get routes
-        final deliveryCubit = context.read<UserDeliveryCubit>();
-        final routeCoordinates = await deliveryCubit.getRoutes(
+        // Use OrderLocationCubit to get routes
+        final orderLocationCubit = context.read<OrderLocationCubit>();
+        final routeCoordinates = await orderLocationCubit.getRoutes(
           pickupLoc.toCoordinate(),
           dropoffLoc.toCoordinate(),
         );

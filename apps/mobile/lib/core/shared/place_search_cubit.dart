@@ -49,9 +49,11 @@ class PlaceSearchState extends Equatable {
 
 /// Shared cubit for place search and nearby driver functionality.
 ///
-/// This consolidates the duplicate functionality from UserRideCubit and
-/// UserDeliveryCubit. Both ride and delivery flows can use this single
-/// cubit for:
+/// @deprecated Use [OrderLocationCubit] from order feature instead.
+/// This cubit is kept for backwards compatibility but should be migrated to
+/// OrderLocationCubit which consolidates the functionality from UserRideCubit
+/// and UserDeliveryCubit.
+///
 /// - Searching places by text
 /// - Getting nearby places
 /// - Getting nearby drivers

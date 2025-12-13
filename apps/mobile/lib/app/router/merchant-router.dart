@@ -16,8 +16,8 @@ final merchantRouter = StatefulShellRoute.indexedStack(
         BlocProvider(create: (_) => sl<UserProfileCubit>()),
         BlocProvider(create: (_) => sl<SharedOrderChatCubit>()),
         BlocProvider(create: (_) => sl<SharedQuickMessageCubit>()),
-        BlocProvider(
-          create: (_) => sl<SharedNotificationCubit>()
+        BlocProvider.value(
+          value: sl<SharedNotificationCubit>()
             ..getUnreadCount()
             ..subscribeToTopic('merchant-announcements'),
         ),

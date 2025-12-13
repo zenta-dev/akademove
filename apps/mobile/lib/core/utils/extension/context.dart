@@ -234,7 +234,7 @@ extension BuildContextExt on BuildContext {
     final repo = sl<NotificationRepository>();
     await safeAsync(() => repo.syncToken());
 
-    // Handle foreground messages - show local notification
+    // Handle foreground messages - show local notification and update badge
     repo.onMessage((msg) async {
       logger.i('[NotificationRepository] - onMessage: ${msg.messageId}');
       final title = msg.notification?.title ?? 'Akademove';
@@ -243,6 +243,9 @@ extension BuildContextExt on BuildContext {
 
       logger.f('📨 Foreground FCM: ${msg.toMap()}');
       await safeAsync(() => ntfSvc.show(title: title, body: body, data: data));
+
+      // Update unread notification count when new notification arrives
+      await safeAsync(() => sl<SharedNotificationCubit>().getUnreadCount());
     });
 
     // Handle notification taps when app was in background

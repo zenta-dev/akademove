@@ -171,13 +171,7 @@ void _setupCubit() {
       () => UserMerchantListCubit(merchantRepository: sl<MerchantRepository>()),
     )
     ..registerFactory(
-      () => UserRideCubit(
-        driverRepository: sl<DriverRepository>(),
-        mapService: sl<MapService>(),
-      ),
-    )
-    ..registerFactory(
-      () => UserDeliveryCubit(
+      () => OrderLocationCubit(
         driverRepository: sl<DriverRepository>(),
         mapService: sl<MapService>(),
       ),
@@ -245,6 +239,7 @@ void _setupCubit() {
         webSocketService: sl<WebSocketService>(),
         driverRepository: sl<DriverRepository>(),
         locationService: sl<LocationService>(),
+        keyValueService: sl<KeyValueService>(),
       ),
     )
     ..registerFactory(
@@ -285,7 +280,7 @@ void _setupCubit() {
         quickMessageRepository: sl<QuickMessageRepository>(),
       ),
     )
-    ..registerFactory(
+    ..registerLazySingleton(
       () => SharedNotificationCubit(
         notificationRepository: sl<NotificationRepository>(),
       ),

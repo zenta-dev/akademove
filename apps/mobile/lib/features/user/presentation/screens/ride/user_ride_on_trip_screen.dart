@@ -179,7 +179,7 @@ class _UserRideOnTripScreenState extends State<UserRideOnTripScreen> {
 
       final primaryColor = context.colorScheme.primary;
       final dimmedColor = primaryColor.withValues(alpha: 0.4);
-      final rideCubit = context.read<UserRideCubit>();
+      final orderLocationCubit = context.read<OrderLocationCubit>();
       final orderStatus = order.status;
 
       // Determine if driver is heading to pickup or already picked up
@@ -190,7 +190,7 @@ class _UserRideOnTripScreenState extends State<UserRideOnTripScreen> {
 
       try {
         // Always get pickup-to-dropoff route
-        final pickupToDropoffRoute = await rideCubit.getRoutes(
+        final pickupToDropoffRoute = await orderLocationCubit.getRoutes(
           order.pickupLocation,
           order.dropoffLocation,
         );
@@ -205,7 +205,7 @@ class _UserRideOnTripScreenState extends State<UserRideOnTripScreen> {
         // and pickup-to-dropoff route (dimmed)
         if (isDriverHeadingToPickup && driverLocation != null) {
           // Get driver-to-pickup route
-          final driverToPickupRoute = await rideCubit.getRoutes(
+          final driverToPickupRoute = await orderLocationCubit.getRoutes(
             driverLocation,
             order.pickupLocation,
           );
@@ -244,7 +244,7 @@ class _UserRideOnTripScreenState extends State<UserRideOnTripScreen> {
           );
         } else if (isInTrip && driverLocation != null) {
           // During trip: show driver-to-dropoff route (highlighted)
-          final driverToDropoffRoute = await rideCubit.getRoutes(
+          final driverToDropoffRoute = await orderLocationCubit.getRoutes(
             driverLocation,
             order.dropoffLocation,
           );

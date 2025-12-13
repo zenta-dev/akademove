@@ -71,7 +71,7 @@ class _UserDeliverySummaryScreenState extends State<UserDeliverySummaryScreen> {
                       // Store coupon in delivery cubit for payment screen
                       final coupon = selectedCoupon;
                       if (coupon != null) {
-                        context.read<UserDeliveryCubit>().setSelectedCoupon(
+                        context.read<OrderLocationCubit>().setSelectedCoupon(
                           coupon.code,
                         );
                       }

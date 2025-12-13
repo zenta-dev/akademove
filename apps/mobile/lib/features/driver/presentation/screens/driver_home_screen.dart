@@ -19,113 +19,135 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
   void initState() {
     super.initState();
     context.read<DriverProfileCubit>().init();
+    // Recover any active order for the driver
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<DriverOrderCubit>().recoverActiveOrder();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<DriverProfileCubit, DriverProfileState>(
-      listener: (context, state) {
-        if (state.initResult.isFailure) {
-          context.showMyToast(
-            state.initResult.error?.message ?? context.l10n.an_error_occurred,
-            type: ToastType.failed,
-          );
-        }
-
-        // Initialize DriverHomeCubit with driver when init succeeds
-        if (state.initResult.isSuccess) {
-          context.read<DriverHomeCubit>().initWithDriver(state.driver);
-        }
-
-        // Sync driver state to DriverHomeCubit when online status changes
-        if (state.toggleOnlineResult.isSuccess) {
-          context.read<DriverHomeCubit>().updateDriver(state.driver);
+    return BlocListener<DriverOrderCubit, DriverOrderState>(
+      listenWhen: (previous, current) =>
+          previous.recoverOrderResult != current.recoverOrderResult,
+      listener: (context, orderState) {
+        // Navigate to order detail when active order is recovered
+        if (orderState.recoverOrderResult.isSuccess) {
+          final order = orderState.recoverOrderResult.value;
+          if (order != null) {
+            context.pushNamed(
+              Routes.driverOrderDetail.name,
+              pathParameters: {'orderId': order.id},
+            );
+          }
         }
       },
-      builder: (context, state) {
-        return Scaffold(
-          headers: [
-            DefaultAppBar(
-              padding: EdgeInsets.all(16.r),
-              title: context.l10n.driver_dashboard,
-              trailing: [
-                BlocBuilder<SharedNotificationCubit, SharedNotificationState>(
-                  builder: (context, notificationState) {
-                    final unreadCount =
-                        notificationState.unreadCount.value ?? 0;
-                    return Stack(
-                      clipBehavior: Clip.none,
-                      children: [
-                        IconButton(
-                          onPressed: () {
-                            context.pushNamed(Routes.driverNotifications.name);
-                          },
-                          icon: Icon(LucideIcons.bell, size: 20.sp),
-                          variance: const ButtonStyle.ghostIcon(),
-                        ),
-                        if (unreadCount > 0)
-                          Positioned(
-                            right: 0,
-                            top: 0,
-                            child: Container(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: unreadCount > 9 ? 4.w : 6.w,
-                                vertical: 2.h,
-                              ),
-                              decoration: BoxDecoration(
-                                color: context.colorScheme.destructive,
-                                borderRadius: BorderRadius.circular(10.r),
-                                border: Border.all(
-                                  color: context.colorScheme.background,
-                                  width: 1.5,
+      child: BlocConsumer<DriverProfileCubit, DriverProfileState>(
+        listener: (context, state) {
+          if (state.initResult.isFailure) {
+            context.showMyToast(
+              state.initResult.error?.message ?? context.l10n.an_error_occurred,
+              type: ToastType.failed,
+            );
+          }
+
+          // Initialize DriverHomeCubit with driver when init succeeds
+          if (state.initResult.isSuccess) {
+            context.read<DriverHomeCubit>().initWithDriver(state.driver);
+          }
+
+          // Sync driver state to DriverHomeCubit when online status changes
+          if (state.toggleOnlineResult.isSuccess) {
+            context.read<DriverHomeCubit>().updateDriver(state.driver);
+          }
+        },
+        builder: (context, state) {
+          return Scaffold(
+            headers: [
+              DefaultAppBar(
+                padding: EdgeInsets.all(16.r),
+                title: context.l10n.driver_dashboard,
+                trailing: [
+                  BlocBuilder<SharedNotificationCubit, SharedNotificationState>(
+                    builder: (context, notificationState) {
+                      final unreadCount =
+                          notificationState.unreadCount.value ?? 0;
+                      return Stack(
+                        clipBehavior: Clip.none,
+                        children: [
+                          IconButton(
+                            onPressed: () {
+                              context.pushNamed(
+                                Routes.driverNotifications.name,
+                              );
+                            },
+                            icon: Icon(LucideIcons.bell, size: 20.sp),
+                            variance: const ButtonStyle.ghostIcon(),
+                          ),
+                          if (unreadCount > 0)
+                            Positioned(
+                              right: 0,
+                              top: 0,
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: unreadCount > 9 ? 4.w : 6.w,
+                                  vertical: 2.h,
                                 ),
-                              ),
-                              constraints: BoxConstraints(
-                                minWidth: 18.w,
-                                minHeight: 18.h,
-                              ),
-                              child: Center(
-                                child: Text(
-                                  unreadCount > 99
-                                      ? '99+'
-                                      : unreadCount.toString(),
-                                  style: context.typography.xSmall.copyWith(
-                                    color: Colors.white,
-                                    fontSize: 10.sp,
-                                    fontWeight: FontWeight.bold,
+                                decoration: BoxDecoration(
+                                  color: context.colorScheme.destructive,
+                                  borderRadius: BorderRadius.circular(10.r),
+                                  border: Border.all(
+                                    color: context.colorScheme.background,
+                                    width: 1.5,
+                                  ),
+                                ),
+                                constraints: BoxConstraints(
+                                  minWidth: 18.w,
+                                  minHeight: 18.h,
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    unreadCount > 99
+                                        ? '99+'
+                                        : unreadCount.toString(),
+                                    style: context.typography.xSmall.copyWith(
+                                      color: Colors.white,
+                                      fontSize: 10.sp,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
-                      ],
-                    );
-                  },
-                ),
-              ],
-            ),
-          ],
-          child: RefreshTrigger(
-            onRefresh: () => context.read<DriverProfileCubit>().init(),
-            child: SingleChildScrollView(
-              physics: const AlwaysScrollableScrollPhysics(),
-              child: Padding(
-                padding: EdgeInsets.all(16.dg),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  spacing: 20.h,
-                  children: [
-                    _buildWelcomeCard(context, state),
-                    _buildOnlineToggle(context, state),
-                    _buildTodayStats(context, state),
-                    _buildQuickActions(context),
-                  ],
+                        ],
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ],
+            child: RefreshTrigger(
+              onRefresh: () => context.read<DriverProfileCubit>().init(),
+              child: SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                child: Padding(
+                  padding: EdgeInsets.all(16.dg),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    spacing: 20.h,
+                    children: [
+                      _buildWelcomeCard(context, state),
+                      _buildOnlineToggle(context, state),
+                      _buildTodayStats(context, state),
+                      _buildQuickActions(context),
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 

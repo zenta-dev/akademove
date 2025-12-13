@@ -99,13 +99,13 @@ class _UserNearbyDriverScreenState extends State<UserNearbyDriverScreen> {
 
       _updateDriverMarkers(
         locationCubit,
-        context.read<UserRideCubit>().state.nearbyDrivers.value ?? [],
+        context.read<OrderLocationCubit>().state.nearbyDrivers.value ?? [],
       );
       return;
     }
 
     // final user = context.read<AuthCubit>().state.user.data?.value;
-    await context.read<UserRideCubit>().getNearbyDrivers(
+    await context.read<OrderLocationCubit>().getNearbyDrivers(
       GetDriverNearbyQuery(
         x: center.longitude,
         y: center.latitude,
@@ -120,7 +120,7 @@ class _UserNearbyDriverScreenState extends State<UserNearbyDriverScreen> {
 
     _updateDriverMarkers(
       locationCubit,
-      context.read<UserRideCubit>().state.nearbyDrivers.value ?? [],
+      context.read<OrderLocationCubit>().state.nearbyDrivers.value ?? [],
     );
   }
 
@@ -288,7 +288,7 @@ class _UserNearbyDriverScreenState extends State<UserNearbyDriverScreen> {
                   buildWhen: (previous, current) =>
                       previous.markers != current.markers,
                   builder: (context, locationState) {
-                    return BlocBuilder<UserRideCubit, UserRideState>(
+                    return BlocBuilder<OrderLocationCubit, OrderLocationState>(
                       builder: (context, state) {
                         return Text(
                           context.l10n.text_drivers_around_you(

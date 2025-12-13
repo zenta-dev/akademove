@@ -126,7 +126,7 @@ class _UserRideScreenState extends State<UserRideScreen> {
 
   Future<void> _fetchDriversAtLocation(LatLng center, int radiusKm) async {
     // final user = context.read<AuthCubit>().state.user.data?.value;
-    await context.read<UserRideCubit>().getNearbyDrivers(
+    await context.read<OrderLocationCubit>().getNearbyDrivers(
       GetDriverNearbyQuery(
         x: center.longitude,
         y: center.latitude,
@@ -202,7 +202,7 @@ class _UserRideScreenState extends State<UserRideScreen> {
           routeCoordinates = cachedRoute;
         } else {
           // Get actual route from MapService via cubit
-          routeCoordinates = await context.read<UserRideCubit>().getRoutes(
+          routeCoordinates = await context.read<OrderLocationCubit>().getRoutes(
             pickupLoc.toCoordinate(),
             dropoffLoc.toCoordinate(),
           );

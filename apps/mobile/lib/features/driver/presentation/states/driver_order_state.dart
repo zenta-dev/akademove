@@ -10,9 +10,11 @@ class DriverOrderState extends Equatable {
     this.completeTripResult = const OperationResult.idle(),
     this.cancelOrderResult = const OperationResult.idle(),
     this.uploadProofResult = const OperationResult.idle(),
+    this.recoverOrderResult = const OperationResult.idle(),
     this.currentOrder,
     this.customer,
     this.orderStatus,
+    this.isPolling = false,
   });
 
   final OperationResult<Order> fetchOrderResult;
@@ -23,10 +25,16 @@ class DriverOrderState extends Equatable {
   final OperationResult<Order> completeTripResult;
   final OperationResult<Order> cancelOrderResult;
   final OperationResult<Order> uploadProofResult;
+  final OperationResult<Order> recoverOrderResult;
 
   final Order? currentOrder;
   final User? customer;
   final OrderStatus? orderStatus;
+  final bool isPolling;
+
+  /// Check if there's an active order being worked on
+  bool get hasActiveOrder =>
+      currentOrder != null && orderStatus?.isActive == true;
 
   @override
   List<Object?> get props => [
@@ -38,9 +46,11 @@ class DriverOrderState extends Equatable {
     completeTripResult,
     cancelOrderResult,
     uploadProofResult,
+    recoverOrderResult,
     currentOrder,
     customer,
     orderStatus,
+    isPolling,
   ];
 
   @override
@@ -55,9 +65,11 @@ class DriverOrderState extends Equatable {
     OperationResult<Order>? completeTripResult,
     OperationResult<Order>? cancelOrderResult,
     OperationResult<Order>? uploadProofResult,
+    OperationResult<Order>? recoverOrderResult,
     Order? currentOrder,
     User? customer,
     OrderStatus? orderStatus,
+    bool? isPolling,
   }) {
     return DriverOrderState(
       fetchOrderResult: fetchOrderResult ?? this.fetchOrderResult,
@@ -68,9 +80,11 @@ class DriverOrderState extends Equatable {
       completeTripResult: completeTripResult ?? this.completeTripResult,
       cancelOrderResult: cancelOrderResult ?? this.cancelOrderResult,
       uploadProofResult: uploadProofResult ?? this.uploadProofResult,
+      recoverOrderResult: recoverOrderResult ?? this.recoverOrderResult,
       currentOrder: currentOrder ?? this.currentOrder,
       customer: customer ?? this.customer,
       orderStatus: orderStatus ?? this.orderStatus,
+      isPolling: isPolling ?? this.isPolling,
     );
   }
 }
