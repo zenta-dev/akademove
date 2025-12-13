@@ -321,6 +321,7 @@ class NotificationService {
   /// akademove://driver/earnings
   /// akademove://driver/badges/{badgeId}
   /// akademove://driver/leaderboard
+  /// akademove://driver/notifications
   bool _handleDriverDeepLink(
     List<String> pathSegments,
     Map<String, dynamic> data,
@@ -373,6 +374,10 @@ class NotificationService {
 
       case 'profile':
         router.pushNamed(Routes.driverProfile.name);
+        return true;
+
+      case 'notifications':
+        router.pushNamed(Routes.driverNotifications.name);
         return true;
 
       default:

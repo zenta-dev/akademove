@@ -38,6 +38,61 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
             DefaultAppBar(
               padding: EdgeInsets.all(16.r),
               title: context.l10n.driver_dashboard,
+              trailing: [
+                BlocBuilder<NotificationCubit, NotificationState>(
+                  builder: (context, notificationState) {
+                    final unreadCount =
+                        notificationState.unreadCount.value ?? 0;
+                    return Stack(
+                      clipBehavior: Clip.none,
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            context.pushNamed(Routes.driverNotifications.name);
+                          },
+                          icon: Icon(LucideIcons.bell, size: 20.sp),
+                          variance: const ButtonStyle.ghostIcon(),
+                        ),
+                        if (unreadCount > 0)
+                          Positioned(
+                            right: 0,
+                            top: 0,
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: unreadCount > 9 ? 4.w : 6.w,
+                                vertical: 2.h,
+                              ),
+                              decoration: BoxDecoration(
+                                color: context.colorScheme.destructive,
+                                borderRadius: BorderRadius.circular(10.r),
+                                border: Border.all(
+                                  color: context.colorScheme.background,
+                                  width: 1.5,
+                                ),
+                              ),
+                              constraints: BoxConstraints(
+                                minWidth: 18.w,
+                                minHeight: 18.h,
+                              ),
+                              child: Center(
+                                child: Text(
+                                  unreadCount > 99
+                                      ? '99+'
+                                      : unreadCount.toString(),
+                                  style: context.typography.xSmall.copyWith(
+                                    color: Colors.white,
+                                    fontSize: 10.sp,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                      ],
+                    );
+                  },
+                ),
+              ],
             ),
           ],
           child: RefreshTrigger(

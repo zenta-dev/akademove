@@ -96,6 +96,7 @@ enum Routes {
   driverProfile('/driver/profile'),
   driverEditProfile('/driver/profile/edit'),
   driverChangePassword('/driver/profile/change-password'),
+  driverNotifications('/driver/notifications'),
 
   ///
   /// Merchant Routes

@@ -19,6 +19,11 @@ final driverRouter = StatefulShellRoute.indexedStack(
         BlocProvider(create: (_) => sl<EmergencyCubit>()),
         BlocProvider(create: (_) => sl<OrderChatCubit>()),
         BlocProvider(create: (_) => sl<QuickMessageCubit>()),
+        BlocProvider(
+          create: (_) => sl<NotificationCubit>()
+            ..getUnreadCount()
+            ..subscribeToTopic('driver-announcements'),
+        ),
       ],
       child: IncomingOrderListener(
         child: BottomNavbar(
@@ -104,6 +109,15 @@ final driverRouter = StatefulShellRoute.indexedStack(
                   ),
                 ),
               ],
+            ),
+            GoRoute(
+              name: Routes.driverNotifications.name,
+              path: 'notifications',
+              builder: (context, state) => BlocProvider.value(
+                value: context.read<NotificationCubit>()
+                  ..refreshNotifications(),
+                child: const NotificationScreen(),
+              ),
             ),
           ],
         ),
