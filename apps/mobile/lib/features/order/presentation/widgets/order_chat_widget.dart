@@ -16,16 +16,16 @@ class OrderChatWidget extends StatefulWidget {
 }
 
 class _OrderChatWidgetState extends State<OrderChatWidget> {
-  late OrderChatCubit _cubit;
-  late QuickMessageCubit _quickMessageCubit;
+  late SharedOrderChatCubit _cubit;
+  late SharedQuickMessageCubit _quickMessageCubit;
   final TextEditingController _messageController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
-    _cubit = context.read<OrderChatCubit>();
-    _quickMessageCubit = context.read<QuickMessageCubit>();
+    _cubit = context.read<SharedOrderChatCubit>();
+    _quickMessageCubit = context.read<SharedQuickMessageCubit>();
     _cubit.init(widget.orderId);
     _scrollController.addListener(_onScroll);
 
@@ -74,7 +74,7 @@ class _OrderChatWidgetState extends State<OrderChatWidget> {
       child: Column(
         children: [
           Expanded(
-            child: BlocBuilder<OrderChatCubit, OrderChatState>(
+            child: BlocBuilder<SharedOrderChatCubit, SharedOrderChatState>(
               builder: (context, state) {
                 if (state.messages.isIdle || state.messages.isLoading) {
                   return const Center(child: CircularProgressIndicator());
@@ -281,7 +281,7 @@ class _QuickMessageChips extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<
-      QuickMessageCubit,
+      SharedQuickMessageCubit,
       OperationResult<List<QuickMessageTemplate>>
     >(
       builder: (context, state) {

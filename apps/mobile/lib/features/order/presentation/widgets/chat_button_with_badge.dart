@@ -7,7 +7,7 @@ import 'package:shadcn_flutter/shadcn_flutter.dart';
 
 /// A chat button that shows a badge with the unread message count.
 ///
-/// This widget creates and manages its own [OrderChatCubit] for tracking
+/// This widget creates and manages its own [SharedOrderChatCubit] for tracking
 /// unread messages. When pressed, it calls the [onPressed] callback.
 ///
 /// Example usage:
@@ -47,7 +47,7 @@ class ChatButtonWithBadge extends StatefulWidget {
 }
 
 class _ChatButtonWithBadgeState extends State<ChatButtonWithBadge> {
-  late OrderChatCubit _chatCubit;
+  late SharedOrderChatCubit _chatCubit;
   bool _isOwnCubit = false;
 
   @override
@@ -59,7 +59,7 @@ class _ChatButtonWithBadgeState extends State<ChatButtonWithBadge> {
   void _initCubit() {
     // Try to use existing cubit from context, otherwise create our own
     try {
-      _chatCubit = context.read<OrderChatCubit>();
+      _chatCubit = context.read<SharedOrderChatCubit>();
       _isOwnCubit = false;
 
       // If cubit exists but hasn't been initialized for this order,
@@ -71,7 +71,7 @@ class _ChatButtonWithBadgeState extends State<ChatButtonWithBadge> {
       });
     } catch (_) {
       // No existing cubit, create our own
-      _chatCubit = OrderChatCubit(
+      _chatCubit = SharedOrderChatCubit(
         orderChatRepository: sl(),
         webSocketService: sl(),
       );
@@ -103,7 +103,7 @@ class _ChatButtonWithBadgeState extends State<ChatButtonWithBadge> {
 
   @override
   Widget build(BuildContext context) {
-    final cubitWidget = BlocBuilder<OrderChatCubit, OrderChatState>(
+    final cubitWidget = BlocBuilder<SharedOrderChatCubit, SharedOrderChatState>(
       bloc: _chatCubit,
       builder: (context, state) {
         final unreadCount = state.unreadCount.value ?? 0;
