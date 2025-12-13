@@ -152,6 +152,7 @@ class _UserDeliverySummaryScreenState extends State<UserDeliverySummaryScreen> {
                     child: SizedBox(
                       height: MediaQuery.of(context).size.height * 0.7,
                       child: UserCouponSelectorWidget(
+                        onClose: () => closeDrawer(drawerContext),
                         onCouponSelected: (coupon) {
                           setState(() {
                             selectedCoupon = coupon;
@@ -168,7 +169,6 @@ class _UserDeliverySummaryScreenState extends State<UserDeliverySummaryScreen> {
                               discountAmount = 0;
                             }
                           });
-                          closeDrawer(drawerContext);
                         },
                       ),
                     ),

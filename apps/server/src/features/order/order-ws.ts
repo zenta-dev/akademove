@@ -611,46 +611,53 @@ export class OrderRoom extends BaseDurableObject {
 			commissionRate = commissionRates.platformFeeRate;
 		}
 
+		// Get driver details - needed for wallet lookup and badge commission reduction
+		const driver = order.driverId
+			? await tx.query.driver.findFirst({
+					where: (f, op) => op.eq(f.id, order.driverId ?? ""),
+				})
+			: null;
+
+		if (!driver?.userId) {
+			logger.error(
+				{ orderId: order.id, driverId: order.driverId },
+				"[OrderRoom] Driver not found or missing userId for order completion",
+			);
+			return;
+		}
+
 		// Apply commission reduction from driver badges
-		if (order.driverId) {
-			const driver = await tx.query.driver.findFirst({
-				where: (f, op) => op.eq(f.id, order.driverId ?? ""),
-			});
+		const driverBadges = await tx.query.userBadge.findMany({
+			where: (f, op) => op.eq(f.userId, driver.userId),
+			with: { badge: true },
+		});
 
-			if (driver?.userId) {
-				const driverBadges = await tx.query.userBadge.findMany({
-					where: (f, op) => op.eq(f.userId, driver.userId),
-					with: { badge: true },
-				});
-
-				// Find highest commission reduction from badges
-				let maxReduction = 0;
-				for (const userBadge of driverBadges) {
-					const benefits = userBadge.badge.benefits as
-						| { commissionReduction?: number }
-						| null
-						| undefined;
-					const reduction = benefits?.commissionReduction ?? 0;
-					if (reduction > maxReduction) {
-						maxReduction = reduction;
-					}
-				}
-
-				// Apply reduction (max 50% per schema)
-				if (maxReduction > 0) {
-					const originalRate = commissionRate;
-					commissionRate = commissionRate * (1 - maxReduction);
-					logger.info(
-						{
-							driverId: order.driverId,
-							originalRate,
-							reduction: maxReduction,
-							finalRate: commissionRate,
-						},
-						"[OrderRoom] Applied badge commission reduction",
-					);
-				}
+		// Find highest commission reduction from badges
+		let maxReduction = 0;
+		for (const userBadge of driverBadges) {
+			const benefits = userBadge.badge.benefits as
+				| { commissionReduction?: number }
+				| null
+				| undefined;
+			const reduction = benefits?.commissionReduction ?? 0;
+			if (reduction > maxReduction) {
+				maxReduction = reduction;
 			}
+		}
+
+		// Apply reduction (max 50% per schema)
+		if (maxReduction > 0) {
+			const originalRate = commissionRate;
+			commissionRate = commissionRate * (1 - maxReduction);
+			logger.info(
+				{
+					driverId: order.driverId,
+					originalRate,
+					reduction: maxReduction,
+					finalRate: commissionRate,
+				},
+				"[OrderRoom] Applied badge commission reduction",
+			);
 		}
 
 		// Calculate amounts
@@ -670,9 +677,9 @@ export class OrderRoom extends BaseDurableObject {
 			.minus(platformCommission)
 			.minus(merchantCommission);
 
-		// Get driver wallet
+		// Get driver wallet using driver's userId (not driverId)
 		const driverwallet = await this.#repo.wallet.getByUserId(
-			order.driverId ?? "",
+			driver.userId,
 			opts,
 		);
 

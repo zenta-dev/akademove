@@ -30,6 +30,9 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
   bool _isUpdatingMap = false;
   Coordinate? _currentDriverLocation;
 
+  /// Flag to prevent "Build scheduled during frame" error from RefreshTrigger
+  bool _isFirstFrame = true;
+
   /// Animated driver marker for smooth location updates with bike icon
   late final AnimatedDriverMarker _animatedDriverMarker;
 
@@ -45,6 +48,14 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
     );
     _initializeMarkerAndLocation();
     _initializeOrder();
+
+    // Allow scroll notifications after first frame to prevent
+    // "Build scheduled during frame" error from RefreshTrigger
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        setState(() => _isFirstFrame = false);
+      }
+    });
   }
 
   /// Initialize marker icon and start location streaming
@@ -91,10 +102,15 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
   void _onDriverMarkerUpdated(Marker driverMarker) {
     if (!mounted) return;
 
-    setState(() {
-      // Remove old driver marker and add updated one
-      _markers = _markers.where((m) => m.markerId.value != 'driver').toSet()
-        ..add(driverMarker);
+    // Schedule setState for next frame to avoid "Build scheduled during frame" error
+    // This can happen when the animation timer fires during layout phase
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      setState(() {
+        // Remove old driver marker and add updated one
+        _markers = _markers.where((m) => m.markerId.value != 'driver').toSet()
+          ..add(driverMarker);
+      });
     });
   }
 
@@ -329,21 +345,26 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
               // Order details and actions
               Expanded(
                 flex: 3,
-                child: RefreshTrigger(
-                  onRefresh: _onRefresh,
-                  child: SingleChildScrollView(
-                    physics: const AlwaysScrollableScrollPhysics(),
-                    padding: EdgeInsets.all(16.dg),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      spacing: 20.h,
-                      children: [
-                        if (status != null)
-                          _buildStatusIndicator(context, status),
-                        _buildOrderInfo(order),
-                        _buildCustomerInfo(order),
-                        _buildActionButtons(state, order),
-                      ],
+                child: NotificationListener<ScrollNotification>(
+                  // Absorb scroll notifications during first frame to prevent
+                  // "Build scheduled during frame" error from RefreshTrigger
+                  onNotification: _isFirstFrame ? (_) => true : null,
+                  child: RefreshTrigger(
+                    onRefresh: _onRefresh,
+                    child: SingleChildScrollView(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      padding: EdgeInsets.all(16.dg),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        spacing: 20.h,
+                        children: [
+                          if (status != null)
+                            _buildStatusIndicator(context, status),
+                          _buildOrderInfo(order),
+                          _buildCustomerInfo(order),
+                          _buildActionButtons(state, order),
+                        ],
+                      ),
                     ),
                   ),
                 ),

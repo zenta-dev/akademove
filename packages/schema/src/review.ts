@@ -12,7 +12,7 @@ export const ReviewSchema = z.object({
 	fromUserId: z.string(),
 	toUserId: z.string(),
 	category: ReviewCategorySchema,
-	score: z.coerce.number(),
+	score: z.number(),
 	comment: z.string().default(""),
 	createdAt: DateSchema,
 });

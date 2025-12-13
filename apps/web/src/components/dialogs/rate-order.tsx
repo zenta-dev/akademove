@@ -1,6 +1,9 @@
-import { zodResolver } from "@hookform/resolvers/zod";
 import { m } from "@repo/i18n";
-import { InsertReviewSchema, type ReviewCategory } from "@repo/schema/review";
+import {
+	type InsertReview,
+	InsertReviewSchema,
+	type ReviewCategory,
+} from "@repo/schema/review";
 import { useMutation } from "@tanstack/react-query";
 import {
 	Car,
@@ -73,8 +76,7 @@ export function RateOrderDialog({
 }: RateOrderDialogProps) {
 	const [hoveredStar, setHoveredStar] = useState(0);
 
-	const form = useForm({
-		resolver: zodResolver(InsertReviewSchema),
+	const form = useForm<InsertReview>({
 		defaultValues: {
 			orderId,
 			toUserId: driverId,
@@ -107,14 +109,12 @@ export function RateOrderDialog({
 		}),
 	);
 
-	const onSubmit = (values: unknown) => {
-		const parsedValues = InsertReviewSchema.parse(values);
-
-		if (parsedValues.score === 0) {
+	const onSubmit = (values: InsertReview) => {
+		if (values.score === 0) {
 			toast.error(m.rate_order_select_rating());
 			return;
 		}
-		createReviewMutation.mutate({ body: parsedValues });
+		createReviewMutation.mutate({ body: values });
 	};
 
 	const currentScore = form.watch("score");

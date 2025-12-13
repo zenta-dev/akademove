@@ -1,6 +1,7 @@
 import { m } from "@repo/i18n";
 import type { Coupon } from "@repo/schema/coupon";
-import { MoreHorizontal } from "lucide-react";
+import { useNavigate } from "@tanstack/react-router";
+import { MoreHorizontal, Pencil } from "lucide-react";
 import { useState } from "react";
 import { ActivateCouponDialog } from "@/components/dialogs/activate-coupon";
 import { DeactivateCouponDialog } from "@/components/dialogs/deactivate-coupon";
@@ -10,12 +11,14 @@ import {
 	DropdownMenuContent,
 	DropdownMenuItem,
 	DropdownMenuLabel,
+	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
 export const CouponActionTable = ({ val }: { val: Coupon }) => {
 	const [activateOpen, setActivateOpen] = useState(false);
 	const [deactivateOpen, setDeactivateOpen] = useState(false);
+	const navigate = useNavigate();
 
 	return (
 		<>
@@ -28,6 +31,18 @@ export const CouponActionTable = ({ val }: { val: Coupon }) => {
 				</DropdownMenuTrigger>
 				<DropdownMenuContent align="end">
 					<DropdownMenuLabel>{m.actions()}</DropdownMenuLabel>
+					<DropdownMenuItem
+						onClick={() =>
+							navigate({
+								to: "/dash/operator/coupons/$id",
+								params: { id: val.id },
+							})
+						}
+					>
+						<Pencil className="mr-2 h-4 w-4" />
+						{m.edit_coupon()}
+					</DropdownMenuItem>
+					<DropdownMenuSeparator />
 					{val.isActive ? (
 						<DropdownMenuItem
 							className="text-orange-600"

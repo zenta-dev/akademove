@@ -218,6 +218,7 @@ class _OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
         child: SizedBox(
           height: MediaQuery.of(context).size.height * 0.7,
           child: UserCouponSelectorWidget(
+            onClose: () => closeDrawer(drawerContext),
             onCouponSelected: (coupon) {
               setState(() {
                 _selectedCoupon = coupon;

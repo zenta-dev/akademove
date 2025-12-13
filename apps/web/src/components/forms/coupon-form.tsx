@@ -393,7 +393,10 @@ export const CouponForm = ({
 								<Input
 									disabled={isLoading}
 									type="number"
-									{...field}
+									name={field.name}
+									ref={field.ref}
+									onBlur={field.onBlur}
+									value={(field.value as number) ?? ""}
 									onChange={(e) => field.onChange(Number(e.target.value))}
 								/>
 							</FormControl>
@@ -430,7 +433,10 @@ export const CouponForm = ({
 								<Input
 									disabled={isLoading}
 									type="number"
-									{...field}
+									name={field.name}
+									ref={field.ref}
+									onBlur={field.onBlur}
+									value={(field.value as number) ?? ""}
 									onChange={(e) => field.onChange(Number(e.target.value))}
 								/>
 							</FormControl>
@@ -448,7 +454,10 @@ export const CouponForm = ({
 								<Input
 									disabled={isLoading}
 									type="number"
-									{...field}
+									name={field.name}
+									ref={field.ref}
+									onBlur={field.onBlur}
+									value={(field.value as number) ?? ""}
 									onChange={(e) => field.onChange(Number(e.target.value))}
 								/>
 							</FormControl>
@@ -565,7 +574,10 @@ export const CouponForm = ({
 											<Input
 												disabled={isLoading}
 												type="number"
-												{...field}
+												name={field.name}
+												ref={field.ref}
+												onBlur={field.onBlur}
+												value={(field.value as number) ?? ""}
 												onChange={(e) => field.onChange(Number(e.target.value))}
 											/>
 										</FormControl>
@@ -583,7 +595,10 @@ export const CouponForm = ({
 											<Input
 												disabled={isLoading}
 												type="number"
-												{...field}
+												name={field.name}
+												ref={field.ref}
+												onBlur={field.onBlur}
+												value={(field.value as number) ?? ""}
 												onChange={(e) => field.onChange(Number(e.target.value))}
 											/>
 										</FormControl>

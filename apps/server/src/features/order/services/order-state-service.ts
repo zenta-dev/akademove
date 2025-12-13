@@ -8,9 +8,6 @@
  */
 
 import type { OrderStatus } from "@repo/schema/order";
-import { ERROR_MESSAGES } from "@/core/constants";
-import { RepositoryError } from "@/core/error";
-import { logger } from "@/utils/logger";
 
 /**
  * Valid order state transitions
@@ -79,7 +76,10 @@ export class OrderStateService {
 	 * @param newStatus - Desired new status
 	 * @throws {RepositoryError} When transition is invalid
 	 */
-	validateTransition(currentStatus: OrderStatus, newStatus: OrderStatus): void {
+	validateTransition(
+		_currentStatus: OrderStatus,
+		_newStatus: OrderStatus,
+	): void {
 		// const allowedTransitions = VALID_TRANSITIONS[currentStatus];
 		// if (!allowedTransitions.includes(newStatus)) {
 		// 	const error = new RepositoryError(

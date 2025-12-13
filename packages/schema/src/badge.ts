@@ -31,7 +31,7 @@ export const BadgeSchema = z.object({
 	type: BadgeTypeSchema,
 	level: BadgeLevelSchema,
 	targetRole: BadgeTargetRoleSchema,
-	icon: z.url().nullish(),
+	icon: z.url().optional(),
 	criteria: BadgeCriteriaSchema,
 	benefits: BadgeBenefitsSchema.optional(),
 	isActive: z.boolean().default(true),

@@ -349,6 +349,7 @@ class _UserRideSummaryScreenState extends State<UserRideSummaryScreen> {
         child: SizedBox(
           height: MediaQuery.of(context).size.height * 0.7,
           child: UserCouponSelectorWidget(
+            onClose: () => closeDrawer(drawerContext),
             onCouponSelected: (coupon) {
               setState(() {
                 selectedCoupon = coupon;
