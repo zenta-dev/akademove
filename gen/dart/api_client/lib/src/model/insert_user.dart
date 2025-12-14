@@ -26,6 +26,7 @@ class InsertUser {
     required this.role,
     this.gender,
     this.phone,
+    this.rating = 0,
   });
   @JsonKey(name: r'name', required: true, includeIfNull: false)
   final String name;
@@ -42,6 +43,16 @@ class InsertUser {
   @JsonKey(name: r'phone', required: false, includeIfNull: false)
   final Phone? phone;
 
+  // minimum: 0
+  // maximum: 5
+  @JsonKey(
+    defaultValue: 0,
+    name: r'rating',
+    required: false,
+    includeIfNull: false,
+  )
+  final num? rating;
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -50,7 +61,8 @@ class InsertUser {
           other.email == email &&
           other.role == role &&
           other.gender == gender &&
-          other.phone == phone;
+          other.phone == phone &&
+          other.rating == rating;
 
   @override
   int get hashCode =>
@@ -58,7 +70,8 @@ class InsertUser {
       email.hashCode +
       role.hashCode +
       gender.hashCode +
-      phone.hashCode;
+      phone.hashCode +
+      rating.hashCode;
 
   factory InsertUser.fromJson(Map<String, dynamic> json) =>
       _$InsertUserFromJson(json);

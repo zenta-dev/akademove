@@ -11,7 +11,9 @@ import {
 	MailIcon,
 	ReceiptIcon,
 	SettingsIcon,
+	ShieldIcon,
 	StoreIcon,
+	TicketIcon,
 	UsersIcon,
 } from "lucide-react";
 import {
@@ -57,6 +59,11 @@ const navMain = Object.freeze([
 		icon: DollarSignIcon,
 	},
 	{
+		title: m.coupons(),
+		href: localizeHref("/dash/admin/coupons"),
+		icon: TicketIcon,
+	},
+	{
 		title: m.analytics(),
 		href: localizeHref("/dash/admin/analytics"),
 		icon: ChartLineIcon,
@@ -65,6 +72,11 @@ const navMain = Object.freeze([
 		title: m.audit_logs(),
 		href: localizeHref("/dash/admin/audit"),
 		icon: ClipboardListIcon,
+	},
+	{
+		title: "Fraud Detection",
+		href: localizeHref("/dash/admin/fraud"),
+		icon: ShieldIcon,
 	},
 	{
 		title: m.contact_us(),

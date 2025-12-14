@@ -211,12 +211,51 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
                   ),
                 ),
                 SizedBox(height: 6.h),
-                Text(
-                  _currentOrder.user?.name ?? _currentOrder.userId,
-                  style: context.typography.small.copyWith(
-                    fontSize: 18.sp,
-                    fontWeight: FontWeight.w600,
-                  ),
+                Row(
+                  children: [
+                    Text(
+                      _currentOrder.user?.name ?? _currentOrder.userId,
+                      style: context.typography.small.copyWith(
+                        fontSize: 18.sp,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    Builder(
+                      builder: (context) {
+                        final rating = _currentOrder.user?.rating;
+                        if (rating == null || rating == 0) {
+                          return const SizedBox.shrink();
+                        }
+
+                        return Row(
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 8.w),
+                              child: Text(
+                                '•',
+                                style: context.typography.small.copyWith(
+                                  color: context.colorScheme.mutedForeground,
+                                ),
+                              ),
+                            ),
+                            Icon(
+                              LucideIcons.star,
+                              size: 14.sp,
+                              color: const Color(0xFFFFC107),
+                            ),
+                            SizedBox(width: 4.w),
+                            Text(
+                              rating.toStringAsFixed(1),
+                              style: context.typography.small.copyWith(
+                                fontSize: 14.sp,
+                                color: context.colorScheme.mutedForeground,
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                    ),
+                  ],
                 ),
               ],
             ),

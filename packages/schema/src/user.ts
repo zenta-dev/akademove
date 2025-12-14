@@ -29,6 +29,7 @@ export const UserSchema = z.object({
 	banExpires: DateSchema.optional(),
 	gender: UserGenderSchema.optional(),
 	phone: PhoneSchema.optional(),
+	rating: z.coerce.number().min(0).max(5).default(0),
 	createdAt: DateSchema,
 	updatedAt: DateSchema,
 

@@ -136,6 +136,7 @@ Class | Method | HTTP request | Description
 [*CouponApi*](doc/CouponApi.md) | [**couponCreate**](doc/CouponApi.md#couponcreate) | **POST** /coupons | 
 [*CouponApi*](doc/CouponApi.md) | [**couponDeactivate**](doc/CouponApi.md#coupondeactivate) | **POST** /coupons/{id}/deactivate | 
 [*CouponApi*](doc/CouponApi.md) | [**couponGet**](doc/CouponApi.md#couponget) | **GET** /coupons/{id} | 
+[*CouponApi*](doc/CouponApi.md) | [**couponGetAvailableCoupons**](doc/CouponApi.md#coupongetavailablecoupons) | **GET** /coupons/available | 
 [*CouponApi*](doc/CouponApi.md) | [**couponGetEligibleCoupons**](doc/CouponApi.md#coupongeteligiblecoupons) | **POST** /coupons/eligible | 
 [*CouponApi*](doc/CouponApi.md) | [**couponList**](doc/CouponApi.md#couponlist) | **GET** /coupons | 
 [*CouponApi*](doc/CouponApi.md) | [**couponRemove**](doc/CouponApi.md#couponremove) | **DELETE** /coupons/{id} | 
@@ -272,6 +273,7 @@ Class | Method | HTTP request | Description
 [*OrderApi*](doc/OrderApi.md) | [**orderSendMessage**](doc/OrderApi.md#ordersendmessage) | **POST** /orders/{id}/messages | 
 [*OrderApi*](doc/OrderApi.md) | [**orderUpdate**](doc/OrderApi.md#orderupdate) | **PUT** /orders/{id} | 
 [*OrderApi*](doc/OrderApi.md) | [**orderUpdateScheduledOrder**](doc/OrderApi.md#orderupdatescheduledorder) | **PUT** /orders/scheduled/{id} | 
+[*OrderApi*](doc/OrderApi.md) | [**orderUploadAttachment**](doc/OrderApi.md#orderuploadattachment) | **POST** /orders/attachment | 
 [*OrderApi*](doc/OrderApi.md) | [**orderUploadDeliveryItemPhoto**](doc/OrderApi.md#orderuploaddeliveryitemphoto) | **POST** /orders/{id}/delivery-item-photo | 
 [*OrderApi*](doc/OrderApi.md) | [**orderUploadDeliveryProof**](doc/OrderApi.md#orderuploaddeliveryproof) | **POST** /orders/{id}/delivery-proof | 
 [*OrderApi*](doc/OrderApi.md) | [**orderVerifyDeliveryOTP**](doc/OrderApi.md#orderverifydeliveryotp) | **POST** /orders/{id}/verify-otp | 

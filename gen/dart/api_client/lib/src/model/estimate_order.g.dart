@@ -27,6 +27,8 @@ abstract class _$EstimateOrderCWProxy {
     EstimateOrderGenderPreferenceEnum? genderPreference,
   );
 
+  EstimateOrder attachmentUrl(String? attachmentUrl);
+
   EstimateOrder couponCode(String? couponCode);
 
   EstimateOrder discountIds(List<int>? discountIds);
@@ -50,6 +52,7 @@ abstract class _$EstimateOrderCWProxy {
     List<OrderItem>? items,
     UserGender? gender,
     EstimateOrderGenderPreferenceEnum? genderPreference,
+    String? attachmentUrl,
     String? couponCode,
     List<int>? discountIds,
     int? weight,
@@ -97,6 +100,10 @@ class _$EstimateOrderCWProxyImpl implements _$EstimateOrderCWProxy {
   ) => call(genderPreference: genderPreference);
 
   @override
+  EstimateOrder attachmentUrl(String? attachmentUrl) =>
+      call(attachmentUrl: attachmentUrl);
+
+  @override
   EstimateOrder couponCode(String? couponCode) => call(couponCode: couponCode);
 
   @override
@@ -124,6 +131,7 @@ class _$EstimateOrderCWProxyImpl implements _$EstimateOrderCWProxy {
     Object? items = const $CopyWithPlaceholder(),
     Object? gender = const $CopyWithPlaceholder(),
     Object? genderPreference = const $CopyWithPlaceholder(),
+    Object? attachmentUrl = const $CopyWithPlaceholder(),
     Object? couponCode = const $CopyWithPlaceholder(),
     Object? discountIds = const $CopyWithPlaceholder(),
     Object? weight = const $CopyWithPlaceholder(),
@@ -169,6 +177,10 @@ class _$EstimateOrderCWProxyImpl implements _$EstimateOrderCWProxy {
           ? _value.genderPreference
           // ignore: cast_nullable_to_non_nullable
           : genderPreference as EstimateOrderGenderPreferenceEnum?,
+      attachmentUrl: attachmentUrl == const $CopyWithPlaceholder()
+          ? _value.attachmentUrl
+          // ignore: cast_nullable_to_non_nullable
+          : attachmentUrl as String?,
       couponCode: couponCode == const $CopyWithPlaceholder()
           ? _value.couponCode
           // ignore: cast_nullable_to_non_nullable
@@ -233,6 +245,7 @@ EstimateOrder _$EstimateOrderFromJson(
       'genderPreference',
       (v) => $enumDecodeNullable(_$EstimateOrderGenderPreferenceEnumEnumMap, v),
     ),
+    attachmentUrl: $checkedConvert('attachmentUrl', (v) => v as String?),
     couponCode: $checkedConvert('couponCode', (v) => v as String?),
     discountIds: $checkedConvert(
       'discountIds',
@@ -256,6 +269,7 @@ Map<String, dynamic> _$EstimateOrderToJson(
   'gender': ?_$UserGenderEnumMap[instance.gender],
   'genderPreference':
       ?_$EstimateOrderGenderPreferenceEnumEnumMap[instance.genderPreference],
+  'attachmentUrl': ?instance.attachmentUrl,
   'couponCode': ?instance.couponCode,
   'discountIds': ?instance.discountIds,
   'weight': ?instance.weight,

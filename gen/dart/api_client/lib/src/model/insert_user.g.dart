@@ -17,6 +17,8 @@ abstract class _$InsertUserCWProxy {
 
   InsertUser phone(Phone? phone);
 
+  InsertUser rating(num? rating);
+
   /// Creates a new instance with the provided field values.
   /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `InsertUser(...).copyWith.fieldName(value)`.
   ///
@@ -30,6 +32,7 @@ abstract class _$InsertUserCWProxy {
     UserRole role,
     UserGender? gender,
     Phone? phone,
+    num? rating,
   });
 }
 
@@ -56,6 +59,9 @@ class _$InsertUserCWProxyImpl implements _$InsertUserCWProxy {
   InsertUser phone(Phone? phone) => call(phone: phone);
 
   @override
+  InsertUser rating(num? rating) => call(rating: rating);
+
+  @override
   /// Creates a new instance with the provided field values.
   /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `InsertUser(...).copyWith.fieldName(value)`.
   ///
@@ -69,6 +75,7 @@ class _$InsertUserCWProxyImpl implements _$InsertUserCWProxy {
     Object? role = const $CopyWithPlaceholder(),
     Object? gender = const $CopyWithPlaceholder(),
     Object? phone = const $CopyWithPlaceholder(),
+    Object? rating = const $CopyWithPlaceholder(),
   }) {
     return InsertUser(
       name: name == const $CopyWithPlaceholder() || name == null
@@ -91,6 +98,10 @@ class _$InsertUserCWProxyImpl implements _$InsertUserCWProxy {
           ? _value.phone
           // ignore: cast_nullable_to_non_nullable
           : phone as Phone?,
+      rating: rating == const $CopyWithPlaceholder()
+          ? _value.rating
+          // ignore: cast_nullable_to_non_nullable
+          : rating as num?,
     );
   }
 }
@@ -121,6 +132,7 @@ InsertUser _$InsertUserFromJson(Map<String, dynamic> json) =>
           'phone',
           (v) => v == null ? null : Phone.fromJson(v as Map<String, dynamic>),
         ),
+        rating: $checkedConvert('rating', (v) => v as num? ?? 0),
       );
       return val;
     });
@@ -132,6 +144,7 @@ Map<String, dynamic> _$InsertUserToJson(InsertUser instance) =>
       'role': _$UserRoleEnumMap[instance.role]!,
       'gender': ?_$UserGenderEnumMap[instance.gender],
       'phone': ?instance.phone?.toJson(),
+      'rating': ?instance.rating,
     };
 
 const _$UserRoleEnumMap = {

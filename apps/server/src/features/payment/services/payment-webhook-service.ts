@@ -442,11 +442,13 @@ export class PaymentWebhookService {
 	 * Process:
 	 * 1. Updates payment status to SUCCESS
 	 * 2. Updates transaction status to SUCCESS
-	 * 3. Updates order status to MATCHING
+	 * 3. Updates order status:
+	 *    - FOOD orders: Stay in REQUESTED (wait for merchant acceptance)
+	 *    - RIDE/DELIVERY orders: Move to MATCHING (start driver search)
 	 * 4. Sends WebSocket notification to payment room
-	 * 5. Triggers order matching via OrderRoom WebSocket
-	 * 6. Sends push notification to customer
-	 * 7. If merchant order: sends push notification to merchant
+	 * 5. For RIDE/DELIVERY: Triggers order matching via driver pool broadcast
+	 * 6. For FOOD: Notifies merchant via WebSocket and push notification
+	 * 7. Sends push notification to customer
 	 *
 	 * @param params - Order, payment, transaction, and dependencies
 	 */
@@ -525,29 +527,46 @@ export class PaymentWebhookService {
 			return;
 		}
 
-		// Validate transition using state machine
-		stateService.validateTransition(currentStatus, "MATCHING");
+		// Determine new status based on order type:
+		// - FOOD orders: Stay in REQUESTED, merchant must accept first
+		// - RIDE/DELIVERY orders: Move to MATCHING for driver search
+		const isFoodOrder = params.type === "FOOD";
+		const newStatus = isFoodOrder ? "REQUESTED" : "MATCHING";
+
+		// Validate transition using state machine (only for non-FOOD orders that change status)
+		if (!isFoodOrder) {
+			stateService.validateTransition(currentStatus, "MATCHING");
+		}
 
 		// Update transaction and order status
-		const [updatedTransaction] = await Promise.all([
-			updateTransaction(transaction.id, { status: "SUCCESS" }, { tx }),
-			tx
-				.update(tables.order)
-				.set({ status: "MATCHING", updatedAt: new Date() })
-				.where(eq(tables.order.id, order.id)),
-			// Record status change in audit trail
-			tx
-				.insert(tables.orderStatusHistory)
-				.values({
-					orderId: order.id,
-					previousStatus: currentStatus,
-					newStatus: "MATCHING",
-					changedBy: undefined,
-					changedByRole: "SYSTEM",
-					reason: "Payment successful, order moved to matching",
-					changedAt: new Date(),
-				}),
-		]);
+		// For FOOD orders, status stays REQUESTED so we only update transaction
+		const updatedTransaction = await updateTransaction(
+			transaction.id,
+			{ status: "SUCCESS" },
+			{ tx },
+		);
+
+		// Only update order status and add history for non-FOOD orders
+		if (!isFoodOrder) {
+			await Promise.all([
+				tx
+					.update(tables.order)
+					.set({ status: "MATCHING", updatedAt: new Date() })
+					.where(eq(tables.order.id, order.id)),
+				// Record status change in audit trail
+				tx
+					.insert(tables.orderStatusHistory)
+					.values({
+						orderId: order.id,
+						previousStatus: currentStatus,
+						newStatus: "MATCHING",
+						changedBy: undefined,
+						changedByRole: "SYSTEM",
+						reason: "Payment successful, order moved to matching",
+						changedAt: new Date(),
+					}),
+			]);
+		}
 
 		const paymentStub = this.#getPaymentRoomStub(payment.id);
 
@@ -583,7 +602,7 @@ export class PaymentWebhookService {
 		// biome-ignore lint/suspicious/noExplicitAny: Complex order type with runtime decimal conversions
 		const composedOrder: any = nullsToUndefined({
 			...orderWithoutItems,
-			status: "MATCHING" as const,
+			status: newStatus,
 			basePrice: toNumberSafe(order.basePrice),
 			totalPrice: toNumberSafe(order.totalPrice),
 			tip: order.tip ? toNumberSafe(order.tip) : undefined,
@@ -620,24 +639,6 @@ export class PaymentWebhookService {
 					wallet: composedWallet,
 				},
 			}),
-			// Trigger order matching with delayed broadcast via queue
-			// Note: setTimeout doesn't work reliably in Cloudflare Workers due to security restrictions
-			// @see https://developers.cloudflare.com/workers/runtime-apis/nodejs/timers/
-			ProcessingQueueService.enqueueWebSocketBroadcast(
-				{
-					roomName: DRIVER_POOL_KEY,
-					action: "MATCHING",
-					target: "SYSTEM",
-					data: {
-						detail: {
-							payment: composedPayment,
-							order: composedOrder,
-							transaction: updatedTransaction,
-						},
-					},
-				},
-				{ delaySeconds: BUSINESS_CONSTANTS.BROADCAST_DELAY_SECONDS },
-			),
 			// Notify customer
 			sendNotification(
 				{
@@ -655,10 +656,41 @@ export class PaymentWebhookService {
 			),
 		];
 
-		// If merchant order: notify merchant via WebSocket and push notification
+		// For RIDE/DELIVERY orders: Trigger driver matching via driver pool broadcast
+		// For FOOD orders: Skip driver pool - matching only starts after merchant marks READY_FOR_PICKUP
+		if (!isFoodOrder) {
+			// Trigger order matching with delayed broadcast via queue
+			// Note: setTimeout doesn't work reliably in Cloudflare Workers due to security restrictions
+			// @see https://developers.cloudflare.com/workers/runtime-apis/nodejs/timers/
+			tasks.push(
+				ProcessingQueueService.enqueueWebSocketBroadcast(
+					{
+						roomName: DRIVER_POOL_KEY,
+						action: "MATCHING",
+						target: "SYSTEM",
+						data: {
+							detail: {
+								payment: composedPayment,
+								order: composedOrder,
+								transaction: updatedTransaction,
+							},
+						},
+					},
+					{ delaySeconds: BUSINESS_CONSTANTS.BROADCAST_DELAY_SECONDS },
+				),
+			);
+
+			logger.info(
+				{ orderId: order.id, type: params.type },
+				"[PaymentWebhookService] RIDE/DELIVERY order - enqueued driver pool broadcast for matching",
+			);
+		}
+
+		// For FOOD orders: notify merchant via WebSocket and push notification
+		// Merchant must accept before driver matching starts
 		const merchantUserId = order.merchant?.user.id;
 		const merchantId = order.merchantId;
-		if (merchantId && merchantUserId) {
+		if (isFoodOrder && merchantId && merchantUserId) {
 			const itemCount = order.items.reduce((sum, i) => sum + i.quantity, 0);
 			const orderUrl = `${env.CORS_ORIGIN}/dash/merchant/orders/${order.id}`;
 
@@ -705,6 +737,11 @@ export class PaymentWebhookService {
 					},
 					{ tx },
 				),
+			);
+
+			logger.info(
+				{ orderId: order.id, merchantId, merchantUserId },
+				"[PaymentWebhookService] FOOD order - notified merchant, waiting for acceptance",
 			);
 		}
 

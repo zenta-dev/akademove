@@ -1,4 +1,5 @@
 import type { CouponRules, CouponType } from "@repo/schema/coupon";
+import type { OrderType } from "@repo/schema/order";
 import { relations } from "drizzle-orm";
 import {
 	boolean,
@@ -49,6 +50,8 @@ export const coupon = pgTable(
 		merchantId: uuid("merchant_id").references(() => merchant.id, {
 			onDelete: "cascade",
 		}), // Nullable - if null, coupon is platform-wide
+		// Service types this coupon is valid for (empty/null = all services)
+		serviceTypes: jsonb("service_types").$type<OrderType[]>(),
 		// Event-specific fields (for EVENT type coupons)
 		eventName: text("event_name"),
 		eventDescription: text("event_description"),

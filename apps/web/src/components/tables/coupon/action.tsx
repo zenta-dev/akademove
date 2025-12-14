@@ -1,6 +1,6 @@
 import { m } from "@repo/i18n";
 import type { Coupon } from "@repo/schema/coupon";
-import { useNavigate } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import { MoreHorizontal, Pencil, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { ActivateCouponDialog } from "@/components/dialogs/activate-coupon";
@@ -16,11 +16,16 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-export const CouponActionTable = ({ val }: { val: Coupon }) => {
+export const CouponActionTable = ({
+	val,
+	userRole,
+}: {
+	val: Coupon;
+	userRole?: "ADMIN" | "OPERATOR";
+}) => {
 	const [activateOpen, setActivateOpen] = useState(false);
 	const [deactivateOpen, setDeactivateOpen] = useState(false);
 	const [deleteOpen, setDeleteOpen] = useState(false);
-	const navigate = useNavigate();
 
 	return (
 		<>
@@ -33,16 +38,18 @@ export const CouponActionTable = ({ val }: { val: Coupon }) => {
 				</DropdownMenuTrigger>
 				<DropdownMenuContent align="end">
 					<DropdownMenuLabel>{m.actions()}</DropdownMenuLabel>
-					<DropdownMenuItem
-						onClick={() =>
-							navigate({
-								to: "/dash/operator/coupons/$id",
-								params: { id: val.id },
-							})
-						}
-					>
-						<Pencil className="mr-2 h-4 w-4" />
-						{m.edit_coupon()}
+					<DropdownMenuItem asChild>
+						<Link
+							to={
+								userRole === "ADMIN"
+									? "/dash/admin/coupons/$id"
+									: "/dash/operator/coupons/$id"
+							}
+							params={{ id: val.id }}
+						>
+							<Pencil className="mr-2 h-4 w-4" />
+							{m.edit_coupon()}
+						</Link>
 					</DropdownMenuItem>
 					<DropdownMenuSeparator />
 					{val.isActive ? (

@@ -167,6 +167,8 @@ enum ListDriverQuizQuestionQuerySortByEnum {
   isActive(r'isActive'),
   @JsonValue(r'merchantId')
   merchantId(r'merchantId'),
+  @JsonValue(r'serviceTypes')
+  serviceTypes(r'serviceTypes'),
   @JsonValue(r'eventName')
   eventName(r'eventName'),
   @JsonValue(r'eventDescription')
@@ -311,6 +313,8 @@ enum ListDriverQuizQuestionQuerySortByEnum {
   deliveryItemPhotoUrl(r'deliveryItemPhotoUrl'),
   @JsonValue(r'deliveryItemType')
   deliveryItemType(r'deliveryItemType'),
+  @JsonValue(r'attachmentUrl')
+  attachmentUrl(r'attachmentUrl'),
   @JsonValue(r'transactionId')
   transactionId(r'transactionId'),
   @JsonValue(r'provider')

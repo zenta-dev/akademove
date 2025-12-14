@@ -33,6 +33,7 @@ class User {
     this.banExpires,
     this.gender,
     this.phone,
+    this.rating = 0,
     required this.createdAt,
     required this.updatedAt,
     required this.userBadges,
@@ -70,6 +71,16 @@ class User {
   @JsonKey(name: r'phone', required: false, includeIfNull: false)
   final Phone? phone;
 
+  // minimum: 0
+  // maximum: 5
+  @JsonKey(
+    defaultValue: 0,
+    name: r'rating',
+    required: false,
+    includeIfNull: false,
+  )
+  final num? rating;
+
   @JsonKey(name: r'createdAt', required: true, includeIfNull: false)
   final DateTime createdAt;
 
@@ -94,6 +105,7 @@ class User {
           other.banExpires == banExpires &&
           other.gender == gender &&
           other.phone == phone &&
+          other.rating == rating &&
           other.createdAt == createdAt &&
           other.updatedAt == updatedAt &&
           other.userBadges == userBadges;
@@ -111,6 +123,7 @@ class User {
       banExpires.hashCode +
       gender.hashCode +
       phone.hashCode +
+      rating.hashCode +
       createdAt.hashCode +
       updatedAt.hashCode +
       userBadges.hashCode;

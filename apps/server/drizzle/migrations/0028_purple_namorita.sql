@@ -1,0 +1,1 @@
+ALTER TABLE "am_users" ADD COLUMN "rating" numeric(2, 1) DEFAULT 0 NOT NULL;

@@ -764,6 +764,7 @@ class _UserMerchantDetailScreenState extends State<UserMerchantDetailScreen> {
           merchantName: merchant.name,
           quantity: newQty,
           merchantLocation: merchant.location,
+          merchantCategory: merchant.category,
         );
       } else {
         // Updating existing item - use delta

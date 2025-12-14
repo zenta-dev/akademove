@@ -11,6 +11,8 @@ class Cart extends Equatable {
     required this.subtotal,
     required this.lastUpdated,
     this.merchantLocation,
+    this.merchantCategory,
+    this.attachmentUrl,
   });
 
   factory Cart.fromJson(Map<String, dynamic> json) {
@@ -28,6 +30,13 @@ class Cart extends Equatable {
               json['merchantLocation'] as Map<String, dynamic>,
             )
           : null,
+      merchantCategory: json['merchantCategory'] != null
+          ? MerchantCategory.values.firstWhere(
+              (e) => e.value == json['merchantCategory'],
+              orElse: () => MerchantCategory.food,
+            )
+          : null,
+      attachmentUrl: json['attachmentUrl'] as String?,
     );
   }
 
@@ -38,6 +47,11 @@ class Cart extends Equatable {
   final num subtotal;
   final DateTime lastUpdated;
   final Coordinate? merchantLocation;
+  final MerchantCategory? merchantCategory;
+  final String? attachmentUrl;
+
+  /// Check if this cart is for a printing merchant (requires attachment)
+  bool get isPrintingMerchant => merchantCategory == MerchantCategory.printing;
 
   Map<String, dynamic> toJson() => {
     'merchantId': merchantId,
@@ -48,6 +62,8 @@ class Cart extends Equatable {
     'lastUpdated': lastUpdated.toIso8601String(),
     if (merchantLocation != null)
       'merchantLocation': merchantLocation!.toJson(),
+    if (merchantCategory != null) 'merchantCategory': merchantCategory!.value,
+    if (attachmentUrl != null) 'attachmentUrl': attachmentUrl,
   };
 
   Cart copyWith({
@@ -58,6 +74,9 @@ class Cart extends Equatable {
     num? subtotal,
     DateTime? lastUpdated,
     Coordinate? merchantLocation,
+    MerchantCategory? merchantCategory,
+    String? attachmentUrl,
+    bool clearAttachment = false,
   }) {
     return Cart(
       merchantId: merchantId ?? this.merchantId,
@@ -67,6 +86,10 @@ class Cart extends Equatable {
       subtotal: subtotal ?? this.subtotal,
       lastUpdated: lastUpdated ?? this.lastUpdated,
       merchantLocation: merchantLocation ?? this.merchantLocation,
+      merchantCategory: merchantCategory ?? this.merchantCategory,
+      attachmentUrl: clearAttachment
+          ? null
+          : (attachmentUrl ?? this.attachmentUrl),
     );
   }
 
@@ -79,6 +102,8 @@ class Cart extends Equatable {
     subtotal,
     lastUpdated,
     merchantLocation,
+    merchantCategory,
+    attachmentUrl,
   ];
 }
 

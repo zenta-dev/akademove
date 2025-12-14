@@ -63,14 +63,9 @@ class MerchantIncomingOrderDialog extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          // Customer info
+          // Customer info with rating
           if (order.user != null) ...[
-            _buildDetailRow(
-              context,
-              icon: LucideIcons.user,
-              label: 'Customer',
-              value: order.user?.name ?? 'Unknown',
-            ),
+            _buildCustomerInfoRow(context),
             SizedBox(height: 12.h),
           ],
 
@@ -357,6 +352,67 @@ class MerchantIncomingOrderDialog extends StatelessWidget {
       return '${(amount / 1000).toStringAsFixed(1)}K';
     }
     return amount.toStringAsFixed(0);
+  }
+
+  Widget _buildCustomerInfoRow(BuildContext context) {
+    final user = order.user;
+    if (user == null) return const SizedBox.shrink();
+
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Icon(
+          LucideIcons.user,
+          size: 20.sp,
+          color: context.colorScheme.mutedForeground,
+        ),
+        SizedBox(width: 12.w),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Customer',
+                style: context.typography.small.copyWith(
+                  color: context.colorScheme.mutedForeground,
+                ),
+              ),
+              SizedBox(height: 2.h),
+              Row(
+                children: [
+                  Flexible(
+                    child: Text(
+                      user.name ?? 'Unknown',
+                      style: context.typography.p.copyWith(
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  if (user.rating != null && user.rating != 0) ...[
+                    SizedBox(width: 8.w),
+                    Icon(
+                      LucideIcons.star,
+                      size: 14.sp,
+                      color: const Color(0xFFFFC107),
+                    ),
+                    SizedBox(width: 4.w),
+                    Text(
+                      user.rating!.toStringAsFixed(1),
+                      style: context.typography.small.copyWith(
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
   }
 }
 

@@ -15,7 +15,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { orpcQuery } from "@/lib/orpc";
 import type { FileRouteTypes } from "@/routeTree.gen";
 import type { TableProps } from "../type";
-import { COUPON_COLUMNS } from "./columns";
+import { createCouponColumns } from "./columns";
 
 type CouponSearchParams = TableProps["search"] & {
 	isActive?: string;
@@ -28,9 +28,10 @@ type CouponSearchParams = TableProps["search"] & {
 interface Props extends Omit<TableProps, "search"> {
 	search: CouponSearchParams;
 	to: FileRouteTypes["to"];
+	userRole: "ADMIN" | "OPERATOR";
 }
 
-export const CouponTable = ({ search, to }: Props) => {
+export const CouponTable = ({ search, to, userRole }: Props) => {
 	const navigate = useNavigate();
 	const [filter, setFilter] = useState<string | undefined>(search.query);
 	const debouncedFilter = useDebounce(filter ?? search.query, 500);
@@ -75,6 +76,8 @@ export const CouponTable = ({ search, to }: Props) => {
 			},
 		}),
 	);
+
+	const columns = useMemo(() => createCouponColumns(userRole), [userRole]);
 
 	const isMobile = useIsMobile();
 	const [visibility, setVisibility] = useState<VisibilityState>({
@@ -264,7 +267,7 @@ export const CouponTable = ({ search, to }: Props) => {
 			</div>
 
 			<DataTable
-				columns={COUPON_COLUMNS}
+				columns={columns}
 				data={coupons.data?.body.data ?? []}
 				isPending={coupons.isPending}
 				columnVisibility={visibility}

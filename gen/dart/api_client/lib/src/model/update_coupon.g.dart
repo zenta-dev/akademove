@@ -29,6 +29,8 @@ abstract class _$UpdateCouponCWProxy {
 
   UpdateCoupon merchantId(String? merchantId);
 
+  UpdateCoupon serviceTypes(List<OrderType>? serviceTypes);
+
   UpdateCoupon eventName(String? eventName);
 
   UpdateCoupon eventDescription(String? eventDescription);
@@ -52,6 +54,7 @@ abstract class _$UpdateCouponCWProxy {
     DateTime? periodEnd,
     bool? isActive,
     String? merchantId,
+    List<OrderType>? serviceTypes,
     String? eventName,
     String? eventDescription,
   });
@@ -102,6 +105,10 @@ class _$UpdateCouponCWProxyImpl implements _$UpdateCouponCWProxy {
   UpdateCoupon merchantId(String? merchantId) => call(merchantId: merchantId);
 
   @override
+  UpdateCoupon serviceTypes(List<OrderType>? serviceTypes) =>
+      call(serviceTypes: serviceTypes);
+
+  @override
   UpdateCoupon eventName(String? eventName) => call(eventName: eventName);
 
   @override
@@ -128,6 +135,7 @@ class _$UpdateCouponCWProxyImpl implements _$UpdateCouponCWProxy {
     Object? periodEnd = const $CopyWithPlaceholder(),
     Object? isActive = const $CopyWithPlaceholder(),
     Object? merchantId = const $CopyWithPlaceholder(),
+    Object? serviceTypes = const $CopyWithPlaceholder(),
     Object? eventName = const $CopyWithPlaceholder(),
     Object? eventDescription = const $CopyWithPlaceholder(),
   }) {
@@ -176,6 +184,10 @@ class _$UpdateCouponCWProxyImpl implements _$UpdateCouponCWProxy {
           ? _value.merchantId
           // ignore: cast_nullable_to_non_nullable
           : merchantId as String?,
+      serviceTypes: serviceTypes == const $CopyWithPlaceholder()
+          ? _value.serviceTypes
+          // ignore: cast_nullable_to_non_nullable
+          : serviceTypes as List<OrderType>?,
       eventName: eventName == const $CopyWithPlaceholder()
           ? _value.eventName
           // ignore: cast_nullable_to_non_nullable
@@ -226,6 +238,12 @@ UpdateCoupon _$UpdateCouponFromJson(
     ),
     isActive: $checkedConvert('isActive', (v) => v as bool?),
     merchantId: $checkedConvert('merchantId', (v) => v as String?),
+    serviceTypes: $checkedConvert(
+      'serviceTypes',
+      (v) => (v as List<dynamic>?)
+          ?.map((e) => $enumDecode(_$OrderTypeEnumMap, e))
+          .toList(),
+    ),
     eventName: $checkedConvert('eventName', (v) => v as String?),
     eventDescription: $checkedConvert('eventDescription', (v) => v as String?),
   );
@@ -245,6 +263,9 @@ Map<String, dynamic> _$UpdateCouponToJson(UpdateCoupon instance) =>
       'periodEnd': ?instance.periodEnd?.toIso8601String(),
       'isActive': ?instance.isActive,
       'merchantId': ?instance.merchantId,
+      'serviceTypes': ?instance.serviceTypes
+          ?.map((e) => _$OrderTypeEnumMap[e]!)
+          .toList(),
       'eventName': ?instance.eventName,
       'eventDescription': ?instance.eventDescription,
     };
@@ -254,4 +275,10 @@ const _$CouponTypeEnumMap = {
   CouponType.EVENT: 'EVENT',
   CouponType.MERCHANT: 'MERCHANT',
   CouponType.FIRST_ORDER: 'FIRST_ORDER',
+};
+
+const _$OrderTypeEnumMap = {
+  OrderType.RIDE: 'RIDE',
+  OrderType.DELIVERY: 'DELIVERY',
+  OrderType.FOOD: 'FOOD',
 };

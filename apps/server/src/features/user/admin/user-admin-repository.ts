@@ -78,6 +78,7 @@ export class UserAdminRepository extends BaseRepository {
 			banExpires: user.banExpires ?? undefined,
 			gender: user.gender ?? undefined,
 			phone: user.phone ?? undefined,
+			rating: user.rating ?? 0,
 			userBadges: user.userBadges.map((e) =>
 				UserBadgeRepository.composeEntity(e, storage),
 			),

@@ -133,6 +133,9 @@ export const OrderSchema = z.object({
 	items: z.array(OrderItemSchema).optional(),
 	deliveryItemType: DeliveryItemTypeSchema.optional(),
 
+	// Attachment for mart orders (e.g., document files for Printing merchants)
+	attachmentUrl: z.string().url().optional(),
+
 	// relations
 	user: UserSchema.partial().optional(),
 	driver: DriverSchema.partial().optional(),
@@ -176,6 +179,7 @@ export const PlaceOrderSchema = OrderSchema.pick({
 	items: true,
 	gender: true,
 	genderPreference: true,
+	attachmentUrl: true,
 }).safeExtend({
 	couponCode: z.string().optional(),
 	payment: z.object({

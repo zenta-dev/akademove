@@ -448,6 +448,31 @@ export const OrderHandler = priv.router({
 			});
 		},
 	),
+	uploadAttachment: priv.uploadAttachment.handler(
+		async ({ context, input: { body } }) => {
+			const { file } = body;
+
+			// Upload attachment to S3
+			const attachmentUrl =
+				await context.svc.orderServices.deliveryProof.uploadOrderAttachment({
+					file,
+					userId: context.user.id,
+				});
+
+			logger.info(
+				{ userId: context.user.id, attachmentUrl },
+				"[OrderHandler] Order attachment uploaded",
+			);
+
+			return {
+				status: 200,
+				body: {
+					message: "Attachment uploaded successfully",
+					data: { url: attachmentUrl },
+				},
+			};
+		},
+	),
 	verifyDeliveryOTP: priv.verifyDeliveryOTP.handler(
 		async ({ context, input: { params, body } }) => {
 			return await context.svc.db.transaction(async (tx) => {

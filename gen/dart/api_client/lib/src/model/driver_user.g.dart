@@ -29,6 +29,8 @@ abstract class _$DriverUserCWProxy {
 
   DriverUser phone(Phone? phone);
 
+  DriverUser rating(num? rating);
+
   DriverUser createdAt(DateTime? createdAt);
 
   DriverUser updatedAt(DateTime? updatedAt);
@@ -54,6 +56,7 @@ abstract class _$DriverUserCWProxy {
     DateTime? banExpires,
     UserGender? gender,
     Phone? phone,
+    num? rating,
     DateTime? createdAt,
     DateTime? updatedAt,
     List<UserBadge>? userBadges,
@@ -102,6 +105,9 @@ class _$DriverUserCWProxyImpl implements _$DriverUserCWProxy {
   DriverUser phone(Phone? phone) => call(phone: phone);
 
   @override
+  DriverUser rating(num? rating) => call(rating: rating);
+
+  @override
   DriverUser createdAt(DateTime? createdAt) => call(createdAt: createdAt);
 
   @override
@@ -131,6 +137,7 @@ class _$DriverUserCWProxyImpl implements _$DriverUserCWProxy {
     Object? banExpires = const $CopyWithPlaceholder(),
     Object? gender = const $CopyWithPlaceholder(),
     Object? phone = const $CopyWithPlaceholder(),
+    Object? rating = const $CopyWithPlaceholder(),
     Object? createdAt = const $CopyWithPlaceholder(),
     Object? updatedAt = const $CopyWithPlaceholder(),
     Object? userBadges = const $CopyWithPlaceholder(),
@@ -180,6 +187,10 @@ class _$DriverUserCWProxyImpl implements _$DriverUserCWProxy {
           ? _value.phone
           // ignore: cast_nullable_to_non_nullable
           : phone as Phone?,
+      rating: rating == const $CopyWithPlaceholder()
+          ? _value.rating
+          // ignore: cast_nullable_to_non_nullable
+          : rating as num?,
       createdAt: createdAt == const $CopyWithPlaceholder()
           ? _value.createdAt
           // ignore: cast_nullable_to_non_nullable
@@ -233,6 +244,7 @@ DriverUser _$DriverUserFromJson(Map<String, dynamic> json) =>
           'phone',
           (v) => v == null ? null : Phone.fromJson(v as Map<String, dynamic>),
         ),
+        rating: $checkedConvert('rating', (v) => v as num? ?? 0),
         createdAt: $checkedConvert(
           'createdAt',
           (v) => v == null ? null : DateTime.parse(v as String),
@@ -264,6 +276,7 @@ Map<String, dynamic> _$DriverUserToJson(DriverUser instance) =>
       'banExpires': ?instance.banExpires?.toIso8601String(),
       'gender': ?_$UserGenderEnumMap[instance.gender],
       'phone': ?instance.phone?.toJson(),
+      'rating': ?instance.rating,
       'createdAt': ?instance.createdAt?.toIso8601String(),
       'updatedAt': ?instance.updatedAt?.toIso8601String(),
       'userBadges': ?instance.userBadges?.map((e) => e.toJson()).toList(),

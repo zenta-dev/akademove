@@ -122,6 +122,9 @@ export const order = pgTable(
 		// Delivery item photo (driver uploads photo of picked up item for verification)
 		deliveryItemPhotoUrl: text("delivery_item_photo_url"),
 
+		// Attachment for mart orders (e.g., document files for Printing merchants)
+		attachmentUrl: text("attachment_url"),
+
 		deliveryItemType: deliveryItemType(),
 	},
 	(t) => [

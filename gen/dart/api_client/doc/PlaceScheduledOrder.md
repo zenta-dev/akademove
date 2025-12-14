@@ -17,6 +17,7 @@ Name | Type | Description | Notes
 **items** | [**List&lt;OrderItem&gt;**](OrderItem.md) |  | [optional] 
 **gender** | [**UserGender**](UserGender.md) |  | [optional] 
 **genderPreference** | **String** |  | [optional] 
+**attachmentUrl** | **String** |  | [optional] 
 **couponCode** | **String** |  | [optional] 
 **payment** | [**PlaceOrderPayment**](PlaceOrderPayment.md) |  | 
 **scheduledAt** | [**DateTime**](DateTime.md) |  | 

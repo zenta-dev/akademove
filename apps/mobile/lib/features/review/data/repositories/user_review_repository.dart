@@ -11,9 +11,6 @@ class UserReviewRepository extends BaseRepository {
   ///
   /// [categories] - List of selected categories (multi-select)
   /// [score] - Overall rating for the entire review (1-5)
-  ///
-  /// NOTE: After running `bun run gen` to regenerate the API client,
-  /// InsertReview will accept `categories` (List of ReviewCategory) instead of `category`.
   Future<BaseResponse<Review>> submitReview({
     required String orderId,
     required String toUserId,
@@ -22,14 +19,11 @@ class UserReviewRepository extends BaseRepository {
     String? comment,
   }) {
     return guard(() async {
-      // fromUserId is automatically set by backend from auth context
-      // TODO: After regenerating API client, change `category` to `categories`
       final res = await _apiClient.getReviewApi().reviewCreate(
         insertReview: InsertReview(
           orderId: orderId,
-          fromUserId: '', // Will be set by backend
+          fromUserId: '', // Will be set by backend from auth context
           toUserId: toUserId,
-          // After API regeneration: categories: categories,
           categories: categories,
           score: score,
           comment: comment,
@@ -48,27 +42,23 @@ class UserReviewRepository extends BaseRepository {
   }
 
   /// Check if user can review an order
-  Future<BaseResponse<bool>> canReviewOrder({
-    required String orderId,
-    required String currentUserId,
-  }) {
+  Future<BaseResponse<bool>> canReviewOrder({required String orderId}) {
     return guard(() async {
-      // Note: This will need to be updated once the server API is regenerated
-      // For now, we'll check by trying to get the order reviews
-      try {
-        final orderReviews = await getOrderReviews(orderId: orderId);
-        // If we can get reviews, the order exists
-        // Check if current user already reviewed
-        final hasAlreadyReviewed = orderReviews.data.any(
-          (r) => r.fromUserId == currentUserId,
-        );
-        return SuccessResponse(
-          message: hasAlreadyReviewed ? 'Already reviewed' : 'Can review order',
-          data: !hasAlreadyReviewed,
-        );
-      } catch (e) {
-        return SuccessResponse(message: 'Cannot review', data: false);
-      }
+      final res = await _apiClient.getReviewApi().reviewCheckCanReview(
+        orderId: orderId,
+      );
+
+      final data =
+          res.data ??
+          (throw const RepositoryError(
+            'Failed to check review eligibility',
+            code: ErrorCode.unknown,
+          ));
+
+      return SuccessResponse(
+        message: data.data.canReview ? 'Can review order' : 'Cannot review',
+        data: data.data.canReview,
+      );
     });
   }
 

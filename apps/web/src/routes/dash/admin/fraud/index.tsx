@@ -51,11 +51,11 @@ const searchSchema = z.object({
 	severity: z.enum(["LOW", "MEDIUM", "HIGH", "CRITICAL"]).optional(),
 });
 
-export const Route = createFileRoute("/dash/operator/fraud/")({
+export const Route = createFileRoute("/dash/admin/fraud/")({
 	validateSearch: (values) => searchSchema.parse(values),
-	head: () => ({ meta: [{ title: SUB_ROUTE_TITLES.OPERATOR.FRAUD }] }),
+	head: () => ({ meta: [{ title: SUB_ROUTE_TITLES.ADMIN.FRAUD }] }),
 	beforeLoad: async () => {
-		const ok = await hasAccess(["OPERATOR", "ADMIN"]);
+		const ok = await hasAccess(["ADMIN"]);
 		if (!ok) redirect({ to: "/", throw: true });
 		return { allowed: ok };
 	},
@@ -133,7 +133,7 @@ function RouteComponent() {
 					? undefined
 					: severityFilter;
 		navigate({
-			to: "/dash/operator/fraud",
+			to: "/dash/admin/fraud",
 			search: {
 				page: 1,
 				limit: search.limit,
@@ -383,7 +383,7 @@ function RouteComponent() {
 										<TableCell className="text-right">
 											<Button variant="ghost" size="sm" asChild>
 												<Link
-													to="/dash/operator/fraud/$id"
+													to="/dash/admin/fraud/$id"
 													params={{ id: event.id }}
 												>
 													<Eye className="h-4 w-4" />
@@ -407,7 +407,7 @@ function RouteComponent() {
 						disabled={search.page <= 1}
 						onClick={() =>
 							navigate({
-								to: "/dash/operator/fraud",
+								to: "/dash/admin/fraud",
 								search: { ...search, page: search.page - 1 },
 							})
 						}
@@ -423,7 +423,7 @@ function RouteComponent() {
 						disabled={search.page >= totalPages}
 						onClick={() =>
 							navigate({
-								to: "/dash/operator/fraud",
+								to: "/dash/admin/fraud",
 								search: { ...search, page: search.page + 1 },
 							})
 						}

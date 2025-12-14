@@ -23,19 +23,12 @@ export const AuthHandler = pub.router({
 
 		// FIX: Check if user is banned BEFORE returning token
 		if (result.user.banned) {
-			// Check if ban has expired
-			if (result.user.banExpires && new Date() > result.user.banExpires) {
-				// Ban expired - allow sign in and clear ban status
-				// Note: A separate job should handle clearing expired bans
-			} else {
-				// Ban is still active - throw error, don't return token
-				const message = result.user.banReason
-					? `Account banned: ${result.user.banReason}`
-					: "Your account has been banned";
-				throw new AuthError(message, {
-					code: "FORBIDDEN",
-				});
-			}
+			const message = result.user.banReason
+				? `Account banned: ${result.user.banReason}`
+				: "Your account has been banned";
+			throw new AuthError(message, {
+				code: "FORBIDDEN",
+			});
 		}
 
 		context.resHeaders?.set(

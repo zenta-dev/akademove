@@ -39,10 +39,10 @@ import { hasAccess } from "@/lib/actions";
 import { SUB_ROUTE_TITLES } from "@/lib/constants";
 import { orpcClient, orpcQuery, queryClient } from "@/lib/orpc";
 
-export const Route = createFileRoute("/dash/operator/fraud/$id")({
-	head: () => ({ meta: [{ title: SUB_ROUTE_TITLES.OPERATOR.FRAUD }] }),
+export const Route = createFileRoute("/dash/admin/fraud/$id")({
+	head: () => ({ meta: [{ title: SUB_ROUTE_TITLES.ADMIN.FRAUD }] }),
 	beforeLoad: async () => {
-		const ok = await hasAccess(["OPERATOR", "ADMIN"]);
+		const ok = await hasAccess(["ADMIN"]);
 		if (!ok) redirect({ to: "/", throw: true });
 		return { allowed: ok };
 	},
@@ -114,7 +114,7 @@ function RouteComponent() {
 				<AlertTriangle className="h-12 w-12 text-muted-foreground" />
 				<h2 className="font-medium text-xl">Event Not Found</h2>
 				<Button asChild>
-					<Link to="/dash/operator/fraud" search={{ page: 1, limit: 20 }}>
+					<Link to="/dash/admin/fraud" search={{ page: 1, limit: 20 }}>
 						Back to Fraud Dashboard
 					</Link>
 				</Button>
@@ -139,7 +139,7 @@ function RouteComponent() {
 			{/* Header */}
 			<div className="flex items-center gap-4">
 				<Button variant="ghost" size="icon" asChild>
-					<Link to="/dash/operator/fraud" search={{ page: 1, limit: 20 }}>
+					<Link to="/dash/admin/fraud" search={{ page: 1, limit: 20 }}>
 						<ArrowLeft className="h-4 w-4" />
 					</Link>
 				</Button>

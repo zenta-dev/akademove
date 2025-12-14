@@ -51,7 +51,11 @@ function RouteComponent() {
 			</div>
 			<Card className="p-0">
 				<CardContent className="p-0">
-					<CouponTable search={search} to="/dash/operator/coupons" />
+					<CouponTable
+						search={search}
+						to="/dash/operator/coupons"
+						userRole="OPERATOR"
+					/>
 				</CardContent>
 			</Card>
 		</>

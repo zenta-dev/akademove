@@ -920,19 +920,62 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    Builder(
-                      builder: (context) {
-                        final gender = order.user?.gender;
-                        if (gender == null) return const SizedBox.shrink();
+                    Row(
+                      children: [
+                        Builder(
+                          builder: (context) {
+                            final gender = order.user?.gender;
+                            if (gender == null) return const SizedBox.shrink();
 
-                        return Text(
-                          _formatGender(gender),
-                          style: context.typography.small.copyWith(
-                            fontSize: 14.sp,
-                            color: context.colorScheme.mutedForeground,
-                          ),
-                        );
-                      },
+                            return Text(
+                              _formatGender(gender),
+                              style: context.typography.small.copyWith(
+                                fontSize: 14.sp,
+                                color: context.colorScheme.mutedForeground,
+                              ),
+                            );
+                          },
+                        ),
+                        Builder(
+                          builder: (context) {
+                            final rating = order.user?.rating;
+                            if (rating == null || rating == 0) {
+                              return const SizedBox.shrink();
+                            }
+
+                            return Row(
+                              children: [
+                                if (order.user?.gender != null)
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 8.w,
+                                    ),
+                                    child: Text(
+                                      '•',
+                                      style: context.typography.small.copyWith(
+                                        color:
+                                            context.colorScheme.mutedForeground,
+                                      ),
+                                    ),
+                                  ),
+                                Icon(
+                                  LucideIcons.star,
+                                  size: 14.sp,
+                                  color: const Color(0xFFFFC107),
+                                ),
+                                SizedBox(width: 4.w),
+                                Text(
+                                  rating.toStringAsFixed(1),
+                                  style: context.typography.small.copyWith(
+                                    fontSize: 14.sp,
+                                    color: context.colorScheme.mutedForeground,
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -1161,8 +1204,10 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
 
   /// Build the delivery item photo upload button for DELIVERY orders
   Widget _buildDeliveryItemPhotoButton(Order order) {
-    // Note: deliveryItemPhotoUrl will be available after API client regeneration
-    // For now, we always show the "Take Item Photo" button
+    final hasPhoto =
+        order.deliveryItemPhotoUrl != null &&
+        order.deliveryItemPhotoUrl!.isNotEmpty;
+
     return SizedBox(
       width: double.infinity,
       child: OutlineButton(
@@ -1171,8 +1216,11 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           spacing: 8.w,
           children: [
-            Icon(LucideIcons.camera, size: 20.sp),
-            const Text('Take Item Photo'),
+            Icon(
+              hasPhoto ? LucideIcons.circleCheck : LucideIcons.camera,
+              size: 20.sp,
+            ),
+            Text(hasPhoto ? 'View/Update Item Photo' : 'Take Item Photo'),
           ],
         ),
       ),

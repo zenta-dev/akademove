@@ -201,7 +201,9 @@ export class OrderBaseRepository extends BaseRepository {
 	): Promise<Order | undefined> {
 		const result = await (opts?.tx ?? this.db).query.order.findFirst({
 			with: {
-				user: { columns: { name: true, image: true, gender: true } },
+				user: {
+					columns: { name: true, image: true, gender: true, rating: true },
+				},
 				driver: {
 					columns: {},
 					with: { user: { columns: { name: true, image: true } } },

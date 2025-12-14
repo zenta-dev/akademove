@@ -56,6 +56,7 @@ class UpdateOrder {
     this.itemCount,
     this.items,
     this.deliveryItemType,
+    this.attachmentUrl,
     this.user,
     this.driver,
     this.merchant,
@@ -149,6 +150,9 @@ class UpdateOrder {
   @JsonKey(name: r'deliveryItemType', required: false, includeIfNull: false)
   final DeliveryItemType? deliveryItemType;
 
+  @JsonKey(name: r'attachmentUrl', required: false, includeIfNull: false)
+  final String? attachmentUrl;
+
   @JsonKey(name: r'user', required: false, includeIfNull: false)
   final DriverUser? user;
 
@@ -191,6 +195,7 @@ class UpdateOrder {
           other.itemCount == itemCount &&
           other.items == items &&
           other.deliveryItemType == deliveryItemType &&
+          other.attachmentUrl == attachmentUrl &&
           other.user == user &&
           other.driver == driver &&
           other.merchant == merchant;
@@ -226,6 +231,7 @@ class UpdateOrder {
       itemCount.hashCode +
       items.hashCode +
       deliveryItemType.hashCode +
+      attachmentUrl.hashCode +
       user.hashCode +
       driver.hashCode +
       merchant.hashCode;

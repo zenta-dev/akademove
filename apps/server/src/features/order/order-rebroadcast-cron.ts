@@ -53,7 +53,9 @@ export async function handleOrderRebroadcastCron(
 		const activeOrders = await svc.db.query.order.findMany({
 			where: (f, _op) => inArray(f.status, ACTIVE_STATUSES),
 			with: {
-				user: { columns: { name: true, image: true } },
+				user: {
+					columns: { name: true, image: true, gender: true, rating: true },
+				},
 				driver: {
 					with: {
 						user: {

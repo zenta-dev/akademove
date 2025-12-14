@@ -10,7 +10,6 @@ import {
 	MailIcon,
 	ReceiptIcon,
 	ShieldAlertIcon,
-	ShieldIcon,
 	StoreIcon,
 	TicketIcon,
 	UsersIcon,
@@ -66,11 +65,6 @@ const navMain = Object.freeze([
 		title: m.reports(),
 		href: localizeHref("/dash/operator/reports"),
 		icon: FlagIcon,
-	},
-	{
-		title: "Fraud Detection",
-		href: localizeHref("/dash/operator/fraud"),
-		icon: ShieldIcon,
 	},
 	{
 		title: m.contact_us(),

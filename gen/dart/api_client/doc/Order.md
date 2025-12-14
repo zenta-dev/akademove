@@ -49,6 +49,7 @@ Name | Type | Description | Notes
 **itemCount** | **int** |  | [optional] 
 **items** | [**List&lt;OrderItem&gt;**](OrderItem.md) |  | [optional] 
 **deliveryItemType** | [**DeliveryItemType**](DeliveryItemType.md) |  | [optional] 
+**attachmentUrl** | **String** |  | [optional] 
 **user** | [**DriverUser**](DriverUser.md) |  | [optional] 
 **driver** | [**OrderDriver**](OrderDriver.md) |  | [optional] 
 **merchant** | [**OrderMerchant**](OrderMerchant.md) |  | [optional] 

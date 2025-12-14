@@ -19,6 +19,7 @@ Name | Type | Description | Notes
 **periodEnd** | [**DateTime**](DateTime.md) |  | [optional] 
 **isActive** | **bool** |  | [optional] 
 **merchantId** | **String** |  | [optional] 
+**serviceTypes** | [**List&lt;OrderType&gt;**](OrderType.md) |  | [optional] 
 **eventName** | **String** |  | [optional] 
 **eventDescription** | **String** |  | [optional] 
 

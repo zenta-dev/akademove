@@ -228,7 +228,9 @@ export class OrderReadRepository extends OrderBaseRepository {
 			};
 
 			const withx = {
-				user: { columns: { name: true, image: true, gender: true } },
+				user: {
+					columns: { name: true, image: true, gender: true, rating: true },
+				},
 				driver: {
 					columns: {},
 					with: { user: { columns: { name: true, image: true } } },

@@ -331,6 +331,28 @@ class OrderRepository extends BaseRepository {
     });
   }
 
+  /// Upload order attachment (e.g., document files for Printing merchants)
+  /// POST /api/orders/attachment
+  /// Returns the uploaded attachment URL
+  Future<BaseResponse<String>> uploadAttachment(Object file) {
+    return guard(() async {
+      final res = await _apiClient.getOrderApi().orderUploadAttachment(
+        orderUploadDeliveryProofRequest: OrderUploadDeliveryProofRequest(
+          file: file,
+        ),
+      );
+
+      final data =
+          res.data ??
+          (throw const RepositoryError(
+            'Failed to upload attachment',
+            code: ErrorCode.unknown,
+          ));
+
+      return SuccessResponse(message: data.message, data: data.data.url);
+    });
+  }
+
   /// Get the active order for the current user (for order recovery on app reopen)
   /// GET /api/orders/active
   /// Returns the active order with associated payment, transaction, and driver
