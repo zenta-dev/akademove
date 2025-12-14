@@ -54,6 +54,10 @@ class _AddressTextState extends State<AddressText> {
   bool _isLoading = false;
   bool _hasError = false;
 
+  /// Cache the last resolved coordinate to avoid re-fetching for same location
+  num? _lastResolvedX;
+  num? _lastResolvedY;
+
   @override
   void initState() {
     super.initState();
@@ -82,6 +86,13 @@ class _AddressTextState extends State<AddressText> {
       return;
     }
 
+    // Skip re-fetching if we already resolved this exact coordinate
+    if (_resolvedAddress != null &&
+        _lastResolvedX == widget.coordinate.x &&
+        _lastResolvedY == widget.coordinate.y) {
+      return;
+    }
+
     // Otherwise, try to reverse geocode
     setState(() {
       _isLoading = true;
@@ -99,6 +110,9 @@ class _AddressTextState extends State<AddressText> {
               ? place.vicinity
               : place.name;
           _isLoading = false;
+          // Cache the resolved coordinate
+          _lastResolvedX = widget.coordinate.x;
+          _lastResolvedY = widget.coordinate.y;
         });
       }
     } catch (e) {

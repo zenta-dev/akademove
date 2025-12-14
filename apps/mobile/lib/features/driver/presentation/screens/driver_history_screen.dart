@@ -99,6 +99,7 @@ class _DriverHistoryScreenState extends State<DriverHistoryScreen> {
               if (state.fetchHistoryResult.isLoading) {
                 return ListView.separated(
                   physics: const AlwaysScrollableScrollPhysics(),
+                  padding: EdgeInsets.zero,
                   itemCount: 5,
                   separatorBuilder: (context, index) => SizedBox(height: 12.h),
                   itemBuilder: (context, index) =>

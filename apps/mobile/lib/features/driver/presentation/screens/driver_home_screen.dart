@@ -129,7 +129,7 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
                 ],
               ),
             ],
-            child: RefreshTrigger(
+            child: SafeRefreshTrigger(
               onRefresh: () => context.read<DriverProfileCubit>().init(),
               child: SingleChildScrollView(
                 physics: const AlwaysScrollableScrollPhysics(),
@@ -152,7 +152,10 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
                             if (location == null) {
                               return const SizedBox.shrink();
                             }
-                            return DriverLocationCard(coordinate: location);
+                            return DriverLocationCard(
+                              key: const ValueKey('driver_location_card'),
+                              coordinate: location,
+                            );
                           },
                         ),
                       _buildTodayStats(context, state),

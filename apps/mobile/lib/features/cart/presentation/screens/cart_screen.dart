@@ -60,7 +60,7 @@ class _CartScreenState extends State<CartScreen> {
           ],
         ),
       ],
-      child: RefreshTrigger(
+      child: SafeRefreshTrigger(
         onRefresh: _onRefresh,
         child: BlocConsumer<UserCartCubit, UserCartState>(
           listener: (context, state) {

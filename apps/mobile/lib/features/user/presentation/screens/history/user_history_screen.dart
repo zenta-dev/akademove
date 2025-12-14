@@ -44,7 +44,7 @@ class UserHistoryScreen extends StatelessWidget {
           ],
         ),
       ],
-      child: RefreshTrigger(
+      child: SafeRefreshTrigger(
         onRefresh: () async {
           context.read<UserOrderCubit>().list();
         },

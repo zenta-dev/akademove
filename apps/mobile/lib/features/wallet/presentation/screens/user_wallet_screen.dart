@@ -55,7 +55,7 @@ class UserWalletScreen extends StatelessWidget {
           ],
         ),
       ],
-      child: RefreshTrigger(
+      child: SafeRefreshTrigger(
         onRefresh: () async {
           context.read<UserWalletCubit>().getMine();
         },

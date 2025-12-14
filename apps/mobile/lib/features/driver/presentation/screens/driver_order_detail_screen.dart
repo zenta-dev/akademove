@@ -30,8 +30,11 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
   bool _isUpdatingMap = false;
   Coordinate? _currentDriverLocation;
 
-  /// Flag to prevent "Build scheduled during frame" error from RefreshTrigger
-  bool _isFirstFrame = true;
+  /// Track the previous order status to detect transitions (not initial load)
+  OrderStatus? _previousOrderStatus;
+
+  /// Flag to indicate if we're viewing a historical order (already terminal)
+  bool _isHistoricalView = false;
 
   /// Animated driver marker for smooth location updates with bike icon
   late final AnimatedDriverMarker _animatedDriverMarker;
@@ -48,14 +51,6 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
     );
     _initializeMarkerAndLocation();
     _initializeOrder();
-
-    // Allow scroll notifications after first frame to prevent
-    // "Build scheduled during frame" error from RefreshTrigger
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) {
-        setState(() => _isFirstFrame = false);
-      }
-    });
   }
 
   /// Initialize marker icon and start location streaming
@@ -254,8 +249,25 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
         .get(widget.orderId)
         .then((res) => res.data);
     if (mounted) {
+      // Check if this is a historical order (already in terminal state)
+      // to prevent auto-navigation back when viewing order history
+      final isTerminal = _isTerminalStatus(order.status);
+      if (_previousOrderStatus == null && isTerminal) {
+        _isHistoricalView = true;
+      }
+      _previousOrderStatus = order.status;
       context.read<DriverOrderCubit>().init(order);
     }
+  }
+
+  /// Check if order status is terminal (completed or cancelled)
+  bool _isTerminalStatus(OrderStatus status) {
+    return status == OrderStatus.COMPLETED ||
+        status == OrderStatus.CANCELLED_BY_USER ||
+        status == OrderStatus.CANCELLED_BY_DRIVER ||
+        status == OrderStatus.CANCELLED_BY_MERCHANT ||
+        status == OrderStatus.CANCELLED_BY_SYSTEM ||
+        status == OrderStatus.NO_SHOW;
   }
 
   Future<void> _onRefresh() async {
@@ -292,16 +304,28 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
           context.showMyToast("Status updated", type: ToastType.success);
         }
 
-        // Navigate back when order is completed or cancelled
-        if (state.orderStatus == OrderStatus.COMPLETED ||
-            state.orderStatus == OrderStatus.CANCELLED_BY_DRIVER ||
-            state.orderStatus == OrderStatus.CANCELLED_BY_USER ||
-            state.orderStatus == OrderStatus.CANCELLED_BY_SYSTEM) {
+        // Navigate back when order status TRANSITIONS to completed or cancelled
+        // Skip if this is a historical view (order was already terminal on load)
+        final currentStatus = state.orderStatus;
+        final isTerminal =
+            currentStatus != null && _isTerminalStatus(currentStatus);
+        final wasTerminalBefore =
+            _previousOrderStatus != null &&
+            _isTerminalStatus(_previousOrderStatus!);
+        final isStatusTransition =
+            isTerminal && !wasTerminalBefore && !_isHistoricalView;
+
+        if (isStatusTransition) {
           Future.delayed(const Duration(seconds: 2), () {
             if (mounted && context.mounted) {
               context.popUntilRoot();
             }
           });
+        }
+
+        // Update previous status for next comparison
+        if (currentStatus != null) {
+          _previousOrderStatus = currentStatus;
         }
 
         // Update map when order data changes
@@ -347,26 +371,21 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
               // Order details and actions
               Expanded(
                 flex: 3,
-                child: NotificationListener<ScrollNotification>(
-                  // Absorb scroll notifications during first frame to prevent
-                  // "Build scheduled during frame" error from RefreshTrigger
-                  onNotification: _isFirstFrame ? (_) => true : null,
-                  child: RefreshTrigger(
-                    onRefresh: _onRefresh,
-                    child: SingleChildScrollView(
-                      physics: const AlwaysScrollableScrollPhysics(),
-                      padding: EdgeInsets.all(16.dg),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        spacing: 20.h,
-                        children: [
-                          if (status != null)
-                            _buildStatusIndicator(context, status),
-                          _buildOrderInfo(order),
-                          _buildCustomerInfo(order),
-                          _buildActionButtons(state, order),
-                        ],
-                      ),
+                child: SafeRefreshTrigger(
+                  onRefresh: _onRefresh,
+                  child: SingleChildScrollView(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    padding: EdgeInsets.all(16.dg),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      spacing: 20.h,
+                      children: [
+                        if (status != null)
+                          _buildStatusIndicator(context, status),
+                        _buildOrderInfo(order),
+                        _buildCustomerInfo(order),
+                        _buildActionButtons(state, order),
+                      ],
                     ),
                   ),
                 ),

@@ -90,7 +90,7 @@ class _MerchantHomeScreenState extends State<MerchantHomeScreen> {
       headers: [
         DefaultAppBar(title: context.l10n.home, padding: EdgeInsets.all(16.r)),
       ],
-      child: RefreshTrigger(
+      child: SafeRefreshTrigger(
         onRefresh: _loadData,
         child: SingleChildScrollView(
           physics: const AlwaysScrollableScrollPhysics(),

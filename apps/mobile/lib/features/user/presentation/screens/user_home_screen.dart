@@ -149,7 +149,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
           ],
         ),
       ],
-      child: RefreshTrigger(
+      child: SafeRefreshTrigger(
         onRefresh: _onRefresh,
         child: SingleChildScrollView(
           child: Column(

@@ -164,11 +164,15 @@ class DriverHomeCubit extends BaseCubit<DriverHomeState> {
     final currentDriver = _driver;
     if (currentDriver == null || !currentDriver.isOnline) return;
 
-    // Skip update if location hasn't changed (deduplication to prevent DB heating)
+    // Skip update if location hasn't changed (deduplication to prevent
+    // unnecessary rerenders and DB heating)
     final last = _lastLocation;
     if (last != null && last.x == coordinate.x && last.y == coordinate.y) {
       return;
     }
+
+    // Update last location first to prevent duplicate processing
+    _lastLocation = coordinate;
 
     // Emit location to state for UI updates (map, address display)
     emit(state.copyWith(currentLocation: coordinate));
@@ -202,7 +206,6 @@ class DriverHomeCubit extends BaseCubit<DriverHomeState> {
       if (isWsConnected && isWsHealthy) {
         // Primary: Send via WebSocket (server will persist)
         _webSocketService.send(locationKey, jsonEncode(envelope));
-        _lastLocation = coordinate;
 
         logger.d(
           '[DriverHomeCubit] - Location updated via WebSocket: '
@@ -218,7 +221,6 @@ class DriverHomeCubit extends BaseCubit<DriverHomeState> {
             isMockLocation: isMocked,
           ),
         );
-        _lastLocation = coordinate;
 
         logger.d(
           '[DriverHomeCubit] - Location updated via REST (WS fallback): '
@@ -248,7 +250,6 @@ class DriverHomeCubit extends BaseCubit<DriverHomeState> {
             isMockLocation: isMocked,
           ),
         );
-        _lastLocation = coordinate;
 
         logger.d(
           '[DriverHomeCubit] - Location updated via REST (error fallback): '

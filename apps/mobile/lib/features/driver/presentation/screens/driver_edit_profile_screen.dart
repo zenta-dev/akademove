@@ -276,25 +276,30 @@ class _DriverEditProfileScreenState extends State<DriverEditProfileScreen> {
                       Text(context.l10n.document),
 
                       _buildDocumentUpload(
-                        Text(context.l10n.student_card).data!,
-                        _studentCardFile,
-                        (file) => setState(() => _studentCardFile = file),
-                        isLoading,
+                        label: Text(context.l10n.student_card).data!,
+                        file: _studentCardFile,
+                        previewUrl: driver?.studentCard,
+                        onFileChanged: (file) =>
+                            setState(() => _studentCardFile = file),
+                        isLoading: isLoading,
                       ),
 
                       _buildDocumentUpload(
-                        Text(context.l10n.driver_license).data!,
-                        _driverLicenseFile,
-                        (file) => setState(() => _driverLicenseFile = file),
-                        isLoading,
+                        label: Text(context.l10n.driver_license).data!,
+                        file: _driverLicenseFile,
+                        previewUrl: driver?.driverLicense,
+                        onFileChanged: (file) =>
+                            setState(() => _driverLicenseFile = file),
+                        isLoading: isLoading,
                       ),
 
                       _buildDocumentUpload(
-                        Text(context.l10n.vehicle_certificate).data!,
-                        _vehicleCertificateFile,
-                        (file) =>
+                        label: Text(context.l10n.vehicle_certificate).data!,
+                        file: _vehicleCertificateFile,
+                        previewUrl: driver?.vehicleCertificate,
+                        onFileChanged: (file) =>
                             setState(() => _vehicleCertificateFile = file),
-                        isLoading,
+                        isLoading: isLoading,
                       ),
 
                       SizedBox(
@@ -332,12 +337,13 @@ class _DriverEditProfileScreenState extends State<DriverEditProfileScreen> {
     );
   }
 
-  Widget _buildDocumentUpload(
-    String label,
-    File? file,
-    Function(File?) onFileChanged,
-    bool isLoading,
-  ) {
+  Widget _buildDocumentUpload({
+    required String label,
+    required File? file,
+    required String? previewUrl,
+    required Function(File?) onFileChanged,
+    required bool isLoading,
+  }) {
     return Column(
       spacing: 8.h,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -345,6 +351,7 @@ class _DriverEditProfileScreenState extends State<DriverEditProfileScreen> {
         Text(label).small(),
         ImagePickerWidget(
           enabled: !isLoading,
+          previewUrl: previewUrl,
           value: file,
           size: Size(double.infinity, 100.h),
           onValueChanged: onFileChanged,
