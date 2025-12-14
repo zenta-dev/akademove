@@ -404,7 +404,6 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
     return Card(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        spacing: 12.h,
         children: [
           Text(context.l10n.quick_actions),
           _buildActionButton(
@@ -436,6 +435,7 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
         child: Row(
           children: [
             Icon(icon, size: 20.sp, color: context.colorScheme.primary),
+            SizedBox(width: 8.w),
             Expanded(
               child: Text(
                 label,

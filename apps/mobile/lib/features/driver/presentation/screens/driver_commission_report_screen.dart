@@ -19,8 +19,6 @@ class DriverCommissionReportScreen extends StatefulWidget {
 
 class _DriverCommissionReportScreenState
     extends State<DriverCommissionReportScreen> {
-  EarningsPeriod _selectedPeriod = EarningsPeriod.daily;
-
   @override
   void initState() {
     super.initState();
@@ -39,9 +37,16 @@ class _DriverCommissionReportScreenState
       builder: (context, state) {
         final isLoading =
             state.fetchWalletResult.isLoading ||
-            state.fetchTransactionsResult.isLoading;
+            state.fetchCommissionReportResult.isLoading;
+        final hasFailed = state.fetchCommissionReportResult.isFailed;
         final wallet = state.wallet;
-        final transactions = state.transactions;
+        final report = state.commissionReport;
+
+        // Show loading when data is loading and report is not yet available
+        final showLoading = isLoading && report == null;
+
+        // Show error only when not loading and the fetch has failed
+        final showError = !isLoading && hasFailed && report == null;
 
         return Scaffold(
           headers: [
@@ -56,7 +61,7 @@ class _DriverCommissionReportScreenState
               ],
             ),
           ],
-          child: isLoading && wallet == null
+          child: showLoading
               ? const Center(child: CircularProgressIndicator())
               : SafeRefreshTrigger(
                   onRefresh: _onRefresh,
@@ -66,13 +71,13 @@ class _DriverCommissionReportScreenState
                       spacing: 16.h,
                       children: [
                         // Current Balance Card
-                        _buildCurrentBalanceCard(wallet),
+                        _buildCurrentBalanceCard(report),
                         // Summary Cards (Side-by-Side)
-                        _buildSummaryCards(transactions),
+                        _buildSummaryCards(report),
                         // Income & Outcome Chart Section
-                        _buildChartSection(transactions),
+                        _buildChartSection(report, state.selectedPeriod),
                         // Balance Detail List
-                        _buildBalanceDetailList(transactions),
+                        _buildBalanceDetailList(report),
                         // Action Buttons
                         _buildActionButtons(wallet),
                         SizedBox(height: 16.h),
@@ -85,8 +90,56 @@ class _DriverCommissionReportScreenState
     );
   }
 
+  /// Error view when API call fails
+  Widget _buildErrorView() {
+    return Center(
+      child: Padding(
+        padding: EdgeInsets.all(24.dg),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          spacing: 16.h,
+          children: [
+            Icon(
+              LucideIcons.triangleAlert,
+              size: 48.sp,
+              color: context.colorScheme.destructive,
+            ),
+            Text(
+              context.l10n.error,
+              style: context.typography.h3.copyWith(
+                color: context.colorScheme.foreground,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            Text(
+              context.l10n.error_unexpected,
+              style: context.typography.small.copyWith(
+                color: context.colorScheme.mutedForeground,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 8.h),
+            PrimaryButton(
+              onPressed: () {
+                context.read<DriverWalletCubit>().init();
+              },
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                spacing: 8.w,
+                children: [
+                  Icon(LucideIcons.refreshCw, size: 16.sp),
+                  Text(context.l10n.retry),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   /// Current Saldo Card - Light cream background with prominent balance
-  Widget _buildCurrentBalanceCard(Wallet? wallet) {
+  Widget _buildCurrentBalanceCard(CommissionReportResponse? report) {
     return SizedBox(
       width: double.infinity,
       child: Card(
@@ -103,7 +156,7 @@ class _DriverCommissionReportScreenState
               ),
             ),
             Text(
-              context.formatCurrency(wallet?.balance ?? 0),
+              context.formatCurrency(report?.currentBalance ?? 0),
               style: context.typography.h1.copyWith(
                 fontSize: 32.sp,
                 fontWeight: FontWeight.bold,
@@ -117,9 +170,9 @@ class _DriverCommissionReportScreenState
   }
 
   /// Summary Cards - Two side-by-side cards for incoming/outgoing balance
-  Widget _buildSummaryCards(List<Transaction> transactions) {
-    final incoming = _calculateIncomingBalance(transactions);
-    final outgoing = _calculateOutgoingBalance(transactions);
+  Widget _buildSummaryCards(CommissionReportResponse? report) {
+    final incoming = report?.incomingBalance ?? 0;
+    final outgoing = report?.outgoingBalance ?? 0;
 
     return Row(
       spacing: 12.w,
@@ -198,7 +251,10 @@ class _DriverCommissionReportScreenState
   }
 
   /// Chart Section with period filter buttons
-  Widget _buildChartSection(List<Transaction> transactions) {
+  Widget _buildChartSection(
+    CommissionReportResponse? report,
+    EarningsPeriod selectedPeriod,
+  ) {
     return Container(
       padding: EdgeInsets.all(16.dg),
       decoration: BoxDecoration(
@@ -225,19 +281,16 @@ class _DriverCommissionReportScreenState
             ),
           ),
           // Chart visualization
-          _buildLineChart(transactions),
+          _buildLineChart(report?.chartData ?? []),
           // Period filter buttons
-          _buildPeriodFilterButtons(),
+          _buildPeriodFilterButtons(selectedPeriod),
         ],
       ),
     );
   }
 
   /// Simple line chart representation
-  Widget _buildLineChart(List<Transaction> transactions) {
-    // Generate chart data points based on selected period
-    final chartData = _generateChartData(transactions);
-
+  Widget _buildLineChart(List<ChartDataPoint> chartData) {
     if (chartData.isEmpty) {
       return Container(
         height: 150.h,
@@ -266,6 +319,9 @@ class _DriverCommissionReportScreenState
         .map((d) => d.income > d.outcome ? d.income : d.outcome)
         .reduce((a, b) => a > b ? a : b);
 
+    // If all values are 0, show a minimum scale
+    final effectiveMaxValue = maxValue > 0 ? maxValue : 100;
+
     return SizedBox(
       height: 150.h,
       child: Column(
@@ -280,14 +336,14 @@ class _DriverCommissionReportScreenState
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      context.formatCurrency(maxValue),
+                      context.formatCurrency(effectiveMaxValue),
                       style: context.typography.small.copyWith(
                         fontSize: 10.sp,
                         color: context.colorScheme.mutedForeground,
                       ),
                     ),
                     Text(
-                      context.formatCurrency(maxValue * 0.5),
+                      context.formatCurrency(effectiveMaxValue * 0.5),
                       style: context.typography.small.copyWith(
                         fontSize: 10.sp,
                         color: context.colorScheme.mutedForeground,
@@ -309,11 +365,11 @@ class _DriverCommissionReportScreenState
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: chartData.map((data) {
-                      final incomeHeight = maxValue > 0
-                          ? (data.income / maxValue) * 100.h
+                      final incomeHeight = effectiveMaxValue > 0
+                          ? (data.income / effectiveMaxValue) * 100.h
                           : 0.0;
-                      final outcomeHeight = maxValue > 0
-                          ? (data.outcome / maxValue) * 100.h
+                      final outcomeHeight = effectiveMaxValue > 0
+                          ? (data.outcome / effectiveMaxValue) * 100.h
                           : 0.0;
                       return Column(
                         mainAxisAlignment: MainAxisAlignment.end,
@@ -407,7 +463,7 @@ class _DriverCommissionReportScreenState
   }
 
   /// Period filter buttons (Daily, Weekly, Monthly)
-  Widget _buildPeriodFilterButtons() {
+  Widget _buildPeriodFilterButtons(EarningsPeriod selectedPeriod) {
     return Row(
       spacing: 8.w,
       children: [
@@ -415,18 +471,21 @@ class _DriverCommissionReportScreenState
           child: _buildPeriodButton(
             label: context.l10n.daily,
             period: EarningsPeriod.daily,
+            selectedPeriod: selectedPeriod,
           ),
         ),
         Expanded(
           child: _buildPeriodButton(
             label: context.l10n.weekly,
             period: EarningsPeriod.weekly,
+            selectedPeriod: selectedPeriod,
           ),
         ),
         Expanded(
           child: _buildPeriodButton(
             label: context.l10n.monthly,
             period: EarningsPeriod.monthly,
+            selectedPeriod: selectedPeriod,
           ),
         ),
       ],
@@ -436,13 +495,11 @@ class _DriverCommissionReportScreenState
   Widget _buildPeriodButton({
     required String label,
     required EarningsPeriod period,
+    required EarningsPeriod selectedPeriod,
   }) {
-    final isSelected = _selectedPeriod == period;
+    final isSelected = selectedPeriod == period;
     return GestureDetector(
       onTap: () {
-        setState(() {
-          _selectedPeriod = period;
-        });
         context.read<DriverWalletCubit>().setSelectedPeriod(period);
       },
       child: Container(
@@ -474,15 +531,9 @@ class _DriverCommissionReportScreenState
   }
 
   /// Balance Detail List - Transaction history card
-  Widget _buildBalanceDetailList(List<Transaction> transactions) {
-    final relevantTransactions = transactions
-        .where(
-          (t) =>
-              t.type == TransactionType.EARNING ||
-              t.type == TransactionType.COMMISSION,
-        )
-        .take(10)
-        .toList();
+  Widget _buildBalanceDetailList(CommissionReportResponse? report) {
+    final transactions = report?.transactions ?? [];
+    final relevantTransactions = transactions.take(10).toList();
 
     return Container(
       padding: EdgeInsets.all(16.dg),
@@ -538,8 +589,9 @@ class _DriverCommissionReportScreenState
     );
   }
 
-  Widget _buildTransactionItem(Transaction transaction) {
-    final isIncoming = transaction.type == TransactionType.EARNING;
+  Widget _buildTransactionItem(CommissionTransaction transaction) {
+    final isIncoming =
+        transaction.type == CommissionTransactionTypeEnum.EARNING;
     final color = isIncoming
         ? const Color(0xFF4CAF50)
         : const Color(0xFFF44336);
@@ -553,8 +605,9 @@ class _DriverCommissionReportScreenState
     // Parse order type from description or metadata
     String subtitle = transaction.description ?? '';
     if (subtitle.isEmpty) {
+      final orderType = transaction.orderType ?? '';
       subtitle = isIncoming
-          ? 'Ride (${context.formatCurrency(transaction.amount)})'
+          ? '${orderType.isNotEmpty ? orderType : "Ride"} (${context.formatCurrency(transaction.amount)})'
           : 'Commission';
     }
 
@@ -662,122 +715,4 @@ class _DriverCommissionReportScreenState
       ],
     );
   }
-
-  // Helper methods for calculations
-  num _calculateIncomingBalance(List<Transaction> transactions) {
-    return transactions
-        .where(
-          (t) =>
-              t.type == TransactionType.EARNING ||
-              t.type == TransactionType.TOPUP ||
-              t.type == TransactionType.REFUND,
-        )
-        .fold<num>(0, (sum, t) => sum + t.amount.abs());
-  }
-
-  num _calculateOutgoingBalance(List<Transaction> transactions) {
-    return transactions
-        .where(
-          (t) =>
-              t.type == TransactionType.COMMISSION ||
-              t.type == TransactionType.WITHDRAW ||
-              t.type == TransactionType.PAYMENT,
-        )
-        .fold<num>(0, (sum, t) => sum + t.amount.abs());
-  }
-
-  List<_ChartDataPoint> _generateChartData(List<Transaction> transactions) {
-    final now = DateTime.now();
-    final data = <_ChartDataPoint>[];
-
-    switch (_selectedPeriod) {
-      case EarningsPeriod.daily:
-        // Group by hour for the last 24 hours
-        for (int hour = 0; hour < 24; hour += 4) {
-          final hourStr = '${hour.toString().padLeft(2, '0')}:00';
-          final hourTransactions = transactions.where((t) {
-            final txHour = t.createdAt.toLocal().hour;
-            return txHour >= hour && txHour < hour + 4;
-          }).toList();
-
-          final income = hourTransactions
-              .where((t) => t.type == TransactionType.EARNING)
-              .fold<num>(0, (sum, t) => sum + t.amount.abs());
-          final outcome = hourTransactions
-              .where((t) => t.type == TransactionType.COMMISSION)
-              .fold<num>(0, (sum, t) => sum + t.amount.abs());
-
-          data.add(
-            _ChartDataPoint(label: hourStr, income: income, outcome: outcome),
-          );
-        }
-        break;
-
-      case EarningsPeriod.weekly:
-        // Group by day for the last 7 days
-        final days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-        for (int i = 6; i >= 0; i--) {
-          final date = now.subtract(Duration(days: i));
-          final dayTransactions = transactions.where((t) {
-            final txDate = t.createdAt.toLocal();
-            return txDate.year == date.year &&
-                txDate.month == date.month &&
-                txDate.day == date.day;
-          }).toList();
-
-          final income = dayTransactions
-              .where((t) => t.type == TransactionType.EARNING)
-              .fold<num>(0, (sum, t) => sum + t.amount.abs());
-          final outcome = dayTransactions
-              .where((t) => t.type == TransactionType.COMMISSION)
-              .fold<num>(0, (sum, t) => sum + t.amount.abs());
-
-          data.add(
-            _ChartDataPoint(
-              label: days[date.weekday % 7],
-              income: income,
-              outcome: outcome,
-            ),
-          );
-        }
-        break;
-
-      case EarningsPeriod.monthly:
-        // Group by week for the last month
-        for (int week = 1; week <= 4; week++) {
-          final weekStart = now.subtract(Duration(days: (4 - week) * 7 + 7));
-          final weekEnd = weekStart.add(const Duration(days: 7));
-          final weekTransactions = transactions.where((t) {
-            final txDate = t.createdAt.toLocal();
-            return txDate.isAfter(weekStart) && txDate.isBefore(weekEnd);
-          }).toList();
-
-          final income = weekTransactions
-              .where((t) => t.type == TransactionType.EARNING)
-              .fold<num>(0, (sum, t) => sum + t.amount.abs());
-          final outcome = weekTransactions
-              .where((t) => t.type == TransactionType.COMMISSION)
-              .fold<num>(0, (sum, t) => sum + t.amount.abs());
-
-          data.add(
-            _ChartDataPoint(label: 'W$week', income: income, outcome: outcome),
-          );
-        }
-        break;
-    }
-
-    return data;
-  }
-}
-
-class _ChartDataPoint {
-  final String label;
-  final num income;
-  final num outcome;
-
-  _ChartDataPoint({
-    required this.label,
-    required this.income,
-    required this.outcome,
-  });
 }

@@ -18,6 +18,7 @@ class DriverWalletCubit extends BaseCubit<DriverWalletState> {
       getWallet(),
       getTransactions(),
       getMonthlySummary(month: month, year: year),
+      getCommissionReport(),
     ]);
   }
 
@@ -102,6 +103,53 @@ class DriverWalletCubit extends BaseCubit<DriverWalletState> {
     });
   }
 
+  Future<void> getCommissionReport({EarningsPeriod? period}) async {
+    await taskManager.execute("DWC-gCR1", () async {
+      try {
+        emit(
+          state.copyWith(
+            fetchCommissionReportResult: const OperationResult.loading(),
+          ),
+        );
+        final selectedPeriod = period ?? state.selectedPeriod;
+        final res = await _walletRepository.getCommissionReport(
+          period: _mapPeriodToApi(selectedPeriod),
+        );
+        emit(
+          state.copyWith(
+            fetchCommissionReportResult: OperationResult.success(
+              res.data,
+              message: res.message,
+            ),
+            commissionReport: res.data,
+          ),
+        );
+      } on BaseError catch (e, st) {
+        logger.e(
+          "[DriverWalletCubit] - Error getting commission report: ${e.message}",
+          error: e,
+          stackTrace: st,
+        );
+        emit(
+          state.copyWith(
+            fetchCommissionReportResult: OperationResult.failed(e),
+          ),
+        );
+      }
+    });
+  }
+
+  CommissionReportPeriod _mapPeriodToApi(EarningsPeriod period) {
+    switch (period) {
+      case EarningsPeriod.daily:
+        return CommissionReportPeriod.daily;
+      case EarningsPeriod.weekly:
+        return CommissionReportPeriod.weekly;
+      case EarningsPeriod.monthly:
+        return CommissionReportPeriod.monthly;
+    }
+  }
+
   Future<BaseResponse<Payment>> withdraw(WithdrawRequest request) async {
     return _walletRepository.withdraw(request);
   }
@@ -142,5 +190,6 @@ class DriverWalletCubit extends BaseCubit<DriverWalletState> {
 
   void setSelectedPeriod(EarningsPeriod period) {
     emit(state.copyWith(selectedPeriod: period));
+    getCommissionReport(period: period);
   }
 }
