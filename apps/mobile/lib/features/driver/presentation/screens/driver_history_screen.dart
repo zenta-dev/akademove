@@ -146,7 +146,9 @@ class _DriverHistoryScreenState extends State<DriverHistoryScreen> {
             child: Padding(
               padding: EdgeInsets.all(24.dg),
               child: Column(
+                mainAxisSize: MainAxisSize.min, // KUNCI UTAMA
                 mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 spacing: 16.h,
                 children: [
                   Icon(
@@ -156,6 +158,7 @@ class _DriverHistoryScreenState extends State<DriverHistoryScreen> {
                   ),
                   Text(
                     context.l10n.no_orders_found,
+                    textAlign: TextAlign.center,
                     style: context.typography.h3.copyWith(
                       fontSize: 20.sp,
                       fontWeight: FontWeight.bold,

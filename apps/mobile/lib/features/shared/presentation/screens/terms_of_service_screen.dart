@@ -13,252 +13,239 @@ class TermsOfServiceScreen extends StatefulWidget {
 class _TermsOfServiceScreenState extends State<TermsOfServiceScreen> {
   int? _openIndex;
 
-  static const List<Map<String, dynamic>> _sections = [
-    {
-      'title': 'Acceptance of Terms',
-      'content':
-          'Welcome to AkadeMove. These Terms of Service ("Terms") govern your access to and use of our campus mobility and delivery platform. By creating an account or using our Services, you agree to be bound by these Terms and our Privacy Policy.',
-    },
-    {
-      'title': 'Service Description',
-      'content':
-          'AkadeMove is a campus-specific platform that connects students, faculty, and authorized campus community members for:',
-      'items': [
-        'Ride-Hailing: Transportation services within and around campus areas',
-        'Package Delivery: Delivery of documents, parcels, and goods within campus',
-        'Food Delivery: Ordering and delivery of food from campus merchants',
-      ],
-      'footer':
-          'AkadeMove acts as a technology platform connecting users with service providers. We are not a transportation or delivery company. Drivers and merchants are independent contractors.',
-    },
-    {
-      'title': 'User Eligibility',
-      'sections': [
-        {
-          'number': '1',
-          'title': 'Passengers/Users',
-          'items': [
-            'Be at least 17 years of age',
-            'Be a current student, faculty, or authorized campus member',
-            'Provide valid contact information',
-            'Verify campus affiliation (Student ID/KTM when required)',
-          ],
-        },
-        {
-          'number': '2',
-          'title': 'Drivers',
-          'items': [
-            'Be at least 18 years of age',
-            'Be a currently enrolled student',
-            "Possess valid driver's license (SIM C/A)",
-            'Provide valid vehicle registration (STNK)',
-            'Submit Student ID (KTM) photo',
-            'Pass verification and onboarding process',
-          ],
-        },
-        {
-          'number': '3',
-          'title': 'Merchants',
-          'items': [
-            'Be an authorized campus food vendor or tenant',
-            'Provide valid business documentation',
-            'Maintain food safety and hygiene standards',
-            'Comply with campus regulations',
-          ],
-        },
-      ],
-    },
-    {
-      'title': 'Pricing & Commission',
-      'content':
-          'Pricing formula: Base Price + (Distance × Rate) + Tip - Coupon',
-      'sections': [
-        {
-          'number': '1',
-          'title': 'Commission Structure',
-          'items': [
-            'Rides & Delivery: 15% platform commission',
-            'Food Orders: 20% total (10% merchant, 10% platform)',
-            'Tips: Go 100% to drivers (configurable)',
-          ],
-        },
-      ],
-      'footer':
-          'Example: Ride total Rp 25,000 → Commission Rp 3,750 → Driver earns Rp 21,250',
-    },
-    {
-      'title': 'Wallet System',
-      'content': 'All users have an in-app wallet for managing funds:',
-      'items': [
-        'Top-Up: Add funds via QRIS, bank transfer, or e-wallet (Midtrans)',
-        'Payment: Automatically deducted from wallet balance',
-        'Earnings: Credited to wallet after order completion',
-        'Withdrawals: Min. Rp 50,000, processed in 1-3 business days',
-      ],
-    },
-    {
-      'title': 'Cancellation Policy',
-      'sections': [
-        {
-          'number': '1',
-          'title': 'User Cancellations',
-          'items': [
-            'Free cancellation within 2 minutes of booking',
-            'Cancellation fee applies after 2 minutes (configurable)',
-            'Full fee if driver arrived or order being prepared',
-          ],
-        },
-        {
-          'number': '2',
-          'title': 'Driver Cancellations',
-          'items': [
-            'Can cancel if passenger unresponsive or violates terms',
-            'Excessive cancellations may result in suspension',
-          ],
-        },
-        {
-          'number': '3',
-          'title': 'Refunds',
-          'items': [
-            'Processed within 5-7 business days for service issues',
-            'Issued to original payment method or wallet',
-            'Disputes must be raised within 24 hours',
-          ],
-        },
-      ],
-    },
-    {
-      'title': 'Rating & Review System',
-      'content':
-          'Both users and drivers rate each other on a 5-star scale. Ratings affect service quality and opportunities.',
-      'items': [
-        'Fairness: Ratings should reflect actual service quality',
-        'Prohibition: Do not manipulate ratings or leave false reviews',
-        'Disputes: Can be reported to customer support',
-        'Consequences: Consistently low ratings may result in suspension',
-      ],
-    },
-    {
-      'title': 'Driver Requirements',
-      'sections': [
-        {
-          'number': '1',
-          'title': 'Class Schedule Management',
-          'description':
-              'Drivers can input class schedules to auto-set offline status during class times.',
-        },
-        {
-          'number': '2',
-          'title': 'Availability Control',
-          'items': [
-            'Toggle online/offline status freely',
-            'Accept or reject order requests',
-            'Excessive rejections affect matching priority',
-            'Repeated cancellations may result in warnings',
-          ],
-        },
-      ],
-    },
-    {
-      'title': 'Safety & Reporting',
-      'content': 'Your safety is our priority. AkadeMove provides:',
-      'items': [
-        'In-App Chat: Communicate without sharing phone numbers',
-        'Driver Verification: All drivers undergo document verification',
-        'Real-Time Tracking: Share trip with trusted contacts',
-        'Emergency Button: Quick access to campus security',
-        'Report System: Report misconduct or safety concerns',
-      ],
-      'footer':
-          'Reports are reviewed within 24-48 hours. Actions may include warnings, suspension, or permanent ban. Serious incidents may be reported to authorities.',
-    },
-    {
-      'title': 'Gender Preference Feature',
-      'content':
-          'Users can optionally request same-gender drivers for enhanced comfort and safety:',
-      'items': [
-        'Optional preference in matching algorithm',
-        'Availability depends on nearby drivers',
-        'May increase wait times if same-gender drivers not available',
-        'Can be enabled/disabled anytime',
-      ],
-    },
-    {
-      'title': 'Prohibited Conduct',
-      'content': 'Users must not:',
-      'items': [
-        'Use services for illegal purposes or transport illegal goods',
-        'Harass, abuse, threaten, or discriminate against others',
-        'Engage in fraudulent activities or fake accounts',
-        'Manipulate platform, ratings, pricing, or promotions',
-        'Operate vehicles unsafely or violate traffic laws',
-        'Attempt unauthorized access to accounts or data',
-        "Infringe on AkadeMove's or others' intellectual property",
-      ],
-      'footer':
-          'Violations may result in immediate suspension and legal action.',
-    },
-    {
-      'title': 'Limitation of Liability',
-      'content':
-          'AkadeMove is a technology platform connecting users with independent service providers. We do not provide transportation or delivery services directly.',
-      'items': [
-        'Services provided "as is" without warranties',
-        'Not liable for indirect or consequential damages',
-        'Maximum liability limited to amounts paid in last 12 months',
-        'Not responsible for actions of drivers, merchants, or users',
-      ],
-    },
-    {
-      'title': 'Dispute Resolution',
-      'items': [
-        'Informal Resolution: Contact customer support first',
-        'Mediation: Attempt mediation before litigation',
-        'Governing Law: Republic of Indonesia laws apply',
-        'Jurisdiction: Courts of Surabaya, Indonesia',
-      ],
-    },
-    {
-      'title': 'Account Termination',
-      'sections': [
-        {
-          'number': '1',
-          'title': 'User Termination',
-          'description':
-              'You may terminate your account anytime through app settings or customer support.',
-        },
-        {
-          'number': '2',
-          'title': 'Platform Termination',
-          'description':
-              'We reserve the right to suspend or terminate accounts that violate Terms, engage in fraud, or pose safety risks.',
-        },
-      ],
-      'footer':
-          'Upon termination, access ceases and data may be deleted subject to legal requirements. Outstanding obligations remain.',
-    },
-    {
-      'title': 'Changes to Terms',
-      'content':
-          'We may modify these Terms at any time. Material changes will be notified via:',
-      'items': [
-        'In-app notification',
-        'Email to registered address',
-        'Prominent website notice',
-      ],
-      'footer':
-          'Continued use after changes constitutes acceptance. If you disagree, stop using our Services.',
-    },
-    {
-      'title': 'Contact Information',
-      'items': [
-        'Email: support@akademove.com',
-        'Phone: +62 21 1234 5678',
-        'Address: AkadeMove, Universitas Negeri Surabaya, Surabaya, Jawa Timur',
-        'Customer Support: Available 24/7 through in-app chat',
-      ],
-    },
-  ];
+  List<Map<String, dynamic>> _getSections(BuildContext context) {
+    final l10n = context.l10n;
+    return [
+      {
+        'title': l10n.tos_acceptance_title,
+        'content': l10n.tos_acceptance_content,
+      },
+      {
+        'title': l10n.tos_service_desc_title,
+        'content': l10n.tos_service_desc_content,
+        'items': [
+          l10n.tos_service_desc_item_ride,
+          l10n.tos_service_desc_item_delivery,
+          l10n.tos_service_desc_item_food,
+        ],
+        'footer': l10n.tos_service_desc_footer,
+      },
+      {
+        'title': l10n.tos_eligibility_title,
+        'sections': [
+          {
+            'number': '1',
+            'title': l10n.tos_eligibility_passengers_title,
+            'items': [
+              l10n.tos_eligibility_passengers_item_1,
+              l10n.tos_eligibility_passengers_item_2,
+              l10n.tos_eligibility_passengers_item_3,
+              l10n.tos_eligibility_passengers_item_4,
+            ],
+          },
+          {
+            'number': '2',
+            'title': l10n.tos_eligibility_drivers_title,
+            'items': [
+              l10n.tos_eligibility_drivers_item_1,
+              l10n.tos_eligibility_drivers_item_2,
+              l10n.tos_eligibility_drivers_item_3,
+              l10n.tos_eligibility_drivers_item_4,
+              l10n.tos_eligibility_drivers_item_5,
+              l10n.tos_eligibility_drivers_item_6,
+            ],
+          },
+          {
+            'number': '3',
+            'title': l10n.tos_eligibility_merchants_title,
+            'items': [
+              l10n.tos_eligibility_merchants_item_1,
+              l10n.tos_eligibility_merchants_item_2,
+              l10n.tos_eligibility_merchants_item_3,
+              l10n.tos_eligibility_merchants_item_4,
+            ],
+          },
+        ],
+      },
+      {
+        'title': l10n.tos_pricing_title,
+        'content': l10n.tos_pricing_content,
+        'sections': [
+          {
+            'number': '1',
+            'title': l10n.tos_pricing_commission_title,
+            'items': [
+              l10n.tos_pricing_commission_item_1,
+              l10n.tos_pricing_commission_item_2,
+              l10n.tos_pricing_commission_item_3,
+            ],
+          },
+        ],
+        'footer': l10n.tos_pricing_footer,
+      },
+      {
+        'title': l10n.tos_wallet_title,
+        'content': l10n.tos_wallet_content,
+        'items': [
+          l10n.tos_wallet_item_1,
+          l10n.tos_wallet_item_2,
+          l10n.tos_wallet_item_3,
+          l10n.tos_wallet_item_4,
+        ],
+      },
+      {
+        'title': l10n.tos_cancellation_title,
+        'sections': [
+          {
+            'number': '1',
+            'title': l10n.tos_cancellation_user_title,
+            'items': [
+              l10n.tos_cancellation_user_item_1,
+              l10n.tos_cancellation_user_item_2,
+              l10n.tos_cancellation_user_item_3,
+            ],
+          },
+          {
+            'number': '2',
+            'title': l10n.tos_cancellation_driver_title,
+            'items': [
+              l10n.tos_cancellation_driver_item_1,
+              l10n.tos_cancellation_driver_item_2,
+            ],
+          },
+          {
+            'number': '3',
+            'title': l10n.tos_cancellation_refunds_title,
+            'items': [
+              l10n.tos_cancellation_refunds_item_1,
+              l10n.tos_cancellation_refunds_item_2,
+              l10n.tos_cancellation_refunds_item_3,
+            ],
+          },
+        ],
+      },
+      {
+        'title': l10n.tos_rating_title,
+        'content': l10n.tos_rating_content,
+        'items': [
+          l10n.tos_rating_item_1,
+          l10n.tos_rating_item_2,
+          l10n.tos_rating_item_3,
+          l10n.tos_rating_item_4,
+        ],
+      },
+      {
+        'title': l10n.tos_driver_req_title,
+        'sections': [
+          {
+            'number': '1',
+            'title': l10n.tos_driver_req_schedule_title,
+            'description': l10n.tos_driver_req_schedule_desc,
+          },
+          {
+            'number': '2',
+            'title': l10n.tos_driver_req_availability_title,
+            'items': [
+              l10n.tos_driver_req_availability_item_1,
+              l10n.tos_driver_req_availability_item_2,
+              l10n.tos_driver_req_availability_item_3,
+              l10n.tos_driver_req_availability_item_4,
+            ],
+          },
+        ],
+      },
+      {
+        'title': l10n.tos_safety_title,
+        'content': l10n.tos_safety_content,
+        'items': [
+          l10n.tos_safety_item_1,
+          l10n.tos_safety_item_2,
+          l10n.tos_safety_item_3,
+          l10n.tos_safety_item_4,
+          l10n.tos_safety_item_5,
+        ],
+        'footer': l10n.tos_safety_footer,
+      },
+      {
+        'title': l10n.tos_gender_pref_title,
+        'content': l10n.tos_gender_pref_content,
+        'items': [
+          l10n.tos_gender_pref_item_1,
+          l10n.tos_gender_pref_item_2,
+          l10n.tos_gender_pref_item_3,
+          l10n.tos_gender_pref_item_4,
+        ],
+      },
+      {
+        'title': l10n.tos_prohibited_title,
+        'content': l10n.tos_prohibited_content,
+        'items': [
+          l10n.tos_prohibited_item_1,
+          l10n.tos_prohibited_item_2,
+          l10n.tos_prohibited_item_3,
+          l10n.tos_prohibited_item_4,
+          l10n.tos_prohibited_item_5,
+          l10n.tos_prohibited_item_6,
+          l10n.tos_prohibited_item_7,
+        ],
+        'footer': l10n.tos_prohibited_footer,
+      },
+      {
+        'title': l10n.tos_liability_title,
+        'content': l10n.tos_liability_content,
+        'items': [
+          l10n.tos_liability_item_1,
+          l10n.tos_liability_item_2,
+          l10n.tos_liability_item_3,
+          l10n.tos_liability_item_4,
+        ],
+      },
+      {
+        'title': l10n.tos_dispute_title,
+        'items': [
+          l10n.tos_dispute_item_1,
+          l10n.tos_dispute_item_2,
+          l10n.tos_dispute_item_3,
+          l10n.tos_dispute_item_4,
+        ],
+      },
+      {
+        'title': l10n.tos_termination_title,
+        'sections': [
+          {
+            'number': '1',
+            'title': l10n.tos_termination_user_title,
+            'description': l10n.tos_termination_user_desc,
+          },
+          {
+            'number': '2',
+            'title': l10n.tos_termination_platform_title,
+            'description': l10n.tos_termination_platform_desc,
+          },
+        ],
+        'footer': l10n.tos_termination_footer,
+      },
+      {
+        'title': l10n.tos_changes_title,
+        'content': l10n.tos_changes_content,
+        'items': [
+          l10n.tos_changes_item_1,
+          l10n.tos_changes_item_2,
+          l10n.tos_changes_item_3,
+        ],
+        'footer': l10n.tos_changes_footer,
+      },
+      {
+        'title': l10n.tos_contact_title,
+        'items': [
+          l10n.tos_contact_item_1,
+          l10n.tos_contact_item_2,
+          l10n.tos_contact_item_3,
+          l10n.tos_contact_item_4,
+        ],
+      },
+    ];
+  }
 
   void _toggleSection(int index) {
     setState(() {
@@ -268,10 +255,13 @@ class _TermsOfServiceScreenState extends State<TermsOfServiceScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final sections = _getSections(context);
+    final l10n = context.l10n;
+
     return Stack(
       children: [
         Scaffold(
-          headers: [const DefaultAppBar(title: 'Terms of Service')],
+          headers: [DefaultAppBar(title: l10n.tos_title)],
           child: SingleChildScrollView(
             child: Padding(
               padding: EdgeInsets.all(16.dg),
@@ -282,7 +272,7 @@ class _TermsOfServiceScreenState extends State<TermsOfServiceScreen> {
                   spacing: 16.h,
                   children: [
                     _buildHeaderCard(context),
-                    ..._sections.asMap().entries.map((entry) {
+                    ...sections.asMap().entries.map((entry) {
                       return _TermsSection(
                         section: entry.value,
                         isOpen: _openIndex == entry.key,
@@ -301,26 +291,28 @@ class _TermsOfServiceScreenState extends State<TermsOfServiceScreen> {
   }
 
   Widget _buildHeaderCard(BuildContext context) {
+    final l10n = context.l10n;
+
     return Card(
       child: Column(
         spacing: 8.h,
         children: [
           Text(
-            'AkadeMove Terms of Service',
+            l10n.tos_title,
             style: context.typography.small.copyWith(
               fontSize: 16.sp,
               fontWeight: FontWeight.w600,
             ),
           ),
           Text(
-            'Effective Date: December 6, 2025',
+            l10n.tos_effective_date,
             style: context.typography.small.copyWith(
               fontSize: 13.sp,
               fontWeight: FontWeight.w500,
             ),
           ),
           Text(
-            'These Terms of Service constitute a legally binding agreement between you and AkadeMove. Please read them carefully before using our services.',
+            l10n.tos_intro,
             style: context.typography.small.copyWith(
               fontSize: 12.sp,
               fontWeight: FontWeight.normal,

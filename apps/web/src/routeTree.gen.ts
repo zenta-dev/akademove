@@ -63,6 +63,7 @@ import { Route as DashDriverRatingsRouteImport } from './routes/dash/driver/rati
 import { Route as DashDriverProfileRouteImport } from './routes/dash/driver/profile'
 import { Route as DashDriverOrdersRouteImport } from './routes/dash/driver/orders'
 import { Route as DashDriverEarningsRouteImport } from './routes/dash/driver/earnings'
+import { Route as DashDriverCommissionReportRouteImport } from './routes/dash/driver/commission-report'
 import { Route as DashAdminUsersRouteImport } from './routes/dash/admin/users'
 import { Route as DashAdminSettingsRouteImport } from './routes/dash/admin/settings'
 import { Route as DashAdminProfileRouteImport } from './routes/dash/admin/profile'
@@ -370,6 +371,12 @@ const DashDriverEarningsRoute = DashDriverEarningsRouteImport.update({
   path: '/earnings',
   getParentRoute: () => DashDriverRouteRoute,
 } as any)
+const DashDriverCommissionReportRoute =
+  DashDriverCommissionReportRouteImport.update({
+    id: '/commission-report',
+    path: '/commission-report',
+    getParentRoute: () => DashDriverRouteRoute,
+  } as any)
 const DashAdminUsersRoute = DashAdminUsersRouteImport.update({
   id: '/users',
   path: '/users',
@@ -605,6 +612,7 @@ export interface FileRoutesByFullPath {
   '/dash/admin/profile': typeof DashAdminProfileRoute
   '/dash/admin/settings': typeof DashAdminSettingsRoute
   '/dash/admin/users': typeof DashAdminUsersRoute
+  '/dash/driver/commission-report': typeof DashDriverCommissionReportRoute
   '/dash/driver/earnings': typeof DashDriverEarningsRoute
   '/dash/driver/orders': typeof DashDriverOrdersRoute
   '/dash/driver/profile': typeof DashDriverProfileRoute
@@ -691,6 +699,7 @@ export interface FileRoutesByTo {
   '/dash/admin/profile': typeof DashAdminProfileRoute
   '/dash/admin/settings': typeof DashAdminSettingsRoute
   '/dash/admin/users': typeof DashAdminUsersRoute
+  '/dash/driver/commission-report': typeof DashDriverCommissionReportRoute
   '/dash/driver/earnings': typeof DashDriverEarningsRoute
   '/dash/driver/orders': typeof DashDriverOrdersRoute
   '/dash/driver/profile': typeof DashDriverProfileRoute
@@ -785,6 +794,7 @@ export interface FileRoutesById {
   '/dash/admin/profile': typeof DashAdminProfileRoute
   '/dash/admin/settings': typeof DashAdminSettingsRoute
   '/dash/admin/users': typeof DashAdminUsersRoute
+  '/dash/driver/commission-report': typeof DashDriverCommissionReportRoute
   '/dash/driver/earnings': typeof DashDriverEarningsRoute
   '/dash/driver/orders': typeof DashDriverOrdersRoute
   '/dash/driver/profile': typeof DashDriverProfileRoute
@@ -878,6 +888,7 @@ export interface FileRouteTypes {
     | '/dash/admin/profile'
     | '/dash/admin/settings'
     | '/dash/admin/users'
+    | '/dash/driver/commission-report'
     | '/dash/driver/earnings'
     | '/dash/driver/orders'
     | '/dash/driver/profile'
@@ -964,6 +975,7 @@ export interface FileRouteTypes {
     | '/dash/admin/profile'
     | '/dash/admin/settings'
     | '/dash/admin/users'
+    | '/dash/driver/commission-report'
     | '/dash/driver/earnings'
     | '/dash/driver/orders'
     | '/dash/driver/profile'
@@ -1057,6 +1069,7 @@ export interface FileRouteTypes {
     | '/dash/admin/profile'
     | '/dash/admin/settings'
     | '/dash/admin/users'
+    | '/dash/driver/commission-report'
     | '/dash/driver/earnings'
     | '/dash/driver/orders'
     | '/dash/driver/profile'
@@ -1511,6 +1524,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashDriverEarningsRouteImport
       parentRoute: typeof DashDriverRouteRoute
     }
+    '/dash/driver/commission-report': {
+      id: '/dash/driver/commission-report'
+      path: '/commission-report'
+      fullPath: '/dash/driver/commission-report'
+      preLoaderRoute: typeof DashDriverCommissionReportRouteImport
+      parentRoute: typeof DashDriverRouteRoute
+    }
     '/dash/admin/users': {
       id: '/dash/admin/users'
       path: '/users'
@@ -1869,6 +1889,7 @@ const DashAdminRouteRouteWithChildren = DashAdminRouteRoute._addFileChildren(
 )
 
 interface DashDriverRouteRouteChildren {
+  DashDriverCommissionReportRoute: typeof DashDriverCommissionReportRoute
   DashDriverEarningsRoute: typeof DashDriverEarningsRoute
   DashDriverOrdersRoute: typeof DashDriverOrdersRoute
   DashDriverProfileRoute: typeof DashDriverProfileRoute
@@ -1878,6 +1899,7 @@ interface DashDriverRouteRouteChildren {
 }
 
 const DashDriverRouteRouteChildren: DashDriverRouteRouteChildren = {
+  DashDriverCommissionReportRoute: DashDriverCommissionReportRoute,
   DashDriverEarningsRoute: DashDriverEarningsRoute,
   DashDriverOrdersRoute: DashDriverOrdersRoute,
   DashDriverProfileRoute: DashDriverProfileRoute,
@@ -2014,12 +2036,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { createStart } from '@tanstack/react-start'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-  }
-}

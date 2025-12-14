@@ -87,40 +87,31 @@ class _DriverCommissionReportScreenState
 
   /// Current Saldo Card - Light cream background with prominent balance
   Widget _buildCurrentBalanceCard(Wallet? wallet) {
-    return Container(
+    return SizedBox(
       width: double.infinity,
-      padding: EdgeInsets.all(24.dg),
-      decoration: BoxDecoration(
-        color: const Color(0xFFFFF8E7),
-        borderRadius: BorderRadius.circular(16.r),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        spacing: 8.h,
-        children: [
-          Text(
-            context.l10n.current_saldo,
-            style: context.typography.p.copyWith(
-              fontSize: 14.sp,
-              color: const Color(0xFF8B7355),
+      child: Card(
+        padding: EdgeInsets.all(24.dg),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          spacing: 8.h,
+          children: [
+            Text(
+              context.l10n.current_saldo,
+              style: context.typography.p.copyWith(
+                fontSize: 14.sp,
+                color: context.colorScheme.secondaryForeground,
+              ),
             ),
-          ),
-          Text(
-            context.formatCurrency(wallet?.balance ?? 0),
-            style: context.typography.h1.copyWith(
-              fontSize: 32.sp,
-              fontWeight: FontWeight.bold,
-              color: const Color(0xFF4A3728),
+            Text(
+              context.formatCurrency(wallet?.balance ?? 0),
+              style: context.typography.h1.copyWith(
+                fontSize: 32.sp,
+                fontWeight: FontWeight.bold,
+                color: context.colorScheme.secondaryForeground,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -136,6 +127,7 @@ class _DriverCommissionReportScreenState
         Expanded(
           child: _buildSummaryCard(
             title: context.l10n.incoming_balance,
+            titleColor: context.colorScheme.secondaryForeground,
             amount: incoming,
             icon: LucideIcons.arrowDownLeft,
             iconBackgroundColor: const Color(0xFFE3F2FD),
@@ -145,6 +137,7 @@ class _DriverCommissionReportScreenState
         Expanded(
           child: _buildSummaryCard(
             title: context.l10n.outgoing_balance,
+            titleColor: context.colorScheme.secondaryForeground,
             amount: outgoing,
             icon: LucideIcons.arrowUpRight,
             iconBackgroundColor: const Color(0xFFFFEBEE),
@@ -161,20 +154,10 @@ class _DriverCommissionReportScreenState
     required IconData icon,
     required Color iconBackgroundColor,
     required Color iconColor,
+    required Color titleColor,
   }) {
-    return Container(
+    return Card(
       padding: EdgeInsets.all(16.dg),
-      decoration: BoxDecoration(
-        color: const Color(0xFFE8F4FD),
-        borderRadius: BorderRadius.circular(12.r),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 8.h,
@@ -195,7 +178,7 @@ class _DriverCommissionReportScreenState
                   title,
                   style: context.typography.small.copyWith(
                     fontSize: 12.sp,
-                    color: const Color(0xFF5C6BC0),
+                    color: titleColor,
                   ),
                 ),
               ),
@@ -206,7 +189,7 @@ class _DriverCommissionReportScreenState
             style: context.typography.h3.copyWith(
               fontSize: 18.sp,
               fontWeight: FontWeight.bold,
-              color: const Color(0xFF1A237E),
+              color: titleColor,
             ),
           ),
         ],

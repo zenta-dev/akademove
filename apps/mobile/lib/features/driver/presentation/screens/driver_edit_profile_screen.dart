@@ -222,7 +222,7 @@ class _DriverEditProfileScreenState extends State<DriverEditProfileScreen> {
                       // Driver Specific Information
                       const Divider(),
                       Text(
-                        'Driver Information',
+                        context.l10n.driver_information,
                         style: context.typography.h4.copyWith(
                           fontSize: 16.sp,
                           fontWeight: FontWeight.bold,
@@ -273,30 +273,24 @@ class _DriverEditProfileScreenState extends State<DriverEditProfileScreen> {
 
                       // Document Uploads
                       const Divider(),
-                      Text(
-                        'Documents',
-                        style: context.typography.h4.copyWith(
-                          fontSize: 16.sp,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+                      Text(context.l10n.document),
 
                       _buildDocumentUpload(
-                        'Student Card',
+                        Text(context.l10n.student_card).data!,
                         _studentCardFile,
                         (file) => setState(() => _studentCardFile = file),
                         isLoading,
                       ),
 
                       _buildDocumentUpload(
-                        'Driver License',
+                        Text(context.l10n.driver_license).data!,
                         _driverLicenseFile,
                         (file) => setState(() => _driverLicenseFile = file),
                         isLoading,
                       ),
 
                       _buildDocumentUpload(
-                        'Vehicle Certificate',
+                        Text(context.l10n.vehicle_certificate).data!,
                         _vehicleCertificateFile,
                         (file) =>
                             setState(() => _vehicleCertificateFile = file),

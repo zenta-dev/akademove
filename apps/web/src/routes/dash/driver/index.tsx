@@ -319,22 +319,24 @@ function RouteComponent() {
 					</CardContent>
 				</Card>
 
-				<Card>
-					<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-						<CardTitle className="font-medium text-sm">
-							Total Earnings
-						</CardTitle>
-						<TrendingUp className="h-4 w-4 text-muted-foreground" />
-					</CardHeader>
-					<CardContent>
-						<div className="font-bold text-2xl">
-							{formatPrice(totalEarnings)}
-						</div>
-						<p className="text-muted-foreground text-xs">
-							From {completedOrders?.body.data.length ?? 0} completed trips
-						</p>
-					</CardContent>
-				</Card>
+				<Link to="/dash/driver/commission-report" className="block">
+					<Card className="cursor-pointer transition-colors hover:bg-muted/50">
+						<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+							<CardTitle className="font-medium text-sm">
+								Total Earnings
+							</CardTitle>
+							<TrendingUp className="h-4 w-4 text-muted-foreground" />
+						</CardHeader>
+						<CardContent>
+							<div className="font-bold text-2xl">
+								{formatPrice(totalEarnings)}
+							</div>
+							<p className="text-muted-foreground text-xs">
+								From {completedOrders?.body.data.length ?? 0} completed trips
+							</p>
+						</CardContent>
+					</Card>
+				</Link>
 
 				<Card>
 					<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">

@@ -64,13 +64,18 @@ final driverRouter = StatefulShellRoute.indexedStack(
             GoRoute(
               name: Routes.driverEarnings.name,
               path: 'earnings',
-              builder: (context, state) => const DriverEarningsScreen(),
+              builder: (context, state) => BlocProvider(
+                create: (_) => sl<DriverWalletCubit>(),
+                child: const DriverEarningsScreen(),
+              ),
               routes: [
                 GoRoute(
                   name: Routes.driverCommissionReport.name,
                   path: 'commission',
-                  builder: (context, state) =>
-                      const DriverCommissionReportScreen(),
+                  builder: (context, state) => BlocProvider(
+                    create: (_) => sl<DriverWalletCubit>(),
+                    child: const DriverCommissionReportScreen(),
+                  ),
                 ),
               ],
             ),

@@ -2,6 +2,7 @@ import { localizeHref, m } from "@repo/i18n";
 import { Link, useRouterState } from "@tanstack/react-router";
 import {
 	Calendar,
+	FileText,
 	Gauge,
 	LineChart,
 	Receipt,
@@ -39,6 +40,11 @@ const navMain = Object.freeze([
 		title: m.earnings(),
 		href: localizeHref("/dash/driver/earnings"),
 		icon: LineChart,
+	},
+	{
+		title: m.title_commission_report(),
+		href: localizeHref("/dash/driver/commission-report"),
+		icon: FileText,
 	},
 	{
 		title: m.ratings(),

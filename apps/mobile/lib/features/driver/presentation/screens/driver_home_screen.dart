@@ -291,19 +291,21 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 16.h,
         children: [
-          Text(
-            'Today\'s Performance',
-            style: context.typography.h4.copyWith(fontSize: 16.sp),
-          ),
+          Text(context.l10n.today_performance),
           Row(
             children: [
               Expanded(
-                child: _buildStatItem(
-                  context,
-                  icon: LucideIcons.dollarSign,
-                  label: context.l10n.earnings,
-                  value: 'Rp ${_formatMoney(state.todayEarnings ?? 0)}',
-                  color: const Color(0xFF4CAF50),
+                child: GestureDetector(
+                  onTap: () =>
+                      context.pushNamed(Routes.driverCommissionReport.name),
+                  child: _buildStatItem(
+                    context,
+                    icon: LucideIcons.dollarSign,
+                    label: context.l10n.earnings,
+                    value: 'Rp ${_formatMoney(state.todayEarnings ?? 0)}',
+                    color: const Color(0xFF4CAF50),
+                    showArrow: true,
+                  ),
                 ),
               ),
               SizedBox(width: 16.w),
@@ -329,6 +331,7 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
     required String label,
     required String value,
     required Color color,
+    bool showArrow = false,
   }) {
     return Container(
       padding: EdgeInsets.all(12.dg),
@@ -336,24 +339,42 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
         color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(8.r),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        spacing: 8.h,
+      child: Row(
         children: [
-          Icon(icon, color: color, size: 24.sp),
-          Text(
-            label,
-            style: context.typography.small.copyWith(
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              spacing: 6.h,
+              children: [
+                Icon(icon, color: color, size: 24.sp),
+                Text(
+                  label,
+                  style: context.typography.small.copyWith(
+                    color: context.colorScheme.mutedForeground,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                Text(
+                  value,
+                  style: context.typography.h4.copyWith(
+                    fontSize: 18.sp,
+                    color: color,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+            ),
+          ),
+          if (showArrow) ...[
+            SizedBox(width: 8.w),
+            Icon(
+              LucideIcons.arrowRight,
+              size: 20.sp,
               color: context.colorScheme.mutedForeground,
             ),
-          ),
-          Text(
-            value,
-            style: context.typography.h4.copyWith(
-              fontSize: 18.sp,
-              color: color,
-            ),
-          ),
+          ],
         ],
       ),
     );
@@ -365,14 +386,11 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 12.h,
         children: [
-          Text(
-            'Quick Actions',
-            style: context.typography.h4.copyWith(fontSize: 16.sp),
-          ),
+          Text(context.l10n.quick_actions),
           _buildActionButton(
             context,
             icon: LucideIcons.trophy,
-            label: context.l10n.leadeboard_and_badges,
+            label: context.l10n.leaderboard,
             onTap: () => context.pushNamed(Routes.driverLeaderboard.name),
           ),
           _buildActionButton(
@@ -398,7 +416,6 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
         child: Row(
           children: [
             Icon(icon, size: 20.sp, color: context.colorScheme.primary),
-            SizedBox(width: 12.w),
             Expanded(
               child: Text(
                 label,

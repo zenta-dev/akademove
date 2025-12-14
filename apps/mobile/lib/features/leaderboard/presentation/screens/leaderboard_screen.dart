@@ -1,11 +1,17 @@
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/l10n/l10n.dart';
-import 'package:api_client/api_client.dart' as api_client;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 
+/// Driver Leaderboard Screen
+///
+/// Displays the top 10 drivers:
+/// - Top section: Podium showing ranks 1-3
+/// - Bottom section: Scrollable list showing ranks 4-10
+///
+/// Data refreshes every 24 hours from the backend.
 class LeaderboardScreen extends StatelessWidget {
   const LeaderboardScreen({super.key});
 
@@ -33,13 +39,11 @@ class _LeaderboardViewState extends State<_LeaderboardView> {
       builder: (context, state) {
         return Scaffold(
           headers: [DefaultAppBar(title: context.l10n.leaderboard_title)],
-          child: state.leaderboards.isLoading
-              ? _buildBody(context, state)
+          child: state.leaderboardEntries.isLoading
+              ? const Center(child: CircularProgressIndicator())
               : RefreshTrigger(
                   onRefresh: _onRefresh,
-                  child: SingleChildScrollView(
-                    child: _buildBody(context, state),
-                  ),
+                  child: _buildBody(context, state),
                 ),
         );
       },
@@ -47,18 +51,134 @@ class _LeaderboardViewState extends State<_LeaderboardView> {
   }
 
   Widget _buildBody(BuildContext context, DriverLeaderboardState state) {
-    if (state.leaderboards.isLoading) {
-      return const Center(child: CircularProgressIndicator());
+    if (state.leaderboardEntries.isFailure) {
+      return _buildErrorState(context, state);
     }
 
-    if (state.leaderboards.isFailure) {
-      return Center(
+    final entries = state.leaderboardEntries.value ?? [];
+    if (entries.isEmpty) {
+      return _buildEmptyState(context);
+    }
+
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Podium Section (Top 3)
+          if (state.topThree.isNotEmpty)
+            LeaderboardPodiumWidget(topThree: state.topThree),
+
+          // Daily refresh info
+          _buildRefreshInfo(context),
+
+          // Other Rankings Section (4-10)
+          if (state.otherRankings.isNotEmpty) ...[
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.w),
+              child: Text(
+                context.l10n.leaderboard_other_rankings,
+                style: context.typography.h4.copyWith(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16.sp,
+                ),
+              ),
+            ),
+            SizedBox(height: 12.h),
+            _buildRankingsList(state),
+          ],
+
+          // Bottom padding
+          SizedBox(height: 24.h),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildRefreshInfo(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            LucideIcons.clock,
+            size: 14.sp,
+            color: context.colorScheme.mutedForeground,
+          ),
+          SizedBox(width: 8.w),
+          Text(
+            context.l10n.leaderboard_refreshes_daily,
+            style: context.typography.small.copyWith(
+              fontSize: 12.sp,
+              color: context.colorScheme.mutedForeground,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildRankingsList(DriverLeaderboardState state) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 16.w),
+      child: Column(
+        children: state.otherRankings.map((entry) {
+          return Padding(
+            padding: EdgeInsets.only(bottom: 8.h),
+            child: LeaderboardListItem(entry: entry),
+          );
+        }).toList(),
+      ),
+    );
+  }
+
+  Widget _buildEmptyState(BuildContext context) {
+    return Center(
+      child: Padding(
+        padding: EdgeInsets.all(32.w),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Icon(
+              LucideIcons.trophy,
+              size: 64.sp,
+              color: context.colorScheme.mutedForeground,
+            ),
+            SizedBox(height: 16.h),
             Text(
-              state.leaderboards.error?.message ?? 'Failed to load data',
-              style: TextStyle(color: context.colorScheme.destructive),
+              context.l10n.leaderboard_empty_state,
+              style: context.typography.p.copyWith(
+                color: context.colorScheme.mutedForeground,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildErrorState(BuildContext context, DriverLeaderboardState state) {
+    return Center(
+      child: Padding(
+        padding: EdgeInsets.all(32.w),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              LucideIcons.circleAlert,
+              size: 64.sp,
+              color: context.colorScheme.destructive,
+            ),
+            SizedBox(height: 16.h),
+            Text(
+              state.leaderboardEntries.error?.message ??
+                  context.l10n.failed_to_load,
+              style: context.typography.p.copyWith(
+                color: context.colorScheme.destructive,
+              ),
+              textAlign: TextAlign.center,
             ),
             SizedBox(height: 16.h),
             PrimaryButton(
@@ -67,150 +187,6 @@ class _LeaderboardViewState extends State<_LeaderboardView> {
             ),
           ],
         ),
-      );
-    }
-
-    return _buildLeaderboardTab(state);
-  }
-
-  Widget _buildLeaderboardTab(DriverLeaderboardState state) {
-    final leaderboards = state.leaderboards.value ?? [];
-
-    if (leaderboards.isEmpty) {
-      return Center(child: Text(context.l10n.text_no_rankings_yet));
-    }
-
-    return Padding(
-      padding: EdgeInsets.all(16.w),
-      child: Column(
-        children: leaderboards
-            .map((leaderboard) => _LeaderboardCard(leaderboard: leaderboard))
-            .toList(),
-      ),
-    );
-  }
-}
-
-class _LeaderboardCard extends StatelessWidget {
-  const _LeaderboardCard({required this.leaderboard});
-
-  final api_client.Leaderboard leaderboard;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(bottom: 12.h),
-      child: Card(
-        child: Padding(
-          padding: EdgeInsets.all(16.w),
-          child: Row(
-            children: [
-              // Rank Badge
-              _buildRankBadge(context),
-              SizedBox(width: 16.w),
-
-              // User Info
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      context.l10n.text_user_id(
-                        leaderboard.userId.substring(0, 8),
-                      ),
-                      style: context.typography.p.copyWith(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14.sp,
-                      ),
-                    ),
-                    SizedBox(height: 4.h),
-                    Text(
-                      context.l10n.text_category_value(
-                        leaderboard.category.value,
-                      ),
-                      style: context.typography.small.copyWith(
-                        fontSize: 12.sp,
-                        color: context.colorScheme.mutedForeground,
-                      ),
-                    ),
-                    SizedBox(height: 4.h),
-                    Text(
-                      context.l10n.text_period_value(leaderboard.period.value),
-                      style: context.typography.small.copyWith(
-                        fontSize: 12.sp,
-                        color: context.colorScheme.mutedForeground,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              // Score
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(
-                    leaderboard.score.toString(),
-                    style: context.typography.h4.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: context.colorScheme.primary,
-                    ),
-                  ),
-                  Text(
-                    context.l10n.leaderboard_pts,
-                    style: context.typography.small.copyWith(
-                      fontSize: 12.sp,
-                      color: context.colorScheme.mutedForeground,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildRankBadge(BuildContext context) {
-    Color badgeColor;
-    IconData icon;
-
-    if (leaderboard.rank == 1) {
-      badgeColor = const Color(0xFFFFD700); // Gold
-      icon = LucideIcons.trophy;
-    } else if (leaderboard.rank == 2) {
-      badgeColor = const Color(0xFFC0C0C0); // Silver
-      icon = LucideIcons.medal;
-    } else if (leaderboard.rank == 3) {
-      badgeColor = const Color(0xFFCD7F32); // Bronze
-      icon = LucideIcons.award;
-    } else {
-      badgeColor = context.colorScheme.secondary;
-      icon = LucideIcons.user;
-    }
-
-    return Container(
-      width: 60.w,
-      height: 60.w,
-      decoration: BoxDecoration(
-        color: badgeColor.withAlpha(51), // ~20% opacity
-        shape: BoxShape.circle,
-        border: Border.all(color: badgeColor, width: 2),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(icon, color: badgeColor, size: 24.sp),
-          Text(
-            '#${leaderboard.rank}',
-            style: TextStyle(
-              color: badgeColor,
-              fontWeight: FontWeight.bold,
-              fontSize: 12.sp,
-            ),
-          ),
-        ],
       ),
     );
   }

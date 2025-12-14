@@ -52,6 +52,7 @@ export const SUB_ROUTE_TITLES = Object.freeze({
 		SCHEDULE: `${m.schedule()} - ${ROUTE_TITLES.DRIVER}`,
 		ORDERS: `${m.orders()} - ${ROUTE_TITLES.DRIVER}`,
 		EARNINGS: `${m.earnings()} - ${ROUTE_TITLES.DRIVER}`,
+		COMMISSION_REPORT: `${m.title_commission_report()} - ${ROUTE_TITLES.DRIVER}`,
 		RATINGS: `${m.ratings()} - ${ROUTE_TITLES.DRIVER}`,
 		PROFILE: `${m.profile()} - ${ROUTE_TITLES.DRIVER}`,
 	} as const,
