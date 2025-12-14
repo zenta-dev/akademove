@@ -41,7 +41,7 @@ class _LeaderboardViewState extends State<_LeaderboardView> {
           headers: [DefaultAppBar(title: context.l10n.leaderboard_title)],
           child: state.leaderboardEntries.isLoading
               ? const Center(child: CircularProgressIndicator())
-              : RefreshTrigger(
+              : SafeRefreshTrigger(
                   onRefresh: _onRefresh,
                   child: _buildBody(context, state),
                 ),

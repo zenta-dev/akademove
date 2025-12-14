@@ -247,7 +247,7 @@ class _MerchantWalletWithdrawScreenState
           ],
         ),
       ],
-      child: RefreshTrigger(
+      child: SafeRefreshTrigger(
         onRefresh: _onRefresh,
         child: SingleChildScrollView(
           child: Padding(

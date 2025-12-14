@@ -36,6 +36,7 @@ import type {
 } from "@/core/interface";
 import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
+import type { StorageService } from "@/core/services/storage";
 import { logger } from "@/utils/logger";
 import type { OrderListQuery } from "../order-spec";
 import type { OrderPricingService } from "../services";
@@ -57,8 +58,9 @@ export class OrderReadRepository extends OrderBaseRepository {
 		db: DatabaseService,
 		kv: KeyValueService,
 		pricingService: OrderPricingService,
+		storage?: StorageService,
 	) {
-		super(db, kv);
+		super(db, kv, storage);
 		this.#pricingService = pricingService;
 	}
 
@@ -308,7 +310,9 @@ export class OrderReadRepository extends OrderBaseRepository {
 					limit: limit + 1,
 				});
 
-				const mapped = res.map(OrderBaseRepository.composeEntity);
+				const mapped = res.map((item) =>
+					OrderBaseRepository.composeEntity(item, this.storage),
+				);
 				const hasMore = mapped.length > limit;
 				const rows = hasMore ? mapped.slice(0, limit) : mapped;
 				const nextCursor = hasMore ? mapped[mapped.length - 1].id : undefined;
@@ -326,7 +330,9 @@ export class OrderReadRepository extends OrderBaseRepository {
 				limit,
 			});
 
-			const rows = result.map(OrderBaseRepository.composeEntity);
+			const rows = result.map((item) =>
+				OrderBaseRepository.composeEntity(item, this.storage),
+			);
 
 			const hasFilters = statuses.length > 0 || type || startDate || endDate;
 

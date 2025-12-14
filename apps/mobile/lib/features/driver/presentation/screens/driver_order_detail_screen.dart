@@ -28,6 +28,7 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
   Set<Marker> _markers = {};
   Set<Polyline> _polylines = {};
   bool _isUpdatingMap = false;
+  bool _isDisposed = false;
   Coordinate? _currentDriverLocation;
 
   /// Track the previous order status to detect transitions (not initial load)
@@ -112,12 +113,12 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
 
   /// Update only polylines when driver location changes (without full map rebuild)
   Future<void> _updatePolylinesOnly(Order order) async {
-    if (_isUpdatingMap) return;
+    if (_isDisposed || _isUpdatingMap) return;
     _isUpdatingMap = true;
 
     try {
       final driverLocation = _currentDriverLocation;
-      if (driverLocation == null || !mounted) {
+      if (driverLocation == null || _isDisposed || !mounted) {
         _isUpdatingMap = false;
         return;
       }
@@ -228,7 +229,7 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
         logger.e('[DriverOrderDetailScreen] - Failed to update polylines: $e');
       }
 
-      if (!mounted) {
+      if (_isDisposed || !mounted) {
         _isUpdatingMap = false;
         return;
       }
@@ -276,6 +277,7 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
 
   @override
   void dispose() {
+    _isDisposed = true;
     _locationStreamSubscription?.cancel();
     _animatedDriverMarker.dispose();
     _mapController?.dispose();
@@ -457,19 +459,20 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
 
   /// Center map on driver's current location
   Future<void> _centerOnDriverLocation() async {
+    if (_isDisposed) return;
     final driverLocation = _currentDriverLocation;
     final mapController = _mapController;
     if (driverLocation != null && mapController != null && mounted) {
       try {
-        if (_mapController != null) {
-          await mapController.animateCamera(
-            CameraUpdate.newLatLngZoom(
-              LatLng(driverLocation.y.toDouble(), driverLocation.x.toDouble()),
-              16,
-            ),
-          );
-        }
+        await mapController.animateCamera(
+          CameraUpdate.newLatLngZoom(
+            LatLng(driverLocation.y.toDouble(), driverLocation.x.toDouble()),
+            16,
+          ),
+        );
       } catch (e) {
+        // Ignore "Bad state" errors from disposed controller
+        if (e.toString().contains('was used after')) return;
         logger.e('[DriverOrderDetailScreen] - Map controller error: $e');
       }
     }
@@ -477,7 +480,7 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
 
   Future<void> _updateMapWithOrderData(Order order) async {
     // Prevent updates if widget is disposed
-    if (!mounted) return;
+    if (_isDisposed || !mounted) return;
 
     // Prevent concurrent updates
     if (_isUpdatingMap) return;
@@ -497,7 +500,7 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
       );
 
       // Check mounted again after async operation
-      if (!mounted) {
+      if (_isDisposed || !mounted) {
         _isUpdatingMap = false;
         return;
       }
@@ -543,7 +546,7 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
       // Build polylines based on order status
       final newPolylines = <Polyline>{};
 
-      if (!mounted) {
+      if (_isDisposed || !mounted) {
         _isUpdatingMap = false;
         return;
       }
@@ -669,7 +672,7 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
         );
       }
 
-      if (!mounted) {
+      if (_isDisposed || !mounted) {
         _isUpdatingMap = false;
         return;
       }
@@ -681,7 +684,7 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
 
       // Fit bounds to show all relevant points
       final mapController = _mapController;
-      if (mapController != null && mounted) {
+      if (mapController != null && !_isDisposed && mounted) {
         final allPoints = <LatLng>[
           LatLng(pickupLat, pickupLng),
           LatLng(dropoffLat, dropoffLng),
@@ -719,6 +722,8 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
             );
           }
         } catch (e) {
+          // Ignore "Bad state" errors from disposed controller
+          if (e.toString().contains('was used after')) return;
           logger.e('[DriverOrderDetailScreen] - Map controller error: $e');
         }
       }

@@ -46,7 +46,7 @@ class _DriverReviewsScreenState extends State<DriverReviewsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       headers: [AppBar(title: Text(context.l10n.my_reviews))],
-      child: RefreshTrigger(
+      child: SafeRefreshTrigger(
         onRefresh: _onRefresh,
         child: BlocBuilder<DriverReviewCubit, DriverReviewState>(
           builder: (context, state) {

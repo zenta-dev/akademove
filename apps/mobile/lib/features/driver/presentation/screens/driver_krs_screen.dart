@@ -64,7 +64,7 @@ class _DriverKrsScreenState extends State<DriverKrsScreen> {
       ],
       child: Padding(
         padding: EdgeInsets.all(16.dg),
-        child: RefreshTrigger(
+        child: SafeRefreshTrigger(
           onRefresh: _onRefresh,
           child: BlocConsumer<DriverScheduleCubit, DriverScheduleState>(
             listener: (context, state) {

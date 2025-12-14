@@ -173,7 +173,8 @@ export const [server, web] = await Promise.all([
 			},
 		],
 		crons: [
-			"* * * * *", // Every minute: auto-offline + scheduled orders (need minute precision)
+			"* * * * *", // Every minute: auto-offline + scheduled orders + order rebroadcast (need minute precision)
+			"*/2 * * * *", // Every 2 minutes: driver rebroadcast for unmatched orders
 			"*/5 * * * *", // Every 5 minutes: order checker (timeouts, cleanup)
 			"*/15 * * * *", // Every 15 minutes: leaderboard calculation
 		],

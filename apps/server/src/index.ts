@@ -5,6 +5,7 @@ import { setupHonoRouter } from "@/core/router/hono";
 import { setupOrpcRouter } from "./core/router/orpc";
 import { handleAutoOfflineCron } from "./features/driver/cron/auto-offline-handler";
 import { handleLeaderboardCron } from "./features/leaderboard/leaderboard-cron";
+import { handleDriverRebroadcastCron } from "./features/order/driver-rebroadcast-cron";
 import { handleOrderCheckerCron } from "./features/order/order-checker-cron";
 import { handleOrderRebroadcastCron } from "./features/order/order-rebroadcast-cron";
 import { handleScheduledOrderCron } from "./features/order/scheduled-order-cron";
@@ -43,6 +44,16 @@ export default {
 			ctx.waitUntil(
 				handleOrderRebroadcastCron(env, ctx).catch((error) => {
 					logger.error({ error }, "[Cron] Order rebroadcast handler failed");
+				}),
+			);
+		}
+
+		// Every 2 minutes: Rebroadcast orders to driver pool if no driver accepted
+		// Handles cases where first broadcast had no drivers or all drivers ignored the order
+		if (event.cron === "*/2 * * * *") {
+			ctx.waitUntil(
+				handleDriverRebroadcastCron(env, ctx).catch((error) => {
+					logger.error({ error }, "[Cron] Driver rebroadcast handler failed");
 				}),
 			);
 		}

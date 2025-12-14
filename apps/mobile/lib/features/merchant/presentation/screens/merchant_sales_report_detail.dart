@@ -422,7 +422,7 @@ class _MerchantSalesReportDetailScreenState
           ],
           child: isLoading
               ? const Center(child: CircularProgressIndicator())
-              : RefreshTrigger(
+              : SafeRefreshTrigger(
                   onRefresh: () => context
                       .read<MerchantAnalyticsCubit>()
                       .getMonthlyAnalytics(),

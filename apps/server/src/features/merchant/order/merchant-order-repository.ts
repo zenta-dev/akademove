@@ -28,6 +28,7 @@ export class MerchantOrderRepository extends BaseRepository {
 		return {
 			...item,
 			driverId: item.driverId ?? undefined,
+			completedDriverId: item.completedDriverId ?? undefined,
 			merchantId: item.merchantId ?? undefined,
 			pickupAddress: item.pickupAddress ?? undefined,
 			dropoffAddress: item.dropoffAddress ?? undefined,
@@ -62,6 +63,7 @@ export class MerchantOrderRepository extends BaseRepository {
 			scheduledAt: item.scheduledAt ?? undefined,
 			scheduledMatchingAt: item.scheduledMatchingAt ?? undefined,
 			deliveryItemType: item.deliveryItemType ?? undefined,
+			deliveryItemPhotoUrl: item.deliveryItemPhotoUrl ?? undefined,
 		};
 	}
 

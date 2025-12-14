@@ -25,13 +25,13 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
   Timer? _pollingTimer;
 
   /// Default polling interval in seconds (fallback only)
-  static const int _defaultPollingIntervalSeconds = 5;
+  static const int _defaultPollingIntervalSeconds = 5 * 10;
 
   /// Faster polling interval when recovering from WebSocket failure
-  static const int _fastPollingIntervalSeconds = 3;
+  static const int _fastPollingIntervalSeconds = 3 * 10;
 
   /// Critical polling interval during MATCHING status for faster driver acceptance detection
-  static const int _criticalPollingIntervalSeconds = 2;
+  static const int _criticalPollingIntervalSeconds = 2 * 10;
 
   /// Last known order version for tracking updates (used for debugging/logging)
   // ignore: unused_field
@@ -51,7 +51,7 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
   int _healthCheckFailures = 0;
 
   /// Max health check failures before HTTP fallback
-  static const int _maxHealthCheckFailures = 3;
+  static const int _maxHealthCheckFailures = 10;
 
   Future<void> init() async {
     reset();
@@ -856,7 +856,7 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
         ? _criticalPollingIntervalSeconds
         : (fast ? _fastPollingIntervalSeconds : _defaultPollingIntervalSeconds);
 
-    startPolling(intervalSeconds: interval);
+    _startPolling(intervalSeconds: interval);
   }
 
   Future<void> teardownWebsocket() async {
@@ -887,7 +887,7 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
   /// Start polling for active order updates
   /// This is a FALLBACK mechanism when WebSocket fails
   /// [intervalSeconds] - The interval between each poll (default: 5 seconds)
-  void startPolling({int intervalSeconds = _defaultPollingIntervalSeconds}) {
+  void _startPolling({int intervalSeconds = _defaultPollingIntervalSeconds}) {
     if (state.isPolling) {
       logger.d('[UserOrderCubit] Polling already active, skipping start');
       return;
@@ -1012,14 +1012,14 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
         '${currentInterval}s -> ${targetInterval}s',
       );
       stopPolling();
-      startPolling(intervalSeconds: targetInterval);
+      _startPolling(intervalSeconds: targetInterval);
     }
   }
 
   /// Get current polling interval (approximation based on state)
   int _getCurrentPollingInterval() {
     // This is tracked implicitly; for now return default
-    // The actual interval is determined when startPolling is called
+    // The actual interval is determined when _startPolling is called
     return _isPollingFallback
         ? _fastPollingIntervalSeconds
         : _defaultPollingIntervalSeconds;

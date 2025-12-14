@@ -108,8 +108,8 @@ function RouteComponent() {
 	const categoryBreakdown =
 		reviewsResult?.reduce(
 			(acc, review: Review) => {
-				if (review.category) {
-					acc[review.category] = (acc[review.category] || 0) + 1;
+				for (const category of review.categories) {
+					acc[category] = (acc[category] || 0) + 1;
 				}
 				return acc;
 			},
@@ -335,10 +335,18 @@ function RouteComponent() {
 										{review.comment && (
 											<p className="text-sm">{review.comment}</p>
 										)}
-										{review.category && (
-											<Badge variant="secondary" className="text-xs">
-												{review.category}
-											</Badge>
+										{review.categories.length > 0 && (
+											<div className="flex flex-wrap gap-1">
+												{review.categories.map((category) => (
+													<Badge
+														key={category}
+														variant="secondary"
+														className="text-xs"
+													>
+														{category}
+													</Badge>
+												))}
+											</div>
 										)}
 									</div>
 								</div>

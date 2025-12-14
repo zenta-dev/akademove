@@ -190,7 +190,7 @@ class _UserMerchantDetailScreenState extends State<UserMerchantDetailScreen> {
         BlocSelector<UserCartCubit, UserCartState, int>(
           selector: (state) => state.totalItems,
           builder: (context, itemCount) {
-            return RefreshTrigger(
+            return SafeRefreshTrigger(
               onRefresh: _onRefresh,
               child: ListView(
                 physics: const AlwaysScrollableScrollPhysics(),

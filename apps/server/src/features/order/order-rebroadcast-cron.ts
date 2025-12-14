@@ -85,6 +85,7 @@ export async function handleOrderRebroadcastCron(
 				// The composed order includes driver info via the `driver` relation
 				const composedOrder = OrderBaseRepository.composeEntity(
 					order as Parameters<typeof OrderBaseRepository.composeEntity>[0],
+					svc.storage,
 				);
 
 				// Build the broadcast payload with current order state

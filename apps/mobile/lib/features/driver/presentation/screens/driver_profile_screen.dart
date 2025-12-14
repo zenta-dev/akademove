@@ -46,7 +46,7 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
               padding: EdgeInsets.all(16.r),
             ),
           ],
-          child: RefreshTrigger(
+          child: SafeRefreshTrigger(
             onRefresh: _onRefresh,
             child: SingleChildScrollView(
               child: Padding(

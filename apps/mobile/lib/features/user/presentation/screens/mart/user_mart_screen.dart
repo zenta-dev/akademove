@@ -55,7 +55,7 @@ class _UserMartScreenState extends State<UserMartScreen> {
           ],
         ),
       ],
-      child: RefreshTrigger(
+      child: SafeRefreshTrigger(
         onRefresh: _onRefresh,
         child: BlocBuilder<UserMartCubit, UserMartState>(
           builder: (context, state) {

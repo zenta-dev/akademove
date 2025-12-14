@@ -207,7 +207,7 @@ class _PickLocationWidgetState extends State<PickLocationWidget> {
                 : state.nearbyPlaces.value?.token != null;
 
             return Expanded(
-              child: RefreshTrigger(
+              child: SafeRefreshTrigger(
                 key: refreshTriggerKey,
                 onRefresh: refresh,
                 child: ListPlacesWidget(

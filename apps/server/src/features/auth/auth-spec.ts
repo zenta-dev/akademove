@@ -101,7 +101,18 @@ export const AuthSpec = {
 			inputStructure: "detailed",
 			outputStructure: "detailed",
 		})
-		.input(z.any())
+		.input(
+			z.object({
+				body: z
+					.object({
+						fcmToken: z
+							.string()
+							.optional()
+							.describe("FCM token to remove for this session/device"),
+					})
+					.optional(),
+			}),
+		)
 		.output(
 			z.union([createSuccesSchema(z.boolean(), "Sign Out Successfully")]),
 		),

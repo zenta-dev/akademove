@@ -117,7 +117,7 @@ class _ScheduledOrderListScreenState extends State<ScheduledOrderListScreen> {
           ],
           child: isLoading
               ? const Center(child: CircularProgressIndicator())
-              : RefreshTrigger(
+              : SafeRefreshTrigger(
                   onRefresh: _onRefresh,
                   child: SingleChildScrollView(
                     child: scheduledOrders.isEmpty

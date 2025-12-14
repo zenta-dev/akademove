@@ -680,7 +680,7 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
               ),
             ],
             footers: [?actionButtons],
-            child: RefreshTrigger(
+            child: SafeRefreshTrigger(
               onRefresh: _onRefresh,
               child: SingleChildScrollView(
                 physics: const AlwaysScrollableScrollPhysics(),

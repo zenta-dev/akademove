@@ -321,6 +321,7 @@ export function getRepositories(
 			svc.orderServices.matching,
 			svc.orderServices.state,
 			svc.orderServices.deliveryProof,
+			svc.storage,
 		),
 		payment,
 		coupon: new CouponRepository(svc.db, svc.kv),

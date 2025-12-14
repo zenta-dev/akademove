@@ -16,6 +16,7 @@ import type { OrderEnvelope } from "@repo/schema/ws";
 import type { UnifiedListResult, WithTx, WithUserId } from "@/core/interface";
 import type { DatabaseService } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
+import type { StorageService } from "@/core/services/storage";
 import { logger } from "@/utils/logger";
 import type { PaymentRepository } from "../payment/payment-repository";
 import type { OrderListQuery } from "./order-spec";
@@ -65,9 +66,10 @@ export class OrderRepository {
 		_matchingService: OrderMatchingService,
 		stateService: OrderStateService,
 		deliveryProofService: DeliveryProofService,
+		storage?: StorageService,
 	) {
 		// Initialize read repository
-		this.#readRepo = new OrderReadRepository(db, kv, pricingService);
+		this.#readRepo = new OrderReadRepository(db, kv, pricingService, storage);
 
 		// Initialize write repository
 		this.#writeRepo = new OrderWriteRepository(

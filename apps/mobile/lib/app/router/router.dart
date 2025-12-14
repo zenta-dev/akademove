@@ -93,6 +93,7 @@ enum Routes {
   driverKRS('/driver/krs'),
   driverKrsUpsert('/driver/krs/upsert'),
   driverHistory('/driver/history'),
+  driverHistoryDetail('/driver/history/:orderId'),
   driverProfile('/driver/profile'),
   driverEditProfile('/driver/profile/edit'),
   driverChangePassword('/driver/profile/change-password'),

@@ -74,7 +74,7 @@ class _DriverLeaderboardDetailScreenState
           ],
         ),
       ],
-      child: RefreshTrigger(
+      child: SafeRefreshTrigger(
         onRefresh: _onRefresh,
         child: BlocBuilder<DriverLeaderboardCubit, DriverLeaderboardState>(
           builder: (context, state) {

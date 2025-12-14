@@ -73,7 +73,7 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
           ],
           child: isLoading && wallet == null
               ? const Center(child: CircularProgressIndicator())
-              : RefreshTrigger(
+              : SafeRefreshTrigger(
                   onRefresh: _onRefresh,
                   child: SingleChildScrollView(
                     padding: EdgeInsets.all(16.dg),

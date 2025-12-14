@@ -18,11 +18,28 @@ class EligibleCouponsResult {
     required this.coupons,
     this.bestCoupon,
     required this.bestDiscountAmount,
+    required this.orderAmount,
   });
 
   final List<Coupon> coupons;
   final Coupon? bestCoupon;
   final num bestDiscountAmount;
+  final num orderAmount;
+
+  /// Create a copy with updated values
+  EligibleCouponsResult copyWith({
+    List<Coupon>? coupons,
+    Coupon? bestCoupon,
+    num? bestDiscountAmount,
+    num? orderAmount,
+  }) {
+    return EligibleCouponsResult(
+      coupons: coupons ?? this.coupons,
+      bestCoupon: bestCoupon,
+      bestDiscountAmount: bestDiscountAmount ?? this.bestDiscountAmount,
+      orderAmount: orderAmount ?? this.orderAmount,
+    );
+  }
 }
 
 /// Result from validateCoupon API
@@ -101,6 +118,7 @@ class CouponRepository extends BaseRepository {
           coupons: data.coupons,
           bestCoupon: data.bestCoupon,
           bestDiscountAmount: data.bestDiscountAmount,
+          orderAmount: totalAmount,
         ),
       );
     });

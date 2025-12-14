@@ -154,6 +154,16 @@ final driverRouter = StatefulShellRoute.indexedStack(
           name: Routes.driverHistory.name,
           path: Routes.driverHistory.path,
           builder: (context, state) => const DriverHistoryScreen(),
+          routes: [
+            GoRoute(
+              name: Routes.driverHistoryDetail.name,
+              path: ':orderId',
+              builder: (context, state) {
+                final orderId = state.pathParameters['orderId']!;
+                return DriverHistoryDetailScreen(orderId: orderId);
+              },
+            ),
+          ],
         ),
       ],
     ),

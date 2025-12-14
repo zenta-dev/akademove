@@ -89,7 +89,7 @@ class _MerchantMenuScreenState extends State<MerchantMenuScreen> {
         child: Column(
           children: [
             Expanded(
-              child: RefreshTrigger(
+              child: SafeRefreshTrigger(
                 onRefresh: _initializeMenu,
                 child: BlocBuilder<MerchantMenuCubit, MerchantMenuState>(
                   builder: (context, state) {

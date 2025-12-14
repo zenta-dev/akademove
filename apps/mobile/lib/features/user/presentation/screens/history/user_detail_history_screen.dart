@@ -90,7 +90,7 @@ class _UserDetailHistoryScreenState extends State<UserDetailHistoryScreen> {
             _handleAutoAction(order);
           }
         },
-        child: RefreshTrigger(
+        child: SafeRefreshTrigger(
           onRefresh: _onRefresh,
           child: SingleChildScrollView(
             child: Padding(

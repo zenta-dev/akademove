@@ -58,7 +58,7 @@ class _DriverReviewsDetailScreenState extends State<DriverReviewsDetailScreen> {
           ],
         ),
       ],
-      child: RefreshTrigger(
+      child: SafeRefreshTrigger(
         onRefresh: _onRefresh,
         child: BlocBuilder<DriverReviewCubit, DriverReviewState>(
           builder: (context, state) {

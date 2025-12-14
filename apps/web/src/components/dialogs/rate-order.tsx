@@ -18,6 +18,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
 	Dialog,
 	DialogContent,
@@ -36,7 +37,6 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
 import { orpcClient, orpcQuery, queryClient } from "@/lib/orpc";
 import { cn } from "@/utils/cn";
@@ -81,7 +81,7 @@ export function RateOrderDialog({
 			orderId,
 			toUserId: driverId,
 			fromUserId: "", // Will be set by backend from context.user.id
-			category: "COURTESY",
+			categories: ["COURTESY"],
 			score: 0,
 			comment: "",
 		},
@@ -185,19 +185,15 @@ export function RateOrderDialog({
 							)}
 						/>
 
-						{/* Category */}
+						{/* Categories */}
 						<FormField
 							control={form.control}
-							name="category"
-							render={({ field }) => (
+							name="categories"
+							render={() => (
 								<FormItem>
 									<FormLabel>{m.rate_order_aspect()}</FormLabel>
 									<FormControl>
-										<RadioGroup
-											value={field.value}
-											onValueChange={field.onChange}
-											className="flex flex-col space-y-2"
-										>
+										<div className="flex flex-col space-y-2">
 											{(
 												Object.keys(
 													getCategoryLabels(),
@@ -205,12 +201,32 @@ export function RateOrderDialog({
 											).map((category) => {
 												const Icon = categoryIcons[category];
 												const labels = getCategoryLabels();
+												const selectedCategories = form.watch("categories");
+												const isChecked = selectedCategories.includes(category);
+
 												return (
 													<div
 														key={category}
 														className="flex items-center space-x-2"
 													>
-														<RadioGroupItem value={category} id={category} />
+														<Checkbox
+															id={category}
+															checked={isChecked}
+															onCheckedChange={(checked) => {
+																const current = form.getValues("categories");
+																if (checked) {
+																	form.setValue("categories", [
+																		...current,
+																		category,
+																	]);
+																} else {
+																	form.setValue(
+																		"categories",
+																		current.filter((c) => c !== category),
+																	);
+																}
+															}}
+														/>
 														<Label
 															htmlFor={category}
 															className="flex cursor-pointer items-center gap-2 font-normal"
@@ -221,7 +237,7 @@ export function RateOrderDialog({
 													</div>
 												);
 											})}
-										</RadioGroup>
+										</div>
 									</FormControl>
 									<FormMessage />
 								</FormItem>

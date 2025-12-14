@@ -92,7 +92,7 @@ class _DriverHistoryScreenState extends State<DriverHistoryScreen> {
       ],
       child: Padding(
         padding: EdgeInsets.all(16.dg),
-        child: RefreshTrigger(
+        child: SafeRefreshTrigger(
           onRefresh: _onRefresh,
           child: BlocBuilder<DriverListHistoryCubit, DriverListHistoryState>(
             builder: (context, state) {
@@ -187,11 +187,12 @@ class _DriverHistoryScreenState extends State<DriverHistoryScreen> {
   Widget _buildOrderCard(BuildContext context, Order order) {
     final statusColor = _getStatusColor(order.status);
     final statusText = _getStatusText(context, order.status);
+    final isActive = order.status.isActive;
 
     return GhostButton(
       density: ButtonDensity.compact,
       onPressed: () => context.pushNamed(
-        Routes.driverOrderDetail.name,
+        Routes.driverHistoryDetail.name,
         pathParameters: {'orderId': order.id},
       ),
       child: Card(
@@ -287,9 +288,41 @@ class _DriverHistoryScreenState extends State<DriverHistoryScreen> {
                 ),
               ],
             ),
+            // View Active Order button for active orders
+            if (isActive) ...[
+              SizedBox(
+                width: double.infinity,
+                child: PrimaryButton(
+                  onPressed: () => _navigateToActiveOrder(context, order),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    spacing: 8.w,
+                    children: [
+                      Icon(LucideIcons.navigation, size: 16.sp),
+                      Text(
+                        context.l10n.view_active_order,
+                        style: context.typography.small.copyWith(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ],
         ),
       ),
+    );
+  }
+
+  void _navigateToActiveOrder(BuildContext context, Order order) {
+    // Initialize the driver order cubit with this order and navigate
+    context.read<DriverOrderCubit>().init(order);
+    context.pushNamed(
+      Routes.driverOrderDetail.name,
+      pathParameters: {'orderId': order.id},
     );
   }
 

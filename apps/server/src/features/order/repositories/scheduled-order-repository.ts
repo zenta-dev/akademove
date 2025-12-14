@@ -363,7 +363,9 @@ export class ScheduledOrderRepository extends OrderBaseRepository {
 					limit: limit + 1,
 				});
 
-				const mapped = res.map(OrderBaseRepository.composeEntity);
+				const mapped = res.map((item) =>
+					OrderBaseRepository.composeEntity(item, this.storage),
+				);
 				const hasMore = mapped.length > limit;
 				const rows = hasMore ? mapped.slice(0, limit) : mapped;
 				const nextCursor = hasMore ? mapped[mapped.length - 1].id : undefined;
@@ -381,7 +383,9 @@ export class ScheduledOrderRepository extends OrderBaseRepository {
 				limit,
 			});
 
-			const rows = result.map(OrderBaseRepository.composeEntity);
+			const rows = result.map((item) =>
+				OrderBaseRepository.composeEntity(item, this.storage),
+			);
 
 			// Get total count for scheduled orders
 			const [countResult] = await tx

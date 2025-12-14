@@ -73,7 +73,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
           ],
         ),
       ],
-      child: RefreshTrigger(
+      child: SafeRefreshTrigger(
         onRefresh: _onRefresh,
         child: BlocBuilder<SharedNotificationCubit, SharedNotificationState>(
           builder: (context, state) {

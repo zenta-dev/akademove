@@ -40,7 +40,7 @@ class DriverApprovalScreen extends StatelessWidget {
             ),
           ],
           child: SafeArea(
-            child: RefreshTrigger(
+            child: SafeRefreshTrigger(
               onRefresh: () async {
                 context.read<DriverApprovalCubit>().load();
               },

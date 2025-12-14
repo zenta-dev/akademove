@@ -38,27 +38,71 @@ class UserCouponCubit extends BaseCubit<UserCouponState> {
   });
 
   /// Manually select a specific coupon from the eligible list
-  void selectCoupon(Coupon? coupon) {
+  /// Calls server to validate and get accurate discount amount
+  Future<void> selectCoupon(Coupon? coupon) async {
     final currentData = state.eligibleCoupons.value;
     if (currentData == null) return;
 
-    // Recalculate discount for the selected coupon
-    final selectedDiscountAmount = _calculateDiscount(
-      coupon: coupon,
-      totalAmount: currentData.bestDiscountAmount,
-    );
-
-    emit(
-      state.copyWith(
-        eligibleCoupons: OperationResult.success(
-          EligibleCouponsResult(
-            coupons: currentData.coupons,
-            bestCoupon: coupon,
-            bestDiscountAmount: selectedDiscountAmount,
+    // If clearing coupon, just reset discount
+    if (coupon == null) {
+      emit(
+        state.copyWith(
+          eligibleCoupons: OperationResult.success(
+            currentData.copyWith(bestCoupon: null, bestDiscountAmount: 0),
           ),
         ),
-      ),
-    );
+      );
+      return;
+    }
+
+    // Call server to validate and get accurate discount
+    try {
+      final res = await _couponRepository.validateCoupon(
+        code: coupon.code,
+        orderAmount: currentData.orderAmount,
+      );
+
+      final validationResult = res.data;
+
+      if (validationResult.valid) {
+        emit(
+          state.copyWith(
+            eligibleCoupons: OperationResult.success(
+              currentData.copyWith(
+                bestCoupon: coupon,
+                bestDiscountAmount: validationResult.discountAmount,
+              ),
+            ),
+          ),
+        );
+      } else {
+        // Coupon not valid - log and keep current state
+        logger.w(
+          '[CouponCubit] - Coupon validation failed: ${validationResult.reason}',
+        );
+      }
+    } on BaseError catch (e, st) {
+      logger.e(
+        '[CouponCubit] - Failed to validate coupon: ${e.message}',
+        error: e,
+        stackTrace: st,
+      );
+      // On error, fallback to local calculation
+      final fallbackDiscount = _calculateDiscount(
+        coupon: coupon,
+        totalAmount: currentData.orderAmount,
+      );
+      emit(
+        state.copyWith(
+          eligibleCoupons: OperationResult.success(
+            currentData.copyWith(
+              bestCoupon: coupon,
+              bestDiscountAmount: fallbackDiscount,
+            ),
+          ),
+        ),
+      );
+    }
   }
 
   /// Clear selected coupon
@@ -69,11 +113,7 @@ class UserCouponCubit extends BaseCubit<UserCouponState> {
     emit(
       state.copyWith(
         eligibleCoupons: OperationResult.success(
-          EligibleCouponsResult(
-            coupons: currentData.coupons,
-            bestCoupon: null,
-            bestDiscountAmount: 0,
-          ),
+          currentData.copyWith(bestCoupon: null, bestDiscountAmount: 0),
         ),
       ),
     );

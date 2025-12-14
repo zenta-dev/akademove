@@ -578,8 +578,6 @@ export class OrderRoom extends BaseDurableObject {
 			this.#broadcasted.delete(orderId);
 		}
 
-		const userWs = this.findById(userId);
-
 		const acceptedPayload: OrderEnvelope = {
 			e: "DRIVER_ACCEPTED",
 			f: "s",
@@ -590,7 +588,36 @@ export class OrderRoom extends BaseDurableObject {
 			},
 		};
 
-		userWs?.send(JSON.stringify(acceptedPayload));
+		// FIX: Broadcast to entire room instead of just user socket
+		// This ensures user receives the event even if they reconnected to a different socket
+		// Exclude the driver socket since they already know they accepted
+		this.broadcast(acceptedPayload, { excludes: [ws] });
+
+		// Send push notification as fallback for when user's WebSocket is disconnected
+		// This ensures user is notified even if their app is in background or WebSocket failed
+		await this.#repo.notification.sendNotificationToUserId({
+			fromUserId: driverId,
+			toUserId: userId,
+			title: "Driver Found",
+			body: `A driver has accepted your ${detail.order.type.toLowerCase()} order and is on the way.`,
+			data: {
+				type: "DRIVER_ACCEPTED",
+				orderId,
+				deeplink: `akademove://order/${orderId}`,
+			},
+			android: {
+				priority: "high",
+				notification: { clickAction: "USER_OPEN_ORDER_DETAIL" },
+			},
+			apns: {
+				payload: { aps: { category: "DRIVER_ACCEPTED", sound: "default" } },
+			},
+		});
+
+		logger.info(
+			{ orderId, driverId, userId },
+			"[OrderRoom] Driver accepted order, notification sent to user",
+		);
 	}
 
 	async #handleDriverUpdateLocation(ws: WebSocket, data: OrderEnvelope) {
