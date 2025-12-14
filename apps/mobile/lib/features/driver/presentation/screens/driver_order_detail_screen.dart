@@ -267,6 +267,7 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
     _locationStreamSubscription?.cancel();
     _animatedDriverMarker.dispose();
     _mapController?.dispose();
+    _mapController = null;
     super.dispose();
   }
 
@@ -305,7 +306,7 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
 
         // Update map when order data changes
         final currentOrder = state.currentOrder;
-        if (currentOrder != null) {
+        if (currentOrder != null && mounted) {
           _updateMapWithOrderData(currentOrder);
         }
       },
@@ -394,6 +395,7 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
           myLocationButtonEnabled: false,
           zoomControlsEnabled: false,
           onMapCreated: (controller) {
+            if (!mounted) return;
             _mapController = controller;
             _updateMapWithOrderData(order);
           },
@@ -437,17 +439,27 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
   /// Center map on driver's current location
   Future<void> _centerOnDriverLocation() async {
     final driverLocation = _currentDriverLocation;
-    if (driverLocation != null && _mapController != null) {
-      await _mapController!.animateCamera(
-        CameraUpdate.newLatLngZoom(
-          LatLng(driverLocation.y.toDouble(), driverLocation.x.toDouble()),
-          16,
-        ),
-      );
+    final mapController = _mapController;
+    if (driverLocation != null && mapController != null && mounted) {
+      try {
+        if (_mapController != null) {
+          await mapController.animateCamera(
+            CameraUpdate.newLatLngZoom(
+              LatLng(driverLocation.y.toDouble(), driverLocation.x.toDouble()),
+              16,
+            ),
+          );
+        }
+      } catch (e) {
+        logger.e('[DriverOrderDetailScreen] - Map controller error: $e');
+      }
     }
   }
 
   Future<void> _updateMapWithOrderData(Order order) async {
+    // Prevent updates if widget is disposed
+    if (!mounted) return;
+
     // Prevent concurrent updates
     if (_isUpdatingMap) return;
     _isUpdatingMap = true;
@@ -464,6 +476,12 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
         accuracy: LocationAccuracy.high,
         fromCache: false,
       );
+
+      // Check mounted again after async operation
+      if (!mounted) {
+        _isUpdatingMap = false;
+        return;
+      }
 
       String pickupTitle = 'Pickup';
       String dropoffTitle = 'Dropoff';
@@ -644,7 +662,7 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
 
       // Fit bounds to show all relevant points
       final mapController = _mapController;
-      if (mapController != null) {
+      if (mapController != null && mounted) {
         final allPoints = <LatLng>[
           LatLng(pickupLat, pickupLng),
           LatLng(dropoffLat, dropoffLng),
@@ -673,9 +691,17 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
           southwest: LatLng(minLat, minLng),
           northeast: LatLng(maxLat, maxLng),
         );
-        await mapController.animateCamera(
-          CameraUpdate.newLatLngBounds(bounds, 100),
-        );
+
+        // Wrap in try-catch to handle disposed controller
+        try {
+          if (mounted && _mapController != null) {
+            await mapController.animateCamera(
+              CameraUpdate.newLatLngBounds(bounds, 100),
+            );
+          }
+        } catch (e) {
+          logger.e('[DriverOrderDetailScreen] - Map controller error: $e');
+        }
       }
     } finally {
       _isUpdatingMap = false;

@@ -12,6 +12,18 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
+  String get tax => 'Tax';
+
+  @override
+  String get distance => 'Distance';
+
+  @override
+  String get fare => 'Fare';
+
+  @override
+  String get platform_fee => 'Platform fee';
+
+  @override
   String get transfer => 'Transfer';
 
   @override
@@ -322,12 +334,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get customer_info => 'Customer Info';
-
-  @override
-  String get distance => 'Distance';
-
-  @override
-  String get fare => 'Fare';
 
   @override
   String get service => 'Service';

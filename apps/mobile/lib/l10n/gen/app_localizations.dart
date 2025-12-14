@@ -97,6 +97,30 @@ abstract class AppLocalizations {
     Locale('id')
   ];
 
+  /// No description provided for @tax.
+  ///
+  /// In en, this message translates to:
+  /// **'Tax'**
+  String get tax;
+
+  /// No description provided for @distance.
+  ///
+  /// In en, this message translates to:
+  /// **'Distance'**
+  String get distance;
+
+  /// No description provided for @fare.
+  ///
+  /// In en, this message translates to:
+  /// **'Fare'**
+  String get fare;
+
+  /// No description provided for @platform_fee.
+  ///
+  /// In en, this message translates to:
+  /// **'Platform fee'**
+  String get platform_fee;
+
   /// No description provided for @transfer.
   ///
   /// In en, this message translates to:
@@ -720,18 +744,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Customer Info'**
   String get customer_info;
-
-  /// No description provided for @distance.
-  ///
-  /// In en, this message translates to:
-  /// **'Distance'**
-  String get distance;
-
-  /// No description provided for @fare.
-  ///
-  /// In en, this message translates to:
-  /// **'Fare'**
-  String get fare;
 
   /// No description provided for @service.
   ///

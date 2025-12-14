@@ -12,6 +12,18 @@ class AppLocalizationsId extends AppLocalizations {
   AppLocalizationsId([String locale = 'id']) : super(locale);
 
   @override
+  String get tax => 'Pajak';
+
+  @override
+  String get distance => 'Jarak';
+
+  @override
+  String get fare => 'Tarif';
+
+  @override
+  String get platform_fee => 'Biaya platform';
+
+  @override
   String get transfer => 'Transfer';
 
   @override
@@ -322,12 +334,6 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get customer_info => 'Info Pelanggan';
-
-  @override
-  String get distance => 'Jarak';
-
-  @override
-  String get fare => 'Tarif';
 
   @override
   String get service => 'Layanan';
