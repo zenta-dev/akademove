@@ -288,8 +288,35 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<DriverOrderCubit, DriverOrderState>(
+      listenWhen: (previous, current) {
+        // Only listen when operation results transition to success/failure
+        // This prevents toast from firing multiple times on unrelated state changes
+        final fetchFailed =
+            !previous.fetchOrderResult.isFailure &&
+            current.fetchOrderResult.isFailure;
+        final acceptSuccess =
+            !previous.acceptOrderResult.isSuccess &&
+            current.acceptOrderResult.isSuccess;
+        final markArrivedSuccess =
+            !previous.markArrivedResult.isSuccess &&
+            current.markArrivedResult.isSuccess;
+        final startTripSuccess =
+            !previous.startTripResult.isSuccess &&
+            current.startTripResult.isSuccess;
+        final completeTripSuccess =
+            !previous.completeTripResult.isSuccess &&
+            current.completeTripResult.isSuccess;
+        final orderStatusChanged = previous.orderStatus != current.orderStatus;
+
+        return fetchFailed ||
+            acceptSuccess ||
+            markArrivedSuccess ||
+            startTripSuccess ||
+            completeTripSuccess ||
+            orderStatusChanged;
+      },
       listener: (context, state) {
-        // Show error messages
+        // Show error messages on failure transition
         if (state.fetchOrderResult.isFailure) {
           context.showMyToast(
             state.fetchOrderResult.error?.message ??
@@ -298,7 +325,7 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
           );
         }
 
-        // Show success messages for various actions
+        // Show success messages on success transition
         if (state.acceptOrderResult.isSuccess ||
             state.markArrivedResult.isSuccess ||
             state.startTripResult.isSuccess ||
@@ -306,7 +333,7 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
           context.showMyToast("Status updated", type: ToastType.success);
         }
 
-        // Navigate back when order status TRANSITIONS to completed or cancelled
+        // Handle order status TRANSITIONS to terminal states
         // Skip if this is a historical view (order was already terminal on load)
         final currentStatus = state.orderStatus;
         final isTerminal =
@@ -318,11 +345,33 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
             isTerminal && !wasTerminalBefore && !_isHistoricalView;
 
         if (isStatusTransition) {
-          Future.delayed(const Duration(seconds: 2), () {
-            if (mounted && context.mounted) {
-              context.popUntilRoot();
-            }
-          });
+          final order = state.currentOrder;
+          // For COMPLETED status, redirect to review screen
+          if (currentStatus == OrderStatus.COMPLETED && order != null) {
+            Future.delayed(const Duration(milliseconds: 500), () {
+              if (mounted && context.mounted) {
+                // Navigate to order completion/review screen
+                context.goNamed(
+                  Routes.driverOrderCompletion.name,
+                  extra: {
+                    'orderId': order.id,
+                    'orderType': order.type,
+                    'order': order,
+                    'user': order.user,
+                    'merchant': order.merchant,
+                    'payment': null,
+                  },
+                );
+              }
+            });
+          } else {
+            // For other terminal states (cancelled, no-show), navigate back
+            Future.delayed(const Duration(seconds: 2), () {
+              if (mounted && context.mounted) {
+                context.popUntilRoot();
+              }
+            });
+          }
         }
 
         // Update previous status for next comparison

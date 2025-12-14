@@ -29,7 +29,9 @@ class UserMerchantListCubit extends BaseCubit<UserMerchantListState> {
             ? await _merchantRepository.getPopulars()
             : await _merchantRepository.listWithFilters(
                 query: state.searchQuery,
-                isActive: true, // Only show open merchants
+                isActive: true, // Only show active merchants
+                operatingStatus:
+                    'OPEN', // Only show open merchants (matches server populars)
                 sortBy: 'popularity', // Always sort by popularity
                 limit: 20,
                 cursor: null,
@@ -84,6 +86,8 @@ class UserMerchantListCubit extends BaseCubit<UserMerchantListState> {
         final res = await _merchantRepository.listWithFilters(
           query: state.searchQuery.isEmpty ? null : state.searchQuery,
           isActive: true,
+          operatingStatus:
+              'OPEN', // Only show open merchants (matches server populars)
           sortBy: 'popularity', // Always sort by popularity
           limit: 20,
           cursor: _cursor,

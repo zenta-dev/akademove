@@ -1,3 +1,4 @@
+import 'package:akademove/app/router/router.dart';
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/gen/assets.gen.dart';
@@ -125,7 +126,11 @@ class _MerchantCard extends StatelessWidget {
     return Button(
       style: const ButtonStyle.ghost(density: ButtonDensity.compact),
       onPressed: () {
-        // Navigate to merchant detail screen (to be implemented)
+        context.pushNamed(
+          Routes.userMartDetail.name,
+          pathParameters: {'merchantId': merchant.id},
+          extra: {'merchant': merchant},
+        );
       },
       child: Card(
         child: Row(
@@ -192,29 +197,52 @@ class _MerchantCard extends StatelessWidget {
                           ),
                         ),
                         Gap(12.w),
-                        Container(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 8.w,
-                            vertical: 4.h,
-                          ),
-                          decoration: BoxDecoration(
-                            color: merchant.isActive
-                                ? Colors.green.withValues(alpha: 0.1)
-                                : Colors.red.withValues(alpha: 0.1),
-                            borderRadius: BorderRadius.circular(4.r),
-                          ),
-                          child: Text(
-                            merchant.isActive
-                                ? context.l10n.text_open
-                                : context.l10n.text_closed,
-                            style: context.typography.small.copyWith(
-                              fontSize: 10.sp,
-                              color: merchant.isActive
-                                  ? Colors.green
-                                  : Colors.red,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
+                        Builder(
+                          builder: (context) {
+                            // Merchant is only open if isActive AND operatingStatus is OPEN
+                            final isOpen =
+                                merchant.isActive &&
+                                merchant.operatingStatus ==
+                                    MerchantOperatingStatusEnum.OPEN;
+
+                            // Determine display label based on operating status
+                            final String label;
+                            if (!merchant.isActive) {
+                              label = context.l10n.text_closed;
+                            } else {
+                              switch (merchant.operatingStatus) {
+                                case MerchantOperatingStatusEnum.OPEN:
+                                  label = context.l10n.text_open;
+                                case MerchantOperatingStatusEnum.CLOSED:
+                                  label = context.l10n.text_closed;
+                                case MerchantOperatingStatusEnum.BREAK:
+                                  label = 'Break';
+                                case MerchantOperatingStatusEnum.MAINTENANCE:
+                                  label = 'Maintenance';
+                              }
+                            }
+
+                            return Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 8.w,
+                                vertical: 4.h,
+                              ),
+                              decoration: BoxDecoration(
+                                color: isOpen
+                                    ? Colors.green.withValues(alpha: 0.1)
+                                    : Colors.red.withValues(alpha: 0.1),
+                                borderRadius: BorderRadius.circular(4.r),
+                              ),
+                              child: Text(
+                                label,
+                                style: context.typography.small.copyWith(
+                                  fontSize: 10.sp,
+                                  color: isOpen ? Colors.green : Colors.red,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            );
+                          },
                         ),
                       ],
                     ),

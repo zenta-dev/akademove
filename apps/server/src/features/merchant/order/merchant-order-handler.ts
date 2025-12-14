@@ -1,3 +1,4 @@
+import { env } from "cloudflare:workers";
 import { m } from "@repo/i18n";
 import { trimObjectValues } from "@repo/shared";
 import { BUSINESS_CONSTANTS, DRIVER_POOL_KEY } from "@/core/constants";
@@ -171,7 +172,7 @@ export const MerchantOrderHandler = priv.router({
 				"[MerchantOrderHandler] Order moved to MATCHING after merchant ready",
 			);
 
-			// Get payment info for the order to setup refund if matching fails
+			// Get payment info for the order to setup refund if matching fails and for WebSocket payload
 			const paymentTransaction =
 				await OrderRefundService.findPaymentTransaction(tx, updatedOrder.id);
 			const payment = paymentTransaction
@@ -212,6 +213,47 @@ export const MerchantOrderHandler = priv.router({
 				logger.error(
 					{ error: queueError, orderId: updatedOrder.id },
 					"[MerchantOrderHandler] Failed to enqueue timeout job - cron will handle",
+				);
+			}
+
+			// Broadcast MERCHANT_READY with MATCHING status to OrderRoom for user real-time update
+			// This is critical: the user's mobile app needs the updated order with MATCHING status
+			// Note: markReady() in repository emitted MERCHANT_READY with READY_FOR_PICKUP status,
+			// but we need to send another update with the final MATCHING status
+			try {
+				const stub = env.ORDER_ROOM.idFromName(updatedOrder.id);
+				const room = env.ORDER_ROOM.get(stub);
+
+				// Payment/transaction from DB have string amounts but schema expects number.
+				// Runtime JSON serialization handles this correctly for WebSocket clients.
+				const payload = {
+					e: "MERCHANT_READY" as const,
+					f: "s" as const,
+					t: "c" as const,
+					p: {
+						detail: {
+							order: updatedOrder,
+							payment: payment ?? null,
+							transaction: paymentTransaction ?? null,
+						},
+					},
+				};
+
+				await room.fetch("https://internal/broadcast", {
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify(payload),
+				});
+
+				logger.info(
+					{ orderId: updatedOrder.id, status: updatedOrder.status },
+					"[MerchantOrderHandler] MERCHANT_READY event broadcast to OrderRoom with MATCHING status",
+				);
+			} catch (wsError) {
+				// Log but don't fail - WebSocket broadcast is best-effort
+				logger.error(
+					{ error: wsError, orderId: updatedOrder.id },
+					"[MerchantOrderHandler] Failed to broadcast MERCHANT_READY to OrderRoom",
 				);
 			}
 

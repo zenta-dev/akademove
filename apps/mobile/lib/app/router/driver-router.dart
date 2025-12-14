@@ -138,8 +138,13 @@ final driverRouter = StatefulShellRoute.indexedStack(
                 final merchant = extra['merchant'] as Merchant?;
                 final payment = extra['payment'] as Payment?;
 
-                return BlocProvider.value(
-                  value: context.read<DriverReviewCubit>(),
+                return MultiBlocProvider(
+                  providers: [
+                    BlocProvider.value(
+                      value: context.read<DriverReviewCubit>(),
+                    ),
+                    BlocProvider.value(value: context.read<DriverOrderCubit>()),
+                  ],
                   child: OrderCompletionScreen(
                     orderId: orderId,
                     orderType: orderType,

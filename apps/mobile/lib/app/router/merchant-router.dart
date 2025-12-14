@@ -94,6 +94,34 @@ final merchantRouter = StatefulShellRoute.indexedStack(
             return MerchantOrderDetailScreen(order: order);
           },
         ),
+        GoRoute(
+          name: Routes.merchantOrderCompletion.name,
+          path: Routes.merchantOrderCompletion.path,
+          builder: (context, state) {
+            final extra = state.extra as Map<String, dynamic>;
+
+            final orderId = extra['orderId'] as String;
+            final orderType = extra['orderType'] as OrderType;
+            final order = extra['order'] as Order;
+            final user = extra['user'] as User?;
+            final payment = extra['payment'] as Payment?;
+
+            return MultiBlocProvider(
+              providers: [
+                BlocProvider(create: (_) => sl<MerchantReviewCubit>()),
+                BlocProvider.value(value: context.read<MerchantOrderCubit>()),
+              ],
+              child: OrderCompletionScreen(
+                orderId: orderId,
+                orderType: orderType,
+                order: order,
+                viewerRole: OrderCompletionViewerRole.merchant,
+                user: user,
+                payment: payment,
+              ),
+            );
+          },
+        ),
       ],
     ),
     StatefulShellBranch(

@@ -1,3 +1,4 @@
+import 'package:akademove/app/router/router.dart';
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/l10n/l10n.dart';
@@ -166,6 +167,29 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
     context.read<MerchantOrderCubit>().markReady(
       merchantId: merchantId,
       orderId: _currentOrder.id,
+    );
+  }
+
+  /// Navigate to review screen after order completion
+  Future<void> _navigateToReviewScreen(Order order) async {
+    if (!mounted || !context.mounted) return;
+
+    // Small delay to let the UI update
+    await Future.delayed(const Duration(milliseconds: 500));
+
+    if (!mounted || !context.mounted) return;
+
+    final user = order.user;
+
+    context.pushNamed(
+      Routes.merchantOrderCompletion.name,
+      extra: {
+        'orderId': order.id,
+        'orderType': order.type,
+        'order': order,
+        'user': user,
+        'payment': null,
+      },
     );
   }
 
@@ -657,7 +681,16 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
               final selectedOrder = state.order.value;
               if (selectedOrder != null &&
                   selectedOrder.id == _currentOrder.id) {
+                final previousStatus = _currentOrder.status;
+                final newStatus = selectedOrder.status;
+
                 setState(() => _currentOrder = selectedOrder);
+
+                // Check if order just transitioned to COMPLETED
+                if (previousStatus != OrderStatus.COMPLETED &&
+                    newStatus == OrderStatus.COMPLETED) {
+                  _navigateToReviewScreen(selectedOrder);
+                }
               }
             }
           },

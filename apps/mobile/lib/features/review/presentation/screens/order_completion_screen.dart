@@ -75,6 +75,7 @@ class _OrderCompletionScreenState extends State<OrderCompletionScreen> {
       TextEditingController();
 
   bool _isSubmitting = false;
+  bool _hasSubmittedReview = false;
 
   @override
   void dispose() {
@@ -230,9 +231,22 @@ class _OrderCompletionScreenState extends State<OrderCompletionScreen> {
                 : null,
           );
         }
-      } else {
-        // Driver or Merchant submitting review for customer
+      } else if (widget.viewerRole == OrderCompletionViewerRole.driver) {
+        // Driver submitting review for customer
         final cubit = context.read<DriverReviewCubit>();
+
+        await cubit.submitReview(
+          orderId: widget.orderId,
+          toUserId: primaryTargetId,
+          categories: _primaryCategories.toList(),
+          score: _primaryRating,
+          comment: _primaryCommentController.text.trim().isNotEmpty
+              ? _primaryCommentController.text.trim()
+              : null,
+        );
+      } else {
+        // Merchant submitting review for customer
+        final cubit = context.read<MerchantReviewCubit>();
 
         await cubit.submitReview(
           orderId: widget.orderId,
@@ -246,11 +260,21 @@ class _OrderCompletionScreenState extends State<OrderCompletionScreen> {
       }
 
       if (mounted) {
+        _hasSubmittedReview = true;
         context.showMyToast(
           context.l10n.text_thank_you_for_review,
           type: ToastType.success,
         );
-        context.pop(true);
+        // For driver role, clear active order and navigate to home
+        if (widget.viewerRole == OrderCompletionViewerRole.driver) {
+          context.read<DriverOrderCubit>().clearActiveOrder();
+          context.popUntilRoot();
+        } else if (widget.viewerRole == OrderCompletionViewerRole.merchant) {
+          // For merchant role, navigate back to order list
+          context.popUntilRoot();
+        } else {
+          context.pop(true);
+        }
       }
     } catch (e) {
       if (mounted) {
@@ -300,9 +324,25 @@ class _OrderCompletionScreenState extends State<OrderCompletionScreen> {
         },
         child: child,
       );
-    } else {
-      // Driver or Merchant role
+    } else if (widget.viewerRole == OrderCompletionViewerRole.driver) {
+      // Driver role
       return BlocListener<DriverReviewCubit, DriverReviewState>(
+        listenWhen: (previous, current) =>
+            previous.submitReviewResult != current.submitReviewResult,
+        listener: (context, state) {
+          if (state.submitReviewResult.isFailure) {
+            context.showMyToast(
+              state.submitReviewResult.error?.message ??
+                  context.l10n.toast_failed_submit_review,
+              type: ToastType.failed,
+            );
+          }
+        },
+        child: child,
+      );
+    } else {
+      // Merchant role
+      return BlocListener<MerchantReviewCubit, MerchantReviewState>(
         listenWhen: (previous, current) =>
             previous.submitReviewResult != current.submitReviewResult,
         listener: (context, state) {
@@ -321,87 +361,99 @@ class _OrderCompletionScreenState extends State<OrderCompletionScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      headers: [DefaultAppBar(title: context.l10n.order_completed)],
-      child: _buildBlocListener(
-        child: Column(
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
-                padding: EdgeInsets.all(16.w),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  spacing: 20.h,
-                  children: [
-                    // Order completed header with date/time/id
-                    _OrderCompletedHeader(order: widget.order),
+    return PopScope(
+      canPop: true,
+      onPopInvokedWithResult: (didPop, result) {
+        // For driver role, clear active order when navigating away
+        // (if review was not submitted)
+        if (didPop &&
+            widget.viewerRole == OrderCompletionViewerRole.driver &&
+            !_hasSubmittedReview) {
+          context.read<DriverOrderCubit>().clearActiveOrder();
+        }
+      },
+      child: Scaffold(
+        headers: [DefaultAppBar(title: context.l10n.order_completed)],
+        child: _buildBlocListener(
+          child: Column(
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.all(16.w),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    spacing: 20.h,
+                    children: [
+                      // Order completed header with date/time/id
+                      _OrderCompletedHeader(order: widget.order),
 
-                    // Fare summary card
-                    _FareSummaryCard(
-                      order: widget.order,
-                      payment: widget.payment,
-                    ),
-
-                    // Primary rating section (driver for USER, customer for DRIVER/MERCHANT)
-                    _RatingSection(
-                      title: _primaryRatingTitle,
-                      subtitle: _primaryTargetName,
-                      avatarInitials: _primaryAvatarInitials,
-                      avatarImage: _primaryAvatarImage,
-                      rating: _primaryRating,
-                      onRatingChanged: (rating) {
-                        setState(() {
-                          _primaryRating = rating;
-                        });
-                      },
-                      selectedCategories: _primaryCategories,
-                      onCategoryToggle: _togglePrimaryCategory,
-                      commentController: _primaryCommentController,
-                      onReport: () {
-                        final targetId = _primaryTargetUserId;
-                        if (targetId != null) {
-                          _navigateToReport(targetId, _primaryTargetName);
-                        }
-                      },
-                    ),
-
-                    // Secondary rating section (merchant for FOOD orders when USER is viewing)
-                    if (_showSecondaryRating && widget.merchant != null)
-                      _RatingSection(
-                        title: context.l10n.rate_merchant_title,
-                        subtitle: widget.merchant!.name,
-                        avatarInitials: Avatar.getInitials(
-                          widget.merchant!.name,
-                        ),
-                        avatarImage: widget.merchant!.image,
-                        rating: _secondaryRating,
-                        onRatingChanged: (rating) {
-                          setState(() {
-                            _secondaryRating = rating;
-                          });
-                        },
-                        selectedCategories: _secondaryCategories,
-                        onCategoryToggle: _toggleSecondaryCategory,
-                        commentController: _secondaryCommentController,
-                        onReport: () => _navigateToReport(
-                          widget.merchant!.userId,
-                          widget.merchant!.name,
-                        ),
+                      // Fare summary card
+                      _FareSummaryCard(
+                        order: widget.order,
+                        payment: widget.payment,
                       ),
 
-                    Gap(60.h), // Space for the fixed button
-                  ],
+                      // Primary rating section (driver for USER, customer for DRIVER/MERCHANT)
+                      _RatingSection(
+                        title: _primaryRatingTitle,
+                        subtitle: _primaryTargetName,
+                        avatarInitials: _primaryAvatarInitials,
+                        avatarImage: _primaryAvatarImage,
+                        rating: _primaryRating,
+                        onRatingChanged: (rating) {
+                          setState(() {
+                            _primaryRating = rating;
+                          });
+                        },
+                        selectedCategories: _primaryCategories,
+                        onCategoryToggle: _togglePrimaryCategory,
+                        commentController: _primaryCommentController,
+                        onReport: () {
+                          final targetId = _primaryTargetUserId;
+                          if (targetId != null) {
+                            _navigateToReport(targetId, _primaryTargetName);
+                          }
+                        },
+                      ),
+
+                      // Secondary rating section (merchant for FOOD orders when USER is viewing)
+                      if (_showSecondaryRating && widget.merchant != null)
+                        _RatingSection(
+                          title: context.l10n.rate_merchant_title,
+                          subtitle: widget.merchant!.name,
+                          avatarInitials: Avatar.getInitials(
+                            widget.merchant!.name,
+                          ),
+                          avatarImage: widget.merchant!.image,
+                          rating: _secondaryRating,
+                          onRatingChanged: (rating) {
+                            setState(() {
+                              _secondaryRating = rating;
+                            });
+                          },
+                          selectedCategories: _secondaryCategories,
+                          onCategoryToggle: _toggleSecondaryCategory,
+                          commentController: _secondaryCommentController,
+                          onReport: () => _navigateToReport(
+                            widget.merchant!.userId,
+                            widget.merchant!.name,
+                          ),
+                        ),
+
+                      Gap(60.h), // Space for the fixed button
+                    ],
+                  ),
                 ),
               ),
-            ),
 
-            // Fixed submit button at bottom
-            _SubmitButton(
-              canSubmit: _canSubmit,
-              isSubmitting: _isSubmitting,
-              onSubmit: _submitReviews,
-            ),
-          ],
+              // Fixed submit button at bottom
+              _SubmitButton(
+                canSubmit: _canSubmit,
+                isSubmitting: _isSubmitting,
+                onSubmit: _submitReviews,
+              ),
+            ],
+          ),
         ),
       ),
     );
