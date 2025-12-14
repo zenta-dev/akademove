@@ -123,6 +123,37 @@ final userRouter = StatefulShellRoute.indexedStack(
               },
             ),
             GoRoute(
+              name: Routes.userOrderCompletion.name,
+              path: Routes.userOrderCompletion.path,
+              builder: (context, state) {
+                final extra = state.extra as Map<String, dynamic>?;
+                final orderId = extra?['orderId'] as String? ?? '';
+                final orderType =
+                    extra?['orderType'] as OrderType? ?? OrderType.RIDE;
+                final order = extra?['order'] as Order?;
+                final driver = extra?['driver'] as Driver?;
+                final merchant = extra?['merchant'] as Merchant?;
+                final payment = extra?['payment'] as Payment?;
+
+                // Fallback if required data is missing
+                if (order == null || driver == null) {
+                  return const UserHomeScreen();
+                }
+
+                return BlocProvider(
+                  create: (context) => sl<UserReviewCubit>(),
+                  child: OrderCompletionScreen(
+                    orderId: orderId,
+                    orderType: orderType,
+                    order: order,
+                    driver: driver,
+                    merchant: merchant,
+                    payment: payment,
+                  ),
+                );
+              },
+            ),
+            GoRoute(
               name: Routes.userMapPicker.name,
               path: Routes.userMapPicker.path,
               builder: (context, state) {

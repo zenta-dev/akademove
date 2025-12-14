@@ -3707,6 +3707,12 @@ class AppLocalizationsId extends AppLocalizations {
   String get export_coming_soon => 'Fitur export segera hadir!';
 
   @override
+  String get export_success => 'PDF berhasil diekspor';
+
+  @override
+  String get export_failed => 'Gagal mengekspor PDF';
+
+  @override
   String get no_data_available => 'Tidak ada data';
 
   @override
@@ -4428,4 +4434,13 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get emergency_contact_unavailable => 'Kontak darurat tidak tersedia. Silakan coba lagi nanti.';
+
+  @override
+  String get order_completed => 'Pesanan Selesai';
+
+  @override
+  String get order_detail_summary => 'Ringkasan Pesanan';
+
+  @override
+  String get rate_merchant_title => 'Beri Rating Pesanan';
 }

@@ -127,7 +127,9 @@ void main() {
       blocTest<UserCartCubit, UserCartState>(
         'emits [loading, success] when clearCart succeeds',
         build: () {
-          when(() => mockCartRepository.clearCart()).thenAnswer((_) async {});
+          when(
+            () => mockCartRepository.clearCart(),
+          ).thenAnswer((_) => Future.value());
           return cubit;
         },
         act: (cubit) => cubit.clearCart(),

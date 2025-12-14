@@ -2,6 +2,7 @@ import 'package:akademove/app/router/router.dart';
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/l10n/l10n.dart';
+import 'package:akademove/locator.dart';
 import 'package:api_client/api_client.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -19,6 +20,8 @@ class DriverCommissionReportScreen extends StatefulWidget {
 
 class _DriverCommissionReportScreenState
     extends State<DriverCommissionReportScreen> {
+  bool _isExporting = false;
+
   @override
   void initState() {
     super.initState();
@@ -29,6 +32,55 @@ class _DriverCommissionReportScreenState
 
   Future<void> _onRefresh() async {
     await context.read<DriverWalletCubit>().init();
+  }
+
+  Future<void> _exportToPdf(
+    CommissionReportResponse report,
+    EarningsPeriod period,
+  ) async {
+    if (_isExporting) return;
+
+    setState(() => _isExporting = true);
+
+    try {
+      final pdfService = sl<PdfService>();
+
+      // Map EarningsPeriod to CommissionReportPeriod
+      final apiPeriod = switch (period) {
+        EarningsPeriod.daily => CommissionReportPeriod.daily,
+        EarningsPeriod.weekly => CommissionReportPeriod.weekly,
+        EarningsPeriod.monthly => CommissionReportPeriod.monthly,
+      };
+
+      // Generate PDF
+      final pdfBytes = await pdfService.generateCommissionReportPdf(
+        report: report,
+        period: apiPeriod,
+      );
+
+      // Generate filename with current date
+      final dateStr = DateFormat('yyyyMMdd_HHmmss').format(DateTime.now());
+      final filename = 'commission_report_$dateStr.pdf';
+
+      // Share/Save PDF
+      await pdfService.sharePdf(pdfBytes: pdfBytes, filename: filename);
+
+      if (mounted) {
+        context.showMyToast(
+          context.l10n.export_success,
+          type: ToastType.success,
+        );
+      }
+    } catch (e, st) {
+      logger.e('Failed to export PDF', error: e, stackTrace: st);
+      if (mounted) {
+        context.showMyToast(context.l10n.export_failed, type: ToastType.failed);
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isExporting = false);
+      }
+    }
   }
 
   @override
@@ -63,6 +115,8 @@ class _DriverCommissionReportScreenState
           ],
           child: showLoading
               ? const Center(child: CircularProgressIndicator())
+              : showError
+              ? _buildErrorView()
               : SafeRefreshTrigger(
                   onRefresh: _onRefresh,
                   child: SingleChildScrollView(
@@ -79,7 +133,11 @@ class _DriverCommissionReportScreenState
                         // Balance Detail List
                         _buildBalanceDetailList(report),
                         // Action Buttons
-                        _buildActionButtons(wallet),
+                        _buildActionButtons(
+                          wallet,
+                          report,
+                          state.selectedPeriod,
+                        ),
                         SizedBox(height: 16.h),
                       ],
                     ),
@@ -675,7 +733,11 @@ class _DriverCommissionReportScreenState
   }
 
   /// Action Buttons - Withdrawal and Export to PDF
-  Widget _buildActionButtons(Wallet? wallet) {
+  Widget _buildActionButtons(
+    Wallet? wallet,
+    CommissionReportResponse? report,
+    EarningsPeriod period,
+  ) {
     return Row(
       spacing: 12.w,
       children: [
@@ -696,17 +758,22 @@ class _DriverCommissionReportScreenState
         ),
         Expanded(
           child: PrimaryButton(
-            onPressed: () {
-              context.showMyToast(
-                context.l10n.export_coming_soon,
-                type: ToastType.info,
-              );
-            },
+            enabled: report != null && !_isExporting,
+            onPressed: report != null
+                ? () => _exportToPdf(report, period)
+                : null,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               spacing: 8.w,
               children: [
-                Icon(LucideIcons.fileDown, size: 18.sp),
+                if (_isExporting)
+                  SizedBox(
+                    width: 18.sp,
+                    height: 18.sp,
+                    child: const CircularProgressIndicator(strokeWidth: 2),
+                  )
+                else
+                  Icon(LucideIcons.fileDown, size: 18.sp),
                 Text(context.l10n.export_pdf),
               ],
             ),

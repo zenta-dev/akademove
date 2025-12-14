@@ -47,6 +47,7 @@ void _setupService() {
     )
     ..registerLazySingleton(FirebaseService.new)
     ..registerLazySingleton(NotificationService.new)
+    ..registerLazySingleton(PdfService.new)
     ..registerLazySingleton(
       () => StateResetService(
         webSocketService: sl<WebSocketService>(),

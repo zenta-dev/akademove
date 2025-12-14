@@ -3707,6 +3707,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get export_coming_soon => 'Export feature coming soon!';
 
   @override
+  String get export_success => 'PDF exported successfully';
+
+  @override
+  String get export_failed => 'Failed to export PDF';
+
+  @override
   String get no_data_available => 'No data available';
 
   @override
@@ -4428,4 +4434,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get emergency_contact_unavailable => 'Emergency contact is not available. Please try again later.';
+
+  @override
+  String get order_completed => 'Order Completed';
+
+  @override
+  String get order_detail_summary => 'Order Summary';
+
+  @override
+  String get rate_merchant_title => 'Rate Your Order';
 }

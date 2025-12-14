@@ -1581,6 +1581,8 @@
 	"outcome": "Outcome",
 	"export_pdf": "Export PDF",
 	"export_coming_soon": "Export feature coming soon!",
+	"export_success": "PDF exported successfully",
+	"export_failed": "Failed to export PDF",
 	"no_transactions_yet": "No transactions yet",
 	"withdrawal": "Withdrawal",
 	"no_data_available": "No data available",
@@ -1842,5 +1844,8 @@
 	"emergency_contact_whatsapp_desc": "Open WhatsApp to contact campus security",
 	"emergency_or_divider": "or",
 	"emergency_whatsapp_error": "Could not open WhatsApp. Please try again.",
-	"emergency_contact_unavailable": "Emergency contact is not available. Please try again later."
+	"emergency_contact_unavailable": "Emergency contact is not available. Please try again later.",
+	"order_completed": "Order Completed",
+	"order_detail_summary": "Order Summary",
+	"rate_merchant_title": "Rate Your Order"
 }

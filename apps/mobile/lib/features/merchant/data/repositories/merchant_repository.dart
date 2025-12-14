@@ -421,7 +421,8 @@ class MerchantRepository extends BaseRepository {
 
       final res = await _apiClient.getMerchantApi().merchantUpdate(
         id: merchantId,
-        phoneCountryCode: merchant.phone?.countryCode.value ?? '+62',
+        phoneCountryCode:
+            merchant.phone?.countryCode.value ?? CountryCode.ID.value,
         phoneNumber: merchant.phone?.number ?? 0,
         locationX: merchant.location?.x ?? 0,
         locationY: merchant.location?.y ?? 0,

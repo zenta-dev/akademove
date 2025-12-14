@@ -39,6 +39,7 @@ enum Routes {
   userRidePayment('/user/home/ride/payment'),
   userRideOnTrip('/user/home/ride/on-trip'),
   userRating('/user/home/ride/rating'),
+  userOrderCompletion('/user/home/order-completion'),
   userMapPicker('/user/home/map-picker'),
   userDriverNearMe('/user/home/driver/near-me'),
   userDelivery('/user/home/delivery'),
@@ -98,6 +99,7 @@ enum Routes {
   driverEditProfile('/driver/profile/edit'),
   driverChangePassword('/driver/profile/change-password'),
   driverNotifications('/driver/notifications'),
+  driverOrderCompletion('/driver/home/order-completion'),
 
   ///
   /// Merchant Routes

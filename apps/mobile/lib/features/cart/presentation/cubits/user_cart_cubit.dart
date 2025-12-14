@@ -191,9 +191,8 @@ class UserCartCubit extends BaseCubit<UserCartState> {
     required String menuId,
     required int delta,
   }) async {
-    // Use a unique key per call to avoid deduplication blocking rapid updates
-    // Each delta update is a distinct operation that should execute
-    final taskKey = 'CC-uQ-$menuId-${DateTime.now().microsecondsSinceEpoch}';
+    // Use stable key per menuId - operations are serialized in the repository
+    final taskKey = 'CC-uQ-$menuId';
     await taskManager.execute(taskKey, () async {
       try {
         final result = await _cartRepository.updateItemQuantityByDelta(

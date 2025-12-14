@@ -56,8 +56,7 @@ export const OrderActionTable = ({ val }: { val: Order }) => {
 		},
 		onSuccess: () => {
 			toast.success(m.success_placeholder({ action: "Order status updated" }));
-			queryClient.invalidateQueries({ queryKey: ["orders"] });
-			queryClient.invalidateQueries({ queryKey: ["order", val.id] });
+			queryClient.invalidateQueries();
 		},
 		onError: (error) => {
 			toast.error(error.message);

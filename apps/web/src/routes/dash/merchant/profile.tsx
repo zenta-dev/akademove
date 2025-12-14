@@ -272,11 +272,7 @@ function EditMerchantProfile({
 	const mutation = useMutation(
 		orpcQuery.merchant.update.mutationOptions({
 			onSuccess: async () => {
-				await queryClient.invalidateQueries(
-					// 	{
-					// 	queryKey: orpcQuery.merchant.getMine.queryKey(),
-					// }
-				);
+				await queryClient.invalidateQueries();
 				toast.success(
 					m.success_placeholder({
 						action: capitalizeFirstLetter(m.update_profile().toLowerCase()),

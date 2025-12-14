@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:akademove/core/_export.dart';
@@ -10,6 +11,28 @@ class CartRepository extends BaseRepository {
     : _keyValueService = keyValueService;
 
   final KeyValueService _keyValueService;
+
+  /// Lock to serialize cart write operations and prevent race conditions
+  Future<void>? _cartLock;
+
+  /// Executes a cart operation with serialization to prevent race conditions.
+  /// All write operations are queued and executed sequentially.
+  Future<T> _withCartLock<T>(Future<T> Function() operation) async {
+    // Wait for any pending operation to complete
+    while (_cartLock != null) {
+      await _cartLock;
+    }
+
+    final completer = Completer<void>();
+    _cartLock = completer.future;
+
+    try {
+      return await operation();
+    } finally {
+      _cartLock = null;
+      completer.complete();
+    }
+  }
 
   /// Get current cart from storage
   Future<models.Cart?> getCart() async {
@@ -30,6 +53,13 @@ class CartRepository extends BaseRepository {
     });
   }
 
+  /// Clear entire cart (internal, not locked - used within locked operations)
+  Future<void> _clearCartInternal() async {
+    return guard(() async {
+      await _keyValueService.remove(KeyValueKeys.cart);
+    });
+  }
+
   /// Add item to cart (or update quantity if exists)
   /// Validates single-merchant constraint
   Future<BaseResponse<models.Cart>> addItem({
@@ -39,61 +69,138 @@ class CartRepository extends BaseRepository {
     String? notes,
     Coordinate? merchantLocation,
   }) async {
-    return guard(() async {
-      final currentCart = await getCart();
+    return _withCartLock(() async {
+      return guard(() async {
+        final currentCart = await getCart();
 
-      // Create new cart item
-      final newItem = models.CartItem(
-        menuId: menu.id,
-        merchantId: menu.merchantId,
-        merchantName: merchantName,
-        menuName: menu.name,
-        menuImage: menu.image,
-        unitPrice: menu.price,
-        quantity: quantity,
-        notes: notes,
-      );
-
-      models.Cart updatedCart;
-
-      if (currentCart == null || currentCart.items.isEmpty) {
-        // Create new cart
-        updatedCart = models.Cart(
-          merchantId: newItem.merchantId,
-          merchantName: newItem.merchantName,
-          items: [newItem],
-          totalItems: quantity,
-          subtotal: menu.price * quantity,
-          lastUpdated: DateTime.now(),
-          merchantLocation: merchantLocation,
+        // Create new cart item
+        final newItem = models.CartItem(
+          menuId: menu.id,
+          merchantId: menu.merchantId,
+          merchantName: merchantName,
+          menuName: menu.name,
+          menuImage: menu.image,
+          unitPrice: menu.price,
+          quantity: quantity,
+          notes: notes,
         );
-      } else {
-        // Check merchant conflict
-        if (currentCart.merchantId != menu.merchantId) {
-          throw RepositoryError(
-            'Cart contains items from ${currentCart.merchantName}. '
-            'Please clear cart before adding items from ${newItem.merchantName}.',
-            code: ErrorCode.conflict,
+
+        models.Cart updatedCart;
+
+        if (currentCart == null || currentCart.items.isEmpty) {
+          // Create new cart
+          updatedCart = models.Cart(
+            merchantId: newItem.merchantId,
+            merchantName: newItem.merchantName,
+            items: [newItem],
+            totalItems: quantity,
+            subtotal: menu.price * quantity,
+            lastUpdated: DateTime.now(),
+            merchantLocation: merchantLocation,
+          );
+        } else {
+          // Check merchant conflict
+          if (currentCart.merchantId != menu.merchantId) {
+            throw RepositoryError(
+              'Cart contains items from ${currentCart.merchantName}. '
+              'Please clear cart before adding items from ${newItem.merchantName}.',
+              code: ErrorCode.conflict,
+            );
+          }
+
+          // Update existing cart
+          final existingIndex = currentCart.items.indexWhere(
+            (item) => item.menuId == newItem.menuId,
+          );
+
+          List<models.CartItem> updatedItems;
+          if (existingIndex >= 0) {
+            // Update existing item quantity
+            updatedItems = List<models.CartItem>.from(currentCart.items);
+            final existing = updatedItems[existingIndex];
+            updatedItems[existingIndex] = existing.copyWith(
+              quantity: existing.quantity + quantity,
+              notes: notes ?? existing.notes,
+            );
+          } else {
+            // Add new item
+            updatedItems = [...currentCart.items, newItem];
+          }
+
+          // Recalculate totals
+          final totalItems = updatedItems.fold<int>(
+            0,
+            (sum, item) => sum + item.quantity,
+          );
+          final subtotal = updatedItems.fold<num>(
+            0,
+            (sum, item) => sum + (item.unitPrice * item.quantity),
+          );
+
+          updatedCart = models.Cart(
+            merchantId: currentCart.merchantId,
+            merchantName: currentCart.merchantName,
+            items: updatedItems,
+            totalItems: totalItems,
+            subtotal: subtotal,
+            lastUpdated: DateTime.now(),
+            merchantLocation: merchantLocation ?? currentCart.merchantLocation,
           );
         }
 
-        // Update existing cart
-        final existingIndex = currentCart.items.indexWhere(
-          (item) => item.menuId == newItem.menuId,
+        await _saveCart(updatedCart);
+        return SuccessResponse(
+          message: 'Item added to cart',
+          data: updatedCart,
+        );
+      });
+    });
+  }
+
+  /// Update item quantity in cart by delta (increment/decrement)
+  /// Use positive delta to increase quantity, negative to decrease
+  /// Removes item if resulting quantity <= 0
+  Future<BaseResponse<models.Cart?>> updateItemQuantityByDelta({
+    required String menuId,
+    required int delta,
+  }) async {
+    return _withCartLock(() async {
+      return guard(() async {
+        final currentCart = await getCart();
+        if (currentCart == null) {
+          throw const RepositoryError(
+            'Cart is empty',
+            code: ErrorCode.notFound,
+          );
+        }
+
+        final itemIndex = currentCart.items.indexWhere(
+          (item) => item.menuId == menuId,
         );
 
-        List<models.CartItem> updatedItems;
-        if (existingIndex >= 0) {
-          // Update existing item quantity
-          updatedItems = List<models.CartItem>.from(currentCart.items);
-          final existing = updatedItems[existingIndex];
-          updatedItems[existingIndex] = existing.copyWith(
-            quantity: existing.quantity + quantity,
-            notes: notes ?? existing.notes,
+        if (itemIndex < 0) {
+          throw const RepositoryError(
+            'Item not found in cart',
+            code: ErrorCode.notFound,
           );
+        }
+
+        final updatedItems = List<models.CartItem>.from(currentCart.items);
+        final currentItem = updatedItems[itemIndex];
+        final newQuantity = currentItem.quantity + delta;
+
+        if (newQuantity <= 0) {
+          // Remove item if quantity is 0 or less
+          updatedItems.removeAt(itemIndex);
         } else {
-          // Add new item
-          updatedItems = [...currentCart.items, newItem];
+          // Update quantity
+          updatedItems[itemIndex] = currentItem.copyWith(quantity: newQuantity);
+        }
+
+        // If cart is empty after update, clear it
+        if (updatedItems.isEmpty) {
+          await _clearCartInternal();
+          return const SuccessResponse(message: 'Cart cleared', data: null);
         }
 
         // Recalculate totals
@@ -106,138 +213,76 @@ class CartRepository extends BaseRepository {
           (sum, item) => sum + (item.unitPrice * item.quantity),
         );
 
-        updatedCart = models.Cart(
+        final updatedCart = models.Cart(
           merchantId: currentCart.merchantId,
           merchantName: currentCart.merchantName,
           items: updatedItems,
           totalItems: totalItems,
           subtotal: subtotal,
           lastUpdated: DateTime.now(),
-          merchantLocation: merchantLocation ?? currentCart.merchantLocation,
+          merchantLocation: currentCart.merchantLocation,
         );
-      }
 
-      await _saveCart(updatedCart);
-      return SuccessResponse(message: 'Item added to cart', data: updatedCart);
-    });
-  }
-
-  /// Update item quantity in cart by delta (increment/decrement)
-  /// Use positive delta to increase quantity, negative to decrease
-  /// Removes item if resulting quantity <= 0
-  Future<BaseResponse<models.Cart?>> updateItemQuantityByDelta({
-    required String menuId,
-    required int delta,
-  }) async {
-    return guard(() async {
-      final currentCart = await getCart();
-      if (currentCart == null) {
-        throw const RepositoryError('Cart is empty', code: ErrorCode.notFound);
-      }
-
-      final itemIndex = currentCart.items.indexWhere(
-        (item) => item.menuId == menuId,
-      );
-
-      if (itemIndex < 0) {
-        throw const RepositoryError(
-          'Item not found in cart',
-          code: ErrorCode.notFound,
-        );
-      }
-
-      final updatedItems = List<models.CartItem>.from(currentCart.items);
-      final currentItem = updatedItems[itemIndex];
-      final newQuantity = currentItem.quantity + delta;
-
-      if (newQuantity <= 0) {
-        // Remove item if quantity is 0 or less
-        updatedItems.removeAt(itemIndex);
-      } else {
-        // Update quantity
-        updatedItems[itemIndex] = currentItem.copyWith(quantity: newQuantity);
-      }
-
-      // If cart is empty after update, clear it
-      if (updatedItems.isEmpty) {
-        await clearCart();
-        return const SuccessResponse(message: 'Cart cleared', data: null);
-      }
-
-      // Recalculate totals
-      final totalItems = updatedItems.fold<int>(
-        0,
-        (sum, item) => sum + item.quantity,
-      );
-      final subtotal = updatedItems.fold<num>(
-        0,
-        (sum, item) => sum + (item.unitPrice * item.quantity),
-      );
-
-      final updatedCart = models.Cart(
-        merchantId: currentCart.merchantId,
-        merchantName: currentCart.merchantName,
-        items: updatedItems,
-        totalItems: totalItems,
-        subtotal: subtotal,
-        lastUpdated: DateTime.now(),
-        merchantLocation: currentCart.merchantLocation,
-      );
-
-      await _saveCart(updatedCart);
-      return SuccessResponse(message: 'Cart updated', data: updatedCart);
+        await _saveCart(updatedCart);
+        return SuccessResponse(message: 'Cart updated', data: updatedCart);
+      });
     });
   }
 
   /// Remove item from cart
   Future<BaseResponse<models.Cart?>> removeItem(String menuId) async {
-    return guard(() async {
-      final currentCart = await getCart();
-      if (currentCart == null) {
-        throw const RepositoryError('Cart is empty', code: ErrorCode.notFound);
-      }
+    return _withCartLock(() async {
+      return guard(() async {
+        final currentCart = await getCart();
+        if (currentCart == null) {
+          throw const RepositoryError(
+            'Cart is empty',
+            code: ErrorCode.notFound,
+          );
+        }
 
-      final updatedItems = currentCart.items
-          .where((item) => item.menuId != menuId)
-          .toList();
+        final updatedItems = currentCart.items
+            .where((item) => item.menuId != menuId)
+            .toList();
 
-      if (updatedItems.isEmpty) {
-        await clearCart();
-        return const SuccessResponse(message: 'Cart cleared', data: null);
-      }
+        if (updatedItems.isEmpty) {
+          await _clearCartInternal();
+          return const SuccessResponse(message: 'Cart cleared', data: null);
+        }
 
-      // Recalculate totals
-      final totalItems = updatedItems.fold<int>(
-        0,
-        (sum, item) => sum + item.quantity,
-      );
-      final subtotal = updatedItems.fold<num>(
-        0,
-        (sum, item) => sum + (item.unitPrice * item.quantity),
-      );
+        // Recalculate totals
+        final totalItems = updatedItems.fold<int>(
+          0,
+          (sum, item) => sum + item.quantity,
+        );
+        final subtotal = updatedItems.fold<num>(
+          0,
+          (sum, item) => sum + (item.unitPrice * item.quantity),
+        );
 
-      final updatedCart = models.Cart(
-        merchantId: currentCart.merchantId,
-        merchantName: currentCart.merchantName,
-        items: updatedItems,
-        totalItems: totalItems,
-        subtotal: subtotal,
-        lastUpdated: DateTime.now(),
-        merchantLocation: currentCart.merchantLocation,
-      );
+        final updatedCart = models.Cart(
+          merchantId: currentCart.merchantId,
+          merchantName: currentCart.merchantName,
+          items: updatedItems,
+          totalItems: totalItems,
+          subtotal: subtotal,
+          lastUpdated: DateTime.now(),
+          merchantLocation: currentCart.merchantLocation,
+        );
 
-      await _saveCart(updatedCart);
-      return SuccessResponse(
-        message: 'Item removed from cart',
-        data: updatedCart,
-      );
+        await _saveCart(updatedCart);
+        return SuccessResponse(
+          message: 'Item removed from cart',
+          data: updatedCart,
+        );
+      });
     });
   }
 
   /// Clear entire cart
   Future<void> clearCart() async {
-    return guard(() async {
-      await _keyValueService.remove(KeyValueKeys.cart);
+    return _withCartLock(() async {
+      return _clearCartInternal();
     });
   }
 
@@ -250,14 +295,35 @@ class CartRepository extends BaseRepository {
     String? notes,
     Coordinate? merchantLocation,
   }) async {
-    await clearCart();
-    return addItem(
-      menu: menu,
-      merchantName: merchantName,
-      quantity: quantity,
-      notes: notes,
-      merchantLocation: merchantLocation,
-    );
+    return _withCartLock(() async {
+      await _clearCartInternal();
+      return guard(() async {
+        // Create new cart item
+        final newItem = models.CartItem(
+          menuId: menu.id,
+          merchantId: menu.merchantId,
+          merchantName: merchantName,
+          menuName: menu.name,
+          menuImage: menu.image,
+          unitPrice: menu.price,
+          quantity: quantity,
+          notes: notes,
+        );
+
+        final updatedCart = models.Cart(
+          merchantId: newItem.merchantId,
+          merchantName: newItem.merchantName,
+          items: [newItem],
+          totalItems: quantity,
+          subtotal: menu.price * quantity,
+          lastUpdated: DateTime.now(),
+          merchantLocation: merchantLocation,
+        );
+
+        await _saveCart(updatedCart);
+        return SuccessResponse(message: 'Cart replaced', data: updatedCart);
+      });
+    });
   }
 
   /// Convert cart to OrderItem list for API

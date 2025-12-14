@@ -1064,7 +1064,7 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
       );
     }
 
-    // Completed - show rating and back button
+    // Completed - navigate to order completion screen for rating
     if (status == OrderStatus.COMPLETED) {
       return Column(
         spacing: 12.h,
@@ -1072,12 +1072,18 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
           SizedBox(
             width: double.infinity,
             child: PrimaryButton(
-              onPressed: () async {
-                await showReviewDialog(
-                  context: context,
-                  orderId: order.id,
-                  toUserId: order.userId,
-                  toUserName: order.user?.name ?? context.l10n.text_customer,
+              onPressed: () {
+                context.goNamed(
+                  Routes.driverOrderCompletion.name,
+                  extra: {
+                    'orderId': order.id,
+                    'orderType': order.type,
+                    'order': order,
+                    'user': order.user,
+                    'merchant': order.merchant,
+                    'payment':
+                        null, // Payment info not available in Order model
+                  },
                 );
               },
               child: Text(context.l10n.rate_customer),

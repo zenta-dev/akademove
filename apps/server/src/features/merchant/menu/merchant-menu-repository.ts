@@ -223,7 +223,10 @@ export class MerchantMenuRepository extends BaseRepository {
 				return { rows, totalPages };
 			}
 
-			const result = await this.db.query.merchantMenu.findMany();
+			const result = await this.db.query.merchantMenu.findMany({
+				where: clauses.length > 0 ? (_f, op) => op.and(...clauses) : undefined,
+				orderBy,
+			});
 			const rows = await Promise.all(
 				result.map((r) =>
 					MerchantMenuRepository.composeEntity(r, this.#storage),

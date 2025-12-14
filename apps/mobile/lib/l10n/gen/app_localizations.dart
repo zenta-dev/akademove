@@ -7315,6 +7315,18 @@ abstract class AppLocalizations {
   /// **'Export feature coming soon!'**
   String get export_coming_soon;
 
+  /// No description provided for @export_success.
+  ///
+  /// In en, this message translates to:
+  /// **'PDF exported successfully'**
+  String get export_success;
+
+  /// No description provided for @export_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to export PDF'**
+  String get export_failed;
+
   /// No description provided for @no_data_available.
   ///
   /// In en, this message translates to:
@@ -8748,6 +8760,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Emergency contact is not available. Please try again later.'**
   String get emergency_contact_unavailable;
+
+  /// No description provided for @order_completed.
+  ///
+  /// In en, this message translates to:
+  /// **'Order Completed'**
+  String get order_completed;
+
+  /// No description provided for @order_detail_summary.
+  ///
+  /// In en, this message translates to:
+  /// **'Order Summary'**
+  String get order_detail_summary;
+
+  /// No description provided for @rate_merchant_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Rate Your Order'**
+  String get rate_merchant_title;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

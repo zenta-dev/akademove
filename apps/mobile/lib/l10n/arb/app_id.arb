@@ -1582,6 +1582,8 @@
 	"outcome": "Pengeluaran",
 	"export_pdf": "Export PDF",
 	"export_coming_soon": "Fitur export segera hadir!",
+	"export_success": "PDF berhasil diekspor",
+	"export_failed": "Gagal mengekspor PDF",
 	"no_transactions_yet": "Belum ada transaksi",
 	"withdrawal": "Penarikan",
 	"no_data_available": "Tidak ada data",
@@ -1843,5 +1845,8 @@
 	"emergency_contact_whatsapp_desc": "Buka WhatsApp untuk menghubungi keamanan kampus",
 	"emergency_or_divider": "atau",
 	"emergency_whatsapp_error": "Tidak dapat membuka WhatsApp. Silakan coba lagi.",
-	"emergency_contact_unavailable": "Kontak darurat tidak tersedia. Silakan coba lagi nanti."
+	"emergency_contact_unavailable": "Kontak darurat tidak tersedia. Silakan coba lagi nanti.",
+	"order_completed": "Pesanan Selesai",
+	"order_detail_summary": "Ringkasan Pesanan",
+	"rate_merchant_title": "Beri Rating Pesanan"
 }

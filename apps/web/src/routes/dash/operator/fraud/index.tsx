@@ -70,11 +70,11 @@ function RouteComponent() {
 	const search = Route.useSearch();
 	const navigate = useNavigate();
 
-	const [statusFilter, setStatusFilter] = useState<FraudStatus | "">(
-		search.status ?? "",
+	const [statusFilter, setStatusFilter] = useState<FraudStatus | "ALL">(
+		search.status ?? "ALL",
 	);
-	const [severityFilter, setSeverityFilter] = useState<FraudSeverity | "">(
-		search.severity ?? "",
+	const [severityFilter, setSeverityFilter] = useState<FraudSeverity | "ALL">(
+		search.severity ?? "ALL",
 	);
 
 	if (!allowed) navigate({ to: "/" });
@@ -93,8 +93,8 @@ function RouteComponent() {
 				query: {
 					page: search.page,
 					limit: search.limit,
-					status: statusFilter || undefined,
-					severity: severityFilter || undefined,
+					status: statusFilter === "ALL" ? undefined : statusFilter,
+					severity: severityFilter === "ALL" ? undefined : severityFilter,
 				},
 			},
 		}),
@@ -112,18 +112,26 @@ function RouteComponent() {
 
 	const handleFilterChange = (type: "status" | "severity", value: string) => {
 		if (type === "status") {
-			setStatusFilter(value as FraudStatus | "");
+			setStatusFilter(value as FraudStatus | "ALL");
 		} else {
-			setSeverityFilter(value as FraudSeverity | "");
+			setSeverityFilter(value as FraudSeverity | "ALL");
 		}
 		const newStatus =
 			type === "status"
-				? ((value || undefined) as FraudStatus | undefined)
-				: statusFilter || undefined;
+				? value === "ALL"
+					? undefined
+					: (value as FraudStatus)
+				: statusFilter === "ALL"
+					? undefined
+					: statusFilter;
 		const newSeverity =
 			type === "severity"
-				? ((value || undefined) as FraudSeverity | undefined)
-				: severityFilter || undefined;
+				? value === "ALL"
+					? undefined
+					: (value as FraudSeverity)
+				: severityFilter === "ALL"
+					? undefined
+					: severityFilter;
 		navigate({
 			to: "/dash/operator/fraud",
 			search: {
@@ -291,7 +299,7 @@ function RouteComponent() {
 									<SelectValue placeholder="Status" />
 								</SelectTrigger>
 								<SelectContent>
-									<SelectItem value="">All Status</SelectItem>
+									<SelectItem value="ALL">All Status</SelectItem>
 									<SelectItem value="PENDING">Pending</SelectItem>
 									<SelectItem value="REVIEWING">Reviewing</SelectItem>
 									<SelectItem value="CONFIRMED">Confirmed</SelectItem>
@@ -307,7 +315,7 @@ function RouteComponent() {
 									<SelectValue placeholder="Severity" />
 								</SelectTrigger>
 								<SelectContent>
-									<SelectItem value="">All Severity</SelectItem>
+									<SelectItem value="ALL">All Severity</SelectItem>
 									<SelectItem value="CRITICAL">Critical</SelectItem>
 									<SelectItem value="HIGH">High</SelectItem>
 									<SelectItem value="MEDIUM">Medium</SelectItem>

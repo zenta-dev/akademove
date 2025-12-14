@@ -320,15 +320,18 @@ class _UserDeliveryOnTripScreenState extends State<UserDeliveryOnTripScreen> {
         mounted &&
         context.mounted) {
       context.read<UserOrderCubit>().clearActiveOrder();
-      // Navigate to rating/review screen
+      // Navigate to order completion screen
       final driver = state.currentAssignedDriver.value;
+      final payment = state.currentPayment.value;
       if (driver != null && currentOrder != null) {
         final result = await context.pushNamed(
-          Routes.userRating.name,
+          Routes.userOrderCompletion.name,
           extra: {
             "orderId": currentOrder.id,
-            "driverId": driver.userId,
-            "driverName": driver.user?.name ?? "Driver",
+            "orderType": OrderType.DELIVERY,
+            "order": currentOrder,
+            "driver": driver,
+            "payment": payment,
           },
         );
 

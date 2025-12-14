@@ -125,6 +125,33 @@ final driverRouter = StatefulShellRoute.indexedStack(
                 child: const NotificationScreen(),
               ),
             ),
+            GoRoute(
+              name: Routes.driverOrderCompletion.name,
+              path: 'order-completion',
+              builder: (context, state) {
+                final extra = state.extra as Map<String, dynamic>;
+
+                final orderId = extra['orderId'] as String;
+                final orderType = extra['orderType'] as OrderType;
+                final order = extra['order'] as Order;
+                final user = extra['user'] as User?;
+                final merchant = extra['merchant'] as Merchant?;
+                final payment = extra['payment'] as Payment?;
+
+                return BlocProvider.value(
+                  value: context.read<DriverReviewCubit>(),
+                  child: OrderCompletionScreen(
+                    orderId: orderId,
+                    orderType: orderType,
+                    order: order,
+                    viewerRole: OrderCompletionViewerRole.driver,
+                    user: user,
+                    merchant: merchant,
+                    payment: payment,
+                  ),
+                );
+              },
+            ),
           ],
         ),
       ],
