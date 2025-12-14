@@ -50,6 +50,18 @@ const MERCHANT_ROOM = DurableObjectNamespace("merchant-rooms", {
 	sqlite: true,
 });
 
+const DRIVER_LOCATION_ROOM = DurableObjectNamespace("driver-location-rooms", {
+	className: "DriverLocationRoom",
+	environment: alchemy.env.NODE_ENV,
+	sqlite: true,
+});
+
+const SUPPORT_CHAT = DurableObjectNamespace("support-chat-rooms", {
+	className: "SupportChatRoom",
+	environment: alchemy.env.NODE_ENV,
+	sqlite: true,
+});
+
 const ORDER_DLQ = await Queue("order-dlq", {
 	name: `${APP_NAME}-order-dlq`,
 	settings: {
@@ -111,6 +123,8 @@ export const [server, web] = await Promise.all([
 			ORDER_ROOM,
 			PAYMENT_ROOM,
 			MERCHANT_ROOM,
+			DRIVER_LOCATION_ROOM,
+			SUPPORT_CHAT,
 			DB_URL: alchemy.secret.env.DATABASE_URL,
 			MAIN_DB: mainDB,
 			MAIN_KV: mainKV,

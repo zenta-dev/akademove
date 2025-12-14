@@ -69,6 +69,30 @@ export function withQueryParams(
 	return new Request(url.toString(), req);
 }
 
+/**
+ * @deprecated DO NOT USE IN CLOUDFLARE WORKERS
+ *
+ * setTimeout does not actually delay execution in Cloudflare Workers due to
+ * security restrictions. It only defers execution to the next event loop iteration,
+ * NOT for the full time specified.
+ *
+ * "Due to security-based restrictions on timers in Workers, timers are limited to
+ * returning the time of the last I/O. This means that while setTimeout, setInterval,
+ * and setImmediate will defer your function execution until other events have run,
+ * they will not delay them for the full time specified."
+ *
+ * @see https://developers.cloudflare.com/workers/runtime-apis/nodejs/timers/
+ *
+ * Instead, use Cloudflare Queues with delaySeconds for reliable delays:
+ * @example
+ * import { ProcessingQueueService } from "@/core/services/queue";
+ * import { BUSINESS_CONSTANTS } from "@/core/constants";
+ *
+ * await ProcessingQueueService.enqueueWebSocketBroadcast(
+ *   { roomName: "driver-pool", action: "MATCHING", ... },
+ *   { delaySeconds: BUSINESS_CONSTANTS.BROADCAST_DELAY_SECONDS }
+ * );
+ */
 export function delay<T>(
 	ms: number,
 	fn?: PromiseLike<T>,

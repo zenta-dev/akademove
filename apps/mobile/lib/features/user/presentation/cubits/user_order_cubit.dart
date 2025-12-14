@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
@@ -24,8 +25,8 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
   /// Timer for polling active order updates (fallback only)
   Timer? _pollingTimer;
 
-  /// Timer for WebSocket data check (to detect if no data received)
-  Timer? _wsDataCheckTimer;
+  /// Timer for sending CHECK_NEW_DATA via WebSocket
+  Timer? _checkNewDataTimer;
 
   /// Default polling interval in seconds
   static const int _defaultPollingIntervalSeconds = 5;
@@ -36,17 +37,17 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
   /// Critical polling interval during MATCHING status for faster driver acceptance detection
   static const int _criticalPollingIntervalSeconds = 2;
 
-  /// WebSocket data check interval in seconds (how often to check if data was received)
-  static const int _wsDataCheckIntervalSeconds = 3;
+  /// CHECK_NEW_DATA interval in seconds (how often to ask for new data via WebSocket)
+  static const int _checkNewDataIntervalSeconds = 5;
 
-  /// Max WebSocket no-data retries before HTTP fallback (15 * 3s = 45s total)
-  static const int _maxWsNoDataRetries = 15;
+  /// Max CHECK_NEW_DATA retries before HTTP fallback (15 * 5s = 75s total)
+  static const int _maxCheckNewDataRetries = 15;
 
-  /// Counter for consecutive WebSocket checks with no data
-  int _wsNoDataCount = 0;
+  /// Counter for consecutive CHECK_NEW_DATA with no response
+  int _checkNewDataNoResponseCount = 0;
 
-  /// Flag to track if we received data via WebSocket since last check
-  bool _receivedWsDataSinceLastCheck = false;
+  /// Last known order version for CHECK_NEW_DATA sync
+  String? _lastKnownVersion;
 
   /// Whether we're using polling as a fallback due to WebSocket issues
   bool _isPollingFallback = false;
@@ -533,16 +534,21 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
   // }
 
   /// Setup live order WebSocket with HTTP polling fallback
-  /// Uses WebSocket first, then falls back to HTTP polling after 15 retries
-  /// (3s interval each = 45s total) if no data received via WebSocket
+  /// Sends CHECK_NEW_DATA every 5 seconds via WebSocket
+  /// Falls back to HTTP polling after 15 retries with no response
   Future<void> _setupLiveOrderWebsocketWithPolling({
     required String orderId,
   }) async {
     _orderId = orderId;
 
-    // Reset WebSocket data check state
-    _wsNoDataCount = 0;
-    _receivedWsDataSinceLastCheck = false;
+    // Reset CHECK_NEW_DATA state
+    _checkNewDataNoResponseCount = 0;
+
+    // Initialize version from current order if available
+    final currentOrder = state.currentOrder.value;
+    if (currentOrder != null) {
+      _lastKnownVersion = currentOrder.updatedAt.toIso8601String();
+    }
 
     // Setup WebSocket status listener for automatic fallback
     _webSocketService.setStatusListener(orderId, _handleWebSocketStatusChange);
@@ -551,20 +557,33 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
     await _setupLiveOrderWebsocket(orderId: orderId);
   }
 
-  /// Setup live order WebSocket connection (WebSocket-first approach)
+  /// Setup live order WebSocket connection with CHECK_NEW_DATA pattern
   Future<void> _setupLiveOrderWebsocket({required String orderId}) async {
     try {
       _orderId = orderId;
 
       // Message handler for WebSocket events
       void handleMessage(Map<String, dynamic> json) {
-        // Mark that we received data via WebSocket
-        _onWebSocketDataReceived();
+        final eventType = json['e'] as String?;
 
-        // Handle all events via normal OrderEnvelope parsing
+        // Handle NEW_DATA response from CHECK_NEW_DATA
+        if (eventType == 'NEW_DATA') {
+          _handleNewDataResponse(json);
+          return;
+        }
+
+        // Handle NO_DATA response from CHECK_NEW_DATA
+        if (eventType == 'NO_DATA') {
+          _handleNoDataResponse(json);
+          return;
+        }
+
+        // Handle all other events via normal OrderEnvelope parsing
         try {
           final data = OrderEnvelope.fromJson(json);
           _handleOrderEnvelopeEvent(data);
+          // Reset counter on any valid event received
+          _checkNewDataNoResponseCount = 0;
         } catch (e, st) {
           logger.e(
             '[UserOrderCubit] Failed to parse OrderEnvelope',
@@ -583,12 +602,13 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
         },
       );
 
-      // Start WebSocket data check timer to detect if no data received
-      _startWsDataCheckTimer();
+      // Start CHECK_NEW_DATA timer
+      _startCheckNewDataTimer();
 
       logger.i(
         '[UserOrderCubit] WebSocket connected for order: $orderId, '
-        'will fallback to HTTP after ${_maxWsNoDataRetries * _wsDataCheckIntervalSeconds}s of no data',
+        'sending CHECK_NEW_DATA every ${_checkNewDataIntervalSeconds}s, '
+        'will fallback to HTTP after $_maxCheckNewDataRetries retries with no response',
       );
     } catch (e, st) {
       logger.e(
@@ -601,66 +621,195 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
     }
   }
 
-  /// Called when data is received via WebSocket
-  void _onWebSocketDataReceived() {
-    _receivedWsDataSinceLastCheck = true;
-    _wsNoDataCount = 0; // Reset counter on data received
+  /// Handle NEW_DATA response from CHECK_NEW_DATA
+  void _handleNewDataResponse(Map<String, dynamic> json) {
+    // Reset counter on successful response
+    _checkNewDataNoResponseCount = 0;
 
     // If we were in fallback mode, stop HTTP polling since WebSocket is working
     if (_isPollingFallback && state.isPolling) {
-      logger.i(
-        '[UserOrderCubit] WebSocket data received, stopping HTTP fallback',
-      );
+      logger.i('[UserOrderCubit] NEW_DATA received, stopping HTTP fallback');
       stopPolling();
       _isPollingFallback = false;
+      // Restart CHECK_NEW_DATA timer
+      _startCheckNewDataTimer();
+    }
+
+    try {
+      final payload = json['p'] as Map<String, Object?>?;
+      final detail = payload?['detail'] as Map<String, Object?>?;
+      final driverAssigned =
+          payload?['driverAssigned'] as Map<String, Object?>?;
+
+      if (detail == null) {
+        logger.d('[UserOrderCubit] NEW_DATA received but no detail');
+        return;
+      }
+
+      // Parse order, payment, transaction from detail
+      final orderJson = detail['order'] as Map<String, dynamic>?;
+      final paymentJson = detail['payment'] as Map<String, dynamic>?;
+      final transactionJson = detail['transaction'] as Map<String, dynamic>?;
+
+      if (orderJson == null) {
+        logger.d('[UserOrderCubit] NEW_DATA has no order in detail');
+        return;
+      }
+
+      final order = Order.fromJson(orderJson);
+      final payment = paymentJson != null
+          ? Payment.fromJson(paymentJson)
+          : null;
+      final transaction = transactionJson != null
+          ? Transaction.fromJson(transactionJson)
+          : null;
+      final driver = driverAssigned != null
+          ? Driver.fromJson(driverAssigned as Map<String, dynamic>)
+          : null;
+
+      // Check if we actually have new data
+      final currentOrder = state.currentOrder.value;
+      final hasChanges =
+          currentOrder == null ||
+          currentOrder.id != order.id ||
+          currentOrder.status != order.status ||
+          currentOrder.updatedAt != order.updatedAt;
+
+      if (hasChanges) {
+        logger.d(
+          '[UserOrderCubit] NEW_DATA: Order updated - '
+          'status: ${order.status}, driver: ${driver?.id}',
+        );
+
+        emit(
+          state.copyWith(
+            currentOrder: OperationResult.success(order),
+            currentPayment: payment != null
+                ? OperationResult.success(payment)
+                : state.currentPayment,
+            currentTransaction: transaction != null
+                ? OperationResult.success(transaction)
+                : state.currentTransaction,
+            currentAssignedDriver: driver != null
+                ? OperationResult.success(driver)
+                : state.currentAssignedDriver,
+          ),
+        );
+
+        // Update version for next CHECK_NEW_DATA
+        _lastKnownVersion = order.updatedAt.toIso8601String();
+
+        // Check if order is in terminal state
+        if (_isTerminalStatus(order.status)) {
+          logger.i(
+            '[UserOrderCubit] NEW_DATA: Order in terminal state (${order.status}), '
+            'clearing active order',
+          );
+          Future.delayed(const Duration(milliseconds: 500), () {
+            if (!isClosed) {
+              clearActiveOrder();
+            }
+          });
+        }
+      }
+    } catch (e, st) {
+      logger.e(
+        '[UserOrderCubit] Failed to handle NEW_DATA',
+        error: e,
+        stackTrace: st,
+      );
     }
   }
 
-  /// Start timer to check if WebSocket data was received
-  void _startWsDataCheckTimer() {
-    _stopWsDataCheckTimer();
+  /// Handle NO_DATA response from CHECK_NEW_DATA
+  void _handleNoDataResponse(Map<String, dynamic> json) {
+    // Reset counter - we got a response, just no new data
+    _checkNewDataNoResponseCount = 0;
+
+    // Extract version from response if present
+    final payload = json['p'] as Map<String, Object?>?;
+    final syncRequest = payload?['syncRequest'] as Map<String, Object?>?;
+    final version = syncRequest?['lastKnownVersion'] as String?;
+
+    if (version != null && _lastKnownVersion != version) {
+      _lastKnownVersion = version;
+    }
+
+    logger.d('[UserOrderCubit] NO_DATA response received');
+  }
+
+  /// Start timer to send CHECK_NEW_DATA periodically
+  void _startCheckNewDataTimer() {
+    _stopCheckNewDataTimer();
 
     logger.d(
-      '[UserOrderCubit] Starting WebSocket data check timer '
-      '(${_wsDataCheckIntervalSeconds}s interval, '
-      'max $_maxWsNoDataRetries retries)',
+      '[UserOrderCubit] Starting CHECK_NEW_DATA timer '
+      '(${_checkNewDataIntervalSeconds}s interval, '
+      'max $_maxCheckNewDataRetries retries)',
     );
 
-    _wsDataCheckTimer = Timer.periodic(
-      Duration(seconds: _wsDataCheckIntervalSeconds),
-      (_) => _checkWsDataReceived(),
+    _checkNewDataTimer = Timer.periodic(
+      Duration(seconds: _checkNewDataIntervalSeconds),
+      (_) => _sendCheckNewData(),
     );
+
+    // Send initial CHECK_NEW_DATA immediately
+    _sendCheckNewData();
   }
 
-  /// Stop the WebSocket data check timer
-  void _stopWsDataCheckTimer() {
-    _wsDataCheckTimer?.cancel();
-    _wsDataCheckTimer = null;
+  /// Stop the CHECK_NEW_DATA timer
+  void _stopCheckNewDataTimer() {
+    _checkNewDataTimer?.cancel();
+    _checkNewDataTimer = null;
   }
 
-  /// Check if WebSocket data was received since last check
-  void _checkWsDataReceived() {
-    if (_receivedWsDataSinceLastCheck) {
-      // Data was received, reset counter
-      _wsNoDataCount = 0;
-      _receivedWsDataSinceLastCheck = false;
-      logger.d('[UserOrderCubit] WebSocket data check: received data');
+  /// Send CHECK_NEW_DATA message via WebSocket
+  void _sendCheckNewData() {
+    final orderId = _orderId;
+    if (orderId == null) return;
+
+    // Check if WebSocket is healthy
+    if (!_webSocketService.isConnectionHealthy(orderId)) {
+      logger.d(
+        '[UserOrderCubit] WebSocket not healthy, skipping CHECK_NEW_DATA',
+      );
+      _checkNewDataNoResponseCount++;
+      _checkFallbackNeeded();
       return;
     }
 
-    // No data received since last check
-    _wsNoDataCount++;
+    // Build CHECK_NEW_DATA message
+    final message = {
+      'a': 'CHECK_NEW_DATA',
+      'f': 'c',
+      't': 's',
+      'p': {
+        'syncRequest': {
+          'orderId': orderId,
+          'lastKnownVersion': _lastKnownVersion,
+        },
+      },
+    };
+
     logger.d(
-      '[UserOrderCubit] WebSocket data check: no data '
-      '($_wsNoDataCount/$_maxWsNoDataRetries)',
+      '[UserOrderCubit] Sending CHECK_NEW_DATA (version: $_lastKnownVersion)',
     );
 
-    if (_wsNoDataCount >= _maxWsNoDataRetries) {
+    _webSocketService.send(orderId, jsonEncode(message));
+
+    // Increment counter - will be reset when response received
+    _checkNewDataNoResponseCount++;
+    _checkFallbackNeeded();
+  }
+
+  /// Check if we need to fallback to HTTP polling
+  void _checkFallbackNeeded() {
+    if (_checkNewDataNoResponseCount >= _maxCheckNewDataRetries) {
       logger.i(
-        '[UserOrderCubit] WebSocket no data after $_wsNoDataCount checks, '
-        'falling back to HTTP polling',
+        '[UserOrderCubit] No response after $_checkNewDataNoResponseCount '
+        'CHECK_NEW_DATA attempts, falling back to HTTP polling',
       );
-      _stopWsDataCheckTimer();
+      _stopCheckNewDataTimer();
       _startPollingFallback(fast: true);
     }
   }
@@ -918,14 +1067,13 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
 
     switch (status) {
       case WebSocketConnectionStatus.connected:
-        // WebSocket is healthy, restart data check timer if not running
-        if (_wsDataCheckTimer == null && !_isPollingFallback) {
+        // WebSocket is healthy, restart CHECK_NEW_DATA timer if not running
+        if (_checkNewDataTimer == null && !_isPollingFallback) {
           logger.i(
-            '[UserOrderCubit] WebSocket connected, starting data check timer',
+            '[UserOrderCubit] WebSocket connected, starting CHECK_NEW_DATA timer',
           );
-          _wsNoDataCount = 0;
-          _receivedWsDataSinceLastCheck = false;
-          _startWsDataCheckTimer();
+          _checkNewDataNoResponseCount = 0;
+          _startCheckNewDataTimer();
         }
         // Stop HTTP polling if it was running as fallback
         if (_isPollingFallback && state.isPolling) {
@@ -934,21 +1082,20 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
           );
           stopPolling();
           _isPollingFallback = false;
-          // Restart data check timer
-          _wsNoDataCount = 0;
-          _receivedWsDataSinceLastCheck = false;
-          _startWsDataCheckTimer();
+          // Restart CHECK_NEW_DATA timer
+          _checkNewDataNoResponseCount = 0;
+          _startCheckNewDataTimer();
         }
       case WebSocketConnectionStatus.reconnecting:
       case WebSocketConnectionStatus.connecting:
-        // WebSocket is unstable, data check timer will handle fallback if needed
+        // WebSocket is unstable, CHECK_NEW_DATA will handle fallback if needed
         logger.d(
-          '[UserOrderCubit] WebSocket reconnecting, will fallback if no data received',
+          '[UserOrderCubit] WebSocket reconnecting, will fallback if no response',
         );
       case WebSocketConnectionStatus.failed:
       case WebSocketConnectionStatus.disconnected:
         // WebSocket is down, start HTTP polling as primary update source
-        _stopWsDataCheckTimer();
+        _stopCheckNewDataTimer();
         if (!state.isPolling) {
           logger.i(
             '[UserOrderCubit] WebSocket failed/disconnected, '
@@ -980,10 +1127,10 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
   }
 
   Future<void> teardownWebsocket() async {
-    // Stop WebSocket data check timer
-    _stopWsDataCheckTimer();
-    _wsNoDataCount = 0;
-    _receivedWsDataSinceLastCheck = false;
+    // Stop CHECK_NEW_DATA timer
+    _stopCheckNewDataTimer();
+    _checkNewDataNoResponseCount = 0;
+    _lastKnownVersion = null;
 
     final futures = [_webSocketService.disconnect('driver-pool')];
     final orderId = _orderId;

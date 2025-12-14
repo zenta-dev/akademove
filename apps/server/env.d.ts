@@ -8,12 +8,20 @@ import type {
 	QueueMessage,
 } from "@repo/schema/queue";
 import type { ServerEnv } from "../../alchemy.run";
-import type { MerchantRoom, OrderRoom, PaymentRoom } from "./src";
+import type {
+	DriverLocationRoom,
+	MerchantRoom,
+	OrderRoom,
+	PaymentRoom,
+	SupportChatRoom,
+} from "./src";
 
 export interface CloudflareEnv extends ServerEnv {
 	ORDER_ROOM: DurableObjectNamespace<OrderRoom>;
 	PAYMENT_ROOM: DurableObjectNamespace<PaymentRoom>;
 	MERCHANT_ROOM: DurableObjectNamespace<MerchantRoom>;
+	DRIVER_LOCATION_ROOM: DurableObjectNamespace<DriverLocationRoom>;
+	SUPPORT_CHAT: DurableObjectNamespace<SupportChatRoom>;
 	// Queue bindings with typed message bodies
 	ORDER_QUEUE: Queue<OrderQueueMessage>;
 	NOTIFICATION_QUEUE: Queue<NotificationQueueMessage>;

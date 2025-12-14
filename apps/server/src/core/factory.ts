@@ -61,6 +61,7 @@ import {
 import { QuickMessageRepository } from "@/features/quick-message/quick-message-repository";
 import { ReportRepository } from "@/features/report/report-repository";
 import { ReviewRepository } from "@/features/review/review-repository";
+import { SupportChatRepository } from "@/features/support-chat/support-chat-repository";
 import { TransactionRepository } from "@/features/transaction/transaction-repository";
 import { UserAdminRepository } from "@/features/user/admin/user-admin-repository";
 import { UserLookupRepository } from "@/features/user/lookup/user-lookup-repository";
@@ -323,6 +324,7 @@ export function getRepositories(
 		coupon: new CouponRepository(svc.db, svc.kv),
 		report: new ReportRepository(svc.db, svc.kv),
 		review: new ReviewRepository(svc.db, svc.kv),
+		supportChat: new SupportChatRepository(svc.db, svc.kv),
 		wallet,
 		user: {
 			admin: new UserAdminRepository(

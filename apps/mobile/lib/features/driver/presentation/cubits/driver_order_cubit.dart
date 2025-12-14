@@ -550,7 +550,7 @@ class DriverOrderCubit extends BaseCubit<DriverOrderState> {
   }
 
   Future<void> _onLocationUpdate(Coordinate coordinate) async {
-    // Skip update if location hasn't changed
+    // Skip update if location hasn't changed (deduplication to prevent DB heating)
     final last = _lastLocation;
     if (last != null && last.x == coordinate.x && last.y == coordinate.y) {
       return;
@@ -562,7 +562,7 @@ class DriverOrderCubit extends BaseCubit<DriverOrderState> {
       if (orderId == null || driverId == null) return;
 
       try {
-        // Send location update via WebSocket to broadcast to user in real-time
+        // WebSocket-first approach: Try WebSocket, fallback to HTTP REST
         final envelope = OrderEnvelope(
           f: EnvelopeSender.c,
           t: EnvelopeSender.s,
@@ -575,30 +575,67 @@ class DriverOrderCubit extends BaseCubit<DriverOrderState> {
             ),
           ),
         );
-        _webSocketService.send(orderId, jsonEncode(envelope.toJson()));
 
-        // Also update location on server via REST API for persistence
-        await _driverRepository.updateLocation(
-          driverId: driverId,
-          location: CoordinateWithMeta(
-            x: coordinate.x,
-            y: coordinate.y,
-            isMockLocation: false,
-          ),
-        );
+        // Check if WebSocket is connected and healthy
+        final isWsConnected = _webSocketService.isConnected(orderId);
+        final isWsHealthy = _webSocketService.isConnectionHealthy(orderId);
 
-        _lastLocation = coordinate;
+        if (isWsConnected && isWsHealthy) {
+          // Primary: Send via WebSocket (server will persist + broadcast)
+          _webSocketService.send(orderId, jsonEncode(envelope.toJson()));
+          _lastLocation = coordinate;
 
-        logger.d(
-          '[DriverOrderCubit] - Location updated (WS + REST): '
-          'lat=${coordinate.y}, lng=${coordinate.x}',
-        );
+          logger.d(
+            '[DriverOrderCubit] - Location updated via WebSocket: '
+            'lat=${coordinate.y}, lng=${coordinate.x}',
+          );
+        } else {
+          // Fallback: Use HTTP REST API when WebSocket is unavailable
+          await _driverRepository.updateLocation(
+            driverId: driverId,
+            location: CoordinateWithMeta(
+              x: coordinate.x,
+              y: coordinate.y,
+              isMockLocation: false,
+            ),
+          );
+          _lastLocation = coordinate;
+
+          logger.d(
+            '[DriverOrderCubit] - Location updated via REST (WS fallback): '
+            'lat=${coordinate.y}, lng=${coordinate.x}',
+          );
+        }
       } catch (e, st) {
         logger.e(
           '[DriverOrderCubit] - Error updating location: $e',
           error: e,
           stackTrace: st,
         );
+
+        // If WebSocket send failed, try HTTP REST as fallback
+        try {
+          await _driverRepository.updateLocation(
+            driverId: driverId,
+            location: CoordinateWithMeta(
+              x: coordinate.x,
+              y: coordinate.y,
+              isMockLocation: false,
+            ),
+          );
+          _lastLocation = coordinate;
+
+          logger.d(
+            '[DriverOrderCubit] - Location updated via REST (error fallback): '
+            'lat=${coordinate.y}, lng=${coordinate.x}',
+          );
+        } catch (restError, restSt) {
+          logger.e(
+            '[DriverOrderCubit] - REST fallback also failed: $restError',
+            error: restError,
+            stackTrace: restSt,
+          );
+        }
       }
     });
   }

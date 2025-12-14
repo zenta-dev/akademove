@@ -6,13 +6,14 @@ import type { Transaction } from "@repo/schema/transaction";
 import { nullsToUndefined } from "@repo/shared";
 import Decimal from "decimal.js";
 import { eq } from "drizzle-orm";
-import { DRIVER_POOL_KEY } from "@/core/constants";
+import { BUSINESS_CONSTANTS, DRIVER_POOL_KEY } from "@/core/constants";
 import { RepositoryError } from "@/core/error";
 import type { WithTx } from "@/core/interface";
 import { tables } from "@/core/services/db";
+import { ProcessingQueueService } from "@/core/services/queue";
 import type { PaymentDatabase } from "@/core/tables/payment";
 import { OrderStateService } from "@/features/order/services/order-state-service";
-import { delay, toNumberSafe, toStringNumberSafe } from "@/utils";
+import { toNumberSafe, toStringNumberSafe } from "@/utils";
 import { logger } from "@/utils/logger";
 import { generateOrderCode } from "@/utils/uuid";
 import { PaymentChargeService } from "./payment-charge-service";
@@ -542,7 +543,6 @@ export class PaymentWebhookService {
 		]);
 
 		const paymentStub = this.#getPaymentRoomStub(payment.id);
-		const orderStub = this.#getOrderRoomStub(DRIVER_POOL_KEY);
 
 		const composedPayment = PaymentChargeService.composeEntity(
 			updatedPayment as unknown as PaymentDatabase,
@@ -586,21 +586,23 @@ export class PaymentWebhookService {
 					wallet: composedWallet,
 				},
 			}),
-			// Trigger order matching (delayed by 500ms)
-			delay(500, () =>
-				orderStub.broadcast({
-					a: "MATCHING",
-					f: "s",
-					t: "s",
-					tg: "SYSTEM",
-					p: {
+			// Trigger order matching with delayed broadcast via queue
+			// Note: setTimeout doesn't work reliably in Cloudflare Workers due to security restrictions
+			// @see https://developers.cloudflare.com/workers/runtime-apis/nodejs/timers/
+			ProcessingQueueService.enqueueWebSocketBroadcast(
+				{
+					roomName: DRIVER_POOL_KEY,
+					action: "MATCHING",
+					target: "SYSTEM",
+					data: {
 						detail: {
 							payment: composedPayment,
 							order: composedOrder,
 							transaction: updatedTransaction,
 						},
 					},
-				}),
+				},
+				{ delaySeconds: BUSINESS_CONSTANTS.BROADCAST_DELAY_SECONDS },
 			),
 			// Notify customer
 			sendNotification(
@@ -684,17 +686,6 @@ export class PaymentWebhookService {
 	#getPaymentRoomStub(paymentId: string) {
 		const stubId = env.PAYMENT_ROOM.idFromName(paymentId);
 		return env.PAYMENT_ROOM.get(stubId);
-	}
-
-	/**
-	 * Gets order room Durable Object stub for WebSocket broadcasting
-	 *
-	 * @param roomName - Room name (typically DRIVER_POOL_KEY)
-	 * @returns Durable Object stub
-	 */
-	#getOrderRoomStub(roomName: string) {
-		const stubId = env.ORDER_ROOM.idFromName(roomName);
-		return env.ORDER_ROOM.get(stubId);
 	}
 
 	/**

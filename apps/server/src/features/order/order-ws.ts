@@ -564,6 +564,56 @@ export class OrderRoom extends BaseDurableObject {
 	}
 
 	async #handleDriverUpdateLocation(ws: WebSocket, data: OrderEnvelope) {
+		const driverLocation = data.p.driverUpdateLocation;
+
+		// Persist driver location if provided (with deduplication handled by handler)
+		if (
+			driverLocation?.driverId &&
+			driverLocation.x != null &&
+			driverLocation.y != null
+		) {
+			try {
+				// Get current driver location for deduplication check
+				const driver = await this.#repo.driver.main.get(
+					driverLocation.driverId,
+				);
+				const currentLocation = driver.currentLocation;
+
+				// Skip DB write if location hasn't changed (deduplication)
+				const isSameLocation =
+					currentLocation != null &&
+					currentLocation.x === driverLocation.x &&
+					currentLocation.y === driverLocation.y;
+
+				if (!isSameLocation) {
+					await this.#repo.driver.main.updateLocation(driverLocation.driverId, {
+						x: driverLocation.x,
+						y: driverLocation.y,
+					});
+					logger.debug(
+						{
+							driverId: driverLocation.driverId,
+							x: driverLocation.x,
+							y: driverLocation.y,
+						},
+						"[OrderRoom] Driver location persisted via WebSocket",
+					);
+				} else {
+					logger.debug(
+						{ driverId: driverLocation.driverId },
+						"[OrderRoom] Skipping location persist - same as current",
+					);
+				}
+			} catch (error) {
+				// Log error but don't fail the broadcast - location update is best-effort
+				logger.error(
+					{ error, driverId: driverLocation.driverId },
+					"[OrderRoom] Failed to persist driver location via WebSocket",
+				);
+			}
+		}
+
+		// Always broadcast to connected clients regardless of persistence result
 		const payload: OrderEnvelope = {
 			e: "DRIVER_LOCATION_UPDATE",
 			f: "s",
@@ -1176,28 +1226,33 @@ export class OrderRoom extends BaseDurableObject {
 			};
 			this.broadcast(readyResponse, { excludes: [ws] });
 
-			// Broadcast to driver pool to start driver matching
-			const { DRIVER_POOL_KEY } = await import("@/core/constants");
-			const { OrderBaseRepository } = await import(
-				"@/features/order/repositories/order-base-repository"
+			// Broadcast to driver pool to start driver matching with delay
+			// Uses queue-based delayed broadcast to allow WebSocket clients time to connect
+			// Note: setTimeout doesn't work reliably in Cloudflare Workers
+			const { DRIVER_POOL_KEY, BUSINESS_CONSTANTS } = await import(
+				"@/core/constants"
 			);
-			const stub = OrderBaseRepository.getRoomStubByName(DRIVER_POOL_KEY);
-			stub.broadcast({
-				f: "s",
-				t: "s",
-				a: "MATCHING",
-				p: {
-					detail: {
-						order: updatedOrder,
-						payment: data.p.detail?.payment ?? null,
-						transaction: data.p.detail?.transaction ?? null,
+			const { ProcessingQueueService } = await import("@/core/services/queue");
+
+			await ProcessingQueueService.enqueueWebSocketBroadcast(
+				{
+					roomName: DRIVER_POOL_KEY,
+					action: "MATCHING",
+					target: "SYSTEM",
+					data: {
+						detail: {
+							order: updatedOrder,
+							payment: data.p.detail?.payment ?? null,
+							transaction: data.p.detail?.transaction ?? null,
+						},
 					},
 				},
-			});
+				{ delaySeconds: BUSINESS_CONSTANTS.BROADCAST_DELAY_SECONDS },
+			);
 
 			logger.info(
 				{ orderId: updatedOrder.id },
-				"[OrderRoom] Broadcast to driver pool for FOOD order after merchant ready",
+				"[OrderRoom] Delayed broadcast enqueued to driver pool for FOOD order after merchant ready",
 			);
 		} catch (error) {
 			logger.error(

@@ -458,11 +458,19 @@ export const ProcessingQueueService = {
 	 * Enqueue WebSocket broadcast
 	 *
 	 * Used when queue worker needs to notify clients after processing.
+	 * Supports delayed broadcasts to allow WebSocket clients time to connect.
+	 *
+	 * Note: Use delaySeconds for reliable delays in Cloudflare Workers.
+	 * setTimeout does not actually delay due to security restrictions.
+	 * @see https://developers.cloudflare.com/workers/runtime-apis/nodejs/timers/
 	 *
 	 * @param payload - Broadcast details
+	 * @param opts - Optional delay configuration
+	 * @param opts.delaySeconds - Delay in seconds before processing (0-43200)
 	 */
 	async enqueueWebSocketBroadcast(
 		payload: WebSocketBroadcastJob["payload"],
+		opts?: { delaySeconds?: number },
 	): Promise<void> {
 		const idempotencyKey = `ws-${payload.roomName}-${payload.event}-${Date.now()}`;
 
@@ -476,11 +484,14 @@ export const ProcessingQueueService = {
 			{
 				roomName: payload.roomName,
 				event: payload.event,
+				delaySeconds: opts?.delaySeconds,
 			},
 			"[QueueService] Enqueueing WebSocket broadcast",
 		);
 
-		await env.PROCESSING_QUEUE.send(message);
+		await env.PROCESSING_QUEUE.send(message, {
+			delaySeconds: opts?.delaySeconds,
+		});
 	},
 };
 

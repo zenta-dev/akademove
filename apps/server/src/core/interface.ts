@@ -56,6 +56,7 @@ import type {
 import type { QuickMessageRepository } from "@/features/quick-message/quick-message-repository";
 import type { ReportRepository } from "@/features/report/report-repository";
 import type { ReviewRepository } from "@/features/review/review-repository";
+import type { SupportChatRepository } from "@/features/support-chat/support-chat-repository";
 import type { TransactionRepository } from "@/features/transaction/transaction-repository";
 import type { UserAdminRepository } from "@/features/user/admin/user-admin-repository";
 import type { UserLookupRepository } from "@/features/user/lookup/user-lookup-repository";
@@ -153,6 +154,7 @@ export interface RepositoryContext {
 	coupon: CouponRepository;
 	report: ReportRepository;
 	review: ReviewRepository;
+	supportChat: SupportChatRepository;
 	transaction: TransactionRepository;
 	user: {
 		admin: UserAdminRepository;

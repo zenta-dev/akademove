@@ -25,6 +25,7 @@ import * as payment from "@/core/tables/payment";
 import * as quickMessage from "@/core/tables/quick-message";
 import * as report from "@/core/tables/report";
 import * as review from "@/core/tables/review";
+import * as supportChat from "@/core/tables/support-chat";
 import * as transaction from "@/core/tables/transaction";
 import * as wallet from "@/core/tables/wallet";
 import { isDev } from "@/utils";
@@ -54,6 +55,7 @@ export const tables = {
 	...quickMessage,
 	...report,
 	...review,
+	...supportChat,
 	...transaction,
 	...wallet,
 };

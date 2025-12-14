@@ -51,6 +51,8 @@ import { ReportHandler } from "./report/report-handler";
 import { ReportSpec } from "./report/report-spec";
 import { ReviewHandler } from "./review/review-handler";
 import { ReviewSpec } from "./review/review-spec";
+import { SupportChatHandler } from "./support-chat/support-chat-handler";
+import { SupportChatSpec } from "./support-chat/support-chat-spec";
 import { TransactionHandler } from "./transaction/transaction-handler";
 import { TransactionSpec } from "./transaction/transaction-spec";
 import { UserHandler } from "./user/user-handler";
@@ -87,6 +89,7 @@ export const FetchServerSpec = oc.router({
 	coupon: oc.prefix("/coupons").router(CouponSpec),
 	report: oc.prefix("/reports").router(ReportSpec),
 	review: oc.prefix("/reviews").router(ReviewSpec),
+	supportChat: oc.prefix("/support-chat").router(SupportChatSpec),
 	transaction: oc.prefix("/transactions").router(TransactionSpec),
 	user: oc.prefix("/users").router(UserSpec),
 	wallet: oc.prefix("/wallets").router(WalletSpec),
@@ -119,6 +122,7 @@ export const FetchServerRouter = os.router({
 	coupon: CouponHandler,
 	report: ReportHandler,
 	review: ReviewHandler,
+	supportChat: SupportChatHandler,
 	transaction: TransactionHandler,
 	user: UserHandler,
 	wallet: WalletHandler,

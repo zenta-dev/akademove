@@ -3,6 +3,10 @@
  *
  * Handles WEBSOCKET_BROADCAST queue messages.
  * Broadcasts messages to connected clients via Durable Objects.
+ *
+ * Supports two message formats:
+ * 1. Event-based (e field): { e: "COMPLETED", f: "s", t: "c", ... }
+ * 2. Action-based (a field): { a: "MATCHING", f: "s", t: "s", ... }
  */
 
 import type { WebSocketBroadcastJob } from "@repo/schema/queue";
@@ -15,10 +19,12 @@ export async function handleWebSocketBroadcast(
 	_context: QueueHandlerContext,
 ): Promise<void> {
 	const { payload } = job;
-	const { roomName, event, target, data, excludeUserIds } = payload;
+	const { roomName, event, action, target, data, excludeUserIds } = payload;
+
+	const messageType = action ?? event;
 
 	logger.debug(
-		{ roomName, event, target },
+		{ roomName, event, action, target },
 		"[WebSocketBroadcastHandler] Broadcasting message",
 	);
 
@@ -26,14 +32,24 @@ export async function handleWebSocketBroadcast(
 		// Get the Durable Object stub for the room
 		const roomStub = OrderRepository.getRoomStubByName(roomName);
 
-		// Create the broadcast message
-		const message = {
-			e: event,
-			f: "s", // from server
-			t: "c", // to client
-			tg: target,
-			p: data,
-		};
+		// Create the broadcast message based on type (event or action)
+		// Action-based messages (a field) are used for MATCHING and similar server-to-server actions
+		// Event-based messages (e field) are used for client notifications
+		const message = action
+			? {
+					a: action,
+					f: "s", // from server
+					t: "s", // to server (action-based messages are processed by DO)
+					tg: target,
+					p: data,
+				}
+			: {
+					e: event,
+					f: "s", // from server
+					t: "c", // to client
+					tg: target,
+					p: data,
+				};
 
 		// Send the broadcast request to the Durable Object
 		// Note: The actual broadcast logic is in the OrderRoom.broadcast() method
@@ -55,12 +71,12 @@ export async function handleWebSocketBroadcast(
 		}
 
 		logger.debug(
-			{ roomName, event },
+			{ roomName, messageType },
 			"[WebSocketBroadcastHandler] Broadcast completed",
 		);
 	} catch (error) {
 		logger.error(
-			{ error, roomName, event },
+			{ error, roomName, messageType },
 			"[WebSocketBroadcastHandler] Failed to broadcast",
 		);
 		// Don't throw - WebSocket broadcast is best-effort
