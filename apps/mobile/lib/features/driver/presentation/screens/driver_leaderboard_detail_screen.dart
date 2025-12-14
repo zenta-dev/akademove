@@ -42,7 +42,7 @@ class _DriverLeaderboardDetailScreenState
         return;
       }
 
-      await _cubit.loadMyRankings(userId: userId, limit: 10);
+      await _cubit.loadMyRankings();
 
       if (mounted) {
         setState(() => _isLoading = false);
@@ -176,7 +176,7 @@ class _DriverLeaderboardDetailScreenState
     );
   }
 
-  Widget _buildOverallStats(List<Leaderboard> rankings) {
+  Widget _buildOverallStats(List<LeaderboardWithDriver> rankings) {
     final bestRank = rankings.isNotEmpty
         ? rankings.reduce((a, b) => a.rank < b.rank ? a : b)
         : null;
@@ -266,8 +266,8 @@ class _DriverLeaderboardDetailScreenState
     );
   }
 
-  Widget _buildRankingsByCategory(List<Leaderboard> rankings) {
-    final rankingsByCategory = <String, List<Leaderboard>>{};
+  Widget _buildRankingsByCategory(List<LeaderboardWithDriver> rankings) {
+    final rankingsByCategory = <String, List<LeaderboardWithDriver>>{};
     for (final ranking in rankings) {
       rankingsByCategory
           .putIfAbsent(ranking.category.value, () => [])
@@ -296,7 +296,10 @@ class _DriverLeaderboardDetailScreenState
     );
   }
 
-  Widget _buildCategoryRanking(String category, List<Leaderboard> rankings) {
+  Widget _buildCategoryRanking(
+    String category,
+    List<LeaderboardWithDriver> rankings,
+  ) {
     final bestRanking = rankings.isNotEmpty
         ? rankings.reduce((a, b) => a.rank < b.rank ? a : b)
         : null;
@@ -375,7 +378,7 @@ class _DriverLeaderboardDetailScreenState
     );
   }
 
-  Widget _buildPerformanceMetrics(List<Leaderboard> rankings) {
+  Widget _buildPerformanceMetrics(List<LeaderboardWithDriver> rankings) {
     if (rankings.isEmpty) return const SizedBox.shrink();
 
     final periods = rankings.map((r) => r.period.value).toSet().toList();
@@ -470,7 +473,7 @@ class _DriverLeaderboardDetailScreenState
     );
   }
 
-  Widget _buildRecentRankingCard(Leaderboard ranking) {
+  Widget _buildRecentRankingCard(LeaderboardWithDriver ranking) {
     return Container(
       padding: EdgeInsets.all(12.dg),
       margin: EdgeInsets.only(bottom: 8.h),
