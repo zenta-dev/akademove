@@ -318,6 +318,7 @@ class UserCartCubit extends BaseCubit<UserCartState> {
     required Coordinate dropoffLocation,
     required PaymentMethod paymentMethod,
     PaymentProvider paymentProvider = PaymentProvider.MANUAL,
+    String? couponCode,
   }) async => await taskManager.execute('CC-pFO', () async {
     try {
       emit(
@@ -344,6 +345,7 @@ class UserCartCubit extends BaseCubit<UserCartState> {
         dropoffLocation: dropoffLocation,
         items: orderItems,
         attachmentUrl: attachmentUrl,
+        couponCode: couponCode,
         payment: PlaceOrderPayment(
           method: paymentMethod,
           provider: paymentProvider,

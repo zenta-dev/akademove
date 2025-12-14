@@ -41,7 +41,7 @@ export const DriverActionTable = ({ val }: { val: Driver }) => {
 					Review Application
 				</Button>
 				<ApproveDriverDialog driverId={val.id} />
-				<ActivateDriverDialog driverId={val.id} />
+				{/* <ActivateDriverDialog driverId={val.id} /> */}
 				<RejectDriverDialog driverId={val.id} />
 			</DropdownMenuContent>
 		</DropdownMenu>
