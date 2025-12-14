@@ -24,7 +24,7 @@ final driverRouter = StatefulShellRoute.indexedStack(
             ..subscribeToTopic('driver-announcements'),
         ),
       ],
-      child: IncomingOrderListener(
+      child: DriverIncomingOrderListener(
         child: BottomNavbar(
           shell: navigationShell,
           tabs: const [

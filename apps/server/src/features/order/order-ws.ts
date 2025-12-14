@@ -47,6 +47,10 @@ export class OrderRoom extends BaseDurableObject {
 	/**
 	 * Handle HTTP requests and WebSocket upgrades
 	 * Supports POST /broadcast for REST API to trigger WebSocket broadcasts
+	 *
+	 * Accepts two formats:
+	 * 1. Direct OrderEnvelope: { e: "...", f: "s", t: "c", p: {...} }
+	 * 2. Wrapped format from queue handler: { message: OrderEnvelope, excludeUserIds?: string[] }
 	 */
 	async fetch(request: Request): Promise<Response> {
 		const url = new URL(request.url);
@@ -54,8 +58,34 @@ export class OrderRoom extends BaseDurableObject {
 		// Handle broadcast requests from REST API handlers
 		if (request.method === "POST" && url.pathname.endsWith("/broadcast")) {
 			try {
-				const body = (await request.json()) as OrderEnvelope;
-				this.broadcast(body);
+				const body = (await request.json()) as
+					| OrderEnvelope
+					| { message: OrderEnvelope; excludeUserIds?: string[] };
+
+				// FIX: Handle both direct OrderEnvelope and wrapped format from WebSocketBroadcastHandler
+				// The queue handler wraps the message in { message, excludeUserIds }
+				const isWrappedFormat =
+					body !== null &&
+					typeof body === "object" &&
+					"message" in body &&
+					body.message !== null &&
+					typeof body.message === "object";
+
+				const envelope = isWrappedFormat
+					? (body as { message: OrderEnvelope; excludeUserIds?: string[] })
+							.message
+					: (body as OrderEnvelope);
+				const excludeUserIds = isWrappedFormat
+					? (body as { message: OrderEnvelope; excludeUserIds?: string[] })
+							.excludeUserIds
+					: undefined;
+
+				// Convert excludeUserIds to WebSocket array for broadcast options
+				const excludes = excludeUserIds?.length
+					? this.findByIds(excludeUserIds)
+					: undefined;
+
+				this.broadcast(envelope, excludes ? { excludes } : undefined);
 				return new Response(JSON.stringify({ success: true }), {
 					status: 200,
 					headers: { "Content-Type": "application/json" },

@@ -9,8 +9,8 @@ import 'package:shadcn_flutter/shadcn_flutter.dart';
 
 /// Dialog that displays incoming order notifications to the driver
 /// Shows order details and provides Accept/Reject actions
-class IncomingOrderDialog extends StatelessWidget {
-  const IncomingOrderDialog({
+class DriverIncomingOrderDialog extends StatelessWidget {
+  const DriverIncomingOrderDialog({
     required this.order,
     required this.onAccept,
     required this.onReject,
@@ -331,8 +331,8 @@ class IncomingOrderDialog extends StatelessWidget {
 }
 
 /// Widget that listens to DriverHomeCubit and shows incoming order dialog
-class IncomingOrderListener extends StatelessWidget {
-  const IncomingOrderListener({required this.child, super.key});
+class DriverIncomingOrderListener extends StatelessWidget {
+  const DriverIncomingOrderListener({required this.child, super.key});
 
   final Widget child;
 
@@ -421,7 +421,7 @@ class IncomingOrderListener extends StatelessWidget {
               }
             });
           },
-          child: IncomingOrderDialog(
+          child: DriverIncomingOrderDialog(
             order: order,
             onAccept: () {
               // Just trigger the accept action

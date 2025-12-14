@@ -47,7 +47,7 @@ class AppBlocObserver extends BlocObserver {
   }
 }
 
-void bootstrap(FutureOr<Widget> Function() builder)   {
+void bootstrap(FutureOr<Widget> Function() builder) {
   // Use runZonedGuarded to catch all uncaught async errors
   runZonedGuarded(
     () async {
