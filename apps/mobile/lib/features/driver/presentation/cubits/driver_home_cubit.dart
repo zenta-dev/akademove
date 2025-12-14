@@ -164,10 +164,12 @@ class DriverHomeCubit extends BaseCubit<DriverHomeState> {
     final currentDriver = _driver;
     if (currentDriver == null || !currentDriver.isOnline) return;
 
-    // Skip update if location hasn't changed (deduplication to prevent
-    // unnecessary rerenders and DB heating)
+    // Skip update if location hasn't changed significantly (deduplication to
+    // prevent unnecessary rerenders and DB heating). Uses 3m threshold to
+    // filter out GPS noise/jitter when driver is stationary.
     final last = _lastLocation;
-    if (last != null && last.x == coordinate.x && last.y == coordinate.y) {
+    if (last != null &&
+        distanceInMeters(last, coordinate) < kMinLocationUpdateDistanceMeters) {
       return;
     }
 
