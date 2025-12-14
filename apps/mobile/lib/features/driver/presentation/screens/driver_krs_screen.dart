@@ -41,7 +41,7 @@ class _DriverKrsScreenState extends State<DriverKrsScreen> {
       Routes.driverKrsUpsert.name,
       extra: schedule,
     );
-    if (result == true) {
+    if (result == true && mounted && context.mounted) {
       await context.read<DriverScheduleCubit>().getSchedules();
     }
   }
