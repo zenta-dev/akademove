@@ -4413,4 +4413,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get faq_safety_a3 => 'All drivers must submit and get approved for their student ID, driver\'s license, and vehicle registration. We verify all documents before activation.';
+
+  @override
+  String get emergency_contact_whatsapp => 'Contact via WhatsApp';
+
+  @override
+  String get emergency_contact_whatsapp_desc => 'Open WhatsApp to contact campus security';
+
+  @override
+  String get emergency_or_divider => 'or';
+
+  @override
+  String get emergency_whatsapp_error => 'Could not open WhatsApp. Please try again.';
+
+  @override
+  String get emergency_contact_unavailable => 'Emergency contact is not available. Please try again later.';
 }

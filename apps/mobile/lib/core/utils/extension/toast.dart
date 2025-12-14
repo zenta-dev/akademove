@@ -42,49 +42,133 @@ enum ToastType {
   }
 }
 
+/// Get a valid context for showing toasts.
+/// Falls back to navigator context if the provided context is invalid.
+BuildContext? _getValidToastContext(BuildContext context) {
+  final element = context as Element;
+  if (!element.mounted) {
+    // Try to get context from global navigator key
+    return GlobalErrorHandler.navigatorKey.currentContext;
+  }
+  return context;
+}
+
 extension ToastExt on BuildContext {
   void showMyToast(
     String? message, {
     ToastType type = ToastType.info,
     Widget? trailing,
     Duration? showDuration,
-  }) => showToast(
-    context: this,
-    location: ToastLocation.topCenter,
-    showDuration: showDuration ?? const Duration(seconds: 5),
-    builder: (context, overlay) {
-      final title = type.title(context);
-      final subtitle = (type != ToastType.loading)
-          ? DefaultText(
-              message ?? context.l10n.an_error_occurred,
-              fontSize: 14.sp,
-              fontWeight: FontWeight.normal,
-            )
-          : null;
-      return Card(
-        padding: EdgeInsets.zero,
-        borderWidth: 0,
-        child: SurfaceCard(
-          padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 12.w),
-          filled: true,
-          fillColor: type.color.withValues(alpha: 0.1),
-          borderColor: type.color,
-          child: Basic(
-            leading: Icon(type.icon, color: type.color),
-            title: DefaultText(
-              title,
-              fontSize: 16.sp,
-              fontWeight: FontWeight.w500,
+  }) {
+    final toastContext = _getValidToastContext(this);
+    if (toastContext == null) {
+      logger.w("[Toast] No valid context available, skipping toast: $message");
+      return;
+    }
+
+    try {
+      showToast(
+        context: toastContext,
+        location: ToastLocation.topCenter,
+        showDuration: showDuration ?? const Duration(seconds: 5),
+        builder: (context, overlay) {
+          final title = type.title(context);
+          final subtitle = (type != ToastType.loading)
+              ? DefaultText(
+                  message ?? context.l10n.an_error_occurred,
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.normal,
+                )
+              : null;
+          return Card(
+            padding: EdgeInsets.zero,
+            borderWidth: 0,
+            child: SurfaceCard(
+              padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 12.w),
+              filled: true,
+              fillColor: type.color.withValues(alpha: 0.1),
+              borderColor: type.color,
+              child: Basic(
+                leading: Icon(type.icon, color: type.color),
+                title: DefaultText(
+                  title,
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.w500,
+                ),
+                subtitle: subtitle,
+                trailing: trailing,
+                trailingAlignment: Alignment.center,
+                leadingAlignment: Alignment.center,
+              ),
             ),
-            subtitle: subtitle,
-            trailing: trailing,
-            trailingAlignment: Alignment.center,
-            leadingAlignment: Alignment.center,
-          ),
-        ),
+          );
+        },
       );
-    },
-  );
+    } catch (e, st) {
+      // If toast fails (e.g., context hierarchy issue), try with navigator context
+      logger.w(
+        "[Toast] Failed to show toast with provided context, "
+        "attempting with navigator context: $e",
+      );
+      final navContext = GlobalErrorHandler.navigatorKey.currentContext;
+      if (navContext != null && navContext != toastContext) {
+        try {
+          showToast(
+            context: navContext,
+            location: ToastLocation.topCenter,
+            showDuration: showDuration ?? const Duration(seconds: 5),
+            builder: (context, overlay) {
+              final title = type.title(context);
+              final subtitle = (type != ToastType.loading)
+                  ? DefaultText(
+                      message ?? context.l10n.an_error_occurred,
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.normal,
+                    )
+                  : null;
+              return Card(
+                padding: EdgeInsets.zero,
+                borderWidth: 0,
+                child: SurfaceCard(
+                  padding: EdgeInsets.symmetric(
+                    vertical: 12.h,
+                    horizontal: 12.w,
+                  ),
+                  filled: true,
+                  fillColor: type.color.withValues(alpha: 0.1),
+                  borderColor: type.color,
+                  child: Basic(
+                    leading: Icon(type.icon, color: type.color),
+                    title: DefaultText(
+                      title,
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    subtitle: subtitle,
+                    trailing: trailing,
+                    trailingAlignment: Alignment.center,
+                    leadingAlignment: Alignment.center,
+                  ),
+                ),
+              );
+            },
+          );
+        } catch (e2) {
+          logger.e(
+            "[Toast] Failed to show toast with navigator context: $e2",
+            error: e2,
+            stackTrace: st,
+          );
+        }
+      } else {
+        logger.e(
+          "[Toast] No fallback context available",
+          error: e,
+          stackTrace: st,
+        );
+      }
+    }
+  }
 
   /// Show an error toast with an optional retry button
   /// Used by GlobalErrorHandler to display uncaught exceptions
@@ -94,6 +178,14 @@ extension ToastExt on BuildContext {
     VoidCallback? onRetry,
     Duration? showDuration,
   }) {
+    final toastContext = _getValidToastContext(this);
+    if (toastContext == null) {
+      logger.w(
+        "[Toast] No valid context available, skipping error toast: $message",
+      );
+      return;
+    }
+
     // Parse the message to extract error code if present
     String displayMessage = message;
     String? errorCode;
@@ -117,144 +209,189 @@ extension ToastExt on BuildContext {
       errorCode = debugCodeMatch.group(1);
     }
 
-    showToast(
-      context: this,
-      location: ToastLocation.topCenter,
-      showDuration: showDuration ?? const Duration(seconds: 10),
-      builder: (context, overlay) {
-        return Card(
-          padding: EdgeInsets.zero,
-          borderWidth: 0,
-          child: SurfaceCard(
-            padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 12.w),
-            filled: true,
-            fillColor: Colors.red.withValues(alpha: 0.1),
-            borderColor: Colors.red,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Header row with close button
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Icon(
-                      LucideIcons.triangleAlert,
-                      color: Colors.red,
-                      size: 20.w,
+    try {
+      _showErrorToastImpl(
+        toastContext,
+        displayMessage: displayMessage,
+        errorCode: errorCode,
+        onRetry: onRetry,
+        showDuration: showDuration,
+      );
+    } catch (e, st) {
+      // If toast fails (e.g., context hierarchy issue), try with navigator context
+      logger.w(
+        "[Toast] Failed to show error toast with provided context, "
+        "attempting with navigator context: $e",
+      );
+      final navContext = GlobalErrorHandler.navigatorKey.currentContext;
+      if (navContext != null && navContext != toastContext) {
+        try {
+          _showErrorToastImpl(
+            navContext,
+            displayMessage: displayMessage,
+            errorCode: errorCode,
+            onRetry: onRetry,
+            showDuration: showDuration,
+          );
+        } catch (e2) {
+          logger.e(
+            "[Toast] Failed to show error toast with navigator context: $e2",
+            error: e2,
+            stackTrace: st,
+          );
+        }
+      } else {
+        logger.e(
+          "[Toast] No fallback context available for error toast",
+          error: e,
+          stackTrace: st,
+        );
+      }
+    }
+  }
+}
+
+/// Helper function to show error toast implementation
+void _showErrorToastImpl(
+  BuildContext toastContext, {
+  required String displayMessage,
+  required String? errorCode,
+  VoidCallback? onRetry,
+  Duration? showDuration,
+}) {
+  showToast(
+    context: toastContext,
+    location: ToastLocation.topCenter,
+    showDuration: showDuration ?? const Duration(seconds: 10),
+    builder: (context, overlay) {
+      return Card(
+        padding: EdgeInsets.zero,
+        borderWidth: 0,
+        child: SurfaceCard(
+          padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 12.w),
+          filled: true,
+          fillColor: Colors.red.withValues(alpha: 0.1),
+          borderColor: Colors.red,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Header row with close button
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Icon(
+                    LucideIcons.triangleAlert,
+                    color: Colors.red,
+                    size: 20.w,
+                  ),
+                  SizedBox(width: 8.w),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        DefaultText(
+                          context.l10n.error_unexpected,
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        SizedBox(height: 4.h),
+                        Text(
+                          displayMessage,
+                          style: TextStyle(
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.normal,
+                          ),
+                          maxLines: 4,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
                     ),
-                    SizedBox(width: 8.w),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          DefaultText(
-                            context.l10n.error_unexpected,
-                            fontSize: 16.sp,
+                  ),
+                  IconButton.ghost(
+                    icon: const Icon(LucideIcons.x, size: 16),
+                    onPressed: overlay.close,
+                    density: ButtonDensity.compact,
+                  ),
+                ],
+              ),
+              // Error code row (if present) - tappable to copy
+              if (errorCode != null) ...[
+                SizedBox(height: 8.h),
+                GestureDetector(
+                  onTap: () {
+                    Clipboard.setData(ClipboardData(text: errorCode));
+                    // Show a brief toast confirmation
+                    showToast(
+                      context: context,
+                      location: ToastLocation.bottomCenter,
+                      showDuration: const Duration(seconds: 1),
+                      builder: (ctx, _) => Card(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 12.w,
+                          vertical: 8.h,
+                        ),
+                        child: Text(ctx.l10n.copied_to_clipboard),
+                      ),
+                    );
+                  },
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 8.w,
+                      vertical: 4.h,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.gray.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(4.r),
+                      border: Border.all(
+                        color: Colors.gray.withValues(alpha: 0.3),
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(LucideIcons.copy, size: 12.w, color: Colors.gray),
+                        SizedBox(width: 4.w),
+                        Text(
+                          errorCode,
+                          style: TextStyle(
+                            fontSize: 12.sp,
                             fontWeight: FontWeight.w500,
-                          ),
-                          SizedBox(height: 4.h),
-                          Text(
-                            displayMessage,
-                            style: TextStyle(
-                              fontSize: 14.sp,
-                              fontWeight: FontWeight.normal,
-                            ),
-                            maxLines: 4,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ],
-                      ),
-                    ),
-                    IconButton.ghost(
-                      icon: const Icon(LucideIcons.x, size: 16),
-                      onPressed: overlay.close,
-                      density: ButtonDensity.compact,
-                    ),
-                  ],
-                ),
-                // Error code row (if present) - tappable to copy
-                if (errorCode != null) ...[
-                  SizedBox(height: 8.h),
-                  GestureDetector(
-                    onTap: () {
-                      Clipboard.setData(ClipboardData(text: errorCode!));
-                      // Show a brief toast confirmation
-                      showToast(
-                        context: context,
-                        location: ToastLocation.bottomCenter,
-                        showDuration: const Duration(seconds: 1),
-                        builder: (ctx, _) => Card(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 12.w,
-                            vertical: 8.h,
-                          ),
-                          child: Text(ctx.l10n.copied_to_clipboard),
-                        ),
-                      );
-                    },
-                    child: Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 8.w,
-                        vertical: 4.h,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.gray.withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(4.r),
-                        border: Border.all(
-                          color: Colors.gray.withValues(alpha: 0.3),
-                        ),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(
-                            LucideIcons.copy,
-                            size: 12.w,
+                            fontFamily: "monospace",
                             color: Colors.gray,
                           ),
-                          SizedBox(width: 4.w),
-                          Text(
-                            errorCode,
-                            style: TextStyle(
-                              fontSize: 12.sp,
-                              fontWeight: FontWeight.w500,
-                              fontFamily: "monospace",
-                              color: Colors.gray,
-                            ),
-                          ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
-                ],
-                // Retry button (if callback provided)
-                if (onRetry != null) ...[
-                  SizedBox(height: 8.h),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: PrimaryButton(
-                      size: ButtonSize.small,
-                      onPressed: () {
-                        overlay.close();
-                        onRetry();
-                      },
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Icon(LucideIcons.refreshCw, size: 14),
-                          SizedBox(width: 4.w),
-                          Text(context.l10n.retry),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
+                ),
               ],
-            ),
+              // Retry button (if callback provided)
+              if (onRetry != null) ...[
+                SizedBox(height: 8.h),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: PrimaryButton(
+                    size: ButtonSize.small,
+                    onPressed: () {
+                      overlay.close();
+                      onRetry();
+                    },
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(LucideIcons.refreshCw, size: 14),
+                        SizedBox(width: 4.w),
+                        Text(context.l10n.retry),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ],
           ),
-        );
-      },
-    );
-  }
+        ),
+      );
+    },
+  );
 }

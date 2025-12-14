@@ -10,14 +10,16 @@ import 'package:api_client/src/deserialize.dart';
 import 'package:dio/dio.dart';
 
 import 'package:api_client/src/model/banner_delete200_response.dart';
-import 'package:api_client/src/model/emergency_contact_create201_response.dart';
+import 'package:api_client/src/model/emergency_contact_get_primary200_response.dart';
 import 'package:api_client/src/model/emergency_contact_list_active200_response.dart';
 import 'package:api_client/src/model/emergency_get200_response.dart';
 import 'package:api_client/src/model/emergency_list_by_order200_response.dart';
+import 'package:api_client/src/model/emergency_log200_response.dart';
 import 'package:api_client/src/model/emergency_trigger200_response.dart';
 import 'package:api_client/src/model/emergency_update_status_request.dart';
 import 'package:api_client/src/model/insert_emergency.dart';
 import 'package:api_client/src/model/insert_emergency_contact.dart';
+import 'package:api_client/src/model/log_emergency.dart';
 import 'package:api_client/src/model/pagination_mode.dart';
 import 'package:api_client/src/model/pagination_order.dart';
 import 'package:api_client/src/model/update_emergency_contact.dart';
@@ -39,9 +41,10 @@ class EmergencyApi {
   /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
   /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
   ///
-  /// Returns a [Future] containing a [Response] with a [EmergencyContactCreate201Response] as data
+  /// Returns a [Future] containing a [Response] with a [EmergencyContactGetPrimary200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<EmergencyContactCreate201Response>> emergencyContactCreate({
+  Future<Response<EmergencyContactGetPrimary200Response>>
+  emergencyContactCreate({
     required InsertEmergencyContact insertEmergencyContact,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -86,16 +89,16 @@ class EmergencyApi {
       onReceiveProgress: onReceiveProgress,
     );
 
-    EmergencyContactCreate201Response? _responseData;
+    EmergencyContactGetPrimary200Response? _responseData;
 
     try {
       final rawData = _response.data;
       _responseData = rawData == null
           ? null
           : deserialize<
-              EmergencyContactCreate201Response,
-              EmergencyContactCreate201Response
-            >(rawData, 'EmergencyContactCreate201Response', growable: true);
+              EmergencyContactGetPrimary200Response,
+              EmergencyContactGetPrimary200Response
+            >(rawData, 'EmergencyContactGetPrimary200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -106,7 +109,7 @@ class EmergencyApi {
       );
     }
 
-    return Response<EmergencyContactCreate201Response>(
+    return Response<EmergencyContactGetPrimary200Response>(
       data: _responseData,
       headers: _response.headers,
       isRedirect: _response.isRedirect,
@@ -212,9 +215,9 @@ class EmergencyApi {
   /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
   /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
   ///
-  /// Returns a [Future] containing a [Response] with a [EmergencyContactCreate201Response] as data
+  /// Returns a [Future] containing a [Response] with a [EmergencyContactGetPrimary200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<EmergencyContactCreate201Response>> emergencyContactGet({
+  Future<Response<EmergencyContactGetPrimary200Response>> emergencyContactGet({
     required String id,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -249,16 +252,16 @@ class EmergencyApi {
       onReceiveProgress: onReceiveProgress,
     );
 
-    EmergencyContactCreate201Response? _responseData;
+    EmergencyContactGetPrimary200Response? _responseData;
 
     try {
       final rawData = _response.data;
       _responseData = rawData == null
           ? null
           : deserialize<
-              EmergencyContactCreate201Response,
-              EmergencyContactCreate201Response
-            >(rawData, 'EmergencyContactCreate201Response', growable: true);
+              EmergencyContactGetPrimary200Response,
+              EmergencyContactGetPrimary200Response
+            >(rawData, 'EmergencyContactGetPrimary200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -269,7 +272,82 @@ class EmergencyApi {
       );
     }
 
-    return Response<EmergencyContactCreate201Response>(
+    return Response<EmergencyContactGetPrimary200Response>(
+      data: _responseData,
+      headers: _response.headers,
+      isRedirect: _response.isRedirect,
+      requestOptions: _response.requestOptions,
+      redirects: _response.redirects,
+      statusCode: _response.statusCode,
+      statusMessage: _response.statusMessage,
+      extra: _response.extra,
+    );
+  }
+
+  /// emergencyContactGetPrimary
+  ///
+  ///
+  /// Parameters:
+  /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
+  /// * [headers] - Can be used to add additional headers to the request
+  /// * [extras] - Can be used to add flags to the request
+  /// * [validateStatus] - A [ValidateStatus] callback that can be used to determine request success based on the HTTP status of the response
+  /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
+  /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
+  ///
+  /// Returns a [Future] containing a [Response] with a [EmergencyContactGetPrimary200Response] as data
+  /// Throws [DioException] if API call or serialization fails
+  Future<Response<EmergencyContactGetPrimary200Response>>
+  emergencyContactGetPrimary({
+    CancelToken? cancelToken,
+    Map<String, dynamic>? headers,
+    Map<String, dynamic>? extra,
+    ValidateStatus? validateStatus,
+    ProgressCallback? onSendProgress,
+    ProgressCallback? onReceiveProgress,
+  }) async {
+    final _path = r'/emergency-contacts/primary';
+    final _options = Options(
+      method: r'GET',
+      headers: <String, dynamic>{...?headers},
+      extra: <String, dynamic>{
+        'secure': <Map<String, String>>[
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
+        ],
+        ...?extra,
+      },
+      validateStatus: validateStatus,
+    );
+
+    final _response = await _dio.request<Object>(
+      _path,
+      options: _options,
+      cancelToken: cancelToken,
+      onSendProgress: onSendProgress,
+      onReceiveProgress: onReceiveProgress,
+    );
+
+    EmergencyContactGetPrimary200Response? _responseData;
+
+    try {
+      final rawData = _response.data;
+      _responseData = rawData == null
+          ? null
+          : deserialize<
+              EmergencyContactGetPrimary200Response,
+              EmergencyContactGetPrimary200Response
+            >(rawData, 'EmergencyContactGetPrimary200Response', growable: true);
+    } catch (error, stackTrace) {
+      throw DioException(
+        requestOptions: _response.requestOptions,
+        response: _response,
+        type: DioExceptionType.unknown,
+        error: error,
+        stackTrace: stackTrace,
+      );
+    }
+
+    return Response<EmergencyContactGetPrimary200Response>(
       data: _responseData,
       headers: _response.headers,
       isRedirect: _response.isRedirect,
@@ -473,9 +551,9 @@ class EmergencyApi {
   /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
   /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
   ///
-  /// Returns a [Future] containing a [Response] with a [EmergencyContactCreate201Response] as data
+  /// Returns a [Future] containing a [Response] with a [EmergencyContactGetPrimary200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<EmergencyContactCreate201Response>>
+  Future<Response<EmergencyContactGetPrimary200Response>>
   emergencyContactToggleActive({
     required String id,
     CancelToken? cancelToken,
@@ -511,16 +589,16 @@ class EmergencyApi {
       onReceiveProgress: onReceiveProgress,
     );
 
-    EmergencyContactCreate201Response? _responseData;
+    EmergencyContactGetPrimary200Response? _responseData;
 
     try {
       final rawData = _response.data;
       _responseData = rawData == null
           ? null
           : deserialize<
-              EmergencyContactCreate201Response,
-              EmergencyContactCreate201Response
-            >(rawData, 'EmergencyContactCreate201Response', growable: true);
+              EmergencyContactGetPrimary200Response,
+              EmergencyContactGetPrimary200Response
+            >(rawData, 'EmergencyContactGetPrimary200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -531,7 +609,7 @@ class EmergencyApi {
       );
     }
 
-    return Response<EmergencyContactCreate201Response>(
+    return Response<EmergencyContactGetPrimary200Response>(
       data: _responseData,
       headers: _response.headers,
       isRedirect: _response.isRedirect,
@@ -556,9 +634,10 @@ class EmergencyApi {
   /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
   /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
   ///
-  /// Returns a [Future] containing a [Response] with a [EmergencyContactCreate201Response] as data
+  /// Returns a [Future] containing a [Response] with a [EmergencyContactGetPrimary200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<EmergencyContactCreate201Response>> emergencyContactUpdate({
+  Future<Response<EmergencyContactGetPrimary200Response>>
+  emergencyContactUpdate({
     required String id,
     required UpdateEmergencyContact updateEmergencyContact,
     CancelToken? cancelToken,
@@ -609,16 +688,16 @@ class EmergencyApi {
       onReceiveProgress: onReceiveProgress,
     );
 
-    EmergencyContactCreate201Response? _responseData;
+    EmergencyContactGetPrimary200Response? _responseData;
 
     try {
       final rawData = _response.data;
       _responseData = rawData == null
           ? null
           : deserialize<
-              EmergencyContactCreate201Response,
-              EmergencyContactCreate201Response
-            >(rawData, 'EmergencyContactCreate201Response', growable: true);
+              EmergencyContactGetPrimary200Response,
+              EmergencyContactGetPrimary200Response
+            >(rawData, 'EmergencyContactGetPrimary200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -629,7 +708,7 @@ class EmergencyApi {
       );
     }
 
-    return Response<EmergencyContactCreate201Response>(
+    return Response<EmergencyContactGetPrimary200Response>(
       data: _responseData,
       headers: _response.headers,
       isRedirect: _response.isRedirect,
@@ -793,6 +872,98 @@ class EmergencyApi {
     }
 
     return Response<EmergencyListByOrder200Response>(
+      data: _responseData,
+      headers: _response.headers,
+      isRedirect: _response.isRedirect,
+      requestOptions: _response.requestOptions,
+      redirects: _response.redirects,
+      statusCode: _response.statusCode,
+      statusMessage: _response.statusMessage,
+      extra: _response.extra,
+    );
+  }
+
+  /// emergencyLog
+  ///
+  ///
+  /// Parameters:
+  /// * [logEmergency]
+  /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
+  /// * [headers] - Can be used to add additional headers to the request
+  /// * [extras] - Can be used to add flags to the request
+  /// * [validateStatus] - A [ValidateStatus] callback that can be used to determine request success based on the HTTP status of the response
+  /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
+  /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
+  ///
+  /// Returns a [Future] containing a [Response] with a [EmergencyLog200Response] as data
+  /// Throws [DioException] if API call or serialization fails
+  Future<Response<EmergencyLog200Response>> emergencyLog({
+    required LogEmergency logEmergency,
+    CancelToken? cancelToken,
+    Map<String, dynamic>? headers,
+    Map<String, dynamic>? extra,
+    ValidateStatus? validateStatus,
+    ProgressCallback? onSendProgress,
+    ProgressCallback? onReceiveProgress,
+  }) async {
+    final _path = r'/emergencies/log';
+    final _options = Options(
+      method: r'POST',
+      headers: <String, dynamic>{...?headers},
+      extra: <String, dynamic>{
+        'secure': <Map<String, String>>[
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
+        ],
+        ...?extra,
+      },
+      contentType: 'application/json',
+      validateStatus: validateStatus,
+    );
+
+    dynamic _bodyData;
+
+    try {
+      _bodyData = jsonEncode(logEmergency);
+    } catch (error, stackTrace) {
+      throw DioException(
+        requestOptions: _options.compose(_dio.options, _path),
+        type: DioExceptionType.unknown,
+        error: error,
+        stackTrace: stackTrace,
+      );
+    }
+
+    final _response = await _dio.request<Object>(
+      _path,
+      data: _bodyData,
+      options: _options,
+      cancelToken: cancelToken,
+      onSendProgress: onSendProgress,
+      onReceiveProgress: onReceiveProgress,
+    );
+
+    EmergencyLog200Response? _responseData;
+
+    try {
+      final rawData = _response.data;
+      _responseData = rawData == null
+          ? null
+          : deserialize<EmergencyLog200Response, EmergencyLog200Response>(
+              rawData,
+              'EmergencyLog200Response',
+              growable: true,
+            );
+    } catch (error, stackTrace) {
+      throw DioException(
+        requestOptions: _response.requestOptions,
+        response: _response,
+        type: DioExceptionType.unknown,
+        error: error,
+        stackTrace: stackTrace,
+      );
+    }
+
+    return Response<EmergencyLog200Response>(
       data: _responseData,
       headers: _response.headers,
       isRedirect: _response.isRedirect,

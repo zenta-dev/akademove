@@ -1060,8 +1060,6 @@ class _DriverInfoContent extends StatelessWidget {
         return LucideIcons.user;
       case UserGender.FEMALE:
         return LucideIcons.userRound;
-      default:
-        return LucideIcons.user;
     }
   }
 

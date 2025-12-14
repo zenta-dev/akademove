@@ -480,8 +480,11 @@ export class PaymentWebhookService {
 			}),
 			tx.query.order.findFirst({
 				with: {
-					user: { columns: { name: true } },
-					driver: { columns: {}, with: { user: { columns: { name: true } } } },
+					user: { columns: { name: true, image: true } },
+					driver: {
+						columns: {},
+						with: { user: { columns: { name: true, image: true } } },
+					},
 					merchant: {
 						columns: { name: true },
 						with: { user: { columns: { id: true } } },

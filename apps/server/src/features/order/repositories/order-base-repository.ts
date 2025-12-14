@@ -14,6 +14,7 @@ import type { StorageService } from "@/core/services/storage";
 import type { MerchantMenuDatabase } from "@/core/tables/merchant";
 import type { OrderDatabase } from "@/core/tables/order";
 import { MenuImageService } from "@/features/merchant/services";
+import { UserProfileService } from "@/features/user/services/user-profile-service";
 import { safeAsync, toNumberSafe } from "@/utils";
 
 /**
@@ -103,9 +104,9 @@ export class OrderBaseRepository extends BaseRepository {
 	 * Compose an Order entity from database row with related entities
 	 *
 	 * @param item - Raw database order row with relations
-	 * @param storage - Optional storage service to convert image keys to URLs for menu items
+	 * @param storage - Optional storage service to convert image keys to URLs for menu items and user profiles
 	 */
-	static composeEntity(
+	static async composeEntity(
 		item: OrderDatabase & {
 			user: Partial<User> | null;
 			driver: Partial<Driver> | null;
@@ -113,15 +114,52 @@ export class OrderBaseRepository extends BaseRepository {
 			items?: OrderItemRow[];
 		},
 		storage?: StorageService,
-	): Order {
+	): Promise<Order> {
 		const composedItems = OrderBaseRepository.composeOrderItems(
 			item.items,
 			storage,
 		);
 
+		// Convert user image key to presigned URL (private bucket)
+		let userImageUrl: string | undefined;
+		if (item.user?.image && storage) {
+			userImageUrl = await storage.getPresignedUrl({
+				bucket: UserProfileService.BUCKET,
+				key: item.user.image,
+			});
+		}
+
+		// Convert driver's user image key to presigned URL (private bucket)
+		let driverUserImageUrl: string | undefined;
+		if (item.driver?.user?.image && storage) {
+			driverUserImageUrl = await storage.getPresignedUrl({
+				bucket: UserProfileService.BUCKET,
+				key: item.driver.user.image,
+			});
+		}
+
+		const result = nullsToUndefined(item);
+
 		return {
 			...item,
-			...nullsToUndefined(item),
+			...result,
+			user: result.user
+				? {
+						...result.user,
+						image: userImageUrl,
+					}
+				: undefined,
+			driver: result.driver
+				? {
+						...result.driver,
+						user: result.driver.user
+							? {
+									...result.driver.user,
+									image: driverUserImageUrl,
+								}
+							: undefined,
+					}
+				: undefined,
 			basePrice: toNumberSafe(item.basePrice),
 			totalPrice: toNumberSafe(item.totalPrice),
 			tip: item.tip ? toNumberSafe(item.tip) : undefined,
@@ -163,8 +201,11 @@ export class OrderBaseRepository extends BaseRepository {
 	): Promise<Order | undefined> {
 		const result = await (opts?.tx ?? this.db).query.order.findFirst({
 			with: {
-				user: { columns: { name: true } },
-				driver: { columns: {}, with: { user: { columns: { name: true } } } },
+				user: { columns: { name: true, image: true } },
+				driver: {
+					columns: {},
+					with: { user: { columns: { name: true, image: true } } },
+				},
 				merchant: { columns: { name: true } },
 				items: {
 					with: {

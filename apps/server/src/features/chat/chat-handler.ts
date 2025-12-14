@@ -32,6 +32,7 @@ export const ChatHandler = priv.router({
 			);
 
 			// Broadcast the message to WebSocket room so other participants receive it in real-time
+			// Exclude the sender from the broadcast since they already have the message from HTTP response
 			try {
 				const stub = OrderBaseRepository.getRoomStubByName(result.orderId);
 				const broadcastPayload: OrderEnvelope = {
@@ -51,11 +52,16 @@ export const ChatHandler = priv.router({
 					},
 				};
 
+				// Use wrapped format to exclude sender from receiving their own message via WebSocket
+				// This prevents duplicate messages on the sender's device
 				await stub.fetch(
 					new Request("http://internal/broadcast", {
 						method: "POST",
 						headers: { "Content-Type": "application/json" },
-						body: JSON.stringify(broadcastPayload),
+						body: JSON.stringify({
+							message: broadcastPayload,
+							excludeUserIds: [context.user.id],
+						}),
 					}),
 				);
 

@@ -108,4 +108,58 @@ class SharedEmergencyCubit extends BaseCubit<SharedEmergencyState> {
           emit(state.copyWith(selectedEmergency: OperationResult.failed(e)));
         }
       });
+
+  /// Get primary emergency contact for WhatsApp redirect
+  Future<void> getPrimaryContact() async =>
+      await taskManager.execute('SEC-gPC4', () async {
+        try {
+          emit(state.copyWith(primaryContact: const OperationResult.loading()));
+
+          final res = await _repository.getPrimaryContact();
+
+          emit(
+            state.copyWith(
+              primaryContact: OperationResult.success(
+                res.data,
+                message: res.message,
+              ),
+            ),
+          );
+        } on BaseError catch (e, st) {
+          logger.e(
+            '[SharedEmergencyCubit] Failed to get primary contact',
+            error: e,
+            stackTrace: st,
+          );
+          emit(state.copyWith(primaryContact: OperationResult.failed(e)));
+        }
+      });
+
+  /// Log emergency event when user redirects to WhatsApp
+  Future<void> logEmergency({
+    required String orderId,
+    EmergencyLocation? location,
+  }) async => await taskManager.execute('SEC-lE5-$orderId', () async {
+    try {
+      emit(state.copyWith(logEmergency: const OperationResult.loading()));
+
+      final res = await _repository.logEmergency(
+        orderId: orderId,
+        location: location,
+      );
+
+      emit(
+        state.copyWith(
+          logEmergency: OperationResult.success(res.data, message: res.message),
+        ),
+      );
+    } on BaseError catch (e, st) {
+      logger.e(
+        '[SharedEmergencyCubit] Failed to log emergency',
+        error: e,
+        stackTrace: st,
+      );
+      emit(state.copyWith(logEmergency: OperationResult.failed(e)));
+    }
+  });
 }

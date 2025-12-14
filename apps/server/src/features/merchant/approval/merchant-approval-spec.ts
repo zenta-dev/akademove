@@ -18,10 +18,10 @@ export const MerchantApprovalReviewSchema = z.object({
 	businessDocumentStatus: MerchantApprovalDocumentStatusSchema,
 	businessDocumentReason: z.string().nullable(),
 	reviewedBy: z.string().nullable(),
-	reviewedAt: z.date().nullable(),
+	reviewedAt: z.coerce.date().nullable(),
 	reviewNotes: z.string().nullable(),
-	createdAt: z.date(),
-	updatedAt: z.date(),
+	createdAt: z.coerce.date(),
+	updatedAt: z.coerce.date(),
 });
 
 export type MerchantApprovalReview = z.infer<

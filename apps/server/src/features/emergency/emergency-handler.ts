@@ -8,6 +8,81 @@ import { EmergencySpec } from "./emergency-spec";
 const { priv } = createORPCRouter(EmergencySpec);
 
 export const EmergencyHandler = priv.router({
+	// Simplified log endpoint - logs emergency event when user redirects to WhatsApp
+	log: priv.log.handler(async ({ context, input: { body } }) => {
+		const data = trimObjectValues(body);
+
+		// Verify order exists and is in active trip
+		const order = await context.repo.order.get(data.orderId);
+
+		if (order.status !== "IN_TRIP") {
+			throw new Error(
+				"Emergency can only be logged during active trip (IN_TRIP status)",
+			);
+		}
+
+		// Verify user is part of the order (either passenger or driver)
+		const userId = context.user.id;
+		const userDriver = await context.repo.driver.main
+			.getByUserId(userId)
+			.catch(() => null);
+		const isDriver =
+			order.driverId !== null &&
+			userDriver !== null &&
+			order.driverId === userDriver.id;
+
+		if (order.userId !== userId && !isDriver) {
+			throw new Error("You are not authorized to log emergency for this order");
+		}
+
+		// Log emergency event
+		logger.warn(
+			{
+				orderId: data.orderId,
+				userId: context.user.id,
+				driverId: order.driverId,
+				location: data.location,
+				isDriver,
+				timestamp: new Date().toISOString(),
+			},
+			"[EmergencyHandler] Emergency WhatsApp redirect triggered",
+		);
+
+		// Send emergency notification to operators
+		try {
+			await context.repo.notification.sendToTopic({
+				topic: "OPERATOR",
+				title: "🚨 Emergency Alert",
+				body: `Order #${data.orderId.substring(0, 8)} - User redirected to WhatsApp emergency contact`,
+				data: {
+					type: "EMERGENCY_WHATSAPP",
+					orderId: data.orderId,
+					userId: context.user.id,
+					location: data.location ? JSON.stringify(data.location) : "",
+				},
+				userId: context.user.id,
+			});
+
+			logger.info(
+				{ orderId: data.orderId },
+				"[EmergencyHandler] Emergency notification sent to operators",
+			);
+		} catch (notifError) {
+			logger.error(
+				{ error: notifError, orderId: data.orderId },
+				"[EmergencyHandler] Failed to send emergency notification",
+			);
+		}
+
+		return {
+			status: 200,
+			body: {
+				message: m.server_emergency_logged(),
+				data: { logged: true },
+			},
+		};
+	}),
+
 	trigger: priv.trigger.handler(async ({ context, input: { body } }) => {
 		return await context.svc.db.transaction(async (tx) => {
 			const data = trimObjectValues(body);

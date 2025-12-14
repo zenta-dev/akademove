@@ -185,12 +185,14 @@ Class | Method | HTTP request | Description
 [*EmergencyApi*](doc/EmergencyApi.md) | [**emergencyContactCreate**](doc/EmergencyApi.md#emergencycontactcreate) | **POST** /emergency-contacts | 
 [*EmergencyApi*](doc/EmergencyApi.md) | [**emergencyContactDelete**](doc/EmergencyApi.md#emergencycontactdelete) | **DELETE** /emergency-contacts/{id} | 
 [*EmergencyApi*](doc/EmergencyApi.md) | [**emergencyContactGet**](doc/EmergencyApi.md#emergencycontactget) | **GET** /emergency-contacts/{id} | 
+[*EmergencyApi*](doc/EmergencyApi.md) | [**emergencyContactGetPrimary**](doc/EmergencyApi.md#emergencycontactgetprimary) | **GET** /emergency-contacts/primary | 
 [*EmergencyApi*](doc/EmergencyApi.md) | [**emergencyContactList**](doc/EmergencyApi.md#emergencycontactlist) | **GET** /emergency-contacts | 
 [*EmergencyApi*](doc/EmergencyApi.md) | [**emergencyContactListActive**](doc/EmergencyApi.md#emergencycontactlistactive) | **GET** /emergency-contacts/active | 
 [*EmergencyApi*](doc/EmergencyApi.md) | [**emergencyContactToggleActive**](doc/EmergencyApi.md#emergencycontacttoggleactive) | **PATCH** /emergency-contacts/{id}/toggle | 
 [*EmergencyApi*](doc/EmergencyApi.md) | [**emergencyContactUpdate**](doc/EmergencyApi.md#emergencycontactupdate) | **PUT** /emergency-contacts/{id} | 
 [*EmergencyApi*](doc/EmergencyApi.md) | [**emergencyGet**](doc/EmergencyApi.md#emergencyget) | **GET** /emergencies/{id} | 
 [*EmergencyApi*](doc/EmergencyApi.md) | [**emergencyListByOrder**](doc/EmergencyApi.md#emergencylistbyorder) | **GET** /emergencies/order/{orderId} | 
+[*EmergencyApi*](doc/EmergencyApi.md) | [**emergencyLog**](doc/EmergencyApi.md#emergencylog) | **POST** /emergencies/log | 
 [*EmergencyApi*](doc/EmergencyApi.md) | [**emergencyTrigger**](doc/EmergencyApi.md#emergencytrigger) | **POST** /emergencies | 
 [*EmergencyApi*](doc/EmergencyApi.md) | [**emergencyUpdateStatus**](doc/EmergencyApi.md#emergencyupdatestatus) | **PATCH** /emergencies/{id}/status | 
 [*FraudApi*](doc/FraudApi.md) | [**fraudGetEvent**](doc/FraudApi.md#fraudgetevent) | **GET** /fraud/events/{id} | 
@@ -517,13 +519,15 @@ Class | Method | HTTP request | Description
  - [Emergency](doc/Emergency.md)
  - [EmergencyContact](doc/EmergencyContact.md)
  - [EmergencyContactConfiguration](doc/EmergencyContactConfiguration.md)
- - [EmergencyContactCreate201Response](doc/EmergencyContactCreate201Response.md)
+ - [EmergencyContactGetPrimary200Response](doc/EmergencyContactGetPrimary200Response.md)
  - [EmergencyContactKey](doc/EmergencyContactKey.md)
  - [EmergencyContactListActive200Response](doc/EmergencyContactListActive200Response.md)
  - [EmergencyGet200Response](doc/EmergencyGet200Response.md)
  - [EmergencyKey](doc/EmergencyKey.md)
  - [EmergencyListByOrder200Response](doc/EmergencyListByOrder200Response.md)
  - [EmergencyLocation](doc/EmergencyLocation.md)
+ - [EmergencyLog200Response](doc/EmergencyLog200Response.md)
+ - [EmergencyLog200ResponseData](doc/EmergencyLog200ResponseData.md)
  - [EmergencyStatus](doc/EmergencyStatus.md)
  - [EmergencyTrigger200Response](doc/EmergencyTrigger200Response.md)
  - [EmergencyType](doc/EmergencyType.md)
@@ -586,6 +590,7 @@ Class | Method | HTTP request | Description
  - [ListDriverQuizQuestionQuery](doc/ListDriverQuizQuestionQuery.md)
  - [ListQuickMessageQuery](doc/ListQuickMessageQuery.md)
  - [Location](doc/Location.md)
+ - [LogEmergency](doc/LogEmergency.md)
  - [MarkChatAsRead](doc/MarkChatAsRead.md)
  - [Merchant](doc/Merchant.md)
  - [MerchantAnalytics200Response](doc/MerchantAnalytics200Response.md)

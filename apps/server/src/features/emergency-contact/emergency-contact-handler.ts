@@ -9,6 +9,18 @@ import { EmergencyContactSpec } from "./emergency-contact-spec";
 const { pub, priv } = createORPCRouter(EmergencyContactSpec);
 
 export const EmergencyContactHandler = pub.router({
+	// Public endpoint - get primary contact (for emergency WhatsApp redirect)
+	getPrimary: priv.getPrimary.handler(async ({ context }) => {
+		const result = await context.repo.emergencyContact.getPrimary();
+		return {
+			status: 200,
+			body: {
+				message: m.server_emergency_contact_retrieved(),
+				data: result,
+			},
+		};
+	}),
+
 	// Public endpoint - list active contacts (for emergency trigger)
 	listActive: priv.listActive.handler(async ({ context }) => {
 		const result = await context.repo.emergencyContact.listActive();

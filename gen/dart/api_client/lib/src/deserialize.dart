@@ -155,11 +155,13 @@ import 'package:api_client/src/model/driver_wallet_transfer200_response.dart';
 import 'package:api_client/src/model/emergency.dart';
 import 'package:api_client/src/model/emergency_contact.dart';
 import 'package:api_client/src/model/emergency_contact_configuration.dart';
-import 'package:api_client/src/model/emergency_contact_create201_response.dart';
+import 'package:api_client/src/model/emergency_contact_get_primary200_response.dart';
 import 'package:api_client/src/model/emergency_contact_list_active200_response.dart';
 import 'package:api_client/src/model/emergency_get200_response.dart';
 import 'package:api_client/src/model/emergency_list_by_order200_response.dart';
 import 'package:api_client/src/model/emergency_location.dart';
+import 'package:api_client/src/model/emergency_log200_response.dart';
+import 'package:api_client/src/model/emergency_log200_response_data.dart';
 import 'package:api_client/src/model/emergency_trigger200_response.dart';
 import 'package:api_client/src/model/emergency_update_status_request.dart';
 import 'package:api_client/src/model/emergency_with_contact.dart';
@@ -214,6 +216,7 @@ import 'package:api_client/src/model/list_driver_quiz_answer_query.dart';
 import 'package:api_client/src/model/list_driver_quiz_question_query.dart';
 import 'package:api_client/src/model/list_quick_message_query.dart';
 import 'package:api_client/src/model/location.dart';
+import 'package:api_client/src/model/log_emergency.dart';
 import 'package:api_client/src/model/mark_chat_as_read.dart';
 import 'package:api_client/src/model/merchant.dart';
 import 'package:api_client/src/model/merchant_analytics200_response.dart';
@@ -1040,8 +1043,8 @@ ReturnType deserialize<ReturnType, BaseType>(
             value as Map<String, dynamic>,
           )
           as ReturnType;
-    case 'EmergencyContactCreate201Response':
-      return EmergencyContactCreate201Response.fromJson(
+    case 'EmergencyContactGetPrimary200Response':
+      return EmergencyContactGetPrimary200Response.fromJson(
             value as Map<String, dynamic>,
           )
           as ReturnType;
@@ -1062,6 +1065,12 @@ ReturnType deserialize<ReturnType, BaseType>(
           as ReturnType;
     case 'EmergencyLocation':
       return EmergencyLocation.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
+    case 'EmergencyLog200Response':
+      return EmergencyLog200Response.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
+    case 'EmergencyLog200ResponseData':
+      return EmergencyLog200ResponseData.fromJson(value as Map<String, dynamic>)
           as ReturnType;
     case 'EmergencyStatus':
     case 'EmergencyTrigger200Response':
@@ -1236,6 +1245,8 @@ ReturnType deserialize<ReturnType, BaseType>(
           as ReturnType;
     case 'Location':
       return Location.fromJson(value as Map<String, dynamic>) as ReturnType;
+    case 'LogEmergency':
+      return LogEmergency.fromJson(value as Map<String, dynamic>) as ReturnType;
     case 'MarkChatAsRead':
       return MarkChatAsRead.fromJson(value as Map<String, dynamic>)
           as ReturnType;

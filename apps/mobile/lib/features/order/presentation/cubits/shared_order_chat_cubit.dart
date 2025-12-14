@@ -236,52 +236,54 @@ class SharedOrderChatCubit extends BaseCubit<SharedOrderChatState> {
         }
       });
 
-  Future<void> sendMessage(String message) async =>
-      await taskManager.execute('ORC-sM-$message', () async {
-        final orderId = _currentOrderId;
-        if (orderId == null) return;
-        if (message.trim().isEmpty) return;
-        try {
-          emit(state.copyWith(sendMessage: const OperationResult.loading()));
+  Future<void> sendMessage(
+    String message,
+  ) async => await taskManager.execute('ORC-sM-$message', () async {
+    final orderId = _currentOrderId;
+    if (orderId == null) return;
+    if (message.trim().isEmpty) return;
+    try {
+      emit(state.copyWith(sendMessage: const OperationResult.loading()));
 
-          final res = await _orderChatRepository.sendMessage(
-            SendOrderChatMessageRequest(
-              orderId: orderId,
-              message: message.trim(),
-            ),
-          );
+      final res = await _orderChatRepository.sendMessage(
+        SendOrderChatMessageRequest(orderId: orderId, message: message.trim()),
+      );
 
-          final existingMessages = state.messages.value ?? [];
-          final updatedMessages = [res.data, ...existingMessages];
+      final existingMessages = state.messages.value ?? [];
+      // Filter out any message with the same id as the new message to prevent duplicates
+      final filteredMessages = existingMessages
+          .where((m) => m.id != res.data.id)
+          .toList();
+      final updatedMessages = [res.data, ...filteredMessages];
 
-          emit(
-            state.copyWith(
-              messages: OperationResult.success(updatedMessages),
-              sendMessage: OperationResult.success(res.data),
-            ),
-          );
-        } on BaseError catch (e, st) {
-          logger.e(
-            '[SharedOrderChatCubit] - Error sending message: ${e.message}',
-            error: e,
-            stackTrace: st,
-          );
-          emit(state.copyWith(sendMessage: OperationResult.failed(e)));
-        } catch (e, st) {
-          logger.e(
-            '[SharedOrderChatCubit] - Unexpected error sending message',
-            error: e,
-            stackTrace: st,
-          );
-          emit(
-            state.copyWith(
-              sendMessage: OperationResult.failed(
-                RepositoryError(e.toString(), code: ErrorCode.unknown),
-              ),
-            ),
-          );
-        }
-      });
+      emit(
+        state.copyWith(
+          messages: OperationResult.success(updatedMessages),
+          sendMessage: OperationResult.success(res.data),
+        ),
+      );
+    } on BaseError catch (e, st) {
+      logger.e(
+        '[SharedOrderChatCubit] - Error sending message: ${e.message}',
+        error: e,
+        stackTrace: st,
+      );
+      emit(state.copyWith(sendMessage: OperationResult.failed(e)));
+    } catch (e, st) {
+      logger.e(
+        '[SharedOrderChatCubit] - Unexpected error sending message',
+        error: e,
+        stackTrace: st,
+      );
+      emit(
+        state.copyWith(
+          sendMessage: OperationResult.failed(
+            RepositoryError(e.toString(), code: ErrorCode.unknown),
+          ),
+        ),
+      );
+    }
+  });
 
   Future<void> loadMoreMessages() async {
     if (!state.hasMore) return;

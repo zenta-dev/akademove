@@ -104,7 +104,7 @@ export const OrderEnvelopePayloadSchema = z.object({
 			senderName: z.string(),
 			senderRole: z.enum(["USER", "DRIVER", "MERCHANT"]),
 			message: z.string(),
-			sentAt: z.date(),
+			sentAt: z.coerce.date(),
 		})
 		.optional(),
 	chatUnreadCount: z

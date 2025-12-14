@@ -384,8 +384,8 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
                       children: [
                         if (status != null)
                           _buildStatusIndicator(context, status),
-                        _buildOrderInfo(order),
                         _buildCustomerInfo(order),
+                        _buildOrderInfo(order),
                         _buildActionButtons(state, order),
                       ],
                     ),
@@ -423,35 +423,12 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
         ),
         // Center on driver location button
         Positioned(
-          bottom: 80,
+          bottom: 16,
           right: 16,
           child: IconButton.primary(
             onPressed: _centerOnDriverLocation,
             icon: const Icon(LucideIcons.locateFixed),
           ),
-        ),
-        // Emergency button - only show during IN_TRIP status
-        BlocBuilder<DriverOrderCubit, DriverOrderState>(
-          builder: (context, state) {
-            if (state.orderStatus != OrderStatus.IN_TRIP) {
-              return const SizedBox.shrink();
-            }
-
-            // Use pickup location as fallback for emergency location
-            final emergencyLocation = EmergencyLocation(
-              latitude: order.pickupLocation.y.toDouble(),
-              longitude: order.pickupLocation.x.toDouble(),
-            );
-
-            return Positioned(
-              bottom: 16,
-              right: 16,
-              child: EmergencyButton(
-                orderId: order.id,
-                currentLocation: emergencyLocation,
-              ),
-            );
-          },
         ),
       ],
     );
@@ -816,147 +793,148 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
 
   Widget _buildOrderInfo(Order order) {
     return Card(
-      child: Padding(
-        padding: EdgeInsets.all(16.dg),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          spacing: 12.h,
-          children: [
-            Text(
-              'Order Details',
-              style: context.typography.h3.copyWith(
-                fontSize: 18.sp,
-                fontWeight: FontWeight.bold,
-              ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        spacing: 12.h,
+        children: [
+          Text(
+            'Order Details',
+            style: context.typography.h3.copyWith(
+              fontSize: 18.sp,
+              fontWeight: FontWeight.bold,
             ),
-            const Divider(),
-            _buildInfoRow(
-              LucideIcons.package,
-              context.l10n.service,
-              order.type.name,
-            ),
-            _buildLocationInfoRow(
-              LucideIcons.mapPin,
-              context.l10n.pickup_location,
-              order.pickupAddress,
-              order.pickupLocation,
-            ),
-            _buildLocationInfoRow(
-              LucideIcons.navigation,
-              context.l10n.dropoff_location,
-              order.dropoffAddress,
-              order.dropoffLocation,
-            ),
-            _buildInfoRow(
-              LucideIcons.ruler,
-              context.l10n.distance,
-              '${order.distanceKm.toStringAsFixed(2)} km',
-            ),
-            _buildInfoRow(
-              LucideIcons.dollarSign,
-              context.l10n.fare,
-              context.formatCurrency(order.totalPrice),
-            ),
-          ],
-        ),
+          ),
+          const Divider(),
+          _buildInfoRow(
+            LucideIcons.package,
+            context.l10n.service,
+            order.type.name,
+          ),
+          _buildLocationInfoRow(
+            LucideIcons.mapPin,
+            context.l10n.pickup_location,
+            order.pickupAddress,
+            order.pickupLocation,
+          ),
+          _buildLocationInfoRow(
+            LucideIcons.navigation,
+            context.l10n.dropoff_location,
+            order.dropoffAddress,
+            order.dropoffLocation,
+          ),
+          _buildInfoRow(
+            LucideIcons.ruler,
+            context.l10n.distance,
+            '${order.distanceKm.toStringAsFixed(2)} km',
+          ),
+          _buildInfoRow(
+            LucideIcons.dollarSign,
+            context.l10n.fare,
+            context.formatCurrency(order.totalPrice),
+          ),
+        ],
       ),
     );
   }
 
   Widget _buildCustomerInfo(Order order) {
     return Card(
-      child: Padding(
-        padding: EdgeInsets.all(16.dg),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          spacing: 12.h,
-          children: [
-            Text(
-              context.l10n.customer_info,
-              style: context.typography.h3.copyWith(
-                fontSize: 18.sp,
-                fontWeight: FontWeight.bold,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        spacing: 12.h,
+        children: [
+          Text(
+            context.l10n.customer_info,
+            style: context.typography.h3.copyWith(
+              fontSize: 18.sp,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const Divider(),
+          Row(
+            spacing: 12.w,
+            children: [
+              UserAvatarWidget(
+                name: order.user?.name ?? '',
+                image: order.user?.image,
+                size: 48.r,
               ),
-            ),
-            const Divider(),
-            Row(
-              spacing: 12.w,
-              children: [
-                Container(
-                  width: 48.r,
-                  height: 48.r,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: context.colorScheme.primary.withValues(alpha: 0.1),
-                    border: Border.all(
-                      color: context.colorScheme.primary,
-                      width: 2,
-                    ),
-                  ),
-                  child: Center(
-                    child: Text(
-                      order.user?.name?.substring(0, 1).toUpperCase() ?? 'U',
-                      style: context.typography.h3.copyWith(
-                        fontSize: 20.sp,
-                        color: context.colorScheme.primary,
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  spacing: 4.h,
+                  children: [
+                    Text(
+                      order.user?.name ?? context.l10n.text_unknown_user,
+                      style: context.typography.h4.copyWith(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                  ),
-                ),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    spacing: 4.h,
-                    children: [
-                      Text(
-                        order.user?.name ?? context.l10n.text_unknown_user,
-                        style: context.typography.h4.copyWith(
-                          fontSize: 16.sp,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Builder(
-                        builder: (context) {
-                          final phone = order.user?.phone;
-                          if (phone == null) return const SizedBox.shrink();
+                    Builder(
+                      builder: (context) {
+                        final phone = order.user?.phone;
+                        if (phone == null) return const SizedBox.shrink();
 
-                          return Text(
-                            _formatPhone(phone),
-                            style: context.typography.small.copyWith(
-                              fontSize: 14.sp,
-                              color: context.colorScheme.mutedForeground,
-                            ),
-                          );
-                        },
-                      ),
-                    ],
-                  ),
+                        return Text(
+                          _formatPhone(phone),
+                          style: context.typography.small.copyWith(
+                            fontSize: 14.sp,
+                            color: context.colorScheme.mutedForeground,
+                          ),
+                        );
+                      },
+                    ),
+                  ],
                 ),
-                IconButton(
-                  icon: const Icon(LucideIcons.phone),
-                  onPressed: () {
-                    final phone = order.user?.phone;
-                    if (phone != null) {
-                      _showCallDialog(context, phone);
-                    } else {
-                      context.showMyToast(
-                        context.l10n.customer_phone_number_not_available,
-                        type: ToastType.warning,
-                      );
-                    }
-                  },
-                  variance: ButtonVariance.ghost,
-                ),
-                ChatButtonWithBadge(
-                  orderId: order.id,
-                  onPressed: () {
-                    _showChatDialog(context, order.id);
-                  },
-                ),
-              ],
-            ),
-          ],
-        ),
+              ),
+              // IconButton(
+              //   icon: const Icon(LucideIcons.phone),
+              //   onPressed: () {
+              //     final phone = order.user?.phone;
+              //     if (phone != null) {
+              //       _showCallDialog(context, phone);
+              //     } else {
+              //       context.showMyToast(
+              //         context.l10n.customer_phone_number_not_available,
+              //         type: ToastType.warning,
+              //       );
+              //     }
+              //   },
+              //   variance: ButtonVariance.ghost,
+              // ),
+              ChatButtonWithBadge(
+                orderId: order.id,
+                onPressed: () {
+                  _showChatDialog(context, order.id);
+                },
+              ),
+              // Emergency button - only show during IN_TRIP status
+              BlocBuilder<DriverOrderCubit, DriverOrderState>(
+                builder: (context, state) {
+                  if (state.orderStatus != OrderStatus.IN_TRIP) {
+                    return const SizedBox.shrink();
+                  }
+
+                  // Use pickup location as fallback for emergency location
+                  final emergencyLocation = EmergencyLocation(
+                    latitude: order.pickupLocation.y.toDouble(),
+                    longitude: order.pickupLocation.x.toDouble(),
+                  );
+
+                  return Positioned(
+                    bottom: 16,
+                    right: 16,
+                    child: EmergencyButton(
+                      orderId: order.id,
+                      currentLocation: emergencyLocation,
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

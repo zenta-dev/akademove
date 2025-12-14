@@ -4413,4 +4413,19 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get faq_safety_a3 => 'Semua pengemudi harus mengirimkan dan mendapat persetujuan untuk KTM, SIM, dan STNK mereka. Kami memverifikasi semua dokumen sebelum aktivasi.';
+
+  @override
+  String get emergency_contact_whatsapp => 'Hubungi via WhatsApp';
+
+  @override
+  String get emergency_contact_whatsapp_desc => 'Buka WhatsApp untuk menghubungi keamanan kampus';
+
+  @override
+  String get emergency_or_divider => 'atau';
+
+  @override
+  String get emergency_whatsapp_error => 'Tidak dapat membuka WhatsApp. Silakan coba lagi.';
+
+  @override
+  String get emergency_contact_unavailable => 'Kontak darurat tidak tersedia. Silakan coba lagi nanti.';
 }

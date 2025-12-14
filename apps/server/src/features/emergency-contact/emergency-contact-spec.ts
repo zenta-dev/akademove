@@ -30,6 +30,23 @@ export type EmergencyContactListQuery = z.infer<
 
 // Spec contract
 export const EmergencyContactSpec = {
+	// Get primary emergency WhatsApp contact (for mobile app emergency redirect)
+	getPrimary: oc
+		.route({
+			tags: [FEATURE_TAGS.EMERGENCY],
+			method: "GET",
+			path: "/primary",
+			inputStructure: "detailed",
+			outputStructure: "detailed",
+		})
+		.input(z.object({}))
+		.output(
+			createSuccesSchema(
+				EmergencyContactSchema.nullable(),
+				"Successfully retrieved primary emergency contact",
+			),
+		),
+
 	// List active contacts (for mobile app during emergency)
 	listActive: oc
 		.route({

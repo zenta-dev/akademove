@@ -8718,6 +8718,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'All drivers must submit and get approved for their student ID, driver\'s license, and vehicle registration. We verify all documents before activation.'**
   String get faq_safety_a3;
+
+  /// No description provided for @emergency_contact_whatsapp.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact via WhatsApp'**
+  String get emergency_contact_whatsapp;
+
+  /// No description provided for @emergency_contact_whatsapp_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Open WhatsApp to contact campus security'**
+  String get emergency_contact_whatsapp_desc;
+
+  /// No description provided for @emergency_or_divider.
+  ///
+  /// In en, this message translates to:
+  /// **'or'**
+  String get emergency_or_divider;
+
+  /// No description provided for @emergency_whatsapp_error.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not open WhatsApp. Please try again.'**
+  String get emergency_whatsapp_error;
+
+  /// No description provided for @emergency_contact_unavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Emergency contact is not available. Please try again later.'**
+  String get emergency_contact_unavailable;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

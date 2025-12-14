@@ -1055,6 +1055,7 @@
   "server_email_verified": "Email verified successfully",
   "server_emergencies_retrieved": "Emergencies retrieved successfully",
   "server_emergency_invalid_status": "Emergency can only be triggered during active trip",
+  "server_emergency_logged": "Emergency event logged successfully",
   "server_emergency_not_authorized": "You are not authorized to access this emergency",
   "server_emergency_retrieved": "Emergency data retrieved successfully",
   "server_emergency_triggered": "Emergency alert sent successfully",

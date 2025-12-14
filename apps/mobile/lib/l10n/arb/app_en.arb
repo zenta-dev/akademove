@@ -1837,5 +1837,10 @@
 	"faq_safety_q2": "What if I feel unsafe during a ride?",
 	"faq_safety_a2": "Use the in-app emergency button to alert campus security immediately. You can also report the driver after the trip, and our team will investigate promptly.",
 	"faq_safety_q3": "How are drivers verified?",
-	"faq_safety_a3": "All drivers must submit and get approved for their student ID, driver's license, and vehicle registration. We verify all documents before activation."
+	"faq_safety_a3": "All drivers must submit and get approved for their student ID, driver's license, and vehicle registration. We verify all documents before activation.",
+	"emergency_contact_whatsapp": "Contact via WhatsApp",
+	"emergency_contact_whatsapp_desc": "Open WhatsApp to contact campus security",
+	"emergency_or_divider": "or",
+	"emergency_whatsapp_error": "Could not open WhatsApp. Please try again.",
+	"emergency_contact_unavailable": "Emergency contact is not available. Please try again later."
 }

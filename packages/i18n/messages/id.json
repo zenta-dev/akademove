@@ -1056,6 +1056,7 @@
   "server_email_verified": "Email berhasil diverifikasi",
   "server_emergencies_retrieved": "Data darurat berhasil diambil",
   "server_emergency_invalid_status": "Darurat hanya dapat dipicu saat perjalanan aktif",
+  "server_emergency_logged": "Kejadian darurat berhasil dicatat",
   "server_emergency_not_authorized": "Anda tidak memiliki akses ke data darurat ini",
   "server_emergency_retrieved": "Data darurat berhasil diambil",
   "server_emergency_triggered": "Peringatan darurat berhasil dikirim",

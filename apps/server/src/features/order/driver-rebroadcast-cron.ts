@@ -167,7 +167,7 @@ export async function handleDriverRebroadcastCron(
 				);
 
 				// Compose the order entity for broadcast
-				const composedOrder = OrderBaseRepository.composeEntity(
+				const composedOrder = await OrderBaseRepository.composeEntity(
 					order as Parameters<typeof OrderBaseRepository.composeEntity>[0],
 					svc.storage,
 				);

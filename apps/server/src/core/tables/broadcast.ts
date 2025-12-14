@@ -87,8 +87,8 @@ export const BroadcastSchema = z.object({
 	status: BroadcastStatusSchema,
 	targetAudience: TargetAudienceSchema,
 	targetIds: z.array(z.uuid()).optional(),
-	scheduledAt: z.date().optional(),
-	sentAt: z.date().optional(),
+	scheduledAt: z.coerce.date().optional(),
+	sentAt: z.coerce.date().optional(),
 	totalRecipients: z.coerce
 		.number()
 		.int()
@@ -117,8 +117,8 @@ export const BroadcastSchema = z.object({
 		.min(0)
 		.default(0),
 	createdBy: z.uuid(),
-	createdAt: z.date(),
-	updatedAt: z.date(),
+	createdAt: z.coerce.date(),
+	updatedAt: z.coerce.date(),
 });
 export const InsertBroadcastSchema = BroadcastSchema.omit({
 	id: true,

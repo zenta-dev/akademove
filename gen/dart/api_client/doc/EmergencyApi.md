@@ -12,18 +12,20 @@ Method | HTTP request | Description
 [**emergencyContactCreate**](EmergencyApi.md#emergencycontactcreate) | **POST** /emergency-contacts | 
 [**emergencyContactDelete**](EmergencyApi.md#emergencycontactdelete) | **DELETE** /emergency-contacts/{id} | 
 [**emergencyContactGet**](EmergencyApi.md#emergencycontactget) | **GET** /emergency-contacts/{id} | 
+[**emergencyContactGetPrimary**](EmergencyApi.md#emergencycontactgetprimary) | **GET** /emergency-contacts/primary | 
 [**emergencyContactList**](EmergencyApi.md#emergencycontactlist) | **GET** /emergency-contacts | 
 [**emergencyContactListActive**](EmergencyApi.md#emergencycontactlistactive) | **GET** /emergency-contacts/active | 
 [**emergencyContactToggleActive**](EmergencyApi.md#emergencycontacttoggleactive) | **PATCH** /emergency-contacts/{id}/toggle | 
 [**emergencyContactUpdate**](EmergencyApi.md#emergencycontactupdate) | **PUT** /emergency-contacts/{id} | 
 [**emergencyGet**](EmergencyApi.md#emergencyget) | **GET** /emergencies/{id} | 
 [**emergencyListByOrder**](EmergencyApi.md#emergencylistbyorder) | **GET** /emergencies/order/{orderId} | 
+[**emergencyLog**](EmergencyApi.md#emergencylog) | **POST** /emergencies/log | 
 [**emergencyTrigger**](EmergencyApi.md#emergencytrigger) | **POST** /emergencies | 
 [**emergencyUpdateStatus**](EmergencyApi.md#emergencyupdatestatus) | **PATCH** /emergencies/{id}/status | 
 
 
 # **emergencyContactCreate**
-> EmergencyContactCreate201Response emergencyContactCreate(insertEmergencyContact)
+> EmergencyContactGetPrimary200Response emergencyContactCreate(insertEmergencyContact)
 
 
 
@@ -50,7 +52,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**EmergencyContactCreate201Response**](EmergencyContactCreate201Response.md)
+[**EmergencyContactGetPrimary200Response**](EmergencyContactGetPrimary200Response.md)
 
 ### Authorization
 
@@ -105,7 +107,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **emergencyContactGet**
-> EmergencyContactCreate201Response emergencyContactGet(id)
+> EmergencyContactGetPrimary200Response emergencyContactGet(id)
 
 
 
@@ -132,7 +134,44 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**EmergencyContactCreate201Response**](EmergencyContactCreate201Response.md)
+[**EmergencyContactGetPrimary200Response**](EmergencyContactGetPrimary200Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **emergencyContactGetPrimary**
+> EmergencyContactGetPrimary200Response emergencyContactGetPrimary()
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getEmergencyApi();
+
+try {
+    final response = api.emergencyContactGetPrimary();
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling EmergencyApi->emergencyContactGetPrimary: $e\n');
+}
+```
+
+### Parameters
+This endpoint does not need any parameter.
+
+### Return type
+
+[**EmergencyContactGetPrimary200Response**](EmergencyContactGetPrimary200Response.md)
 
 ### Authorization
 
@@ -240,7 +279,7 @@ This endpoint does not need any parameter.
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **emergencyContactToggleActive**
-> EmergencyContactCreate201Response emergencyContactToggleActive(id)
+> EmergencyContactGetPrimary200Response emergencyContactToggleActive(id)
 
 
 
@@ -267,7 +306,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**EmergencyContactCreate201Response**](EmergencyContactCreate201Response.md)
+[**EmergencyContactGetPrimary200Response**](EmergencyContactGetPrimary200Response.md)
 
 ### Authorization
 
@@ -281,7 +320,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **emergencyContactUpdate**
-> EmergencyContactCreate201Response emergencyContactUpdate(id, updateEmergencyContact)
+> EmergencyContactGetPrimary200Response emergencyContactUpdate(id, updateEmergencyContact)
 
 
 
@@ -310,7 +349,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**EmergencyContactCreate201Response**](EmergencyContactCreate201Response.md)
+[**EmergencyContactGetPrimary200Response**](EmergencyContactGetPrimary200Response.md)
 
 ### Authorization
 
@@ -401,6 +440,47 @@ Name | Type | Description  | Notes
 ### HTTP request headers
 
  - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **emergencyLog**
+> EmergencyLog200Response emergencyLog(logEmergency)
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getEmergencyApi();
+final LogEmergency logEmergency = ; // LogEmergency | 
+
+try {
+    final response = api.emergencyLog(logEmergency);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling EmergencyApi->emergencyLog: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **logEmergency** | [**LogEmergency**](LogEmergency.md)|  | 
+
+### Return type
+
+[**EmergencyLog200Response**](EmergencyLog200Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)

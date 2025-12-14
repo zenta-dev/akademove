@@ -1838,5 +1838,10 @@
 	"faq_safety_q2": "Bagaimana jika saya merasa tidak aman selama perjalanan?",
 	"faq_safety_a2": "Gunakan tombol darurat dalam aplikasi untuk memberi tahu keamanan kampus segera. Anda juga dapat melaporkan pengemudi setelah perjalanan, dan tim kami akan menyelidiki dengan segera.",
 	"faq_safety_q3": "Bagaimana pengemudi diverifikasi?",
-	"faq_safety_a3": "Semua pengemudi harus mengirimkan dan mendapat persetujuan untuk KTM, SIM, dan STNK mereka. Kami memverifikasi semua dokumen sebelum aktivasi."
+	"faq_safety_a3": "Semua pengemudi harus mengirimkan dan mendapat persetujuan untuk KTM, SIM, dan STNK mereka. Kami memverifikasi semua dokumen sebelum aktivasi.",
+	"emergency_contact_whatsapp": "Hubungi via WhatsApp",
+	"emergency_contact_whatsapp_desc": "Buka WhatsApp untuk menghubungi keamanan kampus",
+	"emergency_or_divider": "atau",
+	"emergency_whatsapp_error": "Tidak dapat membuka WhatsApp. Silakan coba lagi.",
+	"emergency_contact_unavailable": "Kontak darurat tidak tersedia. Silakan coba lagi nanti."
 }

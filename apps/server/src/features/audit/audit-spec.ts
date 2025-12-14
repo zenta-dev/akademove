@@ -22,7 +22,7 @@ const AuditLogSchema = z.object({
 	userAgent: z.string().optional(),
 	sessionId: z.string().optional(),
 	reason: z.string().optional(),
-	updatedAt: z.date(),
+	updatedAt: z.coerce.date(),
 });
 
 export type AuditLog = z.infer<typeof AuditLogSchema>;

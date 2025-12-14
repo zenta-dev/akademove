@@ -1,14 +1,14 @@
 import 'package:akademove/core/_export.dart';
-import 'package:akademove/features/auth/presentation/cubits/auth_cubit.dart';
-import 'package:akademove/features/emergency/presentation/cubits/shared_emergency_cubit.dart';
+import 'package:akademove/features/emergency/_export.dart';
 import 'package:akademove/l10n/l10n.dart';
 import 'package:api_client/api_client.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 /// Dialog for triggering an emergency during active trip
-/// Allows user/driver to select emergency type and provide description
+/// Redirects user to WhatsApp emergency contact
 class EmergencyTriggerDialog extends StatefulWidget {
   const EmergencyTriggerDialog({
     required this.orderId,
@@ -24,188 +24,230 @@ class EmergencyTriggerDialog extends StatefulWidget {
 }
 
 class _EmergencyTriggerDialogState extends State<EmergencyTriggerDialog> {
-  EmergencyType _selectedType = EmergencyType.OTHER;
-  final _descriptionController = TextEditingController();
-  bool _confirmed = false;
-
   @override
-  void dispose() {
-    _descriptionController.dispose();
-    super.dispose();
+  void initState() {
+    super.initState();
+    // Fetch primary contact on dialog open
+    context.read<SharedEmergencyCubit>().getPrimaryContact();
   }
 
-  String _getTypeLabel(BuildContext context, EmergencyType type) {
-    switch (type) {
-      case EmergencyType.ACCIDENT:
-        return context.l10n.accident;
-      case EmergencyType.HARASSMENT:
-        return context.l10n.harassment;
-      case EmergencyType.THEFT:
-        return context.l10n.theft;
-      case EmergencyType.MEDICAL:
-        return context.l10n.medical;
-      case EmergencyType.OTHER:
-        return context.l10n.other;
-    }
-  }
-
-  IconData _getTypeIcon(EmergencyType type) {
-    switch (type) {
-      case EmergencyType.ACCIDENT:
-        return LucideIcons.car;
-      case EmergencyType.HARASSMENT:
-        return LucideIcons.userX;
-      case EmergencyType.THEFT:
-        return LucideIcons.triangleAlert;
-      case EmergencyType.MEDICAL:
-        return LucideIcons.heartPulse;
-      case EmergencyType.OTHER:
-        return LucideIcons.triangleAlert;
-    }
-  }
-
-  void _handleTrigger() {
-    if (_descriptionController.text.trim().isEmpty &&
-        context.mounted &&
-        mounted) {
-      context.showMyToast(
-        context.l10n.error_description_required,
-        type: ToastType.failed,
-      );
-      return;
-    }
-
+  /// Opens WhatsApp with pre-filled emergency message
+  Future<void> _openEmergencyWhatsApp(String phone) async {
     final cubit = context.read<SharedEmergencyCubit>();
-    final userId = context.read<AuthCubit>().state.user.data?.value.id;
 
-    if (userId == null) {
-      return;
-    }
-
-    cubit.trigger(
+    // Log emergency event before opening WhatsApp
+    await cubit.logEmergency(
       orderId: widget.orderId,
-      userId: userId,
-      type: _selectedType,
-      description: _descriptionController.text.trim(),
       location: widget.currentLocation,
     );
-    Navigator.of(context).pop();
+
+    final message = Uri.encodeComponent(
+      'EMERGENCY - Order ID: ${widget.orderId}\n'
+      'Location: ${widget.currentLocation.latitude}, ${widget.currentLocation.longitude}\n'
+      'I need immediate assistance!',
+    );
+
+    final url = Uri.parse('https://wa.me/$phone?text=$message');
+
+    try {
+      if (await canLaunchUrl(url)) {
+        await launchUrl(url, mode: LaunchMode.externalApplication);
+        if (mounted) {
+          Navigator.of(context).pop();
+        }
+      } else {
+        if (context.mounted && mounted) {
+          context.showMyToast(
+            context.l10n.emergency_whatsapp_error,
+            type: ToastType.failed,
+          );
+        }
+      }
+    } catch (e) {
+      if (context.mounted && mounted) {
+        context.showMyToast(
+          context.l10n.emergency_whatsapp_error,
+          type: ToastType.failed,
+        );
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    if (!_confirmed) {
-      return AlertDialog(
-        title: Row(
+    return BlocBuilder<SharedEmergencyCubit, SharedEmergencyState>(
+      builder: (context, state) {
+        final primaryContactResult = state.primaryContact;
+
+        return AlertDialog(
+          title: Row(
+            spacing: 12.w,
+            children: [
+              Icon(
+                LucideIcons.triangleAlert,
+                color: context.colorScheme.destructive,
+                size: 28.sp,
+              ),
+              Text(context.l10n.emergency_alert_title),
+            ],
+          ),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text(
+                  context.l10n.message_confirmation,
+                  style: context.typography.p.copyWith(fontSize: 16.sp),
+                ),
+                SizedBox(height: 16.h),
+                // Show loading state while fetching contact
+                if (primaryContactResult.isLoading)
+                  Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(16.dg),
+                      child: const CircularProgressIndicator(),
+                    ),
+                  )
+                // Show error state if fetch failed
+                else if (primaryContactResult.isFailed)
+                  Card(
+                    padding: EdgeInsets.all(12.dg),
+                    borderColor: context.colorScheme.destructive,
+                    child: Column(
+                      children: [
+                        Icon(
+                          LucideIcons.circleAlert,
+                          color: context.colorScheme.destructive,
+                          size: 24.sp,
+                        ),
+                        SizedBox(height: 8.h),
+                        Text(
+                          context.l10n.emergency_contact_unavailable,
+                          textAlign: TextAlign.center,
+                          style: context.typography.base.copyWith(
+                            color: context.colorScheme.destructive,
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                // Show no contact available
+                else if (primaryContactResult.isSuccess &&
+                    primaryContactResult.value == null)
+                  Card(
+                    padding: EdgeInsets.all(12.dg),
+                    borderColor: context.colorScheme.mutedForeground,
+                    child: Column(
+                      children: [
+                        Icon(
+                          LucideIcons.circleAlert,
+                          color: context.colorScheme.mutedForeground,
+                          size: 24.sp,
+                        ),
+                        SizedBox(height: 8.h),
+                        Text(
+                          context.l10n.emergency_contact_unavailable,
+                          textAlign: TextAlign.center,
+                          style: context.typography.base.copyWith(
+                            color: context.colorScheme.mutedForeground,
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                // Show WhatsApp contact card
+                else if (primaryContactResult.isSuccess &&
+                    primaryContactResult.value != null)
+                  _buildWhatsAppCard(primaryContactResult.value!),
+              ],
+            ),
+          ),
+          actions: [
+            OutlineButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text(context.l10n.cancel),
+            ),
+            if (primaryContactResult.isSuccess &&
+                primaryContactResult.value != null)
+              PrimaryButton(
+                onPressed: () =>
+                    _openEmergencyWhatsApp(primaryContactResult.value!.phone),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  spacing: 8.w,
+                  children: [
+                    Icon(
+                      LucideIcons.messageCircle,
+                      size: 18.sp,
+                      color: Colors.white,
+                    ),
+                    Text(
+                      context.l10n.emergency_contact_whatsapp,
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                  ],
+                ),
+              ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildWhatsAppCard(EmergencyContact contact) {
+    return GestureDetector(
+      onTap: () => _openEmergencyWhatsApp(contact.phone),
+      child: Card(
+        padding: EdgeInsets.all(12.dg),
+        borderWidth: 2,
+        borderColor: const Color(0xFF25D366), // WhatsApp green
+        child: Row(
           spacing: 12.w,
           children: [
-            Icon(
-              LucideIcons.triangleAlert,
-              color: context.colorScheme.destructive,
-              size: 28.sp,
+            Container(
+              width: 40.w,
+              height: 40.w,
+              decoration: const BoxDecoration(
+                color: Color(0xFF25D366),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                LucideIcons.messageCircle,
+                color: Colors.white,
+                size: 20.sp,
+              ),
             ),
-            Text(context.l10n.emergency_alert_title),
-          ],
-        ),
-        content: Text(
-          context.l10n.message_confirmation,
-          style: context.typography.p.copyWith(fontSize: 16.sp),
-        ),
-        actions: [
-          OutlineButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: Text(context.l10n.cancel),
-          ),
-          DestructiveButton(
-            onPressed: () {
-              setState(() {
-                _confirmed = true;
-              });
-            },
-            child: Text(context.l10n.button_continue),
-          ),
-        ],
-      );
-    }
-
-    return AlertDialog(
-      title: Text(context.l10n.emergency_report_title),
-      content: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          spacing: 8.h,
-          children: [
-            Text(
-              context.l10n.emergency_select_type,
-              style: context.typography.semiBold.copyWith(fontSize: 16.sp),
-            ),
-            SizedBox(height: 4.h),
-            // Emergency type selector
-            ...EmergencyType.values.map((type) {
-              final isSelected = _selectedType == type;
-              return GestureDetector(
-                onTap: () {
-                  setState(() {
-                    _selectedType = type;
-                  });
-                },
-                child: Card(
-                  padding: EdgeInsets.all(12.dg),
-                  borderWidth: isSelected ? 2 : 1,
-                  borderColor: isSelected
-                      ? context.colorScheme.destructive
-                      : context.colorScheme.border,
-                  child: Row(
-                    spacing: 12.w,
-                    children: [
-                      Icon(
-                        _getTypeIcon(type),
-                        color: isSelected
-                            ? context.colorScheme.destructive
-                            : context.colorScheme.mutedForeground,
-                      ),
-                      Text(
-                        _getTypeLabel(context, type),
-                        style: context.typography.base.copyWith(
-                          fontWeight: isSelected
-                              ? FontWeight.w600
-                              : FontWeight.normal,
-                          color: isSelected
-                              ? context.colorScheme.destructive
-                              : context.colorScheme.foreground,
-                        ),
-                      ),
-                    ],
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    contact.name,
+                    style: context.typography.semiBold.copyWith(
+                      fontSize: 14.sp,
+                      color: const Color(0xFF25D366),
+                    ),
                   ),
-                ),
-              );
-            }),
-            SizedBox(height: 8.h),
-            Text(
-              context.l10n.description,
-              style: context.typography.semiBold.copyWith(fontSize: 16.sp),
+                  SizedBox(height: 2.h),
+                  Text(
+                    context.l10n.emergency_contact_whatsapp_desc,
+                    style: context.typography.small.copyWith(
+                      fontSize: 12.sp,
+                      color: context.colorScheme.mutedForeground,
+                    ),
+                  ),
+                ],
+              ),
             ),
-            SizedBox(height: 4.h),
-            TextField(
-              controller: _descriptionController,
-              placeholder: Text(context.l10n.emergency_describe_situation),
-              maxLines: 4,
-              maxLength: 500,
+            Icon(
+              LucideIcons.externalLink,
+              size: 18.sp,
+              color: const Color(0xFF25D366),
             ),
           ],
         ),
       ),
-      actions: [
-        OutlineButton(
-          onPressed: () => Navigator.of(context).pop(),
-          child: Text(context.l10n.cancel),
-        ),
-        DestructiveButton(
-          onPressed: _handleTrigger,
-          child: Text(context.l10n.emergency_send_alert),
-        ),
-      ],
     );
   }
 }

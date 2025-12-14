@@ -196,8 +196,8 @@ export const MerchantMainSpec = {
 							category: z.string().optional(),
 							price: z.coerce.number(),
 							stock: z.coerce.number(),
-							createdAt: z.date(),
-							updatedAt: z.date(),
+							createdAt: z.coerce.date(),
+							updatedAt: z.coerce.date(),
 						}),
 						merchant: z.object({
 							id: z.string(),

@@ -5,6 +5,7 @@ import 'package:akademove/features/emergency/presentation/states/_export.dart';
 import 'package:akademove/l10n/l10n.dart';
 import 'package:api_client/api_client.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 
 import 'emergency_trigger_dialog.dart';
@@ -43,7 +44,8 @@ class EmergencyButton extends StatelessWidget {
         foregroundColor: Colors.white,
         elevation: 8,
         heroTag: 'emergency_button',
-        child: const Icon(LucideIcons.triangleAlert, size: 32),
+        size: 24.dg,
+        child: Icon(LucideIcons.triangleAlert, size: 18.sp),
       ),
     );
   }

@@ -185,6 +185,37 @@ export class EmergencyContactRepository extends BaseRepository {
 		}
 	}
 
+	/**
+	 * Get primary (highest priority) active emergency contact for WhatsApp redirect
+	 */
+	async getPrimary(opts?: PartialWithTx): Promise<EmergencyContact | null> {
+		try {
+			const cacheKey = "primary_contact";
+			const fallback = async () => {
+				const result = await (
+					opts?.tx ?? this.db
+				).query.emergencyContact.findFirst({
+					where: (f, op) => op.eq(f.isActive, true),
+					orderBy: (f, op) => op.asc(f.priority),
+				});
+				const contact = result
+					? EmergencyContactRepository.composeEntity(result)
+					: null;
+				await this.setCache(cacheKey, contact, {
+					expirationTtl: CACHE_TTLS["5m"],
+				});
+				return contact;
+			};
+			return await this.getCache(cacheKey, { fallback });
+		} catch (error) {
+			logger.error(
+				{ error },
+				"[EmergencyContactRepository] Failed to get primary emergency contact",
+			);
+			return null;
+		}
+	}
+
 	async get(id: string, opts?: PartialWithTx): Promise<EmergencyContact> {
 		try {
 			const fallback = async () => {
@@ -244,6 +275,7 @@ export class EmergencyContactRepository extends BaseRepository {
 			});
 			await this.deleteCache("count");
 			await this.deleteCache("active_contacts");
+			await this.deleteCache("primary_contact");
 
 			return result;
 		} catch (error) {
@@ -289,6 +321,7 @@ export class EmergencyContactRepository extends BaseRepository {
 			// Invalidate caches
 			await this.deleteCache(id);
 			await this.deleteCache("active_contacts");
+			await this.deleteCache("primary_contact");
 
 			return result;
 		} catch (error) {
@@ -322,6 +355,7 @@ export class EmergencyContactRepository extends BaseRepository {
 			await this.deleteCache(id);
 			await this.deleteCache("count");
 			await this.deleteCache("active_contacts");
+			await this.deleteCache("primary_contact");
 
 			return { ok: true };
 		} catch (error) {
@@ -368,6 +402,7 @@ export class EmergencyContactRepository extends BaseRepository {
 			// Invalidate caches
 			await this.deleteCache(id);
 			await this.deleteCache("active_contacts");
+			await this.deleteCache("primary_contact");
 
 			return result;
 		} catch (error) {

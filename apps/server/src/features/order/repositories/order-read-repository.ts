@@ -228,10 +228,10 @@ export class OrderReadRepository extends OrderBaseRepository {
 			};
 
 			const withx = {
-				user: { columns: { name: true } },
+				user: { columns: { name: true, image: true } },
 				driver: {
 					columns: {},
-					with: { user: { columns: { name: true } } },
+					with: { user: { columns: { name: true, image: true } } },
 				},
 				merchant: { columns: { name: true } },
 				items: {
@@ -310,12 +310,21 @@ export class OrderReadRepository extends OrderBaseRepository {
 					limit: limit + 1,
 				});
 
-				const mapped = res.map((item) =>
-					OrderBaseRepository.composeEntity(item, this.storage),
+				// Type assertion needed because we're selecting specific columns from relations
+				// which changes the inferred type, but it's still compatible with Partial<User/Driver>
+				const mapped = await Promise.all(
+					res.map((item) =>
+						OrderBaseRepository.composeEntity(
+							item as unknown as Parameters<
+								typeof OrderBaseRepository.composeEntity
+							>[0],
+							this.storage,
+						),
+					),
 				);
 				const hasMore = mapped.length > limit;
 				const rows = hasMore ? mapped.slice(0, limit) : mapped;
-				const nextCursor = hasMore ? mapped[mapped.length - 1].id : undefined;
+				const nextCursor = hasMore ? mapped[mapped.length - 1]?.id : undefined;
 
 				return { rows, pagination: { hasMore, nextCursor } };
 			}
@@ -330,8 +339,15 @@ export class OrderReadRepository extends OrderBaseRepository {
 				limit,
 			});
 
-			const rows = result.map((item) =>
-				OrderBaseRepository.composeEntity(item, this.storage),
+			const rows = await Promise.all(
+				result.map((item) =>
+					OrderBaseRepository.composeEntity(
+						item as unknown as Parameters<
+							typeof OrderBaseRepository.composeEntity
+						>[0],
+						this.storage,
+					),
+				),
 			);
 
 			const hasFilters = statuses.length > 0 || type || startDate || endDate;

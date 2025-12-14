@@ -53,7 +53,7 @@ export async function handleOrderRebroadcastCron(
 		const activeOrders = await svc.db.query.order.findMany({
 			where: (f, _op) => inArray(f.status, ACTIVE_STATUSES),
 			with: {
-				user: { columns: { name: true } },
+				user: { columns: { name: true, image: true } },
 				driver: {
 					with: {
 						user: {
@@ -83,7 +83,7 @@ export async function handleOrderRebroadcastCron(
 
 				// Compose the order entity properly
 				// The composed order includes driver info via the `driver` relation
-				const composedOrder = OrderBaseRepository.composeEntity(
+				const composedOrder = await OrderBaseRepository.composeEntity(
 					order as Parameters<typeof OrderBaseRepository.composeEntity>[0],
 					svc.storage,
 				);
