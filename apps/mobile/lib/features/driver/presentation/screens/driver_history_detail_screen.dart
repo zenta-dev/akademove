@@ -368,6 +368,14 @@ class _DriverHistoryDetailScreenState extends State<DriverHistoryDetailScreen> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
+                      if (order.user?.gender != null)
+                        Text(
+                          _formatGender(order.user!.gender!),
+                          style: context.typography.small.copyWith(
+                            fontSize: 14.sp,
+                            color: context.colorScheme.mutedForeground,
+                          ),
+                        ),
                     ],
                   ),
                 ),
@@ -400,6 +408,11 @@ class _DriverHistoryDetailScreenState extends State<DriverHistoryDetailScreen> {
 
     // No actions for cancelled orders
     return const SizedBox.shrink();
+  }
+
+  String _formatGender(UserGender gender) {
+    final genderStr = gender.name;
+    return genderStr[0].toUpperCase() + genderStr.substring(1).toLowerCase();
   }
 
   Widget _buildInfoRow(IconData icon, String label, String value) {

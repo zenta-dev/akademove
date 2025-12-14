@@ -873,11 +873,11 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
                     ),
                     Builder(
                       builder: (context) {
-                        final phone = order.user?.phone;
-                        if (phone == null) return const SizedBox.shrink();
+                        final gender = order.user?.gender;
+                        if (gender == null) return const SizedBox.shrink();
 
                         return Text(
-                          _formatPhone(phone),
+                          _formatGender(gender),
                           style: context.typography.small.copyWith(
                             fontSize: 14.sp,
                             color: context.colorScheme.mutedForeground,
@@ -1206,6 +1206,11 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
 
   String _formatPhone(Phone phone) {
     return '+${phone.countryCode.value}${phone.number}';
+  }
+
+  String _formatGender(UserGender gender) {
+    final genderStr = gender.name;
+    return genderStr[0].toUpperCase() + genderStr.substring(1).toLowerCase();
   }
 
   void _showRejectDialog(BuildContext context, String orderId) {

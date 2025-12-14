@@ -1,9 +1,11 @@
 import 'package:akademove/core/_export.dart';
+import 'package:akademove/features/auth/presentation/cubits/_export.dart';
 import 'package:akademove/features/emergency/_export.dart';
 import 'package:akademove/l10n/l10n.dart';
 import 'package:api_client/api_client.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -24,16 +26,62 @@ class EmergencyTriggerDialog extends StatefulWidget {
 }
 
 class _EmergencyTriggerDialogState extends State<EmergencyTriggerDialog> {
+  String? _address;
+
   @override
   void initState() {
     super.initState();
-    // Fetch primary contact on dialog open
+    // Fetch primary contact and address on dialog open
     context.read<SharedEmergencyCubit>().getPrimaryContact();
+    _fetchAddress();
+  }
+
+  /// Fetches address from coordinates using reverse geocoding
+  Future<void> _fetchAddress() async {
+    try {
+      final placemarks = await placemarkFromCoordinates(
+        widget.currentLocation.latitude.toDouble(),
+        widget.currentLocation.longitude.toDouble(),
+      );
+      if (placemarks.isNotEmpty && mounted) {
+        final place = placemarks.first;
+        // Build address string from placemark components
+        final addressParts = <String>[
+          if (place.street?.isNotEmpty ?? false) place.street!,
+          if (place.subLocality?.isNotEmpty ?? false) place.subLocality!,
+          if (place.locality?.isNotEmpty ?? false) place.locality!,
+          if (place.subAdministrativeArea?.isNotEmpty ?? false)
+            place.subAdministrativeArea!,
+          if (place.administrativeArea?.isNotEmpty ?? false)
+            place.administrativeArea!,
+        ];
+        setState(() {
+          _address = addressParts.isNotEmpty
+              ? addressParts.join(', ')
+              : '${widget.currentLocation.latitude}, ${widget.currentLocation.longitude}';
+        });
+      } else {
+        _setFallbackAddress();
+      }
+    } catch (e) {
+      logger.e('Failed to reverse geocode: $e');
+      _setFallbackAddress();
+    }
+  }
+
+  void _setFallbackAddress() {
+    if (mounted) {
+      setState(() {
+        _address =
+            '${widget.currentLocation.latitude}, ${widget.currentLocation.longitude}';
+      });
+    }
   }
 
   /// Opens WhatsApp with pre-filled emergency message
   Future<void> _openEmergencyWhatsApp(String phone) async {
     final cubit = context.read<SharedEmergencyCubit>();
+    final authState = context.read<AuthCubit>().state;
 
     // Log emergency event before opening WhatsApp
     await cubit.logEmergency(
@@ -44,29 +92,38 @@ class _EmergencyTriggerDialogState extends State<EmergencyTriggerDialog> {
     // Sanitize phone number for WhatsApp (remove +, spaces, dashes)
     final sanitizedPhone = phone.replaceAll(RegExp(r'[^\d]'), '');
 
+    // Get user info from auth state
+    final user = authState.user.value;
+    final customerName = user?.name ?? 'Unknown';
+    final customerGender = user?.gender?.name ?? 'Unknown';
+
+    // Use address if available, fallback to coordinates
+    final locationText =
+        _address ??
+        '${widget.currentLocation.latitude}, ${widget.currentLocation.longitude}';
+
     final message = Uri.encodeComponent(
       'EMERGENCY - Order ID: ${widget.orderId}\n'
-      'Location: ${widget.currentLocation.latitude}, ${widget.currentLocation.longitude}\n'
+      'Customer: $customerName\n'
+      'Gender: $customerGender\n'
+      'Location: $locationText\n'
       'I need immediate assistance!',
     );
 
-    // Try WhatsApp URL scheme first, then fallback to web URL
-    final whatsappUrl = Uri.parse(
-      'whatsapp://send?phone=$sanitizedPhone&text=$message',
-    );
-    final webUrl = Uri.parse('https://wa.me/$sanitizedPhone?text=$message');
+    // Use wa.me URL which is more reliable across devices
+    // This works on both Android and iOS, and opens WhatsApp app if installed
+    // or falls back to browser/app store if not
+    final waUrl = Uri.parse('https://wa.me/$sanitizedPhone?text=$message');
 
     try {
-      // Try native WhatsApp app first
-      if (await canLaunchUrl(whatsappUrl)) {
-        await launchUrl(whatsappUrl);
-        if (mounted) {
-          Navigator.of(context).pop();
-        }
-      }
-      // Fallback to web URL
-      else if (await canLaunchUrl(webUrl)) {
-        await launchUrl(webUrl, mode: LaunchMode.externalApplication);
+      // Launch directly without canLaunchUrl check
+      // canLaunchUrl is unreliable on Android 11+ even with proper queries
+      final launched = await launchUrl(
+        waUrl,
+        mode: LaunchMode.externalApplication,
+      );
+
+      if (launched) {
         if (mounted) {
           Navigator.of(context).pop();
         }
@@ -79,6 +136,7 @@ class _EmergencyTriggerDialogState extends State<EmergencyTriggerDialog> {
         }
       }
     } catch (e) {
+      logger.e('Error launching WhatsApp: $e');
       if (context.mounted && mounted) {
         context.showMyToast(
           context.l10n.emergency_whatsapp_error,

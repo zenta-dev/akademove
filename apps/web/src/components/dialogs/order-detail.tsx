@@ -1,5 +1,6 @@
 import { m } from "@repo/i18n";
 import type { Order } from "@repo/schema/order";
+import { capitalizeFirstLetter } from "@repo/shared";
 import {
 	CheckCircle2,
 	Clock,
@@ -211,6 +212,16 @@ export const OrderDetailDialog = ({
 									{order.user?.name || "N/A"}
 								</span>
 							</div>
+							{order.user?.gender && (
+								<div className="flex justify-between">
+									<span className="text-muted-foreground text-sm">
+										{m.gender()}
+									</span>
+									<span className="font-medium text-sm">
+										{capitalizeFirstLetter(order.user.gender)}
+									</span>
+								</div>
+							)}
 							{order.user?.phone && (
 								<div className="flex justify-between">
 									<span className="text-muted-foreground text-sm">
