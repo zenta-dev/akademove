@@ -19,7 +19,12 @@ class QuickMessageRepository extends BaseRepository {
         role: role,
         orderType: orderType,
         locale: locale,
-        isActive: isActive,
+        // isActive: isActive,
+        status: isActive == null
+            ? null
+            : isActive
+            ? "ACTIVE"
+            : "INACTIVE",
       );
 
       final responseData = response.data;
