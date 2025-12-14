@@ -64,6 +64,12 @@ class _LeaderboardViewState extends State<_LeaderboardView> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Period Filter
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+            child: _buildPeriodFilterButtons(state.selectedPeriod),
+          ),
+
           // Podium Section (Top 3)
           if (state.topThree.isNotEmpty)
             LeaderboardPodiumWidget(topThree: state.topThree),
@@ -186,6 +192,74 @@ class _LeaderboardViewState extends State<_LeaderboardView> {
               child: Text(context.l10n.retry),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  /// Period filter buttons (Daily, Weekly, Monthly)
+  Widget _buildPeriodFilterButtons(LeaderboardPeriod selectedPeriod) {
+    return Row(
+      spacing: 8.w,
+      children: [
+        Expanded(
+          child: _buildPeriodButton(
+            label: context.l10n.daily,
+            period: LeaderboardPeriod.DAILY,
+            selectedPeriod: selectedPeriod,
+          ),
+        ),
+        Expanded(
+          child: _buildPeriodButton(
+            label: context.l10n.weekly,
+            period: LeaderboardPeriod.WEEKLY,
+            selectedPeriod: selectedPeriod,
+          ),
+        ),
+        Expanded(
+          child: _buildPeriodButton(
+            label: context.l10n.monthly,
+            period: LeaderboardPeriod.MONTHLY,
+            selectedPeriod: selectedPeriod,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildPeriodButton({
+    required String label,
+    required LeaderboardPeriod period,
+    required LeaderboardPeriod selectedPeriod,
+  }) {
+    final isSelected = selectedPeriod == period;
+    return GestureDetector(
+      onTap: () {
+        context.read<DriverLeaderboardCubit>().selectPeriod(period);
+      },
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: 10.h),
+        decoration: BoxDecoration(
+          color: isSelected
+              ? context.colorScheme.primary
+              : context.colorScheme.background,
+          borderRadius: BorderRadius.circular(8.r),
+          border: Border.all(
+            color: isSelected
+                ? context.colorScheme.primary
+                : context.colorScheme.border,
+          ),
+        ),
+        child: Text(
+          label,
+          textAlign: TextAlign.center,
+          style: context.typography.small.copyWith(
+            fontSize: 13.sp,
+            fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+            color: isSelected
+                ? context.colorScheme.primaryForeground
+                : context.colorScheme.foreground,
+          ),
         ),
       ),
     );

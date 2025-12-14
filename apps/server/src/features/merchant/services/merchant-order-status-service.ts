@@ -1,7 +1,50 @@
 import { env } from "cloudflare:workers";
 import type { Order, OrderStatus } from "@repo/schema/order";
+import type { MerchantEnvelope, OrderEnvelope } from "@repo/schema/ws";
 import { RepositoryError } from "@/core/error";
 import { logger } from "@/utils/logger";
+
+/**
+ * Maps order status to the appropriate WebSocket event for OrderRoom
+ * These events are what the mobile clients (USER, DRIVER) listen for
+ */
+function getOrderRoomEventForStatus(
+	status: OrderStatus,
+): OrderEnvelope["e"] | null {
+	switch (status) {
+		case "ACCEPTED":
+			return "MERCHANT_ACCEPTED";
+		case "PREPARING":
+			return "MERCHANT_PREPARING";
+		case "READY_FOR_PICKUP":
+			return "MERCHANT_READY";
+		case "CANCELLED_BY_MERCHANT":
+			return "MERCHANT_REJECTED";
+		default:
+			// For other statuses, use generic ORDER_STATUS_CHANGED
+			return "ORDER_STATUS_CHANGED";
+	}
+}
+
+/**
+ * Maps order status to the appropriate WebSocket event for MerchantRoom
+ * These events are for merchant dashboard sync across devices
+ */
+function getMerchantRoomEventForStatus(
+	status: OrderStatus,
+): MerchantEnvelope["e"] {
+	switch (status) {
+		case "CANCELLED_BY_MERCHANT":
+		case "CANCELLED_BY_USER":
+		case "CANCELLED_BY_DRIVER":
+		case "CANCELLED_BY_SYSTEM":
+			return "ORDER_CANCELLED";
+		case "COMPLETED":
+			return "ORDER_COMPLETED";
+		default:
+			return "ORDER_STATUS_CHANGED";
+	}
+}
 
 /**
  * Service responsible for merchant order status management
@@ -9,7 +52,7 @@ import { logger } from "@/utils/logger";
  * Handles:
  * - Order status validation (can accept/reject/prepare/ready)
  * - Status transition rules (REQUESTED → ACCEPTED → PREPARING → READY_FOR_PICKUP)
- * - WebSocket event emission for real-time updates
+ * - WebSocket event emission for real-time updates to ALL roles
  * - Merchant ownership validation
  *
  * @example
@@ -163,37 +206,130 @@ export class MerchantOrderStatusService {
 	}
 
 	/**
-	 * Emits WebSocket event for order status update
+	 * Emits WebSocket events for order status update to ALL relevant rooms
 	 *
-	 * Broadcasts status change to all connected clients in the order room.
+	 * Broadcasts to:
+	 * 1. OrderRoom (orderId) - For USER and DRIVER real-time updates
+	 * 2. MerchantRoom (merchantId) - For merchant dashboard sync across devices
+	 *
+	 * Uses specific event names that match the schema and mobile client handlers:
+	 * - MERCHANT_ACCEPTED, MERCHANT_PREPARING, MERCHANT_READY, MERCHANT_REJECTED
+	 *
 	 * Non-critical operation - logs warning if fails.
 	 *
-	 * @param orderId - Order ID
-	 * @param status - New status
+	 * @param order - Full order object with updated status
+	 * @param cancelReason - Optional cancel reason for rejected orders
 	 */
-	async emitStatusUpdate(orderId: string, status: OrderStatus): Promise<void> {
+	async emitStatusUpdate(order: Order, cancelReason?: string): Promise<void> {
+		const { id: orderId, status, merchantId } = order;
+
+		// Broadcast to OrderRoom (for USER and DRIVER)
+		await this.#emitToOrderRoom(order, cancelReason);
+
+		// Broadcast to MerchantRoom (for merchant dashboard sync)
+		if (merchantId) {
+			await this.#emitToMerchantRoom(order, cancelReason);
+		}
+
+		logger.info(
+			{ orderId, status, merchantId },
+			"[MerchantOrderStatusService] WebSocket events emitted to all rooms",
+		);
+	}
+
+	/**
+	 * Emits event to OrderRoom for USER and DRIVER clients
+	 */
+	async #emitToOrderRoom(order: Order, cancelReason?: string): Promise<void> {
 		try {
-			const stub = env.ORDER_ROOM.idFromName(orderId);
+			const event = getOrderRoomEventForStatus(order.status);
+			if (!event) {
+				logger.warn(
+					{ orderId: order.id, status: order.status },
+					"[MerchantOrderStatusService] No OrderRoom event for status",
+				);
+				return;
+			}
+
+			const stub = env.ORDER_ROOM.idFromName(order.id);
 			const room = env.ORDER_ROOM.get(stub);
+
+			const payload: OrderEnvelope = {
+				e: event,
+				f: "s",
+				t: "c",
+				p: {
+					detail: {
+						order,
+						payment: null,
+						transaction: null,
+					},
+					...(cancelReason && { cancelReason }),
+				},
+			};
 
 			await room.fetch("https://internal/broadcast", {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({
-					t: "r",
-					e: "ORDER_STATUS_UPDATED",
-					p: { detail: { order: { id: orderId, status } } },
-				}),
+				body: JSON.stringify(payload),
 			});
 
-			logger.info(
-				{ orderId, status },
-				"[MerchantOrderStatusService] WebSocket event emitted",
+			logger.debug(
+				{ orderId: order.id, event, status: order.status },
+				"[MerchantOrderStatusService] OrderRoom event emitted",
 			);
 		} catch (error) {
 			logger.warn(
-				{ error, orderId, status },
-				"[MerchantOrderStatusService] Failed to emit WebSocket event - non-critical",
+				{ error, orderId: order.id, status: order.status },
+				"[MerchantOrderStatusService] Failed to emit OrderRoom event - non-critical",
+			);
+		}
+	}
+
+	/**
+	 * Emits event to MerchantRoom for merchant dashboard sync
+	 */
+	async #emitToMerchantRoom(
+		order: Order,
+		cancelReason?: string,
+	): Promise<void> {
+		try {
+			if (!order.merchantId) {
+				return;
+			}
+
+			const event = getMerchantRoomEventForStatus(order.status);
+
+			const stub = env.MERCHANT_ROOM.idFromName(order.merchantId);
+			const room = env.MERCHANT_ROOM.get(stub);
+
+			const payload: MerchantEnvelope = {
+				e: event,
+				f: "s",
+				t: "c",
+				p: {
+					order,
+					orderId: order.id,
+					merchantId: order.merchantId,
+					newStatus: order.status,
+					...(cancelReason && { cancelReason }),
+				},
+			};
+
+			await room.fetch("https://internal/broadcast", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify(payload),
+			});
+
+			logger.debug(
+				{ orderId: order.id, merchantId: order.merchantId, event },
+				"[MerchantOrderStatusService] MerchantRoom event emitted",
+			);
+		} catch (error) {
+			logger.warn(
+				{ error, orderId: order.id, merchantId: order.merchantId },
+				"[MerchantOrderStatusService] Failed to emit MerchantRoom event - non-critical",
 			);
 		}
 	}

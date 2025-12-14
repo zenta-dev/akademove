@@ -3,12 +3,13 @@
 //
 
 // ignore_for_file: unused_element
+import 'package:api_client/src/model/leaderboard_driver_info.dart';
 import 'package:api_client/src/model/leaderboard_period.dart';
 import 'package:api_client/src/model/leaderboard_category.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
 
-part 'insert_leaderboard.g.dart';
+part 'leaderboard_with_driver.g.dart';
 
 @CopyWith()
 @JsonSerializable(
@@ -17,9 +18,10 @@ part 'insert_leaderboard.g.dart';
   disallowUnrecognizedKeys: false,
   explicitToJson: true,
 )
-class InsertLeaderboard {
-  /// Returns a new [InsertLeaderboard] instance.
-  const InsertLeaderboard({
+class LeaderboardWithDriver {
+  /// Returns a new [LeaderboardWithDriver] instance.
+  const LeaderboardWithDriver({
+    required this.id,
     required this.userId,
     this.driverId,
     this.merchantId,
@@ -29,7 +31,14 @@ class InsertLeaderboard {
     required this.score,
     required this.periodStart,
     required this.periodEnd,
+    required this.createdAt,
+    required this.updatedAt,
+    this.driver,
+    this.previousRank,
   });
+  @JsonKey(name: r'id', required: true, includeIfNull: false)
+  final String id;
+
   @JsonKey(name: r'userId', required: true, includeIfNull: false)
   final String userId;
 
@@ -55,16 +64,31 @@ class InsertLeaderboard {
   @JsonKey(name: r'score', required: true, includeIfNull: false)
   final int score;
 
-  @JsonKey(name: r'periodStart', required: true, includeIfNull: true)
-  final DateTime? periodStart;
+  @JsonKey(name: r'periodStart', required: true, includeIfNull: false)
+  final DateTime periodStart;
 
-  @JsonKey(name: r'periodEnd', required: true, includeIfNull: true)
-  final DateTime? periodEnd;
+  @JsonKey(name: r'periodEnd', required: true, includeIfNull: false)
+  final DateTime periodEnd;
+
+  @JsonKey(name: r'createdAt', required: true, includeIfNull: false)
+  final DateTime createdAt;
+
+  @JsonKey(name: r'updatedAt', required: true, includeIfNull: false)
+  final DateTime updatedAt;
+
+  @JsonKey(name: r'driver', required: false, includeIfNull: false)
+  final LeaderboardDriverInfo? driver;
+
+  // minimum: 1
+  // maximum: 9007199254740991
+  @JsonKey(name: r'previousRank', required: false, includeIfNull: false)
+  final int? previousRank;
 
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is InsertLeaderboard &&
+      other is LeaderboardWithDriver &&
+          other.id == id &&
           other.userId == userId &&
           other.driverId == driverId &&
           other.merchantId == merchantId &&
@@ -73,10 +97,15 @@ class InsertLeaderboard {
           other.rank == rank &&
           other.score == score &&
           other.periodStart == periodStart &&
-          other.periodEnd == periodEnd;
+          other.periodEnd == periodEnd &&
+          other.createdAt == createdAt &&
+          other.updatedAt == updatedAt &&
+          other.driver == driver &&
+          other.previousRank == previousRank;
 
   @override
   int get hashCode =>
+      id.hashCode +
       userId.hashCode +
       driverId.hashCode +
       merchantId.hashCode +
@@ -84,13 +113,17 @@ class InsertLeaderboard {
       period.hashCode +
       rank.hashCode +
       score.hashCode +
-      (periodStart == null ? 0 : periodStart.hashCode) +
-      (periodEnd == null ? 0 : periodEnd.hashCode);
+      periodStart.hashCode +
+      periodEnd.hashCode +
+      createdAt.hashCode +
+      updatedAt.hashCode +
+      driver.hashCode +
+      previousRank.hashCode;
 
-  factory InsertLeaderboard.fromJson(Map<String, dynamic> json) =>
-      _$InsertLeaderboardFromJson(json);
+  factory LeaderboardWithDriver.fromJson(Map<String, dynamic> json) =>
+      _$LeaderboardWithDriverFromJson(json);
 
-  Map<String, dynamic> toJson() => _$InsertLeaderboardToJson(this);
+  Map<String, dynamic> toJson() => _$LeaderboardWithDriverToJson(this);
 
   @override
   String toString() {

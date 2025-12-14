@@ -265,8 +265,13 @@ doc/InsertTransaction.md
 doc/InsertUser.md
 doc/Leaderboard.md
 doc/LeaderboardApi.md
+doc/LeaderboardCategory.md
+doc/LeaderboardDriverInfo.md
 doc/LeaderboardGet200Response.md
 doc/LeaderboardList200Response.md
+doc/LeaderboardPeriod.md
+doc/LeaderboardQuery.md
+doc/LeaderboardWithDriver.md
 doc/ListDriverQuizAnswerQuery.md
 doc/ListDriverQuizQuestionQuery.md
 doc/ListQuickMessageQuery.md
@@ -801,8 +806,13 @@ lib/src/model/insert_support_ticket.dart
 lib/src/model/insert_transaction.dart
 lib/src/model/insert_user.dart
 lib/src/model/leaderboard.dart
+lib/src/model/leaderboard_category.dart
+lib/src/model/leaderboard_driver_info.dart
 lib/src/model/leaderboard_get200_response.dart
 lib/src/model/leaderboard_list200_response.dart
+lib/src/model/leaderboard_period.dart
+lib/src/model/leaderboard_query.dart
+lib/src/model/leaderboard_with_driver.dart
 lib/src/model/list_driver_quiz_answer_query.dart
 lib/src/model/list_driver_quiz_question_query.dart
 lib/src/model/list_quick_message_query.dart

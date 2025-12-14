@@ -3,7 +3,12 @@ import type {
 	FoodPricingConfiguration,
 	PricingConfiguration,
 } from "@repo/schema";
-import { type OrderEnvelope, OrderEnvelopeSchema } from "@repo/schema/ws";
+import type { Order } from "@repo/schema/order";
+import {
+	type MerchantEnvelope,
+	type OrderEnvelope,
+	OrderEnvelopeSchema,
+} from "@repo/schema/ws";
 import Decimal from "decimal.js";
 import { sql } from "drizzle-orm";
 import { BaseDurableObject, type BroadcastOptions } from "@/core/base";
@@ -363,6 +368,15 @@ export class OrderRoom extends BaseDurableObject {
 				}
 			}
 
+			// Notify MerchantRoom if this is a FOOD order (merchant needs to know order is cancelled)
+			if (updatedOrder.merchantId && updatedOrder.type === "FOOD") {
+				await this.#notifyMerchantRoom(
+					updatedOrder.merchantId,
+					"ORDER_CANCELLED",
+					updatedOrder,
+				);
+			}
+
 			ws.send(JSON.stringify(response));
 			ws.close(1000, "No driver around you");
 			return;
@@ -613,6 +627,16 @@ export class OrderRoom extends BaseDurableObject {
 				payload: { aps: { category: "DRIVER_ACCEPTED", sound: "default" } },
 			},
 		});
+
+		// Notify MerchantRoom if this is a FOOD order (merchant needs to know driver is assigned)
+		if (detail.order.merchantId && detail.order.type === "FOOD") {
+			await this.#notifyMerchantRoom(
+				detail.order.merchantId,
+				"DRIVER_ASSIGNED",
+				detail.order,
+				updatedDriver.user?.name,
+			);
+		}
 
 		logger.info(
 			{ orderId, driverId, userId },
@@ -928,6 +952,15 @@ export class OrderRoom extends BaseDurableObject {
 				payload: { aps: { category: "ORDER_COMPLETED", sound: "default" } },
 			},
 		});
+
+		// Notify MerchantRoom if this is a FOOD order
+		if (updatedOrder.merchantId && updatedOrder.type === "FOOD") {
+			await this.#notifyMerchantRoom(
+				updatedOrder.merchantId,
+				"ORDER_COMPLETED",
+				updatedOrder,
+			);
+		}
 
 		logger.info(
 			{ orderId: order.id, userId: order.userId },
@@ -1753,6 +1786,57 @@ export class OrderRoom extends BaseDurableObject {
 				p: {},
 			};
 			ws.send(JSON.stringify(errorResponse));
+		}
+	}
+
+	/**
+	 * Notifies MerchantRoom of order events
+	 * Used to sync merchant dashboard when driver accepts or order completes
+	 *
+	 * @param merchantId - Merchant ID to notify
+	 * @param event - Event type (DRIVER_ASSIGNED, ORDER_COMPLETED, ORDER_CANCELLED)
+	 * @param order - Order data
+	 * @param driverName - Optional driver name for DRIVER_ASSIGNED event
+	 */
+	async #notifyMerchantRoom(
+		merchantId: string,
+		event: MerchantEnvelope["e"],
+		order: Order,
+		driverName?: string,
+	): Promise<void> {
+		try {
+			const stub = env.MERCHANT_ROOM.idFromName(merchantId);
+			const room = env.MERCHANT_ROOM.get(stub);
+
+			const payload: MerchantEnvelope = {
+				e: event,
+				f: "s",
+				t: "c",
+				p: {
+					order,
+					orderId: order.id,
+					merchantId,
+					newStatus: order.status,
+					...(driverName && { driverName }),
+				},
+			};
+
+			await room.fetch("https://internal/broadcast", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify(payload),
+			});
+
+			logger.debug(
+				{ orderId: order.id, merchantId, event },
+				"[OrderRoom] MerchantRoom notified",
+			);
+		} catch (error) {
+			// Non-critical - log and continue
+			logger.warn(
+				{ error, orderId: order.id, merchantId, event },
+				"[OrderRoom] Failed to notify MerchantRoom - non-critical",
+			);
 		}
 	}
 }

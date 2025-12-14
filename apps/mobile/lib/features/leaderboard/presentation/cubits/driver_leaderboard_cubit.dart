@@ -14,25 +14,39 @@ class DriverLeaderboardCubit extends BaseCubit<DriverLeaderboardState> {
   final BadgeRepository _badgeRepository;
 
   /// Initialize the leaderboard feature by loading all data
-  Future<void> init() async {
+  Future<void> init({
+    LeaderboardCategory? category,
+    LeaderboardPeriod? period,
+  }) async {
     try {
+      final effectiveCategory = category ?? LeaderboardCategory.RATING;
+      final effectivePeriod = period ?? LeaderboardPeriod.WEEKLY;
+
       emit(
         state.copyWith(
           leaderboards: const OperationResult.loading(),
           leaderboardEntries: const OperationResult.loading(),
           badges: const OperationResult.loading(),
           userBadges: const OperationResult.loading(),
+          selectedCategory: effectiveCategory,
+          selectedPeriod: effectivePeriod,
         ),
       );
 
       // Load all data in parallel
       final results = await Future.wait([
-        _leaderboardRepository.list(limit: 10),
+        _leaderboardRepository.list(
+          category: effectiveCategory,
+          period: effectivePeriod,
+          includeDriver: true,
+          limit: 10,
+        ),
         _badgeRepository.listBadges(),
         _badgeRepository.listUserBadges(),
       ]);
 
-      final leaderboardsRes = results[0] as BaseResponse<List<Leaderboard>>;
+      final leaderboardsRes =
+          results[0] as BaseResponse<List<LeaderboardWithDriver>>;
       final badgesRes = results[1] as BaseResponse<List<Badge>>;
       final userBadgesRes = results[2] as BaseResponse<List<UserBadge>>;
 
@@ -64,63 +78,37 @@ class DriverLeaderboardCubit extends BaseCubit<DriverLeaderboardState> {
     }
   }
 
-  /// Convert API Leaderboard models to UI-friendly LeaderboardEntry models.
+  /// Convert API LeaderboardWithDriver models to UI-friendly LeaderboardEntry.
   ///
-  /// Note: Currently uses placeholder data for driver names and ratings
-  /// since the API doesn't provide these fields. This should be updated
-  /// when the backend adds driver info to the leaderboard response.
-  List<LeaderboardEntry> _convertToEntries(List<Leaderboard>? leaderboards) {
+  /// Uses the driver data directly from API response.
+  List<LeaderboardEntry> _convertToEntries(
+    List<LeaderboardWithDriver>? leaderboards,
+  ) {
     if (leaderboards == null || leaderboards.isEmpty) return [];
 
     // Sort by rank and take top 10
     final sorted = [...leaderboards]..sort((a, b) => a.rank.compareTo(b.rank));
     final top10 = sorted.take(10).toList();
 
-    return top10.map((lb) {
-      // TODO: Replace with actual driver data from API when available
-      // For now, use placeholder data based on user ID
-      final driverName = _getDriverName(lb.userId, lb.rank);
-      final driverRating = _getDriverRating(lb.rank);
-      final rankChange = _getRankChange(lb.rank);
-
-      return LeaderboardEntry(
-        id: lb.id,
-        userId: lb.userId,
-        driverName: driverName,
-        driverRating: driverRating,
-        rank: lb.rank,
-        score: lb.score,
-        rankChange: rankChange,
-      );
-    }).toList();
+    return top10.map(LeaderboardEntry.fromApi).toList();
   }
 
-  /// Generate a display name for the driver.
-  /// TODO: Replace with actual driver name from API
-  String _getDriverName(String userId, int rank) {
-    // Use first 8 chars of userId as a fallback display name
-    final shortId = userId.length > 8 ? userId.substring(0, 8) : userId;
-    return 'Driver $shortId';
+  /// Change the selected category and reload data
+  Future<void> selectCategory(LeaderboardCategory category) async {
+    if (state.selectedCategory == category) return;
+    await init(category: category, period: state.selectedPeriod);
   }
 
-  /// Generate a rating for the driver.
-  /// TODO: Replace with actual driver rating from API
-  double _getDriverRating(int rank) {
-    // Higher ranked drivers tend to have higher ratings
-    // This is just placeholder logic
-    return 5.0 - (rank * 0.05).clamp(0.0, 1.5);
-  }
-
-  /// Generate a rank change indicator.
-  /// TODO: Replace with actual rank change from API
-  int _getRankChange(int rank) {
-    // Placeholder: assume no change for now
-    // The API should provide previous rank for comparison
-    return 0;
+  /// Change the selected period and reload data
+  Future<void> selectPeriod(LeaderboardPeriod period) async {
+    if (state.selectedPeriod == period) return;
+    await init(category: state.selectedCategory, period: period);
   }
 
   /// Load leaderboards with optional filters
   Future<void> loadLeaderboards({
+    LeaderboardCategory? category,
+    LeaderboardPeriod? period,
     int? limit,
     String? cursor,
     PaginationOrder? order,
@@ -134,6 +122,9 @@ class DriverLeaderboardCubit extends BaseCubit<DriverLeaderboardState> {
       );
 
       final res = await _leaderboardRepository.list(
+        category: category ?? state.selectedCategory,
+        period: period ?? state.selectedPeriod,
+        includeDriver: true,
         limit: limit ?? 10,
         cursor: cursor,
         order: order,
@@ -148,6 +139,8 @@ class DriverLeaderboardCubit extends BaseCubit<DriverLeaderboardState> {
             entries,
             message: res.message,
           ),
+          selectedCategory: category ?? state.selectedCategory,
+          selectedPeriod: period ?? state.selectedPeriod,
         ),
       );
     } on BaseError catch (e, st) {
@@ -226,36 +219,35 @@ class DriverLeaderboardCubit extends BaseCubit<DriverLeaderboardState> {
   });
 
   /// Load current user's rankings across all categories
-  Future<void> loadMyRankings({required String userId, int? limit}) async =>
-      await taskManager.execute('LC-loadMyRankings', () async {
-        try {
-          emit(state.copyWith(myRankings: const OperationResult.loading()));
+  Future<void> loadMyRankings({
+    LeaderboardCategory? category,
+    LeaderboardPeriod? period,
+  }) async => await taskManager.execute('LC-loadMyRankings', () async {
+    try {
+      emit(state.copyWith(myRankings: const OperationResult.loading()));
 
-          final res = await _leaderboardRepository.getMyRankings(
-            userId: userId,
-            limit: limit,
-          );
+      final res = await _leaderboardRepository.getMyRankings(
+        category: category,
+        period: period,
+      );
 
-          emit(
-            state.copyWith(
-              myRankings: OperationResult.success(
-                res.data,
-                message: res.message,
-              ),
-            ),
-          );
-        } on BaseError catch (e, st) {
-          logger.e(
-            '[DriverLeaderboardCubit] - loadMyRankings error: ${e.message}',
-            error: e,
-            stackTrace: st,
-          );
-          emit(state.copyWith(myRankings: OperationResult.failed(e)));
-        }
-      });
+      emit(
+        state.copyWith(
+          myRankings: OperationResult.success(res.data, message: res.message),
+        ),
+      );
+    } on BaseError catch (e, st) {
+      logger.e(
+        '[DriverLeaderboardCubit] - loadMyRankings error: ${e.message}',
+        error: e,
+        stackTrace: st,
+      );
+      emit(state.copyWith(myRankings: OperationResult.failed(e)));
+    }
+  });
 
   /// Refresh all leaderboard data
   Future<void> refresh() async {
-    await init();
+    await init(category: state.selectedCategory, period: state.selectedPeriod);
   }
 }

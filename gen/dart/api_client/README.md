@@ -204,6 +204,7 @@ Class | Method | HTTP request | Description
 [*FraudApi*](doc/FraudApi.md) | [**fraudReviewEvent**](doc/FraudApi.md#fraudreviewevent) | **POST** /fraud/events/{id}/review | 
 [*LeaderboardApi*](doc/LeaderboardApi.md) | [**leaderboardGet**](doc/LeaderboardApi.md#leaderboardget) | **GET** /leaderboards/{id} | 
 [*LeaderboardApi*](doc/LeaderboardApi.md) | [**leaderboardList**](doc/LeaderboardApi.md#leaderboardlist) | **GET** /leaderboards | 
+[*LeaderboardApi*](doc/LeaderboardApi.md) | [**leaderboardMe**](doc/LeaderboardApi.md#leaderboardme) | **GET** /leaderboards/me | 
 [*MerchantApi*](doc/MerchantApi.md) | [**analyticsExportMerchantAnalytics**](doc/MerchantApi.md#analyticsexportmerchantanalytics) | **GET** /analytics/merchant/{merchantId}/export | 
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantActivate**](doc/MerchantApi.md#merchantactivate) | **POST** /merchants/{id}/activate | 
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantAnalytics**](doc/MerchantApi.md#merchantanalytics) | **GET** /merchants/{id}/analytics | 
@@ -584,8 +585,13 @@ Class | Method | HTTP request | Description
  - [InsertTransaction](doc/InsertTransaction.md)
  - [InsertUser](doc/InsertUser.md)
  - [Leaderboard](doc/Leaderboard.md)
+ - [LeaderboardCategory](doc/LeaderboardCategory.md)
+ - [LeaderboardDriverInfo](doc/LeaderboardDriverInfo.md)
  - [LeaderboardGet200Response](doc/LeaderboardGet200Response.md)
  - [LeaderboardList200Response](doc/LeaderboardList200Response.md)
+ - [LeaderboardPeriod](doc/LeaderboardPeriod.md)
+ - [LeaderboardQuery](doc/LeaderboardQuery.md)
+ - [LeaderboardWithDriver](doc/LeaderboardWithDriver.md)
  - [ListDriverQuizAnswerQuery](doc/ListDriverQuizAnswerQuery.md)
  - [ListDriverQuizQuestionQuery](doc/ListDriverQuizQuestionQuery.md)
  - [ListQuickMessageQuery](doc/ListQuickMessageQuery.md)

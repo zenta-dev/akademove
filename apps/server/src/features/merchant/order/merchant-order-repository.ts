@@ -120,13 +120,15 @@ export class MerchantOrderRepository extends BaseRepository {
 				"[MerchantOrderRepository] Order accepted",
 			);
 
-			// Invalidate cache and emit WebSocket event
+			const composedOrder = this.composeEntity(updated);
+
+			// Invalidate cache and emit WebSocket event to all roles (USER, DRIVER, MERCHANT)
 			await Promise.allSettled([
 				this.deleteCache(orderId),
-				this.statusService.emitStatusUpdate(orderId, updated.status),
+				this.statusService.emitStatusUpdate(composedOrder),
 			]);
 
-			return this.composeEntity(updated);
+			return composedOrder;
 		} catch (error) {
 			logger.error(
 				{ error, orderId, merchantId },
@@ -194,14 +196,16 @@ export class MerchantOrderRepository extends BaseRepository {
 				"[MerchantOrderRepository] Order rejected",
 			);
 
-			// Invalidate cache and emit WebSocket event
+			const composedOrder = this.composeEntity(updated);
+
+			// Invalidate cache and emit WebSocket event to all roles (USER, DRIVER, MERCHANT)
 			// NOTE: Refund logic should be handled by payment service/handler
 			await Promise.allSettled([
 				this.deleteCache(orderId),
-				this.statusService.emitStatusUpdate(orderId, updated.status),
+				this.statusService.emitStatusUpdate(composedOrder, cancelReason),
 			]);
 
-			return this.composeEntity(updated);
+			return composedOrder;
 		} catch (error) {
 			logger.error(
 				{ error, orderId, merchantId },
@@ -267,13 +271,15 @@ export class MerchantOrderRepository extends BaseRepository {
 				"[MerchantOrderRepository] Order marked as preparing",
 			);
 
-			// Invalidate cache and emit WebSocket event to notify driver/user
+			const composedOrder = this.composeEntity(updated);
+
+			// Invalidate cache and emit WebSocket event to all roles (USER, DRIVER, MERCHANT)
 			await Promise.allSettled([
 				this.deleteCache(orderId),
-				this.statusService.emitStatusUpdate(orderId, updated.status),
+				this.statusService.emitStatusUpdate(composedOrder),
 			]);
 
-			return this.composeEntity(updated);
+			return composedOrder;
 		} catch (error) {
 			logger.error(
 				{ error, orderId, merchantId },
@@ -336,14 +342,16 @@ export class MerchantOrderRepository extends BaseRepository {
 				"[MerchantOrderRepository] Order marked as ready",
 			);
 
-			// Invalidate cache and emit WebSocket event
+			const composedOrder = this.composeEntity(updated);
+
+			// Invalidate cache and emit WebSocket event to all roles (USER, DRIVER, MERCHANT)
 			// NOTE: Push notification should be handled by notification service
 			await Promise.allSettled([
 				this.deleteCache(orderId),
-				this.statusService.emitStatusUpdate(orderId, updated.status),
+				this.statusService.emitStatusUpdate(composedOrder),
 			]);
 
-			return this.composeEntity(updated);
+			return composedOrder;
 		} catch (error) {
 			logger.error(
 				{ error, orderId, merchantId },

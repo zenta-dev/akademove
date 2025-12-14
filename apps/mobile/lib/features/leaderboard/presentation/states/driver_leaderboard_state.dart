@@ -10,17 +10,25 @@ class DriverLeaderboardState extends Equatable {
     this.badges = const OperationResult.idle(),
     this.userBadges = const OperationResult.idle(),
     this.myRankings = const OperationResult.idle(),
+    this.selectedCategory = LeaderboardCategory.RATING,
+    this.selectedPeriod = LeaderboardPeriod.WEEKLY,
   });
 
-  /// Raw leaderboard data from API
-  final OperationResult<List<Leaderboard>> leaderboards;
+  /// Raw leaderboard data from API (now with driver info)
+  final OperationResult<List<LeaderboardWithDriver>> leaderboards;
 
   /// Processed leaderboard entries with driver info for UI display
   final OperationResult<List<LeaderboardEntry>> leaderboardEntries;
 
   final OperationResult<List<Badge>> badges;
   final OperationResult<List<UserBadge>> userBadges;
-  final OperationResult<List<Leaderboard>> myRankings;
+  final OperationResult<List<LeaderboardWithDriver>> myRankings;
+
+  /// Currently selected leaderboard category filter
+  final LeaderboardCategory selectedCategory;
+
+  /// Currently selected leaderboard period filter
+  final LeaderboardPeriod selectedPeriod;
 
   /// Get top 3 drivers for podium display
   List<LeaderboardEntry> get topThree {
@@ -43,14 +51,18 @@ class DriverLeaderboardState extends Equatable {
     badges,
     userBadges,
     myRankings,
+    selectedCategory,
+    selectedPeriod,
   ];
 
   DriverLeaderboardState copyWith({
-    OperationResult<List<Leaderboard>>? leaderboards,
+    OperationResult<List<LeaderboardWithDriver>>? leaderboards,
     OperationResult<List<LeaderboardEntry>>? leaderboardEntries,
     OperationResult<List<Badge>>? badges,
     OperationResult<List<UserBadge>>? userBadges,
-    OperationResult<List<Leaderboard>>? myRankings,
+    OperationResult<List<LeaderboardWithDriver>>? myRankings,
+    LeaderboardCategory? selectedCategory,
+    LeaderboardPeriod? selectedPeriod,
   }) {
     return DriverLeaderboardState(
       leaderboards: leaderboards ?? this.leaderboards,
@@ -58,6 +70,8 @@ class DriverLeaderboardState extends Equatable {
       badges: badges ?? this.badges,
       userBadges: userBadges ?? this.userBadges,
       myRankings: myRankings ?? this.myRankings,
+      selectedCategory: selectedCategory ?? this.selectedCategory,
+      selectedPeriod: selectedPeriod ?? this.selectedPeriod,
     );
   }
 

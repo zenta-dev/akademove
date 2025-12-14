@@ -210,8 +210,11 @@ import 'package:api_client/src/model/insert_support_ticket.dart';
 import 'package:api_client/src/model/insert_transaction.dart';
 import 'package:api_client/src/model/insert_user.dart';
 import 'package:api_client/src/model/leaderboard.dart';
+import 'package:api_client/src/model/leaderboard_driver_info.dart';
 import 'package:api_client/src/model/leaderboard_get200_response.dart';
 import 'package:api_client/src/model/leaderboard_list200_response.dart';
+import 'package:api_client/src/model/leaderboard_query.dart';
+import 'package:api_client/src/model/leaderboard_with_driver.dart';
 import 'package:api_client/src/model/list_driver_quiz_answer_query.dart';
 import 'package:api_client/src/model/list_driver_quiz_question_query.dart';
 import 'package:api_client/src/model/list_quick_message_query.dart';
@@ -1228,11 +1231,22 @@ ReturnType deserialize<ReturnType, BaseType>(
       return InsertUser.fromJson(value as Map<String, dynamic>) as ReturnType;
     case 'Leaderboard':
       return Leaderboard.fromJson(value as Map<String, dynamic>) as ReturnType;
+    case 'LeaderboardCategory':
+    case 'LeaderboardDriverInfo':
+      return LeaderboardDriverInfo.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
     case 'LeaderboardGet200Response':
       return LeaderboardGet200Response.fromJson(value as Map<String, dynamic>)
           as ReturnType;
     case 'LeaderboardList200Response':
       return LeaderboardList200Response.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
+    case 'LeaderboardPeriod':
+    case 'LeaderboardQuery':
+      return LeaderboardQuery.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
+    case 'LeaderboardWithDriver':
+      return LeaderboardWithDriver.fromJson(value as Map<String, dynamic>)
           as ReturnType;
     case 'ListDriverQuizAnswerQuery':
       return ListDriverQuizAnswerQuery.fromJson(value as Map<String, dynamic>)

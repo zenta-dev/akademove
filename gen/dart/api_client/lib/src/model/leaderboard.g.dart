@@ -15,21 +15,21 @@ abstract class _$LeaderboardCWProxy {
 
   Leaderboard merchantId(String? merchantId);
 
-  Leaderboard category(LeaderboardCategoryEnum category);
+  Leaderboard category(LeaderboardCategory category);
 
-  Leaderboard period(LeaderboardPeriodEnum period);
+  Leaderboard period(LeaderboardPeriod period);
 
   Leaderboard rank(int rank);
 
   Leaderboard score(int score);
 
-  Leaderboard periodStart(DateTime periodStart);
+  Leaderboard periodStart(DateTime? periodStart);
 
-  Leaderboard periodEnd(DateTime periodEnd);
+  Leaderboard periodEnd(DateTime? periodEnd);
 
-  Leaderboard createdAt(DateTime createdAt);
+  Leaderboard createdAt(DateTime? createdAt);
 
-  Leaderboard updatedAt(DateTime updatedAt);
+  Leaderboard updatedAt(DateTime? updatedAt);
 
   /// Creates a new instance with the provided field values.
   /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `Leaderboard(...).copyWith.fieldName(value)`.
@@ -43,14 +43,14 @@ abstract class _$LeaderboardCWProxy {
     String userId,
     String? driverId,
     String? merchantId,
-    LeaderboardCategoryEnum category,
-    LeaderboardPeriodEnum period,
+    LeaderboardCategory category,
+    LeaderboardPeriod period,
     int rank,
     int score,
-    DateTime periodStart,
-    DateTime periodEnd,
-    DateTime createdAt,
-    DateTime updatedAt,
+    DateTime? periodStart,
+    DateTime? periodEnd,
+    DateTime? createdAt,
+    DateTime? updatedAt,
   });
 }
 
@@ -74,11 +74,11 @@ class _$LeaderboardCWProxyImpl implements _$LeaderboardCWProxy {
   Leaderboard merchantId(String? merchantId) => call(merchantId: merchantId);
 
   @override
-  Leaderboard category(LeaderboardCategoryEnum category) =>
+  Leaderboard category(LeaderboardCategory category) =>
       call(category: category);
 
   @override
-  Leaderboard period(LeaderboardPeriodEnum period) => call(period: period);
+  Leaderboard period(LeaderboardPeriod period) => call(period: period);
 
   @override
   Leaderboard rank(int rank) => call(rank: rank);
@@ -87,17 +87,17 @@ class _$LeaderboardCWProxyImpl implements _$LeaderboardCWProxy {
   Leaderboard score(int score) => call(score: score);
 
   @override
-  Leaderboard periodStart(DateTime periodStart) =>
+  Leaderboard periodStart(DateTime? periodStart) =>
       call(periodStart: periodStart);
 
   @override
-  Leaderboard periodEnd(DateTime periodEnd) => call(periodEnd: periodEnd);
+  Leaderboard periodEnd(DateTime? periodEnd) => call(periodEnd: periodEnd);
 
   @override
-  Leaderboard createdAt(DateTime createdAt) => call(createdAt: createdAt);
+  Leaderboard createdAt(DateTime? createdAt) => call(createdAt: createdAt);
 
   @override
-  Leaderboard updatedAt(DateTime updatedAt) => call(updatedAt: updatedAt);
+  Leaderboard updatedAt(DateTime? updatedAt) => call(updatedAt: updatedAt);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -141,11 +141,11 @@ class _$LeaderboardCWProxyImpl implements _$LeaderboardCWProxy {
       category: category == const $CopyWithPlaceholder() || category == null
           ? _value.category
           // ignore: cast_nullable_to_non_nullable
-          : category as LeaderboardCategoryEnum,
+          : category as LeaderboardCategory,
       period: period == const $CopyWithPlaceholder() || period == null
           ? _value.period
           // ignore: cast_nullable_to_non_nullable
-          : period as LeaderboardPeriodEnum,
+          : period as LeaderboardPeriod,
       rank: rank == const $CopyWithPlaceholder() || rank == null
           ? _value.rank
           // ignore: cast_nullable_to_non_nullable
@@ -154,23 +154,22 @@ class _$LeaderboardCWProxyImpl implements _$LeaderboardCWProxy {
           ? _value.score
           // ignore: cast_nullable_to_non_nullable
           : score as int,
-      periodStart:
-          periodStart == const $CopyWithPlaceholder() || periodStart == null
+      periodStart: periodStart == const $CopyWithPlaceholder()
           ? _value.periodStart
           // ignore: cast_nullable_to_non_nullable
-          : periodStart as DateTime,
-      periodEnd: periodEnd == const $CopyWithPlaceholder() || periodEnd == null
+          : periodStart as DateTime?,
+      periodEnd: periodEnd == const $CopyWithPlaceholder()
           ? _value.periodEnd
           // ignore: cast_nullable_to_non_nullable
-          : periodEnd as DateTime,
-      createdAt: createdAt == const $CopyWithPlaceholder() || createdAt == null
+          : periodEnd as DateTime?,
+      createdAt: createdAt == const $CopyWithPlaceholder()
           ? _value.createdAt
           // ignore: cast_nullable_to_non_nullable
-          : createdAt as DateTime,
-      updatedAt: updatedAt == const $CopyWithPlaceholder() || updatedAt == null
+          : createdAt as DateTime?,
+      updatedAt: updatedAt == const $CopyWithPlaceholder()
           ? _value.updatedAt
           // ignore: cast_nullable_to_non_nullable
-          : updatedAt as DateTime,
+          : updatedAt as DateTime?,
     );
   }
 }
@@ -186,49 +185,57 @@ extension $LeaderboardCopyWith on Leaderboard {
 // JsonSerializableGenerator
 // **************************************************************************
 
-Leaderboard _$LeaderboardFromJson(
-  Map<String, dynamic> json,
-) => $checkedCreate('Leaderboard', json, ($checkedConvert) {
-  $checkKeys(
-    json,
-    requiredKeys: const [
-      'id',
-      'userId',
-      'category',
-      'period',
-      'rank',
-      'score',
-      'periodStart',
-      'periodEnd',
-      'createdAt',
-      'updatedAt',
-    ],
-  );
-  final val = Leaderboard(
-    id: $checkedConvert('id', (v) => v as String),
-    userId: $checkedConvert('userId', (v) => v as String),
-    driverId: $checkedConvert('driverId', (v) => v as String?),
-    merchantId: $checkedConvert('merchantId', (v) => v as String?),
-    category: $checkedConvert(
-      'category',
-      (v) => $enumDecode(_$LeaderboardCategoryEnumEnumMap, v),
-    ),
-    period: $checkedConvert(
-      'period',
-      (v) => $enumDecode(_$LeaderboardPeriodEnumEnumMap, v),
-    ),
-    rank: $checkedConvert('rank', (v) => (v as num).toInt()),
-    score: $checkedConvert('score', (v) => (v as num).toInt()),
-    periodStart: $checkedConvert(
-      'periodStart',
-      (v) => DateTime.parse(v as String),
-    ),
-    periodEnd: $checkedConvert('periodEnd', (v) => DateTime.parse(v as String)),
-    createdAt: $checkedConvert('createdAt', (v) => DateTime.parse(v as String)),
-    updatedAt: $checkedConvert('updatedAt', (v) => DateTime.parse(v as String)),
-  );
-  return val;
-});
+Leaderboard _$LeaderboardFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('Leaderboard', json, ($checkedConvert) {
+      $checkKeys(
+        json,
+        requiredKeys: const [
+          'id',
+          'userId',
+          'category',
+          'period',
+          'rank',
+          'score',
+          'periodStart',
+          'periodEnd',
+          'createdAt',
+          'updatedAt',
+        ],
+      );
+      final val = Leaderboard(
+        id: $checkedConvert('id', (v) => v as String),
+        userId: $checkedConvert('userId', (v) => v as String),
+        driverId: $checkedConvert('driverId', (v) => v as String?),
+        merchantId: $checkedConvert('merchantId', (v) => v as String?),
+        category: $checkedConvert(
+          'category',
+          (v) => $enumDecode(_$LeaderboardCategoryEnumMap, v),
+        ),
+        period: $checkedConvert(
+          'period',
+          (v) => $enumDecode(_$LeaderboardPeriodEnumMap, v),
+        ),
+        rank: $checkedConvert('rank', (v) => (v as num).toInt()),
+        score: $checkedConvert('score', (v) => (v as num).toInt()),
+        periodStart: $checkedConvert(
+          'periodStart',
+          (v) => v == null ? null : DateTime.parse(v as String),
+        ),
+        periodEnd: $checkedConvert(
+          'periodEnd',
+          (v) => v == null ? null : DateTime.parse(v as String),
+        ),
+        createdAt: $checkedConvert(
+          'createdAt',
+          (v) => v == null ? null : DateTime.parse(v as String),
+        ),
+        updatedAt: $checkedConvert(
+          'updatedAt',
+          (v) => v == null ? null : DateTime.parse(v as String),
+        ),
+      );
+      return val;
+    });
 
 Map<String, dynamic> _$LeaderboardToJson(Leaderboard instance) =>
     <String, dynamic>{
@@ -236,30 +243,30 @@ Map<String, dynamic> _$LeaderboardToJson(Leaderboard instance) =>
       'userId': instance.userId,
       'driverId': ?instance.driverId,
       'merchantId': ?instance.merchantId,
-      'category': _$LeaderboardCategoryEnumEnumMap[instance.category]!,
-      'period': _$LeaderboardPeriodEnumEnumMap[instance.period]!,
+      'category': _$LeaderboardCategoryEnumMap[instance.category]!,
+      'period': _$LeaderboardPeriodEnumMap[instance.period]!,
       'rank': instance.rank,
       'score': instance.score,
-      'periodStart': instance.periodStart.toIso8601String(),
-      'periodEnd': instance.periodEnd.toIso8601String(),
-      'createdAt': instance.createdAt.toIso8601String(),
-      'updatedAt': instance.updatedAt.toIso8601String(),
+      'periodStart': instance.periodStart?.toIso8601String(),
+      'periodEnd': instance.periodEnd?.toIso8601String(),
+      'createdAt': instance.createdAt?.toIso8601String(),
+      'updatedAt': instance.updatedAt?.toIso8601String(),
     };
 
-const _$LeaderboardCategoryEnumEnumMap = {
-  LeaderboardCategoryEnum.RATING: 'RATING',
-  LeaderboardCategoryEnum.VOLUME: 'VOLUME',
-  LeaderboardCategoryEnum.EARNINGS: 'EARNINGS',
-  LeaderboardCategoryEnum.STREAK: 'STREAK',
-  LeaderboardCategoryEnum.ON_TIME: 'ON-TIME',
-  LeaderboardCategoryEnum.COMPLETION_RATE: 'COMPLETION-RATE',
+const _$LeaderboardCategoryEnumMap = {
+  LeaderboardCategory.RATING: 'RATING',
+  LeaderboardCategory.VOLUME: 'VOLUME',
+  LeaderboardCategory.EARNINGS: 'EARNINGS',
+  LeaderboardCategory.STREAK: 'STREAK',
+  LeaderboardCategory.ON_TIME: 'ON-TIME',
+  LeaderboardCategory.COMPLETION_RATE: 'COMPLETION-RATE',
 };
 
-const _$LeaderboardPeriodEnumEnumMap = {
-  LeaderboardPeriodEnum.DAILY: 'DAILY',
-  LeaderboardPeriodEnum.WEEKLY: 'WEEKLY',
-  LeaderboardPeriodEnum.MONTHLY: 'MONTHLY',
-  LeaderboardPeriodEnum.QUARTERLY: 'QUARTERLY',
-  LeaderboardPeriodEnum.YEARLY: 'YEARLY',
-  LeaderboardPeriodEnum.ALL_TIME: 'ALL-TIME',
+const _$LeaderboardPeriodEnumMap = {
+  LeaderboardPeriod.DAILY: 'DAILY',
+  LeaderboardPeriod.WEEKLY: 'WEEKLY',
+  LeaderboardPeriod.MONTHLY: 'MONTHLY',
+  LeaderboardPeriod.QUARTERLY: 'QUARTERLY',
+  LeaderboardPeriod.YEARLY: 'YEARLY',
+  LeaderboardPeriod.ALL_TIME: 'ALL-TIME',
 };

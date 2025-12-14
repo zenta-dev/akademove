@@ -9,7 +9,7 @@ part of 'leaderboard_get200_response.dart';
 abstract class _$LeaderboardGet200ResponseCWProxy {
   LeaderboardGet200Response message(String message);
 
-  LeaderboardGet200Response data(Leaderboard data);
+  LeaderboardGet200Response data(LeaderboardWithDriver data);
 
   LeaderboardGet200Response pagination(PaginationResult? pagination);
 
@@ -24,7 +24,7 @@ abstract class _$LeaderboardGet200ResponseCWProxy {
   /// ```
   LeaderboardGet200Response call({
     String message,
-    Leaderboard data,
+    LeaderboardWithDriver data,
     PaginationResult? pagination,
     int? totalPages,
   });
@@ -42,7 +42,8 @@ class _$LeaderboardGet200ResponseCWProxyImpl
   LeaderboardGet200Response message(String message) => call(message: message);
 
   @override
-  LeaderboardGet200Response data(Leaderboard data) => call(data: data);
+  LeaderboardGet200Response data(LeaderboardWithDriver data) =>
+      call(data: data);
 
   @override
   LeaderboardGet200Response pagination(PaginationResult? pagination) =>
@@ -74,7 +75,7 @@ class _$LeaderboardGet200ResponseCWProxyImpl
       data: data == const $CopyWithPlaceholder() || data == null
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
-          : data as Leaderboard,
+          : data as LeaderboardWithDriver,
       pagination: pagination == const $CopyWithPlaceholder()
           ? _value.pagination
           // ignore: cast_nullable_to_non_nullable
@@ -107,7 +108,7 @@ LeaderboardGet200Response _$LeaderboardGet200ResponseFromJson(
     message: $checkedConvert('message', (v) => v as String),
     data: $checkedConvert(
       'data',
-      (v) => Leaderboard.fromJson(v as Map<String, dynamic>),
+      (v) => LeaderboardWithDriver.fromJson(v as Map<String, dynamic>),
     ),
     pagination: $checkedConvert(
       'pagination',
