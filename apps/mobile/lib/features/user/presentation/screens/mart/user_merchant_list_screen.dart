@@ -109,30 +109,35 @@ class _UserMerchantListScreenState extends State<UserMerchantListScreen> {
     }
 
     // Success state - show merchants list
-    return ListView.builder(
-      controller: _scrollController,
-      padding: EdgeInsets.only(bottom: 16.h),
-      itemCount:
-          merchants.length +
-          (state.merchants.isLoading && merchants.isNotEmpty ? 1 : 0),
-      itemBuilder: (context, index) {
-        // Loading indicator at the end
-        if (index == merchants.length) {
-          return const _PaginationLoadingView();
-        }
-
-        final merchant = merchants[index];
-        return MerchantCardWidget(
-          merchant: merchant,
-          onTap: () {
-            context.pushNamed(
-              Routes.userMartDetail.name,
-              pathParameters: {'merchantId': merchant.id},
-              extra: {'merchant': merchant},
-            );
-          },
-        );
+    return SafeRefreshTrigger(
+      onRefresh: () async {
+        await context.read<UserMerchantListCubit>().loadMerchants();
       },
+      child: ListView.builder(
+        controller: _scrollController,
+        padding: EdgeInsets.only(bottom: 16.h),
+        itemCount:
+            merchants.length +
+            (state.merchants.isLoading && merchants.isNotEmpty ? 1 : 0),
+        itemBuilder: (context, index) {
+          // Loading indicator at the end
+          if (index == merchants.length) {
+            return const _PaginationLoadingView();
+          }
+
+          final merchant = merchants[index];
+          return MerchantCardWidget(
+            merchant: merchant,
+            onTap: () {
+              context.pushNamed(
+                Routes.userMartDetail.name,
+                pathParameters: {'merchantId': merchant.id},
+                extra: {'merchant': merchant},
+              );
+            },
+          );
+        },
+      ),
     );
   }
 }

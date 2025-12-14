@@ -26,154 +26,160 @@ class UserDetailProfileScreen extends StatelessWidget {
   }
 
   Widget _buildDetail() {
-    return SingleChildScrollView(
-      padding: EdgeInsets.all(16.dg),
-      child: Builder(
-        builder: (context) {
-          return Column(
-            spacing: 16.h,
-            children: [
-              BlocBuilder<AuthCubit, AuthState>(
-                builder: (context, state) {
-                  final user = state.user.data?.value ?? dummyUser;
-                  return DefaultText(
-                    user.name,
-                    fontSize: 20.sp,
-                    fontWeight: FontWeight.w600,
-                  ).asSkeleton(enabled: state.user.isLoading);
-                },
-              ),
-              SizedBox(
-                width: double.infinity,
-                child: Card(
+    return Builder(
+      builder: (context) {
+        return SafeRefreshTrigger(
+          onRefresh: () async {
+            await context.read<AuthCubit>().authenticate();
+          },
+          child: SingleChildScrollView(
+            padding: EdgeInsets.all(16.dg),
+            child: Column(
+              spacing: 16.h,
+              children: [
+                BlocBuilder<AuthCubit, AuthState>(
+                  builder: (context, state) {
+                    final user = state.user.data?.value ?? dummyUser;
+                    return DefaultText(
+                      user.name,
+                      fontSize: 20.sp,
+                      fontWeight: FontWeight.w600,
+                    ).asSkeleton(enabled: state.user.isLoading);
+                  },
+                ),
+                SizedBox(
+                  width: double.infinity,
+                  child: Card(
+                    child: BlocBuilder<AuthCubit, AuthState>(
+                      builder: (context, state) {
+                        final user = state.user.data?.value ?? dummyUser;
+                        return Column(
+                          spacing: 12.h,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                DefaultText(
+                                  context.l10n.label_user_id,
+                                  fontSize: 14.sp,
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    Clipboard.setData(
+                                      ClipboardData(text: user.id),
+                                    );
+                                    context.showMyToast(
+                                      context.l10n.copied_to_clipboard,
+                                      type: ToastType.success,
+                                    );
+                                  },
+                                  child: Row(
+                                    spacing: 4.w,
+                                    children: [
+                                      DefaultText(
+                                        user.id.length > 8
+                                            ? '${user.id.substring(0, 8)}...'
+                                            : user.id,
+                                        fontSize: 14.sp,
+                                      ),
+                                      Icon(
+                                        LucideIcons.copy,
+                                        size: 14.sp,
+                                        color:
+                                            context.colorScheme.mutedForeground,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const Divider(),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                DefaultText(
+                                  context.l10n.label_email,
+                                  fontSize: 14.sp,
+                                ),
+                                DefaultText(user.email, fontSize: 14.sp),
+                              ],
+                            ),
+                            const Divider(),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                DefaultText(
+                                  context.l10n.label_phone,
+                                  fontSize: 14.sp,
+                                ),
+                                DefaultText(
+                                  user.phone.toPhoneNumber().toString(),
+                                  fontSize: 14.sp,
+                                ),
+                              ],
+                            ),
+                          ],
+                        ).asSkeleton(enabled: state.user.isLoading);
+                      },
+                    ),
+                  ),
+                ),
+                DefaultText(
+                  context.l10n.label_achievements,
+                  fontWeight: FontWeight.w500,
+                ),
+                SizedBox(
+                  width: double.infinity,
+                  height: 0.3.sh,
                   child: BlocBuilder<AuthCubit, AuthState>(
                     builder: (context, state) {
                       final user = state.user.data?.value ?? dummyUser;
-                      return Column(
-                        spacing: 12.h,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              DefaultText(
-                                context.l10n.label_user_id,
-                                fontSize: 14.sp,
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  Clipboard.setData(
-                                    ClipboardData(text: user.id),
-                                  );
-                                  context.showMyToast(
-                                    context.l10n.copied_to_clipboard,
-                                    type: ToastType.success,
-                                  );
-                                },
-                                child: Row(
-                                  spacing: 4.w,
-                                  children: [
-                                    DefaultText(
-                                      user.id.length > 8
-                                          ? '${user.id.substring(0, 8)}...'
-                                          : user.id,
-                                      fontSize: 14.sp,
-                                    ),
-                                    Icon(
-                                      LucideIcons.copy,
-                                      size: 14.sp,
-                                      color:
-                                          context.colorScheme.mutedForeground,
-                                    ),
-                                  ],
+                      return ListView.builder(
+                        itemCount: user.userBadges.length,
+                        padding: EdgeInsets.zero,
+                        itemBuilder: (context, index) {
+                          final userBadge = user.userBadges[index];
+                          final badge = userBadge.badge;
+                          return Button(
+                            style: const ButtonStyle.ghost(
+                              density: ButtonDensity.compact,
+                            ),
+                            onPressed: () =>
+                                _showBadgeDialog(context, userBadge),
+                            child: Basic(
+                              leading: CachedNetworkImage(
+                                imageUrl: badge.icon ?? randomBadgeImage,
+                                width: 42,
+                                height: 42,
+                                placeholder: (context, url) => Container(
+                                  color: context.colorScheme.mutedForeground,
                                 ),
+                                errorWidget: (context, url, error) =>
+                                    const Center(
+                                      child: Icon(
+                                        LucideIcons.info,
+                                        color: Colors.red,
+                                      ),
+                                    ),
                               ),
-                            ],
-                          ),
-                          const Divider(),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              DefaultText(
-                                context.l10n.label_email,
-                                fontSize: 14.sp,
+                              title: DefaultText(badge.name),
+                              subtitle: DefaultText(
+                                '${context.l10n.text_earned_at} ${userBadge.earnedAt.format('dd MMMM yyyy')}',
+                                fontSize: 12.sp,
+                                color: context.colorScheme.mutedForeground,
                               ),
-                              DefaultText(user.email, fontSize: 14.sp),
-                            ],
-                          ),
-                          const Divider(),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              DefaultText(
-                                context.l10n.label_phone,
-                                fontSize: 14.sp,
-                              ),
-                              DefaultText(
-                                user.phone.toPhoneNumber().toString(),
-                                fontSize: 14.sp,
-                              ),
-                            ],
-                          ),
-                        ],
-                      ).asSkeleton(enabled: state.user.isLoading);
+                            ),
+                          );
+                        },
+                      );
                     },
                   ),
                 ),
-              ),
-              DefaultText(
-                context.l10n.label_achievements,
-                fontWeight: FontWeight.w500,
-              ),
-              SizedBox(
-                width: double.infinity,
-                height: 0.3.sh,
-                child: BlocBuilder<AuthCubit, AuthState>(
-                  builder: (context, state) {
-                    final user = state.user.data?.value ?? dummyUser;
-                    return ListView.builder(
-                      itemCount: user.userBadges.length,
-                      padding: EdgeInsets.zero,
-                      itemBuilder: (context, index) {
-                        final userBadge = user.userBadges[index];
-                        final badge = userBadge.badge;
-                        return Button(
-                          style: const ButtonStyle.ghost(
-                            density: ButtonDensity.compact,
-                          ),
-                          onPressed: () => _showBadgeDialog(context, userBadge),
-                          child: Basic(
-                            leading: CachedNetworkImage(
-                              imageUrl: badge.icon ?? randomBadgeImage,
-                              width: 42,
-                              height: 42,
-                              placeholder: (context, url) => Container(
-                                color: context.colorScheme.mutedForeground,
-                              ),
-                              errorWidget: (context, url, error) =>
-                                  const Center(
-                                    child: Icon(
-                                      LucideIcons.info,
-                                      color: Colors.red,
-                                    ),
-                                  ),
-                            ),
-                            title: DefaultText(badge.name),
-                            subtitle: DefaultText(
-                              '${context.l10n.text_earned_at} ${userBadge.earnedAt.format('dd MMMM yyyy')}',
-                              fontSize: 12.sp,
-                              color: context.colorScheme.mutedForeground,
-                            ),
-                          ),
-                        );
-                      },
-                    );
-                  },
-                ),
-              ),
-            ],
-          );
-        },
-      ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 

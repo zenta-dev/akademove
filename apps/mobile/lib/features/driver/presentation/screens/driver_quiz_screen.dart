@@ -434,11 +434,14 @@ class _DriverQuizScreenState extends State<DriverQuizScreen> {
                 (index) {
                   final isCurrentQuestion =
                       index == (state.currentQuestionIndex ?? 0);
+                  final questions = state.attempt.data?.value.questions;
+                  final questionId =
+                      questions != null && index < questions.length
+                      ? questions[index].id
+                      : null;
                   final isAnswered =
-                      state.answeredQuestions?.contains(
-                        state.attempt.data!.value.questions[index].id,
-                      ) ==
-                      true;
+                      questionId != null &&
+                      (state.answeredQuestions?.contains(questionId) == true);
 
                   // Determine button style based on state (like web)
                   // Current question: primary, Answered: secondary with green, Default: outline

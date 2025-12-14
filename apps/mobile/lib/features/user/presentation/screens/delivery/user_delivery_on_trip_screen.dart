@@ -517,7 +517,7 @@ class _UserDeliveryOnTripScreenState extends State<UserDeliveryOnTripScreen> {
               mapController: _mapController,
               onMapCreated: (controller) {
                 _mapController = controller;
-                setState(() {});
+                if (mounted) setState(() {});
                 final state = context.read<UserOrderCubit>().state;
                 _updateMapWithOrderData(state);
               },

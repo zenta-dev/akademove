@@ -345,7 +345,9 @@ class WebSocketService with WidgetsBindingObserver {
       try {
         await _subscriptions[key]?.cancel();
         await _connections[key]?.sink.close(status.normalClosure);
-      } catch (_) {}
+      } catch (e) {
+        _logDebug(key, 'Error during reconnect cleanup: $e');
+      }
 
       _subscriptions.remove(key);
       _connections.remove(key);

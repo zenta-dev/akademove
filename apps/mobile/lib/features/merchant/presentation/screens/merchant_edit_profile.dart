@@ -133,9 +133,9 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
         _isBankAccountVerified = true;
 
         // Prefill outlet phone
-        if (merchant.phone != null) {
-          _initialOutletPhone = merchant.phone.toPhoneNumber();
-          _outletPhoneNumber = merchant.phone!.number.toString();
+        if (merchant.phone case final phone?) {
+          _initialOutletPhone = phone.toPhoneNumber();
+          _outletPhoneNumber = phone.number.toString();
         }
 
         // Prefill location and address
@@ -167,8 +167,9 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
     } else {
       // Animate to the saved location
       Future.delayed(const Duration(milliseconds: 500), () {
-        if (mounted && _mapController != null) {
-          _mapController!.animateCamera(
+        final controller = _mapController;
+        if (mounted && controller != null) {
+          controller.animateCamera(
             CameraUpdate.newLatLngZoom(
               LatLng(
                 _outletLocation.y.toDouble(),

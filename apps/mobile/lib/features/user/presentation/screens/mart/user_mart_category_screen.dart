@@ -102,15 +102,25 @@ class UserMartCategoryScreen extends StatelessWidget {
       );
     }
 
-    return Padding(
-      padding: EdgeInsets.all(16.w),
-      child: ListView.separated(
-        itemCount: merchants.length,
-        separatorBuilder: (context, index) => Gap(12.h),
-        itemBuilder: (context, index) {
-          final merchant = merchants[index];
-          return _MerchantCard(merchant: merchant);
-        },
+    return SafeRefreshTrigger(
+      onRefresh: () async {
+        final category = context.read<UserMartCubit>().state.selectedCategory;
+        if (category != null) {
+          await context.read<UserMartCubit>().loadCategoryMerchants(
+            category: category,
+          );
+        }
+      },
+      child: Padding(
+        padding: EdgeInsets.all(16.w),
+        child: ListView.separated(
+          itemCount: merchants.length,
+          separatorBuilder: (context, index) => Gap(12.h),
+          itemBuilder: (context, index) {
+            final merchant = merchants[index];
+            return _MerchantCard(merchant: merchant);
+          },
+        ),
       ),
     );
   }
