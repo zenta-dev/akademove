@@ -33,6 +33,7 @@ class PlaceOrder {
     this.items,
     this.gender,
     this.genderPreference,
+    this.attachmentUrl,
     this.couponCode,
     required this.payment,
   });
@@ -63,6 +64,9 @@ class PlaceOrder {
   @JsonKey(name: r'genderPreference', required: false, includeIfNull: false)
   final PlaceOrderGenderPreferenceEnum? genderPreference;
 
+  @JsonKey(name: r'attachmentUrl', required: false, includeIfNull: false)
+  final String? attachmentUrl;
+
   @JsonKey(name: r'couponCode', required: false, includeIfNull: false)
   final String? couponCode;
 
@@ -82,6 +86,7 @@ class PlaceOrder {
           other.items == items &&
           other.gender == gender &&
           other.genderPreference == genderPreference &&
+          other.attachmentUrl == attachmentUrl &&
           other.couponCode == couponCode &&
           other.payment == payment;
 
@@ -96,6 +101,7 @@ class PlaceOrder {
       items.hashCode +
       gender.hashCode +
       genderPreference.hashCode +
+      attachmentUrl.hashCode +
       couponCode.hashCode +
       payment.hashCode;
 

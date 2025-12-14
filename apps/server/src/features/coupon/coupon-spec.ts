@@ -94,6 +94,29 @@ export const CouponSpec = {
 				"Successfully retrieved eligible coupons",
 			),
 		),
+	getAvailableCoupons: oc
+		.route({
+			tags: [FEATURE_TAGS.COUPON],
+			method: "GET",
+			path: "/available",
+			inputStructure: "detailed",
+			outputStructure: "detailed",
+			description:
+				"Get all available coupons for browsing (active and within validity period)",
+		})
+		.input(
+			z.object({
+				query: z.object({
+					serviceType: OrderTypeSchema.optional(),
+				}),
+			}),
+		)
+		.output(
+			createSuccesSchema(
+				z.array(CouponSchema),
+				"Successfully retrieved available coupons",
+			),
+		),
 	create: oc
 		.route({
 			tags: [FEATURE_TAGS.COUPON],

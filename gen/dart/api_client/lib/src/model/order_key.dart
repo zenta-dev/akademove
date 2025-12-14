@@ -83,7 +83,9 @@ enum OrderKey {
   @JsonValue(r'deliveryItemPhotoUrl')
   deliveryItemPhotoUrl(r'deliveryItemPhotoUrl'),
   @JsonValue(r'deliveryItemType')
-  deliveryItemType(r'deliveryItemType');
+  deliveryItemType(r'deliveryItemType'),
+  @JsonValue(r'attachmentUrl')
+  attachmentUrl(r'attachmentUrl');
 
   const OrderKey(this.value);
 

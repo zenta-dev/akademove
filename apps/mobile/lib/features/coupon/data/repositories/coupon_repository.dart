@@ -162,4 +162,28 @@ class CouponRepository extends BaseRepository {
       );
     });
   }
+
+  /// Get all available coupons for browsing (active and within validity period)
+  /// This is used for the voucher screen to show all coupons without order context
+  Future<BaseResponse<List<Coupon>>> getAvailableCoupons({
+    OrderType? serviceType,
+  }) {
+    return guard(() async {
+      final res = await _apiClient.getCouponApi().couponGetAvailableCoupons(
+        serviceType: serviceType,
+      );
+
+      final responseData =
+          res.data ??
+          (throw const RepositoryError(
+            'Response data not found',
+            code: ErrorCode.notFound,
+          ));
+
+      return SuccessResponse(
+        message: responseData.message,
+        data: responseData.data,
+      );
+    });
+  }
 }

@@ -240,4 +240,56 @@ export class DeliveryProofService {
 			});
 		}
 	}
+
+	/**
+	 * Upload order attachment to S3
+	 * This is used by users to upload document files for Printing merchants
+	 *
+	 * @param params - Upload parameters
+	 * @returns S3 URL of uploaded attachment
+	 * @throws {RepositoryError} When upload fails
+	 */
+	async uploadOrderAttachment(params: {
+		file: File;
+		userId: string;
+	}): Promise<string> {
+		try {
+			const { file, userId } = params;
+
+			// Generate unique key
+			const timestamp = Date.now();
+			const uniqueId = v7();
+			const extension = file.name.split(".").pop() || "pdf";
+			const key = `order-attachments/${userId}/${timestamp}-${uniqueId}.${extension}`;
+
+			logger.info(
+				{ userId, key, size: file.size, fileName: file.name },
+				"[DeliveryProofService] Uploading order attachment",
+			);
+
+			// Upload to S3
+			const url = await this.storageService.upload({
+				bucket: "delivery-proofs",
+				key,
+				file,
+				userId,
+				isPublic: false, // Private - only accessible via presigned URL
+			});
+
+			logger.info(
+				{ userId, url },
+				"[DeliveryProofService] Order attachment uploaded successfully",
+			);
+
+			return url;
+		} catch (error) {
+			logger.error(
+				{ error, userId: params.userId },
+				"[DeliveryProofService] Order attachment upload failed",
+			);
+			throw new RepositoryError("Failed to upload order attachment", {
+				code: "INTERNAL_SERVER_ERROR",
+			});
+		}
+	}
 }

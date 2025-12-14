@@ -1,5 +1,6 @@
 import { m } from "@repo/i18n";
 import type { Order } from "@repo/schema/order";
+import { nullsToUndefined } from "@repo/shared";
 import { eq } from "drizzle-orm";
 import { BaseRepository } from "@/core/base";
 import { RepositoryError } from "@/core/error";
@@ -25,24 +26,12 @@ export class MerchantOrderRepository extends BaseRepository {
 	 * Converts database types to schema types
 	 */
 	private composeEntity(item: OrderDatabase): Order {
+		const result = nullsToUndefined(item);
 		return {
-			...item,
-			driverId: item.driverId ?? undefined,
-			completedDriverId: item.completedDriverId ?? undefined,
-			merchantId: item.merchantId ?? undefined,
-			pickupAddress: item.pickupAddress ?? undefined,
-			dropoffAddress: item.dropoffAddress ?? undefined,
-			note: item.note ?? undefined,
+			...result,
 			basePrice: toNumberSafe(item.basePrice),
 			totalPrice: toNumberSafe(item.totalPrice),
 			tip: item.tip ? toNumberSafe(item.tip) : undefined,
-			acceptedAt: item.acceptedAt ?? undefined,
-			preparedAt: item.preparedAt ?? undefined,
-			readyAt: item.readyAt ?? undefined,
-			arrivedAt: item.arrivedAt ?? undefined,
-			cancelReason: item.cancelReason ?? undefined,
-			gender: item.gender ?? undefined,
-			genderPreference: item.genderPreference ?? undefined,
 			platformCommission: item.platformCommission
 				? toNumberSafe(item.platformCommission)
 				: undefined,
@@ -52,18 +41,9 @@ export class MerchantOrderRepository extends BaseRepository {
 			merchantCommission: item.merchantCommission
 				? toNumberSafe(item.merchantCommission)
 				: undefined,
-			couponId: item.couponId ?? undefined,
-			couponCode: item.couponCode ?? undefined,
 			discountAmount: item.discountAmount
 				? toNumberSafe(item.discountAmount)
 				: undefined,
-			proofOfDeliveryUrl: item.proofOfDeliveryUrl ?? undefined,
-			deliveryOtp: item.deliveryOtp ?? undefined,
-			otpVerifiedAt: item.otpVerifiedAt ?? undefined,
-			scheduledAt: item.scheduledAt ?? undefined,
-			scheduledMatchingAt: item.scheduledMatchingAt ?? undefined,
-			deliveryItemType: item.deliveryItemType ?? undefined,
-			deliveryItemPhotoUrl: item.deliveryItemPhotoUrl ?? undefined,
 		};
 	}
 

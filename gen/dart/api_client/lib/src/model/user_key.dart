@@ -28,6 +28,8 @@ enum UserKey {
   gender(r'gender'),
   @JsonValue(r'phone')
   phone(r'phone'),
+  @JsonValue(r'rating')
+  rating(r'rating'),
   @JsonValue(r'createdAt')
   createdAt(r'createdAt'),
   @JsonValue(r'updatedAt')

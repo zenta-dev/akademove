@@ -1,0 +1,1 @@
+ALTER TABLE "am_orders" ADD COLUMN "attachment_url" text;

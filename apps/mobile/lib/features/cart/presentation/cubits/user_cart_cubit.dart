@@ -4,6 +4,8 @@ import 'package:akademove/features/cart/data/models/cart_models.dart' as models;
 import 'package:akademove/features/cart/presentation/states/_export.dart';
 import 'package:akademove/features/order/data/repositories/order_repository.dart';
 import 'package:api_client/api_client.dart' hide Cart, CartItem;
+import 'package:dio/dio.dart';
+import 'package:http_parser/http_parser.dart' show MediaType;
 
 class UserCartCubit extends BaseCubit<UserCartState> {
   UserCartCubit({
@@ -45,6 +47,7 @@ class UserCartCubit extends BaseCubit<UserCartState> {
     required int quantity,
     String? notes,
     Coordinate? merchantLocation,
+    MerchantCategory? merchantCategory,
   }) async => await taskManager.execute('CC-aI-${menu.id}', () async {
     try {
       // Don't emit loading for add operations to keep UI responsive
@@ -54,6 +57,7 @@ class UserCartCubit extends BaseCubit<UserCartState> {
         quantity: quantity,
         notes: notes,
         merchantLocation: merchantLocation,
+        merchantCategory: merchantCategory,
       );
 
       result.when(
@@ -86,6 +90,7 @@ class UserCartCubit extends BaseCubit<UserCartState> {
                 pendingItem: item,
                 pendingMerchantName: merchantName,
                 pendingMerchantLocation: merchantLocation,
+                pendingMerchantCategory: merchantCategory,
                 showMerchantConflict: true,
               ),
             );
@@ -112,6 +117,7 @@ class UserCartCubit extends BaseCubit<UserCartState> {
           final pendingItem = state.pendingItem;
           final pendingMerchantName = state.pendingMerchantName;
           final pendingMerchantLocation = state.pendingMerchantLocation;
+          final pendingMerchantCategory = state.pendingMerchantCategory;
 
           if (pendingItem == null || pendingMerchantName == null) {
             emit(state.copyWith(clearPending: true));
@@ -140,6 +146,7 @@ class UserCartCubit extends BaseCubit<UserCartState> {
             quantity: pendingItem.quantity,
             notes: pendingItem.notes,
             merchantLocation: pendingMerchantLocation,
+            merchantCategory: pendingMerchantCategory,
           );
 
           result.when(
@@ -326,12 +333,17 @@ class UserCartCubit extends BaseCubit<UserCartState> {
         );
       }
 
+      // Get attachment URL from cart if present
+      final cart = await _cartRepository.getCart();
+      final attachmentUrl = cart?.attachmentUrl;
+
       // Create place order request
       final placeOrderRequest = PlaceOrder(
         type: OrderType.FOOD,
         pickupLocation: pickupLocation,
         dropoffLocation: dropoffLocation,
         items: orderItems,
+        attachmentUrl: attachmentUrl,
         payment: PlaceOrderPayment(
           method: paymentMethod,
           provider: paymentProvider,
@@ -365,4 +377,95 @@ class UserCartCubit extends BaseCubit<UserCartState> {
       return null;
     }
   });
+
+  /// Upload attachment file for Printing merchants
+  /// Returns the uploaded URL on success
+  Future<String?> uploadAttachment(
+    String filePath,
+  ) async => await taskManager.execute('CC-uA', () async {
+    try {
+      emit(
+        state.copyWith(uploadAttachmentResult: const OperationResult.loading()),
+      );
+
+      // Create multipart file from path
+      final file = await MultipartFile.fromFile(
+        filePath,
+        contentType: _getMediaType(filePath),
+      );
+
+      // Upload to server
+      final response = await _orderRepository.uploadAttachment(file);
+
+      // Update cart with attachment URL
+      await _cartRepository.updateAttachment(response.data);
+
+      // Reload cart to get updated data
+      final updatedCart = await _cartRepository.getCart();
+
+      emit(
+        state.copyWith(
+          uploadAttachmentResult: OperationResult.success(
+            response.data,
+            message: response.message,
+          ),
+          cart: OperationResult.success(updatedCart),
+        ),
+      );
+
+      return response.data;
+    } on BaseError catch (e, st) {
+      logger.e(
+        '[UserCartCubit] - uploadAttachment Error: ${e.message}',
+        error: e,
+        stackTrace: st,
+      );
+      emit(state.copyWith(uploadAttachmentResult: OperationResult.failed(e)));
+      return null;
+    }
+  });
+
+  /// Remove attachment from cart
+  Future<void> removeAttachment() async =>
+      await taskManager.execute('CC-rA', () async {
+        try {
+          await _cartRepository.updateAttachment(null);
+          final updatedCart = await _cartRepository.getCart();
+          emit(
+            state.copyWith(
+              uploadAttachmentResult: const OperationResult.idle(),
+              cart: OperationResult.success(updatedCart),
+            ),
+          );
+        } on BaseError catch (e, st) {
+          logger.e(
+            '[UserCartCubit] - removeAttachment Error: ${e.message}',
+            error: e,
+            stackTrace: st,
+          );
+        }
+      });
+
+  /// Get media type from file extension
+  MediaType _getMediaType(String filePath) {
+    final extension = filePath.split('.').last.toLowerCase();
+    switch (extension) {
+      case 'pdf':
+        return MediaType('application', 'pdf');
+      case 'doc':
+        return MediaType('application', 'msword');
+      case 'docx':
+        return MediaType(
+          'application',
+          'vnd.openxmlformats-officedocument.wordprocessingml.document',
+        );
+      case 'jpg':
+      case 'jpeg':
+        return MediaType('image', 'jpeg');
+      case 'png':
+        return MediaType('image', 'png');
+      default:
+        return MediaType('application', 'octet-stream');
+    }
+  }
 }

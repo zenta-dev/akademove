@@ -4,6 +4,7 @@ import { RepositoryError } from "@/core/error";
 import { createORPCRouter } from "@/core/router/orpc";
 import { ReviewSpec } from "./review-spec";
 import { ReviewValidationService } from "./services/review-validation-service";
+import { UserRatingService } from "./services/user-rating-service";
 
 const { priv } = createORPCRouter(ReviewSpec);
 
@@ -114,6 +115,9 @@ export const ReviewHandler = priv.router({
 				opts,
 			);
 
+			// Update the reviewed user's rating
+			await UserRatingService.updateUserRating(tx, data.toUserId);
+
 			return {
 				status: 200,
 				body: { message: m.server_review_created(), data: result },
@@ -123,7 +127,14 @@ export const ReviewHandler = priv.router({
 	update: priv.update.handler(async ({ context, input: { params, body } }) => {
 		return await context.svc.db.transaction(async (tx) => {
 			const data = trimObjectValues(body);
+
+			// Get the existing review to know which user's rating to update
+			const existingReview = await context.repo.review.get(params.id);
+
 			const result = await context.repo.review.update(params.id, data, { tx });
+
+			// Recalculate the reviewed user's rating after update
+			await UserRatingService.updateUserRating(tx, existingReview.toUserId);
 
 			return {
 				status: 200,
@@ -133,7 +144,13 @@ export const ReviewHandler = priv.router({
 	}),
 	remove: priv.remove.handler(async ({ context, input: { params } }) => {
 		return await context.svc.db.transaction(async (tx) => {
+			// Get the existing review to know which user's rating to update
+			const existingReview = await context.repo.review.get(params.id);
+
 			await context.repo.review.remove(params.id, { tx });
+
+			// Recalculate the reviewed user's rating after deletion
+			await UserRatingService.updateUserRating(tx, existingReview.toUserId);
 
 			return {
 				status: 200,

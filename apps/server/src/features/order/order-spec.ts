@@ -234,6 +234,32 @@ export const OrderSpec = {
 				"Delivery item photo uploaded successfully",
 			),
 		),
+	/**
+	 * Upload order attachment (e.g., document files for Printing merchants)
+	 * This endpoint allows users to upload files before placing an order
+	 * Returns a URL that can be passed to the placeOrder endpoint
+	 */
+	uploadAttachment: oc
+		.route({
+			tags: [FEATURE_TAGS.ORDER],
+			method: "POST",
+			path: "/attachment",
+			inputStructure: "detailed",
+			outputStructure: "detailed",
+		})
+		.input(
+			z.object({
+				body: z.object({
+					file: z.instanceof(File),
+				}),
+			}),
+		)
+		.output(
+			createSuccesSchema(
+				z.object({ url: z.string().url() }),
+				"Attachment uploaded successfully",
+			),
+		),
 	verifyDeliveryOTP: oc
 		.route({
 			tags: [FEATURE_TAGS.ORDER],

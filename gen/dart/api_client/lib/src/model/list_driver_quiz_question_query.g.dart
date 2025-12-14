@@ -274,6 +274,7 @@ const _$ListDriverQuizQuestionQuerySortByEnumEnumMap = {
   ListDriverQuizQuestionQuerySortByEnum.periodEnd: 'periodEnd',
   ListDriverQuizQuestionQuerySortByEnum.isActive: 'isActive',
   ListDriverQuizQuestionQuerySortByEnum.merchantId: 'merchantId',
+  ListDriverQuizQuestionQuerySortByEnum.serviceTypes: 'serviceTypes',
   ListDriverQuizQuestionQuerySortByEnum.eventName: 'eventName',
   ListDriverQuizQuestionQuerySortByEnum.eventDescription: 'eventDescription',
   ListDriverQuizQuestionQuerySortByEnum.createdById: 'createdById',
@@ -354,6 +355,7 @@ const _$ListDriverQuizQuestionQuerySortByEnumEnumMap = {
   ListDriverQuizQuestionQuerySortByEnum.deliveryItemPhotoUrl:
       'deliveryItemPhotoUrl',
   ListDriverQuizQuestionQuerySortByEnum.deliveryItemType: 'deliveryItemType',
+  ListDriverQuizQuestionQuerySortByEnum.attachmentUrl: 'attachmentUrl',
   ListDriverQuizQuestionQuerySortByEnum.transactionId: 'transactionId',
   ListDriverQuizQuestionQuerySortByEnum.provider: 'provider',
   ListDriverQuizQuestionQuerySortByEnum.method: 'method',

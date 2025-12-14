@@ -1,30 +1,37 @@
 import { m } from "@repo/i18n";
 import { trimObjectValues } from "@repo/shared";
+import { requireRoles } from "@/core/middlewares/auth";
 import { createORPCRouter } from "@/core/router/orpc";
 import { CouponSpec } from "./coupon-spec";
 
 const { priv } = createORPCRouter(CouponSpec);
 
-export const CouponHandler = priv.router({
-	list: priv.list.handler(async ({ context, input: { query } }) => {
-		const { rows, totalPages } = await context.repo.coupon.list(query);
-		return {
-			status: 200,
-			body: {
-				message: m.server_coupons_retrieved(),
-				data: rows,
-				totalPages,
-			},
-		};
-	}),
-	get: priv.get.handler(async ({ context, input: { params } }) => {
-		const result = await context.repo.coupon.get(params.id);
+const adminOperatorMiddleware = requireRoles("ADMIN", "OPERATOR");
 
-		return {
-			status: 200,
-			body: { message: m.server_coupon_retrieved(), data: result },
-		};
-	}),
+export const CouponHandler = priv.router({
+	list: priv.list
+		.use(adminOperatorMiddleware)
+		.handler(async ({ context, input: { query } }) => {
+			const { rows, totalPages } = await context.repo.coupon.list(query);
+			return {
+				status: 200,
+				body: {
+					message: m.server_coupons_retrieved(),
+					data: rows,
+					totalPages,
+				},
+			};
+		}),
+	get: priv.get
+		.use(adminOperatorMiddleware)
+		.handler(async ({ context, input: { params } }) => {
+			const result = await context.repo.coupon.get(params.id);
+
+			return {
+				status: 200,
+				body: { message: m.server_coupon_retrieved(), data: result },
+			};
+		}),
 	validate: priv.validate.handler(async ({ context, input: { body } }) => {
 		const { code, orderAmount, serviceType, merchantId } =
 			trimObjectValues(body);
@@ -63,66 +70,91 @@ export const CouponHandler = priv.router({
 			};
 		},
 	),
-	create: priv.create.handler(async ({ context, input: { body } }) => {
-		return await context.svc.db.transaction(async (tx) => {
-			const data = trimObjectValues(body);
-			const result = await context.repo.coupon.create(
-				{
-					...data,
-					userId: context.user.id,
+	getAvailableCoupons: priv.getAvailableCoupons.handler(
+		async ({ context, input: { query } }) => {
+			const { serviceType } = trimObjectValues(query);
+			const result = await context.repo.coupon.getAvailableCoupons({
+				serviceType,
+			});
+
+			return {
+				status: 200,
+				body: {
+					message: m.server_available_coupons_retrieved(),
+					data: result,
 				},
-				{ tx },
-				context,
-			);
-
-			return {
-				status: 200,
-				body: { message: m.server_coupon_created(), data: result },
 			};
-		});
-	}),
-	update: priv.update.handler(async ({ context, input: { params, body } }) => {
-		return await context.svc.db.transaction(async (tx) => {
-			const data = trimObjectValues(body);
-			const result = await context.repo.coupon.update(
-				params.id,
-				data,
-				{ tx },
-				context,
-			);
+		},
+	),
+	create: priv.create
+		.use(adminOperatorMiddleware)
+		.handler(async ({ context, input: { body } }) => {
+			return await context.svc.db.transaction(async (tx) => {
+				const data = trimObjectValues(body);
+				const result = await context.repo.coupon.create(
+					{
+						...data,
+						userId: context.user.id,
+					},
+					{ tx },
+					context,
+				);
 
-			return {
-				status: 200,
-				body: { message: m.server_coupon_updated(), data: result },
-			};
-		});
-	}),
-	remove: priv.remove.handler(async ({ context, input: { params } }) => {
-		return await context.svc.db.transaction(async (tx) => {
-			await context.repo.coupon.remove(params.id, { tx }, context);
+				return {
+					status: 200,
+					body: { message: m.server_coupon_created(), data: result },
+				};
+			});
+		}),
+	update: priv.update
+		.use(adminOperatorMiddleware)
+		.handler(async ({ context, input: { params, body } }) => {
+			return await context.svc.db.transaction(async (tx) => {
+				const data = trimObjectValues(body);
+				const result = await context.repo.coupon.update(
+					params.id,
+					data,
+					{ tx },
+					context,
+				);
 
-			return {
-				status: 200,
-				body: { message: m.server_coupon_deleted(), data: null },
-			};
-		});
-	}),
-	activate: priv.activate.handler(async ({ context, input: { params } }) => {
-		return await context.svc.db.transaction(async (tx) => {
-			const result = await context.repo.coupon.activate(
-				params.id,
-				{ tx },
-				context,
-			);
+				return {
+					status: 200,
+					body: { message: m.server_coupon_updated(), data: result },
+				};
+			});
+		}),
+	remove: priv.remove
+		.use(adminOperatorMiddleware)
+		.handler(async ({ context, input: { params } }) => {
+			return await context.svc.db.transaction(async (tx) => {
+				await context.repo.coupon.remove(params.id, { tx }, context);
 
-			return {
-				status: 200,
-				body: { message: m.server_coupon_activated(), data: result },
-			};
-		});
-	}),
-	deactivate: priv.deactivate.handler(
-		async ({ context, input: { params } }) => {
+				return {
+					status: 200,
+					body: { message: m.server_coupon_deleted(), data: null },
+				};
+			});
+		}),
+	activate: priv.activate
+		.use(adminOperatorMiddleware)
+		.handler(async ({ context, input: { params } }) => {
+			return await context.svc.db.transaction(async (tx) => {
+				const result = await context.repo.coupon.activate(
+					params.id,
+					{ tx },
+					context,
+				);
+
+				return {
+					status: 200,
+					body: { message: m.server_coupon_activated(), data: result },
+				};
+			});
+		}),
+	deactivate: priv.deactivate
+		.use(adminOperatorMiddleware)
+		.handler(async ({ context, input: { params } }) => {
 			return await context.svc.db.transaction(async (tx) => {
 				const result = await context.repo.coupon.deactivate(
 					params.id,
@@ -135,6 +167,5 @@ export const CouponHandler = priv.router({
 					body: { message: m.server_coupon_deactivated(), data: result },
 				};
 			});
-		},
-	),
+		}),
 });

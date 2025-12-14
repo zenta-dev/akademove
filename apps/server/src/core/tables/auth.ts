@@ -2,7 +2,7 @@ import type { Phone } from "@repo/schema/common";
 import { CONSTANTS } from "@repo/schema/constants";
 import type { UserRole } from "@repo/schema/user";
 import { relations } from "drizzle-orm";
-import { boolean, jsonb, text } from "drizzle-orm/pg-core";
+import { boolean, jsonb, numeric, text } from "drizzle-orm/pg-core";
 import { userBadge } from "./badge";
 import {
 	createAuditLogTable,
@@ -30,6 +30,9 @@ export const user = pgTable(
 		gender: userGender(),
 		phone: jsonb().$type<Phone>().unique(),
 		banExpires: timestamp("ban_expires"),
+		rating: numeric({ precision: 2, scale: 1, mode: "number" })
+			.notNull()
+			.default(0.0),
 		...DateModifier,
 	},
 	(t) => [

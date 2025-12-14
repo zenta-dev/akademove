@@ -19,22 +19,14 @@ class _UserVoucherScreenState extends State<UserVoucherScreen> {
   @override
   void initState() {
     super.initState();
-    // Load all coupons when screen loads
+    // Load all available coupons when screen loads
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<UserCouponCubit>().loadEligibleCoupons(
-        serviceType: OrderType.RIDE,
-        // Use a reasonable default amount to show available coupons
-        // The actual eligibility will be checked when applying to an order
-        totalAmount: 10000,
-      );
+      context.read<UserCouponCubit>().loadAvailableCoupons();
     });
   }
 
   Future<void> _onRefresh() async {
-    await context.read<UserCouponCubit>().loadEligibleCoupons(
-      serviceType: OrderType.RIDE,
-      totalAmount: 10000,
-    );
+    await context.read<UserCouponCubit>().loadAvailableCoupons();
   }
 
   @override
@@ -63,11 +55,11 @@ class _UserVoucherScreenState extends State<UserVoucherScreen> {
             padding: EdgeInsets.all(16.dg),
             child: BlocBuilder<UserCouponCubit, UserCouponState>(
               builder: (context, state) {
-                if (state.eligibleCoupons.isLoading) {
+                if (state.availableCoupons.isLoading) {
                   return const Center(child: CircularProgressIndicator());
                 }
 
-                if (state.eligibleCoupons.isFailure) {
+                if (state.availableCoupons.isFailure) {
                   return Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -79,17 +71,16 @@ class _UserVoucherScreenState extends State<UserVoucherScreen> {
                           color: context.colorScheme.destructive,
                         ),
                         Text(
-                          state.eligibleCoupons.error?.message ??
+                          state.availableCoupons.error?.message ??
                               context.l10n.failed_to_load,
                           style: context.typography.p.copyWith(fontSize: 14.sp),
                           textAlign: TextAlign.center,
                         ),
                         OutlineButton(
                           onPressed: () {
-                            context.read<UserCouponCubit>().loadEligibleCoupons(
-                              serviceType: OrderType.RIDE,
-                              totalAmount: 10000,
-                            );
+                            context
+                                .read<UserCouponCubit>()
+                                .loadAvailableCoupons();
                           },
                           child: Text(context.l10n.retry),
                         ),
@@ -98,8 +89,8 @@ class _UserVoucherScreenState extends State<UserVoucherScreen> {
                   );
                 }
 
-                final data = state.eligibleCoupons.value;
-                if (data == null || data.coupons.isEmpty) {
+                final coupons = state.availableCoupons.value;
+                if (coupons == null || coupons.isEmpty) {
                   return Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -131,18 +122,16 @@ class _UserVoucherScreenState extends State<UserVoucherScreen> {
                 }
 
                 return Column(
-                  children: data.coupons.asMap().entries.map((entry) {
+                  children: coupons.asMap().entries.map((entry) {
                     final index = entry.key;
                     final coupon = entry.value;
-                    final isBestCoupon = data.bestCoupon?.id == coupon.id;
 
                     return Padding(
                       padding: EdgeInsets.only(
-                        bottom: index < data.coupons.length - 1 ? 12.h : 0,
+                        bottom: index < coupons.length - 1 ? 12.h : 0,
                       ),
                       child: _VoucherCard(
                         coupon: coupon,
-                        isBestCoupon: isBestCoupon,
                         onTap: () => _showCouponDetails(context, coupon),
                       ),
                     );
@@ -165,14 +154,9 @@ class _UserVoucherScreenState extends State<UserVoucherScreen> {
 }
 
 class _VoucherCard extends StatelessWidget {
-  const _VoucherCard({
-    required this.coupon,
-    required this.isBestCoupon,
-    required this.onTap,
-  });
+  const _VoucherCard({required this.coupon, required this.onTap});
 
   final Coupon coupon;
-  final bool isBestCoupon;
   final VoidCallback onTap;
 
   @override
@@ -191,12 +175,7 @@ class _VoucherCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: theme.colorScheme.background,
           borderRadius: BorderRadius.circular(12.r),
-          border: Border.all(
-            color: isBestCoupon
-                ? const Color(0xFF10B981)
-                : theme.colorScheme.border,
-            width: isBestCoupon ? 2 : 1,
-          ),
+          border: Border.all(color: theme.colorScheme.border, width: 1),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withAlpha(10),
@@ -255,25 +234,6 @@ class _VoucherCard extends StatelessWidget {
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ),
-                            if (isBestCoupon)
-                              Container(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: 8.w,
-                                  vertical: 2.h,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: const Color(0xFF10B981).withAlpha(25),
-                                  borderRadius: BorderRadius.circular(4.r),
-                                ),
-                                child: Text(
-                                  'Best',
-                                  style: TextStyle(
-                                    fontSize: 10.sp,
-                                    fontWeight: FontWeight.bold,
-                                    color: const Color(0xFF10B981),
-                                  ),
-                                ),
-                              ),
                           ],
                         ),
                         SizedBox(height: 4.h),
@@ -285,6 +245,43 @@ class _VoucherCard extends StatelessWidget {
                             fontWeight: FontWeight.w600,
                           ),
                         ),
+                        // Service type badges
+                        if (coupon.serviceTypes != null &&
+                            coupon.serviceTypes!.isNotEmpty) ...[
+                          SizedBox(height: 6.h),
+                          Wrap(
+                            spacing: 4.w,
+                            runSpacing: 4.h,
+                            children: coupon.serviceTypes!.map((type) {
+                              return Container(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 6.w,
+                                  vertical: 2.h,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: _getServiceTypeColor(
+                                    type,
+                                  ).withAlpha(25),
+                                  borderRadius: BorderRadius.circular(4.r),
+                                  border: Border.all(
+                                    color: _getServiceTypeColor(
+                                      type,
+                                    ).withAlpha(100),
+                                    width: 0.5,
+                                  ),
+                                ),
+                                child: Text(
+                                  _getServiceTypeLabel(type),
+                                  style: TextStyle(
+                                    fontSize: 9.sp,
+                                    fontWeight: FontWeight.w600,
+                                    color: _getServiceTypeColor(type),
+                                  ),
+                                ),
+                              );
+                            }).toList(),
+                          ),
+                        ],
                         SizedBox(height: 8.h),
                         Row(
                           children: [
@@ -418,6 +415,28 @@ class _VoucherCard extends StatelessWidget {
     );
     return formatter.format(amount);
   }
+
+  Color _getServiceTypeColor(OrderType type) {
+    switch (type) {
+      case OrderType.RIDE:
+        return const Color(0xFF3B82F6); // Blue
+      case OrderType.DELIVERY:
+        return const Color(0xFF10B981); // Green
+      case OrderType.FOOD:
+        return const Color(0xFFF59E0B); // Amber
+    }
+  }
+
+  String _getServiceTypeLabel(OrderType type) {
+    switch (type) {
+      case OrderType.RIDE:
+        return 'Ride';
+      case OrderType.DELIVERY:
+        return 'Delivery';
+      case OrderType.FOOD:
+        return 'Food';
+    }
+  }
 }
 
 class _CouponDetailDialog extends StatelessWidget {
@@ -490,6 +509,18 @@ class _CouponDetailDialog extends StatelessWidget {
                 'Valid Days',
                 coupon.rules.time!.allowedDays!.map((d) => d.name).join(', '),
               ),
+            ],
+            if (coupon.serviceTypes != null &&
+                coupon.serviceTypes!.isNotEmpty) ...[
+              SizedBox(height: 12.h),
+              _buildInfoRow(
+                context,
+                'Services',
+                coupon.serviceTypes!.map((t) => t.name).join(', '),
+              ),
+            ] else ...[
+              SizedBox(height: 12.h),
+              _buildInfoRow(context, 'Services', 'All services'),
             ],
           ],
         ),

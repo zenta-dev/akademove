@@ -60,6 +60,8 @@ class MerchantRepository extends BaseRepository {
   Future<BaseResponse<List<Merchant>>> list({
     String? category,
     String? query,
+    bool? isActive,
+    String? operatingStatus, // 'OPEN', 'CLOSED', 'BREAK', 'MAINTENANCE'
     int? page,
     int? limit,
   }) {
@@ -67,6 +69,8 @@ class MerchantRepository extends BaseRepository {
       final res = await _apiClient.getMerchantApi().merchantList(
         categories: category != null ? [category] : null,
         query: query,
+        isActive: isActive,
+        operatingStatus: operatingStatus,
         page: page,
         limit: limit,
       );
@@ -86,10 +90,12 @@ class MerchantRepository extends BaseRepository {
   /// Used for user home screen merchant list with:
   /// - Search by name
   /// - Filter by active/open status
+  /// - Filter by operating status (OPEN, CLOSED, BREAK, MAINTENANCE)
   /// - Pagination with cursor
   Future<BaseResponse<List<Merchant>>> listWithFilters({
     String? query,
     bool isActive = true,
+    String? operatingStatus, // 'OPEN', 'CLOSED', 'BREAK', 'MAINTENANCE'
     String? sortBy, // 'rating' for bestsellers, 'distance' for nearby
     int? limit,
     String? cursor, // Cursor-based pagination
@@ -98,6 +104,7 @@ class MerchantRepository extends BaseRepository {
       final res = await _apiClient.getMerchantApi().merchantList(
         query: query,
         isActive: isActive,
+        operatingStatus: operatingStatus,
         sortBy: sortBy,
         limit: limit,
         cursor: cursor,

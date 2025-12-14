@@ -307,6 +307,8 @@ class _OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
   }
 
   Widget _buildContent(BuildContext context, Cart cart, UserCartState state) {
+    final isPrintingMerchant = state.isPrintingMerchant;
+
     return Column(
       children: [
         Expanded(
@@ -324,6 +326,9 @@ class _OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
 
                 // Selected Item Card
                 _buildSelectedItemCard(context, cart),
+
+                // Attachment Upload Widget (for Printing merchants only)
+                if (isPrintingMerchant) const AttachmentUploadWidget(),
 
                 // Payment Summary Card
                 _buildPaymentSummaryCard(context, cart),
@@ -1190,6 +1195,20 @@ class _OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
   void _placeOrder(BuildContext context, Cart cart) {
     final userLocationCubit = context.read<UserLocationCubit>();
     final userLocation = userLocationCubit.state.coordinate;
+    final cartState = context.read<UserCartCubit>().state;
+
+    // Validate attachment for Printing merchants
+    if (cartState.isPrintingMerchant && !cartState.hasAttachment) {
+      showToast(
+        context: context,
+        builder: (ctx, overlay) => ctx.buildToast(
+          title: context.l10n.order_confirm_failed,
+          message: "Mohon unggah file dokumen yang ingin dicetak",
+        ),
+        location: ToastLocation.topCenter,
+      );
+      return;
+    }
 
     // Pickup location = merchant location (where food is prepared)
     final pickupLocation = cart.merchantLocation ?? userLocation;

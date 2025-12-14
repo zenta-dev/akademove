@@ -68,6 +68,7 @@ class CartRepository extends BaseRepository {
     int quantity = 1,
     String? notes,
     Coordinate? merchantLocation,
+    MerchantCategory? merchantCategory,
   }) async {
     return _withCartLock(() async {
       return guard(() async {
@@ -97,6 +98,7 @@ class CartRepository extends BaseRepository {
             subtotal: menu.price * quantity,
             lastUpdated: DateTime.now(),
             merchantLocation: merchantLocation,
+            merchantCategory: merchantCategory,
           );
         } else {
           // Check merchant conflict
@@ -145,6 +147,7 @@ class CartRepository extends BaseRepository {
             subtotal: subtotal,
             lastUpdated: DateTime.now(),
             merchantLocation: merchantLocation ?? currentCart.merchantLocation,
+            merchantCategory: merchantCategory ?? currentCart.merchantCategory,
           );
         }
 
@@ -294,6 +297,7 @@ class CartRepository extends BaseRepository {
     int quantity = 1,
     String? notes,
     Coordinate? merchantLocation,
+    MerchantCategory? merchantCategory,
   }) async {
     return _withCartLock(() async {
       await _clearCartInternal();
@@ -318,10 +322,42 @@ class CartRepository extends BaseRepository {
           subtotal: menu.price * quantity,
           lastUpdated: DateTime.now(),
           merchantLocation: merchantLocation,
+          merchantCategory: merchantCategory,
         );
 
         await _saveCart(updatedCart);
         return SuccessResponse(message: 'Cart replaced', data: updatedCart);
+      });
+    });
+  }
+
+  /// Update attachment URL in cart (for Printing merchants)
+  Future<BaseResponse<models.Cart>> updateAttachment(
+    String? attachmentUrl,
+  ) async {
+    return _withCartLock(() async {
+      return guard(() async {
+        final currentCart = await getCart();
+        if (currentCart == null) {
+          throw const RepositoryError(
+            'Cart is empty',
+            code: ErrorCode.notFound,
+          );
+        }
+
+        final updatedCart = currentCart.copyWith(
+          attachmentUrl: attachmentUrl,
+          clearAttachment: attachmentUrl == null,
+          lastUpdated: DateTime.now(),
+        );
+
+        await _saveCart(updatedCart);
+        return SuccessResponse(
+          message: attachmentUrl != null
+              ? 'Attachment added'
+              : 'Attachment removed',
+          data: updatedCart,
+        );
       });
     });
   }

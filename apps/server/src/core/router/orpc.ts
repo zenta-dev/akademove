@@ -43,7 +43,7 @@ const _sharedInterceptor: Interceptor<
 		logger.debug({ body }, "Incoming request body");
 		const res = await opts.next();
 		const { response } = res;
-		// logger.debug(response, "Outcoming response");
+		logger.debug(response, "Outcoming response");
 		return res;
 	} catch (error) {
 		logger.error({ error }, "ORPC Error Interceptor");

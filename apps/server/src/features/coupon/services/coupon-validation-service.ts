@@ -231,6 +231,42 @@ export class CouponValidationService {
 	}
 
 	/**
+	 * Validate service type eligibility
+	 * Checks if the coupon is valid for the requested service type (RIDE/DELIVERY/FOOD)
+	 * Empty or undefined serviceTypes means coupon is valid for all services
+	 */
+	static validateServiceType(
+		coupon: Coupon,
+		serviceType?: string,
+	): CouponValidationResult {
+		// If coupon has no service type restrictions, it's valid for all services
+		if (
+			!coupon.serviceTypes ||
+			!Array.isArray(coupon.serviceTypes) ||
+			coupon.serviceTypes.length === 0
+		) {
+			return { valid: true };
+		}
+
+		// If no service type provided, allow (will be validated at order time)
+		if (!serviceType) {
+			return { valid: true };
+		}
+
+		// Check if the service type is in the allowed list
+		if (
+			!coupon.serviceTypes.includes(serviceType as "RIDE" | "DELIVERY" | "FOOD")
+		) {
+			return {
+				valid: false,
+				reason: `Coupon not valid for ${serviceType} orders`,
+			};
+		}
+
+		return { valid: true };
+	}
+
+	/**
 	 * Validate all coupon eligibility rules (for filtering eligible coupons)
 	 */
 	static async validateCouponEligibility(
@@ -239,6 +275,7 @@ export class CouponValidationService {
 			orderAmount: number;
 			userId: string;
 			merchantId?: string;
+			serviceType?: string;
 			getUserUsageCount: GetUserUsageCountFn;
 			getUserOrderCount: GetUserOrderCountFn;
 		},
@@ -248,6 +285,7 @@ export class CouponValidationService {
 				orderAmount,
 				userId,
 				merchantId,
+				serviceType,
 				getUserUsageCount,
 				getUserOrderCount,
 			} = params;
@@ -257,6 +295,15 @@ export class CouponValidationService {
 				CouponValidationService.validateDiscountType(coupon);
 			if (!discountTypeCheck.valid) {
 				return discountTypeCheck;
+			}
+
+			// Check service type eligibility
+			const serviceTypeCheck = CouponValidationService.validateServiceType(
+				coupon,
+				serviceType,
+			);
+			if (!serviceTypeCheck.valid) {
+				return serviceTypeCheck;
 			}
 
 			// Check merchant eligibility
@@ -320,6 +367,7 @@ export class CouponValidationService {
 			orderAmount: number;
 			userId: string;
 			merchantId?: string;
+			serviceType?: string;
 			getUserUsageCount: GetUserUsageCountFn;
 			getUserOrderCount: GetUserOrderCountFn;
 		},
@@ -329,6 +377,7 @@ export class CouponValidationService {
 				orderAmount,
 				userId,
 				merchantId,
+				serviceType,
 				getUserUsageCount,
 				getUserOrderCount,
 			} = params;
@@ -337,6 +386,15 @@ export class CouponValidationService {
 			const activeCheck = CouponValidationService.validateActiveStatus(coupon);
 			if (!activeCheck.valid) {
 				return activeCheck;
+			}
+
+			// Check service type eligibility
+			const serviceTypeCheck = CouponValidationService.validateServiceType(
+				coupon,
+				serviceType,
+			);
+			if (!serviceTypeCheck.valid) {
+				return serviceTypeCheck;
 			}
 
 			// Check merchant eligibility

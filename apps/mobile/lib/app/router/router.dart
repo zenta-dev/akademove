@@ -119,6 +119,7 @@ enum Routes {
   merchantChangePassword('/merchant/change/password'),
   merchantWalletWithdraw('/merchant/wallet/withdraw'),
   merchantNotifications('/merchant/notifications'),
+  merchantOrderCompletion('/merchant/order/completion'),
 
   ///
   /// Shared Routes

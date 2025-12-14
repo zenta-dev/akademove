@@ -32,6 +32,7 @@ class EstimateOrder {
     this.items,
     this.gender,
     this.genderPreference,
+    this.attachmentUrl,
     this.couponCode,
     this.discountIds,
     this.weight,
@@ -63,6 +64,9 @@ class EstimateOrder {
   @JsonKey(name: r'genderPreference', required: false, includeIfNull: false)
   final EstimateOrderGenderPreferenceEnum? genderPreference;
 
+  @JsonKey(name: r'attachmentUrl', required: false, includeIfNull: false)
+  final String? attachmentUrl;
+
   @JsonKey(name: r'couponCode', required: false, includeIfNull: false)
   final String? couponCode;
 
@@ -87,6 +91,7 @@ class EstimateOrder {
           other.items == items &&
           other.gender == gender &&
           other.genderPreference == genderPreference &&
+          other.attachmentUrl == attachmentUrl &&
           other.couponCode == couponCode &&
           other.discountIds == discountIds &&
           other.weight == weight;
@@ -102,6 +107,7 @@ class EstimateOrder {
       items.hashCode +
       gender.hashCode +
       genderPreference.hashCode +
+      attachmentUrl.hashCode +
       couponCode.hashCode +
       discountIds.hashCode +
       weight.hashCode;

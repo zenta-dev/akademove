@@ -856,12 +856,9 @@ class DriverOrderCubit extends BaseCubit<DriverOrderState> {
         );
       }
       logger.i('[DriverOrderCubit] - Order completed confirmation received');
-      // Clear active order after completion
-      Future.delayed(const Duration(milliseconds: 500), () {
-        if (!isClosed) {
-          clearActiveOrder();
-        }
-      });
+      // NOTE: Don't clear active order immediately - let the screen handle
+      // navigation to review screen first. The screen will call clearActiveOrder()
+      // after the driver submits the review or navigates away.
     }
   }
 

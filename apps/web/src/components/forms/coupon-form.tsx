@@ -7,6 +7,7 @@ import {
 	InsertCouponSchema,
 	UpdateCouponSchema,
 } from "@repo/schema/coupon";
+import type { OrderType } from "@repo/schema/order";
 import { capitalizeFirstLetter } from "@repo/shared";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "@tanstack/react-router";
@@ -48,6 +49,7 @@ import {
 } from "@/components/ui/popover";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { orpcQuery, queryClient } from "@/lib/orpc";
+import type { FileRouteTypes } from "@/routeTree.gen";
 import { cn } from "@/utils/cn";
 
 const GENERAL_RULE_TYPES: { id: GeneralRuleType; name: string }[] = [
@@ -92,12 +94,29 @@ const DAY_OF_WEEKS: { id: DayOfWeek; name: string }[] = [
 	},
 ] as const;
 
+const SERVICE_TYPES: { id: OrderType; name: string }[] = [
+	{
+		id: "RIDE",
+		name: m.ride(),
+	},
+	{
+		id: "DELIVERY",
+		name: m.delivery(),
+	},
+	{
+		id: "FOOD",
+		name: m.food(),
+	},
+] as const;
+
 export const CouponForm = ({
 	kind,
 	coupon,
+	redirectPath = "/dash/operator/coupons",
 }: {
 	kind: "new" | "edit";
 	coupon?: Coupon;
+	redirectPath?: FileRouteTypes["to"];
 }) => {
 	const router = useRouter();
 	const form = useForm({
@@ -130,6 +149,7 @@ export const CouponForm = ({
 						periodStart: new Date(),
 						periodEnd: new Date(),
 						isActive: true,
+						serviceTypes: [],
 					},
 	});
 
@@ -148,12 +168,11 @@ export const CouponForm = ({
 			);
 			form.reset();
 			await router.navigate({
-				to: "/dash/operator/coupons",
-				// @ts-expect-error - search params type mismatch
+				to: redirectPath,
 				search: {},
 			});
 		},
-		[form, router],
+		[form, router, redirectPath],
 	);
 
 	const onError = useCallback((kind: "insert" | "update", error: Error) => {
@@ -487,6 +506,47 @@ export const CouponForm = ({
 						</FormItem>
 					)}
 				/>
+
+				{/* Service Types Selection */}
+				<div className="col-span-2">
+					<FormField
+						control={form.control}
+						name="serviceTypes"
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>{m.service_types()}</FormLabel>
+								<FormControl>
+									<div className="flex flex-col gap-2">
+										<div className="flex flex-wrap items-center gap-4">
+											{SERVICE_TYPES.map((item) => (
+												<div key={item.id} className="flex items-center gap-2">
+													<Checkbox
+														checked={field.value?.includes(item.id) ?? false}
+														onCheckedChange={(checked) => {
+															const currentValue = field.value || [];
+															const newValue = checked
+																? [...currentValue, item.id]
+																: currentValue.filter(
+																		(value) => value !== item.id,
+																	);
+															field.onChange(newValue);
+														}}
+														disabled={isLoading}
+													/>
+													<span className="text-sm">{item.name}</span>
+												</div>
+											))}
+										</div>
+										<p className="text-muted-foreground text-xs">
+											{m.service_types_hint()}
+										</p>
+									</div>
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+				</div>
 
 				<Tabs defaultValue="general" className="col-span-2 w-full">
 					<p>{m.rules()}</p>

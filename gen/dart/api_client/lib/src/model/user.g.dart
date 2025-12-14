@@ -29,6 +29,8 @@ abstract class _$UserCWProxy {
 
   User phone(Phone? phone);
 
+  User rating(num? rating);
+
   User createdAt(DateTime createdAt);
 
   User updatedAt(DateTime updatedAt);
@@ -54,6 +56,7 @@ abstract class _$UserCWProxy {
     DateTime? banExpires,
     UserGender? gender,
     Phone? phone,
+    num? rating,
     DateTime createdAt,
     DateTime updatedAt,
     List<UserBadge> userBadges,
@@ -101,6 +104,9 @@ class _$UserCWProxyImpl implements _$UserCWProxy {
   User phone(Phone? phone) => call(phone: phone);
 
   @override
+  User rating(num? rating) => call(rating: rating);
+
+  @override
   User createdAt(DateTime createdAt) => call(createdAt: createdAt);
 
   @override
@@ -129,6 +135,7 @@ class _$UserCWProxyImpl implements _$UserCWProxy {
     Object? banExpires = const $CopyWithPlaceholder(),
     Object? gender = const $CopyWithPlaceholder(),
     Object? phone = const $CopyWithPlaceholder(),
+    Object? rating = const $CopyWithPlaceholder(),
     Object? createdAt = const $CopyWithPlaceholder(),
     Object? updatedAt = const $CopyWithPlaceholder(),
     Object? userBadges = const $CopyWithPlaceholder(),
@@ -179,6 +186,10 @@ class _$UserCWProxyImpl implements _$UserCWProxy {
           ? _value.phone
           // ignore: cast_nullable_to_non_nullable
           : phone as Phone?,
+      rating: rating == const $CopyWithPlaceholder()
+          ? _value.rating
+          // ignore: cast_nullable_to_non_nullable
+          : rating as num?,
       createdAt: createdAt == const $CopyWithPlaceholder() || createdAt == null
           ? _value.createdAt
           // ignore: cast_nullable_to_non_nullable
@@ -245,6 +256,7 @@ User _$UserFromJson(Map<String, dynamic> json) => $checkedCreate('User', json, (
       'phone',
       (v) => v == null ? null : Phone.fromJson(v as Map<String, dynamic>),
     ),
+    rating: $checkedConvert('rating', (v) => v as num? ?? 0),
     createdAt: $checkedConvert('createdAt', (v) => DateTime.parse(v as String)),
     updatedAt: $checkedConvert('updatedAt', (v) => DateTime.parse(v as String)),
     userBadges: $checkedConvert(
@@ -269,6 +281,7 @@ Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
   'banExpires': ?instance.banExpires?.toIso8601String(),
   'gender': ?_$UserGenderEnumMap[instance.gender],
   'phone': ?instance.phone?.toJson(),
+  'rating': ?instance.rating,
   'createdAt': instance.createdAt.toIso8601String(),
   'updatedAt': instance.updatedAt.toIso8601String(),
   'userBadges': instance.userBadges.map((e) => e.toJson()).toList(),

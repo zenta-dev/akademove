@@ -37,6 +37,35 @@ class UserCouponCubit extends BaseCubit<UserCouponState> {
     }
   });
 
+  /// Load all available coupons for browsing (voucher screen)
+  /// Shows all active coupons within validity period without order context
+  Future<void> loadAvailableCoupons({OrderType? serviceType}) async =>
+      await taskManager.execute('CC-lAC1', () async {
+        try {
+          emit(
+            state.copyWith(availableCoupons: const OperationResult.loading()),
+          );
+          final res = await _couponRepository.getAvailableCoupons(
+            serviceType: serviceType,
+          );
+          emit(
+            state.copyWith(
+              availableCoupons: OperationResult.success(
+                res.data,
+                message: res.message,
+              ),
+            ),
+          );
+        } on BaseError catch (e, st) {
+          logger.e(
+            '[CouponCubit] - Error loading available coupons: ${e.message}',
+            error: e,
+            stackTrace: st,
+          );
+          emit(state.copyWith(availableCoupons: OperationResult.failed(e)));
+        }
+      });
+
   /// Manually select a specific coupon from the eligible list
   /// Calls server to validate and get accurate discount amount
   Future<void> selectCoupon(Coupon? coupon) async {

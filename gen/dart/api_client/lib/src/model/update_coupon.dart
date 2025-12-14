@@ -3,6 +3,7 @@
 //
 
 // ignore_for_file: unused_element
+import 'package:api_client/src/model/order_type.dart';
 import 'package:api_client/src/model/coupon_rules.dart';
 import 'package:api_client/src/model/coupon_type.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -31,6 +32,7 @@ class UpdateCoupon {
     this.periodEnd,
     this.isActive,
     this.merchantId,
+    this.serviceTypes,
     this.eventName,
     this.eventDescription,
   });
@@ -72,6 +74,9 @@ class UpdateCoupon {
   @JsonKey(name: r'merchantId', required: false, includeIfNull: false)
   final String? merchantId;
 
+  @JsonKey(name: r'serviceTypes', required: false, includeIfNull: false)
+  final List<OrderType>? serviceTypes;
+
   @JsonKey(name: r'eventName', required: false, includeIfNull: false)
   final String? eventName;
 
@@ -93,6 +98,7 @@ class UpdateCoupon {
           other.periodEnd == periodEnd &&
           other.isActive == isActive &&
           other.merchantId == merchantId &&
+          other.serviceTypes == serviceTypes &&
           other.eventName == eventName &&
           other.eventDescription == eventDescription;
 
@@ -109,6 +115,7 @@ class UpdateCoupon {
       periodEnd.hashCode +
       isActive.hashCode +
       (merchantId == null ? 0 : merchantId.hashCode) +
+      serviceTypes.hashCode +
       eventName.hashCode +
       eventDescription.hashCode;
 

@@ -1,3 +1,4 @@
+import 'package:akademove/app/router/router.dart';
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/l10n/l10n.dart';
@@ -169,6 +170,29 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
     );
   }
 
+  /// Navigate to review screen after order completion
+  Future<void> _navigateToReviewScreen(Order order) async {
+    if (!mounted || !context.mounted) return;
+
+    // Small delay to let the UI update
+    await Future.delayed(const Duration(milliseconds: 500));
+
+    if (!mounted || !context.mounted) return;
+
+    final user = order.user;
+
+    context.pushNamed(
+      Routes.merchantOrderCompletion.name,
+      extra: {
+        'orderId': order.id,
+        'orderType': order.type,
+        'order': order,
+        'user': user,
+        'payment': null,
+      },
+    );
+  }
+
   Widget _buildCustomerInfo(BuildContext context) {
     return Card(
       child: Row(
@@ -187,12 +211,51 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
                   ),
                 ),
                 SizedBox(height: 6.h),
-                Text(
-                  _currentOrder.user?.name ?? _currentOrder.userId,
-                  style: context.typography.small.copyWith(
-                    fontSize: 18.sp,
-                    fontWeight: FontWeight.w600,
-                  ),
+                Row(
+                  children: [
+                    Text(
+                      _currentOrder.user?.name ?? _currentOrder.userId,
+                      style: context.typography.small.copyWith(
+                        fontSize: 18.sp,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    Builder(
+                      builder: (context) {
+                        final rating = _currentOrder.user?.rating;
+                        if (rating == null || rating == 0) {
+                          return const SizedBox.shrink();
+                        }
+
+                        return Row(
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 8.w),
+                              child: Text(
+                                '•',
+                                style: context.typography.small.copyWith(
+                                  color: context.colorScheme.mutedForeground,
+                                ),
+                              ),
+                            ),
+                            Icon(
+                              LucideIcons.star,
+                              size: 14.sp,
+                              color: const Color(0xFFFFC107),
+                            ),
+                            SizedBox(width: 4.w),
+                            Text(
+                              rating.toStringAsFixed(1),
+                              style: context.typography.small.copyWith(
+                                fontSize: 14.sp,
+                                color: context.colorScheme.mutedForeground,
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -657,7 +720,16 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
               final selectedOrder = state.order.value;
               if (selectedOrder != null &&
                   selectedOrder.id == _currentOrder.id) {
+                final previousStatus = _currentOrder.status;
+                final newStatus = selectedOrder.status;
+
                 setState(() => _currentOrder = selectedOrder);
+
+                // Check if order just transitioned to COMPLETED
+                if (previousStatus != OrderStatus.COMPLETED &&
+                    newStatus == OrderStatus.COMPLETED) {
+                  _navigateToReviewScreen(selectedOrder);
+                }
               }
             }
           },

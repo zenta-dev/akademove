@@ -97,7 +97,10 @@ class MerchantCardWidget extends StatelessWidget {
                         ),
                       ),
                       SizedBox(width: 8.w),
-                      _AvailabilityBadge(isActive: merchant.isActive),
+                      _AvailabilityBadge(
+                        isActive: merchant.isActive,
+                        operatingStatus: merchant.operatingStatus,
+                      ),
                     ],
                   ),
                   SizedBox(height: 8.h),
@@ -148,19 +151,46 @@ class _RatingWidget extends StatelessWidget {
 }
 
 /// Availability badge showing Open/Closed status
+/// A merchant is considered "Open" only when:
+/// - isActive is true AND
+/// - operatingStatus is OPEN
 class _AvailabilityBadge extends StatelessWidget {
-  const _AvailabilityBadge({required this.isActive});
+  const _AvailabilityBadge({
+    required this.isActive,
+    required this.operatingStatus,
+  });
 
   final bool isActive;
+  final MerchantOperatingStatusEnum operatingStatus;
 
   @override
   Widget build(BuildContext context) {
-    final backgroundColor = isActive
+    // Merchant is only open if both isActive AND operatingStatus is OPEN
+    final isOpen =
+        isActive && operatingStatus == MerchantOperatingStatusEnum.OPEN;
+
+    // Determine the display label based on operating status
+    final String label;
+    if (!isActive) {
+      label = "Closed";
+    } else {
+      switch (operatingStatus) {
+        case MerchantOperatingStatusEnum.OPEN:
+          label = "Open";
+        case MerchantOperatingStatusEnum.CLOSED:
+          label = "Closed";
+        case MerchantOperatingStatusEnum.BREAK:
+          label = "Break";
+        case MerchantOperatingStatusEnum.MAINTENANCE:
+          label = "Maintenance";
+      }
+    }
+
+    final backgroundColor = isOpen
         ? Colors.green.shade100
         : Colors.red.shade100;
-    final textColor = isActive ? Colors.green.shade700 : Colors.red.shade700;
-    final dotColor = isActive ? Colors.green.shade600 : Colors.red.shade600;
-    final label = isActive ? 'Open' : 'Closed';
+    final textColor = isOpen ? Colors.green.shade700 : Colors.red.shade700;
+    final dotColor = isOpen ? Colors.green.shade600 : Colors.red.shade600;
 
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),

@@ -223,6 +223,7 @@ export class OrderPlacementRepository extends OrderBaseRepository {
 					discountAmount: safeDiscountAmount,
 					gender: params.gender,
 					genderPreference: params.genderPreference ?? "ANY",
+					attachmentUrl: params.attachmentUrl,
 					requestedAt: now,
 					createdAt: now,
 					updatedAt: now,

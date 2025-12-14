@@ -13,6 +13,7 @@ Method | HTTP request | Description
 [**couponCreate**](CouponApi.md#couponcreate) | **POST** /coupons | 
 [**couponDeactivate**](CouponApi.md#coupondeactivate) | **POST** /coupons/{id}/deactivate | 
 [**couponGet**](CouponApi.md#couponget) | **GET** /coupons/{id} | 
+[**couponGetAvailableCoupons**](CouponApi.md#coupongetavailablecoupons) | **GET** /coupons/available | 
 [**couponGetEligibleCoupons**](CouponApi.md#coupongeteligiblecoupons) | **POST** /coupons/eligible | 
 [**couponList**](CouponApi.md#couponlist) | **GET** /coupons | 
 [**couponRemove**](CouponApi.md#couponremove) | **DELETE** /coupons/{id} | 
@@ -172,6 +173,49 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**CouponCreate200Response**](CouponCreate200Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **couponGetAvailableCoupons**
+> CouponList200Response couponGetAvailableCoupons(serviceType)
+
+
+
+Get all available coupons for browsing (active and within validity period)
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getCouponApi();
+final OrderType serviceType = ; // OrderType | 
+
+try {
+    final response = api.couponGetAvailableCoupons(serviceType);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling CouponApi->couponGetAvailableCoupons: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **serviceType** | [**OrderType**](.md)|  | [optional] 
+
+### Return type
+
+[**CouponList200Response**](CouponList200Response.md)
 
 ### Authorization
 

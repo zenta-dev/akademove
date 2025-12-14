@@ -288,8 +288,35 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<DriverOrderCubit, DriverOrderState>(
+      listenWhen: (previous, current) {
+        // Only listen when operation results transition to success/failure
+        // This prevents toast from firing multiple times on unrelated state changes
+        final fetchFailed =
+            !previous.fetchOrderResult.isFailure &&
+            current.fetchOrderResult.isFailure;
+        final acceptSuccess =
+            !previous.acceptOrderResult.isSuccess &&
+            current.acceptOrderResult.isSuccess;
+        final markArrivedSuccess =
+            !previous.markArrivedResult.isSuccess &&
+            current.markArrivedResult.isSuccess;
+        final startTripSuccess =
+            !previous.startTripResult.isSuccess &&
+            current.startTripResult.isSuccess;
+        final completeTripSuccess =
+            !previous.completeTripResult.isSuccess &&
+            current.completeTripResult.isSuccess;
+        final orderStatusChanged = previous.orderStatus != current.orderStatus;
+
+        return fetchFailed ||
+            acceptSuccess ||
+            markArrivedSuccess ||
+            startTripSuccess ||
+            completeTripSuccess ||
+            orderStatusChanged;
+      },
       listener: (context, state) {
-        // Show error messages
+        // Show error messages on failure transition
         if (state.fetchOrderResult.isFailure) {
           context.showMyToast(
             state.fetchOrderResult.error?.message ??
@@ -298,7 +325,7 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
           );
         }
 
-        // Show success messages for various actions
+        // Show success messages on success transition
         if (state.acceptOrderResult.isSuccess ||
             state.markArrivedResult.isSuccess ||
             state.startTripResult.isSuccess ||
@@ -306,7 +333,7 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
           context.showMyToast("Status updated", type: ToastType.success);
         }
 
-        // Navigate back when order status TRANSITIONS to completed or cancelled
+        // Handle order status TRANSITIONS to terminal states
         // Skip if this is a historical view (order was already terminal on load)
         final currentStatus = state.orderStatus;
         final isTerminal =
@@ -318,11 +345,33 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
             isTerminal && !wasTerminalBefore && !_isHistoricalView;
 
         if (isStatusTransition) {
-          Future.delayed(const Duration(seconds: 2), () {
-            if (mounted && context.mounted) {
-              context.popUntilRoot();
-            }
-          });
+          final order = state.currentOrder;
+          // For COMPLETED status, redirect to review screen
+          if (currentStatus == OrderStatus.COMPLETED && order != null) {
+            Future.delayed(const Duration(milliseconds: 500), () {
+              if (mounted && context.mounted) {
+                // Navigate to order completion/review screen
+                context.goNamed(
+                  Routes.driverOrderCompletion.name,
+                  extra: {
+                    'orderId': order.id,
+                    'orderType': order.type,
+                    'order': order,
+                    'user': order.user,
+                    'merchant': order.merchant,
+                    'payment': null,
+                  },
+                );
+              }
+            });
+          } else {
+            // For other terminal states (cancelled, no-show), navigate back
+            Future.delayed(const Duration(seconds: 2), () {
+              if (mounted && context.mounted) {
+                context.popUntilRoot();
+              }
+            });
+          }
         }
 
         // Update previous status for next comparison
@@ -871,19 +920,62 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    Builder(
-                      builder: (context) {
-                        final gender = order.user?.gender;
-                        if (gender == null) return const SizedBox.shrink();
+                    Row(
+                      children: [
+                        Builder(
+                          builder: (context) {
+                            final gender = order.user?.gender;
+                            if (gender == null) return const SizedBox.shrink();
 
-                        return Text(
-                          _formatGender(gender),
-                          style: context.typography.small.copyWith(
-                            fontSize: 14.sp,
-                            color: context.colorScheme.mutedForeground,
-                          ),
-                        );
-                      },
+                            return Text(
+                              _formatGender(gender),
+                              style: context.typography.small.copyWith(
+                                fontSize: 14.sp,
+                                color: context.colorScheme.mutedForeground,
+                              ),
+                            );
+                          },
+                        ),
+                        Builder(
+                          builder: (context) {
+                            final rating = order.user?.rating;
+                            if (rating == null || rating == 0) {
+                              return const SizedBox.shrink();
+                            }
+
+                            return Row(
+                              children: [
+                                if (order.user?.gender != null)
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 8.w,
+                                    ),
+                                    child: Text(
+                                      '•',
+                                      style: context.typography.small.copyWith(
+                                        color:
+                                            context.colorScheme.mutedForeground,
+                                      ),
+                                    ),
+                                  ),
+                                Icon(
+                                  LucideIcons.star,
+                                  size: 14.sp,
+                                  color: const Color(0xFFFFC107),
+                                ),
+                                SizedBox(width: 4.w),
+                                Text(
+                                  rating.toStringAsFixed(1),
+                                  style: context.typography.small.copyWith(
+                                    fontSize: 14.sp,
+                                    color: context.colorScheme.mutedForeground,
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -1112,8 +1204,10 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
 
   /// Build the delivery item photo upload button for DELIVERY orders
   Widget _buildDeliveryItemPhotoButton(Order order) {
-    // Note: deliveryItemPhotoUrl will be available after API client regeneration
-    // For now, we always show the "Take Item Photo" button
+    final hasPhoto =
+        order.deliveryItemPhotoUrl != null &&
+        order.deliveryItemPhotoUrl!.isNotEmpty;
+
     return SizedBox(
       width: double.infinity,
       child: OutlineButton(
@@ -1122,8 +1216,11 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           spacing: 8.w,
           children: [
-            Icon(LucideIcons.camera, size: 20.sp),
-            const Text('Take Item Photo'),
+            Icon(
+              hasPhoto ? LucideIcons.circleCheck : LucideIcons.camera,
+              size: 20.sp,
+            ),
+            Text(hasPhoto ? 'View/Update Item Photo' : 'Take Item Photo'),
           ],
         ),
       ),

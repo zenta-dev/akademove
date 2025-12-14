@@ -69,6 +69,7 @@ class UserMartCubit extends BaseCubit<UserMartState> {
 
   /// Load merchants by category (ATK, Printing, Food)
   /// Uses backend category filtering to show merchants with matching categories
+  /// Only shows approved, active, and open merchants to match server behavior
   Future<void> loadCategoryMerchants({required String category}) async =>
       await taskManager.execute('UMC-lCM-$category', () async {
         try {
@@ -79,9 +80,12 @@ class UserMartCubit extends BaseCubit<UserMartState> {
             ),
           );
 
-          // Use list() with category filter
+          // Use list() with category filter and status filters
+          // This matches server's popular merchants filter criteria
           final res = await _merchantRepository.list(
             category: category,
+            isActive: true, // Only show active merchants
+            operatingStatus: 'OPEN', // Only show open merchants
             limit: 50, // Get reasonable number of merchants per category
           );
 

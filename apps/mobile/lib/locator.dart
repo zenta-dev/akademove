@@ -303,5 +303,8 @@ void _setupCubit() {
       () => MerchantWalletCubit(
         merchantWalletRepository: sl<MerchantWalletRepository>(),
       ),
+    )
+    ..registerFactory(
+      () => MerchantReviewCubit(reviewRepository: sl<ReviewRepository>()),
     );
 }

@@ -19,6 +19,7 @@ Name | Type | Description | Notes
 **banExpires** | [**DateTime**](DateTime.md) |  | [optional] 
 **gender** | [**UserGender**](UserGender.md) |  | [optional] 
 **phone** | [**Phone**](Phone.md) |  | [optional] 
+**rating** | **num** |  | [optional] [default to 0]
 **createdAt** | [**DateTime**](DateTime.md) |  | 
 **updatedAt** | [**DateTime**](DateTime.md) |  | 
 **userBadges** | [**List&lt;UserBadge&gt;**](UserBadge.md) |  | 

@@ -7,6 +7,7 @@ import {
 } from "./common.js";
 import { CONSTANTS } from "./constants.js";
 import { extractSchemaKeysAsEnum } from "./enum.helper.js";
+import { OrderTypeSchema } from "./order.js";
 
 const GeneralRuleTypeSchema = z.enum(CONSTANTS.GENERAL_RULE_TYPES);
 export type GeneralRuleType = z.infer<typeof GeneralRuleTypeSchema>;
@@ -60,6 +61,8 @@ export const CouponSchema = z.object({
 	periodEnd: DateSchema,
 	isActive: z.boolean(),
 	merchantId: z.uuid().nullable().optional(), // For merchant-specific coupons
+	// Service types this coupon is valid for (empty array = all services)
+	serviceTypes: z.array(OrderTypeSchema).optional(),
 	// Event-specific fields (for EVENT type coupons)
 	eventName: z.string().max(256).optional(),
 	eventDescription: z.string().max(1000).optional(),

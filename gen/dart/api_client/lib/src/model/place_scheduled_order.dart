@@ -33,6 +33,7 @@ class PlaceScheduledOrder {
     this.items,
     this.gender,
     this.genderPreference,
+    this.attachmentUrl,
     this.couponCode,
     required this.payment,
     required this.scheduledAt,
@@ -64,6 +65,9 @@ class PlaceScheduledOrder {
   @JsonKey(name: r'genderPreference', required: false, includeIfNull: false)
   final PlaceScheduledOrderGenderPreferenceEnum? genderPreference;
 
+  @JsonKey(name: r'attachmentUrl', required: false, includeIfNull: false)
+  final String? attachmentUrl;
+
   @JsonKey(name: r'couponCode', required: false, includeIfNull: false)
   final String? couponCode;
 
@@ -86,6 +90,7 @@ class PlaceScheduledOrder {
           other.items == items &&
           other.gender == gender &&
           other.genderPreference == genderPreference &&
+          other.attachmentUrl == attachmentUrl &&
           other.couponCode == couponCode &&
           other.payment == payment &&
           other.scheduledAt == scheduledAt;
@@ -101,6 +106,7 @@ class PlaceScheduledOrder {
       items.hashCode +
       gender.hashCode +
       genderPreference.hashCode +
+      attachmentUrl.hashCode +
       couponCode.hashCode +
       payment.hashCode +
       scheduledAt.hashCode;

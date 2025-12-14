@@ -39,6 +39,7 @@ export class CouponRepository extends BaseRepository {
 				? toNumberSafe(item.discountAmount)
 				: undefined,
 			discountPercentage: item.discountPercentage ?? undefined,
+			serviceTypes: item.serviceTypes ?? [],
 			eventName: item.eventName ?? undefined,
 			eventDescription: item.eventDescription ?? undefined,
 		};
@@ -311,6 +312,73 @@ export class CouponRepository extends BaseRepository {
 	}
 
 	/**
+	 * Get all available coupons for browsing
+	 * Returns active coupons within validity period, optionally filtered by service type
+	 * Does NOT check user-specific eligibility (usage limits, new user only, etc.)
+	 *
+	 * @param params - Optional serviceType filter
+	 * @returns Array of available coupons
+	 */
+	async getAvailableCoupons(params?: {
+		serviceType?: string;
+	}): Promise<Coupon[]> {
+		try {
+			const { serviceType } = params ?? {};
+			const now = new Date();
+
+			// Query active coupons within validity period
+			const coupons = await this.db.query.coupon.findMany({
+				where: (f, op) =>
+					op.and(
+						op.eq(f.isActive, true),
+						op.lte(f.periodStart, now),
+						op.gte(f.periodEnd, now),
+						op.lt(f.usedCount, f.usageLimit),
+						// Only platform-wide coupons for browsing (no merchant-specific)
+						op.isNull(f.merchantId),
+					),
+				orderBy: (f, op) => op.desc(f.createdAt),
+			});
+
+			// Filter by service type if specified
+			const filteredCoupons = coupons
+				.map(CouponRepository.composeEntity)
+				.filter((coupon) => {
+					// If no service type filter, include all
+					if (!serviceType) return true;
+
+					// If coupon has no service type restrictions, include it
+					if (
+						!coupon.serviceTypes ||
+						!Array.isArray(coupon.serviceTypes) ||
+						coupon.serviceTypes.length === 0
+					) {
+						return true;
+					}
+
+					// Check if service type is in allowed list
+					return coupon.serviceTypes.includes(
+						serviceType as "RIDE" | "DELIVERY" | "FOOD",
+					);
+				});
+
+			logger.info(
+				{
+					serviceType,
+					totalCount: coupons.length,
+					filteredCount: filteredCoupons.length,
+				},
+				"[CouponRepository] Available coupons retrieved",
+			);
+
+			return filteredCoupons;
+		} catch (error) {
+			logger.error({ params, error }, "Failed to get available coupons");
+			throw this.handleError(error, "getAvailableCoupons");
+		}
+	}
+
+	/**
 	 * Get all eligible coupons for an order with auto-selected best coupon
 	 * Returns ALL eligible coupons without any limit
 	 *
@@ -328,7 +396,7 @@ export class CouponRepository extends BaseRepository {
 		bestDiscountAmount: number;
 	}> {
 		try {
-			const { totalAmount, userId, merchantId } = params;
+			const { serviceType, totalAmount, userId, merchantId } = params;
 			const now = new Date();
 
 			// Query active coupons within validity period
@@ -368,6 +436,7 @@ export class CouponRepository extends BaseRepository {
 						orderAmount: totalAmount,
 						userId,
 						merchantId,
+						serviceType,
 						getUserUsageCount,
 						getUserOrderCount,
 					});
@@ -388,6 +457,7 @@ export class CouponRepository extends BaseRepository {
 				{
 					userId,
 					merchantId,
+					serviceType,
 					totalAmount,
 					eligibleCount: eligibleCoupons.length,
 					bestCouponCode: bestCoupon?.code,
@@ -411,7 +481,7 @@ export class CouponRepository extends BaseRepository {
 		code: string,
 		orderAmount: number,
 		userId: string,
-		_serviceType?: string,
+		serviceType?: string,
 		merchantId?: string,
 	): Promise<{
 		valid: boolean;
@@ -452,6 +522,7 @@ export class CouponRepository extends BaseRepository {
 					orderAmount,
 					userId,
 					merchantId,
+					serviceType,
 					getUserUsageCount,
 					getUserOrderCount,
 				},

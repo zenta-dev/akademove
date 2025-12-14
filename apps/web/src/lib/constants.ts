@@ -23,6 +23,8 @@ export const SUB_ROUTE_TITLES = Object.freeze({
 		USERS: `${m.users()} - ${ROUTE_TITLES.ADMINISTRATOR}`,
 		CONTACTS: `${m.contact_us()} - ${ROUTE_TITLES.ADMINISTRATOR}`,
 		APPROVALS: `Approval Dashboard - ${ROUTE_TITLES.ADMINISTRATOR}`,
+		FRAUD: `Fraud Detection - ${ROUTE_TITLES.ADMINISTRATOR}`,
+		COUPONS: `${m.coupons()} - ${ROUTE_TITLES.ADMINISTRATOR}`,
 	} as const,
 	OPERATOR: {
 		OVERVIEW: `${m.overview()} - ${ROUTE_TITLES.OPERATOR}`,
@@ -35,7 +37,6 @@ export const SUB_ROUTE_TITLES = Object.freeze({
 		REPORTS: `${m.reports()} - ${ROUTE_TITLES.OPERATOR}`,
 		CONTACTS: `${m.contact_us()} - ${ROUTE_TITLES.OPERATOR}`,
 		USERS: `${m.users()} - ${ROUTE_TITLES.OPERATOR}`,
-		FRAUD: `Fraud Detection - ${ROUTE_TITLES.OPERATOR}`,
 		APPROVALS: `Approval Dashboard - ${ROUTE_TITLES.OPERATOR}`,
 		EMERGENCY_CONTACTS: `Emergency Contacts - ${ROUTE_TITLES.OPERATOR}`,
 	} as const,

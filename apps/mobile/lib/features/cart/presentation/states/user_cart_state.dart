@@ -9,9 +9,11 @@ class UserCartState extends Equatable {
     this.clearCartResult = const OperationResult.idle(),
     this.replaceCartResult = const OperationResult.idle(),
     this.placeFoodOrderResult = const OperationResult.idle(),
+    this.uploadAttachmentResult = const OperationResult.idle(),
     this.pendingItem,
     this.pendingMerchantName,
     this.pendingMerchantLocation,
+    this.pendingMerchantCategory,
     this.showMerchantConflict = false,
   });
 
@@ -36,6 +38,9 @@ class UserCartState extends Equatable {
   /// Place food order operation result
   final OperationResult<PlaceOrderResponse> placeFoodOrderResult;
 
+  /// Upload attachment operation result
+  final OperationResult<String> uploadAttachmentResult;
+
   /// Pending item to add (when merchant conflict detected)
   final CartItem? pendingItem;
 
@@ -44,6 +49,9 @@ class UserCartState extends Equatable {
 
   /// Pending merchant location (when merchant conflict detected)
   final Coordinate? pendingMerchantLocation;
+
+  /// Pending merchant category (when merchant conflict detected)
+  final MerchantCategory? pendingMerchantCategory;
 
   /// Whether to show merchant conflict dialog
   final bool showMerchantConflict;
@@ -82,6 +90,12 @@ class UserCartState extends Equatable {
   /// Computed: has merchant conflict
   bool get hasMerchantConflict => showMerchantConflict && pendingItem != null;
 
+  /// Computed: is this a printing merchant (requires attachment)
+  bool get isPrintingMerchant => currentCart?.isPrintingMerchant ?? false;
+
+  /// Computed: has attachment
+  bool get hasAttachment => currentCart?.attachmentUrl != null;
+
   @override
   List<Object?> get props => [
     cart,
@@ -91,9 +105,11 @@ class UserCartState extends Equatable {
     clearCartResult,
     replaceCartResult,
     placeFoodOrderResult,
+    uploadAttachmentResult,
     pendingItem,
     pendingMerchantName,
     pendingMerchantLocation,
+    pendingMerchantCategory,
     showMerchantConflict,
   ];
 
@@ -105,9 +121,11 @@ class UserCartState extends Equatable {
     OperationResult<bool>? clearCartResult,
     OperationResult<Cart>? replaceCartResult,
     OperationResult<PlaceOrderResponse>? placeFoodOrderResult,
+    OperationResult<String>? uploadAttachmentResult,
     CartItem? pendingItem,
     String? pendingMerchantName,
     Coordinate? pendingMerchantLocation,
+    MerchantCategory? pendingMerchantCategory,
     bool? showMerchantConflict,
     bool clearPending = false,
   }) {
@@ -119,6 +137,8 @@ class UserCartState extends Equatable {
       clearCartResult: clearCartResult ?? this.clearCartResult,
       replaceCartResult: replaceCartResult ?? this.replaceCartResult,
       placeFoodOrderResult: placeFoodOrderResult ?? this.placeFoodOrderResult,
+      uploadAttachmentResult:
+          uploadAttachmentResult ?? this.uploadAttachmentResult,
       pendingItem: clearPending ? null : (pendingItem ?? this.pendingItem),
       pendingMerchantName: clearPending
           ? null
@@ -126,6 +146,9 @@ class UserCartState extends Equatable {
       pendingMerchantLocation: clearPending
           ? null
           : (pendingMerchantLocation ?? this.pendingMerchantLocation),
+      pendingMerchantCategory: clearPending
+          ? null
+          : (pendingMerchantCategory ?? this.pendingMerchantCategory),
       showMerchantConflict: clearPending
           ? false
           : (showMerchantConflict ?? this.showMerchantConflict),

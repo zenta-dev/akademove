@@ -67,6 +67,8 @@ abstract class _$UpdateOrderCWProxy {
 
   UpdateOrder deliveryItemType(DeliveryItemType? deliveryItemType);
 
+  UpdateOrder attachmentUrl(String? attachmentUrl);
+
   UpdateOrder user(DriverUser? user);
 
   UpdateOrder driver(OrderDriver? driver);
@@ -110,6 +112,7 @@ abstract class _$UpdateOrderCWProxy {
     int? itemCount,
     List<OrderItem>? items,
     DeliveryItemType? deliveryItemType,
+    String? attachmentUrl,
     DriverUser? user,
     OrderDriver? driver,
     OrderMerchant? merchant,
@@ -228,6 +231,10 @@ class _$UpdateOrderCWProxyImpl implements _$UpdateOrderCWProxy {
       call(deliveryItemType: deliveryItemType);
 
   @override
+  UpdateOrder attachmentUrl(String? attachmentUrl) =>
+      call(attachmentUrl: attachmentUrl);
+
+  @override
   UpdateOrder user(DriverUser? user) => call(user: user);
 
   @override
@@ -274,6 +281,7 @@ class _$UpdateOrderCWProxyImpl implements _$UpdateOrderCWProxy {
     Object? itemCount = const $CopyWithPlaceholder(),
     Object? items = const $CopyWithPlaceholder(),
     Object? deliveryItemType = const $CopyWithPlaceholder(),
+    Object? attachmentUrl = const $CopyWithPlaceholder(),
     Object? user = const $CopyWithPlaceholder(),
     Object? driver = const $CopyWithPlaceholder(),
     Object? merchant = const $CopyWithPlaceholder(),
@@ -395,6 +403,10 @@ class _$UpdateOrderCWProxyImpl implements _$UpdateOrderCWProxy {
           ? _value.deliveryItemType
           // ignore: cast_nullable_to_non_nullable
           : deliveryItemType as DeliveryItemType?,
+      attachmentUrl: attachmentUrl == const $CopyWithPlaceholder()
+          ? _value.attachmentUrl
+          // ignore: cast_nullable_to_non_nullable
+          : attachmentUrl as String?,
       user: user == const $CopyWithPlaceholder()
           ? _value.user
           // ignore: cast_nullable_to_non_nullable
@@ -496,6 +508,7 @@ UpdateOrder _$UpdateOrderFromJson(
       'deliveryItemType',
       (v) => $enumDecodeNullable(_$DeliveryItemTypeEnumMap, v),
     ),
+    attachmentUrl: $checkedConvert('attachmentUrl', (v) => v as String?),
     user: $checkedConvert(
       'user',
       (v) => v == null ? null : DriverUser.fromJson(v as Map<String, dynamic>),
@@ -545,6 +558,7 @@ Map<String, dynamic> _$UpdateOrderToJson(UpdateOrder instance) =>
       'itemCount': ?instance.itemCount,
       'items': ?instance.items?.map((e) => e.toJson()).toList(),
       'deliveryItemType': ?_$DeliveryItemTypeEnumMap[instance.deliveryItemType],
+      'attachmentUrl': ?instance.attachmentUrl,
       'user': ?instance.user?.toJson(),
       'driver': ?instance.driver?.toJson(),
       'merchant': ?instance.merchant?.toJson(),
