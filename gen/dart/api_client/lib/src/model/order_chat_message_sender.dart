@@ -41,8 +41,7 @@ class OrderChatMessageSender {
           other.role == role;
 
   @override
-  int get hashCode =>
-      name.hashCode + (image == null ? 0 : image.hashCode) + role.hashCode;
+  int get hashCode => name.hashCode + image.hashCode + role.hashCode;
 
   factory OrderChatMessageSender.fromJson(Map<String, dynamic> json) =>
       _$OrderChatMessageSenderFromJson(json);

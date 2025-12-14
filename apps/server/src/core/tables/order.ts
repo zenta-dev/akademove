@@ -42,6 +42,10 @@ export const order = pgTable(
 		driverId: uuid("driver_id").references(() => driver.id, {
 			onDelete: "set null",
 		}),
+		/** Stores the driver ID when order is completed, for review purposes even if driverId is later cleared */
+		completedDriverId: uuid("completed_driver_id").references(() => driver.id, {
+			onDelete: "set null",
+		}),
 		merchantId: uuid("merchant_id").references(() => merchant.id, {
 			onDelete: "set null",
 		}),
@@ -115,12 +119,16 @@ export const order = pgTable(
 		deliveryOtp: text("delivery_otp"),
 		otpVerifiedAt: timestamp("otp_verified_at"),
 
+		// Delivery item photo (driver uploads photo of picked up item for verification)
+		deliveryItemPhotoUrl: text("delivery_item_photo_url"),
+
 		deliveryItemType: deliveryItemType(),
 	},
 	(t) => [
 		// Foreign key indexes for filtering by user/driver/merchant
 		index("order_user_id_idx").on(t.userId),
 		index("order_driver_id_idx").on(t.driverId),
+		index("order_completed_driver_id_idx").on(t.completedDriverId),
 		index("order_merchant_id_idx").on(t.merchantId),
 
 		// Status index for filtering by order status
@@ -224,6 +232,12 @@ export const orderRelations = relations(order, ({ one, many }) => ({
 	driver: one(driver, {
 		fields: [order.driverId],
 		references: [driver.id],
+		relationName: "currentDriver",
+	}),
+	completedDriver: one(driver, {
+		fields: [order.completedDriverId],
+		references: [driver.id],
+		relationName: "completedDriver",
 	}),
 	merchant: one(merchant, {
 		fields: [order.merchantId],
@@ -237,6 +251,10 @@ export const orderItemRelations = relations(orderItem, ({ one }) => ({
 	order: one(order, {
 		fields: [orderItem.orderId],
 		references: [order.id],
+	}),
+	menu: one(merchantMenu, {
+		fields: [orderItem.menuId],
+		references: [merchantMenu.id],
 	}),
 }));
 

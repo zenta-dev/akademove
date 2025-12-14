@@ -27,7 +27,11 @@ export class ReviewRepository extends BaseRepository {
 	}
 
 	static composeEntity(item: ReviewDatabase): Review {
-		return item;
+		return {
+			...item,
+			// Ensure categories is an array (from JSONB)
+			categories: (item.categories ?? []) as Review["categories"],
+		};
 	}
 
 	async #getFromDB(id: string): Promise<Review | undefined> {

@@ -12,8 +12,8 @@ Name | Type | Description | Notes
 **orderId** | **String** |  | 
 **fromUserId** | **String** |  | 
 **toUserId** | **String** |  | 
-**category** | [**ReviewCategory**](ReviewCategory.md) |  | 
-**score** | **num** |  | 
+**categories** | [**List&lt;ReviewCategory&gt;**](ReviewCategory.md) |  | 
+**score** | **int** |  | 
 **comment** | **String** |  | [optional] [default to '']
 **createdAt** | [**DateTime**](DateTime.md) |  | 
 

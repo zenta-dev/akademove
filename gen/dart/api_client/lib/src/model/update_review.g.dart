@@ -7,15 +7,9 @@ part of 'update_review.dart';
 // **************************************************************************
 
 abstract class _$UpdateReviewCWProxy {
-  UpdateReview orderId(String? orderId);
+  UpdateReview categories(List<ReviewCategory>? categories);
 
-  UpdateReview fromUserId(String? fromUserId);
-
-  UpdateReview toUserId(String? toUserId);
-
-  UpdateReview category(ReviewCategory? category);
-
-  UpdateReview score(num? score);
+  UpdateReview score(int? score);
 
   UpdateReview comment(String? comment);
 
@@ -27,11 +21,8 @@ abstract class _$UpdateReviewCWProxy {
   /// UpdateReview(...).copyWith(id: 12, name: "My name")
   /// ```
   UpdateReview call({
-    String? orderId,
-    String? fromUserId,
-    String? toUserId,
-    ReviewCategory? category,
-    num? score,
+    List<ReviewCategory>? categories,
+    int? score,
     String? comment,
   });
 }
@@ -44,19 +35,11 @@ class _$UpdateReviewCWProxyImpl implements _$UpdateReviewCWProxy {
   final UpdateReview _value;
 
   @override
-  UpdateReview orderId(String? orderId) => call(orderId: orderId);
+  UpdateReview categories(List<ReviewCategory>? categories) =>
+      call(categories: categories);
 
   @override
-  UpdateReview fromUserId(String? fromUserId) => call(fromUserId: fromUserId);
-
-  @override
-  UpdateReview toUserId(String? toUserId) => call(toUserId: toUserId);
-
-  @override
-  UpdateReview category(ReviewCategory? category) => call(category: category);
-
-  @override
-  UpdateReview score(num? score) => call(score: score);
+  UpdateReview score(int? score) => call(score: score);
 
   @override
   UpdateReview comment(String? comment) => call(comment: comment);
@@ -70,34 +53,19 @@ class _$UpdateReviewCWProxyImpl implements _$UpdateReviewCWProxy {
   /// UpdateReview(...).copyWith(id: 12, name: "My name")
   /// ```
   UpdateReview call({
-    Object? orderId = const $CopyWithPlaceholder(),
-    Object? fromUserId = const $CopyWithPlaceholder(),
-    Object? toUserId = const $CopyWithPlaceholder(),
-    Object? category = const $CopyWithPlaceholder(),
+    Object? categories = const $CopyWithPlaceholder(),
     Object? score = const $CopyWithPlaceholder(),
     Object? comment = const $CopyWithPlaceholder(),
   }) {
     return UpdateReview(
-      orderId: orderId == const $CopyWithPlaceholder()
-          ? _value.orderId
+      categories: categories == const $CopyWithPlaceholder()
+          ? _value.categories
           // ignore: cast_nullable_to_non_nullable
-          : orderId as String?,
-      fromUserId: fromUserId == const $CopyWithPlaceholder()
-          ? _value.fromUserId
-          // ignore: cast_nullable_to_non_nullable
-          : fromUserId as String?,
-      toUserId: toUserId == const $CopyWithPlaceholder()
-          ? _value.toUserId
-          // ignore: cast_nullable_to_non_nullable
-          : toUserId as String?,
-      category: category == const $CopyWithPlaceholder()
-          ? _value.category
-          // ignore: cast_nullable_to_non_nullable
-          : category as ReviewCategory?,
+          : categories as List<ReviewCategory>?,
       score: score == const $CopyWithPlaceholder()
           ? _value.score
           // ignore: cast_nullable_to_non_nullable
-          : score as num?,
+          : score as int?,
       comment: comment == const $CopyWithPlaceholder()
           ? _value.comment
           // ignore: cast_nullable_to_non_nullable
@@ -120,14 +88,13 @@ extension $UpdateReviewCopyWith on UpdateReview {
 UpdateReview _$UpdateReviewFromJson(Map<String, dynamic> json) =>
     $checkedCreate('UpdateReview', json, ($checkedConvert) {
       final val = UpdateReview(
-        orderId: $checkedConvert('orderId', (v) => v as String?),
-        fromUserId: $checkedConvert('fromUserId', (v) => v as String?),
-        toUserId: $checkedConvert('toUserId', (v) => v as String?),
-        category: $checkedConvert(
-          'category',
-          (v) => $enumDecodeNullable(_$ReviewCategoryEnumMap, v),
+        categories: $checkedConvert(
+          'categories',
+          (v) => (v as List<dynamic>?)
+              ?.map((e) => $enumDecode(_$ReviewCategoryEnumMap, e))
+              .toList(),
         ),
-        score: $checkedConvert('score', (v) => v as num?),
+        score: $checkedConvert('score', (v) => (v as num?)?.toInt()),
         comment: $checkedConvert('comment', (v) => v as String? ?? ''),
       );
       return val;
@@ -135,10 +102,9 @@ UpdateReview _$UpdateReviewFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$UpdateReviewToJson(UpdateReview instance) =>
     <String, dynamic>{
-      'orderId': ?instance.orderId,
-      'fromUserId': ?instance.fromUserId,
-      'toUserId': ?instance.toUserId,
-      'category': ?_$ReviewCategoryEnumMap[instance.category],
+      'categories': ?instance.categories
+          ?.map((e) => _$ReviewCategoryEnumMap[e]!)
+          .toList(),
       'score': ?instance.score,
       'comment': ?instance.comment,
     };

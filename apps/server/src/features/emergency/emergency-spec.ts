@@ -4,6 +4,7 @@ import {
 	InsertEmergencySchema,
 	UpdateEmergencySchema,
 } from "@repo/schema/emergency";
+import { EmergencyWithContactSchema } from "@repo/schema/emergency-contact";
 import * as z from "zod";
 import { createSuccesSchema, FEATURE_TAGS } from "@/core/constants";
 
@@ -18,7 +19,10 @@ export const EmergencySpec = {
 		})
 		.input(z.object({ body: InsertEmergencySchema }))
 		.output(
-			createSuccesSchema(EmergencySchema, "Emergency triggered successfully"),
+			createSuccesSchema(
+				EmergencyWithContactSchema,
+				"Emergency triggered successfully",
+			),
 		),
 	listByOrder: oc
 		.route({

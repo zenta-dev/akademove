@@ -776,11 +776,12 @@ export class OrderRoom extends BaseDurableObject {
 		// Create transaction records for driver earning and platform commission
 		// Now using correct balance values from the atomic update
 		const [updatedOrder] = await Promise.all([
-			// Update order with commission details
+			// Update order with commission details and store completedDriverId for reviews
 			this.#repo.order.update(
 				done.orderId,
 				{
 					status: "COMPLETED",
+					completedDriverId: done.driverId,
 					platformCommission: toNumberSafe(platformCommission.toString()),
 					driverEarning: toNumberSafe(driverEarning.toString()),
 					merchantCommission: toNumberSafe(merchantCommission.toString()),

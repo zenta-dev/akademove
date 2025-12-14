@@ -597,7 +597,7 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
                   isValidated = true;
                   isValidating = false;
                 });
-                if (mounted) {
+                if (context.mounted) {
                   context.showMyToast(
                     context.l10n.toast_bank_account_verified,
                     type: ToastType.success,
@@ -605,7 +605,7 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
                 }
               } else {
                 setState(() => isValidating = false);
-                if (mounted) {
+                if (context.mounted) {
                   context.showMyToast(
                     context.l10n.toast_failed_verify_bank,
                     type: ToastType.failed,
@@ -614,7 +614,7 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
               }
             } catch (e) {
               setState(() => isValidating = false);
-              if (mounted) {
+              if (context.mounted) {
                 context.showMyToast(
                   context.l10n.toast_failed_verify_bank,
                   type: ToastType.failed,

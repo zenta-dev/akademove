@@ -24,20 +24,13 @@ class UserRatingScreen extends StatefulWidget {
 }
 
 class _UserRatingScreenState extends State<UserRatingScreen> {
-  final Map<ReviewCategory, int> _ratings = {};
-  final TextEditingController _commentController = TextEditingController();
-  ReviewCategory? _selectedCategory;
+  /// Selected categories (multi-select)
+  final Set<ReviewCategory> _selectedCategories = {};
 
-  @override
-  void initState() {
-    super.initState();
-    // Initialize all categories with 0 rating
-    for (final category in ReviewCategory.values) {
-      _ratings[category] = 0;
-    }
-    // Default to first category
-    _selectedCategory = ReviewCategory.values.first;
-  }
+  /// Overall rating for the review (1-5)
+  int _rating = 0;
+
+  final TextEditingController _commentController = TextEditingController();
 
   @override
   void dispose() {
@@ -46,34 +39,29 @@ class _UserRatingScreenState extends State<UserRatingScreen> {
   }
 
   bool get _canSubmit {
-    // Check if at least one category has a rating
-    return _ratings.values.any((rating) => rating > 0) &&
-        _selectedCategory != null;
+    // Must have at least one category selected and a rating > 0
+    return _selectedCategories.isNotEmpty && _rating > 0;
+  }
+
+  void _toggleCategory(ReviewCategory category) {
+    setState(() {
+      if (_selectedCategories.contains(category)) {
+        _selectedCategories.remove(category);
+      } else {
+        _selectedCategories.add(category);
+      }
+    });
   }
 
   void _submitReview() {
     if (!_canSubmit) return;
 
-    final category = _selectedCategory;
-    if (category == null) return;
-
-    final rating = _ratings[category] ?? 0;
-    if (rating == 0) {
-      if (mounted) {
-        context.showMyToast(
-          context.l10n.toast_please_rate_category(category.name),
-          type: ToastType.failed,
-        );
-      }
-      return;
-    }
-
     // BlocListener handles state changes
     context.read<UserReviewCubit>().submitReview(
       orderId: widget.orderId,
       toUserId: widget.driverId,
-      category: category,
-      score: rating,
+      categories: _selectedCategories.toList(),
+      score: _rating,
       comment: _commentController.text.trim().isNotEmpty
           ? _commentController.text.trim()
           : null,
@@ -113,11 +101,11 @@ class _UserRatingScreenState extends State<UserRatingScreen> {
                 // Driver info
                 _buildDriverInfo(),
 
-                // Category selector
-                _buildCategorySelector(),
+                // Overall rating section
+                _buildOverallRatingSection(),
 
-                // Rating stars for selected category
-                if (_selectedCategory != null) _buildRatingSection(),
+                // Category selector (multi-select)
+                _buildCategorySelector(),
 
                 // Comment section
                 _buildCommentSection(),
@@ -171,78 +159,7 @@ class _UserRatingScreenState extends State<UserRatingScreen> {
     );
   }
 
-  Widget _buildCategorySelector() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      spacing: 12.h,
-      children: [
-        Text(
-          context.l10n.text_rate_by_category,
-          style: context.typography.h4.copyWith(
-            fontSize: 16.sp,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        Wrap(
-          spacing: 8.w,
-          runSpacing: 8.h,
-          children: ReviewCategory.values.map((category) {
-            final isSelected = _selectedCategory == category;
-            final rating = _ratings[category] ?? 0;
-
-            return Button(
-              style: isSelected
-                  ? const ButtonStyle.primary(density: ButtonDensity.compact)
-                  : const ButtonStyle.outline(density: ButtonDensity.compact),
-              onPressed: () {
-                setState(() {
-                  _selectedCategory = category;
-                });
-              },
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                spacing: 8.w,
-                children: [
-                  Icon(_getCategoryIcon(category), size: 16.sp),
-                  Text(_getCategoryLabel(category)),
-                  if (rating > 0)
-                    Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 6.w,
-                        vertical: 2.h,
-                      ),
-                      decoration: BoxDecoration(
-                        color: isSelected
-                            ? context.colorScheme.primaryForeground
-                            : context.colorScheme.primary,
-                        borderRadius: BorderRadius.circular(12.r),
-                      ),
-                      child: Text(
-                        rating.toString(),
-                        style: TextStyle(
-                          fontSize: 10.sp,
-                          fontWeight: FontWeight.bold,
-                          color: isSelected
-                              ? context.colorScheme.primary
-                              : context.colorScheme.primaryForeground,
-                        ),
-                      ),
-                    ),
-                ],
-              ),
-            );
-          }).toList(),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildRatingSection() {
-    final category = _selectedCategory;
-    if (category == null) return const SizedBox.shrink();
-
-    final rating = _ratings[category] ?? 0;
-
+  Widget _buildOverallRatingSection() {
     return Card(
       child: Padding(
         padding: EdgeInsets.all(20.dg),
@@ -250,10 +167,10 @@ class _UserRatingScreenState extends State<UserRatingScreen> {
           spacing: 16.h,
           children: [
             Text(
-              _getCategoryDescription(category),
-              style: context.typography.small.copyWith(
-                fontSize: 14.sp,
-                color: context.colorScheme.mutedForeground,
+              context.l10n.text_rate_overall_experience,
+              style: context.typography.h4.copyWith(
+                fontSize: 16.sp,
+                fontWeight: FontWeight.w600,
               ),
               textAlign: TextAlign.center,
             ),
@@ -266,23 +183,23 @@ class _UserRatingScreenState extends State<UserRatingScreen> {
                 return GestureDetector(
                   onTap: () {
                     setState(() {
-                      _ratings[category] = starValue;
+                      _rating = starValue;
                     });
                   },
                   child: Icon(
-                    starValue <= rating ? LucideIcons.star : LucideIcons.star,
-                    size: 24.sp,
-                    color: starValue <= rating
+                    LucideIcons.star,
+                    size: 32.sp,
+                    color: starValue <= _rating
                         ? const Color(0xFFFFA000)
                         : context.colorScheme.mutedForeground,
-                    fill: starValue <= rating ? 1.0 : 0.0,
+                    fill: starValue <= _rating ? 1.0 : 0.0,
                   ),
                 );
               }),
             ),
-            if (rating > 0)
+            if (_rating > 0)
               Text(
-                _getRatingLabel(rating),
+                _getRatingLabel(_rating),
                 style: context.typography.h4.copyWith(
                   fontSize: 16.sp,
                   color: context.colorScheme.primary,
@@ -291,6 +208,57 @@ class _UserRatingScreenState extends State<UserRatingScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildCategorySelector() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: 12.h,
+      children: [
+        Text(
+          context.l10n.text_select_categories,
+          style: context.typography.h4.copyWith(
+            fontSize: 16.sp,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        Text(
+          context.l10n.text_select_categories_hint,
+          style: context.typography.small.copyWith(
+            fontSize: 12.sp,
+            color: context.colorScheme.mutedForeground,
+          ),
+        ),
+        Wrap(
+          spacing: 8.w,
+          runSpacing: 8.h,
+          children: ReviewCategory.values.map((category) {
+            final isSelected = _selectedCategories.contains(category);
+
+            return Button(
+              style: isSelected
+                  ? const ButtonStyle.primary(density: ButtonDensity.compact)
+                  : const ButtonStyle.outline(density: ButtonDensity.compact),
+              onPressed: () => _toggleCategory(category),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                spacing: 8.w,
+                children: [
+                  Icon(_getCategoryIcon(category), size: 16.sp),
+                  Text(_getCategoryLabel(category)),
+                  if (isSelected)
+                    Icon(
+                      LucideIcons.check,
+                      size: 14.sp,
+                      color: context.colorScheme.primaryForeground,
+                    ),
+                ],
+              ),
+            );
+          }).toList(),
+        ),
+      ],
     );
   }
 
@@ -366,23 +334,6 @@ class _UserRatingScreenState extends State<UserRatingScreen> {
         return context.l10n.category_communication;
       case ReviewCategory.OTHER:
         return context.l10n.category_overall;
-    }
-  }
-
-  String _getCategoryDescription(ReviewCategory category) {
-    switch (category) {
-      case ReviewCategory.CLEANLINESS:
-        return context.l10n.category_desc_cleanliness;
-      case ReviewCategory.COURTESY:
-        return context.l10n.category_desc_courtesy;
-      case ReviewCategory.PUNCTUALITY:
-        return context.l10n.category_desc_punctuality;
-      case ReviewCategory.SAFETY:
-        return context.l10n.category_desc_safety;
-      case ReviewCategory.COMMUNICATION:
-        return context.l10n.category_desc_communication;
-      case ReviewCategory.OTHER:
-        return context.l10n.category_desc_overall;
     }
   }
 

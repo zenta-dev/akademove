@@ -19,11 +19,11 @@ abstract class _$SupportChatMessageCWProxy {
 
   SupportChatMessage readAt(DateTime? readAt);
 
-  SupportChatMessage sentAt(DateTime? sentAt);
+  SupportChatMessage sentAt(DateTime sentAt);
 
-  SupportChatMessage createdAt(DateTime? createdAt);
+  SupportChatMessage createdAt(DateTime createdAt);
 
-  SupportChatMessage updatedAt(DateTime? updatedAt);
+  SupportChatMessage updatedAt(DateTime updatedAt);
 
   SupportChatMessage sender(SupportTicketAssignedTo? sender);
 
@@ -41,9 +41,9 @@ abstract class _$SupportChatMessageCWProxy {
     String message,
     bool isFromSupport,
     DateTime? readAt,
-    DateTime? sentAt,
-    DateTime? createdAt,
-    DateTime? updatedAt,
+    DateTime sentAt,
+    DateTime createdAt,
+    DateTime updatedAt,
     SupportTicketAssignedTo? sender,
   });
 }
@@ -75,14 +75,14 @@ class _$SupportChatMessageCWProxyImpl implements _$SupportChatMessageCWProxy {
   SupportChatMessage readAt(DateTime? readAt) => call(readAt: readAt);
 
   @override
-  SupportChatMessage sentAt(DateTime? sentAt) => call(sentAt: sentAt);
+  SupportChatMessage sentAt(DateTime sentAt) => call(sentAt: sentAt);
 
   @override
-  SupportChatMessage createdAt(DateTime? createdAt) =>
+  SupportChatMessage createdAt(DateTime createdAt) =>
       call(createdAt: createdAt);
 
   @override
-  SupportChatMessage updatedAt(DateTime? updatedAt) =>
+  SupportChatMessage updatedAt(DateTime updatedAt) =>
       call(updatedAt: updatedAt);
 
   @override
@@ -135,18 +135,18 @@ class _$SupportChatMessageCWProxyImpl implements _$SupportChatMessageCWProxy {
           ? _value.readAt
           // ignore: cast_nullable_to_non_nullable
           : readAt as DateTime?,
-      sentAt: sentAt == const $CopyWithPlaceholder()
+      sentAt: sentAt == const $CopyWithPlaceholder() || sentAt == null
           ? _value.sentAt
           // ignore: cast_nullable_to_non_nullable
-          : sentAt as DateTime?,
-      createdAt: createdAt == const $CopyWithPlaceholder()
+          : sentAt as DateTime,
+      createdAt: createdAt == const $CopyWithPlaceholder() || createdAt == null
           ? _value.createdAt
           // ignore: cast_nullable_to_non_nullable
-          : createdAt as DateTime?,
-      updatedAt: updatedAt == const $CopyWithPlaceholder()
+          : createdAt as DateTime,
+      updatedAt: updatedAt == const $CopyWithPlaceholder() || updatedAt == null
           ? _value.updatedAt
           // ignore: cast_nullable_to_non_nullable
-          : updatedAt as DateTime?,
+          : updatedAt as DateTime,
       sender: sender == const $CopyWithPlaceholder()
           ? _value.sender
           // ignore: cast_nullable_to_non_nullable
@@ -167,52 +167,44 @@ extension $SupportChatMessageCopyWith on SupportChatMessage {
 // JsonSerializableGenerator
 // **************************************************************************
 
-SupportChatMessage _$SupportChatMessageFromJson(Map<String, dynamic> json) =>
-    $checkedCreate('SupportChatMessage', json, ($checkedConvert) {
-      $checkKeys(
-        json,
-        requiredKeys: const [
-          'id',
-          'ticketId',
-          'senderId',
-          'message',
-          'isFromSupport',
-          'sentAt',
-          'createdAt',
-          'updatedAt',
-        ],
-      );
-      final val = SupportChatMessage(
-        id: $checkedConvert('id', (v) => v as String),
-        ticketId: $checkedConvert('ticketId', (v) => v as String),
-        senderId: $checkedConvert('senderId', (v) => v as String),
-        message: $checkedConvert('message', (v) => v as String),
-        isFromSupport: $checkedConvert('isFromSupport', (v) => v as bool),
-        readAt: $checkedConvert(
-          'readAt',
-          (v) => v == null ? null : DateTime.parse(v as String),
-        ),
-        sentAt: $checkedConvert(
-          'sentAt',
-          (v) => v == null ? null : DateTime.parse(v as String),
-        ),
-        createdAt: $checkedConvert(
-          'createdAt',
-          (v) => v == null ? null : DateTime.parse(v as String),
-        ),
-        updatedAt: $checkedConvert(
-          'updatedAt',
-          (v) => v == null ? null : DateTime.parse(v as String),
-        ),
-        sender: $checkedConvert(
-          'sender',
-          (v) => v == null
-              ? null
-              : SupportTicketAssignedTo.fromJson(v as Map<String, dynamic>),
-        ),
-      );
-      return val;
-    });
+SupportChatMessage _$SupportChatMessageFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate('SupportChatMessage', json, ($checkedConvert) {
+  $checkKeys(
+    json,
+    requiredKeys: const [
+      'id',
+      'ticketId',
+      'senderId',
+      'message',
+      'isFromSupport',
+      'sentAt',
+      'createdAt',
+      'updatedAt',
+    ],
+  );
+  final val = SupportChatMessage(
+    id: $checkedConvert('id', (v) => v as String),
+    ticketId: $checkedConvert('ticketId', (v) => v as String),
+    senderId: $checkedConvert('senderId', (v) => v as String),
+    message: $checkedConvert('message', (v) => v as String),
+    isFromSupport: $checkedConvert('isFromSupport', (v) => v as bool),
+    readAt: $checkedConvert(
+      'readAt',
+      (v) => v == null ? null : DateTime.parse(v as String),
+    ),
+    sentAt: $checkedConvert('sentAt', (v) => DateTime.parse(v as String)),
+    createdAt: $checkedConvert('createdAt', (v) => DateTime.parse(v as String)),
+    updatedAt: $checkedConvert('updatedAt', (v) => DateTime.parse(v as String)),
+    sender: $checkedConvert(
+      'sender',
+      (v) => v == null
+          ? null
+          : SupportTicketAssignedTo.fromJson(v as Map<String, dynamic>),
+    ),
+  );
+  return val;
+});
 
 Map<String, dynamic> _$SupportChatMessageToJson(SupportChatMessage instance) =>
     <String, dynamic>{
@@ -222,8 +214,8 @@ Map<String, dynamic> _$SupportChatMessageToJson(SupportChatMessage instance) =>
       'message': instance.message,
       'isFromSupport': instance.isFromSupport,
       'readAt': ?instance.readAt?.toIso8601String(),
-      'sentAt': instance.sentAt?.toIso8601String(),
-      'createdAt': instance.createdAt?.toIso8601String(),
-      'updatedAt': instance.updatedAt?.toIso8601String(),
+      'sentAt': instance.sentAt.toIso8601String(),
+      'createdAt': instance.createdAt.toIso8601String(),
+      'updatedAt': instance.updatedAt.toIso8601String(),
       'sender': ?instance.sender?.toJson(),
     };

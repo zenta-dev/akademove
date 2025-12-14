@@ -1,4 +1,5 @@
 import { m } from "@repo/i18n";
+import type { EmergencyWithContact } from "@repo/schema/emergency-contact";
 import { trimObjectValues } from "@repo/shared";
 import { createORPCRouter } from "@/core/router/orpc";
 import { logger } from "@/utils/logger";
@@ -87,11 +88,72 @@ export const EmergencyHandler = priv.router({
 				);
 			}
 
+			// Get emergency contacts for WhatsApp integration
+			const contacts = await context.repo.emergencyContact.listActive({ tx });
+
+			// Get user info
+			const userRecord = await context.repo.user.admin.get(order.userId);
+
+			// Get driver info if available
+			let driverInfo: EmergencyWithContact["driverInfo"];
+			if (order.driverId) {
+				try {
+					const driver = await context.repo.driver.main.get(order.driverId);
+					const driverUser = await context.repo.user.admin.get(driver.userId);
+					driverInfo = {
+						id: driver.id,
+						userId: driver.userId,
+						name: driverUser.name,
+						phone: driverUser.phone
+							? `+${driverUser.phone.countryCode === "ID" ? "62" : driverUser.phone.countryCode}${driverUser.phone.number}`
+							: undefined,
+						gender: driverUser.gender ?? undefined,
+						vehiclePlate: driver.licensePlate ?? undefined,
+					};
+				} catch (driverError) {
+					logger.warn(
+						{ error: driverError, driverId: order.driverId },
+						"[EmergencyHandler] Failed to fetch driver info",
+					);
+				}
+			}
+
+			const responseData: EmergencyWithContact = {
+				emergency: {
+					id: result.id,
+					orderId: result.orderId,
+					userId: result.userId,
+					driverId: result.driverId,
+					type: result.type,
+					status: result.status,
+					description: result.description,
+					location: result.location,
+					reportedAt: result.reportedAt,
+				},
+				contacts,
+				orderInfo: {
+					id: order.id,
+					type: order.type,
+					status: order.status,
+					pickupAddress: order.pickupAddress ?? undefined,
+					dropoffAddress: order.dropoffAddress ?? undefined,
+				},
+				userInfo: {
+					id: userRecord.id,
+					name: userRecord.name,
+					phone: userRecord.phone
+						? `+${userRecord.phone.countryCode === "ID" ? "62" : userRecord.phone.countryCode}${userRecord.phone.number}`
+						: undefined,
+					gender: userRecord.gender ?? undefined,
+				},
+				driverInfo,
+			};
+
 			return {
 				status: 200,
 				body: {
 					message: m.server_emergency_triggered(),
-					data: result,
+					data: responseData,
 				},
 			};
 		});

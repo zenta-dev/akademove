@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:akademove/core/_export.dart';
@@ -5,6 +6,13 @@ import 'package:akademove/features/features.dart';
 import 'package:api_client/api_client.dart';
 import 'package:flutter/services.dart';
 
+/// Cubit for handling merchant orders with WebSocket-first approach and HTTP polling fallback.
+///
+/// This cubit implements a reliable WebSocket-first pattern:
+/// 1. Connect to merchant WebSocket to receive real-time order notifications
+/// 2. Set up health check timer to detect stale/failed WebSocket connections
+/// 3. If WebSocket fails, fallback to HTTP polling to fetch orders
+/// 4. Stop polling when WebSocket recovers
 class MerchantOrderCubit extends BaseCubit<MerchantOrderState> {
   MerchantOrderCubit({
     required OrderRepository orderRepository,
@@ -28,10 +36,47 @@ class MerchantOrderCubit extends BaseCubit<MerchantOrderState> {
   /// WebSocket key for merchant-level order notifications
   static const _merchantWsKeyPrefix = 'merchant-orders';
 
+  /// Timer for WebSocket health check
+  Timer? _wsHealthCheckTimer;
+
+  /// Timer for HTTP polling fallback
+  Timer? _pollingTimer;
+
+  /// Consecutive health check failures
+  int _healthCheckFailures = 0;
+
+  /// Whether polling fallback is active
+  bool _isPollingActive = false;
+
+  /// Order statuses to poll for (active orders)
+  static const _activeOrderStatuses = [
+    OrderStatus.REQUESTED,
+    OrderStatus.MATCHING,
+    OrderStatus.ACCEPTED,
+    OrderStatus.ARRIVING,
+    OrderStatus.PREPARING,
+    OrderStatus.READY_FOR_PICKUP,
+  ];
+
+  /// Health check interval in seconds
+  static const int _wsHealthCheckIntervalSeconds = 15;
+
+  /// Max consecutive health check failures before fallback
+  static const int _maxHealthCheckFailures = 2;
+
+  /// Polling interval in seconds
+  static const int _pollingIntervalSeconds = 10;
+
   String _getMerchantWsKey(String merchantId) =>
       '$_merchantWsKeyPrefix-$merchantId';
 
-  void reset() => emit(const MerchantOrderState());
+  void reset() {
+    _stopHealthCheckTimer();
+    _stopPollingFallback();
+    _healthCheckFailures = 0;
+    _isPollingActive = false;
+    emit(const MerchantOrderState());
+  }
 
   /// Clear the incoming order from state (used after dialog is shown/dismissed)
   void clearIncomingOrder() {
@@ -40,6 +85,8 @@ class MerchantOrderCubit extends BaseCubit<MerchantOrderState> {
 
   @override
   Future<void> close() {
+    _stopHealthCheckTimer();
+    _stopPollingFallback();
     unsubscribeFromOrder();
     unsubscribeFromMerchantOrders();
     return super.close();
@@ -57,6 +104,9 @@ class MerchantOrderCubit extends BaseCubit<MerchantOrderState> {
     _merchantId = merchantId;
     final wsKey = _getMerchantWsKey(merchantId);
 
+    // Set up WebSocket status listener for automatic fallback
+    _webSocketService.setStatusListener(wsKey, _handleWebSocketStatusChange);
+
     try {
       logger.i(
         '[MerchantOrderCubit] - Subscribing to merchant WebSocket: $merchantId',
@@ -66,6 +116,17 @@ class MerchantOrderCubit extends BaseCubit<MerchantOrderState> {
         wsKey,
         '${UrlConstants.wsBaseUrl}/merchant/$merchantId/orders',
         onMessage: (Object? msg) {
+          // Reset health check failures on any message received
+          _healthCheckFailures = 0;
+
+          // If we were polling, stop it since WebSocket is working
+          if (_isPollingActive) {
+            logger.i(
+              '[MerchantOrderCubit] - WebSocket message received, stopping polling',
+            );
+            _stopPollingFallback();
+          }
+
           try {
             if (msg == null) return;
             final json = jsonDecode(msg.toString()) as Map<String, Object?>;
@@ -83,6 +144,9 @@ class MerchantOrderCubit extends BaseCubit<MerchantOrderState> {
       );
 
       emit(state.copyWith(isMerchantWsConnected: true));
+
+      // Start health check timer
+      _startHealthCheckTimer();
     } catch (e, st) {
       logger.e(
         '[MerchantOrderCubit] - Failed to subscribe to merchant WebSocket',
@@ -90,6 +154,154 @@ class MerchantOrderCubit extends BaseCubit<MerchantOrderState> {
         stackTrace: st,
       );
       emit(state.copyWith(isMerchantWsConnected: false));
+      // Start polling fallback since WebSocket failed
+      _startPollingFallback();
+    }
+  }
+
+  /// Handle WebSocket connection status changes
+  void _handleWebSocketStatusChange(WebSocketConnectionStatus status) {
+    logger.d('[MerchantOrderCubit] - WebSocket status changed: $status');
+
+    switch (status) {
+      case WebSocketConnectionStatus.connected:
+        // WebSocket reconnected, stop polling if active
+        _healthCheckFailures = 0;
+        emit(state.copyWith(isMerchantWsConnected: true));
+        if (_isPollingActive) {
+          logger.i(
+            '[MerchantOrderCubit] - WebSocket reconnected, stopping polling',
+          );
+          _stopPollingFallback();
+        }
+        // Restart health check timer
+        _startHealthCheckTimer();
+
+      case WebSocketConnectionStatus.failed:
+        // WebSocket failed permanently, start polling fallback
+        emit(state.copyWith(isMerchantWsConnected: false));
+        logger.w(
+          '[MerchantOrderCubit] - WebSocket failed, starting polling fallback',
+        );
+        _startPollingFallback();
+
+      case WebSocketConnectionStatus.reconnecting:
+        // WebSocket is trying to reconnect
+        logger.d('[MerchantOrderCubit] - WebSocket reconnecting...');
+
+      case WebSocketConnectionStatus.disconnected:
+      case WebSocketConnectionStatus.connecting:
+        // Transitional states, no action needed
+        break;
+    }
+  }
+
+  /// Start WebSocket health check timer
+  void _startHealthCheckTimer() {
+    _stopHealthCheckTimer();
+    _wsHealthCheckTimer = Timer.periodic(
+      Duration(seconds: _wsHealthCheckIntervalSeconds),
+      (_) => _performHealthCheck(),
+    );
+  }
+
+  /// Stop WebSocket health check timer
+  void _stopHealthCheckTimer() {
+    _wsHealthCheckTimer?.cancel();
+    _wsHealthCheckTimer = null;
+  }
+
+  /// Perform WebSocket health check
+  void _performHealthCheck() {
+    final merchantId = _merchantId;
+    if (merchantId == null) return;
+
+    final wsKey = _getMerchantWsKey(merchantId);
+    final isHealthy = _webSocketService.isConnectionHealthy(wsKey);
+
+    if (!isHealthy) {
+      _healthCheckFailures++;
+      logger.d(
+        '[MerchantOrderCubit] - WebSocket health check failed '
+        '($_healthCheckFailures/$_maxHealthCheckFailures)',
+      );
+
+      if (_healthCheckFailures >= _maxHealthCheckFailures &&
+          !_isPollingActive) {
+        logger.w(
+          '[MerchantOrderCubit] - Max health check failures reached, '
+          'starting polling fallback',
+        );
+        emit(state.copyWith(isMerchantWsConnected: false));
+        _startPollingFallback();
+      }
+    } else {
+      _healthCheckFailures = 0;
+    }
+  }
+
+  /// Start HTTP polling fallback
+  void _startPollingFallback() {
+    if (_isPollingActive) return;
+
+    _isPollingActive = true;
+    logger.i('[MerchantOrderCubit] - Starting HTTP polling fallback');
+
+    _pollingTimer = Timer.periodic(
+      Duration(seconds: _pollingIntervalSeconds),
+      (_) => _pollOrders(),
+    );
+
+    // Also poll immediately
+    _pollOrders();
+  }
+
+  /// Stop HTTP polling fallback
+  void _stopPollingFallback() {
+    _pollingTimer?.cancel();
+    _pollingTimer = null;
+    _isPollingActive = false;
+  }
+
+  /// Poll orders via HTTP as fallback
+  Future<void> _pollOrders() async {
+    if (!_isPollingActive) return;
+
+    try {
+      logger.d('[MerchantOrderCubit] - Polling orders via HTTP...');
+
+      final res = await _orderRepository.list(
+        ListOrderQuery(statuses: _activeOrderStatuses),
+      );
+
+      // Check for new orders that we don't have in our list
+      final existingOrders = state.orders.value ?? [];
+      final existingIds = existingOrders.map((o) => o.id).toSet();
+
+      for (final order in res.data) {
+        if (!existingIds.contains(order.id)) {
+          // New order detected via polling - notify merchant
+          logger.i(
+            '[MerchantOrderCubit] - New order detected via polling: ${order.id}',
+          );
+          _notifyNewOrder(order);
+        }
+      }
+
+      // Merge orders, preserving existing ones and adding new ones
+      final mergedList = {
+        for (final item in existingOrders) item.id: item,
+        for (final item in res.data) item.id: item,
+      }.values.toList();
+
+      emit(state.copyWith(orders: OperationResult.success(mergedList)));
+    } catch (e, st) {
+      logger.e(
+        '[MerchantOrderCubit] - Polling failed',
+        error: e,
+        stackTrace: st,
+      );
+      // Continue polling even on error - network might recover
     }
   }
 
@@ -292,14 +504,20 @@ class MerchantOrderCubit extends BaseCubit<MerchantOrderState> {
 
   /// Unsubscribe from merchant-level WebSocket
   Future<void> unsubscribeFromMerchantOrders() async {
+    _stopHealthCheckTimer();
+    _stopPollingFallback();
+
     final merchantId = _merchantId;
     if (merchantId == null) return;
 
     try {
       logger.i('[MerchantOrderCubit] - Unsubscribing from merchant WebSocket');
       final wsKey = _getMerchantWsKey(merchantId);
+      _webSocketService.removeStatusListener(wsKey);
       await _webSocketService.disconnect(wsKey);
       _merchantId = null;
+      _healthCheckFailures = 0;
+      _isPollingActive = false;
       emit(state.copyWith(isMerchantWsConnected: false));
     } catch (e, st) {
       logger.e(

@@ -1181,6 +1181,9 @@
 	"text_thank_you_for_review": "Terima kasih atas ulasan Anda!",
 	"toast_failed_submit_review": "Gagal mengirim ulasan",
 	"text_rate_by_category": "Beri nilai berdasarkan kategori",
+	"text_rate_overall_experience": "Bagaimana penilaian Anda secara keseluruhan?",
+	"text_select_categories": "Pilih kategori yang sesuai",
+	"text_select_categories_hint": "Pilih semua yang sesuai dengan pengalaman Anda",
 	"category_cleanliness": "Kebersihan",
 	"category_courtesy": "Kesopanan",
 	"category_punctuality": "Ketepatan Waktu",
@@ -1607,6 +1610,8 @@
 	"leaderboard_other_rankings": "Peringkat Lainnya",
 	"leaderboard_refreshes_daily": "Peringkat diperbarui setiap 24 jam",
 	"leaderboard_empty_state": "Belum ada driver di papan peringkat",
+	"current_location": "Lokasi Saat Ini",
+	"current_location_desc": "Lokasi GPS Anda saat ini",
 
 	"privacy_policy_title": "Kebijakan Privasi AkadeMove",
 	"privacy_policy_date": "Oktober 2025",

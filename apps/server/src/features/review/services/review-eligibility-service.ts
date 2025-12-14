@@ -28,6 +28,7 @@ interface OrderData {
 	status: OrderStatus;
 	userId: string;
 	driverId: string | null;
+	completedDriverId: string | null;
 }
 
 /**
@@ -38,6 +39,9 @@ interface OrderData {
  * - Validate order completion status
  * - Verify user participation in order
  * - Check if review already exists
+ *
+ * Note: Uses completedDriverId for driver lookup after order completion,
+ * as driverId may be cleared after the trip ends.
  */
 export class ReviewEligibilityService {
 	/**
@@ -83,14 +87,32 @@ export class ReviewEligibilityService {
 
 	/**
 	 * Check if user is participant in the order
-	 * User must be either the customer (userId) or driver (driverId)
+	 * User must be either the customer (userId) or the driver (via driver.userId lookup)
+	 *
+	 * Note: For driver comparison, we need to look up the driver record to get userId
+	 * This method checks driverId directly; for full validation use isUserOrderParticipantAsync
 	 *
 	 * @param order - Order data
 	 * @param userId - User ID to check
+	 * @param driverUserId - Optional driver's userId (from driver table lookup)
 	 * @returns True if user is part of the order
 	 */
-	static isUserOrderParticipant(order: OrderData, userId: string): boolean {
-		return order.userId === userId || order.driverId === userId;
+	static isUserOrderParticipant(
+		order: OrderData,
+		userId: string,
+		driverUserId?: string | null,
+	): boolean {
+		// Check if user is the customer
+		if (order.userId === userId) {
+			return true;
+		}
+
+		// Check if user is the driver (via driverUserId lookup)
+		if (driverUserId && driverUserId === userId) {
+			return true;
+		}
+
+		return false;
 	}
 
 	/**
@@ -103,12 +125,14 @@ export class ReviewEligibilityService {
 	 * @param order - Order data
 	 * @param userId - User ID attempting to review
 	 * @param alreadyReviewed - Whether user already reviewed
+	 * @param driverUserId - Driver's user ID (from driver table lookup)
 	 * @returns True if user can submit review
 	 */
 	static canUserReviewOrder(
 		order: OrderData,
 		userId: string,
 		alreadyReviewed: boolean,
+		driverUserId?: string | null,
 	): boolean {
 		const orderCompleted = ReviewEligibilityService.isOrderReviewable(
 			order.status,
@@ -116,6 +140,7 @@ export class ReviewEligibilityService {
 		const isParticipant = ReviewEligibilityService.isUserOrderParticipant(
 			order,
 			userId,
+			driverUserId,
 		);
 
 		return orderCompleted && isParticipant && !alreadyReviewed;
@@ -152,9 +177,23 @@ export class ReviewEligibilityService {
 			const orderCompleted = ReviewEligibilityService.isOrderReviewable(
 				order.status,
 			);
+
+			// Get driver's userId for comparison
+			// Use completedDriverId first (set when order is completed), fallback to driverId
+			const effectiveDriverId = order.completedDriverId ?? order.driverId;
+			let driverUserId: string | null = null;
+
+			if (effectiveDriverId) {
+				const driver = await db.query.driver.findFirst({
+					where: (f, op) => op.eq(f.id, effectiveDriverId),
+				});
+				driverUserId = driver?.userId ?? null;
+			}
+
 			const isParticipant = ReviewEligibilityService.isUserOrderParticipant(
 				order,
 				userId,
+				driverUserId,
 			);
 
 			// Check if already reviewed

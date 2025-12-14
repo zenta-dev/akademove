@@ -10,6 +10,7 @@ class DriverOrderState extends Equatable {
     this.completeTripResult = const OperationResult.idle(),
     this.cancelOrderResult = const OperationResult.idle(),
     this.uploadProofResult = const OperationResult.idle(),
+    this.uploadItemPhotoResult = const OperationResult.idle(),
     this.recoverOrderResult = const OperationResult.idle(),
     this.currentOrder,
     this.customer,
@@ -25,6 +26,7 @@ class DriverOrderState extends Equatable {
   final OperationResult<Order> completeTripResult;
   final OperationResult<Order> cancelOrderResult;
   final OperationResult<Order> uploadProofResult;
+  final OperationResult<Order> uploadItemPhotoResult;
   final OperationResult<Order> recoverOrderResult;
 
   final Order? currentOrder;
@@ -46,6 +48,7 @@ class DriverOrderState extends Equatable {
     completeTripResult,
     cancelOrderResult,
     uploadProofResult,
+    uploadItemPhotoResult,
     recoverOrderResult,
     currentOrder,
     customer,
@@ -65,6 +68,7 @@ class DriverOrderState extends Equatable {
     OperationResult<Order>? completeTripResult,
     OperationResult<Order>? cancelOrderResult,
     OperationResult<Order>? uploadProofResult,
+    OperationResult<Order>? uploadItemPhotoResult,
     OperationResult<Order>? recoverOrderResult,
     Order? currentOrder,
     User? customer,
@@ -80,6 +84,8 @@ class DriverOrderState extends Equatable {
       completeTripResult: completeTripResult ?? this.completeTripResult,
       cancelOrderResult: cancelOrderResult ?? this.cancelOrderResult,
       uploadProofResult: uploadProofResult ?? this.uploadProofResult,
+      uploadItemPhotoResult:
+          uploadItemPhotoResult ?? this.uploadItemPhotoResult,
       recoverOrderResult: recoverOrderResult ?? this.recoverOrderResult,
       currentOrder: currentOrder ?? this.currentOrder,
       customer: customer ?? this.customer,

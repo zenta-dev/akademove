@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
@@ -22,35 +21,37 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
   String? _paymentId;
   String? _orderId;
 
-  /// Timer for polling active order updates (fallback only)
+  /// Timer for polling active order updates (fallback only when WebSocket fails)
   Timer? _pollingTimer;
 
-  /// Timer for sending CHECK_NEW_DATA via WebSocket
-  Timer? _checkNewDataTimer;
-
-  /// Default polling interval in seconds
+  /// Default polling interval in seconds (fallback only)
   static const int _defaultPollingIntervalSeconds = 5;
 
-  /// Faster polling interval when WebSocket is unhealthy
+  /// Faster polling interval when recovering from WebSocket failure
   static const int _fastPollingIntervalSeconds = 3;
 
   /// Critical polling interval during MATCHING status for faster driver acceptance detection
   static const int _criticalPollingIntervalSeconds = 2;
 
-  /// CHECK_NEW_DATA interval in seconds (how often to ask for new data via WebSocket)
-  static const int _checkNewDataIntervalSeconds = 5;
-
-  /// Max CHECK_NEW_DATA retries before HTTP fallback (15 * 5s = 75s total)
-  static const int _maxCheckNewDataRetries = 15;
-
-  /// Counter for consecutive CHECK_NEW_DATA with no response
-  int _checkNewDataNoResponseCount = 0;
-
-  /// Last known order version for CHECK_NEW_DATA sync
+  /// Last known order version for tracking updates (used for debugging/logging)
+  // ignore: unused_field
   String? _lastKnownVersion;
 
   /// Whether we're using polling as a fallback due to WebSocket issues
   bool _isPollingFallback = false;
+
+  /// WebSocket connection health check timer
+  /// Only used to detect stale connections, not for data sync
+  Timer? _wsHealthCheckTimer;
+
+  /// Health check interval in seconds (longer interval since server pushes all updates)
+  static const int _wsHealthCheckIntervalSeconds = 30;
+
+  /// Number of consecutive health check failures before fallback
+  int _healthCheckFailures = 0;
+
+  /// Max health check failures before HTTP fallback
+  static const int _maxHealthCheckFailures = 3;
 
   Future<void> init() async {
     reset();
@@ -63,6 +64,7 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
   @override
   Future<void> close() async {
     stopPolling();
+    _stopHealthCheckTimer();
     await teardownWebsocket();
     return super.close();
   }
@@ -133,10 +135,8 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
         final pid = activeOrder.payment?.id;
         if (pid != null) await _setupPaymentWebsocket(paymentId: pid);
 
-        // Setup live order WebSocket with polling fallback
-        await _setupLiveOrderWebsocketWithPolling(
-          orderId: activeOrder.order.id,
-        );
+        // Setup live order WebSocket (WebSocket-first, polling fallback)
+        await _setupLiveOrderWebsocket(orderId: activeOrder.order.id);
 
         return true;
       });
@@ -168,10 +168,12 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
   Future<void> clearActiveOrder() async {
     await _keyValueService.remove(KeyValueKeys.activeOrderId);
     stopPolling();
+    _stopHealthCheckTimer();
     await teardownWebsocket();
     _orderId = null;
     _paymentId = null;
     _isPollingFallback = false;
+    _healthCheckFailures = 0;
     emit(
       state.copyWith(
         currentOrder: const OperationResult.idle(),
@@ -379,16 +381,10 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
 
           await _webSocketService.disconnect(paymentId);
 
-          // For FOOD orders, connect to order WebSocket to receive merchant updates
-          // For RIDE/DELIVERY orders, connect to driver pool for driver matching
-          // Use WebSocket with polling fallback for reliability
-          final currentOrder = state.currentOrder.value;
+          // Connect to order WebSocket for real-time updates (WebSocket-first)
           final orderId = _orderId;
-          if (currentOrder?.type == OrderType.FOOD && orderId != null) {
-            await _setupLiveOrderWebsocketWithPolling(orderId: orderId);
-          } else if (orderId != null) {
-            // For RIDE/DELIVERY, also setup WebSocket with polling fallback
-            await _setupLiveOrderWebsocketWithPolling(orderId: orderId);
+          if (orderId != null) {
+            await _setupLiveOrderWebsocket(orderId: orderId);
           }
         }
 
@@ -439,151 +435,38 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
     }
   }
 
-  // Future<void> _setupFindDriverWebsocket() async {
-  //   try {
-  //     const driverPool = 'driver-pool';
-  //     Future<void> handleMessage(Map<String, dynamic> json) async {
-  //       final data = OrderEnvelope.fromJson(json);
-  //       logger.d('Driver Pool WebSocket Message: $data');
+  // ============================================================
+  // WebSocket-First Real-time Updates
+  // ============================================================
 
-  //       if (data.e == OrderEnvelopeEvent.MATCHING &&
-  //           state.currentOrder.value?.id == data.p.detail?.order.id) {
-  //         final detail = data.p.detail;
-  //         final payment = detail?.payment;
-  //         final transaction = detail?.transaction;
-  //         if (detail != null && payment != null && transaction != null) {
-  //           emit(
-  //             state.copyWith(
-  //               currentOrder: OperationResult.success(detail.order),
-  //               currentPayment: OperationResult.success(payment),
-  //               currentTransaction: OperationResult.success(transaction),
-  //             ),
-  //           );
-  //         }
-  //       }
-
-  //       if (data.e == OrderEnvelopeEvent.CANCELED) {
-  //         final detail = data.p.detail;
-  //         final payment = detail?.payment;
-  //         final transaction = detail?.transaction;
-  //         if (detail != null && payment != null && transaction != null) {
-  //           emit(
-  //             state.copyWith(
-  //               currentOrder: OperationResult.success(detail.order),
-  //               currentPayment: OperationResult.success(payment),
-  //               currentTransaction: OperationResult.success(transaction),
-  //             ),
-  //           );
-  //         }
-  //         emit(
-  //           state.copyWith(
-  //             currentOrder: OperationResult.failed(
-  //               UnknownError(data.p.cancelReason ?? 'Order cancelled'),
-  //             ),
-  //           ),
-  //         );
-  //       }
-
-  //       if (data.e == OrderEnvelopeEvent.DRIVER_ACCEPTED) {
-  //         final detail = data.p.detail;
-  //         final payment = detail?.payment;
-  //         final transaction = detail?.transaction;
-  //         if (detail != null && payment != null && transaction != null) {
-  //           emit(
-  //             state.copyWith(
-  //               currentOrder: OperationResult.success(detail.order),
-  //               currentPayment: OperationResult.success(payment),
-  //               currentTransaction: OperationResult.success(transaction),
-  //               currentAssignedDriver: OperationResult.success(
-  //                 data.p.driverAssigned,
-  //               ),
-  //             ),
-  //           );
-  //         }
-
-  //         await _webSocketService.disconnect(driverPool);
-  //         final orderId = _orderId;
-  //         if (orderId != null) {
-  //           await _setupLiveOrderWebsocket(orderId: orderId);
-  //         }
-  //       }
-  //     }
-
-  //     await _webSocketService.connect(
-  //       driverPool,
-  //       '${UrlConstants.wsBaseUrl}/$driverPool',
-  //       onMessage: (msg) async {
-  //         final json = (msg as String).parseJson();
-  //         if (json is Map<String, dynamic>) await handleMessage(json);
-  //       },
-  //     );
-  //   } catch (e, st) {
-  //     logger.e(
-  //       '[UserOrderCubit] - Driver Pool WebSocket error: $e',
-  //       error: e,
-  //       stackTrace: st,
-  //     );
-  //     emit(
-  //       state.copyWith(
-  //         currentAssignedDriver: OperationResult.failed(
-  //           const UnknownError('Failed to connect to driver service'),
-  //         ),
-  //       ),
-  //     );
-  //   }
-  // }
-
-  /// Setup live order WebSocket with HTTP polling fallback
-  /// Sends CHECK_NEW_DATA every 5 seconds via WebSocket
-  /// Falls back to HTTP polling after 15 retries with no response
-  Future<void> _setupLiveOrderWebsocketWithPolling({
-    required String orderId,
-  }) async {
-    _orderId = orderId;
-
-    // Reset CHECK_NEW_DATA state
-    _checkNewDataNoResponseCount = 0;
-
-    // Initialize version from current order if available
-    final currentOrder = state.currentOrder.value;
-    if (currentOrder != null) {
-      _lastKnownVersion = currentOrder.updatedAt.toIso8601String();
-    }
-
-    // Setup WebSocket status listener for automatic fallback
-    _webSocketService.setStatusListener(orderId, _handleWebSocketStatusChange);
-
-    // Setup WebSocket connection with event handlers
-    await _setupLiveOrderWebsocket(orderId: orderId);
-  }
-
-  /// Setup live order WebSocket connection with CHECK_NEW_DATA pattern
+  /// Setup live order WebSocket connection (WebSocket-first approach)
+  /// Server pushes all updates via WebSocket events
+  /// Falls back to HTTP polling only when WebSocket fails
   Future<void> _setupLiveOrderWebsocket({required String orderId}) async {
     try {
       _orderId = orderId;
 
-      // Message handler for WebSocket events
+      // Initialize version from current order if available
+      final currentOrder = state.currentOrder.value;
+      if (currentOrder != null) {
+        _lastKnownVersion = currentOrder.updatedAt.toIso8601String();
+      }
+
+      // Setup WebSocket status listener for automatic fallback
+      _webSocketService.setStatusListener(
+        orderId,
+        _handleWebSocketStatusChange,
+      );
+
+      // Message handler for WebSocket events (server-pushed)
       void handleMessage(Map<String, dynamic> json) {
-        final eventType = json['e'] as String?;
+        // Reset health check failures on any message received
+        _healthCheckFailures = 0;
 
-        // Handle NEW_DATA response from CHECK_NEW_DATA
-        if (eventType == 'NEW_DATA') {
-          _handleNewDataResponse(json);
-          return;
-        }
-
-        // Handle NO_DATA response from CHECK_NEW_DATA
-        if (eventType == 'NO_DATA') {
-          _handleNoDataResponse(json);
-          return;
-        }
-
-        // Handle all other events via normal OrderEnvelope parsing
+        // Handle server-pushed events via OrderEnvelope
         try {
           final data = OrderEnvelope.fromJson(json);
           _handleOrderEnvelopeEvent(data);
-          // Reset counter on any valid event received
-          _checkNewDataNoResponseCount = 0;
         } catch (e, st) {
           logger.e(
             '[UserOrderCubit] Failed to parse OrderEnvelope',
@@ -602,13 +485,12 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
         },
       );
 
-      // Start CHECK_NEW_DATA timer
-      _startCheckNewDataTimer();
+      // Start health check timer (only to detect stale connections)
+      _startHealthCheckTimer();
 
       logger.i(
-        '[UserOrderCubit] WebSocket connected for order: $orderId, '
-        'sending CHECK_NEW_DATA every ${_checkNewDataIntervalSeconds}s, '
-        'will fallback to HTTP after $_maxCheckNewDataRetries retries with no response',
+        '[UserOrderCubit] WebSocket connected for order: $orderId '
+        '(WebSocket-first, server pushes all updates)',
       );
     } catch (e, st) {
       logger.e(
@@ -621,203 +503,67 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
     }
   }
 
-  /// Handle NEW_DATA response from CHECK_NEW_DATA
-  void _handleNewDataResponse(Map<String, dynamic> json) {
-    // Reset counter on successful response
-    _checkNewDataNoResponseCount = 0;
-
-    // If we were in fallback mode, stop HTTP polling since WebSocket is working
-    if (_isPollingFallback && state.isPolling) {
-      logger.i('[UserOrderCubit] NEW_DATA received, stopping HTTP fallback');
-      stopPolling();
-      _isPollingFallback = false;
-      // Restart CHECK_NEW_DATA timer
-      _startCheckNewDataTimer();
-    }
-
-    try {
-      final payload = json['p'] as Map<String, Object?>?;
-      final detail = payload?['detail'] as Map<String, Object?>?;
-      final driverAssigned =
-          payload?['driverAssigned'] as Map<String, Object?>?;
-
-      if (detail == null) {
-        logger.d('[UserOrderCubit] NEW_DATA received but no detail');
-        return;
-      }
-
-      // Parse order, payment, transaction from detail
-      final orderJson = detail['order'] as Map<String, dynamic>?;
-      final paymentJson = detail['payment'] as Map<String, dynamic>?;
-      final transactionJson = detail['transaction'] as Map<String, dynamic>?;
-
-      if (orderJson == null) {
-        logger.d('[UserOrderCubit] NEW_DATA has no order in detail');
-        return;
-      }
-
-      final order = Order.fromJson(orderJson);
-      final payment = paymentJson != null
-          ? Payment.fromJson(paymentJson)
-          : null;
-      final transaction = transactionJson != null
-          ? Transaction.fromJson(transactionJson)
-          : null;
-      final driver = driverAssigned != null
-          ? Driver.fromJson(driverAssigned as Map<String, dynamic>)
-          : null;
-
-      // Check if we actually have new data
-      final currentOrder = state.currentOrder.value;
-      final hasChanges =
-          currentOrder == null ||
-          currentOrder.id != order.id ||
-          currentOrder.status != order.status ||
-          currentOrder.updatedAt != order.updatedAt;
-
-      if (hasChanges) {
-        logger.d(
-          '[UserOrderCubit] NEW_DATA: Order updated - '
-          'status: ${order.status}, driver: ${driver?.id}',
-        );
-
-        emit(
-          state.copyWith(
-            currentOrder: OperationResult.success(order),
-            currentPayment: payment != null
-                ? OperationResult.success(payment)
-                : state.currentPayment,
-            currentTransaction: transaction != null
-                ? OperationResult.success(transaction)
-                : state.currentTransaction,
-            currentAssignedDriver: driver != null
-                ? OperationResult.success(driver)
-                : state.currentAssignedDriver,
-          ),
-        );
-
-        // Update version for next CHECK_NEW_DATA
-        _lastKnownVersion = order.updatedAt.toIso8601String();
-
-        // Check if order is in terminal state
-        if (_isTerminalStatus(order.status)) {
-          logger.i(
-            '[UserOrderCubit] NEW_DATA: Order in terminal state (${order.status}), '
-            'clearing active order',
-          );
-          Future.delayed(const Duration(milliseconds: 500), () {
-            if (!isClosed) {
-              clearActiveOrder();
-            }
-          });
-        }
-      }
-    } catch (e, st) {
-      logger.e(
-        '[UserOrderCubit] Failed to handle NEW_DATA',
-        error: e,
-        stackTrace: st,
-      );
-    }
-  }
-
-  /// Handle NO_DATA response from CHECK_NEW_DATA
-  void _handleNoDataResponse(Map<String, dynamic> json) {
-    // Reset counter - we got a response, just no new data
-    _checkNewDataNoResponseCount = 0;
-
-    // Extract version from response if present
-    final payload = json['p'] as Map<String, Object?>?;
-    final syncRequest = payload?['syncRequest'] as Map<String, Object?>?;
-    final version = syncRequest?['lastKnownVersion'] as String?;
-
-    if (version != null && _lastKnownVersion != version) {
-      _lastKnownVersion = version;
-    }
-
-    logger.d('[UserOrderCubit] NO_DATA response received');
-  }
-
-  /// Start timer to send CHECK_NEW_DATA periodically
-  void _startCheckNewDataTimer() {
-    _stopCheckNewDataTimer();
+  /// Start health check timer to detect stale WebSocket connections
+  /// This is NOT for data sync - server pushes all updates
+  /// Only used to detect if WebSocket connection becomes stale
+  void _startHealthCheckTimer() {
+    _stopHealthCheckTimer();
+    _healthCheckFailures = 0;
 
     logger.d(
-      '[UserOrderCubit] Starting CHECK_NEW_DATA timer '
-      '(${_checkNewDataIntervalSeconds}s interval, '
-      'max $_maxCheckNewDataRetries retries)',
+      '[UserOrderCubit] Starting WebSocket health check timer '
+      '(${_wsHealthCheckIntervalSeconds}s interval)',
     );
 
-    _checkNewDataTimer = Timer.periodic(
-      Duration(seconds: _checkNewDataIntervalSeconds),
-      (_) => _sendCheckNewData(),
+    _wsHealthCheckTimer = Timer.periodic(
+      Duration(seconds: _wsHealthCheckIntervalSeconds),
+      (_) => _performHealthCheck(),
     );
-
-    // Send initial CHECK_NEW_DATA immediately
-    _sendCheckNewData();
   }
 
-  /// Stop the CHECK_NEW_DATA timer
-  void _stopCheckNewDataTimer() {
-    _checkNewDataTimer?.cancel();
-    _checkNewDataTimer = null;
+  /// Stop the health check timer
+  void _stopHealthCheckTimer() {
+    _wsHealthCheckTimer?.cancel();
+    _wsHealthCheckTimer = null;
   }
 
-  /// Send CHECK_NEW_DATA message via WebSocket
-  void _sendCheckNewData() {
+  /// Perform WebSocket connection health check
+  void _performHealthCheck() {
     final orderId = _orderId;
     if (orderId == null) return;
 
-    // Check if WebSocket is healthy
+    // Check if WebSocket is still healthy
     if (!_webSocketService.isConnectionHealthy(orderId)) {
+      _healthCheckFailures++;
       logger.d(
-        '[UserOrderCubit] WebSocket not healthy, skipping CHECK_NEW_DATA',
+        '[UserOrderCubit] WebSocket health check failed '
+        '($_healthCheckFailures/$_maxHealthCheckFailures)',
       );
-      _checkNewDataNoResponseCount++;
-      _checkFallbackNeeded();
-      return;
-    }
 
-    // Build CHECK_NEW_DATA message
-    final message = {
-      'a': 'CHECK_NEW_DATA',
-      'f': 'c',
-      't': 's',
-      'p': {
-        'syncRequest': {
-          'orderId': orderId,
-          'lastKnownVersion': _lastKnownVersion,
-        },
-      },
-    };
-
-    logger.d(
-      '[UserOrderCubit] Sending CHECK_NEW_DATA (version: $_lastKnownVersion)',
-    );
-
-    _webSocketService.send(orderId, jsonEncode(message));
-
-    // Increment counter - will be reset when response received
-    _checkNewDataNoResponseCount++;
-    _checkFallbackNeeded();
-  }
-
-  /// Check if we need to fallback to HTTP polling
-  void _checkFallbackNeeded() {
-    if (_checkNewDataNoResponseCount >= _maxCheckNewDataRetries) {
-      logger.i(
-        '[UserOrderCubit] No response after $_checkNewDataNoResponseCount '
-        'CHECK_NEW_DATA attempts, falling back to HTTP polling',
-      );
-      _stopCheckNewDataTimer();
-      _startPollingFallback(fast: true);
+      if (_healthCheckFailures >= _maxHealthCheckFailures) {
+        logger.i(
+          '[UserOrderCubit] WebSocket unhealthy after $_healthCheckFailures checks, '
+          'starting HTTP polling fallback',
+        );
+        _stopHealthCheckTimer();
+        _startPollingFallback(fast: true);
+      }
+    } else {
+      // Reset failures on healthy connection
+      _healthCheckFailures = 0;
     }
   }
 
-  /// Handle OrderEnvelope events from WebSocket
-  /// This is extracted from _setupLiveOrderWebsocket for reuse with sync pattern
+  /// Handle OrderEnvelope events from WebSocket (server-pushed)
+  /// All order updates are pushed by the server - no client-side polling needed
   void _handleOrderEnvelopeEvent(OrderEnvelope data) {
     logger.d('Live Order WebSocket Message: $data');
+
+    // Update version tracking for any event with order data
+    final detail = data.p.detail;
+    if (detail != null) {
+      _lastKnownVersion = detail.order.updatedAt.toIso8601String();
+    }
 
     if (data.e == OrderEnvelopeEvent.DRIVER_LOCATION_UPDATE) {
       final x = data.p.driverUpdateLocation?.x;
@@ -838,7 +584,6 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
     // Handle driver accepted event - driver has accepted the order
     // This provides instant UI update when a driver accepts
     if (data.e == OrderEnvelopeEvent.DRIVER_ACCEPTED) {
-      final detail = data.p.detail;
       final driverAssigned = data.p.driverAssigned;
 
       if (detail != null) {
@@ -866,7 +611,6 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
     // Handle generic order status change events from REST API updates
     // This catches status changes made via REST API (e.g., driver updating status)
     if (data.e == OrderEnvelopeEvent.ORDER_STATUS_CHANGED) {
-      final detail = data.p.detail;
       if (detail != null) {
         emit(
           state.copyWith(
@@ -889,7 +633,6 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
     // Handle order completion - update order status to COMPLETED
     // and clear active order state
     if (data.e == OrderEnvelopeEvent.COMPLETED) {
-      final detail = data.p.detail;
       if (detail != null) {
         // Emit completed order state first so UI can react to completion
         emit(
@@ -917,7 +660,6 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
 
     // Handle order cancellation events
     if (data.e == OrderEnvelopeEvent.CANCELED) {
-      final detail = data.p.detail;
       if (detail != null) {
         emit(
           state.copyWith(
@@ -939,7 +681,6 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
 
     // Handle no-show event (driver reported user not present)
     if (data.e == OrderEnvelopeEvent.NO_SHOW) {
-      final detail = data.p.detail;
       if (detail != null) {
         emit(
           state.copyWith(
@@ -974,7 +715,6 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
 
     // Handle merchant accepted event (FOOD orders)
     if (data.e == OrderEnvelopeEvent.MERCHANT_ACCEPTED) {
-      final detail = data.p.detail;
       if (detail != null) {
         emit(
           state.copyWith(
@@ -995,7 +735,6 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
 
     // Handle merchant preparing event (FOOD orders)
     if (data.e == OrderEnvelopeEvent.MERCHANT_PREPARING) {
-      final detail = data.p.detail;
       if (detail != null) {
         emit(
           state.copyWith(
@@ -1016,7 +755,6 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
 
     // Handle merchant ready event (FOOD orders - triggers driver matching)
     if (data.e == OrderEnvelopeEvent.MERCHANT_READY) {
-      final detail = data.p.detail;
       if (detail != null) {
         emit(
           state.copyWith(
@@ -1037,7 +775,6 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
 
     // Handle merchant rejected event (FOOD orders)
     if (data.e == OrderEnvelopeEvent.MERCHANT_REJECTED) {
-      final detail = data.p.detail;
       if (detail != null) {
         emit(
           state.copyWith(
@@ -1067,39 +804,35 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
 
     switch (status) {
       case WebSocketConnectionStatus.connected:
-        // WebSocket is healthy, restart CHECK_NEW_DATA timer if not running
-        if (_checkNewDataTimer == null && !_isPollingFallback) {
-          logger.i(
-            '[UserOrderCubit] WebSocket connected, starting CHECK_NEW_DATA timer',
-          );
-          _checkNewDataNoResponseCount = 0;
-          _startCheckNewDataTimer();
-        }
-        // Stop HTTP polling if it was running as fallback
+        // WebSocket is healthy, stop HTTP polling if running as fallback
         if (_isPollingFallback && state.isPolling) {
           logger.i(
             '[UserOrderCubit] WebSocket connected, stopping HTTP fallback',
           );
           stopPolling();
           _isPollingFallback = false;
-          // Restart CHECK_NEW_DATA timer
-          _checkNewDataNoResponseCount = 0;
-          _startCheckNewDataTimer();
+          _healthCheckFailures = 0;
+          // Restart health check timer
+          _startHealthCheckTimer();
+        } else if (_wsHealthCheckTimer == null) {
+          // Start health check timer if not running
+          _startHealthCheckTimer();
         }
+        _healthCheckFailures = 0;
       case WebSocketConnectionStatus.reconnecting:
       case WebSocketConnectionStatus.connecting:
-        // WebSocket is unstable, CHECK_NEW_DATA will handle fallback if needed
+        // WebSocket is reconnecting, health check will handle fallback if needed
         logger.d(
-          '[UserOrderCubit] WebSocket reconnecting, will fallback if no response',
+          '[UserOrderCubit] WebSocket reconnecting, will fallback if connection fails',
         );
       case WebSocketConnectionStatus.failed:
       case WebSocketConnectionStatus.disconnected:
-        // WebSocket is down, start HTTP polling as primary update source
-        _stopCheckNewDataTimer();
+        // WebSocket is down, start HTTP polling as fallback
+        _stopHealthCheckTimer();
         if (!state.isPolling) {
           logger.i(
             '[UserOrderCubit] WebSocket failed/disconnected, '
-            'starting HTTP polling as primary update source',
+            'starting HTTP polling fallback',
           );
           _startPollingFallback(fast: true);
         }
@@ -1127,9 +860,9 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
   }
 
   Future<void> teardownWebsocket() async {
-    // Stop CHECK_NEW_DATA timer
-    _stopCheckNewDataTimer();
-    _checkNewDataNoResponseCount = 0;
+    // Stop health check timer
+    _stopHealthCheckTimer();
+    _healthCheckFailures = 0;
     _lastKnownVersion = null;
 
     final futures = [_webSocketService.disconnect('driver-pool')];
@@ -1147,10 +880,12 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
     await Future.wait(futures);
   }
 
-  // ==================== Polling ====================
+  // ============================================================
+  // HTTP Polling (Fallback Only)
+  // ============================================================
 
   /// Start polling for active order updates
-  /// This is a fallback mechanism for devices that don't support WebSocket
+  /// This is a FALLBACK mechanism when WebSocket fails
   /// [intervalSeconds] - The interval between each poll (default: 5 seconds)
   void startPolling({int intervalSeconds = _defaultPollingIntervalSeconds}) {
     if (state.isPolling) {
@@ -1159,7 +894,7 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
     }
 
     logger.i(
-      '[UserOrderCubit] Starting polling with ${intervalSeconds}s interval',
+      '[UserOrderCubit] Starting HTTP polling fallback with ${intervalSeconds}s interval',
     );
     emit(state.copyWith(isPolling: true));
 
@@ -1178,7 +913,7 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
       return;
     }
 
-    logger.i('[UserOrderCubit] Stopping polling');
+    logger.i('[UserOrderCubit] Stopping HTTP polling');
     _pollingTimer?.cancel();
     _pollingTimer = null;
     emit(state.copyWith(isPolling: false));

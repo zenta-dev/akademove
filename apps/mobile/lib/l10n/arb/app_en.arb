@@ -1180,6 +1180,9 @@
 	"text_thank_you_for_review": "Thank you for your review!",
 	"toast_failed_submit_review": "Failed to submit review",
 	"text_rate_by_category": "Rate by category",
+	"text_rate_overall_experience": "How would you rate your overall experience?",
+	"text_select_categories": "Select applicable categories",
+	"text_select_categories_hint": "Choose all that apply to your experience",
 	"category_cleanliness": "Cleanliness",
 	"category_courtesy": "Courtesy",
 	"category_punctuality": "Punctuality",
@@ -1606,6 +1609,8 @@
 	"leaderboard_other_rankings": "Other Rankings",
 	"leaderboard_refreshes_daily": "Rankings refresh every 24 hours",
 	"leaderboard_empty_state": "No drivers on the leaderboard yet",
+	"current_location": "Current Location",
+	"current_location_desc": "Your current GPS location",
 
 	"privacy_policy_title": "AkadeMove Privacy Policy",
 	"privacy_policy_date": "October 2025",

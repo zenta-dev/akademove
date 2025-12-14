@@ -12,6 +12,8 @@ enum OrderKey {
   userId(r'userId'),
   @JsonValue(r'driverId')
   driverId(r'driverId'),
+  @JsonValue(r'completedDriverId')
+  completedDriverId(r'completedDriverId'),
   @JsonValue(r'merchantId')
   merchantId(r'merchantId'),
   @JsonValue(r'type')
@@ -78,6 +80,8 @@ enum OrderKey {
   deliveryOtp(r'deliveryOtp'),
   @JsonValue(r'otpVerifiedAt')
   otpVerifiedAt(r'otpVerifiedAt'),
+  @JsonValue(r'deliveryItemPhotoUrl')
+  deliveryItemPhotoUrl(r'deliveryItemPhotoUrl'),
   @JsonValue(r'deliveryItemType')
   deliveryItemType(r'deliveryItemType');
 

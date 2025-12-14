@@ -52,6 +52,32 @@ class DriverHomeCubit extends BaseCubit<DriverHomeState> {
       await _connectToDriverPool();
       await _connectToDriverLocation(driver.id);
       _startLocationTracking();
+      // Fetch and emit initial location immediately
+      await _fetchInitialLocation();
+    }
+  }
+
+  /// Fetch and emit the initial location when driver goes online.
+  Future<void> _fetchInitialLocation() async {
+    try {
+      final coordinate = await _locationService.getMyLocation(
+        accuracy: LocationAccuracy.high,
+        fromCache: false,
+      );
+      if (coordinate != null) {
+        _lastLocation = coordinate;
+        emit(state.copyWith(currentLocation: coordinate));
+        logger.i(
+          '[DriverHomeCubit] - Initial location fetched: '
+          '${coordinate.y}, ${coordinate.x}',
+        );
+      }
+    } catch (e, st) {
+      logger.e(
+        '[DriverHomeCubit] - Error fetching initial location',
+        error: e,
+        stackTrace: st,
+      );
     }
   }
 
@@ -68,10 +94,14 @@ class DriverHomeCubit extends BaseCubit<DriverHomeState> {
       _connectToDriverPool();
       _connectToDriverLocation(driver.id);
       _startLocationTracking();
+      // Fetch and emit initial location when going online
+      _fetchInitialLocation();
     } else if (wasOnline && !isNowOnline) {
       _disconnectDriverPool();
       _disconnectDriverLocation();
       _stopLocationTracking();
+      // Clear location when going offline
+      emit(state.copyWith(currentLocation: null));
     }
   }
 
@@ -139,6 +169,9 @@ class DriverHomeCubit extends BaseCubit<DriverHomeState> {
     if (last != null && last.x == coordinate.x && last.y == coordinate.y) {
       return;
     }
+
+    // Emit location to state for UI updates (map, address display)
+    emit(state.copyWith(currentLocation: coordinate));
 
     try {
       // Check if location is mocked (for fraud detection)

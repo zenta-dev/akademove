@@ -109,6 +109,13 @@ export class MerchantRoom extends BaseDurableObject {
 						]),
 					),
 				orderBy: (f, op) => op.desc(f.createdAt),
+				with: {
+					items: {
+						with: {
+							menu: true,
+						},
+					},
+				},
 			});
 
 			// Calculate version based on the most recent update across all active orders
@@ -127,25 +134,56 @@ export class MerchantRoom extends BaseDurableObject {
 				!lastKnownVersion || lastKnownVersion !== currentVersion;
 
 			if (hasNewData) {
-				// Compose orders for response - convert numeric fields properly
-				const composedOrders = activeOrders.map((order) => ({
-					...nullsToUndefined(order),
-					basePrice: toNumberSafe(order.basePrice),
-					totalPrice: toNumberSafe(order.totalPrice),
-					tip: order.tip ? toNumberSafe(order.tip) : undefined,
-					platformCommission: order.platformCommission
-						? toNumberSafe(order.platformCommission)
-						: undefined,
-					driverEarning: order.driverEarning
-						? toNumberSafe(order.driverEarning)
-						: undefined,
-					merchantCommission: order.merchantCommission
-						? toNumberSafe(order.merchantCommission)
-						: undefined,
-					discountAmount: order.discountAmount
-						? toNumberSafe(order.discountAmount)
-						: undefined,
-				}));
+				// Compose orders for response - convert numeric fields and transform items
+				const composedOrders = activeOrders.map((order) => {
+					// Transform order items to expected format: { quantity, item: MerchantMenu }
+					const composedItems = order.items
+						?.filter(
+							(
+								item,
+							): item is typeof item & {
+								menu: NonNullable<typeof item.menu>;
+							} => item.menu !== null,
+						)
+						.map((item) => ({
+							quantity: item.quantity,
+							item: {
+								id: item.menu.id,
+								merchantId: item.menu.merchantId,
+								name: item.menu.name,
+								category: item.menu.category ?? undefined,
+								price: toNumberSafe(item.menu.price),
+								stock: item.menu.stock,
+								image: item.menu.image ?? undefined,
+								createdAt: item.menu.createdAt,
+								updatedAt: item.menu.updatedAt,
+							},
+						}));
+
+					// Destructure to exclude raw items, then add transformed items
+					const { items: _rawItems, ...orderWithoutItems } = order;
+
+					return {
+						...nullsToUndefined(orderWithoutItems),
+						basePrice: toNumberSafe(order.basePrice),
+						totalPrice: toNumberSafe(order.totalPrice),
+						tip: order.tip ? toNumberSafe(order.tip) : undefined,
+						platformCommission: order.platformCommission
+							? toNumberSafe(order.platformCommission)
+							: undefined,
+						driverEarning: order.driverEarning
+							? toNumberSafe(order.driverEarning)
+							: undefined,
+						merchantCommission: order.merchantCommission
+							? toNumberSafe(order.merchantCommission)
+							: undefined,
+						discountAmount: order.discountAmount
+							? toNumberSafe(order.discountAmount)
+							: undefined,
+						items: composedItems,
+						itemCount: composedItems?.length,
+					};
+				});
 
 				const newDataResponse: MerchantEnvelope = {
 					e: "NEW_DATA",

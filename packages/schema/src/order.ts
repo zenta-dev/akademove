@@ -84,6 +84,8 @@ export const OrderSchema = z.object({
 	id: z.uuid(),
 	userId: z.string(),
 	driverId: z.string().optional(),
+	/** Driver ID stored when order is completed, for review purposes */
+	completedDriverId: z.string().optional(),
 	merchantId: z.string().optional(),
 	type: OrderTypeSchema,
 	status: OrderStatusSchema,
@@ -122,6 +124,9 @@ export const OrderSchema = z.object({
 	proofOfDeliveryUrl: z.string().url().optional(),
 	deliveryOtp: z.string().length(6).optional(),
 	otpVerifiedAt: DateSchema.optional(),
+
+	// Delivery item photo (driver uploads photo of picked up item for verification)
+	deliveryItemPhotoUrl: z.string().url().optional(),
 
 	// delivery, food
 	itemCount: z.coerce.number().int().nonnegative().optional(),

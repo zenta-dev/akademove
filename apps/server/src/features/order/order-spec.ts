@@ -212,6 +212,28 @@ export const OrderSpec = {
 				"Proof uploaded successfully",
 			),
 		),
+	uploadDeliveryItemPhoto: oc
+		.route({
+			tags: [FEATURE_TAGS.ORDER],
+			method: "POST",
+			path: "/{id}/delivery-item-photo",
+			inputStructure: "detailed",
+			outputStructure: "detailed",
+		})
+		.input(
+			z.object({
+				params: z.object({ id: z.uuid() }),
+				body: z.object({
+					file: z.instanceof(File),
+				}),
+			}),
+		)
+		.output(
+			createSuccesSchema(
+				z.object({ url: z.string().url() }),
+				"Delivery item photo uploaded successfully",
+			),
+		),
 	verifyDeliveryOTP: oc
 		.route({
 			tags: [FEATURE_TAGS.ORDER],

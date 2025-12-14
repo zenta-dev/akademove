@@ -152,11 +152,20 @@ import 'package:api_client/src/model/driver_wallet_get_wallet200_response.dart';
 import 'package:api_client/src/model/driver_wallet_top_up200_response.dart';
 import 'package:api_client/src/model/driver_wallet_transfer200_response.dart';
 import 'package:api_client/src/model/emergency.dart';
+import 'package:api_client/src/model/emergency_contact.dart';
 import 'package:api_client/src/model/emergency_contact_configuration.dart';
+import 'package:api_client/src/model/emergency_contact_create201_response.dart';
+import 'package:api_client/src/model/emergency_contact_list_active200_response.dart';
+import 'package:api_client/src/model/emergency_get200_response.dart';
 import 'package:api_client/src/model/emergency_list_by_order200_response.dart';
 import 'package:api_client/src/model/emergency_location.dart';
 import 'package:api_client/src/model/emergency_trigger200_response.dart';
 import 'package:api_client/src/model/emergency_update_status_request.dart';
+import 'package:api_client/src/model/emergency_with_contact.dart';
+import 'package:api_client/src/model/emergency_with_contact_driver_info.dart';
+import 'package:api_client/src/model/emergency_with_contact_emergency.dart';
+import 'package:api_client/src/model/emergency_with_contact_order_info.dart';
+import 'package:api_client/src/model/emergency_with_contact_user_info.dart';
 import 'package:api_client/src/model/estimate_order.dart';
 import 'package:api_client/src/model/food_pricing_configuration.dart';
 import 'package:api_client/src/model/fraud_config.dart';
@@ -184,6 +193,7 @@ import 'package:api_client/src/model/insert_contact.dart';
 import 'package:api_client/src/model/insert_coupon.dart';
 import 'package:api_client/src/model/insert_driver_quiz_question.dart';
 import 'package:api_client/src/model/insert_emergency.dart';
+import 'package:api_client/src/model/insert_emergency_contact.dart';
 import 'package:api_client/src/model/insert_fraud_event.dart';
 import 'package:api_client/src/model/insert_leaderboard.dart';
 import 'package:api_client/src/model/insert_newsletter.dart';
@@ -237,8 +247,6 @@ import 'package:api_client/src/model/merchant_populars200_response.dart';
 import 'package:api_client/src/model/merchant_set_operating_status_request.dart';
 import 'package:api_client/src/model/merchant_update_document_status_request.dart';
 import 'package:api_client/src/model/newsletter.dart';
-import 'package:api_client/src/model/notification_get_unread_count200_response.dart';
-import 'package:api_client/src/model/notification_get_unread_count200_response_data.dart';
 import 'package:api_client/src/model/notification_list200_response.dart';
 import 'package:api_client/src/model/notification_list200_response_data_inner.dart';
 import 'package:api_client/src/model/notification_mark_as_read200_response.dart';
@@ -327,10 +335,21 @@ import 'package:api_client/src/model/start_driver_quiz.dart';
 import 'package:api_client/src/model/start_investigation.dart';
 import 'package:api_client/src/model/submit_driver_quiz_answer.dart';
 import 'package:api_client/src/model/submit_driver_quiz_answer_response.dart';
+import 'package:api_client/src/model/support_chat_create_ticket201_response.dart';
 import 'package:api_client/src/model/support_chat_envelope.dart';
 import 'package:api_client/src/model/support_chat_envelope_payload.dart';
+import 'package:api_client/src/model/support_chat_get_unread_count200_response.dart';
+import 'package:api_client/src/model/support_chat_get_unread_count200_response_data.dart';
+import 'package:api_client/src/model/support_chat_list_messages200_response.dart';
+import 'package:api_client/src/model/support_chat_list_messages200_response_data.dart';
+import 'package:api_client/src/model/support_chat_list_tickets200_response.dart';
+import 'package:api_client/src/model/support_chat_list_tickets200_response_data.dart';
+import 'package:api_client/src/model/support_chat_mark_as_read200_response.dart';
+import 'package:api_client/src/model/support_chat_mark_as_read200_response_data.dart';
+import 'package:api_client/src/model/support_chat_mark_as_read_request.dart';
 import 'package:api_client/src/model/support_chat_message.dart';
 import 'package:api_client/src/model/support_chat_message_list_query.dart';
+import 'package:api_client/src/model/support_chat_send_message201_response.dart';
 import 'package:api_client/src/model/support_ticket.dart';
 import 'package:api_client/src/model/support_ticket_assigned_to.dart';
 import 'package:api_client/src/model/support_ticket_list_query.dart';
@@ -351,6 +370,7 @@ import 'package:api_client/src/model/update_contact.dart';
 import 'package:api_client/src/model/update_coupon.dart';
 import 'package:api_client/src/model/update_driver_quiz_question.dart';
 import 'package:api_client/src/model/update_emergency.dart';
+import 'package:api_client/src/model/update_emergency_contact.dart';
 import 'package:api_client/src/model/update_fraud_event.dart';
 import 'package:api_client/src/model/update_leaderboard.dart';
 import 'package:api_client/src/model/update_newsletter.dart';
@@ -1008,10 +1028,27 @@ ReturnType deserialize<ReturnType, BaseType>(
           as ReturnType;
     case 'Emergency':
       return Emergency.fromJson(value as Map<String, dynamic>) as ReturnType;
+    case 'EmergencyContact':
+      return EmergencyContact.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
     case 'EmergencyContactConfiguration':
       return EmergencyContactConfiguration.fromJson(
             value as Map<String, dynamic>,
           )
+          as ReturnType;
+    case 'EmergencyContactCreate201Response':
+      return EmergencyContactCreate201Response.fromJson(
+            value as Map<String, dynamic>,
+          )
+          as ReturnType;
+    case 'EmergencyContactKey':
+    case 'EmergencyContactListActive200Response':
+      return EmergencyContactListActive200Response.fromJson(
+            value as Map<String, dynamic>,
+          )
+          as ReturnType;
+    case 'EmergencyGet200Response':
+      return EmergencyGet200Response.fromJson(value as Map<String, dynamic>)
           as ReturnType;
     case 'EmergencyKey':
     case 'EmergencyListByOrder200Response':
@@ -1029,6 +1066,29 @@ ReturnType deserialize<ReturnType, BaseType>(
     case 'EmergencyType':
     case 'EmergencyUpdateStatusRequest':
       return EmergencyUpdateStatusRequest.fromJson(
+            value as Map<String, dynamic>,
+          )
+          as ReturnType;
+    case 'EmergencyWithContact':
+      return EmergencyWithContact.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
+    case 'EmergencyWithContactDriverInfo':
+      return EmergencyWithContactDriverInfo.fromJson(
+            value as Map<String, dynamic>,
+          )
+          as ReturnType;
+    case 'EmergencyWithContactEmergency':
+      return EmergencyWithContactEmergency.fromJson(
+            value as Map<String, dynamic>,
+          )
+          as ReturnType;
+    case 'EmergencyWithContactOrderInfo':
+      return EmergencyWithContactOrderInfo.fromJson(
+            value as Map<String, dynamic>,
+          )
+          as ReturnType;
+    case 'EmergencyWithContactUserInfo':
+      return EmergencyWithContactUserInfo.fromJson(
             value as Map<String, dynamic>,
           )
           as ReturnType;
@@ -1116,6 +1176,9 @@ ReturnType deserialize<ReturnType, BaseType>(
           as ReturnType;
     case 'InsertEmergency':
       return InsertEmergency.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
+    case 'InsertEmergencyContact':
+      return InsertEmergencyContact.fromJson(value as Map<String, dynamic>)
           as ReturnType;
     case 'InsertFraudEvent':
       return InsertFraudEvent.fromJson(value as Map<String, dynamic>)
@@ -1323,16 +1386,6 @@ ReturnType deserialize<ReturnType, BaseType>(
       return Newsletter.fromJson(value as Map<String, dynamic>) as ReturnType;
     case 'NewsletterKey':
     case 'NewsletterStatus':
-    case 'NotificationGetUnreadCount200Response':
-      return NotificationGetUnreadCount200Response.fromJson(
-            value as Map<String, dynamic>,
-          )
-          as ReturnType;
-    case 'NotificationGetUnreadCount200ResponseData':
-      return NotificationGetUnreadCount200ResponseData.fromJson(
-            value as Map<String, dynamic>,
-          )
-          as ReturnType;
     case 'NotificationList200Response':
       return NotificationList200Response.fromJson(value as Map<String, dynamic>)
           as ReturnType;
@@ -1660,6 +1713,11 @@ ReturnType deserialize<ReturnType, BaseType>(
             value as Map<String, dynamic>,
           )
           as ReturnType;
+    case 'SupportChatCreateTicket201Response':
+      return SupportChatCreateTicket201Response.fromJson(
+            value as Map<String, dynamic>,
+          )
+          as ReturnType;
     case 'SupportChatEnvelope':
       return SupportChatEnvelope.fromJson(value as Map<String, dynamic>)
           as ReturnType;
@@ -1668,11 +1726,61 @@ ReturnType deserialize<ReturnType, BaseType>(
     case 'SupportChatEnvelopePayload':
       return SupportChatEnvelopePayload.fromJson(value as Map<String, dynamic>)
           as ReturnType;
+    case 'SupportChatGetUnreadCount200Response':
+      return SupportChatGetUnreadCount200Response.fromJson(
+            value as Map<String, dynamic>,
+          )
+          as ReturnType;
+    case 'SupportChatGetUnreadCount200ResponseData':
+      return SupportChatGetUnreadCount200ResponseData.fromJson(
+            value as Map<String, dynamic>,
+          )
+          as ReturnType;
+    case 'SupportChatListMessages200Response':
+      return SupportChatListMessages200Response.fromJson(
+            value as Map<String, dynamic>,
+          )
+          as ReturnType;
+    case 'SupportChatListMessages200ResponseData':
+      return SupportChatListMessages200ResponseData.fromJson(
+            value as Map<String, dynamic>,
+          )
+          as ReturnType;
+    case 'SupportChatListTickets200Response':
+      return SupportChatListTickets200Response.fromJson(
+            value as Map<String, dynamic>,
+          )
+          as ReturnType;
+    case 'SupportChatListTickets200ResponseData':
+      return SupportChatListTickets200ResponseData.fromJson(
+            value as Map<String, dynamic>,
+          )
+          as ReturnType;
+    case 'SupportChatMarkAsRead200Response':
+      return SupportChatMarkAsRead200Response.fromJson(
+            value as Map<String, dynamic>,
+          )
+          as ReturnType;
+    case 'SupportChatMarkAsRead200ResponseData':
+      return SupportChatMarkAsRead200ResponseData.fromJson(
+            value as Map<String, dynamic>,
+          )
+          as ReturnType;
+    case 'SupportChatMarkAsReadRequest':
+      return SupportChatMarkAsReadRequest.fromJson(
+            value as Map<String, dynamic>,
+          )
+          as ReturnType;
     case 'SupportChatMessage':
       return SupportChatMessage.fromJson(value as Map<String, dynamic>)
           as ReturnType;
     case 'SupportChatMessageListQuery':
       return SupportChatMessageListQuery.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
+    case 'SupportChatSendMessage201Response':
+      return SupportChatSendMessage201Response.fromJson(
+            value as Map<String, dynamic>,
+          )
           as ReturnType;
     case 'SupportTicket':
       return SupportTicket.fromJson(value as Map<String, dynamic>)
@@ -1734,6 +1842,9 @@ ReturnType deserialize<ReturnType, BaseType>(
           as ReturnType;
     case 'UpdateEmergency':
       return UpdateEmergency.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
+    case 'UpdateEmergencyContact':
+      return UpdateEmergencyContact.fromJson(value as Map<String, dynamic>)
           as ReturnType;
     case 'UpdateFraudEvent':
       return UpdateFraudEvent.fromJson(value as Map<String, dynamic>)

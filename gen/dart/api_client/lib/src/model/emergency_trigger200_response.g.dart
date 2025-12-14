@@ -9,7 +9,7 @@ part of 'emergency_trigger200_response.dart';
 abstract class _$EmergencyTrigger200ResponseCWProxy {
   EmergencyTrigger200Response message(String message);
 
-  EmergencyTrigger200Response data(Emergency data);
+  EmergencyTrigger200Response data(EmergencyWithContact data);
 
   EmergencyTrigger200Response pagination(PaginationResult? pagination);
 
@@ -24,7 +24,7 @@ abstract class _$EmergencyTrigger200ResponseCWProxy {
   /// ```
   EmergencyTrigger200Response call({
     String message,
-    Emergency data,
+    EmergencyWithContact data,
     PaginationResult? pagination,
     int? totalPages,
   });
@@ -42,7 +42,8 @@ class _$EmergencyTrigger200ResponseCWProxyImpl
   EmergencyTrigger200Response message(String message) => call(message: message);
 
   @override
-  EmergencyTrigger200Response data(Emergency data) => call(data: data);
+  EmergencyTrigger200Response data(EmergencyWithContact data) =>
+      call(data: data);
 
   @override
   EmergencyTrigger200Response pagination(PaginationResult? pagination) =>
@@ -74,7 +75,7 @@ class _$EmergencyTrigger200ResponseCWProxyImpl
       data: data == const $CopyWithPlaceholder() || data == null
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
-          : data as Emergency,
+          : data as EmergencyWithContact,
       pagination: pagination == const $CopyWithPlaceholder()
           ? _value.pagination
           // ignore: cast_nullable_to_non_nullable
@@ -107,7 +108,7 @@ EmergencyTrigger200Response _$EmergencyTrigger200ResponseFromJson(
     message: $checkedConvert('message', (v) => v as String),
     data: $checkedConvert(
       'data',
-      (v) => Emergency.fromJson(v as Map<String, dynamic>),
+      (v) => EmergencyWithContact.fromJson(v as Map<String, dynamic>),
     ),
     pagination: $checkedConvert(
       'pagination',

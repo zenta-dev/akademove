@@ -67,6 +67,7 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
   /// Start real-time location streaming for driver marker
   void _startLocationStream() {
     final locationService = sl<LocationService>();
+    final driverOrderCubit = context.read<DriverOrderCubit>();
     _locationStreamSubscription = locationService
         .getLocationStream(
           accuracy: LocationAccuracy.high,
@@ -78,7 +79,7 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
             _animatedDriverMarker.updateDriverLocation(coordinate);
 
             // Update polylines when driver location changes during active order
-            final state = context.read<DriverOrderCubit>().state;
+            final state = driverOrderCubit.state;
             final order = state.currentOrder;
             if (order != null &&
                 _shouldUpdateRouteForStatus(state.orderStatus)) {
@@ -963,6 +964,9 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
       return Column(
         spacing: 12.h,
         children: [
+          // Show photo upload button for DELIVERY orders
+          if (order.type == OrderType.DELIVERY)
+            _buildDeliveryItemPhotoButton(order),
           SizedBox(
             width: double.infinity,
             child: ActionButton.primary(
@@ -993,6 +997,9 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
       return Column(
         spacing: 12.h,
         children: [
+          // Show photo upload button for DELIVERY orders
+          if (order.type == OrderType.DELIVERY)
+            _buildDeliveryItemPhotoButton(order),
           SizedBox(
             width: double.infinity,
             child: ActionButton.primary(
@@ -1069,6 +1076,36 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
       child: PrimaryButton(
         onPressed: () => context.goNamed(Routes.driverHome.name),
         child: Text(context.l10n.back_to_home),
+      ),
+    );
+  }
+
+  /// Build the delivery item photo upload button for DELIVERY orders
+  Widget _buildDeliveryItemPhotoButton(Order order) {
+    // Note: deliveryItemPhotoUrl will be available after API client regeneration
+    // For now, we always show the "Take Item Photo" button
+    return SizedBox(
+      width: double.infinity,
+      child: OutlineButton(
+        onPressed: () => _showDeliveryItemPhotoDialog(context, order.id),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          spacing: 8.w,
+          children: [
+            Icon(LucideIcons.camera, size: 20.sp),
+            const Text('Take Item Photo'),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showDeliveryItemPhotoDialog(BuildContext context, String orderId) {
+    showDialog(
+      context: context,
+      builder: (dialogContext) => BlocProvider.value(
+        value: context.read<DriverOrderCubit>(),
+        child: DeliveryItemPhotoUploadDialog(orderId: orderId),
       ),
     );
   }

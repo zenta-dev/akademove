@@ -232,6 +232,11 @@ export class OrderReadRepository extends OrderBaseRepository {
 					with: { user: { columns: { name: true } } },
 				},
 				merchant: { columns: { name: true } },
+				items: {
+					with: {
+						menu: true,
+					},
+				},
 			} as const;
 
 			const clauses: SQL[] = [];

@@ -486,7 +486,11 @@ export class PaymentWebhookService {
 						columns: { name: true },
 						with: { user: { columns: { id: true } } },
 					},
-					items: { columns: { quantity: true } },
+					items: {
+						with: {
+							menu: true,
+						},
+					},
 				},
 				where: (f, op) => op.eq(f.id, orderId),
 			}),
@@ -547,10 +551,35 @@ export class PaymentWebhookService {
 		const composedPayment = PaymentChargeService.composeEntity(
 			updatedPayment as unknown as PaymentDatabase,
 		);
+
+		// Transform order items to expected format: { quantity, item: MerchantMenu }
+		const composedItems = order.items
+			?.filter(
+				(item): item is typeof item & { menu: NonNullable<typeof item.menu> } =>
+					item.menu !== null,
+			)
+			.map((item) => ({
+				quantity: item.quantity,
+				item: {
+					id: item.menu.id,
+					merchantId: item.menu.merchantId,
+					name: item.menu.name,
+					category: item.menu.category ?? undefined,
+					price: toNumberSafe(item.menu.price),
+					stock: item.menu.stock,
+					image: item.menu.image ?? undefined,
+					createdAt: item.menu.createdAt,
+					updatedAt: item.menu.updatedAt,
+				},
+			}));
+
+		// Destructure to exclude raw items, then add transformed items
+		const { items: _rawItems, ...orderWithoutItems } = order;
+
 		// Compose order with proper decimal conversions for WebSocket broadcasting
 		// biome-ignore lint/suspicious/noExplicitAny: Complex order type with runtime decimal conversions
 		const composedOrder: any = nullsToUndefined({
-			...order,
+			...orderWithoutItems,
 			status: "MATCHING" as const,
 			basePrice: toNumberSafe(order.basePrice),
 			totalPrice: toNumberSafe(order.totalPrice),
@@ -567,6 +596,8 @@ export class PaymentWebhookService {
 			discountAmount: order.discountAmount
 				? toNumberSafe(order.discountAmount)
 				: undefined,
+			items: composedItems,
+			itemCount: composedItems?.length,
 		});
 		const composedWallet = {
 			...transaction.wallet,

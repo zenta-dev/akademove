@@ -25,7 +25,9 @@ class EmergencyRepository extends BaseRepository {
   final ApiClient _apiClient;
 
   /// Trigger emergency during active trip
-  Future<BaseResponse<Emergency>> trigger(TriggerEmergencyQuery query) {
+  Future<BaseResponse<EmergencyWithContact>> trigger(
+    TriggerEmergencyQuery query,
+  ) {
     return guard(() async {
       final insertEmergency = InsertEmergency(
         orderId: query.orderId,

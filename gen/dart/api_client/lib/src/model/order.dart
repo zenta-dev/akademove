@@ -31,6 +31,7 @@ class Order {
     required this.id,
     required this.userId,
     this.driverId,
+    this.completedDriverId,
     this.merchantId,
     required this.type,
     required this.status,
@@ -64,6 +65,7 @@ class Order {
     this.proofOfDeliveryUrl,
     this.deliveryOtp,
     this.otpVerifiedAt,
+    this.deliveryItemPhotoUrl,
     this.itemCount,
     this.items,
     this.deliveryItemType,
@@ -79,6 +81,9 @@ class Order {
 
   @JsonKey(name: r'driverId', required: false, includeIfNull: false)
   final String? driverId;
+
+  @JsonKey(name: r'completedDriverId', required: false, includeIfNull: false)
+  final String? completedDriverId;
 
   @JsonKey(name: r'merchantId', required: false, includeIfNull: false)
   final String? merchantId;
@@ -179,6 +184,9 @@ class Order {
   @JsonKey(name: r'otpVerifiedAt', required: false, includeIfNull: false)
   final DateTime? otpVerifiedAt;
 
+  @JsonKey(name: r'deliveryItemPhotoUrl', required: false, includeIfNull: false)
+  final String? deliveryItemPhotoUrl;
+
   // minimum: 0
   // maximum: 9007199254740991
   @JsonKey(name: r'itemCount', required: false, includeIfNull: false)
@@ -206,6 +214,7 @@ class Order {
           other.id == id &&
           other.userId == userId &&
           other.driverId == driverId &&
+          other.completedDriverId == completedDriverId &&
           other.merchantId == merchantId &&
           other.type == type &&
           other.status == status &&
@@ -239,6 +248,7 @@ class Order {
           other.proofOfDeliveryUrl == proofOfDeliveryUrl &&
           other.deliveryOtp == deliveryOtp &&
           other.otpVerifiedAt == otpVerifiedAt &&
+          other.deliveryItemPhotoUrl == deliveryItemPhotoUrl &&
           other.itemCount == itemCount &&
           other.items == items &&
           other.deliveryItemType == deliveryItemType &&
@@ -251,6 +261,7 @@ class Order {
       id.hashCode +
       userId.hashCode +
       driverId.hashCode +
+      completedDriverId.hashCode +
       merchantId.hashCode +
       type.hashCode +
       status.hashCode +
@@ -284,6 +295,7 @@ class Order {
       proofOfDeliveryUrl.hashCode +
       deliveryOtp.hashCode +
       otpVerifiedAt.hashCode +
+      deliveryItemPhotoUrl.hashCode +
       itemCount.hashCode +
       items.hashCode +
       deliveryItemType.hashCode +

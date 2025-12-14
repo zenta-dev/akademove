@@ -10,8 +10,21 @@ import { CACHE_TTLS, CONFIGURATION_KEYS } from "@/core/constants";
 import type { WithTx } from "@/core/interface";
 import type { DatabaseService } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
+import type { MerchantMenuDatabase } from "@/core/tables/merchant";
 import type { OrderDatabase } from "@/core/tables/order";
 import { safeAsync, toNumberSafe } from "@/utils";
+
+/**
+ * Database row type for order items with menu relation
+ */
+interface OrderItemRow {
+	id: number;
+	orderId: string;
+	menuId: string;
+	quantity: number;
+	unitPrice: string;
+	menu: MerchantMenuDatabase | null;
+}
 
 /**
  * OrderBaseRepository - Shared base class for all order repositories
@@ -31,6 +44,38 @@ export class OrderBaseRepository extends BaseRepository {
 	}
 
 	/**
+	 * Compose order items from database rows to API format
+	 * Transforms { menuId, quantity, unitPrice, menu } to { quantity, item: MerchantMenu }
+	 */
+	static composeOrderItems(
+		items: OrderItemRow[] | undefined,
+	): Order["items"] | undefined {
+		if (!items || items.length === 0) return undefined;
+
+		return items
+			.filter(
+				(
+					item,
+				): item is OrderItemRow & { menu: NonNullable<OrderItemRow["menu"]> } =>
+					item.menu !== null,
+			)
+			.map((item) => ({
+				quantity: item.quantity,
+				item: {
+					id: item.menu.id,
+					merchantId: item.menu.merchantId,
+					name: item.menu.name,
+					category: item.menu.category ?? undefined,
+					price: toNumberSafe(item.menu.price),
+					stock: item.menu.stock,
+					image: item.menu.image ?? undefined,
+					createdAt: item.menu.createdAt,
+					updatedAt: item.menu.updatedAt,
+				},
+			}));
+	}
+
+	/**
 	 * Compose an Order entity from database row with related entities
 	 */
 	static composeEntity(
@@ -38,8 +83,11 @@ export class OrderBaseRepository extends BaseRepository {
 			user: Partial<User> | null;
 			driver: Partial<Driver> | null;
 			merchant: Partial<Merchant> | null;
+			items?: OrderItemRow[];
 		},
 	): Order {
+		const composedItems = OrderBaseRepository.composeOrderItems(item.items);
+
 		return {
 			...item,
 			...nullsToUndefined(item),
@@ -58,6 +106,8 @@ export class OrderBaseRepository extends BaseRepository {
 			discountAmount: item.discountAmount
 				? toNumberSafe(item.discountAmount)
 				: undefined,
+			items: composedItems,
+			itemCount: composedItems?.length,
 		};
 	}
 
@@ -85,6 +135,11 @@ export class OrderBaseRepository extends BaseRepository {
 				user: { columns: { name: true } },
 				driver: { columns: {}, with: { user: { columns: { name: true } } } },
 				merchant: { columns: { name: true } },
+				items: {
+					with: {
+						menu: true,
+					},
+				},
 			},
 			where: (f, op) => op.eq(f.id, id),
 		});

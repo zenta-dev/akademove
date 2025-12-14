@@ -5887,6 +5887,24 @@ abstract class AppLocalizations {
   /// **'Rate by category'**
   String get text_rate_by_category;
 
+  /// No description provided for @text_rate_overall_experience.
+  ///
+  /// In en, this message translates to:
+  /// **'How would you rate your overall experience?'**
+  String get text_rate_overall_experience;
+
+  /// No description provided for @text_select_categories.
+  ///
+  /// In en, this message translates to:
+  /// **'Select applicable categories'**
+  String get text_select_categories;
+
+  /// No description provided for @text_select_categories_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose all that apply to your experience'**
+  String get text_select_categories_hint;
+
   /// No description provided for @category_cleanliness.
   ///
   /// In en, this message translates to:
@@ -7338,6 +7356,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No drivers on the leaderboard yet'**
   String get leaderboard_empty_state;
+
+  /// No description provided for @current_location.
+  ///
+  /// In en, this message translates to:
+  /// **'Current Location'**
+  String get current_location;
+
+  /// No description provided for @current_location_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Your current GPS location'**
+  String get current_location_desc;
 
   /// No description provided for @privacy_policy_title.
   ///

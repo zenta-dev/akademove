@@ -25,6 +25,7 @@ import 'package:api_client/src/api/order_api.dart';
 import 'package:api_client/src/api/payment_api.dart';
 import 'package:api_client/src/api/report_api.dart';
 import 'package:api_client/src/api/review_api.dart';
+import 'package:api_client/src/api/support_chat_api.dart';
 import 'package:api_client/src/api/transaction_api.dart';
 import 'package:api_client/src/api/user_api.dart';
 import 'package:api_client/src/api/wallet_api.dart';
@@ -204,6 +205,12 @@ class ApiClient {
   /// by doing that all interceptors will not be executed
   ReviewApi getReviewApi() {
     return ReviewApi(dio);
+  }
+
+  /// Get SupportChatApi instance, base route and serializer can be overridden by a given but be careful,
+  /// by doing that all interceptors will not be executed
+  SupportChatApi getSupportChatApi() {
+    return SupportChatApi(dio);
   }
 
   /// Get TransactionApi instance, base route and serializer can be overridden by a given but be careful,

@@ -2955,6 +2955,15 @@ class AppLocalizationsId extends AppLocalizations {
   String get text_rate_by_category => 'Beri nilai berdasarkan kategori';
 
   @override
+  String get text_rate_overall_experience => 'Bagaimana penilaian Anda secara keseluruhan?';
+
+  @override
+  String get text_select_categories => 'Pilih kategori yang sesuai';
+
+  @override
+  String get text_select_categories_hint => 'Pilih semua yang sesuai dengan pengalaman Anda';
+
+  @override
   String get category_cleanliness => 'Kebersihan';
 
   @override
@@ -3723,6 +3732,12 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get leaderboard_empty_state => 'Belum ada driver di papan peringkat';
+
+  @override
+  String get current_location => 'Lokasi Saat Ini';
+
+  @override
+  String get current_location_desc => 'Lokasi GPS Anda saat ini';
 
   @override
   String get privacy_policy_title => 'Kebijakan Privasi AkadeMove';

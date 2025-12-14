@@ -31,26 +31,31 @@ class DriverOrderCubit extends BaseCubit<DriverOrderState> {
   String? _currentOrderId;
   String? _currentDriverId;
 
-  /// WebSocket sync service for CHECK_NEW_DATA pattern (replaces Timer polling)
-  WebSocketSyncService<Map<String, Object?>>? _wsSyncService;
-
-  /// Last known order version for WebSocket sync
+  /// Last known order version for tracking updates (used for debugging/logging)
+  // ignore: unused_field
   String? _lastKnownVersion;
 
-  /// Timer for polling active order updates (fallback only)
+  /// Timer for polling active order updates (fallback only when WebSocket fails)
   Timer? _pollingTimer;
 
-  /// WebSocket sync interval in seconds
-  static const int _wsSyncIntervalSeconds = 3;
-
-  /// Max NO_DATA count before HTTP fallback
-  static const int _maxNoDataCount = 5;
-
-  /// Default polling interval in seconds (fallback)
+  /// Default polling interval in seconds (fallback only)
   static const int _defaultPollingIntervalSeconds = 5;
 
   /// Whether we're using polling as a fallback due to WebSocket issues
   bool _isPollingFallback = false;
+
+  /// WebSocket connection health check timer
+  /// Only used to detect stale connections, not for data sync
+  Timer? _wsHealthCheckTimer;
+
+  /// Health check interval in seconds (longer interval since server pushes all updates)
+  static const int _wsHealthCheckIntervalSeconds = 30;
+
+  /// Number of consecutive health check failures before fallback
+  int _healthCheckFailures = 0;
+
+  /// Max health check failures before HTTP fallback
+  static const int _maxHealthCheckFailures = 3;
 
   Future<void> init(Order order) async {
     _currentOrderId = order.id;
@@ -66,19 +71,19 @@ class DriverOrderCubit extends BaseCubit<DriverOrderState> {
         orderStatus: order.status,
       ),
     );
-    await _setupOrderWebSocketWithSync(order.id);
+    await _setupOrderWebSocket(order.id);
     _startLocationTracking();
   }
 
   void reset() {
     _stopLocationTracking();
     _stopPolling();
-    _wsSyncService?.stop();
-    _wsSyncService = null;
+    _stopHealthCheckTimer();
     _currentOrderId = null;
     _currentDriverId = null;
     _lastKnownVersion = null;
     _isPollingFallback = false;
+    _healthCheckFailures = 0;
     emit(const DriverOrderState());
   }
 
@@ -87,7 +92,7 @@ class DriverOrderCubit extends BaseCubit<DriverOrderState> {
     await teardownWebSocket();
     _stopLocationTracking();
     _stopPolling();
-    _wsSyncService?.dispose();
+    _stopHealthCheckTimer();
     return super.close();
   }
 
@@ -156,8 +161,8 @@ class DriverOrderCubit extends BaseCubit<DriverOrderState> {
           ),
         );
 
-        // Setup WebSocket with sync and start location tracking
-        await _setupOrderWebSocketWithSync(order.id);
+        // Setup WebSocket (WebSocket-first) and start location tracking
+        await _setupOrderWebSocket(order.id);
         _startLocationTracking();
 
         return true;
@@ -179,14 +184,14 @@ class DriverOrderCubit extends BaseCubit<DriverOrderState> {
   Future<void> clearActiveOrder() async {
     await _keyValueService.remove(KeyValueKeys.driverActiveOrderId);
     _stopPolling();
-    _wsSyncService?.stop();
-    _wsSyncService = null;
+    _stopHealthCheckTimer();
     await teardownWebSocket();
     _stopLocationTracking();
     _currentOrderId = null;
     _currentDriverId = null;
     _lastKnownVersion = null;
     _isPollingFallback = false;
+    _healthCheckFailures = 0;
     emit(const DriverOrderState());
   }
 
@@ -230,7 +235,7 @@ class DriverOrderCubit extends BaseCubit<DriverOrderState> {
             ),
           );
 
-          await _setupOrderWebSocketWithSync(orderId);
+          await _setupOrderWebSocket(orderId);
           _startLocationTracking();
         } on BaseError catch (e, st) {
           logger.e(
@@ -507,6 +512,55 @@ class DriverOrderCubit extends BaseCubit<DriverOrderState> {
     }
   });
 
+  /// Upload delivery item photo (driver uploads photo of picked up item)
+  /// This is used to document the item at pickup for verification purposes
+  Future<void> uploadDeliveryItemPhoto(
+    String imagePath,
+  ) async => await taskManager.execute('DOC-uDIP-$imagePath', () async {
+    final orderId = _currentOrderId;
+    if (orderId == null) {
+      logger.w(
+        '[DriverOrderCubit] - No current order to upload item photo for',
+      );
+      return;
+    }
+
+    try {
+      emit(
+        state.copyWith(uploadItemPhotoResult: const OperationResult.loading()),
+      );
+
+      final res = await _orderRepository.uploadDeliveryItemPhoto(
+        orderId,
+        imagePath,
+      );
+
+      final currentOrder = state.currentOrder;
+      emit(
+        state.copyWith(
+          uploadItemPhotoResult: currentOrder != null
+              ? OperationResult.success(currentOrder)
+              : const OperationResult.idle(),
+          currentOrder: currentOrder,
+          orderStatus: currentOrder?.status,
+        ),
+      );
+
+      logger.i(
+        '[DriverOrderCubit] - Delivery item photo uploaded successfully: '
+        '${res.data}',
+      );
+    } on BaseError catch (e, st) {
+      logger.e(
+        '[DriverOrderCubit] - Error uploading delivery item photo: '
+        '${e.message}',
+        error: e,
+        stackTrace: st,
+      );
+      emit(state.copyWith(uploadItemPhotoResult: OperationResult.failed(e)));
+    }
+  });
+
   // ============================================================
   // Location Tracking
   // ============================================================
@@ -641,14 +695,21 @@ class DriverOrderCubit extends BaseCubit<DriverOrderState> {
   }
 
   // ============================================================
-  // WebSocket with Sync Service
+  // WebSocket-First Real-time Updates
   // ============================================================
 
-  /// Setup order WebSocket with WebSocket-based sync (CHECK_NEW_DATA pattern)
-  /// Uses HTTP fallback after 5 consecutive NO_DATA responses
-  Future<void> _setupOrderWebSocketWithSync(String orderId) async {
+  /// Setup order WebSocket connection (WebSocket-first approach)
+  /// Server pushes all updates via WebSocket events
+  /// Falls back to HTTP polling only when WebSocket fails
+  Future<void> _setupOrderWebSocket(String orderId) async {
     try {
       _currentOrderId = orderId;
+
+      // Initialize version from current order if available
+      final currentOrder = state.currentOrder;
+      if (currentOrder != null) {
+        _lastKnownVersion = currentOrder.updatedAt.toIso8601String();
+      }
 
       // Setup WebSocket status listener for automatic fallback
       _webSocketService.setStatusListener(
@@ -656,43 +717,12 @@ class DriverOrderCubit extends BaseCubit<DriverOrderState> {
         _handleWebSocketStatusChange,
       );
 
-      // Create WebSocket sync service for CHECK_NEW_DATA pattern
-      _wsSyncService = WebSocketSyncService<Map<String, Object?>>(
-        webSocketService: _webSocketService,
-        connectionKey: orderId,
-        config: WebSocketSyncConfig(
-          syncIntervalSeconds: _wsSyncIntervalSeconds,
-          maxNoDataCount: _maxNoDataCount,
-        ),
-        buildCheckNewDataMessage: () => {
-          'a': 'CHECK_NEW_DATA',
-          'f': 'c',
-          't': 's',
-          'p': {
-            'syncRequest': {
-              'orderId': orderId,
-              'lastKnownVersion': _lastKnownVersion,
-            },
-          },
-        },
-        isNewDataEvent: (data) => data['e'] == 'NEW_DATA',
-        isNoDataEvent: (data) => data['e'] == 'NO_DATA',
-        parseNewData: (data) => data,
-        onNewData: _handleNewDataFromSync,
-        onHttpFallback: _pollActiveOrder,
-        onVersionUpdate: (version) => _lastKnownVersion = version,
-      );
-
-      // Custom message handler that handles both sync events and regular events
+      // Message handler for WebSocket events (server-pushed)
       void handleMessage(Map<String, dynamic> json) {
-        final eventType = json['e'] as String?;
+        // Reset health check failures on any message received
+        _healthCheckFailures = 0;
 
-        // Handle NEW_DATA and NO_DATA via sync service (skip normal parsing)
-        if (eventType == 'NEW_DATA' || eventType == 'NO_DATA') {
-          return;
-        }
-
-        // Handle all other events via normal OrderEnvelope parsing
+        // Handle server-pushed events via OrderEnvelope
         try {
           final envelope = OrderEnvelope.fromJson(json);
           _handleOrderEnvelopeEvent(envelope);
@@ -714,17 +744,13 @@ class DriverOrderCubit extends BaseCubit<DriverOrderState> {
         },
       );
 
-      // Start WebSocket sync after connection is established
-      _wsSyncService?.start();
+      // Start health check timer (only to detect stale connections)
+      _startHealthCheckTimer();
 
-      // Initialize version from current order if available
-      final currentOrder = state.currentOrder;
-      if (currentOrder != null) {
-        _lastKnownVersion = currentOrder.updatedAt.toIso8601String();
-        _wsSyncService?.setLastKnownVersion(_lastKnownVersion);
-      }
-
-      logger.i('[DriverOrderCubit] - Connected to order WebSocket: $orderId');
+      logger.i(
+        '[DriverOrderCubit] - Connected to order WebSocket: $orderId '
+        '(WebSocket-first, server pushes all updates)',
+      );
     } catch (e, st) {
       logger.e(
         '[DriverOrderCubit] - Error connecting to order WebSocket: $e',
@@ -736,83 +762,68 @@ class DriverOrderCubit extends BaseCubit<DriverOrderState> {
     }
   }
 
-  /// Handle NEW_DATA event from WebSocket sync service
-  void _handleNewDataFromSync(Map<String, Object?> data) {
-    try {
-      final payload = data['p'] as Map<String, Object?>?;
-      final detail = payload?['detail'] as Map<String, Object?>?;
+  /// Start health check timer to detect stale WebSocket connections
+  /// This is NOT for data sync - server pushes all updates
+  /// Only used to detect if WebSocket connection becomes stale
+  void _startHealthCheckTimer() {
+    _stopHealthCheckTimer();
+    _healthCheckFailures = 0;
 
-      if (detail == null) {
-        logger.d('[DriverOrderCubit] NEW_DATA received but no detail');
-        return;
-      }
+    logger.d(
+      '[DriverOrderCubit] Starting WebSocket health check timer '
+      '(${_wsHealthCheckIntervalSeconds}s interval)',
+    );
 
-      // Parse order from detail
-      final orderJson = detail['order'] as Map<String, dynamic>?;
+    _wsHealthCheckTimer = Timer.periodic(
+      Duration(seconds: _wsHealthCheckIntervalSeconds),
+      (_) => _performHealthCheck(),
+    );
+  }
 
-      if (orderJson == null) {
-        logger.d('[DriverOrderCubit] NEW_DATA has no order in detail');
-        return;
-      }
+  /// Stop the health check timer
+  void _stopHealthCheckTimer() {
+    _wsHealthCheckTimer?.cancel();
+    _wsHealthCheckTimer = null;
+  }
 
-      final order = Order.fromJson(orderJson);
+  /// Perform WebSocket connection health check
+  void _performHealthCheck() {
+    final orderId = _currentOrderId;
+    if (orderId == null) return;
 
-      // Check if we actually have new data
-      final currentOrder = state.currentOrder;
-      final hasChanges =
-          currentOrder == null ||
-          currentOrder.id != order.id ||
-          currentOrder.status != order.status ||
-          currentOrder.updatedAt != order.updatedAt;
-
-      if (hasChanges) {
-        logger.d(
-          '[DriverOrderCubit] NEW_DATA sync: Order updated - '
-          'status: ${order.status}',
-        );
-
-        emit(
-          state.copyWith(
-            fetchOrderResult: OperationResult.success(order),
-            currentOrder: order,
-            orderStatus: order.status,
-          ),
-        );
-
-        // Update version for next sync
-        _lastKnownVersion = order.updatedAt.toIso8601String();
-        _wsSyncService?.setLastKnownVersion(_lastKnownVersion);
-
-        // Check if order is in terminal state
-        if (_isTerminalStatus(order.status)) {
-          logger.i(
-            '[DriverOrderCubit] Sync: Order in terminal state (${order.status}), '
-            'clearing active order',
-          );
-          Future.delayed(const Duration(milliseconds: 500), () {
-            if (!isClosed) {
-              clearActiveOrder();
-            }
-          });
-        }
-      }
-    } catch (e, st) {
-      logger.e(
-        '[DriverOrderCubit] Failed to handle NEW_DATA',
-        error: e,
-        stackTrace: st,
+    // Check if WebSocket is still healthy
+    if (!_webSocketService.isConnectionHealthy(orderId)) {
+      _healthCheckFailures++;
+      logger.d(
+        '[DriverOrderCubit] WebSocket health check failed '
+        '($_healthCheckFailures/$_maxHealthCheckFailures)',
       );
+
+      if (_healthCheckFailures >= _maxHealthCheckFailures) {
+        logger.i(
+          '[DriverOrderCubit] WebSocket unhealthy after $_healthCheckFailures checks, '
+          'starting HTTP polling fallback',
+        );
+        _stopHealthCheckTimer();
+        _startPollingFallback();
+      }
+    } else {
+      // Reset failures on healthy connection
+      _healthCheckFailures = 0;
     }
   }
 
-  /// Handle order envelope events from WebSocket
+  /// Handle order envelope events from WebSocket (server-pushed)
+  /// All order updates are pushed by the server - no client-side polling needed
   void _handleOrderEnvelopeEvent(OrderEnvelope envelope) {
     logger.d('[DriverOrderCubit] - Order WebSocket Message: $envelope');
 
-    // Handle order updates
+    // Update version tracking for any event with order data
     final detail = envelope.p.detail;
     final order = detail?.order;
     if (order != null) {
+      _lastKnownVersion = order.updatedAt.toIso8601String();
+
       emit(
         state.copyWith(
           fetchOrderResult: OperationResult.success(order),
@@ -820,10 +831,6 @@ class DriverOrderCubit extends BaseCubit<DriverOrderState> {
           orderStatus: order.status,
         ),
       );
-
-      // Update version for sync
-      _lastKnownVersion = order.updatedAt.toIso8601String();
-      _wsSyncService?.setLastKnownVersion(_lastKnownVersion);
     }
 
     if (envelope.e == OrderEnvelopeEvent.CANCELED) {
@@ -861,26 +868,33 @@ class DriverOrderCubit extends BaseCubit<DriverOrderState> {
 
     switch (status) {
       case WebSocketConnectionStatus.connected:
-        // WebSocket reconnected, restart sync and stop polling fallback
-        if (_isPollingFallback) {
+        // WebSocket is healthy, stop HTTP polling if running as fallback
+        if (_isPollingFallback && state.isPolling) {
           logger.i(
             '[DriverOrderCubit] WebSocket connected, stopping HTTP fallback',
           );
           _stopPolling();
           _isPollingFallback = false;
-          _wsSyncService?.resetNoDataCounter();
-          _wsSyncService?.start();
+          _healthCheckFailures = 0;
+          // Restart health check timer
+          _startHealthCheckTimer();
+        } else if (_wsHealthCheckTimer == null) {
+          // Start health check timer if not running
+          _startHealthCheckTimer();
         }
+        _healthCheckFailures = 0;
       case WebSocketConnectionStatus.reconnecting:
         logger.d(
-          '[DriverOrderCubit] WebSocket reconnecting, sync will fallback if needed',
+          '[DriverOrderCubit] WebSocket reconnecting, will fallback if connection fails',
         );
       case WebSocketConnectionStatus.failed:
       case WebSocketConnectionStatus.disconnected:
+        // WebSocket is down, start HTTP polling as fallback
+        _stopHealthCheckTimer();
         if (!_isPollingFallback && _currentOrderId != null) {
           logger.i(
             '[DriverOrderCubit] WebSocket failed/disconnected, '
-            'starting HTTP fallback',
+            'starting HTTP polling fallback',
           );
           _startPollingFallback();
         }
@@ -891,7 +905,7 @@ class DriverOrderCubit extends BaseCubit<DriverOrderState> {
   }
 
   // ============================================================
-  // HTTP Polling Fallback
+  // HTTP Polling (Fallback Only)
   // ============================================================
 
   /// Start polling as fallback when WebSocket is unhealthy
@@ -910,7 +924,7 @@ class DriverOrderCubit extends BaseCubit<DriverOrderState> {
     }
 
     logger.i(
-      '[DriverOrderCubit] Starting polling with ${intervalSeconds}s interval',
+      '[DriverOrderCubit] Starting HTTP polling fallback with ${intervalSeconds}s interval',
     );
     emit(state.copyWith(isPolling: true));
 
@@ -929,7 +943,7 @@ class DriverOrderCubit extends BaseCubit<DriverOrderState> {
       return;
     }
 
-    logger.i('[DriverOrderCubit] Stopping polling');
+    logger.i('[DriverOrderCubit] Stopping HTTP polling');
     _pollingTimer?.cancel();
     _pollingTimer = null;
     emit(state.copyWith(isPolling: false));
@@ -971,9 +985,8 @@ class DriverOrderCubit extends BaseCubit<DriverOrderState> {
           ),
         );
 
-        // Update version for sync
+        // Update version tracking
         _lastKnownVersion = order.updatedAt.toIso8601String();
-        _wsSyncService?.setLastKnownVersion(_lastKnownVersion);
       }
 
       // Check if order is in terminal state
@@ -995,8 +1008,7 @@ class DriverOrderCubit extends BaseCubit<DriverOrderState> {
 
   Future<void> teardownWebSocket() async {
     final orderId = _currentOrderId;
-    _wsSyncService?.stop();
-    _wsSyncService = null;
+    _stopHealthCheckTimer();
     if (orderId != null) {
       try {
         _webSocketService.removeStatusListener(orderId);

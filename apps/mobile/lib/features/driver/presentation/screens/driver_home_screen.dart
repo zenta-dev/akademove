@@ -141,6 +141,20 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
                     children: [
                       _buildWelcomeCard(context, state),
                       _buildOnlineToggle(context, state),
+                      // Show location card when driver is online
+                      if (state.isOnline)
+                        BlocBuilder<DriverHomeCubit, DriverHomeState>(
+                          buildWhen: (previous, current) =>
+                              previous.currentLocation !=
+                              current.currentLocation,
+                          builder: (context, homeState) {
+                            final location = homeState.currentLocation;
+                            if (location == null) {
+                              return const SizedBox.shrink();
+                            }
+                            return DriverLocationCard(coordinate: location);
+                          },
+                        ),
                       _buildTodayStats(context, state),
                       _buildQuickActions(context),
                     ],

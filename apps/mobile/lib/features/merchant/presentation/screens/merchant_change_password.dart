@@ -148,7 +148,7 @@ class _ChangePasswordFormViewState extends State<_ChangePasswordFormView> {
           );
           // Navigate back after successful password change
           Future.delayed(const Duration(milliseconds: 500), () {
-            if (mounted) {
+            if (mounted && context.mounted) {
               context.pop();
             }
           });

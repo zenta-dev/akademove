@@ -82,30 +82,30 @@ class SharedEmergencyCubit extends BaseCubit<SharedEmergencyState> {
         }
       });
 
-  Future<void> get(String id) async => taskManager.execute(
-    'SEC-g3-$id',
-    () async {
-      try {
-        emit(state.copyWith(triggerEmergency: const OperationResult.loading()));
+  Future<void> get(String id) async =>
+      taskManager.execute('SEC-g3-$id', () async {
+        try {
+          emit(
+            state.copyWith(selectedEmergency: const OperationResult.loading()),
+          );
 
-        final res = await _repository.get(id);
+          final res = await _repository.get(id);
 
-        emit(
-          state.copyWith(
-            triggerEmergency: OperationResult.success(
-              res.data,
-              message: res.message,
+          emit(
+            state.copyWith(
+              selectedEmergency: OperationResult.success(
+                res.data,
+                message: res.message,
+              ),
             ),
-          ),
-        );
-      } on BaseError catch (e, st) {
-        logger.e(
-          '[SharedEmergencyCubit] Failed to get emergency',
-          error: e,
-          stackTrace: st,
-        );
-        emit(state.copyWith(triggerEmergency: OperationResult.failed(e)));
-      }
-    },
-  );
+          );
+        } on BaseError catch (e, st) {
+          logger.e(
+            '[SharedEmergencyCubit] Failed to get emergency',
+            error: e,
+            stackTrace: st,
+          );
+          emit(state.copyWith(selectedEmergency: OperationResult.failed(e)));
+        }
+      });
 }

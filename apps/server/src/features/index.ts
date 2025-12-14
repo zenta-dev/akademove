@@ -33,6 +33,8 @@ import { DriverQuizQuestionHandler } from "./driver-quiz-question/driver-quiz-qu
 import { DriverQuizQuestionSpec } from "./driver-quiz-question/driver-quiz-question-spec";
 import { EmergencyHandler } from "./emergency/emergency-handler";
 import { EmergencySpec } from "./emergency/emergency-spec";
+import { EmergencyContactHandler } from "./emergency-contact/emergency-contact-handler";
+import { EmergencyContactSpec } from "./emergency-contact/emergency-contact-spec";
 import { FraudHandler } from "./fraud/fraud-handler";
 import { FraudSpec } from "./fraud/fraud-spec";
 import { LeaderboardHandler } from "./leaderboard/leaderboard-handler";
@@ -81,6 +83,9 @@ export const FetchServerSpec = oc.router({
 		.prefix("/driver-quiz-answers")
 		.router(DriverQuizAnswerSpec),
 	emergency: oc.prefix("/emergencies").router(EmergencySpec),
+	emergencyContact: oc
+		.prefix("/emergency-contacts")
+		.router(EmergencyContactSpec),
 	fraud: oc.prefix("/fraud").router(FraudSpec),
 	leaderboard: oc.prefix("/leaderboards").router(LeaderboardSpec),
 	merchant: oc.prefix("/merchants").router(MerchantSpec),
@@ -114,6 +119,7 @@ export const FetchServerRouter = os.router({
 	driverQuizQuestion: DriverQuizQuestionHandler,
 	driverQuizAnswer: DriverQuizAnswerHandler,
 	emergency: EmergencyHandler,
+	emergencyContact: EmergencyContactHandler,
 	fraud: FraudHandler,
 	leaderboard: LeaderboardHandler,
 	merchant: MerchantHandler,

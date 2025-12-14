@@ -14,8 +14,8 @@ enum ReviewKeySchema {
   fromUserId(r'fromUserId'),
   @JsonValue(r'toUserId')
   toUserId(r'toUserId'),
-  @JsonValue(r'category')
-  category(r'category'),
+  @JsonValue(r'categories')
+  categories(r'categories'),
   @JsonValue(r'score')
   score(r'score'),
   @JsonValue(r'comment')

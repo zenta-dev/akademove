@@ -2955,6 +2955,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get text_rate_by_category => 'Rate by category';
 
   @override
+  String get text_rate_overall_experience => 'How would you rate your overall experience?';
+
+  @override
+  String get text_select_categories => 'Select applicable categories';
+
+  @override
+  String get text_select_categories_hint => 'Choose all that apply to your experience';
+
+  @override
   String get category_cleanliness => 'Cleanliness';
 
   @override
@@ -3723,6 +3732,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get leaderboard_empty_state => 'No drivers on the leaderboard yet';
+
+  @override
+  String get current_location => 'Current Location';
+
+  @override
+  String get current_location_desc => 'Your current GPS location';
 
   @override
   String get privacy_policy_title => 'AkadeMove Privacy Policy';

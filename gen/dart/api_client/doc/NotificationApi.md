@@ -62,7 +62,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **notificationGetUnreadCount**
-> NotificationGetUnreadCount200Response notificationGetUnreadCount()
+> SupportChatMarkAsRead200Response notificationGetUnreadCount()
 
 
 
@@ -85,7 +85,7 @@ This endpoint does not need any parameter.
 
 ### Return type
 
-[**NotificationGetUnreadCount200Response**](NotificationGetUnreadCount200Response.md)
+[**SupportChatMarkAsRead200Response**](SupportChatMarkAsRead200Response.md)
 
 ### Authorization
 
@@ -156,7 +156,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **notificationMarkAllAsRead**
-> NotificationGetUnreadCount200Response notificationMarkAllAsRead()
+> SupportChatMarkAsRead200Response notificationMarkAllAsRead()
 
 
 
@@ -179,7 +179,7 @@ This endpoint does not need any parameter.
 
 ### Return type
 
-[**NotificationGetUnreadCount200Response**](NotificationGetUnreadCount200Response.md)
+[**SupportChatMarkAsRead200Response**](SupportChatMarkAsRead200Response.md)
 
 ### Authorization
 

@@ -150,8 +150,8 @@ class Merchant {
       operatingStatus.hashCode +
       activeOrderCount.hashCode +
       rating.hashCode +
-      (document == null ? 0 : document.hashCode) +
-      (image == null ? 0 : image.hashCode) +
+      document.hashCode +
+      image.hashCode +
       category.hashCode +
       categories.hashCode +
       bank.hashCode +

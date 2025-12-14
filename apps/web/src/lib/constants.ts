@@ -37,6 +37,7 @@ export const SUB_ROUTE_TITLES = Object.freeze({
 		USERS: `${m.users()} - ${ROUTE_TITLES.OPERATOR}`,
 		FRAUD: `Fraud Detection - ${ROUTE_TITLES.OPERATOR}`,
 		APPROVALS: `Approval Dashboard - ${ROUTE_TITLES.OPERATOR}`,
+		EMERGENCY_CONTACTS: `Emergency Contacts - ${ROUTE_TITLES.OPERATOR}`,
 	} as const,
 	MERCHANT: {
 		OVERVIEW: `${m.overview()} - ${ROUTE_TITLES.MERCHANT}`,

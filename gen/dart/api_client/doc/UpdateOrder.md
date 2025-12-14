@@ -9,6 +9,7 @@ import 'package:api_client/api.dart';
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **driverId** | **String** |  | [optional] 
+**completedDriverId** | **String** |  | [optional] 
 **merchantId** | **String** |  | [optional] 
 **type** | [**OrderType**](OrderType.md) |  | [optional] 
 **status** | [**OrderStatus**](OrderStatus.md) |  | [optional] 
@@ -32,6 +33,7 @@ Name | Type | Description | Notes
 **proofOfDeliveryUrl** | **String** |  | [optional] 
 **deliveryOtp** | **String** |  | [optional] 
 **otpVerifiedAt** | [**DateTime**](DateTime.md) |  | [optional] 
+**deliveryItemPhotoUrl** | **String** |  | [optional] 
 **itemCount** | **int** |  | [optional] 
 **items** | [**List&lt;OrderItem&gt;**](OrderItem.md) |  | [optional] 
 **deliveryItemType** | [**DeliveryItemType**](DeliveryItemType.md) |  | [optional] 

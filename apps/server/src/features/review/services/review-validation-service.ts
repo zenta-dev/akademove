@@ -1,3 +1,4 @@
+import { CONSTANTS } from "@repo/schema/constants";
 import type { ReviewCategory } from "@repo/schema/review";
 import { RepositoryError } from "@/core/error";
 import type { PartialWithTx } from "@/core/interface";
@@ -10,6 +11,7 @@ import { logger } from "@/utils/logger";
  * Handles:
  * - Score validation (1-5 range)
  * - Comment content validation (profanity, length)
+ * - Categories validation (array of valid categories)
  * - Review eligibility checks (order completed, not duplicate)
  * - User participation validation (is user part of order)
  *
@@ -77,28 +79,39 @@ export class ReviewValidationService {
 	}
 
 	/**
-	 * Validates review category
+	 * Validates review categories (multi-select)
 	 *
-	 * @param category - Review category to validate
+	 * @param categories - Array of review categories to validate
 	 * @returns Validation result
 	 */
-	validateCategory(category: ReviewCategory): {
+	validateCategories(categories: ReviewCategory[]): {
 		valid: boolean;
 		error?: string;
 	} {
-		const validCategories = [
-			"CLEANLINESS",
-			"COURTESY",
-			"PUNCTUALITY",
-			"SAFETY",
-			"COMMUNICATION",
-			"OTHER",
-		];
-
-		if (!validCategories.includes(category)) {
+		if (!Array.isArray(categories) || categories.length === 0) {
 			return {
 				valid: false,
-				error: `Invalid category. Must be one of: ${validCategories.join(", ")}`,
+				error: "At least one category must be selected",
+			};
+		}
+
+		const validCategories = CONSTANTS.REVIEW_CATEGORIES as readonly string[];
+
+		for (const category of categories) {
+			if (!validCategories.includes(category)) {
+				return {
+					valid: false,
+					error: `Invalid category "${category}". Must be one of: ${validCategories.join(", ")}`,
+				};
+			}
+		}
+
+		// Check for duplicates
+		const uniqueCategories = new Set(categories);
+		if (uniqueCategories.size !== categories.length) {
+			return {
+				valid: false,
+				error: "Duplicate categories are not allowed",
 			};
 		}
 
@@ -115,9 +128,9 @@ export class ReviewValidationService {
 	validateReview(params: {
 		score: number;
 		comment: string;
-		category: ReviewCategory;
+		categories: ReviewCategory[];
 	}): void {
-		const { score, comment, category } = params;
+		const { score, comment, categories } = params;
 
 		// Validate score
 		const scoreValidation = this.validateScore(score);
@@ -135,11 +148,11 @@ export class ReviewValidationService {
 			});
 		}
 
-		// Validate category
-		const categoryValidation = this.validateCategory(category);
-		if (!categoryValidation.valid) {
+		// Validate categories
+		const categoriesValidation = this.validateCategories(categories);
+		if (!categoriesValidation.valid) {
 			throw new RepositoryError(
-				categoryValidation.error ?? "Invalid category",
+				categoriesValidation.error ?? "Invalid categories",
 				{ code: "BAD_REQUEST" },
 			);
 		}
@@ -182,6 +195,9 @@ export class ReviewValidationService {
 	 * - User is part of order (as customer or driver)
 	 * - User hasn't already reviewed this order
 	 *
+	 * Note: Uses completedDriverId for driver lookup after order completion,
+	 * as driverId may be cleared after the trip ends.
+	 *
 	 * @param params - Eligibility check parameters
 	 * @returns Review eligibility status
 	 */
@@ -216,9 +232,20 @@ export class ReviewValidationService {
 
 			const orderCompleted = order.status === "COMPLETED";
 
-			// Check if user is part of this order (as user or driver)
-			const isUserInOrder =
-				order.userId === userId || order.driverId === userId;
+			// Get driver's userId for comparison
+			// Use completedDriverId first (set when order is completed), fallback to driverId
+			const effectiveDriverId = order.completedDriverId ?? order.driverId;
+			let driverUserId: string | null = null;
+
+			if (effectiveDriverId) {
+				const driver = await (opts?.tx ?? this.#db).query.driver.findFirst({
+					where: (f, op) => op.eq(f.id, effectiveDriverId),
+				});
+				driverUserId = driver?.userId ?? null;
+			}
+
+			// Check if user is part of this order (as customer or driver)
+			const isUserInOrder = order.userId === userId || driverUserId === userId;
 
 			// Check if user already reviewed this order
 			const alreadyReviewed = await this.hasUserReviewedOrder({
@@ -294,6 +321,7 @@ export class ReviewValidationService {
 	 * Validates that toUserId is the other party in the order
 	 *
 	 * Ensures fromUserId is rating the correct person (driver rates user, user rates driver)
+	 * Uses completedDriverId for driver lookup after order completion.
 	 *
 	 * @param params - Validation parameters
 	 * @returns true if toUserId is valid
@@ -315,12 +343,24 @@ export class ReviewValidationService {
 				return { valid: false, error: "Order not found" };
 			}
 
-			// If fromUser is the customer, toUser must be the driver
+			// Get driver's userId for comparison
+			// Use completedDriverId first (set when order is completed), fallback to driverId
+			const effectiveDriverId = order.completedDriverId ?? order.driverId;
+			let driverUserId: string | null = null;
+
+			if (effectiveDriverId) {
+				const driver = await (opts?.tx ?? this.#db).query.driver.findFirst({
+					where: (f, op) => op.eq(f.id, effectiveDriverId),
+				});
+				driverUserId = driver?.userId ?? null;
+			}
+
+			// If fromUser is the customer, toUser must be the driver's userId
 			if (fromUserId === order.userId) {
-				if (!order.driverId) {
+				if (!driverUserId) {
 					return { valid: false, error: "Order has no driver assigned" };
 				}
-				if (toUserId !== order.driverId) {
+				if (toUserId !== driverUserId) {
 					return {
 						valid: false,
 						error: "Customer can only review the assigned driver",
@@ -330,7 +370,7 @@ export class ReviewValidationService {
 			}
 
 			// If fromUser is the driver, toUser must be the customer
-			if (fromUserId === order.driverId) {
+			if (fromUserId === driverUserId) {
 				if (toUserId !== order.userId) {
 					return {
 						valid: false,

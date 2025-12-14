@@ -120,7 +120,7 @@ class Badge {
       type.hashCode +
       level.hashCode +
       targetRole.hashCode +
-      (icon == null ? 0 : icon.hashCode) +
+      icon.hashCode +
       criteria.hashCode +
       benefits.hashCode +
       isActive.hashCode +

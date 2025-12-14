@@ -48,14 +48,14 @@ class SupportChatMessage {
   @JsonKey(name: r'readAt', required: false, includeIfNull: false)
   final DateTime? readAt;
 
-  @JsonKey(name: r'sentAt', required: true, includeIfNull: true)
-  final DateTime? sentAt;
+  @JsonKey(name: r'sentAt', required: true, includeIfNull: false)
+  final DateTime sentAt;
 
-  @JsonKey(name: r'createdAt', required: true, includeIfNull: true)
-  final DateTime? createdAt;
+  @JsonKey(name: r'createdAt', required: true, includeIfNull: false)
+  final DateTime createdAt;
 
-  @JsonKey(name: r'updatedAt', required: true, includeIfNull: true)
-  final DateTime? updatedAt;
+  @JsonKey(name: r'updatedAt', required: true, includeIfNull: false)
+  final DateTime updatedAt;
 
   @JsonKey(name: r'sender', required: false, includeIfNull: false)
   final SupportTicketAssignedTo? sender;
@@ -82,10 +82,10 @@ class SupportChatMessage {
       senderId.hashCode +
       message.hashCode +
       isFromSupport.hashCode +
-      (readAt == null ? 0 : readAt.hashCode) +
-      (sentAt == null ? 0 : sentAt.hashCode) +
-      (createdAt == null ? 0 : createdAt.hashCode) +
-      (updatedAt == null ? 0 : updatedAt.hashCode) +
+      readAt.hashCode +
+      sentAt.hashCode +
+      createdAt.hashCode +
+      updatedAt.hashCode +
       sender.hashCode;
 
   factory SupportChatMessage.fromJson(Map<String, dynamic> json) =>

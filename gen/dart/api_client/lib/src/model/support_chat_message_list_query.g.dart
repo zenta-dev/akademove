@@ -9,7 +9,7 @@ part of 'support_chat_message_list_query.dart';
 abstract class _$SupportChatMessageListQueryCWProxy {
   SupportChatMessageListQuery ticketId(String ticketId);
 
-  SupportChatMessageListQuery limit(int? limit);
+  SupportChatMessageListQuery limit(int limit);
 
   SupportChatMessageListQuery cursor(String? cursor);
 
@@ -22,7 +22,7 @@ abstract class _$SupportChatMessageListQueryCWProxy {
   /// ```
   SupportChatMessageListQuery call({
     String ticketId,
-    int? limit,
+    int limit,
     String? cursor,
   });
 }
@@ -40,7 +40,7 @@ class _$SupportChatMessageListQueryCWProxyImpl
       call(ticketId: ticketId);
 
   @override
-  SupportChatMessageListQuery limit(int? limit) => call(limit: limit);
+  SupportChatMessageListQuery limit(int limit) => call(limit: limit);
 
   @override
   SupportChatMessageListQuery cursor(String? cursor) => call(cursor: cursor);
@@ -63,10 +63,10 @@ class _$SupportChatMessageListQueryCWProxyImpl
           ? _value.ticketId
           // ignore: cast_nullable_to_non_nullable
           : ticketId as String,
-      limit: limit == const $CopyWithPlaceholder()
+      limit: limit == const $CopyWithPlaceholder() || limit == null
           ? _value.limit
           // ignore: cast_nullable_to_non_nullable
-          : limit as int?,
+          : limit as int,
       cursor: cursor == const $CopyWithPlaceholder()
           ? _value.cursor
           // ignore: cast_nullable_to_non_nullable
@@ -90,10 +90,10 @@ extension $SupportChatMessageListQueryCopyWith on SupportChatMessageListQuery {
 SupportChatMessageListQuery _$SupportChatMessageListQueryFromJson(
   Map<String, dynamic> json,
 ) => $checkedCreate('SupportChatMessageListQuery', json, ($checkedConvert) {
-  $checkKeys(json, requiredKeys: const ['ticketId']);
+  $checkKeys(json, requiredKeys: const ['ticketId', 'limit']);
   final val = SupportChatMessageListQuery(
     ticketId: $checkedConvert('ticketId', (v) => v as String),
-    limit: $checkedConvert('limit', (v) => (v as num?)?.toInt() ?? 50),
+    limit: $checkedConvert('limit', (v) => (v as num).toInt()),
     cursor: $checkedConvert('cursor', (v) => v as String?),
   );
   return val;
@@ -103,6 +103,6 @@ Map<String, dynamic> _$SupportChatMessageListQueryToJson(
   SupportChatMessageListQuery instance,
 ) => <String, dynamic>{
   'ticketId': instance.ticketId,
-  'limit': ?instance.limit,
+  'limit': instance.limit,
   'cursor': ?instance.cursor,
 };

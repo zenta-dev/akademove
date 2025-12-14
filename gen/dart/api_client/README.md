@@ -182,6 +182,13 @@ Class | Method | HTTP request | Description
 [*DriverQuizQuestionApi*](doc/DriverQuizQuestionApi.md) | [**driverQuizQuestionList**](doc/DriverQuizQuestionApi.md#driverquizquestionlist) | **GET** /driver-quiz-questions | 
 [*DriverQuizQuestionApi*](doc/DriverQuizQuestionApi.md) | [**driverQuizQuestionRemove**](doc/DriverQuizQuestionApi.md#driverquizquestionremove) | **DELETE** /driver-quiz-questions/{id} | 
 [*DriverQuizQuestionApi*](doc/DriverQuizQuestionApi.md) | [**driverQuizQuestionUpdate**](doc/DriverQuizQuestionApi.md#driverquizquestionupdate) | **PUT** /driver-quiz-questions/{id} | 
+[*EmergencyApi*](doc/EmergencyApi.md) | [**emergencyContactCreate**](doc/EmergencyApi.md#emergencycontactcreate) | **POST** /emergency-contacts | 
+[*EmergencyApi*](doc/EmergencyApi.md) | [**emergencyContactDelete**](doc/EmergencyApi.md#emergencycontactdelete) | **DELETE** /emergency-contacts/{id} | 
+[*EmergencyApi*](doc/EmergencyApi.md) | [**emergencyContactGet**](doc/EmergencyApi.md#emergencycontactget) | **GET** /emergency-contacts/{id} | 
+[*EmergencyApi*](doc/EmergencyApi.md) | [**emergencyContactList**](doc/EmergencyApi.md#emergencycontactlist) | **GET** /emergency-contacts | 
+[*EmergencyApi*](doc/EmergencyApi.md) | [**emergencyContactListActive**](doc/EmergencyApi.md#emergencycontactlistactive) | **GET** /emergency-contacts/active | 
+[*EmergencyApi*](doc/EmergencyApi.md) | [**emergencyContactToggleActive**](doc/EmergencyApi.md#emergencycontacttoggleactive) | **PATCH** /emergency-contacts/{id}/toggle | 
+[*EmergencyApi*](doc/EmergencyApi.md) | [**emergencyContactUpdate**](doc/EmergencyApi.md#emergencycontactupdate) | **PUT** /emergency-contacts/{id} | 
 [*EmergencyApi*](doc/EmergencyApi.md) | [**emergencyGet**](doc/EmergencyApi.md#emergencyget) | **GET** /emergencies/{id} | 
 [*EmergencyApi*](doc/EmergencyApi.md) | [**emergencyListByOrder**](doc/EmergencyApi.md#emergencylistbyorder) | **GET** /emergencies/order/{orderId} | 
 [*EmergencyApi*](doc/EmergencyApi.md) | [**emergencyTrigger**](doc/EmergencyApi.md#emergencytrigger) | **POST** /emergencies | 
@@ -262,6 +269,7 @@ Class | Method | HTTP request | Description
 [*OrderApi*](doc/OrderApi.md) | [**orderSendMessage**](doc/OrderApi.md#ordersendmessage) | **POST** /orders/{id}/messages | 
 [*OrderApi*](doc/OrderApi.md) | [**orderUpdate**](doc/OrderApi.md#orderupdate) | **PUT** /orders/{id} | 
 [*OrderApi*](doc/OrderApi.md) | [**orderUpdateScheduledOrder**](doc/OrderApi.md#orderupdatescheduledorder) | **PUT** /orders/scheduled/{id} | 
+[*OrderApi*](doc/OrderApi.md) | [**orderUploadDeliveryItemPhoto**](doc/OrderApi.md#orderuploaddeliveryitemphoto) | **POST** /orders/{id}/delivery-item-photo | 
 [*OrderApi*](doc/OrderApi.md) | [**orderUploadDeliveryProof**](doc/OrderApi.md#orderuploaddeliveryproof) | **POST** /orders/{id}/delivery-proof | 
 [*OrderApi*](doc/OrderApi.md) | [**orderVerifyDeliveryOTP**](doc/OrderApi.md#orderverifydeliveryotp) | **POST** /orders/{id}/verify-otp | 
 [*PaymentApi*](doc/PaymentApi.md) | [**bankValidateAccount**](doc/PaymentApi.md#bankvalidateaccount) | **POST** /bank/validate | 
@@ -282,6 +290,14 @@ Class | Method | HTTP request | Description
 [*ReviewApi*](doc/ReviewApi.md) | [**reviewList**](doc/ReviewApi.md#reviewlist) | **GET** /reviews | 
 [*ReviewApi*](doc/ReviewApi.md) | [**reviewRemove**](doc/ReviewApi.md#reviewremove) | **DELETE** /reviews/{id} | 
 [*ReviewApi*](doc/ReviewApi.md) | [**reviewUpdate**](doc/ReviewApi.md#reviewupdate) | **PUT** /reviews/{id} | 
+[*SupportChatApi*](doc/SupportChatApi.md) | [**supportChatCreateTicket**](doc/SupportChatApi.md#supportchatcreateticket) | **POST** /support-chat/tickets | 
+[*SupportChatApi*](doc/SupportChatApi.md) | [**supportChatGetTicket**](doc/SupportChatApi.md#supportchatgetticket) | **GET** /support-chat/tickets/{id} | 
+[*SupportChatApi*](doc/SupportChatApi.md) | [**supportChatGetUnreadCount**](doc/SupportChatApi.md#supportchatgetunreadcount) | **GET** /support-chat/messages/unread-count | 
+[*SupportChatApi*](doc/SupportChatApi.md) | [**supportChatListMessages**](doc/SupportChatApi.md#supportchatlistmessages) | **GET** /support-chat/messages | 
+[*SupportChatApi*](doc/SupportChatApi.md) | [**supportChatListTickets**](doc/SupportChatApi.md#supportchatlisttickets) | **GET** /support-chat/tickets | 
+[*SupportChatApi*](doc/SupportChatApi.md) | [**supportChatMarkAsRead**](doc/SupportChatApi.md#supportchatmarkasread) | **POST** /support-chat/messages/mark-read | 
+[*SupportChatApi*](doc/SupportChatApi.md) | [**supportChatSendMessage**](doc/SupportChatApi.md#supportchatsendmessage) | **POST** /support-chat/messages | 
+[*SupportChatApi*](doc/SupportChatApi.md) | [**supportChatUpdateTicket**](doc/SupportChatApi.md#supportchatupdateticket) | **PATCH** /support-chat/tickets/{id} | 
 [*TransactionApi*](doc/TransactionApi.md) | [**transactionGet**](doc/TransactionApi.md#transactionget) | **GET** /transactions/{id} | 
 [*TransactionApi*](doc/TransactionApi.md) | [**transactionList**](doc/TransactionApi.md#transactionlist) | **GET** /transactions | 
 [*UserApi*](doc/UserApi.md) | [**accountDeletionSubmit**](doc/UserApi.md#accountdeletionsubmit) | **POST** /account-deletion/submit | 
@@ -498,7 +514,12 @@ Class | Method | HTTP request | Description
  - [DriverWalletTopUp200Response](doc/DriverWalletTopUp200Response.md)
  - [DriverWalletTransfer200Response](doc/DriverWalletTransfer200Response.md)
  - [Emergency](doc/Emergency.md)
+ - [EmergencyContact](doc/EmergencyContact.md)
  - [EmergencyContactConfiguration](doc/EmergencyContactConfiguration.md)
+ - [EmergencyContactCreate201Response](doc/EmergencyContactCreate201Response.md)
+ - [EmergencyContactKey](doc/EmergencyContactKey.md)
+ - [EmergencyContactListActive200Response](doc/EmergencyContactListActive200Response.md)
+ - [EmergencyGet200Response](doc/EmergencyGet200Response.md)
  - [EmergencyKey](doc/EmergencyKey.md)
  - [EmergencyListByOrder200Response](doc/EmergencyListByOrder200Response.md)
  - [EmergencyLocation](doc/EmergencyLocation.md)
@@ -506,6 +527,11 @@ Class | Method | HTTP request | Description
  - [EmergencyTrigger200Response](doc/EmergencyTrigger200Response.md)
  - [EmergencyType](doc/EmergencyType.md)
  - [EmergencyUpdateStatusRequest](doc/EmergencyUpdateStatusRequest.md)
+ - [EmergencyWithContact](doc/EmergencyWithContact.md)
+ - [EmergencyWithContactDriverInfo](doc/EmergencyWithContactDriverInfo.md)
+ - [EmergencyWithContactEmergency](doc/EmergencyWithContactEmergency.md)
+ - [EmergencyWithContactOrderInfo](doc/EmergencyWithContactOrderInfo.md)
+ - [EmergencyWithContactUserInfo](doc/EmergencyWithContactUserInfo.md)
  - [EnvelopeSender](doc/EnvelopeSender.md)
  - [EnvelopeTarget](doc/EnvelopeTarget.md)
  - [EstimateOrder](doc/EstimateOrder.md)
@@ -539,6 +565,7 @@ Class | Method | HTTP request | Description
  - [InsertCoupon](doc/InsertCoupon.md)
  - [InsertDriverQuizQuestion](doc/InsertDriverQuizQuestion.md)
  - [InsertEmergency](doc/InsertEmergency.md)
+ - [InsertEmergencyContact](doc/InsertEmergencyContact.md)
  - [InsertFraudEvent](doc/InsertFraudEvent.md)
  - [InsertLeaderboard](doc/InsertLeaderboard.md)
  - [InsertNewsletter](doc/InsertNewsletter.md)
@@ -601,8 +628,6 @@ Class | Method | HTTP request | Description
  - [Newsletter](doc/Newsletter.md)
  - [NewsletterKey](doc/NewsletterKey.md)
  - [NewsletterStatus](doc/NewsletterStatus.md)
- - [NotificationGetUnreadCount200Response](doc/NotificationGetUnreadCount200Response.md)
- - [NotificationGetUnreadCount200ResponseData](doc/NotificationGetUnreadCount200ResponseData.md)
  - [NotificationList200Response](doc/NotificationList200Response.md)
  - [NotificationList200ResponseDataInner](doc/NotificationList200ResponseDataInner.md)
  - [NotificationMarkAsRead200Response](doc/NotificationMarkAsRead200Response.md)
@@ -711,12 +736,23 @@ Class | Method | HTTP request | Description
  - [StartInvestigation](doc/StartInvestigation.md)
  - [SubmitDriverQuizAnswer](doc/SubmitDriverQuizAnswer.md)
  - [SubmitDriverQuizAnswerResponse](doc/SubmitDriverQuizAnswerResponse.md)
+ - [SupportChatCreateTicket201Response](doc/SupportChatCreateTicket201Response.md)
  - [SupportChatEnvelope](doc/SupportChatEnvelope.md)
  - [SupportChatEnvelopeAction](doc/SupportChatEnvelopeAction.md)
  - [SupportChatEnvelopeEvent](doc/SupportChatEnvelopeEvent.md)
  - [SupportChatEnvelopePayload](doc/SupportChatEnvelopePayload.md)
+ - [SupportChatGetUnreadCount200Response](doc/SupportChatGetUnreadCount200Response.md)
+ - [SupportChatGetUnreadCount200ResponseData](doc/SupportChatGetUnreadCount200ResponseData.md)
+ - [SupportChatListMessages200Response](doc/SupportChatListMessages200Response.md)
+ - [SupportChatListMessages200ResponseData](doc/SupportChatListMessages200ResponseData.md)
+ - [SupportChatListTickets200Response](doc/SupportChatListTickets200Response.md)
+ - [SupportChatListTickets200ResponseData](doc/SupportChatListTickets200ResponseData.md)
+ - [SupportChatMarkAsRead200Response](doc/SupportChatMarkAsRead200Response.md)
+ - [SupportChatMarkAsRead200ResponseData](doc/SupportChatMarkAsRead200ResponseData.md)
+ - [SupportChatMarkAsReadRequest](doc/SupportChatMarkAsReadRequest.md)
  - [SupportChatMessage](doc/SupportChatMessage.md)
  - [SupportChatMessageListQuery](doc/SupportChatMessageListQuery.md)
+ - [SupportChatSendMessage201Response](doc/SupportChatSendMessage201Response.md)
  - [SupportTicket](doc/SupportTicket.md)
  - [SupportTicketAssignedTo](doc/SupportTicketAssignedTo.md)
  - [SupportTicketCategory](doc/SupportTicketCategory.md)
@@ -744,6 +780,7 @@ Class | Method | HTTP request | Description
  - [UpdateCoupon](doc/UpdateCoupon.md)
  - [UpdateDriverQuizQuestion](doc/UpdateDriverQuizQuestion.md)
  - [UpdateEmergency](doc/UpdateEmergency.md)
+ - [UpdateEmergencyContact](doc/UpdateEmergencyContact.md)
  - [UpdateFraudEvent](doc/UpdateFraudEvent.md)
  - [UpdateLeaderboard](doc/UpdateLeaderboard.md)
  - [UpdateNewsletter](doc/UpdateNewsletter.md)

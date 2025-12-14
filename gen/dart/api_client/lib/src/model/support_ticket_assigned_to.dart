@@ -32,7 +32,7 @@ class SupportTicketAssignedTo {
           other.image == image;
 
   @override
-  int get hashCode => name.hashCode + (image == null ? 0 : image.hashCode);
+  int get hashCode => name.hashCode + image.hashCode;
 
   factory SupportTicketAssignedTo.fromJson(Map<String, dynamic> json) =>
       _$SupportTicketAssignedToFromJson(json);
