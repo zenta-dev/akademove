@@ -563,7 +563,12 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
                     });
                   }
                 })
-                .catchError((_) {});
+                .catchError((Object e) {
+                  logger.e(
+                    '[DriverEarningsScreen] Failed to load saved bank account',
+                    error: e,
+                  );
+                });
           }
 
           Future<void> validateBankAccount() async {
@@ -872,7 +877,12 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
           );
         },
       ),
-    );
+    ).then((_) {
+      // Dispose controllers when dialog closes
+      amountController.dispose();
+      accountNumberController.dispose();
+      accountNameController.dispose();
+    });
   }
 
   Future<void> _processWithdrawal({

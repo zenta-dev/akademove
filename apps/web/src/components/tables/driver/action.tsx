@@ -2,7 +2,6 @@ import { m } from "@repo/i18n";
 import type { Driver } from "@repo/schema/driver";
 import { useNavigate } from "@tanstack/react-router";
 import { CheckCircle, MoreHorizontal } from "lucide-react";
-import { ActivateDriverDialog } from "@/components/dialogs/activate-driver";
 import { ApproveDriverDialog } from "@/components/dialogs/approve-driver";
 import { RejectDriverDialog } from "@/components/dialogs/reject-driver";
 import { Button } from "@/components/ui/button";
@@ -41,7 +40,7 @@ export const DriverActionTable = ({ val }: { val: Driver }) => {
 					Review Application
 				</Button>
 				<ApproveDriverDialog driverId={val.id} />
-				<ActivateDriverDialog driverId={val.id} />
+				{/* <ActivateDriverDialog driverId={val.id} /> */}
 				<RejectDriverDialog driverId={val.id} />
 			</DropdownMenuContent>
 		</DropdownMenu>

@@ -1,5 +1,6 @@
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
+import 'package:api_client/api_client.dart' show User;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
@@ -319,10 +320,10 @@ class DeleteAccountButtonWidget extends StatelessWidget {
   }
 
   /// Build email query string
-  String _buildEmailQuery(dynamic user, String accountType) {
+  String _buildEmailQuery(User? user, String accountType) {
     final name = user?.name;
     final email = user?.email;
-    final phone = user?.phoneNumber;
+    final phone = user?.phone?.number;
 
     return 'subject=Account Deletion Request'
         '&body=I request that my AkadeMove account be permanently deleted.%0A%0A'

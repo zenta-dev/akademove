@@ -310,7 +310,10 @@ class AttachmentUploadWidget extends StatelessWidget {
       if (pathSegments.isNotEmpty) {
         return pathSegments.last;
       }
-    } catch (_) {}
+    } catch (e) {
+      // URI parsing failed, fallback to default filename
+      debugPrint('[AttachmentUploadWidget] Failed to parse URL: $e');
+    }
     return 'document';
   }
 

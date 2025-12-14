@@ -1248,6 +1248,7 @@ class _OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
       pickupLocation: pickupLocation,
       dropoffLocation: dropoffLocation,
       paymentMethod: _selectedPaymentMethod,
+      couponCode: _selectedCoupon?.code,
     );
   }
 }

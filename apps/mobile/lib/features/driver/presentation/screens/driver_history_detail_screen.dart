@@ -150,7 +150,9 @@ class _DriverHistoryDetailScreenState extends State<DriverHistoryDetailScreen> {
           ],
           title: Text(
             _order != null
-                ? context.l10n.text_order_id_short(_order!.id.substring(0, 8))
+                ? context.l10n.text_order_id_short(
+                    _order?.id.substring(0, 8) ?? '',
+                  )
                 : context.l10n.order_history,
           ),
         ),
@@ -175,7 +177,7 @@ class _DriverHistoryDetailScreenState extends State<DriverHistoryDetailScreen> {
       return Center(child: Text(context.l10n.order_unavailable));
     }
 
-    return RefreshTrigger(
+    return SafeRefreshTrigger(
       onRefresh: _loadOrder,
       child: Column(
         children: [
@@ -368,9 +370,9 @@ class _DriverHistoryDetailScreenState extends State<DriverHistoryDetailScreen> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      if (order.user?.gender != null)
+                      if (order.user?.gender case final gender?)
                         Text(
-                          _formatGender(order.user!.gender!),
+                          _formatGender(gender),
                           style: context.typography.small.copyWith(
                             fontSize: 14.sp,
                             color: context.colorScheme.mutedForeground,

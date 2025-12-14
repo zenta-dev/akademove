@@ -127,6 +127,7 @@ class WalletBalanceCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final currentUserId = userId;
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(16.dg),
@@ -137,10 +138,10 @@ class WalletBalanceCardWidget extends StatelessWidget {
       child: Column(
         spacing: 8.h,
         children: [
-          if (userId != null)
+          if (currentUserId != null)
             GestureDetector(
               onTap: () {
-                Clipboard.setData(ClipboardData(text: userId!));
+                Clipboard.setData(ClipboardData(text: currentUserId));
                 context.showMyToast(
                   context.l10n.copied_to_clipboard,
                   type: ToastType.success,
@@ -162,7 +163,7 @@ class WalletBalanceCardWidget extends StatelessWidget {
                       color: Colors.white,
                     ),
                     Text(
-                      '${context.l10n.label_user_id}: ${userId!.length > 8 ? '${userId!.substring(0, 8)}...' : userId!}',
+                      '${context.l10n.label_user_id}: ${currentUserId.length > 8 ? '${currentUserId.substring(0, 8)}...' : currentUserId}',
                       style: context.typography.small.copyWith(
                         fontSize: 11.sp,
                         color: Colors.white,

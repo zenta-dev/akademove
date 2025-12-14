@@ -220,16 +220,19 @@ class _OrderCompletionScreenState extends State<OrderCompletionScreen> {
         );
 
         // Submit secondary review (merchant) if applicable
-        if (_showSecondaryRating && widget.merchant != null) {
-          await cubit.submitReview(
-            orderId: widget.orderId,
-            toUserId: widget.merchant!.userId,
-            categories: _secondaryCategories.toList(),
-            score: _secondaryRating,
-            comment: _secondaryCommentController.text.trim().isNotEmpty
-                ? _secondaryCommentController.text.trim()
-                : null,
-          );
+        if (_showSecondaryRating) {
+          final merchant = widget.merchant;
+          if (merchant != null) {
+            await cubit.submitReview(
+              orderId: widget.orderId,
+              toUserId: merchant.userId,
+              categories: _secondaryCategories.toList(),
+              score: _secondaryRating,
+              comment: _secondaryCommentController.text.trim().isNotEmpty
+                  ? _secondaryCommentController.text.trim()
+                  : null,
+            );
+          }
         }
       } else if (widget.viewerRole == OrderCompletionViewerRole.driver) {
         // Driver submitting review for customer
@@ -418,26 +421,32 @@ class _OrderCompletionScreenState extends State<OrderCompletionScreen> {
 
                       // Secondary rating section (merchant for FOOD orders when USER is viewing)
                       if (_showSecondaryRating && widget.merchant != null)
-                        _RatingSection(
-                          title: context.l10n.rate_merchant_title,
-                          subtitle: widget.merchant!.name,
-                          avatarInitials: Avatar.getInitials(
-                            widget.merchant!.name,
-                          ),
-                          avatarImage: widget.merchant!.image,
-                          rating: _secondaryRating,
-                          onRatingChanged: (rating) {
-                            setState(() {
-                              _secondaryRating = rating;
-                            });
+                        Builder(
+                          builder: (context) {
+                            final merchant = widget.merchant;
+                            if (merchant == null) {
+                              return const SizedBox.shrink();
+                            }
+                            return _RatingSection(
+                              title: context.l10n.rate_merchant_title,
+                              subtitle: merchant.name,
+                              avatarInitials: Avatar.getInitials(merchant.name),
+                              avatarImage: merchant.image,
+                              rating: _secondaryRating,
+                              onRatingChanged: (rating) {
+                                setState(() {
+                                  _secondaryRating = rating;
+                                });
+                              },
+                              selectedCategories: _secondaryCategories,
+                              onCategoryToggle: _toggleSecondaryCategory,
+                              commentController: _secondaryCommentController,
+                              onReport: () => _navigateToReport(
+                                merchant.userId,
+                                merchant.name,
+                              ),
+                            );
                           },
-                          selectedCategories: _secondaryCategories,
-                          onCategoryToggle: _toggleSecondaryCategory,
-                          commentController: _secondaryCommentController,
-                          onReport: () => _navigateToReport(
-                            widget.merchant!.userId,
-                            widget.merchant!.name,
-                          ),
                         ),
 
                       Gap(60.h), // Space for the fixed button
