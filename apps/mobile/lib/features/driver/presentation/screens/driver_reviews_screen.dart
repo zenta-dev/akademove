@@ -46,7 +46,7 @@ class _DriverReviewsScreenState extends State<DriverReviewsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       headers: [AppBar(title: Text(context.l10n.my_reviews))],
-      child: RefreshTrigger(
+      child: SafeRefreshTrigger(
         onRefresh: _onRefresh,
         child: BlocBuilder<DriverReviewCubit, DriverReviewState>(
           builder: (context, state) {
@@ -168,7 +168,7 @@ class _ReviewCard extends StatelessWidget {
                         style: context.typography.semiBold,
                       ),
                       Text(
-                        _formatCategory(context, review.category),
+                        _formatCategories(context, review.categories),
                         style: context.typography.small.copyWith(
                           color: context.colorScheme.mutedForeground,
                         ),
@@ -251,5 +251,14 @@ class _ReviewCard extends StatelessWidget {
       case ReviewCategory.OTHER:
         return context.l10n.other;
     }
+  }
+
+  /// Formats a list of categories into a comma-separated string
+  String _formatCategories(
+    BuildContext context,
+    List<ReviewCategory> categories,
+  ) {
+    if (categories.isEmpty) return '';
+    return categories.map((c) => _formatCategory(context, c)).join(', ');
   }
 }

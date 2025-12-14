@@ -58,7 +58,7 @@ class _DriverReviewsDetailScreenState extends State<DriverReviewsDetailScreen> {
           ],
         ),
       ],
-      child: RefreshTrigger(
+      child: SafeRefreshTrigger(
         onRefresh: _onRefresh,
         child: BlocBuilder<DriverReviewCubit, DriverReviewState>(
           builder: (context, state) {
@@ -326,17 +326,16 @@ class _DriverReviewsDetailScreenState extends State<DriverReviewsDetailScreen> {
   }
 
   Widget _buildCategoryBreakdown(List<Review> reviews) {
-    final categoryScores = <ReviewCategory, List<num>>{};
+    final categoryCounts = <ReviewCategory, int>{};
     for (final review in reviews) {
-      categoryScores.putIfAbsent(review.category, () => []).add(review.score);
+      for (final category in review.categories) {
+        categoryCounts[category] = (categoryCounts[category] ?? 0) + 1;
+      }
     }
 
-    final categoryAverages = categoryScores.map((category, scores) {
-      final avg = scores.isNotEmpty
-          ? scores.reduce((a, b) => a + b) / scores.length
-          : 0.0;
-      return MapEntry(category, avg);
-    });
+    // Sort by count descending
+    final sortedCategories = categoryCounts.entries.toList()
+      ..sort((a, b) => b.value.compareTo(a.value));
 
     return Card(
       child: Padding(
@@ -352,8 +351,8 @@ class _DriverReviewsDetailScreenState extends State<DriverReviewsDetailScreen> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            ...categoryAverages.entries.map((entry) {
-              return _buildCategoryRow(entry.key, entry.value);
+            ...sortedCategories.map((entry) {
+              return _buildCategoryRow(entry.key, entry.value, reviews.length);
             }),
           ],
         ),
@@ -361,7 +360,12 @@ class _DriverReviewsDetailScreenState extends State<DriverReviewsDetailScreen> {
     );
   }
 
-  Widget _buildCategoryRow(ReviewCategory category, num averageScore) {
+  Widget _buildCategoryRow(
+    ReviewCategory category,
+    int count,
+    int totalReviews,
+  ) {
+    final percentage = totalReviews > 0 ? (count / totalReviews * 100) : 0.0;
     return Container(
       padding: EdgeInsets.all(12.dg),
       decoration: BoxDecoration(
@@ -398,18 +402,11 @@ class _DriverReviewsDetailScreenState extends State<DriverReviewsDetailScreen> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                Row(
-                  children: [
-                    ...List.generate(5, (index) {
-                      return Icon(
-                        LucideIcons.star,
-                        size: 12.sp,
-                        color: index < averageScore.round()
-                            ? const Color(0xFFFFC107)
-                            : context.colorScheme.mutedForeground,
-                      );
-                    }),
-                  ],
+                Text(
+                  '$count ${count == 1 ? "review" : "reviews"}',
+                  style: context.typography.small.copyWith(
+                    color: context.colorScheme.mutedForeground,
+                  ),
                 ),
               ],
             ),
@@ -417,11 +414,11 @@ class _DriverReviewsDetailScreenState extends State<DriverReviewsDetailScreen> {
           Container(
             padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
             decoration: BoxDecoration(
-              color: _getRatingColor(context, averageScore),
+              color: _getCategoryColor(category),
               borderRadius: BorderRadius.circular(8.r),
             ),
             child: Text(
-              averageScore.toStringAsFixed(1),
+              '${percentage.toStringAsFixed(0)}%',
               style: context.typography.small.copyWith(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
@@ -502,7 +499,7 @@ class _DriverReviewsDetailScreenState extends State<DriverReviewsDetailScreen> {
                       ),
                     ),
                     Text(
-                      _formatCategory(context, review.category),
+                      _formatCategories(context, review.categories),
                       style: context.typography.small.copyWith(
                         color: context.colorScheme.mutedForeground,
                       ),
@@ -679,5 +676,14 @@ class _DriverReviewsDetailScreenState extends State<DriverReviewsDetailScreen> {
       case ReviewCategory.OTHER:
         return context.l10n.other;
     }
+  }
+
+  /// Formats a list of categories into a comma-separated string
+  String _formatCategories(
+    BuildContext context,
+    List<ReviewCategory> categories,
+  ) {
+    if (categories.isEmpty) return '';
+    return categories.map((c) => _formatCategory(context, c)).join(', ');
   }
 }

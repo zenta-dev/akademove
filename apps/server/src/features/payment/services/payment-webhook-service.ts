@@ -6,13 +6,14 @@ import type { Transaction } from "@repo/schema/transaction";
 import { nullsToUndefined } from "@repo/shared";
 import Decimal from "decimal.js";
 import { eq } from "drizzle-orm";
-import { DRIVER_POOL_KEY } from "@/core/constants";
+import { BUSINESS_CONSTANTS, DRIVER_POOL_KEY } from "@/core/constants";
 import { RepositoryError } from "@/core/error";
 import type { WithTx } from "@/core/interface";
 import { tables } from "@/core/services/db";
+import { ProcessingQueueService } from "@/core/services/queue";
 import type { PaymentDatabase } from "@/core/tables/payment";
 import { OrderStateService } from "@/features/order/services/order-state-service";
-import { delay, toNumberSafe, toStringNumberSafe } from "@/utils";
+import { toNumberSafe, toStringNumberSafe } from "@/utils";
 import { logger } from "@/utils/logger";
 import { generateOrderCode } from "@/utils/uuid";
 import { PaymentChargeService } from "./payment-charge-service";
@@ -479,13 +480,20 @@ export class PaymentWebhookService {
 			}),
 			tx.query.order.findFirst({
 				with: {
-					user: { columns: { name: true } },
-					driver: { columns: {}, with: { user: { columns: { name: true } } } },
+					user: { columns: { name: true, image: true } },
+					driver: {
+						columns: {},
+						with: { user: { columns: { name: true, image: true } } },
+					},
 					merchant: {
 						columns: { name: true },
 						with: { user: { columns: { id: true } } },
 					},
-					items: { columns: { quantity: true } },
+					items: {
+						with: {
+							menu: true,
+						},
+					},
 				},
 				where: (f, op) => op.eq(f.id, orderId),
 			}),
@@ -542,15 +550,39 @@ export class PaymentWebhookService {
 		]);
 
 		const paymentStub = this.#getPaymentRoomStub(payment.id);
-		const orderStub = this.#getOrderRoomStub(DRIVER_POOL_KEY);
 
 		const composedPayment = PaymentChargeService.composeEntity(
 			updatedPayment as unknown as PaymentDatabase,
 		);
+
+		// Transform order items to expected format: { quantity, item: MerchantMenu }
+		const composedItems = order.items
+			?.filter(
+				(item): item is typeof item & { menu: NonNullable<typeof item.menu> } =>
+					item.menu !== null,
+			)
+			.map((item) => ({
+				quantity: item.quantity,
+				item: {
+					id: item.menu.id,
+					merchantId: item.menu.merchantId,
+					name: item.menu.name,
+					category: item.menu.category ?? undefined,
+					price: toNumberSafe(item.menu.price),
+					stock: item.menu.stock,
+					image: item.menu.image ?? undefined,
+					createdAt: item.menu.createdAt,
+					updatedAt: item.menu.updatedAt,
+				},
+			}));
+
+		// Destructure to exclude raw items, then add transformed items
+		const { items: _rawItems, ...orderWithoutItems } = order;
+
 		// Compose order with proper decimal conversions for WebSocket broadcasting
 		// biome-ignore lint/suspicious/noExplicitAny: Complex order type with runtime decimal conversions
 		const composedOrder: any = nullsToUndefined({
-			...order,
+			...orderWithoutItems,
 			status: "MATCHING" as const,
 			basePrice: toNumberSafe(order.basePrice),
 			totalPrice: toNumberSafe(order.totalPrice),
@@ -567,6 +599,8 @@ export class PaymentWebhookService {
 			discountAmount: order.discountAmount
 				? toNumberSafe(order.discountAmount)
 				: undefined,
+			items: composedItems,
+			itemCount: composedItems?.length,
 		});
 		const composedWallet = {
 			...transaction.wallet,
@@ -586,21 +620,23 @@ export class PaymentWebhookService {
 					wallet: composedWallet,
 				},
 			}),
-			// Trigger order matching (delayed by 500ms)
-			delay(500, () =>
-				orderStub.broadcast({
-					a: "MATCHING",
-					f: "s",
-					t: "s",
-					tg: "SYSTEM",
-					p: {
+			// Trigger order matching with delayed broadcast via queue
+			// Note: setTimeout doesn't work reliably in Cloudflare Workers due to security restrictions
+			// @see https://developers.cloudflare.com/workers/runtime-apis/nodejs/timers/
+			ProcessingQueueService.enqueueWebSocketBroadcast(
+				{
+					roomName: DRIVER_POOL_KEY,
+					action: "MATCHING",
+					target: "SYSTEM",
+					data: {
 						detail: {
 							payment: composedPayment,
 							order: composedOrder,
 							transaction: updatedTransaction,
 						},
 					},
-				}),
+				},
+				{ delaySeconds: BUSINESS_CONSTANTS.BROADCAST_DELAY_SECONDS },
 			),
 			// Notify customer
 			sendNotification(
@@ -684,17 +720,6 @@ export class PaymentWebhookService {
 	#getPaymentRoomStub(paymentId: string) {
 		const stubId = env.PAYMENT_ROOM.idFromName(paymentId);
 		return env.PAYMENT_ROOM.get(stubId);
-	}
-
-	/**
-	 * Gets order room Durable Object stub for WebSocket broadcasting
-	 *
-	 * @param roomName - Room name (typically DRIVER_POOL_KEY)
-	 * @returns Durable Object stub
-	 */
-	#getOrderRoomStub(roomName: string) {
-		const stubId = env.ORDER_ROOM.idFromName(roomName);
-		return env.ORDER_ROOM.get(stubId);
 	}
 
 	/**

@@ -27,6 +27,7 @@ Method | HTTP request | Description
 [**orderSendMessage**](OrderApi.md#ordersendmessage) | **POST** /orders/{id}/messages | 
 [**orderUpdate**](OrderApi.md#orderupdate) | **PUT** /orders/{id} | 
 [**orderUpdateScheduledOrder**](OrderApi.md#orderupdatescheduledorder) | **PUT** /orders/scheduled/{id} | 
+[**orderUploadDeliveryItemPhoto**](OrderApi.md#orderuploaddeliveryitemphoto) | **POST** /orders/{id}/delivery-item-photo | 
 [**orderUploadDeliveryProof**](OrderApi.md#orderuploaddeliveryproof) | **POST** /orders/{id}/delivery-proof | 
 [**orderVerifyDeliveryOTP**](OrderApi.md#orderverifydeliveryotp) | **POST** /orders/{id}/verify-otp | 
 
@@ -815,6 +816,49 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**MerchantOrderAccept200Response**](MerchantOrderAccept200Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **orderUploadDeliveryItemPhoto**
+> OrderUploadDeliveryProof200Response orderUploadDeliveryItemPhoto(id, orderUploadDeliveryProofRequest)
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getOrderApi();
+final String id = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
+final OrderUploadDeliveryProofRequest orderUploadDeliveryProofRequest = ; // OrderUploadDeliveryProofRequest | 
+
+try {
+    final response = api.orderUploadDeliveryItemPhoto(id, orderUploadDeliveryProofRequest);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling OrderApi->orderUploadDeliveryItemPhoto: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**|  | 
+ **orderUploadDeliveryProofRequest** | [**OrderUploadDeliveryProofRequest**](OrderUploadDeliveryProofRequest.md)|  | 
+
+### Return type
+
+[**OrderUploadDeliveryProof200Response**](OrderUploadDeliveryProof200Response.md)
 
 ### Authorization
 

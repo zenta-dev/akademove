@@ -179,7 +179,7 @@ class _UserRideOnTripScreenState extends State<UserRideOnTripScreen> {
 
       final primaryColor = context.colorScheme.primary;
       final dimmedColor = primaryColor.withValues(alpha: 0.4);
-      final rideCubit = context.read<UserRideCubit>();
+      final orderLocationCubit = context.read<OrderLocationCubit>();
       final orderStatus = order.status;
 
       // Determine if driver is heading to pickup or already picked up
@@ -190,7 +190,7 @@ class _UserRideOnTripScreenState extends State<UserRideOnTripScreen> {
 
       try {
         // Always get pickup-to-dropoff route
-        final pickupToDropoffRoute = await rideCubit.getRoutes(
+        final pickupToDropoffRoute = await orderLocationCubit.getRoutes(
           order.pickupLocation,
           order.dropoffLocation,
         );
@@ -205,7 +205,7 @@ class _UserRideOnTripScreenState extends State<UserRideOnTripScreen> {
         // and pickup-to-dropoff route (dimmed)
         if (isDriverHeadingToPickup && driverLocation != null) {
           // Get driver-to-pickup route
-          final driverToPickupRoute = await rideCubit.getRoutes(
+          final driverToPickupRoute = await orderLocationCubit.getRoutes(
             driverLocation,
             order.pickupLocation,
           );
@@ -244,7 +244,7 @@ class _UserRideOnTripScreenState extends State<UserRideOnTripScreen> {
           );
         } else if (isInTrip && driverLocation != null) {
           // During trip: show driver-to-dropoff route (highlighted)
-          final driverToDropoffRoute = await rideCubit.getRoutes(
+          final driverToDropoffRoute = await orderLocationCubit.getRoutes(
             driverLocation,
             order.dropoffLocation,
           );
@@ -319,15 +319,18 @@ class _UserRideOnTripScreenState extends State<UserRideOnTripScreen> {
         mounted &&
         context.mounted) {
       context.read<UserOrderCubit>().clearActiveOrder();
-      // Navigate to rating/review screen
+      // Navigate to order completion screen
       final driver = state.currentAssignedDriver.value;
+      final payment = state.currentPayment.value;
       if (driver != null && currentOrder != null) {
         final result = await context.pushNamed(
-          Routes.userRating.name,
+          Routes.userOrderCompletion.name,
           extra: {
             "orderId": currentOrder.id,
-            "driverId": driver.userId,
-            "driverName": driver.user?.name ?? "Driver",
+            "orderType": OrderType.RIDE,
+            "order": currentOrder,
+            "driver": driver,
+            "payment": payment,
           },
         );
 
@@ -713,6 +716,7 @@ class _DriverInfoData {
     return other is _DriverInfoData &&
         other.driver?.userId == driver?.userId &&
         other.driver?.user?.name == driver?.user?.name &&
+        other.driver?.user?.gender == driver?.user?.gender &&
         other.driver?.licensePlate == driver?.licensePlate &&
         other.driver?.rating == driver?.rating &&
         other.orderStatus == orderStatus &&
@@ -723,6 +727,7 @@ class _DriverInfoData {
   int get hashCode => Object.hash(
     driver?.userId,
     driver?.user?.name,
+    driver?.user?.gender,
     driver?.licensePlate,
     driver?.rating,
     orderStatus,
@@ -1042,8 +1047,30 @@ class _DriverInfoContent extends StatelessWidget {
     );
   }
 
+  String _getGenderDisplay(UserGender? gender) {
+    if (gender == null) return "";
+
+    // Get string from enum and capitalize first letter
+    final genderStr = gender.name;
+    return genderStr[0].toUpperCase() + genderStr.substring(1).toLowerCase();
+  }
+
+  IconData _getGenderIcon(UserGender? gender) {
+    if (gender == null) return LucideIcons.user;
+
+    switch (gender) {
+      case UserGender.MALE:
+        return LucideIcons.user;
+      case UserGender.FEMALE:
+        return LucideIcons.userRound;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final gender = driver.user?.gender;
+    final hasGender = gender != null;
+
     return Card(
       child: Padding(
         padding: EdgeInsets.all(12.w),
@@ -1063,16 +1090,57 @@ class _DriverInfoContent extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 spacing: 4.h,
                 children: [
-                  DefaultText(
-                    driver.user?.name ?? "Driver",
-                    fontWeight: FontWeight.w500,
-                    fontSize: 16.sp,
+                  // Driver name with gender badge
+                  Row(
+                    children: [
+                      Flexible(
+                        child: DefaultText(
+                          driver.user?.name ?? "Driver",
+                          fontWeight: FontWeight.w500,
+                          fontSize: 16.sp,
+                        ),
+                      ),
+                      if (hasGender) ...[
+                        SizedBox(width: 8.w),
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 6.w,
+                            vertical: 2.h,
+                          ),
+                          decoration: BoxDecoration(
+                            color: context.colorScheme.primary.withValues(
+                              alpha: 0.1,
+                            ),
+                            borderRadius: BorderRadius.circular(4.w),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                _getGenderIcon(gender),
+                                size: 10.sp,
+                                color: context.colorScheme.primary,
+                              ),
+                              SizedBox(width: 2.w),
+                              DefaultText(
+                                _getGenderDisplay(gender),
+                                fontSize: 10.sp,
+                                color: context.colorScheme.primary,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ],
                   ),
+                  // License plate
                   DefaultText(
                     driver.licensePlate,
                     fontSize: 12.sp,
                     color: context.colorScheme.mutedForeground,
                   ),
+                  // Rating
                   if (driver.rating != 0)
                     Row(
                       spacing: 4.w,
@@ -1080,12 +1148,13 @@ class _DriverInfoContent extends StatelessWidget {
                         Icon(
                           LucideIcons.star,
                           size: 14.sp,
-                          color: context.colorScheme.primary,
+                          color: Colors.amber,
                         ),
                         DefaultText(
                           driver.rating.toStringAsFixed(1),
                           fontSize: 12.sp,
-                          fontWeight: FontWeight.w500,
+                          fontWeight: FontWeight.w600,
+                          color: context.colorScheme.foreground,
                         ),
                       ],
                     ),

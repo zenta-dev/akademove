@@ -39,8 +39,14 @@ export class QuickMessageRepository extends BaseRepository {
 			const cacheKey = QuickMessageCacheService.generateListCacheKey(query);
 
 			const fallback = async () => {
-				const { role, orderType, locale, isActive } = query;
+				const { role, orderType, locale, status } = query;
 				const tx = opts?.tx ?? this.db;
+				const isActive =
+					status === "ACTIVE"
+						? true
+						: status === "INACTIVE"
+							? false
+							: undefined;
 
 				const conditions: SQL[] = [];
 				if (role) conditions.push(eq(tables.quickMessageTemplate.role, role));

@@ -1,6 +1,7 @@
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/l10n/l10n.dart';
+import 'package:akademove/locator.dart';
 import 'package:api_client/api_client.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -34,17 +35,72 @@ class _MerchantSalesReportDetailScreenState
     context.read<MerchantAnalyticsCubit>().getMonthlyAnalytics();
   }
 
-  void _handleExport() {
+  Future<void> _handleExport() async {
+    final state = context.read<MerchantAnalyticsCubit>().state;
+
+    // Ensure we have data to export
+    if (!state.analytics.isSuccess || state.analytics.value == null) {
+      showToast(
+        context: context,
+        builder: (context, overlay) => context.buildToast(
+          title: context.l10n.error,
+          message: context.l10n.an_error_occurred,
+        ),
+        location: ToastLocation.topCenter,
+      );
+      return;
+    }
+
     setState(() => _isExporting = true);
 
-    final now = DateTime.now();
-    final startOfMonth = DateTime(now.year, now.month, 1);
+    try {
+      final pdfService = sl<PdfService>();
+      final analytics = state.analytics.value!;
 
-    // Just trigger the cubit action - response handling is done via BlocListener
-    context.read<MerchantAnalyticsCubit>().exportAnalytics(
-      startDate: startOfMonth,
-      endDate: now,
-    );
+      // Generate PDF using client-side generation
+      final pdfBytes = await pdfService.generateMerchantSalesReportPdf(
+        totalOrders: analytics.totalOrders,
+        completedOrders: analytics.completedOrders,
+        cancelledOrders: analytics.cancelledOrders,
+        totalRevenue: analytics.totalRevenue,
+        averageOrderValue: analytics.averageOrderValue,
+        topSellingItems: analytics.topSellingItems,
+        period: context.l10n.monthly,
+      );
+
+      // Share/save the PDF
+      final now = DateTime.now();
+      final filename =
+          'merchant_sales_report_${DateFormat('yyyyMMdd_HHmmss').format(now)}.pdf';
+
+      await pdfService.sharePdf(pdfBytes: pdfBytes, filename: filename);
+
+      if (mounted) {
+        showToast(
+          context: context,
+          builder: (context, overlay) => context.buildToast(
+            title: context.l10n.success,
+            message: context.l10n.export_success,
+          ),
+          location: ToastLocation.topCenter,
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        showToast(
+          context: context,
+          builder: (context, overlay) => context.buildToast(
+            title: context.l10n.error,
+            message: context.l10n.export_failed,
+          ),
+          location: ToastLocation.topCenter,
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isExporting = false);
+      }
+    }
   }
 
   Widget _buildSalesGauge({
@@ -347,42 +403,7 @@ class _MerchantSalesReportDetailScreenState
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<MerchantAnalyticsCubit, MerchantAnalyticsState>(
-      listenWhen: (previous, current) =>
-          previous.exportResult != current.exportResult,
-      listener: (context, state) {
-        // Handle loading state end
-        if (!state.exportResult.isLoading && _isExporting) {
-          setState(() => _isExporting = false);
-        }
-
-        // Handle success
-        if (state.exportResult.isSuccess) {
-          showToast(
-            context: context,
-            builder: (context, overlay) => context.buildToast(
-              title: context.l10n.success,
-              message: context.l10n.toast_success,
-            ),
-            location: ToastLocation.topCenter,
-          );
-          context.read<MerchantAnalyticsCubit>().clearExportResult();
-        }
-
-        // Handle failure
-        if (state.exportResult.isFailed) {
-          showToast(
-            context: context,
-            builder: (context, overlay) => context.buildToast(
-              title: context.l10n.error,
-              message:
-                  state.exportResult.error?.message ??
-                  context.l10n.an_error_occurred,
-            ),
-            location: ToastLocation.topCenter,
-          );
-        }
-      },
+    return BlocBuilder<MerchantAnalyticsCubit, MerchantAnalyticsState>(
       builder: (context, state) {
         final isLoading = state.analytics.isLoading;
         final analytics = state.analytics.value;
@@ -422,7 +443,7 @@ class _MerchantSalesReportDetailScreenState
           ],
           child: isLoading
               ? const Center(child: CircularProgressIndicator())
-              : RefreshTrigger(
+              : SafeRefreshTrigger(
                   onRefresh: () => context
                       .read<MerchantAnalyticsCubit>()
                       .getMonthlyAnalytics(),

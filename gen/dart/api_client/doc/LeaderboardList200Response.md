@@ -9,7 +9,7 @@ import 'package:api_client/api.dart';
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **message** | **String** |  | 
-**data** | [**List&lt;Leaderboard&gt;**](Leaderboard.md) |  | 
+**data** | [**List&lt;LeaderboardWithDriver&gt;**](LeaderboardWithDriver.md) |  | 
 **pagination** | [**PaginationResult**](PaginationResult.md) |  | [optional] 
 **totalPages** | **int** |  | [optional] 
 

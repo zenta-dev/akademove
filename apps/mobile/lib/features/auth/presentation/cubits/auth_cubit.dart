@@ -17,7 +17,9 @@ class AuthCubit extends BaseCubit<AuthState> {
   final DriverRepository _driverRepository;
   final MerchantRepository _merchantRepository;
 
-  void reset() => emit(const AuthState());
+  void reset() {
+    emit(const AuthState());
+  }
 
   Future<void> signIn(String email, String password) async =>
       await taskManager.execute('SC-sI1-$email', () async {
@@ -76,6 +78,7 @@ class AuthCubit extends BaseCubit<AuthState> {
         confirmPassword: confirmPassword,
         photo: photo,
       );
+
       emit(
         state.copyWith(
           user: OperationResult.success(res.data, message: res.message),
@@ -123,6 +126,7 @@ class AuthCubit extends BaseCubit<AuthState> {
         ),
         bank: Bank(provider: bankProvider, number: bankNumber),
       );
+
       emit(
         state.copyWith(
           user: OperationResult.success(res.data, message: res.message),
@@ -180,6 +184,7 @@ class AuthCubit extends BaseCubit<AuthState> {
         photo: photo,
         document: document,
       );
+
       emit(
         state.copyWith(
           user: OperationResult.success(res.data, message: res.message),

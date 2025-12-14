@@ -131,20 +131,17 @@ function RouteComponent() {
 		}),
 	);
 
-	// Fetch completed orders count
-	const { data: completedOrders } = useQuery(
-		orpcQuery.order.list.queryOptions({
-			input: {
-				query: {
-					limit: 100,
-					sortBy: "id",
-					order: "desc",
-					statuses: ["COMPLETED"],
-				},
-			},
-			refreshInterval: 60000,
-		}),
-	);
+	// Fetch commission report for all-time total earnings
+	const { data: commissionReport } = useQuery({
+		queryKey: ["wallet", "commissionReport", "daily"],
+		queryFn: async () => {
+			const result = await orpcClient.wallet.getCommissionReport({
+				query: { period: "daily" },
+			});
+			return result;
+		},
+		refetchInterval: 60000,
+	});
 
 	// Toggle online status mutation
 	const toggleOnlineMutation = useMutation(
@@ -200,14 +197,10 @@ function RouteComponent() {
 		return null;
 	}, [driverData]);
 
-	// Calculate total earnings from completed orders
-	const totalEarnings = useMemo(() => {
-		if (!completedOrders?.body?.data) return 0;
-		return completedOrders.body.data.reduce(
-			(sum, order) => sum + (order.driverEarning ?? order.totalPrice * 0.8),
-			0,
-		);
-	}, [completedOrders?.body?.data]);
+	// Get today's earnings from commission report (daily period)
+	const todaysEarnings = useMemo(() => {
+		return commissionReport?.body?.data?.totalEarnings ?? 0;
+	}, [commissionReport?.body?.data?.totalEarnings]);
 
 	const statusColors: Record<string, string> = {
 		ACCEPTED: "bg-cyan-100 text-cyan-800 dark:bg-cyan-900 dark:text-cyan-300",
@@ -319,22 +312,24 @@ function RouteComponent() {
 					</CardContent>
 				</Card>
 
-				<Card>
-					<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-						<CardTitle className="font-medium text-sm">
-							Total Earnings
-						</CardTitle>
-						<TrendingUp className="h-4 w-4 text-muted-foreground" />
-					</CardHeader>
-					<CardContent>
-						<div className="font-bold text-2xl">
-							{formatPrice(totalEarnings)}
-						</div>
-						<p className="text-muted-foreground text-xs">
-							From {completedOrders?.body.data.length ?? 0} completed trips
-						</p>
-					</CardContent>
-				</Card>
+				<Link to="/dash/driver/commission-report" className="block">
+					<Card className="cursor-pointer transition-colors hover:bg-muted/50">
+						<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+							<CardTitle className="font-medium text-sm">
+								Today's Earnings
+							</CardTitle>
+							<TrendingUp className="h-4 w-4 text-muted-foreground" />
+						</CardHeader>
+						<CardContent>
+							<div className="font-bold text-2xl">
+								{formatPrice(todaysEarnings)}
+							</div>
+							<p className="text-muted-foreground text-xs">
+								Click for detailed report
+							</p>
+						</CardContent>
+					</Card>
+				</Link>
 
 				<Card>
 					<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">

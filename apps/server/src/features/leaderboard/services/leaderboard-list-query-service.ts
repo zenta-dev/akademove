@@ -1,6 +1,10 @@
+import type {
+	LeaderboardCategory,
+	LeaderboardPeriod,
+	LeaderboardQuery,
+} from "@repo/schema/leaderboard";
 import { LeaderboardKeySchema } from "@repo/schema/leaderboard";
-import type { UnifiedPaginationQuery } from "@repo/schema/pagination";
-import { count, gt, ilike, type SQL } from "drizzle-orm";
+import { and, count, eq, gt, type SQL } from "drizzle-orm";
 import type { DatabaseService } from "@/core/services/db";
 import { tables } from "@/core/services/db";
 import { logger } from "@/utils/logger";
@@ -25,14 +29,24 @@ export class LeaderboardListQueryService {
 	 * Generate WHERE clauses for leaderboard listing
 	 */
 	static generateWhereClauses(options: {
-		search?: string;
+		category?: LeaderboardCategory;
+		period?: LeaderboardPeriod;
+		userId?: string;
 		cursor?: string;
 	}): SQL[] {
-		const { search, cursor } = options;
+		const { category, period, userId, cursor } = options;
 		const clauses: SQL[] = [];
 
-		if (search) {
-			clauses.push(ilike(tables.leaderboard.category, `%${search}%`));
+		if (category) {
+			clauses.push(eq(tables.leaderboard.category, category));
+		}
+
+		if (period) {
+			clauses.push(eq(tables.leaderboard.period, period));
+		}
+
+		if (userId) {
+			clauses.push(eq(tables.leaderboard.userId, userId));
 		}
 
 		if (cursor) {
@@ -43,23 +57,29 @@ export class LeaderboardListQueryService {
 	}
 
 	/**
-	 * Get count of leaderboards matching search query
+	 * Get count of leaderboards matching filters
 	 */
-	static async getSearchCount(
+	static async getFilteredCount(
 		db: DatabaseService,
-		search: string,
+		options: {
+			category?: LeaderboardCategory;
+			period?: LeaderboardPeriod;
+			userId?: string;
+		},
 	): Promise<number> {
 		try {
+			const clauses = LeaderboardListQueryService.generateWhereClauses(options);
+
 			const [dbResult] = await db
 				.select({ count: count(tables.leaderboard.id) })
 				.from(tables.leaderboard)
-				.where(ilike(tables.leaderboard.category, `%${search}%`));
+				.where(clauses.length > 0 ? and(...clauses) : undefined);
 
 			return dbResult?.count ?? 0;
 		} catch (error) {
 			logger.error(
-				{ search, error },
-				"[LeaderboardListQueryService] Failed to get search count",
+				{ options, error },
+				"[LeaderboardListQueryService] Failed to get filtered count",
 			);
 			return 0;
 		}
@@ -86,21 +106,25 @@ export class LeaderboardListQueryService {
 	/**
 	 * Extract pagination parameters from query with defaults
 	 */
-	static extractPaginationParams(query?: UnifiedPaginationQuery): {
+	static extractPaginationParams(query?: LeaderboardQuery): {
+		category?: LeaderboardCategory;
+		period?: LeaderboardPeriod;
 		cursor?: string;
 		page?: number;
 		limit: number;
-		search?: string;
 		sortBy?: string;
 		order: "asc" | "desc";
+		includeDriver: boolean;
 	} {
 		return {
+			category: query?.category,
+			period: query?.period,
 			cursor: query?.cursor,
 			page: query?.page,
 			limit: query?.limit ?? 10,
-			search: query?.query,
-			sortBy: query?.sortBy,
+			sortBy: query?.sortBy ?? "rank",
 			order: query?.order ?? "asc",
+			includeDriver: query?.includeDriver ?? false,
 		};
 	}
 }

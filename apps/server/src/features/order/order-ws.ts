@@ -3,7 +3,12 @@ import type {
 	FoodPricingConfiguration,
 	PricingConfiguration,
 } from "@repo/schema";
-import { type OrderEnvelope, OrderEnvelopeSchema } from "@repo/schema/ws";
+import type { Order } from "@repo/schema/order";
+import {
+	type MerchantEnvelope,
+	type OrderEnvelope,
+	OrderEnvelopeSchema,
+} from "@repo/schema/ws";
 import Decimal from "decimal.js";
 import { sql } from "drizzle-orm";
 import { BaseDurableObject, type BroadcastOptions } from "@/core/base";
@@ -47,6 +52,10 @@ export class OrderRoom extends BaseDurableObject {
 	/**
 	 * Handle HTTP requests and WebSocket upgrades
 	 * Supports POST /broadcast for REST API to trigger WebSocket broadcasts
+	 *
+	 * Accepts two formats:
+	 * 1. Direct OrderEnvelope: { e: "...", f: "s", t: "c", p: {...} }
+	 * 2. Wrapped format from queue handler: { message: OrderEnvelope, excludeUserIds?: string[] }
 	 */
 	async fetch(request: Request): Promise<Response> {
 		const url = new URL(request.url);
@@ -54,8 +63,34 @@ export class OrderRoom extends BaseDurableObject {
 		// Handle broadcast requests from REST API handlers
 		if (request.method === "POST" && url.pathname.endsWith("/broadcast")) {
 			try {
-				const body = (await request.json()) as OrderEnvelope;
-				this.broadcast(body);
+				const body = (await request.json()) as
+					| OrderEnvelope
+					| { message: OrderEnvelope; excludeUserIds?: string[] };
+
+				// FIX: Handle both direct OrderEnvelope and wrapped format from WebSocketBroadcastHandler
+				// The queue handler wraps the message in { message, excludeUserIds }
+				const isWrappedFormat =
+					body !== null &&
+					typeof body === "object" &&
+					"message" in body &&
+					body.message !== null &&
+					typeof body.message === "object";
+
+				const envelope = isWrappedFormat
+					? (body as { message: OrderEnvelope; excludeUserIds?: string[] })
+							.message
+					: (body as OrderEnvelope);
+				const excludeUserIds = isWrappedFormat
+					? (body as { message: OrderEnvelope; excludeUserIds?: string[] })
+							.excludeUserIds
+					: undefined;
+
+				// Convert excludeUserIds to WebSocket array for broadcast options
+				const excludes = excludeUserIds?.length
+					? this.findByIds(excludeUserIds)
+					: undefined;
+
+				this.broadcast(envelope, excludes ? { excludes } : undefined);
 				return new Response(JSON.stringify({ success: true }), {
 					status: 200,
 					headers: { "Content-Type": "application/json" },
@@ -135,6 +170,9 @@ export class OrderRoom extends BaseDurableObject {
 					await this.#svc.db.transaction(
 						async (tx) => await this.#handleNoShow(ws, data, tx),
 					);
+				}
+				if (data.a === "CHECK_NEW_DATA") {
+					await this.#handleCheckNewData(ws, data);
 				}
 			} catch (error) {
 				logger.error(
@@ -328,6 +366,15 @@ export class OrderRoom extends BaseDurableObject {
 					);
 					throw refundError; // Re-throw to trigger transaction rollback
 				}
+			}
+
+			// Notify MerchantRoom if this is a FOOD order (merchant needs to know order is cancelled)
+			if (updatedOrder.merchantId && updatedOrder.type === "FOOD") {
+				await this.#notifyMerchantRoom(
+					updatedOrder.merchantId,
+					"ORDER_CANCELLED",
+					updatedOrder,
+				);
 			}
 
 			ws.send(JSON.stringify(response));
@@ -545,8 +592,6 @@ export class OrderRoom extends BaseDurableObject {
 			this.#broadcasted.delete(orderId);
 		}
 
-		const userWs = this.findById(userId);
-
 		const acceptedPayload: OrderEnvelope = {
 			e: "DRIVER_ACCEPTED",
 			f: "s",
@@ -557,10 +602,99 @@ export class OrderRoom extends BaseDurableObject {
 			},
 		};
 
-		userWs?.send(JSON.stringify(acceptedPayload));
+		// FIX: Broadcast to entire room instead of just user socket
+		// This ensures user receives the event even if they reconnected to a different socket
+		// Exclude the driver socket since they already know they accepted
+		this.broadcast(acceptedPayload, { excludes: [ws] });
+
+		// Send push notification as fallback for when user's WebSocket is disconnected
+		// This ensures user is notified even if their app is in background or WebSocket failed
+		await this.#repo.notification.sendNotificationToUserId({
+			fromUserId: driverId,
+			toUserId: userId,
+			title: "Driver Found",
+			body: `A driver has accepted your ${detail.order.type.toLowerCase()} order and is on the way.`,
+			data: {
+				type: "DRIVER_ACCEPTED",
+				orderId,
+				deeplink: `akademove://order/${orderId}`,
+			},
+			android: {
+				priority: "high",
+				notification: { clickAction: "USER_OPEN_ORDER_DETAIL" },
+			},
+			apns: {
+				payload: { aps: { category: "DRIVER_ACCEPTED", sound: "default" } },
+			},
+		});
+
+		// Notify MerchantRoom if this is a FOOD order (merchant needs to know driver is assigned)
+		if (detail.order.merchantId && detail.order.type === "FOOD") {
+			await this.#notifyMerchantRoom(
+				detail.order.merchantId,
+				"DRIVER_ASSIGNED",
+				detail.order,
+				updatedDriver.user?.name,
+			);
+		}
+
+		logger.info(
+			{ orderId, driverId, userId },
+			"[OrderRoom] Driver accepted order, notification sent to user",
+		);
 	}
 
 	async #handleDriverUpdateLocation(ws: WebSocket, data: OrderEnvelope) {
+		const driverLocation = data.p.driverUpdateLocation;
+
+		// Persist driver location if provided (with deduplication handled by handler)
+		if (
+			driverLocation?.driverId &&
+			driverLocation.x != null &&
+			driverLocation.y != null
+		) {
+			try {
+				// Get current driver location for deduplication check
+				const driver = await this.#repo.driver.main.get(
+					driverLocation.driverId,
+				);
+				const currentLocation = driver.currentLocation;
+
+				// Skip DB write if location hasn't changed (deduplication)
+				const isSameLocation =
+					currentLocation != null &&
+					currentLocation.x === driverLocation.x &&
+					currentLocation.y === driverLocation.y;
+
+				if (!isSameLocation) {
+					await this.#repo.driver.main.updateLocation(driverLocation.driverId, {
+						x: driverLocation.x,
+						y: driverLocation.y,
+					});
+					logger.debug(
+						{
+							driverId: driverLocation.driverId,
+							x: driverLocation.x,
+							y: driverLocation.y,
+						},
+						"[OrderRoom] Driver location persisted via WebSocket",
+					);
+				} else {
+					logger.debug(
+						{ driverId: driverLocation.driverId },
+						"[OrderRoom] Skipping location persist - same as current",
+					);
+				}
+			} catch (error) {
+				// Log error but don't fail the broadcast - location update is best-effort
+				logger.error(
+					{ error, driverId: driverLocation.driverId },
+					"[OrderRoom] Failed to persist driver location via WebSocket",
+				);
+			}
+		}
+
+		// Always broadcast to connected clients regardless of persistence result
 		const payload: OrderEnvelope = {
 			e: "DRIVER_LOCATION_UPDATE",
 			f: "s",
@@ -608,46 +742,53 @@ export class OrderRoom extends BaseDurableObject {
 			commissionRate = commissionRates.platformFeeRate;
 		}
 
+		// Get driver details - needed for wallet lookup and badge commission reduction
+		const driver = order.driverId
+			? await tx.query.driver.findFirst({
+					where: (f, op) => op.eq(f.id, order.driverId ?? ""),
+				})
+			: null;
+
+		if (!driver?.userId) {
+			logger.error(
+				{ orderId: order.id, driverId: order.driverId },
+				"[OrderRoom] Driver not found or missing userId for order completion",
+			);
+			return;
+		}
+
 		// Apply commission reduction from driver badges
-		if (order.driverId) {
-			const driver = await tx.query.driver.findFirst({
-				where: (f, op) => op.eq(f.id, order.driverId ?? ""),
-			});
+		const driverBadges = await tx.query.userBadge.findMany({
+			where: (f, op) => op.eq(f.userId, driver.userId),
+			with: { badge: true },
+		});
 
-			if (driver?.userId) {
-				const driverBadges = await tx.query.userBadge.findMany({
-					where: (f, op) => op.eq(f.userId, driver.userId),
-					with: { badge: true },
-				});
-
-				// Find highest commission reduction from badges
-				let maxReduction = 0;
-				for (const userBadge of driverBadges) {
-					const benefits = userBadge.badge.benefits as
-						| { commissionReduction?: number }
-						| null
-						| undefined;
-					const reduction = benefits?.commissionReduction ?? 0;
-					if (reduction > maxReduction) {
-						maxReduction = reduction;
-					}
-				}
-
-				// Apply reduction (max 50% per schema)
-				if (maxReduction > 0) {
-					const originalRate = commissionRate;
-					commissionRate = commissionRate * (1 - maxReduction);
-					logger.info(
-						{
-							driverId: order.driverId,
-							originalRate,
-							reduction: maxReduction,
-							finalRate: commissionRate,
-						},
-						"[OrderRoom] Applied badge commission reduction",
-					);
-				}
+		// Find highest commission reduction from badges
+		let maxReduction = 0;
+		for (const userBadge of driverBadges) {
+			const benefits = userBadge.badge.benefits as
+				| { commissionReduction?: number }
+				| null
+				| undefined;
+			const reduction = benefits?.commissionReduction ?? 0;
+			if (reduction > maxReduction) {
+				maxReduction = reduction;
 			}
+		}
+
+		// Apply reduction (max 50% per schema)
+		if (maxReduction > 0) {
+			const originalRate = commissionRate;
+			commissionRate = commissionRate * (1 - maxReduction);
+			logger.info(
+				{
+					driverId: order.driverId,
+					originalRate,
+					reduction: maxReduction,
+					finalRate: commissionRate,
+				},
+				"[OrderRoom] Applied badge commission reduction",
+			);
 		}
 
 		// Calculate amounts
@@ -667,9 +808,9 @@ export class OrderRoom extends BaseDurableObject {
 			.minus(platformCommission)
 			.minus(merchantCommission);
 
-		// Get driver wallet
+		// Get driver wallet using driver's userId (not driverId)
 		const driverwallet = await this.#repo.wallet.getByUserId(
-			order.driverId ?? "",
+			driver.userId,
 			opts,
 		);
 
@@ -686,11 +827,12 @@ export class OrderRoom extends BaseDurableObject {
 		// Create transaction records for driver earning and platform commission
 		// Now using correct balance values from the atomic update
 		const [updatedOrder] = await Promise.all([
-			// Update order with commission details
+			// Update order with commission details and store completedDriverId for reviews
 			this.#repo.order.update(
 				done.orderId,
 				{
 					status: "COMPLETED",
+					completedDriverId: done.driverId,
 					platformCommission: toNumberSafe(platformCommission.toString()),
 					driverEarning: toNumberSafe(driverEarning.toString()),
 					merchantCommission: toNumberSafe(merchantCommission.toString()),
@@ -810,6 +952,15 @@ export class OrderRoom extends BaseDurableObject {
 				payload: { aps: { category: "ORDER_COMPLETED", sound: "default" } },
 			},
 		});
+
+		// Notify MerchantRoom if this is a FOOD order
+		if (updatedOrder.merchantId && updatedOrder.type === "FOOD") {
+			await this.#notifyMerchantRoom(
+				updatedOrder.merchantId,
+				"ORDER_COMPLETED",
+				updatedOrder,
+			);
+		}
 
 		logger.info(
 			{ orderId: order.id, userId: order.userId },
@@ -1166,28 +1317,33 @@ export class OrderRoom extends BaseDurableObject {
 			};
 			this.broadcast(readyResponse, { excludes: [ws] });
 
-			// Broadcast to driver pool to start driver matching
-			const { DRIVER_POOL_KEY } = await import("@/core/constants");
-			const { OrderBaseRepository } = await import(
-				"@/features/order/repositories/order-base-repository"
+			// Broadcast to driver pool to start driver matching with delay
+			// Uses queue-based delayed broadcast to allow WebSocket clients time to connect
+			// Note: setTimeout doesn't work reliably in Cloudflare Workers
+			const { DRIVER_POOL_KEY, BUSINESS_CONSTANTS } = await import(
+				"@/core/constants"
 			);
-			const stub = OrderBaseRepository.getRoomStubByName(DRIVER_POOL_KEY);
-			stub.broadcast({
-				f: "s",
-				t: "s",
-				a: "MATCHING",
-				p: {
-					detail: {
-						order: updatedOrder,
-						payment: data.p.detail?.payment ?? null,
-						transaction: data.p.detail?.transaction ?? null,
+			const { ProcessingQueueService } = await import("@/core/services/queue");
+
+			await ProcessingQueueService.enqueueWebSocketBroadcast(
+				{
+					roomName: DRIVER_POOL_KEY,
+					action: "MATCHING",
+					target: "SYSTEM",
+					data: {
+						detail: {
+							order: updatedOrder,
+							payment: data.p.detail?.payment ?? null,
+							transaction: data.p.detail?.transaction ?? null,
+						},
 					},
 				},
-			});
+				{ delaySeconds: BUSINESS_CONSTANTS.BROADCAST_DELAY_SECONDS },
+			);
 
 			logger.info(
 				{ orderId: updatedOrder.id },
-				"[OrderRoom] Broadcast to driver pool for FOOD order after merchant ready",
+				"[OrderRoom] Delayed broadcast enqueued to driver pool for FOOD order after merchant ready",
 			);
 		} catch (error) {
 			logger.error(
@@ -1462,6 +1618,225 @@ export class OrderRoom extends BaseDurableObject {
 				"[OrderRoom] Failed to handle no-show",
 			);
 			throw error;
+		}
+	}
+
+	/**
+	 * Handle CHECK_NEW_DATA action - client asks if there's new data since lastKnownVersion
+	 * This replaces HTTP polling with WebSocket-based data sync
+	 *
+	 * Client sends: { a: "CHECK_NEW_DATA", p: { syncRequest: { orderId, lastKnownVersion } } }
+	 * Server responds:
+	 *   - NEW_DATA with full order detail if data changed
+	 *   - NO_DATA if no changes since lastKnownVersion
+	 */
+	async #handleCheckNewData(ws: WebSocket, data: OrderEnvelope) {
+		const syncRequest = data.p.syncRequest;
+		if (!syncRequest) {
+			logger.warn(
+				data,
+				"[OrderRoom] Invalid CHECK_NEW_DATA payload - missing syncRequest",
+			);
+			return;
+		}
+
+		const { orderId, lastKnownVersion } = syncRequest;
+
+		try {
+			// Fetch current order state from database using repository
+			const composedOrder = await this.#repo.order.get(orderId);
+
+			// Use updatedAt as version indicator
+			const currentVersion = composedOrder.updatedAt.toISOString();
+
+			// Compare versions - if lastKnownVersion is missing or different, send new data
+			const hasNewData =
+				!lastKnownVersion || lastKnownVersion !== currentVersion;
+
+			if (hasNewData) {
+				// Find payment transaction for this order
+				const paymentTransaction =
+					await this.#svc.db.query.transaction.findFirst({
+						where: (f, op) =>
+							op.and(
+								op.eq(f.referenceId, orderId),
+								op.eq(f.type, "PAYMENT"),
+								op.inArray(f.status, ["PENDING", "SUCCESS"]),
+							),
+					});
+
+				// Find payment if transaction exists
+				const payment = paymentTransaction
+					? await this.#svc.db.query.payment.findFirst({
+							where: (f, op) => op.eq(f.transactionId, paymentTransaction.id),
+						})
+					: null;
+
+				// Get driver if assigned
+				let driverAssigned = null;
+				if (composedOrder.driverId) {
+					try {
+						driverAssigned = await this.#repo.driver.main.get(
+							composedOrder.driverId,
+						);
+					} catch {
+						// Driver might not exist, continue without it
+						logger.debug(
+							{ driverId: composedOrder.driverId },
+							"[OrderRoom] Driver not found",
+						);
+					}
+				}
+
+				// Convert payment to schema-compatible format
+				const paymentData = payment
+					? {
+							id: payment.id,
+							transactionId: payment.transactionId,
+							provider: payment.provider,
+							method: payment.method,
+							amount: toNumberSafe(payment.amount),
+							status: payment.status,
+							bankProvider: payment.bankProvider ?? undefined,
+							externalId: payment.externalId ?? undefined,
+							paymentUrl: payment.paymentUrl ?? undefined,
+							va_number: payment.va_number ?? undefined,
+							metadata: payment.metadata ?? undefined,
+							expiresAt: payment.expiresAt ?? undefined,
+							payload: payment.payload ?? undefined,
+							response: payment.response ?? undefined,
+							createdAt: payment.createdAt,
+							updatedAt: payment.updatedAt,
+						}
+					: null;
+
+				// Convert transaction to schema-compatible format
+				const transactionData = paymentTransaction
+					? {
+							id: paymentTransaction.id,
+							walletId: paymentTransaction.walletId,
+							type: paymentTransaction.type,
+							amount: toNumberSafe(paymentTransaction.amount),
+							status: paymentTransaction.status,
+							balanceBefore: paymentTransaction.balanceBefore
+								? toNumberSafe(paymentTransaction.balanceBefore)
+								: undefined,
+							balanceAfter: paymentTransaction.balanceAfter
+								? toNumberSafe(paymentTransaction.balanceAfter)
+								: undefined,
+							description: paymentTransaction.description ?? undefined,
+							createdAt: paymentTransaction.createdAt,
+							updatedAt: paymentTransaction.updatedAt,
+						}
+					: null;
+
+				const newDataResponse: OrderEnvelope = {
+					e: "NEW_DATA",
+					f: "s",
+					t: "c",
+					p: {
+						detail: {
+							order: composedOrder,
+							payment: paymentData,
+							transaction: transactionData,
+						},
+						driverAssigned: driverAssigned ?? undefined,
+						syncRequest: {
+							orderId,
+							lastKnownVersion: currentVersion, // Send current version so client can track
+						},
+					},
+				};
+
+				logger.debug(
+					{ orderId, previousVersion: lastKnownVersion, currentVersion },
+					"[OrderRoom] Sending NEW_DATA response",
+				);
+				ws.send(JSON.stringify(newDataResponse));
+			} else {
+				// No changes since last known version
+				const noDataResponse: OrderEnvelope = {
+					e: "NO_DATA",
+					f: "s",
+					t: "c",
+					p: {
+						syncRequest: {
+							orderId,
+							lastKnownVersion: currentVersion,
+						},
+					},
+				};
+
+				logger.debug(
+					{ orderId, version: currentVersion },
+					"[OrderRoom] Sending NO_DATA response - no changes",
+				);
+				ws.send(JSON.stringify(noDataResponse));
+			}
+		} catch (error) {
+			logger.error(
+				{ error, orderId },
+				"[OrderRoom] Failed to handle CHECK_NEW_DATA",
+			);
+			// Send NO_DATA on error to avoid blocking client
+			const errorResponse: OrderEnvelope = {
+				e: "NO_DATA",
+				f: "s",
+				t: "c",
+				p: {},
+			};
+			ws.send(JSON.stringify(errorResponse));
+		}
+	}
+
+	/**
+	 * Notifies MerchantRoom of order events
+	 * Used to sync merchant dashboard when driver accepts or order completes
+	 *
+	 * @param merchantId - Merchant ID to notify
+	 * @param event - Event type (DRIVER_ASSIGNED, ORDER_COMPLETED, ORDER_CANCELLED)
+	 * @param order - Order data
+	 * @param driverName - Optional driver name for DRIVER_ASSIGNED event
+	 */
+	async #notifyMerchantRoom(
+		merchantId: string,
+		event: MerchantEnvelope["e"],
+		order: Order,
+		driverName?: string,
+	): Promise<void> {
+		try {
+			const stub = env.MERCHANT_ROOM.idFromName(merchantId);
+			const room = env.MERCHANT_ROOM.get(stub);
+
+			const payload: MerchantEnvelope = {
+				e: event,
+				f: "s",
+				t: "c",
+				p: {
+					order,
+					orderId: order.id,
+					merchantId,
+					newStatus: order.status,
+					...(driverName && { driverName }),
+				},
+			};
+
+			await room.fetch("https://internal/broadcast", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify(payload),
+			});
+
+			logger.debug(
+				{ orderId: order.id, merchantId, event },
+				"[OrderRoom] MerchantRoom notified",
+			);
+		} catch (error) {
+			// Non-critical - log and continue
+			logger.warn(
+				{ error, orderId: order.id, merchantId, event },
+				"[OrderRoom] Failed to notify MerchantRoom - non-critical",
+			);
 		}
 	}
 }

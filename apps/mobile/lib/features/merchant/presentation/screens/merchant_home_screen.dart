@@ -20,24 +20,31 @@ class _MerchantHomeScreenState extends State<MerchantHomeScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _loadData().then((_) {
-        checkAndNavigateToSetup();
-      });
+      _loadData();
     });
   }
 
   /// Load all required data for the home screen
   Future<void> _loadData() async {
-    // Load merchant profile
-    context.read<MerchantCubit>().getMine();
+    // Load merchant profile and check outlet setup after data is fetched
+    await context.read<MerchantCubit>().getMine();
+
+    // Check outlet setup after merchant data is loaded
+    _checkAndNavigateToSetup();
+
+    if (!mounted) return;
+
+    // Load other data in parallel (don't need to await these)
     // Load today's analytics
     context.read<MerchantAnalyticsCubit>().getAnalytics(period: 'today');
     // Load availability status
     context.read<MerchantAvailabilityCubit>().getAvailabilityStatus();
   }
 
-  // Unsafe navigation to setup screen if outlet not set up
-  void checkAndNavigateToSetup() {
+  /// Navigate to setup screen if outlet is not set up
+  void _checkAndNavigateToSetup() {
+    if (!mounted) return;
+
     final merchantState = context.read<MerchantCubit>().state;
 
     if (!merchantState.isMerchantOutletSetup) {
@@ -88,7 +95,7 @@ class _MerchantHomeScreenState extends State<MerchantHomeScreen> {
       headers: [
         DefaultAppBar(title: context.l10n.home, padding: EdgeInsets.all(16.r)),
       ],
-      child: RefreshTrigger(
+      child: SafeRefreshTrigger(
         onRefresh: _loadData,
         child: SingleChildScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
@@ -228,7 +235,7 @@ class _MerchantHomeScreenState extends State<MerchantHomeScreen> {
                       );
                     },
                   ),
-                  BlocBuilder<NotificationCubit, NotificationState>(
+                  BlocBuilder<SharedNotificationCubit, SharedNotificationState>(
                     builder: (context, state) {
                       final unreadCount = state.unreadCount.value ?? 0;
                       return Stack(

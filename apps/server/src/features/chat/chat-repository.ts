@@ -16,6 +16,7 @@ import { RepositoryError } from "@/core/error";
 import type { PartialWithTx, WithTx, WithUserId } from "@/core/interface";
 import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
+import type { StorageService } from "@/core/services/storage";
 import type { OrderChatMessageDatabase } from "@/core/tables/chat";
 import { logger } from "@/utils/logger";
 import { ChatAuthorizationService, ChatCacheService } from "./services";
@@ -26,9 +27,17 @@ interface OrderParticipants {
 	merchantUserId?: string;
 }
 
+const BUCKET = "user";
+
 export class ChatRepository extends BaseRepository {
-	constructor(db: DatabaseService, kv: KeyValueService) {
+	#storage: StorageService;
+	constructor(
+		db: DatabaseService,
+		kv: KeyValueService,
+		storage: StorageService,
+	) {
 		super("orderChatMessage", kv, db);
+		this.#storage = storage;
 	}
 
 	/**
@@ -57,18 +66,27 @@ export class ChatRepository extends BaseRepository {
 		return "USER";
 	}
 
-	static composeEntity(
+	static async composeEntity(
 		item: OrderChatMessageDatabase & {
 			sender: { name: string; image: string | null } | null;
 		},
+		storage: StorageService,
 		senderRole?: ChatSenderRole,
-	): OrderChatMessage {
+	): Promise<OrderChatMessage> {
+		let image: string | undefined;
+		if (item.sender?.image && storage) {
+			image = await storage.getPresignedUrl({
+				bucket: BUCKET,
+				key: item.sender.image,
+			});
+		}
+
 		return {
 			...item,
 			sender: item.sender
 				? {
 						name: item.sender.name,
-						image: item.sender.image ?? undefined,
+						image,
 						role: senderRole ?? "USER",
 					}
 				: undefined,
@@ -93,7 +111,7 @@ export class ChatRepository extends BaseRepository {
 			result.senderId,
 			participants,
 		);
-		return ChatRepository.composeEntity(result, role);
+		return ChatRepository.composeEntity(result, this.#storage, role);
 	}
 
 	/**
@@ -182,13 +200,15 @@ export class ChatRepository extends BaseRepository {
 				limit: limit + 1,
 			});
 
-			const mapped = res.map((item) => {
-				const role = ChatRepository.determineSenderRole(
-					item.senderId,
-					participants,
-				);
-				return ChatRepository.composeEntity(item, role);
-			});
+			const mapped = await Promise.all(
+				res.map(async (item) => {
+					const role = ChatRepository.determineSenderRole(
+						item.senderId,
+						participants,
+					);
+					return await ChatRepository.composeEntity(item, this.#storage, role);
+				}),
+			);
 			const hasMore = mapped.length > limit;
 			const rows = hasMore ? mapped.slice(0, limit) : mapped;
 			const nextCursor = hasMore ? rows[rows.length - 1].id : undefined;

@@ -33,6 +33,8 @@ import { DriverQuizQuestionHandler } from "./driver-quiz-question/driver-quiz-qu
 import { DriverQuizQuestionSpec } from "./driver-quiz-question/driver-quiz-question-spec";
 import { EmergencyHandler } from "./emergency/emergency-handler";
 import { EmergencySpec } from "./emergency/emergency-spec";
+import { EmergencyContactHandler } from "./emergency-contact/emergency-contact-handler";
+import { EmergencyContactSpec } from "./emergency-contact/emergency-contact-spec";
 import { FraudHandler } from "./fraud/fraud-handler";
 import { FraudSpec } from "./fraud/fraud-spec";
 import { LeaderboardHandler } from "./leaderboard/leaderboard-handler";
@@ -51,6 +53,8 @@ import { ReportHandler } from "./report/report-handler";
 import { ReportSpec } from "./report/report-spec";
 import { ReviewHandler } from "./review/review-handler";
 import { ReviewSpec } from "./review/review-spec";
+import { SupportChatHandler } from "./support-chat/support-chat-handler";
+import { SupportChatSpec } from "./support-chat/support-chat-spec";
 import { TransactionHandler } from "./transaction/transaction-handler";
 import { TransactionSpec } from "./transaction/transaction-spec";
 import { UserHandler } from "./user/user-handler";
@@ -79,6 +83,9 @@ export const FetchServerSpec = oc.router({
 		.prefix("/driver-quiz-answers")
 		.router(DriverQuizAnswerSpec),
 	emergency: oc.prefix("/emergencies").router(EmergencySpec),
+	emergencyContact: oc
+		.prefix("/emergency-contacts")
+		.router(EmergencyContactSpec),
 	fraud: oc.prefix("/fraud").router(FraudSpec),
 	leaderboard: oc.prefix("/leaderboards").router(LeaderboardSpec),
 	merchant: oc.prefix("/merchants").router(MerchantSpec),
@@ -87,6 +94,7 @@ export const FetchServerSpec = oc.router({
 	coupon: oc.prefix("/coupons").router(CouponSpec),
 	report: oc.prefix("/reports").router(ReportSpec),
 	review: oc.prefix("/reviews").router(ReviewSpec),
+	supportChat: oc.prefix("/support-chat").router(SupportChatSpec),
 	transaction: oc.prefix("/transactions").router(TransactionSpec),
 	user: oc.prefix("/users").router(UserSpec),
 	wallet: oc.prefix("/wallets").router(WalletSpec),
@@ -111,6 +119,7 @@ export const FetchServerRouter = os.router({
 	driverQuizQuestion: DriverQuizQuestionHandler,
 	driverQuizAnswer: DriverQuizAnswerHandler,
 	emergency: EmergencyHandler,
+	emergencyContact: EmergencyContactHandler,
 	fraud: FraudHandler,
 	leaderboard: LeaderboardHandler,
 	merchant: MerchantHandler,
@@ -119,6 +128,7 @@ export const FetchServerRouter = os.router({
 	coupon: CouponHandler,
 	report: ReportHandler,
 	review: ReviewHandler,
+	supportChat: SupportChatHandler,
 	transaction: TransactionHandler,
 	user: UserHandler,
 	wallet: WalletHandler,

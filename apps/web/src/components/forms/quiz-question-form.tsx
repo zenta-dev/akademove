@@ -384,7 +384,10 @@ export const QuizQuestionForm = ({
 										max="1000"
 										placeholder="10"
 										disabled={isPending}
-										{...field}
+										name={field.name}
+										ref={field.ref}
+										onBlur={field.onBlur}
+										value={(field.value as number) ?? ""}
 										onChange={(e) =>
 											field.onChange(Number.parseInt(e.target.value, 10) || 0)
 										}
@@ -407,7 +410,10 @@ export const QuizQuestionForm = ({
 										min="0"
 										placeholder="0"
 										disabled={isPending}
-										{...field}
+										name={field.name}
+										ref={field.ref}
+										onBlur={field.onBlur}
+										value={(field.value as number) ?? ""}
 										onChange={(e) =>
 											field.onChange(Number.parseInt(e.target.value, 10) || 0)
 										}

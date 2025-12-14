@@ -214,7 +214,7 @@ class _UserWalletWithdrawScreenState extends State<UserWalletWithdrawScreen> {
           ],
         ),
       ],
-      child: RefreshTrigger(
+      child: SafeRefreshTrigger(
         onRefresh: _onRefresh,
         child: SingleChildScrollView(
           child: BlocBuilder<UserWalletCubit, UserWalletState>(

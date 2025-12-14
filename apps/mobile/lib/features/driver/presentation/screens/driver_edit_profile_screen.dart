@@ -107,239 +107,227 @@ class _DriverEditProfileScreenState extends State<DriverEditProfileScreen> {
         child: SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.all(16.dg),
-            child: BlocBuilder<DriverCubit, DriverState>(
-              builder: (context, driverState) {
-                return BlocConsumer<DriverProfileCubit, DriverProfileState>(
-                  listener: (context, profileState) {
-                    profileState.updateProfileResult.whenOr(
-                      success: (driver, message) {
-                        context.showMyToast(message, type: ToastType.success);
-                        delay(const Duration(seconds: 3), () {
-                          context.read<DriverProfileCubit>().reset();
-                          context.pop();
-                        });
-                      },
-                      failure: (error) {
-                        context.showMyToast(
-                          error.message,
-                          type: ToastType.failed,
-                        );
-                      },
-                      orElse: noop,
-                    );
+            child: BlocConsumer<DriverProfileCubit, DriverProfileState>(
+              listener: (context, profileState) {
+                profileState.updateProfileResult.whenOr(
+                  success: (driver, message) {
+                    context.showMyToast(message, type: ToastType.success);
+                    delay(const Duration(seconds: 3), () {
+                      context.read<DriverProfileCubit>().clearResults();
+                      context.pop();
+                    });
                   },
-                  builder: (context, profileState) {
-                    final isLoading =
-                        profileState.updateProfileResult.isLoading;
-                    final driver = driverState.driver;
-                    final user = driver?.user;
+                  failure: (error) {
+                    context.showMyToast(error.message, type: ToastType.failed);
+                  },
+                  orElse: noop,
+                );
+              },
+              builder: (context, profileState) {
+                final isLoading = profileState.updateProfileResult.isLoading;
+                final driver = profileState.driver;
+                final user = driver?.user;
 
-                    return Form(
-                      onSubmit: _handleFormSubmit,
-                      child: Column(
+                return Form(
+                  onSubmit: _handleFormSubmit,
+                  child: Column(
+                    spacing: 8.h,
+                    children: [
+                      // Profile Photo
+                      Column(
                         spacing: 8.h,
                         children: [
-                          // Profile Photo
-                          Column(
-                            spacing: 8.h,
-                            children: [
-                              Text(context.l10n.label_photo_profile).small(),
-                              ImagePickerWidget(
-                                enabled: !isLoading,
-                                previewUrl: user?.image,
-                                value: _pickedPhoto,
-                                size: Size(86.h, 86.h),
-                                onValueChanged: (file) =>
-                                    setState(() => _pickedPhoto = file),
-                              ),
-                            ],
-                          ),
-
-                          // Basic Information
-                          FormField(
-                            key: _nameKey,
-                            label: Text(context.l10n.label_name).small(),
-                            showErrors: _showErrors,
-                            child: TextField(
-                              enabled: !isLoading,
-                              focusNode: _nameFn,
-                              initialValue: user?.name,
-                              placeholder: Text(
-                                user?.name ??
-                                    context.l10n.placeholder_full_name,
-                              ),
-                              keyboardType: TextInputType.name,
-                              textInputAction: TextInputAction.next,
-                              autofillHints: const [AutofillHints.name],
-                              onSubmitted: (value) {
-                                _emailFn.requestFocus();
-                              },
-                              features: const [
-                                InputFeature.leading(Icon(LucideIcons.user)),
-                              ],
-                            ),
-                          ),
-
-                          FormField(
-                            key: _emailKey,
-                            label: Text(context.l10n.label_email).small(),
-                            validator: _emailValidator,
-                            showErrors: _showErrors,
-                            child: TextField(
-                              enabled: !isLoading,
-                              focusNode: _emailFn,
-                              initialValue: user?.email,
-                              placeholder: Text(
-                                user?.email ?? 'john@gmail.com',
-                              ),
-                              keyboardType: TextInputType.emailAddress,
-                              textInputAction: TextInputAction.next,
-                              autofillHints: const [AutofillHints.email],
-                              features: const [
-                                InputFeature.leading(Icon(LucideIcons.mail)),
-                              ],
-                            ),
-                          ),
-
-                          FormField(
-                            key: _phoneKey,
-                            label: Text(context.l10n.label_phone).small(),
-                            showErrors: const {
-                              FormValidationMode.changed,
-                              FormValidationMode.submitted,
-                            },
-                            child: ComponentTheme(
-                              data: PhoneInputTheme(
-                                maxWidth: 200 * context.theme.scaling,
-                                flagWidth: 22.w,
-                              ),
-                              child: PhoneInput(
-                                initialCountry: Country.indonesia,
-                                countries: const [Country.indonesia],
-                                initialValue: user?.phone.toPhoneNumber(),
-                                onChanged: (value) {
-                                  switch (value.country) {
-                                    case Country.indonesia:
-                                      _selectedCountryCode = CountryCode.ID;
-                                    default:
-                                  }
-                                },
-                              ),
-                            ),
-                          ),
-
-                          // Driver Specific Information
-                          const Divider(),
-                          Text(
-                            'Driver Information',
-                            style: context.typography.h4.copyWith(
-                              fontSize: 16.sp,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-
-                          FormField(
-                            key: _studentIdKey,
-                            label: Text('Student ID').small(),
-                            showErrors: _showErrors,
-                            child: TextField(
-                              enabled: !isLoading,
-                              focusNode: _studentIdFn,
-                              initialValue: driver?.studentId.toString(),
-                              placeholder: Text('Enter your student ID'),
-                              keyboardType: TextInputType.number,
-                              textInputAction: TextInputAction.next,
-                              autofillHints: const [],
-                              onSubmitted: (value) {
-                                _licensePlateFn.requestFocus();
-                              },
-                              features: const [
-                                InputFeature.leading(Icon(LucideIcons.idCard)),
-                              ],
-                            ),
-                          ),
-
-                          FormField(
-                            key: _licensePlateKey,
-                            label: Text('License Plate').small(),
-                            showErrors: _showErrors,
-                            child: TextField(
-                              enabled: !isLoading,
-                              focusNode: _licensePlateFn,
-                              initialValue: driver?.licensePlate,
-                              placeholder: Text('Enter your license plate'),
-                              keyboardType: TextInputType.text,
-                              textInputAction: TextInputAction.done,
-                              autofillHints: const [],
-                              onSubmitted: (value) {
-                                FocusScope.of(context).unfocus();
-                              },
-                              features: const [
-                                InputFeature.leading(Icon(LucideIcons.car)),
-                              ],
-                            ),
-                          ),
-
-                          // Document Uploads
-                          const Divider(),
-                          Text(
-                            'Documents',
-                            style: context.typography.h4.copyWith(
-                              fontSize: 16.sp,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-
-                          _buildDocumentUpload(
-                            'Student Card',
-                            _studentCardFile,
-                            (file) => setState(() => _studentCardFile = file),
-                            isLoading,
-                          ),
-
-                          _buildDocumentUpload(
-                            'Driver License',
-                            _driverLicenseFile,
-                            (file) => setState(() => _driverLicenseFile = file),
-                            isLoading,
-                          ),
-
-                          _buildDocumentUpload(
-                            'Vehicle Certificate',
-                            _vehicleCertificateFile,
-                            (file) =>
-                                setState(() => _vehicleCertificateFile = file),
-                            isLoading,
-                          ),
-
-                          SizedBox(
-                            width: double.infinity,
-                            child: FormErrorBuilder(
-                              builder: (context, errors, child) {
-                                final hasErrors = errors.isNotEmpty;
-
-                                return Button(
-                                  style: isLoading || hasErrors
-                                      ? const ButtonStyle.outline()
-                                      : const ButtonStyle.primary(),
-                                  onPressed: (!isLoading)
-                                      ? () => context.submitForm()
-                                      : null,
-                                  child: isLoading
-                                      ? const Submiting()
-                                      : Text(
-                                          context.l10n.button_save_changes,
-                                          style: context.theme.typography.medium
-                                              .copyWith(color: Colors.white),
-                                        ),
-                                );
-                              },
-                            ),
+                          Text(context.l10n.label_photo_profile).small(),
+                          ImagePickerWidget(
+                            enabled: !isLoading,
+                            previewUrl: user?.image,
+                            value: _pickedPhoto,
+                            size: Size(86.h, 86.h),
+                            onValueChanged: (file) =>
+                                setState(() => _pickedPhoto = file),
                           ),
                         ],
                       ),
-                    );
-                  },
+
+                      // Basic Information
+                      FormField(
+                        key: _nameKey,
+                        label: Text(context.l10n.label_name).small(),
+                        showErrors: _showErrors,
+                        child: TextField(
+                          enabled: !isLoading,
+                          focusNode: _nameFn,
+                          initialValue: user?.name,
+                          placeholder: Text(
+                            user?.name ?? context.l10n.placeholder_full_name,
+                          ),
+                          keyboardType: TextInputType.name,
+                          textInputAction: TextInputAction.next,
+                          autofillHints: const [AutofillHints.name],
+                          onSubmitted: (value) {
+                            _emailFn.requestFocus();
+                          },
+                          features: const [
+                            InputFeature.leading(Icon(LucideIcons.user)),
+                          ],
+                        ),
+                      ),
+
+                      FormField(
+                        key: _emailKey,
+                        label: Text(context.l10n.label_email).small(),
+                        validator: _emailValidator,
+                        showErrors: _showErrors,
+                        child: TextField(
+                          enabled: !isLoading,
+                          focusNode: _emailFn,
+                          initialValue: user?.email,
+                          placeholder: Text(user?.email ?? 'john@gmail.com'),
+                          keyboardType: TextInputType.emailAddress,
+                          textInputAction: TextInputAction.next,
+                          autofillHints: const [AutofillHints.email],
+                          features: const [
+                            InputFeature.leading(Icon(LucideIcons.mail)),
+                          ],
+                        ),
+                      ),
+
+                      FormField(
+                        key: _phoneKey,
+                        label: Text(context.l10n.label_phone).small(),
+                        showErrors: const {
+                          FormValidationMode.changed,
+                          FormValidationMode.submitted,
+                        },
+                        child: ComponentTheme(
+                          data: PhoneInputTheme(
+                            maxWidth: 200 * context.theme.scaling,
+                            flagWidth: 22.w,
+                          ),
+                          child: PhoneInput(
+                            initialCountry: Country.indonesia,
+                            countries: const [Country.indonesia],
+                            initialValue: user?.phone.toPhoneNumber(),
+                            onChanged: (value) {
+                              switch (value.country) {
+                                case Country.indonesia:
+                                  _selectedCountryCode = CountryCode.ID;
+                                default:
+                              }
+                            },
+                          ),
+                        ),
+                      ),
+
+                      // Driver Specific Information
+                      const Divider(),
+                      Text(
+                        context.l10n.driver_information,
+                        style: context.typography.h4.copyWith(
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+
+                      FormField(
+                        key: _studentIdKey,
+                        label: Text('Student ID').small(),
+                        showErrors: _showErrors,
+                        child: TextField(
+                          enabled: !isLoading,
+                          focusNode: _studentIdFn,
+                          initialValue: driver?.studentId.toString(),
+                          placeholder: Text('Enter your student ID'),
+                          keyboardType: TextInputType.number,
+                          textInputAction: TextInputAction.next,
+                          autofillHints: const [],
+                          onSubmitted: (value) {
+                            _licensePlateFn.requestFocus();
+                          },
+                          features: const [
+                            InputFeature.leading(Icon(LucideIcons.idCard)),
+                          ],
+                        ),
+                      ),
+
+                      FormField(
+                        key: _licensePlateKey,
+                        label: Text('License Plate').small(),
+                        showErrors: _showErrors,
+                        child: TextField(
+                          enabled: !isLoading,
+                          focusNode: _licensePlateFn,
+                          initialValue: driver?.licensePlate,
+                          placeholder: Text('Enter your license plate'),
+                          keyboardType: TextInputType.text,
+                          textInputAction: TextInputAction.done,
+                          autofillHints: const [],
+                          onSubmitted: (value) {
+                            FocusScope.of(context).unfocus();
+                          },
+                          features: const [
+                            InputFeature.leading(Icon(LucideIcons.car)),
+                          ],
+                        ),
+                      ),
+
+                      // Document Uploads
+                      const Divider(),
+                      Text(context.l10n.document),
+
+                      _buildDocumentUpload(
+                        label: Text(context.l10n.student_card).data!,
+                        file: _studentCardFile,
+                        previewUrl: driver?.studentCard,
+                        onFileChanged: (file) =>
+                            setState(() => _studentCardFile = file),
+                        isLoading: isLoading,
+                      ),
+
+                      _buildDocumentUpload(
+                        label: Text(context.l10n.driver_license).data!,
+                        file: _driverLicenseFile,
+                        previewUrl: driver?.driverLicense,
+                        onFileChanged: (file) =>
+                            setState(() => _driverLicenseFile = file),
+                        isLoading: isLoading,
+                      ),
+
+                      _buildDocumentUpload(
+                        label: Text(context.l10n.vehicle_certificate).data!,
+                        file: _vehicleCertificateFile,
+                        previewUrl: driver?.vehicleCertificate,
+                        onFileChanged: (file) =>
+                            setState(() => _vehicleCertificateFile = file),
+                        isLoading: isLoading,
+                      ),
+
+                      SizedBox(
+                        width: double.infinity,
+                        child: FormErrorBuilder(
+                          builder: (context, errors, child) {
+                            final hasErrors = errors.isNotEmpty;
+
+                            return Button(
+                              style: isLoading || hasErrors
+                                  ? const ButtonStyle.outline()
+                                  : const ButtonStyle.primary(),
+                              onPressed: (!isLoading)
+                                  ? () => context.submitForm()
+                                  : null,
+                              child: isLoading
+                                  ? const Submiting()
+                                  : Text(
+                                      context.l10n.button_save_changes,
+                                      style: context.theme.typography.medium
+                                          .copyWith(color: Colors.white),
+                                    ),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
                 );
               },
             ),
@@ -349,12 +337,13 @@ class _DriverEditProfileScreenState extends State<DriverEditProfileScreen> {
     );
   }
 
-  Widget _buildDocumentUpload(
-    String label,
-    File? file,
-    Function(File?) onFileChanged,
-    bool isLoading,
-  ) {
+  Widget _buildDocumentUpload({
+    required String label,
+    required File? file,
+    required String? previewUrl,
+    required Function(File?) onFileChanged,
+    required bool isLoading,
+  }) {
     return Column(
       spacing: 8.h,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -362,6 +351,7 @@ class _DriverEditProfileScreenState extends State<DriverEditProfileScreen> {
         Text(label).small(),
         ImagePickerWidget(
           enabled: !isLoading,
+          previewUrl: previewUrl,
           value: file,
           size: Size(double.infinity, 100.h),
           onValueChanged: onFileChanged,

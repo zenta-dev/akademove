@@ -1,6 +1,6 @@
 import { CONSTANTS } from "@repo/schema/constants";
 import { relations } from "drizzle-orm";
-import { integer, text, uuid } from "drizzle-orm/pg-core";
+import { integer, jsonb, text, uuid } from "drizzle-orm/pg-core";
 import { user } from "./auth";
 import { DateModifier, index, pgEnum, pgTable, uniqueIndex } from "./common";
 import { order } from "./order";
@@ -23,7 +23,9 @@ export const review = pgTable(
 		toUserId: text("to_user_id")
 			.notNull()
 			.references(() => user.id, { onDelete: "no action" }),
-		category: reviewCategory().notNull().default("OTHER"),
+		/** Multi-select categories stored as JSON array (e.g., ["CLEANLINESS", "PUNCTUALITY"]) */
+		categories: jsonb().$type<string[]>().notNull().default([]),
+		/** Overall rating score for the entire review (1-5) */
 		score: integer().notNull().default(0),
 		comment: text().notNull().default(""),
 		...DateModifier,
@@ -33,10 +35,8 @@ export const review = pgTable(
 		index("review_order_id_idx").on(t.orderId),
 		index("review_from_user_id_idx").on(t.fromUserId),
 		index("review_to_user_id_idx").on(t.toUserId),
-		index("review_category_idx").on(t.category),
 		index("review_score_idx").on(t.score),
 		index("review_to_user_score_idx").on(t.toUserId, t.score),
-		index("review_to_user_category_idx").on(t.toUserId, t.category),
 		index("review_created_at_idx").on(t.createdAt),
 		index("review_to_user_created_at_idx").on(t.toUserId, t.createdAt),
 	],

@@ -33,6 +33,10 @@ abstract class _$OrderEnvelopePayloadCWProxy {
 
   OrderEnvelopePayload retryInfo(OrderEnvelopePayloadRetryInfo? retryInfo);
 
+  OrderEnvelopePayload syncRequest(
+    OrderEnvelopePayloadSyncRequest? syncRequest,
+  );
+
   /// Creates a new instance with the provided field values.
   /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `OrderEnvelopePayload(...).copyWith.fieldName(value)`.
   ///
@@ -51,6 +55,7 @@ abstract class _$OrderEnvelopePayloadCWProxy {
     String? cancelReason,
     OrderEnvelopePayloadNoShow? noShow,
     OrderEnvelopePayloadRetryInfo? retryInfo,
+    OrderEnvelopePayloadSyncRequest? syncRequest,
   });
 }
 
@@ -105,6 +110,11 @@ class _$OrderEnvelopePayloadCWProxyImpl
       call(retryInfo: retryInfo);
 
   @override
+  OrderEnvelopePayload syncRequest(
+    OrderEnvelopePayloadSyncRequest? syncRequest,
+  ) => call(syncRequest: syncRequest);
+
+  @override
   /// Creates a new instance with the provided field values.
   /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `OrderEnvelopePayload(...).copyWith.fieldName(value)`.
   ///
@@ -123,6 +133,7 @@ class _$OrderEnvelopePayloadCWProxyImpl
     Object? cancelReason = const $CopyWithPlaceholder(),
     Object? noShow = const $CopyWithPlaceholder(),
     Object? retryInfo = const $CopyWithPlaceholder(),
+    Object? syncRequest = const $CopyWithPlaceholder(),
   }) {
     return OrderEnvelopePayload(
       detail: detail == const $CopyWithPlaceholder()
@@ -165,6 +176,10 @@ class _$OrderEnvelopePayloadCWProxyImpl
           ? _value.retryInfo
           // ignore: cast_nullable_to_non_nullable
           : retryInfo as OrderEnvelopePayloadRetryInfo?,
+      syncRequest: syncRequest == const $CopyWithPlaceholder()
+          ? _value.syncRequest
+          // ignore: cast_nullable_to_non_nullable
+          : syncRequest as OrderEnvelopePayloadSyncRequest?,
     );
   }
 }
@@ -244,6 +259,12 @@ OrderEnvelopePayload _$OrderEnvelopePayloadFromJson(
           ? null
           : OrderEnvelopePayloadRetryInfo.fromJson(v as Map<String, dynamic>),
     ),
+    syncRequest: $checkedConvert(
+      'syncRequest',
+      (v) => v == null
+          ? null
+          : OrderEnvelopePayloadSyncRequest.fromJson(v as Map<String, dynamic>),
+    ),
   );
   return val;
 });
@@ -261,4 +282,5 @@ Map<String, dynamic> _$OrderEnvelopePayloadToJson(
   'cancelReason': ?instance.cancelReason,
   'noShow': ?instance.noShow?.toJson(),
   'retryInfo': ?instance.retryInfo?.toJson(),
+  'syncRequest': ?instance.syncRequest?.toJson(),
 };

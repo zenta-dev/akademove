@@ -1,6 +1,6 @@
 import { localizeHref, m } from "@repo/i18n";
 import { Link, useRouterState } from "@tanstack/react-router";
-import { BookMarked, Gauge, History, UserRound, Wallet } from "lucide-react";
+import { UserRound } from "lucide-react";
 import {
 	Sidebar,
 	SidebarContent,
@@ -13,26 +13,26 @@ import {
 import { cn } from "@/utils/cn";
 
 const navMain = Object.freeze([
-	{
-		title: m.overview(),
-		href: localizeHref("/dash/user"),
-		icon: Gauge,
-	},
-	{
-		title: m.bookings(),
-		href: localizeHref("/dash/user/bookings"),
-		icon: BookMarked,
-	},
-	{
-		title: m.history(),
-		href: localizeHref("/dash/user/history"),
-		icon: History,
-	},
-	{
-		title: m.wallet(),
-		href: localizeHref("/dash/user/wallet"),
-		icon: Wallet,
-	},
+	// {
+	// 	title: m.overview(),
+	// 	href: localizeHref("/dash/user"),
+	// 	icon: Gauge,
+	// },
+	// {
+	// 	title: m.bookings(),
+	// 	href: localizeHref("/dash/user/bookings"),
+	// 	icon: BookMarked,
+	// },
+	// {
+	// 	title: m.history(),
+	// 	href: localizeHref("/dash/user/history"),
+	// 	icon: History,
+	// },
+	// {
+	// 	title: m.wallet(),
+	// 	href: localizeHref("/dash/user/wallet"),
+	// 	icon: Wallet,
+	// },
 	{
 		title: m.profile(),
 		href: localizeHref("/dash/user/profile"),

@@ -13,7 +13,11 @@ enum PaymentEnvelopeEvent {
   @JsonValue(r'TOP_UP_FAILED')
   TOP_UP_FAILED(r'TOP_UP_FAILED'),
   @JsonValue(r'PAYMENT_FAILED')
-  PAYMENT_FAILED(r'PAYMENT_FAILED');
+  PAYMENT_FAILED(r'PAYMENT_FAILED'),
+  @JsonValue(r'NEW_DATA')
+  NEW_DATA(r'NEW_DATA'),
+  @JsonValue(r'NO_DATA')
+  NO_DATA(r'NO_DATA');
 
   const PaymentEnvelopeEvent(this.value);
 

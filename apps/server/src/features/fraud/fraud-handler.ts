@@ -6,9 +6,9 @@ import { FraudSpec } from "./fraud-spec";
 const { priv } = createORPCRouter(FraudSpec);
 
 export const FraudHandler = priv.router({
-	// List fraud events (ADMIN/OPERATOR only)
+	// List fraud events (ADMIN only)
 	listEvents: priv.listEvents
-		.use(requireRoles("ADMIN", "OPERATOR"))
+		.use(requireRoles("ADMIN"))
 		.handler(async ({ context, input: { query } }) => {
 			const { rows, totalPages } = await context.repo.fraud.listEvents(query);
 
@@ -22,9 +22,9 @@ export const FraudHandler = priv.router({
 			};
 		}),
 
-	// Get single fraud event (ADMIN/OPERATOR only)
+	// Get single fraud event (ADMIN only)
 	getEvent: priv.getEvent
-		.use(requireRoles("ADMIN", "OPERATOR"))
+		.use(requireRoles("ADMIN"))
 		.handler(async ({ context, input: { params } }) => {
 			const result = await context.repo.fraud.get(params.id);
 
@@ -37,9 +37,9 @@ export const FraudHandler = priv.router({
 			};
 		}),
 
-	// Review fraud event (ADMIN/OPERATOR only)
+	// Review fraud event (ADMIN only)
 	reviewEvent: priv.reviewEvent
-		.use(requireRoles("ADMIN", "OPERATOR"))
+		.use(requireRoles("ADMIN"))
 		.handler(async ({ context, input: { params, body } }) => {
 			const data = trimObjectValues(body);
 
@@ -65,9 +65,9 @@ export const FraudHandler = priv.router({
 			});
 		}),
 
-	// Get fraud statistics (ADMIN/OPERATOR only)
+	// Get fraud statistics (ADMIN only)
 	getStats: priv.getStats
-		.use(requireRoles("ADMIN", "OPERATOR"))
+		.use(requireRoles("ADMIN"))
 		.handler(async ({ context, input: { query } }) => {
 			const result = await context.repo.fraud.getStats(query);
 
@@ -80,9 +80,9 @@ export const FraudHandler = priv.router({
 			};
 		}),
 
-	// Get user fraud profile (ADMIN/OPERATOR only)
+	// Get user fraud profile (ADMIN only)
 	getUserProfile: priv.getUserProfile
-		.use(requireRoles("ADMIN", "OPERATOR"))
+		.use(requireRoles("ADMIN"))
 		.handler(async ({ context, input: { params } }) => {
 			const result = await context.repo.fraud.getUserProfile(params.userId);
 
@@ -95,9 +95,9 @@ export const FraudHandler = priv.router({
 			};
 		}),
 
-	// List high-risk users (ADMIN/OPERATOR only)
+	// List high-risk users (ADMIN only)
 	listHighRiskUsers: priv.listHighRiskUsers
-		.use(requireRoles("ADMIN", "OPERATOR"))
+		.use(requireRoles("ADMIN"))
 		.handler(async ({ context, input: { query } }) => {
 			const { rows, totalPages } =
 				await context.repo.fraud.listHighRiskUsers(query);
@@ -112,9 +112,9 @@ export const FraudHandler = priv.router({
 			};
 		}),
 
-	// Get fraud events for a specific user (ADMIN/OPERATOR only)
+	// Get fraud events for a specific user (ADMIN only)
 	getUserEvents: priv.getUserEvents
-		.use(requireRoles("ADMIN", "OPERATOR"))
+		.use(requireRoles("ADMIN"))
 		.handler(async ({ context, input: { params, query } }) => {
 			const { rows, totalPages } = await context.repo.fraud.listEvents({
 				userId: params.userId,

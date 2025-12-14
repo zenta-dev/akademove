@@ -44,6 +44,10 @@ class WebSocketService with WidgetsBindingObserver {
   final Map<String, void Function(WebSocketConnectionStatus)?>
   _statusListeners = {};
   final Map<String, StreamController<Object?>> _broadcastControllers = {};
+  final Map<String, Timer> _keepAliveTimers = {};
+
+  /// Keep-alive ping interval (sends ping to keep connection active)
+  static const Duration _keepAliveInterval = Duration(seconds: 25);
 
   String? sessionToken;
   bool _isPaused = false;
@@ -101,6 +105,9 @@ class WebSocketService with WidgetsBindingObserver {
     try {
       _reconnectTimers[key]?.cancel();
       _reconnectTimers.remove(key);
+
+      _keepAliveTimers[key]?.cancel();
+      _keepAliveTimers.remove(key);
 
       await _subscriptions[key]?.cancel();
       _subscriptions.remove(key);
@@ -180,12 +187,23 @@ class WebSocketService with WidgetsBindingObserver {
       // ignore: cancel_subscriptions
       final sub = channel.stream.listen(
         (data) {
+          final dataStr = data.toString();
+
           // First successful message means connection is healthy
           if (_connectionStatuses[key] != WebSocketConnectionStatus.connected) {
             _updateConnectionStatus(key, WebSocketConnectionStatus.connected);
+            _logInfo(key, 'Connection confirmed via message');
           }
           _reconnectAttempts[key] = 0;
-          _logDebug(key, 'Message received: ${_truncate(data.toString())}');
+
+          // Skip "pong" responses - these are internal keep-alive responses
+          // from server's WebSocketRequestResponsePair("ping", "pong")
+          if (dataStr == 'pong') {
+            _logDebug(key, 'Received pong (keep-alive confirmed)');
+            return;
+          }
+
+          _logDebug(key, 'Message received: ${_truncate(dataStr)}');
           config.onMessage?.call(data);
           // Forward to broadcast stream for multiple listeners
           _broadcastControllers[key]?.add(data);
@@ -217,9 +235,22 @@ class WebSocketService with WidgetsBindingObserver {
       );
 
       _subscriptions[key] = sub;
-      // Mark as connected - we'll get confirmation via first message
-      _updateConnectionStatus(key, WebSocketConnectionStatus.connected);
-      _logInfo(key, 'Connected successfully');
+
+      // Send initial ping to confirm connection works
+      // Server uses WebSocketRequestResponsePair("ping", "pong") for auto-response
+      _sendPing(key);
+
+      // Start keep-alive timer to periodically ping the server
+      _startKeepAliveTimer(key);
+
+      // Note: We don't mark as connected here - wait for first message (pong)
+      // The status will be updated to 'connected' when we receive data
+      // This prevents race condition where connection fails during handshake
+      // but we already marked it as connected
+      _logInfo(
+        key,
+        'WebSocket channel opened, sent ping, awaiting pong confirmation',
+      );
     } on SocketException catch (e, st) {
       _logError(
         key,
@@ -340,6 +371,37 @@ class WebSocketService with WidgetsBindingObserver {
     }
   }
 
+  /// Send a ping message to the server
+  /// Server uses WebSocketRequestResponsePair("ping", "pong") for auto-response
+  void _sendPing(String key) {
+    try {
+      final channel = _connections[key];
+      if (channel != null) {
+        channel.sink.add('ping');
+        _logDebug(key, 'Sent ping');
+      }
+    } catch (e) {
+      _logDebug(key, 'Failed to send ping: $e');
+    }
+  }
+
+  /// Start keep-alive timer to periodically ping the server
+  void _startKeepAliveTimer(String key) {
+    _keepAliveTimers[key]?.cancel();
+    _keepAliveTimers[key] = Timer.periodic(_keepAliveInterval, (_) {
+      if (_connections.containsKey(key) &&
+          _connectionStatuses[key] == WebSocketConnectionStatus.connected) {
+        _sendPing(key);
+      }
+    });
+  }
+
+  /// Stop keep-alive timer for a connection
+  void _stopKeepAliveTimer(String key) {
+    _keepAliveTimers[key]?.cancel();
+    _keepAliveTimers.remove(key);
+  }
+
   /// Returns a broadcast stream that can be listened to by multiple subscribers.
   /// Returns null if there's no active connection for the given key.
   Stream<Object?>? stream(String key) => _broadcastControllers[key]?.stream;
@@ -388,6 +450,7 @@ class WebSocketService with WidgetsBindingObserver {
       _logInfo(key, 'Disconnecting...');
       _reconnectTimers[key]?.cancel();
       _reconnectTimers.remove(key);
+      _stopKeepAliveTimer(key);
       _configs.remove(key);
       _reconnectAttempts.remove(key);
 
@@ -426,6 +489,12 @@ class WebSocketService with WidgetsBindingObserver {
         timer.cancel();
       }
       _reconnectTimers.clear();
+
+      for (final timer in _keepAliveTimers.values) {
+        timer.cancel();
+      }
+      _keepAliveTimers.clear();
+
       _configs.clear();
       _reconnectAttempts.clear();
 

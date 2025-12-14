@@ -25,7 +25,9 @@ enum OrderEnvelopeAction {
   @JsonValue(r'MERCHANT_MARK_READY')
   MERCHANT_MARK_READY(r'MERCHANT_MARK_READY'),
   @JsonValue(r'REPORT_NO_SHOW')
-  REPORT_NO_SHOW(r'REPORT_NO_SHOW');
+  REPORT_NO_SHOW(r'REPORT_NO_SHOW'),
+  @JsonValue(r'CHECK_NEW_DATA')
+  CHECK_NEW_DATA(r'CHECK_NEW_DATA');
 
   const OrderEnvelopeAction(this.value);
 

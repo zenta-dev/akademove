@@ -128,9 +128,8 @@ export const useOrderUpdates = (
 				case "NEW_ORDER":
 					if (onNewOrderRef.current) {
 						onNewOrderRef.current(payload);
-						// Invalidate order list queries
-						queryClient.invalidateQueries({ queryKey: ["orders"] });
-						queryClient.invalidateQueries({ queryKey: ["merchant", "orders"] });
+						// Invalidate all queries
+						queryClient.invalidateQueries();
 					}
 					break;
 
@@ -143,9 +142,8 @@ export const useOrderUpdates = (
 					if (payload?.orderId) {
 						queryClient.setQueryData(["order", payload.orderId], payload.order);
 					}
-					// Invalidate order list queries
-					queryClient.invalidateQueries({ queryKey: ["orders"] });
-					queryClient.invalidateQueries({ queryKey: ["merchant", "orders"] });
+					// Invalidate all queries
+					queryClient.invalidateQueries();
 					break;
 
 				case "DRIVER_LOCATION":
@@ -168,8 +166,7 @@ export const useOrderUpdates = (
 					if (payload?.orderId) {
 						queryClient.setQueryData(["order", payload.orderId], payload.order);
 					}
-					queryClient.invalidateQueries({ queryKey: ["orders"] });
-					queryClient.invalidateQueries({ queryKey: ["merchant", "orders"] });
+					queryClient.invalidateQueries();
 					break;
 
 				case "ORDER_CANCELLED":
@@ -178,8 +175,7 @@ export const useOrderUpdates = (
 					if (payload?.orderId) {
 						queryClient.setQueryData(["order", payload.orderId], payload.order);
 					}
-					queryClient.invalidateQueries({ queryKey: ["orders"] });
-					queryClient.invalidateQueries({ queryKey: ["merchant", "orders"] });
+					queryClient.invalidateQueries();
 					break;
 
 				case "DRIVER_ARRIVED":
@@ -195,8 +191,7 @@ export const useOrderUpdates = (
 					if (payload?.orderId) {
 						queryClient.setQueryData(["order", payload.orderId], payload.order);
 					}
-					queryClient.invalidateQueries({ queryKey: ["orders"] });
-					queryClient.invalidateQueries({ queryKey: ["merchant", "orders"] });
+					queryClient.invalidateQueries();
 					break;
 
 				case "MERCHANT_ACCEPTED":
@@ -204,7 +199,7 @@ export const useOrderUpdates = (
 					if (payload?.orderId) {
 						queryClient.setQueryData(["order", payload.orderId], payload.order);
 					}
-					queryClient.invalidateQueries({ queryKey: ["orders"] });
+					queryClient.invalidateQueries();
 					break;
 
 				case "MERCHANT_READY":
@@ -219,8 +214,7 @@ export const useOrderUpdates = (
 					if (payload?.orderId) {
 						queryClient.setQueryData(["order", payload.orderId], payload.order);
 					}
-					queryClient.invalidateQueries({ queryKey: ["orders"] });
-					queryClient.invalidateQueries({ queryKey: ["merchant", "orders"] });
+					queryClient.invalidateQueries();
 					break;
 
 				default:
@@ -334,8 +328,8 @@ export const useOrderUpdatesPolling = (
 				data?: Array<{ id: string }>;
 			}>(["orders"]);
 
-			// Invalidate order list queries to trigger refetch
-			await queryClient.invalidateQueries({ queryKey: ["orders"] });
+			// Invalidate all queries to trigger refetch
+			await queryClient.invalidateQueries();
 
 			// Check for new orders after a short delay to let queries refetch
 			if (onNewOrder) {

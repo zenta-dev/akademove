@@ -2,11 +2,12 @@ import { m } from "@repo/i18n";
 import type {
 	InsertLeaderboard,
 	Leaderboard,
+	LeaderboardQuery,
+	LeaderboardWithDriver,
 	UpdateLeaderboard,
 } from "@repo/schema/leaderboard";
-import type { UnifiedPaginationQuery } from "@repo/schema/pagination";
 import { nullsToUndefined } from "@repo/shared";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { v7 } from "uuid";
 import { BaseRepository } from "@/core/base";
 import { CACHE_TTLS } from "@/core/constants";
@@ -19,6 +20,8 @@ import type {
 import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
 import type { LeaderboardDatabase } from "@/core/tables/leaderboard";
+import { toNumberSafe } from "@/utils";
+import { logger } from "@/utils/logger";
 import { LeaderboardListQueryService } from "./services/leaderboard-list-query-service";
 
 export class LeaderboardRepository extends BaseRepository {
@@ -38,11 +41,106 @@ export class LeaderboardRepository extends BaseRepository {
 		return result ? LeaderboardRepository.composeEntity(result) : undefined;
 	}
 
-	async list(query?: UnifiedPaginationQuery): Promise<ListResult<Leaderboard>> {
+	/**
+	 * Fetch driver info for leaderboard entries
+	 */
+	async #fetchDriverInfo(
+		driverIds: string[],
+	): Promise<Map<string, LeaderboardWithDriver["driver"]>> {
+		const driverMap = new Map<string, LeaderboardWithDriver["driver"]>();
+
+		if (driverIds.length === 0) return driverMap;
+
+		try {
+			const drivers = await this.db.query.driver.findMany({
+				where: (f, op) =>
+					op.inArray(
+						f.id,
+						driverIds.filter((id): id is string => id !== undefined),
+					),
+				with: {
+					user: true,
+				},
+			});
+
+			for (const driver of drivers) {
+				if (driver.user) {
+					driverMap.set(driver.id, {
+						id: driver.id,
+						name: driver.user.name,
+						image: driver.user.image ?? undefined,
+						rating: toNumberSafe(driver.rating),
+					});
+				}
+			}
+		} catch (error) {
+			logger.error(
+				{ error, driverIds },
+				"[LeaderboardRepository] Failed to fetch driver info",
+			);
+		}
+
+		return driverMap;
+	}
+
+	/**
+	 * Fetch previous rank for leaderboard entries (from previous period)
+	 */
+	async #fetchPreviousRanks(
+		entries: Leaderboard[],
+	): Promise<Map<string, number>> {
+		const rankMap = new Map<string, number>();
+
+		if (entries.length === 0) return rankMap;
+
+		try {
+			// Get the first entry to determine current period
+			const sample = entries[0];
+			if (!sample) return rankMap;
+
+			// Find previous period entries for same category
+			const previousEntries = await this.db.query.leaderboard.findMany({
+				where: (f, op) =>
+					and(
+						op.eq(f.category, sample.category),
+						op.eq(f.period, sample.period),
+						op.lt(f.periodStart, sample.periodStart),
+					),
+				orderBy: (f, op) => op.desc(f.periodStart),
+				limit: entries.length * 2, // Get enough to cover all drivers
+			});
+
+			// Create a map of driverId -> previous rank
+			for (const entry of previousEntries) {
+				if (entry.driverId && !rankMap.has(entry.driverId)) {
+					rankMap.set(entry.driverId, entry.rank);
+				}
+			}
+		} catch (error) {
+			logger.error(
+				{ error },
+				"[LeaderboardRepository] Failed to fetch previous ranks",
+			);
+		}
+
+		return rankMap;
+	}
+
+	async list(
+		query?: LeaderboardQuery,
+	): Promise<ListResult<LeaderboardWithDriver>> {
 		try {
 			// Extract pagination parameters
-			const { cursor, page, limit, search, sortBy, order } =
-				LeaderboardListQueryService.extractPaginationParams(query);
+			const {
+				cursor,
+				page,
+				limit,
+				sortBy,
+				order,
+				category,
+				period,
+				includeDriver,
+			} = LeaderboardListQueryService.extractPaginationParams(query);
 
 			// Generate ORDER BY clause
 			const orderBy = (
@@ -54,74 +152,145 @@ export class LeaderboardRepository extends BaseRepository {
 					const field = f[validField as keyof typeof f];
 					return op[order](field);
 				}
-				return op[order](f.id);
+				// Default sort by rank ascending
+				return op.asc(f.rank);
 			};
 
 			// Generate WHERE clauses
 			const clauses = LeaderboardListQueryService.generateWhereClauses({
-				search,
+				category,
+				period,
 				cursor,
 			});
+
+			let rows: Leaderboard[];
+			let totalPages: number | undefined;
 
 			// Cursor-based pagination
 			if (cursor) {
 				const res = await this.db.query.leaderboard.findMany({
-					where: (_, op) => op.and(...clauses),
+					where: clauses.length > 0 ? (_, op) => op.and(...clauses) : undefined,
 					orderBy,
 					limit: limit + 1,
 				});
 
-				const rows = res.map(LeaderboardRepository.composeEntity);
-
-				return { rows };
+				rows = res.map(LeaderboardRepository.composeEntity);
 			}
-
 			// Page-based pagination
-			if (page) {
-				const res = await this.db.query.leaderboard.findMany({
-					where: (_, op) => op.and(...clauses),
-					orderBy,
-					offset: LeaderboardListQueryService.calculatePagination({
+			else if (page) {
+				const totalCount = await LeaderboardListQueryService.getFilteredCount(
+					this.db,
+					{ category, period },
+				);
+
+				const { offset, totalPages: pages } =
+					LeaderboardListQueryService.calculatePagination({
 						page,
 						limit,
-						totalCount: 0,
-					}).offset,
+						totalCount,
+					});
+
+				const res = await this.db.query.leaderboard.findMany({
+					where: clauses.length > 0 ? (_, op) => op.and(...clauses) : undefined,
+					orderBy,
+					offset,
 					limit,
 				});
 
-				const rows = res.map(LeaderboardRepository.composeEntity);
-
-				// Get total count based on search
-				const totalCount = search
-					? await LeaderboardListQueryService.getSearchCount(this.db, search)
-					: await this.getTotalRow();
-
-				const { totalPages } = LeaderboardListQueryService.calculatePagination({
-					page,
+				rows = res.map(LeaderboardRepository.composeEntity);
+				totalPages = pages;
+			}
+			// Default: no pagination, just limit
+			else {
+				const res = await this.db.query.leaderboard.findMany({
+					where: clauses.length > 0 ? (_, op) => op.and(...clauses) : undefined,
+					orderBy,
 					limit,
-					totalCount,
 				});
 
-				return { rows, totalPages };
+				rows = res.map(LeaderboardRepository.composeEntity);
 			}
 
-			// Default: no pagination
-			const res = await this.db.query.leaderboard.findMany({
-				where: (_, op) => op.and(...clauses),
-				orderBy,
-				limit: limit,
-			});
+			// Enhance with driver info if requested
+			let result: LeaderboardWithDriver[] = rows;
 
-			const rows = res.map(LeaderboardRepository.composeEntity);
+			if (includeDriver) {
+				const driverIds = rows
+					.map((r) => r.driverId)
+					.filter((id): id is string => id !== undefined);
 
-			return { rows };
+				const [driverMap, previousRankMap] = await Promise.all([
+					this.#fetchDriverInfo(driverIds),
+					this.#fetchPreviousRanks(rows),
+				]);
+
+				result = rows.map((entry) => ({
+					...entry,
+					driver: entry.driverId ? driverMap.get(entry.driverId) : undefined,
+					previousRank: entry.driverId
+						? previousRankMap.get(entry.driverId)
+						: undefined,
+				}));
+			}
+
+			return { rows: result, totalPages };
 		} catch (error) {
 			this.handleError(error, "list");
 			return { rows: [] };
 		}
 	}
 
-	async get(id: string): Promise<Leaderboard> {
+	/**
+	 * Get current user's rankings across all categories/periods
+	 */
+	async getMyRankings(
+		userId: string,
+		query?: { category?: string; period?: string },
+	): Promise<LeaderboardWithDriver[]> {
+		try {
+			const clauses = LeaderboardListQueryService.generateWhereClauses({
+				category: query?.category as LeaderboardWithDriver["category"],
+				period: query?.period as LeaderboardWithDriver["period"],
+				userId,
+			});
+
+			const res = await this.db.query.leaderboard.findMany({
+				where: clauses.length > 0 ? (_, op) => op.and(...clauses) : undefined,
+				orderBy: (f, op) => [
+					op.asc(f.category),
+					op.asc(f.period),
+					op.asc(f.rank),
+				],
+			});
+
+			const rows = res.map(LeaderboardRepository.composeEntity);
+
+			// Fetch driver info for current user
+			const driverIds = rows
+				.map((r) => r.driverId)
+				.filter((id): id is string => id !== undefined);
+
+			const [driverMap, previousRankMap] = await Promise.all([
+				this.#fetchDriverInfo(driverIds),
+				this.#fetchPreviousRanks(rows),
+			]);
+
+			return rows.map((entry) => ({
+				...entry,
+				driver: entry.driverId ? driverMap.get(entry.driverId) : undefined,
+				previousRank: entry.driverId
+					? previousRankMap.get(entry.driverId)
+					: undefined,
+			}));
+		} catch (error) {
+			throw this.handleError(error, "get my rankings");
+		}
+	}
+
+	async getById(
+		id: string,
+		options?: { includeDriver?: boolean },
+	): Promise<LeaderboardWithDriver> {
 		try {
 			const fallback = async () => {
 				const res = await this.#getFromDB(id);
@@ -131,6 +300,19 @@ export class LeaderboardRepository extends BaseRepository {
 			};
 
 			const result = await this.getCache(id, { fallback });
+
+			// Enhance with driver info if requested
+			if (options?.includeDriver && result.driverId) {
+				const driverMap = await this.#fetchDriverInfo([result.driverId]);
+				const previousRankMap = await this.#fetchPreviousRanks([result]);
+
+				return {
+					...result,
+					driver: driverMap.get(result.driverId),
+					previousRank: previousRankMap.get(result.driverId),
+				};
+			}
+
 			return result;
 		} catch (error) {
 			throw this.handleError(error, "get by id");

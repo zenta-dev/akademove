@@ -29,13 +29,13 @@ class UserMerchantDetailScreen extends StatefulWidget {
 
 class _UserMerchantDetailScreenState extends State<UserMerchantDetailScreen> {
   late UserMerchantDetailCubit _detailCubit;
-  late CartCubit _cartCubit;
+  late UserCartCubit _cartCubit;
 
   @override
   void initState() {
     super.initState();
     _detailCubit = context.read<UserMerchantDetailCubit>();
-    _cartCubit = context.read<CartCubit>();
+    _cartCubit = context.read<UserCartCubit>();
 
     _detailCubit.getMerchantDetail(
       widget.merchantId,
@@ -187,10 +187,10 @@ class _UserMerchantDetailScreenState extends State<UserMerchantDetailScreen> {
     return Stack(
       children: [
         // Use BlocSelector to only get totalItems for padding calculation
-        BlocSelector<CartCubit, CartState, int>(
+        BlocSelector<UserCartCubit, UserCartState, int>(
           selector: (state) => state.totalItems,
           builder: (context, itemCount) {
-            return RefreshTrigger(
+            return SafeRefreshTrigger(
               onRefresh: _onRefresh,
               child: ListView(
                 physics: const AlwaysScrollableScrollPhysics(),
@@ -212,7 +212,7 @@ class _UserMerchantDetailScreenState extends State<UserMerchantDetailScreen> {
 
                   // Product List (Stack of Cards)
                   if (detailState.menuByCategory.hasData)
-                    BlocBuilder<CartCubit, CartState>(
+                    BlocBuilder<UserCartCubit, UserCartState>(
                       builder: (context, cartState) {
                         return _buildProductList(
                           context,
@@ -229,7 +229,7 @@ class _UserMerchantDetailScreenState extends State<UserMerchantDetailScreen> {
         ),
 
         // Bottom Floating Action Bar - separate builder to avoid RefreshTrigger rebuilds
-        BlocBuilder<CartCubit, CartState>(
+        BlocBuilder<UserCartCubit, UserCartState>(
           builder: (context, cartState) {
             final itemCount = cartState.totalItems;
             if (itemCount > 0) {
@@ -438,7 +438,7 @@ class _UserMerchantDetailScreenState extends State<UserMerchantDetailScreen> {
   Widget _buildProductList(
     BuildContext context,
     UserMerchantDetailState detailState,
-    CartState cartState,
+    UserCartState cartState,
     Merchant merchant,
   ) {
     final allItems = <MerchantMenu>[];
@@ -596,6 +596,7 @@ class _UserMerchantDetailScreenState extends State<UserMerchantDetailScreen> {
                     onPressed: () => _onQuantityChanged(
                       item: item,
                       newQty: 1,
+                      currentQty: currentQty,
                       merchant: merchant,
                     ),
                     child: Row(
@@ -688,6 +689,7 @@ class _UserMerchantDetailScreenState extends State<UserMerchantDetailScreen> {
             onTap: () => _onQuantityChanged(
               item: item,
               newQty: currentQty - 1,
+              currentQty: currentQty,
               merchant: merchant,
             ),
             child: Container(
@@ -714,6 +716,7 @@ class _UserMerchantDetailScreenState extends State<UserMerchantDetailScreen> {
                 ? () => _onQuantityChanged(
                     item: item,
                     newQty: currentQty + 1,
+                    currentQty: currentQty,
                     merchant: merchant,
                   )
                 : null,
@@ -738,6 +741,7 @@ class _UserMerchantDetailScreenState extends State<UserMerchantDetailScreen> {
   void _onQuantityChanged({
     required MerchantMenu item,
     required int newQty,
+    required int currentQty,
     required Merchant merchant,
   }) {
     if (newQty > item.stock) {
@@ -753,18 +757,25 @@ class _UserMerchantDetailScreenState extends State<UserMerchantDetailScreen> {
     }
 
     if (newQty > 0) {
-      _cartCubit.addItem(
-        menu: item,
-        merchantName: merchant.name,
-        quantity: newQty,
-        merchantLocation: merchant.location,
-      );
+      if (currentQty == 0) {
+        // Adding new item to cart
+        _cartCubit.addItem(
+          menu: item,
+          merchantName: merchant.name,
+          quantity: newQty,
+          merchantLocation: merchant.location,
+        );
+      } else {
+        // Updating existing item - use delta
+        final delta = newQty - currentQty;
+        _cartCubit.updateQuantity(menuId: item.id, delta: delta);
+      }
     } else {
       _cartCubit.removeItem(item.id);
     }
   }
 
-  Widget _buildBottomActionBar(BuildContext context, CartState cartState) {
+  Widget _buildBottomActionBar(BuildContext context, UserCartState cartState) {
     final firstItem = cartState.currentCart?.items.firstOrNull;
     final itemName = firstItem?.menuName ?? "";
     final totalPrice = cartState.subtotal;

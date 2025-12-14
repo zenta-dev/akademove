@@ -13,151 +13,102 @@ class PrivacyPoliciesScreen extends StatefulWidget {
 class _PrivacyPoliciesScreenState extends State<PrivacyPoliciesScreen> {
   int? _openIndex;
 
-  static const List<Map<String, dynamic>> _details = [
-    {
-      'title': 'Data We Collect',
-      'content':
-          'We collect personal information from all users of AkadeMove, Customers, Drivers (Students), and Merchants to enable our services and ensure a safe and efficient platform experience.',
-      'sections': [
-        {
-          'number': '1',
-          'title': 'Customer Data',
-          'description':
-              'When you register and use AkadeMove as a Customer, we collect:',
-          'items': ['Name', 'Email address', 'Phone number', 'Gender'],
-          'footer':
-              'This data allows us to verify your identity, communicate with you, process bookings and payments, and improve your overall experience.',
-          'additional':
-              'Customers may select their preferred driver gender to enhance comfort and safety.',
-        },
-        {
-          'number': '2',
-          'title': 'Driver (Student) Data',
-          'description':
-              'When you register as a Driver (student driver) on AkadeMove, we collect:',
-          'items': [
-            'Full name',
-            'Email address',
-            'Phone number',
-            'Gender',
-            'Driver License (SIM)',
-            'Student ID Card (KTM)',
-            'Vehicle Registration Certificate (STNK)',
-            'Vehicle license plate number',
-            'Bank account number',
-          ],
-          'footer':
-              'Drivers may also manually input their academic schedule (KRS) to indicate unavailable periods (e.g., class hours). This schedule data is not shared with customers or third parties and is used solely to prevent order assignments during academic sessions.',
-        },
-        {
-          'number': '3',
-          'title': 'Merchant Data',
-          'description': 'When you register as a Merchant Partner, we collect:',
-          'items': [
-            "Owner's full name",
-            "Owner's email address",
-            "Owner's phone number",
-            "Outlet's name",
-            "Outlet's location",
-            "Outlet's phone number",
-            "Outlet's email",
-            "Outlet's documents (It is an optional uploads, e.g., tax ID, business license, etc.)",
-            'Bank account number',
-          ],
-          'footer':
-              'This data helps verify your merchant identity, facilitate transactions, and manage fund withdrawals securely.',
-        },
-      ],
-    },
-    {
-      'title': 'Use of Data',
-      'content': 'AkadeMove uses personal information to:',
-      'items': [
-        {
-          'number': '1',
-          'text':
-              'Provide and manage all AkadeMove services (transportation, delivery, and transactions).',
-        },
-        {
-          'number': '2',
-          'text':
-              'Verify the identity of Customers, Drivers, and Merchants to prevent fraud and unauthorized access.',
-        },
-        {
-          'number': '3',
-          'text':
-              'Match customers with suitable drivers based on gender preference, proximity, and availability',
-        },
-        {
-          'number': '4',
-          'text':
-              'Manage student drivers schedules to ensure service availability aligns with their academic commitments.',
-        },
-        {
-          'number': '5',
-          'text':
-              'Communicate service updates, notifications, promotions, and account-related information.',
-        },
-        {
-          'number': '6',
-          'text':
-              'Fulfill legal and regulatory obligations required by applicable laws.',
-        },
-      ],
-    },
-    {
-      'title': 'Location Access',
-      'content':
-          'AkadeMove requires location access (GPS) to function properly. We use location data to:',
-      'items': [
-        {'number': '1', 'text': 'Identify pick-up and drop-off points.'},
-        {'number': '2', 'text': 'Show real-time driver locations.'},
-        {
-          'number': '3',
-          'text': 'Improve route accuracy and service efficiency.',
-        },
-        {
-          'number': '4',
-          'text': 'Match customers with the nearest available driver.',
-        },
-      ],
-      'footer':
-          'You may adjust your location permissions in your device settings. However, disabling location access may limit AkadeMove functionality.',
-    },
-    {
-      'title': 'Data Sharing',
-      'content':
-          'We do not sell, rent, or trade your personal data to third parties. However, we may share certain information with:',
-      'items': [
-        {
-          'number': '1',
-          'text':
-              'Payment service providers to process financial transactions.',
-        },
-        {
-          'number': '2',
-          'text':
-              'Trusted third-party partners (such as identity verification, insurance, or analytics providers) to support our operations.',
-        },
-        {
-          'number': '3',
-          'text':
-              'Law enforcement or government authorities, if required by applicable law or legal process.',
-        },
-        {
-          'number': '4',
-          'text': 'Match customers with the nearest available driver.',
-        },
-      ],
-      'footer':
-          'All partners handling your data are required to comply with strict data protection standards.',
-    },
-    {
-      'title': 'Changes to This Privacy Policy',
-      'content':
-          'We may update this Privacy Policy from time to time to reflect changes in our practices or legal obligations. Updates will be communicated via the AkadeMove app or website. Continued use of our services after any update constitutes your acceptance of the revised policy.',
-    },
-  ];
+  List<Map<String, dynamic>> _getDetails(BuildContext context) {
+    final l10n = context.l10n;
+    return [
+      {
+        'title': l10n.privacy_data_we_collect_title,
+        'content': l10n.privacy_data_we_collect_content,
+        'sections': [
+          {
+            'number': '1',
+            'title': l10n.privacy_customer_data_title,
+            'description': l10n.privacy_customer_data_desc,
+            'items': [
+              l10n.privacy_customer_data_item_name,
+              l10n.privacy_customer_data_item_email,
+              l10n.privacy_customer_data_item_phone,
+              l10n.privacy_customer_data_item_gender,
+            ],
+            'footer': l10n.privacy_customer_data_footer,
+            'additional': l10n.privacy_customer_data_additional,
+          },
+          {
+            'number': '2',
+            'title': l10n.privacy_driver_data_title,
+            'description': l10n.privacy_driver_data_desc,
+            'items': [
+              l10n.privacy_driver_data_item_name,
+              l10n.privacy_driver_data_item_email,
+              l10n.privacy_driver_data_item_phone,
+              l10n.privacy_driver_data_item_gender,
+              l10n.privacy_driver_data_item_sim,
+              l10n.privacy_driver_data_item_ktm,
+              l10n.privacy_driver_data_item_stnk,
+              l10n.privacy_driver_data_item_plate,
+              l10n.privacy_driver_data_item_bank,
+            ],
+            'footer': l10n.privacy_driver_data_footer,
+          },
+          {
+            'number': '3',
+            'title': l10n.privacy_merchant_data_title,
+            'description': l10n.privacy_merchant_data_desc,
+            'items': [
+              l10n.privacy_merchant_data_item_owner_name,
+              l10n.privacy_merchant_data_item_owner_email,
+              l10n.privacy_merchant_data_item_owner_phone,
+              l10n.privacy_merchant_data_item_outlet_name,
+              l10n.privacy_merchant_data_item_outlet_location,
+              l10n.privacy_merchant_data_item_outlet_phone,
+              l10n.privacy_merchant_data_item_outlet_email,
+              l10n.privacy_merchant_data_item_outlet_docs,
+              l10n.privacy_merchant_data_item_bank,
+            ],
+            'footer': l10n.privacy_merchant_data_footer,
+          },
+        ],
+      },
+      {
+        'title': l10n.privacy_use_of_data_title,
+        'content': l10n.privacy_use_of_data_content,
+        'items': [
+          {'number': '1', 'text': l10n.privacy_use_of_data_item_1},
+          {'number': '2', 'text': l10n.privacy_use_of_data_item_2},
+          {'number': '3', 'text': l10n.privacy_use_of_data_item_3},
+          {'number': '4', 'text': l10n.privacy_use_of_data_item_4},
+          {'number': '5', 'text': l10n.privacy_use_of_data_item_5},
+          {'number': '6', 'text': l10n.privacy_use_of_data_item_6},
+        ],
+      },
+      {
+        'title': l10n.privacy_location_access_title,
+        'content': l10n.privacy_location_access_content,
+        'items': [
+          {'number': '1', 'text': l10n.privacy_location_access_item_1},
+          {'number': '2', 'text': l10n.privacy_location_access_item_2},
+          {'number': '3', 'text': l10n.privacy_location_access_item_3},
+          {'number': '4', 'text': l10n.privacy_location_access_item_4},
+        ],
+        'footer': l10n.privacy_location_access_footer,
+      },
+      {
+        'title': l10n.privacy_data_sharing_title,
+        'content': l10n.privacy_data_sharing_content,
+        'items': [
+          {'number': '1', 'text': l10n.privacy_data_sharing_item_1},
+          {'number': '2', 'text': l10n.privacy_data_sharing_item_2},
+          {'number': '3', 'text': l10n.privacy_data_sharing_item_3},
+          {'number': '4', 'text': l10n.privacy_data_sharing_item_4},
+        ],
+        'footer': l10n.privacy_data_sharing_footer,
+      },
+      {
+        'title': l10n.privacy_changes_title,
+        'content': l10n.privacy_changes_content,
+      },
+    ];
+  }
 
   void _toggleSection(int index) {
     setState(() {
@@ -167,6 +118,7 @@ class _PrivacyPoliciesScreenState extends State<PrivacyPoliciesScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final details = _getDetails(context);
     return Stack(
       children: [
         Scaffold(
@@ -181,7 +133,7 @@ class _PrivacyPoliciesScreenState extends State<PrivacyPoliciesScreen> {
                   spacing: 16.h,
                   children: [
                     _buildHeaderCard(context),
-                    ..._details.asMap().entries.map((entry) {
+                    ...details.asMap().entries.map((entry) {
                       return _PrivacySection(
                         detail: entry.value,
                         isOpen: _openIndex == entry.key,
@@ -200,26 +152,27 @@ class _PrivacyPoliciesScreenState extends State<PrivacyPoliciesScreen> {
   }
 
   Widget _buildHeaderCard(BuildContext context) {
+    final l10n = context.l10n;
     return Card(
       child: Column(
         spacing: 8.h,
         children: [
           Text(
-            'AkadeMove Privacy Policy',
+            l10n.privacy_policy_title,
             style: context.typography.small.copyWith(
               fontSize: 16.sp,
               fontWeight: FontWeight.w600,
             ),
           ),
           Text(
-            'October 2025',
+            l10n.privacy_policy_date,
             style: context.typography.small.copyWith(
               fontSize: 13.sp,
               fontWeight: FontWeight.w500,
             ),
           ),
           Text(
-            'Welcome to AkadeMove, a platform designed to connect customers, student drivers, and merchants in a unified mobility and delivery ecosystem. Your privacy is important to us. This Privacy Policy explains how we collect, use, store, and protect your personal information when you use our mobile application, website, or any related services (collectively referred to as "AkadeMove"). By using AkadeMove, you agree to the collection and use of your data in accordance with this policy. Please read this document carefully to understand how we handle your personal information.',
+            l10n.privacy_policy_intro,
             style: context.typography.small.copyWith(
               fontSize: 12.sp,
               fontWeight: FontWeight.normal,

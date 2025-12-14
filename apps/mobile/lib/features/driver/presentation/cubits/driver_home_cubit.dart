@@ -1,211 +1,275 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:api_client/api_client.dart';
 import 'package:geolocator/geolocator.dart';
 
+/// Cubit for driver home screen WebSocket and location functionality.
+///
+/// This cubit manages:
+/// - WebSocket connection for incoming orders (driver-pool)
+/// - WebSocket connection for location updates (driver-location)
+/// - Location tracking and updates
+/// - Incoming/current order state
+///
+/// For driver profile and stats, use [DriverProfileCubit].
+/// This cubit does NOT own the driver - it receives driver updates
+/// via [updateDriver] from the screen when [DriverProfileCubit] changes.
 class DriverHomeCubit extends BaseCubit<DriverHomeState> {
   DriverHomeCubit({
     required DriverRepository driverRepository,
-    required OrderRepository orderRepository,
     required WebSocketService webSocketService,
-    required ConfigurationRepository configurationRepository,
+    required LocationService locationService,
   }) : _driverRepository = driverRepository,
-       _orderRepository = orderRepository,
        _webSocketService = webSocketService,
-       _configurationRepository = configurationRepository,
+       _locationService = locationService,
        super(const DriverHomeState());
 
   final DriverRepository _driverRepository;
-  final OrderRepository _orderRepository;
   final WebSocketService _webSocketService;
-  final ConfigurationRepository _configurationRepository;
+  final LocationService _locationService;
 
-  Timer? _locationUpdateTimer;
-  double? _platformFeeRate;
+  /// Location stream subscription for real-time GPS updates
+  StreamSubscription<Coordinate>? _locationStreamSubscription;
 
-  Future<void> init() async {
+  /// Last known location to avoid duplicate updates
+  Coordinate? _lastLocation;
+
+  /// Driver reference for WebSocket/location operations.
+  /// This is a cache updated via [updateDriver], NOT a source of truth.
+  Driver? _driver;
+
+  /// Initialize the cubit with a driver.
+  /// Call this after DriverProfileCubit has loaded the driver.
+  Future<void> initWithDriver(Driver? driver) async {
     reset();
-    await loadDriverProfile();
-    await loadTodayStats();
+    _driver = driver;
+
+    // Start WebSocket and location tracking if driver is online
+    if (driver != null && driver.isOnline) {
+      await _connectToDriverPool();
+      await _connectToDriverLocation(driver.id);
+      _startLocationTracking();
+      // Fetch and emit initial location immediately
+      await _fetchInitialLocation();
+    }
   }
 
-  void reset() {
-    emit(const DriverHomeState());
-    _locationUpdateTimer?.cancel();
-  }
-
-  @override
-  Future<void> close() async {
-    _locationUpdateTimer?.cancel();
-    await _disconnectDriverPool();
-    return super.close();
-  }
-
-  Future<void> loadDriverProfile() async =>
-      await taskManager.execute("DHC-lDP1", () async {
-        try {
-          emit(state.copyWith(initResult: const OperationResult.loading()));
-
-          final res = await _driverRepository.getMine();
-
-          emit(
-            state.copyWith(
-              initResult: OperationResult.success(res.data),
-              myDriver: res.data,
-              isOnline: res.data.isOnline,
-            ),
-          );
-
-          if (res.data.isOnline) {
-            await _connectToDriverPool();
-            _startLocationTracking();
-          }
-        } on BaseError catch (e, st) {
-          logger.e(
-            '[DriverHomeCubit] - Error loading profile: ${e.message}',
-            error: e,
-            stackTrace: st,
-          );
-          emit(state.copyWith(initResult: OperationResult.failed(e)));
-        }
-      });
-
-  Future<void> loadTodayStats() async =>
-      await taskManager.execute('DHC-lTS2', () async {
-        try {
-          final now = DateTime.now();
-          final startOfDay = DateTime(now.year, now.month, now.day);
-
-          final ordersRes = await _orderRepository.list(
-            ListOrderQuery(statuses: const [OrderStatus.COMPLETED]),
-          );
-
-          final todayOrders = ordersRes.data.where((order) {
-            // Convert UTC timestamp to local time for comparison
-            final orderDate = order.createdAt.toLocal();
-            return orderDate.isAfter(startOfDay);
-          }).toList();
-
-          // Calculate driver earnings (totalPrice - platform commission)
-          final todayEarnings = await _calculateDriverEarnings(todayOrders);
-
-          emit(
-            state.copyWith(
-              todayTrips: todayOrders.length,
-              todayEarnings: todayEarnings,
-            ),
-          );
-        } on BaseError catch (e, st) {
-          logger.e(
-            '[DriverHomeCubit] - Error loading today stats: ${e.message}',
-            error: e,
-            stackTrace: st,
-          );
-        }
-      });
-
-  Future<void> toggleOnlineStatus() async =>
-      await taskManager.execute('DHC-tOS3', () async {
-        final driverId = state.myDriver?.id;
-        if (driverId == null) return;
-
-        try {
-          final newStatus = !state.isOnline;
-          emit(
-            state.copyWith(toggleOnlineResult: const OperationResult.loading()),
-          );
-
-          final res = await _driverRepository.updateOnlineStatus(
-            driverId: driverId,
-            isOnline: newStatus,
-          );
-
-          emit(
-            state.copyWith(
-              toggleOnlineResult: OperationResult.success(res.data),
-              myDriver: res.data,
-              isOnline: res.data.isOnline,
-            ),
-          );
-
-          if (newStatus) {
-            await _connectToDriverPool();
-            _startLocationTracking();
-          } else {
-            await _disconnectDriverPool();
-            _stopLocationTracking();
-          }
-        } on BaseError catch (e, st) {
-          logger.e(
-            '[DriverHomeCubit] - Error toggling online status: ${e.message}',
-            error: e,
-            stackTrace: st,
-          );
-          emit(state.copyWith(toggleOnlineResult: OperationResult.failed(e)));
-        }
-      });
-
-  Future<void> _startLocationTracking() async {
-    _locationUpdateTimer?.cancel();
-    _locationUpdateTimer = Timer.periodic(const Duration(seconds: 3), (
-      _,
-    ) async {
-      await _updateLocation();
-    });
-    // Await initial location update to catch any errors
-    await _updateLocation();
-  }
-
-  void _stopLocationTracking() {
-    _locationUpdateTimer?.cancel();
-  }
-
-  Future<void> _updateLocation() async {
-    final driverId = state.myDriver?.id;
-    if (driverId == null || !state.isOnline) return;
-
+  /// Fetch and emit the initial location when driver goes online.
+  Future<void> _fetchInitialLocation() async {
     try {
-      // Check permission
-      final permission = await Geolocator.checkPermission();
-      if (permission == LocationPermission.denied ||
-          permission == LocationPermission.deniedForever) {
-        logger.w('[DriverHomeCubit] - Location permission denied');
-        return;
+      final coordinate = await _locationService.getMyLocation(
+        accuracy: LocationAccuracy.high,
+        fromCache: false,
+      );
+      if (coordinate != null) {
+        _lastLocation = coordinate;
+        emit(state.copyWith(currentLocation: coordinate));
+        logger.i(
+          '[DriverHomeCubit] - Initial location fetched: '
+          '${coordinate.y}, ${coordinate.x}',
+        );
       }
-
-      final position = await Geolocator.getCurrentPosition(
-        locationSettings: const LocationSettings(
-          accuracy: LocationAccuracy.high,
-        ),
-      );
-
-      await _driverRepository.updateLocation(
-        driverId: driverId,
-        location: CoordinateWithMeta(
-          x: position.longitude,
-          y: position.latitude,
-          isMockLocation: position.isMocked,
-        ),
-      );
-
-      logger.d(
-        '[DriverHomeCubit] - Location updated: ${position.latitude}, ${position.longitude}, isMock: ${position.isMocked}',
-      );
     } catch (e, st) {
       logger.e(
-        '[DriverHomeCubit] - Error updating location: $e',
+        '[DriverHomeCubit] - Error fetching initial location',
         error: e,
         stackTrace: st,
       );
     }
   }
 
+  /// Update driver reference when DriverProfileCubit's driver changes.
+  /// Call this when toggle online status changes.
+  void updateDriver(Driver? driver) {
+    final wasOnline = _driver?.isOnline ?? false;
+    final isNowOnline = driver?.isOnline ?? false;
+
+    _driver = driver;
+
+    // Handle online status changes
+    if (!wasOnline && isNowOnline && driver != null) {
+      _connectToDriverPool();
+      _connectToDriverLocation(driver.id);
+      _startLocationTracking();
+      // Fetch and emit initial location when going online
+      _fetchInitialLocation();
+    } else if (wasOnline && !isNowOnline) {
+      _disconnectDriverPool();
+      _disconnectDriverLocation();
+      _stopLocationTracking();
+      // Clear location when going offline
+      emit(state.copyWith(currentLocation: null));
+    }
+  }
+
+  void reset() {
+    emit(const DriverHomeState());
+    _stopLocationTracking();
+    _driver = null;
+  }
+
+  @override
+  Future<void> close() async {
+    _stopLocationTracking();
+    await _disconnectDriverPool();
+    await _disconnectDriverLocation();
+    return super.close();
+  }
+
+  void _startLocationTracking() {
+    _stopLocationTracking();
+
+    final currentDriver = _driver;
+    if (currentDriver == null || !currentDriver.isOnline) return;
+
+    logger.i('[DriverHomeCubit] - Starting location stream tracking');
+
+    _locationStreamSubscription = _locationService
+        .getLocationStream(
+          accuracy: LocationAccuracy.high,
+          interval: const Duration(seconds: 3),
+        )
+        .listen(
+          (coordinate) => _onLocationUpdate(coordinate),
+          onError: (Object error, StackTrace st) {
+            logger.e(
+              '[DriverHomeCubit] - Location stream error',
+              error: error,
+              stackTrace: st,
+            );
+          },
+        );
+  }
+
+  void _stopLocationTracking() {
+    _locationStreamSubscription?.cancel();
+    _locationStreamSubscription = null;
+    _lastLocation = null;
+  }
+
+  /// WebSocket connection key for driver pool (order offers)
+  static const String _driverPoolKey = 'driver-pool';
+
+  /// WebSocket connection key prefix for driver location updates
+  static const String _driverLocationKeyPrefix = 'driver-location';
+
+  /// Get the driver location WebSocket key for a specific driver
+  String _getDriverLocationKey(String driverId) =>
+      '$_driverLocationKeyPrefix-$driverId';
+
+  Future<void> _onLocationUpdate(Coordinate coordinate) async {
+    final currentDriver = _driver;
+    if (currentDriver == null || !currentDriver.isOnline) return;
+
+    // Skip update if location hasn't changed significantly (deduplication to
+    // prevent unnecessary rerenders and DB heating). Uses 3m threshold to
+    // filter out GPS noise/jitter when driver is stationary.
+    final last = _lastLocation;
+    if (last != null &&
+        distanceInMeters(last, coordinate) < kMinLocationUpdateDistanceMeters) {
+      return;
+    }
+
+    // Update last location first to prevent duplicate processing
+    _lastLocation = coordinate;
+
+    // Emit location to state for UI updates (map, address display)
+    emit(state.copyWith(currentLocation: coordinate));
+
+    try {
+      // Check if location is mocked (for fraud detection)
+      final position = await Geolocator.getLastKnownPosition();
+      final isMocked = position?.isMocked ?? false;
+
+      // WebSocket-first approach: Try WebSocket, fallback to HTTP REST
+      // Use dedicated driver-location WebSocket for location updates
+      final locationKey = _getDriverLocationKey(currentDriver.id);
+
+      // Simple envelope format matching server's DriverLocationEnvelopeSchema
+      final envelope = <String, dynamic>{
+        'a': 'UPDATE_LOCATION', // action
+        'f': 'c', // from: client
+        't': 's', // to: server
+        'p': {
+          // payload
+          'driverId': currentDriver.id,
+          'x': coordinate.x, // longitude
+          'y': coordinate.y, // latitude
+        },
+      };
+
+      // Check if WebSocket is connected and healthy
+      final isWsConnected = _webSocketService.isConnected(locationKey);
+      final isWsHealthy = _webSocketService.isConnectionHealthy(locationKey);
+
+      if (isWsConnected && isWsHealthy) {
+        // Primary: Send via WebSocket (server will persist)
+        _webSocketService.send(locationKey, jsonEncode(envelope));
+
+        logger.d(
+          '[DriverHomeCubit] - Location updated via WebSocket: '
+          '${coordinate.y}, ${coordinate.x}, isMock: $isMocked',
+        );
+      } else {
+        // Fallback: Use HTTP REST API when WebSocket is unavailable
+        await _driverRepository.updateLocation(
+          driverId: currentDriver.id,
+          location: CoordinateWithMeta(
+            x: coordinate.x,
+            y: coordinate.y,
+            isMockLocation: isMocked,
+          ),
+        );
+
+        logger.d(
+          '[DriverHomeCubit] - Location updated via REST (WS fallback): '
+          '${coordinate.y}, ${coordinate.x}, isMock: $isMocked',
+        );
+      }
+    } catch (e, st) {
+      logger.e(
+        '[DriverHomeCubit] - Error updating location: $e',
+        error: e,
+        stackTrace: st,
+      );
+
+      // If WebSocket send failed, try HTTP REST as fallback
+      final currentDriver = _driver;
+      if (currentDriver == null) return;
+
+      try {
+        final position = await Geolocator.getLastKnownPosition();
+        final isMocked = position?.isMocked ?? false;
+
+        await _driverRepository.updateLocation(
+          driverId: currentDriver.id,
+          location: CoordinateWithMeta(
+            x: coordinate.x,
+            y: coordinate.y,
+            isMockLocation: isMocked,
+          ),
+        );
+
+        logger.d(
+          '[DriverHomeCubit] - Location updated via REST (error fallback): '
+          '${coordinate.y}, ${coordinate.x}',
+        );
+      } catch (restError, restSt) {
+        logger.e(
+          '[DriverHomeCubit] - REST fallback also failed: $restError',
+          error: restError,
+          stackTrace: restSt,
+        );
+      }
+    }
+  }
+
+  /// Connect to driver pool WebSocket for receiving order offers
   Future<void> _connectToDriverPool() async {
     try {
-      const driverPool = 'driver-pool';
-
       Future<void> handleMessage(Map<String, dynamic> json) async {
         try {
           final envelope = OrderEnvelope.fromJson(json);
@@ -242,8 +306,8 @@ class DriverHomeCubit extends BaseCubit<DriverHomeState> {
       }
 
       await _webSocketService.connect(
-        driverPool,
-        '${UrlConstants.wsBaseUrl}/$driverPool',
+        _driverPoolKey,
+        '${UrlConstants.wsBaseUrl}/$_driverPoolKey',
         onMessage: (msg) async {
           final json = (msg as String).parseJson();
           if (json is Map<String, dynamic>) await handleMessage(json);
@@ -262,11 +326,56 @@ class DriverHomeCubit extends BaseCubit<DriverHomeState> {
 
   Future<void> _disconnectDriverPool() async {
     try {
-      await _webSocketService.disconnect('driver-pool');
+      await _webSocketService.disconnect(_driverPoolKey);
       logger.i('[DriverHomeCubit] - Disconnected from driver pool WebSocket');
     } catch (e, st) {
       logger.e(
         '[DriverHomeCubit] - Error disconnecting from driver pool: $e',
+        error: e,
+        stackTrace: st,
+      );
+    }
+  }
+
+  /// Connect to dedicated driver location WebSocket for sending location updates
+  Future<void> _connectToDriverLocation(String driverId) async {
+    final locationKey = _getDriverLocationKey(driverId);
+    try {
+      await _webSocketService.connect(
+        locationKey,
+        '${UrlConstants.wsBaseUrl}/driver-location/$driverId',
+        onMessage: (msg) {
+          // Driver location WebSocket is primarily for sending, not receiving
+          // But we can handle any server acknowledgments here if needed
+          logger.d('[DriverHomeCubit] - Driver Location WS message: $msg');
+        },
+      );
+
+      logger.i(
+        '[DriverHomeCubit] - Connected to driver location WebSocket: $driverId',
+      );
+    } catch (e, st) {
+      logger.e(
+        '[DriverHomeCubit] - Error connecting to driver location WS: $e',
+        error: e,
+        stackTrace: st,
+      );
+    }
+  }
+
+  Future<void> _disconnectDriverLocation() async {
+    final currentDriver = _driver;
+    if (currentDriver == null) return;
+
+    final locationKey = _getDriverLocationKey(currentDriver.id);
+    try {
+      await _webSocketService.disconnect(locationKey);
+      logger.i(
+        '[DriverHomeCubit] - Disconnected from driver location WebSocket',
+      );
+    } catch (e, st) {
+      logger.e(
+        '[DriverHomeCubit] - Error disconnecting from driver location WS: $e',
         error: e,
         stackTrace: st,
       );
@@ -283,58 +392,5 @@ class DriverHomeCubit extends BaseCubit<DriverHomeState> {
 
   void clearCurrentOrder() {
     emit(state.copyWith(currentOrder: null));
-  }
-
-  /// Calculate total driver earnings from orders after platform commission
-  /// Fetches commission rate from configuration.
-  /// NOTE: Platform fee rate MUST come from database configuration.
-  /// Fallback values are forbidden per business requirements.
-  Future<num> _calculateDriverEarnings(List<Order> orders) async {
-    if (orders.isEmpty) return 0;
-
-    // Fetch platform fee rate from configuration if not already cached
-    if (_platformFeeRate == null) {
-      try {
-        // Fetch ride pricing configuration (contains platformFeeRate)
-        final configRes = await _configurationRepository.get(
-          'ride-service-pricing',
-        );
-        final pricingConfig = configRes.data.value;
-
-        // Parse the pricing configuration JSON
-        if (pricingConfig is Map<String, Object?>) {
-          final platformFeeRate = pricingConfig['platformFeeRate'];
-          if (platformFeeRate is num) {
-            _platformFeeRate = platformFeeRate.toDouble();
-          } else {
-            logger.e(
-              '[DriverHomeCubit] platformFeeRate not found in configuration',
-            );
-            // Return 0 earnings to indicate error rather than showing wrong data
-            return 0;
-          }
-        }
-      } catch (e) {
-        logger.e(
-          '[DriverHomeCubit] Failed to fetch platform fee rate from database',
-          error: e,
-        );
-        // Return 0 earnings to indicate error rather than showing wrong data
-        return 0;
-      }
-    }
-
-    // platformFeeRate should now be available from database
-    if (_platformFeeRate == null) {
-      logger.e('[DriverHomeCubit] Platform fee rate not available');
-      return 0;
-    }
-
-    final driverShare = 1.0 - _platformFeeRate!;
-
-    return orders.fold<num>(
-      0,
-      (sum, order) => sum + (order.totalPrice * driverShare),
-    );
   }
 }

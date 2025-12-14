@@ -289,11 +289,12 @@ class _MerchantSetUpOutletScreenState extends State<MerchantSetUpOutletScreen> {
     });
 
     // Step 1: Trigger outlet setup - listener will handle the response and chain step 2
+    final merchantCubit = context.read<MerchantCubit>();
     final outletImage = await _fileToMultipart(
       _step1Docs[_Step1Docs.outletPhotoProfile],
     );
 
-    context.read<MerchantCubit>().setupOutlet(
+    merchantCubit.setupOutlet(
       merchantId: merchant.id,
       category: _selectedOutletCategory,
       image: outletImage,

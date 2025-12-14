@@ -19,7 +19,7 @@ abstract class _$SupportTicketListQueryCWProxy {
 
   SupportTicketListQuery search(String? search);
 
-  SupportTicketListQuery limit(int? limit);
+  SupportTicketListQuery limit(int limit);
 
   SupportTicketListQuery cursor(String? cursor);
 
@@ -37,7 +37,7 @@ abstract class _$SupportTicketListQueryCWProxy {
     String? assignedToId,
     String? userId,
     String? search,
-    int? limit,
+    int limit,
     String? cursor,
   });
 }
@@ -73,7 +73,7 @@ class _$SupportTicketListQueryCWProxyImpl
   SupportTicketListQuery search(String? search) => call(search: search);
 
   @override
-  SupportTicketListQuery limit(int? limit) => call(limit: limit);
+  SupportTicketListQuery limit(int limit) => call(limit: limit);
 
   @override
   SupportTicketListQuery cursor(String? cursor) => call(cursor: cursor);
@@ -121,10 +121,10 @@ class _$SupportTicketListQueryCWProxyImpl
           ? _value.search
           // ignore: cast_nullable_to_non_nullable
           : search as String?,
-      limit: limit == const $CopyWithPlaceholder()
+      limit: limit == const $CopyWithPlaceholder() || limit == null
           ? _value.limit
           // ignore: cast_nullable_to_non_nullable
-          : limit as int?,
+          : limit as int,
       cursor: cursor == const $CopyWithPlaceholder()
           ? _value.cursor
           // ignore: cast_nullable_to_non_nullable
@@ -148,6 +148,7 @@ extension $SupportTicketListQueryCopyWith on SupportTicketListQuery {
 SupportTicketListQuery _$SupportTicketListQueryFromJson(
   Map<String, dynamic> json,
 ) => $checkedCreate('SupportTicketListQuery', json, ($checkedConvert) {
+  $checkKeys(json, requiredKeys: const ['limit']);
   final val = SupportTicketListQuery(
     status: $checkedConvert(
       'status',
@@ -164,7 +165,7 @@ SupportTicketListQuery _$SupportTicketListQueryFromJson(
     assignedToId: $checkedConvert('assignedToId', (v) => v as String?),
     userId: $checkedConvert('userId', (v) => v as String?),
     search: $checkedConvert('search', (v) => v as String?),
-    limit: $checkedConvert('limit', (v) => (v as num?)?.toInt() ?? 20),
+    limit: $checkedConvert('limit', (v) => (v as num).toInt()),
     cursor: $checkedConvert('cursor', (v) => v as String?),
   );
   return val;
@@ -179,7 +180,7 @@ Map<String, dynamic> _$SupportTicketListQueryToJson(
   'assignedToId': ?instance.assignedToId,
   'userId': ?instance.userId,
   'search': ?instance.search,
-  'limit': ?instance.limit,
+  'limit': instance.limit,
   'cursor': ?instance.cursor,
 };
 

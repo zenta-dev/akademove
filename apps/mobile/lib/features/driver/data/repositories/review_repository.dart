@@ -11,8 +11,8 @@ class ReviewRepository extends BaseRepository {
   Future<BaseResponse<Review>> submitReview({
     required String orderId,
     required String toUserId,
-    required ReviewCategory category,
-    required num score,
+    required List<ReviewCategory> categories,
+    required int score,
     String? comment,
   }) {
     return guard(() async {
@@ -22,7 +22,7 @@ class ReviewRepository extends BaseRepository {
           orderId: orderId,
           fromUserId: '', // Will be set by backend
           toUserId: toUserId,
-          category: category,
+          categories: categories,
           score: score,
           comment: comment,
         ),

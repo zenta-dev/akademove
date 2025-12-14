@@ -9,10 +9,10 @@ import 'dart:convert';
 import 'package:api_client/src/deserialize.dart';
 import 'package:dio/dio.dart';
 
+import 'package:api_client/src/model/leaderboard_category.dart';
 import 'package:api_client/src/model/leaderboard_get200_response.dart';
 import 'package:api_client/src/model/leaderboard_list200_response.dart';
-import 'package:api_client/src/model/pagination_mode.dart';
-import 'package:api_client/src/model/pagination_order.dart';
+import 'package:api_client/src/model/leaderboard_period.dart';
 
 class LeaderboardApi {
   final Dio _dio;
@@ -24,6 +24,7 @@ class LeaderboardApi {
   ///
   /// Parameters:
   /// * [id]
+  /// * [includeDriver]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -35,6 +36,7 @@ class LeaderboardApi {
   /// Throws [DioException] if API call or serialization fails
   Future<Response<LeaderboardGet200Response>> leaderboardGet({
     required String id,
+    bool? includeDriver,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -60,9 +62,14 @@ class LeaderboardApi {
       validateStatus: validateStatus,
     );
 
+    final _queryParameters = <String, dynamic>{
+      if (includeDriver != null) r'includeDriver': includeDriver,
+    };
+
     final _response = await _dio.request<Object>(
       _path,
       options: _options,
+      queryParameters: _queryParameters,
       cancelToken: cancelToken,
       onSendProgress: onSendProgress,
       onReceiveProgress: onReceiveProgress,
@@ -105,14 +112,14 @@ class LeaderboardApi {
   ///
   ///
   /// Parameters:
-  /// * [cursor]
+  /// * [category]
+  /// * [period]
   /// * [limit]
-  /// * [direction]
+  /// * [cursor]
   /// * [page]
-  /// * [query]
   /// * [sortBy]
   /// * [order]
-  /// * [mode]
+  /// * [includeDriver]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -123,14 +130,14 @@ class LeaderboardApi {
   /// Returns a [Future] containing a [Response] with a [LeaderboardList200Response] as data
   /// Throws [DioException] if API call or serialization fails
   Future<Response<LeaderboardList200Response>> leaderboardList({
+    LeaderboardCategory? category,
+    LeaderboardPeriod? period,
+    int? limit,
     String? cursor,
-    Object? limit,
-    String? direction,
-    Object? page,
-    String? query,
+    int? page,
     String? sortBy,
-    PaginationOrder? order = PaginationOrder.desc,
-    PaginationMode? mode = PaginationMode.offset,
+    String? order,
+    bool? includeDriver,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -152,14 +159,99 @@ class LeaderboardApi {
     );
 
     final _queryParameters = <String, dynamic>{
-      if (cursor != null) r'cursor': cursor,
+      if (category != null) r'category': category,
+      if (period != null) r'period': period,
       if (limit != null) r'limit': limit,
-      if (direction != null) r'direction': direction,
+      if (cursor != null) r'cursor': cursor,
       if (page != null) r'page': page,
-      if (query != null) r'query': query,
       if (sortBy != null) r'sortBy': sortBy,
       if (order != null) r'order': order,
-      if (mode != null) r'mode': mode,
+      if (includeDriver != null) r'includeDriver': includeDriver,
+    };
+
+    final _response = await _dio.request<Object>(
+      _path,
+      options: _options,
+      queryParameters: _queryParameters,
+      cancelToken: cancelToken,
+      onSendProgress: onSendProgress,
+      onReceiveProgress: onReceiveProgress,
+    );
+
+    LeaderboardList200Response? _responseData;
+
+    try {
+      final rawData = _response.data;
+      _responseData = rawData == null
+          ? null
+          : deserialize<LeaderboardList200Response, LeaderboardList200Response>(
+              rawData,
+              'LeaderboardList200Response',
+              growable: true,
+            );
+    } catch (error, stackTrace) {
+      throw DioException(
+        requestOptions: _response.requestOptions,
+        response: _response,
+        type: DioExceptionType.unknown,
+        error: error,
+        stackTrace: stackTrace,
+      );
+    }
+
+    return Response<LeaderboardList200Response>(
+      data: _responseData,
+      headers: _response.headers,
+      isRedirect: _response.isRedirect,
+      requestOptions: _response.requestOptions,
+      redirects: _response.redirects,
+      statusCode: _response.statusCode,
+      statusMessage: _response.statusMessage,
+      extra: _response.extra,
+    );
+  }
+
+  /// leaderboardMe
+  ///
+  ///
+  /// Parameters:
+  /// * [category]
+  /// * [period]
+  /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
+  /// * [headers] - Can be used to add additional headers to the request
+  /// * [extras] - Can be used to add flags to the request
+  /// * [validateStatus] - A [ValidateStatus] callback that can be used to determine request success based on the HTTP status of the response
+  /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
+  /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
+  ///
+  /// Returns a [Future] containing a [Response] with a [LeaderboardList200Response] as data
+  /// Throws [DioException] if API call or serialization fails
+  Future<Response<LeaderboardList200Response>> leaderboardMe({
+    LeaderboardCategory? category,
+    LeaderboardPeriod? period,
+    CancelToken? cancelToken,
+    Map<String, dynamic>? headers,
+    Map<String, dynamic>? extra,
+    ValidateStatus? validateStatus,
+    ProgressCallback? onSendProgress,
+    ProgressCallback? onReceiveProgress,
+  }) async {
+    final _path = r'/leaderboards/me';
+    final _options = Options(
+      method: r'GET',
+      headers: <String, dynamic>{...?headers},
+      extra: <String, dynamic>{
+        'secure': <Map<String, String>>[
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
+        ],
+        ...?extra,
+      },
+      validateStatus: validateStatus,
+    );
+
+    final _queryParameters = <String, dynamic>{
+      if (category != null) r'category': category,
+      if (period != null) r'period': period,
     };
 
     final _response = await _dio.request<Object>(

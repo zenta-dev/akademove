@@ -18,7 +18,6 @@ class DriverEarningsScreen extends StatefulWidget {
 
 class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
   DateTime _selectedMonth = DateTime.now();
-  bool _isWithdrawing = false;
 
   @override
   void initState() {
@@ -27,7 +26,7 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
   }
 
   Future<void> _loadData() async {
-    await context.read<DriverEarningsCubit>().init(
+    await context.read<DriverWalletCubit>().init(
       month: _selectedMonth.month,
       year: _selectedMonth.year,
     );
@@ -44,7 +43,7 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
         _selectedMonth.month + delta,
       );
     });
-    await context.read<DriverEarningsCubit>().getMonthlySummary(
+    await context.read<DriverWalletCubit>().getMonthlySummary(
       month: _selectedMonth.month,
       year: _selectedMonth.year,
     );
@@ -52,7 +51,7 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<DriverEarningsCubit, DriverEarningsState>(
+    return BlocBuilder<DriverWalletCubit, DriverWalletState>(
       builder: (context, state) {
         final isLoading = state.fetchWalletResult.isLoading;
         final wallet = state.wallet;
@@ -74,7 +73,7 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
           ],
           child: isLoading && wallet == null
               ? const Center(child: CircularProgressIndicator())
-              : RefreshTrigger(
+              : SafeRefreshTrigger(
                   onRefresh: _onRefresh,
                   child: SingleChildScrollView(
                     padding: EdgeInsets.all(16.dg),
@@ -537,7 +536,7 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
     var isValidated = false;
     var saveBank = false;
 
-    final cubit = context.read<DriverEarningsCubit>();
+    final cubit = context.read<DriverWalletCubit>();
 
     showDialog(
       context: context,
@@ -598,7 +597,7 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
                   isValidated = true;
                   isValidating = false;
                 });
-                if (mounted) {
+                if (context.mounted) {
                   context.showMyToast(
                     context.l10n.toast_bank_account_verified,
                     type: ToastType.success,
@@ -606,7 +605,7 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
                 }
               } else {
                 setState(() => isValidating = false);
-                if (mounted) {
+                if (context.mounted) {
                   context.showMyToast(
                     context.l10n.toast_failed_verify_bank,
                     type: ToastType.failed,
@@ -615,7 +614,7 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
               }
             } catch (e) {
               setState(() => isValidating = false);
-              if (mounted) {
+              if (context.mounted) {
                 context.showMyToast(
                   context.l10n.toast_failed_verify_bank,
                   type: ToastType.failed,
@@ -884,8 +883,6 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
     bool saveBank = false,
   }) async {
     try {
-      setState(() => _isWithdrawing = true);
-
       final request = WithdrawRequest(
         amount: amount,
         bankProvider: bankProvider,
@@ -893,18 +890,14 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
         accountName: accountName,
       );
 
-      final result = await context.read<DriverEarningsCubit>().withdraw(
-        request,
-      );
+      final result = await context.read<DriverWalletCubit>().withdraw(request);
 
       if (mounted) {
-        setState(() => _isWithdrawing = false);
         context.showMyToast(result.message, type: ToastType.success);
         _loadData();
       }
     } catch (e) {
       if (mounted) {
-        setState(() => _isWithdrawing = false);
         context.showMyToast(
           context.l10n.failed_to_withdraw,
           type: ToastType.failed,

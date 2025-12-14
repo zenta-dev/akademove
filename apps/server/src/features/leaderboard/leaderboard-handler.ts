@@ -16,13 +16,32 @@ export const LeaderboardHandler = priv.router({
 			},
 		};
 	}),
-	get: priv.get.handler(async ({ context, input: { params } }) => {
-		const result = await context.repo.leaderboard.get(params.id);
+	get: priv.get.handler(async ({ context, input: { params, query } }) => {
+		const result = await context.repo.leaderboard.getById(params.id, {
+			includeDriver: query?.includeDriver,
+		});
 
 		return {
 			status: 200,
 			body: {
 				message: m.server_leaderboard_retrieved(),
+				data: result,
+			},
+		};
+	}),
+	me: priv.me.handler(async ({ context, input: { query } }) => {
+		const result = await context.repo.leaderboard.getMyRankings(
+			context.user.id,
+			{
+				category: query?.category,
+				period: query?.period,
+			},
+		);
+
+		return {
+			status: 200,
+			body: {
+				message: m.server_leaderboards_retrieved(),
 				data: result,
 			},
 		};

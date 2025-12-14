@@ -21,7 +21,7 @@ class ListQuickMessageQuery {
     this.role,
     this.orderType,
     this.locale,
-    this.isActive,
+    this.status,
   });
   @JsonKey(name: r'role', required: false, includeIfNull: false)
   final ListQuickMessageQueryRoleEnum? role;
@@ -32,8 +32,8 @@ class ListQuickMessageQuery {
   @JsonKey(name: r'locale', required: false, includeIfNull: false)
   final String? locale;
 
-  @JsonKey(name: r'isActive', required: false, includeIfNull: false)
-  final bool? isActive;
+  @JsonKey(name: r'status', required: false, includeIfNull: false)
+  final ListQuickMessageQueryStatusEnum? status;
 
   @override
   bool operator ==(Object other) =>
@@ -42,11 +42,11 @@ class ListQuickMessageQuery {
           other.role == role &&
           other.orderType == orderType &&
           other.locale == locale &&
-          other.isActive == isActive;
+          other.status == status;
 
   @override
   int get hashCode =>
-      role.hashCode + orderType.hashCode + locale.hashCode + isActive.hashCode;
+      role.hashCode + orderType.hashCode + locale.hashCode + status.hashCode;
 
   factory ListQuickMessageQuery.fromJson(Map<String, dynamic> json) =>
       _$ListQuickMessageQueryFromJson(json);
@@ -88,6 +88,20 @@ enum ListQuickMessageQueryOrderTypeEnum {
   FOOD(r'FOOD');
 
   const ListQuickMessageQueryOrderTypeEnum(this.value);
+
+  final String value;
+
+  @override
+  String toString() => value;
+}
+
+enum ListQuickMessageQueryStatusEnum {
+  @JsonValue(r'ACTIVE')
+  ACTIVE(r'ACTIVE'),
+  @JsonValue(r'INACTIVE')
+  INACTIVE(r'INACTIVE');
+
+  const ListQuickMessageQueryStatusEnum(this.value);
 
   final String value;
 

@@ -25,13 +25,26 @@ class UserWalletTopUpBankTransferScreen extends StatelessWidget {
               BlocConsumer<UserWalletTopUpCubit, UserWalletTopUpState>(
                 listener: (context, state) async {
                   final transaction = state.transaction.value;
-                  if (state.payment.isSuccess &&
+                  final wallet = state.wallet.value;
+
+                  // Check for success via WebSocket (transaction available)
+                  // OR via polling fallback (wallet updated without transaction)
+                  final isSuccessViaWebSocket =
+                      state.payment.isSuccess &&
                       transaction != null &&
-                      transaction.status == TransactionStatus.SUCCESS) {
+                      transaction.status == TransactionStatus.SUCCESS;
+                  final isSuccessViaPolling =
+                      state.payment.isSuccess &&
+                      wallet != null &&
+                      transaction == null;
+
+                  if (isSuccessViaWebSocket || isSuccessViaPolling) {
                     context.showMyToast(
                       context.l10n.top_up_success,
                       type: ToastType.success,
                     );
+                    // Refresh the main wallet cubit to show updated balance
+                    context.read<UserWalletCubit>().getMine();
                     await Future.delayed(const Duration(seconds: 3), () {
                       if (!context.mounted) return;
                       context.read<UserWalletTopUpCubit>().teardownWebsocket();

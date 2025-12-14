@@ -9,6 +9,7 @@ import {
 	ImageIcon,
 	MailIcon,
 	ReceiptIcon,
+	ShieldAlertIcon,
 	ShieldIcon,
 	StoreIcon,
 	TicketIcon,
@@ -85,6 +86,11 @@ const navMain = Object.freeze([
 		title: m.banners(),
 		href: localizeHref("/dash/operator/banners"),
 		icon: ImageIcon,
+	},
+	{
+		title: m.emergency_contacts(),
+		href: localizeHref("/dash/operator/emergency-contacts"),
+		icon: ShieldAlertIcon,
 	},
 ] as const);
 

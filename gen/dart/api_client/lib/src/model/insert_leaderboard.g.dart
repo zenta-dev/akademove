@@ -13,9 +13,9 @@ abstract class _$InsertLeaderboardCWProxy {
 
   InsertLeaderboard merchantId(String? merchantId);
 
-  InsertLeaderboard category(InsertLeaderboardCategoryEnum category);
+  InsertLeaderboard category(LeaderboardCategory category);
 
-  InsertLeaderboard period(InsertLeaderboardPeriodEnum period);
+  InsertLeaderboard period(LeaderboardPeriod period);
 
   InsertLeaderboard rank(int rank);
 
@@ -36,8 +36,8 @@ abstract class _$InsertLeaderboardCWProxy {
     String userId,
     String? driverId,
     String? merchantId,
-    InsertLeaderboardCategoryEnum category,
-    InsertLeaderboardPeriodEnum period,
+    LeaderboardCategory category,
+    LeaderboardPeriod period,
     int rank,
     int score,
     DateTime? periodStart,
@@ -63,12 +63,11 @@ class _$InsertLeaderboardCWProxyImpl implements _$InsertLeaderboardCWProxy {
       call(merchantId: merchantId);
 
   @override
-  InsertLeaderboard category(InsertLeaderboardCategoryEnum category) =>
+  InsertLeaderboard category(LeaderboardCategory category) =>
       call(category: category);
 
   @override
-  InsertLeaderboard period(InsertLeaderboardPeriodEnum period) =>
-      call(period: period);
+  InsertLeaderboard period(LeaderboardPeriod period) => call(period: period);
 
   @override
   InsertLeaderboard rank(int rank) => call(rank: rank);
@@ -119,11 +118,11 @@ class _$InsertLeaderboardCWProxyImpl implements _$InsertLeaderboardCWProxy {
       category: category == const $CopyWithPlaceholder() || category == null
           ? _value.category
           // ignore: cast_nullable_to_non_nullable
-          : category as InsertLeaderboardCategoryEnum,
+          : category as LeaderboardCategory,
       period: period == const $CopyWithPlaceholder() || period == null
           ? _value.period
           // ignore: cast_nullable_to_non_nullable
-          : period as InsertLeaderboardPeriodEnum,
+          : period as LeaderboardPeriod,
       rank: rank == const $CopyWithPlaceholder() || rank == null
           ? _value.rank
           // ignore: cast_nullable_to_non_nullable
@@ -176,11 +175,11 @@ InsertLeaderboard _$InsertLeaderboardFromJson(Map<String, dynamic> json) =>
         merchantId: $checkedConvert('merchantId', (v) => v as String?),
         category: $checkedConvert(
           'category',
-          (v) => $enumDecode(_$InsertLeaderboardCategoryEnumEnumMap, v),
+          (v) => $enumDecode(_$LeaderboardCategoryEnumMap, v),
         ),
         period: $checkedConvert(
           'period',
-          (v) => $enumDecode(_$InsertLeaderboardPeriodEnumEnumMap, v),
+          (v) => $enumDecode(_$LeaderboardPeriodEnumMap, v),
         ),
         rank: $checkedConvert('rank', (v) => (v as num).toInt()),
         score: $checkedConvert('score', (v) => (v as num).toInt()),
@@ -201,28 +200,28 @@ Map<String, dynamic> _$InsertLeaderboardToJson(InsertLeaderboard instance) =>
       'userId': instance.userId,
       'driverId': ?instance.driverId,
       'merchantId': ?instance.merchantId,
-      'category': _$InsertLeaderboardCategoryEnumEnumMap[instance.category]!,
-      'period': _$InsertLeaderboardPeriodEnumEnumMap[instance.period]!,
+      'category': _$LeaderboardCategoryEnumMap[instance.category]!,
+      'period': _$LeaderboardPeriodEnumMap[instance.period]!,
       'rank': instance.rank,
       'score': instance.score,
       'periodStart': instance.periodStart?.toIso8601String(),
       'periodEnd': instance.periodEnd?.toIso8601String(),
     };
 
-const _$InsertLeaderboardCategoryEnumEnumMap = {
-  InsertLeaderboardCategoryEnum.RATING: 'RATING',
-  InsertLeaderboardCategoryEnum.VOLUME: 'VOLUME',
-  InsertLeaderboardCategoryEnum.EARNINGS: 'EARNINGS',
-  InsertLeaderboardCategoryEnum.STREAK: 'STREAK',
-  InsertLeaderboardCategoryEnum.ON_TIME: 'ON-TIME',
-  InsertLeaderboardCategoryEnum.COMPLETION_RATE: 'COMPLETION-RATE',
+const _$LeaderboardCategoryEnumMap = {
+  LeaderboardCategory.RATING: 'RATING',
+  LeaderboardCategory.VOLUME: 'VOLUME',
+  LeaderboardCategory.EARNINGS: 'EARNINGS',
+  LeaderboardCategory.STREAK: 'STREAK',
+  LeaderboardCategory.ON_TIME: 'ON-TIME',
+  LeaderboardCategory.COMPLETION_RATE: 'COMPLETION-RATE',
 };
 
-const _$InsertLeaderboardPeriodEnumEnumMap = {
-  InsertLeaderboardPeriodEnum.DAILY: 'DAILY',
-  InsertLeaderboardPeriodEnum.WEEKLY: 'WEEKLY',
-  InsertLeaderboardPeriodEnum.MONTHLY: 'MONTHLY',
-  InsertLeaderboardPeriodEnum.QUARTERLY: 'QUARTERLY',
-  InsertLeaderboardPeriodEnum.YEARLY: 'YEARLY',
-  InsertLeaderboardPeriodEnum.ALL_TIME: 'ALL-TIME',
+const _$LeaderboardPeriodEnumMap = {
+  LeaderboardPeriod.DAILY: 'DAILY',
+  LeaderboardPeriod.WEEKLY: 'WEEKLY',
+  LeaderboardPeriod.MONTHLY: 'MONTHLY',
+  LeaderboardPeriod.QUARTERLY: 'QUARTERLY',
+  LeaderboardPeriod.YEARLY: 'YEARLY',
+  LeaderboardPeriod.ALL_TIME: 'ALL-TIME',
 };

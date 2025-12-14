@@ -15,19 +15,19 @@ import { orpcClient } from "@/lib/orpc";
 interface MerchantStatusToggleProps {
 	merchantId: string;
 	isOnline: boolean;
-	isTakingOrders: boolean;
 	operatingStatus: "OPEN" | "CLOSED" | "BREAK" | "MAINTENANCE";
 }
 
 export function MerchantStatusToggle({
 	merchantId,
 	isOnline: initialIsOnline,
-	isTakingOrders: initialIsTakingOrders,
 	operatingStatus: initialOperatingStatus,
 }: MerchantStatusToggleProps) {
 	const queryClient = useQueryClient();
 	const [isOnline, setIsOnline] = useState(initialIsOnline);
-	const [isTakingOrders, setIsTakingOrders] = useState(initialIsTakingOrders);
+	const [isTakingOrders, setIsTakingOrders] = useState(
+		initialOperatingStatus === "OPEN",
+	);
 	const [operatingStatus, setOperatingStatus] = useState(
 		initialOperatingStatus,
 	);
@@ -60,18 +60,19 @@ export function MerchantStatusToggle({
 	// Toggle order taking status mutation
 	const orderTakingMutation = useMutation({
 		mutationFn: async (isTakingOrdersValue: boolean) => {
-			const result = await orpcClient.merchant.setOrderTakingStatus({
+			const result = await orpcClient.merchant.setOperatingStatus({
 				params: { id: merchantId },
-				body: { isTakingOrders: isTakingOrdersValue },
+				body: { operatingStatus: isTakingOrdersValue ? "OPEN" : "CLOSED" },
 			});
 			if (result.status !== 200) throw new Error(result.body.message);
 			return result.body.data;
 		},
 		onSuccess: (data) => {
-			setIsTakingOrders(data.isTakingOrders);
+			const isTakingOrdersNow = data.operatingStatus === "OPEN";
+			setIsTakingOrders(isTakingOrdersNow);
 			queryClient.invalidateQueries();
 			toast.success(
-				data.isTakingOrders
+				isTakingOrdersNow
 					? "You're now taking orders"
 					: "You've stopped taking orders",
 			);

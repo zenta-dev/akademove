@@ -364,6 +364,10 @@ export type DriverMetricsJob = z.infer<typeof DriverMetricsJobSchema>;
 /**
  * WebSocket broadcast job - broadcasts messages to connected clients
  * Used when queue worker needs to notify clients after processing
+ *
+ * Supports two message formats:
+ * 1. Event-based (e field): { e: "COMPLETED", f: "s", t: "c", ... }
+ * 2. Action-based (a field): { a: "MATCHING", f: "s", t: "s", ... }
  */
 export const WebSocketBroadcastJobSchema = z.object({
 	type: z.literal("WEBSOCKET_BROADCAST"),
@@ -371,10 +375,18 @@ export const WebSocketBroadcastJobSchema = z.object({
 	payload: z.object({
 		/** Durable Object room name (orderId or "driver-pool") */
 		roomName: z.string(),
-		/** Event type to broadcast */
-		event: z.string(),
+		/**
+		 * Event type to broadcast (for event-based messages)
+		 * Used with 'e' field in WebSocket envelope
+		 */
+		event: z.string().optional(),
+		/**
+		 * Action type to broadcast (for action-based messages like MATCHING)
+		 * Used with 'a' field in WebSocket envelope
+		 */
+		action: z.string().optional(),
 		/** Target audience */
-		target: z.enum(["USER", "DRIVER", "MERCHANT", "ALL"]).optional(),
+		target: z.enum(["USER", "DRIVER", "MERCHANT", "SYSTEM", "ALL"]).optional(),
 		/** Message payload */
 		data: z.record(z.string(), z.unknown()),
 		/** User IDs to exclude from broadcast */

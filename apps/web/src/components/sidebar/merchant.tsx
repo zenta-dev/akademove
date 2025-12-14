@@ -1,13 +1,6 @@
 import { localizeHref, m } from "@repo/i18n";
 import { Link, useRouterState } from "@tanstack/react-router";
-import {
-	Gauge,
-	LineChart,
-	Logs,
-	Receipt,
-	UserRound,
-	Wallet,
-} from "lucide-react";
+import { UserRound } from "lucide-react";
 import {
 	Sidebar,
 	SidebarContent,
@@ -20,31 +13,31 @@ import {
 import { cn } from "@/utils/cn";
 
 const navMain = Object.freeze([
-	{
-		title: m.overview(),
-		href: localizeHref("/dash/merchant"),
-		icon: Gauge,
-	},
-	{
-		title: m.menu(),
-		href: localizeHref("/dash/merchant/menu"),
-		icon: Logs,
-	},
-	{
-		title: m.orders(),
-		href: localizeHref("/dash/merchant/orders"),
-		icon: Receipt,
-	},
-	{
-		title: m.sales(),
-		href: localizeHref("/dash/merchant/sales"),
-		icon: LineChart,
-	},
-	{
-		title: m.wallet(),
-		href: localizeHref("/dash/merchant/wallet"),
-		icon: Wallet,
-	},
+	// {
+	// 	title: m.overview(),
+	// 	href: localizeHref("/dash/merchant"),
+	// 	icon: Gauge,
+	// },
+	// {
+	// 	title: m.menu(),
+	// 	href: localizeHref("/dash/merchant/menu"),
+	// 	icon: Logs,
+	// },
+	// {
+	// 	title: m.orders(),
+	// 	href: localizeHref("/dash/merchant/orders"),
+	// 	icon: Receipt,
+	// },
+	// {
+	// 	title: m.sales(),
+	// 	href: localizeHref("/dash/merchant/sales"),
+	// 	icon: LineChart,
+	// },
+	// {
+	// 	title: m.wallet(),
+	// 	href: localizeHref("/dash/merchant/wallet"),
+	// 	icon: Wallet,
+	// },
 	{
 		title: m.profile(),
 		href: localizeHref("/dash/merchant/profile"),

@@ -527,7 +527,7 @@ export const AuthHandler = pub.router({
 			});
 		},
 	),
-	signOut: priv.signOut.handler(async ({ context }) => {
+	signOut: priv.signOut.handler(async ({ context, input: { body } }) => {
 		context.resHeaders?.set(
 			"Set-Cookie",
 			composeAuthCookieValue({
@@ -543,7 +543,22 @@ export const AuthHandler = pub.router({
 			});
 		}
 
-		await context.repo.auth.signOut(context.token);
+		const tasks: Promise<unknown>[] = [
+			context.repo.auth.signOut(context.token),
+		];
+
+		// Remove FCM token for this session/device if provided
+		if (body?.fcmToken) {
+			tasks.push(
+				context.repo.notification.removeByToken({ token: body.fcmToken }),
+			);
+			logger.info(
+				{ userId: context.user?.id },
+				"[AuthHandler] Removing FCM token on sign out",
+			);
+		}
+
+		await Promise.all(tasks);
 
 		return {
 			status: 200,

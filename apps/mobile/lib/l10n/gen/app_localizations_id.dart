@@ -12,6 +12,18 @@ class AppLocalizationsId extends AppLocalizations {
   AppLocalizationsId([String locale = 'id']) : super(locale);
 
   @override
+  String get tax => 'Pajak';
+
+  @override
+  String get distance => 'Jarak';
+
+  @override
+  String get fare => 'Tarif';
+
+  @override
+  String get platform_fee => 'Biaya platform';
+
+  @override
   String get transfer => 'Transfer';
 
   @override
@@ -234,6 +246,9 @@ class AppLocalizationsId extends AppLocalizations {
   String get missing => 'Hilangan';
 
   @override
+  String get driver_information => 'Informasi Driver';
+
+  @override
   String get student_card => 'Kartu Mahasiswa (KTM)';
 
   @override
@@ -319,12 +334,6 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get customer_info => 'Info Pelanggan';
-
-  @override
-  String get distance => 'Jarak';
-
-  @override
-  String get fare => 'Tarif';
 
   @override
   String get service => 'Layanan';
@@ -449,7 +458,7 @@ class AppLocalizationsId extends AppLocalizations {
   String get manage_schedule => 'Kelola Jadwal';
 
   @override
-  String get leadeboard_and_badges => 'Papan Peringkat & Lencana';
+  String get leaderboard => 'Papan Peringkat';
 
   @override
   String get trips => 'Perjalanan';
@@ -682,7 +691,7 @@ class AppLocalizationsId extends AppLocalizations {
   String get privacy_policy => 'Kebijakan Privasi';
 
   @override
-  String get faq => 'FAQ';
+  String get faq => 'Pertanyaan';
 
   @override
   String get i_agree_to_the => 'Saya setuju dengan';
@@ -1656,7 +1665,7 @@ class AppLocalizationsId extends AppLocalizations {
   String get button_continue => 'Lanjutkan';
 
   @override
-  String get leaderboard_title => 'Papan Peringkat';
+  String get leaderboard_title => 'Leaderboard';
 
   @override
   String get leaderboard_no_rankings => 'Belum ada peringkat';
@@ -2325,7 +2334,16 @@ class AppLocalizationsId extends AppLocalizations {
   String get label_outlet_location_description => 'Pastikan titik lokasi di peta sudah benar untuk memenuhi persyaratan pendaftaran.';
 
   @override
+  String get placeholder_search_dropoff_location => 'Cari lokasi pengantaran';
+
+  @override
   String get placeholder_search_location => 'Cari lokasi';
+
+  @override
+  String get placeholder_search_merchant => 'Cari merchant';
+
+  @override
+  String get placeholder_search_pickup_location => 'Cari lokasi penjemputan';
 
   @override
   String get label_dragging => 'Menyeret...';
@@ -2941,6 +2959,15 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get text_rate_by_category => 'Beri nilai berdasarkan kategori';
+
+  @override
+  String get text_rate_overall_experience => 'Bagaimana penilaian Anda secara keseluruhan?';
+
+  @override
+  String get text_select_categories => 'Pilih kategori yang sesuai';
+
+  @override
+  String get text_select_categories_hint => 'Pilih semua yang sesuai dengan pengalaman Anda';
 
   @override
   String get category_cleanliness => 'Kebersihan';
@@ -3680,5 +3707,740 @@ class AppLocalizationsId extends AppLocalizations {
   String get export_coming_soon => 'Fitur export segera hadir!';
 
   @override
+  String get export_success => 'PDF berhasil diekspor';
+
+  @override
+  String get export_failed => 'Gagal mengekspor PDF';
+
+  @override
   String get no_data_available => 'Tidak ada data';
+
+  @override
+  String chat_time_days_ago(int count) {
+    return '$count hari lalu';
+  }
+
+  @override
+  String chat_time_hours_ago(int count) {
+    return '$count jam lalu';
+  }
+
+  @override
+  String chat_time_minutes_ago(int count) {
+    return '$count menit lalu';
+  }
+
+  @override
+  String get chat_time_just_now => 'Baru saja';
+
+  @override
+  String get leaderboard_top_drivers => 'Driver Terbaik';
+
+  @override
+  String get leaderboard_other_rankings => 'Peringkat Lainnya';
+
+  @override
+  String get leaderboard_refreshes_daily => 'Peringkat diperbarui setiap 24 jam';
+
+  @override
+  String get leaderboard_empty_state => 'Belum ada driver di papan peringkat';
+
+  @override
+  String get current_location => 'Lokasi Saat Ini';
+
+  @override
+  String get current_location_desc => 'Lokasi GPS Anda saat ini';
+
+  @override
+  String get privacy_policy_title => 'Kebijakan Privasi AkadeMove';
+
+  @override
+  String get privacy_policy_date => 'Oktober 2025';
+
+  @override
+  String get privacy_policy_intro => 'Selamat datang di AkadeMove, platform yang dirancang untuk menghubungkan pelanggan, pengemudi mahasiswa, dan merchant dalam ekosistem mobilitas dan pengiriman terpadu. Privasi Anda penting bagi kami. Kebijakan Privasi ini menjelaskan bagaimana kami mengumpulkan, menggunakan, menyimpan, dan melindungi informasi pribadi Anda saat menggunakan aplikasi seluler, situs web, atau layanan terkait kami (secara kolektif disebut sebagai \"AkadeMove\"). Dengan menggunakan AkadeMove, Anda menyetujui pengumpulan dan penggunaan data Anda sesuai dengan kebijakan ini. Harap baca dokumen ini dengan cermat untuk memahami bagaimana kami menangani informasi pribadi Anda.';
+
+  @override
+  String get privacy_data_we_collect_title => 'Data yang Kami Kumpulkan';
+
+  @override
+  String get privacy_data_we_collect_content => 'Kami mengumpulkan informasi pribadi dari semua pengguna AkadeMove, Pelanggan, Pengemudi (Mahasiswa), dan Merchant untuk memungkinkan layanan kami dan memastikan pengalaman platform yang aman dan efisien.';
+
+  @override
+  String get privacy_customer_data_title => 'Data Pelanggan';
+
+  @override
+  String get privacy_customer_data_desc => 'Saat Anda mendaftar dan menggunakan AkadeMove sebagai Pelanggan, kami mengumpulkan:';
+
+  @override
+  String get privacy_customer_data_item_name => 'Nama';
+
+  @override
+  String get privacy_customer_data_item_email => 'Alamat email';
+
+  @override
+  String get privacy_customer_data_item_phone => 'Nomor telepon';
+
+  @override
+  String get privacy_customer_data_item_gender => 'Jenis kelamin';
+
+  @override
+  String get privacy_customer_data_footer => 'Data ini memungkinkan kami untuk memverifikasi identitas Anda, berkomunikasi dengan Anda, memproses pemesanan dan pembayaran, dan meningkatkan pengalaman Anda secara keseluruhan.';
+
+  @override
+  String get privacy_customer_data_additional => 'Pelanggan dapat memilih preferensi jenis kelamin pengemudi untuk meningkatkan kenyamanan dan keamanan.';
+
+  @override
+  String get privacy_driver_data_title => 'Data Pengemudi (Mahasiswa)';
+
+  @override
+  String get privacy_driver_data_desc => 'Saat Anda mendaftar sebagai Pengemudi (pengemudi mahasiswa) di AkadeMove, kami mengumpulkan:';
+
+  @override
+  String get privacy_driver_data_item_name => 'Nama lengkap';
+
+  @override
+  String get privacy_driver_data_item_email => 'Alamat email';
+
+  @override
+  String get privacy_driver_data_item_phone => 'Nomor telepon';
+
+  @override
+  String get privacy_driver_data_item_gender => 'Jenis kelamin';
+
+  @override
+  String get privacy_driver_data_item_sim => 'Surat Izin Mengemudi (SIM)';
+
+  @override
+  String get privacy_driver_data_item_ktm => 'Kartu Tanda Mahasiswa (KTM)';
+
+  @override
+  String get privacy_driver_data_item_stnk => 'Surat Tanda Nomor Kendaraan (STNK)';
+
+  @override
+  String get privacy_driver_data_item_plate => 'Nomor plat kendaraan';
+
+  @override
+  String get privacy_driver_data_item_bank => 'Nomor rekening bank';
+
+  @override
+  String get privacy_driver_data_footer => 'Pengemudi juga dapat memasukkan jadwal akademik (KRS) mereka secara manual untuk menunjukkan periode tidak tersedia (mis., jam kuliah). Data jadwal ini tidak dibagikan dengan pelanggan atau pihak ketiga dan hanya digunakan untuk mencegah penugasan pesanan selama sesi akademik.';
+
+  @override
+  String get privacy_merchant_data_title => 'Data Merchant';
+
+  @override
+  String get privacy_merchant_data_desc => 'Saat Anda mendaftar sebagai Mitra Merchant, kami mengumpulkan:';
+
+  @override
+  String get privacy_merchant_data_item_owner_name => 'Nama lengkap pemilik';
+
+  @override
+  String get privacy_merchant_data_item_owner_email => 'Alamat email pemilik';
+
+  @override
+  String get privacy_merchant_data_item_owner_phone => 'Nomor telepon pemilik';
+
+  @override
+  String get privacy_merchant_data_item_outlet_name => 'Nama outlet';
+
+  @override
+  String get privacy_merchant_data_item_outlet_location => 'Lokasi outlet';
+
+  @override
+  String get privacy_merchant_data_item_outlet_phone => 'Nomor telepon outlet';
+
+  @override
+  String get privacy_merchant_data_item_outlet_email => 'Email outlet';
+
+  @override
+  String get privacy_merchant_data_item_outlet_docs => 'Dokumen outlet (unggahan opsional, mis., NPWP, izin usaha, dll.)';
+
+  @override
+  String get privacy_merchant_data_item_bank => 'Nomor rekening bank';
+
+  @override
+  String get privacy_merchant_data_footer => 'Data ini membantu memverifikasi identitas merchant Anda, memfasilitasi transaksi, dan mengelola penarikan dana dengan aman.';
+
+  @override
+  String get privacy_use_of_data_title => 'Penggunaan Data';
+
+  @override
+  String get privacy_use_of_data_content => 'AkadeMove menggunakan informasi pribadi untuk:';
+
+  @override
+  String get privacy_use_of_data_item_1 => 'Menyediakan dan mengelola semua layanan AkadeMove (transportasi, pengiriman, dan transaksi).';
+
+  @override
+  String get privacy_use_of_data_item_2 => 'Memverifikasi identitas Pelanggan, Pengemudi, dan Merchant untuk mencegah penipuan dan akses tidak sah.';
+
+  @override
+  String get privacy_use_of_data_item_3 => 'Mencocokkan pelanggan dengan pengemudi yang sesuai berdasarkan preferensi jenis kelamin, kedekatan, dan ketersediaan';
+
+  @override
+  String get privacy_use_of_data_item_4 => 'Mengelola jadwal pengemudi mahasiswa untuk memastikan ketersediaan layanan selaras dengan komitmen akademik mereka.';
+
+  @override
+  String get privacy_use_of_data_item_5 => 'Mengkomunikasikan pembaruan layanan, notifikasi, promosi, dan informasi terkait akun.';
+
+  @override
+  String get privacy_use_of_data_item_6 => 'Memenuhi kewajiban hukum dan peraturan yang diwajibkan oleh hukum yang berlaku.';
+
+  @override
+  String get privacy_location_access_title => 'Akses Lokasi';
+
+  @override
+  String get privacy_location_access_content => 'AkadeMove memerlukan akses lokasi (GPS) agar berfungsi dengan baik. Kami menggunakan data lokasi untuk:';
+
+  @override
+  String get privacy_location_access_item_1 => 'Mengidentifikasi titik penjemputan dan pengantaran.';
+
+  @override
+  String get privacy_location_access_item_2 => 'Menampilkan lokasi pengemudi secara real-time.';
+
+  @override
+  String get privacy_location_access_item_3 => 'Meningkatkan akurasi rute dan efisiensi layanan.';
+
+  @override
+  String get privacy_location_access_item_4 => 'Mencocokkan pelanggan dengan pengemudi terdekat yang tersedia.';
+
+  @override
+  String get privacy_location_access_footer => 'Anda dapat menyesuaikan izin lokasi di pengaturan perangkat Anda. Namun, menonaktifkan akses lokasi dapat membatasi fungsionalitas AkadeMove.';
+
+  @override
+  String get privacy_data_sharing_title => 'Berbagi Data';
+
+  @override
+  String get privacy_data_sharing_content => 'Kami tidak menjual, menyewakan, atau memperdagangkan data pribadi Anda kepada pihak ketiga. Namun, kami dapat membagikan informasi tertentu dengan:';
+
+  @override
+  String get privacy_data_sharing_item_1 => 'Penyedia layanan pembayaran untuk memproses transaksi keuangan.';
+
+  @override
+  String get privacy_data_sharing_item_2 => 'Mitra pihak ketiga terpercaya (seperti verifikasi identitas, asuransi, atau penyedia analitik) untuk mendukung operasi kami.';
+
+  @override
+  String get privacy_data_sharing_item_3 => 'Penegak hukum atau otoritas pemerintah, jika diwajibkan oleh hukum atau proses hukum yang berlaku.';
+
+  @override
+  String get privacy_data_sharing_item_4 => 'Mencocokkan pelanggan dengan pengemudi terdekat yang tersedia.';
+
+  @override
+  String get privacy_data_sharing_footer => 'Semua mitra yang menangani data Anda diwajibkan untuk mematuhi standar perlindungan data yang ketat.';
+
+  @override
+  String get privacy_changes_title => 'Perubahan Kebijakan Privasi Ini';
+
+  @override
+  String get privacy_changes_content => 'Kami dapat memperbarui Kebijakan Privasi ini dari waktu ke waktu untuk mencerminkan perubahan dalam praktik kami atau kewajiban hukum. Pembaruan akan dikomunikasikan melalui aplikasi atau situs web AkadeMove. Penggunaan layanan kami yang berkelanjutan setelah pembaruan apa pun merupakan penerimaan Anda terhadap kebijakan yang direvisi.';
+
+  @override
+  String get tos_title => 'Ketentuan Layanan AkadeMove';
+
+  @override
+  String get tos_effective_date => 'Tanggal Berlaku: 6 Desember 2025';
+
+  @override
+  String get tos_intro => 'Ketentuan Layanan ini merupakan perjanjian yang mengikat secara hukum antara Anda dan AkadeMove. Harap baca dengan cermat sebelum menggunakan layanan kami.';
+
+  @override
+  String get tos_acceptance_title => 'Penerimaan Ketentuan';
+
+  @override
+  String get tos_acceptance_content => 'Selamat datang di AkadeMove. Ketentuan Layanan (\"Ketentuan\") ini mengatur akses dan penggunaan Anda terhadap platform mobilitas dan pengiriman kampus kami. Dengan membuat akun atau menggunakan Layanan kami, Anda setuju untuk terikat oleh Ketentuan ini dan Kebijakan Privasi kami.';
+
+  @override
+  String get tos_service_desc_title => 'Deskripsi Layanan';
+
+  @override
+  String get tos_service_desc_content => 'AkadeMove adalah platform khusus kampus yang menghubungkan mahasiswa, dosen, dan anggota komunitas kampus yang berwenang untuk:';
+
+  @override
+  String get tos_service_desc_item_ride => 'Ride-Hailing: Layanan transportasi di dalam dan sekitar area kampus';
+
+  @override
+  String get tos_service_desc_item_delivery => 'Pengiriman Paket: Pengiriman dokumen, paket, dan barang di dalam kampus';
+
+  @override
+  String get tos_service_desc_item_food => 'Pengiriman Makanan: Pemesanan dan pengiriman makanan dari merchant kampus';
+
+  @override
+  String get tos_service_desc_footer => 'AkadeMove bertindak sebagai platform teknologi yang menghubungkan pengguna dengan penyedia layanan. Kami bukan perusahaan transportasi atau pengiriman. Pengemudi dan merchant adalah kontraktor independen.';
+
+  @override
+  String get tos_eligibility_title => 'Kelayakan Pengguna';
+
+  @override
+  String get tos_eligibility_passengers_title => 'Penumpang/Pengguna';
+
+  @override
+  String get tos_eligibility_passengers_item_1 => 'Berusia minimal 17 tahun';
+
+  @override
+  String get tos_eligibility_passengers_item_2 => 'Merupakan mahasiswa, dosen, atau anggota kampus yang berwenang saat ini';
+
+  @override
+  String get tos_eligibility_passengers_item_3 => 'Memberikan informasi kontak yang valid';
+
+  @override
+  String get tos_eligibility_passengers_item_4 => 'Memverifikasi afiliasi kampus (KTM bila diperlukan)';
+
+  @override
+  String get tos_eligibility_drivers_title => 'Pengemudi';
+
+  @override
+  String get tos_eligibility_drivers_item_1 => 'Berusia minimal 18 tahun';
+
+  @override
+  String get tos_eligibility_drivers_item_2 => 'Merupakan mahasiswa yang terdaftar saat ini';
+
+  @override
+  String get tos_eligibility_drivers_item_3 => 'Memiliki SIM yang valid (SIM C/A)';
+
+  @override
+  String get tos_eligibility_drivers_item_4 => 'Menyediakan STNK yang valid';
+
+  @override
+  String get tos_eligibility_drivers_item_5 => 'Mengirimkan foto KTM';
+
+  @override
+  String get tos_eligibility_drivers_item_6 => 'Lulus proses verifikasi dan onboarding';
+
+  @override
+  String get tos_eligibility_merchants_title => 'Merchant';
+
+  @override
+  String get tos_eligibility_merchants_item_1 => 'Menjadi vendor makanan atau penyewa kampus yang berwenang';
+
+  @override
+  String get tos_eligibility_merchants_item_2 => 'Menyediakan dokumentasi bisnis yang valid';
+
+  @override
+  String get tos_eligibility_merchants_item_3 => 'Menjaga standar keamanan dan kebersihan makanan';
+
+  @override
+  String get tos_eligibility_merchants_item_4 => 'Mematuhi peraturan kampus';
+
+  @override
+  String get tos_pricing_title => 'Harga & Komisi';
+
+  @override
+  String get tos_pricing_content => 'Rumus harga: Harga Dasar + (Jarak × Tarif) + Tip - Kupon';
+
+  @override
+  String get tos_pricing_commission_title => 'Struktur Komisi';
+
+  @override
+  String get tos_pricing_commission_item_1 => 'Ride & Pengiriman: 15% komisi platform';
+
+  @override
+  String get tos_pricing_commission_item_2 => 'Pesanan Makanan: 20% total (10% merchant, 10% platform)';
+
+  @override
+  String get tos_pricing_commission_item_3 => 'Tips: 100% untuk pengemudi (dapat dikonfigurasi)';
+
+  @override
+  String get tos_pricing_footer => 'Contoh: Total ride Rp 25.000 → Komisi Rp 3.750 → Pengemudi mendapat Rp 21.250';
+
+  @override
+  String get tos_wallet_title => 'Sistem Dompet';
+
+  @override
+  String get tos_wallet_content => 'Semua pengguna memiliki dompet dalam aplikasi untuk mengelola dana:';
+
+  @override
+  String get tos_wallet_item_1 => 'Top-Up: Tambah dana melalui QRIS, transfer bank, atau e-wallet (Midtrans)';
+
+  @override
+  String get tos_wallet_item_2 => 'Pembayaran: Dipotong otomatis dari saldo dompet';
+
+  @override
+  String get tos_wallet_item_3 => 'Penghasilan: Dikreditkan ke dompet setelah pesanan selesai';
+
+  @override
+  String get tos_wallet_item_4 => 'Penarikan: Min. Rp 50.000, diproses dalam 1-3 hari kerja';
+
+  @override
+  String get tos_cancellation_title => 'Kebijakan Pembatalan';
+
+  @override
+  String get tos_cancellation_user_title => 'Pembatalan Pengguna';
+
+  @override
+  String get tos_cancellation_user_item_1 => 'Pembatalan gratis dalam 2 menit setelah pemesanan';
+
+  @override
+  String get tos_cancellation_user_item_2 => 'Biaya pembatalan berlaku setelah 2 menit (dapat dikonfigurasi)';
+
+  @override
+  String get tos_cancellation_user_item_3 => 'Biaya penuh jika pengemudi sudah tiba atau pesanan sedang disiapkan';
+
+  @override
+  String get tos_cancellation_driver_title => 'Pembatalan Pengemudi';
+
+  @override
+  String get tos_cancellation_driver_item_1 => 'Dapat membatalkan jika penumpang tidak responsif atau melanggar ketentuan';
+
+  @override
+  String get tos_cancellation_driver_item_2 => 'Pembatalan berlebihan dapat mengakibatkan penangguhan';
+
+  @override
+  String get tos_cancellation_refunds_title => 'Pengembalian Dana';
+
+  @override
+  String get tos_cancellation_refunds_item_1 => 'Diproses dalam 5-7 hari kerja untuk masalah layanan';
+
+  @override
+  String get tos_cancellation_refunds_item_2 => 'Dikembalikan ke metode pembayaran asli atau dompet';
+
+  @override
+  String get tos_cancellation_refunds_item_3 => 'Sengketa harus diajukan dalam 24 jam';
+
+  @override
+  String get tos_rating_title => 'Sistem Rating & Ulasan';
+
+  @override
+  String get tos_rating_content => 'Pengguna dan pengemudi saling memberi rating dalam skala 5 bintang. Rating mempengaruhi kualitas layanan dan peluang.';
+
+  @override
+  String get tos_rating_item_1 => 'Keadilan: Rating harus mencerminkan kualitas layanan yang sebenarnya';
+
+  @override
+  String get tos_rating_item_2 => 'Larangan: Jangan memanipulasi rating atau memberikan ulasan palsu';
+
+  @override
+  String get tos_rating_item_3 => 'Sengketa: Dapat dilaporkan ke dukungan pelanggan';
+
+  @override
+  String get tos_rating_item_4 => 'Konsekuensi: Rating rendah yang konsisten dapat mengakibatkan penangguhan';
+
+  @override
+  String get tos_driver_req_title => 'Persyaratan Pengemudi';
+
+  @override
+  String get tos_driver_req_schedule_title => 'Manajemen Jadwal Kuliah';
+
+  @override
+  String get tos_driver_req_schedule_desc => 'Pengemudi dapat memasukkan jadwal kuliah untuk mengatur status offline otomatis selama jam kuliah.';
+
+  @override
+  String get tos_driver_req_availability_title => 'Kontrol Ketersediaan';
+
+  @override
+  String get tos_driver_req_availability_item_1 => 'Beralih status online/offline dengan bebas';
+
+  @override
+  String get tos_driver_req_availability_item_2 => 'Terima atau tolak permintaan pesanan';
+
+  @override
+  String get tos_driver_req_availability_item_3 => 'Penolakan berlebihan mempengaruhi prioritas pencocokan';
+
+  @override
+  String get tos_driver_req_availability_item_4 => 'Pembatalan berulang dapat mengakibatkan peringatan';
+
+  @override
+  String get tos_safety_title => 'Keamanan & Pelaporan';
+
+  @override
+  String get tos_safety_content => 'Keamanan Anda adalah prioritas kami. AkadeMove menyediakan:';
+
+  @override
+  String get tos_safety_item_1 => 'Chat Dalam Aplikasi: Berkomunikasi tanpa membagikan nomor telepon';
+
+  @override
+  String get tos_safety_item_2 => 'Verifikasi Pengemudi: Semua pengemudi menjalani verifikasi dokumen';
+
+  @override
+  String get tos_safety_item_3 => 'Pelacakan Real-Time: Bagikan perjalanan dengan kontak terpercaya';
+
+  @override
+  String get tos_safety_item_4 => 'Tombol Darurat: Akses cepat ke keamanan kampus';
+
+  @override
+  String get tos_safety_item_5 => 'Sistem Pelaporan: Laporkan pelanggaran atau masalah keamanan';
+
+  @override
+  String get tos_safety_footer => 'Laporan ditinjau dalam 24-48 jam. Tindakan dapat mencakup peringatan, penangguhan, atau larangan permanen. Insiden serius dapat dilaporkan ke pihak berwenang.';
+
+  @override
+  String get tos_gender_pref_title => 'Fitur Preferensi Gender';
+
+  @override
+  String get tos_gender_pref_content => 'Pengguna dapat secara opsional meminta pengemudi dengan jenis kelamin yang sama untuk kenyamanan dan keamanan yang lebih baik:';
+
+  @override
+  String get tos_gender_pref_item_1 => 'Preferensi opsional dalam algoritma pencocokan';
+
+  @override
+  String get tos_gender_pref_item_2 => 'Ketersediaan tergantung pada pengemudi terdekat';
+
+  @override
+  String get tos_gender_pref_item_3 => 'Dapat meningkatkan waktu tunggu jika pengemudi sejenis tidak tersedia';
+
+  @override
+  String get tos_gender_pref_item_4 => 'Dapat diaktifkan/dinonaktifkan kapan saja';
+
+  @override
+  String get tos_prohibited_title => 'Perilaku yang Dilarang';
+
+  @override
+  String get tos_prohibited_content => 'Pengguna tidak boleh:';
+
+  @override
+  String get tos_prohibited_item_1 => 'Menggunakan layanan untuk tujuan ilegal atau mengangkut barang ilegal';
+
+  @override
+  String get tos_prohibited_item_2 => 'Melecehkan, menyalahgunakan, mengancam, atau mendiskriminasi orang lain';
+
+  @override
+  String get tos_prohibited_item_3 => 'Terlibat dalam aktivitas penipuan atau akun palsu';
+
+  @override
+  String get tos_prohibited_item_4 => 'Memanipulasi platform, rating, harga, atau promosi';
+
+  @override
+  String get tos_prohibited_item_5 => 'Mengoperasikan kendaraan dengan tidak aman atau melanggar aturan lalu lintas';
+
+  @override
+  String get tos_prohibited_item_6 => 'Mencoba akses tidak sah ke akun atau data';
+
+  @override
+  String get tos_prohibited_item_7 => 'Melanggar kekayaan intelektual AkadeMove atau orang lain';
+
+  @override
+  String get tos_prohibited_footer => 'Pelanggaran dapat mengakibatkan penangguhan segera dan tindakan hukum.';
+
+  @override
+  String get tos_liability_title => 'Batasan Tanggung Jawab';
+
+  @override
+  String get tos_liability_content => 'AkadeMove adalah platform teknologi yang menghubungkan pengguna dengan penyedia layanan independen. Kami tidak menyediakan layanan transportasi atau pengiriman secara langsung.';
+
+  @override
+  String get tos_liability_item_1 => 'Layanan disediakan \"sebagaimana adanya\" tanpa jaminan';
+
+  @override
+  String get tos_liability_item_2 => 'Tidak bertanggung jawab atas kerugian tidak langsung atau konsekuensial';
+
+  @override
+  String get tos_liability_item_3 => 'Tanggung jawab maksimum terbatas pada jumlah yang dibayarkan dalam 12 bulan terakhir';
+
+  @override
+  String get tos_liability_item_4 => 'Tidak bertanggung jawab atas tindakan pengemudi, merchant, atau pengguna';
+
+  @override
+  String get tos_dispute_title => 'Penyelesaian Sengketa';
+
+  @override
+  String get tos_dispute_item_1 => 'Penyelesaian Informal: Hubungi dukungan pelanggan terlebih dahulu';
+
+  @override
+  String get tos_dispute_item_2 => 'Mediasi: Coba mediasi sebelum litigasi';
+
+  @override
+  String get tos_dispute_item_3 => 'Hukum yang Berlaku: Hukum Republik Indonesia berlaku';
+
+  @override
+  String get tos_dispute_item_4 => 'Yurisdiksi: Pengadilan Surabaya, Indonesia';
+
+  @override
+  String get tos_termination_title => 'Penghentian Akun';
+
+  @override
+  String get tos_termination_user_title => 'Penghentian Pengguna';
+
+  @override
+  String get tos_termination_user_desc => 'Anda dapat menghentikan akun Anda kapan saja melalui pengaturan aplikasi atau dukungan pelanggan.';
+
+  @override
+  String get tos_termination_platform_title => 'Penghentian Platform';
+
+  @override
+  String get tos_termination_platform_desc => 'Kami berhak menangguhkan atau menghentikan akun yang melanggar Ketentuan, terlibat dalam penipuan, atau menimbulkan risiko keamanan.';
+
+  @override
+  String get tos_termination_footer => 'Setelah penghentian, akses berhenti dan data dapat dihapus sesuai persyaratan hukum. Kewajiban yang belum terpenuhi tetap berlaku.';
+
+  @override
+  String get tos_changes_title => 'Perubahan Ketentuan';
+
+  @override
+  String get tos_changes_content => 'Kami dapat mengubah Ketentuan ini kapan saja. Perubahan material akan diberitahukan melalui:';
+
+  @override
+  String get tos_changes_item_1 => 'Notifikasi dalam aplikasi';
+
+  @override
+  String get tos_changes_item_2 => 'Email ke alamat terdaftar';
+
+  @override
+  String get tos_changes_item_3 => 'Pemberitahuan mencolok di situs web';
+
+  @override
+  String get tos_changes_footer => 'Penggunaan berkelanjutan setelah perubahan merupakan penerimaan. Jika Anda tidak setuju, berhenti menggunakan Layanan kami.';
+
+  @override
+  String get tos_contact_title => 'Informasi Kontak';
+
+  @override
+  String get tos_contact_item_1 => 'Email: support@akademove.com';
+
+  @override
+  String get tos_contact_item_2 => 'Telepon: +62 21 1234 5678';
+
+  @override
+  String get tos_contact_item_3 => 'Alamat: AkadeMove, Universitas Negeri Surabaya, Surabaya, Jawa Timur';
+
+  @override
+  String get tos_contact_item_4 => 'Dukungan Pelanggan: Tersedia 24/7 melalui chat dalam aplikasi';
+
+  @override
+  String get faq_title => 'Pertanyaan yang Sering Diajukan';
+
+  @override
+  String get faq_header_title => 'Ada yang bisa kami bantu?';
+
+  @override
+  String get faq_header_subtitle => 'Temukan jawaban cepat untuk pertanyaan umum tentang penggunaan AkadeMove';
+
+  @override
+  String get faq_contact_title => 'Masih ada pertanyaan?';
+
+  @override
+  String get faq_contact_subtitle => 'Hubungi tim dukungan kami untuk bantuan lebih lanjut';
+
+  @override
+  String get faq_contact_support => 'Hubungi Dukungan';
+
+  @override
+  String get faq_error_email => 'Tidak dapat membuka aplikasi email. Silakan coba lagi.';
+
+  @override
+  String get faq_category_general => 'Umum';
+
+  @override
+  String get faq_category_orders => 'Pesanan & Pengiriman';
+
+  @override
+  String get faq_category_payment => 'Pembayaran & Dompet';
+
+  @override
+  String get faq_category_driver => 'Pengemudi';
+
+  @override
+  String get faq_category_safety => 'Keamanan & Keselamatan';
+
+  @override
+  String get faq_general_q1 => 'Apa itu AkadeMove?';
+
+  @override
+  String get faq_general_a1 => 'AkadeMove adalah platform mobilitas dan pengiriman khusus kampus yang menghubungkan mahasiswa sebagai pengguna, pengemudi, dan merchant. Kami menawarkan layanan ride-hailing, pengiriman paket, dan pemesanan makanan secara eksklusif di dalam batas kampus.';
+
+  @override
+  String get faq_general_q2 => 'Siapa yang bisa menggunakan AkadeMove?';
+
+  @override
+  String get faq_general_a2 => 'AkadeMove tersedia untuk semua mahasiswa, dosen, dan staf dengan ID kampus yang valid. Pengemudi harus mahasiswa dengan SIM dan dokumentasi kendaraan yang valid.';
+
+  @override
+  String get faq_general_q3 => 'Layanan apa yang ditawarkan AkadeMove?';
+
+  @override
+  String get faq_general_a3 => 'Kami menawarkan tiga layanan utama: Ride-hailing untuk transportasi kampus, Pengiriman untuk paket dan dokumen, dan Pengiriman makanan dari merchant kampus.';
+
+  @override
+  String get faq_orders_q1 => 'Bagaimana cara memesan?';
+
+  @override
+  String get faq_orders_a1 => 'Buka aplikasi, pilih jenis layanan Anda (Ride, Pengiriman, atau Makanan), atur titik penjemputan dan tujuan, tinjau tarif, dan konfirmasi pemesanan Anda.';
+
+  @override
+  String get faq_orders_q2 => 'Bisakah saya membatalkan pesanan?';
+
+  @override
+  String get faq_orders_a2 => 'Ya, Anda dapat membatalkan sebelum pengemudi menerima pesanan Anda tanpa penalti. Setelah diterima, biaya pembatalan dapat berlaku berdasarkan status pesanan.';
+
+  @override
+  String get faq_orders_q3 => 'Berapa lama pencocokan memakan waktu?';
+
+  @override
+  String get faq_orders_a3 => 'Pencocokan biasanya memakan waktu kurang dari 30 detik. Jika tidak ada pengemudi yang menerima dalam waktu ini, kami akan secara otomatis memperluas radius pencarian.';
+
+  @override
+  String get faq_payment_q1 => 'Metode pembayaran apa yang diterima?';
+
+  @override
+  String get faq_payment_a1 => 'Anda dapat membayar menggunakan dompet dalam aplikasi, yang dapat diisi ulang melalui QRIS atau transfer bank melalui Midtrans.';
+
+  @override
+  String get faq_payment_q2 => 'Bagaimana cara mengisi ulang dompet saya?';
+
+  @override
+  String get faq_payment_a2 => 'Buka dompet Anda, pilih \'Isi Ulang\', pilih jumlah dan metode pembayaran Anda (QRIS atau transfer bank), selesaikan pembayaran melalui Midtrans.';
+
+  @override
+  String get faq_payment_q3 => 'Bagaimana struktur komisi?';
+
+  @override
+  String get faq_payment_a3 => 'Untuk ride dan pengiriman, platform mengambil komisi 15%. Untuk pesanan makanan, ada komisi 20% yang dibagi antara platform (10%) dan merchant (10%). Tips 100% untuk pengemudi.';
+
+  @override
+  String get faq_driver_q1 => 'Bagaimana cara menjadi pengemudi?';
+
+  @override
+  String get faq_driver_a1 => 'Klik \'Jadi Pengemudi\', kirimkan KTM, SIM, dan STNK Anda. Setelah diverifikasi dan disetujui, Anda dapat mulai menerima pesanan.';
+
+  @override
+  String get faq_driver_q2 => 'Bisakah saya bekerja selama jadwal kuliah saya?';
+
+  @override
+  String get faq_driver_a2 => 'Aplikasi secara otomatis mengatur Anda offline selama waktu kuliah yang dijadwalkan. Anda dapat menimpanya secara manual jika diperlukan, tetapi kami menyarankan untuk fokus pada studi Anda.';
+
+  @override
+  String get faq_driver_q3 => 'Kapan saya bisa menarik penghasilan saya?';
+
+  @override
+  String get faq_driver_a3 => 'Anda dapat menarik penghasilan ke rekening bank Anda kapan saja setelah menyelesaikan pesanan. Penarikan biasanya diproses dalam 1-3 hari kerja. Penarikan minimum adalah Rp 50.000.';
+
+  @override
+  String get faq_safety_q1 => 'Bagaimana preferensi gender bekerja?';
+
+  @override
+  String get faq_safety_a1 => 'Pengguna dapat secara opsional meminta pengemudi dengan jenis kelamin yang sama untuk kenyamanan dan keamanan tambahan. Ini sangat berguna untuk perjalanan larut malam.';
+
+  @override
+  String get faq_safety_q2 => 'Bagaimana jika saya merasa tidak aman selama perjalanan?';
+
+  @override
+  String get faq_safety_a2 => 'Gunakan tombol darurat dalam aplikasi untuk memberi tahu keamanan kampus segera. Anda juga dapat melaporkan pengemudi setelah perjalanan, dan tim kami akan menyelidiki dengan segera.';
+
+  @override
+  String get faq_safety_q3 => 'Bagaimana pengemudi diverifikasi?';
+
+  @override
+  String get faq_safety_a3 => 'Semua pengemudi harus mengirimkan dan mendapat persetujuan untuk KTM, SIM, dan STNK mereka. Kami memverifikasi semua dokumen sebelum aktivasi.';
+
+  @override
+  String get emergency_contact_whatsapp => 'Hubungi via WA';
+
+  @override
+  String get emergency_contact_whatsapp_desc => 'Buka WhatsApp untuk menghubungi keamanan kampus';
+
+  @override
+  String get emergency_or_divider => 'atau';
+
+  @override
+  String get emergency_whatsapp_error => 'Tidak dapat membuka WhatsApp. Silakan coba lagi.';
+
+  @override
+  String get emergency_contact_unavailable => 'Kontak darurat tidak tersedia. Silakan coba lagi nanti.';
+
+  @override
+  String get order_completed => 'Pesanan Selesai';
+
+  @override
+  String get order_detail_summary => 'Ringkasan Pesanan';
+
+  @override
+  String get rate_merchant_title => 'Beri Rating Pesanan';
 }

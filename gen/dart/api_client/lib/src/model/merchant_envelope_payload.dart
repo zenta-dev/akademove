@@ -3,6 +3,7 @@
 //
 
 // ignore_for_file: unused_element
+import 'package:api_client/src/model/merchant_envelope_payload_sync_request.dart';
 import 'package:api_client/src/model/order.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
@@ -27,6 +28,8 @@ class MerchantEnvelopePayload {
     this.cancelReason,
     this.driverName,
     this.newStatus,
+    this.syncRequest,
+    this.orders,
   });
   @JsonKey(name: r'order', required: false, includeIfNull: false)
   final Order? order;
@@ -52,6 +55,12 @@ class MerchantEnvelopePayload {
   @JsonKey(name: r'newStatus', required: false, includeIfNull: false)
   final String? newStatus;
 
+  @JsonKey(name: r'syncRequest', required: false, includeIfNull: false)
+  final MerchantEnvelopePayloadSyncRequest? syncRequest;
+
+  @JsonKey(name: r'orders', required: false, includeIfNull: false)
+  final List<Order>? orders;
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -63,7 +72,9 @@ class MerchantEnvelopePayload {
           other.totalAmount == totalAmount &&
           other.cancelReason == cancelReason &&
           other.driverName == driverName &&
-          other.newStatus == newStatus;
+          other.newStatus == newStatus &&
+          other.syncRequest == syncRequest &&
+          other.orders == orders;
 
   @override
   int get hashCode =>
@@ -74,7 +85,9 @@ class MerchantEnvelopePayload {
       totalAmount.hashCode +
       cancelReason.hashCode +
       driverName.hashCode +
-      newStatus.hashCode;
+      newStatus.hashCode +
+      syncRequest.hashCode +
+      orders.hashCode;
 
   factory MerchantEnvelopePayload.fromJson(Map<String, dynamic> json) =>
       _$MerchantEnvelopePayloadFromJson(json);

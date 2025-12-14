@@ -11,8 +11,11 @@ export const ReviewSchema = z.object({
 	orderId: z.uuid(),
 	fromUserId: z.string(),
 	toUserId: z.string(),
-	category: ReviewCategorySchema,
-	score: z.coerce.number(),
+	/** Multi-select categories (e.g., ["CLEANLINESS", "PUNCTUALITY", "SAFETY"]) */
+	categories: z.array(ReviewCategorySchema).min(1),
+	/** Overall rating score for the entire review (1-5) */
+	score: z.number().int().min(1).max(5),
+	/** Optional comment/notes about the review */
 	comment: z.string().default(""),
 	createdAt: DateSchema,
 });
@@ -29,6 +32,9 @@ export type InsertReview = z.infer<typeof InsertReviewSchema>;
 export const UpdateReviewSchema = ReviewSchema.omit({
 	id: true,
 	createdAt: true,
+	orderId: true,
+	fromUserId: true,
+	toUserId: true,
 }).partial();
 export type UpdateReview = z.infer<typeof UpdateReviewSchema>;
 

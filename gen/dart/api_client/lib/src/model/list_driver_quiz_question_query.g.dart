@@ -318,6 +318,7 @@ const _$ListDriverQuizQuestionQuerySortByEnumEnumMap = {
   ListDriverQuizQuestionQuerySortByEnum.categories: 'categories',
   ListDriverQuizQuestionQuerySortByEnum.price: 'price',
   ListDriverQuizQuestionQuerySortByEnum.stock: 'stock',
+  ListDriverQuizQuestionQuerySortByEnum.completedDriverId: 'completedDriverId',
   ListDriverQuizQuestionQuerySortByEnum.type: 'type',
   ListDriverQuizQuestionQuerySortByEnum.pickupLocation: 'pickupLocation',
   ListDriverQuizQuestionQuerySortByEnum.dropoffLocation: 'dropoffLocation',
@@ -350,6 +351,8 @@ const _$ListDriverQuizQuestionQuerySortByEnumEnumMap = {
       'proofOfDeliveryUrl',
   ListDriverQuizQuestionQuerySortByEnum.deliveryOtp: 'deliveryOtp',
   ListDriverQuizQuestionQuerySortByEnum.otpVerifiedAt: 'otpVerifiedAt',
+  ListDriverQuizQuestionQuerySortByEnum.deliveryItemPhotoUrl:
+      'deliveryItemPhotoUrl',
   ListDriverQuizQuestionQuerySortByEnum.deliveryItemType: 'deliveryItemType',
   ListDriverQuizQuestionQuerySortByEnum.transactionId: 'transactionId',
   ListDriverQuizQuestionQuerySortByEnum.provider: 'provider',

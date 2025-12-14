@@ -399,6 +399,55 @@ export const OrderHandler = priv.router({
 			});
 		},
 	),
+	uploadDeliveryItemPhoto: priv.uploadDeliveryItemPhoto.handler(
+		async ({ context, input: { params, body } }) => {
+			return await context.svc.db.transaction(async (tx) => {
+				const { id: orderId } = params;
+				const { file } = body;
+
+				// Verify order exists and is a delivery order
+				const order = await context.repo.order.get(orderId, { tx });
+
+				// Verify order is a DELIVERY type
+				if (order.type !== "DELIVERY") {
+					throw new AuthError(
+						"Item photo upload is only available for delivery orders",
+						{ code: "BAD_REQUEST" },
+					);
+				}
+
+				// Upload delivery item photo to S3
+				const photoUrl =
+					await context.svc.orderServices.deliveryProof.uploadDeliveryItemPhoto(
+						{
+							orderId,
+							file,
+							userId: context.user.id,
+						},
+					);
+
+				// Update order with photo URL
+				await context.repo.order.update(
+					orderId,
+					{ deliveryItemPhotoUrl: photoUrl },
+					{ tx },
+				);
+
+				logger.info(
+					{ orderId, photoUrl },
+					"[OrderHandler] Delivery item photo uploaded",
+				);
+
+				return {
+					status: 200,
+					body: {
+						message: "Delivery item photo uploaded successfully",
+						data: { url: photoUrl },
+					},
+				};
+			});
+		},
+	),
 	verifyDeliveryOTP: priv.verifyDeliveryOTP.handler(
 		async ({ context, input: { params, body } }) => {
 			return await context.svc.db.transaction(async (tx) => {

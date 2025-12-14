@@ -48,7 +48,7 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
           ],
           child: Padding(
             padding: EdgeInsets.all(16.dg),
-            child: RefreshTrigger(
+            child: SafeRefreshTrigger(
               onRefresh: _onRefresh,
               child: SingleChildScrollView(
                 child: Builder(

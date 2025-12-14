@@ -405,9 +405,7 @@ function EditDriverProfile({
 	const mutation = useMutation(
 		orpcQuery.driver.update.mutationOptions({
 			onSuccess: async () => {
-				await queryClient.invalidateQueries({
-					queryKey: orpcQuery.driver.getMine.queryKey({}),
-				});
+				await queryClient.invalidateQueries();
 				toast.success(
 					m.success_placeholder({
 						action: capitalizeFirstLetter(m.update_profile().toLowerCase()),

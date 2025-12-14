@@ -49,7 +49,7 @@ class _MerchantMenuDetailScreenState extends State<MerchantMenuDetailScreen> {
 
     return Scaffold(
       headers: [DefaultAppBar(title: context.l10n.title_menu_detail)],
-      child: RefreshTrigger(
+      child: SafeRefreshTrigger(
         onRefresh: _onRefresh,
         child: BlocBuilder<MerchantMenuCubit, MerchantMenuState>(
           builder: (context, state) {

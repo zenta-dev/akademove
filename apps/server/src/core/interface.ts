@@ -32,6 +32,7 @@ import type {
 import type { DriverQuizAnswerRepository } from "@/features/driver-quiz-answer/driver-quiz-answer-repository";
 import type { DriverQuizQuestionRepository } from "@/features/driver-quiz-question/driver-quiz-question-repository";
 import type { EmergencyRepository } from "@/features/emergency/emergency-repository";
+import type { EmergencyContactRepository } from "@/features/emergency-contact/emergency-contact-repository";
 import type { FraudRepository } from "@/features/fraud/fraud-repository";
 import type { LeaderboardRepository } from "@/features/leaderboard/leaderboard-repository";
 import type { MerchantApprovalRepository } from "@/features/merchant/approval/merchant-approval-repository";
@@ -56,6 +57,7 @@ import type {
 import type { QuickMessageRepository } from "@/features/quick-message/quick-message-repository";
 import type { ReportRepository } from "@/features/report/report-repository";
 import type { ReviewRepository } from "@/features/review/review-repository";
+import type { SupportChatRepository } from "@/features/support-chat/support-chat-repository";
 import type { TransactionRepository } from "@/features/transaction/transaction-repository";
 import type { UserAdminRepository } from "@/features/user/admin/user-admin-repository";
 import type { UserLookupRepository } from "@/features/user/lookup/user-lookup-repository";
@@ -139,6 +141,7 @@ export interface RepositoryContext {
 	driverQuizQuestion: DriverQuizQuestionRepository;
 	driverQuizAnswer: DriverQuizAnswerRepository;
 	emergency: EmergencyRepository;
+	emergencyContact: EmergencyContactRepository;
 	fraud: FraudRepository;
 	leaderboard: LeaderboardRepository;
 	merchant: {
@@ -153,6 +156,7 @@ export interface RepositoryContext {
 	coupon: CouponRepository;
 	report: ReportRepository;
 	review: ReviewRepository;
+	supportChat: SupportChatRepository;
 	transaction: TransactionRepository;
 	user: {
 		admin: UserAdminRepository;

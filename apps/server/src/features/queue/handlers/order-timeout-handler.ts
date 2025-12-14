@@ -8,9 +8,12 @@
  * 1. Check if order is still in MATCHING status
  * 2. If yes, cancel the order and process refund
  * 3. Notify user about the cancellation
+ * 4. Notify MerchantRoom if this is a FOOD order
  */
 
+import type { Order } from "@repo/schema/order";
 import type { OrderTimeoutJob } from "@repo/schema/queue";
+import type { MerchantEnvelope } from "@repo/schema/ws";
 import { logger } from "@/utils/logger";
 import type { QueueHandlerContext } from "../queue-handler";
 
@@ -141,6 +144,16 @@ export async function handleOrderTimeout(
 					payload: { aps: { category: "ORDER_DETAIL", sound: "default" } },
 				},
 			});
+
+			// Notify MerchantRoom if this is a FOOD order
+			if (updatedOrder.merchantId && updatedOrder.type === "FOOD") {
+				await notifyMerchantRoom(
+					context.env,
+					updatedOrder.merchantId,
+					"ORDER_CANCELLED",
+					updatedOrder,
+				);
+			}
 		});
 	} catch (error) {
 		logger.error(
@@ -148,5 +161,54 @@ export async function handleOrderTimeout(
 			"[OrderTimeoutHandler] Failed to process timeout",
 		);
 		throw error;
+	}
+}
+
+/**
+ * Notifies MerchantRoom of order cancellation
+ *
+ * @param env - Cloudflare environment with Durable Objects
+ * @param merchantId - Merchant ID to notify
+ * @param event - Event type (ORDER_CANCELLED)
+ * @param order - Order data
+ */
+async function notifyMerchantRoom(
+	env: Env,
+	merchantId: string,
+	event: MerchantEnvelope["e"],
+	order: Order,
+): Promise<void> {
+	try {
+		const stub = env.MERCHANT_ROOM.idFromName(merchantId);
+		const room = env.MERCHANT_ROOM.get(stub);
+
+		const payload: MerchantEnvelope = {
+			e: event,
+			f: "s",
+			t: "c",
+			p: {
+				order,
+				orderId: order.id,
+				merchantId,
+				newStatus: order.status,
+			},
+		};
+
+		await room.fetch("https://internal/broadcast", {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify(payload),
+		});
+
+		logger.debug(
+			{ orderId: order.id, merchantId, event },
+			"[OrderTimeoutHandler] MerchantRoom notified",
+		);
+	} catch (error) {
+		// Non-critical - log and continue
+		logger.warn(
+			{ error, orderId: order.id, merchantId, event },
+			"[OrderTimeoutHandler] Failed to notify MerchantRoom - non-critical",
+		);
 	}
 }

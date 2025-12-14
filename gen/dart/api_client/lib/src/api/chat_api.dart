@@ -280,7 +280,7 @@ class ChatApi {
   /// * [role]
   /// * [orderType]
   /// * [locale]
-  /// * [isActive]
+  /// * [status]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -294,7 +294,7 @@ class ChatApi {
     String? role,
     String? orderType,
     String? locale,
-    bool? isActive,
+    String? status,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -319,7 +319,7 @@ class ChatApi {
       if (role != null) r'role': role,
       if (orderType != null) r'orderType': orderType,
       if (locale != null) r'locale': locale,
-      if (isActive != null) r'isActive': isActive,
+      if (status != null) r'status': status,
     };
 
     final _response = await _dio.request<Object>(

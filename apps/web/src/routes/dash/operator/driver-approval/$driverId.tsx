@@ -82,14 +82,7 @@ function RouteComponent() {
 					? "Quiz verified successfully"
 					: "Quiz verification removed",
 			);
-			queryClient.invalidateQueries(
-				// 	{
-				// 	predicate: (query) =>
-				// 		query.queryKey[0] === "driver" ||
-				// 		(Array.isArray(query.queryKey) &&
-				// 			query.queryKey.includes("getReview")),
-				// }
-			);
+			queryClient.invalidateQueries();
 		},
 		onError: (error) => {
 			toast.error(`Failed to update quiz verification: ${error.message}`);

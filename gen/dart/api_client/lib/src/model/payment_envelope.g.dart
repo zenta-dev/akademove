@@ -158,9 +158,14 @@ const _$PaymentEnvelopeEventEnumMap = {
   PaymentEnvelopeEvent.PAYMENT_SUCCESS: 'PAYMENT_SUCCESS',
   PaymentEnvelopeEvent.TOP_UP_FAILED: 'TOP_UP_FAILED',
   PaymentEnvelopeEvent.PAYMENT_FAILED: 'PAYMENT_FAILED',
+  PaymentEnvelopeEvent.NEW_DATA: 'NEW_DATA',
+  PaymentEnvelopeEvent.NO_DATA: 'NO_DATA',
 };
 
-const _$PaymentEnvelopeActionEnumMap = {PaymentEnvelopeAction.NONE: 'NONE'};
+const _$PaymentEnvelopeActionEnumMap = {
+  PaymentEnvelopeAction.NONE: 'NONE',
+  PaymentEnvelopeAction.CHECK_NEW_DATA: 'CHECK_NEW_DATA',
+};
 
 const _$EnvelopeTargetEnumMap = {
   EnvelopeTarget.ADMIN: 'ADMIN',

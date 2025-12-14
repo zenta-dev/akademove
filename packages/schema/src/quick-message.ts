@@ -42,7 +42,7 @@ export const ListQuickMessageQuerySchema = z.object({
 	role: z.enum(CONSTANTS.USER_ROLES).optional(),
 	orderType: z.enum(CONSTANTS.ORDER_TYPES).optional(),
 	locale: z.string().optional(),
-	isActive: z.boolean().optional(),
+	status: z.enum(["ACTIVE", "INACTIVE"]).optional(),
 });
 export type ListQuickMessageQuery = z.infer<typeof ListQuickMessageQuerySchema>;
 

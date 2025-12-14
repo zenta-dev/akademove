@@ -22,7 +22,7 @@ class InsertReview {
     required this.orderId,
     required this.fromUserId,
     required this.toUserId,
-    required this.category,
+    required this.categories,
     required this.score,
     this.comment = '',
   });
@@ -35,11 +35,13 @@ class InsertReview {
   @JsonKey(name: r'toUserId', required: true, includeIfNull: false)
   final String toUserId;
 
-  @JsonKey(name: r'category', required: true, includeIfNull: false)
-  final ReviewCategory category;
+  @JsonKey(name: r'categories', required: true, includeIfNull: false)
+  final List<ReviewCategory> categories;
 
+  // minimum: 1
+  // maximum: 5
   @JsonKey(name: r'score', required: true, includeIfNull: false)
-  final num score;
+  final int score;
 
   @JsonKey(
     defaultValue: '',
@@ -56,7 +58,7 @@ class InsertReview {
           other.orderId == orderId &&
           other.fromUserId == fromUserId &&
           other.toUserId == toUserId &&
-          other.category == category &&
+          other.categories == categories &&
           other.score == score &&
           other.comment == comment;
 
@@ -65,7 +67,7 @@ class InsertReview {
       orderId.hashCode +
       fromUserId.hashCode +
       toUserId.hashCode +
-      category.hashCode +
+      categories.hashCode +
       score.hashCode +
       comment.hashCode;
 

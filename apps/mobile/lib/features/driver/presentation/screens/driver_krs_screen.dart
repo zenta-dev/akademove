@@ -19,18 +19,21 @@ class _DriverKrsScreenState extends State<DriverKrsScreen> {
   @override
   void initState() {
     super.initState();
-    _loadDriverAndSchedules();
+    _initSchedules();
   }
 
-  Future<void> _loadDriverAndSchedules() async {
-    await Future.wait([
-      context.read<DriverScheduleCubit>().ensureDriverLoaded(),
-      context.read<DriverScheduleCubit>().getSchedules(),
-    ]);
+  void _initSchedules() {
+    // Get driverId from DriverProfileCubit (single source of truth)
+    final driverId = context.read<DriverProfileCubit>().driver?.id;
+    if (driverId != null) {
+      final scheduleCubit = context.read<DriverScheduleCubit>();
+      scheduleCubit.setDriverId(driverId);
+      scheduleCubit.getSchedules();
+    }
   }
 
   Future<void> _onRefresh() async {
-    await _loadDriverAndSchedules();
+    await context.read<DriverScheduleCubit>().getSchedules();
   }
 
   void _navigateToUpsert({DriverSchedule? schedule}) async {
@@ -38,8 +41,8 @@ class _DriverKrsScreenState extends State<DriverKrsScreen> {
       Routes.driverKrsUpsert.name,
       extra: schedule,
     );
-    if (result == true) {
-      await _loadDriverAndSchedules();
+    if (result == true && mounted && context.mounted) {
+      await context.read<DriverScheduleCubit>().getSchedules();
     }
   }
 
@@ -49,7 +52,7 @@ class _DriverKrsScreenState extends State<DriverKrsScreen> {
       headers: [
         DefaultAppBar(
           title: context.l10n.my_schedule,
-          padding: EdgeInsets.symmetric(horizontal: 16.r, vertical: 9.r),
+          padding: EdgeInsets.all(16.r),
           trailing: [
             IconButton(
               icon: const Icon(LucideIcons.plus),
@@ -61,7 +64,7 @@ class _DriverKrsScreenState extends State<DriverKrsScreen> {
       ],
       child: Padding(
         padding: EdgeInsets.all(16.dg),
-        child: RefreshTrigger(
+        child: SafeRefreshTrigger(
           onRefresh: _onRefresh,
           child: BlocConsumer<DriverScheduleCubit, DriverScheduleState>(
             listener: (context, state) {

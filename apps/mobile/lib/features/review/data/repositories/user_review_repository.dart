@@ -8,21 +8,29 @@ class UserReviewRepository extends BaseRepository {
   final ApiClient _apiClient;
 
   /// Submit a review for a driver after completing an order
+  ///
+  /// [categories] - List of selected categories (multi-select)
+  /// [score] - Overall rating for the entire review (1-5)
+  ///
+  /// NOTE: After running `bun run gen` to regenerate the API client,
+  /// InsertReview will accept `categories` (List of ReviewCategory) instead of `category`.
   Future<BaseResponse<Review>> submitReview({
     required String orderId,
     required String toUserId,
-    required ReviewCategory category,
-    required num score,
+    required List<ReviewCategory> categories,
+    required int score,
     String? comment,
   }) {
     return guard(() async {
       // fromUserId is automatically set by backend from auth context
+      // TODO: After regenerating API client, change `category` to `categories`
       final res = await _apiClient.getReviewApi().reviewCreate(
         insertReview: InsertReview(
           orderId: orderId,
           fromUserId: '', // Will be set by backend
           toUserId: toUserId,
-          category: category,
+          // After API regeneration: categories: categories,
+          categories: categories,
           score: score,
           comment: comment,
         ),

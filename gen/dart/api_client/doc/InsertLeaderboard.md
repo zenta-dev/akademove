@@ -11,8 +11,8 @@ Name | Type | Description | Notes
 **userId** | **String** |  | 
 **driverId** | **String** |  | [optional] 
 **merchantId** | **String** |  | [optional] 
-**category** | **String** |  | 
-**period** | **String** |  | 
+**category** | [**LeaderboardCategory**](LeaderboardCategory.md) |  | 
+**period** | [**LeaderboardPeriod**](LeaderboardPeriod.md) |  | 
 **rank** | **int** |  | 
 **score** | **int** |  | 
 **periodStart** | [**DateTime**](DateTime.md) |  | 

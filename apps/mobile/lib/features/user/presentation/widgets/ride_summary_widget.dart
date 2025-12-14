@@ -1,4 +1,5 @@
 import 'package:akademove/core/_export.dart';
+import 'package:akademove/l10n/l10n.dart';
 import 'package:api_client/api_client.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
@@ -21,14 +22,20 @@ class RideSummaryWidget extends StatelessWidget {
       child: Column(
         spacing: 6.h,
         children: [
-          _buildRow('Distance', '${summary?.distanceKm} Km'),
-          const Divider(),
-          _buildRow('Fare', context.formatCurrency(summary?.subtotal ?? 0)),
-          const Divider(),
-          _buildRow('Tax', context.formatCurrency(summary?.tax ?? 0)),
+          _buildRow(context.l10n.distance, '${summary?.distanceKm} Km'),
           const Divider(),
           _buildRow(
-            'Platform fee',
+            context.l10n.fare,
+            context.formatCurrency(summary?.subtotal ?? 0),
+          ),
+          const Divider(),
+          _buildRow(
+            context.l10n.tax,
+            context.formatCurrency(summary?.tax ?? 0),
+          ),
+          const Divider(),
+          _buildRow(
+            context.l10n.platform_fee,
             context.formatCurrency(summary?.platformFee ?? 0),
           ),
           const Divider(),

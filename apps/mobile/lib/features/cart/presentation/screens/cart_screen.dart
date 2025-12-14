@@ -1,7 +1,7 @@
 import 'package:akademove/app/router/router.dart';
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/cart/data/models/cart_models.dart';
-import 'package:akademove/features/cart/presentation/cubits/cart_cubit.dart';
+import 'package:akademove/features/cart/presentation/cubits/user_cart_cubit.dart';
 import 'package:akademove/features/cart/presentation/states/_export.dart';
 import 'package:akademove/l10n/l10n.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -22,11 +22,11 @@ class _CartScreenState extends State<CartScreen> {
   @override
   void initState() {
     super.initState();
-    context.read<CartCubit>().loadCart();
+    context.read<UserCartCubit>().loadCart();
   }
 
   Future<void> _onRefresh() async {
-    await context.read<CartCubit>().loadCart();
+    await context.read<UserCartCubit>().loadCart();
   }
 
   @override
@@ -47,7 +47,7 @@ class _CartScreenState extends State<CartScreen> {
             ),
           ],
           trailing: [
-            BlocBuilder<CartCubit, CartState>(
+            BlocBuilder<UserCartCubit, UserCartState>(
               builder: (context, state) {
                 if (state.isEmpty) return const SizedBox.shrink();
                 return IconButton(
@@ -60,9 +60,9 @@ class _CartScreenState extends State<CartScreen> {
           ],
         ),
       ],
-      child: RefreshTrigger(
+      child: SafeRefreshTrigger(
         onRefresh: _onRefresh,
-        child: BlocConsumer<CartCubit, CartState>(
+        child: BlocConsumer<UserCartCubit, UserCartState>(
           listener: (context, state) {
             // Listen to cart load failures
             state.cart.whenOr(
@@ -90,7 +90,7 @@ class _CartScreenState extends State<CartScreen> {
               failure: (error) => Center(
                 child: OopsAlertWidget(
                   message: error.message ?? context.l10n.cart_failed_to_load,
-                  onRefresh: () => context.read<CartCubit>().loadCart(),
+                  onRefresh: () => context.read<UserCartCubit>().loadCart(),
                 ),
               ),
               orElse: () => const Center(child: CircularProgressIndicator()),
@@ -150,7 +150,7 @@ class _CartScreenState extends State<CartScreen> {
     );
   }
 
-  Widget _buildContent(BuildContext context, CartState state) {
+  Widget _buildContent(BuildContext context, UserCartState state) {
     final cart = state.currentCart;
     if (cart == null) return const SizedBox.shrink();
 
@@ -210,7 +210,7 @@ class _CartScreenState extends State<CartScreen> {
     );
   }
 
-  Widget _buildBottomBar(BuildContext context, CartState state) {
+  Widget _buildBottomBar(BuildContext context, UserCartState state) {
     final mutedColor = context.colorScheme.mutedForeground;
 
     return Container(
@@ -281,7 +281,7 @@ class _CartScreenState extends State<CartScreen> {
           ),
           Button(
             onPressed: () {
-              context.read<CartCubit>().clearCart();
+              context.read<UserCartCubit>().clearCart();
               Navigator.of(dialogContext).pop();
             },
             style: ButtonStyle.destructive(),
@@ -397,7 +397,7 @@ class _QuantityControls extends StatelessWidget {
       children: [
         GestureDetector(
           onTap: () {
-            context.read<CartCubit>().updateQuantity(
+            context.read<UserCartCubit>().updateQuantity(
               menuId: item.menuId,
               delta: -1,
             );
@@ -424,7 +424,7 @@ class _QuantityControls extends StatelessWidget {
         Gap(12.w),
         GestureDetector(
           onTap: () {
-            context.read<CartCubit>().updateQuantity(
+            context.read<UserCartCubit>().updateQuantity(
               menuId: item.menuId,
               delta: 1,
             );

@@ -11,6 +11,7 @@ Name | Type | Description | Notes
 **id** | **String** |  | 
 **userId** | **String** |  | 
 **driverId** | **String** |  | [optional] 
+**completedDriverId** | **String** |  | [optional] 
 **merchantId** | **String** |  | [optional] 
 **type** | [**OrderType**](OrderType.md) |  | 
 **status** | [**OrderStatus**](OrderStatus.md) |  | 
@@ -44,6 +45,7 @@ Name | Type | Description | Notes
 **proofOfDeliveryUrl** | **String** |  | [optional] 
 **deliveryOtp** | **String** |  | [optional] 
 **otpVerifiedAt** | [**DateTime**](DateTime.md) |  | [optional] 
+**deliveryItemPhotoUrl** | **String** |  | [optional] 
 **itemCount** | **int** |  | [optional] 
 **items** | [**List&lt;OrderItem&gt;**](OrderItem.md) |  | [optional] 
 **deliveryItemType** | [**DeliveryItemType**](DeliveryItemType.md) |  | [optional] 

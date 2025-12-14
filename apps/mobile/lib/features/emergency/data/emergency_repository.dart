@@ -25,7 +25,9 @@ class EmergencyRepository extends BaseRepository {
   final ApiClient _apiClient;
 
   /// Trigger emergency during active trip
-  Future<BaseResponse<Emergency>> trigger(TriggerEmergencyQuery query) {
+  Future<BaseResponse<EmergencyWithContact>> trigger(
+    TriggerEmergencyQuery query,
+  ) {
     return guard(() async {
       final insertEmergency = InsertEmergency(
         orderId: query.orderId,
@@ -102,6 +104,59 @@ class EmergencyRepository extends BaseRepository {
 
       throw const RepositoryError(
         'Failed to get emergency',
+        code: ErrorCode.internalServerError,
+      );
+    });
+  }
+
+  /// Get primary emergency contact (highest priority active contact)
+  Future<BaseResponse<EmergencyContact?>> getPrimaryContact() {
+    return guard(() async {
+      final res = await _apiClient
+          .getEmergencyApi()
+          .emergencyContactGetPrimary();
+
+      if (res.statusCode == 200 && res.data != null) {
+        final data = res.data;
+        if (data == null) {
+          throw const RepositoryError(
+            'No data received from primary contact',
+            code: ErrorCode.internalServerError,
+          );
+        }
+        return SuccessResponse(message: data.message, data: data.data);
+      }
+
+      throw const RepositoryError(
+        'Failed to get primary contact',
+        code: ErrorCode.internalServerError,
+      );
+    });
+  }
+
+  /// Log emergency event (when user redirects to WhatsApp)
+  Future<BaseResponse<bool>> logEmergency({
+    required String orderId,
+    EmergencyLocation? location,
+  }) {
+    return guard(() async {
+      final res = await _apiClient.getEmergencyApi().emergencyLog(
+        logEmergency: LogEmergency(orderId: orderId, location: location),
+      );
+
+      if (res.statusCode == 200 && res.data != null) {
+        final data = res.data;
+        if (data == null) {
+          throw const RepositoryError(
+            'No data received from emergency log',
+            code: ErrorCode.internalServerError,
+          );
+        }
+        return SuccessResponse(message: data.message, data: data.data.logged);
+      }
+
+      throw const RepositoryError(
+        'Failed to log emergency',
         code: ErrorCode.internalServerError,
       );
     });

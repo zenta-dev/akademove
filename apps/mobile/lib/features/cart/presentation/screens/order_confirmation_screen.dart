@@ -65,7 +65,7 @@ class _OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
 
   void _loadEligibleCoupons() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final cartState = context.read<CartCubit>().state;
+      final cartState = context.read<UserCartCubit>().state;
       final totalAmount = cartState.currentCart?.subtotal ?? 0;
       if (totalAmount > 0) {
         context.read<UserCouponCubit>().loadEligibleCoupons(
@@ -218,6 +218,7 @@ class _OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
         child: SizedBox(
           height: MediaQuery.of(context).size.height * 0.7,
           child: UserCouponSelectorWidget(
+            onClose: () => closeDrawer(drawerContext),
             onCouponSelected: (coupon) {
               setState(() {
                 _selectedCoupon = coupon;
@@ -259,7 +260,7 @@ class _OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
           ],
         ),
       ],
-      child: BlocConsumer<CartCubit, CartState>(
+      child: BlocConsumer<UserCartCubit, UserCartState>(
         listenWhen: (prev, curr) =>
             prev.placeFoodOrderResult != curr.placeFoodOrderResult,
         listener: (context, state) async {
@@ -305,7 +306,7 @@ class _OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
     );
   }
 
-  Widget _buildContent(BuildContext context, Cart cart, CartState state) {
+  Widget _buildContent(BuildContext context, Cart cart, UserCartState state) {
     return Column(
       children: [
         Expanded(
@@ -646,7 +647,7 @@ class _OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
                     variance: ButtonVariance.ghost,
                     onPressed: item.quantity > 1
                         ? () {
-                            context.read<CartCubit>().updateQuantity(
+                            context.read<UserCartCubit>().updateQuantity(
                               menuId: item.menuId,
                               delta: -1,
                             );
@@ -667,7 +668,7 @@ class _OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
                     icon: Icon(LucideIcons.plus, size: 16.sp),
                     variance: ButtonVariance.ghost,
                     onPressed: () {
-                      context.read<CartCubit>().updateQuantity(
+                      context.read<UserCartCubit>().updateQuantity(
                         menuId: item.menuId,
                         delta: 1,
                       );
@@ -771,7 +772,7 @@ class _OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
         builder: (context, walletState) {
           final walletBalance =
               walletState.myWallet.value?.balance.toDouble() ?? 0;
-          final cartState = context.read<CartCubit>().state;
+          final cartState = context.read<UserCartCubit>().state;
           final totalCost = cartState.currentCart?.subtotal ?? 0;
           final isWalletSufficient = walletBalance >= totalCost;
 
@@ -1027,7 +1028,7 @@ class _OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
     );
   }
 
-  Widget _buildBottomBar(BuildContext context, Cart cart, CartState state) {
+  Widget _buildBottomBar(BuildContext context, Cart cart, UserCartState state) {
     final isPlacingOrder = state.placeFoodOrderResult.isLoading;
     const handlingAndShipping = 16000.0;
     final totalPrice = cart.subtotal + handlingAndShipping - _discountAmount;
@@ -1224,7 +1225,7 @@ class _OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
       return;
     }
 
-    context.read<CartCubit>().placeFoodOrder(
+    context.read<UserCartCubit>().placeFoodOrder(
       pickupLocation: pickupLocation,
       dropoffLocation: dropoffLocation,
       paymentMethod: _selectedPaymentMethod,

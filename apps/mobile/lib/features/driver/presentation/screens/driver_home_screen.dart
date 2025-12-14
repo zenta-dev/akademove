@@ -18,108 +18,162 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
   @override
   void initState() {
     super.initState();
-    context.read<DriverCubit>().init();
+    context.read<DriverProfileCubit>().init();
+    // Recover any active order for the driver
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<DriverOrderCubit>().recoverActiveOrder();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<DriverCubit, DriverState>(
-      listener: (context, state) {
-        if (state.initResult.isFailure) {
-          context.showMyToast(
-            state.initResult.error?.message ?? context.l10n.an_error_occurred,
-            type: ToastType.failed,
-          );
+    return BlocListener<DriverOrderCubit, DriverOrderState>(
+      listenWhen: (previous, current) =>
+          previous.recoverOrderResult != current.recoverOrderResult,
+      listener: (context, orderState) {
+        // Navigate to order detail when active order is recovered
+        if (orderState.recoverOrderResult.isSuccess) {
+          final order = orderState.recoverOrderResult.value;
+          if (order != null) {
+            context.pushNamed(
+              Routes.driverOrderDetail.name,
+              pathParameters: {'orderId': order.id},
+            );
+          }
         }
       },
-      builder: (context, state) {
-        return Scaffold(
-          headers: [
-            DefaultAppBar(
-              padding: EdgeInsets.all(16.r),
-              title: context.l10n.driver_dashboard,
-              trailing: [
-                BlocBuilder<NotificationCubit, NotificationState>(
-                  builder: (context, notificationState) {
-                    final unreadCount =
-                        notificationState.unreadCount.value ?? 0;
-                    return Stack(
-                      clipBehavior: Clip.none,
-                      children: [
-                        IconButton(
-                          onPressed: () {
-                            context.pushNamed(Routes.driverNotifications.name);
-                          },
-                          icon: Icon(LucideIcons.bell, size: 20.sp),
-                          variance: const ButtonStyle.ghostIcon(),
-                        ),
-                        if (unreadCount > 0)
-                          Positioned(
-                            right: 0,
-                            top: 0,
-                            child: Container(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: unreadCount > 9 ? 4.w : 6.w,
-                                vertical: 2.h,
-                              ),
-                              decoration: BoxDecoration(
-                                color: context.colorScheme.destructive,
-                                borderRadius: BorderRadius.circular(10.r),
-                                border: Border.all(
-                                  color: context.colorScheme.background,
-                                  width: 1.5,
+      child: BlocConsumer<DriverProfileCubit, DriverProfileState>(
+        listener: (context, state) {
+          if (state.initResult.isFailure) {
+            context.showMyToast(
+              state.initResult.error?.message ?? context.l10n.an_error_occurred,
+              type: ToastType.failed,
+            );
+          }
+
+          // Initialize DriverHomeCubit with driver when init succeeds
+          if (state.initResult.isSuccess) {
+            context.read<DriverHomeCubit>().initWithDriver(state.driver);
+          }
+
+          // Sync driver state to DriverHomeCubit when online status changes
+          if (state.toggleOnlineResult.isSuccess) {
+            context.read<DriverHomeCubit>().updateDriver(state.driver);
+          }
+        },
+        builder: (context, state) {
+          return Scaffold(
+            headers: [
+              AppBar(
+                padding: EdgeInsets.all(16.r),
+                title: Text(
+                  context.l10n.driver_dashboard,
+                  style: context.typography.h4.copyWith(fontSize: 18.sp),
+                ),
+                trailing: [
+                  BlocBuilder<SharedNotificationCubit, SharedNotificationState>(
+                    builder: (context, notificationState) {
+                      final unreadCount =
+                          notificationState.unreadCount.value ?? 0;
+                      return Stack(
+                        clipBehavior: Clip.none,
+                        children: [
+                          IconButton(
+                            onPressed: () {
+                              context.pushNamed(
+                                Routes.driverNotifications.name,
+                              );
+                            },
+                            icon: Icon(LucideIcons.bell, size: 20.sp),
+                            variance: const ButtonStyle.ghostIcon(),
+                          ),
+                          if (unreadCount > 0)
+                            Positioned(
+                              right: 0,
+                              top: 0,
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: unreadCount > 9 ? 4.w : 6.w,
+                                  vertical: 2.h,
                                 ),
-                              ),
-                              constraints: BoxConstraints(
-                                minWidth: 18.w,
-                                minHeight: 18.h,
-                              ),
-                              child: Center(
-                                child: Text(
-                                  unreadCount > 99
-                                      ? '99+'
-                                      : unreadCount.toString(),
-                                  style: context.typography.xSmall.copyWith(
-                                    color: Colors.white,
-                                    fontSize: 10.sp,
-                                    fontWeight: FontWeight.bold,
+                                decoration: BoxDecoration(
+                                  color: context.colorScheme.destructive,
+                                  borderRadius: BorderRadius.circular(10.r),
+                                  border: Border.all(
+                                    color: context.colorScheme.background,
+                                    width: 1.5,
+                                  ),
+                                ),
+                                constraints: BoxConstraints(
+                                  minWidth: 18.w,
+                                  minHeight: 18.h,
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    unreadCount > 99
+                                        ? '99+'
+                                        : unreadCount.toString(),
+                                    style: context.typography.xSmall.copyWith(
+                                      color: Colors.white,
+                                      fontSize: 10.sp,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
-                      ],
-                    );
-                  },
-                ),
-              ],
-            ),
-          ],
-          child: RefreshTrigger(
-            onRefresh: () => context.read<DriverCubit>().init(),
-            child: SingleChildScrollView(
-              physics: const AlwaysScrollableScrollPhysics(),
-              child: Padding(
-                padding: EdgeInsets.all(16.dg),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  spacing: 20.h,
-                  children: [
-                    _buildWelcomeCard(context, state),
-                    _buildOnlineToggle(context, state),
-                    _buildTodayStats(context, state),
-                    _buildQuickActions(context),
-                  ],
+                        ],
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ],
+            child: SafeRefreshTrigger(
+              onRefresh: () => context.read<DriverProfileCubit>().init(),
+              child: SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                child: Padding(
+                  padding: EdgeInsets.all(16.dg),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    spacing: 20.h,
+                    children: [
+                      _buildWelcomeCard(context, state),
+                      _buildOnlineToggle(context, state),
+                      // Show location card when driver is online
+                      if (state.isOnline)
+                        BlocBuilder<DriverHomeCubit, DriverHomeState>(
+                          buildWhen: (previous, current) =>
+                              previous.currentLocation !=
+                              current.currentLocation,
+                          builder: (context, homeState) {
+                            final location = homeState.currentLocation;
+                            if (location == null) {
+                              return const SizedBox.shrink();
+                            }
+                            return DriverLocationCard(
+                              key: const ValueKey('driver_location_card'),
+                              coordinate: location,
+                            );
+                          },
+                        ),
+                      _buildTodayStats(context, state),
+                      _buildQuickActions(context),
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 
-  Widget _buildWelcomeCard(BuildContext context, DriverState state) {
+  Widget _buildWelcomeCard(BuildContext context, DriverProfileState state) {
+    final driver = state.driver;
+
     return Card(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -135,53 +189,46 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
               SizedBox(width: 8.w),
               Expanded(
                 child: Text(
-                  context.l10n.hello(state.driver?.user?.name ?? 'Folks'),
+                  context.l10n.hello(driver?.user?.name ?? 'Folks'),
                   style: context.typography.h4.copyWith(fontSize: 18.sp),
                 ),
               ),
             ],
           ),
-          if (state.driver != null)
-            Builder(
-              builder: (context) {
-                final driver = state.driver;
-                if (driver == null) return const SizedBox.shrink();
-
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  spacing: 8.h,
+          if (driver != null)
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              spacing: 8.h,
+              children: [
+                Text(
+                  '${context.l10n.license_plate} ${driver.licensePlate}',
+                  style: context.typography.small.copyWith(
+                    color: context.colorScheme.mutedForeground,
+                  ),
+                ),
+                Row(
                   children: [
-                    Text(
-                      '${context.l10n.license_plate} ${driver.licensePlate}',
-                      style: context.typography.small.copyWith(
-                        color: context.colorScheme.mutedForeground,
-                      ),
+                    Icon(
+                      LucideIcons.star,
+                      size: 16.sp,
+                      color: const Color(0xFFFFC107),
                     ),
-                    Row(
-                      children: [
-                        Icon(
-                          LucideIcons.star,
-                          size: 16.sp,
-                          color: const Color(0xFFFFC107),
-                        ),
-                        SizedBox(width: 4.w),
-                        Text(
-                          '${driver.rating.toStringAsFixed(1)} rating',
-                          style: context.typography.small,
-                        ),
-                      ],
+                    SizedBox(width: 4.w),
+                    Text(
+                      '${driver.rating.toStringAsFixed(1)} rating',
+                      style: context.typography.small,
                     ),
                   ],
-                );
-              },
+                ),
+              ],
             ),
         ],
       ),
     );
   }
 
-  Widget _buildOnlineToggle(BuildContext context, DriverState state) {
-    final isOnline = state.driver?.isOnline ?? false;
+  Widget _buildOnlineToggle(BuildContext context, DriverProfileState state) {
+    final isOnline = state.isOnline;
     final isLoading = state.initResult.isLoading;
 
     return Card(
@@ -214,7 +261,9 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
                 value: isOnline,
                 onChanged: isLoading
                     ? null
-                    : (_) => context.read<DriverCubit>().toggleOnlineStatus(),
+                    : (_) => context
+                          .read<DriverProfileCubit>()
+                          .toggleOnlineStatus(),
               ),
             ],
           ),
@@ -256,25 +305,27 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
     );
   }
 
-  Widget _buildTodayStats(BuildContext context, DriverState state) {
+  Widget _buildTodayStats(BuildContext context, DriverProfileState state) {
     return Card(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 16.h,
         children: [
-          Text(
-            'Today\'s Performance',
-            style: context.typography.h4.copyWith(fontSize: 16.sp),
-          ),
+          Text(context.l10n.today_performance),
           Row(
             children: [
               Expanded(
-                child: _buildStatItem(
-                  context,
-                  icon: LucideIcons.dollarSign,
-                  label: context.l10n.earnings,
-                  value: 'Rp ${_formatMoney(state.todayEarnings ?? 0)}',
-                  color: const Color(0xFF4CAF50),
+                child: GestureDetector(
+                  onTap: () =>
+                      context.pushNamed(Routes.driverCommissionReport.name),
+                  child: _buildStatItem(
+                    context,
+                    icon: LucideIcons.dollarSign,
+                    label: context.l10n.earnings,
+                    value: 'Rp ${_formatMoney(state.todayEarnings ?? 0)}',
+                    color: const Color(0xFF4CAF50),
+                    showArrow: true,
+                  ),
                 ),
               ),
               SizedBox(width: 16.w),
@@ -300,6 +351,7 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
     required String label,
     required String value,
     required Color color,
+    bool showArrow = false,
   }) {
     return Container(
       padding: EdgeInsets.all(12.dg),
@@ -307,24 +359,42 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
         color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(8.r),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        spacing: 8.h,
+      child: Row(
         children: [
-          Icon(icon, color: color, size: 24.sp),
-          Text(
-            label,
-            style: context.typography.small.copyWith(
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              spacing: 6.h,
+              children: [
+                Icon(icon, color: color, size: 24.sp),
+                Text(
+                  label,
+                  style: context.typography.small.copyWith(
+                    color: context.colorScheme.mutedForeground,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                Text(
+                  value,
+                  style: context.typography.h4.copyWith(
+                    fontSize: 18.sp,
+                    color: color,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+            ),
+          ),
+          if (showArrow) ...[
+            SizedBox(width: 8.w),
+            Icon(
+              LucideIcons.arrowRight,
+              size: 20.sp,
               color: context.colorScheme.mutedForeground,
             ),
-          ),
-          Text(
-            value,
-            style: context.typography.h4.copyWith(
-              fontSize: 18.sp,
-              color: color,
-            ),
-          ),
+          ],
         ],
       ),
     );
@@ -334,16 +404,12 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
     return Card(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        spacing: 12.h,
         children: [
-          Text(
-            'Quick Actions',
-            style: context.typography.h4.copyWith(fontSize: 16.sp),
-          ),
+          Text(context.l10n.quick_actions),
           _buildActionButton(
             context,
             icon: LucideIcons.trophy,
-            label: context.l10n.leadeboard_and_badges,
+            label: context.l10n.leaderboard,
             onTap: () => context.pushNamed(Routes.driverLeaderboard.name),
           ),
           _buildActionButton(
@@ -369,7 +435,7 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
         child: Row(
           children: [
             Icon(icon, size: 20.sp, color: context.colorScheme.primary),
-            SizedBox(width: 12.w),
+            SizedBox(width: 8.w),
             Expanded(
               child: Text(
                 label,

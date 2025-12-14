@@ -14,7 +14,7 @@ class UserOrderState extends Equatable {
     this.selectedScheduledOrder = const OperationResult.idle(),
     this.pickupLocation,
     this.dropoffLocation,
-    this.isPolling = false,
+    // this.isPolling = false,
   });
 
   final OperationResult<EstimateOrderResult> estimateOrder;
@@ -34,7 +34,7 @@ class UserOrderState extends Equatable {
   final Place? dropoffLocation;
 
   /// Whether polling is currently active for order updates
-  final bool isPolling;
+  // final bool isPolling;
 
   @override
   List<Object> get props => [
@@ -49,7 +49,7 @@ class UserOrderState extends Equatable {
     selectedScheduledOrder,
     ?pickupLocation,
     ?dropoffLocation,
-    isPolling,
+    // isPolling,
   ];
 
   UserOrderState copyWith({
@@ -64,7 +64,7 @@ class UserOrderState extends Equatable {
     OperationResult<Order>? selectedScheduledOrder,
     Place? pickupLocation,
     Place? dropoffLocation,
-    bool? isPolling,
+    // bool? isPolling,
   }) {
     return UserOrderState(
       estimateOrder: estimateOrder ?? this.estimateOrder,
@@ -80,7 +80,7 @@ class UserOrderState extends Equatable {
           selectedScheduledOrder ?? this.selectedScheduledOrder,
       pickupLocation: pickupLocation ?? this.pickupLocation,
       dropoffLocation: dropoffLocation ?? this.dropoffLocation,
-      isPolling: isPolling ?? this.isPolling,
+      // isPolling: isPolling ?? this.isPolling,
     );
   }
 

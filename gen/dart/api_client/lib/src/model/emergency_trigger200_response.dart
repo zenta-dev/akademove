@@ -4,7 +4,7 @@
 
 // ignore_for_file: unused_element
 import 'package:api_client/src/model/pagination_result.dart';
-import 'package:api_client/src/model/emergency.dart';
+import 'package:api_client/src/model/emergency_with_contact.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
 
@@ -29,7 +29,7 @@ class EmergencyTrigger200Response {
   final String message;
 
   @JsonKey(name: r'data', required: true, includeIfNull: false)
-  final Emergency data;
+  final EmergencyWithContact data;
 
   @JsonKey(name: r'pagination', required: false, includeIfNull: false)
   final PaginationResult? pagination;

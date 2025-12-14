@@ -68,11 +68,11 @@ class SupportTicket {
   @JsonKey(name: r'resolvedAt', required: false, includeIfNull: false)
   final DateTime? resolvedAt;
 
-  @JsonKey(name: r'createdAt', required: true, includeIfNull: true)
-  final DateTime? createdAt;
+  @JsonKey(name: r'createdAt', required: true, includeIfNull: false)
+  final DateTime createdAt;
 
-  @JsonKey(name: r'updatedAt', required: true, includeIfNull: true)
-  final DateTime? updatedAt;
+  @JsonKey(name: r'updatedAt', required: true, includeIfNull: false)
+  final DateTime updatedAt;
 
   @JsonKey(name: r'user', required: false, includeIfNull: false)
   final SupportTicketUser? user;
@@ -109,10 +109,10 @@ class SupportTicket {
       priority.hashCode +
       status.hashCode +
       orderId.hashCode +
-      (lastMessageAt == null ? 0 : lastMessageAt.hashCode) +
-      (resolvedAt == null ? 0 : resolvedAt.hashCode) +
-      (createdAt == null ? 0 : createdAt.hashCode) +
-      (updatedAt == null ? 0 : updatedAt.hashCode) +
+      lastMessageAt.hashCode +
+      resolvedAt.hashCode +
+      createdAt.hashCode +
+      updatedAt.hashCode +
       user.hashCode +
       assignedTo.hashCode;
 

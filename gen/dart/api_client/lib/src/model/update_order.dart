@@ -28,6 +28,7 @@ class UpdateOrder {
   /// Returns a new [UpdateOrder] instance.
   const UpdateOrder({
     this.driverId,
+    this.completedDriverId,
     this.merchantId,
     this.type,
     this.status,
@@ -51,6 +52,7 @@ class UpdateOrder {
     this.proofOfDeliveryUrl,
     this.deliveryOtp,
     this.otpVerifiedAt,
+    this.deliveryItemPhotoUrl,
     this.itemCount,
     this.items,
     this.deliveryItemType,
@@ -60,6 +62,9 @@ class UpdateOrder {
   });
   @JsonKey(name: r'driverId', required: false, includeIfNull: false)
   final String? driverId;
+
+  @JsonKey(name: r'completedDriverId', required: false, includeIfNull: false)
+  final String? completedDriverId;
 
   @JsonKey(name: r'merchantId', required: false, includeIfNull: false)
   final String? merchantId;
@@ -130,6 +135,9 @@ class UpdateOrder {
   @JsonKey(name: r'otpVerifiedAt', required: false, includeIfNull: false)
   final DateTime? otpVerifiedAt;
 
+  @JsonKey(name: r'deliveryItemPhotoUrl', required: false, includeIfNull: false)
+  final String? deliveryItemPhotoUrl;
+
   // minimum: 0
   // maximum: 9007199254740991
   @JsonKey(name: r'itemCount', required: false, includeIfNull: false)
@@ -155,6 +163,7 @@ class UpdateOrder {
       identical(this, other) ||
       other is UpdateOrder &&
           other.driverId == driverId &&
+          other.completedDriverId == completedDriverId &&
           other.merchantId == merchantId &&
           other.type == type &&
           other.status == status &&
@@ -178,6 +187,7 @@ class UpdateOrder {
           other.proofOfDeliveryUrl == proofOfDeliveryUrl &&
           other.deliveryOtp == deliveryOtp &&
           other.otpVerifiedAt == otpVerifiedAt &&
+          other.deliveryItemPhotoUrl == deliveryItemPhotoUrl &&
           other.itemCount == itemCount &&
           other.items == items &&
           other.deliveryItemType == deliveryItemType &&
@@ -188,6 +198,7 @@ class UpdateOrder {
   @override
   int get hashCode =>
       driverId.hashCode +
+      completedDriverId.hashCode +
       merchantId.hashCode +
       type.hashCode +
       status.hashCode +
@@ -211,6 +222,7 @@ class UpdateOrder {
       proofOfDeliveryUrl.hashCode +
       deliveryOtp.hashCode +
       otpVerifiedAt.hashCode +
+      deliveryItemPhotoUrl.hashCode +
       itemCount.hashCode +
       items.hashCode +
       deliveryItemType.hashCode +

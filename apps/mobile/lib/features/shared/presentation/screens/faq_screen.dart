@@ -1,4 +1,5 @@
 import 'package:akademove/core/_export.dart';
+import 'package:akademove/l10n/l10n.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -42,133 +43,121 @@ class _FaqScreenState extends State<FaqScreen> {
   String? _openCategory;
   String? _openQuestion;
 
-  static final List<FaqCategory> _categories = [
-    FaqCategory(
-      id: 'general',
-      title: 'General',
-      icon: LucideIcons.circle,
-      questions: [
-        FaqQuestion(
-          id: 'q1',
-          question: 'What is AkadeMove?',
-          answer:
-              'AkadeMove is a campus-specific mobility and delivery platform connecting students as users, drivers, and merchants. We offer ride-hailing, package delivery, and food ordering services exclusively within campus boundaries.',
-        ),
-        FaqQuestion(
-          id: 'q2',
-          question: 'Who can use AkadeMove?',
-          answer:
-              'AkadeMove is available to all students, faculty, and staff with a valid campus ID. Drivers must be students with valid licenses and vehicle documentation.',
-        ),
-        FaqQuestion(
-          id: 'q3',
-          question: 'What services does AkadeMove offer?',
-          answer:
-              'We offer three main services: Ride-hailing for campus transportation, Delivery for packages and documents, and Food delivery from campus merchants.',
-        ),
-      ],
-    ),
-    FaqCategory(
-      id: 'orders',
-      title: 'Orders & Delivery',
-      icon: LucideIcons.shoppingCart,
-      questions: [
-        FaqQuestion(
-          id: 'q1',
-          question: 'How do I place an order?',
-          answer:
-              'Open the app, select your service type (Ride, Delivery, or Food), set your pickup and destination points, review the fare, and confirm your booking.',
-        ),
-        FaqQuestion(
-          id: 'q2',
-          question: 'Can I cancel an order?',
-          answer:
-              'Yes, you can cancel before a driver accepts your order with no penalty. After acceptance, cancellation fees may apply based on order status.',
-        ),
-        FaqQuestion(
-          id: 'q3',
-          question: 'How long does matching take?',
-          answer:
-              'Matching typically takes less than 30 seconds. If no driver accepts within this time, we\'ll automatically expand the search radius.',
-        ),
-      ],
-    ),
-    FaqCategory(
-      id: 'payment',
-      title: 'Payments & Wallet',
-      icon: LucideIcons.creditCard,
-      questions: [
-        FaqQuestion(
-          id: 'q1',
-          question: 'What payment methods are accepted?',
-          answer:
-              'You can pay using your in-app wallet, which can be topped up via QRIS or bank transfer through Midtrans.',
-        ),
-        FaqQuestion(
-          id: 'q2',
-          question: 'How do I top up my wallet?',
-          answer:
-              'Go to your wallet, select \'Top Up\', choose your amount and payment method (QRIS or bank transfer), complete the payment through Midtrans.',
-        ),
-        FaqQuestion(
-          id: 'q3',
-          question: 'What is the commission structure?',
-          answer:
-              'For rides and deliveries, the platform takes a 15% commission. For food orders, there\'s a 20% commission split between the platform (10%) and merchant (10%). Tips go 100% to drivers.',
-        ),
-      ],
-    ),
-    FaqCategory(
-      id: 'driver',
-      title: 'Driver',
-      icon: LucideIcons.car,
-      questions: [
-        FaqQuestion(
-          id: 'q1',
-          question: 'How do I become a driver?',
-          answer:
-              'Click \'Become a Driver\', submit your student ID (KTM), driver\'s license (SIM), and vehicle registration (STNK). Once verified and approved, you can start accepting orders.',
-        ),
-        FaqQuestion(
-          id: 'q2',
-          question: 'Can I work during my class schedule?',
-          answer:
-              'The app automatically sets you offline during your scheduled class times. You can manually override this if needed, but we recommend focusing on your studies.',
-        ),
-        FaqQuestion(
-          id: 'q3',
-          question: 'When can I withdraw my earnings?',
-          answer:
-              'You can withdraw your earnings to your bank account anytime after completing orders. Withdrawals are typically processed within 1-3 business days. Minimum withdrawal is Rp 50,000.',
-        ),
-      ],
-    ),
-    FaqCategory(
-      id: 'safety',
-      title: 'Safety & Security',
-      icon: LucideIcons.shield,
-      questions: [
-        FaqQuestion(
-          id: 'q1',
-          question: 'How does gender preference work?',
-          answer:
-              'Users can optionally request a driver of the same gender for added comfort and safety. This is especially useful for late-night rides.',
-        ),
-        FaqQuestion(
-          id: 'q2',
-          question: 'What if I feel unsafe during a ride?',
-          answer:
-              'Use the in-app emergency button to alert campus security immediately. You can also report the driver after the trip, and our team will investigate promptly.',
-        ),
-        FaqQuestion(
-          id: 'q3',
-          question: 'How are drivers verified?',
-          answer:
-              'All drivers must submit and get approved for their student ID, driver\'s license, and vehicle registration. We verify all documents before activation.',
-        ),
-      ],
-    ),
-  ];
+  List<FaqCategory> _getCategories(BuildContext context) {
+    final l10n = context.l10n;
+    return [
+      FaqCategory(
+        id: 'general',
+        title: l10n.faq_category_general,
+        icon: LucideIcons.circle,
+        questions: [
+          FaqQuestion(
+            id: 'q1',
+            question: l10n.faq_general_q1,
+            answer: l10n.faq_general_a1,
+          ),
+          FaqQuestion(
+            id: 'q2',
+            question: l10n.faq_general_q2,
+            answer: l10n.faq_general_a2,
+          ),
+          FaqQuestion(
+            id: 'q3',
+            question: l10n.faq_general_q3,
+            answer: l10n.faq_general_a3,
+          ),
+        ],
+      ),
+      FaqCategory(
+        id: 'orders',
+        title: l10n.faq_category_orders,
+        icon: LucideIcons.shoppingCart,
+        questions: [
+          FaqQuestion(
+            id: 'q1',
+            question: l10n.faq_orders_q1,
+            answer: l10n.faq_orders_a1,
+          ),
+          FaqQuestion(
+            id: 'q2',
+            question: l10n.faq_orders_q2,
+            answer: l10n.faq_orders_a2,
+          ),
+          FaqQuestion(
+            id: 'q3',
+            question: l10n.faq_orders_q3,
+            answer: l10n.faq_orders_a3,
+          ),
+        ],
+      ),
+      FaqCategory(
+        id: 'payment',
+        title: l10n.faq_category_payment,
+        icon: LucideIcons.creditCard,
+        questions: [
+          FaqQuestion(
+            id: 'q1',
+            question: l10n.faq_payment_q1,
+            answer: l10n.faq_payment_a1,
+          ),
+          FaqQuestion(
+            id: 'q2',
+            question: l10n.faq_payment_q2,
+            answer: l10n.faq_payment_a2,
+          ),
+          FaqQuestion(
+            id: 'q3',
+            question: l10n.faq_payment_q3,
+            answer: l10n.faq_payment_a3,
+          ),
+        ],
+      ),
+      FaqCategory(
+        id: 'driver',
+        title: l10n.faq_category_driver,
+        icon: LucideIcons.car,
+        questions: [
+          FaqQuestion(
+            id: 'q1',
+            question: l10n.faq_driver_q1,
+            answer: l10n.faq_driver_a1,
+          ),
+          FaqQuestion(
+            id: 'q2',
+            question: l10n.faq_driver_q2,
+            answer: l10n.faq_driver_a2,
+          ),
+          FaqQuestion(
+            id: 'q3',
+            question: l10n.faq_driver_q3,
+            answer: l10n.faq_driver_a3,
+          ),
+        ],
+      ),
+      FaqCategory(
+        id: 'safety',
+        title: l10n.faq_category_safety,
+        icon: LucideIcons.shield,
+        questions: [
+          FaqQuestion(
+            id: 'q1',
+            question: l10n.faq_safety_q1,
+            answer: l10n.faq_safety_a1,
+          ),
+          FaqQuestion(
+            id: 'q2',
+            question: l10n.faq_safety_q2,
+            answer: l10n.faq_safety_a2,
+          ),
+          FaqQuestion(
+            id: 'q3',
+            question: l10n.faq_safety_q3,
+            answer: l10n.faq_safety_a3,
+          ),
+        ],
+      ),
+    ];
+  }
 
   void _toggleCategory(String categoryId) {
     setState(() {
@@ -187,6 +176,7 @@ class _FaqScreenState extends State<FaqScreen> {
   }
 
   Future<void> _openContactSupport(BuildContext context) async {
+    final l10n = context.l10n;
     final emailUri = Uri(
       scheme: 'mailto',
       path: 'support@akademove.com',
@@ -202,7 +192,7 @@ class _FaqScreenState extends State<FaqScreen> {
             context: context,
             builder: (context, overlay) => context.buildToast(
               title: 'Error',
-              message: 'Could not open email app. Please try again.',
+              message: l10n.faq_error_email,
             ),
             location: ToastLocation.topCenter,
           );
@@ -212,10 +202,8 @@ class _FaqScreenState extends State<FaqScreen> {
       if (context.mounted) {
         showToast(
           context: context,
-          builder: (context, overlay) => context.buildToast(
-            title: 'Error',
-            message: 'Could not open email app. Please try again.',
-          ),
+          builder: (context, overlay) =>
+              context.buildToast(title: 'Error', message: l10n.faq_error_email),
           location: ToastLocation.topCenter,
         );
       }
@@ -224,8 +212,11 @@ class _FaqScreenState extends State<FaqScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final categories = _getCategories(context);
+    final l10n = context.l10n;
+
     return Scaffold(
-      headers: [const DefaultAppBar(title: 'Frequently Asked Questions')],
+      headers: [DefaultAppBar(title: l10n.faq_title)],
       child: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.all(16.dg),
@@ -234,7 +225,7 @@ class _FaqScreenState extends State<FaqScreen> {
             spacing: 16.h,
             children: [
               _buildHeaderCard(context),
-              ..._categories.map((category) {
+              ...categories.map((category) {
                 return _FaqCategoryWidget(
                   category: category,
                   isOpen: _openCategory == category.id,
@@ -252,6 +243,8 @@ class _FaqScreenState extends State<FaqScreen> {
   }
 
   Widget _buildHeaderCard(BuildContext context) {
+    final l10n = context.l10n;
+
     return Card(
       child: Column(
         spacing: 8.h,
@@ -262,14 +255,14 @@ class _FaqScreenState extends State<FaqScreen> {
             color: Theme.of(context).colorScheme.primary,
           ),
           Text(
-            'How can we help you?',
+            l10n.faq_header_title,
             style: context.typography.small.copyWith(
               fontSize: 16.sp,
               fontWeight: FontWeight.w600,
             ),
           ),
           Text(
-            'Find quick answers to common questions about using AkadeMove',
+            l10n.faq_header_subtitle,
             style: context.typography.small.copyWith(
               fontSize: 12.sp,
               fontWeight: FontWeight.normal,
@@ -282,19 +275,21 @@ class _FaqScreenState extends State<FaqScreen> {
   }
 
   Widget _buildContactCard(BuildContext context) {
+    final l10n = context.l10n;
+
     return Card(
       child: Column(
         spacing: 8.h,
         children: [
           Text(
-            'Still have questions?',
+            l10n.faq_contact_title,
             style: context.typography.small.copyWith(
               fontSize: 14.sp,
               fontWeight: FontWeight.w600,
             ),
           ),
           Text(
-            'Contact our support team for more help',
+            l10n.faq_contact_subtitle,
             style: context.typography.small.copyWith(
               fontSize: 12.sp,
               fontWeight: FontWeight.normal,
@@ -309,7 +304,7 @@ class _FaqScreenState extends State<FaqScreen> {
                 child: Button.secondary(
                   onPressed: () => _openContactSupport(context),
                   child: Text(
-                    'Contact Support',
+                    l10n.faq_contact_support,
                     style: context.typography.small.copyWith(fontSize: 14.sp),
                   ),
                 ),

@@ -15,6 +15,7 @@ import * as driverApprovalReview from "@/core/tables/driver-approval-review";
 import * as driverQuizAnswer from "@/core/tables/driver-quiz-answer";
 import * as driverQuizQuestion from "@/core/tables/driver-quiz-question";
 import * as emergency from "@/core/tables/emergency";
+import * as emergencyContact from "@/core/tables/emergency-contact";
 import * as fraud from "@/core/tables/fraud";
 import * as leaderboard from "@/core/tables/leaderboard";
 import * as merchant from "@/core/tables/merchant";
@@ -25,6 +26,7 @@ import * as payment from "@/core/tables/payment";
 import * as quickMessage from "@/core/tables/quick-message";
 import * as report from "@/core/tables/report";
 import * as review from "@/core/tables/review";
+import * as supportChat from "@/core/tables/support-chat";
 import * as transaction from "@/core/tables/transaction";
 import * as wallet from "@/core/tables/wallet";
 import { isDev } from "@/utils";
@@ -44,6 +46,7 @@ export const tables = {
 	...driverQuizAnswer,
 	...driverQuizQuestion,
 	...emergency,
+	...emergencyContact,
 	...fraud,
 	...leaderboard,
 	...merchant,
@@ -54,6 +57,7 @@ export const tables = {
 	...quickMessage,
 	...report,
 	...review,
+	...supportChat,
 	...transaction,
 	...wallet,
 };

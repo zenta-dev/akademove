@@ -112,6 +112,16 @@ export const BUSINESS_CONSTANTS = Object.freeze({
 	// WebSocket
 	WEBSOCKET_HEARTBEAT_INTERVAL_MS: 30_000, // 30 seconds
 	WEBSOCKET_MESSAGE_MAX_SIZE: 65_536, // 64 KB
+	/**
+	 * Delay in seconds before broadcasting WebSocket messages.
+	 * This allows clients time to establish WebSocket connections
+	 * after triggering actions (e.g., placing an order).
+	 *
+	 * Note: Uses Cloudflare Queues delaySeconds since setTimeout
+	 * does not actually delay in Cloudflare Workers due to security restrictions.
+	 * @see https://developers.cloudflare.com/workers/runtime-apis/nodejs/timers/
+	 */
+	BROADCAST_DELAY_SECONDS: 1,
 
 	// File Upload
 	MAX_FILE_SIZE_MB: 5,

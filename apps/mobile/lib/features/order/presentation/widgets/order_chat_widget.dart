@@ -16,16 +16,16 @@ class OrderChatWidget extends StatefulWidget {
 }
 
 class _OrderChatWidgetState extends State<OrderChatWidget> {
-  late OrderChatCubit _cubit;
-  late QuickMessageCubit _quickMessageCubit;
+  late SharedOrderChatCubit _cubit;
+  late SharedQuickMessageCubit _quickMessageCubit;
   final TextEditingController _messageController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
-    _cubit = context.read<OrderChatCubit>();
-    _quickMessageCubit = context.read<QuickMessageCubit>();
+    _cubit = context.read<SharedOrderChatCubit>();
+    _quickMessageCubit = context.read<SharedQuickMessageCubit>();
     _cubit.init(widget.orderId);
     _scrollController.addListener(_onScroll);
 
@@ -74,7 +74,7 @@ class _OrderChatWidgetState extends State<OrderChatWidget> {
       child: Column(
         children: [
           Expanded(
-            child: BlocBuilder<OrderChatCubit, OrderChatState>(
+            child: BlocBuilder<SharedOrderChatCubit, SharedOrderChatState>(
               builder: (context, state) {
                 if (state.messages.isIdle || state.messages.isLoading) {
                   return const Center(child: CircularProgressIndicator());
@@ -245,7 +245,7 @@ class _ChatMessageBubble extends StatelessWidget {
           ),
           SizedBox(height: 4.h),
           Text(
-            _formatTimestamp(message.sentAt),
+            _formatTimestamp(context, message.sentAt),
             style: context.typography.small.copyWith(
               color: context.colorScheme.mutedForeground,
             ),
@@ -255,20 +255,20 @@ class _ChatMessageBubble extends StatelessWidget {
     );
   }
 
-  String _formatTimestamp(DateTime timestamp) {
+  String _formatTimestamp(BuildContext context, DateTime timestamp) {
     // Convert UTC timestamp to local time for comparison
     final localTimestamp = timestamp.toLocal();
     final now = DateTime.now();
     final difference = now.difference(localTimestamp);
 
     if (difference.inDays > 0) {
-      return '${difference.inDays}d ago';
+      return context.l10n.chat_time_days_ago(difference.inDays);
     } else if (difference.inHours > 0) {
-      return '${difference.inHours}h ago';
+      return context.l10n.chat_time_hours_ago(difference.inHours);
     } else if (difference.inMinutes > 0) {
-      return '${difference.inMinutes}m ago';
+      return context.l10n.chat_time_minutes_ago(difference.inMinutes);
     } else {
-      return 'Just now';
+      return context.l10n.chat_time_just_now;
     }
   }
 }
@@ -281,7 +281,7 @@ class _QuickMessageChips extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<
-      QuickMessageCubit,
+      SharedQuickMessageCubit,
       OperationResult<List<QuickMessageTemplate>>
     >(
       builder: (context, state) {

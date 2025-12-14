@@ -166,6 +166,33 @@ class OrderRepository extends BaseRepository {
     });
   }
 
+  /// Upload delivery item photo (driver only)
+  /// POST /api/orders/{id}/delivery-item-photo
+  /// Driver uploads a photo of the item they picked up for delivery verification
+  /// Returns the uploaded photo URL
+  Future<BaseResponse<String>> uploadDeliveryItemPhoto(
+    String orderId,
+    Object file,
+  ) {
+    return guard(() async {
+      final res = await _apiClient.getOrderApi().orderUploadDeliveryItemPhoto(
+        id: orderId,
+        orderUploadDeliveryProofRequest: OrderUploadDeliveryProofRequest(
+          file: file,
+        ),
+      );
+
+      final data =
+          res.data ??
+          (throw const RepositoryError(
+            'Failed to upload delivery item photo',
+            code: ErrorCode.unknown,
+          ));
+
+      return SuccessResponse(message: data.message, data: data.data.url);
+    });
+  }
+
   /// Verify delivery OTP (customer only)
   /// POST /api/orders/{id}/verify-otp
   /// Returns whether verification was successful

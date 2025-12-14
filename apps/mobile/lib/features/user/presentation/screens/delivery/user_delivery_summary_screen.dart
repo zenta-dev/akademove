@@ -71,7 +71,7 @@ class _UserDeliverySummaryScreenState extends State<UserDeliverySummaryScreen> {
                       // Store coupon in delivery cubit for payment screen
                       final coupon = selectedCoupon;
                       if (coupon != null) {
-                        context.read<UserDeliveryCubit>().setSelectedCoupon(
+                        context.read<OrderLocationCubit>().setSelectedCoupon(
                           coupon.code,
                         );
                       }
@@ -152,6 +152,7 @@ class _UserDeliverySummaryScreenState extends State<UserDeliverySummaryScreen> {
                     child: SizedBox(
                       height: MediaQuery.of(context).size.height * 0.7,
                       child: UserCouponSelectorWidget(
+                        onClose: () => closeDrawer(drawerContext),
                         onCouponSelected: (coupon) {
                           setState(() {
                             selectedCoupon = coupon;
@@ -168,7 +169,6 @@ class _UserDeliverySummaryScreenState extends State<UserDeliverySummaryScreen> {
                               discountAmount = 0;
                             }
                           });
-                          closeDrawer(drawerContext);
                         },
                       ),
                     ),

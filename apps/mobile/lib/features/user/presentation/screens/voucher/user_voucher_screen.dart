@@ -56,7 +56,7 @@ class _UserVoucherScreenState extends State<UserVoucherScreen> {
           ],
         ),
       ],
-      child: RefreshTrigger(
+      child: SafeRefreshTrigger(
         onRefresh: _onRefresh,
         child: SingleChildScrollView(
           child: Padding(

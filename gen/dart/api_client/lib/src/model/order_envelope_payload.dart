@@ -3,6 +3,7 @@
 //
 
 // ignore_for_file: unused_element
+import 'package:api_client/src/model/order_envelope_payload_sync_request.dart';
 import 'package:api_client/src/model/order_envelope_payload_done.dart';
 import 'package:api_client/src/model/order_envelope_payload_detail.dart';
 import 'package:api_client/src/model/order_envelope_payload_retry_info.dart';
@@ -37,6 +38,7 @@ class OrderEnvelopePayload {
     this.cancelReason,
     this.noShow,
     this.retryInfo,
+    this.syncRequest,
   });
   @JsonKey(name: r'detail', required: false, includeIfNull: false)
   final OrderEnvelopePayloadDetail? detail;
@@ -68,6 +70,9 @@ class OrderEnvelopePayload {
   @JsonKey(name: r'retryInfo', required: false, includeIfNull: false)
   final OrderEnvelopePayloadRetryInfo? retryInfo;
 
+  @JsonKey(name: r'syncRequest', required: false, includeIfNull: false)
+  final OrderEnvelopePayloadSyncRequest? syncRequest;
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -81,7 +86,8 @@ class OrderEnvelopePayload {
           other.merchantAction == merchantAction &&
           other.cancelReason == cancelReason &&
           other.noShow == noShow &&
-          other.retryInfo == retryInfo;
+          other.retryInfo == retryInfo &&
+          other.syncRequest == syncRequest;
 
   @override
   int get hashCode =>
@@ -94,7 +100,8 @@ class OrderEnvelopePayload {
       merchantAction.hashCode +
       cancelReason.hashCode +
       noShow.hashCode +
-      retryInfo.hashCode;
+      retryInfo.hashCode +
+      syncRequest.hashCode;
 
   factory OrderEnvelopePayload.fromJson(Map<String, dynamic> json) =>
       _$OrderEnvelopePayloadFromJson(json);

@@ -15,9 +15,9 @@ abstract class _$ReviewCWProxy {
 
   Review toUserId(String toUserId);
 
-  Review category(ReviewCategory category);
+  Review categories(List<ReviewCategory> categories);
 
-  Review score(num score);
+  Review score(int score);
 
   Review comment(String? comment);
 
@@ -35,8 +35,8 @@ abstract class _$ReviewCWProxy {
     String orderId,
     String fromUserId,
     String toUserId,
-    ReviewCategory category,
-    num score,
+    List<ReviewCategory> categories,
+    int score,
     String? comment,
     DateTime createdAt,
   });
@@ -62,10 +62,11 @@ class _$ReviewCWProxyImpl implements _$ReviewCWProxy {
   Review toUserId(String toUserId) => call(toUserId: toUserId);
 
   @override
-  Review category(ReviewCategory category) => call(category: category);
+  Review categories(List<ReviewCategory> categories) =>
+      call(categories: categories);
 
   @override
-  Review score(num score) => call(score: score);
+  Review score(int score) => call(score: score);
 
   @override
   Review comment(String? comment) => call(comment: comment);
@@ -86,7 +87,7 @@ class _$ReviewCWProxyImpl implements _$ReviewCWProxy {
     Object? orderId = const $CopyWithPlaceholder(),
     Object? fromUserId = const $CopyWithPlaceholder(),
     Object? toUserId = const $CopyWithPlaceholder(),
-    Object? category = const $CopyWithPlaceholder(),
+    Object? categories = const $CopyWithPlaceholder(),
     Object? score = const $CopyWithPlaceholder(),
     Object? comment = const $CopyWithPlaceholder(),
     Object? createdAt = const $CopyWithPlaceholder(),
@@ -109,14 +110,15 @@ class _$ReviewCWProxyImpl implements _$ReviewCWProxy {
           ? _value.toUserId
           // ignore: cast_nullable_to_non_nullable
           : toUserId as String,
-      category: category == const $CopyWithPlaceholder() || category == null
-          ? _value.category
+      categories:
+          categories == const $CopyWithPlaceholder() || categories == null
+          ? _value.categories
           // ignore: cast_nullable_to_non_nullable
-          : category as ReviewCategory,
+          : categories as List<ReviewCategory>,
       score: score == const $CopyWithPlaceholder() || score == null
           ? _value.score
           // ignore: cast_nullable_to_non_nullable
-          : score as num,
+          : score as int,
       comment: comment == const $CopyWithPlaceholder()
           ? _value.comment
           // ignore: cast_nullable_to_non_nullable
@@ -149,7 +151,7 @@ Review _$ReviewFromJson(Map<String, dynamic> json) =>
           'orderId',
           'fromUserId',
           'toUserId',
-          'category',
+          'categories',
           'score',
           'createdAt',
         ],
@@ -159,11 +161,13 @@ Review _$ReviewFromJson(Map<String, dynamic> json) =>
         orderId: $checkedConvert('orderId', (v) => v as String),
         fromUserId: $checkedConvert('fromUserId', (v) => v as String),
         toUserId: $checkedConvert('toUserId', (v) => v as String),
-        category: $checkedConvert(
-          'category',
-          (v) => $enumDecode(_$ReviewCategoryEnumMap, v),
+        categories: $checkedConvert(
+          'categories',
+          (v) => (v as List<dynamic>)
+              .map((e) => $enumDecode(_$ReviewCategoryEnumMap, e))
+              .toList(),
         ),
-        score: $checkedConvert('score', (v) => v as num),
+        score: $checkedConvert('score', (v) => (v as num).toInt()),
         comment: $checkedConvert('comment', (v) => v as String? ?? ''),
         createdAt: $checkedConvert(
           'createdAt',
@@ -178,7 +182,9 @@ Map<String, dynamic> _$ReviewToJson(Review instance) => <String, dynamic>{
   'orderId': instance.orderId,
   'fromUserId': instance.fromUserId,
   'toUserId': instance.toUserId,
-  'category': _$ReviewCategoryEnumMap[instance.category]!,
+  'categories': instance.categories
+      .map((e) => _$ReviewCategoryEnumMap[e]!)
+      .toList(),
   'score': instance.score,
   'comment': ?instance.comment,
   'createdAt': instance.createdAt.toIso8601String(),

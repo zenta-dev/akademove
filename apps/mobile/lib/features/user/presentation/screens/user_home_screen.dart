@@ -35,7 +35,8 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
   late final TextEditingController _searchController;
   late final CarouselController _bannerController;
 
-  NotificationCubit get _notificationCubit => context.read<NotificationCubit>();
+  SharedNotificationCubit get _notificationCubit =>
+      context.read<SharedNotificationCubit>();
 
   @override
   void initState() {
@@ -48,7 +49,9 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
       context.read<UserOrderCubit>().fetchActiveOrder();
       Future.wait([
         context.read<UserHomeCubit>().getPopulars(),
-        context.read<ConfigurationCubit>().getBanners(placement: 'USER_HOME'),
+        context.read<SharedConfigurationCubit>().getBanners(
+          placement: 'USER_HOME',
+        ),
         context.read<UserWalletCubit>().getMine(),
       ]);
     });
@@ -66,7 +69,9 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
     context.read<UserOrderCubit>().fetchActiveOrder();
     await Future.wait([
       context.read<UserHomeCubit>().getPopulars(),
-      context.read<ConfigurationCubit>().getBanners(placement: 'USER_HOME'),
+      context.read<SharedConfigurationCubit>().getBanners(
+        placement: 'USER_HOME',
+      ),
       context.read<UserWalletCubit>().getMine(),
     ]);
   }
@@ -79,7 +84,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
           title: context.l10n.home,
           padding: EdgeInsets.all(16.r),
           trailing: [
-            BlocBuilder<NotificationCubit, NotificationState>(
+            BlocBuilder<SharedNotificationCubit, SharedNotificationState>(
               builder: (context, state) {
                 final unreadCount = state.unreadCount.value ?? 0;
                 return IconButton(
@@ -144,7 +149,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
           ],
         ),
       ],
-      child: RefreshTrigger(
+      child: SafeRefreshTrigger(
         onRefresh: _onRefresh,
         child: SingleChildScrollView(
           child: Column(
@@ -346,7 +351,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
     return Container(
       height: 180.h,
       padding: EdgeInsets.only(top: 8.dg),
-      child: BlocBuilder<ConfigurationCubit, ConfigurationState>(
+      child: BlocBuilder<SharedConfigurationCubit, SharedConfigurationState>(
         builder: (context, state) {
           return state.banners.whenOr(
             success: (banners, _) {
@@ -405,7 +410,7 @@ class _MerchantCardWidget extends StatelessWidget {
             CachedNetworkImage(
               imageUrl: merchant.image!,
               width: 135.w,
-              height: 100.h,
+              height: 95.h,
               imageBuilder: (context, imageProvider) {
                 return Container(
                   decoration: BoxDecoration(
@@ -422,10 +427,10 @@ class _MerchantCardWidget extends StatelessWidget {
                 );
               },
               errorWidget: (context, url, error) =>
-                  Assets.images.noImage.svg(width: 135.w, height: 100.h),
+                  Assets.images.noImage.svg(width: 135.w, height: 95.h),
             ),
           ] else ...[
-            Assets.images.noImage.svg(width: 135.w, height: 100.h),
+            Assets.images.noImage.svg(width: 135.w, height: 95.h),
           ],
           Padding(
             padding: EdgeInsetsGeometry.all(8.dg),
@@ -442,7 +447,7 @@ class _MerchantCardWidget extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  merchant.categories.join(', '),
+                  merchant.category.localizedName(context),
                   overflow: TextOverflow.ellipsis,
                   style: context.typography.textMuted.copyWith(
                     fontSize: 10.sp,
@@ -450,7 +455,7 @@ class _MerchantCardWidget extends StatelessWidget {
                     color: context.colorScheme.mutedForeground,
                   ),
                 ),
-                Gap(2.h),
+                Gap(4.h),
                 StarRating(
                   starSize: 12.sp,
                   value: merchant.rating.toDouble(),

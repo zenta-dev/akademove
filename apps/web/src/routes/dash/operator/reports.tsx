@@ -119,13 +119,7 @@ function RouteComponent() {
 		orpcQuery.report.update.mutationOptions({
 			onSuccess: () => {
 				toast.success("Report updated successfully");
-				queryClient.invalidateQueries(
-					// 	{
-					// 	queryKey: orpcQuery.report.list.queryKey({
-					// 		input: { query: search },
-					// 	}),
-					// }
-				);
+				queryClient.invalidateQueries();
 				setUpdateDialogOpen(false);
 				setSelectedReport(null);
 			},

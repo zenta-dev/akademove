@@ -9,7 +9,7 @@ part of 'leaderboard_list200_response.dart';
 abstract class _$LeaderboardList200ResponseCWProxy {
   LeaderboardList200Response message(String message);
 
-  LeaderboardList200Response data(List<Leaderboard> data);
+  LeaderboardList200Response data(List<LeaderboardWithDriver> data);
 
   LeaderboardList200Response pagination(PaginationResult? pagination);
 
@@ -24,7 +24,7 @@ abstract class _$LeaderboardList200ResponseCWProxy {
   /// ```
   LeaderboardList200Response call({
     String message,
-    List<Leaderboard> data,
+    List<LeaderboardWithDriver> data,
     PaginationResult? pagination,
     int? totalPages,
   });
@@ -42,7 +42,8 @@ class _$LeaderboardList200ResponseCWProxyImpl
   LeaderboardList200Response message(String message) => call(message: message);
 
   @override
-  LeaderboardList200Response data(List<Leaderboard> data) => call(data: data);
+  LeaderboardList200Response data(List<LeaderboardWithDriver> data) =>
+      call(data: data);
 
   @override
   LeaderboardList200Response pagination(PaginationResult? pagination) =>
@@ -74,7 +75,7 @@ class _$LeaderboardList200ResponseCWProxyImpl
       data: data == const $CopyWithPlaceholder() || data == null
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
-          : data as List<Leaderboard>,
+          : data as List<LeaderboardWithDriver>,
       pagination: pagination == const $CopyWithPlaceholder()
           ? _value.pagination
           // ignore: cast_nullable_to_non_nullable
@@ -108,7 +109,7 @@ LeaderboardList200Response _$LeaderboardList200ResponseFromJson(
     data: $checkedConvert(
       'data',
       (v) => (v as List<dynamic>)
-          .map((e) => Leaderboard.fromJson(e as Map<String, dynamic>))
+          .map((e) => LeaderboardWithDriver.fromJson(e as Map<String, dynamic>))
           .toList(),
     ),
     pagination: $checkedConvert(

@@ -1,6 +1,8 @@
+export * from "./driver/driver-location-ws";
 export * from "./merchant/merchant-ws";
 export * from "./order/order-ws";
 export * from "./payment/payment-ws";
+export * from "./support-chat/support-chat-ws";
 
 import type { Hono } from "hono";
 import { DRIVER_POOL_KEY } from "@/core/constants";
@@ -12,9 +14,11 @@ import {
 import { honoWebsocketHeader } from "@/core/middlewares/header";
 import { withQueryParams } from "@/utils";
 import { logger } from "@/utils/logger";
+import { DriverLocationRoom } from "./driver/driver-location-ws";
 import { MerchantRoom } from "./merchant/merchant-ws";
 import { OrderRepository } from "./order/order-repository";
 import { PaymentRepository } from "./payment/payment-repository";
+import { SupportChatRoom } from "./support-chat/support-chat-ws";
 
 export const setupWebsocketRouter = (app: Hono<HonoContext>) =>
 	app
@@ -64,6 +68,32 @@ export const setupWebsocketRouter = (app: Hono<HonoContext>) =>
 			);
 
 			const stub = MerchantRoom.getRoomStubByName(merchantId);
+
+			const userId = c.var.session?.user.id;
+			if (!userId) return c.json({ message: "Unauthenticated" }, 401);
+
+			const req = withQueryParams(c.req.raw, { userId });
+
+			return await stub.fetch(req);
+		})
+		.get("/ws/driver-location/:driverId", async (c) => {
+			const { driverId } = c.req.param();
+			logger.info(`WebSocket connection to driver location room: ${driverId}`);
+
+			const stub = DriverLocationRoom.getRoomStubByName(driverId);
+
+			const userId = c.var.session?.user.id;
+			if (!userId) return c.json({ message: "Unauthenticated" }, 401);
+
+			const req = withQueryParams(c.req.raw, { userId });
+
+			return await stub.fetch(req);
+		})
+		.get("/ws/support/:ticketId", async (c) => {
+			const { ticketId } = c.req.param();
+			logger.info(`WebSocket connection to support chat room: ${ticketId}`);
+
+			const stub = SupportChatRoom.getRoomStubByName(ticketId);
 
 			const userId = c.var.session?.user.id;
 			if (!userId) return c.json({ message: "Unauthenticated" }, 401);

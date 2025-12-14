@@ -262,7 +262,7 @@ export class OrderPlacementRepository extends OrderBaseRepository {
 				if (phoneNumber) chargePayload.va_number = `${phoneNumber}`;
 			}
 
-			const { transaction, payment } = await this.#paymentRepo.charge(
+			const { transaction, payment, wallet } = await this.#paymentRepo.charge(
 				chargePayload,
 				opts,
 			);
@@ -379,6 +379,38 @@ export class OrderPlacementRepository extends OrderBaseRepository {
 							updatedStatus: order.status,
 						},
 						"[OrderPlacementRepository] wallet payment successful - Order moved to MATCHING",
+					);
+				}
+
+				// Broadcast PAYMENT_SUCCESS to payment room for real-time UI updates
+				// This ensures the mobile app receives the payment success event with updated wallet balance
+				// (Same behavior as QRIS/Bank Transfer webhook handler)
+				try {
+					const { PaymentRepository } = await import(
+						"@/features/payment/payment-repository"
+					);
+					const paymentStub = PaymentRepository.getRoomStubByName(payment.id);
+					paymentStub.broadcast({
+						e: "PAYMENT_SUCCESS",
+						f: "s",
+						t: "c",
+						tg: "USER",
+						p: {
+							payment,
+							transaction,
+							wallet,
+						},
+					});
+
+					logger.info(
+						{ orderId: order.id, paymentId: payment.id },
+						"[OrderPlacementRepository] PAYMENT_SUCCESS broadcast sent to payment room",
+					);
+				} catch (broadcastError) {
+					// Log but don't fail the order - the payment was successful
+					logger.error(
+						{ error: broadcastError, orderId: order.id, paymentId: payment.id },
+						"[OrderPlacementRepository] Failed to broadcast PAYMENT_SUCCESS to payment room",
 					);
 				}
 
@@ -515,37 +547,39 @@ export class OrderPlacementRepository extends OrderBaseRepository {
 					);
 
 					// Broadcast to driver pool room via WebSocket for real-time driver matching
-					// This ensures drivers connected via WebSocket receive the order offer immediately
+					// Uses queue-based delayed broadcast to allow WebSocket clients time to connect
 					// The queue-based matching handles push notifications for offline drivers
-					const { OrderBaseRepository } = await import(
-						"./order-base-repository"
+					const { DRIVER_POOL_KEY, BUSINESS_CONSTANTS } = await import(
+						"@/core/constants"
 					);
-					const { DRIVER_POOL_KEY } = await import("@/core/constants");
+					const { ProcessingQueueService } = await import(
+						"@/core/services/queue"
+					);
 
-					const orderStub =
-						OrderBaseRepository.getRoomStubByName(DRIVER_POOL_KEY);
-
-					// Payment is already composed from charge() - use it directly
-					orderStub.broadcast({
-						a: "MATCHING",
-						f: "s",
-						t: "s",
-						tg: "SYSTEM",
-						p: {
-							detail: {
-								payment,
-								order: {
-									...order,
-									status: "MATCHING",
+					// Use queue-based broadcast with delay for robustness
+					// setTimeout doesn't work reliably in Cloudflare Workers
+					await ProcessingQueueService.enqueueWebSocketBroadcast(
+						{
+							roomName: DRIVER_POOL_KEY,
+							action: "MATCHING",
+							target: "SYSTEM",
+							data: {
+								detail: {
+									payment,
+									order: {
+										...order,
+										status: "MATCHING",
+									},
+									transaction,
 								},
-								transaction,
 							},
 						},
-					});
+						{ delaySeconds: BUSINESS_CONSTANTS.BROADCAST_DELAY_SECONDS },
+					);
 
 					logger.info(
 						{ orderId: order.id },
-						"[OrderPlacementRepository] Broadcast to driver pool for RIDE/DELIVERY order after wallet payment",
+						"[OrderPlacementRepository] Delayed broadcast enqueued to driver pool for RIDE/DELIVERY order after wallet payment",
 					);
 				} catch (matchingError) {
 					// Log but don't fail the order - the timeout handler will handle stuck orders

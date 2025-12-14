@@ -1,5 +1,5 @@
 import 'package:akademove/core/_export.dart';
-import 'package:akademove/features/cart/presentation/cubits/cart_cubit.dart';
+import 'package:akademove/features/cart/presentation/cubits/user_cart_cubit.dart';
 import 'package:akademove/features/cart/presentation/states/_export.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -14,7 +14,7 @@ class CartBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<CartCubit, CartState>(
+    return BlocBuilder<UserCartCubit, UserCartState>(
       builder: (context, state) {
         final itemCount = state.totalItems;
 

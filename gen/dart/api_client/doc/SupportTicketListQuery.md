@@ -14,7 +14,7 @@ Name | Type | Description | Notes
 **assignedToId** | **String** |  | [optional] 
 **userId** | **String** |  | [optional] 
 **search** | **String** |  | [optional] 
-**limit** | **int** |  | [optional] [default to 20]
+**limit** | **int** |  | 
 **cursor** | **String** |  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

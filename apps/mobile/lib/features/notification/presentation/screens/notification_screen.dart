@@ -17,7 +17,7 @@ class NotificationScreen extends StatefulWidget {
 class _NotificationScreenState extends State<NotificationScreen> {
   final _scrollController = ScrollController();
 
-  NotificationCubit get _cubit => context.read<NotificationCubit>();
+  SharedNotificationCubit get _cubit => context.read<SharedNotificationCubit>();
 
   @override
   void initState() {
@@ -47,6 +47,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
     return Scaffold(
       headers: [
         AppBar(
+          padding: EdgeInsets.all(16.r),
           leading: [
             IconButton(
               icon: const Icon(LucideIcons.arrowLeft),
@@ -56,7 +57,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
           ],
           title: Text(context.l10n.notifications),
           trailing: [
-            BlocBuilder<NotificationCubit, NotificationState>(
+            BlocBuilder<SharedNotificationCubit, SharedNotificationState>(
               builder: (context, state) {
                 final items = state.notifications.value?.items ?? [];
                 final hasUnread = items.any((n) => !n.isRead);
@@ -72,9 +73,9 @@ class _NotificationScreenState extends State<NotificationScreen> {
           ],
         ),
       ],
-      child: RefreshTrigger(
+      child: SafeRefreshTrigger(
         onRefresh: _onRefresh,
-        child: BlocBuilder<NotificationCubit, NotificationState>(
+        child: BlocBuilder<SharedNotificationCubit, SharedNotificationState>(
           builder: (context, state) {
             final notificationData = state.notifications.value;
             final items = notificationData?.items ?? [];

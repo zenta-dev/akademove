@@ -19,7 +19,7 @@ class UserProfileScreen extends StatelessWidget {
 
     return Scaffold(
       child: SafeArea(
-        child: RefreshTrigger(
+        child: SafeRefreshTrigger(
           onRefresh: onRefresh,
           child: SingleChildScrollView(
             child: Padding(

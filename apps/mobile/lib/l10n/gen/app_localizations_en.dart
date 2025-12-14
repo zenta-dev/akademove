@@ -12,6 +12,18 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
+  String get tax => 'Tax';
+
+  @override
+  String get distance => 'Distance';
+
+  @override
+  String get fare => 'Fare';
+
+  @override
+  String get platform_fee => 'Platform fee';
+
+  @override
   String get transfer => 'Transfer';
 
   @override
@@ -234,6 +246,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get missing => 'Missing';
 
   @override
+  String get driver_information => 'Driver Information';
+
+  @override
   String get student_card => 'Student Card (KTM)';
 
   @override
@@ -319,12 +334,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get customer_info => 'Customer Info';
-
-  @override
-  String get distance => 'Distance';
-
-  @override
-  String get fare => 'Fare';
 
   @override
   String get service => 'Service';
@@ -449,7 +458,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get manage_schedule => 'Manage Schedule';
 
   @override
-  String get leadeboard_and_badges => 'Leaderboard & Badges';
+  String get leaderboard => 'Leaderboard';
 
   @override
   String get trips => 'Trips';
@@ -2325,7 +2334,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get label_outlet_location_description => 'Make sure the location point on the map is correct to meet the registration requirements.';
 
   @override
+  String get placeholder_search_dropoff_location => 'Search dropoff location';
+
+  @override
   String get placeholder_search_location => 'Search location';
+
+  @override
+  String get placeholder_search_merchant => 'Search merchant';
+
+  @override
+  String get placeholder_search_pickup_location => 'Search pickup location';
 
   @override
   String get label_dragging => 'Dragging...';
@@ -2941,6 +2959,15 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get text_rate_by_category => 'Rate by category';
+
+  @override
+  String get text_rate_overall_experience => 'How would you rate your overall experience?';
+
+  @override
+  String get text_select_categories => 'Select applicable categories';
+
+  @override
+  String get text_select_categories_hint => 'Choose all that apply to your experience';
 
   @override
   String get category_cleanliness => 'Cleanliness';
@@ -3680,5 +3707,740 @@ class AppLocalizationsEn extends AppLocalizations {
   String get export_coming_soon => 'Export feature coming soon!';
 
   @override
+  String get export_success => 'PDF exported successfully';
+
+  @override
+  String get export_failed => 'Failed to export PDF';
+
+  @override
   String get no_data_available => 'No data available';
+
+  @override
+  String chat_time_days_ago(int count) {
+    return '${count}d ago';
+  }
+
+  @override
+  String chat_time_hours_ago(int count) {
+    return '${count}h ago';
+  }
+
+  @override
+  String chat_time_minutes_ago(int count) {
+    return '${count}m ago';
+  }
+
+  @override
+  String get chat_time_just_now => 'Just now';
+
+  @override
+  String get leaderboard_top_drivers => 'Top Drivers';
+
+  @override
+  String get leaderboard_other_rankings => 'Other Rankings';
+
+  @override
+  String get leaderboard_refreshes_daily => 'Rankings refresh every 24 hours';
+
+  @override
+  String get leaderboard_empty_state => 'No drivers on the leaderboard yet';
+
+  @override
+  String get current_location => 'Current Location';
+
+  @override
+  String get current_location_desc => 'Your current GPS location';
+
+  @override
+  String get privacy_policy_title => 'AkadeMove Privacy Policy';
+
+  @override
+  String get privacy_policy_date => 'October 2025';
+
+  @override
+  String get privacy_policy_intro => 'Welcome to AkadeMove, a platform designed to connect customers, student drivers, and merchants in a unified mobility and delivery ecosystem. Your privacy is important to us. This Privacy Policy explains how we collect, use, store, and protect your personal information when you use our mobile application, website, or any related services (collectively referred to as \"AkadeMove\"). By using AkadeMove, you agree to the collection and use of your data in accordance with this policy. Please read this document carefully to understand how we handle your personal information.';
+
+  @override
+  String get privacy_data_we_collect_title => 'Data We Collect';
+
+  @override
+  String get privacy_data_we_collect_content => 'We collect personal information from all users of AkadeMove, Customers, Drivers (Students), and Merchants to enable our services and ensure a safe and efficient platform experience.';
+
+  @override
+  String get privacy_customer_data_title => 'Customer Data';
+
+  @override
+  String get privacy_customer_data_desc => 'When you register and use AkadeMove as a Customer, we collect:';
+
+  @override
+  String get privacy_customer_data_item_name => 'Name';
+
+  @override
+  String get privacy_customer_data_item_email => 'Email address';
+
+  @override
+  String get privacy_customer_data_item_phone => 'Phone number';
+
+  @override
+  String get privacy_customer_data_item_gender => 'Gender';
+
+  @override
+  String get privacy_customer_data_footer => 'This data allows us to verify your identity, communicate with you, process bookings and payments, and improve your overall experience.';
+
+  @override
+  String get privacy_customer_data_additional => 'Customers may select their preferred driver gender to enhance comfort and safety.';
+
+  @override
+  String get privacy_driver_data_title => 'Driver (Student) Data';
+
+  @override
+  String get privacy_driver_data_desc => 'When you register as a Driver (student driver) on AkadeMove, we collect:';
+
+  @override
+  String get privacy_driver_data_item_name => 'Full name';
+
+  @override
+  String get privacy_driver_data_item_email => 'Email address';
+
+  @override
+  String get privacy_driver_data_item_phone => 'Phone number';
+
+  @override
+  String get privacy_driver_data_item_gender => 'Gender';
+
+  @override
+  String get privacy_driver_data_item_sim => 'Driver License (SIM)';
+
+  @override
+  String get privacy_driver_data_item_ktm => 'Student ID Card (KTM)';
+
+  @override
+  String get privacy_driver_data_item_stnk => 'Vehicle Registration Certificate (STNK)';
+
+  @override
+  String get privacy_driver_data_item_plate => 'Vehicle license plate number';
+
+  @override
+  String get privacy_driver_data_item_bank => 'Bank account number';
+
+  @override
+  String get privacy_driver_data_footer => 'Drivers may also manually input their academic schedule (KRS) to indicate unavailable periods (e.g., class hours). This schedule data is not shared with customers or third parties and is used solely to prevent order assignments during academic sessions.';
+
+  @override
+  String get privacy_merchant_data_title => 'Merchant Data';
+
+  @override
+  String get privacy_merchant_data_desc => 'When you register as a Merchant Partner, we collect:';
+
+  @override
+  String get privacy_merchant_data_item_owner_name => 'Owner\'s full name';
+
+  @override
+  String get privacy_merchant_data_item_owner_email => 'Owner\'s email address';
+
+  @override
+  String get privacy_merchant_data_item_owner_phone => 'Owner\'s phone number';
+
+  @override
+  String get privacy_merchant_data_item_outlet_name => 'Outlet\'s name';
+
+  @override
+  String get privacy_merchant_data_item_outlet_location => 'Outlet\'s location';
+
+  @override
+  String get privacy_merchant_data_item_outlet_phone => 'Outlet\'s phone number';
+
+  @override
+  String get privacy_merchant_data_item_outlet_email => 'Outlet\'s email';
+
+  @override
+  String get privacy_merchant_data_item_outlet_docs => 'Outlet\'s documents (It is an optional uploads, e.g., tax ID, business license, etc.)';
+
+  @override
+  String get privacy_merchant_data_item_bank => 'Bank account number';
+
+  @override
+  String get privacy_merchant_data_footer => 'This data helps verify your merchant identity, facilitate transactions, and manage fund withdrawals securely.';
+
+  @override
+  String get privacy_use_of_data_title => 'Use of Data';
+
+  @override
+  String get privacy_use_of_data_content => 'AkadeMove uses personal information to:';
+
+  @override
+  String get privacy_use_of_data_item_1 => 'Provide and manage all AkadeMove services (transportation, delivery, and transactions).';
+
+  @override
+  String get privacy_use_of_data_item_2 => 'Verify the identity of Customers, Drivers, and Merchants to prevent fraud and unauthorized access.';
+
+  @override
+  String get privacy_use_of_data_item_3 => 'Match customers with suitable drivers based on gender preference, proximity, and availability';
+
+  @override
+  String get privacy_use_of_data_item_4 => 'Manage student drivers schedules to ensure service availability aligns with their academic commitments.';
+
+  @override
+  String get privacy_use_of_data_item_5 => 'Communicate service updates, notifications, promotions, and account-related information.';
+
+  @override
+  String get privacy_use_of_data_item_6 => 'Fulfill legal and regulatory obligations required by applicable laws.';
+
+  @override
+  String get privacy_location_access_title => 'Location Access';
+
+  @override
+  String get privacy_location_access_content => 'AkadeMove requires location access (GPS) to function properly. We use location data to:';
+
+  @override
+  String get privacy_location_access_item_1 => 'Identify pick-up and drop-off points.';
+
+  @override
+  String get privacy_location_access_item_2 => 'Show real-time driver locations.';
+
+  @override
+  String get privacy_location_access_item_3 => 'Improve route accuracy and service efficiency.';
+
+  @override
+  String get privacy_location_access_item_4 => 'Match customers with the nearest available driver.';
+
+  @override
+  String get privacy_location_access_footer => 'You may adjust your location permissions in your device settings. However, disabling location access may limit AkadeMove functionality.';
+
+  @override
+  String get privacy_data_sharing_title => 'Data Sharing';
+
+  @override
+  String get privacy_data_sharing_content => 'We do not sell, rent, or trade your personal data to third parties. However, we may share certain information with:';
+
+  @override
+  String get privacy_data_sharing_item_1 => 'Payment service providers to process financial transactions.';
+
+  @override
+  String get privacy_data_sharing_item_2 => 'Trusted third-party partners (such as identity verification, insurance, or analytics providers) to support our operations.';
+
+  @override
+  String get privacy_data_sharing_item_3 => 'Law enforcement or government authorities, if required by applicable law or legal process.';
+
+  @override
+  String get privacy_data_sharing_item_4 => 'Match customers with the nearest available driver.';
+
+  @override
+  String get privacy_data_sharing_footer => 'All partners handling your data are required to comply with strict data protection standards.';
+
+  @override
+  String get privacy_changes_title => 'Changes to This Privacy Policy';
+
+  @override
+  String get privacy_changes_content => 'We may update this Privacy Policy from time to time to reflect changes in our practices or legal obligations. Updates will be communicated via the AkadeMove app or website. Continued use of our services after any update constitutes your acceptance of the revised policy.';
+
+  @override
+  String get tos_title => 'AkadeMove Terms of Service';
+
+  @override
+  String get tos_effective_date => 'Effective Date: December 6, 2025';
+
+  @override
+  String get tos_intro => 'These Terms of Service constitute a legally binding agreement between you and AkadeMove. Please read them carefully before using our services.';
+
+  @override
+  String get tos_acceptance_title => 'Acceptance of Terms';
+
+  @override
+  String get tos_acceptance_content => 'Welcome to AkadeMove. These Terms of Service (\"Terms\") govern your access to and use of our campus mobility and delivery platform. By creating an account or using our Services, you agree to be bound by these Terms and our Privacy Policy.';
+
+  @override
+  String get tos_service_desc_title => 'Service Description';
+
+  @override
+  String get tos_service_desc_content => 'AkadeMove is a campus-specific platform that connects students, faculty, and authorized campus community members for:';
+
+  @override
+  String get tos_service_desc_item_ride => 'Ride-Hailing: Transportation services within and around campus areas';
+
+  @override
+  String get tos_service_desc_item_delivery => 'Package Delivery: Delivery of documents, parcels, and goods within campus';
+
+  @override
+  String get tos_service_desc_item_food => 'Food Delivery: Ordering and delivery of food from campus merchants';
+
+  @override
+  String get tos_service_desc_footer => 'AkadeMove acts as a technology platform connecting users with service providers. We are not a transportation or delivery company. Drivers and merchants are independent contractors.';
+
+  @override
+  String get tos_eligibility_title => 'User Eligibility';
+
+  @override
+  String get tos_eligibility_passengers_title => 'Passengers/Users';
+
+  @override
+  String get tos_eligibility_passengers_item_1 => 'Be at least 17 years of age';
+
+  @override
+  String get tos_eligibility_passengers_item_2 => 'Be a current student, faculty, or authorized campus member';
+
+  @override
+  String get tos_eligibility_passengers_item_3 => 'Provide valid contact information';
+
+  @override
+  String get tos_eligibility_passengers_item_4 => 'Verify campus affiliation (Student ID/KTM when required)';
+
+  @override
+  String get tos_eligibility_drivers_title => 'Drivers';
+
+  @override
+  String get tos_eligibility_drivers_item_1 => 'Be at least 18 years of age';
+
+  @override
+  String get tos_eligibility_drivers_item_2 => 'Be a currently enrolled student';
+
+  @override
+  String get tos_eligibility_drivers_item_3 => 'Possess valid driver\'s license (SIM C/A)';
+
+  @override
+  String get tos_eligibility_drivers_item_4 => 'Provide valid vehicle registration (STNK)';
+
+  @override
+  String get tos_eligibility_drivers_item_5 => 'Submit Student ID (KTM) photo';
+
+  @override
+  String get tos_eligibility_drivers_item_6 => 'Pass verification and onboarding process';
+
+  @override
+  String get tos_eligibility_merchants_title => 'Merchants';
+
+  @override
+  String get tos_eligibility_merchants_item_1 => 'Be an authorized campus food vendor or tenant';
+
+  @override
+  String get tos_eligibility_merchants_item_2 => 'Provide valid business documentation';
+
+  @override
+  String get tos_eligibility_merchants_item_3 => 'Maintain food safety and hygiene standards';
+
+  @override
+  String get tos_eligibility_merchants_item_4 => 'Comply with campus regulations';
+
+  @override
+  String get tos_pricing_title => 'Pricing & Commission';
+
+  @override
+  String get tos_pricing_content => 'Pricing formula: Base Price + (Distance × Rate) + Tip - Coupon';
+
+  @override
+  String get tos_pricing_commission_title => 'Commission Structure';
+
+  @override
+  String get tos_pricing_commission_item_1 => 'Rides & Delivery: 15% platform commission';
+
+  @override
+  String get tos_pricing_commission_item_2 => 'Food Orders: 20% total (10% merchant, 10% platform)';
+
+  @override
+  String get tos_pricing_commission_item_3 => 'Tips: Go 100% to drivers (configurable)';
+
+  @override
+  String get tos_pricing_footer => 'Example: Ride total Rp 25,000 → Commission Rp 3,750 → Driver earns Rp 21,250';
+
+  @override
+  String get tos_wallet_title => 'Wallet System';
+
+  @override
+  String get tos_wallet_content => 'All users have an in-app wallet for managing funds:';
+
+  @override
+  String get tos_wallet_item_1 => 'Top-Up: Add funds via QRIS, bank transfer, or e-wallet (Midtrans)';
+
+  @override
+  String get tos_wallet_item_2 => 'Payment: Automatically deducted from wallet balance';
+
+  @override
+  String get tos_wallet_item_3 => 'Earnings: Credited to wallet after order completion';
+
+  @override
+  String get tos_wallet_item_4 => 'Withdrawals: Min. Rp 50,000, processed in 1-3 business days';
+
+  @override
+  String get tos_cancellation_title => 'Cancellation Policy';
+
+  @override
+  String get tos_cancellation_user_title => 'User Cancellations';
+
+  @override
+  String get tos_cancellation_user_item_1 => 'Free cancellation within 2 minutes of booking';
+
+  @override
+  String get tos_cancellation_user_item_2 => 'Cancellation fee applies after 2 minutes (configurable)';
+
+  @override
+  String get tos_cancellation_user_item_3 => 'Full fee if driver arrived or order being prepared';
+
+  @override
+  String get tos_cancellation_driver_title => 'Driver Cancellations';
+
+  @override
+  String get tos_cancellation_driver_item_1 => 'Can cancel if passenger unresponsive or violates terms';
+
+  @override
+  String get tos_cancellation_driver_item_2 => 'Excessive cancellations may result in suspension';
+
+  @override
+  String get tos_cancellation_refunds_title => 'Refunds';
+
+  @override
+  String get tos_cancellation_refunds_item_1 => 'Processed within 5-7 business days for service issues';
+
+  @override
+  String get tos_cancellation_refunds_item_2 => 'Issued to original payment method or wallet';
+
+  @override
+  String get tos_cancellation_refunds_item_3 => 'Disputes must be raised within 24 hours';
+
+  @override
+  String get tos_rating_title => 'Rating & Review System';
+
+  @override
+  String get tos_rating_content => 'Both users and drivers rate each other on a 5-star scale. Ratings affect service quality and opportunities.';
+
+  @override
+  String get tos_rating_item_1 => 'Fairness: Ratings should reflect actual service quality';
+
+  @override
+  String get tos_rating_item_2 => 'Prohibition: Do not manipulate ratings or leave false reviews';
+
+  @override
+  String get tos_rating_item_3 => 'Disputes: Can be reported to customer support';
+
+  @override
+  String get tos_rating_item_4 => 'Consequences: Consistently low ratings may result in suspension';
+
+  @override
+  String get tos_driver_req_title => 'Driver Requirements';
+
+  @override
+  String get tos_driver_req_schedule_title => 'Class Schedule Management';
+
+  @override
+  String get tos_driver_req_schedule_desc => 'Drivers can input class schedules to auto-set offline status during class times.';
+
+  @override
+  String get tos_driver_req_availability_title => 'Availability Control';
+
+  @override
+  String get tos_driver_req_availability_item_1 => 'Toggle online/offline status freely';
+
+  @override
+  String get tos_driver_req_availability_item_2 => 'Accept or reject order requests';
+
+  @override
+  String get tos_driver_req_availability_item_3 => 'Excessive rejections affect matching priority';
+
+  @override
+  String get tos_driver_req_availability_item_4 => 'Repeated cancellations may result in warnings';
+
+  @override
+  String get tos_safety_title => 'Safety & Reporting';
+
+  @override
+  String get tos_safety_content => 'Your safety is our priority. AkadeMove provides:';
+
+  @override
+  String get tos_safety_item_1 => 'In-App Chat: Communicate without sharing phone numbers';
+
+  @override
+  String get tos_safety_item_2 => 'Driver Verification: All drivers undergo document verification';
+
+  @override
+  String get tos_safety_item_3 => 'Real-Time Tracking: Share trip with trusted contacts';
+
+  @override
+  String get tos_safety_item_4 => 'Emergency Button: Quick access to campus security';
+
+  @override
+  String get tos_safety_item_5 => 'Report System: Report misconduct or safety concerns';
+
+  @override
+  String get tos_safety_footer => 'Reports are reviewed within 24-48 hours. Actions may include warnings, suspension, or permanent ban. Serious incidents may be reported to authorities.';
+
+  @override
+  String get tos_gender_pref_title => 'Gender Preference Feature';
+
+  @override
+  String get tos_gender_pref_content => 'Users can optionally request same-gender drivers for enhanced comfort and safety:';
+
+  @override
+  String get tos_gender_pref_item_1 => 'Optional preference in matching algorithm';
+
+  @override
+  String get tos_gender_pref_item_2 => 'Availability depends on nearby drivers';
+
+  @override
+  String get tos_gender_pref_item_3 => 'May increase wait times if same-gender drivers not available';
+
+  @override
+  String get tos_gender_pref_item_4 => 'Can be enabled/disabled anytime';
+
+  @override
+  String get tos_prohibited_title => 'Prohibited Conduct';
+
+  @override
+  String get tos_prohibited_content => 'Users must not:';
+
+  @override
+  String get tos_prohibited_item_1 => 'Use services for illegal purposes or transport illegal goods';
+
+  @override
+  String get tos_prohibited_item_2 => 'Harass, abuse, threaten, or discriminate against others';
+
+  @override
+  String get tos_prohibited_item_3 => 'Engage in fraudulent activities or fake accounts';
+
+  @override
+  String get tos_prohibited_item_4 => 'Manipulate platform, ratings, pricing, or promotions';
+
+  @override
+  String get tos_prohibited_item_5 => 'Operate vehicles unsafely or violate traffic laws';
+
+  @override
+  String get tos_prohibited_item_6 => 'Attempt unauthorized access to accounts or data';
+
+  @override
+  String get tos_prohibited_item_7 => 'Infringe on AkadeMove\'s or others\' intellectual property';
+
+  @override
+  String get tos_prohibited_footer => 'Violations may result in immediate suspension and legal action.';
+
+  @override
+  String get tos_liability_title => 'Limitation of Liability';
+
+  @override
+  String get tos_liability_content => 'AkadeMove is a technology platform connecting users with independent service providers. We do not provide transportation or delivery services directly.';
+
+  @override
+  String get tos_liability_item_1 => 'Services provided \"as is\" without warranties';
+
+  @override
+  String get tos_liability_item_2 => 'Not liable for indirect or consequential damages';
+
+  @override
+  String get tos_liability_item_3 => 'Maximum liability limited to amounts paid in last 12 months';
+
+  @override
+  String get tos_liability_item_4 => 'Not responsible for actions of drivers, merchants, or users';
+
+  @override
+  String get tos_dispute_title => 'Dispute Resolution';
+
+  @override
+  String get tos_dispute_item_1 => 'Informal Resolution: Contact customer support first';
+
+  @override
+  String get tos_dispute_item_2 => 'Mediation: Attempt mediation before litigation';
+
+  @override
+  String get tos_dispute_item_3 => 'Governing Law: Republic of Indonesia laws apply';
+
+  @override
+  String get tos_dispute_item_4 => 'Jurisdiction: Courts of Surabaya, Indonesia';
+
+  @override
+  String get tos_termination_title => 'Account Termination';
+
+  @override
+  String get tos_termination_user_title => 'User Termination';
+
+  @override
+  String get tos_termination_user_desc => 'You may terminate your account anytime through app settings or customer support.';
+
+  @override
+  String get tos_termination_platform_title => 'Platform Termination';
+
+  @override
+  String get tos_termination_platform_desc => 'We reserve the right to suspend or terminate accounts that violate Terms, engage in fraud, or pose safety risks.';
+
+  @override
+  String get tos_termination_footer => 'Upon termination, access ceases and data may be deleted subject to legal requirements. Outstanding obligations remain.';
+
+  @override
+  String get tos_changes_title => 'Changes to Terms';
+
+  @override
+  String get tos_changes_content => 'We may modify these Terms at any time. Material changes will be notified via:';
+
+  @override
+  String get tos_changes_item_1 => 'In-app notification';
+
+  @override
+  String get tos_changes_item_2 => 'Email to registered address';
+
+  @override
+  String get tos_changes_item_3 => 'Prominent website notice';
+
+  @override
+  String get tos_changes_footer => 'Continued use after changes constitutes acceptance. If you disagree, stop using our Services.';
+
+  @override
+  String get tos_contact_title => 'Contact Information';
+
+  @override
+  String get tos_contact_item_1 => 'Email: support@akademove.com';
+
+  @override
+  String get tos_contact_item_2 => 'Phone: +62 21 1234 5678';
+
+  @override
+  String get tos_contact_item_3 => 'Address: AkadeMove, Universitas Negeri Surabaya, Surabaya, Jawa Timur';
+
+  @override
+  String get tos_contact_item_4 => 'Customer Support: Available 24/7 through in-app chat';
+
+  @override
+  String get faq_title => 'Frequently Asked Questions';
+
+  @override
+  String get faq_header_title => 'How can we help you?';
+
+  @override
+  String get faq_header_subtitle => 'Find quick answers to common questions about using AkadeMove';
+
+  @override
+  String get faq_contact_title => 'Still have questions?';
+
+  @override
+  String get faq_contact_subtitle => 'Contact our support team for more help';
+
+  @override
+  String get faq_contact_support => 'Contact Support';
+
+  @override
+  String get faq_error_email => 'Could not open email app. Please try again.';
+
+  @override
+  String get faq_category_general => 'General';
+
+  @override
+  String get faq_category_orders => 'Orders & Delivery';
+
+  @override
+  String get faq_category_payment => 'Payments & Wallet';
+
+  @override
+  String get faq_category_driver => 'Driver';
+
+  @override
+  String get faq_category_safety => 'Safety & Security';
+
+  @override
+  String get faq_general_q1 => 'What is AkadeMove?';
+
+  @override
+  String get faq_general_a1 => 'AkadeMove is a campus-specific mobility and delivery platform connecting students as users, drivers, and merchants. We offer ride-hailing, package delivery, and food ordering services exclusively within campus boundaries.';
+
+  @override
+  String get faq_general_q2 => 'Who can use AkadeMove?';
+
+  @override
+  String get faq_general_a2 => 'AkadeMove is available to all students, faculty, and staff with a valid campus ID. Drivers must be students with valid licenses and vehicle documentation.';
+
+  @override
+  String get faq_general_q3 => 'What services does AkadeMove offer?';
+
+  @override
+  String get faq_general_a3 => 'We offer three main services: Ride-hailing for campus transportation, Delivery for packages and documents, and Food delivery from campus merchants.';
+
+  @override
+  String get faq_orders_q1 => 'How do I place an order?';
+
+  @override
+  String get faq_orders_a1 => 'Open the app, select your service type (Ride, Delivery, or Food), set your pickup and destination points, review the fare, and confirm your booking.';
+
+  @override
+  String get faq_orders_q2 => 'Can I cancel an order?';
+
+  @override
+  String get faq_orders_a2 => 'Yes, you can cancel before a driver accepts your order with no penalty. After acceptance, cancellation fees may apply based on order status.';
+
+  @override
+  String get faq_orders_q3 => 'How long does matching take?';
+
+  @override
+  String get faq_orders_a3 => 'Matching typically takes less than 30 seconds. If no driver accepts within this time, we\'ll automatically expand the search radius.';
+
+  @override
+  String get faq_payment_q1 => 'What payment methods are accepted?';
+
+  @override
+  String get faq_payment_a1 => 'You can pay using your in-app wallet, which can be topped up via QRIS or bank transfer through Midtrans.';
+
+  @override
+  String get faq_payment_q2 => 'How do I top up my wallet?';
+
+  @override
+  String get faq_payment_a2 => 'Go to your wallet, select \'Top Up\', choose your amount and payment method (QRIS or bank transfer), complete the payment through Midtrans.';
+
+  @override
+  String get faq_payment_q3 => 'What is the commission structure?';
+
+  @override
+  String get faq_payment_a3 => 'For rides and deliveries, the platform takes a 15% commission. For food orders, there\'s a 20% commission split between the platform (10%) and merchant (10%). Tips go 100% to drivers.';
+
+  @override
+  String get faq_driver_q1 => 'How do I become a driver?';
+
+  @override
+  String get faq_driver_a1 => 'Click \'Become a Driver\', submit your student ID (KTM), driver\'s license (SIM), and vehicle registration (STNK). Once verified and approved, you can start accepting orders.';
+
+  @override
+  String get faq_driver_q2 => 'Can I work during my class schedule?';
+
+  @override
+  String get faq_driver_a2 => 'The app automatically sets you offline during your scheduled class times. You can manually override this if needed, but we recommend focusing on your studies.';
+
+  @override
+  String get faq_driver_q3 => 'When can I withdraw my earnings?';
+
+  @override
+  String get faq_driver_a3 => 'You can withdraw your earnings to your bank account anytime after completing orders. Withdrawals are typically processed within 1-3 business days. Minimum withdrawal is Rp 50,000.';
+
+  @override
+  String get faq_safety_q1 => 'How does gender preference work?';
+
+  @override
+  String get faq_safety_a1 => 'Users can optionally request a driver of the same gender for added comfort and safety. This is especially useful for late-night rides.';
+
+  @override
+  String get faq_safety_q2 => 'What if I feel unsafe during a ride?';
+
+  @override
+  String get faq_safety_a2 => 'Use the in-app emergency button to alert campus security immediately. You can also report the driver after the trip, and our team will investigate promptly.';
+
+  @override
+  String get faq_safety_q3 => 'How are drivers verified?';
+
+  @override
+  String get faq_safety_a3 => 'All drivers must submit and get approved for their student ID, driver\'s license, and vehicle registration. We verify all documents before activation.';
+
+  @override
+  String get emergency_contact_whatsapp => 'Contact via WA';
+
+  @override
+  String get emergency_contact_whatsapp_desc => 'Open WhatsApp to contact campus security';
+
+  @override
+  String get emergency_or_divider => 'or';
+
+  @override
+  String get emergency_whatsapp_error => 'Could not open WhatsApp. Please try again.';
+
+  @override
+  String get emergency_contact_unavailable => 'Emergency contact is not available. Please try again later.';
+
+  @override
+  String get order_completed => 'Order Completed';
+
+  @override
+  String get order_detail_summary => 'Order Summary';
+
+  @override
+  String get rate_merchant_title => 'Rate Your Order';
 }

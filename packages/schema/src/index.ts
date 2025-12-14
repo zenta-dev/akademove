@@ -12,6 +12,7 @@ import { DriverSchemaRegistries } from "./driver.js";
 import { DriverQuizAnswerSchemaRegistries } from "./driver-quiz-answer.js";
 import { DriverQuizQuestionSchemaRegistries } from "./driver-quiz-question.js";
 import { EmergencySchemaRegistries } from "./emergency.js";
+import { EmergencyContactSchemaRegistries } from "./emergency-contact.js";
 import { FraudSchemaRegistries } from "./fraud.js";
 import { LeaderboardSchemaRegistries } from "./leaderboard.js";
 import { MerchantSchemaRegistries } from "./merchant.js";
@@ -44,6 +45,7 @@ export const AllSchemaRegistries = {
 	...DriverQuizQuestionSchemaRegistries,
 	...DriverSchemaRegistries,
 	...EmergencySchemaRegistries,
+	...EmergencyContactSchemaRegistries,
 	...FraudSchemaRegistries,
 	...LeaderboardSchemaRegistries,
 	...MerchantSchemaRegistries,
@@ -78,6 +80,7 @@ export * from "./driver.js";
 export * from "./driver-quiz-answer.js";
 export * from "./driver-quiz-question.js";
 export * from "./emergency.js";
+export * from "./emergency-contact.js";
 export * from "./fraud.js";
 export * from "./leaderboard.js";
 export * from "./merchant.js";

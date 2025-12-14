@@ -9,6 +9,8 @@ part of 'update_order.dart';
 abstract class _$UpdateOrderCWProxy {
   UpdateOrder driverId(String? driverId);
 
+  UpdateOrder completedDriverId(String? completedDriverId);
+
   UpdateOrder merchantId(String? merchantId);
 
   UpdateOrder type(OrderType? type);
@@ -57,6 +59,8 @@ abstract class _$UpdateOrderCWProxy {
 
   UpdateOrder otpVerifiedAt(DateTime? otpVerifiedAt);
 
+  UpdateOrder deliveryItemPhotoUrl(String? deliveryItemPhotoUrl);
+
   UpdateOrder itemCount(int? itemCount);
 
   UpdateOrder items(List<OrderItem>? items);
@@ -78,6 +82,7 @@ abstract class _$UpdateOrderCWProxy {
   /// ```
   UpdateOrder call({
     String? driverId,
+    String? completedDriverId,
     String? merchantId,
     OrderType? type,
     OrderStatus? status,
@@ -101,6 +106,7 @@ abstract class _$UpdateOrderCWProxy {
     String? proofOfDeliveryUrl,
     String? deliveryOtp,
     DateTime? otpVerifiedAt,
+    String? deliveryItemPhotoUrl,
     int? itemCount,
     List<OrderItem>? items,
     DeliveryItemType? deliveryItemType,
@@ -119,6 +125,10 @@ class _$UpdateOrderCWProxyImpl implements _$UpdateOrderCWProxy {
 
   @override
   UpdateOrder driverId(String? driverId) => call(driverId: driverId);
+
+  @override
+  UpdateOrder completedDriverId(String? completedDriverId) =>
+      call(completedDriverId: completedDriverId);
 
   @override
   UpdateOrder merchantId(String? merchantId) => call(merchantId: merchantId);
@@ -204,6 +214,10 @@ class _$UpdateOrderCWProxyImpl implements _$UpdateOrderCWProxy {
       call(otpVerifiedAt: otpVerifiedAt);
 
   @override
+  UpdateOrder deliveryItemPhotoUrl(String? deliveryItemPhotoUrl) =>
+      call(deliveryItemPhotoUrl: deliveryItemPhotoUrl);
+
+  @override
   UpdateOrder itemCount(int? itemCount) => call(itemCount: itemCount);
 
   @override
@@ -232,6 +246,7 @@ class _$UpdateOrderCWProxyImpl implements _$UpdateOrderCWProxy {
   /// ```
   UpdateOrder call({
     Object? driverId = const $CopyWithPlaceholder(),
+    Object? completedDriverId = const $CopyWithPlaceholder(),
     Object? merchantId = const $CopyWithPlaceholder(),
     Object? type = const $CopyWithPlaceholder(),
     Object? status = const $CopyWithPlaceholder(),
@@ -255,6 +270,7 @@ class _$UpdateOrderCWProxyImpl implements _$UpdateOrderCWProxy {
     Object? proofOfDeliveryUrl = const $CopyWithPlaceholder(),
     Object? deliveryOtp = const $CopyWithPlaceholder(),
     Object? otpVerifiedAt = const $CopyWithPlaceholder(),
+    Object? deliveryItemPhotoUrl = const $CopyWithPlaceholder(),
     Object? itemCount = const $CopyWithPlaceholder(),
     Object? items = const $CopyWithPlaceholder(),
     Object? deliveryItemType = const $CopyWithPlaceholder(),
@@ -267,6 +283,10 @@ class _$UpdateOrderCWProxyImpl implements _$UpdateOrderCWProxy {
           ? _value.driverId
           // ignore: cast_nullable_to_non_nullable
           : driverId as String?,
+      completedDriverId: completedDriverId == const $CopyWithPlaceholder()
+          ? _value.completedDriverId
+          // ignore: cast_nullable_to_non_nullable
+          : completedDriverId as String?,
       merchantId: merchantId == const $CopyWithPlaceholder()
           ? _value.merchantId
           // ignore: cast_nullable_to_non_nullable
@@ -359,6 +379,10 @@ class _$UpdateOrderCWProxyImpl implements _$UpdateOrderCWProxy {
           ? _value.otpVerifiedAt
           // ignore: cast_nullable_to_non_nullable
           : otpVerifiedAt as DateTime?,
+      deliveryItemPhotoUrl: deliveryItemPhotoUrl == const $CopyWithPlaceholder()
+          ? _value.deliveryItemPhotoUrl
+          // ignore: cast_nullable_to_non_nullable
+          : deliveryItemPhotoUrl as String?,
       itemCount: itemCount == const $CopyWithPlaceholder()
           ? _value.itemCount
           // ignore: cast_nullable_to_non_nullable
@@ -403,6 +427,10 @@ UpdateOrder _$UpdateOrderFromJson(
 ) => $checkedCreate('UpdateOrder', json, ($checkedConvert) {
   final val = UpdateOrder(
     driverId: $checkedConvert('driverId', (v) => v as String?),
+    completedDriverId: $checkedConvert(
+      'completedDriverId',
+      (v) => v as String?,
+    ),
     merchantId: $checkedConvert('merchantId', (v) => v as String?),
     type: $checkedConvert(
       'type',
@@ -453,6 +481,10 @@ UpdateOrder _$UpdateOrderFromJson(
       'otpVerifiedAt',
       (v) => v == null ? null : DateTime.parse(v as String),
     ),
+    deliveryItemPhotoUrl: $checkedConvert(
+      'deliveryItemPhotoUrl',
+      (v) => v as String?,
+    ),
     itemCount: $checkedConvert('itemCount', (v) => (v as num?)?.toInt()),
     items: $checkedConvert(
       'items',
@@ -484,6 +516,7 @@ UpdateOrder _$UpdateOrderFromJson(
 Map<String, dynamic> _$UpdateOrderToJson(UpdateOrder instance) =>
     <String, dynamic>{
       'driverId': ?instance.driverId,
+      'completedDriverId': ?instance.completedDriverId,
       'merchantId': ?instance.merchantId,
       'type': ?_$OrderTypeEnumMap[instance.type],
       'status': ?_$OrderStatusEnumMap[instance.status],
@@ -508,6 +541,7 @@ Map<String, dynamic> _$UpdateOrderToJson(UpdateOrder instance) =>
       'proofOfDeliveryUrl': ?instance.proofOfDeliveryUrl,
       'deliveryOtp': ?instance.deliveryOtp,
       'otpVerifiedAt': ?instance.otpVerifiedAt?.toIso8601String(),
+      'deliveryItemPhotoUrl': ?instance.deliveryItemPhotoUrl,
       'itemCount': ?instance.itemCount,
       'items': ?instance.items?.map((e) => e.toJson()).toList(),
       'deliveryItemType': ?_$DeliveryItemTypeEnumMap[instance.deliveryItemType],

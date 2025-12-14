@@ -162,4 +162,21 @@ class WalletRepository extends BaseRepository {
       );
     });
   }
+
+  Future<BaseResponse<CommissionReportResponse>> getCommissionReport({
+    required CommissionReportPeriod period,
+  }) {
+    return guard(() async {
+      final res = await _apiClient.getWalletApi().walletGetCommissionReport(
+        period: period,
+      );
+      final data =
+          res.data ??
+          (throw const RepositoryError(
+            'Commission report not found',
+            code: ErrorCode.notFound,
+          ));
+      return SuccessResponse(message: data.message, data: data.data);
+    });
+  }
 }

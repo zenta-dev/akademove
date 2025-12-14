@@ -245,13 +245,7 @@ export function ConfigurationItem({
 	const mutation = useMutation(
 		orpcQuery.configuration.update.mutationOptions({
 			onSuccess: async () => {
-				await queryClient.invalidateQueries(
-					// 	{
-					// 	queryKey: orpcQuery.configuration.get.queryKey({
-					// 		input: { params: { key } },
-					// 	}),
-					// }
-				);
+				await queryClient.invalidateQueries();
 				toast.success(
 					m.success_placeholder({
 						action: capitalizeFirstLetter(m.update_pricing().toLowerCase()),

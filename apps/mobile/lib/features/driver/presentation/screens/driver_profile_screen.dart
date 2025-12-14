@@ -4,6 +4,7 @@ import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/l10n/l10n.dart';
 import 'package:api_client/api_client.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -27,7 +28,7 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
   }
 
   Future<void> _loadProfile() async {
-    await context.read<DriverCubit>().refreshProfile();
+    await context.read<DriverProfileCubit>().loadProfile();
   }
 
   Future<void> _onRefresh() async {
@@ -36,7 +37,7 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<DriverCubit, DriverState>(
+    return BlocBuilder<DriverProfileCubit, DriverProfileState>(
       builder: (context, state) {
         return Scaffold(
           headers: [
@@ -45,7 +46,7 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
               padding: EdgeInsets.all(16.r),
             ),
           ],
-          child: RefreshTrigger(
+          child: SafeRefreshTrigger(
             onRefresh: _onRefresh,
             child: SingleChildScrollView(
               child: Padding(
@@ -112,27 +113,7 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
           Row(
             spacing: 16.w,
             children: [
-              Container(
-                width: 80.r,
-                height: 80.r,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: context.colorScheme.primary.withValues(alpha: 0.1),
-                  border: Border.all(
-                    color: context.colorScheme.primary,
-                    width: 2,
-                  ),
-                ),
-                child: Center(
-                  child: Text(
-                    user?.name?.substring(0, 1).toUpperCase() ?? 'D',
-                    style: context.typography.h1.copyWith(
-                      fontSize: 32.sp,
-                      color: context.colorScheme.primary,
-                    ),
-                  ),
-                ),
-              ),
+              _buildAvatar(user),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -279,6 +260,51 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildAvatar(DriverUser? user) {
+    final imageUrl = user?.image;
+    final hasImage = imageUrl != null && imageUrl.isNotEmpty;
+
+    return Container(
+      width: 80.r,
+      height: 80.r,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: context.colorScheme.primary.withValues(alpha: 0.1),
+        border: Border.all(color: context.colorScheme.primary, width: 2),
+      ),
+      child: ClipOval(
+        child: hasImage
+            ? CachedNetworkImage(
+                imageUrl: imageUrl,
+                width: 80.r,
+                height: 80.r,
+                fit: BoxFit.cover,
+                placeholder: (context, url) => Center(
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: context.colorScheme.primary,
+                  ),
+                ),
+                errorWidget: (context, url, error) =>
+                    _buildAvatarPlaceholder(user),
+              )
+            : _buildAvatarPlaceholder(user),
+      ),
+    );
+  }
+
+  Widget _buildAvatarPlaceholder(DriverUser? user) {
+    return Center(
+      child: Text(
+        user?.name?.substring(0, 1).toUpperCase() ?? 'D',
+        style: context.typography.h1.copyWith(
+          fontSize: 32.sp,
+          color: context.colorScheme.primary,
+        ),
+      ),
     );
   }
 

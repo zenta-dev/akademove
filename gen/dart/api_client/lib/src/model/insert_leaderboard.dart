@@ -3,6 +3,8 @@
 //
 
 // ignore_for_file: unused_element
+import 'package:api_client/src/model/leaderboard_period.dart';
+import 'package:api_client/src/model/leaderboard_category.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
 
@@ -38,10 +40,10 @@ class InsertLeaderboard {
   final String? merchantId;
 
   @JsonKey(name: r'category', required: true, includeIfNull: false)
-  final InsertLeaderboardCategoryEnum category;
+  final LeaderboardCategory category;
 
   @JsonKey(name: r'period', required: true, includeIfNull: false)
-  final InsertLeaderboardPeriodEnum period;
+  final LeaderboardPeriod period;
 
   // minimum: 1
   // maximum: 9007199254740991
@@ -94,48 +96,4 @@ class InsertLeaderboard {
   String toString() {
     return toJson().toString();
   }
-}
-
-enum InsertLeaderboardCategoryEnum {
-  @JsonValue(r'RATING')
-  RATING(r'RATING'),
-  @JsonValue(r'VOLUME')
-  VOLUME(r'VOLUME'),
-  @JsonValue(r'EARNINGS')
-  EARNINGS(r'EARNINGS'),
-  @JsonValue(r'STREAK')
-  STREAK(r'STREAK'),
-  @JsonValue(r'ON-TIME')
-  ON_TIME(r'ON-TIME'),
-  @JsonValue(r'COMPLETION-RATE')
-  COMPLETION_RATE(r'COMPLETION-RATE');
-
-  const InsertLeaderboardCategoryEnum(this.value);
-
-  final String value;
-
-  @override
-  String toString() => value;
-}
-
-enum InsertLeaderboardPeriodEnum {
-  @JsonValue(r'DAILY')
-  DAILY(r'DAILY'),
-  @JsonValue(r'WEEKLY')
-  WEEKLY(r'WEEKLY'),
-  @JsonValue(r'MONTHLY')
-  MONTHLY(r'MONTHLY'),
-  @JsonValue(r'QUARTERLY')
-  QUARTERLY(r'QUARTERLY'),
-  @JsonValue(r'YEARLY')
-  YEARLY(r'YEARLY'),
-  @JsonValue(r'ALL-TIME')
-  ALL_TIME(r'ALL-TIME');
-
-  const InsertLeaderboardPeriodEnum(this.value);
-
-  final String value;
-
-  @override
-  String toString() => value;
 }

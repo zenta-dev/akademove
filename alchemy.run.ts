@@ -5,7 +5,6 @@ import {
 	KVNamespace,
 	Queue,
 	TanStackStart,
-	Tunnel,
 	Worker,
 } from "alchemy/cloudflare";
 import { config } from "dotenv";
@@ -47,6 +46,18 @@ const PAYMENT_ROOM = DurableObjectNamespace("payment-rooms", {
 
 const MERCHANT_ROOM = DurableObjectNamespace("merchant-rooms", {
 	className: "MerchantRoom",
+	environment: alchemy.env.NODE_ENV,
+	sqlite: true,
+});
+
+const DRIVER_LOCATION_ROOM = DurableObjectNamespace("driver-location-rooms", {
+	className: "DriverLocationRoom",
+	environment: alchemy.env.NODE_ENV,
+	sqlite: true,
+});
+
+const SUPPORT_CHAT = DurableObjectNamespace("support-chat-rooms", {
+	className: "SupportChatRoom",
 	environment: alchemy.env.NODE_ENV,
 	sqlite: true,
 });
@@ -112,6 +123,8 @@ export const [server, web] = await Promise.all([
 			ORDER_ROOM,
 			PAYMENT_ROOM,
 			MERCHANT_ROOM,
+			DRIVER_LOCATION_ROOM,
+			SUPPORT_CHAT,
 			DB_URL: alchemy.secret.env.DATABASE_URL,
 			MAIN_DB: mainDB,
 			MAIN_KV: mainKV,
@@ -160,9 +173,14 @@ export const [server, web] = await Promise.all([
 			},
 		],
 		crons: [
-			"* * * * *", // Every minute: auto-offline + scheduled orders (need minute precision)
-			"*/5 * * * *", // Every 5 minutes: order checker (timeouts, cleanup)
+			"* * * * *", // Every minute: auto-offline + scheduled orders + order rebroadcast (need minute precision)
+			"*/2 * * * *", // Every 2 minutes: driver rebroadcast for unmatched orders
+			"*/5 * * * *", // Every 5 minutes: order checker (timeouts, cleanup) + stale location
 			"*/15 * * * *", // Every 15 minutes: leaderboard calculation
+			"0 * * * *", // Hourly: ban expiry, payment expiry, report escalation, DLQ monitor
+			"0 0 * * *", // Daily at midnight: coupon expiry, banner expiry
+			"0 2 * * *", // Daily at 2 AM: account deletion processing
+			"0 4 * * 0", // Weekly on Sunday at 4 AM: FCM token cleanup
 		],
 		dev: {
 			port: 3000,

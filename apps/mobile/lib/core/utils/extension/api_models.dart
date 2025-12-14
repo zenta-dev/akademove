@@ -150,3 +150,13 @@ extension WeightSizeExt on WeightSize {
     };
   }
 }
+
+extension MerchantCategoryExt on MerchantCategory {
+  String localizedName(BuildContext context) {
+    return switch (this) {
+      MerchantCategory.ATK => context.l10n.merchant_category_atk,
+      MerchantCategory.printing => context.l10n.merchant_category_printing,
+      MerchantCategory.food => context.l10n.merchant_category_food,
+    };
+  }
+}

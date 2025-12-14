@@ -22,12 +22,12 @@ export const DriverApprovalReviewSchema = z.object({
 	vehicleRegistrationStatus: ApprovalDocumentStatusSchema,
 	vehicleRegistrationReason: z.string().nullable(),
 	quizVerified: z.boolean(),
-	quizReviewedAt: z.date().nullable(),
+	quizReviewedAt: z.coerce.date().nullable(),
 	reviewedBy: z.string().nullable(),
-	reviewedAt: z.date().nullable(),
+	reviewedAt: z.coerce.date().nullable(),
 	reviewNotes: z.string().nullable(),
-	createdAt: z.date(),
-	updatedAt: z.date(),
+	createdAt: z.coerce.date(),
+	updatedAt: z.coerce.date(),
 });
 
 export type DriverApprovalReview = z.infer<typeof DriverApprovalReviewSchema>;

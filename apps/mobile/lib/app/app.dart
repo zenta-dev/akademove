@@ -17,7 +17,7 @@ class App extends StatelessWidget {
       providers: [
         BlocProvider(create: (_) => sl<AppCubit>()..init()),
         BlocProvider(create: (_) => sl<AuthCubit>()..authenticate()),
-        BlocProvider(create: (_) => sl<ConfigurationCubit>()),
+        BlocProvider(create: (_) => sl<SharedConfigurationCubit>()),
       ],
       child: ScreenUtilInit(
         minTextAdapt: true,

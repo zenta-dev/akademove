@@ -2,12 +2,31 @@ import { oc } from "@orpc/contract";
 import {
 	EmergencySchema,
 	InsertEmergencySchema,
+	LogEmergencySchema,
 	UpdateEmergencySchema,
 } from "@repo/schema/emergency";
+import { EmergencyWithContactSchema } from "@repo/schema/emergency-contact";
 import * as z from "zod";
 import { createSuccesSchema, FEATURE_TAGS } from "@/core/constants";
 
 export const EmergencySpec = {
+	// Simplified log endpoint - only logs emergency event for WhatsApp redirect
+	log: oc
+		.route({
+			tags: [FEATURE_TAGS.EMERGENCY],
+			method: "POST",
+			path: "/log",
+			inputStructure: "detailed",
+			outputStructure: "detailed",
+		})
+		.input(z.object({ body: LogEmergencySchema }))
+		.output(
+			createSuccesSchema(
+				z.object({ logged: z.boolean() }),
+				"Emergency event logged successfully",
+			),
+		),
+
 	trigger: oc
 		.route({
 			tags: [FEATURE_TAGS.EMERGENCY],
@@ -18,7 +37,10 @@ export const EmergencySpec = {
 		})
 		.input(z.object({ body: InsertEmergencySchema }))
 		.output(
-			createSuccesSchema(EmergencySchema, "Emergency triggered successfully"),
+			createSuccesSchema(
+				EmergencyWithContactSchema,
+				"Emergency triggered successfully",
+			),
 		),
 	listByOrder: oc
 		.route({

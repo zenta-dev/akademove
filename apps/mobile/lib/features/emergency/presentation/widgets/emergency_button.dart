@@ -5,6 +5,7 @@ import 'package:akademove/features/emergency/presentation/states/_export.dart';
 import 'package:akademove/l10n/l10n.dart';
 import 'package:api_client/api_client.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 
 import 'emergency_trigger_dialog.dart';
@@ -23,7 +24,7 @@ class EmergencyButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<EmergencyCubit, EmergencyState>(
+    return BlocListener<SharedEmergencyCubit, SharedEmergencyState>(
       listener: (context, state) {
         if (state.triggerEmergency.isSuccess) {
           context.showMyToast(
@@ -43,14 +44,15 @@ class EmergencyButton extends StatelessWidget {
         foregroundColor: Colors.white,
         elevation: 8,
         heroTag: 'emergency_button',
-        child: const Icon(LucideIcons.triangleAlert, size: 32),
+        size: 24.dg,
+        child: Icon(LucideIcons.triangleAlert, size: 18.sp),
       ),
     );
   }
 
   void _showEmergencyDialog(BuildContext context) {
     // Capture cubits from parent context before showing dialog
-    final emergencyCubit = context.read<EmergencyCubit>();
+    final emergencyCubit = context.read<SharedEmergencyCubit>();
     final authCubit = context.read<AuthCubit>();
 
     showDialog<void>(

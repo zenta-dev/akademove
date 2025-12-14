@@ -14,8 +14,8 @@ class DriverReviewCubit extends BaseCubit<DriverReviewState> {
   Future<void> submitReview({
     required String orderId,
     required String toUserId,
-    required ReviewCategory category,
-    required num score,
+    required List<ReviewCategory> categories,
+    required int score,
     String? comment,
   }) async => await taskManager.execute('DRC-sR1-$orderId', () async {
     try {
@@ -24,7 +24,7 @@ class DriverReviewCubit extends BaseCubit<DriverReviewState> {
       final res = await _reviewRepository.submitReview(
         orderId: orderId,
         toUserId: toUserId,
-        category: category,
+        categories: categories,
         score: score,
         comment: comment,
       );

@@ -14,10 +14,10 @@ final merchantRouter = StatefulShellRoute.indexedStack(
         BlocProvider(create: (_) => sl<MerchantAvailabilityCubit>()),
         BlocProvider(create: (_) => sl<MerchantAnalyticsCubit>()),
         BlocProvider(create: (_) => sl<UserProfileCubit>()),
-        BlocProvider(create: (_) => sl<OrderChatCubit>()),
-        BlocProvider(create: (_) => sl<QuickMessageCubit>()),
-        BlocProvider(
-          create: (_) => sl<NotificationCubit>()
+        BlocProvider(create: (_) => sl<SharedOrderChatCubit>()),
+        BlocProvider(create: (_) => sl<SharedQuickMessageCubit>()),
+        BlocProvider.value(
+          value: sl<SharedNotificationCubit>()
             ..getUnreadCount()
             ..subscribeToTopic('merchant-announcements'),
         ),
@@ -58,7 +58,8 @@ final merchantRouter = StatefulShellRoute.indexedStack(
           name: Routes.merchantNotifications.name,
           path: Routes.merchantNotifications.path,
           builder: (context, state) => BlocProvider.value(
-            value: context.read<NotificationCubit>()..refreshNotifications(),
+            value: context.read<SharedNotificationCubit>()
+              ..refreshNotifications(),
             child: const NotificationScreen(),
           ),
         ),

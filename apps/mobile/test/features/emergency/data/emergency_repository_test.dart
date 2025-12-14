@@ -52,19 +52,31 @@ void main() {
           contactedAuthorities: ['Police'],
         );
 
-        final emergency = Emergency(
-          id: TestConstants.testEmergencyId,
-          orderId: TestConstants.testOrderId,
-          userId: TestConstants.testUserId,
-          type: EmergencyType.ACCIDENT,
-          status: EmergencyStatus.REPORTED,
-          description: 'Test emergency',
-          reportedAt: TestConstants.testCreatedAt,
+        final emergencyWithContact = EmergencyWithContact(
+          emergency: EmergencyWithContactEmergency(
+            id: TestConstants.testEmergencyId,
+            orderId: TestConstants.testOrderId,
+            userId: TestConstants.testUserId,
+            type: EmergencyType.ACCIDENT.value,
+            status: EmergencyStatus.REPORTED.value,
+            description: 'Test emergency',
+            reportedAt: TestConstants.testCreatedAt,
+          ),
+          contacts: [],
+          orderInfo: EmergencyWithContactOrderInfo(
+            id: TestConstants.testOrderId,
+            type: OrderType.RIDE.value,
+            status: OrderStatus.ACCEPTED.value,
+          ),
+          userInfo: EmergencyWithContactUserInfo(
+            id: TestConstants.testUserId,
+            name: 'Test User',
+          ),
         );
 
         final response = EmergencyTrigger200Response(
           message: 'Emergency triggered successfully',
-          data: emergency,
+          data: emergencyWithContact,
         );
 
         when(
@@ -83,8 +95,8 @@ void main() {
         final result = await repository.trigger(query);
 
         // Assert
-        expect(result, isSuccessResponse<Emergency>());
-        expect(result.data, equals(emergency));
+        expect(result, isSuccessResponse<EmergencyWithContact>());
+        expect(result.data, equals(emergencyWithContact));
         expect(result.message, equals('Emergency triggered successfully'));
 
         verify(
@@ -270,7 +282,7 @@ void main() {
           reportedAt: TestConstants.testCreatedAt,
         );
 
-        final response = EmergencyTrigger200Response(
+        final response = EmergencyGet200Response(
           message: 'Emergency retrieved successfully',
           data: emergency,
         );

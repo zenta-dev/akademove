@@ -15,7 +15,11 @@ enum MerchantEnvelopeEvent {
   @JsonValue(r'ORDER_COMPLETED')
   ORDER_COMPLETED(r'ORDER_COMPLETED'),
   @JsonValue(r'ORDER_STATUS_CHANGED')
-  ORDER_STATUS_CHANGED(r'ORDER_STATUS_CHANGED');
+  ORDER_STATUS_CHANGED(r'ORDER_STATUS_CHANGED'),
+  @JsonValue(r'NEW_DATA')
+  NEW_DATA(r'NEW_DATA'),
+  @JsonValue(r'NO_DATA')
+  NO_DATA(r'NO_DATA');
 
   const MerchantEnvelopeEvent(this.value);
 

@@ -23,7 +23,7 @@ class _UserDeliveryPaymentScreenState extends State<UserDeliveryPaymentScreen> {
 
   Future<void> _placeOrder() async {
     final orderCubit = context.read<UserOrderCubit>();
-    final deliveryCubit = context.read<UserDeliveryCubit>();
+    final orderLocationCubit = context.read<OrderLocationCubit>();
     final orderState = orderCubit.state;
 
     final pickup = orderState.pickupLocation;
@@ -44,7 +44,7 @@ class _UserDeliveryPaymentScreenState extends State<UserDeliveryPaymentScreen> {
       method,
       gender: gender,
       bankProvider: bankProvider,
-      couponCode: deliveryCubit.selectedCouponCode,
+      couponCode: orderLocationCubit.selectedCouponCode,
     );
   }
 

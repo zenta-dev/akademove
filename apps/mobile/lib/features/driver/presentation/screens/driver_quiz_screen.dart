@@ -33,7 +33,7 @@ class _DriverQuizScreenState extends State<DriverQuizScreen> {
         ),
       ],
       child: SafeArea(
-        child: RefreshTrigger(
+        child: SafeRefreshTrigger(
           onRefresh: () async {
             context.read<DriverQuizCubit2>().getLatestAttempt();
           },

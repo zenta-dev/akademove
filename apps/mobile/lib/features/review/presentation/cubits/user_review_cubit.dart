@@ -11,11 +11,13 @@ class UserReviewCubit extends BaseCubit<UserReviewState> {
   final UserReviewRepository _reviewRepository;
 
   /// Submit a review for a driver after completing an order
+  /// [categories] - List of selected categories (multi-select)
+  /// [score] - Overall rating for the entire review (1-5)
   Future<void> submitReview({
     required String orderId,
     required String toUserId,
-    required ReviewCategory category,
-    required num score,
+    required List<ReviewCategory> categories,
+    required int score,
     String? comment,
   }) async => await taskManager.execute('URC-sR1-$orderId', () async {
     try {
@@ -24,7 +26,7 @@ class UserReviewCubit extends BaseCubit<UserReviewState> {
       final res = await _reviewRepository.submitReview(
         orderId: orderId,
         toUserId: toUserId,
-        category: category,
+        categories: categories,
         score: score,
         comment: comment,
       );

@@ -46,7 +46,7 @@ export const MerchantMenuForm = ({
 	onSuccess,
 }: MerchantMenuFormProps) => {
 	const [imagePreview, setImagePreview] = useState<string | undefined>(
-		data?.image,
+		data?.image ?? undefined,
 	);
 	const form = useForm({
 		resolver: zodResolver(
@@ -159,7 +159,7 @@ export const MerchantMenuForm = ({
 				...data,
 				image: undefined,
 			});
-			setImagePreview(data.image);
+			setImagePreview(data.image ?? undefined);
 		}
 	}, [kind, data, form.reset]);
 

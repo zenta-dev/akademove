@@ -9,7 +9,7 @@ import 'package:api_client/api.dart';
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **message** | **String** |  | 
-**data** | [**Emergency**](Emergency.md) |  | 
+**data** | [**EmergencyWithContact**](EmergencyWithContact.md) |  | 
 **pagination** | [**PaginationResult**](PaginationResult.md) |  | [optional] 
 **totalPages** | **int** |  | [optional] 
 

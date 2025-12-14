@@ -10,8 +10,24 @@ import { CACHE_TTLS, CONFIGURATION_KEYS } from "@/core/constants";
 import type { WithTx } from "@/core/interface";
 import type { DatabaseService } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
+import type { StorageService } from "@/core/services/storage";
+import type { MerchantMenuDatabase } from "@/core/tables/merchant";
 import type { OrderDatabase } from "@/core/tables/order";
+import { MenuImageService } from "@/features/merchant/services";
+import { UserProfileService } from "@/features/user/services/user-profile-service";
 import { safeAsync, toNumberSafe } from "@/utils";
+
+/**
+ * Database row type for order items with menu relation
+ */
+interface OrderItemRow {
+	id: number;
+	orderId: string;
+	menuId: string;
+	quantity: number;
+	unitPrice: string;
+	menu: MerchantMenuDatabase | null;
+}
 
 /**
  * OrderBaseRepository - Shared base class for all order repositories
@@ -26,23 +42,124 @@ import { safeAsync, toNumberSafe } from "@/utils";
  * and each request can hit a different isolate.
  */
 export class OrderBaseRepository extends BaseRepository {
-	constructor(db: DatabaseService, kv: KeyValueService) {
+	protected readonly storage?: StorageService;
+
+	constructor(
+		db: DatabaseService,
+		kv: KeyValueService,
+		storage?: StorageService,
+	) {
 		super("order", kv, db);
+		this.storage = storage;
+	}
+
+	/**
+	 * Compose order items from database rows to API format
+	 * Transforms { menuId, quantity, unitPrice, menu } to { quantity, item: MerchantMenu }
+	 *
+	 * @param items - Raw database order item rows
+	 * @param storage - Optional storage service to convert image keys to URLs
+	 */
+	static composeOrderItems(
+		items: OrderItemRow[] | undefined,
+		storage?: StorageService,
+	): Order["items"] | undefined {
+		if (!items || items.length === 0) return undefined;
+
+		return items
+			.filter(
+				(
+					item,
+				): item is OrderItemRow & { menu: NonNullable<OrderItemRow["menu"]> } =>
+					item.menu !== null,
+			)
+			.map((item) => {
+				// Convert image key to full URL if storage service is provided
+				const imageUrl =
+					item.menu.image && storage
+						? storage.getPublicUrl({
+								bucket: MenuImageService.BUCKET,
+								key: item.menu.image,
+							})
+						: undefined;
+
+				return {
+					quantity: item.quantity,
+					item: {
+						id: item.menu.id,
+						merchantId: item.menu.merchantId,
+						name: item.menu.name,
+						category: item.menu.category ?? undefined,
+						price: toNumberSafe(item.menu.price),
+						stock: item.menu.stock,
+						image: imageUrl,
+						createdAt: item.menu.createdAt,
+						updatedAt: item.menu.updatedAt,
+					},
+				};
+			});
 	}
 
 	/**
 	 * Compose an Order entity from database row with related entities
+	 *
+	 * @param item - Raw database order row with relations
+	 * @param storage - Optional storage service to convert image keys to URLs for menu items and user profiles
 	 */
-	static composeEntity(
+	static async composeEntity(
 		item: OrderDatabase & {
 			user: Partial<User> | null;
 			driver: Partial<Driver> | null;
 			merchant: Partial<Merchant> | null;
+			items?: OrderItemRow[];
 		},
-	): Order {
+		storage?: StorageService,
+	): Promise<Order> {
+		const composedItems = OrderBaseRepository.composeOrderItems(
+			item.items,
+			storage,
+		);
+
+		// Convert user image key to presigned URL (private bucket)
+		let userImageUrl: string | undefined;
+		if (item.user?.image && storage) {
+			userImageUrl = await storage.getPresignedUrl({
+				bucket: UserProfileService.BUCKET,
+				key: item.user.image,
+			});
+		}
+
+		// Convert driver's user image key to presigned URL (private bucket)
+		let driverUserImageUrl: string | undefined;
+		if (item.driver?.user?.image && storage) {
+			driverUserImageUrl = await storage.getPresignedUrl({
+				bucket: UserProfileService.BUCKET,
+				key: item.driver.user.image,
+			});
+		}
+
+		const result = nullsToUndefined(item);
+
 		return {
 			...item,
-			...nullsToUndefined(item),
+			...result,
+			user: result.user
+				? {
+						...result.user,
+						image: userImageUrl,
+					}
+				: undefined,
+			driver: result.driver
+				? {
+						...result.driver,
+						user: result.driver.user
+							? {
+									...result.driver.user,
+									image: driverUserImageUrl,
+								}
+							: undefined,
+					}
+				: undefined,
 			basePrice: toNumberSafe(item.basePrice),
 			totalPrice: toNumberSafe(item.totalPrice),
 			tip: item.tip ? toNumberSafe(item.tip) : undefined,
@@ -58,6 +175,8 @@ export class OrderBaseRepository extends BaseRepository {
 			discountAmount: item.discountAmount
 				? toNumberSafe(item.discountAmount)
 				: undefined,
+			items: composedItems,
+			itemCount: composedItems?.length,
 		};
 	}
 
@@ -82,9 +201,17 @@ export class OrderBaseRepository extends BaseRepository {
 	): Promise<Order | undefined> {
 		const result = await (opts?.tx ?? this.db).query.order.findFirst({
 			with: {
-				user: { columns: { name: true } },
-				driver: { columns: {}, with: { user: { columns: { name: true } } } },
+				user: { columns: { name: true, image: true, gender: true } },
+				driver: {
+					columns: {},
+					with: { user: { columns: { name: true, image: true } } },
+				},
 				merchant: { columns: { name: true } },
+				items: {
+					with: {
+						menu: true,
+					},
+				},
 			},
 			where: (f, op) => op.eq(f.id, id),
 		});
@@ -96,6 +223,7 @@ export class OrderBaseRepository extends BaseRepository {
 			result as unknown as Parameters<
 				typeof OrderBaseRepository.composeEntity
 			>[0],
+			this.storage,
 		);
 	}
 

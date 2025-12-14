@@ -1,8 +1,14 @@
 import { env } from "cloudflare:workers";
 import type { ExecutionContext } from "@cloudflare/workers-types";
 import { and, eq, lte } from "drizzle-orm";
+import { BUSINESS_CONSTANTS, DRIVER_POOL_KEY } from "@/core/constants";
 import { getManagers, getRepositories, getServices } from "@/core/factory";
 import { tables } from "@/core/services/db";
+import {
+	OrderQueueService,
+	ProcessingQueueService,
+} from "@/core/services/queue";
+import { BusinessConfigurationService } from "@/features/configuration/services";
 import { logger } from "@/utils/logger";
 import { SCHEDULING_CONFIG } from "./services/order-scheduling-service";
 import { OrderStateService } from "./services/order-state-service";
@@ -15,9 +21,8 @@ import { OrderStateService } from "./services/order-state-service";
  * 1. Find orders with status='SCHEDULED' where scheduledMatchingAt <= now
  * 2. Update status to 'MATCHING'
  * 3. Send push notification to user that their scheduled ride is being matched
- *
- * Note: The actual driver matching is triggered when the user's app reconnects
- * to the WebSocket or via the order status update broadcast.
+ * 4. Enqueue driver matching job to find available drivers
+ * 5. Broadcast to driver pool room via WebSocket for real-time driver matching
  */
 export async function handleScheduledOrderCron(
 	_env: Env,
@@ -159,6 +164,78 @@ export async function handleScheduledOrderCron(
 					logger.error(
 						{ error: notificationError, orderId: order.id },
 						"[ScheduledOrderCron] Failed to send notification, but order was updated",
+					);
+				}
+
+				// Enqueue driver matching job and broadcast to driver pool
+				// This ensures drivers are notified immediately when scheduled order is ready
+				try {
+					// Fetch driver matching config from database
+					const matchingConfig =
+						await BusinessConfigurationService.getDriverMatchingConfig(
+							svc.db,
+							svc.kv,
+						);
+
+					// Enqueue driver matching job (which handles push notifications to drivers)
+					await OrderQueueService.enqueueDriverMatching({
+						orderId: order.id,
+						pickupLocation: order.pickupLocation,
+						orderType: order.type,
+						genderPreference: order.genderPreference ?? undefined,
+						userGender: order.gender ?? undefined,
+						initialRadiusKm: matchingConfig.initialRadiusKm,
+						maxRadiusKm: matchingConfig.maxRadiusKm,
+						maxMatchingDurationMinutes: matchingConfig.timeoutMinutes,
+						currentAttempt: 1,
+						maxExpansionAttempts: Math.ceil(
+							Math.log(
+								matchingConfig.maxRadiusKm / matchingConfig.initialRadiusKm,
+							) / Math.log(1 + matchingConfig.expansionRate),
+						),
+						expansionRate: matchingConfig.expansionRate,
+						matchingIntervalSeconds: matchingConfig.intervalSeconds,
+						broadcastLimit: matchingConfig.broadcastLimit,
+						maxCancellationsPerDay: matchingConfig.maxCancellationsPerDay,
+						excludedDriverIds: [],
+						isRetry: false,
+					});
+
+					logger.info(
+						{ orderId: order.id },
+						"[ScheduledOrderCron] Driver matching job enqueued for scheduled order",
+					);
+
+					// Broadcast to driver pool room via WebSocket for real-time driver matching
+					// Uses queue-based delayed broadcast to allow WebSocket clients time to connect
+					await ProcessingQueueService.enqueueWebSocketBroadcast(
+						{
+							roomName: DRIVER_POOL_KEY,
+							action: "MATCHING",
+							target: "SYSTEM",
+							data: {
+								detail: {
+									payment: null,
+									order: {
+										...order,
+										status: "MATCHING",
+									},
+									transaction: null,
+								},
+							},
+						},
+						{ delaySeconds: BUSINESS_CONSTANTS.BROADCAST_DELAY_SECONDS },
+					);
+
+					logger.info(
+						{ orderId: order.id },
+						"[ScheduledOrderCron] Broadcast enqueued to driver pool for scheduled order",
+					);
+				} catch (matchingError) {
+					// Log but don't fail the order - the rebroadcast cron will handle stuck orders
+					logger.error(
+						{ error: matchingError, orderId: order.id },
+						"[ScheduledOrderCron] Failed to enqueue driver matching job - rebroadcast cron will handle",
 					);
 				}
 			} catch (error) {

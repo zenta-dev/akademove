@@ -172,7 +172,7 @@ class _MerchantOrderScreenState extends State<MerchantOrderScreen> {
   Widget _buildTab({required List<OrderStatus> statuses}) {
     return BlocBuilder<MerchantOrderCubit, MerchantOrderState>(
       builder: (context, state) {
-        return RefreshTrigger(
+        return SafeRefreshTrigger(
           onRefresh: () async {
             await context.read<MerchantOrderCubit>().getMine(
               statuses: statuses,

@@ -97,6 +97,30 @@ abstract class AppLocalizations {
     Locale('id')
   ];
 
+  /// No description provided for @tax.
+  ///
+  /// In en, this message translates to:
+  /// **'Tax'**
+  String get tax;
+
+  /// No description provided for @distance.
+  ///
+  /// In en, this message translates to:
+  /// **'Distance'**
+  String get distance;
+
+  /// No description provided for @fare.
+  ///
+  /// In en, this message translates to:
+  /// **'Fare'**
+  String get fare;
+
+  /// No description provided for @platform_fee.
+  ///
+  /// In en, this message translates to:
+  /// **'Platform fee'**
+  String get platform_fee;
+
   /// No description provided for @transfer.
   ///
   /// In en, this message translates to:
@@ -541,6 +565,12 @@ abstract class AppLocalizations {
   /// **'Missing'**
   String get missing;
 
+  /// No description provided for @driver_information.
+  ///
+  /// In en, this message translates to:
+  /// **'Driver Information'**
+  String get driver_information;
+
   /// No description provided for @student_card.
   ///
   /// In en, this message translates to:
@@ -714,18 +744,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Customer Info'**
   String get customer_info;
-
-  /// No description provided for @distance.
-  ///
-  /// In en, this message translates to:
-  /// **'Distance'**
-  String get distance;
-
-  /// No description provided for @fare.
-  ///
-  /// In en, this message translates to:
-  /// **'Fare'**
-  String get fare;
 
   /// No description provided for @service.
   ///
@@ -967,11 +985,11 @@ abstract class AppLocalizations {
   /// **'Manage Schedule'**
   String get manage_schedule;
 
-  /// No description provided for @leadeboard_and_badges.
+  /// No description provided for @leaderboard.
   ///
   /// In en, this message translates to:
-  /// **'Leaderboard & Badges'**
-  String get leadeboard_and_badges;
+  /// **'Leaderboard'**
+  String get leaderboard;
 
   /// No description provided for @trips.
   ///
@@ -4639,11 +4657,29 @@ abstract class AppLocalizations {
   /// **'Make sure the location point on the map is correct to meet the registration requirements.'**
   String get label_outlet_location_description;
 
+  /// No description provided for @placeholder_search_dropoff_location.
+  ///
+  /// In en, this message translates to:
+  /// **'Search dropoff location'**
+  String get placeholder_search_dropoff_location;
+
   /// No description provided for @placeholder_search_location.
   ///
   /// In en, this message translates to:
   /// **'Search location'**
   String get placeholder_search_location;
+
+  /// No description provided for @placeholder_search_merchant.
+  ///
+  /// In en, this message translates to:
+  /// **'Search merchant'**
+  String get placeholder_search_merchant;
+
+  /// No description provided for @placeholder_search_pickup_location.
+  ///
+  /// In en, this message translates to:
+  /// **'Search pickup location'**
+  String get placeholder_search_pickup_location;
 
   /// No description provided for @label_dragging.
   ///
@@ -5862,6 +5898,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Rate by category'**
   String get text_rate_by_category;
+
+  /// No description provided for @text_rate_overall_experience.
+  ///
+  /// In en, this message translates to:
+  /// **'How would you rate your overall experience?'**
+  String get text_rate_overall_experience;
+
+  /// No description provided for @text_select_categories.
+  ///
+  /// In en, this message translates to:
+  /// **'Select applicable categories'**
+  String get text_select_categories;
+
+  /// No description provided for @text_select_categories_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose all that apply to your experience'**
+  String get text_select_categories_hint;
 
   /// No description provided for @category_cleanliness.
   ///
@@ -7261,11 +7315,1469 @@ abstract class AppLocalizations {
   /// **'Export feature coming soon!'**
   String get export_coming_soon;
 
+  /// No description provided for @export_success.
+  ///
+  /// In en, this message translates to:
+  /// **'PDF exported successfully'**
+  String get export_success;
+
+  /// No description provided for @export_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to export PDF'**
+  String get export_failed;
+
   /// No description provided for @no_data_available.
   ///
   /// In en, this message translates to:
   /// **'No data available'**
   String get no_data_available;
+
+  /// No description provided for @chat_time_days_ago.
+  ///
+  /// In en, this message translates to:
+  /// **'{count}d ago'**
+  String chat_time_days_ago(int count);
+
+  /// No description provided for @chat_time_hours_ago.
+  ///
+  /// In en, this message translates to:
+  /// **'{count}h ago'**
+  String chat_time_hours_ago(int count);
+
+  /// No description provided for @chat_time_minutes_ago.
+  ///
+  /// In en, this message translates to:
+  /// **'{count}m ago'**
+  String chat_time_minutes_ago(int count);
+
+  /// No description provided for @chat_time_just_now.
+  ///
+  /// In en, this message translates to:
+  /// **'Just now'**
+  String get chat_time_just_now;
+
+  /// No description provided for @leaderboard_top_drivers.
+  ///
+  /// In en, this message translates to:
+  /// **'Top Drivers'**
+  String get leaderboard_top_drivers;
+
+  /// No description provided for @leaderboard_other_rankings.
+  ///
+  /// In en, this message translates to:
+  /// **'Other Rankings'**
+  String get leaderboard_other_rankings;
+
+  /// No description provided for @leaderboard_refreshes_daily.
+  ///
+  /// In en, this message translates to:
+  /// **'Rankings refresh every 24 hours'**
+  String get leaderboard_refreshes_daily;
+
+  /// No description provided for @leaderboard_empty_state.
+  ///
+  /// In en, this message translates to:
+  /// **'No drivers on the leaderboard yet'**
+  String get leaderboard_empty_state;
+
+  /// No description provided for @current_location.
+  ///
+  /// In en, this message translates to:
+  /// **'Current Location'**
+  String get current_location;
+
+  /// No description provided for @current_location_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Your current GPS location'**
+  String get current_location_desc;
+
+  /// No description provided for @privacy_policy_title.
+  ///
+  /// In en, this message translates to:
+  /// **'AkadeMove Privacy Policy'**
+  String get privacy_policy_title;
+
+  /// No description provided for @privacy_policy_date.
+  ///
+  /// In en, this message translates to:
+  /// **'October 2025'**
+  String get privacy_policy_date;
+
+  /// No description provided for @privacy_policy_intro.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome to AkadeMove, a platform designed to connect customers, student drivers, and merchants in a unified mobility and delivery ecosystem. Your privacy is important to us. This Privacy Policy explains how we collect, use, store, and protect your personal information when you use our mobile application, website, or any related services (collectively referred to as \"AkadeMove\"). By using AkadeMove, you agree to the collection and use of your data in accordance with this policy. Please read this document carefully to understand how we handle your personal information.'**
+  String get privacy_policy_intro;
+
+  /// No description provided for @privacy_data_we_collect_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Data We Collect'**
+  String get privacy_data_we_collect_title;
+
+  /// No description provided for @privacy_data_we_collect_content.
+  ///
+  /// In en, this message translates to:
+  /// **'We collect personal information from all users of AkadeMove, Customers, Drivers (Students), and Merchants to enable our services and ensure a safe and efficient platform experience.'**
+  String get privacy_data_we_collect_content;
+
+  /// No description provided for @privacy_customer_data_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Customer Data'**
+  String get privacy_customer_data_title;
+
+  /// No description provided for @privacy_customer_data_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'When you register and use AkadeMove as a Customer, we collect:'**
+  String get privacy_customer_data_desc;
+
+  /// No description provided for @privacy_customer_data_item_name.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get privacy_customer_data_item_name;
+
+  /// No description provided for @privacy_customer_data_item_email.
+  ///
+  /// In en, this message translates to:
+  /// **'Email address'**
+  String get privacy_customer_data_item_email;
+
+  /// No description provided for @privacy_customer_data_item_phone.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone number'**
+  String get privacy_customer_data_item_phone;
+
+  /// No description provided for @privacy_customer_data_item_gender.
+  ///
+  /// In en, this message translates to:
+  /// **'Gender'**
+  String get privacy_customer_data_item_gender;
+
+  /// No description provided for @privacy_customer_data_footer.
+  ///
+  /// In en, this message translates to:
+  /// **'This data allows us to verify your identity, communicate with you, process bookings and payments, and improve your overall experience.'**
+  String get privacy_customer_data_footer;
+
+  /// No description provided for @privacy_customer_data_additional.
+  ///
+  /// In en, this message translates to:
+  /// **'Customers may select their preferred driver gender to enhance comfort and safety.'**
+  String get privacy_customer_data_additional;
+
+  /// No description provided for @privacy_driver_data_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Driver (Student) Data'**
+  String get privacy_driver_data_title;
+
+  /// No description provided for @privacy_driver_data_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'When you register as a Driver (student driver) on AkadeMove, we collect:'**
+  String get privacy_driver_data_desc;
+
+  /// No description provided for @privacy_driver_data_item_name.
+  ///
+  /// In en, this message translates to:
+  /// **'Full name'**
+  String get privacy_driver_data_item_name;
+
+  /// No description provided for @privacy_driver_data_item_email.
+  ///
+  /// In en, this message translates to:
+  /// **'Email address'**
+  String get privacy_driver_data_item_email;
+
+  /// No description provided for @privacy_driver_data_item_phone.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone number'**
+  String get privacy_driver_data_item_phone;
+
+  /// No description provided for @privacy_driver_data_item_gender.
+  ///
+  /// In en, this message translates to:
+  /// **'Gender'**
+  String get privacy_driver_data_item_gender;
+
+  /// No description provided for @privacy_driver_data_item_sim.
+  ///
+  /// In en, this message translates to:
+  /// **'Driver License (SIM)'**
+  String get privacy_driver_data_item_sim;
+
+  /// No description provided for @privacy_driver_data_item_ktm.
+  ///
+  /// In en, this message translates to:
+  /// **'Student ID Card (KTM)'**
+  String get privacy_driver_data_item_ktm;
+
+  /// No description provided for @privacy_driver_data_item_stnk.
+  ///
+  /// In en, this message translates to:
+  /// **'Vehicle Registration Certificate (STNK)'**
+  String get privacy_driver_data_item_stnk;
+
+  /// No description provided for @privacy_driver_data_item_plate.
+  ///
+  /// In en, this message translates to:
+  /// **'Vehicle license plate number'**
+  String get privacy_driver_data_item_plate;
+
+  /// No description provided for @privacy_driver_data_item_bank.
+  ///
+  /// In en, this message translates to:
+  /// **'Bank account number'**
+  String get privacy_driver_data_item_bank;
+
+  /// No description provided for @privacy_driver_data_footer.
+  ///
+  /// In en, this message translates to:
+  /// **'Drivers may also manually input their academic schedule (KRS) to indicate unavailable periods (e.g., class hours). This schedule data is not shared with customers or third parties and is used solely to prevent order assignments during academic sessions.'**
+  String get privacy_driver_data_footer;
+
+  /// No description provided for @privacy_merchant_data_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Merchant Data'**
+  String get privacy_merchant_data_title;
+
+  /// No description provided for @privacy_merchant_data_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'When you register as a Merchant Partner, we collect:'**
+  String get privacy_merchant_data_desc;
+
+  /// No description provided for @privacy_merchant_data_item_owner_name.
+  ///
+  /// In en, this message translates to:
+  /// **'Owner\'s full name'**
+  String get privacy_merchant_data_item_owner_name;
+
+  /// No description provided for @privacy_merchant_data_item_owner_email.
+  ///
+  /// In en, this message translates to:
+  /// **'Owner\'s email address'**
+  String get privacy_merchant_data_item_owner_email;
+
+  /// No description provided for @privacy_merchant_data_item_owner_phone.
+  ///
+  /// In en, this message translates to:
+  /// **'Owner\'s phone number'**
+  String get privacy_merchant_data_item_owner_phone;
+
+  /// No description provided for @privacy_merchant_data_item_outlet_name.
+  ///
+  /// In en, this message translates to:
+  /// **'Outlet\'s name'**
+  String get privacy_merchant_data_item_outlet_name;
+
+  /// No description provided for @privacy_merchant_data_item_outlet_location.
+  ///
+  /// In en, this message translates to:
+  /// **'Outlet\'s location'**
+  String get privacy_merchant_data_item_outlet_location;
+
+  /// No description provided for @privacy_merchant_data_item_outlet_phone.
+  ///
+  /// In en, this message translates to:
+  /// **'Outlet\'s phone number'**
+  String get privacy_merchant_data_item_outlet_phone;
+
+  /// No description provided for @privacy_merchant_data_item_outlet_email.
+  ///
+  /// In en, this message translates to:
+  /// **'Outlet\'s email'**
+  String get privacy_merchant_data_item_outlet_email;
+
+  /// No description provided for @privacy_merchant_data_item_outlet_docs.
+  ///
+  /// In en, this message translates to:
+  /// **'Outlet\'s documents (It is an optional uploads, e.g., tax ID, business license, etc.)'**
+  String get privacy_merchant_data_item_outlet_docs;
+
+  /// No description provided for @privacy_merchant_data_item_bank.
+  ///
+  /// In en, this message translates to:
+  /// **'Bank account number'**
+  String get privacy_merchant_data_item_bank;
+
+  /// No description provided for @privacy_merchant_data_footer.
+  ///
+  /// In en, this message translates to:
+  /// **'This data helps verify your merchant identity, facilitate transactions, and manage fund withdrawals securely.'**
+  String get privacy_merchant_data_footer;
+
+  /// No description provided for @privacy_use_of_data_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Use of Data'**
+  String get privacy_use_of_data_title;
+
+  /// No description provided for @privacy_use_of_data_content.
+  ///
+  /// In en, this message translates to:
+  /// **'AkadeMove uses personal information to:'**
+  String get privacy_use_of_data_content;
+
+  /// No description provided for @privacy_use_of_data_item_1.
+  ///
+  /// In en, this message translates to:
+  /// **'Provide and manage all AkadeMove services (transportation, delivery, and transactions).'**
+  String get privacy_use_of_data_item_1;
+
+  /// No description provided for @privacy_use_of_data_item_2.
+  ///
+  /// In en, this message translates to:
+  /// **'Verify the identity of Customers, Drivers, and Merchants to prevent fraud and unauthorized access.'**
+  String get privacy_use_of_data_item_2;
+
+  /// No description provided for @privacy_use_of_data_item_3.
+  ///
+  /// In en, this message translates to:
+  /// **'Match customers with suitable drivers based on gender preference, proximity, and availability'**
+  String get privacy_use_of_data_item_3;
+
+  /// No description provided for @privacy_use_of_data_item_4.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage student drivers schedules to ensure service availability aligns with their academic commitments.'**
+  String get privacy_use_of_data_item_4;
+
+  /// No description provided for @privacy_use_of_data_item_5.
+  ///
+  /// In en, this message translates to:
+  /// **'Communicate service updates, notifications, promotions, and account-related information.'**
+  String get privacy_use_of_data_item_5;
+
+  /// No description provided for @privacy_use_of_data_item_6.
+  ///
+  /// In en, this message translates to:
+  /// **'Fulfill legal and regulatory obligations required by applicable laws.'**
+  String get privacy_use_of_data_item_6;
+
+  /// No description provided for @privacy_location_access_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Location Access'**
+  String get privacy_location_access_title;
+
+  /// No description provided for @privacy_location_access_content.
+  ///
+  /// In en, this message translates to:
+  /// **'AkadeMove requires location access (GPS) to function properly. We use location data to:'**
+  String get privacy_location_access_content;
+
+  /// No description provided for @privacy_location_access_item_1.
+  ///
+  /// In en, this message translates to:
+  /// **'Identify pick-up and drop-off points.'**
+  String get privacy_location_access_item_1;
+
+  /// No description provided for @privacy_location_access_item_2.
+  ///
+  /// In en, this message translates to:
+  /// **'Show real-time driver locations.'**
+  String get privacy_location_access_item_2;
+
+  /// No description provided for @privacy_location_access_item_3.
+  ///
+  /// In en, this message translates to:
+  /// **'Improve route accuracy and service efficiency.'**
+  String get privacy_location_access_item_3;
+
+  /// No description provided for @privacy_location_access_item_4.
+  ///
+  /// In en, this message translates to:
+  /// **'Match customers with the nearest available driver.'**
+  String get privacy_location_access_item_4;
+
+  /// No description provided for @privacy_location_access_footer.
+  ///
+  /// In en, this message translates to:
+  /// **'You may adjust your location permissions in your device settings. However, disabling location access may limit AkadeMove functionality.'**
+  String get privacy_location_access_footer;
+
+  /// No description provided for @privacy_data_sharing_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Data Sharing'**
+  String get privacy_data_sharing_title;
+
+  /// No description provided for @privacy_data_sharing_content.
+  ///
+  /// In en, this message translates to:
+  /// **'We do not sell, rent, or trade your personal data to third parties. However, we may share certain information with:'**
+  String get privacy_data_sharing_content;
+
+  /// No description provided for @privacy_data_sharing_item_1.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment service providers to process financial transactions.'**
+  String get privacy_data_sharing_item_1;
+
+  /// No description provided for @privacy_data_sharing_item_2.
+  ///
+  /// In en, this message translates to:
+  /// **'Trusted third-party partners (such as identity verification, insurance, or analytics providers) to support our operations.'**
+  String get privacy_data_sharing_item_2;
+
+  /// No description provided for @privacy_data_sharing_item_3.
+  ///
+  /// In en, this message translates to:
+  /// **'Law enforcement or government authorities, if required by applicable law or legal process.'**
+  String get privacy_data_sharing_item_3;
+
+  /// No description provided for @privacy_data_sharing_item_4.
+  ///
+  /// In en, this message translates to:
+  /// **'Match customers with the nearest available driver.'**
+  String get privacy_data_sharing_item_4;
+
+  /// No description provided for @privacy_data_sharing_footer.
+  ///
+  /// In en, this message translates to:
+  /// **'All partners handling your data are required to comply with strict data protection standards.'**
+  String get privacy_data_sharing_footer;
+
+  /// No description provided for @privacy_changes_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Changes to This Privacy Policy'**
+  String get privacy_changes_title;
+
+  /// No description provided for @privacy_changes_content.
+  ///
+  /// In en, this message translates to:
+  /// **'We may update this Privacy Policy from time to time to reflect changes in our practices or legal obligations. Updates will be communicated via the AkadeMove app or website. Continued use of our services after any update constitutes your acceptance of the revised policy.'**
+  String get privacy_changes_content;
+
+  /// No description provided for @tos_title.
+  ///
+  /// In en, this message translates to:
+  /// **'AkadeMove Terms of Service'**
+  String get tos_title;
+
+  /// No description provided for @tos_effective_date.
+  ///
+  /// In en, this message translates to:
+  /// **'Effective Date: December 6, 2025'**
+  String get tos_effective_date;
+
+  /// No description provided for @tos_intro.
+  ///
+  /// In en, this message translates to:
+  /// **'These Terms of Service constitute a legally binding agreement between you and AkadeMove. Please read them carefully before using our services.'**
+  String get tos_intro;
+
+  /// No description provided for @tos_acceptance_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Acceptance of Terms'**
+  String get tos_acceptance_title;
+
+  /// No description provided for @tos_acceptance_content.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome to AkadeMove. These Terms of Service (\"Terms\") govern your access to and use of our campus mobility and delivery platform. By creating an account or using our Services, you agree to be bound by these Terms and our Privacy Policy.'**
+  String get tos_acceptance_content;
+
+  /// No description provided for @tos_service_desc_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Service Description'**
+  String get tos_service_desc_title;
+
+  /// No description provided for @tos_service_desc_content.
+  ///
+  /// In en, this message translates to:
+  /// **'AkadeMove is a campus-specific platform that connects students, faculty, and authorized campus community members for:'**
+  String get tos_service_desc_content;
+
+  /// No description provided for @tos_service_desc_item_ride.
+  ///
+  /// In en, this message translates to:
+  /// **'Ride-Hailing: Transportation services within and around campus areas'**
+  String get tos_service_desc_item_ride;
+
+  /// No description provided for @tos_service_desc_item_delivery.
+  ///
+  /// In en, this message translates to:
+  /// **'Package Delivery: Delivery of documents, parcels, and goods within campus'**
+  String get tos_service_desc_item_delivery;
+
+  /// No description provided for @tos_service_desc_item_food.
+  ///
+  /// In en, this message translates to:
+  /// **'Food Delivery: Ordering and delivery of food from campus merchants'**
+  String get tos_service_desc_item_food;
+
+  /// No description provided for @tos_service_desc_footer.
+  ///
+  /// In en, this message translates to:
+  /// **'AkadeMove acts as a technology platform connecting users with service providers. We are not a transportation or delivery company. Drivers and merchants are independent contractors.'**
+  String get tos_service_desc_footer;
+
+  /// No description provided for @tos_eligibility_title.
+  ///
+  /// In en, this message translates to:
+  /// **'User Eligibility'**
+  String get tos_eligibility_title;
+
+  /// No description provided for @tos_eligibility_passengers_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Passengers/Users'**
+  String get tos_eligibility_passengers_title;
+
+  /// No description provided for @tos_eligibility_passengers_item_1.
+  ///
+  /// In en, this message translates to:
+  /// **'Be at least 17 years of age'**
+  String get tos_eligibility_passengers_item_1;
+
+  /// No description provided for @tos_eligibility_passengers_item_2.
+  ///
+  /// In en, this message translates to:
+  /// **'Be a current student, faculty, or authorized campus member'**
+  String get tos_eligibility_passengers_item_2;
+
+  /// No description provided for @tos_eligibility_passengers_item_3.
+  ///
+  /// In en, this message translates to:
+  /// **'Provide valid contact information'**
+  String get tos_eligibility_passengers_item_3;
+
+  /// No description provided for @tos_eligibility_passengers_item_4.
+  ///
+  /// In en, this message translates to:
+  /// **'Verify campus affiliation (Student ID/KTM when required)'**
+  String get tos_eligibility_passengers_item_4;
+
+  /// No description provided for @tos_eligibility_drivers_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Drivers'**
+  String get tos_eligibility_drivers_title;
+
+  /// No description provided for @tos_eligibility_drivers_item_1.
+  ///
+  /// In en, this message translates to:
+  /// **'Be at least 18 years of age'**
+  String get tos_eligibility_drivers_item_1;
+
+  /// No description provided for @tos_eligibility_drivers_item_2.
+  ///
+  /// In en, this message translates to:
+  /// **'Be a currently enrolled student'**
+  String get tos_eligibility_drivers_item_2;
+
+  /// No description provided for @tos_eligibility_drivers_item_3.
+  ///
+  /// In en, this message translates to:
+  /// **'Possess valid driver\'s license (SIM C/A)'**
+  String get tos_eligibility_drivers_item_3;
+
+  /// No description provided for @tos_eligibility_drivers_item_4.
+  ///
+  /// In en, this message translates to:
+  /// **'Provide valid vehicle registration (STNK)'**
+  String get tos_eligibility_drivers_item_4;
+
+  /// No description provided for @tos_eligibility_drivers_item_5.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit Student ID (KTM) photo'**
+  String get tos_eligibility_drivers_item_5;
+
+  /// No description provided for @tos_eligibility_drivers_item_6.
+  ///
+  /// In en, this message translates to:
+  /// **'Pass verification and onboarding process'**
+  String get tos_eligibility_drivers_item_6;
+
+  /// No description provided for @tos_eligibility_merchants_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Merchants'**
+  String get tos_eligibility_merchants_title;
+
+  /// No description provided for @tos_eligibility_merchants_item_1.
+  ///
+  /// In en, this message translates to:
+  /// **'Be an authorized campus food vendor or tenant'**
+  String get tos_eligibility_merchants_item_1;
+
+  /// No description provided for @tos_eligibility_merchants_item_2.
+  ///
+  /// In en, this message translates to:
+  /// **'Provide valid business documentation'**
+  String get tos_eligibility_merchants_item_2;
+
+  /// No description provided for @tos_eligibility_merchants_item_3.
+  ///
+  /// In en, this message translates to:
+  /// **'Maintain food safety and hygiene standards'**
+  String get tos_eligibility_merchants_item_3;
+
+  /// No description provided for @tos_eligibility_merchants_item_4.
+  ///
+  /// In en, this message translates to:
+  /// **'Comply with campus regulations'**
+  String get tos_eligibility_merchants_item_4;
+
+  /// No description provided for @tos_pricing_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Pricing & Commission'**
+  String get tos_pricing_title;
+
+  /// No description provided for @tos_pricing_content.
+  ///
+  /// In en, this message translates to:
+  /// **'Pricing formula: Base Price + (Distance × Rate) + Tip - Coupon'**
+  String get tos_pricing_content;
+
+  /// No description provided for @tos_pricing_commission_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Commission Structure'**
+  String get tos_pricing_commission_title;
+
+  /// No description provided for @tos_pricing_commission_item_1.
+  ///
+  /// In en, this message translates to:
+  /// **'Rides & Delivery: 15% platform commission'**
+  String get tos_pricing_commission_item_1;
+
+  /// No description provided for @tos_pricing_commission_item_2.
+  ///
+  /// In en, this message translates to:
+  /// **'Food Orders: 20% total (10% merchant, 10% platform)'**
+  String get tos_pricing_commission_item_2;
+
+  /// No description provided for @tos_pricing_commission_item_3.
+  ///
+  /// In en, this message translates to:
+  /// **'Tips: Go 100% to drivers (configurable)'**
+  String get tos_pricing_commission_item_3;
+
+  /// No description provided for @tos_pricing_footer.
+  ///
+  /// In en, this message translates to:
+  /// **'Example: Ride total Rp 25,000 → Commission Rp 3,750 → Driver earns Rp 21,250'**
+  String get tos_pricing_footer;
+
+  /// No description provided for @tos_wallet_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Wallet System'**
+  String get tos_wallet_title;
+
+  /// No description provided for @tos_wallet_content.
+  ///
+  /// In en, this message translates to:
+  /// **'All users have an in-app wallet for managing funds:'**
+  String get tos_wallet_content;
+
+  /// No description provided for @tos_wallet_item_1.
+  ///
+  /// In en, this message translates to:
+  /// **'Top-Up: Add funds via QRIS, bank transfer, or e-wallet (Midtrans)'**
+  String get tos_wallet_item_1;
+
+  /// No description provided for @tos_wallet_item_2.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment: Automatically deducted from wallet balance'**
+  String get tos_wallet_item_2;
+
+  /// No description provided for @tos_wallet_item_3.
+  ///
+  /// In en, this message translates to:
+  /// **'Earnings: Credited to wallet after order completion'**
+  String get tos_wallet_item_3;
+
+  /// No description provided for @tos_wallet_item_4.
+  ///
+  /// In en, this message translates to:
+  /// **'Withdrawals: Min. Rp 50,000, processed in 1-3 business days'**
+  String get tos_wallet_item_4;
+
+  /// No description provided for @tos_cancellation_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancellation Policy'**
+  String get tos_cancellation_title;
+
+  /// No description provided for @tos_cancellation_user_title.
+  ///
+  /// In en, this message translates to:
+  /// **'User Cancellations'**
+  String get tos_cancellation_user_title;
+
+  /// No description provided for @tos_cancellation_user_item_1.
+  ///
+  /// In en, this message translates to:
+  /// **'Free cancellation within 2 minutes of booking'**
+  String get tos_cancellation_user_item_1;
+
+  /// No description provided for @tos_cancellation_user_item_2.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancellation fee applies after 2 minutes (configurable)'**
+  String get tos_cancellation_user_item_2;
+
+  /// No description provided for @tos_cancellation_user_item_3.
+  ///
+  /// In en, this message translates to:
+  /// **'Full fee if driver arrived or order being prepared'**
+  String get tos_cancellation_user_item_3;
+
+  /// No description provided for @tos_cancellation_driver_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Driver Cancellations'**
+  String get tos_cancellation_driver_title;
+
+  /// No description provided for @tos_cancellation_driver_item_1.
+  ///
+  /// In en, this message translates to:
+  /// **'Can cancel if passenger unresponsive or violates terms'**
+  String get tos_cancellation_driver_item_1;
+
+  /// No description provided for @tos_cancellation_driver_item_2.
+  ///
+  /// In en, this message translates to:
+  /// **'Excessive cancellations may result in suspension'**
+  String get tos_cancellation_driver_item_2;
+
+  /// No description provided for @tos_cancellation_refunds_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Refunds'**
+  String get tos_cancellation_refunds_title;
+
+  /// No description provided for @tos_cancellation_refunds_item_1.
+  ///
+  /// In en, this message translates to:
+  /// **'Processed within 5-7 business days for service issues'**
+  String get tos_cancellation_refunds_item_1;
+
+  /// No description provided for @tos_cancellation_refunds_item_2.
+  ///
+  /// In en, this message translates to:
+  /// **'Issued to original payment method or wallet'**
+  String get tos_cancellation_refunds_item_2;
+
+  /// No description provided for @tos_cancellation_refunds_item_3.
+  ///
+  /// In en, this message translates to:
+  /// **'Disputes must be raised within 24 hours'**
+  String get tos_cancellation_refunds_item_3;
+
+  /// No description provided for @tos_rating_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Rating & Review System'**
+  String get tos_rating_title;
+
+  /// No description provided for @tos_rating_content.
+  ///
+  /// In en, this message translates to:
+  /// **'Both users and drivers rate each other on a 5-star scale. Ratings affect service quality and opportunities.'**
+  String get tos_rating_content;
+
+  /// No description provided for @tos_rating_item_1.
+  ///
+  /// In en, this message translates to:
+  /// **'Fairness: Ratings should reflect actual service quality'**
+  String get tos_rating_item_1;
+
+  /// No description provided for @tos_rating_item_2.
+  ///
+  /// In en, this message translates to:
+  /// **'Prohibition: Do not manipulate ratings or leave false reviews'**
+  String get tos_rating_item_2;
+
+  /// No description provided for @tos_rating_item_3.
+  ///
+  /// In en, this message translates to:
+  /// **'Disputes: Can be reported to customer support'**
+  String get tos_rating_item_3;
+
+  /// No description provided for @tos_rating_item_4.
+  ///
+  /// In en, this message translates to:
+  /// **'Consequences: Consistently low ratings may result in suspension'**
+  String get tos_rating_item_4;
+
+  /// No description provided for @tos_driver_req_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Driver Requirements'**
+  String get tos_driver_req_title;
+
+  /// No description provided for @tos_driver_req_schedule_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Class Schedule Management'**
+  String get tos_driver_req_schedule_title;
+
+  /// No description provided for @tos_driver_req_schedule_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Drivers can input class schedules to auto-set offline status during class times.'**
+  String get tos_driver_req_schedule_desc;
+
+  /// No description provided for @tos_driver_req_availability_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Availability Control'**
+  String get tos_driver_req_availability_title;
+
+  /// No description provided for @tos_driver_req_availability_item_1.
+  ///
+  /// In en, this message translates to:
+  /// **'Toggle online/offline status freely'**
+  String get tos_driver_req_availability_item_1;
+
+  /// No description provided for @tos_driver_req_availability_item_2.
+  ///
+  /// In en, this message translates to:
+  /// **'Accept or reject order requests'**
+  String get tos_driver_req_availability_item_2;
+
+  /// No description provided for @tos_driver_req_availability_item_3.
+  ///
+  /// In en, this message translates to:
+  /// **'Excessive rejections affect matching priority'**
+  String get tos_driver_req_availability_item_3;
+
+  /// No description provided for @tos_driver_req_availability_item_4.
+  ///
+  /// In en, this message translates to:
+  /// **'Repeated cancellations may result in warnings'**
+  String get tos_driver_req_availability_item_4;
+
+  /// No description provided for @tos_safety_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Safety & Reporting'**
+  String get tos_safety_title;
+
+  /// No description provided for @tos_safety_content.
+  ///
+  /// In en, this message translates to:
+  /// **'Your safety is our priority. AkadeMove provides:'**
+  String get tos_safety_content;
+
+  /// No description provided for @tos_safety_item_1.
+  ///
+  /// In en, this message translates to:
+  /// **'In-App Chat: Communicate without sharing phone numbers'**
+  String get tos_safety_item_1;
+
+  /// No description provided for @tos_safety_item_2.
+  ///
+  /// In en, this message translates to:
+  /// **'Driver Verification: All drivers undergo document verification'**
+  String get tos_safety_item_2;
+
+  /// No description provided for @tos_safety_item_3.
+  ///
+  /// In en, this message translates to:
+  /// **'Real-Time Tracking: Share trip with trusted contacts'**
+  String get tos_safety_item_3;
+
+  /// No description provided for @tos_safety_item_4.
+  ///
+  /// In en, this message translates to:
+  /// **'Emergency Button: Quick access to campus security'**
+  String get tos_safety_item_4;
+
+  /// No description provided for @tos_safety_item_5.
+  ///
+  /// In en, this message translates to:
+  /// **'Report System: Report misconduct or safety concerns'**
+  String get tos_safety_item_5;
+
+  /// No description provided for @tos_safety_footer.
+  ///
+  /// In en, this message translates to:
+  /// **'Reports are reviewed within 24-48 hours. Actions may include warnings, suspension, or permanent ban. Serious incidents may be reported to authorities.'**
+  String get tos_safety_footer;
+
+  /// No description provided for @tos_gender_pref_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Gender Preference Feature'**
+  String get tos_gender_pref_title;
+
+  /// No description provided for @tos_gender_pref_content.
+  ///
+  /// In en, this message translates to:
+  /// **'Users can optionally request same-gender drivers for enhanced comfort and safety:'**
+  String get tos_gender_pref_content;
+
+  /// No description provided for @tos_gender_pref_item_1.
+  ///
+  /// In en, this message translates to:
+  /// **'Optional preference in matching algorithm'**
+  String get tos_gender_pref_item_1;
+
+  /// No description provided for @tos_gender_pref_item_2.
+  ///
+  /// In en, this message translates to:
+  /// **'Availability depends on nearby drivers'**
+  String get tos_gender_pref_item_2;
+
+  /// No description provided for @tos_gender_pref_item_3.
+  ///
+  /// In en, this message translates to:
+  /// **'May increase wait times if same-gender drivers not available'**
+  String get tos_gender_pref_item_3;
+
+  /// No description provided for @tos_gender_pref_item_4.
+  ///
+  /// In en, this message translates to:
+  /// **'Can be enabled/disabled anytime'**
+  String get tos_gender_pref_item_4;
+
+  /// No description provided for @tos_prohibited_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Prohibited Conduct'**
+  String get tos_prohibited_title;
+
+  /// No description provided for @tos_prohibited_content.
+  ///
+  /// In en, this message translates to:
+  /// **'Users must not:'**
+  String get tos_prohibited_content;
+
+  /// No description provided for @tos_prohibited_item_1.
+  ///
+  /// In en, this message translates to:
+  /// **'Use services for illegal purposes or transport illegal goods'**
+  String get tos_prohibited_item_1;
+
+  /// No description provided for @tos_prohibited_item_2.
+  ///
+  /// In en, this message translates to:
+  /// **'Harass, abuse, threaten, or discriminate against others'**
+  String get tos_prohibited_item_2;
+
+  /// No description provided for @tos_prohibited_item_3.
+  ///
+  /// In en, this message translates to:
+  /// **'Engage in fraudulent activities or fake accounts'**
+  String get tos_prohibited_item_3;
+
+  /// No description provided for @tos_prohibited_item_4.
+  ///
+  /// In en, this message translates to:
+  /// **'Manipulate platform, ratings, pricing, or promotions'**
+  String get tos_prohibited_item_4;
+
+  /// No description provided for @tos_prohibited_item_5.
+  ///
+  /// In en, this message translates to:
+  /// **'Operate vehicles unsafely or violate traffic laws'**
+  String get tos_prohibited_item_5;
+
+  /// No description provided for @tos_prohibited_item_6.
+  ///
+  /// In en, this message translates to:
+  /// **'Attempt unauthorized access to accounts or data'**
+  String get tos_prohibited_item_6;
+
+  /// No description provided for @tos_prohibited_item_7.
+  ///
+  /// In en, this message translates to:
+  /// **'Infringe on AkadeMove\'s or others\' intellectual property'**
+  String get tos_prohibited_item_7;
+
+  /// No description provided for @tos_prohibited_footer.
+  ///
+  /// In en, this message translates to:
+  /// **'Violations may result in immediate suspension and legal action.'**
+  String get tos_prohibited_footer;
+
+  /// No description provided for @tos_liability_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Limitation of Liability'**
+  String get tos_liability_title;
+
+  /// No description provided for @tos_liability_content.
+  ///
+  /// In en, this message translates to:
+  /// **'AkadeMove is a technology platform connecting users with independent service providers. We do not provide transportation or delivery services directly.'**
+  String get tos_liability_content;
+
+  /// No description provided for @tos_liability_item_1.
+  ///
+  /// In en, this message translates to:
+  /// **'Services provided \"as is\" without warranties'**
+  String get tos_liability_item_1;
+
+  /// No description provided for @tos_liability_item_2.
+  ///
+  /// In en, this message translates to:
+  /// **'Not liable for indirect or consequential damages'**
+  String get tos_liability_item_2;
+
+  /// No description provided for @tos_liability_item_3.
+  ///
+  /// In en, this message translates to:
+  /// **'Maximum liability limited to amounts paid in last 12 months'**
+  String get tos_liability_item_3;
+
+  /// No description provided for @tos_liability_item_4.
+  ///
+  /// In en, this message translates to:
+  /// **'Not responsible for actions of drivers, merchants, or users'**
+  String get tos_liability_item_4;
+
+  /// No description provided for @tos_dispute_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Dispute Resolution'**
+  String get tos_dispute_title;
+
+  /// No description provided for @tos_dispute_item_1.
+  ///
+  /// In en, this message translates to:
+  /// **'Informal Resolution: Contact customer support first'**
+  String get tos_dispute_item_1;
+
+  /// No description provided for @tos_dispute_item_2.
+  ///
+  /// In en, this message translates to:
+  /// **'Mediation: Attempt mediation before litigation'**
+  String get tos_dispute_item_2;
+
+  /// No description provided for @tos_dispute_item_3.
+  ///
+  /// In en, this message translates to:
+  /// **'Governing Law: Republic of Indonesia laws apply'**
+  String get tos_dispute_item_3;
+
+  /// No description provided for @tos_dispute_item_4.
+  ///
+  /// In en, this message translates to:
+  /// **'Jurisdiction: Courts of Surabaya, Indonesia'**
+  String get tos_dispute_item_4;
+
+  /// No description provided for @tos_termination_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Account Termination'**
+  String get tos_termination_title;
+
+  /// No description provided for @tos_termination_user_title.
+  ///
+  /// In en, this message translates to:
+  /// **'User Termination'**
+  String get tos_termination_user_title;
+
+  /// No description provided for @tos_termination_user_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'You may terminate your account anytime through app settings or customer support.'**
+  String get tos_termination_user_desc;
+
+  /// No description provided for @tos_termination_platform_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Platform Termination'**
+  String get tos_termination_platform_title;
+
+  /// No description provided for @tos_termination_platform_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'We reserve the right to suspend or terminate accounts that violate Terms, engage in fraud, or pose safety risks.'**
+  String get tos_termination_platform_desc;
+
+  /// No description provided for @tos_termination_footer.
+  ///
+  /// In en, this message translates to:
+  /// **'Upon termination, access ceases and data may be deleted subject to legal requirements. Outstanding obligations remain.'**
+  String get tos_termination_footer;
+
+  /// No description provided for @tos_changes_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Changes to Terms'**
+  String get tos_changes_title;
+
+  /// No description provided for @tos_changes_content.
+  ///
+  /// In en, this message translates to:
+  /// **'We may modify these Terms at any time. Material changes will be notified via:'**
+  String get tos_changes_content;
+
+  /// No description provided for @tos_changes_item_1.
+  ///
+  /// In en, this message translates to:
+  /// **'In-app notification'**
+  String get tos_changes_item_1;
+
+  /// No description provided for @tos_changes_item_2.
+  ///
+  /// In en, this message translates to:
+  /// **'Email to registered address'**
+  String get tos_changes_item_2;
+
+  /// No description provided for @tos_changes_item_3.
+  ///
+  /// In en, this message translates to:
+  /// **'Prominent website notice'**
+  String get tos_changes_item_3;
+
+  /// No description provided for @tos_changes_footer.
+  ///
+  /// In en, this message translates to:
+  /// **'Continued use after changes constitutes acceptance. If you disagree, stop using our Services.'**
+  String get tos_changes_footer;
+
+  /// No description provided for @tos_contact_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact Information'**
+  String get tos_contact_title;
+
+  /// No description provided for @tos_contact_item_1.
+  ///
+  /// In en, this message translates to:
+  /// **'Email: support@akademove.com'**
+  String get tos_contact_item_1;
+
+  /// No description provided for @tos_contact_item_2.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone: +62 21 1234 5678'**
+  String get tos_contact_item_2;
+
+  /// No description provided for @tos_contact_item_3.
+  ///
+  /// In en, this message translates to:
+  /// **'Address: AkadeMove, Universitas Negeri Surabaya, Surabaya, Jawa Timur'**
+  String get tos_contact_item_3;
+
+  /// No description provided for @tos_contact_item_4.
+  ///
+  /// In en, this message translates to:
+  /// **'Customer Support: Available 24/7 through in-app chat'**
+  String get tos_contact_item_4;
+
+  /// No description provided for @faq_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Frequently Asked Questions'**
+  String get faq_title;
+
+  /// No description provided for @faq_header_title.
+  ///
+  /// In en, this message translates to:
+  /// **'How can we help you?'**
+  String get faq_header_title;
+
+  /// No description provided for @faq_header_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Find quick answers to common questions about using AkadeMove'**
+  String get faq_header_subtitle;
+
+  /// No description provided for @faq_contact_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Still have questions?'**
+  String get faq_contact_title;
+
+  /// No description provided for @faq_contact_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact our support team for more help'**
+  String get faq_contact_subtitle;
+
+  /// No description provided for @faq_contact_support.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact Support'**
+  String get faq_contact_support;
+
+  /// No description provided for @faq_error_email.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not open email app. Please try again.'**
+  String get faq_error_email;
+
+  /// No description provided for @faq_category_general.
+  ///
+  /// In en, this message translates to:
+  /// **'General'**
+  String get faq_category_general;
+
+  /// No description provided for @faq_category_orders.
+  ///
+  /// In en, this message translates to:
+  /// **'Orders & Delivery'**
+  String get faq_category_orders;
+
+  /// No description provided for @faq_category_payment.
+  ///
+  /// In en, this message translates to:
+  /// **'Payments & Wallet'**
+  String get faq_category_payment;
+
+  /// No description provided for @faq_category_driver.
+  ///
+  /// In en, this message translates to:
+  /// **'Driver'**
+  String get faq_category_driver;
+
+  /// No description provided for @faq_category_safety.
+  ///
+  /// In en, this message translates to:
+  /// **'Safety & Security'**
+  String get faq_category_safety;
+
+  /// No description provided for @faq_general_q1.
+  ///
+  /// In en, this message translates to:
+  /// **'What is AkadeMove?'**
+  String get faq_general_q1;
+
+  /// No description provided for @faq_general_a1.
+  ///
+  /// In en, this message translates to:
+  /// **'AkadeMove is a campus-specific mobility and delivery platform connecting students as users, drivers, and merchants. We offer ride-hailing, package delivery, and food ordering services exclusively within campus boundaries.'**
+  String get faq_general_a1;
+
+  /// No description provided for @faq_general_q2.
+  ///
+  /// In en, this message translates to:
+  /// **'Who can use AkadeMove?'**
+  String get faq_general_q2;
+
+  /// No description provided for @faq_general_a2.
+  ///
+  /// In en, this message translates to:
+  /// **'AkadeMove is available to all students, faculty, and staff with a valid campus ID. Drivers must be students with valid licenses and vehicle documentation.'**
+  String get faq_general_a2;
+
+  /// No description provided for @faq_general_q3.
+  ///
+  /// In en, this message translates to:
+  /// **'What services does AkadeMove offer?'**
+  String get faq_general_q3;
+
+  /// No description provided for @faq_general_a3.
+  ///
+  /// In en, this message translates to:
+  /// **'We offer three main services: Ride-hailing for campus transportation, Delivery for packages and documents, and Food delivery from campus merchants.'**
+  String get faq_general_a3;
+
+  /// No description provided for @faq_orders_q1.
+  ///
+  /// In en, this message translates to:
+  /// **'How do I place an order?'**
+  String get faq_orders_q1;
+
+  /// No description provided for @faq_orders_a1.
+  ///
+  /// In en, this message translates to:
+  /// **'Open the app, select your service type (Ride, Delivery, or Food), set your pickup and destination points, review the fare, and confirm your booking.'**
+  String get faq_orders_a1;
+
+  /// No description provided for @faq_orders_q2.
+  ///
+  /// In en, this message translates to:
+  /// **'Can I cancel an order?'**
+  String get faq_orders_q2;
+
+  /// No description provided for @faq_orders_a2.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes, you can cancel before a driver accepts your order with no penalty. After acceptance, cancellation fees may apply based on order status.'**
+  String get faq_orders_a2;
+
+  /// No description provided for @faq_orders_q3.
+  ///
+  /// In en, this message translates to:
+  /// **'How long does matching take?'**
+  String get faq_orders_q3;
+
+  /// No description provided for @faq_orders_a3.
+  ///
+  /// In en, this message translates to:
+  /// **'Matching typically takes less than 30 seconds. If no driver accepts within this time, we\'ll automatically expand the search radius.'**
+  String get faq_orders_a3;
+
+  /// No description provided for @faq_payment_q1.
+  ///
+  /// In en, this message translates to:
+  /// **'What payment methods are accepted?'**
+  String get faq_payment_q1;
+
+  /// No description provided for @faq_payment_a1.
+  ///
+  /// In en, this message translates to:
+  /// **'You can pay using your in-app wallet, which can be topped up via QRIS or bank transfer through Midtrans.'**
+  String get faq_payment_a1;
+
+  /// No description provided for @faq_payment_q2.
+  ///
+  /// In en, this message translates to:
+  /// **'How do I top up my wallet?'**
+  String get faq_payment_q2;
+
+  /// No description provided for @faq_payment_a2.
+  ///
+  /// In en, this message translates to:
+  /// **'Go to your wallet, select \'Top Up\', choose your amount and payment method (QRIS or bank transfer), complete the payment through Midtrans.'**
+  String get faq_payment_a2;
+
+  /// No description provided for @faq_payment_q3.
+  ///
+  /// In en, this message translates to:
+  /// **'What is the commission structure?'**
+  String get faq_payment_q3;
+
+  /// No description provided for @faq_payment_a3.
+  ///
+  /// In en, this message translates to:
+  /// **'For rides and deliveries, the platform takes a 15% commission. For food orders, there\'s a 20% commission split between the platform (10%) and merchant (10%). Tips go 100% to drivers.'**
+  String get faq_payment_a3;
+
+  /// No description provided for @faq_driver_q1.
+  ///
+  /// In en, this message translates to:
+  /// **'How do I become a driver?'**
+  String get faq_driver_q1;
+
+  /// No description provided for @faq_driver_a1.
+  ///
+  /// In en, this message translates to:
+  /// **'Click \'Become a Driver\', submit your student ID (KTM), driver\'s license (SIM), and vehicle registration (STNK). Once verified and approved, you can start accepting orders.'**
+  String get faq_driver_a1;
+
+  /// No description provided for @faq_driver_q2.
+  ///
+  /// In en, this message translates to:
+  /// **'Can I work during my class schedule?'**
+  String get faq_driver_q2;
+
+  /// No description provided for @faq_driver_a2.
+  ///
+  /// In en, this message translates to:
+  /// **'The app automatically sets you offline during your scheduled class times. You can manually override this if needed, but we recommend focusing on your studies.'**
+  String get faq_driver_a2;
+
+  /// No description provided for @faq_driver_q3.
+  ///
+  /// In en, this message translates to:
+  /// **'When can I withdraw my earnings?'**
+  String get faq_driver_q3;
+
+  /// No description provided for @faq_driver_a3.
+  ///
+  /// In en, this message translates to:
+  /// **'You can withdraw your earnings to your bank account anytime after completing orders. Withdrawals are typically processed within 1-3 business days. Minimum withdrawal is Rp 50,000.'**
+  String get faq_driver_a3;
+
+  /// No description provided for @faq_safety_q1.
+  ///
+  /// In en, this message translates to:
+  /// **'How does gender preference work?'**
+  String get faq_safety_q1;
+
+  /// No description provided for @faq_safety_a1.
+  ///
+  /// In en, this message translates to:
+  /// **'Users can optionally request a driver of the same gender for added comfort and safety. This is especially useful for late-night rides.'**
+  String get faq_safety_a1;
+
+  /// No description provided for @faq_safety_q2.
+  ///
+  /// In en, this message translates to:
+  /// **'What if I feel unsafe during a ride?'**
+  String get faq_safety_q2;
+
+  /// No description provided for @faq_safety_a2.
+  ///
+  /// In en, this message translates to:
+  /// **'Use the in-app emergency button to alert campus security immediately. You can also report the driver after the trip, and our team will investigate promptly.'**
+  String get faq_safety_a2;
+
+  /// No description provided for @faq_safety_q3.
+  ///
+  /// In en, this message translates to:
+  /// **'How are drivers verified?'**
+  String get faq_safety_q3;
+
+  /// No description provided for @faq_safety_a3.
+  ///
+  /// In en, this message translates to:
+  /// **'All drivers must submit and get approved for their student ID, driver\'s license, and vehicle registration. We verify all documents before activation.'**
+  String get faq_safety_a3;
+
+  /// No description provided for @emergency_contact_whatsapp.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact via WA'**
+  String get emergency_contact_whatsapp;
+
+  /// No description provided for @emergency_contact_whatsapp_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Open WhatsApp to contact campus security'**
+  String get emergency_contact_whatsapp_desc;
+
+  /// No description provided for @emergency_or_divider.
+  ///
+  /// In en, this message translates to:
+  /// **'or'**
+  String get emergency_or_divider;
+
+  /// No description provided for @emergency_whatsapp_error.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not open WhatsApp. Please try again.'**
+  String get emergency_whatsapp_error;
+
+  /// No description provided for @emergency_contact_unavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Emergency contact is not available. Please try again later.'**
+  String get emergency_contact_unavailable;
+
+  /// No description provided for @order_completed.
+  ///
+  /// In en, this message translates to:
+  /// **'Order Completed'**
+  String get order_completed;
+
+  /// No description provided for @order_detail_summary.
+  ///
+  /// In en, this message translates to:
+  /// **'Order Summary'**
+  String get order_detail_summary;
+
+  /// No description provided for @rate_merchant_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Rate Your Order'**
+  String get rate_merchant_title;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

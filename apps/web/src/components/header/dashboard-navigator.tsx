@@ -5,12 +5,14 @@ import { GripIcon } from "lucide-react";
 import { useMemo } from "react";
 import { buttonVariants } from "@/components/ui/button";
 
+const ALLOWED_ROLES: UserRole[] = ["ADMIN", "OPERATOR"];
+
 export const DashboardNavigator = ({ role }: { role: UserRole }) => {
 	const route = useMemo(() => {
 		return localizeHref(`/dash/${role.toLowerCase()}`);
 	}, [role]);
 
-	if (role === "USER") return;
+	if (!ALLOWED_ROLES.includes(role)) return;
 
 	return (
 		<Link

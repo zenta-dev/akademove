@@ -10,7 +10,7 @@ import {
 } from "@repo/schema/banner";
 import { capitalizeFirstLetter } from "@repo/shared";
 import { useMutation } from "@tanstack/react-query";
-import { useRouter } from "@tanstack/react-router";
+
 import { format } from "date-fns";
 import { CalendarIcon, Check } from "lucide-react";
 import { useCallback, useMemo } from "react";
@@ -83,7 +83,6 @@ export const BannerForm = ({
 	banner?: Banner;
 	onSuccess?: () => Promise<void>;
 }) => {
-	const _router = useRouter();
 	const form = useForm({
 		resolver: zodResolver(
 			kind === "new" ? InsertBannerSchema : UpdateBannerSchema,
@@ -500,7 +499,10 @@ export const BannerForm = ({
 									type="number"
 									placeholder="0"
 									disabled={isLoading}
-									{...field}
+									name={field.name}
+									ref={field.ref}
+									onBlur={field.onBlur}
+									value={(field.value as number) ?? ""}
 									onChange={(e) => field.onChange(Number(e.target.value))}
 								/>
 							</FormControl>

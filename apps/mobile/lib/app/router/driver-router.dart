@@ -8,24 +8,23 @@ final driverRouter = StatefulShellRoute.indexedStack(
     child: MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => sl<BottomNavBarCubit>()),
-        BlocProvider(create: (_) => sl<DriverCubit>()),
-        BlocProvider(create: (_) => sl<DriverHomeCubit>()..init()),
+        BlocProvider(create: (_) => sl<DriverProfileCubit>()),
+        BlocProvider(create: (_) => sl<DriverHomeCubit>()),
         BlocProvider(create: (_) => sl<DriverOrderCubit>()),
         BlocProvider(create: (_) => sl<DriverScheduleCubit>()),
-        BlocProvider(create: (_) => sl<DriverProfileCubit>()),
         BlocProvider(create: (_) => sl<DriverListHistoryCubit>()),
-        BlocProvider(create: (_) => sl<LeaderboardCubit>()),
+        BlocProvider(create: (_) => sl<DriverLeaderboardCubit>()),
         BlocProvider(create: (_) => sl<DriverReviewCubit>()),
-        BlocProvider(create: (_) => sl<EmergencyCubit>()),
-        BlocProvider(create: (_) => sl<OrderChatCubit>()),
-        BlocProvider(create: (_) => sl<QuickMessageCubit>()),
-        BlocProvider(
-          create: (_) => sl<NotificationCubit>()
+        BlocProvider(create: (_) => sl<SharedEmergencyCubit>()),
+        BlocProvider(create: (_) => sl<SharedOrderChatCubit>()),
+        BlocProvider(create: (_) => sl<SharedQuickMessageCubit>()),
+        BlocProvider.value(
+          value: sl<SharedNotificationCubit>()
             ..getUnreadCount()
             ..subscribeToTopic('driver-announcements'),
         ),
       ],
-      child: IncomingOrderListener(
+      child: DriverIncomingOrderListener(
         child: BottomNavbar(
           shell: navigationShell,
           tabs: const [
@@ -54,7 +53,9 @@ final driverRouter = StatefulShellRoute.indexedStack(
                 return MultiBlocProvider(
                   providers: [
                     BlocProvider.value(value: context.read<DriverOrderCubit>()),
-                    BlocProvider.value(value: context.read<EmergencyCubit>()),
+                    BlocProvider.value(
+                      value: context.read<SharedEmergencyCubit>(),
+                    ),
                   ],
                   child: DriverOrderDetailScreen(orderId: orderId),
                 );
@@ -63,13 +64,18 @@ final driverRouter = StatefulShellRoute.indexedStack(
             GoRoute(
               name: Routes.driverEarnings.name,
               path: 'earnings',
-              builder: (context, state) => const DriverEarningsScreen(),
+              builder: (context, state) => BlocProvider(
+                create: (_) => sl<DriverWalletCubit>(),
+                child: const DriverEarningsScreen(),
+              ),
               routes: [
                 GoRoute(
                   name: Routes.driverCommissionReport.name,
                   path: 'commission',
-                  builder: (context, state) =>
-                      const DriverCommissionReportScreen(),
+                  builder: (context, state) => BlocProvider(
+                    create: (_) => sl<DriverWalletCubit>(),
+                    child: const DriverCommissionReportScreen(),
+                  ),
                 ),
               ],
             ),
@@ -77,7 +83,7 @@ final driverRouter = StatefulShellRoute.indexedStack(
               name: Routes.driverLeaderboard.name,
               path: 'leaderboard',
               builder: (context, state) => BlocProvider.value(
-                value: context.read<LeaderboardCubit>()..init(),
+                value: context.read<DriverLeaderboardCubit>()..init(),
                 child: const LeaderboardScreen(),
               ),
               routes: [
@@ -85,7 +91,7 @@ final driverRouter = StatefulShellRoute.indexedStack(
                   name: Routes.driverLeaderboardDetail.name,
                   path: 'detail',
                   builder: (context, state) => BlocProvider.value(
-                    value: context.read<LeaderboardCubit>(),
+                    value: context.read<DriverLeaderboardCubit>(),
                     child: const DriverLeaderboardDetailScreen(),
                   ),
                 ),
@@ -114,10 +120,37 @@ final driverRouter = StatefulShellRoute.indexedStack(
               name: Routes.driverNotifications.name,
               path: 'notifications',
               builder: (context, state) => BlocProvider.value(
-                value: context.read<NotificationCubit>()
+                value: context.read<SharedNotificationCubit>()
                   ..refreshNotifications(),
                 child: const NotificationScreen(),
               ),
+            ),
+            GoRoute(
+              name: Routes.driverOrderCompletion.name,
+              path: 'order-completion',
+              builder: (context, state) {
+                final extra = state.extra as Map<String, dynamic>;
+
+                final orderId = extra['orderId'] as String;
+                final orderType = extra['orderType'] as OrderType;
+                final order = extra['order'] as Order;
+                final user = extra['user'] as User?;
+                final merchant = extra['merchant'] as Merchant?;
+                final payment = extra['payment'] as Payment?;
+
+                return BlocProvider.value(
+                  value: context.read<DriverReviewCubit>(),
+                  child: OrderCompletionScreen(
+                    orderId: orderId,
+                    orderType: orderType,
+                    order: order,
+                    viewerRole: OrderCompletionViewerRole.driver,
+                    user: user,
+                    merchant: merchant,
+                    payment: payment,
+                  ),
+                );
+              },
             ),
           ],
         ),
@@ -148,6 +181,16 @@ final driverRouter = StatefulShellRoute.indexedStack(
           name: Routes.driverHistory.name,
           path: Routes.driverHistory.path,
           builder: (context, state) => const DriverHistoryScreen(),
+          routes: [
+            GoRoute(
+              name: Routes.driverHistoryDetail.name,
+              path: ':orderId',
+              builder: (context, state) {
+                final orderId = state.pathParameters['orderId']!;
+                return DriverHistoryDetailScreen(orderId: orderId);
+              },
+            ),
+          ],
         ),
       ],
     ),

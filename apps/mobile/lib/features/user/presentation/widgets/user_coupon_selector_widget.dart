@@ -7,9 +7,14 @@ import 'package:intl/intl.dart';
 
 /// Bottom sheet for selecting coupons
 class UserCouponSelectorWidget extends StatelessWidget {
-  const UserCouponSelectorWidget({required this.onCouponSelected, super.key});
+  const UserCouponSelectorWidget({
+    required this.onCouponSelected,
+    required this.onClose,
+    super.key,
+  });
 
   final void Function(Coupon?) onCouponSelected;
+  final VoidCallback onClose;
 
   @override
   Widget build(BuildContext context) {
@@ -73,7 +78,7 @@ class UserCouponSelectorWidget extends StatelessWidget {
                   ),
                   IconButton(
                     icon: Icon(LucideIcons.x),
-                    onPressed: () => Navigator.pop(context),
+                    onPressed: onClose,
                     variance: ButtonVariance.ghost,
                   ),
                 ],
@@ -139,7 +144,7 @@ class UserCouponSelectorWidget extends StatelessWidget {
                     onTap: () {
                       context.read<UserCouponCubit>().selectCoupon(coupon);
                       onCouponSelected(coupon);
-                      Navigator.pop(context);
+                      onClose();
                     },
                     onInfo: () => _showCouponDetails(context, coupon),
                   );
@@ -155,7 +160,7 @@ class UserCouponSelectorWidget extends StatelessWidget {
                   onPressed: () {
                     context.read<UserCouponCubit>().clearCoupon();
                     onCouponSelected(null);
-                    Navigator.pop(context);
+                    onClose();
                   },
                   child: Text(context.l10n.coupon_remove_coupon),
                 ),

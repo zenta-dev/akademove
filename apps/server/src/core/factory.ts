@@ -36,6 +36,7 @@ import {
 import { DriverQuizAnswerRepository } from "@/features/driver-quiz-answer/driver-quiz-answer-repository";
 import { DriverQuizQuestionRepository } from "@/features/driver-quiz-question/driver-quiz-question-repository";
 import { EmergencyRepository } from "@/features/emergency/emergency-repository";
+import { EmergencyContactRepository } from "@/features/emergency-contact/emergency-contact-repository";
 import { FraudRepository } from "@/features/fraud/fraud-repository";
 import { LeaderboardRepository } from "@/features/leaderboard/leaderboard-repository";
 import { MerchantApprovalRepository } from "@/features/merchant/approval/merchant-approval-repository";
@@ -61,6 +62,7 @@ import {
 import { QuickMessageRepository } from "@/features/quick-message/quick-message-repository";
 import { ReportRepository } from "@/features/report/report-repository";
 import { ReviewRepository } from "@/features/review/review-repository";
+import { SupportChatRepository } from "@/features/support-chat/support-chat-repository";
 import { TransactionRepository } from "@/features/transaction/transaction-repository";
 import { UserAdminRepository } from "@/features/user/admin/user-admin-repository";
 import { UserLookupRepository } from "@/features/user/lookup/user-lookup-repository";
@@ -280,7 +282,7 @@ export function getRepositories(
 			user: new UserBadgeRepository(svc.db, svc.kv, svc.storage),
 		},
 		banner: new BannerRepository(svc.db, svc.kv),
-		chat: new ChatRepository(svc.db, svc.kv),
+		chat: new ChatRepository(svc.db, svc.kv, svc.storage),
 		configuration: new ConfigurationRepository(svc.db, svc.kv),
 		contact: new ContactRepository(svc.db, svc.kv),
 		quickMessage: new QuickMessageRepository(svc.db, svc.kv),
@@ -296,6 +298,7 @@ export function getRepositories(
 		driverQuizQuestion,
 		driverQuizAnswer,
 		emergency: new EmergencyRepository(svc.db, svc.kv),
+		emergencyContact: new EmergencyContactRepository(svc.db, svc.kv),
 		fraud: new FraudRepository(svc.db, svc.kv),
 		leaderboard: new LeaderboardRepository(svc.db, svc.kv),
 		merchant: {
@@ -318,11 +321,13 @@ export function getRepositories(
 			svc.orderServices.matching,
 			svc.orderServices.state,
 			svc.orderServices.deliveryProof,
+			svc.storage,
 		),
 		payment,
 		coupon: new CouponRepository(svc.db, svc.kv),
 		report: new ReportRepository(svc.db, svc.kv),
 		review: new ReviewRepository(svc.db, svc.kv),
+		supportChat: new SupportChatRepository(svc.db, svc.kv),
 		wallet,
 		user: {
 			admin: new UserAdminRepository(

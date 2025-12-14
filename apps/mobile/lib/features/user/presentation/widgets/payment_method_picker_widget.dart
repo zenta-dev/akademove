@@ -3,6 +3,7 @@ import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/l10n/l10n.dart';
 import 'package:api_client/api_client.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
@@ -80,8 +81,13 @@ class PaymentMethodPickerWidget extends StatelessWidget {
                       fontSize: 12.sp,
                       color: context.colorScheme.destructive,
                     ),
-                    onPressed: () {
-                      context.pushNamed(Routes.userWalletTopUp.name);
+                    onPressed: () async {
+                      final res = await context.pushNamed(
+                        Routes.userWalletTopUp.name,
+                      );
+                      if (res != null && context.mounted) {
+                        context.read<UserWalletCubit>().init();
+                      }
                     },
                   ),
               ],

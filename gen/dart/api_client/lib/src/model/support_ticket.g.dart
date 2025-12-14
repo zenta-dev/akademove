@@ -27,9 +27,9 @@ abstract class _$SupportTicketCWProxy {
 
   SupportTicket resolvedAt(DateTime? resolvedAt);
 
-  SupportTicket createdAt(DateTime? createdAt);
+  SupportTicket createdAt(DateTime createdAt);
 
-  SupportTicket updatedAt(DateTime? updatedAt);
+  SupportTicket updatedAt(DateTime updatedAt);
 
   SupportTicket user(SupportTicketUser? user);
 
@@ -53,8 +53,8 @@ abstract class _$SupportTicketCWProxy {
     String? orderId,
     DateTime? lastMessageAt,
     DateTime? resolvedAt,
-    DateTime? createdAt,
-    DateTime? updatedAt,
+    DateTime createdAt,
+    DateTime updatedAt,
     SupportTicketUser? user,
     SupportTicketAssignedTo? assignedTo,
   });
@@ -103,10 +103,10 @@ class _$SupportTicketCWProxyImpl implements _$SupportTicketCWProxy {
       call(resolvedAt: resolvedAt);
 
   @override
-  SupportTicket createdAt(DateTime? createdAt) => call(createdAt: createdAt);
+  SupportTicket createdAt(DateTime createdAt) => call(createdAt: createdAt);
 
   @override
-  SupportTicket updatedAt(DateTime? updatedAt) => call(updatedAt: updatedAt);
+  SupportTicket updatedAt(DateTime updatedAt) => call(updatedAt: updatedAt);
 
   @override
   SupportTicket user(SupportTicketUser? user) => call(user: user);
@@ -180,14 +180,14 @@ class _$SupportTicketCWProxyImpl implements _$SupportTicketCWProxy {
           ? _value.resolvedAt
           // ignore: cast_nullable_to_non_nullable
           : resolvedAt as DateTime?,
-      createdAt: createdAt == const $CopyWithPlaceholder()
+      createdAt: createdAt == const $CopyWithPlaceholder() || createdAt == null
           ? _value.createdAt
           // ignore: cast_nullable_to_non_nullable
-          : createdAt as DateTime?,
-      updatedAt: updatedAt == const $CopyWithPlaceholder()
+          : createdAt as DateTime,
+      updatedAt: updatedAt == const $CopyWithPlaceholder() || updatedAt == null
           ? _value.updatedAt
           // ignore: cast_nullable_to_non_nullable
-          : updatedAt as DateTime?,
+          : updatedAt as DateTime,
       user: user == const $CopyWithPlaceholder()
           ? _value.user
           // ignore: cast_nullable_to_non_nullable
@@ -211,70 +211,65 @@ extension $SupportTicketCopyWith on SupportTicket {
 // JsonSerializableGenerator
 // **************************************************************************
 
-SupportTicket _$SupportTicketFromJson(Map<String, dynamic> json) =>
-    $checkedCreate('SupportTicket', json, ($checkedConvert) {
-      $checkKeys(
-        json,
-        requiredKeys: const [
-          'id',
-          'userId',
-          'subject',
-          'category',
-          'priority',
-          'status',
-          'createdAt',
-          'updatedAt',
-        ],
-      );
-      final val = SupportTicket(
-        id: $checkedConvert('id', (v) => v as String),
-        userId: $checkedConvert('userId', (v) => v as String),
-        assignedToId: $checkedConvert('assignedToId', (v) => v as String?),
-        subject: $checkedConvert('subject', (v) => v as String),
-        category: $checkedConvert(
-          'category',
-          (v) => $enumDecode(_$SupportTicketCategoryEnumMap, v),
-        ),
-        priority: $checkedConvert(
-          'priority',
-          (v) => $enumDecode(_$SupportTicketPriorityEnumMap, v),
-        ),
-        status: $checkedConvert(
-          'status',
-          (v) => $enumDecode(_$SupportTicketStatusEnumMap, v),
-        ),
-        orderId: $checkedConvert('orderId', (v) => v as String?),
-        lastMessageAt: $checkedConvert(
-          'lastMessageAt',
-          (v) => v == null ? null : DateTime.parse(v as String),
-        ),
-        resolvedAt: $checkedConvert(
-          'resolvedAt',
-          (v) => v == null ? null : DateTime.parse(v as String),
-        ),
-        createdAt: $checkedConvert(
-          'createdAt',
-          (v) => v == null ? null : DateTime.parse(v as String),
-        ),
-        updatedAt: $checkedConvert(
-          'updatedAt',
-          (v) => v == null ? null : DateTime.parse(v as String),
-        ),
-        user: $checkedConvert(
-          'user',
-          (v) => v == null
-              ? null
-              : SupportTicketUser.fromJson(v as Map<String, dynamic>),
-        ),
-        assignedTo: $checkedConvert(
-          'assignedTo',
-          (v) => v == null
-              ? null
-              : SupportTicketAssignedTo.fromJson(v as Map<String, dynamic>),
-        ),
-      );
-      return val;
-    });
+SupportTicket _$SupportTicketFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate('SupportTicket', json, ($checkedConvert) {
+  $checkKeys(
+    json,
+    requiredKeys: const [
+      'id',
+      'userId',
+      'subject',
+      'category',
+      'priority',
+      'status',
+      'createdAt',
+      'updatedAt',
+    ],
+  );
+  final val = SupportTicket(
+    id: $checkedConvert('id', (v) => v as String),
+    userId: $checkedConvert('userId', (v) => v as String),
+    assignedToId: $checkedConvert('assignedToId', (v) => v as String?),
+    subject: $checkedConvert('subject', (v) => v as String),
+    category: $checkedConvert(
+      'category',
+      (v) => $enumDecode(_$SupportTicketCategoryEnumMap, v),
+    ),
+    priority: $checkedConvert(
+      'priority',
+      (v) => $enumDecode(_$SupportTicketPriorityEnumMap, v),
+    ),
+    status: $checkedConvert(
+      'status',
+      (v) => $enumDecode(_$SupportTicketStatusEnumMap, v),
+    ),
+    orderId: $checkedConvert('orderId', (v) => v as String?),
+    lastMessageAt: $checkedConvert(
+      'lastMessageAt',
+      (v) => v == null ? null : DateTime.parse(v as String),
+    ),
+    resolvedAt: $checkedConvert(
+      'resolvedAt',
+      (v) => v == null ? null : DateTime.parse(v as String),
+    ),
+    createdAt: $checkedConvert('createdAt', (v) => DateTime.parse(v as String)),
+    updatedAt: $checkedConvert('updatedAt', (v) => DateTime.parse(v as String)),
+    user: $checkedConvert(
+      'user',
+      (v) => v == null
+          ? null
+          : SupportTicketUser.fromJson(v as Map<String, dynamic>),
+    ),
+    assignedTo: $checkedConvert(
+      'assignedTo',
+      (v) => v == null
+          ? null
+          : SupportTicketAssignedTo.fromJson(v as Map<String, dynamic>),
+    ),
+  );
+  return val;
+});
 
 Map<String, dynamic> _$SupportTicketToJson(SupportTicket instance) =>
     <String, dynamic>{
@@ -288,8 +283,8 @@ Map<String, dynamic> _$SupportTicketToJson(SupportTicket instance) =>
       'orderId': ?instance.orderId,
       'lastMessageAt': ?instance.lastMessageAt?.toIso8601String(),
       'resolvedAt': ?instance.resolvedAt?.toIso8601String(),
-      'createdAt': instance.createdAt?.toIso8601String(),
-      'updatedAt': instance.updatedAt?.toIso8601String(),
+      'createdAt': instance.createdAt.toIso8601String(),
+      'updatedAt': instance.updatedAt.toIso8601String(),
       'user': ?instance.user?.toJson(),
       'assignedTo': ?instance.assignedTo?.toJson(),
     };

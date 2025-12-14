@@ -81,7 +81,6 @@ function RouteComponent() {
 					<MerchantStatusToggle
 						merchantId={merchant.value.id}
 						isOnline={merchant.value.isOnline}
-						isTakingOrders={merchant.value.isTakingOrders}
 						operatingStatus={merchant.value.operatingStatus}
 					/>
 				</CardContent>

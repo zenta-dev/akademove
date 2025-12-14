@@ -21,20 +21,37 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
   String? _paymentId;
   String? _orderId;
 
-  /// Timer for polling active order updates
+  /// Timer for polling active order updates (fallback only when WebSocket fails)
   Timer? _pollingTimer;
 
-  /// Default polling interval in seconds
-  static const int _defaultPollingIntervalSeconds = 5;
+  /// Default polling interval in seconds (fallback only)
+  static const int _defaultPollingIntervalSeconds = 5 * 10;
 
-  /// Faster polling interval when WebSocket is unhealthy
-  static const int _fastPollingIntervalSeconds = 3;
+  /// Faster polling interval when recovering from WebSocket failure
+  static const int _fastPollingIntervalSeconds = 3 * 10;
 
   /// Critical polling interval during MATCHING status for faster driver acceptance detection
-  static const int _criticalPollingIntervalSeconds = 2;
+  static const int _criticalPollingIntervalSeconds = 2 * 10;
+
+  /// Last known order version for tracking updates (used for debugging/logging)
+  // ignore: unused_field
+  String? _lastKnownVersion;
 
   /// Whether we're using polling as a fallback due to WebSocket issues
-  bool _isPollingFallback = false;
+  // bool _isPollingFallback = false;
+
+  // /// WebSocket connection health check timer
+  // /// Only used to detect stale connections, not for data sync
+  // Timer? _wsHealthCheckTimer;
+
+  /// Health check interval in seconds (longer interval since server pushes all updates)
+  // static const int _wsHealthCheckIntervalSeconds = 30;
+
+  // /// Number of consecutive health check failures before fallback
+  // int _healthCheckFailures = 0;
+
+  // /// Max health check failures before HTTP fallback
+  // static const int _maxHealthCheckFailures = 10;
 
   Future<void> init() async {
     reset();
@@ -46,7 +63,8 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
 
   @override
   Future<void> close() async {
-    stopPolling();
+    // stopPolling();
+    // _stopHealthCheckTimer();
     await teardownWebsocket();
     return super.close();
   }
@@ -117,10 +135,8 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
         final pid = activeOrder.payment?.id;
         if (pid != null) await _setupPaymentWebsocket(paymentId: pid);
 
-        // Setup live order WebSocket with polling fallback
-        await _setupLiveOrderWebsocketWithPolling(
-          orderId: activeOrder.order.id,
-        );
+        // Setup live order WebSocket (WebSocket-first, polling fallback)
+        await _setupLiveOrderWebsocket(orderId: activeOrder.order.id);
 
         return true;
       });
@@ -151,11 +167,13 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
   /// Clear the active order state and stored ID
   Future<void> clearActiveOrder() async {
     await _keyValueService.remove(KeyValueKeys.activeOrderId);
-    stopPolling();
+    // stopPolling();
+    // _stopHealthCheckTimer();
     await teardownWebsocket();
     _orderId = null;
     _paymentId = null;
-    _isPollingFallback = false;
+    // _isPollingFallback = false;
+    // _healthCheckFailures = 0;
     emit(
       state.copyWith(
         currentOrder: const OperationResult.idle(),
@@ -348,33 +366,39 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
         logger.d('Payment WebSocket Message: $data');
 
         if (data.e == PaymentEnvelopeEvent.PAYMENT_SUCCESS) {
+          final payment = data.p.payment;
+          final transaction = data.p.transaction;
           emit(
             state.copyWith(
-              currentPayment: OperationResult.success(data.p.payment),
-              currentTransaction: OperationResult.success(data.p.transaction),
+              currentPayment: payment != null
+                  ? OperationResult.success(payment)
+                  : state.currentPayment,
+              currentTransaction: transaction != null
+                  ? OperationResult.success(transaction)
+                  : state.currentTransaction,
             ),
           );
 
           await _webSocketService.disconnect(paymentId);
 
-          // For FOOD orders, connect to order WebSocket to receive merchant updates
-          // For RIDE/DELIVERY orders, connect to driver pool for driver matching
-          // Use WebSocket with polling fallback for reliability
-          final currentOrder = state.currentOrder.value;
+          // Connect to order WebSocket for real-time updates (WebSocket-first)
           final orderId = _orderId;
-          if (currentOrder?.type == OrderType.FOOD && orderId != null) {
-            await _setupLiveOrderWebsocketWithPolling(orderId: orderId);
-          } else if (orderId != null) {
-            // For RIDE/DELIVERY, also setup WebSocket with polling fallback
-            await _setupLiveOrderWebsocketWithPolling(orderId: orderId);
+          if (orderId != null) {
+            await _setupLiveOrderWebsocket(orderId: orderId);
           }
         }
 
         if (data.e == PaymentEnvelopeEvent.PAYMENT_FAILED) {
+          final payment = data.p.payment;
+          final transaction = data.p.transaction;
           emit(
             state.copyWith(
-              currentPayment: OperationResult.success(data.p.payment),
-              currentTransaction: OperationResult.success(data.p.transaction),
+              currentPayment: payment != null
+                  ? OperationResult.success(payment)
+                  : state.currentPayment,
+              currentTransaction: transaction != null
+                  ? OperationResult.success(transaction)
+                  : state.currentTransaction,
             ),
           );
           emit(
@@ -411,345 +435,44 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
     }
   }
 
-  // Future<void> _setupFindDriverWebsocket() async {
-  //   try {
-  //     const driverPool = 'driver-pool';
-  //     Future<void> handleMessage(Map<String, dynamic> json) async {
-  //       final data = OrderEnvelope.fromJson(json);
-  //       logger.d('Driver Pool WebSocket Message: $data');
+  // ============================================================
+  // WebSocket-First Real-time Updates
+  // ============================================================
 
-  //       if (data.e == OrderEnvelopeEvent.MATCHING &&
-  //           state.currentOrder.value?.id == data.p.detail?.order.id) {
-  //         final detail = data.p.detail;
-  //         final payment = detail?.payment;
-  //         final transaction = detail?.transaction;
-  //         if (detail != null && payment != null && transaction != null) {
-  //           emit(
-  //             state.copyWith(
-  //               currentOrder: OperationResult.success(detail.order),
-  //               currentPayment: OperationResult.success(payment),
-  //               currentTransaction: OperationResult.success(transaction),
-  //             ),
-  //           );
-  //         }
-  //       }
-
-  //       if (data.e == OrderEnvelopeEvent.CANCELED) {
-  //         final detail = data.p.detail;
-  //         final payment = detail?.payment;
-  //         final transaction = detail?.transaction;
-  //         if (detail != null && payment != null && transaction != null) {
-  //           emit(
-  //             state.copyWith(
-  //               currentOrder: OperationResult.success(detail.order),
-  //               currentPayment: OperationResult.success(payment),
-  //               currentTransaction: OperationResult.success(transaction),
-  //             ),
-  //           );
-  //         }
-  //         emit(
-  //           state.copyWith(
-  //             currentOrder: OperationResult.failed(
-  //               UnknownError(data.p.cancelReason ?? 'Order cancelled'),
-  //             ),
-  //           ),
-  //         );
-  //       }
-
-  //       if (data.e == OrderEnvelopeEvent.DRIVER_ACCEPTED) {
-  //         final detail = data.p.detail;
-  //         final payment = detail?.payment;
-  //         final transaction = detail?.transaction;
-  //         if (detail != null && payment != null && transaction != null) {
-  //           emit(
-  //             state.copyWith(
-  //               currentOrder: OperationResult.success(detail.order),
-  //               currentPayment: OperationResult.success(payment),
-  //               currentTransaction: OperationResult.success(transaction),
-  //               currentAssignedDriver: OperationResult.success(
-  //                 data.p.driverAssigned,
-  //               ),
-  //             ),
-  //           );
-  //         }
-
-  //         await _webSocketService.disconnect(driverPool);
-  //         final orderId = _orderId;
-  //         if (orderId != null) {
-  //           await _setupLiveOrderWebsocket(orderId: orderId);
-  //         }
-  //       }
-  //     }
-
-  //     await _webSocketService.connect(
-  //       driverPool,
-  //       '${UrlConstants.wsBaseUrl}/$driverPool',
-  //       onMessage: (msg) async {
-  //         final json = (msg as String).parseJson();
-  //         if (json is Map<String, dynamic>) await handleMessage(json);
-  //       },
-  //     );
-  //   } catch (e, st) {
-  //     logger.e(
-  //       '[UserOrderCubit] - Driver Pool WebSocket error: $e',
-  //       error: e,
-  //       stackTrace: st,
-  //     );
-  //     emit(
-  //       state.copyWith(
-  //         currentAssignedDriver: OperationResult.failed(
-  //           const UnknownError('Failed to connect to driver service'),
-  //         ),
-  //       ),
-  //     );
-  //   }
-  // }
-
+  /// Setup live order WebSocket connection (WebSocket-first approach)
+  /// Server pushes all updates via WebSocket events
+  /// Falls back to HTTP polling only when WebSocket fails
   Future<void> _setupLiveOrderWebsocket({required String orderId}) async {
     try {
       _orderId = orderId;
+
+      // Initialize version from current order if available
+      final currentOrder = state.currentOrder.value;
+      if (currentOrder != null) {
+        _lastKnownVersion = currentOrder.updatedAt.toIso8601String();
+      }
+
+      // Setup WebSocket status listener for automatic fallback
+      _webSocketService.setStatusListener(
+        orderId,
+        _handleWebSocketStatusChange,
+      );
+
+      // Message handler for WebSocket events (server-pushed)
       void handleMessage(Map<String, dynamic> json) {
-        final data = OrderEnvelope.fromJson(json);
-        logger.d('Live Order WebSocket Message: $data');
+        // Reset health check failures on any message received
+        // _healthCheckFailures = 0;
 
-        if (data.e == OrderEnvelopeEvent.DRIVER_LOCATION_UPDATE) {
-          final x = data.p.driverUpdateLocation?.x;
-          final y = data.p.driverUpdateLocation?.y;
-          var driver = state.currentAssignedDriver.value ?? dummyDriver;
-          if (x != null && y != null) {
-            driver = driver.copyWith(
-              currentLocation: Coordinate(x: x, y: y),
-            );
-            emit(
-              state.copyWith(
-                currentAssignedDriver: OperationResult.success(driver),
-              ),
-            );
-          }
-        }
-
-        // Handle driver accepted event - driver has accepted the order
-        // This provides instant UI update when a driver accepts
-        if (data.e == OrderEnvelopeEvent.DRIVER_ACCEPTED) {
-          final detail = data.p.detail;
-          final driverAssigned = data.p.driverAssigned;
-
-          if (detail != null) {
-            emit(
-              state.copyWith(
-                currentOrder: OperationResult.success(detail.order),
-                currentPayment: detail.payment != null
-                    ? OperationResult.success(detail.payment!)
-                    : state.currentPayment,
-                currentTransaction: detail.transaction != null
-                    ? OperationResult.success(detail.transaction!)
-                    : state.currentTransaction,
-                currentAssignedDriver: driverAssigned != null
-                    ? OperationResult.success(driverAssigned)
-                    : state.currentAssignedDriver,
-              ),
-            );
-            logger.i(
-              '[UserOrderCubit] Driver accepted order: ${detail.order.id}, '
-              'driver: ${driverAssigned?.id}',
-            );
-          }
-        }
-
-        // Handle generic order status change events from REST API updates
-        // This catches status changes made via REST API (e.g., driver updating status)
-        if (data.e == OrderEnvelopeEvent.ORDER_STATUS_CHANGED) {
-          final detail = data.p.detail;
-          if (detail != null) {
-            emit(
-              state.copyWith(
-                currentOrder: OperationResult.success(detail.order),
-                currentPayment: detail.payment != null
-                    ? OperationResult.success(detail.payment!)
-                    : state.currentPayment,
-                currentTransaction: detail.transaction != null
-                    ? OperationResult.success(detail.transaction!)
-                    : state.currentTransaction,
-              ),
-            );
-            logger.i(
-              '[UserOrderCubit] Order status changed: ${detail.order.id}, '
-              'new status: ${detail.order.status}',
-            );
-          }
-        }
-
-        // Handle order completion - update order status to COMPLETED
-        // and clear active order state
-        if (data.e == OrderEnvelopeEvent.COMPLETED) {
-          final detail = data.p.detail;
-          if (detail != null) {
-            // Emit completed order state first so UI can react to completion
-            emit(
-              state.copyWith(
-                currentOrder: OperationResult.success(detail.order),
-                currentPayment: detail.payment != null
-                    ? OperationResult.success(detail.payment!)
-                    : state.currentPayment,
-                currentTransaction: detail.transaction != null
-                    ? OperationResult.success(detail.transaction!)
-                    : state.currentTransaction,
-              ),
-            );
-            logger.i('[UserOrderCubit] Order completed: ${detail.order.id}');
-
-            // Clear active order after a short delay to allow UI to process
-            // the completion state change before cleaning up
-            Future.delayed(const Duration(milliseconds: 500), () {
-              if (!isClosed) {
-                clearActiveOrder();
-              }
-            });
-          }
-        }
-
-        // Handle order cancellation events
-        if (data.e == OrderEnvelopeEvent.CANCELED) {
-          final detail = data.p.detail;
-          if (detail != null) {
-            emit(
-              state.copyWith(
-                currentOrder: OperationResult.success(detail.order),
-                currentPayment: detail.payment != null
-                    ? OperationResult.success(detail.payment!)
-                    : state.currentPayment,
-                currentTransaction: detail.transaction != null
-                    ? OperationResult.success(detail.transaction!)
-                    : state.currentTransaction,
-              ),
-            );
-            logger.i(
-              '[UserOrderCubit] Order cancelled: ${detail.order.id}, '
-              'reason: ${data.p.cancelReason}',
-            );
-          }
-        }
-
-        // Handle no-show event (driver reported user not present)
-        if (data.e == OrderEnvelopeEvent.NO_SHOW) {
-          final detail = data.p.detail;
-          if (detail != null) {
-            emit(
-              state.copyWith(
-                currentOrder: OperationResult.success(detail.order),
-                currentPayment: detail.payment != null
-                    ? OperationResult.success(detail.payment!)
-                    : state.currentPayment,
-                currentTransaction: detail.transaction != null
-                    ? OperationResult.success(detail.transaction!)
-                    : state.currentTransaction,
-              ),
-            );
-            logger.i(
-              '[UserOrderCubit] No-show reported for order: ${detail.order.id}',
-            );
-          }
-        }
-
-        // Handle driver cancelled and rematching event
-        if (data.e == OrderEnvelopeEvent.DRIVER_CANCELLED_REMATCHING) {
-          final retryInfo = data.p.retryInfo;
-          if (retryInfo != null) {
-            // Clear current driver and update order to MATCHING status
-            emit(
-              state.copyWith(
-                currentAssignedDriver: const OperationResult.idle(),
-              ),
-            );
-            logger.i(
-              '[UserOrderCubit] Driver cancelled, rematching: ${retryInfo.orderId}',
-            );
-          }
-        }
-
-        // Handle merchant accepted event (FOOD orders)
-        if (data.e == OrderEnvelopeEvent.MERCHANT_ACCEPTED) {
-          final detail = data.p.detail;
-          if (detail != null) {
-            emit(
-              state.copyWith(
-                currentOrder: OperationResult.success(detail.order),
-                currentPayment: detail.payment != null
-                    ? OperationResult.success(detail.payment!)
-                    : state.currentPayment,
-                currentTransaction: detail.transaction != null
-                    ? OperationResult.success(detail.transaction!)
-                    : state.currentTransaction,
-              ),
-            );
-            logger.i(
-              '[UserOrderCubit] Merchant accepted order: ${detail.order.id}',
-            );
-          }
-        }
-
-        // Handle merchant preparing event (FOOD orders)
-        if (data.e == OrderEnvelopeEvent.MERCHANT_PREPARING) {
-          final detail = data.p.detail;
-          if (detail != null) {
-            emit(
-              state.copyWith(
-                currentOrder: OperationResult.success(detail.order),
-                currentPayment: detail.payment != null
-                    ? OperationResult.success(detail.payment!)
-                    : state.currentPayment,
-                currentTransaction: detail.transaction != null
-                    ? OperationResult.success(detail.transaction!)
-                    : state.currentTransaction,
-              ),
-            );
-            logger.i(
-              '[UserOrderCubit] Merchant preparing order: ${detail.order.id}',
-            );
-          }
-        }
-
-        // Handle merchant ready event (FOOD orders - triggers driver matching)
-        if (data.e == OrderEnvelopeEvent.MERCHANT_READY) {
-          final detail = data.p.detail;
-          if (detail != null) {
-            emit(
-              state.copyWith(
-                currentOrder: OperationResult.success(detail.order),
-                currentPayment: detail.payment != null
-                    ? OperationResult.success(detail.payment!)
-                    : state.currentPayment,
-                currentTransaction: detail.transaction != null
-                    ? OperationResult.success(detail.transaction!)
-                    : state.currentTransaction,
-              ),
-            );
-            logger.i(
-              '[UserOrderCubit] Merchant ready, driver matching started: ${detail.order.id}',
-            );
-          }
-        }
-
-        // Handle merchant rejected event (FOOD orders)
-        if (data.e == OrderEnvelopeEvent.MERCHANT_REJECTED) {
-          final detail = data.p.detail;
-          if (detail != null) {
-            emit(
-              state.copyWith(
-                currentOrder: OperationResult.success(detail.order),
-                currentPayment: detail.payment != null
-                    ? OperationResult.success(detail.payment!)
-                    : state.currentPayment,
-                currentTransaction: detail.transaction != null
-                    ? OperationResult.success(detail.transaction!)
-                    : state.currentTransaction,
-              ),
-            );
-            logger.i(
-              '[UserOrderCubit] Merchant rejected order: ${detail.order.id}, '
-              'reason: ${data.p.cancelReason}',
-            );
-          }
+        // Handle server-pushed events via OrderEnvelope
+        try {
+          final data = OrderEnvelope.fromJson(json);
+          _handleOrderEnvelopeEvent(data);
+        } catch (e, st) {
+          logger.e(
+            '[UserOrderCubit] Failed to parse OrderEnvelope',
+            error: e,
+            stackTrace: st,
+          );
         }
       }
 
@@ -761,33 +484,315 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
           if (json is Map<String, dynamic>) handleMessage(json);
         },
       );
+
+      // Start health check timer (only to detect stale connections)
+      // _startHealthCheckTimer();
+
+      logger.i(
+        '[UserOrderCubit] WebSocket connected for order: $orderId '
+        '(WebSocket-first, server pushes all updates)',
+      );
     } catch (e, st) {
       logger.e(
         '[UserOrderCubit] - Live Order WebSocket error: $e',
         error: e,
         stackTrace: st,
       );
-      // Don't emit failure here as it would disrupt the active trip
-      // Just log the error and let the app continue
+      // Fallback to HTTP polling on WebSocket failure
+      // _startPollingFallback(fast: true);
     }
   }
 
-  /// Setup live order WebSocket with automatic polling fallback
-  /// This provides reliable order updates even when WebSocket is unstable
-  Future<void> _setupLiveOrderWebsocketWithPolling({
-    required String orderId,
-  }) async {
-    _orderId = orderId;
+  /// Start health check timer to detect stale WebSocket connections
+  /// This is NOT for data sync - server pushes all updates
+  /// Only used to detect if WebSocket connection becomes stale
+  // void _startHealthCheckTimer() {
+  //   _stopHealthCheckTimer();
+  //   _healthCheckFailures = 0;
 
-    // Setup WebSocket status listener for automatic polling fallback
-    _webSocketService.setStatusListener(orderId, _handleWebSocketStatusChange);
+  //   logger.d(
+  //     '[UserOrderCubit] Starting WebSocket health check timer '
+  //     '(${_wsHealthCheckIntervalSeconds}s interval)',
+  //   );
 
-    // Setup WebSocket connection
-    await _setupLiveOrderWebsocket(orderId: orderId);
+  //   _wsHealthCheckTimer = Timer.periodic(
+  //     Duration(seconds: _wsHealthCheckIntervalSeconds),
+  //     (_) => _performHealthCheck(),
+  //   );
+  // }
 
-    // Always start polling as a backup mechanism
-    // This ensures we don't miss updates if WebSocket is slow or disconnects
-    _startPollingFallback();
+  /// Stop the health check timer
+  // void _stopHealthCheckTimer() {
+  //   _wsHealthCheckTimer?.cancel();
+  //   _wsHealthCheckTimer = null;
+  // }
+
+  /// Perform WebSocket connection health check
+  // void _performHealthCheck() {
+  //   final orderId = _orderId;
+  //   if (orderId == null) return;
+
+  //   // Check if WebSocket is still healthy
+  //   if (!_webSocketService.isConnectionHealthy(orderId)) {
+  //     _healthCheckFailures++;
+  //     logger.d(
+  //       '[UserOrderCubit] WebSocket health check failed '
+  //       '($_healthCheckFailures/$_maxHealthCheckFailures)',
+  //     );
+
+  //     if (_healthCheckFailures >= _maxHealthCheckFailures) {
+  //       logger.i(
+  //         '[UserOrderCubit] WebSocket unhealthy after $_healthCheckFailures checks, '
+  //         'starting HTTP polling fallback',
+  //       );
+  //       _stopHealthCheckTimer();
+  //       _startPollingFallback(fast: true);
+  //     }
+  //   } else {
+  //     // Reset failures on healthy connection
+  //     _healthCheckFailures = 0;
+  //   }
+  // }
+
+  /// Handle OrderEnvelope events from WebSocket (server-pushed)
+  /// All order updates are pushed by the server - no client-side polling needed
+  void _handleOrderEnvelopeEvent(OrderEnvelope data) {
+    logger.d('Live Order WebSocket Message: $data');
+
+    // Update version tracking for any event with order data
+    final detail = data.p.detail;
+    if (detail != null) {
+      _lastKnownVersion = detail.order.updatedAt.toIso8601String();
+    }
+
+    if (data.e == OrderEnvelopeEvent.DRIVER_LOCATION_UPDATE) {
+      final x = data.p.driverUpdateLocation?.x;
+      final y = data.p.driverUpdateLocation?.y;
+      var driver = state.currentAssignedDriver.value ?? dummyDriver;
+      if (x != null && y != null) {
+        driver = driver.copyWith(
+          currentLocation: Coordinate(x: x, y: y),
+        );
+        emit(
+          state.copyWith(
+            currentAssignedDriver: OperationResult.success(driver),
+          ),
+        );
+      }
+    }
+
+    // Handle driver accepted event - driver has accepted the order
+    // This provides instant UI update when a driver accepts
+    if (data.e == OrderEnvelopeEvent.DRIVER_ACCEPTED) {
+      final driverAssigned = data.p.driverAssigned;
+
+      if (detail != null) {
+        emit(
+          state.copyWith(
+            currentOrder: OperationResult.success(detail.order),
+            currentPayment: detail.payment != null
+                ? OperationResult.success(detail.payment!)
+                : state.currentPayment,
+            currentTransaction: detail.transaction != null
+                ? OperationResult.success(detail.transaction!)
+                : state.currentTransaction,
+            currentAssignedDriver: driverAssigned != null
+                ? OperationResult.success(driverAssigned)
+                : state.currentAssignedDriver,
+          ),
+        );
+        logger.i(
+          '[UserOrderCubit] Driver accepted order: ${detail.order.id}, '
+          'driver: ${driverAssigned?.id}',
+        );
+      }
+    }
+
+    // Handle generic order status change events from REST API updates
+    // This catches status changes made via REST API (e.g., driver updating status)
+    if (data.e == OrderEnvelopeEvent.ORDER_STATUS_CHANGED) {
+      if (detail != null) {
+        emit(
+          state.copyWith(
+            currentOrder: OperationResult.success(detail.order),
+            currentPayment: detail.payment != null
+                ? OperationResult.success(detail.payment!)
+                : state.currentPayment,
+            currentTransaction: detail.transaction != null
+                ? OperationResult.success(detail.transaction!)
+                : state.currentTransaction,
+          ),
+        );
+        logger.i(
+          '[UserOrderCubit] Order status changed: ${detail.order.id}, '
+          'new status: ${detail.order.status}',
+        );
+      }
+    }
+
+    // Handle order completion - update order status to COMPLETED
+    // and clear active order state
+    if (data.e == OrderEnvelopeEvent.COMPLETED) {
+      if (detail != null) {
+        // Emit completed order state first so UI can react to completion
+        emit(
+          state.copyWith(
+            currentOrder: OperationResult.success(detail.order),
+            currentPayment: detail.payment != null
+                ? OperationResult.success(detail.payment!)
+                : state.currentPayment,
+            currentTransaction: detail.transaction != null
+                ? OperationResult.success(detail.transaction!)
+                : state.currentTransaction,
+          ),
+        );
+        logger.i('[UserOrderCubit] Order completed: ${detail.order.id}');
+
+        // Clear active order after a short delay to allow UI to process
+        // the completion state change before cleaning up
+        Future.delayed(const Duration(milliseconds: 500), () {
+          if (!isClosed) {
+            clearActiveOrder();
+          }
+        });
+      }
+    }
+
+    // Handle order cancellation events
+    if (data.e == OrderEnvelopeEvent.CANCELED) {
+      if (detail != null) {
+        emit(
+          state.copyWith(
+            currentOrder: OperationResult.success(detail.order),
+            currentPayment: detail.payment != null
+                ? OperationResult.success(detail.payment!)
+                : state.currentPayment,
+            currentTransaction: detail.transaction != null
+                ? OperationResult.success(detail.transaction!)
+                : state.currentTransaction,
+          ),
+        );
+        logger.i(
+          '[UserOrderCubit] Order cancelled: ${detail.order.id}, '
+          'reason: ${data.p.cancelReason}',
+        );
+      }
+    }
+
+    // Handle no-show event (driver reported user not present)
+    if (data.e == OrderEnvelopeEvent.NO_SHOW) {
+      if (detail != null) {
+        emit(
+          state.copyWith(
+            currentOrder: OperationResult.success(detail.order),
+            currentPayment: detail.payment != null
+                ? OperationResult.success(detail.payment!)
+                : state.currentPayment,
+            currentTransaction: detail.transaction != null
+                ? OperationResult.success(detail.transaction!)
+                : state.currentTransaction,
+          ),
+        );
+        logger.i(
+          '[UserOrderCubit] No-show reported for order: ${detail.order.id}',
+        );
+      }
+    }
+
+    // Handle driver cancelled and rematching event
+    if (data.e == OrderEnvelopeEvent.DRIVER_CANCELLED_REMATCHING) {
+      final retryInfo = data.p.retryInfo;
+      if (retryInfo != null) {
+        // Clear current driver and update order to MATCHING status
+        emit(
+          state.copyWith(currentAssignedDriver: const OperationResult.idle()),
+        );
+        logger.i(
+          '[UserOrderCubit] Driver cancelled, rematching: ${retryInfo.orderId}',
+        );
+      }
+    }
+
+    // Handle merchant accepted event (FOOD orders)
+    if (data.e == OrderEnvelopeEvent.MERCHANT_ACCEPTED) {
+      if (detail != null) {
+        emit(
+          state.copyWith(
+            currentOrder: OperationResult.success(detail.order),
+            currentPayment: detail.payment != null
+                ? OperationResult.success(detail.payment!)
+                : state.currentPayment,
+            currentTransaction: detail.transaction != null
+                ? OperationResult.success(detail.transaction!)
+                : state.currentTransaction,
+          ),
+        );
+        logger.i(
+          '[UserOrderCubit] Merchant accepted order: ${detail.order.id}',
+        );
+      }
+    }
+
+    // Handle merchant preparing event (FOOD orders)
+    if (data.e == OrderEnvelopeEvent.MERCHANT_PREPARING) {
+      if (detail != null) {
+        emit(
+          state.copyWith(
+            currentOrder: OperationResult.success(detail.order),
+            currentPayment: detail.payment != null
+                ? OperationResult.success(detail.payment!)
+                : state.currentPayment,
+            currentTransaction: detail.transaction != null
+                ? OperationResult.success(detail.transaction!)
+                : state.currentTransaction,
+          ),
+        );
+        logger.i(
+          '[UserOrderCubit] Merchant preparing order: ${detail.order.id}',
+        );
+      }
+    }
+
+    // Handle merchant ready event (FOOD orders - triggers driver matching)
+    if (data.e == OrderEnvelopeEvent.MERCHANT_READY) {
+      if (detail != null) {
+        emit(
+          state.copyWith(
+            currentOrder: OperationResult.success(detail.order),
+            currentPayment: detail.payment != null
+                ? OperationResult.success(detail.payment!)
+                : state.currentPayment,
+            currentTransaction: detail.transaction != null
+                ? OperationResult.success(detail.transaction!)
+                : state.currentTransaction,
+          ),
+        );
+        logger.i(
+          '[UserOrderCubit] Merchant ready, driver matching started: ${detail.order.id}',
+        );
+      }
+    }
+
+    // Handle merchant rejected event (FOOD orders)
+    if (data.e == OrderEnvelopeEvent.MERCHANT_REJECTED) {
+      if (detail != null) {
+        emit(
+          state.copyWith(
+            currentOrder: OperationResult.success(detail.order),
+            currentPayment: detail.payment != null
+                ? OperationResult.success(detail.payment!)
+                : state.currentPayment,
+            currentTransaction: detail.transaction != null
+                ? OperationResult.success(detail.transaction!)
+                : state.currentTransaction,
+          ),
+        );
+        logger.i(
+          '[UserOrderCubit] Merchant rejected order: ${detail.order.id}, '
+          'reason: ${data.p.cancelReason}',
+        );
+      }
+    }
   }
 
   /// Handle WebSocket connection status changes
@@ -799,64 +804,67 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
 
     switch (status) {
       case WebSocketConnectionStatus.connected:
-        // WebSocket is healthy, we can reduce polling frequency or keep it as backup
-        if (_isPollingFallback && state.isPolling) {
-          logger.i(
-            '[UserOrderCubit] WebSocket connected, '
-            'keeping polling as backup with normal interval',
-          );
-          // Restart polling with normal interval since WS is healthy
-          stopPolling();
-          startPolling(intervalSeconds: _defaultPollingIntervalSeconds);
-        }
+      // WebSocket is healthy, stop HTTP polling if running as fallback
+      // if (_isPollingFallback && state.isPolling) {
+      //   logger.i(
+      //     '[UserOrderCubit] WebSocket connected, stopping HTTP fallback',
+      //   );
+      //   stopPolling();
+      //   _isPollingFallback = false;
+      //   _healthCheckFailures = 0;
+      //   // Restart health check timer
+      //   // _startHealthCheckTimer();
+      // } else if (_wsHealthCheckTimer == null) {
+      //   // Start health check timer if not running
+      //   // _startHealthCheckTimer();
+      // }
+      // _healthCheckFailures = 0;
       case WebSocketConnectionStatus.reconnecting:
       case WebSocketConnectionStatus.connecting:
-        // WebSocket is unstable, ensure polling is active with faster interval
-        if (!state.isPolling) {
-          logger.i(
-            '[UserOrderCubit] WebSocket unstable, '
-            'starting fast polling as fallback',
-          );
-          _startPollingFallback(fast: true);
-        } else if (!_isPollingFallback) {
-          // Switch to fast polling
-          stopPolling();
-          _startPollingFallback(fast: true);
-        }
+        // WebSocket is reconnecting, health check will handle fallback if needed
+        logger.d(
+          '[UserOrderCubit] WebSocket reconnecting, will fallback if connection fails',
+        );
       case WebSocketConnectionStatus.failed:
       case WebSocketConnectionStatus.disconnected:
-        // WebSocket is down, rely on polling entirely
-        if (!state.isPolling) {
-          logger.i(
-            '[UserOrderCubit] WebSocket failed/disconnected, '
-            'starting fast polling as primary update source',
-          );
-          _startPollingFallback(fast: true);
-        }
+      // WebSocket is down, start HTTP polling as fallback
+      // _stopHealthCheckTimer();
+      // if (!state.isPolling) {
+      //   logger.i(
+      //     '[UserOrderCubit] WebSocket failed/disconnected, '
+      //     'starting HTTP polling fallback',
+      //   );
+      //   // _startPollingFallback(fast: true);
+      // }
     }
   }
 
   /// Start polling as a fallback mechanism
   /// [fast] - If true, use faster polling interval (for when WebSocket is unstable)
-  void _startPollingFallback({bool fast = false}) {
-    _isPollingFallback = true;
+  // void _startPollingFallback({bool fast = false}) {
+  //   _isPollingFallback = true;
 
-    // Check if order is in critical status (MATCHING/REQUESTED) for faster polling
-    final currentOrder = state.currentOrder.value;
-    final isCriticalStatus =
-        currentOrder != null &&
-        (currentOrder.status == OrderStatus.MATCHING ||
-            currentOrder.status == OrderStatus.REQUESTED);
+  //   // Check if order is in critical status (MATCHING/REQUESTED) for faster polling
+  //   final currentOrder = state.currentOrder.value;
+  //   final isCriticalStatus =
+  //       currentOrder != null &&
+  //       (currentOrder.status == OrderStatus.MATCHING ||
+  //           currentOrder.status == OrderStatus.REQUESTED);
 
-    // Use critical interval if in MATCHING/REQUESTED, otherwise use fast/default
-    final interval = isCriticalStatus
-        ? _criticalPollingIntervalSeconds
-        : (fast ? _fastPollingIntervalSeconds : _defaultPollingIntervalSeconds);
+  //   // Use critical interval if in MATCHING/REQUESTED, otherwise use fast/default
+  //   final interval = isCriticalStatus
+  //       ? _criticalPollingIntervalSeconds
+  //       : (fast ? _fastPollingIntervalSeconds : _defaultPollingIntervalSeconds);
 
-    startPolling(intervalSeconds: interval);
-  }
+  //   _startPolling(intervalSeconds: interval);
+  // }
 
   Future<void> teardownWebsocket() async {
+    // Stop health check timer
+    // _stopHealthCheckTimer();
+    // _healthCheckFailures = 0;
+    _lastKnownVersion = null;
+
     final futures = [_webSocketService.disconnect('driver-pool')];
     final orderId = _orderId;
     if (orderId != null) {
@@ -868,166 +876,168 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
       futures.add(_webSocketService.disconnect(paymentId));
     }
 
-    _isPollingFallback = false;
+    // _isPollingFallback = false;
     await Future.wait(futures);
   }
 
-  // ==================== Polling ====================
+  // ============================================================
+  // HTTP Polling (Fallback Only)
+  // ============================================================
 
   /// Start polling for active order updates
-  /// This is a fallback mechanism for devices that don't support WebSocket
+  /// This is a FALLBACK mechanism when WebSocket fails
   /// [intervalSeconds] - The interval between each poll (default: 5 seconds)
-  void startPolling({int intervalSeconds = _defaultPollingIntervalSeconds}) {
-    if (state.isPolling) {
-      logger.d('[UserOrderCubit] Polling already active, skipping start');
-      return;
-    }
+  // void _startPolling({int intervalSeconds = _defaultPollingIntervalSeconds}) {
+  //   if (state.isPolling) {
+  //     logger.d('[UserOrderCubit] Polling already active, skipping start');
+  //     return;
+  //   }
 
-    logger.i(
-      '[UserOrderCubit] Starting polling with ${intervalSeconds}s interval',
-    );
-    emit(state.copyWith(isPolling: true));
+  //   logger.i(
+  //     '[UserOrderCubit] Starting HTTP polling fallback with ${intervalSeconds}s interval',
+  //   );
+  //   emit(state.copyWith(isPolling: true));
 
-    _pollingTimer = Timer.periodic(
-      Duration(seconds: intervalSeconds),
-      (_) => _pollActiveOrder(),
-    );
+  //   _pollingTimer = Timer.periodic(
+  //     Duration(seconds: intervalSeconds),
+  //     (_) => _pollActiveOrder(),
+  //   );
 
-    // Also fetch immediately on start
-    _pollActiveOrder();
-  }
+  //   // Also fetch immediately on start
+  //   _pollActiveOrder();
+  // }
 
   /// Stop polling for active order updates
-  void stopPolling() {
-    if (!state.isPolling && _pollingTimer == null) {
-      return;
-    }
+  // void stopPolling() {
+  //   if (!state.isPolling && _pollingTimer == null) {
+  //     return;
+  //   }
 
-    logger.i('[UserOrderCubit] Stopping polling');
-    _pollingTimer?.cancel();
-    _pollingTimer = null;
-    emit(state.copyWith(isPolling: false));
-  }
+  //   logger.i('[UserOrderCubit] Stopping HTTP polling');
+  //   _pollingTimer?.cancel();
+  //   _pollingTimer = null;
+  //   emit(state.copyWith(isPolling: false));
+  // }
 
   /// Internal method to poll the active order
-  Future<void> _pollActiveOrder() async {
-    try {
-      final res = await _orderRepository.getActiveOrder();
-      final activeOrder = res.data;
+  // Future<void> _pollActiveOrder() async {
+  //   try {
+  //     final res = await _orderRepository.getActiveOrder();
+  //     final activeOrder = res.data;
 
-      if (activeOrder == null) {
-        // No active order, stop polling and clear state
-        logger.d('[UserOrderCubit] Poll: No active order found');
-        stopPolling();
-        await clearActiveOrder();
-        return;
-      }
+  //     if (activeOrder == null) {
+  //       // No active order, stop polling and clear state
+  //       logger.d('[UserOrderCubit] Poll: No active order found');
+  //       stopPolling();
+  //       await clearActiveOrder();
+  //       return;
+  //     }
 
-      final order = activeOrder.order;
-      final currentOrder = state.currentOrder.value;
+  //     final order = activeOrder.order;
+  //     final currentOrder = state.currentOrder.value;
 
-      // Check if order status changed or if we have new data
-      final hasChanges =
-          currentOrder == null ||
-          currentOrder.id != order.id ||
-          currentOrder.status != order.status ||
-          _hasDriverLocationChanged(
-            state.currentAssignedDriver.value,
-            activeOrder.driver,
-          );
+  //     // Check if order status changed or if we have new data
+  //     final hasChanges =
+  //         currentOrder == null ||
+  //         currentOrder.id != order.id ||
+  //         currentOrder.status != order.status ||
+  //         _hasDriverLocationChanged(
+  //           state.currentAssignedDriver.value,
+  //           activeOrder.driver,
+  //         );
 
-      if (hasChanges) {
-        logger.d(
-          '[UserOrderCubit] Poll: Order updated - '
-          'status: ${order.status}, driver: ${activeOrder.driver?.userId}',
-        );
+  //     if (hasChanges) {
+  //       logger.d(
+  //         '[UserOrderCubit] Poll: Order updated - '
+  //         'status: ${order.status}, driver: ${activeOrder.driver?.userId}',
+  //       );
 
-        emit(
-          state.copyWith(
-            currentOrder: OperationResult.success(order),
-            currentPayment: activeOrder.payment != null
-                ? OperationResult.success(activeOrder.payment!)
-                : state.currentPayment,
-            currentTransaction: activeOrder.transaction != null
-                ? OperationResult.success(activeOrder.transaction!)
-                : state.currentTransaction,
-            currentAssignedDriver: activeOrder.driver != null
-                ? OperationResult.success(activeOrder.driver)
-                : state.currentAssignedDriver,
-          ),
-        );
-      }
+  //       emit(
+  //         state.copyWith(
+  //           currentOrder: OperationResult.success(order),
+  //           currentPayment: activeOrder.payment != null
+  //               ? OperationResult.success(activeOrder.payment!)
+  //               : state.currentPayment,
+  //           currentTransaction: activeOrder.transaction != null
+  //               ? OperationResult.success(activeOrder.transaction!)
+  //               : state.currentTransaction,
+  //           currentAssignedDriver: activeOrder.driver != null
+  //               ? OperationResult.success(activeOrder.driver)
+  //               : state.currentAssignedDriver,
+  //         ),
+  //       );
+  //     }
 
-      // Check if order is in terminal state, stop polling and clear active order
-      if (_isTerminalStatus(order.status)) {
-        logger.i(
-          '[UserOrderCubit] Poll: Order in terminal state (${order.status}), '
-          'clearing active order',
-        );
-        // Clear active order after a short delay to allow UI to process
-        // the terminal state change before cleaning up
-        Future.delayed(const Duration(milliseconds: 500), () {
-          if (!isClosed) {
-            clearActiveOrder();
-          }
-        });
-      } else {
-        // Adjust polling interval based on order status
-        // Use critical (faster) polling during MATCHING status for quicker driver detection
-        _adjustPollingIntervalForStatus(order.status);
-      }
-    } catch (e, st) {
-      logger.e('[UserOrderCubit] Poll error: $e', error: e, stackTrace: st);
-      // Don't stop polling on error, let it retry
-    }
-  }
+  //     // Check if order is in terminal state, stop polling and clear active order
+  //     if (_isTerminalStatus(order.status)) {
+  //       logger.i(
+  //         '[UserOrderCubit] Poll: Order in terminal state (${order.status}), '
+  //         'clearing active order',
+  //       );
+  //       // Clear active order after a short delay to allow UI to process
+  //       // the terminal state change before cleaning up
+  //       Future.delayed(const Duration(milliseconds: 500), () {
+  //         if (!isClosed) {
+  //           clearActiveOrder();
+  //         }
+  //       });
+  //     } else {
+  //       // Adjust polling interval based on order status
+  //       // Use critical (faster) polling during MATCHING status for quicker driver detection
+  //       _adjustPollingIntervalForStatus(order.status);
+  //     }
+  //   } catch (e, st) {
+  //     logger.e('[UserOrderCubit] Poll error: $e', error: e, stackTrace: st);
+  //     // Don't stop polling on error, let it retry
+  //   }
+  // }
 
   /// Adjust polling interval based on current order status
   /// Uses faster polling during MATCHING to detect driver acceptance quickly
-  void _adjustPollingIntervalForStatus(OrderStatus status) {
-    final isCriticalStatus =
-        status == OrderStatus.MATCHING || status == OrderStatus.REQUESTED;
+  // void _adjustPollingIntervalForStatus(OrderStatus status) {
+  //   final isCriticalStatus =
+  //       status == OrderStatus.MATCHING || status == OrderStatus.REQUESTED;
 
-    final currentInterval = _pollingTimer != null
-        ? _getCurrentPollingInterval()
-        : 0;
-    final targetInterval = isCriticalStatus
-        ? _criticalPollingIntervalSeconds
-        : _defaultPollingIntervalSeconds;
+  //   final currentInterval = _pollingTimer != null
+  //       ? _getCurrentPollingInterval()
+  //       : 0;
+  //   final targetInterval = isCriticalStatus
+  //       ? _criticalPollingIntervalSeconds
+  //       : _defaultPollingIntervalSeconds;
 
-    // Only restart if interval needs to change
-    if (currentInterval != targetInterval && state.isPolling) {
-      logger.d(
-        '[UserOrderCubit] Adjusting polling interval for status $status: '
-        '${currentInterval}s -> ${targetInterval}s',
-      );
-      stopPolling();
-      startPolling(intervalSeconds: targetInterval);
-    }
-  }
+  //   // Only restart if interval needs to change
+  //   if (currentInterval != targetInterval && state.isPolling) {
+  //     logger.d(
+  //       '[UserOrderCubit] Adjusting polling interval for status $status: '
+  //       '${currentInterval}s -> ${targetInterval}s',
+  //     );
+  //     stopPolling();
+  //     _startPolling(intervalSeconds: targetInterval);
+  //   }
+  // }
 
   /// Get current polling interval (approximation based on state)
-  int _getCurrentPollingInterval() {
-    // This is tracked implicitly; for now return default
-    // The actual interval is determined when startPolling is called
-    return _isPollingFallback
-        ? _fastPollingIntervalSeconds
-        : _defaultPollingIntervalSeconds;
-  }
+  // int _getCurrentPollingInterval() {
+  //   // This is tracked implicitly; for now return default
+  //   // The actual interval is determined when _startPolling is called
+  //   return _isPollingFallback
+  //       ? _fastPollingIntervalSeconds
+  //       : _defaultPollingIntervalSeconds;
+  // }
 
   /// Check if driver location has changed
-  bool _hasDriverLocationChanged(Driver? current, Driver? incoming) {
-    if (current == null && incoming == null) return false;
-    if (current == null || incoming == null) return true;
+  // bool _hasDriverLocationChanged(Driver? current, Driver? incoming) {
+  //   if (current == null && incoming == null) return false;
+  //   if (current == null || incoming == null) return true;
 
-    final currentLoc = current.currentLocation;
-    final incomingLoc = incoming.currentLocation;
+  //   final currentLoc = current.currentLocation;
+  //   final incomingLoc = incoming.currentLocation;
 
-    if (currentLoc == null && incomingLoc == null) return false;
-    if (currentLoc == null || incomingLoc == null) return true;
+  //   if (currentLoc == null && incomingLoc == null) return false;
+  //   if (currentLoc == null || incomingLoc == null) return true;
 
-    return currentLoc.x != incomingLoc.x || currentLoc.y != incomingLoc.y;
-  }
+  //   return currentLoc.x != incomingLoc.x || currentLoc.y != incomingLoc.y;
+  // }
 
   /// Check if order status is terminal (completed, cancelled, etc.)
   bool _isTerminalStatus(OrderStatus status) {

@@ -182,7 +182,7 @@ class _UserMartOnTripScreenState extends State<UserMartOnTripScreen> {
 
       final primaryColor = context.colorScheme.primary;
       final dimmedColor = primaryColor.withValues(alpha: 0.4);
-      final deliveryCubit = context.read<UserDeliveryCubit>();
+      final orderLocationCubit = context.read<OrderLocationCubit>();
       final orderStatus = order.status;
 
       // Determine if driver is heading to pickup (merchant) or already picked up
@@ -194,7 +194,7 @@ class _UserMartOnTripScreenState extends State<UserMartOnTripScreen> {
 
       try {
         // Always get pickup-to-dropoff route (merchant to customer)
-        final pickupToDropoffRoute = await deliveryCubit.getRoutes(
+        final pickupToDropoffRoute = await orderLocationCubit.getRoutes(
           order.pickupLocation,
           order.dropoffLocation,
         );
@@ -209,7 +209,7 @@ class _UserMartOnTripScreenState extends State<UserMartOnTripScreen> {
         // and pickup-to-dropoff route (dimmed)
         if (isDriverHeadingToPickup && driverLocation != null) {
           // Get driver-to-pickup (merchant) route
-          final driverToPickupRoute = await deliveryCubit.getRoutes(
+          final driverToPickupRoute = await orderLocationCubit.getRoutes(
             driverLocation,
             order.pickupLocation,
           );
@@ -248,7 +248,7 @@ class _UserMartOnTripScreenState extends State<UserMartOnTripScreen> {
           );
         } else if (isInTrip && driverLocation != null) {
           // During trip: show driver-to-dropoff route (highlighted)
-          final driverToDropoffRoute = await deliveryCubit.getRoutes(
+          final driverToDropoffRoute = await orderLocationCubit.getRoutes(
             driverLocation,
             order.dropoffLocation,
           );
@@ -323,15 +323,20 @@ class _UserMartOnTripScreenState extends State<UserMartOnTripScreen> {
         mounted &&
         context.mounted) {
       context.read<UserOrderCubit>().clearActiveOrder();
-      // Navigate to rating/review screen
+      // Navigate to order completion screen
       final driver = state.currentAssignedDriver.value;
+      final payment = state.currentPayment.value;
+      final merchant = currentOrder?.merchant;
       if (driver != null && currentOrder != null) {
         final result = await context.pushNamed(
-          Routes.userRating.name,
+          Routes.userOrderCompletion.name,
           extra: {
             "orderId": currentOrder.id,
-            "driverId": driver.userId,
-            "driverName": driver.user?.name ?? "Driver",
+            "orderType": OrderType.FOOD,
+            "order": currentOrder,
+            "driver": driver,
+            "merchant": merchant,
+            "payment": payment,
           },
         );
 

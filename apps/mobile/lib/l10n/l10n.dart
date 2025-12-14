@@ -4,7 +4,20 @@ import 'package:shadcn_flutter/shadcn_flutter.dart';
 export 'package:akademove/l10n/gen/app_localizations.dart';
 
 extension AppLocalizationsX on BuildContext {
-  AppLocalizations get l10n => AppLocalizations.of(this);
+  /// Returns the [AppLocalizations] instance for the current context.
+  ///
+  /// This getter safely handles deactivated widgets by checking if the
+  /// context is still mounted before attempting the lookup.
+  AppLocalizations get l10n {
+    // Check if the widget is still in the tree before looking up ancestors
+    final element = this as Element;
+    if (!element.mounted) {
+      // Return a fallback localization when the widget is deactivated
+      // This prevents the "Looking up a deactivated widget's ancestor is unsafe" error
+      return lookupAppLocalizations(const Locale('en'));
+    }
+    return AppLocalizations.of(this);
+  }
 }
 
 // class IndonesianMaterialLocalizations

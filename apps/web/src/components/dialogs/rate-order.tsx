@@ -1,6 +1,9 @@
-import { zodResolver } from "@hookform/resolvers/zod";
 import { m } from "@repo/i18n";
-import { InsertReviewSchema, type ReviewCategory } from "@repo/schema/review";
+import {
+	type InsertReview,
+	InsertReviewSchema,
+	type ReviewCategory,
+} from "@repo/schema/review";
 import { useMutation } from "@tanstack/react-query";
 import {
 	Car,
@@ -15,6 +18,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
 	Dialog,
 	DialogContent,
@@ -33,7 +37,6 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
 import { orpcClient, orpcQuery, queryClient } from "@/lib/orpc";
 import { cn } from "@/utils/cn";
@@ -73,13 +76,12 @@ export function RateOrderDialog({
 }: RateOrderDialogProps) {
 	const [hoveredStar, setHoveredStar] = useState(0);
 
-	const form = useForm({
-		resolver: zodResolver(InsertReviewSchema),
+	const form = useForm<InsertReview>({
 		defaultValues: {
 			orderId,
 			toUserId: driverId,
 			fromUserId: "", // Will be set by backend from context.user.id
-			category: "COURTESY",
+			categories: ["COURTESY"],
 			score: 0,
 			comment: "",
 		},
@@ -107,14 +109,12 @@ export function RateOrderDialog({
 		}),
 	);
 
-	const onSubmit = (values: unknown) => {
-		const parsedValues = InsertReviewSchema.parse(values);
-
-		if (parsedValues.score === 0) {
+	const onSubmit = (values: InsertReview) => {
+		if (values.score === 0) {
 			toast.error(m.rate_order_select_rating());
 			return;
 		}
-		createReviewMutation.mutate({ body: parsedValues });
+		createReviewMutation.mutate({ body: values });
 	};
 
 	const currentScore = form.watch("score");
@@ -185,19 +185,15 @@ export function RateOrderDialog({
 							)}
 						/>
 
-						{/* Category */}
+						{/* Categories */}
 						<FormField
 							control={form.control}
-							name="category"
-							render={({ field }) => (
+							name="categories"
+							render={() => (
 								<FormItem>
 									<FormLabel>{m.rate_order_aspect()}</FormLabel>
 									<FormControl>
-										<RadioGroup
-											value={field.value}
-											onValueChange={field.onChange}
-											className="flex flex-col space-y-2"
-										>
+										<div className="flex flex-col space-y-2">
 											{(
 												Object.keys(
 													getCategoryLabels(),
@@ -205,12 +201,32 @@ export function RateOrderDialog({
 											).map((category) => {
 												const Icon = categoryIcons[category];
 												const labels = getCategoryLabels();
+												const selectedCategories = form.watch("categories");
+												const isChecked = selectedCategories.includes(category);
+
 												return (
 													<div
 														key={category}
 														className="flex items-center space-x-2"
 													>
-														<RadioGroupItem value={category} id={category} />
+														<Checkbox
+															id={category}
+															checked={isChecked}
+															onCheckedChange={(checked) => {
+																const current = form.getValues("categories");
+																if (checked) {
+																	form.setValue("categories", [
+																		...current,
+																		category,
+																	]);
+																} else {
+																	form.setValue(
+																		"categories",
+																		current.filter((c) => c !== category),
+																	);
+																}
+															}}
+														/>
 														<Label
 															htmlFor={category}
 															className="flex cursor-pointer items-center gap-2 font-normal"
@@ -221,7 +237,7 @@ export function RateOrderDialog({
 													</div>
 												);
 											})}
-										</RadioGroup>
+										</div>
 									</FormControl>
 									<FormMessage />
 								</FormItem>

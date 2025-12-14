@@ -10,19 +10,18 @@ final userRouter = StatefulShellRoute.indexedStack(
         BlocProvider(create: (_) => sl<BottomNavBarCubit>()),
         BlocProvider(create: (_) => sl<UserHomeCubit>()),
         BlocProvider(create: (_) => sl<UserLocationCubit>()),
-        BlocProvider(create: (_) => sl<UserRideCubit>()),
-        BlocProvider(create: (_) => sl<UserDeliveryCubit>()),
+        BlocProvider(create: (_) => sl<OrderLocationCubit>()),
         BlocProvider(create: (_) => sl<UserMartCubit>()),
-        BlocProvider(create: (_) => sl<CartCubit>()..loadCart()),
+        BlocProvider(create: (_) => sl<UserCartCubit>()..loadCart()),
         BlocProvider(create: (_) => sl<UserWalletCubit>()),
         BlocProvider(create: (_) => sl<UserWalletTopUpCubit>()),
         BlocProvider(create: (_) => sl<UserOrderCubit>()),
         BlocProvider(create: (_) => sl<UserMapCubit>()),
-        BlocProvider(create: (_) => sl<NotificationCubit>()),
-        BlocProvider(create: (_) => sl<EmergencyCubit>()),
+        BlocProvider.value(value: sl<SharedNotificationCubit>()),
+        BlocProvider(create: (_) => sl<SharedEmergencyCubit>()),
         BlocProvider(create: (_) => sl<UserCouponCubit>()),
-        BlocProvider(create: (_) => sl<OrderChatCubit>()),
-        BlocProvider(create: (_) => sl<QuickMessageCubit>()),
+        BlocProvider(create: (_) => sl<SharedOrderChatCubit>()),
+        BlocProvider(create: (_) => sl<SharedQuickMessageCubit>()),
       ],
       child: BottomNavbar(
         shell: navigationShell,
@@ -100,7 +99,7 @@ final userRouter = StatefulShellRoute.indexedStack(
               name: Routes.userRideOnTrip.name,
               path: Routes.userRideOnTrip.path,
               builder: (context, state) => BlocProvider.value(
-                value: context.read<EmergencyCubit>(),
+                value: context.read<SharedEmergencyCubit>(),
                 child: const UserRideOnTripScreen(),
               ),
             ),
@@ -119,6 +118,37 @@ final userRouter = StatefulShellRoute.indexedStack(
                     orderId: orderId,
                     driverId: driverId,
                     driverName: driverName,
+                  ),
+                );
+              },
+            ),
+            GoRoute(
+              name: Routes.userOrderCompletion.name,
+              path: Routes.userOrderCompletion.path,
+              builder: (context, state) {
+                final extra = state.extra as Map<String, dynamic>?;
+                final orderId = extra?['orderId'] as String? ?? '';
+                final orderType =
+                    extra?['orderType'] as OrderType? ?? OrderType.RIDE;
+                final order = extra?['order'] as Order?;
+                final driver = extra?['driver'] as Driver?;
+                final merchant = extra?['merchant'] as Merchant?;
+                final payment = extra?['payment'] as Payment?;
+
+                // Fallback if required data is missing
+                if (order == null || driver == null) {
+                  return const UserHomeScreen();
+                }
+
+                return BlocProvider(
+                  create: (context) => sl<UserReviewCubit>(),
+                  child: OrderCompletionScreen(
+                    orderId: orderId,
+                    orderType: orderType,
+                    order: order,
+                    driver: driver,
+                    merchant: merchant,
+                    payment: payment,
                   ),
                 );
               },
@@ -219,7 +249,7 @@ final userRouter = StatefulShellRoute.indexedStack(
               name: Routes.userDeliveryOnTrip.name,
               path: Routes.userDeliveryOnTrip.path,
               builder: (context, state) => BlocProvider.value(
-                value: context.read<EmergencyCubit>(),
+                value: context.read<SharedEmergencyCubit>(),
                 child: const UserDeliveryOnTripScreen(),
               ),
             ),
@@ -247,7 +277,7 @@ final userRouter = StatefulShellRoute.indexedStack(
           name: Routes.userMartOnTrip.name,
           path: Routes.userMartOnTrip.path,
           builder: (context, state) => BlocProvider.value(
-            value: context.read<EmergencyCubit>(),
+            value: context.read<SharedEmergencyCubit>(),
             child: const UserMartOnTripScreen(),
           ),
         ),
@@ -297,7 +327,7 @@ final userRouter = StatefulShellRoute.indexedStack(
           name: Routes.userCart.name,
           path: Routes.userCart.path,
           builder: (context, state) => BlocProvider.value(
-            value: BlocProvider.of<CartCubit>(context),
+            value: BlocProvider.of<UserCartCubit>(context),
             child: const CartScreen(),
           ),
         ),
@@ -305,7 +335,7 @@ final userRouter = StatefulShellRoute.indexedStack(
           name: Routes.userOrderConfirm.name,
           path: Routes.userOrderConfirm.path,
           builder: (context, state) => BlocProvider.value(
-            value: BlocProvider.of<CartCubit>(context),
+            value: BlocProvider.of<UserCartCubit>(context),
             child: const OrderConfirmationScreen(),
           ),
         ),
@@ -384,7 +414,8 @@ final userRouter = StatefulShellRoute.indexedStack(
           name: Routes.userNotifications.name,
           path: Routes.userNotifications.path,
           builder: (context, state) => BlocProvider.value(
-            value: context.read<NotificationCubit>()..refreshNotifications(),
+            value: context.read<SharedNotificationCubit>()
+              ..refreshNotifications(),
             child: const NotificationScreen(),
           ),
         ),

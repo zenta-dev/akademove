@@ -67,6 +67,7 @@ class _MerchantMenuFormState extends State<MerchantMenuForm> {
   int _stock = 0;
   File? _imageFile;
   bool _isFirstFrame = true;
+  bool _isProgrammaticUpdate = false;
 
   bool get _isEditMode => widget.initialMenu != null;
 
@@ -170,14 +171,18 @@ class _MerchantMenuFormState extends State<MerchantMenuForm> {
   void _incrementStock() {
     setState(() {
       _stock = (_stock + 1).clamp(0, 999);
+      _isProgrammaticUpdate = true;
       _stockController.text = _stock.toString();
+      _isProgrammaticUpdate = false;
     });
   }
 
   void _decrementStock() {
     setState(() {
       _stock = (_stock - 1).clamp(0, 999);
+      _isProgrammaticUpdate = true;
       _stockController.text = _stock.toString();
+      _isProgrammaticUpdate = false;
     });
   }
 
@@ -288,16 +293,21 @@ class _MerchantMenuFormState extends State<MerchantMenuForm> {
               keyboardType: TextInputType.number,
               features: const [InputFeature.leading(Icon(LucideIcons.package))],
               onChanged: (value) {
+                // Skip if this is a programmatic update from increment/decrement buttons
+                if (_isProgrammaticUpdate) return;
+
                 final intValue = int.tryParse(value) ?? 0;
                 final clampedValue = intValue.clamp(0, 999);
                 setState(() {
                   _stock = clampedValue;
                 });
                 if (clampedValue != intValue) {
+                  _isProgrammaticUpdate = true;
                   _stockController.text = clampedValue.toString();
                   _stockController.selection = TextSelection.fromPosition(
                     TextPosition(offset: _stockController.text.length),
                   );
+                  _isProgrammaticUpdate = false;
                 }
               },
             ),

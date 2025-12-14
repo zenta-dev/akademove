@@ -27,7 +27,7 @@ class SupportTicketListQuery {
     this.assignedToId,
     this.userId,
     this.search,
-    this.limit = 20,
+    required this.limit,
     this.cursor,
   });
   @JsonKey(name: r'status', required: false, includeIfNull: false)
@@ -49,14 +49,9 @@ class SupportTicketListQuery {
   final String? search;
 
   // minimum: -9007199254740991
-  // maximum: 1000
-  @JsonKey(
-    defaultValue: 20,
-    name: r'limit',
-    required: false,
-    includeIfNull: false,
-  )
-  final int? limit;
+  // maximum: 9007199254740991
+  @JsonKey(name: r'limit', required: true, includeIfNull: false)
+  final int limit;
 
   @JsonKey(name: r'cursor', required: false, includeIfNull: false)
   final String? cursor;

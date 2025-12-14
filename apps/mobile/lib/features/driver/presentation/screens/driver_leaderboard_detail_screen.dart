@@ -17,7 +17,7 @@ class DriverLeaderboardDetailScreen extends StatefulWidget {
 
 class _DriverLeaderboardDetailScreenState
     extends State<DriverLeaderboardDetailScreen> {
-  LeaderboardCubit get _cubit => context.read<LeaderboardCubit>();
+  DriverLeaderboardCubit get _cubit => context.read<DriverLeaderboardCubit>();
   bool _isLoading = false;
 
   @override
@@ -32,9 +32,8 @@ class _DriverLeaderboardDetailScreenState
     setState(() => _isLoading = true);
 
     try {
-      // Get current user ID from driver cubit
-      final driverState = context.read<DriverCubit>().state;
-      final userId = driverState.driver?.user?.id ?? '';
+      // Get current user ID from DriverProfileCubit
+      final userId = context.read<DriverProfileCubit>().driver?.user?.id ?? '';
 
       if (userId.isEmpty) {
         if (mounted) {
@@ -43,7 +42,7 @@ class _DriverLeaderboardDetailScreenState
         return;
       }
 
-      await _cubit.loadMyRankings(userId: userId, limit: 10);
+      await _cubit.loadMyRankings();
 
       if (mounted) {
         setState(() => _isLoading = false);
@@ -75,9 +74,9 @@ class _DriverLeaderboardDetailScreenState
           ],
         ),
       ],
-      child: RefreshTrigger(
+      child: SafeRefreshTrigger(
         onRefresh: _onRefresh,
-        child: BlocBuilder<LeaderboardCubit, LeaderboardState>(
+        child: BlocBuilder<DriverLeaderboardCubit, DriverLeaderboardState>(
           builder: (context, state) {
             final myRankingsResult = state.myRankings;
 
@@ -177,7 +176,7 @@ class _DriverLeaderboardDetailScreenState
     );
   }
 
-  Widget _buildOverallStats(List<Leaderboard> rankings) {
+  Widget _buildOverallStats(List<LeaderboardWithDriver> rankings) {
     final bestRank = rankings.isNotEmpty
         ? rankings.reduce((a, b) => a.rank < b.rank ? a : b)
         : null;
@@ -267,8 +266,8 @@ class _DriverLeaderboardDetailScreenState
     );
   }
 
-  Widget _buildRankingsByCategory(List<Leaderboard> rankings) {
-    final rankingsByCategory = <String, List<Leaderboard>>{};
+  Widget _buildRankingsByCategory(List<LeaderboardWithDriver> rankings) {
+    final rankingsByCategory = <String, List<LeaderboardWithDriver>>{};
     for (final ranking in rankings) {
       rankingsByCategory
           .putIfAbsent(ranking.category.value, () => [])
@@ -297,7 +296,10 @@ class _DriverLeaderboardDetailScreenState
     );
   }
 
-  Widget _buildCategoryRanking(String category, List<Leaderboard> rankings) {
+  Widget _buildCategoryRanking(
+    String category,
+    List<LeaderboardWithDriver> rankings,
+  ) {
     final bestRanking = rankings.isNotEmpty
         ? rankings.reduce((a, b) => a.rank < b.rank ? a : b)
         : null;
@@ -376,7 +378,7 @@ class _DriverLeaderboardDetailScreenState
     );
   }
 
-  Widget _buildPerformanceMetrics(List<Leaderboard> rankings) {
+  Widget _buildPerformanceMetrics(List<LeaderboardWithDriver> rankings) {
     if (rankings.isEmpty) return const SizedBox.shrink();
 
     final periods = rankings.map((r) => r.period.value).toSet().toList();
@@ -471,7 +473,7 @@ class _DriverLeaderboardDetailScreenState
     );
   }
 
-  Widget _buildRecentRankingCard(Leaderboard ranking) {
+  Widget _buildRecentRankingCard(LeaderboardWithDriver ranking) {
     return Container(
       padding: EdgeInsets.all(12.dg),
       margin: EdgeInsets.only(bottom: 8.h),

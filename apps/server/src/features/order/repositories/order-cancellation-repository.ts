@@ -1,13 +1,16 @@
 import { m } from "@repo/i18n";
 import type { Order } from "@repo/schema/order";
 import type { UserRole } from "@repo/schema/user";
-import type { OrderEnvelope } from "@repo/schema/ws";
 import { eq } from "drizzle-orm";
+import { BUSINESS_CONSTANTS } from "@/core/constants";
 import { RepositoryError } from "@/core/error";
 import type { WithTx } from "@/core/interface";
 import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
-import { OrderQueueService } from "@/core/services/queue";
+import {
+	OrderQueueService,
+	ProcessingQueueService,
+} from "@/core/services/queue";
 import { BusinessConfigurationService } from "@/features/configuration/services";
 import { toNumberSafe } from "@/utils";
 import { logger } from "@/utils/logger";
@@ -303,28 +306,29 @@ export class OrderCancellationRepository extends OrderBaseRepository {
 		}
 
 		// Broadcast DRIVER_CANCELLED_REMATCHING event to notify user via WebSocket
+		// Uses queue-based delayed broadcast to allow WebSocket clients time to connect
 		try {
-			const roomStub = OrderBaseRepository.getRoomStubByName(order.id);
-			const retryPayload: OrderEnvelope = {
-				e: "DRIVER_CANCELLED_REMATCHING",
-				f: "s",
-				t: "c",
-				tg: "USER",
-				p: {
-					detail: {
-						order: updatedOrder,
-						payment: null,
-						transaction: null,
-					},
-					retryInfo: {
-						orderId: order.id,
-						cancelledDriverId,
-						excludedDriverCount: excludedDriverIds.length,
-						reason: reason ?? "Driver cancelled the order",
+			await ProcessingQueueService.enqueueWebSocketBroadcast(
+				{
+					roomName: order.id,
+					event: "DRIVER_CANCELLED_REMATCHING",
+					target: "USER",
+					data: {
+						detail: {
+							order: updatedOrder,
+							payment: null,
+							transaction: null,
+						},
+						retryInfo: {
+							orderId: order.id,
+							cancelledDriverId,
+							excludedDriverCount: excludedDriverIds.length,
+							reason: reason ?? "Driver cancelled the order",
+						},
 					},
 				},
-			};
-			await roomStub.broadcast(retryPayload);
+				{ delaySeconds: BUSINESS_CONSTANTS.BROADCAST_DELAY_SECONDS },
+			);
 
 			logger.info(
 				{
@@ -332,13 +336,13 @@ export class OrderCancellationRepository extends OrderBaseRepository {
 					userId: order.userId,
 					event: "DRIVER_CANCELLED_REMATCHING",
 				},
-				"[OrderCancellationRepository] Broadcasted retry status to user",
+				"[OrderCancellationRepository] Delayed broadcast enqueued for retry status to user",
 			);
 		} catch (error) {
 			// Log but don't fail the transaction if WebSocket broadcast fails
 			logger.error(
 				{ error, orderId: order.id },
-				"[OrderCancellationRepository] Failed to broadcast retry status via WebSocket",
+				"[OrderCancellationRepository] Failed to enqueue broadcast for retry status via WebSocket",
 			);
 		}
 

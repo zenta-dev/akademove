@@ -1,1 +1,1 @@
-export 'configuration_cubit.dart';
+export 'shared_configuration_cubit.dart';

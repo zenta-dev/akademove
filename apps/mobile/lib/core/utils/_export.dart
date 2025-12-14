@@ -2,6 +2,7 @@ export 'commmon.dart';
 export 'debouncer.dart';
 export 'extension/_export.dart';
 export 'file.dart';
+export 'geo.dart';
 export 'logger.dart';
 export 'operation.dart';
 export 'string_utils.dart';

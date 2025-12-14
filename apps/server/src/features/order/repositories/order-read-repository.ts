@@ -36,6 +36,7 @@ import type {
 } from "@/core/interface";
 import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
+import type { StorageService } from "@/core/services/storage";
 import { logger } from "@/utils/logger";
 import type { OrderListQuery } from "../order-spec";
 import type { OrderPricingService } from "../services";
@@ -57,8 +58,9 @@ export class OrderReadRepository extends OrderBaseRepository {
 		db: DatabaseService,
 		kv: KeyValueService,
 		pricingService: OrderPricingService,
+		storage?: StorageService,
 	) {
-		super(db, kv);
+		super(db, kv, storage);
 		this.#pricingService = pricingService;
 	}
 
@@ -226,12 +228,17 @@ export class OrderReadRepository extends OrderBaseRepository {
 			};
 
 			const withx = {
-				user: { columns: { name: true } },
+				user: { columns: { name: true, image: true, gender: true } },
 				driver: {
 					columns: {},
-					with: { user: { columns: { name: true } } },
+					with: { user: { columns: { name: true, image: true } } },
 				},
 				merchant: { columns: { name: true } },
+				items: {
+					with: {
+						menu: true,
+					},
+				},
 			} as const;
 
 			const clauses: SQL[] = [];
@@ -303,10 +310,21 @@ export class OrderReadRepository extends OrderBaseRepository {
 					limit: limit + 1,
 				});
 
-				const mapped = res.map(OrderBaseRepository.composeEntity);
+				// Type assertion needed because we're selecting specific columns from relations
+				// which changes the inferred type, but it's still compatible with Partial<User/Driver>
+				const mapped = await Promise.all(
+					res.map((item) =>
+						OrderBaseRepository.composeEntity(
+							item as unknown as Parameters<
+								typeof OrderBaseRepository.composeEntity
+							>[0],
+							this.storage,
+						),
+					),
+				);
 				const hasMore = mapped.length > limit;
 				const rows = hasMore ? mapped.slice(0, limit) : mapped;
-				const nextCursor = hasMore ? mapped[mapped.length - 1].id : undefined;
+				const nextCursor = hasMore ? mapped[mapped.length - 1]?.id : undefined;
 
 				return { rows, pagination: { hasMore, nextCursor } };
 			}
@@ -321,7 +339,16 @@ export class OrderReadRepository extends OrderBaseRepository {
 				limit,
 			});
 
-			const rows = result.map(OrderBaseRepository.composeEntity);
+			const rows = await Promise.all(
+				result.map((item) =>
+					OrderBaseRepository.composeEntity(
+						item as unknown as Parameters<
+							typeof OrderBaseRepository.composeEntity
+						>[0],
+						this.storage,
+					),
+				),
+			);
 
 			const hasFilters = statuses.length > 0 || type || startDate || endDate;
 

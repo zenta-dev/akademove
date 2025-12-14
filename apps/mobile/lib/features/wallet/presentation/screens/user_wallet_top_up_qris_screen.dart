@@ -25,22 +25,35 @@ class UserWalletTopUpQRISScreen extends StatelessWidget {
               BlocConsumer<UserWalletTopUpCubit, UserWalletTopUpState>(
                 listener: (context, state) async {
                   final transaction = state.transaction.value;
-                  if (state.payment.isSuccess &&
+                  final wallet = state.wallet.value;
+
+                  // Check for success via WebSocket (transaction available)
+                  // OR via polling fallback (wallet updated without transaction)
+                  final isSuccessViaWebSocket =
+                      state.payment.isSuccess &&
                       transaction != null &&
-                      transaction.status == TransactionStatus.SUCCESS) {
+                      transaction.status == TransactionStatus.SUCCESS;
+                  final isSuccessViaPolling =
+                      state.payment.isSuccess &&
+                      wallet != null &&
+                      transaction == null;
+
+                  if (isSuccessViaWebSocket || isSuccessViaPolling) {
                     context.showMyToast(
                       context.l10n.top_up_success,
                       type: ToastType.success,
                     );
                     // Teardown websocket immediately, don't wait for delay
                     context.read<UserWalletTopUpCubit>().teardownWebsocket();
+                    // Refresh the main wallet cubit to show updated balance
+                    context.read<UserWalletCubit>().getMine();
                     // Wait before navigating to let user see the success message
                     await Future.delayed(const Duration(seconds: 3), () {
                       if (!context.mounted) return;
                       context
-                        ..pop()
-                        ..pop()
-                        ..pop();
+                        ..pop(true)
+                        ..pop(true)
+                        ..pop(true);
                     });
                   }
                   if (state.payment.isFailure && context.mounted) {
@@ -64,7 +77,7 @@ class UserWalletTopUpQRISScreen extends StatelessWidget {
                       context.read<UserWalletTopUpCubit>().teardownWebsocket();
                       await Future.delayed(const Duration(seconds: 3), () {
                         if (!context.mounted) return;
-                        context.pop();
+                        context.pop(true);
                       });
                     },
                   ).asSkeleton(enabled: state.payment.isLoading);

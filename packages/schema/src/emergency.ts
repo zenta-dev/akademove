@@ -53,6 +53,18 @@ export const UpdateEmergencySchema = EmergencySchema.omit({
 }).partial();
 export type UpdateEmergency = z.infer<typeof UpdateEmergencySchema>;
 
+// Simplified schema for logging emergency events (WhatsApp redirect)
+export const LogEmergencySchema = z.object({
+	orderId: z.uuid(),
+	location: z
+		.object({
+			latitude: z.coerce.number(),
+			longitude: z.coerce.number(),
+		})
+		.optional(),
+});
+export type LogEmergency = z.infer<typeof LogEmergencySchema>;
+
 export const EmergencySchemaRegistries = {
 	EmergencyType: { schema: EmergencyTypeSchema, strategy: "output" },
 	EmergencyStatus: { schema: EmergencyStatusSchema, strategy: "output" },
@@ -60,4 +72,5 @@ export const EmergencySchemaRegistries = {
 	InsertEmergency: { schema: InsertEmergencySchema, strategy: "input" },
 	UpdateEmergency: { schema: UpdateEmergencySchema, strategy: "input" },
 	EmergencyKey: { schema: EmergencyKeySchema, strategy: "input" },
+	LogEmergency: { schema: LogEmergencySchema, strategy: "input" },
 } satisfies SchemaRegistries;
