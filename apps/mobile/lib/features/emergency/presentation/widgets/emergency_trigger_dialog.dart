@@ -41,17 +41,32 @@ class _EmergencyTriggerDialogState extends State<EmergencyTriggerDialog> {
       location: widget.currentLocation,
     );
 
+    // Sanitize phone number for WhatsApp (remove +, spaces, dashes)
+    final sanitizedPhone = phone.replaceAll(RegExp(r'[^\d]'), '');
+
     final message = Uri.encodeComponent(
       'EMERGENCY - Order ID: ${widget.orderId}\n'
       'Location: ${widget.currentLocation.latitude}, ${widget.currentLocation.longitude}\n'
       'I need immediate assistance!',
     );
 
-    final url = Uri.parse('https://wa.me/$phone?text=$message');
+    // Try WhatsApp URL scheme first, then fallback to web URL
+    final whatsappUrl = Uri.parse(
+      'whatsapp://send?phone=$sanitizedPhone&text=$message',
+    );
+    final webUrl = Uri.parse('https://wa.me/$sanitizedPhone?text=$message');
 
     try {
-      if (await canLaunchUrl(url)) {
-        await launchUrl(url, mode: LaunchMode.externalApplication);
+      // Try native WhatsApp app first
+      if (await canLaunchUrl(whatsappUrl)) {
+        await launchUrl(whatsappUrl);
+        if (mounted) {
+          Navigator.of(context).pop();
+        }
+      }
+      // Fallback to web URL
+      else if (await canLaunchUrl(webUrl)) {
+        await launchUrl(webUrl, mode: LaunchMode.externalApplication);
         if (mounted) {
           Navigator.of(context).pop();
         }

@@ -4415,7 +4415,7 @@ class AppLocalizationsId extends AppLocalizations {
   String get faq_safety_a3 => 'Semua pengemudi harus mengirimkan dan mendapat persetujuan untuk KTM, SIM, dan STNK mereka. Kami memverifikasi semua dokumen sebelum aktivasi.';
 
   @override
-  String get emergency_contact_whatsapp => 'Hubungi via WhatsApp';
+  String get emergency_contact_whatsapp => 'Hubungi via WA';
 
   @override
   String get emergency_contact_whatsapp_desc => 'Buka WhatsApp untuk menghubungi keamanan kampus';

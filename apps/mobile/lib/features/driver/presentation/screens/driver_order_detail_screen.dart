@@ -922,13 +922,9 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
                     longitude: order.pickupLocation.x.toDouble(),
                   );
 
-                  return Positioned(
-                    bottom: 16,
-                    right: 16,
-                    child: EmergencyButton(
-                      orderId: order.id,
-                      currentLocation: emergencyLocation,
-                    ),
+                  return EmergencyButton(
+                    orderId: order.id,
+                    currentLocation: emergencyLocation,
                   );
                 },
               ),

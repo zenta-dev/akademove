@@ -8722,7 +8722,7 @@ abstract class AppLocalizations {
   /// No description provided for @emergency_contact_whatsapp.
   ///
   /// In en, this message translates to:
-  /// **'Contact via WhatsApp'**
+  /// **'Contact via WA'**
   String get emergency_contact_whatsapp;
 
   /// No description provided for @emergency_contact_whatsapp_desc.
