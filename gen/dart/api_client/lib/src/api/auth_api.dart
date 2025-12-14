@@ -15,6 +15,7 @@ import 'package:api_client/src/model/auth_get_session200_response.dart';
 import 'package:api_client/src/model/auth_has_access_request.dart';
 import 'package:api_client/src/model/auth_sign_in200_response.dart';
 import 'package:api_client/src/model/auth_sign_out200_response.dart';
+import 'package:api_client/src/model/auth_sign_out_request.dart';
 import 'package:api_client/src/model/auth_sign_up_user201_response.dart';
 import 'package:api_client/src/model/auth_verify_email200_response.dart';
 import 'package:api_client/src/model/reset_password.dart';
@@ -640,6 +641,7 @@ class AuthApi {
   ///
   ///
   /// Parameters:
+  /// * [authSignOutRequest]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -650,6 +652,7 @@ class AuthApi {
   /// Returns a [Future] containing a [Response] with a [AuthSignOut200Response] as data
   /// Throws [DioException] if API call or serialization fails
   Future<Response<AuthSignOut200Response>> authSignOut({
+    AuthSignOutRequest? authSignOutRequest,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -667,11 +670,26 @@ class AuthApi {
         ],
         ...?extra,
       },
+      contentType: 'application/json',
       validateStatus: validateStatus,
     );
 
+    dynamic _bodyData;
+
+    try {
+      _bodyData = jsonEncode(authSignOutRequest);
+    } catch (error, stackTrace) {
+      throw DioException(
+        requestOptions: _options.compose(_dio.options, _path),
+        type: DioExceptionType.unknown,
+        error: error,
+        stackTrace: stackTrace,
+      );
+    }
+
     final _response = await _dio.request<Object>(
       _path,
+      data: _bodyData,
       options: _options,
       cancelToken: cancelToken,
       onSendProgress: onSendProgress,

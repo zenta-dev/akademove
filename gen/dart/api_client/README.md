@@ -355,6 +355,7 @@ Class | Method | HTTP request | Description
  - [AuthHasAccessRequest](doc/AuthHasAccessRequest.md)
  - [AuthSignIn200Response](doc/AuthSignIn200Response.md)
  - [AuthSignOut200Response](doc/AuthSignOut200Response.md)
+ - [AuthSignOutRequest](doc/AuthSignOutRequest.md)
  - [AuthSignUpUser201Response](doc/AuthSignUpUser201Response.md)
  - [AuthVerifyEmail200Response](doc/AuthVerifyEmail200Response.md)
  - [AuthVerifyEmail200ResponseData](doc/AuthVerifyEmail200ResponseData.md)

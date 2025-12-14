@@ -303,7 +303,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **authSignOut**
-> AuthSignOut200Response authSignOut()
+> AuthSignOut200Response authSignOut(authSignOutRequest)
 
 
 
@@ -312,9 +312,10 @@ Name | Type | Description  | Notes
 import 'package:api_client/api.dart';
 
 final api = ApiClient().getAuthApi();
+final AuthSignOutRequest authSignOutRequest = ; // AuthSignOutRequest | 
 
 try {
-    final response = api.authSignOut();
+    final response = api.authSignOut(authSignOutRequest);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling AuthApi->authSignOut: $e\n');
@@ -322,7 +323,10 @@ try {
 ```
 
 ### Parameters
-This endpoint does not need any parameter.
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **authSignOutRequest** | [**AuthSignOutRequest**](AuthSignOutRequest.md)|  | [optional] 
 
 ### Return type
 
@@ -334,7 +338,7 @@ This endpoint does not need any parameter.
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)

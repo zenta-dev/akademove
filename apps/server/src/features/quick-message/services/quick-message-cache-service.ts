@@ -11,8 +11,8 @@ export class QuickMessageCacheService {
 	 * @returns Cache key string
 	 */
 	static generateListCacheKey(query: ListQuickMessageQuery): string {
-		const { role, orderType, locale, isActive } = query;
-		return `quick-messages:${role ?? "all"}:${orderType ?? "all"}:${locale ?? "all"}:${isActive ?? "all"}`;
+		const { role, orderType, locale, status } = query;
+		return `quick-messages:${role ?? "all"}:${orderType ?? "all"}:${locale ?? "all"}:${status ?? "all"}`;
 	}
 
 	/**

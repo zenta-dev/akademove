@@ -12,15 +12,15 @@ const STALE_LOCATION_THRESHOLD_MINUTES = 15;
 
 /**
  * Stale Location Cron Handler
- * Schedule: Every 5 minutes (*/5 * * * *)
+ * Schedule: Every 5 minutes
  *
  * Purpose:
- * - Set `isOnline = false` for drivers with stale location updates
- * - A stale location is one that hasn't been updated in 15+ minutes
- * - This ensures offline drivers (app closed, lost connection) don't receive orders
+ * - Set isOnline = false for drivers with stale location updates
+ * - A stale location is one that has not been updated in 15+ minutes
+ * - This ensures offline drivers (app closed, lost connection) do not receive orders
  *
  * This handles cases where:
- * 1. Driver's app crashes without proper cleanup
+ * 1. Driver app crashes without proper cleanup
  * 2. Driver loses internet connection
  * 3. Driver closes the app without going offline
  */
@@ -44,7 +44,7 @@ export async function handleStaleLocationCron(
 
 		// Find online drivers with stale location updates
 		const staleDrivers = await svc.db.query.driver.findMany({
-			where: (f, op) =>
+			where: (f, _op) =>
 				and(
 					eq(f.isOnline, true),
 					eq(f.status, "APPROVED"),
@@ -94,8 +94,7 @@ export async function handleStaleLocationCron(
 						lastLocationUpdate: driver.lastLocationUpdate,
 						staleDuration: driver.lastLocationUpdate
 							? Math.round(
-									(now.getTime() - driver.lastLocationUpdate.getTime()) /
-										60000,
+									(now.getTime() - driver.lastLocationUpdate.getTime()) / 60000,
 								)
 							: null,
 					},
@@ -119,7 +118,9 @@ export async function handleStaleLocationCron(
 		);
 
 		return new Response(
-			`Stale location check completed. Set ${offlineCount} drivers offline.`,
+			"Stale location check completed. Set " +
+				offlineCount +
+				" drivers offline.",
 			{ status: 200 },
 		);
 	} catch (error) {

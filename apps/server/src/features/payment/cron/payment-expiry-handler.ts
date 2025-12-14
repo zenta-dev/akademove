@@ -32,7 +32,7 @@ export async function handlePaymentExpiryCron(
 		await svc.db.transaction(async (tx) => {
 			// Find PENDING payments that have expired
 			const expiredPayments = await tx.query.payment.findMany({
-				where: (f, op) =>
+				where: (f, _op) =>
 					and(
 						eq(f.status, "PENDING"),
 						isNotNull(f.expiresAt),

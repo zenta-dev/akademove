@@ -18,6 +18,7 @@ import 'package:api_client/src/model/auth_get_session200_response.dart';
 import 'package:api_client/src/model/auth_has_access_request.dart';
 import 'package:api_client/src/model/auth_sign_in200_response.dart';
 import 'package:api_client/src/model/auth_sign_out200_response.dart';
+import 'package:api_client/src/model/auth_sign_out_request.dart';
 import 'package:api_client/src/model/auth_sign_up_user201_response.dart';
 import 'package:api_client/src/model/auth_verify_email200_response.dart';
 import 'package:api_client/src/model/auth_verify_email200_response_data.dart';
@@ -511,6 +512,9 @@ ReturnType deserialize<ReturnType, BaseType>(
           as ReturnType;
     case 'AuthSignOut200Response':
       return AuthSignOut200Response.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
+    case 'AuthSignOutRequest':
+      return AuthSignOutRequest.fromJson(value as Map<String, dynamic>)
           as ReturnType;
     case 'AuthSignUpUser201Response':
       return AuthSignUpUser201Response.fromJson(value as Map<String, dynamic>)

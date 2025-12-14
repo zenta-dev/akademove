@@ -61,7 +61,7 @@ export async function handleFcmCleanupCron(
 			);
 
 			// Delete stale tokens
-			const result = await tx
+			await tx
 				.delete(tables.fcmToken)
 				.where(lt(tables.fcmToken.updatedAt, staleThreshold));
 

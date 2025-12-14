@@ -1,5 +1,5 @@
-import { env } from "cloudflare:workers";
 import type { ExecutionContext } from "@cloudflare/workers-types";
+import { eq } from "drizzle-orm";
 import { getManagers, getRepositories, getServices } from "@/core/factory";
 import { logger } from "@/utils/logger";
 
@@ -22,6 +22,10 @@ const DLQ_ALERT_THRESHOLD = 1;
  * 1. Queue handlers fail after all retry attempts
  * 2. Message processing times out
  * 3. Unhandled exceptions in queue handlers
+ *
+ * Note: Cloudflare Queues do not have a direct API to count messages.
+ * This cron relies on a dlq:message_count key being updated by queue handlers
+ * when messages are moved to the DLQ.
  */
 export async function handleDlqMonitorCron(
 	_env: Env,
@@ -35,17 +39,21 @@ export async function handleDlqMonitorCron(
 		const repo = getRepositories(svc, managers);
 		const now = new Date();
 
-		// Note: Cloudflare Queues don't have a direct API to count messages in a queue
-		// We need to track failed messages separately in our system
-		// For now, we'll log a warning that this functionality requires custom tracking
-
-		// Check if we have a way to track DLQ messages
-		// This would typically be done by storing failed message metadata in KV or database
-		const dlqMessagesKey = "dlq:message_count";
-		const dlqMessagesStr = await svc.kv.get(dlqMessagesKey);
-		const dlqMessageCount = dlqMessagesStr
-			? Number.parseInt(dlqMessagesStr, 10)
-			: 0;
+		// Try to get DLQ message count from KV
+		// This key should be incremented by queue handlers when messages fail
+		let dlqMessageCount = 0;
+		try {
+			const countData = await svc.kv.get<{ count: number }>(
+				"dlq:message_count",
+				{
+					fallback: async () => ({ count: 0 }),
+				},
+			);
+			dlqMessageCount = countData.count;
+		} catch {
+			// If key doesn't exist or fails, assume 0 messages
+			logger.debug({}, "[DlqMonitorCron] No DLQ message count found in KV");
+		}
 
 		if (dlqMessageCount < DLQ_ALERT_THRESHOLD) {
 			logger.info(
@@ -53,7 +61,11 @@ export async function handleDlqMonitorCron(
 				"[DlqMonitorCron] DLQ message count below threshold",
 			);
 			return new Response(
-				`DLQ monitor completed. ${dlqMessageCount} messages in DLQ (below threshold of ${DLQ_ALERT_THRESHOLD}).`,
+				"DLQ monitor completed. " +
+					dlqMessageCount +
+					" messages in DLQ (below threshold of " +
+					DLQ_ALERT_THRESHOLD +
+					").",
 				{ status: 200 },
 			);
 		}
@@ -65,7 +77,7 @@ export async function handleDlqMonitorCron(
 
 		// Find admin users to notify
 		const adminUsers = await svc.db.query.user.findMany({
-			where: (f, op) => op.eq(f.role, "ADMIN"),
+			where: (f, _op) => eq(f.role, "ADMIN"),
 			columns: {
 				id: true,
 				name: true,
@@ -80,7 +92,10 @@ export async function handleDlqMonitorCron(
 					fromUserId: admin.id, // System notification from self
 					toUserId: admin.id,
 					title: "DLQ Alert - Failed Messages Detected",
-					body: `There are ${dlqMessageCount} messages in the Dead Letter Queue that require investigation. Check the queue dashboard for details.`,
+					body:
+						"There are " +
+						dlqMessageCount +
+						" messages in the Dead Letter Queue that require investigation. Check the queue dashboard for details.",
 					data: {
 						type: "DLQ_ALERT",
 						messageCount: dlqMessageCount.toString(),
@@ -105,7 +120,11 @@ export async function handleDlqMonitorCron(
 		);
 
 		return new Response(
-			`DLQ monitor completed. Alerted ${adminUsers.length} admins about ${dlqMessageCount} DLQ messages.`,
+			"DLQ monitor completed. Alerted " +
+				adminUsers.length +
+				" admins about " +
+				dlqMessageCount +
+				" DLQ messages.",
 			{ status: 200 },
 		);
 	} catch (error) {

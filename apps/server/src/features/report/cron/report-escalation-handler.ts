@@ -15,8 +15,8 @@ const ESCALATION_THRESHOLD_DAYS = 7;
  * Schedule: Every hour (0 * * * *)
  *
  * Purpose:
- * - Escalate PENDING reports that haven't been handled in 7+ days
- * - Change status to ESCALATED to flag them for immediate attention
+ * - Escalate PENDING reports that have not been handled in 7+ days
+ * - Change status to INVESTIGATING to flag them for immediate attention
  * - Send notifications to admin users about escalated reports
  *
  * This ensures no reports are forgotten and all user concerns are addressed.
@@ -41,7 +41,7 @@ export async function handleReportEscalationCron(
 
 		// Find PENDING reports older than the threshold
 		const oldPendingReports = await svc.db.query.report.findMany({
-			where: (f, op) =>
+			where: (f, _op) =>
 				and(eq(f.status, "PENDING"), lt(f.reportedAt, escalationThreshold)),
 			columns: {
 				id: true,
@@ -78,7 +78,7 @@ export async function handleReportEscalationCron(
 
 		// Find admin users to notify
 		const adminUsers = await svc.db.query.user.findMany({
-			where: (f, op) => eq(f.role, "ADMIN"),
+			where: (f, _op) => eq(f.role, "ADMIN"),
 			columns: {
 				id: true,
 				name: true,
@@ -92,7 +92,7 @@ export async function handleReportEscalationCron(
 				await svc.db.transaction(async (tx) => {
 					await tx
 						.update(tables.report)
-						.set({ status: "ESCALATED" })
+						.set({ status: "INVESTIGATING" })
 						.where(eq(tables.report.id, report.id));
 				});
 

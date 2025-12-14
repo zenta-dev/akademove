@@ -29,7 +29,7 @@ export async function handleCouponExpiryCron(
 		await svc.db.transaction(async (tx) => {
 			// Find active coupons that have expired
 			const expiredCoupons = await tx.query.coupon.findMany({
-				where: (f, op) => and(eq(f.isActive, true), lt(f.periodEnd, now)),
+				where: (f, _op) => and(eq(f.isActive, true), lt(f.periodEnd, now)),
 				columns: {
 					id: true,
 					name: true,

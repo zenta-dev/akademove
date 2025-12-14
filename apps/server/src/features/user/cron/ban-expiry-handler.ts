@@ -29,7 +29,7 @@ export async function handleBanExpiryCron(
 		await svc.db.transaction(async (tx) => {
 			// Find users with expired bans
 			const expiredBans = await tx.query.user.findMany({
-				where: (f, op) =>
+				where: (f, _op) =>
 					and(
 						eq(f.banned, true),
 						isNotNull(f.banExpires),

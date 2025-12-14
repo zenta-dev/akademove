@@ -15,7 +15,7 @@ abstract class _$ListQuickMessageQueryCWProxy {
 
   ListQuickMessageQuery locale(String? locale);
 
-  ListQuickMessageQuery isActive(bool? isActive);
+  ListQuickMessageQuery status(ListQuickMessageQueryStatusEnum? status);
 
   /// Creates a new instance with the provided field values.
   /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `ListQuickMessageQuery(...).copyWith.fieldName(value)`.
@@ -28,7 +28,7 @@ abstract class _$ListQuickMessageQueryCWProxy {
     ListQuickMessageQueryRoleEnum? role,
     ListQuickMessageQueryOrderTypeEnum? orderType,
     String? locale,
-    bool? isActive,
+    ListQuickMessageQueryStatusEnum? status,
   });
 }
 
@@ -53,7 +53,8 @@ class _$ListQuickMessageQueryCWProxyImpl
   ListQuickMessageQuery locale(String? locale) => call(locale: locale);
 
   @override
-  ListQuickMessageQuery isActive(bool? isActive) => call(isActive: isActive);
+  ListQuickMessageQuery status(ListQuickMessageQueryStatusEnum? status) =>
+      call(status: status);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -67,7 +68,7 @@ class _$ListQuickMessageQueryCWProxyImpl
     Object? role = const $CopyWithPlaceholder(),
     Object? orderType = const $CopyWithPlaceholder(),
     Object? locale = const $CopyWithPlaceholder(),
-    Object? isActive = const $CopyWithPlaceholder(),
+    Object? status = const $CopyWithPlaceholder(),
   }) {
     return ListQuickMessageQuery(
       role: role == const $CopyWithPlaceholder()
@@ -82,10 +83,10 @@ class _$ListQuickMessageQueryCWProxyImpl
           ? _value.locale
           // ignore: cast_nullable_to_non_nullable
           : locale as String?,
-      isActive: isActive == const $CopyWithPlaceholder()
-          ? _value.isActive
+      status: status == const $CopyWithPlaceholder()
+          ? _value.status
           // ignore: cast_nullable_to_non_nullable
-          : isActive as bool?,
+          : status as ListQuickMessageQueryStatusEnum?,
     );
   }
 }
@@ -116,7 +117,10 @@ ListQuickMessageQuery _$ListQuickMessageQueryFromJson(
           $enumDecodeNullable(_$ListQuickMessageQueryOrderTypeEnumEnumMap, v),
     ),
     locale: $checkedConvert('locale', (v) => v as String?),
-    isActive: $checkedConvert('isActive', (v) => v as bool?),
+    status: $checkedConvert(
+      'status',
+      (v) => $enumDecodeNullable(_$ListQuickMessageQueryStatusEnumEnumMap, v),
+    ),
   );
   return val;
 });
@@ -127,7 +131,7 @@ Map<String, dynamic> _$ListQuickMessageQueryToJson(
   'role': ?_$ListQuickMessageQueryRoleEnumEnumMap[instance.role],
   'orderType': ?_$ListQuickMessageQueryOrderTypeEnumEnumMap[instance.orderType],
   'locale': ?instance.locale,
-  'isActive': ?instance.isActive,
+  'status': ?_$ListQuickMessageQueryStatusEnumEnumMap[instance.status],
 };
 
 const _$ListQuickMessageQueryRoleEnumEnumMap = {
@@ -142,4 +146,9 @@ const _$ListQuickMessageQueryOrderTypeEnumEnumMap = {
   ListQuickMessageQueryOrderTypeEnum.RIDE: 'RIDE',
   ListQuickMessageQueryOrderTypeEnum.DELIVERY: 'DELIVERY',
   ListQuickMessageQueryOrderTypeEnum.FOOD: 'FOOD',
+};
+
+const _$ListQuickMessageQueryStatusEnumEnumMap = {
+  ListQuickMessageQueryStatusEnum.ACTIVE: 'ACTIVE',
+  ListQuickMessageQueryStatusEnum.INACTIVE: 'INACTIVE',
 };

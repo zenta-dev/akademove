@@ -66,6 +66,7 @@ class SharedOrderChatCubit extends BaseCubit<SharedOrderChatState> {
   void _handleWebSocketMessage(String data) {
     try {
       final json = data.parseJson();
+      logger.d('[SharedOrderChatCubit] Received WebSocket message: $json');
       if (json is! Map<String, dynamic>) return;
 
       final envelope = OrderEnvelope.fromJson(json);
@@ -117,7 +118,18 @@ class SharedOrderChatCubit extends BaseCubit<SharedOrderChatState> {
     final isDuplicate = existingMessages.any((m) => m.id == newMessage.id);
     if (!isDuplicate) {
       final updatedMessages = [newMessage, ...existingMessages];
-      emit(state.copyWith(messages: OperationResult.success(updatedMessages)));
+
+      // Increment unread count since this message is from someone else
+      // (the sender is excluded from WebSocket broadcast, so any message
+      // received here is from a peer and should increment unread count)
+      final currentUnreadCount = state.unreadCount.value ?? 0;
+
+      emit(
+        state.copyWith(
+          messages: OperationResult.success(updatedMessages),
+          unreadCount: OperationResult.success(currentUnreadCount + 1),
+        ),
+      );
     }
   }
 

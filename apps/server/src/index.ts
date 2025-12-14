@@ -3,13 +3,22 @@ import "./polyfill";
 import type { QueueMessage } from "@repo/schema/queue";
 import { setupHonoRouter } from "@/core/router/hono";
 import { setupOrpcRouter } from "./core/router/orpc";
+import { handleAccountDeletionCron } from "./features/account-deletion/cron/account-deletion-cron";
+import { handleBannerExpiryCron } from "./features/banner/cron/banner-expiry-handler";
+import { handleCouponExpiryCron } from "./features/coupon/cron/coupon-expiry-handler";
 import { handleAutoOfflineCron } from "./features/driver/cron/auto-offline-handler";
+import { handleStaleLocationCron } from "./features/driver/cron/stale-location-handler";
 import { handleLeaderboardCron } from "./features/leaderboard/leaderboard-cron";
+import { handleFcmCleanupCron } from "./features/notification/cron/fcm-cleanup-handler";
 import { handleDriverRebroadcastCron } from "./features/order/driver-rebroadcast-cron";
 import { handleOrderCheckerCron } from "./features/order/order-checker-cron";
 import { handleOrderRebroadcastCron } from "./features/order/order-rebroadcast-cron";
 import { handleScheduledOrderCron } from "./features/order/scheduled-order-cron";
+import { handlePaymentExpiryCron } from "./features/payment/cron/payment-expiry-handler";
+import { handleDlqMonitorCron } from "./features/queue/cron/dlq-monitor-handler";
 import { handleQueue } from "./features/queue/queue-handler";
+import { handleReportEscalationCron } from "./features/report/cron/report-escalation-handler";
+import { handleBanExpiryCron } from "./features/user/cron/ban-expiry-handler";
 import { setupWebsocketRouter } from "./features/ws";
 import { logger } from "./utils/logger";
 
@@ -66,6 +75,13 @@ export default {
 					logger.error({ error }, "[Cron] Order checker handler failed");
 				}),
 			);
+
+			// Every 5 minutes: Mark drivers as offline if their location hasn't been updated in 15 minutes
+			ctx.waitUntil(
+				handleStaleLocationCron(env, ctx).catch((error) => {
+					logger.error({ error }, "[Cron] Stale location handler failed");
+				}),
+			);
 		}
 
 		// Every 15 minutes: Calculate leaderboards
@@ -77,6 +93,72 @@ export default {
 						{ error },
 						"[Cron] Leaderboard calculation handler failed",
 					);
+				}),
+			);
+		}
+
+		// Hourly: Ban expiry, Payment expiry, Report escalation, DLQ monitor
+		if (event.cron === "0 * * * *") {
+			// Clear expired user bans
+			ctx.waitUntil(
+				handleBanExpiryCron(env, ctx).catch((error) => {
+					logger.error({ error }, "[Cron] Ban expiry handler failed");
+				}),
+			);
+
+			// Mark expired payments as EXPIRED
+			ctx.waitUntil(
+				handlePaymentExpiryCron(env, ctx).catch((error) => {
+					logger.error({ error }, "[Cron] Payment expiry handler failed");
+				}),
+			);
+
+			// Escalate stale PENDING reports to INVESTIGATING
+			ctx.waitUntil(
+				handleReportEscalationCron(env, ctx).catch((error) => {
+					logger.error({ error }, "[Cron] Report escalation handler failed");
+				}),
+			);
+
+			// Alert admins if DLQ has messages
+			ctx.waitUntil(
+				handleDlqMonitorCron(env, ctx).catch((error) => {
+					logger.error({ error }, "[Cron] DLQ monitor handler failed");
+				}),
+			);
+		}
+
+		// Daily at midnight: Coupon expiry, Banner expiry
+		if (event.cron === "0 0 * * *") {
+			// Deactivate expired coupons
+			ctx.waitUntil(
+				handleCouponExpiryCron(env, ctx).catch((error) => {
+					logger.error({ error }, "[Cron] Coupon expiry handler failed");
+				}),
+			);
+
+			// Deactivate expired banners
+			ctx.waitUntil(
+				handleBannerExpiryCron(env, ctx).catch((error) => {
+					logger.error({ error }, "[Cron] Banner expiry handler failed");
+				}),
+			);
+		}
+
+		// Daily at 2 AM: Account deletion processing
+		if (event.cron === "0 2 * * *") {
+			ctx.waitUntil(
+				handleAccountDeletionCron(env, ctx).catch((error) => {
+					logger.error({ error }, "[Cron] Account deletion handler failed");
+				}),
+			);
+		}
+
+		// Weekly on Sunday at 4 AM: FCM token cleanup
+		if (event.cron === "0 4 * * 0") {
+			ctx.waitUntil(
+				handleFcmCleanupCron(env, ctx).catch((error) => {
+					logger.error({ error }, "[Cron] FCM cleanup handler failed");
 				}),
 			);
 		}

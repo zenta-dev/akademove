@@ -140,7 +140,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **quickMessageList**
-> QuickMessageList200Response quickMessageList(role, orderType, locale, isActive)
+> QuickMessageList200Response quickMessageList(role, orderType, locale, status)
 
 
 
@@ -152,10 +152,10 @@ final api = ApiClient().getChatApi();
 final String role = role_example; // String | 
 final String orderType = orderType_example; // String | 
 final String locale = locale_example; // String | 
-final bool isActive = true; // bool | 
+final String status = status_example; // String | 
 
 try {
-    final response = api.quickMessageList(role, orderType, locale, isActive);
+    final response = api.quickMessageList(role, orderType, locale, status);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling ChatApi->quickMessageList: $e\n');
@@ -169,7 +169,7 @@ Name | Type | Description  | Notes
  **role** | **String**|  | [optional] 
  **orderType** | **String**|  | [optional] 
  **locale** | **String**|  | [optional] 
- **isActive** | **bool**|  | [optional] 
+ **status** | **String**|  | [optional] 
 
 ### Return type
 

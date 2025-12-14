@@ -28,6 +28,7 @@ doc/AuthGetSession200Response.md
 doc/AuthHasAccessRequest.md
 doc/AuthSignIn200Response.md
 doc/AuthSignOut200Response.md
+doc/AuthSignOutRequest.md
 doc/AuthSignUpUser201Response.md
 doc/AuthVerifyEmail200Response.md
 doc/AuthVerifyEmail200ResponseData.md
@@ -570,6 +571,7 @@ lib/src/model/auth_get_session200_response.dart
 lib/src/model/auth_has_access_request.dart
 lib/src/model/auth_sign_in200_response.dart
 lib/src/model/auth_sign_out200_response.dart
+lib/src/model/auth_sign_out_request.dart
 lib/src/model/auth_sign_up_user201_response.dart
 lib/src/model/auth_verify_email200_response.dart
 lib/src/model/auth_verify_email200_response_data.dart

@@ -29,7 +29,7 @@ export async function handleBannerExpiryCron(
 		await svc.db.transaction(async (tx) => {
 			// Find active banners that have expired (endAt is set and has passed)
 			const expiredBanners = await tx.query.banner.findMany({
-				where: (f, op) =>
+				where: (f, _op) =>
 					and(eq(f.isActive, true), isNotNull(f.endAt), lt(f.endAt, now)),
 				columns: {
 					id: true,

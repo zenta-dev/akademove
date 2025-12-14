@@ -55,6 +55,7 @@ export 'package:api_client/src/model/auth_get_session200_response.dart';
 export 'package:api_client/src/model/auth_has_access_request.dart';
 export 'package:api_client/src/model/auth_sign_in200_response.dart';
 export 'package:api_client/src/model/auth_sign_out200_response.dart';
+export 'package:api_client/src/model/auth_sign_out_request.dart';
 export 'package:api_client/src/model/auth_sign_up_user201_response.dart';
 export 'package:api_client/src/model/auth_verify_email200_response.dart';
 export 'package:api_client/src/model/auth_verify_email200_response_data.dart';

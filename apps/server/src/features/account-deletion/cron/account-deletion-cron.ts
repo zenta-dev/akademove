@@ -43,7 +43,7 @@ export async function handleAccountDeletionCron(
 
 		// Find APPROVED deletion requests that have passed the grace period
 		const pendingDeletions = await svc.db.query.accountDeletion.findMany({
-			where: (f, op) =>
+			where: (f, _op) =>
 				and(
 					eq(f.status, "APPROVED"),
 					isNotNull(f.reviewedAt),
