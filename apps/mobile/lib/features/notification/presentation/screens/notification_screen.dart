@@ -47,6 +47,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
     return Scaffold(
       headers: [
         AppBar(
+          padding: EdgeInsets.all(16.r),
           leading: [
             IconButton(
               icon: const Icon(LucideIcons.arrowLeft),

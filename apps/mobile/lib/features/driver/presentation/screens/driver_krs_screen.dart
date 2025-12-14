@@ -52,7 +52,7 @@ class _DriverKrsScreenState extends State<DriverKrsScreen> {
       headers: [
         DefaultAppBar(
           title: context.l10n.my_schedule,
-          padding: EdgeInsets.symmetric(horizontal: 16.r, vertical: 9.r),
+          padding: EdgeInsets.all(16.r),
           trailing: [
             IconButton(
               icon: const Icon(LucideIcons.plus),

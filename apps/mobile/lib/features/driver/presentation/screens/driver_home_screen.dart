@@ -64,9 +64,12 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
         builder: (context, state) {
           return Scaffold(
             headers: [
-              DefaultAppBar(
+              AppBar(
                 padding: EdgeInsets.all(16.r),
-                title: context.l10n.driver_dashboard,
+                title: Text(
+                  context.l10n.driver_dashboard,
+                  style: context.typography.h4.copyWith(fontSize: 18.sp),
+                ),
                 trailing: [
                   BlocBuilder<SharedNotificationCubit, SharedNotificationState>(
                     builder: (context, notificationState) {
