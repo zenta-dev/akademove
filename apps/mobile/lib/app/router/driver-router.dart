@@ -129,11 +129,33 @@ final driverRouter = StatefulShellRoute.indexedStack(
               name: Routes.driverOrderCompletion.name,
               path: 'order-completion',
               builder: (context, state) {
-                final extra = state.extra as Map<String, dynamic>;
+                final extra = state.extra as Map<String, dynamic>?;
 
-                final orderId = extra['orderId'] as String;
-                final orderType = extra['orderType'] as OrderType;
-                final order = extra['order'] as Order;
+                // Handle missing route parameters gracefully
+                if (extra == null) {
+                  // Navigate back to home if route data is missing
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    context.goNamed(Routes.driverHome.name);
+                  });
+                  return const Scaffold(
+                    child: Center(child: CircularProgressIndicator()),
+                  );
+                }
+
+                final orderId = extra['orderId'] as String?;
+                final orderType = extra['orderType'] as OrderType?;
+                final order = extra['order'] as Order?;
+
+                // Validate required parameters
+                if (orderId == null || orderType == null || order == null) {
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    context.goNamed(Routes.driverHome.name);
+                  });
+                  return const Scaffold(
+                    child: Center(child: CircularProgressIndicator()),
+                  );
+                }
+
                 final driverUser = extra['user'] as DriverUser?;
                 final merchant = extra['merchant'] as Merchant?;
                 final payment = extra['payment'] as Payment?;

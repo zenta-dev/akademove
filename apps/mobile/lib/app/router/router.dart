@@ -7,7 +7,9 @@ import 'package:akademove/locator.dart';
 import 'package:api_client/api_client.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:shadcn_flutter/shadcn_flutter.dart' show LucideIcons;
+import 'package:flutter/widgets.dart' show WidgetsBinding;
+import 'package:shadcn_flutter/shadcn_flutter.dart'
+    show LucideIcons, Scaffold, CircularProgressIndicator, Center;
 
 part 'auth-router.dart';
 part 'driver-router.dart';
