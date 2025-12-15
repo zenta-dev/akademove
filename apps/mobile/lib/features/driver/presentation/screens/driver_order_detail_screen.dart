@@ -351,7 +351,7 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
             Future.delayed(const Duration(milliseconds: 500), () {
               if (mounted && context.mounted) {
                 // Navigate to order completion/review screen
-                context.goNamed(
+                context.pushNamed(
                   Routes.driverOrderCompletion.name,
                   extra: {
                     'orderId': order.id,
@@ -1165,7 +1165,7 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
             width: double.infinity,
             child: PrimaryButton(
               onPressed: () {
-                context.goNamed(
+                context.pushNamed(
                   Routes.driverOrderCompletion.name,
                   extra: {
                     'orderId': order.id,
@@ -1184,7 +1184,7 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
           SizedBox(
             width: double.infinity,
             child: OutlineButton(
-              onPressed: () => context.goNamed(Routes.driverHome.name),
+              onPressed: () => context.pushNamed(Routes.driverHome.name),
               child: Text(context.l10n.back_to_home),
             ),
           ),
@@ -1196,7 +1196,7 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
     return SizedBox(
       width: double.infinity,
       child: PrimaryButton(
-        onPressed: () => context.goNamed(Routes.driverHome.name),
+        onPressed: () => context.pushNamed(Routes.driverHome.name),
         child: Text(context.l10n.back_to_home),
       ),
     );

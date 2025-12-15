@@ -38,14 +38,17 @@ class DriverProfileCubit extends BaseCubit<DriverProfileState> {
     required DriverRepository driverRepository,
     required OrderRepository orderRepository,
     required ConfigurationRepository configurationRepository,
+    required UserRepository userRepository,
   }) : _driverRepository = driverRepository,
        _orderRepository = orderRepository,
        _configurationRepository = configurationRepository,
+       _userRepository = userRepository,
        super(const DriverProfileState());
 
   final DriverRepository _driverRepository;
   final OrderRepository _orderRepository;
   final ConfigurationRepository _configurationRepository;
+  final UserRepository _userRepository;
 
   double? _platformFeeRate;
 
@@ -304,63 +307,93 @@ class DriverProfileCubit extends BaseCubit<DriverProfileState> {
   });
 
   /// Update profile with full request object.
-  Future<void> updateProfile(DriverUpdateProfileRequest req) async =>
-      await taskManager.execute('DPC-uP5-${driver?.id}', () async {
-        final currentDriver = driver;
-        if (currentDriver == null) return;
+  /// Updates both user fields (name, email, phone, photo) and driver fields
+  /// (studentId, licensePlate, documents, bank).
+  Future<void> updateProfile(
+    DriverUpdateProfileRequest req,
+  ) async => await taskManager.execute('DPC-uP5-${driver?.id}', () async {
+    final currentDriver = driver;
+    if (currentDriver == null) return;
 
-        try {
-          emit(
-            state.copyWith(
-              updateProfileResult: const OperationResult.loading(),
-            ),
-          );
+    try {
+      emit(
+        state.copyWith(updateProfileResult: const OperationResult.loading()),
+      );
 
-          final photoPath = req.photoPath;
-          final photo = photoPath != null
-              ? await MultipartFile.fromFile(photoPath)
-              : null;
+      // Check if there are user fields to update
+      final hasUserFields =
+          req.name != null ||
+          req.email != null ||
+          req.phone != null ||
+          req.photoPath != null;
 
-          final studentCardPath = req.studentCardPath;
-          final studentCard = studentCardPath != null
-              ? await MultipartFile.fromFile(studentCardPath)
-              : null;
+      // Check if there are driver fields to update
+      final hasDriverFields =
+          req.studentId != null ||
+          req.licensePlate != null ||
+          req.studentCardPath != null ||
+          req.driverLicensePath != null ||
+          req.vehicleCertificatePath != null ||
+          req.bank != null;
 
-          final driverLicensePath = req.driverLicensePath;
-          final driverLicense = driverLicensePath != null
-              ? await MultipartFile.fromFile(driverLicensePath)
-              : null;
+      // Update user fields if present
+      if (hasUserFields) {
+        await _userRepository.updateProfile(
+          UpdateProfileRequest(
+            name: req.name,
+            email: req.email,
+            phone: req.phone,
+            photoPath: req.photoPath,
+          ),
+        );
+      }
 
-          final vehicleCertificatePath = req.vehicleCertificatePath;
-          final vehicleCertificate = vehicleCertificatePath != null
-              ? await MultipartFile.fromFile(vehicleCertificatePath)
-              : null;
+      // Update driver fields if present
+      if (hasDriverFields) {
+        final studentCardPath = req.studentCardPath;
+        final studentCard = studentCardPath != null
+            ? await MultipartFile.fromFile(studentCardPath)
+            : null;
 
-          final res = await _driverRepository.update(
-            driverId: currentDriver.id,
-            studentId: req.studentId,
-            licensePlate: req.licensePlate,
-            studentCard: studentCard ?? photo,
-            driverLicense: driverLicense,
-            vehicleCertificate: vehicleCertificate,
-            bank: req.bank,
-          );
+        final driverLicensePath = req.driverLicensePath;
+        final driverLicense = driverLicensePath != null
+            ? await MultipartFile.fromFile(driverLicensePath)
+            : null;
 
-          emit(
-            state.copyWith(
-              driver: res.data,
-              updateProfileResult: OperationResult.success(res.data),
-            ),
-          );
-        } on BaseError catch (e, st) {
-          logger.e(
-            '[DriverProfileCubit] - Error updating profile: ${e.message}',
-            error: e,
-            stackTrace: st,
-          );
-          emit(state.copyWith(updateProfileResult: OperationResult.failed(e)));
-        }
-      });
+        final vehicleCertificatePath = req.vehicleCertificatePath;
+        final vehicleCertificate = vehicleCertificatePath != null
+            ? await MultipartFile.fromFile(vehicleCertificatePath)
+            : null;
+
+        await _driverRepository.update(
+          driverId: currentDriver.id,
+          studentId: req.studentId,
+          licensePlate: req.licensePlate,
+          studentCard: studentCard,
+          driverLicense: driverLicense,
+          vehicleCertificate: vehicleCertificate,
+          bank: req.bank,
+        );
+      }
+
+      // Fetch the updated driver profile to get all changes including user data
+      final res = await _driverRepository.getMine();
+
+      emit(
+        state.copyWith(
+          driver: res.data,
+          updateProfileResult: OperationResult.success(res.data),
+        ),
+      );
+    } on BaseError catch (e, st) {
+      logger.e(
+        '[DriverProfileCubit] - Error updating profile: ${e.message}',
+        error: e,
+        stackTrace: st,
+      );
+      emit(state.copyWith(updateProfileResult: OperationResult.failed(e)));
+    }
+  });
 
   /// Update password.
   Future<void> updatePassword(
