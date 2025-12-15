@@ -46,7 +46,7 @@ export async function handleWebSocketBroadcast(
 			? {
 					a: action,
 					f: "s", // from server
-					t: "s", // to client (broadcasts go to connected WebSocket clients)
+					t: "c", // to client (broadcasts go to connected WebSocket clients)
 					tg: target,
 					p: data,
 				}
