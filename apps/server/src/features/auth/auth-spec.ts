@@ -199,7 +199,13 @@ export const AuthSpec = {
 		.input(z.object({ body: SendEmailVerificationSchema }))
 		.output(
 			z.union([
-				createSuccesSchema(z.boolean(), "Email verification sent successfully"),
+				createSuccesSchema(
+					z.boolean(),
+					"Email verification sent successfully",
+					{
+						status: 202,
+					},
+				),
 			]),
 		),
 	verifyEmail: oc
