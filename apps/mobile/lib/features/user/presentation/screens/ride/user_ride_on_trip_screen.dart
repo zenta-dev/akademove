@@ -318,10 +318,14 @@ class _UserRideOnTripScreenState extends State<UserRideOnTripScreen> {
     if (currentOrder?.status == OrderStatus.COMPLETED &&
         mounted &&
         context.mounted) {
-      context.read<UserOrderCubit>().clearActiveOrder();
-      // Navigate to order completion screen
+      // Read driver/payment data BEFORE clearing to avoid race condition
       final driver = state.currentAssignedDriver.value;
       final payment = state.currentPayment.value;
+
+      // Clear active order AFTER reading data
+      context.read<UserOrderCubit>().clearActiveOrder();
+
+      // Navigate to order completion screen
       if (driver != null && currentOrder != null) {
         final result = await context.pushNamed(
           Routes.userOrderCompletion.name,

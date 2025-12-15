@@ -29,6 +29,7 @@ interface OrderData {
 	userId: string;
 	driverId: string | null;
 	completedDriverId: string | null;
+	merchantId: string | null;
 }
 
 /**
@@ -87,7 +88,8 @@ export class ReviewEligibilityService {
 
 	/**
 	 * Check if user is participant in the order
-	 * User must be either the customer (userId) or the driver (via driver.userId lookup)
+	 * User must be either the customer (userId), the driver (via driver.userId lookup),
+	 * or the merchant (via merchant.userId lookup for FOOD orders)
 	 *
 	 * Note: For driver comparison, we need to look up the driver record to get userId
 	 * This method checks driverId directly; for full validation use isUserOrderParticipantAsync
@@ -95,12 +97,14 @@ export class ReviewEligibilityService {
 	 * @param order - Order data
 	 * @param userId - User ID to check
 	 * @param driverUserId - Optional driver's userId (from driver table lookup)
+	 * @param merchantUserId - Optional merchant's userId (from merchant table lookup)
 	 * @returns True if user is part of the order
 	 */
 	static isUserOrderParticipant(
 		order: OrderData,
 		userId: string,
 		driverUserId?: string | null,
+		merchantUserId?: string | null,
 	): boolean {
 		// Check if user is the customer
 		if (order.userId === userId) {
@@ -112,6 +116,11 @@ export class ReviewEligibilityService {
 			return true;
 		}
 
+		// Check if user is the merchant (via merchantUserId lookup)
+		if (merchantUserId && merchantUserId === userId) {
+			return true;
+		}
+
 		return false;
 	}
 
@@ -119,13 +128,14 @@ export class ReviewEligibilityService {
 	 * Determine if user can review an order
 	 * Combines all eligibility rules:
 	 * 1. Order must be completed
-	 * 2. User must be participant (customer or driver)
+	 * 2. User must be participant (customer, driver, or merchant)
 	 * 3. User must not have already reviewed
 	 *
 	 * @param order - Order data
 	 * @param userId - User ID attempting to review
 	 * @param alreadyReviewed - Whether user already reviewed
 	 * @param driverUserId - Driver's user ID (from driver table lookup)
+	 * @param merchantUserId - Merchant's user ID (from merchant table lookup)
 	 * @returns True if user can submit review
 	 */
 	static canUserReviewOrder(
@@ -133,6 +143,7 @@ export class ReviewEligibilityService {
 		userId: string,
 		alreadyReviewed: boolean,
 		driverUserId?: string | null,
+		merchantUserId?: string | null,
 	): boolean {
 		const orderCompleted = ReviewEligibilityService.isOrderReviewable(
 			order.status,
@@ -141,6 +152,7 @@ export class ReviewEligibilityService {
 			order,
 			userId,
 			driverUserId,
+			merchantUserId,
 		);
 
 		return orderCompleted && isParticipant && !alreadyReviewed;
@@ -190,10 +202,22 @@ export class ReviewEligibilityService {
 				driverUserId = driver?.userId ?? null;
 			}
 
+			// Get merchant's userId for comparison (for FOOD orders)
+			let merchantUserId: string | null = null;
+
+			if (order.merchantId) {
+				const merchantId = order.merchantId;
+				const merchant = await db.query.merchant.findFirst({
+					where: (f, op) => op.eq(f.id, merchantId),
+				});
+				merchantUserId = merchant?.userId ?? null;
+			}
+
 			const isParticipant = ReviewEligibilityService.isUserOrderParticipant(
 				order,
 				userId,
 				driverUserId,
+				merchantUserId,
 			);
 
 			// Check if already reviewed
