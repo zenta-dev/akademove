@@ -43,9 +43,21 @@ export class OrderRoom extends BaseDurableObject {
 	broadcast(message: OrderEnvelope, opts?: BroadcastOptions): void {
 		const parse = OrderEnvelopeSchema.safeParse(message);
 		if (!parse.success) {
-			logger.warn(parse, "Invalid order WS message");
+			logger.warn(
+				{ zodError: parse.error, message },
+				"[OrderRoom] Invalid order WS message - validation failed",
+			);
 			return;
 		}
+		logger.debug(
+			{
+				event: parse.data.e,
+				action: parse.data.a,
+				target: parse.data.tg,
+				sessionCount: this.sessions.size,
+			},
+			"[OrderRoom] Broadcasting message to connected sessions",
+		);
 		super.broadcast(parse.data, opts);
 	}
 
@@ -67,6 +79,11 @@ export class OrderRoom extends BaseDurableObject {
 					| OrderEnvelope
 					| { message: OrderEnvelope; excludeUserIds?: string[] };
 
+				logger.debug(
+					{ body, roomId: this.ctx.id.toString() },
+					"[OrderRoom] Received broadcast request",
+				);
+
 				// FIX: Handle both direct OrderEnvelope and wrapped format from WebSocketBroadcastHandler
 				// The queue handler wraps the message in { message, excludeUserIds }
 				const isWrappedFormat =
@@ -84,6 +101,16 @@ export class OrderRoom extends BaseDurableObject {
 					? (body as { message: OrderEnvelope; excludeUserIds?: string[] })
 							.excludeUserIds
 					: undefined;
+
+				logger.debug(
+					{
+						envelope,
+						isWrappedFormat,
+						excludeUserIds,
+						connectedSessions: this.sessions.size,
+					},
+					"[OrderRoom] Parsed broadcast envelope",
+				);
 
 				// Convert excludeUserIds to WebSocket array for broadcast options
 				const excludes = excludeUserIds?.length

@@ -25,9 +25,9 @@ export async function handleWebSocketBroadcast(
 
 	const messageType = action ?? event;
 
-	logger.debug(
-		{ roomName, event, action, target },
-		"[WebSocketBroadcastHandler] Broadcasting message",
+	logger.info(
+		{ roomName, event, action, target, hasData: !!data },
+		"[WebSocketBroadcastHandler] Processing broadcast job",
 	);
 
 	try {
@@ -46,7 +46,7 @@ export async function handleWebSocketBroadcast(
 			? {
 					a: action,
 					f: "s", // from server
-					t: "c", // to client (broadcasts go to connected WebSocket clients)
+					t: "s", // to client (broadcasts go to connected WebSocket clients)
 					tg: target,
 					p: data,
 				}
@@ -77,9 +77,9 @@ export async function handleWebSocketBroadcast(
 			throw new Error(`Broadcast failed: ${errorText}`);
 		}
 
-		logger.debug(
-			{ roomName, messageType },
-			"[WebSocketBroadcastHandler] Broadcast completed",
+		logger.info(
+			{ roomName, messageType, status: response.status },
+			"[WebSocketBroadcastHandler] Broadcast completed successfully",
 		);
 	} catch (error) {
 		logger.error(
