@@ -3,27 +3,36 @@ import 'package:akademove/features/features.dart';
 import 'package:api_client/api_client.dart';
 
 class UserMartCubit extends BaseCubit<UserMartState> {
-  UserMartCubit({required MerchantRepository merchantRepository})
-    : _merchantRepository = merchantRepository,
-      super(const UserMartState());
+  UserMartCubit({
+    required MerchantRepository merchantRepository,
+    required LocationService locationService,
+  }) : _merchantRepository = merchantRepository,
+       _locationService = locationService,
+       super(const UserMartState());
 
   final MerchantRepository _merchantRepository;
+  final LocationService _locationService;
 
-  /// Load mart home screen data (best sellers + recent orders)
+  /// Load mart home screen data (best sellers + nearby merchants)
   Future<void>
   loadMartHome() async => await taskManager.execute('UMC-lMH', () async {
     try {
       emit(
         state.copyWith(
           bestSellers: const OperationResult.loading(),
-          // recentOrders: const OperationResult.loading(), // Optional: load separately or together
+          nearbyMerchants: const OperationResult.loading(),
         ),
       );
 
-      // Load best sellers from API
-      final bestSellersRes = await _merchantRepository.getBestSellers(
-        limit: 20,
-      );
+      // Load best sellers and nearby merchants in parallel
+      final results = await Future.wait([
+        _merchantRepository.getBestSellers(limit: 20),
+        _loadNearbyMerchantsInternal(),
+      ]);
+
+      final bestSellersRes =
+          results[0]
+              as BaseResponse<List<MerchantBestSellers200ResponseDataInner>>;
 
       // Convert best seller items to BestSellerItem (menu + merchant name)
       final bestSellers = bestSellersRes.data.map((item) {
@@ -48,6 +57,8 @@ class UserMartCubit extends BaseCubit<UserMartState> {
       // For now, we don't have a specific API endpoint for user's recent mart orders
       final recentOrders = <Order>[];
 
+      final nearbyRes = results[1] as BaseResponse<List<Merchant>>?;
+
       emit(
         state.copyWith(
           bestSellers: OperationResult.success(
@@ -55,6 +66,12 @@ class UserMartCubit extends BaseCubit<UserMartState> {
             message: bestSellersRes.message,
           ),
           recentOrders: OperationResult.success(recentOrders),
+          nearbyMerchants: nearbyRes != null
+              ? OperationResult.success(
+                  nearbyRes.data,
+                  message: nearbyRes.message,
+                )
+              : OperationResult.success(<Merchant>[]),
         ),
       );
     } on BaseError catch (e, st) {
@@ -66,6 +83,64 @@ class UserMartCubit extends BaseCubit<UserMartState> {
       emit(state.copyWith(bestSellers: OperationResult.failed(e)));
     }
   });
+
+  /// Internal method to load nearby merchants
+  Future<BaseResponse<List<Merchant>>?> _loadNearbyMerchantsInternal() async {
+    try {
+      final location = await _locationService.getMyLocation(
+        fromCache: true,
+        timeout: const Duration(seconds: 10),
+      );
+
+      if (location == null) {
+        logger.w(
+          '[UserMartCubit] - Could not get user location for nearby merchants',
+        );
+        return null;
+      }
+
+      return await _merchantRepository.listNearby(
+        latitude: location.y.toDouble(),
+        longitude: location.x.toDouble(),
+        maxDistance: 5000, // 5km radius
+        limit: 10,
+      );
+    } catch (e, st) {
+      logger.e(
+        '[UserMartCubit] - loadNearbyMerchants Error: $e',
+        error: e,
+        stackTrace: st,
+      );
+      return null;
+    }
+  }
+
+  /// Load nearby merchants separately (can be called to refresh)
+  Future<void> loadNearbyMerchants() async => await taskManager.execute(
+    'UMC-lNM',
+    () async {
+      try {
+        emit(state.copyWith(nearbyMerchants: const OperationResult.loading()));
+
+        final res = await _loadNearbyMerchantsInternal();
+
+        emit(
+          state.copyWith(
+            nearbyMerchants: res != null
+                ? OperationResult.success(res.data, message: res.message)
+                : OperationResult.success(<Merchant>[]),
+          ),
+        );
+      } on BaseError catch (e, st) {
+        logger.e(
+          '[UserMartCubit] - loadNearbyMerchants Error: ${e.message}',
+          error: e,
+          stackTrace: st,
+        );
+        emit(state.copyWith(nearbyMerchants: OperationResult.failed(e)));
+      }
+    },
+  );
 
   /// Load merchants by category (ATK, Printing, Food)
   /// Uses backend category filtering to show merchants with matching categories
@@ -85,6 +160,7 @@ class UserMartCubit extends BaseCubit<UserMartState> {
           final res = await _merchantRepository.list(
             category: category,
             isActive: true, // Only show active merchants
+            status: MerchantStatus.APPROVED, // Only show approved merchants
             operatingStatus: 'OPEN', // Only show open merchants
             limit: 50, // Get reasonable number of merchants per category
           );

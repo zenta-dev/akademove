@@ -1,0 +1,1 @@
+ALTER TABLE "am_coupons" ADD COLUMN "service_types" jsonb;

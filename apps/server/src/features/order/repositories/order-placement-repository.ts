@@ -196,6 +196,12 @@ export class OrderPlacementRepository extends OrderBaseRepository {
 			OrderValidationService.validateMenuItems(menus, itemIds);
 			OrderValidationService.validateSingleMerchant(menus);
 
+			// Validate stock availability for FOOD orders at placement time
+			// This fails fast before charging the user's wallet
+			if (params.type === "FOOD" && menus.length > 0) {
+				OrderValidationService.validateStockAtPlacement(menus, params.items);
+			}
+
 			const now = new Date();
 
 			const safeTotalCost = toStringNumberSafe(finalTotalCost);

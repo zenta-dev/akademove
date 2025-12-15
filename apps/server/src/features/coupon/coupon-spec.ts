@@ -160,7 +160,12 @@ export const CouponSpec = {
 			inputStructure: "detailed",
 			outputStructure: "detailed",
 		})
-		.input(z.object({ params: z.object({ id: z.string() }) }))
+		.input(
+			z.object({
+				params: z.object({ id: z.string() }),
+				body: z.object({}).nullish(),
+			}),
+		)
 		.output(createSuccesSchema(CouponSchema, "Coupon activated successfully")),
 	deactivate: oc
 		.route({
@@ -170,7 +175,12 @@ export const CouponSpec = {
 			inputStructure: "detailed",
 			outputStructure: "detailed",
 		})
-		.input(z.object({ params: z.object({ id: z.string() }) }))
+		.input(
+			z.object({
+				params: z.object({ id: z.string() }),
+				body: z.object({}).nullish(),
+			}),
+		)
 		.output(
 			createSuccesSchema(CouponSchema, "Coupon deactivated successfully"),
 		),

@@ -44,7 +44,6 @@ class SignInScreen extends StatelessWidget {
                   ).gap(8.h),
                   Gap(16.h),
                   Card(
-                    padding: EdgeInsets.all(8.dg),
                     child: SizedBox(
                       width: size.width.w,
                       child: const _SignInFormView(),

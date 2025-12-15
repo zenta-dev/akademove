@@ -26,6 +26,7 @@ export const MerchantOrderSpec = {
 					merchantId: z.string(),
 					id: z.string(),
 				}),
+				body: z.object({}).nullish(), // Allow null, undefined, or empty object (Dart client sends null when no body)
 			}),
 		)
 		.output(createSuccesSchema(OrderSchema, "Order accepted successfully")),
@@ -67,6 +68,7 @@ export const MerchantOrderSpec = {
 					merchantId: z.string(),
 					id: z.string(),
 				}),
+				body: z.object({}).nullish(), // Allow null, undefined, or empty object (Dart client sends null when no body)
 			}),
 		)
 		.output(
@@ -87,6 +89,7 @@ export const MerchantOrderSpec = {
 					merchantId: z.string(),
 					id: z.string(),
 				}),
+				body: z.object({}).nullish(), // Allow null, undefined, or empty object (Dart client sends null when no body)
 			}),
 		)
 		.output(

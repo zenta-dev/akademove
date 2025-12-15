@@ -351,7 +351,7 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
             Future.delayed(const Duration(milliseconds: 500), () {
               if (mounted && context.mounted) {
                 // Navigate to order completion/review screen
-                context.goNamed(
+                context.pushNamed(
                   Routes.driverOrderCompletion.name,
                   extra: {
                     'orderId': order.id,
@@ -435,6 +435,35 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
                           _buildStatusIndicator(context, status),
                         _buildCustomerInfo(order),
                         _buildOrderInfo(order),
+                        // Show timeline for completed/cancelled orders
+                        // Show scheduled indicator if this is a scheduled order
+                        if (order.scheduledAt != null)
+                          _buildScheduledIndicator(order),
+                        // Show food order items for FOOD orders
+                        if (order.type == OrderType.FOOD &&
+                            order.items != null &&
+                            order.items!.isNotEmpty)
+                          _buildFoodOrderItemsCard(order),
+                        // Show merchant info for FOOD orders
+                        if (order.type == OrderType.FOOD &&
+                            order.merchant != null)
+                          _buildMerchantInfoCard(order),
+                        // Show notes if available
+                        if (_hasNotes(order)) _buildNotesCard(order),
+                        if (_isHistoricalView ||
+                            _isTerminalStatus(order.status))
+                          OrderTimelineWidget(order: order),
+                        // Show delivery info for DELIVERY orders
+                        if (order.type == OrderType.DELIVERY)
+                          DeliveryInfoWidget(order: order),
+                        // Show cancel reason for cancelled orders
+                        if (_isCancelledStatus(order.status) &&
+                            order.cancelReason != null &&
+                            order.cancelReason!.isNotEmpty)
+                          _buildCancelReasonCard(order),
+                        // Show earnings breakdown for completed orders
+                        if (order.status == OrderStatus.COMPLETED)
+                          _buildEarningsCard(order),
                         _buildActionButtons(state, order),
                       ],
                     ),
@@ -886,6 +915,518 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
     );
   }
 
+  /// Build earnings breakdown card for completed orders (driver view)
+  Widget _buildEarningsCard(Order order) {
+    final totalPrice = order.totalPrice;
+    final tip = order.tip ?? 0;
+    final platformCommission = order.platformCommission ?? 0;
+    final driverEarning =
+        order.driverEarning ?? (totalPrice - platformCommission);
+
+    return Card(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        spacing: 12.h,
+        children: [
+          Row(
+            children: [
+              Icon(
+                LucideIcons.wallet,
+                size: 20.sp,
+                color: context.colorScheme.primary,
+              ),
+              Gap(8.w),
+              Text(
+                'Earnings Breakdown',
+                style: context.typography.h3.copyWith(
+                  fontSize: 18.sp,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+          const Divider(),
+          // Total fare
+          _buildEarningsRow('Total Fare', context.formatCurrency(totalPrice)),
+          // Tip (if any)
+          if (tip > 0)
+            _buildEarningsRow(
+              'Tip',
+              context.formatCurrency(tip),
+              isPositive: true,
+            ),
+          // Platform commission
+          if (platformCommission > 0)
+            _buildEarningsRow(
+              'Platform Commission',
+              '- ${context.formatCurrency(platformCommission)}',
+              isNegative: true,
+            ),
+          Divider(color: context.colorScheme.primary.withValues(alpha: 0.3)),
+          // Your earnings (highlighted)
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Your Earnings',
+                style: context.typography.h4.copyWith(
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.bold,
+                  color: context.colorScheme.primary,
+                ),
+              ),
+              Text(
+                context.formatCurrency(driverEarning),
+                style: context.typography.h4.copyWith(
+                  fontSize: 18.sp,
+                  fontWeight: FontWeight.bold,
+                  color: const Color(0xFF4CAF50),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildEarningsRow(
+    String label,
+    String value, {
+    bool isPositive = false,
+    bool isNegative = false,
+  }) {
+    Color? valueColor;
+    if (isPositive) {
+      valueColor = const Color(0xFF4CAF50);
+    } else if (isNegative) {
+      valueColor = const Color(0xFFF44336);
+    }
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          label,
+          style: context.typography.p.copyWith(
+            fontSize: 14.sp,
+            color: context.colorScheme.mutedForeground,
+          ),
+        ),
+        Text(
+          value,
+          style: context.typography.p.copyWith(
+            fontSize: 14.sp,
+            fontWeight: FontWeight.w500,
+            color: valueColor,
+          ),
+        ),
+      ],
+    );
+  }
+
+  /// Check if order status is cancelled
+  bool _isCancelledStatus(OrderStatus status) {
+    return status == OrderStatus.CANCELLED_BY_USER ||
+        status == OrderStatus.CANCELLED_BY_DRIVER ||
+        status == OrderStatus.CANCELLED_BY_MERCHANT ||
+        status == OrderStatus.CANCELLED_BY_SYSTEM;
+  }
+
+  /// Check if order has any notes
+  bool _hasNotes(Order order) {
+    final note = order.note;
+    if (note == null) return false;
+    return (note.pickup != null && note.pickup!.isNotEmpty) ||
+        (note.dropoff != null && note.dropoff!.isNotEmpty) ||
+        (note.senderName != null && note.senderName!.isNotEmpty) ||
+        (note.recevierName != null && note.recevierName!.isNotEmpty);
+  }
+
+  /// Build scheduled order indicator
+  Widget _buildScheduledIndicator(Order order) {
+    final scheduledAt = order.scheduledAt;
+    if (scheduledAt == null) return const SizedBox.shrink();
+
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 16.w),
+      decoration: BoxDecoration(
+        color: const Color(0xFF00BCD4).withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(8.r),
+        border: Border.all(color: const Color(0xFF00BCD4)),
+      ),
+      child: Row(
+        spacing: 8.w,
+        children: [
+          Icon(
+            LucideIcons.calendarClock,
+            size: 20.sp,
+            color: const Color(0xFF00BCD4),
+          ),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              spacing: 4.h,
+              children: [
+                Text(
+                  context.l10n.scheduled,
+                  style: context.typography.small.copyWith(
+                    fontSize: 12.sp,
+                    color: const Color(0xFF00BCD4),
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                Text(
+                  scheduledAt.format('dd MMM yyyy - HH:mm'),
+                  style: context.typography.p.copyWith(
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.bold,
+                    color: const Color(0xFF00BCD4),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Build food order items card for FOOD orders
+  Widget _buildFoodOrderItemsCard(Order order) {
+    final items = order.items ?? [];
+    if (items.isEmpty) return const SizedBox.shrink();
+
+    return Card(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        spacing: 12.h,
+        children: [
+          Row(
+            spacing: 8.w,
+            children: [
+              Icon(
+                LucideIcons.utensils,
+                size: 20.sp,
+                color: context.colorScheme.primary,
+              ),
+              Text(
+                context.l10n.order_items,
+                style: context.typography.h3.copyWith(
+                  fontSize: 18.sp,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const Spacer(),
+              Text(
+                '${items.length} ${items.length == 1 ? 'item' : 'items'}',
+                style: context.typography.small.copyWith(
+                  fontSize: 12.sp,
+                  color: context.colorScheme.mutedForeground,
+                ),
+              ),
+            ],
+          ),
+          const Divider(),
+          ...items.map(_buildFoodOrderItem),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFoodOrderItem(OrderItem orderItem) {
+    final item = orderItem.item;
+    final itemPrice = item.price?.toDouble() ?? 0;
+
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 4.h),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Quantity badge
+          Container(
+            width: 28.r,
+            height: 28.r,
+            decoration: BoxDecoration(
+              color: context.colorScheme.primary.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(6.r),
+            ),
+            child: Center(
+              child: Text(
+                '${orderItem.quantity}x',
+                style: context.typography.small.copyWith(
+                  fontSize: 12.sp,
+                  fontWeight: FontWeight.bold,
+                  color: context.colorScheme.primary,
+                ),
+              ),
+            ),
+          ),
+          SizedBox(width: 12.w),
+          // Item details
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              spacing: 2.h,
+              children: [
+                Text(
+                  item.name ?? context.l10n.unknown_item,
+                  style: context.typography.p.copyWith(
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                Text(
+                  context.formatCurrency(itemPrice),
+                  style: context.typography.small.copyWith(
+                    fontSize: 12.sp,
+                    color: context.colorScheme.mutedForeground,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Build merchant info card for FOOD orders
+  Widget _buildMerchantInfoCard(Order order) {
+    final merchant = order.merchant;
+    if (merchant == null) return const SizedBox.shrink();
+
+    return Card(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        spacing: 12.h,
+        children: [
+          Row(
+            spacing: 8.w,
+            children: [
+              Icon(
+                LucideIcons.store,
+                size: 20.sp,
+                color: context.colorScheme.primary,
+              ),
+              Text(
+                'Merchant Info',
+                style: context.typography.h3.copyWith(
+                  fontSize: 18.sp,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+          const Divider(),
+          Row(
+            spacing: 12.w,
+            children: [
+              // Merchant logo/avatar
+              ClipRRect(
+                borderRadius: BorderRadius.circular(8.r),
+                child: Container(
+                  width: 48.r,
+                  height: 48.r,
+                  decoration: BoxDecoration(
+                    color: context.colorScheme.muted,
+                    borderRadius: BorderRadius.circular(8.r),
+                  ),
+                  child: merchant.image != null
+                      ? Image.network(
+                          merchant.image!,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) => Center(
+                            child: Icon(
+                              LucideIcons.store,
+                              size: 24.sp,
+                              color: context.colorScheme.mutedForeground,
+                            ),
+                          ),
+                        )
+                      : Center(
+                          child: Icon(
+                            LucideIcons.store,
+                            size: 24.sp,
+                            color: context.colorScheme.mutedForeground,
+                          ),
+                        ),
+                ),
+              ),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  spacing: 4.h,
+                  children: [
+                    Text(
+                      merchant.name ?? context.l10n.unknown,
+                      style: context.typography.h4.copyWith(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    if (merchant.rating != null && merchant.rating! > 0)
+                      Row(
+                        spacing: 4.w,
+                        children: [
+                          Icon(
+                            LucideIcons.star,
+                            size: 14.sp,
+                            color: const Color(0xFFFFC107),
+                          ),
+                          Text(
+                            merchant.rating!.toStringAsFixed(1),
+                            style: context.typography.small.copyWith(
+                              fontSize: 12.sp,
+                              color: context.colorScheme.mutedForeground,
+                            ),
+                          ),
+                        ],
+                      ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Build notes card for order notes
+  Widget _buildNotesCard(Order order) {
+    final note = order.note;
+    if (note == null) return const SizedBox.shrink();
+
+    return Card(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        spacing: 12.h,
+        children: [
+          Row(
+            spacing: 8.w,
+            children: [
+              Icon(
+                LucideIcons.stickyNote,
+                size: 20.sp,
+                color: context.colorScheme.primary,
+              ),
+              Text(
+                'Notes',
+                style: context.typography.h3.copyWith(
+                  fontSize: 18.sp,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+          const Divider(),
+          // Sender name (for delivery)
+          if (note.senderName != null && note.senderName!.isNotEmpty)
+            _buildNoteItem('Sender', note.senderName!, LucideIcons.userCheck),
+          // Receiver name (for delivery)
+          if (note.recevierName != null && note.recevierName!.isNotEmpty)
+            _buildNoteItem('Receiver', note.recevierName!, LucideIcons.user),
+          // Pickup note
+          if (note.pickup != null && note.pickup!.isNotEmpty)
+            _buildNoteItem('Pickup Note', note.pickup!, LucideIcons.mapPin),
+          // Dropoff note
+          if (note.dropoff != null && note.dropoff!.isNotEmpty)
+            _buildNoteItem(
+              'Dropoff Note',
+              note.dropoff!,
+              LucideIcons.navigation,
+            ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildNoteItem(String label, String value, IconData icon) {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 4.h),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        spacing: 12.w,
+        children: [
+          Icon(icon, size: 16.sp, color: context.colorScheme.mutedForeground),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              spacing: 2.h,
+              children: [
+                Text(
+                  label,
+                  style: context.typography.small.copyWith(
+                    fontSize: 12.sp,
+                    color: context.colorScheme.mutedForeground,
+                  ),
+                ),
+                Text(
+                  value,
+                  style: context.typography.p.copyWith(
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Build cancel reason card for cancelled orders
+  Widget _buildCancelReasonCard(Order order) {
+    final cancelReason = order.cancelReason;
+    if (cancelReason == null || cancelReason.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.all(16.dg),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF44336).withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(8.r),
+        border: Border.all(color: const Color(0xFFF44336)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        spacing: 8.h,
+        children: [
+          Row(
+            spacing: 8.w,
+            children: [
+              Icon(
+                LucideIcons.circleX,
+                size: 20.sp,
+                color: const Color(0xFFF44336),
+              ),
+              Text(
+                'Cancellation Reason',
+                style: context.typography.h4.copyWith(
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.bold,
+                  color: const Color(0xFFF44336),
+                ),
+              ),
+            ],
+          ),
+          Text(
+            cancelReason,
+            style: context.typography.p.copyWith(
+              fontSize: 14.sp,
+              color: context.colorScheme.foreground,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildCustomerInfo(Order order) {
     return Card(
       child: Column(
@@ -1165,7 +1706,7 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
             width: double.infinity,
             child: PrimaryButton(
               onPressed: () {
-                context.goNamed(
+                context.pushNamed(
                   Routes.driverOrderCompletion.name,
                   extra: {
                     'orderId': order.id,
@@ -1184,7 +1725,7 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
           SizedBox(
             width: double.infinity,
             child: OutlineButton(
-              onPressed: () => context.goNamed(Routes.driverHome.name),
+              onPressed: () => context.pushNamed(Routes.driverHome.name),
               child: Text(context.l10n.back_to_home),
             ),
           ),
@@ -1196,7 +1737,7 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
     return SizedBox(
       width: double.infinity,
       child: PrimaryButton(
-        onPressed: () => context.goNamed(Routes.driverHome.name),
+        onPressed: () => context.pushNamed(Routes.driverHome.name),
         child: Text(context.l10n.back_to_home),
       ),
     );

@@ -166,7 +166,10 @@ void _setupCubit() {
       () => UserLocationCubit(locationService: sl<LocationService>()),
     )
     ..registerFactory(
-      () => UserMartCubit(merchantRepository: sl<MerchantRepository>()),
+      () => UserMartCubit(
+        merchantRepository: sl<MerchantRepository>(),
+        locationService: sl<LocationService>(),
+      ),
     )
     ..registerFactory(
       () => UserMerchantListCubit(merchantRepository: sl<MerchantRepository>()),
@@ -225,6 +228,7 @@ void _setupCubit() {
         driverRepository: sl<DriverRepository>(),
         orderRepository: sl<OrderRepository>(),
         configurationRepository: sl<ConfigurationRepository>(),
+        userRepository: sl<UserRepository>(),
       ),
     )
     ..registerFactory(

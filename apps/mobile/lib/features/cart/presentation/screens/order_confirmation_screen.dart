@@ -277,7 +277,8 @@ class _OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
             await context.read<UserOrderCubit>().recoverActiveOrder();
 
             if (context.mounted) {
-              context.go(Routes.userMartOnTrip.path);
+              context.popUntilRoot();
+              context.pushNamed(Routes.userMartOnTrip.name);
             }
           } else if (state.placeFoodOrderResult.isFailed) {
             final error = state.placeFoodOrderResult.error;
@@ -538,6 +539,9 @@ class _OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
   }
 
   Widget _buildItemDetail(BuildContext context, CartItem item, Cart cart) {
+    final isAtMaxStock = item.isAtMaxStock;
+    final isOutOfStock = item.isOutOfStock;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -635,10 +639,41 @@ class _OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
             ),
           ),
         Gap(12.h),
-        // Quantity selector
+        // Quantity selector with stock info
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
+            if (isOutOfStock)
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                decoration: BoxDecoration(
+                  color: context.colorScheme.destructive.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: Text(
+                  context.l10n.menu_out_of_stock,
+                  style: TextStyle(
+                    fontSize: 12.sp,
+                    color: context.colorScheme.destructive,
+                  ),
+                ),
+              )
+            else if (isAtMaxStock)
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                decoration: BoxDecoration(
+                  color: context.colorScheme.primary.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: Text(
+                  context.l10n.max,
+                  style: TextStyle(
+                    fontSize: 12.sp,
+                    color: context.colorScheme.primary,
+                  ),
+                ),
+              ),
+            if (isOutOfStock || isAtMaxStock) Gap(8.w),
             Container(
               decoration: BoxDecoration(
                 border: Border.all(color: context.colorScheme.border),
@@ -648,16 +683,19 @@ class _OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   IconButton(
-                    icon: Icon(LucideIcons.minus, size: 16.sp),
+                    icon: Icon(
+                      item.quantity == 1
+                          ? LucideIcons.trash2
+                          : LucideIcons.minus,
+                      size: 16.sp,
+                    ),
                     variance: ButtonVariance.ghost,
-                    onPressed: item.quantity > 1
-                        ? () {
-                            context.read<UserCartCubit>().updateQuantity(
-                              menuId: item.menuId,
-                              delta: -1,
-                            );
-                          }
-                        : null,
+                    onPressed: () {
+                      context.read<UserCartCubit>().updateQuantity(
+                        menuId: item.menuId,
+                        delta: -1,
+                      );
+                    },
                   ),
                   Container(
                     constraints: BoxConstraints(minWidth: 40.w),
@@ -672,12 +710,14 @@ class _OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
                   IconButton(
                     icon: Icon(LucideIcons.plus, size: 16.sp),
                     variance: ButtonVariance.ghost,
-                    onPressed: () {
-                      context.read<UserCartCubit>().updateQuantity(
-                        menuId: item.menuId,
-                        delta: 1,
-                      );
-                    },
+                    onPressed: isAtMaxStock || isOutOfStock
+                        ? null
+                        : () {
+                            context.read<UserCartCubit>().updateQuantity(
+                              menuId: item.menuId,
+                              delta: 1,
+                            );
+                          },
                   ),
                 ],
               ),

@@ -86,11 +86,19 @@ class _UserMartScreenState extends State<UserMartScreen> {
         children: [
           _buildCategoryNavigator(context, state.categories),
           Gap(16.h),
-          if (state.recentOrders.hasData)
+          if (state.recentOrders.hasData &&
+              state.recentOrders.value!.isNotEmpty)
             _buildRecentOrders(context, state.recentOrders.value!),
-          Gap(16.h),
-          if (state.bestSellers.hasData)
+          if (state.nearbyMerchants.hasData &&
+              state.nearbyMerchants.value!.isNotEmpty) ...[
+            Gap(16.h),
+            _buildNearbyMerchants(context, state.nearbyMerchants.value!),
+          ],
+          if (state.bestSellers.hasData &&
+              state.bestSellers.value!.isNotEmpty) ...[
+            Gap(16.h),
             _buildBestSellers(context, state.bestSellers.value!),
+          ],
           Gap(16.h),
         ],
       ),
@@ -158,7 +166,7 @@ class _UserMartScreenState extends State<UserMartScreen> {
                       padding: (context, states, value) =>
                           EdgeInsetsGeometry.all(4.dg),
                     ),
-                onPressed: () => context.goNamed(Routes.userHistory.name),
+                onPressed: () => context.pushNamed(Routes.userHistory.name),
                 child: Row(
                   children: [
                     Text(
@@ -184,6 +192,72 @@ class _UserMartScreenState extends State<UserMartScreen> {
               final order = orders[index];
               return _RecentOrderCard(order: order);
             },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildNearbyMerchants(BuildContext context, List<Merchant> merchants) {
+    if (merchants.isEmpty) return const SizedBox.shrink();
+
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 16.w),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  Icon(
+                    LucideIcons.mapPin,
+                    size: 16.sp,
+                    color: context.colorScheme.primary,
+                  ),
+                  Gap(4.w),
+                  Text(
+                    context.l10n.label_nearby,
+                    style: context.typography.h4.copyWith(fontSize: 16.sp),
+                  ),
+                ],
+              ),
+              Button(
+                style: const ButtonStyle.outline(density: ButtonDensity.compact)
+                    .copyWith(
+                      padding: (context, states, value) =>
+                          EdgeInsetsGeometry.all(4.dg),
+                    ),
+                onPressed: () =>
+                    context.pushNamed(Routes.userListMerchant.name),
+                child: Row(
+                  children: [
+                    Text(
+                      context.l10n.button_view_all,
+                      style: context.typography.small.copyWith(
+                        fontSize: 10.sp,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    Icon(LucideIcons.chevronRight, size: 10.sp),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          Gap(12.h),
+          SizedBox(
+            height: 180.h,
+            child: ListView.separated(
+              scrollDirection: Axis.horizontal,
+              itemCount: merchants.length,
+              separatorBuilder: (context, index) => Gap(12.w),
+              itemBuilder: (context, index) {
+                final merchant = merchants[index];
+                return _NearbyMerchantCard(merchant: merchant);
+              },
+            ),
           ),
         ],
       ),
@@ -420,6 +494,95 @@ class _BestSellerItem extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                         color: context.colorScheme.primary,
                       ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _NearbyMerchantCard extends StatelessWidget {
+  const _NearbyMerchantCard({required this.merchant});
+
+  final Merchant merchant;
+
+  @override
+  Widget build(BuildContext context) {
+    return Button(
+      style: const ButtonStyle.ghost(density: ButtonDensity.compact),
+      onPressed: () {
+        context.pushNamed(
+          Routes.userMartDetail.name,
+          pathParameters: {'merchantId': merchant.id},
+        );
+      },
+      child: SizedBox(
+        width: 160.w,
+        child: Card(
+          padding: EdgeInsets.zero,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.vertical(top: Radius.circular(12.r)),
+                child: SizedBox(
+                  width: 160.w,
+                  height: 100.h,
+                  child: merchant.image != null && merchant.image!.isNotEmpty
+                      ? CachedNetworkImage(
+                          imageUrl: merchant.image!,
+                          fit: BoxFit.cover,
+                          errorWidget: (context, url, error) => Assets
+                              .images
+                              .noImage
+                              .svg(width: 160.w, height: 100.h),
+                        )
+                      : Assets.images.noImage.svg(width: 160.w, height: 100.h),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.all(8.dg),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      merchant.name,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                      style: context.typography.h4.copyWith(
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    Gap(4.h),
+                    Text(
+                      merchant.category.name,
+                      style: context.typography.small.copyWith(
+                        fontSize: 11.sp,
+                        color: context.colorScheme.mutedForeground,
+                      ),
+                    ),
+                    Gap(4.h),
+                    Row(
+                      children: [
+                        Icon(
+                          LucideIcons.star,
+                          size: 12.sp,
+                          color: Colors.amber,
+                        ),
+                        Gap(4.w),
+                        Text(
+                          merchant.rating.toStringAsFixed(1),
+                          style: context.typography.small.copyWith(
+                            fontSize: 11.sp,
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),

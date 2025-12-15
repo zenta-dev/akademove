@@ -36,38 +36,51 @@ class UserMartCategoryScreen extends StatelessWidget {
               ],
             ),
           ],
-          child: () {
-            final result = state.categoryMerchants;
+          child: SafeRefreshTrigger(
+            onRefresh: () async {
+              final category = context
+                  .read<UserMartCubit>()
+                  .state
+                  .selectedCategory;
+              if (category != null) {
+                await context.read<UserMartCubit>().loadCategoryMerchants(
+                  category: category,
+                );
+              }
+            },
+            child: () {
+              final result = state.categoryMerchants;
 
-            if (result.isLoading) {
+              if (result.isLoading) {
+                return const Center(child: CircularProgressIndicator());
+              }
+
+              if (result.isFailure) {
+                return Center(
+                  child: OopsAlertWidget(
+                    message:
+                        result.error?.message ??
+                        context.l10n.toast_failed_load_merchants,
+                    onRefresh: () {
+                      final category = state.selectedCategory;
+                      if (category != null) {
+                        context.read<UserMartCubit>().loadCategoryMerchants(
+                          category: category,
+                        );
+                      }
+                    },
+                  ),
+                );
+              }
+
+              if (result.isSuccess) {
+                return _buildMerchantList(context, result.value ?? []);
+              }
+
+              // Fallback for idle or other states
               return const Center(child: CircularProgressIndicator());
-            }
-
-            if (result.isFailure) {
-              return Center(
-                child: OopsAlertWidget(
-                  message:
-                      result.error?.message ??
-                      context.l10n.toast_failed_load_merchants,
-                  onRefresh: () {
-                    final category = state.selectedCategory;
-                    if (category != null) {
-                      context.read<UserMartCubit>().loadCategoryMerchants(
-                        category: category,
-                      );
-                    }
-                  },
-                ),
-              );
-            }
-
-            if (result.isSuccess) {
-              return _buildMerchantList(context, result.value ?? []);
-            }
-
-            // Fallback for idle or other states
-            return const Center(child: CircularProgressIndicator());
-          }(),
+            }(),
+          ),
         );
       },
     );
@@ -102,25 +115,15 @@ class UserMartCategoryScreen extends StatelessWidget {
       );
     }
 
-    return SafeRefreshTrigger(
-      onRefresh: () async {
-        final category = context.read<UserMartCubit>().state.selectedCategory;
-        if (category != null) {
-          await context.read<UserMartCubit>().loadCategoryMerchants(
-            category: category,
-          );
-        }
-      },
-      child: Padding(
-        padding: EdgeInsets.all(16.w),
-        child: ListView.separated(
-          itemCount: merchants.length,
-          separatorBuilder: (context, index) => Gap(12.h),
-          itemBuilder: (context, index) {
-            final merchant = merchants[index];
-            return _MerchantCard(merchant: merchant);
-          },
-        ),
+    return Padding(
+      padding: EdgeInsets.all(16.w),
+      child: ListView.separated(
+        itemCount: merchants.length,
+        separatorBuilder: (context, index) => Gap(12.h),
+        itemBuilder: (context, index) {
+          final merchant = merchants[index];
+          return _MerchantCard(merchant: merchant);
+        },
       ),
     );
   }

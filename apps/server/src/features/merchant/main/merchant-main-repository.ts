@@ -115,9 +115,14 @@ export class MerchantMainRepository extends BaseRepository {
 				clauses.push(ilike(tables.merchant.name, `%${query}%`));
 			}
 			if (filters?.categories && filters.categories.length > 0) {
-				// Match any of the categories in the array
-				const categoryConditions = filters.categories.map(
-					(cat) => sql`${tables.merchant.categories} @> ARRAY[${cat}]::text[]`,
+				// Match any of the categories in both:
+				// 1. merchant.category (single enum field) - case-insensitive
+				// 2. merchant.categories (array field) - using ANY with array overlap
+				const categoryConditions = filters.categories.map((cat) =>
+					or(
+						sql`LOWER(${tables.merchant.category}::text) = LOWER(${cat})`,
+						sql`LOWER(${cat}) = ANY(SELECT LOWER(c) FROM unnest(${tables.merchant.categories}) AS c)`,
+					),
 				);
 				const categoryClause = or(...categoryConditions);
 				if (categoryClause) clauses.push(categoryClause);
@@ -207,9 +212,14 @@ export class MerchantMainRepository extends BaseRepository {
 
 			// Add filter clauses
 			if (categories && categories.length > 0) {
-				// Match any of the categories in the array
-				const categoryConditions = categories.map(
-					(cat) => sql`${tables.merchant.categories} @> ARRAY[${cat}]::text[]`,
+				// Match any of the categories in both:
+				// 1. merchant.category (single enum field) - case-insensitive
+				// 2. merchant.categories (array field) - using ANY with array overlap
+				const categoryConditions = categories.map((cat) =>
+					or(
+						sql`LOWER(${tables.merchant.category}::text) = LOWER(${cat})`,
+						sql`LOWER(${cat}) = ANY(SELECT LOWER(c) FROM unnest(${tables.merchant.categories}) AS c)`,
+					),
 				);
 				const categoryClause = or(...categoryConditions);
 				if (categoryClause) clauses.push(categoryClause);

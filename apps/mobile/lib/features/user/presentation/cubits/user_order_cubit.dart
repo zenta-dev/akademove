@@ -328,7 +328,23 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
 
       _orderId = res.data.order.id;
       _paymentId = res.data.payment.id;
-      await _setupPaymentWebsocket(paymentId: res.data.payment.id);
+
+      // For wallet payments that succeed immediately, skip payment WebSocket
+      // and directly set up the order WebSocket for real-time updates.
+      // For other payment methods (QRIS, BANK_TRANSFER), we need to wait for
+      // payment confirmation via payment WebSocket before setting up order WebSocket.
+      final isWalletPaymentSuccess =
+          res.data.payment.method == PaymentMethod.wallet &&
+          res.data.payment.status == TransactionStatus.SUCCESS;
+
+      if (isWalletPaymentSuccess) {
+        // Wallet payment is instant - set up order WebSocket directly
+        await _setupLiveOrderWebsocket(orderId: res.data.order.id);
+      } else {
+        // Non-wallet payments need to wait for payment confirmation
+        await _setupPaymentWebsocket(paymentId: res.data.payment.id);
+      }
+
       emit(
         state.copyWith(
           currentOrder: OperationResult.success(res.data.order),

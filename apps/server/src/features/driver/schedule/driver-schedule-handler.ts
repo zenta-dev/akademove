@@ -9,11 +9,10 @@ const { priv } = createORPCRouter(DriverScheduleSpec);
 
 export const DriverScheduleHandler = priv.router({
 	list: priv.list.handler(async ({ context, input: { query } }) => {
-		// FIX: Drivers can only list their own schedules
 		// Admins/Operators can list all schedules
 		let driverId: string | undefined;
 
-		if (!shouldBypassAuthorization() && context.user.role === "DRIVER") {
+		if (context.user.role === "DRIVER") {
 			const driver = await context.repo.driver.main.getByUserId(
 				context.user.id,
 			);

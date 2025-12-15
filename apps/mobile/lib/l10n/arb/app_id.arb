@@ -1848,5 +1848,14 @@
 	"emergency_contact_unavailable": "Kontak darurat tidak tersedia. Silakan coba lagi nanti.",
 	"order_completed": "Pesanan Selesai",
 	"order_detail_summary": "Ringkasan Pesanan",
-	"rate_merchant_title": "Beri Rating Pesanan"
+	"rate_merchant_title": "Beri Rating Pesanan",
+	"label_nearby": "Terdekat",
+	"view_realtime": "Lihat Real Time",
+	"status_requested": "Menunggu",
+	"status_matching": "Mencari Driver",
+	"status_accepted": "Diterima",
+	"status_preparing": "Sedang Disiapkan",
+	"status_ready_for_pickup": "Siap Diambil",
+	"status_arriving": "Driver Menuju Lokasi",
+	"status_in_trip": "Dalam Perjalanan"
 }

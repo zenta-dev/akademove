@@ -1,7 +1,7 @@
 name: akademove
 description: "A new Flutter project."
 publish_to: "none"
-version: 1.0.0+1
+version: 1.0.0+2
 
 resolution: workspace
 
@@ -74,6 +74,7 @@ flutter:
     - assets/images/character/
     - assets/images/hero/
     - assets/icons/
+    - shorebird.yaml
 
 flutter_gen:
   output: lib/gen/

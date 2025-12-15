@@ -4443,4 +4443,31 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get rate_merchant_title => 'Rate Your Order';
+
+  @override
+  String get label_nearby => 'Nearby';
+
+  @override
+  String get view_realtime => 'View Real Time';
+
+  @override
+  String get status_requested => 'Requested';
+
+  @override
+  String get status_matching => 'Finding Driver';
+
+  @override
+  String get status_accepted => 'Accepted';
+
+  @override
+  String get status_preparing => 'Preparing';
+
+  @override
+  String get status_ready_for_pickup => 'Ready for Pickup';
+
+  @override
+  String get status_arriving => 'Driver Arriving';
+
+  @override
+  String get status_in_trip => 'In Progress';
 }

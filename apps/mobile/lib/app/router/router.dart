@@ -108,7 +108,9 @@ enum Routes {
   merchantSalesReportDetail('/merchant/sales/report/detail'),
   merchantCommissionReportDetail('/merchant/commission/report/detail'),
   merchantOrder('/merchant/order'),
-  merchantOrderDetail('/merchant/order/detail'),
+  merchantActiveOrder('/merchant/order/detail'),
+  merchantHistory('/merchant/history'),
+  merchantHistoryDetail('/merchant/history/:orderId'),
   merchantCreateMenu('/merchant/create/menu'),
   merchantEditMenu('/merchant/edit/menu'),
   merchantMenu('/merchant/menu'),
@@ -118,7 +120,7 @@ enum Routes {
   merchantEditProfile('/merchant/edit/profile'),
   merchantChangePassword('/merchant/change/password'),
   merchantWalletWithdraw('/merchant/wallet/withdraw'),
-  merchantNotifications('/merchant/notifications'),
+  merchantNotifications('/merchant/home/notifications'),
   merchantOrderCompletion('/merchant/order/completion'),
 
   ///

@@ -257,7 +257,12 @@ export const DriverMainSpec = {
 			inputStructure: "detailed",
 			outputStructure: "detailed",
 		})
-		.input(z.object({ params: z.object({ id: z.string() }) }))
+		.input(
+			z.object({
+				params: z.object({ id: z.string() }),
+				body: z.object({}).nullish(),
+			}),
+		)
 		.output(createSuccesSchema(DriverSchema, "Driver approved successfully")),
 	reject: oc
 		.route({
@@ -300,6 +305,11 @@ export const DriverMainSpec = {
 			inputStructure: "detailed",
 			outputStructure: "detailed",
 		})
-		.input(z.object({ params: z.object({ id: z.string() }) }))
+		.input(
+			z.object({
+				params: z.object({ id: z.string() }),
+				body: z.object({}).nullish(),
+			}),
+		)
 		.output(createSuccesSchema(DriverSchema, "Driver activated successfully")),
 };

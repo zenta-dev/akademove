@@ -61,6 +61,7 @@ class MerchantRepository extends BaseRepository {
     String? category,
     String? query,
     bool? isActive,
+    MerchantStatus? status, // 'PENDING', 'APPROVED', 'REJECTED', etc.
     String? operatingStatus, // 'OPEN', 'CLOSED', 'BREAK', 'MAINTENANCE'
     int? page,
     int? limit,
@@ -70,6 +71,7 @@ class MerchantRepository extends BaseRepository {
         categories: category != null ? [category] : null,
         query: query,
         isActive: isActive,
+        status: status,
         operatingStatus: operatingStatus,
         page: page,
         limit: limit,
@@ -135,6 +137,37 @@ class MerchantRepository extends BaseRepository {
           res.data ??
           (throw const RepositoryError(
             'Best sellers not found',
+            code: ErrorCode.unknown,
+          ));
+
+      return SuccessResponse(message: data.message, data: data.data);
+    });
+  }
+
+  /// Get nearby merchants sorted by distance
+  /// Used for mart home screen to show merchants near user's location
+  Future<BaseResponse<List<Merchant>>> listNearby({
+    required double latitude,
+    required double longitude,
+    double maxDistance = 5000, // 5km default
+    int limit = 10,
+  }) {
+    return guard(() async {
+      final res = await _apiClient.getMerchantApi().merchantList(
+        latitude: latitude,
+        longitude: longitude,
+        maxDistance: maxDistance,
+        sortBy: 'distance',
+        isActive: true,
+        status: MerchantStatus.APPROVED,
+        operatingStatus: 'OPEN',
+        limit: limit,
+      );
+
+      final data =
+          res.data ??
+          (throw const RepositoryError(
+            'Nearby merchants not found',
             code: ErrorCode.unknown,
           ));
 

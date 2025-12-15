@@ -324,12 +324,11 @@ export class MerchantOrderRepository extends BaseRepository {
 
 			const composedOrder = this.composeEntity(updated);
 
-			// Invalidate cache and emit WebSocket event to all roles (USER, DRIVER, MERCHANT)
-			// NOTE: Push notification should be handled by notification service
-			await Promise.allSettled([
-				this.deleteCache(orderId),
-				this.statusService.emitStatusUpdate(composedOrder),
-			]);
+			// Invalidate cache only - DO NOT emit WebSocket event here!
+			// The handler is responsible for emitting the status update AFTER
+			// transitioning to MATCHING status to avoid race conditions where
+			// the user receives READY_FOR_PICKUP before MATCHING
+			await this.deleteCache(orderId);
 
 			return composedOrder;
 		} catch (error) {

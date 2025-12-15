@@ -392,6 +392,8 @@ class _QuantityControls extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final mutedColor = context.colorScheme.mutedForeground;
+    final isAtMaxStock = item.isAtMaxStock;
+    final isOutOfStock = item.isOutOfStock;
 
     return Row(
       children: [
@@ -417,27 +419,58 @@ class _QuantityControls extends StatelessWidget {
           ),
         ),
         Gap(12.w),
-        Text(
-          item.quantity.toString(),
-          style: context.typography.semiBold.copyWith(fontSize: 14.sp),
+        Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              item.quantity.toString(),
+              style: context.typography.semiBold.copyWith(fontSize: 14.sp),
+            ),
+            if (isOutOfStock)
+              Text(
+                context.l10n.menu_out_of_stock,
+                style: TextStyle(
+                  fontSize: 10.sp,
+                  color: context.colorScheme.destructive,
+                ),
+              )
+            else if (isAtMaxStock)
+              Text(
+                context.l10n.max,
+                style: TextStyle(
+                  fontSize: 10.sp,
+                  color: context.colorScheme.primary,
+                ),
+              ),
+          ],
         ),
         Gap(12.w),
         GestureDetector(
-          onTap: () {
-            context.read<UserCartCubit>().updateQuantity(
-              menuId: item.menuId,
-              delta: 1,
-            );
-          },
+          onTap: isAtMaxStock || isOutOfStock
+              ? null
+              : () {
+                  context.read<UserCartCubit>().updateQuantity(
+                    menuId: item.menuId,
+                    delta: 1,
+                  );
+                },
           child: Container(
             width: 32.w,
             height: 32.w,
             alignment: Alignment.center,
             decoration: BoxDecoration(
-              color: context.colorScheme.primary,
+              color: isAtMaxStock || isOutOfStock
+                  ? mutedColor.withValues(alpha: 0.2)
+                  : context.colorScheme.primary,
               borderRadius: BorderRadius.circular(4),
             ),
-            child: Icon(LucideIcons.plus, size: 16.sp, color: Colors.white),
+            child: Icon(
+              LucideIcons.plus,
+              size: 16.sp,
+              color: isAtMaxStock || isOutOfStock
+                  ? mutedColor.withValues(alpha: 0.5)
+                  : Colors.white,
+            ),
           ),
         ),
       ],

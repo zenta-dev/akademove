@@ -66,7 +66,8 @@ export const merchant = pgTable(
 		uniqueIndex("merchant_phone_idx").on(t.phone),
 		// Text search index for name field (used in order list searches)
 		index("merchant_name_text_idx").on(t.name.op("text_pattern_ops")),
-		// index("merchant_type_idx").on(t.type),
+		// Index for category enum filtering
+		index("merchant_category_idx").on(t.category),
 		index("merchant_status_idx").on(t.status),
 		index("merchant_is_active_idx").on(t.isActive),
 		index("merchant_is_online_idx").on(t.isOnline),
@@ -77,6 +78,8 @@ export const merchant = pgTable(
 		index("merchant_status_active_idx").on(t.status, t.isActive),
 		index("merchant_created_at_idx").on(t.createdAt),
 		index("merchant_location_idx").using("gist", t.location),
+		// GIN index for categories array filtering
+		index("merchant_categories_idx").using("gin", t.categories),
 	],
 );
 

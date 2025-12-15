@@ -497,8 +497,8 @@ class _MerchantIncomingOrderListenerState
               final acceptedOrder = state.order.value;
               if (acceptedOrder != null) {
                 context.pushNamed(
-                  Routes.merchantOrderDetail.name,
-                  extra: acceptedOrder,
+                  Routes.merchantActiveOrder.name,
+                  extra: acceptedOrder.id,
                 );
               }
             }

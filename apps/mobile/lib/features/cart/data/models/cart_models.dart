@@ -116,6 +116,7 @@ class CartItem extends Equatable {
     required this.menuName,
     required this.unitPrice,
     required this.quantity,
+    required this.stock,
     this.menuImage,
     this.notes,
   });
@@ -129,6 +130,7 @@ class CartItem extends Equatable {
       menuImage: json['menuImage'] as String?,
       unitPrice: json['unitPrice'] as num,
       quantity: json['quantity'] as int,
+      stock: json['stock'] as int? ?? 999,
       notes: json['notes'] as String?,
     );
   }
@@ -140,7 +142,19 @@ class CartItem extends Equatable {
   final String? menuImage;
   final num unitPrice;
   final int quantity;
+
+  /// Available stock for this item (from merchant menu)
+  final int stock;
   final String? notes;
+
+  /// Returns true if this item is out of stock (quantity >= stock)
+  bool get isOutOfStock => stock <= 0;
+
+  /// Returns true if incrementing quantity would exceed available stock
+  bool get isAtMaxStock => quantity >= stock;
+
+  /// Returns the remaining stock that can be added
+  int get remainingStock => (stock - quantity).clamp(0, stock);
 
   Map<String, dynamic> toJson() => {
     'menuId': menuId,
@@ -150,6 +164,7 @@ class CartItem extends Equatable {
     if (menuImage != null) 'menuImage': menuImage,
     'unitPrice': unitPrice,
     'quantity': quantity,
+    'stock': stock,
     if (notes != null) 'notes': notes,
   };
 
@@ -161,6 +176,7 @@ class CartItem extends Equatable {
     String? menuImage,
     num? unitPrice,
     int? quantity,
+    int? stock,
     String? notes,
   }) {
     return CartItem(
@@ -171,6 +187,7 @@ class CartItem extends Equatable {
       menuImage: menuImage ?? this.menuImage,
       unitPrice: unitPrice ?? this.unitPrice,
       quantity: quantity ?? this.quantity,
+      stock: stock ?? this.stock,
       notes: notes ?? this.notes,
     );
   }
@@ -184,6 +201,7 @@ class CartItem extends Equatable {
     menuImage,
     unitPrice,
     quantity,
+    stock,
     notes,
   ];
 }

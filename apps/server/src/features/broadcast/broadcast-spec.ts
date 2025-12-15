@@ -136,7 +136,12 @@ export const BroadcastSpec = {
 			inputStructure: "detailed",
 			outputStructure: "detailed",
 		})
-		.input(z.object({ params: z.object({ id: z.uuid() }) }))
+		.input(
+			z.object({
+				params: z.object({ id: z.uuid() }),
+				body: z.object({}).nullish(),
+			}),
+		)
 		.output(createSuccesSchema(BroadcastSchema, "Broadcast sent successfully")),
 
 	// Get broadcast statistics

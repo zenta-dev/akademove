@@ -200,14 +200,37 @@ class _MerchantOrderScreenState extends State<MerchantOrderScreen> {
                 separatorBuilder: (context, index) => Gap(16.h),
                 itemBuilder: (context, index) {
                   final order = filtered[index];
+                  // Check if order is active (in-process)
+                  final isActiveOrder = [
+                    OrderStatus.REQUESTED,
+                    OrderStatus.MATCHING,
+                    OrderStatus.ACCEPTED,
+                    OrderStatus.PREPARING,
+                    OrderStatus.READY_FOR_PICKUP,
+                    OrderStatus.ARRIVING,
+                    OrderStatus.IN_TRIP,
+                  ].contains(order.status);
+
                   return MerchantOrderCardWidget(
                     order: order,
                     onPressed: () {
-                      context.pushNamed(
-                        Routes.merchantOrderDetail.name,
-                        extra: order,
-                      );
+                      // Navigate to history detail for completed/cancelled
+                      if (!isActiveOrder) {
+                        context.pushNamed(
+                          Routes.merchantHistoryDetail.name,
+                          pathParameters: {'orderId': order.id},
+                        );
+                      }
                     },
+                    // Show "View Real Time" button for active orders
+                    onViewRealTime: isActiveOrder
+                        ? () {
+                            context.pushNamed(
+                              Routes.merchantActiveOrder.name,
+                              extra: order.id,
+                            );
+                          }
+                        : null,
                   );
                 },
               );

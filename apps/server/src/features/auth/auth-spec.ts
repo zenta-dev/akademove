@@ -110,7 +110,7 @@ export const AuthSpec = {
 							.optional()
 							.describe("FCM token to remove for this session/device"),
 					})
-					.optional(),
+					.nullish(), // Allow null, undefined, or object (Dart client sends null when no body)
 			}),
 		)
 		.output(
@@ -199,7 +199,13 @@ export const AuthSpec = {
 		.input(z.object({ body: SendEmailVerificationSchema }))
 		.output(
 			z.union([
-				createSuccesSchema(z.boolean(), "Email verification sent successfully"),
+				createSuccesSchema(
+					z.boolean(),
+					"Email verification sent successfully",
+					{
+						status: 202,
+					},
+				),
 			]),
 		),
 	verifyEmail: oc
