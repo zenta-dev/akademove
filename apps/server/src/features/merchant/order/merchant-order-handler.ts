@@ -179,14 +179,16 @@ export const MerchantOrderHandler = priv.router({
 				? await OrderRefundService.findPayment(tx, paymentTransaction.id)
 				: null;
 
-			// Enqueue timeout job for driver matching (uses configured timeout)
-			try {
-				const businessConfig = await BusinessConfigurationService.getConfig(
+			// Get matching configuration from database (used for both timeout and driver matching)
+			const matchingConfig =
+				await BusinessConfigurationService.getDriverMatchingConfig(
 					context.svc.db,
 					context.svc.kv,
 				);
 
-				const timeoutMinutes = businessConfig.driverMatchingTimeoutMinutes;
+			// Enqueue timeout job for driver matching (uses configured timeout)
+			try {
+				const timeoutMinutes = matchingConfig.timeoutMinutes;
 				const timeoutSeconds = timeoutMinutes * 60;
 
 				await OrderQueueService.enqueueOrderTimeout(
@@ -213,6 +215,45 @@ export const MerchantOrderHandler = priv.router({
 				logger.error(
 					{ error: queueError, orderId: updatedOrder.id },
 					"[MerchantOrderHandler] Failed to enqueue timeout job - cron will handle",
+				);
+			}
+
+			// Enqueue driver matching job (handles push notifications to offline drivers)
+			// This is the same mechanism used by RIDE/DELIVERY orders for reliable driver discovery
+			try {
+				await OrderQueueService.enqueueDriverMatching({
+					orderId: updatedOrder.id,
+					pickupLocation: updatedOrder.pickupLocation,
+					orderType: updatedOrder.type,
+					genderPreference: updatedOrder.genderPreference ?? undefined,
+					userGender: updatedOrder.gender ?? undefined,
+					initialRadiusKm: matchingConfig.initialRadiusKm,
+					maxRadiusKm: matchingConfig.maxRadiusKm,
+					maxMatchingDurationMinutes: matchingConfig.timeoutMinutes,
+					currentAttempt: 1,
+					maxExpansionAttempts: Math.ceil(
+						Math.log(
+							matchingConfig.maxRadiusKm / matchingConfig.initialRadiusKm,
+						) / Math.log(1 + matchingConfig.expansionRate),
+					),
+					expansionRate: matchingConfig.expansionRate,
+					matchingIntervalSeconds: matchingConfig.intervalSeconds,
+					broadcastLimit: matchingConfig.broadcastLimit,
+					maxCancellationsPerDay: matchingConfig.maxCancellationsPerDay,
+					paymentId: payment?.id,
+					excludedDriverIds: [],
+					isRetry: false,
+				});
+
+				logger.info(
+					{ orderId: updatedOrder.id },
+					"[MerchantOrderHandler] Driver matching job enqueued after merchant ready",
+				);
+			} catch (matchingError) {
+				// Log but don't fail - the cron fallback will handle stuck orders
+				logger.error(
+					{ error: matchingError, orderId: updatedOrder.id },
+					"[MerchantOrderHandler] Failed to enqueue driver matching job - cron will handle",
 				);
 			}
 
