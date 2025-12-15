@@ -7,16 +7,19 @@
  *
  * Flow:
  * 1. Search for drivers within current radius
- * 2. If drivers found, broadcast order and schedule next matching attempt
+ * 2. If drivers found, broadcast OFFER via WebSocket AND send FCM push notifications
  * 3. If no drivers found, check if we've exceeded timeout
  * 4. If timeout exceeded, cancel order and process refund
  * 5. Otherwise, expand radius and schedule next attempt
  */
 
 import type { DriverMatchingJob } from "@repo/schema/queue";
+import type { OrderEnvelope } from "@repo/schema/ws";
 import { sql } from "drizzle-orm";
+import { DRIVER_POOL_KEY } from "@/core/constants";
 import { OrderQueueService } from "@/core/services/queue";
 import { order } from "@/core/tables/order";
+import { OrderRepository } from "@/features/order/order-repository";
 import type { MatchingConfig } from "@/features/order/services/order-matching-service";
 import { logger } from "@/utils/logger";
 import type { QueueHandlerContext } from "../queue-handler";
@@ -148,12 +151,104 @@ export async function handleDriverMatching(
 			);
 
 			if (matchedDrivers.length > 0) {
+				// Get full order details for WebSocket broadcast
+				const fullOrder = await context.repo.order.get(orderId, { tx });
+
+				// Get payment info for the order
+				const { OrderRefundService } = await import(
+					"@/features/order/services/order-refund-service"
+				);
+				const { toNumberSafe } = await import("@/utils");
+				const paymentTransaction =
+					await OrderRefundService.findPaymentTransaction(tx, orderId);
+				const paymentRow = paymentTransaction
+					? await OrderRefundService.findPayment(tx, paymentTransaction.id)
+					: null;
+
+				// Convert DB rows to schema-compatible format (amounts from string to number)
+				const payment = paymentRow
+					? {
+							...paymentRow,
+							amount: toNumberSafe(paymentRow.amount),
+							expiresAt: paymentRow.expiresAt ?? undefined,
+							externalId: paymentRow.externalId ?? undefined,
+							paymentUrl: paymentRow.paymentUrl ?? undefined,
+							va_number: paymentRow.va_number ?? undefined,
+							bankProvider: paymentRow.bankProvider ?? undefined,
+						}
+					: null;
+
+				const transaction = paymentTransaction
+					? {
+							...paymentTransaction,
+							amount: toNumberSafe(paymentTransaction.amount),
+							balanceBefore: paymentTransaction.balanceBefore
+								? toNumberSafe(paymentTransaction.balanceBefore)
+								: undefined,
+							balanceAfter: paymentTransaction.balanceAfter
+								? toNumberSafe(paymentTransaction.balanceAfter)
+								: undefined,
+							description: paymentTransaction.description ?? undefined,
+							referenceId: paymentTransaction.referenceId ?? undefined,
+						}
+					: null;
+
+				// Create OFFER envelope for WebSocket broadcast
+				const offerEnvelope: OrderEnvelope = {
+					e: "OFFER",
+					f: "s",
+					t: "c",
+					tg: "DRIVER",
+					p: {
+						detail: {
+							order: fullOrder,
+							payment,
+							transaction,
+						},
+					},
+				};
+
+				// Broadcast OFFER to driver pool WebSocket
+				// This notifies all connected drivers about the new order
+				try {
+					const driverPoolStub =
+						OrderRepository.getRoomStubByName(DRIVER_POOL_KEY);
+					const broadcastResponse = await driverPoolStub.fetch(
+						new Request("http://internal/broadcast", {
+							method: "POST",
+							headers: { "Content-Type": "application/json" },
+							body: JSON.stringify(offerEnvelope),
+						}),
+					);
+
+					if (broadcastResponse.ok) {
+						logger.info(
+							{ orderId, driversFound: matchedDrivers.length },
+							"[DriverMatchingHandler] OFFER broadcast sent to driver pool WebSocket",
+						);
+					} else {
+						logger.warn(
+							{
+								orderId,
+								status: broadcastResponse.status,
+							},
+							"[DriverMatchingHandler] Driver pool WebSocket broadcast failed",
+						);
+					}
+				} catch (wsError) {
+					// Log but don't fail - FCM notifications are fallback
+					logger.error(
+						{ error: wsError, orderId },
+						"[DriverMatchingHandler] Failed to broadcast to driver pool WebSocket",
+					);
+				}
+
 				// Create notification payload for drivers
 				const driverUserIds = matchedDrivers
 					.map((m) => m.driver.userId)
 					.filter((id): id is string => id !== undefined);
 
-				// Send push notifications to nearby drivers
+				// Send push notifications to nearby drivers (FCM fallback for offline/background drivers)
 				if (driverUserIds.length > 0) {
 					await context.repo.notification.sendNotificationToUserIds({
 						fromUserId: lockedOrder.user_id,
@@ -177,8 +272,12 @@ export async function handleDriverMatching(
 				}
 
 				logger.info(
-					{ orderId, notifiedDrivers: driverUserIds.length },
-					"[DriverMatchingHandler] Broadcasted to nearby drivers",
+					{
+						orderId,
+						wsNotified: true,
+						fcmNotified: driverUserIds.length,
+					},
+					"[DriverMatchingHandler] Broadcasted to nearby drivers via WebSocket and FCM",
 				);
 			}
 
