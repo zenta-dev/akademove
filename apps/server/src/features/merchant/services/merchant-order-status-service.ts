@@ -86,13 +86,14 @@ export class MerchantOrderStatusService {
 			};
 		}
 
+		// TODO: Re-enable status validation after demo
 		// Check status
-		if (order.status !== "REQUESTED" && order.status !== "MATCHING") {
-			return {
-				allowed: false,
-				reason: `Cannot accept order with status ${order.status}`,
-			};
-		}
+		// if (order.status !== "REQUESTED" && order.status !== "MATCHING") {
+		// 	return {
+		// 		allowed: false,
+		// 		reason: `Cannot accept order with status ${order.status}`,
+		// 	};
+		// }
 
 		return { allowed: true };
 	}
@@ -116,17 +117,18 @@ export class MerchantOrderStatusService {
 			};
 		}
 
+		// TODO: Re-enable status validation after demo
 		// Check status
-		if (
-			order.status !== "REQUESTED" &&
-			order.status !== "MATCHING" &&
-			order.status !== "ACCEPTED"
-		) {
-			return {
-				allowed: false,
-				reason: `Cannot reject order with status ${order.status}`,
-			};
-		}
+		// if (
+		// 	order.status !== "REQUESTED" &&
+		// 	order.status !== "MATCHING" &&
+		// 	order.status !== "ACCEPTED"
+		// ) {
+		// 	return {
+		// 		allowed: false,
+		// 		reason: `Cannot reject order with status ${order.status}`,
+		// 	};
+		// }
 
 		return { allowed: true };
 	}
@@ -150,13 +152,14 @@ export class MerchantOrderStatusService {
 			};
 		}
 
+		// TODO: Re-enable status validation after demo
 		// Check status
-		if (order.status !== "ACCEPTED") {
-			return {
-				allowed: false,
-				reason: `Cannot mark order as preparing with status ${order.status}`,
-			};
-		}
+		// if (order.status !== "ACCEPTED") {
+		// 	return {
+		// 		allowed: false,
+		// 		reason: `Cannot mark order as preparing with status ${order.status}`,
+		// 	};
+		// }
 
 		return { allowed: true };
 	}
@@ -180,13 +183,14 @@ export class MerchantOrderStatusService {
 			};
 		}
 
+		// TODO: Re-enable status validation after demo
 		// Check status
-		if (order.status !== "PREPARING") {
-			return {
-				allowed: false,
-				reason: `Cannot mark order as ready with status ${order.status}`,
-			};
-		}
+		// if (order.status !== "PREPARING") {
+		// 	return {
+		// 		allowed: false,
+		// 		reason: `Cannot mark order as ready with status ${order.status}`,
+		// 	};
+		// }
 
 		return { allowed: true };
 	}
