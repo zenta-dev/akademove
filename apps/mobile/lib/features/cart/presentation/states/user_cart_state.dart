@@ -56,26 +56,10 @@ class UserCartState extends Equatable {
   /// Whether to show merchant conflict dialog
   final bool showMerchantConflict;
 
-  /// Get the current cart data from any successful operation
-  Cart? get currentCart {
-    // Return from the most recently successful operation
-    if (replaceCartResult.isSuccess && replaceCartResult.value != null) {
-      return replaceCartResult.value;
-    }
-    if (addItemResult.isSuccess && addItemResult.value != null) {
-      return addItemResult.value;
-    }
-    if (updateQuantityResult.isSuccess && updateQuantityResult.value != null) {
-      return updateQuantityResult.value;
-    }
-    if (removeItemResult.isSuccess) {
-      return removeItemResult.value;
-    }
-    if (clearCartResult.isSuccess) {
-      return null;
-    }
-    return cart.value;
-  }
+  /// Get the current cart data
+  /// The main `cart` field is the single source of truth - all operations
+  /// update it when they complete successfully
+  Cart? get currentCart => cart.value;
 
   /// Computed: total number of items in cart
   int get totalItems => currentCart?.totalItems ?? 0;

@@ -135,8 +135,14 @@ final userRouter = StatefulShellRoute.indexedStack(
                 final merchant = extra?['merchant'] as Merchant?;
                 final payment = extra?['payment'] as Payment?;
 
-                // Fallback if required data is missing
+                // Log and fallback if required data is missing
+                // This should rarely happen now that we fixed the race condition
+                // in on-trip screens, but we keep logging for debugging purposes
                 if (order == null || driver == null) {
+                  logger.w(
+                    '[UserRouter] Order completion route missing required data: '
+                    'order=${order != null}, driver=${driver != null}',
+                  );
                   return const UserHomeScreen();
                 }
 

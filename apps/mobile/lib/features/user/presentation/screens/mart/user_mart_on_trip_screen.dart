@@ -327,10 +327,8 @@ class _UserMartOnTripScreenState extends State<UserMartOnTripScreen> {
       final payment = state.currentPayment.value;
       final merchant = currentOrder?.merchant;
 
-      // Clear active order AFTER reading data
-      context.read<UserOrderCubit>().clearActiveOrder();
-
-      // Navigate to order completion screen
+      // Navigate to order completion screen FIRST, then clear active order
+      // This prevents race condition where driver data is cleared before navigation
       if (driver != null && currentOrder != null) {
         final result = await context.pushNamed(
           Routes.userOrderCompletion.name,
@@ -344,6 +342,11 @@ class _UserMartOnTripScreenState extends State<UserMartOnTripScreen> {
           },
         );
 
+        // Clear active order AFTER navigation completes
+        if (mounted && context.mounted) {
+          context.read<UserOrderCubit>().clearActiveOrder();
+        }
+
         // If rating was submitted successfully, show success message
         if (result == true && mounted && context.mounted) {
           context.showMyToast(
@@ -353,6 +356,8 @@ class _UserMartOnTripScreenState extends State<UserMartOnTripScreen> {
           context.popUntilRoot();
         }
       } else {
+        // Fallback: clear order and go to home if driver data is missing
+        context.read<UserOrderCubit>().clearActiveOrder();
         context.showMyToast(
           context.l10n.text_trip_completed,
           type: ToastType.success,

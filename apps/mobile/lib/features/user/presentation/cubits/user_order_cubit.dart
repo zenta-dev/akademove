@@ -647,10 +647,14 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
     }
 
     // Handle order completion - update order status to COMPLETED
-    // and clear active order state
+    // Note: We do NOT auto-clear the active order here. The UI screen
+    // is responsible for reading the driver/payment data and navigating
+    // to the review screen, THEN calling clearActiveOrder() after navigation.
+    // Auto-clearing here causes a race condition where driver data is lost
+    // before the UI can use it for navigation, resulting in a white screen.
     if (data.e == OrderEnvelopeEvent.COMPLETED) {
       if (detail != null) {
-        // Emit completed order state first so UI can react to completion
+        // Emit completed order state so UI can react to completion
         emit(
           state.copyWith(
             currentOrder: OperationResult.success(detail.order),
@@ -663,14 +667,6 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
           ),
         );
         logger.i('[UserOrderCubit] Order completed: ${detail.order.id}');
-
-        // Clear active order after a short delay to allow UI to process
-        // the completion state change before cleaning up
-        Future.delayed(const Duration(milliseconds: 500), () {
-          if (!isClosed) {
-            clearActiveOrder();
-          }
-        });
       }
     }
 

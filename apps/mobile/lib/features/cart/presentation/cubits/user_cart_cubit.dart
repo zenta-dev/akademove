@@ -66,6 +66,10 @@ class UserCartCubit extends BaseCubit<UserCartState> {
             state.copyWith(
               addItemResult: OperationResult.success(cart, message: message),
               cart: OperationResult.success(cart),
+              // Reset stale operation results
+              updateQuantityResult: const OperationResult.idle(),
+              removeItemResult: const OperationResult.idle(),
+              replaceCartResult: const OperationResult.idle(),
             ),
           );
         },
@@ -160,6 +164,10 @@ class UserCartCubit extends BaseCubit<UserCartState> {
                   ),
                   cart: OperationResult.success(cart),
                   clearPending: true,
+                  // Reset stale operation results
+                  addItemResult: const OperationResult.idle(),
+                  updateQuantityResult: const OperationResult.idle(),
+                  removeItemResult: const OperationResult.idle(),
                 ),
               );
             },
@@ -293,6 +301,7 @@ class UserCartCubit extends BaseCubit<UserCartState> {
     }
 
     // Emit optimistic state immediately (non-blocking)
+    // Reset other operation results to ensure cart field is the source of truth
     emit(
       state.copyWith(
         updateQuantityResult: OperationResult.success(
@@ -300,6 +309,10 @@ class UserCartCubit extends BaseCubit<UserCartState> {
           message: 'Cart updated',
         ),
         cart: OperationResult.success(updatedCart),
+        // Reset stale operation results to prevent them from interfering
+        addItemResult: const OperationResult.idle(),
+        removeItemResult: const OperationResult.idle(),
+        replaceCartResult: const OperationResult.idle(),
       ),
     );
 
@@ -324,6 +337,10 @@ class UserCartCubit extends BaseCubit<UserCartState> {
             state.copyWith(
               removeItemResult: OperationResult.success(cart, message: message),
               cart: OperationResult.success(cart),
+              // Reset stale operation results
+              addItemResult: const OperationResult.idle(),
+              updateQuantityResult: const OperationResult.idle(),
+              replaceCartResult: const OperationResult.idle(),
             ),
           );
         },
@@ -357,6 +374,11 @@ class UserCartCubit extends BaseCubit<UserCartState> {
               message: 'Cart cleared',
             ),
             cart: OperationResult.success(null),
+            // Reset stale operation results
+            addItemResult: const OperationResult.idle(),
+            updateQuantityResult: const OperationResult.idle(),
+            removeItemResult: const OperationResult.idle(),
+            replaceCartResult: const OperationResult.idle(),
           ),
         );
       } on BaseError catch (e, st) {
