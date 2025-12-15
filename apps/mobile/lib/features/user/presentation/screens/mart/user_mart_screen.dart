@@ -166,7 +166,7 @@ class _UserMartScreenState extends State<UserMartScreen> {
                       padding: (context, states, value) =>
                           EdgeInsetsGeometry.all(4.dg),
                     ),
-                onPressed: () => context.goNamed(Routes.userHistory.name),
+                onPressed: () => context.pushNamed(Routes.userHistory.name),
                 child: Row(
                   children: [
                     Text(

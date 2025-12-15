@@ -1848,5 +1848,13 @@
 	"order_completed": "Order Completed",
 	"order_detail_summary": "Order Summary",
 	"rate_merchant_title": "Rate Your Order",
-	"label_nearby": "Nearby"
+	"label_nearby": "Nearby",
+	"view_realtime": "View Real Time",
+	"status_requested": "Requested",
+	"status_matching": "Finding Driver",
+	"status_accepted": "Accepted",
+	"status_preparing": "Preparing",
+	"status_ready_for_pickup": "Ready for Pickup",
+	"status_arriving": "Driver Arriving",
+	"status_in_trip": "In Progress"
 }

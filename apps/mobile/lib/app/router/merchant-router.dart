@@ -84,14 +84,14 @@ final merchantRouter = StatefulShellRoute.indexedStack(
           ),
         ),
         GoRoute(
-          name: Routes.merchantOrderDetail.name,
-          path: Routes.merchantOrderDetail.path,
+          name: Routes.merchantActiveOrder.name,
+          path: Routes.merchantActiveOrder.path,
           builder: (context, state) {
-            final order = state.extra as Order?;
-            if (order == null) {
-              throw Exception('Order is required for merchant order detail');
+            final orderId = state.extra as String?;
+            if (orderId == null || orderId.isEmpty) {
+              throw Exception('Order ID is required for merchant order detail');
             }
-            return MerchantOrderDetailScreen(order: order);
+            return MerchantActiveOrderScreen(orderId: orderId);
           },
         ),
         GoRoute(
@@ -120,6 +120,19 @@ final merchantRouter = StatefulShellRoute.indexedStack(
                 payment: payment,
               ),
             );
+          },
+        ),
+        GoRoute(
+          name: Routes.merchantHistoryDetail.name,
+          path: Routes.merchantHistoryDetail.path,
+          builder: (context, state) {
+            final orderId = state.pathParameters['orderId'];
+            if (orderId == null || orderId.isEmpty) {
+              throw Exception(
+                'Order ID is required for merchant history detail',
+              );
+            }
+            return MerchantHistoryDetailScreen(orderId: orderId);
           },
         ),
       ],

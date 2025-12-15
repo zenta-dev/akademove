@@ -81,6 +81,7 @@ class UserCartCubit extends BaseCubit<UserCartState> {
               menuImage: menu.image,
               unitPrice: menu.price,
               quantity: quantity,
+              stock: menu.stock,
               notes: notes,
             );
 
@@ -196,8 +197,9 @@ class UserCartCubit extends BaseCubit<UserCartState> {
   /// Removes item if resulting quantity <= 0
   ///
   /// Uses optimistic updates for instant UI feedback:
-  /// 1. Immediately computes and emits new cart state
-  /// 2. Persists to storage in background (non-blocking)
+  /// 1. Validates stock availability for increments
+  /// 2. Immediately computes and emits new cart state
+  /// 3. Persists to storage in background (non-blocking)
   void updateQuantity({required String menuId, required int delta}) {
     final currentCart = state.currentCart;
     if (currentCart == null) {
@@ -233,6 +235,13 @@ class UserCartCubit extends BaseCubit<UserCartState> {
     final updatedItems = List<models.CartItem>.from(currentCart.items);
     final currentItem = updatedItems[itemIndex];
     final newQuantity = currentItem.quantity + delta;
+
+    // Validate stock for increments (delta > 0)
+    if (delta > 0 && newQuantity > currentItem.stock) {
+      // Cannot exceed available stock - silently ignore or emit same state
+      // The UI will show the item as "at max stock"
+      return;
+    }
 
     models.Cart? updatedCart;
 

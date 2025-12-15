@@ -110,7 +110,7 @@ class _ForgotPasswordFormViewState extends State<_ForgotPasswordFormView> {
       );
       await delay(const Duration(seconds: 1), () {});
       if (context.mounted && _submittedEmail != null) {
-        context.goNamed(
+        context.pushNamed(
           Routes.authResetPassword.name,
           queryParameters: {'email': _submittedEmail!},
         );

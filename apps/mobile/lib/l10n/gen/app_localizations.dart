@@ -8784,6 +8784,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Nearby'**
   String get label_nearby;
+
+  /// No description provided for @view_realtime.
+  ///
+  /// In en, this message translates to:
+  /// **'View Real Time'**
+  String get view_realtime;
+
+  /// No description provided for @status_requested.
+  ///
+  /// In en, this message translates to:
+  /// **'Requested'**
+  String get status_requested;
+
+  /// No description provided for @status_matching.
+  ///
+  /// In en, this message translates to:
+  /// **'Finding Driver'**
+  String get status_matching;
+
+  /// No description provided for @status_accepted.
+  ///
+  /// In en, this message translates to:
+  /// **'Accepted'**
+  String get status_accepted;
+
+  /// No description provided for @status_preparing.
+  ///
+  /// In en, this message translates to:
+  /// **'Preparing'**
+  String get status_preparing;
+
+  /// No description provided for @status_ready_for_pickup.
+  ///
+  /// In en, this message translates to:
+  /// **'Ready for Pickup'**
+  String get status_ready_for_pickup;
+
+  /// No description provided for @status_arriving.
+  ///
+  /// In en, this message translates to:
+  /// **'Driver Arriving'**
+  String get status_arriving;
+
+  /// No description provided for @status_in_trip.
+  ///
+  /// In en, this message translates to:
+  /// **'In Progress'**
+  String get status_in_trip;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

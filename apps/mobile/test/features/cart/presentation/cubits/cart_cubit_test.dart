@@ -63,6 +63,7 @@ void main() {
                 menuImage: null,
                 unitPrice: 25000,
                 quantity: 2,
+                stock: 10,
               ),
             ],
             totalItems: 2,
@@ -208,6 +209,7 @@ void main() {
             menuImage: null,
             unitPrice: 25000,
             quantity: 2,
+            stock: 10,
           ),
           CartItem(
             menuId: 'menu-2',
@@ -217,6 +219,7 @@ void main() {
             menuImage: null,
             unitPrice: 15000,
             quantity: 1,
+            stock: 5,
           ),
         ];
 
@@ -275,6 +278,7 @@ void main() {
               menuImage: null,
               unitPrice: 25000,
               quantity: 1,
+              stock: 10,
             ),
           ],
           totalItems: 1,
@@ -304,11 +308,57 @@ void main() {
           menuImage: null,
           unitPrice: 25000,
           quantity: 3,
+          stock: 10,
         );
 
         // Calculate manually: unitPrice * quantity
         final itemSubtotal = item.unitPrice * item.quantity;
         expect(itemSubtotal, 75000);
+      });
+
+      test('CartItem stock validation works correctly', () {
+        // Item at max stock
+        final atMaxItem = CartItem(
+          menuId: 'menu-1',
+          merchantId: TestConstants.testMerchantId,
+          merchantName: TestConstants.testMerchantName,
+          menuName: 'Max Stock Item',
+          menuImage: null,
+          unitPrice: 25000,
+          quantity: 10,
+          stock: 10,
+        );
+        expect(atMaxItem.isAtMaxStock, true);
+        expect(atMaxItem.isOutOfStock, false);
+
+        // Out of stock item
+        final outOfStockItem = CartItem(
+          menuId: 'menu-2',
+          merchantId: TestConstants.testMerchantId,
+          merchantName: TestConstants.testMerchantName,
+          menuName: 'Out of Stock Item',
+          menuImage: null,
+          unitPrice: 15000,
+          quantity: 1,
+          stock: 0,
+        );
+        expect(outOfStockItem.isOutOfStock, true);
+        expect(outOfStockItem.isAtMaxStock, true);
+
+        // Normal item with remaining stock
+        final normalItem = CartItem(
+          menuId: 'menu-3',
+          merchantId: TestConstants.testMerchantId,
+          merchantName: TestConstants.testMerchantName,
+          menuName: 'Normal Item',
+          menuImage: null,
+          unitPrice: 20000,
+          quantity: 3,
+          stock: 10,
+        );
+        expect(normalItem.isAtMaxStock, false);
+        expect(normalItem.isOutOfStock, false);
+        expect(normalItem.remainingStock, 7);
       });
     });
 

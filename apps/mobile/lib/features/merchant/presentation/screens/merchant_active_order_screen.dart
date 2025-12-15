@@ -2,7 +2,6 @@ import 'package:akademove/app/router/router.dart';
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/l10n/l10n.dart';
-import 'package:akademove/locator.dart';
 import 'package:api_client/api_client.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -10,24 +9,25 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 
-class MerchantOrderDetailScreen extends StatefulWidget {
-  const MerchantOrderDetailScreen({required this.order, super.key});
+class MerchantActiveOrderScreen extends StatefulWidget {
+  const MerchantActiveOrderScreen({required this.orderId, super.key});
 
-  final Order order;
+  final String orderId;
 
   @override
-  State<MerchantOrderDetailScreen> createState() =>
-      _MerchantOrderDetailScreenState();
+  State<MerchantActiveOrderScreen> createState() =>
+      _MerchantActiveOrderScreenState();
 }
 
-class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
-  late Order _currentOrder;
+class _MerchantActiveOrderScreenState extends State<MerchantActiveOrderScreen> {
   String? _merchantId;
+  OrderStatus? _previousStatus;
+  late final MerchantOrderCubit _merchantOrderCubit;
 
   @override
   void initState() {
     super.initState();
-    _currentOrder = widget.order;
+    _merchantOrderCubit = context.read<MerchantOrderCubit>();
     _loadMerchantId();
     _subscribeToOrderUpdates();
   }
@@ -48,36 +48,18 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
         setState(() {
           _merchantId = currentMerchant.id;
         });
-      } else {
-        // Fallback to order's merchantId if cubit state is empty
-        setState(() {
-          _merchantId = _currentOrder.merchantId;
-        });
       }
     } catch (e) {
-      // Fallback to order's merchantId on error
-      setState(() {
-        _merchantId = _currentOrder.merchantId;
-      });
-    }
-  }
-
-  Future<void> _onRefresh() async {
-    final result = await sl<OrderRepository>().get(_currentOrder.id);
-    final order = result.data;
-    if (mounted) {
-      setState(() {
-        _currentOrder = order;
-      });
+      // Silently fail - merchantId will be checked before actions
     }
   }
 
   Future<void> _subscribeToOrderUpdates() async {
-    await context.read<MerchantOrderCubit>().subscribeToOrder(_currentOrder.id);
+    await _merchantOrderCubit.subscribeToOrder(widget.orderId);
   }
 
   Future<void> _unsubscribeFromOrderUpdates() async {
-    await context.read<MerchantOrderCubit>().unsubscribeFromOrder();
+    await _merchantOrderCubit.unsubscribeFromOrder();
   }
 
   Future<void> _handleAcceptOrder() async {
@@ -111,7 +93,7 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
     if (confirmed == true && mounted) {
       context.read<MerchantOrderCubit>().acceptOrder(
         merchantId: merchantId,
-        orderId: _currentOrder.id,
+        orderId: widget.orderId,
       );
     }
   }
@@ -131,7 +113,7 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
     if (result != null && mounted) {
       context.read<MerchantOrderCubit>().rejectOrder(
         merchantId: merchantId,
-        orderId: _currentOrder.id,
+        orderId: widget.orderId,
         reason: result.reason,
         note: result.note,
       );
@@ -150,7 +132,7 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
 
     context.read<MerchantOrderCubit>().markPreparing(
       merchantId: merchantId,
-      orderId: _currentOrder.id,
+      orderId: widget.orderId,
     );
   }
 
@@ -166,7 +148,7 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
 
     context.read<MerchantOrderCubit>().markReady(
       merchantId: merchantId,
-      orderId: _currentOrder.id,
+      orderId: widget.orderId,
     );
   }
 
@@ -193,7 +175,7 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
     );
   }
 
-  Widget _buildCustomerInfo(BuildContext context) {
+  Widget _buildCustomerInfo(BuildContext context, Order order) {
     return Card(
       child: Row(
         spacing: 8.w,
@@ -214,7 +196,7 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
                 Row(
                   children: [
                     Text(
-                      _currentOrder.user?.name ?? _currentOrder.userId,
+                      order.user?.name ?? order.userId,
                       style: context.typography.small.copyWith(
                         fontSize: 18.sp,
                         fontWeight: FontWeight.w600,
@@ -222,7 +204,7 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
                     ),
                     Builder(
                       builder: (context) {
-                        final rating = _currentOrder.user?.rating;
+                        final rating = order.user?.rating;
                         if (rating == null || rating == 0) {
                           return const SizedBox.shrink();
                         }
@@ -261,9 +243,9 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
             ),
           ),
           ChatButtonWithBadge(
-            orderId: _currentOrder.id,
+            orderId: order.id,
             onPressed: () {
-              _showChatDialog(context, _currentOrder.id);
+              _showChatDialog(context, order.id);
             },
             variance: ButtonVariance.primary,
           ),
@@ -272,8 +254,8 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
     );
   }
 
-  Widget _buildDriverInfo(BuildContext context) {
-    final driverId = _currentOrder.driverId;
+  Widget _buildDriverInfo(BuildContext context, Order order) {
+    final driverId = order.driverId;
     if (driverId == null) {
       return const SizedBox.shrink();
     }
@@ -294,16 +276,16 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                _currentOrder.driver?.user?.name ?? driverId,
+                order.driver?.user?.name ?? driverId,
                 style: context.typography.small.copyWith(
                   fontSize: 18.sp,
                   fontWeight: FontWeight.w600,
                 ),
               ),
               ChatButtonWithBadge(
-                orderId: _currentOrder.id,
+                orderId: order.id,
                 onPressed: () {
-                  _showChatDialog(context, _currentOrder.id);
+                  _showChatDialog(context, order.id);
                 },
                 variance: ButtonVariance.primary,
               ),
@@ -314,8 +296,8 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
     );
   }
 
-  Widget _buildOrderDetails(BuildContext context) {
-    final items = _currentOrder.items ?? [];
+  Widget _buildOrderDetails(BuildContext context, Order order) {
+    final items = order.items ?? [];
 
     return Card(
       child: Column(
@@ -350,7 +332,7 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
               ],
             ),
           ),
-          if (_currentOrder.note != null) ...[
+          if (order.note != null) ...[
             Gap(8.h),
             Container(
               width: double.infinity,
@@ -378,7 +360,7 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
                 ),
               ),
               Text(
-                context.formatCurrency(_currentOrder.basePrice),
+                context.formatCurrency(order.basePrice),
                 style: context.typography.small.copyWith(
                   fontSize: 14.sp,
                   fontWeight: FontWeight.w500,
@@ -398,7 +380,7 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
                 ),
               ),
               Text(
-                context.formatCurrency(_currentOrder.totalPrice),
+                context.formatCurrency(order.totalPrice),
                 style: context.typography.small.copyWith(
                   fontSize: 14.sp,
                   fontWeight: FontWeight.w600,
@@ -411,7 +393,7 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
     );
   }
 
-  Widget _buildOrderInfo(BuildContext context) {
+  Widget _buildOrderInfo(BuildContext context, Order order) {
     return Card(
       child: Column(
         spacing: 8.h,
@@ -428,7 +410,7 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
                 ),
               ),
               Text(
-                _currentOrder.id.prefix(8),
+                order.id.prefix(8),
                 style: context.typography.small.copyWith(
                   fontSize: 14.sp,
                   fontWeight: FontWeight.w500,
@@ -448,11 +430,11 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
                 ),
               ),
               Text(
-                _currentOrder.status.value,
+                order.status.value,
                 style: context.typography.small.copyWith(
                   fontSize: 14.sp,
                   fontWeight: FontWeight.w600,
-                  color: _getStatusColor(_currentOrder.status),
+                  color: _getStatusColor(order.status),
                 ),
               ),
             ],
@@ -471,7 +453,7 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
               Text(
                 DateFormat(
                   'yyyy-MM-dd HH:mm',
-                ).format(_currentOrder.requestedAt.toLocal()),
+                ).format(order.requestedAt.toLocal()),
                 style: context.typography.small.copyWith(
                   fontSize: 14.sp,
                   fontWeight: FontWeight.w500,
@@ -503,12 +485,15 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
     }
   }
 
-  Widget? _buildActionButtons(BuildContext context, MerchantOrderState state) {
-    final status = _currentOrder.status;
+  Widget? _buildActionButtons(
+    BuildContext context,
+    MerchantOrderState state,
+    Order order,
+  ) {
+    final status = order.status;
 
     // Only show actions for food orders that belong to this merchant
-    if (_currentOrder.type != OrderType.FOOD ||
-        _currentOrder.merchantId == null) {
+    if (order.type != OrderType.FOOD || order.merchantId == null) {
       return null;
     }
 
@@ -523,8 +508,7 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
 
     switch (status) {
       case OrderStatus.REQUESTED:
-      case OrderStatus.MATCHING:
-        // Show accept/reject buttons
+        // Show accept/reject buttons for new incoming orders
         primaryButton = ActionButton.primary(
           isLoading: isAccepting,
           enabled: !isRejecting,
@@ -544,6 +528,25 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
           ),
         );
         break;
+
+      case OrderStatus.MATCHING:
+        // Show finding driver message (order is ready, searching for driver)
+        return Container(
+          padding: EdgeInsets.all(16.w),
+          decoration: BoxDecoration(
+            color: context.theme.colorScheme.background,
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Center(
+            child: Text(
+              context.l10n.finding_driver,
+              style: context.typography.small.copyWith(
+                fontSize: 16.sp,
+                color: const Color(0xFFFFA500), // Orange
+              ),
+            ),
+          ),
+        );
 
       case OrderStatus.ACCEPTED:
         // Show start preparing button
@@ -611,6 +614,23 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
     );
   }
 
+  /// Get order from cubit state - check both `order` and `orders` list
+  Order? _getOrderFromState(MerchantOrderState state) {
+    // First try to get from selected order
+    final selectedOrder = state.order.value;
+    if (selectedOrder != null && selectedOrder.id == widget.orderId) {
+      return selectedOrder;
+    }
+
+    // Fall back to orders list
+    final orders = state.orders.value;
+    if (orders != null) {
+      return orders.where((o) => o.id == widget.orderId).firstOrNull;
+    }
+
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     return MultiBlocListener(
@@ -621,13 +641,9 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
               previous.acceptOrderResult != current.acceptOrderResult,
           listener: (context, state) {
             if (state.acceptOrderResult.isSuccess) {
-              final updatedOrder = state.acceptOrderResult.value;
-              if (updatedOrder != null && updatedOrder.id == _currentOrder.id) {
-                setState(() => _currentOrder = updatedOrder);
-                final message = state.acceptOrderResult.message;
-                if (message != null && message.isNotEmpty) {
-                  context.showMyToast(message, type: ToastType.success);
-                }
+              final message = state.acceptOrderResult.message;
+              if (message != null && message.isNotEmpty) {
+                context.showMyToast(message, type: ToastType.success);
               }
             }
             if (state.acceptOrderResult.isFailure) {
@@ -646,7 +662,7 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
           listener: (context, state) {
             if (state.rejectOrderResult.isSuccess) {
               final updatedOrder = state.rejectOrderResult.value;
-              if (updatedOrder != null && updatedOrder.id == _currentOrder.id) {
+              if (updatedOrder != null && updatedOrder.id == widget.orderId) {
                 final message = state.rejectOrderResult.message;
                 if (message != null && message.isNotEmpty) {
                   context.showMyToast(message, type: ToastType.success);
@@ -670,13 +686,9 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
               previous.markPreparingResult != current.markPreparingResult,
           listener: (context, state) {
             if (state.markPreparingResult.isSuccess) {
-              final updatedOrder = state.markPreparingResult.value;
-              if (updatedOrder != null && updatedOrder.id == _currentOrder.id) {
-                setState(() => _currentOrder = updatedOrder);
-                final message = state.markPreparingResult.message;
-                if (message != null && message.isNotEmpty) {
-                  context.showMyToast(message, type: ToastType.success);
-                }
+              final message = state.markPreparingResult.message;
+              if (message != null && message.isNotEmpty) {
+                context.showMyToast(message, type: ToastType.success);
               }
             }
             if (state.markPreparingResult.isFailure) {
@@ -694,13 +706,9 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
               previous.markReadyResult != current.markReadyResult,
           listener: (context, state) {
             if (state.markReadyResult.isSuccess) {
-              final updatedOrder = state.markReadyResult.value;
-              if (updatedOrder != null && updatedOrder.id == _currentOrder.id) {
-                setState(() => _currentOrder = updatedOrder);
-                final message = state.markReadyResult.message;
-                if (message != null && message.isNotEmpty) {
-                  context.showMyToast(message, type: ToastType.success);
-                }
+              final message = state.markReadyResult.message;
+              if (message != null && message.isNotEmpty) {
+                context.showMyToast(message, type: ToastType.success);
               }
             }
             if (state.markReadyResult.isFailure) {
@@ -712,63 +720,74 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
             }
           },
         ),
-        // Listen for WebSocket order updates
+        // Listen for order completion to navigate to review screen
         BlocListener<MerchantOrderCubit, MerchantOrderState>(
-          listenWhen: (previous, current) => previous.order != current.order,
+          listenWhen: (previous, current) {
+            final prevOrder = _getOrderFromState(previous);
+            final currOrder = _getOrderFromState(current);
+            return prevOrder?.status != currOrder?.status;
+          },
           listener: (context, state) {
-            if (state.order.isSuccess) {
-              final selectedOrder = state.order.value;
-              if (selectedOrder != null &&
-                  selectedOrder.id == _currentOrder.id) {
-                final previousStatus = _currentOrder.status;
-                final newStatus = selectedOrder.status;
+            final order = _getOrderFromState(state);
+            if (order == null) return;
 
-                setState(() => _currentOrder = selectedOrder);
+            final newStatus = order.status;
 
-                // Check if order just transitioned to COMPLETED
-                if (previousStatus != OrderStatus.COMPLETED &&
-                    newStatus == OrderStatus.COMPLETED) {
-                  _navigateToReviewScreen(selectedOrder);
-                }
-              }
+            // Check if order just transitioned to COMPLETED
+            if (_previousStatus != null &&
+                _previousStatus != OrderStatus.COMPLETED &&
+                newStatus == OrderStatus.COMPLETED) {
+              _navigateToReviewScreen(order);
             }
+
+            _previousStatus = newStatus;
           },
         ),
       ],
       child: BlocBuilder<MerchantOrderCubit, MerchantOrderState>(
-        buildWhen: (previous, current) =>
-            previous.acceptOrderResult != current.acceptOrderResult ||
-            previous.rejectOrderResult != current.rejectOrderResult ||
-            previous.markPreparingResult != current.markPreparingResult ||
-            previous.markReadyResult != current.markReadyResult,
         builder: (context, state) {
-          final actionButtons = _buildActionButtons(context, state);
+          final order = _getOrderFromState(state);
+
+          // Show loading if order not yet available
+          if (order == null) {
+            return Scaffold(
+              headers: [
+                DefaultAppBar(
+                  title: context.l10n.order_detail,
+                  subtitle: 'F-${widget.orderId.prefix(8)}',
+                ),
+              ],
+              child: const Center(child: CircularProgressIndicator()),
+            );
+          }
+
+          // Update previous status for completion detection
+          _previousStatus ??= order.status;
+
+          final actionButtons = _buildActionButtons(context, state, order);
 
           return Scaffold(
             headers: [
               DefaultAppBar(
                 title: context.l10n.order_detail,
-                subtitle: 'F-${_currentOrder.id.prefix(8)}',
+                subtitle: 'F-${order.id.prefix(8)}',
               ),
             ],
             footers: [?actionButtons],
-            child: SafeRefreshTrigger(
-              onRefresh: _onRefresh,
-              child: SingleChildScrollView(
-                physics: const AlwaysScrollableScrollPhysics(),
-                child: Padding(
-                  padding: EdgeInsets.all(16.dg),
-                  child: Column(
-                    spacing: 16.h,
-                    children: [
-                      _buildCustomerInfo(context),
-                      _buildDriverInfo(context),
-                      _buildOrderDetails(context),
-                      _buildOrderInfo(context),
-                      // Add bottom padding if there are action buttons
-                      if (actionButtons != null) SizedBox(height: 80.h),
-                    ],
-                  ),
+            child: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              child: Padding(
+                padding: EdgeInsets.all(16.dg),
+                child: Column(
+                  spacing: 16.h,
+                  children: [
+                    _buildCustomerInfo(context, order),
+                    _buildDriverInfo(context, order),
+                    _buildOrderDetails(context, order),
+                    _buildOrderInfo(context, order),
+                    // Add bottom padding if there are action buttons
+                    if (actionButtons != null) SizedBox(height: 80.h),
+                  ],
                 ),
               ),
             ),

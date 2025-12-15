@@ -3,6 +3,7 @@ import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/l10n/l10n.dart';
 import 'package:api_client/api_client.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -138,6 +139,15 @@ class _UserDetailHistoryScreenState extends State<UserDetailHistoryScreen> {
                       // Order Details Card
                       _buildOrderDetailsCard(context, order),
                       Gap(16.h),
+
+                      // Order Timeline
+                      OrderTimelineWidget(order: order),
+                      Gap(16.h),
+
+                      // Delivery Info (for DELIVERY orders)
+                      if (order.type == OrderType.DELIVERY)
+                        DeliveryInfoWidget(order: order),
+                      if (order.type == OrderType.DELIVERY) Gap(16.h),
 
                       // Price Breakdown Card
                       _buildPriceBreakdownCard(context, order),
@@ -275,7 +285,7 @@ class _UserDetailHistoryScreenState extends State<UserDetailHistoryScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             DefaultText(
-              'Locations',
+              context.l10n.location,
               fontSize: 16.sp,
               fontWeight: FontWeight.w600,
             ),
@@ -286,6 +296,7 @@ class _UserDetailHistoryScreenState extends State<UserDetailHistoryScreen> {
               icon: LucideIcons.circle,
               iconColor: Colors.green,
               label: context.l10n.pickup_location,
+              address: order.pickupAddress,
               coordinate: order.pickupLocation,
             ),
             Padding(
@@ -305,9 +316,11 @@ class _UserDetailHistoryScreenState extends State<UserDetailHistoryScreen> {
               icon: LucideIcons.mapPin,
               iconColor: Colors.red,
               label: context.l10n.dropoff_location,
+              address: order.dropoffAddress,
               coordinate: order.dropoffLocation,
             ),
             Gap(12.h),
+            // Distance and estimated time
             Row(
               children: [
                 Icon(
@@ -334,6 +347,7 @@ class _UserDetailHistoryScreenState extends State<UserDetailHistoryScreen> {
     required IconData icon,
     required Color iconColor,
     required String label,
+    String? address,
     required Coordinate coordinate,
   }) {
     return Row(
@@ -351,11 +365,14 @@ class _UserDetailHistoryScreenState extends State<UserDetailHistoryScreen> {
                 color: context.colorScheme.mutedForeground,
               ),
               Gap(4.h),
-              AddressText(
-                address: null,
-                coordinate: coordinate,
-                style: context.typography.p.copyWith(fontSize: 14.sp),
-              ),
+              if (address != null && address.isNotEmpty)
+                DefaultText(address, fontSize: 14.sp)
+              else
+                AddressText(
+                  address: null,
+                  coordinate: coordinate,
+                  style: context.typography.p.copyWith(fontSize: 14.sp),
+                ),
             ],
           ),
         ),
@@ -371,7 +388,7 @@ class _UserDetailHistoryScreenState extends State<UserDetailHistoryScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             DefaultText(
-              'Order Details',
+              context.l10n.order_detail_summary,
               fontSize: 16.sp,
               fontWeight: FontWeight.w600,
             ),
@@ -383,28 +400,57 @@ class _UserDetailHistoryScreenState extends State<UserDetailHistoryScreen> {
             ),
             _buildDetailRow(
               context,
-              label: 'Order Type',
+              label: context.l10n.order_type_ride_label,
               value: order.type.localizedName(context),
             ),
             _buildDetailRow(
               context,
-              label: 'Requested',
+              label: context.l10n.distance,
+              value: '${order.distanceKm.toStringAsFixed(2)} km',
+            ),
+            _buildDetailRow(
+              context,
+              label: context.l10n.order_time,
               value: order.requestedAt.format('dd MMM yyyy - HH:mm'),
             ),
+            // Scheduled order info
+            if (order.scheduledAt != null)
+              _buildDetailRow(
+                context,
+                label: context.l10n.scheduled,
+                value: order.scheduledAt!.format('dd MMM yyyy - HH:mm'),
+                valueColor: const Color(0xFF00BCD4),
+              ),
             if (order.acceptedAt != null)
               _buildDetailRow(
                 context,
-                label: 'Accepted',
+                label: context.l10n.accepted,
                 value: order.acceptedAt!.format('dd MMM yyyy - HH:mm'),
               ),
+            // Completion time
+            if (order.status == OrderStatus.COMPLETED &&
+                order.updatedAt != order.createdAt)
+              _buildDetailRow(
+                context,
+                label: context.l10n.completed,
+                value: order.updatedAt.format('dd MMM yyyy - HH:mm'),
+                valueColor: const Color(0xFF4CAF50),
+              ),
+            // Gender preference
             if (order.genderPreference != null)
               _buildDetailRow(
                 context,
-                label: 'Gender Preference',
+                label: context.l10n.gender_preference,
                 value: order.genderPreference == OrderGenderPreferenceEnum.SAME
                     ? 'Same Gender'
-                    : 'Any Gender',
+                    : 'Any',
               ),
+            // Payment method
+            _buildDetailRow(
+              context,
+              label: context.l10n.label_payment_method,
+              value: context.l10n.payment_method_wallet,
+            ),
           ],
         ),
       ),
@@ -415,6 +461,7 @@ class _UserDetailHistoryScreenState extends State<UserDetailHistoryScreen> {
     BuildContext context, {
     required String label,
     required String value,
+    Color? valueColor,
   }) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 6.h),
@@ -426,7 +473,9 @@ class _UserDetailHistoryScreenState extends State<UserDetailHistoryScreen> {
             fontSize: 14.sp,
             color: context.colorScheme.mutedForeground,
           ),
-          Flexible(child: DefaultText(value, fontSize: 14.sp)),
+          Flexible(
+            child: DefaultText(value, fontSize: 14.sp, color: valueColor),
+          ),
         ],
       ),
     );
@@ -440,14 +489,14 @@ class _UserDetailHistoryScreenState extends State<UserDetailHistoryScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             DefaultText(
-              'Price Breakdown',
+              context.l10n.label_payment_summary,
               fontSize: 16.sp,
               fontWeight: FontWeight.w600,
             ),
             Gap(12.h),
             _buildPriceRow(
               context,
-              label: 'Base Price',
+              label: context.l10n.base_price,
               amount: order.basePrice,
             ),
             if (order.tip != null && order.tip! > 0)
@@ -456,8 +505,8 @@ class _UserDetailHistoryScreenState extends State<UserDetailHistoryScreen> {
               _buildPriceRow(
                 context,
                 label: order.couponCode != null
-                    ? 'Discount (${order.couponCode})'
-                    : 'Discount',
+                    ? '${context.l10n.label_discount} (${order.couponCode})'
+                    : context.l10n.label_discount,
                 amount: -order.discountAmount!,
                 isDiscount: true,
               ),
@@ -477,6 +526,32 @@ class _UserDetailHistoryScreenState extends State<UserDetailHistoryScreen> {
                   color: context.colorScheme.primary,
                 ),
               ],
+            ),
+            Gap(12.h),
+            // Payment status indicator
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+              decoration: BoxDecoration(
+                color: const Color(0xFF4CAF50).withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(8.r),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    LucideIcons.circleCheck,
+                    size: 16.sp,
+                    color: const Color(0xFF4CAF50),
+                  ),
+                  Gap(8.w),
+                  DefaultText(
+                    context.l10n.payment_method_wallet,
+                    fontSize: 14.sp,
+                    color: const Color(0xFF4CAF50),
+                    fontWeight: FontWeight.w500,
+                  ),
+                ],
+              ),
             ),
           ],
         ),
@@ -513,7 +588,12 @@ class _UserDetailHistoryScreenState extends State<UserDetailHistoryScreen> {
   }
 
   Widget _buildDriverCard(BuildContext context, Order order) {
-    final driverName = order.driver?.user?.name ?? context.l10n.text_driver;
+    final driver = order.driver;
+    final driverUser = driver?.user;
+    final driverName = driverUser?.name ?? context.l10n.text_driver;
+    final driverImage = driverUser?.image;
+    final driverRating = driver?.rating;
+    final licensePlate = driver?.licensePlate;
 
     return Card(
       child: Padding(
@@ -529,19 +609,51 @@ class _UserDetailHistoryScreenState extends State<UserDetailHistoryScreen> {
             Gap(12.h),
             Row(
               children: [
-                Container(
-                  width: 48.w,
-                  height: 48.w,
-                  decoration: BoxDecoration(
-                    color: context.colorScheme.primary.withValues(alpha: 0.1),
-                    shape: BoxShape.circle,
+                // Driver avatar with image support
+                if (driverImage != null && driverImage.isNotEmpty)
+                  ClipOval(
+                    child: CachedNetworkImage(
+                      imageUrl: driverImage,
+                      width: 56.w,
+                      height: 56.w,
+                      fit: BoxFit.cover,
+                      placeholder: (context, url) => Container(
+                        width: 56.w,
+                        height: 56.w,
+                        color: context.colorScheme.muted,
+                        child: const CircularProgressIndicator(strokeWidth: 2),
+                      ),
+                      errorWidget: (context, url, error) => Container(
+                        width: 56.w,
+                        height: 56.w,
+                        decoration: BoxDecoration(
+                          color: context.colorScheme.primary.withValues(
+                            alpha: 0.1,
+                          ),
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(
+                          LucideIcons.user,
+                          size: 28.sp,
+                          color: context.colorScheme.primary,
+                        ),
+                      ),
+                    ),
+                  )
+                else
+                  Container(
+                    width: 56.w,
+                    height: 56.w,
+                    decoration: BoxDecoration(
+                      color: context.colorScheme.primary.withValues(alpha: 0.1),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      LucideIcons.user,
+                      size: 28.sp,
+                      color: context.colorScheme.primary,
+                    ),
                   ),
-                  child: Icon(
-                    LucideIcons.user,
-                    size: 24.sp,
-                    color: context.colorScheme.primary,
-                  ),
-                ),
                 Gap(12.w),
                 Expanded(
                   child: Column(
@@ -550,19 +662,84 @@ class _UserDetailHistoryScreenState extends State<UserDetailHistoryScreen> {
                       DefaultText(
                         driverName,
                         fontSize: 16.sp,
-                        fontWeight: FontWeight.w500,
+                        fontWeight: FontWeight.w600,
                       ),
                       Gap(4.h),
-                      DefaultText(
-                        context.l10n.text_driver,
-                        fontSize: 12.sp,
-                        color: context.colorScheme.mutedForeground,
+                      Row(
+                        children: [
+                          // Rating
+                          if (driverRating != null && driverRating > 0) ...[
+                            Icon(
+                              LucideIcons.star,
+                              size: 14.sp,
+                              color: const Color(0xFFFFC107),
+                            ),
+                            Gap(4.w),
+                            DefaultText(
+                              driverRating.toStringAsFixed(1),
+                              fontSize: 13.sp,
+                              fontWeight: FontWeight.w500,
+                            ),
+                            Gap(8.w),
+                            Container(
+                              width: 4.w,
+                              height: 4.w,
+                              decoration: BoxDecoration(
+                                color: context.colorScheme.mutedForeground,
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                            Gap(8.w),
+                          ],
+                          DefaultText(
+                            context.l10n.text_driver,
+                            fontSize: 13.sp,
+                            color: context.colorScheme.mutedForeground,
+                          ),
+                        ],
                       ),
                     ],
                   ),
                 ),
               ],
             ),
+            // Vehicle info (license plate)
+            if (licensePlate != null && licensePlate.isNotEmpty) ...[
+              Gap(12.h),
+              Divider(color: context.colorScheme.border.withValues(alpha: 0.5)),
+              Gap(12.h),
+              Row(
+                children: [
+                  Icon(
+                    LucideIcons.bike,
+                    size: 18.sp,
+                    color: context.colorScheme.mutedForeground,
+                  ),
+                  Gap(8.w),
+                  DefaultText(
+                    'License Plate',
+                    fontSize: 13.sp,
+                    color: context.colorScheme.mutedForeground,
+                  ),
+                  Gap(8.w),
+                  Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 8.w,
+                      vertical: 4.h,
+                    ),
+                    decoration: BoxDecoration(
+                      color: context.colorScheme.muted,
+                      borderRadius: BorderRadius.circular(4.r),
+                    ),
+                    child: DefaultText(
+                      licensePlate,
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ],
         ),
       ),
@@ -570,7 +747,12 @@ class _UserDetailHistoryScreenState extends State<UserDetailHistoryScreen> {
   }
 
   Widget _buildMerchantCard(BuildContext context, Order order) {
-    final merchantName = order.merchant?.name ?? 'Merchant';
+    final merchant = order.merchant;
+    final merchantName = merchant?.name ?? 'Merchant';
+    final merchantImage = merchant?.image;
+    final merchantRating = merchant?.rating;
+    final merchantAddress = merchant?.address;
+    final merchantCategory = merchant?.category;
 
     return Card(
       child: Padding(
@@ -586,29 +768,130 @@ class _UserDetailHistoryScreenState extends State<UserDetailHistoryScreen> {
             Gap(12.h),
             Row(
               children: [
-                Container(
-                  width: 48.w,
-                  height: 48.w,
-                  decoration: BoxDecoration(
-                    color: context.colorScheme.primary.withValues(alpha: 0.1),
-                    shape: BoxShape.circle,
+                // Merchant image
+                if (merchantImage != null && merchantImage.isNotEmpty)
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(8.r),
+                    child: CachedNetworkImage(
+                      imageUrl: merchantImage,
+                      width: 56.w,
+                      height: 56.w,
+                      fit: BoxFit.cover,
+                      placeholder: (context, url) => Container(
+                        width: 56.w,
+                        height: 56.w,
+                        color: context.colorScheme.muted,
+                        child: const CircularProgressIndicator(strokeWidth: 2),
+                      ),
+                      errorWidget: (context, url, error) => Container(
+                        width: 56.w,
+                        height: 56.w,
+                        decoration: BoxDecoration(
+                          color: context.colorScheme.primary.withValues(
+                            alpha: 0.1,
+                          ),
+                          borderRadius: BorderRadius.circular(8.r),
+                        ),
+                        child: Icon(
+                          LucideIcons.store,
+                          size: 28.sp,
+                          color: context.colorScheme.primary,
+                        ),
+                      ),
+                    ),
+                  )
+                else
+                  Container(
+                    width: 56.w,
+                    height: 56.w,
+                    decoration: BoxDecoration(
+                      color: context.colorScheme.primary.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(8.r),
+                    ),
+                    child: Icon(
+                      LucideIcons.store,
+                      size: 28.sp,
+                      color: context.colorScheme.primary,
+                    ),
                   ),
-                  child: Icon(
-                    LucideIcons.store,
-                    size: 24.sp,
-                    color: context.colorScheme.primary,
-                  ),
-                ),
                 Gap(12.w),
                 Expanded(
-                  child: DefaultText(
-                    merchantName,
-                    fontSize: 16.sp,
-                    fontWeight: FontWeight.w500,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      DefaultText(
+                        merchantName,
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      Gap(4.h),
+                      Row(
+                        children: [
+                          // Rating
+                          if (merchantRating != null && merchantRating > 0) ...[
+                            Icon(
+                              LucideIcons.star,
+                              size: 14.sp,
+                              color: const Color(0xFFFFC107),
+                            ),
+                            Gap(4.w),
+                            DefaultText(
+                              merchantRating.toStringAsFixed(1),
+                              fontSize: 13.sp,
+                              fontWeight: FontWeight.w500,
+                            ),
+                            Gap(8.w),
+                            Container(
+                              width: 4.w,
+                              height: 4.w,
+                              decoration: BoxDecoration(
+                                color: context.colorScheme.mutedForeground,
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                            Gap(8.w),
+                          ],
+                          // Category
+                          if (merchantCategory != null)
+                            Flexible(
+                              child: DefaultText(
+                                merchantCategory.name,
+                                fontSize: 13.sp,
+                                color: context.colorScheme.mutedForeground,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                        ],
+                      ),
+                    ],
                   ),
                 ),
               ],
             ),
+            // Address
+            if (merchantAddress != null && merchantAddress.isNotEmpty) ...[
+              Gap(12.h),
+              Divider(color: context.colorScheme.border.withValues(alpha: 0.5)),
+              Gap(12.h),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Icon(
+                    LucideIcons.mapPin,
+                    size: 16.sp,
+                    color: context.colorScheme.mutedForeground,
+                  ),
+                  Gap(8.w),
+                  Expanded(
+                    child: DefaultText(
+                      merchantAddress,
+                      fontSize: 13.sp,
+                      color: context.colorScheme.mutedForeground,
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ],
         ),
       ),

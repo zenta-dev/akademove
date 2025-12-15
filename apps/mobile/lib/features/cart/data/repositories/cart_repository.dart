@@ -101,7 +101,7 @@ class CartRepository extends BaseRepository {
       return guard(() async {
         final currentCart = await getCart();
 
-        // Create new cart item
+        // Create new cart item with stock info
         final newItem = models.CartItem(
           menuId: menu.id,
           merchantId: menu.merchantId,
@@ -110,6 +110,7 @@ class CartRepository extends BaseRepository {
           menuImage: menu.image,
           unitPrice: menu.price,
           quantity: quantity,
+          stock: menu.stock,
           notes: notes,
         );
 
@@ -333,7 +334,7 @@ class CartRepository extends BaseRepository {
     return _withCartLock(() async {
       await _clearCartInternal();
       return guard(() async {
-        // Create new cart item
+        // Create new cart item with stock info
         final newItem = models.CartItem(
           menuId: menu.id,
           merchantId: menu.merchantId,
@@ -342,6 +343,7 @@ class CartRepository extends BaseRepository {
           menuImage: menu.image,
           unitPrice: menu.price,
           quantity: quantity,
+          stock: menu.stock,
           notes: notes,
         );
 

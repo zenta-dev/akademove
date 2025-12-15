@@ -141,7 +141,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                   variance: ButtonVariance.ghost,
                   onPressed: () {
                     context.read<BottomNavBarCubit>().setIndex(2);
-                    context.goNamed(Routes.userProfile.name);
+                    context.pushNamed(Routes.userProfile.name);
                   },
                 ).asSkeleton(enabled: state.user.isLoading);
               },

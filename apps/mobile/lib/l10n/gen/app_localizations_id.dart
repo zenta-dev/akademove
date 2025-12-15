@@ -4446,4 +4446,28 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get label_nearby => 'Terdekat';
+
+  @override
+  String get view_realtime => 'Lihat Real Time';
+
+  @override
+  String get status_requested => 'Menunggu';
+
+  @override
+  String get status_matching => 'Mencari Driver';
+
+  @override
+  String get status_accepted => 'Diterima';
+
+  @override
+  String get status_preparing => 'Sedang Disiapkan';
+
+  @override
+  String get status_ready_for_pickup => 'Siap Diambil';
+
+  @override
+  String get status_arriving => 'Driver Menuju Lokasi';
+
+  @override
+  String get status_in_trip => 'Dalam Perjalanan';
 }

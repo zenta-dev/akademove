@@ -6,7 +6,9 @@
  *
  * Supports two message formats:
  * 1. Event-based (e field): { e: "COMPLETED", f: "s", t: "c", ... }
- * 2. Action-based (a field): { a: "MATCHING", f: "s", t: "s", ... }
+ * 2. Action-based (a field): { a: "MATCHING", f: "s", t: "c", ... }
+ *
+ * Both formats use t: "c" (to client) since broadcasts always go TO clients.
  */
 
 import type { WebSocketBroadcastJob } from "@repo/schema/queue";
@@ -33,13 +35,18 @@ export async function handleWebSocketBroadcast(
 		const roomStub = OrderRepository.getRoomStubByName(roomName);
 
 		// Create the broadcast message based on type (event or action)
-		// Action-based messages (a field) are used for MATCHING and similar server-to-server actions
-		// Event-based messages (e field) are used for client notifications
+		// Both action-based (a field) and event-based (e field) messages are broadcast TO CLIENTS
+		// The "t" field indicates the intended recipient, which is "c" (client) for broadcasts
+		// Note: "t: s" is only used when CLIENT sends a message TO SERVER for processing
+		//
+		// Per OrderEnvelopeSchema, both `e` (event) and `a` (action) are optional.
+		// Driver app checks: envelope.e == OFFER || envelope.a == MATCHING
+		// So action-based messages with only `a: "MATCHING"` should work correctly.
 		const message = action
 			? {
 					a: action,
 					f: "s", // from server
-					t: "s", // to server (action-based messages are processed by DO)
+					t: "c", // to client (broadcasts go to connected WebSocket clients)
 					tg: target,
 					p: data,
 				}
