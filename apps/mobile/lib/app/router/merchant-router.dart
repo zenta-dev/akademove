@@ -98,11 +98,40 @@ final merchantRouter = StatefulShellRoute.indexedStack(
           name: Routes.merchantOrderCompletion.name,
           path: Routes.merchantOrderCompletion.path,
           builder: (context, state) {
-            final extra = state.extra as Map<String, dynamic>;
+            final extra = state.extra as Map<String, dynamic>?;
 
-            final orderId = extra['orderId'] as String;
-            final orderType = extra['orderType'] as OrderType;
-            final order = extra['order'] as Order;
+            // Handle missing route parameters gracefully
+            if (extra == null) {
+              logger.w(
+                '[MerchantRouter] Order completion route missing extra data',
+              );
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                context.goNamed(Routes.merchantHome.name);
+              });
+              return const Scaffold(
+                child: Center(child: CircularProgressIndicator()),
+              );
+            }
+
+            final orderId = extra['orderId'] as String?;
+            final orderType = extra['orderType'] as OrderType?;
+            final order = extra['order'] as Order?;
+
+            // Validate required parameters
+            if (orderId == null || orderType == null || order == null) {
+              logger.w(
+                '[MerchantRouter] Order completion route missing required data: '
+                'orderId=${orderId != null}, orderType=${orderType != null}, '
+                'order=${order != null}',
+              );
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                context.goNamed(Routes.merchantHome.name);
+              });
+              return const Scaffold(
+                child: Center(child: CircularProgressIndicator()),
+              );
+            }
+
             final driverUser = extra['user'] as DriverUser?;
             final payment = extra['payment'] as Payment?;
 

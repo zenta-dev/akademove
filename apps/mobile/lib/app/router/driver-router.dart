@@ -133,6 +133,9 @@ final driverRouter = StatefulShellRoute.indexedStack(
 
                 // Handle missing route parameters gracefully
                 if (extra == null) {
+                  logger.w(
+                    '[DriverRouter] Order completion route missing extra data',
+                  );
                   // Navigate back to home if route data is missing
                   WidgetsBinding.instance.addPostFrameCallback((_) {
                     context.goNamed(Routes.driverHome.name);
@@ -148,6 +151,11 @@ final driverRouter = StatefulShellRoute.indexedStack(
 
                 // Validate required parameters
                 if (orderId == null || orderType == null || order == null) {
+                  logger.w(
+                    '[DriverRouter] Order completion route missing required data: '
+                    'orderId=${orderId != null}, orderType=${orderType != null}, '
+                    'order=${order != null}',
+                  );
                   WidgetsBinding.instance.addPostFrameCallback((_) {
                     context.goNamed(Routes.driverHome.name);
                   });
