@@ -8778,6 +8778,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Rate Your Order'**
   String get rate_merchant_title;
+
+  /// No description provided for @label_nearby.
+  ///
+  /// In en, this message translates to:
+  /// **'Nearby'**
+  String get label_nearby;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

@@ -144,6 +144,37 @@ class MerchantRepository extends BaseRepository {
     });
   }
 
+  /// Get nearby merchants sorted by distance
+  /// Used for mart home screen to show merchants near user's location
+  Future<BaseResponse<List<Merchant>>> listNearby({
+    required double latitude,
+    required double longitude,
+    double maxDistance = 5000, // 5km default
+    int limit = 10,
+  }) {
+    return guard(() async {
+      final res = await _apiClient.getMerchantApi().merchantList(
+        latitude: latitude,
+        longitude: longitude,
+        maxDistance: maxDistance,
+        sortBy: 'distance',
+        isActive: true,
+        status: MerchantStatus.APPROVED,
+        operatingStatus: 'OPEN',
+        limit: limit,
+      );
+
+      final data =
+          res.data ??
+          (throw const RepositoryError(
+            'Nearby merchants not found',
+            code: ErrorCode.unknown,
+          ));
+
+      return SuccessResponse(message: data.message, data: data.data);
+    });
+  }
+
   // ========== MERCHANT MENU METHODS ==========
 
   Future<BaseResponse<List<MerchantMenu>>> getMenuList({

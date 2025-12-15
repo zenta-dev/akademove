@@ -1848,5 +1848,6 @@
 	"emergency_contact_unavailable": "Kontak darurat tidak tersedia. Silakan coba lagi nanti.",
 	"order_completed": "Pesanan Selesai",
 	"order_detail_summary": "Ringkasan Pesanan",
-	"rate_merchant_title": "Beri Rating Pesanan"
+	"rate_merchant_title": "Beri Rating Pesanan",
+	"label_nearby": "Terdekat"
 }

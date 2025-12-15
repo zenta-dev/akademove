@@ -4443,4 +4443,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get rate_merchant_title => 'Rate Your Order';
+
+  @override
+  String get label_nearby => 'Nearby';
 }

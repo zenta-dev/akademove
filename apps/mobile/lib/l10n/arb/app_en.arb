@@ -1847,5 +1847,6 @@
 	"emergency_contact_unavailable": "Emergency contact is not available. Please try again later.",
 	"order_completed": "Order Completed",
 	"order_detail_summary": "Order Summary",
-	"rate_merchant_title": "Rate Your Order"
+	"rate_merchant_title": "Rate Your Order",
+	"label_nearby": "Nearby"
 }

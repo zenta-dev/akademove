@@ -27,6 +27,7 @@ class UserMartState extends Equatable {
     this.categories = const ['ATK', 'Printing', 'Food'],
     this.bestSellers = const OperationResult.idle(),
     this.recentOrders = const OperationResult.idle(),
+    this.nearbyMerchants = const OperationResult.idle(),
     this.categoryMerchants = const OperationResult.idle(),
     this.selectedCategory,
   });
@@ -34,6 +35,7 @@ class UserMartState extends Equatable {
   final List<String> categories;
   final OperationResult<List<BestSellerItem>> bestSellers;
   final OperationResult<List<Order>> recentOrders;
+  final OperationResult<List<Merchant>> nearbyMerchants;
   final OperationResult<List<Merchant>> categoryMerchants;
   final String? selectedCategory;
 
@@ -42,6 +44,7 @@ class UserMartState extends Equatable {
     categories,
     bestSellers,
     recentOrders,
+    nearbyMerchants,
     categoryMerchants,
     selectedCategory,
   ];
@@ -50,6 +53,7 @@ class UserMartState extends Equatable {
     List<String>? categories,
     OperationResult<List<BestSellerItem>>? bestSellers,
     OperationResult<List<Order>>? recentOrders,
+    OperationResult<List<Merchant>>? nearbyMerchants,
     OperationResult<List<Merchant>>? categoryMerchants,
     String? selectedCategory,
   }) {
@@ -57,6 +61,7 @@ class UserMartState extends Equatable {
       categories: categories ?? this.categories,
       bestSellers: bestSellers ?? this.bestSellers,
       recentOrders: recentOrders ?? this.recentOrders,
+      nearbyMerchants: nearbyMerchants ?? this.nearbyMerchants,
       categoryMerchants: categoryMerchants ?? this.categoryMerchants,
       selectedCategory: selectedCategory ?? this.selectedCategory,
     );

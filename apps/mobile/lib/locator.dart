@@ -166,7 +166,10 @@ void _setupCubit() {
       () => UserLocationCubit(locationService: sl<LocationService>()),
     )
     ..registerFactory(
-      () => UserMartCubit(merchantRepository: sl<MerchantRepository>()),
+      () => UserMartCubit(
+        merchantRepository: sl<MerchantRepository>(),
+        locationService: sl<LocationService>(),
+      ),
     )
     ..registerFactory(
       () => UserMerchantListCubit(merchantRepository: sl<MerchantRepository>()),
