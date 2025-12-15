@@ -194,49 +194,112 @@ class UserCartCubit extends BaseCubit<UserCartState> {
 
   /// Update item quantity by delta (positive to increment, negative to decrement)
   /// Removes item if resulting quantity <= 0
-  Future<void> updateQuantity({
-    required String menuId,
-    required int delta,
-  }) async {
-    // Use stable key per menuId - operations are serialized in the repository
-    final taskKey = 'CC-uQ-$menuId';
-    await taskManager.execute(taskKey, () async {
-      try {
-        final result = await _cartRepository.updateItemQuantityByDelta(
-          menuId: menuId,
-          delta: delta,
+  ///
+  /// Uses optimistic updates for instant UI feedback:
+  /// 1. Immediately computes and emits new cart state
+  /// 2. Persists to storage in background (non-blocking)
+  void updateQuantity({required String menuId, required int delta}) {
+    final currentCart = state.currentCart;
+    if (currentCart == null) {
+      emit(
+        state.copyWith(
+          updateQuantityResult: OperationResult.failed(
+            const RepositoryError('Cart is empty', code: ErrorCode.notFound),
+          ),
+        ),
+      );
+      return;
+    }
+
+    final itemIndex = currentCart.items.indexWhere(
+      (item) => item.menuId == menuId,
+    );
+
+    if (itemIndex < 0) {
+      emit(
+        state.copyWith(
+          updateQuantityResult: OperationResult.failed(
+            const RepositoryError(
+              'Item not found in cart',
+              code: ErrorCode.notFound,
+            ),
+          ),
+        ),
+      );
+      return;
+    }
+
+    // Compute new cart state optimistically
+    final updatedItems = List<models.CartItem>.from(currentCart.items);
+    final currentItem = updatedItems[itemIndex];
+    final newQuantity = currentItem.quantity + delta;
+
+    models.Cart? updatedCart;
+
+    if (newQuantity <= 0) {
+      // Remove item
+      updatedItems.removeAt(itemIndex);
+
+      if (updatedItems.isEmpty) {
+        // Cart becomes empty
+        updatedCart = null;
+      } else {
+        // Recalculate totals
+        final totalItems = updatedItems.fold<int>(
+          0,
+          (sum, item) => sum + item.quantity,
+        );
+        final subtotal = updatedItems.fold<num>(
+          0,
+          (sum, item) => sum + (item.unitPrice * item.quantity),
         );
 
-        result.when(
-          success: (cart, message) {
-            emit(
-              state.copyWith(
-                updateQuantityResult: OperationResult.success(
-                  cart,
-                  message: message,
-                ),
-                cart: OperationResult.success(cart),
-              ),
-            );
-          },
-          failed: (code, message) {
-            final error = RepositoryError(message, code: code);
-            emit(
-              state.copyWith(
-                updateQuantityResult: OperationResult.failed(error),
-              ),
-            );
-          },
+        updatedCart = currentCart.copyWith(
+          items: updatedItems,
+          totalItems: totalItems,
+          subtotal: subtotal,
+          lastUpdated: DateTime.now(),
         );
-      } on BaseError catch (e, st) {
-        logger.e(
-          '[UserCartCubit] - updateQuantity Error: ${e.message}',
-          error: e,
-          stackTrace: st,
-        );
-        emit(state.copyWith(updateQuantityResult: OperationResult.failed(e)));
       }
-    });
+    } else {
+      // Update quantity
+      updatedItems[itemIndex] = currentItem.copyWith(quantity: newQuantity);
+
+      // Recalculate totals
+      final totalItems = updatedItems.fold<int>(
+        0,
+        (sum, item) => sum + item.quantity,
+      );
+      final subtotal = updatedItems.fold<num>(
+        0,
+        (sum, item) => sum + (item.unitPrice * item.quantity),
+      );
+
+      updatedCart = currentCart.copyWith(
+        items: updatedItems,
+        totalItems: totalItems,
+        subtotal: subtotal,
+        lastUpdated: DateTime.now(),
+      );
+    }
+
+    // Emit optimistic state immediately (non-blocking)
+    emit(
+      state.copyWith(
+        updateQuantityResult: OperationResult.success(
+          updatedCart,
+          message: 'Cart updated',
+        ),
+        cart: OperationResult.success(updatedCart),
+      ),
+    );
+
+    // Persist in background (fire-and-forget)
+    if (updatedCart != null) {
+      _cartRepository.persistCart(updatedCart);
+    } else {
+      _cartRepository.persistClearCart();
+    }
   }
 
   /// Remove item from cart

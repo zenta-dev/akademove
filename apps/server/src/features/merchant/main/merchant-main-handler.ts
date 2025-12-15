@@ -23,7 +23,7 @@ export const MerchantMainHandler = priv.router({
 			};
 		}),
 	list: priv.list
-		.use(requireRoles("SYSTEM"))
+		.use(requireRoles("ALL"))
 		.handler(async ({ context, input: { query } }) => {
 			const { rows, totalPages } = await context.repo.merchant.main.list(query);
 

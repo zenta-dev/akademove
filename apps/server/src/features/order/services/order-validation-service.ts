@@ -118,6 +118,71 @@ export class OrderValidationService {
 	}
 
 	/**
+	 * Validate stock availability for FOOD order items at placement time
+	 *
+	 * Called BEFORE order creation to ensure sufficient stock exists.
+	 * Uses the menu items fetched during order placement and the requested quantities.
+	 *
+	 * @param menus - Menu items fetched from database (with stock field)
+	 * @param items - Order items with requested quantities
+	 * @throws RepositoryError if any item has insufficient stock
+	 */
+	static validateStockAtPlacement(
+		menus: Array<{ id: string; name: string; stock: number }>,
+		items?: Array<{ quantity: number; item?: { id?: string } }>,
+	): void {
+		if (!items || items.length === 0) {
+			return;
+		}
+
+		// Create a map of menuId -> requested quantity
+		const requestedQuantities = new Map<string, number>();
+		for (const item of items) {
+			const menuId = item.item?.id;
+			if (menuId) {
+				requestedQuantities.set(menuId, item.quantity);
+			}
+		}
+
+		// Check stock for each menu item
+		const insufficientItems: Array<{
+			menuName: string;
+			requested: number;
+			available: number;
+		}> = [];
+
+		for (const menu of menus) {
+			const requestedQty = requestedQuantities.get(menu.id);
+			if (requestedQty !== undefined && requestedQty > menu.stock) {
+				insufficientItems.push({
+					menuName: menu.name,
+					requested: requestedQty,
+					available: menu.stock,
+				});
+			}
+		}
+
+		if (insufficientItems.length > 0) {
+			const itemDetails = insufficientItems
+				.map(
+					(i) =>
+						`${i.menuName} (requested: ${i.requested}, available: ${i.available})`,
+				)
+				.join(", ");
+			logger.warn(
+				{ insufficientItems },
+				"[OrderValidation] Insufficient stock at order placement",
+			);
+			throw new RepositoryError(
+				`Insufficient stock for: ${itemDetails}. Please update your cart.`,
+				{ code: "BAD_REQUEST" },
+			);
+		}
+
+		logger.debug("[OrderValidation] Stock validation at placement passed");
+	}
+
+	/**
 	 * Validate stock availability for FOOD order items
 	 *
 	 * Queries order items and their associated menu items to ensure

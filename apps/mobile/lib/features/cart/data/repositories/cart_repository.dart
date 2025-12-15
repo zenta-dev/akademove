@@ -45,11 +45,38 @@ class CartRepository extends BaseRepository {
     });
   }
 
-  /// Save cart to storage
+  /// Save cart to storage (internal, used within locked operations)
   Future<void> _saveCart(models.Cart cart) async {
     return guard(() async {
       final cartJson = jsonEncode(cart.toJson());
       await _keyValueService.set(KeyValueKeys.cart, cartJson);
+    });
+  }
+
+  /// Save cart to storage (public, for optimistic updates)
+  /// This method is fire-and-forget safe - errors are logged but not thrown
+  Future<void> persistCart(models.Cart cart) async {
+    return _withCartLock(() async {
+      try {
+        final cartJson = jsonEncode(cart.toJson());
+        await _keyValueService.set(KeyValueKeys.cart, cartJson);
+      } catch (e) {
+        // Log but don't throw - this is for background persistence
+        // The UI already has the optimistic state
+        logger.e('[CartRepository] persistCart failed', error: e);
+      }
+    });
+  }
+
+  /// Clear cart from storage (public, for optimistic updates)
+  /// This method is fire-and-forget safe - errors are logged but not thrown
+  Future<void> persistClearCart() async {
+    return _withCartLock(() async {
+      try {
+        await _keyValueService.remove(KeyValueKeys.cart);
+      } catch (e) {
+        logger.e('[CartRepository] persistClearCart failed', error: e);
+      }
     });
   }
 
@@ -224,6 +251,8 @@ class CartRepository extends BaseRepository {
           subtotal: subtotal,
           lastUpdated: DateTime.now(),
           merchantLocation: currentCart.merchantLocation,
+          merchantCategory: currentCart.merchantCategory,
+          attachmentUrl: currentCart.attachmentUrl,
         );
 
         await _saveCart(updatedCart);
@@ -271,6 +300,8 @@ class CartRepository extends BaseRepository {
           subtotal: subtotal,
           lastUpdated: DateTime.now(),
           merchantLocation: currentCart.merchantLocation,
+          merchantCategory: currentCart.merchantCategory,
+          attachmentUrl: currentCart.attachmentUrl,
         );
 
         await _saveCart(updatedCart);

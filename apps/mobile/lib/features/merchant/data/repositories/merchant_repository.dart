@@ -61,6 +61,7 @@ class MerchantRepository extends BaseRepository {
     String? category,
     String? query,
     bool? isActive,
+    MerchantStatus? status, // 'PENDING', 'APPROVED', 'REJECTED', etc.
     String? operatingStatus, // 'OPEN', 'CLOSED', 'BREAK', 'MAINTENANCE'
     int? page,
     int? limit,
@@ -70,6 +71,7 @@ class MerchantRepository extends BaseRepository {
         categories: category != null ? [category] : null,
         query: query,
         isActive: isActive,
+        status: status,
         operatingStatus: operatingStatus,
         page: page,
         limit: limit,

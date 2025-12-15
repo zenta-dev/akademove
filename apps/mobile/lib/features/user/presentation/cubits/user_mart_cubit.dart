@@ -85,6 +85,7 @@ class UserMartCubit extends BaseCubit<UserMartState> {
           final res = await _merchantRepository.list(
             category: category,
             isActive: true, // Only show active merchants
+            status: MerchantStatus.APPROVED, // Only show approved merchants
             operatingStatus: 'OPEN', // Only show open merchants
             limit: 50, // Get reasonable number of merchants per category
           );
