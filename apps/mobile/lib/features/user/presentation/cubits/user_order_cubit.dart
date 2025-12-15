@@ -647,12 +647,8 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
     }
 
     // Handle order completion - update order status to COMPLETED
-    // Note: We do NOT auto-clear the active order here. The UI screen
-    // is responsible for reading the driver/payment data and navigating
-    // to the review screen, THEN calling clearActiveOrder() after navigation.
-    // Auto-clearing here causes a race condition where driver data is lost
-    // before the UI can use it for navigation, resulting in a white screen.
-    if (data.e == OrderEnvelopeEvent.COMPLETED) {
+    // and clear active order state
+    if (data.e == OrderEnvelopeEvent.ORDER_COMPLETED) {
       if (detail != null) {
         // Emit completed order state so UI can react to completion
         emit(
@@ -671,7 +667,7 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
     }
 
     // Handle order cancellation events
-    if (data.e == OrderEnvelopeEvent.CANCELED) {
+    if (data.e == OrderEnvelopeEvent.ORDER_CANCELLED) {
       if (detail != null) {
         emit(
           state.copyWith(
@@ -692,7 +688,7 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
     }
 
     // Handle no-show event (driver reported user not present)
-    if (data.e == OrderEnvelopeEvent.NO_SHOW) {
+    if (data.e == OrderEnvelopeEvent.ORDER_NO_SHOW) {
       if (detail != null) {
         emit(
           state.copyWith(

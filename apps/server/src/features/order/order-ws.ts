@@ -148,58 +148,17 @@ export class OrderRoom extends BaseDurableObject {
 			return;
 		}
 
+		// Handle client → server actions (a field)
+		// Only 2 actions supported: DRIVER_UPDATE_LOCATION and DRIVER_COMPLETE_ORDER
 		if (data.t === "s" && data.a !== undefined) {
 			try {
-				if (data.a === "MATCHING") {
-					await this.#svc.db.transaction(
-						async (tx) => await this.#handleOrderMatching(ws, data, tx),
-					);
-				}
-				if (data.a === "UPDATE_LOCATION") {
+				if (data.a === "DRIVER_UPDATE_LOCATION") {
 					await this.#handleDriverUpdateLocation(ws, data);
 				}
-				if (data.a === "ACCEPTED") {
-					await this.#svc.db.transaction(
-						async (tx) => await this.#handleOrderAccepted(ws, data, tx),
-					);
-				}
-				if (data.a === "DONE") {
+				if (data.a === "DRIVER_COMPLETE_ORDER") {
 					await this.#svc.db.transaction(
 						async (tx) => await this.#handleOrderDone(ws, data, tx),
 					);
-				}
-				if (data.a === "SEND_MESSAGE") {
-					await this.#svc.db.transaction(
-						async (tx) => await this.#handleChatMessage(ws, data, tx),
-					);
-				}
-				if (data.a === "MERCHANT_ACCEPT") {
-					await this.#svc.db.transaction(
-						async (tx) => await this.#handleMerchantAccept(ws, data, tx),
-					);
-				}
-				if (data.a === "MERCHANT_REJECT") {
-					await this.#svc.db.transaction(
-						async (tx) => await this.#handleMerchantReject(ws, data, tx),
-					);
-				}
-				if (data.a === "MERCHANT_MARK_PREPARING") {
-					await this.#svc.db.transaction(
-						async (tx) => await this.#handleMerchantMarkPreparing(ws, data, tx),
-					);
-				}
-				if (data.a === "MERCHANT_MARK_READY") {
-					await this.#svc.db.transaction(
-						async (tx) => await this.#handleMerchantMarkReady(ws, data, tx),
-					);
-				}
-				if (data.a === "REPORT_NO_SHOW") {
-					await this.#svc.db.transaction(
-						async (tx) => await this.#handleNoShow(ws, data, tx),
-					);
-				}
-				if (data.a === "CHECK_NEW_DATA") {
-					await this.#handleCheckNewData(ws, data);
 				}
 			} catch (error) {
 				logger.error(
@@ -330,7 +289,7 @@ export class OrderRoom extends BaseDurableObject {
 			]);
 
 			const response: OrderEnvelope = {
-				e: "CANCELED",
+				e: "ORDER_CANCELLED",
 				f: "s",
 				t: "c",
 				p: data.p,
@@ -410,7 +369,7 @@ export class OrderRoom extends BaseDurableObject {
 		}
 
 		const envelope: OrderEnvelope = {
-			e: "OFFER",
+			e: "ORDER_OFFER",
 			f: "s",
 			t: "c",
 			tg: "DRIVER",
@@ -505,7 +464,7 @@ export class OrderRoom extends BaseDurableObject {
 
 			// Notify this driver that the order is no longer available
 			const unavailablePayload: OrderEnvelope = {
-				e: "UNAVAILABLE",
+				e: "ORDER_UNAVAILABLE",
 				f: "s",
 				t: "c",
 				tg: "DRIVER",
@@ -531,7 +490,7 @@ export class OrderRoom extends BaseDurableObject {
 
 				// Notify driver that order cannot be accepted due to stock issues
 				const stockErrorPayload: OrderEnvelope = {
-					e: "UNAVAILABLE",
+					e: "ORDER_UNAVAILABLE",
 					f: "s",
 					t: "c",
 					tg: "DRIVER",
@@ -560,7 +519,7 @@ export class OrderRoom extends BaseDurableObject {
 		if (!lockedDriver) {
 			logger.warn({ orderId, driverId }, "[OrderRoom] Driver not found");
 			const errorPayload: OrderEnvelope = {
-				e: "UNAVAILABLE",
+				e: "ORDER_UNAVAILABLE",
 				f: "s",
 				t: "c",
 				tg: "DRIVER",
@@ -577,7 +536,7 @@ export class OrderRoom extends BaseDurableObject {
 				"[OrderRoom] Driver is already taking another order",
 			);
 			const busyPayload: OrderEnvelope = {
-				e: "UNAVAILABLE",
+				e: "ORDER_UNAVAILABLE",
 				f: "s",
 				t: "c",
 				tg: "DRIVER",
@@ -607,7 +566,7 @@ export class OrderRoom extends BaseDurableObject {
 					continue;
 				}
 				const unavailablePayload: OrderEnvelope = {
-					e: "UNAVAILABLE",
+					e: "ORDER_UNAVAILABLE",
 					f: "s",
 					t: "c",
 					tg: "DRIVER",
@@ -946,7 +905,7 @@ export class OrderRoom extends BaseDurableObject {
 		// Broadcast COMPLETED event with updated order details
 		// User cubit expects p.detail.order to update UI
 		const completedPayload: OrderEnvelope = {
-			e: "COMPLETED",
+			e: "ORDER_COMPLETED",
 			f: "s",
 			t: "c",
 			p: {
@@ -1355,8 +1314,8 @@ export class OrderRoom extends BaseDurableObject {
 			await ProcessingQueueService.enqueueWebSocketBroadcast(
 				{
 					roomName: DRIVER_POOL_KEY,
-					action: "MATCHING",
-					target: "SYSTEM",
+					event: "MATCHING",
+					target: "DRIVER",
 					data: {
 						detail: {
 							order: updatedOrder,
@@ -1602,7 +1561,7 @@ export class OrderRoom extends BaseDurableObject {
 			const userWs = this.findById(order.userId);
 
 			const noShowResponse: OrderEnvelope = {
-				e: "NO_SHOW",
+				e: "ORDER_NO_SHOW",
 				f: "s",
 				t: "c",
 				p: {
@@ -1645,174 +1604,6 @@ export class OrderRoom extends BaseDurableObject {
 				"[OrderRoom] Failed to handle no-show",
 			);
 			throw error;
-		}
-	}
-
-	/**
-	 * Handle CHECK_NEW_DATA action - client asks if there's new data since lastKnownVersion
-	 * This replaces HTTP polling with WebSocket-based data sync
-	 *
-	 * Client sends: { a: "CHECK_NEW_DATA", p: { syncRequest: { orderId, lastKnownVersion } } }
-	 * Server responds:
-	 *   - NEW_DATA with full order detail if data changed
-	 *   - NO_DATA if no changes since lastKnownVersion
-	 */
-	async #handleCheckNewData(ws: WebSocket, data: OrderEnvelope) {
-		const syncRequest = data.p.syncRequest;
-		if (!syncRequest) {
-			logger.warn(
-				data,
-				"[OrderRoom] Invalid CHECK_NEW_DATA payload - missing syncRequest",
-			);
-			return;
-		}
-
-		const { orderId, lastKnownVersion } = syncRequest;
-
-		try {
-			// Fetch current order state from database using repository
-			const composedOrder = await this.#repo.order.get(orderId);
-
-			// Use updatedAt as version indicator
-			const currentVersion = composedOrder.updatedAt.toISOString();
-
-			// Compare versions - if lastKnownVersion is missing or different, send new data
-			const hasNewData =
-				!lastKnownVersion || lastKnownVersion !== currentVersion;
-
-			if (hasNewData) {
-				// Find payment transaction for this order
-				const paymentTransaction =
-					await this.#svc.db.query.transaction.findFirst({
-						where: (f, op) =>
-							op.and(
-								op.eq(f.referenceId, orderId),
-								op.eq(f.type, "PAYMENT"),
-								op.inArray(f.status, ["PENDING", "SUCCESS"]),
-							),
-					});
-
-				// Find payment if transaction exists
-				const payment = paymentTransaction
-					? await this.#svc.db.query.payment.findFirst({
-							where: (f, op) => op.eq(f.transactionId, paymentTransaction.id),
-						})
-					: null;
-
-				// Get driver if assigned
-				let driverAssigned = null;
-				if (composedOrder.driverId) {
-					try {
-						driverAssigned = await this.#repo.driver.main.get(
-							composedOrder.driverId,
-						);
-					} catch {
-						// Driver might not exist, continue without it
-						logger.debug(
-							{ driverId: composedOrder.driverId },
-							"[OrderRoom] Driver not found",
-						);
-					}
-				}
-
-				// Convert payment to schema-compatible format
-				const paymentData = payment
-					? {
-							id: payment.id,
-							transactionId: payment.transactionId,
-							provider: payment.provider,
-							method: payment.method,
-							amount: toNumberSafe(payment.amount),
-							status: payment.status,
-							bankProvider: payment.bankProvider ?? undefined,
-							externalId: payment.externalId ?? undefined,
-							paymentUrl: payment.paymentUrl ?? undefined,
-							va_number: payment.va_number ?? undefined,
-							metadata: payment.metadata ?? undefined,
-							expiresAt: payment.expiresAt ?? undefined,
-							payload: payment.payload ?? undefined,
-							response: payment.response ?? undefined,
-							createdAt: payment.createdAt,
-							updatedAt: payment.updatedAt,
-						}
-					: null;
-
-				// Convert transaction to schema-compatible format
-				const transactionData = paymentTransaction
-					? {
-							id: paymentTransaction.id,
-							walletId: paymentTransaction.walletId,
-							type: paymentTransaction.type,
-							amount: toNumberSafe(paymentTransaction.amount),
-							status: paymentTransaction.status,
-							balanceBefore: paymentTransaction.balanceBefore
-								? toNumberSafe(paymentTransaction.balanceBefore)
-								: undefined,
-							balanceAfter: paymentTransaction.balanceAfter
-								? toNumberSafe(paymentTransaction.balanceAfter)
-								: undefined,
-							description: paymentTransaction.description ?? undefined,
-							createdAt: paymentTransaction.createdAt,
-							updatedAt: paymentTransaction.updatedAt,
-						}
-					: null;
-
-				const newDataResponse: OrderEnvelope = {
-					e: "NEW_DATA",
-					f: "s",
-					t: "c",
-					p: {
-						detail: {
-							order: composedOrder,
-							payment: paymentData,
-							transaction: transactionData,
-						},
-						driverAssigned: driverAssigned ?? undefined,
-						syncRequest: {
-							orderId,
-							lastKnownVersion: currentVersion, // Send current version so client can track
-						},
-					},
-				};
-
-				logger.debug(
-					{ orderId, previousVersion: lastKnownVersion, currentVersion },
-					"[OrderRoom] Sending NEW_DATA response",
-				);
-				ws.send(JSON.stringify(newDataResponse));
-			} else {
-				// No changes since last known version
-				const noDataResponse: OrderEnvelope = {
-					e: "NO_DATA",
-					f: "s",
-					t: "c",
-					p: {
-						syncRequest: {
-							orderId,
-							lastKnownVersion: currentVersion,
-						},
-					},
-				};
-
-				logger.debug(
-					{ orderId, version: currentVersion },
-					"[OrderRoom] Sending NO_DATA response - no changes",
-				);
-				ws.send(JSON.stringify(noDataResponse));
-			}
-		} catch (error) {
-			logger.error(
-				{ error, orderId },
-				"[OrderRoom] Failed to handle CHECK_NEW_DATA",
-			);
-			// Send NO_DATA on error to avoid blocking client
-			const errorResponse: OrderEnvelope = {
-				e: "NO_DATA",
-				f: "s",
-				t: "c",
-				p: {},
-			};
-			ws.send(JSON.stringify(errorResponse));
 		}
 	}
 

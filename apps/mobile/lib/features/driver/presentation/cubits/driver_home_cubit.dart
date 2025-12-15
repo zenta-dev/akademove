@@ -275,8 +275,8 @@ class DriverHomeCubit extends BaseCubit<DriverHomeState> {
           final envelope = OrderEnvelope.fromJson(json);
           logger.d('[DriverHomeCubit] - Driver Pool Message: $envelope');
 
-          if (envelope.e == OrderEnvelopeEvent.OFFER ||
-              envelope.a == OrderEnvelopeAction.MATCHING) {
+          if (envelope.e == OrderEnvelopeEvent.ORDER_OFFER ||
+              envelope.e == OrderEnvelopeEvent.ORDER_MATCHING) {
             // New order offer received
             final order = envelope.p.detail?.order;
             if (order != null) {
@@ -287,12 +287,12 @@ class DriverHomeCubit extends BaseCubit<DriverHomeState> {
             }
           }
 
-          if (envelope.e == OrderEnvelopeEvent.CANCELED) {
+          if (envelope.e == OrderEnvelopeEvent.ORDER_CANCELLED) {
             // Order was cancelled before driver could accept
             clearIncomingOrder();
           }
 
-          if (envelope.e == OrderEnvelopeEvent.UNAVAILABLE) {
+          if (envelope.e == OrderEnvelopeEvent.ORDER_UNAVAILABLE) {
             // Order no longer available (accepted by another driver)
             clearIncomingOrder();
           }

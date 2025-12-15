@@ -647,9 +647,9 @@ class MerchantOrderCubit extends BaseCubit<MerchantOrderState> {
         return 'Driver has accepted the order';
       case OrderEnvelopeEvent.DRIVER_LOCATION_UPDATE:
         return null; // Don't show toast for location updates
-      case OrderEnvelopeEvent.COMPLETED:
+      case OrderEnvelopeEvent.ORDER_COMPLETED:
         return 'Order has been completed';
-      case OrderEnvelopeEvent.CANCELED:
+      case OrderEnvelopeEvent.ORDER_CANCELLED:
         return 'Order has been cancelled';
       default:
         return null;

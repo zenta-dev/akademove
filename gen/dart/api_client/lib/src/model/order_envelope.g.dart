@@ -154,38 +154,27 @@ Map<String, dynamic> _$OrderEnvelopeToJson(OrderEnvelope instance) =>
     };
 
 const _$OrderEnvelopeEventEnumMap = {
-  OrderEnvelopeEvent.CANCELED: 'CANCELED',
-  OrderEnvelopeEvent.OFFER: 'OFFER',
-  OrderEnvelopeEvent.UNAVAILABLE: 'UNAVAILABLE',
+  OrderEnvelopeEvent.ORDER_OFFER: 'ORDER_OFFER',
+  OrderEnvelopeEvent.ORDER_MATCHING: 'ORDER_MATCHING',
+  OrderEnvelopeEvent.ORDER_UNAVAILABLE: 'ORDER_UNAVAILABLE',
+  OrderEnvelopeEvent.ORDER_CANCELLED: 'ORDER_CANCELLED',
+  OrderEnvelopeEvent.ORDER_COMPLETED: 'ORDER_COMPLETED',
+  OrderEnvelopeEvent.ORDER_NO_SHOW: 'ORDER_NO_SHOW',
+  OrderEnvelopeEvent.ORDER_STATUS_CHANGED: 'ORDER_STATUS_CHANGED',
   OrderEnvelopeEvent.DRIVER_ACCEPTED: 'DRIVER_ACCEPTED',
   OrderEnvelopeEvent.DRIVER_LOCATION_UPDATE: 'DRIVER_LOCATION_UPDATE',
-  OrderEnvelopeEvent.COMPLETED: 'COMPLETED',
-  OrderEnvelopeEvent.MATCHING: 'MATCHING',
-  OrderEnvelopeEvent.CHAT_MESSAGE: 'CHAT_MESSAGE',
-  OrderEnvelopeEvent.CHAT_UNREAD_COUNT: 'CHAT_UNREAD_COUNT',
+  OrderEnvelopeEvent.DRIVER_CANCELLED_REMATCHING: 'DRIVER_CANCELLED_REMATCHING',
   OrderEnvelopeEvent.MERCHANT_ACCEPTED: 'MERCHANT_ACCEPTED',
   OrderEnvelopeEvent.MERCHANT_REJECTED: 'MERCHANT_REJECTED',
   OrderEnvelopeEvent.MERCHANT_PREPARING: 'MERCHANT_PREPARING',
   OrderEnvelopeEvent.MERCHANT_READY: 'MERCHANT_READY',
-  OrderEnvelopeEvent.NO_SHOW: 'NO_SHOW',
-  OrderEnvelopeEvent.DRIVER_CANCELLED_REMATCHING: 'DRIVER_CANCELLED_REMATCHING',
-  OrderEnvelopeEvent.ORDER_STATUS_CHANGED: 'ORDER_STATUS_CHANGED',
-  OrderEnvelopeEvent.NEW_DATA: 'NEW_DATA',
-  OrderEnvelopeEvent.NO_DATA: 'NO_DATA',
+  OrderEnvelopeEvent.CHAT_MESSAGE: 'CHAT_MESSAGE',
+  OrderEnvelopeEvent.CHAT_UNREAD_COUNT: 'CHAT_UNREAD_COUNT',
 };
 
 const _$OrderEnvelopeActionEnumMap = {
-  OrderEnvelopeAction.MATCHING: 'MATCHING',
-  OrderEnvelopeAction.ACCEPTED: 'ACCEPTED',
-  OrderEnvelopeAction.UPDATE_LOCATION: 'UPDATE_LOCATION',
-  OrderEnvelopeAction.DONE: 'DONE',
-  OrderEnvelopeAction.SEND_MESSAGE: 'SEND_MESSAGE',
-  OrderEnvelopeAction.MERCHANT_ACCEPT: 'MERCHANT_ACCEPT',
-  OrderEnvelopeAction.MERCHANT_REJECT: 'MERCHANT_REJECT',
-  OrderEnvelopeAction.MERCHANT_MARK_PREPARING: 'MERCHANT_MARK_PREPARING',
-  OrderEnvelopeAction.MERCHANT_MARK_READY: 'MERCHANT_MARK_READY',
-  OrderEnvelopeAction.REPORT_NO_SHOW: 'REPORT_NO_SHOW',
-  OrderEnvelopeAction.CHECK_NEW_DATA: 'CHECK_NEW_DATA',
+  OrderEnvelopeAction.DRIVER_UPDATE_LOCATION: 'DRIVER_UPDATE_LOCATION',
+  OrderEnvelopeAction.DRIVER_COMPLETE_ORDER: 'DRIVER_COMPLETE_ORDER',
 };
 
 const _$EnvelopeTargetEnumMap = {

@@ -132,7 +132,7 @@ final userRouter = StatefulShellRoute.indexedStack(
                     extra?['orderType'] as OrderType? ?? OrderType.RIDE;
                 final order = extra?['order'] as Order?;
                 final driver = extra?['driver'] as Driver?;
-                final merchant = extra?['merchant'] as Merchant?;
+                final orderMerchant = extra?['merchant'] as OrderMerchant?;
                 final payment = extra?['payment'] as Payment?;
 
                 // Log and fallback if required data is missing
@@ -146,6 +146,11 @@ final userRouter = StatefulShellRoute.indexedStack(
                   return const UserHomeScreen();
                 }
 
+                // Convert OrderMerchant to MerchantInfo if present
+                final merchantInfo = orderMerchant != null
+                    ? MerchantInfo.fromOrderMerchant(orderMerchant)
+                    : null;
+
                 return BlocProvider(
                   create: (context) => sl<UserReviewCubit>(),
                   child: OrderCompletionScreen(
@@ -153,7 +158,7 @@ final userRouter = StatefulShellRoute.indexedStack(
                     orderType: orderType,
                     order: order,
                     driver: driver,
-                    merchant: merchant,
+                    merchantInfo: merchantInfo,
                     payment: payment,
                   ),
                 );

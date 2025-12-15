@@ -70,11 +70,11 @@ export const LiveTrackingDialog = ({
 					toast.success("Driver accepted your order!");
 					break;
 
-				case "COMPLETED":
+				case "ORDER_COMPLETED":
 					toast.success("Order completed!");
 					break;
 
-				case "CANCELED":
+				case "ORDER_CANCELLED":
 					toast.error(envelope.p.cancelReason || "Order was cancelled");
 					break;
 			}

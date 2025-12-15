@@ -174,7 +174,7 @@ export async function handleDriverRebroadcastCron(
 
 				// Build the broadcast payload
 				const payload: OrderEnvelope = {
-					e: "OFFER",
+					e: "ORDER_OFFER",
 					f: "s",
 					t: "c",
 					tg: "DRIVER",

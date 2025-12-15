@@ -168,8 +168,13 @@ final driverRouter = StatefulShellRoute.indexedStack(
                 }
 
                 final driverUser = extra['user'] as DriverUser?;
-                final merchant = extra['merchant'] as Merchant?;
+                final orderMerchant = extra['merchant'] as OrderMerchant?;
                 final payment = extra['payment'] as Payment?;
+
+                // Convert OrderMerchant to MerchantInfo if present
+                final merchantInfo = orderMerchant != null
+                    ? MerchantInfo.fromOrderMerchant(orderMerchant)
+                    : null;
 
                 return MultiBlocProvider(
                   providers: [
@@ -184,7 +189,7 @@ final driverRouter = StatefulShellRoute.indexedStack(
                     order: order,
                     viewerRole: OrderCompletionViewerRole.driver,
                     driverUser: driverUser,
-                    merchant: merchant,
+                    merchantInfo: merchantInfo,
                     payment: payment,
                   ),
                 );

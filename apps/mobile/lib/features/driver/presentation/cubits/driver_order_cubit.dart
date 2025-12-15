@@ -388,7 +388,7 @@ class DriverOrderCubit extends BaseCubit<DriverOrderState> {
       final envelope = OrderEnvelope(
         f: EnvelopeSender.c,
         t: EnvelopeSender.s,
-        a: OrderEnvelopeAction.DONE,
+        a: OrderEnvelopeAction.DRIVER_COMPLETE_ORDER,
         p: OrderEnvelopePayload(
           done: OrderEnvelopePayloadDone(
             by: OrderEnvelopePayloadDoneByEnum.DRIVER,
@@ -623,7 +623,7 @@ class DriverOrderCubit extends BaseCubit<DriverOrderState> {
         final envelope = OrderEnvelope(
           f: EnvelopeSender.c,
           t: EnvelopeSender.s,
-          a: OrderEnvelopeAction.UPDATE_LOCATION,
+          a: OrderEnvelopeAction.DRIVER_UPDATE_LOCATION,
           p: OrderEnvelopePayload(
             driverUpdateLocation: OrderEnvelopePayloadDriverUpdateLocation(
               driverId: driverId,
@@ -836,13 +836,13 @@ class DriverOrderCubit extends BaseCubit<DriverOrderState> {
       );
     }
 
-    if (envelope.e == OrderEnvelopeEvent.CANCELED) {
+    if (envelope.e == OrderEnvelopeEvent.ORDER_CANCELLED) {
       // Order was cancelled
       logger.i('[DriverOrderCubit] - Order cancelled');
       clearActiveOrder();
     }
 
-    if (envelope.e == OrderEnvelopeEvent.COMPLETED) {
+    if (envelope.e == OrderEnvelopeEvent.ORDER_COMPLETED) {
       // Order completed - update state and cleanup
       _stopLocationTracking();
       final completedOrder = detail?.order;

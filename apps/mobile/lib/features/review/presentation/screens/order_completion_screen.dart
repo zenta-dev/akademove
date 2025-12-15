@@ -10,6 +10,41 @@ import "package:go_router/go_router.dart";
 import "package:intl/intl.dart";
 import "package:shadcn_flutter/shadcn_flutter.dart";
 
+/// Helper class to abstract merchant data from different merchant types
+class MerchantInfo {
+  const MerchantInfo({
+    required this.userId,
+    required this.name,
+    this.image,
+    this.rating,
+  });
+
+  /// Create from OrderMerchant (used by driver flow)
+  factory MerchantInfo.fromOrderMerchant(OrderMerchant merchant) {
+    return MerchantInfo(
+      userId: merchant.userId ?? "",
+      name: merchant.name ?? "",
+      image: merchant.image,
+      rating: merchant.rating?.toDouble(),
+    );
+  }
+
+  /// Create from Merchant (used by user flow)
+  factory MerchantInfo.fromMerchant(Merchant merchant) {
+    return MerchantInfo(
+      userId: merchant.userId,
+      name: merchant.name,
+      image: merchant.image,
+      rating: merchant.rating.toDouble(),
+    );
+  }
+
+  final String userId;
+  final String name;
+  final String? image;
+  final double? rating;
+}
+
 /// The role of the viewer for the order completion screen.
 /// Determines who is rating whom.
 enum OrderCompletionViewerRole {
@@ -37,7 +72,7 @@ class OrderCompletionScreen extends StatefulWidget {
     this.driver,
     this.user,
     this.driverUser,
-    this.merchant,
+    this.merchantInfo,
     this.payment,
     super.key,
   });
@@ -60,7 +95,8 @@ class OrderCompletionScreen extends StatefulWidget {
   /// This is the type returned by Order.user in the API
   final DriverUser? driverUser;
 
-  final Merchant? merchant;
+  /// Merchant info - abstracted to handle both Merchant and OrderMerchant types
+  final MerchantInfo? merchantInfo;
   final Payment? payment;
 
   @override
@@ -94,7 +130,7 @@ class _OrderCompletionScreenState extends State<OrderCompletionScreen> {
   bool get _showSecondaryRating =>
       widget.viewerRole == OrderCompletionViewerRole.user &&
       widget.orderType == OrderType.FOOD &&
-      widget.merchant != null;
+      widget.merchantInfo != null;
 
   bool get _canSubmit {
     // Must have primary rating with at least one category
@@ -232,11 +268,11 @@ class _OrderCompletionScreenState extends State<OrderCompletionScreen> {
 
         // Submit secondary review (merchant) if applicable
         if (_showSecondaryRating) {
-          final merchant = widget.merchant;
-          if (merchant != null) {
+          final merchantInfo = widget.merchantInfo;
+          if (merchantInfo != null && merchantInfo.userId.isNotEmpty) {
             await cubit.submitReview(
               orderId: widget.orderId,
-              toUserId: merchant.userId,
+              toUserId: merchantInfo.userId,
               categories: _secondaryCategories.toList(),
               score: _secondaryRating,
               comment: _secondaryCommentController.text.trim().isNotEmpty
@@ -495,18 +531,20 @@ class _OrderCompletionScreenState extends State<OrderCompletionScreen> {
                       ),
 
                       // Secondary rating section (merchant for FOOD orders when USER is viewing)
-                      if (_showSecondaryRating && widget.merchant != null)
+                      if (_showSecondaryRating && widget.merchantInfo != null)
                         Builder(
                           builder: (context) {
-                            final merchant = widget.merchant;
-                            if (merchant == null) {
+                            final merchantInfo = widget.merchantInfo;
+                            if (merchantInfo == null) {
                               return const SizedBox.shrink();
                             }
                             return _RatingSection(
                               title: context.l10n.rate_merchant_title,
-                              subtitle: merchant.name,
-                              avatarInitials: Avatar.getInitials(merchant.name),
-                              avatarImage: merchant.image,
+                              subtitle: merchantInfo.name,
+                              avatarInitials: Avatar.getInitials(
+                                merchantInfo.name,
+                              ),
+                              avatarImage: merchantInfo.image,
                               rating: _secondaryRating,
                               onRatingChanged: (rating) {
                                 setState(() {
@@ -517,8 +555,8 @@ class _OrderCompletionScreenState extends State<OrderCompletionScreen> {
                               onCategoryToggle: _toggleSecondaryCategory,
                               commentController: _secondaryCommentController,
                               onReport: () => _navigateToReport(
-                                merchant.userId,
-                                merchant.name,
+                                merchantInfo.userId,
+                                merchantInfo.name,
                               ),
                             );
                           },

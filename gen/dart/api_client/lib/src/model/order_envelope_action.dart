@@ -6,28 +6,11 @@
 import 'package:json_annotation/json_annotation.dart';
 
 enum OrderEnvelopeAction {
-  @JsonValue(r'MATCHING')
-  MATCHING(r'MATCHING'),
-  @JsonValue(r'ACCEPTED')
-  ACCEPTED(r'ACCEPTED'),
-  @JsonValue(r'UPDATE_LOCATION')
-  UPDATE_LOCATION(r'UPDATE_LOCATION'),
-  @JsonValue(r'DONE')
-  DONE(r'DONE'),
-  @JsonValue(r'SEND_MESSAGE')
-  SEND_MESSAGE(r'SEND_MESSAGE'),
-  @JsonValue(r'MERCHANT_ACCEPT')
-  MERCHANT_ACCEPT(r'MERCHANT_ACCEPT'),
-  @JsonValue(r'MERCHANT_REJECT')
-  MERCHANT_REJECT(r'MERCHANT_REJECT'),
-  @JsonValue(r'MERCHANT_MARK_PREPARING')
-  MERCHANT_MARK_PREPARING(r'MERCHANT_MARK_PREPARING'),
-  @JsonValue(r'MERCHANT_MARK_READY')
-  MERCHANT_MARK_READY(r'MERCHANT_MARK_READY'),
-  @JsonValue(r'REPORT_NO_SHOW')
-  REPORT_NO_SHOW(r'REPORT_NO_SHOW'),
-  @JsonValue(r'CHECK_NEW_DATA')
-  CHECK_NEW_DATA(r'CHECK_NEW_DATA');
+  // Driver actions (sent by driver app)
+  @JsonValue(r'DRIVER_UPDATE_LOCATION')
+  DRIVER_UPDATE_LOCATION(r'DRIVER_UPDATE_LOCATION'),
+  @JsonValue(r'DRIVER_COMPLETE_ORDER')
+  DRIVER_COMPLETE_ORDER(r'DRIVER_COMPLETE_ORDER');
 
   const OrderEnvelopeAction(this.value);
 

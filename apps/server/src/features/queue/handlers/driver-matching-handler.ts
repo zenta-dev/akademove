@@ -195,7 +195,7 @@ export async function handleDriverMatching(
 
 				// Create OFFER envelope for WebSocket broadcast
 				const offerEnvelope: OrderEnvelope = {
-					e: "OFFER",
+					e: "ORDER_OFFER",
 					f: "s",
 					t: "c",
 					tg: "DRIVER",
