@@ -110,7 +110,7 @@ export const AuthSpec = {
 							.optional()
 							.describe("FCM token to remove for this session/device"),
 					})
-					.optional(),
+					.nullish(), // Allow null, undefined, or object (Dart client sends null when no body)
 			}),
 		)
 		.output(
