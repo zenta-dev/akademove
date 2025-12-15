@@ -247,7 +247,22 @@ class _OrderCompletionScreenState extends State<OrderCompletionScreen> {
         }
       } else if (widget.viewerRole == OrderCompletionViewerRole.driver) {
         // Driver submitting review for customer
-        final cubit = context.read<DriverReviewCubit>();
+        DriverReviewCubit? cubit;
+        try {
+          cubit = context.read<DriverReviewCubit>();
+        } catch (e) {
+          logger.e(
+            '[OrderCompletionScreen] DriverReviewCubit not available',
+            error: e,
+          );
+          if (mounted) {
+            context.showMyToast(
+              context.l10n.toast_failed_submit_review,
+              type: ToastType.failed,
+            );
+          }
+          return;
+        }
 
         await cubit.submitReview(
           orderId: widget.orderId,
@@ -260,7 +275,22 @@ class _OrderCompletionScreenState extends State<OrderCompletionScreen> {
         );
       } else {
         // Merchant submitting review for customer
-        final cubit = context.read<MerchantReviewCubit>();
+        MerchantReviewCubit? cubit;
+        try {
+          cubit = context.read<MerchantReviewCubit>();
+        } catch (e) {
+          logger.e(
+            '[OrderCompletionScreen] MerchantReviewCubit not available',
+            error: e,
+          );
+          if (mounted) {
+            context.showMyToast(
+              context.l10n.toast_failed_submit_review,
+              type: ToastType.failed,
+            );
+          }
+          return;
+        }
 
         await cubit.submitReview(
           orderId: widget.orderId,
@@ -281,7 +311,14 @@ class _OrderCompletionScreenState extends State<OrderCompletionScreen> {
         );
         // For driver role, clear active order and navigate to home
         if (widget.viewerRole == OrderCompletionViewerRole.driver) {
-          context.read<DriverOrderCubit>().clearActiveOrder();
+          try {
+            context.read<DriverOrderCubit>().clearActiveOrder();
+          } catch (e) {
+            // Cubit may not be available, continue with navigation
+            logger.w(
+              '[OrderCompletionScreen] Could not clear active order: $e',
+            );
+          }
           context.popUntilRoot();
         } else if (widget.viewerRole == OrderCompletionViewerRole.merchant) {
           // For merchant role, navigate back to order list
@@ -322,54 +359,69 @@ class _OrderCompletionScreenState extends State<OrderCompletionScreen> {
   }
 
   /// Build the appropriate BlocListener based on viewer role
+  /// Returns the child directly if the required cubit is not available
   Widget _buildBlocListener({required Widget child}) {
-    if (widget.viewerRole == OrderCompletionViewerRole.user) {
-      return BlocListener<UserReviewCubit, UserReviewState>(
-        listenWhen: (previous, current) =>
-            previous.submittedReview != current.submittedReview,
-        listener: (context, state) {
-          if (state.submittedReview.isFailure) {
-            context.showMyToast(
-              state.submittedReview.error?.message ??
-                  context.l10n.toast_failed_submit_review,
-              type: ToastType.failed,
-            );
-          }
-        },
-        child: child,
+    try {
+      if (widget.viewerRole == OrderCompletionViewerRole.user) {
+        // Verify cubit is available before wrapping
+        context.read<UserReviewCubit>();
+        return BlocListener<UserReviewCubit, UserReviewState>(
+          listenWhen: (previous, current) =>
+              previous.submittedReview != current.submittedReview,
+          listener: (context, state) {
+            if (state.submittedReview.isFailure) {
+              context.showMyToast(
+                state.submittedReview.error?.message ??
+                    context.l10n.toast_failed_submit_review,
+                type: ToastType.failed,
+              );
+            }
+          },
+          child: child,
+        );
+      } else if (widget.viewerRole == OrderCompletionViewerRole.driver) {
+        // Driver role - verify cubit is available before wrapping
+        context.read<DriverReviewCubit>();
+        return BlocListener<DriverReviewCubit, DriverReviewState>(
+          listenWhen: (previous, current) =>
+              previous.submitReviewResult != current.submitReviewResult,
+          listener: (context, state) {
+            if (state.submitReviewResult.isFailure) {
+              context.showMyToast(
+                state.submitReviewResult.error?.message ??
+                    context.l10n.toast_failed_submit_review,
+                type: ToastType.failed,
+              );
+            }
+          },
+          child: child,
+        );
+      } else {
+        // Merchant role - verify cubit is available before wrapping
+        context.read<MerchantReviewCubit>();
+        return BlocListener<MerchantReviewCubit, MerchantReviewState>(
+          listenWhen: (previous, current) =>
+              previous.submitReviewResult != current.submitReviewResult,
+          listener: (context, state) {
+            if (state.submitReviewResult.isFailure) {
+              context.showMyToast(
+                state.submitReviewResult.error?.message ??
+                    context.l10n.toast_failed_submit_review,
+                type: ToastType.failed,
+              );
+            }
+          },
+          child: child,
+        );
+      }
+    } catch (e) {
+      // If the cubit is not available, just return the child without the listener
+      // This can happen if the widget is being disposed or the navigation context
+      // has changed
+      logger.w(
+        '[OrderCompletionScreen] Review cubit not available for listener: $e',
       );
-    } else if (widget.viewerRole == OrderCompletionViewerRole.driver) {
-      // Driver role
-      return BlocListener<DriverReviewCubit, DriverReviewState>(
-        listenWhen: (previous, current) =>
-            previous.submitReviewResult != current.submitReviewResult,
-        listener: (context, state) {
-          if (state.submitReviewResult.isFailure) {
-            context.showMyToast(
-              state.submitReviewResult.error?.message ??
-                  context.l10n.toast_failed_submit_review,
-              type: ToastType.failed,
-            );
-          }
-        },
-        child: child,
-      );
-    } else {
-      // Merchant role
-      return BlocListener<MerchantReviewCubit, MerchantReviewState>(
-        listenWhen: (previous, current) =>
-            previous.submitReviewResult != current.submitReviewResult,
-        listener: (context, state) {
-          if (state.submitReviewResult.isFailure) {
-            context.showMyToast(
-              state.submitReviewResult.error?.message ??
-                  context.l10n.toast_failed_submit_review,
-              type: ToastType.failed,
-            );
-          }
-        },
-        child: child,
-      );
+      return child;
     }
   }
 
@@ -380,10 +432,22 @@ class _OrderCompletionScreenState extends State<OrderCompletionScreen> {
       onPopInvokedWithResult: (didPop, result) {
         // For driver role, clear active order when navigating away
         // (if review was not submitted)
+        // Defer the clearActiveOrder call to avoid disposing cubit during navigation
         if (didPop &&
             widget.viewerRole == OrderCompletionViewerRole.driver &&
             !_hasSubmittedReview) {
-          context.read<DriverOrderCubit>().clearActiveOrder();
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (context.mounted) {
+              try {
+                context.read<DriverOrderCubit>().clearActiveOrder();
+              } catch (e) {
+                // Cubit may already be disposed if navigating away quickly
+                logger.w(
+                  '[OrderCompletionScreen] Could not clear active order: $e',
+                );
+              }
+            }
+          });
         }
       },
       child: Scaffold(

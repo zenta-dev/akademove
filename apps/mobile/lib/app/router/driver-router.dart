@@ -61,21 +61,24 @@ final driverRouter = StatefulShellRoute.indexedStack(
                 );
               },
             ),
-            GoRoute(
-              name: Routes.driverEarnings.name,
-              path: 'earnings',
-              builder: (context, state) => BlocProvider(
+            ShellRoute(
+              builder: (context, state, child) => BlocProvider(
                 create: (_) => sl<DriverWalletCubit>(),
-                child: const DriverEarningsScreen(),
+                child: child,
               ),
               routes: [
                 GoRoute(
-                  name: Routes.driverCommissionReport.name,
-                  path: 'commission',
-                  builder: (context, state) => BlocProvider(
-                    create: (_) => sl<DriverWalletCubit>(),
-                    child: const DriverCommissionReportScreen(),
-                  ),
+                  name: Routes.driverEarnings.name,
+                  path: 'earnings',
+                  builder: (context, state) => const DriverEarningsScreen(),
+                  routes: [
+                    GoRoute(
+                      name: Routes.driverCommissionReport.name,
+                      path: 'commission',
+                      builder: (context, state) =>
+                          const DriverCommissionReportScreen(),
+                    ),
+                  ],
                 ),
               ],
             ),
