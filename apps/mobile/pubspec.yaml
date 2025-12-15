@@ -74,6 +74,7 @@ flutter:
     - assets/images/character/
     - assets/images/hero/
     - assets/icons/
+    - shorebird.yaml
 
 flutter_gen:
   output: lib/gen/
