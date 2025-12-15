@@ -103,7 +103,7 @@ final merchantRouter = StatefulShellRoute.indexedStack(
             final orderId = extra['orderId'] as String;
             final orderType = extra['orderType'] as OrderType;
             final order = extra['order'] as Order;
-            final user = extra['user'] as User?;
+            final driverUser = extra['user'] as DriverUser?;
             final payment = extra['payment'] as Payment?;
 
             return MultiBlocProvider(
@@ -116,7 +116,7 @@ final merchantRouter = StatefulShellRoute.indexedStack(
                 orderType: orderType,
                 order: order,
                 viewerRole: OrderCompletionViewerRole.merchant,
-                user: user,
+                driverUser: driverUser,
                 payment: payment,
               ),
             );

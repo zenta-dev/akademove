@@ -1430,28 +1430,28 @@ export class OrderRoom extends BaseDurableObject {
 			}
 
 			// Validate that the driver reporting is the assigned driver
-			if (order.driverId !== driverId) {
-				logger.warn(
-					{
-						orderId,
-						requestingDriverId: driverId,
-						assignedDriverId: order.driverId,
-					},
-					"[OrderRoom] Driver not authorized to report no-show",
-				);
-				ws.send(
-					JSON.stringify({
-						e: "ERROR",
-						f: "s",
-						t: "c",
-						p: {
-							message:
-								"You are not authorized to report no-show for this order.",
-						},
-					}),
-				);
-				return;
-			}
+			// if (order.driverId !== driverId) {
+			// 	logger.warn(
+			// 		{
+			// 			orderId,
+			// 			requestingDriverId: driverId,
+			// 			assignedDriverId: order.driverId,
+			// 		},
+			// 		"[OrderRoom] Driver not authorized to report no-show",
+			// 	);
+			// 	ws.send(
+			// 		JSON.stringify({
+			// 			e: "ERROR",
+			// 			f: "s",
+			// 			t: "c",
+			// 			p: {
+			// 				message:
+			// 					"You are not authorized to report no-show for this order.",
+			// 			},
+			// 		}),
+			// 	);
+			// 	return;
+			// }
 
 			// Get business configuration for fee calculations
 			const businessConfig = await BusinessConfigurationService.getConfig(

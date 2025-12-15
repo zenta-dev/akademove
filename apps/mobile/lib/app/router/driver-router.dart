@@ -134,7 +134,7 @@ final driverRouter = StatefulShellRoute.indexedStack(
                 final orderId = extra['orderId'] as String;
                 final orderType = extra['orderType'] as OrderType;
                 final order = extra['order'] as Order;
-                final user = extra['user'] as User?;
+                final driverUser = extra['user'] as DriverUser?;
                 final merchant = extra['merchant'] as Merchant?;
                 final payment = extra['payment'] as Payment?;
 
@@ -150,7 +150,7 @@ final driverRouter = StatefulShellRoute.indexedStack(
                     orderType: orderType,
                     order: order,
                     viewerRole: OrderCompletionViewerRole.driver,
-                    user: user,
+                    driverUser: driverUser,
                     merchant: merchant,
                     payment: payment,
                   ),

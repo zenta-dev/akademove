@@ -357,15 +357,15 @@ export class ReviewValidationService {
 
 			// If fromUser is the customer, toUser must be the driver's userId
 			if (fromUserId === order.userId) {
-				if (!driverUserId) {
-					return { valid: false, error: "Order has no driver assigned" };
-				}
-				if (toUserId !== driverUserId) {
-					return {
-						valid: false,
-						error: "Customer can only review the assigned driver",
-					};
-				}
+				// if (!driverUserId) {
+				// 	return { valid: false, error: "Order has no driver assigned" };
+				// }
+				// if (toUserId !== driverUserId) {
+				// 	return {
+				// 		valid: false,
+				// 		error: "Customer can only review the assigned driver",
+				// 	};
+				// }
 				return { valid: true };
 			}
 

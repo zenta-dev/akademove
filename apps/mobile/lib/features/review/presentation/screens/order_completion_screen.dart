@@ -36,6 +36,7 @@ class OrderCompletionScreen extends StatefulWidget {
     this.viewerRole = OrderCompletionViewerRole.user,
     this.driver,
     this.user,
+    this.driverUser,
     this.merchant,
     this.payment,
     super.key,
@@ -52,7 +53,12 @@ class OrderCompletionScreen extends StatefulWidget {
   final Driver? driver;
 
   /// User (customer) info - required when viewerRole is driver or merchant
+  /// Use [user] for User type or [driverUser] for DriverUser type (from Order.user)
   final User? user;
+
+  /// DriverUser (customer) info - used when navigating from driver order completion
+  /// This is the type returned by Order.user in the API
+  final DriverUser? driverUser;
 
   final Merchant? merchant;
   final Payment? payment;
@@ -131,7 +137,8 @@ class _OrderCompletionScreenState extends State<OrderCompletionScreen> {
       case OrderCompletionViewerRole.driver:
       case OrderCompletionViewerRole.merchant:
         // Driver/Merchant rates user (customer)
-        return widget.user?.id ?? widget.order.userId;
+        // Check both user types - driverUser is from Order.user (DriverUser type)
+        return widget.user?.id ?? widget.driverUser?.id ?? widget.order.userId;
     }
   }
 
@@ -143,6 +150,7 @@ class _OrderCompletionScreenState extends State<OrderCompletionScreen> {
       case OrderCompletionViewerRole.driver:
       case OrderCompletionViewerRole.merchant:
         return widget.user?.name ??
+            widget.driverUser?.name ??
             widget.order.user?.name ??
             context.l10n.text_customer;
     }
@@ -159,6 +167,7 @@ class _OrderCompletionScreenState extends State<OrderCompletionScreen> {
       case OrderCompletionViewerRole.merchant:
         return Avatar.getInitials(
           widget.user?.name ??
+              widget.driverUser?.name ??
               widget.order.user?.name ??
               context.l10n.text_customer,
         );
@@ -172,7 +181,9 @@ class _OrderCompletionScreenState extends State<OrderCompletionScreen> {
         return widget.driver?.user?.image;
       case OrderCompletionViewerRole.driver:
       case OrderCompletionViewerRole.merchant:
-        return widget.user?.image ?? widget.order.user?.image;
+        return widget.user?.image ??
+            widget.driverUser?.image ??
+            widget.order.user?.image;
     }
   }
 
