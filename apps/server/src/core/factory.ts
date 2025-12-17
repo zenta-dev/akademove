@@ -169,7 +169,7 @@ export function getServices(): ServiceContext {
 	);
 	const orderMatchingService = new OrderMatchingService(db);
 	const orderStateService = new OrderStateService();
-	const deliveryProofService = new DeliveryProofService(storage, db, kv);
+	const deliveryProofService = new DeliveryProofService(storage);
 
 	// Initialize notification domain services
 	const pushNotificationService = new PushNotificationService(firebase);

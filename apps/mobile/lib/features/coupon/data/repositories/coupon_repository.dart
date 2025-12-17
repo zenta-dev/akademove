@@ -116,8 +116,9 @@ class CouponRepository extends BaseRepository {
         message: responseData.message,
         data: EligibleCouponsResult(
           coupons: data.coupons,
-          bestCoupon: data.bestCoupon,
-          bestDiscountAmount: data.bestDiscountAmount,
+          // Auto-apply disabled - user must manually select a coupon
+          bestCoupon: null,
+          bestDiscountAmount: 0,
           orderAmount: totalAmount,
         ),
       );

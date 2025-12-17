@@ -181,34 +181,6 @@ class _DeliveryProofUploadDialogState extends State<DeliveryProofUploadDialog> {
                   ),
 
                 SizedBox(height: 16.h),
-
-                // Note about OTP
-                Container(
-                  padding: EdgeInsets.all(12.dg),
-                  decoration: BoxDecoration(
-                    color: context.theme.colorScheme.muted,
-                    borderRadius: BorderRadius.circular(8.r),
-                  ),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    spacing: 8.w,
-                    children: [
-                      Icon(
-                        LucideIcons.info,
-                        size: 16.sp,
-                        color: context.theme.colorScheme.mutedForeground,
-                      ),
-                      Expanded(
-                        child: Text(
-                          'After upload, you will receive an OTP code to share with the customer for verification.',
-                          style: context.typography.small.copyWith(
-                            color: context.theme.colorScheme.mutedForeground,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
               ],
             ),
           ),

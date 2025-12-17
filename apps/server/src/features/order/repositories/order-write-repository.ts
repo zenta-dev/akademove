@@ -8,7 +8,7 @@ import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
 import { toStringNumberSafe } from "@/utils";
 import { logger } from "@/utils/logger";
-import type { DeliveryProofService, OrderStateService } from "../services";
+import type { OrderStateService } from "../services";
 import { OrderBaseRepository } from "./order-base-repository";
 
 /**
@@ -18,22 +18,18 @@ import { OrderBaseRepository } from "./order-base-repository";
  * - Update order fields
  * - Remove orders
  * - Validate state transitions
- * - Generate delivery OTP when needed
  * - Record status changes in audit trail
  */
 export class OrderWriteRepository extends OrderBaseRepository {
 	readonly #stateService: OrderStateService;
-	readonly #deliveryProofService: DeliveryProofService;
 
 	constructor(
 		db: DatabaseService,
 		kv: KeyValueService,
 		stateService: OrderStateService,
-		deliveryProofService: DeliveryProofService,
 	) {
 		super(db, kv);
 		this.#stateService = stateService;
-		this.#deliveryProofService = deliveryProofService;
 	}
 
 	/**
@@ -66,30 +62,12 @@ export class OrderWriteRepository extends OrderBaseRepository {
 				this.#stateService.validateTransition(existing.status, newStatus);
 			}
 
-			// Generate OTP for delivery proof if order is ARRIVING or IN_TRIP and requires OTP
-			let deliveryOtp = item.deliveryOtp;
-			const shouldGenerateOtp =
-				item.status &&
-				(item.status === "ARRIVING" || item.status === "IN_TRIP") &&
-				existing.status !== "ARRIVING" &&
-				existing.status !== "IN_TRIP" &&
-				!existing.deliveryOtp &&
-				(await this.#deliveryProofService.requiresOTP(existing.totalPrice));
-			if (shouldGenerateOtp) {
-				deliveryOtp = this.#deliveryProofService.generateOTP();
-				logger.info(
-					{ orderId: id, totalPrice: existing.totalPrice },
-					"[OrderWriteRepository] Generated OTP for high-value delivery order",
-				);
-			}
-
 			// Build update object, handling explicit null vs undefined:
 			// - undefined: don't update the field
 			// - null (passed as empty string ''): clear the field to null
 			// - value: update with new value
 			const updateData: Record<string, unknown> = {
 				...item,
-				deliveryOtp: deliveryOtp ?? item.deliveryOtp,
 				basePrice: existing.basePrice
 					? toStringNumberSafe(existing.basePrice)
 					: undefined,

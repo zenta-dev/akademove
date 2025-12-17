@@ -1,25 +1,18 @@
 import { v7 } from "uuid";
 import { RepositoryError } from "@/core/error";
-import type { DatabaseService } from "@/core/services/db";
-import type { KeyValueService } from "@/core/services/kv";
 import type { StorageService } from "@/core/services/storage";
-import { BusinessConfigurationService } from "@/features/configuration/services";
 import { logger } from "@/utils/logger";
 
 /**
  * DeliveryProofService - Handles proof of delivery operations
  *
  * Responsibilities:
- * - Generate OTP for delivery verification
  * - Upload proof photos to S3
- * - Verify OTP matches
+ * - Get presigned URLs for viewing proofs
  *
  * @example
  * ```typescript
- * const service = new DeliveryProofService(storageService, db, kv);
- *
- * // Generate OTP
- * const otp = service.generateOTP();
+ * const service = new DeliveryProofService(storageService);
  *
  * // Upload proof
  * const url = await service.uploadProof({
@@ -27,50 +20,10 @@ import { logger } from "@/utils/logger";
  *   file: proofFile,
  *   userId: "user-456",
  * });
- *
- * // Verify OTP
- * const isValid = service.verifyOTP("123456", "123456");
  * ```
  */
 export class DeliveryProofService {
-	static readonly OTP_LENGTH = 6;
-
-	constructor(
-		private readonly storageService: StorageService,
-		private readonly db: DatabaseService,
-		private readonly kv: KeyValueService,
-	) {}
-
-	/**
-	 * Generate 6-digit OTP for delivery verification
-	 *
-	 * @returns 6-digit OTP string
-	 */
-	generateOTP(): string {
-		const min = 100000;
-		const max = 999999;
-		const otp = Math.floor(Math.random() * (max - min + 1)) + min;
-
-		logger.debug("[DeliveryProofService] Generated OTP");
-
-		return otp.toString();
-	}
-
-	/**
-	 * Check if order requires OTP verification based on value.
-	 * The threshold is fetched from database configuration.
-	 *
-	 * @param totalPrice - Order total price in IDR
-	 * @returns true if OTP required
-	 */
-	async requiresOTP(totalPrice: number): Promise<boolean> {
-		const threshold =
-			await BusinessConfigurationService.getHighValueOrderThreshold(
-				this.db,
-				this.kv,
-			);
-		return totalPrice >= threshold;
-	}
+	constructor(private readonly storageService: StorageService) {}
 
 	/**
 	 * Upload proof photo to S3
@@ -122,33 +75,6 @@ export class DeliveryProofService {
 				code: "INTERNAL_SERVER_ERROR",
 			});
 		}
-	}
-
-	/**
-	 * Verify OTP matches expected value
-	 *
-	 * @param provided - OTP provided by user
-	 * @param expected - Expected OTP from database
-	 * @returns true if OTP matches
-	 */
-	verifyOTP(provided: string, expected: string): boolean {
-		if (!provided || !expected) {
-			logger.warn("[DeliveryProofService] Missing OTP values");
-			return false;
-		}
-
-		// Normalize (trim and remove spaces)
-		const normalizedProvided = provided.trim().replace(/\s/g, "");
-		const normalizedExpected = expected.trim().replace(/\s/g, "");
-
-		const isValid = normalizedProvided === normalizedExpected;
-
-		logger.info(
-			{ isValid },
-			"[DeliveryProofService] OTP verification completed",
-		);
-
-		return isValid;
 	}
 
 	/**

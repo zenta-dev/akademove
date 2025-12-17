@@ -214,27 +214,6 @@ class OrderRepository extends BaseRepository {
     });
   }
 
-  /// Verify delivery OTP (customer only)
-  /// POST /api/orders/{id}/verify-otp
-  /// Returns whether verification was successful
-  Future<BaseResponse<bool>> verifyDeliveryOTP(String orderId, String otp) {
-    return guard(() async {
-      final res = await _apiClient.getOrderApi().orderVerifyDeliveryOTP(
-        id: orderId,
-        orderVerifyDeliveryOTPRequest: OrderVerifyDeliveryOTPRequest(otp: otp),
-      );
-
-      final data =
-          res.data ??
-          (throw const RepositoryError(
-            'Failed to verify delivery OTP',
-            code: ErrorCode.unknown,
-          ));
-
-      return SuccessResponse(message: data.message, data: data.data.verified);
-    });
-  }
-
   /// Place a scheduled order
   /// POST /api/orders/scheduled
   Future<BaseResponse<PlaceScheduledOrderResponse>> placeScheduledOrder(

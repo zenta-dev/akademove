@@ -367,36 +367,6 @@ export const OrderHandler = priv.router({
 				const { id: orderId } = params;
 				const { file } = body;
 
-				// Verify order exists
-				// const order = await context.repo.order.get(orderId, { tx });
-
-				// Verify order is a DELIVERY type
-				// if (order.type !== "DELIVERY") {
-				// 	throw new AuthError(
-				// 		"Proof of delivery can only be uploaded for delivery orders",
-				// 		{ code: "BAD_REQUEST" },
-				// 	);
-				// }
-
-				// // Verify user is the assigned driver
-				// const driver = await context.repo.driver.main.getByUserId(
-				// 	context.user.id,
-				// );
-				// if (order.driverId !== driver.id) {
-				// 	throw new AuthError("Only assigned driver can upload proof", {
-				// 		code: "FORBIDDEN",
-				// 	});
-				// }
-
-				// // Proof of delivery can only be uploaded during IN_TRIP (at dropoff, not at pickup)
-				// // This ensures driver uploads proof when completing the delivery, not at the pickup step
-				// if (order.status !== "IN_TRIP") {
-				// 	throw new AuthError(
-				// 		"Proof of delivery can only be uploaded during delivery (after pickup). Please complete the pickup first.",
-				// 		{ code: "BAD_REQUEST" },
-				// 	);
-				// }
-
 				// Upload proof to S3
 				const proofUrl =
 					await context.svc.orderServices.deliveryProof.uploadProof({
@@ -405,7 +375,7 @@ export const OrderHandler = priv.router({
 						userId: context.user.id,
 					});
 
-				// Update order with proof URL
+				// Update order with proof URL only (completion handled separately)
 				await context.repo.order.update(
 					orderId,
 					{ proofOfDeliveryUrl: proofUrl },
@@ -529,66 +499,6 @@ export const OrderHandler = priv.router({
 			};
 		},
 	),
-	verifyDeliveryOTP: priv.verifyDeliveryOTP.handler(
-		async ({ context, input: { params, body } }) => {
-			return await context.svc.db.transaction(async (tx) => {
-				const { id: orderId } = params;
-				const { otp } = trimObjectValues(body);
-
-				// Get order
-				const order = await context.repo.order.get(orderId, { tx });
-
-				// Verify user is customer
-				if (!shouldBypassAuthorization() && order.userId !== context.user.id) {
-					throw new AuthError("Only customer can verify OTP", {
-						code: "FORBIDDEN",
-					});
-				}
-
-				// Check if OTP exists
-				if (!order.deliveryOtp) {
-					throw new AuthError("No OTP generated for this order", {
-						code: "BAD_REQUEST",
-					});
-				}
-
-				// Verify OTP
-				const isValid = context.svc.orderServices.deliveryProof.verifyOTP(
-					otp,
-					order.deliveryOtp,
-				);
-
-				if (!isValid) {
-					logger.warn(
-						{ orderId, userId: context.user.id },
-						"[OrderHandler] Invalid OTP",
-					);
-					throw new AuthError("Invalid OTP", { code: "BAD_REQUEST" });
-				}
-
-				// Update order with verification timestamp
-				await context.repo.order.update(
-					orderId,
-					{ otpVerifiedAt: new Date() },
-					{ tx },
-				);
-
-				logger.info(
-					{ orderId, userId: context.user.id },
-					"[OrderHandler] OTP verified successfully",
-				);
-
-				return {
-					status: 200,
-					body: {
-						message: "OTP verified successfully",
-						data: { verified: true },
-					},
-				};
-			});
-		},
-	),
-
 	// Scheduled order handlers
 	placeScheduledOrder: priv.placeScheduledOrder.handler(
 		async ({ context, input: { body } }) => {

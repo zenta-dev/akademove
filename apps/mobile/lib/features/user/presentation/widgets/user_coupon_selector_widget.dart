@@ -88,45 +88,6 @@ class UserCouponSelectorWidget extends StatelessWidget {
             ),
             const Divider(height: 1),
 
-            // Best coupon highlight (if any)
-            if (data.bestCoupon != null && data.bestDiscountAmount > 0)
-              Container(
-                margin: const EdgeInsets.all(16),
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: const Color(0xFF10B981).withAlpha(25),
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: const Color(0xFF10B981)),
-                ),
-                child: Row(
-                  children: [
-                    Icon(
-                      LucideIcons.badgeCheck,
-                      color: const Color(0xFF10B981),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Best Discount',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xFF10B981),
-                            ),
-                          ),
-                          Text(
-                            'Save ${_formatCurrency(data.bestDiscountAmount)} with ${data.bestCoupon?.code ?? ""}',
-                            style: const TextStyle(fontSize: 12),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
             // Coupon list
             Expanded(
               child: ListView.separated(
@@ -178,15 +139,6 @@ class UserCouponSelectorWidget extends StatelessWidget {
       context: context,
       builder: (ctx) => CouponDetailDialog(coupon: coupon),
     );
-  }
-
-  String _formatCurrency(num amount) {
-    final formatter = NumberFormat.currency(
-      locale: 'id_ID',
-      symbol: 'Rp ',
-      decimalDigits: 0,
-    );
-    return formatter.format(amount);
   }
 }
 

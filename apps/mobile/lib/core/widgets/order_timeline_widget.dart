@@ -133,20 +133,6 @@ class OrderTimelineWidget extends StatelessWidget {
       );
     }
 
-    // OTP Verified (for delivery)
-    if (order.otpVerifiedAt != null) {
-      events.add(
-        _TimelineEvent(
-          title: "Delivery Verified",
-          subtitle: "OTP verified successfully",
-          timestamp: order.otpVerifiedAt!,
-          icon: LucideIcons.shieldCheck,
-          color: const Color(0xFF4CAF50),
-          isCompleted: true,
-        ),
-      );
-    }
-
     // Order Completed
     if (order.status == OrderStatus.COMPLETED) {
       events.add(

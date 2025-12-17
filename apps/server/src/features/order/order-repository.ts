@@ -73,12 +73,7 @@ export class OrderRepository {
 		this.#readRepo = new OrderReadRepository(db, kv, pricingService, storage);
 
 		// Initialize write repository
-		this.#writeRepo = new OrderWriteRepository(
-			db,
-			kv,
-			stateService,
-			deliveryProofService,
-		);
+		this.#writeRepo = new OrderWriteRepository(db, kv, stateService);
 
 		// Initialize placement repository
 		this.#placementRepo = new OrderPlacementRepository(

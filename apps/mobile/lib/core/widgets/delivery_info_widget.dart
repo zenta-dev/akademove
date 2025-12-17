@@ -5,7 +5,7 @@ import "package:flutter_screenutil/flutter_screenutil.dart";
 import "package:shadcn_flutter/shadcn_flutter.dart";
 
 /// A widget that displays delivery-related information including
-/// proof of delivery images, item photos, OTP status, and delivery notes.
+/// proof of delivery images, item photos, and delivery notes.
 class DeliveryInfoWidget extends StatelessWidget {
   const DeliveryInfoWidget({required this.order, super.key});
 
@@ -18,7 +18,6 @@ class DeliveryInfoWidget extends StatelessWidget {
         order.type == OrderType.DELIVERY ||
         order.proofOfDeliveryUrl != null ||
         order.deliveryItemPhotoUrl != null ||
-        order.deliveryOtp != null ||
         order.deliveryItemType != null;
 
     if (!hasDeliveryInfo) {
@@ -91,16 +90,6 @@ class DeliveryInfoWidget extends StatelessWidget {
                   value: order.note!.recevierPhone!,
                 ),
               ],
-              Gap(12.h),
-            ],
-
-            // OTP Status
-            if (order.deliveryOtp != null) ...[
-              _OtpStatusSection(
-                otp: order.deliveryOtp!,
-                isVerified: order.otpVerifiedAt != null,
-                verifiedAt: order.otpVerifiedAt,
-              ),
               Gap(12.h),
             ],
 
@@ -226,115 +215,6 @@ class _InfoRow extends StatelessWidget {
         ),
         ?trailing,
       ],
-    );
-  }
-}
-
-/// OTP status section widget
-class _OtpStatusSection extends StatelessWidget {
-  const _OtpStatusSection({
-    required this.otp,
-    required this.isVerified,
-    this.verifiedAt,
-  });
-
-  final String otp;
-  final bool isVerified;
-  final DateTime? verifiedAt;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(12.w),
-      decoration: BoxDecoration(
-        color: isVerified
-            ? const Color(0xFF4CAF50).withValues(alpha: 0.1)
-            : context.colorScheme.muted.withValues(alpha: 0.5),
-        borderRadius: BorderRadius.circular(8.r),
-        border: Border.all(
-          color: isVerified
-              ? const Color(0xFF4CAF50).withValues(alpha: 0.3)
-              : context.colorScheme.border,
-        ),
-      ),
-      child: Row(
-        children: [
-          Container(
-            padding: EdgeInsets.all(8.w),
-            decoration: BoxDecoration(
-              color: isVerified
-                  ? const Color(0xFF4CAF50).withValues(alpha: 0.15)
-                  : context.colorScheme.muted,
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              isVerified ? LucideIcons.shieldCheck : LucideIcons.keyRound,
-              size: 20.sp,
-              color: isVerified
-                  ? const Color(0xFF4CAF50)
-                  : context.colorScheme.mutedForeground,
-            ),
-          ),
-          Gap(12.w),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Delivery OTP",
-                  style: context.typography.small.copyWith(
-                    fontSize: 12.sp,
-                    color: context.colorScheme.mutedForeground,
-                  ),
-                ),
-                Gap(2.h),
-                Row(
-                  children: [
-                    Text(
-                      otp,
-                      style: context.typography.h4.copyWith(
-                        fontSize: 18.sp,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 4,
-                      ),
-                    ),
-                    Gap(8.w),
-                    if (isVerified)
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 6.w,
-                          vertical: 2.h,
-                        ),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF4CAF50),
-                          borderRadius: BorderRadius.circular(4.r),
-                        ),
-                        child: Text(
-                          "VERIFIED",
-                          style: context.typography.small.copyWith(
-                            fontSize: 10.sp,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                  ],
-                ),
-                if (verifiedAt != null) ...[
-                  Gap(4.h),
-                  Text(
-                    "Verified at ${verifiedAt!.format("dd MMM yyyy, HH:mm")}",
-                    style: context.typography.small.copyWith(
-                      fontSize: 11.sp,
-                      color: const Color(0xFF4CAF50),
-                    ),
-                  ),
-                ],
-              ],
-            ),
-          ),
-        ],
-      ),
     );
   }
 }
