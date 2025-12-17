@@ -11,6 +11,8 @@ Name | Type | Description | Notes
 **totalOrders** | **num** |  | 
 **totalRevenue** | **num** |  | 
 **totalCommission** | **num** |  | 
+**commissionRate** | **num** |  | 
+**netIncome** | **num** |  | 
 **completedOrders** | **num** |  | 
 **cancelledOrders** | **num** |  | 
 **averageOrderValue** | **num** |  | 

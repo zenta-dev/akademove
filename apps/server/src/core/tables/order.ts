@@ -96,6 +96,10 @@ export const order = pgTable(
 			precision: 18,
 			scale: 2,
 		}),
+		merchantEarning: numeric("merchant_earning", {
+			precision: 18,
+			scale: 2,
+		}),
 		couponId: uuid("coupon_id"),
 		couponCode: text("coupon_code"),
 		discountAmount: numeric("discount_amount", {

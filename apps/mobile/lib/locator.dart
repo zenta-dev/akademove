@@ -105,7 +105,10 @@ void _setupRepository() {
     )
     ..registerLazySingleton(() => BadgeRepository(apiClient: sl<ApiClient>()))
     ..registerLazySingleton(
-      () => CartRepository(keyValueService: sl<KeyValueService>()),
+      () => CartRepository(
+        keyValueService: sl<KeyValueService>(),
+        apiClient: sl<ApiClient>(),
+      ),
     )
     ..registerLazySingleton(
       () => QuickMessageRepository(apiClient: sl<ApiClient>()),

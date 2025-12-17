@@ -42,6 +42,8 @@ enum OrderKey {
   driverEarning(r'driverEarning'),
   @JsonValue(r'merchantCommission')
   merchantCommission(r'merchantCommission'),
+  @JsonValue(r'merchantEarning')
+  merchantEarning(r'merchantEarning'),
   @JsonValue(r'couponId')
   couponId(r'couponId'),
   @JsonValue(r'couponCode')

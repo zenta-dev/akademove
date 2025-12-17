@@ -13,6 +13,7 @@
  * - DriverCancellationService: Manages driver cancellation tracking and suspension
  * - OrderValidationService: Validates order placement parameters
  * - OrderSchedulingService: Validates and manages scheduled order logic
+ * - OrderStockService: Updates menu stock when orders are completed
  */
 
 export { DeliveryProofService } from "./delivery-proof-service";
@@ -26,7 +27,8 @@ export { OrderPricingService } from "./order-pricing-service";
 export { OrderRefundService } from "./order-refund-service";
 export {
 	OrderSchedulingService,
-	SCHEDULING_CONFIG,
+	type SchedulingConfig,
 } from "./order-scheduling-service";
 export { OrderStateService } from "./order-state-service";
+export { OrderStockService } from "./order-stock-service";
 export { OrderValidationService } from "./order-validation-service";

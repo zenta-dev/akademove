@@ -4,11 +4,11 @@
 
 // ignore_for_file: unused_element
 import 'package:api_client/src/model/pagination_result.dart';
-import 'package:api_client/src/model/notification_get_unread_count200_response_data.dart';
+import 'package:api_client/src/model/cart_response.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
 
-part 'notification_get_unread_count200_response.g.dart';
+part 'cart_get200_response.g.dart';
 
 @CopyWith()
 @JsonSerializable(
@@ -17,9 +17,9 @@ part 'notification_get_unread_count200_response.g.dart';
   disallowUnrecognizedKeys: false,
   explicitToJson: true,
 )
-class NotificationGetUnreadCount200Response {
-  /// Returns a new [NotificationGetUnreadCount200Response] instance.
-  const NotificationGetUnreadCount200Response({
+class CartGet200Response {
+  /// Returns a new [CartGet200Response] instance.
+  const CartGet200Response({
     required this.message,
     required this.data,
     this.pagination,
@@ -29,7 +29,7 @@ class NotificationGetUnreadCount200Response {
   final String message;
 
   @JsonKey(name: r'data', required: true, includeIfNull: false)
-  final NotificationGetUnreadCount200ResponseData data;
+  final CartResponse data;
 
   @JsonKey(name: r'pagination', required: false, includeIfNull: false)
   final PaginationResult? pagination;
@@ -42,7 +42,7 @@ class NotificationGetUnreadCount200Response {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is NotificationGetUnreadCount200Response &&
+      other is CartGet200Response &&
           other.message == message &&
           other.data == data &&
           other.pagination == pagination &&
@@ -55,12 +55,10 @@ class NotificationGetUnreadCount200Response {
       pagination.hashCode +
       totalPages.hashCode;
 
-  factory NotificationGetUnreadCount200Response.fromJson(
-    Map<String, dynamic> json,
-  ) => _$NotificationGetUnreadCount200ResponseFromJson(json);
+  factory CartGet200Response.fromJson(Map<String, dynamic> json) =>
+      _$CartGet200ResponseFromJson(json);
 
-  Map<String, dynamic> toJson() =>
-      _$NotificationGetUnreadCount200ResponseToJson(this);
+  Map<String, dynamic> toJson() => _$CartGet200ResponseToJson(this);
 
   @override
   String toString() {

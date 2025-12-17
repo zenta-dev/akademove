@@ -31,5 +31,10 @@ void main() {
     test('to test the property `phone`', () async {
       // TODO
     });
+
+    // num rating (default value: 0)
+    test('to test the property `rating`', () async {
+      // TODO
+    });
   });
 }

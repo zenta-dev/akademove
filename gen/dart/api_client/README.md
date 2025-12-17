@@ -115,6 +115,11 @@ Class | Method | HTTP request | Description
 [*BadgeApi*](doc/BadgeApi.md) | [**badgeUserList**](doc/BadgeApi.md#badgeuserlist) | **GET** /badges/user | 
 [*BadgeApi*](doc/BadgeApi.md) | [**badgeUserRemove**](doc/BadgeApi.md#badgeuserremove) | **DELETE** /badges/user/{id} | 
 [*BadgeApi*](doc/BadgeApi.md) | [**badgeUserUpdate**](doc/BadgeApi.md#badgeuserupdate) | **PUT** /badges/user/{id} | 
+[*CartApi*](doc/CartApi.md) | [**cartAddItem**](doc/CartApi.md#cartadditem) | **POST** /cart/items | 
+[*CartApi*](doc/CartApi.md) | [**cartClear**](doc/CartApi.md#cartclear) | **DELETE** /cart | 
+[*CartApi*](doc/CartApi.md) | [**cartGet**](doc/CartApi.md#cartget) | **GET** /cart | 
+[*CartApi*](doc/CartApi.md) | [**cartRemoveItem**](doc/CartApi.md#cartremoveitem) | **DELETE** /cart/items/{menuId} | 
+[*CartApi*](doc/CartApi.md) | [**cartUpdateItem**](doc/CartApi.md#cartupdateitem) | **PATCH** /cart/items | 
 [*ChatApi*](doc/ChatApi.md) | [**quickMessageCreate**](doc/ChatApi.md#quickmessagecreate) | **POST** /quick-messages | 
 [*ChatApi*](doc/ChatApi.md) | [**quickMessageDelete**](doc/ChatApi.md#quickmessagedelete) | **DELETE** /quick-messages/:id | 
 [*ChatApi*](doc/ChatApi.md) | [**quickMessageGet**](doc/ChatApi.md#quickmessageget) | **GET** /quick-messages/:id | 
@@ -409,6 +414,7 @@ Class | Method | HTTP request | Description
  - [BroadcastUpdateRequest](doc/BroadcastUpdateRequest.md)
  - [BusinessConfiguration](doc/BusinessConfiguration.md)
  - [Cart](doc/Cart.md)
+ - [CartGet200Response](doc/CartGet200Response.md)
  - [CartItem](doc/CartItem.md)
  - [CartResponse](doc/CartResponse.md)
  - [CartResponseStockWarningsInner](doc/CartResponseStockWarningsInner.md)
@@ -792,7 +798,6 @@ Class | Method | HTTP request | Description
  - [UnbanUser](doc/UnbanUser.md)
  - [UpdateAccountDeletion](doc/UpdateAccountDeletion.md)
  - [UpdateBroadcast](doc/UpdateBroadcast.md)
- - [UpdateCartAttachmentRequest](doc/UpdateCartAttachmentRequest.md)
  - [UpdateCartItemRequest](doc/UpdateCartItemRequest.md)
  - [UpdateConfiguration](doc/UpdateConfiguration.md)
  - [UpdateContact](doc/UpdateContact.md)

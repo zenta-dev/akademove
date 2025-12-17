@@ -232,6 +232,7 @@ export class ReviewRepository extends BaseRepository {
 		canReview: boolean;
 		alreadyReviewed: boolean;
 		orderCompleted: boolean;
+		existingReview: Review | null;
 	}> {
 		// Delegate to ReviewEligibilityService
 		return ReviewEligibilityService.getOrderReviewStatus(

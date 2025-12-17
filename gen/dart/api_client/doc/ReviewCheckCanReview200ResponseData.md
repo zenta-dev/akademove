@@ -11,6 +11,7 @@ Name | Type | Description | Notes
 **canReview** | **bool** |  | 
 **alreadyReviewed** | **bool** |  | 
 **orderCompleted** | **bool** |  | 
+**existingReview** | [**Review**](Review.md) |  | 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

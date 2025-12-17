@@ -50,11 +50,19 @@ class _ScheduledOrderListScreenState extends State<ScheduledOrderListScreen> {
   void _showEditScheduleBottomSheet(BuildContext context, Order order) {
     final cubit = context.read<UserOrderCubit>();
     final successMessage = context.l10n.scheduled_order_updated;
+    final configCubit = context.read<SharedConfigurationCubit>();
+    final businessConfig = configCubit.state.businessConfiguration.value;
+    final minAdvanceMinutes =
+        businessConfig?.scheduledOrderMinAdvanceMinutes?.toInt() ?? 30;
+    final maxAdvanceDays =
+        businessConfig?.scheduledOrderMaxAdvanceDays?.toInt() ?? 7;
     openDrawer(
       context: context,
       position: OverlayPosition.bottom,
       builder: (drawerContext) => ScheduledOrderEditBottomSheet(
         order: order,
+        minAdvanceMinutes: minAdvanceMinutes,
+        maxAdvanceDays: maxAdvanceDays,
         onSave: (newDateTime) async {
           final result = await cubit.updateScheduledOrder(
             order.id,
@@ -190,12 +198,16 @@ class ScheduledOrderEditBottomSheet extends StatefulWidget {
     required this.order,
     required this.onSave,
     required this.onClose,
+    this.minAdvanceMinutes = 30,
+    this.maxAdvanceDays = 7,
     super.key,
   });
 
   final Order order;
   final Future<void> Function(DateTime newDateTime) onSave;
   final VoidCallback onClose;
+  final int minAdvanceMinutes;
+  final int maxAdvanceDays;
 
   @override
   State<ScheduledOrderEditBottomSheet> createState() =>
@@ -219,8 +231,10 @@ class _ScheduledOrderEditBottomSheetState
     _selectedTime = TimeOfDay.fromDateTime(scheduledAt);
   }
 
-  DateTime get _minDate => DateTime.now().add(const Duration(minutes: 30));
-  DateTime get _maxDate => DateTime.now().add(const Duration(days: 7));
+  DateTime get _minDate =>
+      DateTime.now().add(Duration(minutes: widget.minAdvanceMinutes));
+  DateTime get _maxDate =>
+      DateTime.now().add(Duration(days: widget.maxAdvanceDays));
 
   DateState _dateStateBuilder(DateTime date) {
     final dateOnly = DateTime(date.year, date.month, date.day);
@@ -244,8 +258,8 @@ class _ScheduledOrderEditBottomSheetState
 
     // Validate the selected time using local time
     final now = DateTime.now();
-    final minTime = now.add(const Duration(minutes: 30));
-    final maxTime = now.add(const Duration(days: 7));
+    final minTime = now.add(Duration(minutes: widget.minAdvanceMinutes));
+    final maxTime = now.add(Duration(days: widget.maxAdvanceDays));
 
     if (newDateTime.isBefore(minTime)) {
       context.showMyToast(context.l10n.schedule_time_too_soon);

@@ -165,6 +165,7 @@ CartItem _$CartItemFromJson(Map<String, dynamic> json) =>
           'menuImage',
           'unitPrice',
           'quantity',
+          'notes',
         ],
       );
       final val = CartItem(
@@ -189,6 +190,6 @@ Map<String, dynamic> _$CartItemToJson(CartItem instance) => <String, dynamic>{
   'menuImage': instance.menuImage,
   'unitPrice': instance.unitPrice,
   'quantity': instance.quantity,
-  'notes': ?instance.notes,
+  'notes': instance.notes,
   'stock': ?instance.stock,
 };

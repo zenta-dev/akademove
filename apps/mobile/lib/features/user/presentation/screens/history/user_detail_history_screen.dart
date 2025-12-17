@@ -37,6 +37,11 @@ class _UserDetailHistoryScreenState extends State<UserDetailHistoryScreen> {
   }
 
   void _handleAutoAction(Order order) {
+    // Always check review status for completed orders with a driver
+    if (order.status == OrderStatus.COMPLETED && order.driverId != null) {
+      context.read<UserReviewCubit>().checkReviewStatus(order.id);
+    }
+
     if (_hasTriggeredAction) return;
     if (widget.action == null) return;
 
@@ -482,6 +487,19 @@ class _UserDetailHistoryScreenState extends State<UserDetailHistoryScreen> {
   }
 
   Widget _buildPriceBreakdownCard(BuildContext context, Order order) {
+    // Calculate menu items total for FOOD orders
+    final menuItemsTotal = order.type == OrderType.FOOD && order.items != null
+        ? order.items!.fold<num>(
+            0,
+            (sum, item) => sum + (item.item.price ?? 0) * item.quantity,
+          )
+        : 0;
+
+    // Delivery fee for FOOD orders = totalPrice - menuItemsTotal + discountAmount
+    final deliveryFee = order.type == OrderType.FOOD
+        ? order.totalPrice - menuItemsTotal + (order.discountAmount ?? 0)
+        : 0;
+
     return Card(
       child: Padding(
         padding: EdgeInsets.all(16.w),
@@ -494,13 +512,31 @@ class _UserDetailHistoryScreenState extends State<UserDetailHistoryScreen> {
               fontWeight: FontWeight.w600,
             ),
             Gap(12.h),
-            _buildPriceRow(
-              context,
-              label: context.l10n.base_price,
-              amount: order.basePrice,
-            ),
+
+            // For FOOD orders, show menu items total and delivery fee separately
+            if (order.type == OrderType.FOOD) ...[
+              _buildPriceRow(
+                context,
+                label: 'Menu Items',
+                amount: menuItemsTotal,
+              ),
+              _buildPriceRow(
+                context,
+                label: 'Delivery Fee',
+                amount: deliveryFee,
+              ),
+            ] else ...[
+              // For RIDE/DELIVERY, show base price
+              _buildPriceRow(
+                context,
+                label: context.l10n.base_price,
+                amount: order.basePrice,
+              ),
+            ],
+
             if (order.tip != null && order.tip! > 0)
               _buildPriceRow(context, label: 'Tip', amount: order.tip!),
+
             if (order.discountAmount != null && order.discountAmount! > 0)
               _buildPriceRow(
                 context,
@@ -510,6 +546,7 @@ class _UserDetailHistoryScreenState extends State<UserDetailHistoryScreen> {
                 amount: -order.discountAmount!,
                 isDiscount: true,
               ),
+
             Divider(height: 24.h),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -527,6 +564,52 @@ class _UserDetailHistoryScreenState extends State<UserDetailHistoryScreen> {
                 ),
               ],
             ),
+
+            // Show commission breakdown for completed orders (transparent fee disclosure)
+            if (order.status == OrderStatus.COMPLETED &&
+                order.platformCommission != null) ...[
+              Gap(16.h),
+              Divider(height: 1.h),
+              Gap(16.h),
+              DefaultText(
+                context.l10n.fee_breakdown,
+                fontSize: 14.sp,
+                fontWeight: FontWeight.w600,
+                color: context.colorScheme.mutedForeground,
+              ),
+              Gap(8.h),
+              _buildPriceRow(
+                context,
+                label: context.l10n.platform_fee,
+                amount: order.platformCommission!,
+                isMuted: true,
+              ),
+              if (order.driverEarning != null)
+                _buildPriceRow(
+                  context,
+                  label: context.l10n.driver_receives,
+                  amount: order.driverEarning!,
+                  isMuted: true,
+                ),
+              // Show merchant fees for FOOD orders (merchants involved)
+              if (order.type == OrderType.FOOD &&
+                  order.merchantCommission != null &&
+                  order.merchantCommission! > 0)
+                _buildPriceRow(
+                  context,
+                  label: context.l10n.merchant_fee,
+                  amount: order.merchantCommission!,
+                  isMuted: true,
+                ),
+              if (order.type == OrderType.FOOD && order.merchantEarning != null)
+                _buildPriceRow(
+                  context,
+                  label: context.l10n.merchant_receives,
+                  amount: order.merchantEarning!,
+                  isMuted: true,
+                ),
+            ],
+
             Gap(12.h),
             // Payment status indicator
             Container(
@@ -564,7 +647,14 @@ class _UserDetailHistoryScreenState extends State<UserDetailHistoryScreen> {
     required String label,
     required num amount,
     bool isDiscount = false,
+    bool isMuted = false,
   }) {
+    final textColor = isDiscount
+        ? Colors.green
+        : isMuted
+        ? context.colorScheme.mutedForeground
+        : null;
+
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 4.h),
       child: Row(
@@ -580,7 +670,7 @@ class _UserDetailHistoryScreenState extends State<UserDetailHistoryScreen> {
                 ? '- ${context.formatCurrency(amount.abs())}'
                 : context.formatCurrency(amount),
             fontSize: 14.sp,
-            color: isDiscount ? Colors.green : null,
+            color: textColor,
           ),
         ],
       ),
@@ -1051,6 +1141,333 @@ class _UserDetailHistoryScreenState extends State<UserDetailHistoryScreen> {
     );
   }
 
+  /// Build the review section that shows either existing review or rate button
+  Widget _buildReviewSection(BuildContext context, Order order) {
+    // Only show for completed orders with a driver
+    if (order.status != OrderStatus.COMPLETED || order.driverId == null) {
+      return const SizedBox.shrink();
+    }
+
+    return BlocBuilder<UserReviewCubit, UserReviewState>(
+      builder: (context, state) {
+        // Show loading state
+        if (state.reviewStatus.isLoading) {
+          return Card(
+            child: Padding(
+              padding: EdgeInsets.all(16.w),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    width: 20.w,
+                    height: 20.w,
+                    child: const CircularProgressIndicator(strokeWidth: 2),
+                  ),
+                  Gap(12.w),
+                  DefaultText(
+                    context.l10n.loading,
+                    fontSize: 14.sp,
+                    color: context.colorScheme.mutedForeground,
+                  ),
+                ],
+              ),
+            ),
+          );
+        }
+
+        // Show error state with retry
+        if (state.reviewStatus.isFailure) {
+          return Card(
+            child: Padding(
+              padding: EdgeInsets.all(16.w),
+              child: Column(
+                children: [
+                  Icon(
+                    LucideIcons.circleAlert,
+                    size: 24.sp,
+                    color: context.colorScheme.destructive,
+                  ),
+                  Gap(8.h),
+                  Text(
+                    state.reviewStatus.error?.message ??
+                        context.l10n.error_generic,
+                    textAlign: TextAlign.center,
+                    style: context.typography.small.copyWith(
+                      fontSize: 14.sp,
+                      color: context.colorScheme.mutedForeground,
+                    ),
+                  ),
+                  Gap(12.h),
+                  Button.outline(
+                    onPressed: () => context
+                        .read<UserReviewCubit>()
+                        .checkReviewStatus(order.id),
+                    child: Text(context.l10n.button_retry),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }
+
+        final reviewStatus = state.reviewStatus.value;
+
+        // If already reviewed, show existing review card
+        if (reviewStatus != null &&
+            reviewStatus.alreadyReviewed &&
+            reviewStatus.existingReview != null) {
+          return _buildExistingReviewCard(
+            context,
+            reviewStatus.existingReview!,
+          );
+        }
+
+        // Otherwise show the "Rate this order" button
+        return SizedBox(
+          width: double.infinity,
+          child: Button.primary(
+            onPressed: () => _navigateToRating(context, order),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(LucideIcons.star, size: 18.sp),
+                Gap(8.w),
+                Text(context.l10n.text_rate_this_order),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  /// Build existing review card showing the user's submitted review
+  Widget _buildExistingReviewCard(BuildContext context, Review review) {
+    return Card(
+      child: Padding(
+        padding: EdgeInsets.all(16.w),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Header with badge
+            Row(
+              children: [
+                Icon(
+                  LucideIcons.circleCheck,
+                  size: 20.sp,
+                  color: context.colorScheme.primary,
+                ),
+                Gap(8.w),
+                DefaultText(
+                  context.l10n.text_already_reviewed,
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.w600,
+                  color: context.colorScheme.primary,
+                ),
+              ],
+            ),
+            Gap(16.h),
+
+            // Star rating display
+            _buildExistingRatingStars(context, review.score),
+            Gap(12.h),
+
+            // Categories display
+            if (review.categories.isNotEmpty) ...[
+              _buildExistingCategoriesChips(context, review.categories),
+              Gap(12.h),
+            ],
+
+            // Comment display (if any)
+            if (review.comment != null && review.comment!.isNotEmpty) ...[
+              _buildExistingCommentDisplay(context, review.comment!),
+              Gap(12.h),
+            ],
+
+            // Review date
+            Divider(color: context.colorScheme.border.withValues(alpha: 0.5)),
+            Gap(8.h),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  LucideIcons.calendar,
+                  size: 14.sp,
+                  color: context.colorScheme.mutedForeground,
+                ),
+                Gap(8.w),
+                DefaultText(
+                  context.l10n.text_reviewed_on(
+                    review.createdAt.format('d MMM yyyy'),
+                  ),
+                  fontSize: 12.sp,
+                  color: context.colorScheme.mutedForeground,
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildExistingRatingStars(BuildContext context, int score) {
+    return Row(
+      children: [
+        DefaultText(
+          context.l10n.text_your_rating,
+          fontSize: 14.sp,
+          color: context.colorScheme.mutedForeground,
+        ),
+        Gap(12.w),
+        Row(
+          children: List.generate(5, (index) {
+            final starValue = index + 1;
+            return Padding(
+              padding: EdgeInsets.only(right: 4.w),
+              child: Icon(
+                LucideIcons.star,
+                size: 18.sp,
+                color: starValue <= score
+                    ? const Color(0xFFFFA000)
+                    : context.colorScheme.mutedForeground,
+                fill: starValue <= score ? 1.0 : 0.0,
+              ),
+            );
+          }),
+        ),
+        Gap(8.w),
+        DefaultText(
+          _getRatingLabel(context, score),
+          fontSize: 13.sp,
+          fontWeight: FontWeight.w500,
+          color: context.colorScheme.primary,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildExistingCategoriesChips(
+    BuildContext context,
+    List<ReviewCategory> categories,
+  ) {
+    return Wrap(
+      spacing: 6.w,
+      runSpacing: 6.h,
+      children: categories.map((category) {
+        return Container(
+          padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
+          decoration: BoxDecoration(
+            color: context.colorScheme.primary.withValues(alpha: 0.1),
+            borderRadius: BorderRadius.circular(16.r),
+            border: Border.all(
+              color: context.colorScheme.primary.withValues(alpha: 0.3),
+            ),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                _getCategoryIcon(category),
+                size: 12.sp,
+                color: context.colorScheme.primary,
+              ),
+              Gap(6.w),
+              DefaultText(
+                _getCategoryLabel(context, category),
+                fontSize: 12.sp,
+                color: context.colorScheme.primary,
+                fontWeight: FontWeight.w500,
+              ),
+            ],
+          ),
+        );
+      }).toList(),
+    );
+  }
+
+  Widget _buildExistingCommentDisplay(BuildContext context, String comment) {
+    return Container(
+      padding: EdgeInsets.all(12.w),
+      decoration: BoxDecoration(
+        color: context.colorScheme.muted.withValues(alpha: 0.5),
+        borderRadius: BorderRadius.circular(8.r),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(
+            LucideIcons.quote,
+            size: 16.sp,
+            color: context.colorScheme.mutedForeground,
+          ),
+          Gap(10.w),
+          Expanded(
+            child: Text(
+              comment,
+              style: context.typography.small.copyWith(
+                fontSize: 13.sp,
+                fontStyle: FontStyle.italic,
+                color: context.colorScheme.foreground,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  IconData _getCategoryIcon(ReviewCategory category) {
+    switch (category) {
+      case ReviewCategory.CLEANLINESS:
+        return LucideIcons.sparkles;
+      case ReviewCategory.COURTESY:
+        return LucideIcons.heart;
+      case ReviewCategory.PUNCTUALITY:
+        return LucideIcons.clock;
+      case ReviewCategory.SAFETY:
+        return LucideIcons.shield;
+      case ReviewCategory.COMMUNICATION:
+        return LucideIcons.messageCircle;
+      case ReviewCategory.OTHER:
+        return LucideIcons.star;
+    }
+  }
+
+  String _getCategoryLabel(BuildContext context, ReviewCategory category) {
+    switch (category) {
+      case ReviewCategory.CLEANLINESS:
+        return context.l10n.category_cleanliness;
+      case ReviewCategory.COURTESY:
+        return context.l10n.category_courtesy;
+      case ReviewCategory.PUNCTUALITY:
+        return context.l10n.category_punctuality;
+      case ReviewCategory.SAFETY:
+        return context.l10n.category_safety;
+      case ReviewCategory.COMMUNICATION:
+        return context.l10n.category_communication;
+      case ReviewCategory.OTHER:
+        return context.l10n.category_overall;
+    }
+  }
+
+  String _getRatingLabel(BuildContext context, int rating) {
+    switch (rating) {
+      case 1:
+        return context.l10n.rating_poor;
+      case 2:
+        return context.l10n.rating_below_average;
+      case 3:
+        return context.l10n.rating_average;
+      case 4:
+        return context.l10n.rating_good;
+      case 5:
+        return context.l10n.rating_excellent;
+      default:
+        return '';
+    }
+  }
+
   Widget _buildActionButtons(BuildContext context, Order order) {
     return Column(
       children: [
@@ -1073,22 +1490,9 @@ class _UserDetailHistoryScreenState extends State<UserDetailHistoryScreen> {
           Gap(12.h),
         ],
 
-        // Rate Button (for completed orders with assigned driver)
-        if (order.status == OrderStatus.COMPLETED && order.driverId != null)
-          SizedBox(
-            width: double.infinity,
-            child: Button.primary(
-              onPressed: () => _navigateToRating(context, order),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(LucideIcons.star, size: 18.sp),
-                  Gap(8.w),
-                  Text(context.l10n.text_rate_this_order),
-                ],
-              ),
-            ),
-          ),
+        // Review section (for completed orders with assigned driver)
+        // Shows existing review if already reviewed, or rate button if not
+        _buildReviewSection(context, order),
       ],
     );
   }

@@ -25,6 +25,7 @@ class MerchantBestSellers200ResponseDataInnerMenu {
     this.category,
     required this.price,
     required this.stock,
+    required this.soldStock,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -49,6 +50,9 @@ class MerchantBestSellers200ResponseDataInnerMenu {
   @JsonKey(name: r'stock', required: true, includeIfNull: false)
   final num stock;
 
+  @JsonKey(name: r'soldStock', required: true, includeIfNull: false)
+  final num soldStock;
+
   @JsonKey(name: r'createdAt', required: true, includeIfNull: true)
   final DateTime? createdAt;
 
@@ -66,6 +70,7 @@ class MerchantBestSellers200ResponseDataInnerMenu {
           other.category == category &&
           other.price == price &&
           other.stock == stock &&
+          other.soldStock == soldStock &&
           other.createdAt == createdAt &&
           other.updatedAt == updatedAt;
 
@@ -78,6 +83,7 @@ class MerchantBestSellers200ResponseDataInnerMenu {
       category.hashCode +
       price.hashCode +
       stock.hashCode +
+      soldStock.hashCode +
       (createdAt == null ? 0 : createdAt.hashCode) +
       (updatedAt == null ? 0 : updatedAt.hashCode);
 

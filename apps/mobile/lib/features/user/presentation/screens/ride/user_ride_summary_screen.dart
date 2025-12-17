@@ -148,9 +148,16 @@ class _UserRideSummaryScreenState extends State<UserRideSummaryScreen> {
   }
 
   void _selectScheduleDateTime() {
+    final configCubit = context.read<SharedConfigurationCubit>();
+    final businessConfig = configCubit.state.businessConfiguration.value;
+    final minAdvanceMinutes =
+        businessConfig?.scheduledOrderMinAdvanceMinutes?.toInt() ?? 30;
+    final maxAdvanceDays =
+        businessConfig?.scheduledOrderMaxAdvanceDays?.toInt() ?? 7;
+
     final now = DateTime.now();
-    final minDate = now.add(const Duration(minutes: 30));
-    final maxDate = now.add(const Duration(days: 7));
+    final minDate = now.add(Duration(minutes: minAdvanceMinutes));
+    final maxDate = now.add(Duration(days: maxAdvanceDays));
     final currentScheduled = scheduledAt;
 
     var tempDate = currentScheduled ?? minDate;
@@ -305,7 +312,7 @@ class _UserRideSummaryScreenState extends State<UserRideSummaryScreen> {
 
                         // Validate using local time
                         final validMinTime = DateTime.now().add(
-                          const Duration(minutes: 30),
+                          Duration(minutes: minAdvanceMinutes),
                         );
                         if (newDateTime.isBefore(validMinTime)) {
                           this.context.showMyToast(

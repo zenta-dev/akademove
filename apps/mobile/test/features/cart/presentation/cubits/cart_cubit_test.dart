@@ -1,6 +1,5 @@
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/cart/data/_export.dart';
-import 'package:akademove/features/cart/data/models/cart_models.dart';
 import 'package:akademove/features/cart/presentation/cubits/_export.dart';
 import 'package:akademove/features/cart/presentation/states/_export.dart';
 import 'package:api_client/api_client.dart' hide Cart, CartItem;
@@ -64,6 +63,7 @@ void main() {
                 unitPrice: 25000,
                 quantity: 2,
                 stock: 10,
+                notes: null,
               ),
             ],
             totalItems: 2,
@@ -72,7 +72,7 @@ void main() {
           );
 
           when(
-            () => mockCartRepository.getCart(),
+            () => mockCartRepository.syncWithServer(),
           ).thenAnswer((_) async => cart);
           return cubit;
         },
@@ -93,14 +93,14 @@ void main() {
               .having((s) => s.cart.value?.items.length, 'items.length', 1),
         ],
         verify: (_) {
-          verify(() => mockCartRepository.getCart()).called(1);
+          verify(() => mockCartRepository.syncWithServer()).called(1);
         },
       );
 
       blocTest<UserCartCubit, UserCartState>(
         'emits [loading, failure] when loadCart fails',
         build: () {
-          when(() => mockCartRepository.getCart()).thenThrow(
+          when(() => mockCartRepository.syncWithServer()).thenThrow(
             const RepositoryError(
               'Failed to load cart',
               code: ErrorCode.internalServerError,
@@ -210,6 +210,7 @@ void main() {
             unitPrice: 25000,
             quantity: 2,
             stock: 10,
+            notes: null,
           ),
           CartItem(
             menuId: 'menu-2',
@@ -220,6 +221,7 @@ void main() {
             unitPrice: 15000,
             quantity: 1,
             stock: 5,
+            notes: null,
           ),
         ];
 
@@ -279,6 +281,7 @@ void main() {
               unitPrice: 25000,
               quantity: 1,
               stock: 10,
+              notes: null,
             ),
           ],
           totalItems: 1,
@@ -309,6 +312,7 @@ void main() {
           unitPrice: 25000,
           quantity: 3,
           stock: 10,
+          notes: null,
         );
 
         // Calculate manually: unitPrice * quantity
@@ -327,6 +331,7 @@ void main() {
           unitPrice: 25000,
           quantity: 10,
           stock: 10,
+          notes: null,
         );
         expect(atMaxItem.isAtMaxStock, true);
         expect(atMaxItem.isOutOfStock, false);
@@ -341,6 +346,7 @@ void main() {
           unitPrice: 15000,
           quantity: 1,
           stock: 0,
+          notes: null,
         );
         expect(outOfStockItem.isOutOfStock, true);
         expect(outOfStockItem.isAtMaxStock, true);
@@ -355,6 +361,7 @@ void main() {
           unitPrice: 20000,
           quantity: 3,
           stock: 10,
+          notes: null,
         );
         expect(normalItem.isAtMaxStock, false);
         expect(normalItem.isOutOfStock, false);

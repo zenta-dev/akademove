@@ -97,7 +97,7 @@ export class OrderPricingService {
 	 *
 	 * @param orderType - Type of order
 	 * @param totalPrice - Total order price
-	 * @param badgeCommissionReduction - Optional reduction from driver badges (0-0.5)
+	 * @param badgeCommissionReduction - Optional reduction from driver badges (0-maxBadgeCommissionReduction)
 	 * @returns Object with platform and merchant commission
 	 */
 	async calculateCommission(
@@ -115,18 +115,23 @@ export class OrderPricingService {
 		// Get pricing config for the order type
 		const config = await this.#getPricingForType(orderType);
 
+		// Get business config for max badge commission reduction
+		const businessConfig = await this.configProvider.getBusinessConfig();
+		const maxBadgeReduction = businessConfig.maxBadgeCommissionReduction;
+
 		// Use platformFeeRate from config as the commission rate
 		let platformRate = new Decimal(config.platformFeeRate);
 
-		// Apply badge commission reduction (max 50%)
+		// Apply badge commission reduction (capped at maxBadgeCommissionReduction from config)
 		if (badgeCommissionReduction > 0) {
-			const reduction = Math.min(badgeCommissionReduction, 0.5);
+			const reduction = Math.min(badgeCommissionReduction, maxBadgeReduction);
 			platformRate = platformRate.mul(1 - reduction);
 			logger.info(
 				{
 					orderType,
 					originalRate: config.platformFeeRate,
 					reduction,
+					maxBadgeReduction,
 					finalRate: platformRate.toNumber(),
 				},
 				"[OrderPricingService] Applied badge commission reduction",

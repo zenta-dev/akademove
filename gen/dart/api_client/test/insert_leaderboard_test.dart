@@ -22,12 +22,12 @@ void main() {
       // TODO
     });
 
-    // String category
+    // LeaderboardCategory category
     test('to test the property `category`', () async {
       // TODO
     });
 
-    // String period
+    // LeaderboardPeriod period
     test('to test the property `period`', () async {
       // TODO
     });

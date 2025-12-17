@@ -2163,6 +2163,9 @@ class AppLocalizationsId extends AppLocalizations {
   String get label_stock => 'Stok';
 
   @override
+  String get sold => 'Terjual';
+
+  @override
   String get label_created => 'Dibuat';
 
   @override
@@ -4470,4 +4473,39 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get status_in_trip => 'Dalam Perjalanan';
+
+  @override
+  String get error_generic => 'Terjadi kesalahan. Silakan coba lagi.';
+
+  @override
+  String get button_retry => 'Coba Lagi';
+
+  @override
+  String get text_already_reviewed => 'Anda sudah mengulas pesanan ini';
+
+  @override
+  String get text_your_rating => 'Rating Anda';
+
+  @override
+  String get text_selected_categories => 'Kategori yang Dipilih';
+
+  @override
+  String get text_your_comment => 'Komentar Anda';
+
+  @override
+  String text_reviewed_on(String date) {
+    return 'Diulas pada $date';
+  }
+
+  @override
+  String get fee_breakdown => 'Rincian Biaya';
+
+  @override
+  String get driver_receives => 'Penghasilan Driver';
+
+  @override
+  String get merchant_fee => 'Biaya Merchant';
+
+  @override
+  String get merchant_receives => 'Penghasilan Merchant';
 }

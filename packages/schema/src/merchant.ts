@@ -100,6 +100,11 @@ export const MerchantMenuSchema = z.object({
 	category: z.string().optional(),
 	price: z.coerce.number<number>().nonnegative(),
 	stock: z.coerce.number<number>().int().nonnegative(),
+	soldStock: z.coerce
+		.number<number>()
+		.int()
+		.nonnegative()
+		.describe("Total number of items sold"),
 	createdAt: DateSchema,
 	updatedAt: DateSchema,
 });
@@ -112,6 +117,7 @@ export const InsertMerchantMenuSchema = MerchantMenuSchema.omit({
 	id: true,
 	image: true,
 	merchantId: true,
+	soldStock: true,
 	createdAt: true,
 	updatedAt: true,
 }).safeExtend({

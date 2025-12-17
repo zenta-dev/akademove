@@ -45,6 +45,8 @@ class _UserDeliveryPaymentScreenState extends State<UserDeliveryPaymentScreen> {
       gender: gender,
       bankProvider: bankProvider,
       couponCode: orderLocationCubit.selectedCouponCode,
+      note: orderLocationCubit.deliveryNote,
+      deliveryItemType: orderLocationCubit.deliveryItemType,
     );
   }
 

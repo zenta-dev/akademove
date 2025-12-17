@@ -59,6 +59,7 @@ class _MerchantCommissionReportDetailScreenState
         totalRevenue: state.totalRevenue,
         totalCommission: state.totalCommission,
         netIncome: state.netIncome,
+        commissionRate: state.commissionRate,
         period: context.l10n.monthly,
       );
 

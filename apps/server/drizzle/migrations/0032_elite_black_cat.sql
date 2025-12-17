@@ -1,0 +1,1 @@
+ALTER TABLE "am_orders" ADD COLUMN "merchant_earning" numeric(18, 2);

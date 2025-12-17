@@ -22,12 +22,12 @@ void main() {
       // TODO
     });
 
-    // ReviewCategory category
-    test('to test the property `category`', () async {
+    // List<ReviewCategory> categories
+    test('to test the property `categories`', () async {
       // TODO
     });
 
-    // num score
+    // int score
     test('to test the property `score`', () async {
       // TODO
     });

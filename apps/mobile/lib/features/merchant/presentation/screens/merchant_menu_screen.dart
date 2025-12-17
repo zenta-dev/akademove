@@ -239,14 +239,26 @@ class _MenuCard extends StatelessWidget {
                           color: context.colorScheme.mutedForeground,
                         ),
                       ),
-                      Text(
-                        '${context.l10n.label_stock}: ${menu.stock}',
-                        style: context.typography.small.copyWith(
-                          fontSize: 11.sp,
-                          color: menu.stock > 0
-                              ? const Color(0xFF4CAF50)
-                              : const Color(0xFFF44336),
-                        ),
+                      Row(
+                        spacing: 8.w,
+                        children: [
+                          Text(
+                            '${context.l10n.label_stock}: ${menu.stock}',
+                            style: context.typography.small.copyWith(
+                              fontSize: 11.sp,
+                              color: menu.stock > 0
+                                  ? const Color(0xFF4CAF50)
+                                  : const Color(0xFFF44336),
+                            ),
+                          ),
+                          Text(
+                            '${context.l10n.sold}: ${menu.soldStock}',
+                            style: context.typography.small.copyWith(
+                              fontSize: 11.sp,
+                              color: context.colorScheme.mutedForeground,
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),

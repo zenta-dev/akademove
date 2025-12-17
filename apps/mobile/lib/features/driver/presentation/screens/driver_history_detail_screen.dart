@@ -3,6 +3,7 @@ import 'package:akademove/features/features.dart';
 import 'package:akademove/l10n/l10n.dart';
 import 'package:akademove/locator.dart';
 import 'package:api_client/api_client.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -31,10 +32,12 @@ class _DriverHistoryDetailScreenState extends State<DriverHistoryDetailScreen> {
   Set<Marker> _markers = {};
   Set<Polyline> _polylines = {};
   GoogleMapController? _mapController;
+  late final DriverReviewCubit _reviewCubit;
 
   @override
   void initState() {
     super.initState();
+    _reviewCubit = sl<DriverReviewCubit>();
     _loadOrder();
   }
 
@@ -52,6 +55,10 @@ class _DriverHistoryDetailScreenState extends State<DriverHistoryDetailScreen> {
           _isLoading = false;
         });
         _setupMap();
+        // Check review status for completed orders
+        if (response.data.status == OrderStatus.COMPLETED) {
+          _reviewCubit.checkReviewStatus(widget.orderId);
+        }
       }
     } catch (e) {
       if (mounted) {
@@ -133,29 +140,33 @@ class _DriverHistoryDetailScreenState extends State<DriverHistoryDetailScreen> {
   @override
   void dispose() {
     _mapController?.dispose();
+    _reviewCubit.reset();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      headers: [
-        AppBar(
-          leading: [
-            IconButton(
-              icon: const Icon(LucideIcons.arrowLeft),
-              onPressed: () => context.pop(),
-              variance: ButtonVariance.ghost,
+    return BlocProvider.value(
+      value: _reviewCubit,
+      child: Scaffold(
+        headers: [
+          AppBar(
+            leading: [
+              IconButton(
+                icon: const Icon(LucideIcons.arrowLeft),
+                onPressed: () => context.pop(),
+                variance: ButtonVariance.ghost,
+              ),
+            ],
+            title: Text(
+              _order != null
+                  ? context.l10n.text_order_id_short(_order?.id.prefix(8) ?? '')
+                  : context.l10n.order_history,
             ),
-          ],
-          title: Text(
-            _order != null
-                ? context.l10n.text_order_id_short(_order?.id.prefix(8) ?? '')
-                : context.l10n.order_history,
           ),
-        ),
-      ],
-      child: _buildBody(),
+        ],
+        child: _buildBody(),
+      ),
     );
   }
 
@@ -413,26 +424,340 @@ class _DriverHistoryDetailScreenState extends State<DriverHistoryDetailScreen> {
   }
 
   Widget _buildActionButtons(Order order) {
-    // Only show rate button for completed orders
-    if (order.status == OrderStatus.COMPLETED) {
-      return SizedBox(
-        width: double.infinity,
-        child: PrimaryButton(
-          onPressed: () async {
-            await showReviewDialog(
-              context: context,
-              orderId: order.id,
-              toUserId: order.userId,
-              toUserName: order.user?.name ?? context.l10n.text_customer,
-            );
-          },
-          child: Text(context.l10n.rate_customer),
-        ),
-      );
+    // Only show review section for completed orders
+    if (order.status != OrderStatus.COMPLETED) {
+      return const SizedBox.shrink();
     }
 
-    // No actions for cancelled orders
-    return const SizedBox.shrink();
+    return _buildReviewSection(order);
+  }
+
+  /// Build the review section that shows either existing review or rate button
+  Widget _buildReviewSection(Order order) {
+    return BlocBuilder<DriverReviewCubit, DriverReviewState>(
+      builder: (context, state) {
+        // Show loading state
+        if (state.reviewStatus.isLoading) {
+          return Card(
+            child: Padding(
+              padding: EdgeInsets.all(16.w),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    width: 20.w,
+                    height: 20.w,
+                    child: const CircularProgressIndicator(strokeWidth: 2),
+                  ),
+                  Gap(12.w),
+                  Text(
+                    context.l10n.loading,
+                    style: context.typography.small.copyWith(
+                      fontSize: 14.sp,
+                      color: context.colorScheme.mutedForeground,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }
+
+        // Show error state with retry
+        if (state.reviewStatus.isFailure) {
+          return Card(
+            child: Padding(
+              padding: EdgeInsets.all(16.w),
+              child: Column(
+                children: [
+                  Icon(
+                    LucideIcons.circleAlert,
+                    size: 24.sp,
+                    color: context.colorScheme.destructive,
+                  ),
+                  Gap(8.h),
+                  Text(
+                    state.reviewStatus.error?.message ??
+                        context.l10n.error_generic,
+                    textAlign: TextAlign.center,
+                    style: context.typography.small.copyWith(
+                      fontSize: 14.sp,
+                      color: context.colorScheme.mutedForeground,
+                    ),
+                  ),
+                  Gap(12.h),
+                  Button.outline(
+                    onPressed: () => _reviewCubit.checkReviewStatus(order.id),
+                    child: Text(context.l10n.button_retry),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }
+
+        final reviewStatus = state.reviewStatus.value;
+
+        // If already reviewed, show existing review card
+        if (reviewStatus != null &&
+            reviewStatus.alreadyReviewed &&
+            reviewStatus.existingReview != null) {
+          return _buildExistingReviewCard(reviewStatus.existingReview!);
+        }
+
+        // Otherwise show the "Rate Customer" button
+        return SizedBox(
+          width: double.infinity,
+          child: PrimaryButton(
+            onPressed: () async {
+              await showReviewDialog(
+                context: context,
+                orderId: order.id,
+                toUserId: order.userId,
+                toUserName: order.user?.name ?? context.l10n.text_customer,
+              );
+              // Refresh review status after dialog closes
+              _reviewCubit.checkReviewStatus(order.id);
+            },
+            child: Text(context.l10n.rate_customer),
+          ),
+        );
+      },
+    );
+  }
+
+  /// Build existing review card showing the driver's submitted review
+  Widget _buildExistingReviewCard(Review review) {
+    return Card(
+      child: Padding(
+        padding: EdgeInsets.all(16.w),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Header with badge
+            Row(
+              children: [
+                Icon(
+                  LucideIcons.circleCheck,
+                  size: 20.sp,
+                  color: context.colorScheme.primary,
+                ),
+                Gap(8.w),
+                Text(
+                  context.l10n.text_already_reviewed,
+                  style: context.typography.h4.copyWith(
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.w600,
+                    color: context.colorScheme.primary,
+                  ),
+                ),
+              ],
+            ),
+            Gap(16.h),
+
+            // Star rating display
+            _buildExistingRatingStars(review.score),
+            Gap(12.h),
+
+            // Categories display
+            if (review.categories.isNotEmpty) ...[
+              _buildExistingCategoriesChips(review.categories),
+              Gap(12.h),
+            ],
+
+            // Comment display (if any)
+            if (review.comment != null && review.comment!.isNotEmpty) ...[
+              _buildExistingCommentDisplay(review.comment!),
+              Gap(12.h),
+            ],
+
+            // Review date
+            Divider(color: context.colorScheme.border.withValues(alpha: 0.5)),
+            Gap(8.h),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  LucideIcons.calendar,
+                  size: 14.sp,
+                  color: context.colorScheme.mutedForeground,
+                ),
+                Gap(8.w),
+                Text(
+                  context.l10n.text_reviewed_on(
+                    review.createdAt.format('d MMM yyyy'),
+                  ),
+                  style: context.typography.small.copyWith(
+                    fontSize: 12.sp,
+                    color: context.colorScheme.mutedForeground,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildExistingRatingStars(int score) {
+    return Row(
+      children: [
+        Text(
+          context.l10n.text_your_rating,
+          style: context.typography.small.copyWith(
+            fontSize: 14.sp,
+            color: context.colorScheme.mutedForeground,
+          ),
+        ),
+        Gap(12.w),
+        Row(
+          children: List.generate(5, (index) {
+            final starValue = index + 1;
+            return Padding(
+              padding: EdgeInsets.only(right: 4.w),
+              child: Icon(
+                LucideIcons.star,
+                size: 18.sp,
+                color: starValue <= score
+                    ? const Color(0xFFFFA000)
+                    : context.colorScheme.mutedForeground,
+                fill: starValue <= score ? 1.0 : 0.0,
+              ),
+            );
+          }),
+        ),
+        Gap(8.w),
+        Text(
+          _getRatingLabel(score),
+          style: context.typography.small.copyWith(
+            fontSize: 13.sp,
+            fontWeight: FontWeight.w500,
+            color: context.colorScheme.primary,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildExistingCategoriesChips(List<ReviewCategory> categories) {
+    return Wrap(
+      spacing: 6.w,
+      runSpacing: 6.h,
+      children: categories.map((category) {
+        return Container(
+          padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
+          decoration: BoxDecoration(
+            color: context.colorScheme.primary.withValues(alpha: 0.1),
+            borderRadius: BorderRadius.circular(16.r),
+            border: Border.all(
+              color: context.colorScheme.primary.withValues(alpha: 0.3),
+            ),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                _getCategoryIcon(category),
+                size: 12.sp,
+                color: context.colorScheme.primary,
+              ),
+              Gap(6.w),
+              Text(
+                _getCategoryLabel(category),
+                style: context.typography.small.copyWith(
+                  fontSize: 12.sp,
+                  color: context.colorScheme.primary,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+        );
+      }).toList(),
+    );
+  }
+
+  Widget _buildExistingCommentDisplay(String comment) {
+    return Container(
+      padding: EdgeInsets.all(12.w),
+      decoration: BoxDecoration(
+        color: context.colorScheme.muted.withValues(alpha: 0.5),
+        borderRadius: BorderRadius.circular(8.r),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(
+            LucideIcons.quote,
+            size: 16.sp,
+            color: context.colorScheme.mutedForeground,
+          ),
+          Gap(10.w),
+          Expanded(
+            child: Text(
+              comment,
+              style: context.typography.small.copyWith(
+                fontSize: 13.sp,
+                fontStyle: FontStyle.italic,
+                color: context.colorScheme.foreground,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  IconData _getCategoryIcon(ReviewCategory category) {
+    switch (category) {
+      case ReviewCategory.CLEANLINESS:
+        return LucideIcons.sparkles;
+      case ReviewCategory.COURTESY:
+        return LucideIcons.heart;
+      case ReviewCategory.PUNCTUALITY:
+        return LucideIcons.clock;
+      case ReviewCategory.SAFETY:
+        return LucideIcons.shield;
+      case ReviewCategory.COMMUNICATION:
+        return LucideIcons.messageCircle;
+      case ReviewCategory.OTHER:
+        return LucideIcons.star;
+    }
+  }
+
+  String _getCategoryLabel(ReviewCategory category) {
+    switch (category) {
+      case ReviewCategory.CLEANLINESS:
+        return context.l10n.category_cleanliness;
+      case ReviewCategory.COURTESY:
+        return context.l10n.category_courtesy;
+      case ReviewCategory.PUNCTUALITY:
+        return context.l10n.category_punctuality;
+      case ReviewCategory.SAFETY:
+        return context.l10n.category_safety;
+      case ReviewCategory.COMMUNICATION:
+        return context.l10n.category_communication;
+      case ReviewCategory.OTHER:
+        return context.l10n.category_overall;
+    }
+  }
+
+  String _getRatingLabel(int rating) {
+    switch (rating) {
+      case 1:
+        return context.l10n.rating_poor;
+      case 2:
+        return context.l10n.rating_below_average;
+      case 3:
+        return context.l10n.rating_average;
+      case 4:
+        return context.l10n.rating_good;
+      case 5:
+        return context.l10n.rating_excellent;
+      default:
+        return '';
+    }
   }
 
   String _formatGender(UserGender gender) {

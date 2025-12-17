@@ -1,10 +1,8 @@
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/cart/data/_export.dart';
-import 'package:akademove/features/cart/data/models/cart_models.dart' as models;
 import 'package:akademove/features/cart/presentation/states/_export.dart';
 import 'package:akademove/features/order/data/repositories/order_repository.dart';
 import 'package:api_client/api_client.dart' hide Cart, CartItem;
-import 'package:http_parser/http_parser.dart' show MediaType;
 
 class UserCartCubit extends BaseCubit<UserCartState> {
   UserCartCubit({
@@ -17,12 +15,12 @@ class UserCartCubit extends BaseCubit<UserCartState> {
   final CartRepository _cartRepository;
   final OrderRepository _orderRepository;
 
-  /// Load cart from storage on init
+  /// Load cart from server on init (syncs with server)
   Future<void> loadCart() async => await taskManager.execute('CC-lC', () async {
     try {
       emit(state.copyWith(cart: const OperationResult.loading()));
 
-      final cart = await _cartRepository.getCart();
+      final cart = await _cartRepository.syncWithServer();
       emit(
         state.copyWith(
           cart: OperationResult.success(cart, message: 'Cart loaded'),
@@ -37,6 +35,26 @@ class UserCartCubit extends BaseCubit<UserCartState> {
       emit(state.copyWith(cart: OperationResult.failed(e)));
     }
   });
+
+  /// Sync cart with server (call on app startup/resume)
+  Future<void> syncWithServer() async =>
+      await taskManager.execute('CC-sWS', () async {
+        try {
+          final cart = await _cartRepository.syncWithServer();
+          emit(
+            state.copyWith(
+              cart: OperationResult.success(cart, message: 'Cart synced'),
+            ),
+          );
+        } on BaseError catch (e, st) {
+          logger.w(
+            '[UserCartCubit] - syncWithServer Error: ${e.message}',
+            error: e,
+            stackTrace: st,
+          );
+          // Don't emit error state on sync failure - keep existing cart
+        }
+      });
 
   /// Add item to cart
   /// If different merchant detected, shows conflict dialog instead of adding
@@ -76,7 +94,7 @@ class UserCartCubit extends BaseCubit<UserCartState> {
           // Check if it's a merchant conflict error
           if (code == ErrorCode.conflict) {
             // Extract pending item for conflict dialog
-            final item = models.CartItem(
+            final item = CartItem(
               menuId: menu.id,
               merchantId: menu.merchantId,
               merchantName: merchantName,
@@ -140,6 +158,7 @@ class UserCartCubit extends BaseCubit<UserCartState> {
             image: pendingItem.menuImage,
             price: pendingItem.unitPrice,
             stock: 999, // Stock not validated here (checked at checkout)
+            soldStock: 0, // Not tracked in cart context
             createdAt: DateTime.now(),
             updatedAt: DateTime.now(),
           );
@@ -206,7 +225,7 @@ class UserCartCubit extends BaseCubit<UserCartState> {
   /// Uses optimistic updates for instant UI feedback:
   /// 1. Validates stock availability for increments
   /// 2. Immediately computes and emits new cart state
-  /// 3. Persists to storage in background (non-blocking)
+  /// 3. Syncs with server in background (non-blocking)
   void updateQuantity({required String menuId, required int delta}) {
     final currentCart = state.currentCart;
     if (currentCart == null) {
@@ -239,18 +258,19 @@ class UserCartCubit extends BaseCubit<UserCartState> {
     }
 
     // Compute new cart state optimistically
-    final updatedItems = List<models.CartItem>.from(currentCart.items);
+    final updatedItems = List<CartItem>.from(currentCart.items);
     final currentItem = updatedItems[itemIndex];
     final newQuantity = currentItem.quantity + delta;
 
     // Validate stock for increments (delta > 0)
-    if (delta > 0 && newQuantity > currentItem.stock) {
+    // Use effectiveStock extension to handle null stock
+    if (delta > 0 && newQuantity > currentItem.effectiveStock) {
       // Cannot exceed available stock - silently ignore or emit same state
       // The UI will show the item as "at max stock"
       return;
     }
 
-    models.Cart? updatedCart;
+    Cart? updatedCart;
 
     if (newQuantity <= 0) {
       // Remove item
@@ -315,11 +335,29 @@ class UserCartCubit extends BaseCubit<UserCartState> {
       ),
     );
 
-    // Persist in background (fire-and-forget)
-    if (updatedCart != null) {
-      _cartRepository.persistCart(updatedCart);
-    } else {
-      _cartRepository.persistClearCart();
+    // Sync with server in background (fire-and-forget)
+    // This persists locally and syncs with server
+    _syncQuantityUpdateToServer(menuId: menuId, delta: delta);
+  }
+
+  /// Background sync of quantity update to server
+  /// Fire-and-forget - errors are logged but don't affect UI
+  Future<void> _syncQuantityUpdateToServer({
+    required String menuId,
+    required int delta,
+  }) async {
+    try {
+      await _cartRepository.updateItemQuantityByDelta(
+        menuId: menuId,
+        delta: delta,
+      );
+    } catch (e, st) {
+      // Log but don't propagate - optimistic update already shown
+      logger.w(
+        '[UserCartCubit] - Server sync failed for quantity update',
+        error: e,
+        stackTrace: st,
+      );
     }
   }
 
@@ -402,9 +440,6 @@ class UserCartCubit extends BaseCubit<UserCartState> {
     }
   }
 
-  /// Reset to initial state
-  void reset() => emit(const UserCartState());
-
   /// Place a food order from the current cart
   Future<PlaceOrderResponse?> placeFoodOrder({
     required Coordinate pickupLocation,
@@ -412,6 +447,7 @@ class UserCartCubit extends BaseCubit<UserCartState> {
     required PaymentMethod paymentMethod,
     PaymentProvider paymentProvider = PaymentProvider.MANUAL,
     String? couponCode,
+    String? attachmentUrl,
   }) async => await taskManager.execute('CC-pFO', () async {
     try {
       emit(
@@ -426,10 +462,6 @@ class UserCartCubit extends BaseCubit<UserCartState> {
           code: ErrorCode.badRequest,
         );
       }
-
-      // Get attachment URL from cart if present
-      final cart = await _cartRepository.getCart();
-      final attachmentUrl = cart?.attachmentUrl;
 
       // Create place order request
       final placeOrderRequest = PlaceOrder(
@@ -473,88 +505,6 @@ class UserCartCubit extends BaseCubit<UserCartState> {
     }
   });
 
-  /// Upload attachment file for Printing merchants
-  /// Returns the uploaded URL on success
-  Future<String?> uploadAttachment(
-    String filePath,
-  ) async => await taskManager.execute('CC-uA', () async {
-    try {
-      emit(
-        state.copyWith(uploadAttachmentResult: const OperationResult.loading()),
-      );
-
-      // Upload to server
-      final response = await _orderRepository.uploadAttachment(filePath);
-
-      // Update cart with attachment URL
-      await _cartRepository.updateAttachment(response.data);
-
-      // Reload cart to get updated data
-      final updatedCart = await _cartRepository.getCart();
-
-      emit(
-        state.copyWith(
-          uploadAttachmentResult: OperationResult.success(
-            response.data,
-            message: response.message,
-          ),
-          cart: OperationResult.success(updatedCart),
-        ),
-      );
-
-      return response.data;
-    } on BaseError catch (e, st) {
-      logger.e(
-        '[UserCartCubit] - uploadAttachment Error: ${e.message}',
-        error: e,
-        stackTrace: st,
-      );
-      emit(state.copyWith(uploadAttachmentResult: OperationResult.failed(e)));
-      return null;
-    }
-  });
-
-  /// Remove attachment from cart
-  Future<void> removeAttachment() async =>
-      await taskManager.execute('CC-rA', () async {
-        try {
-          await _cartRepository.updateAttachment(null);
-          final updatedCart = await _cartRepository.getCart();
-          emit(
-            state.copyWith(
-              uploadAttachmentResult: const OperationResult.idle(),
-              cart: OperationResult.success(updatedCart),
-            ),
-          );
-        } on BaseError catch (e, st) {
-          logger.e(
-            '[UserCartCubit] - removeAttachment Error: ${e.message}',
-            error: e,
-            stackTrace: st,
-          );
-        }
-      });
-
-  /// Get media type from file extension
-  MediaType _getMediaType(String filePath) {
-    final extension = filePath.split('.').last.toLowerCase();
-    switch (extension) {
-      case 'pdf':
-        return MediaType('application', 'pdf');
-      case 'doc':
-        return MediaType('application', 'msword');
-      case 'docx':
-        return MediaType(
-          'application',
-          'vnd.openxmlformats-officedocument.wordprocessingml.document',
-        );
-      case 'jpg':
-      case 'jpeg':
-        return MediaType('image', 'jpeg');
-      case 'png':
-        return MediaType('image', 'png');
-      default:
-        return MediaType('application', 'octet-stream');
-    }
-  }
+  /// Reset to initial state
+  void reset() => emit(const UserCartState());
 }

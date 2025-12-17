@@ -70,12 +70,23 @@ export class ScheduledOrderRepository extends OrderBaseRepository {
 		opts: WithTx,
 	): Promise<PlaceScheduledOrderResponse> {
 		try {
+			// Fetch scheduling configuration from database
+			const schedulingConfig =
+				await BusinessConfigurationService.getScheduledOrderConfig(
+					this.db,
+					this.kv,
+				);
+
 			// Validate scheduled time
-			OrderSchedulingService.validateScheduledTime(params.scheduledAt);
+			OrderSchedulingService.validateScheduledTime(
+				params.scheduledAt,
+				schedulingConfig,
+			);
 
 			// Calculate when matching should begin
 			const scheduledMatchingAt = OrderSchedulingService.calculateMatchingTime(
 				params.scheduledAt,
+				schedulingConfig,
 			);
 
 			logger.debug(
@@ -327,6 +338,13 @@ export class ScheduledOrderRepository extends OrderBaseRepository {
 		try {
 			const tx = opts?.tx ?? this.db;
 
+			// Fetch all pricing configurations upfront for estimatedDriverEarning calculation
+			const pricingConfigs =
+				await OrderBaseRepository.fetchAllPricingConfigurations(
+					this.kv,
+					this.db,
+				);
+
 			const orderBy = (
 				f: typeof tables.order._.columns,
 				op: OrderByOperation,
@@ -374,6 +392,7 @@ export class ScheduledOrderRepository extends OrderBaseRepository {
 								typeof OrderBaseRepository.composeEntity
 							>[0],
 							this.storage,
+							pricingConfigs.get(item.type as "RIDE" | "DELIVERY" | "FOOD"),
 						),
 					),
 				);
@@ -402,6 +421,7 @@ export class ScheduledOrderRepository extends OrderBaseRepository {
 							typeof OrderBaseRepository.composeEntity
 						>[0],
 						this.storage,
+						pricingConfigs.get(item.type as "RIDE" | "DELIVERY" | "FOOD"),
 					),
 				),
 			);
@@ -450,15 +470,24 @@ export class ScheduledOrderRepository extends OrderBaseRepository {
 				);
 			}
 
+			// Fetch scheduling configuration from database
+			const schedulingConfig =
+				await BusinessConfigurationService.getScheduledOrderConfig(
+					this.db,
+					this.kv,
+				);
+
 			// If rescheduling, validate the new time
 			let scheduledMatchingAt = existing.scheduledMatchingAt;
 			if (item.scheduledAt && existing.scheduledAt) {
 				OrderSchedulingService.validateReschedule(
 					new Date(existing.scheduledAt),
 					item.scheduledAt,
+					schedulingConfig,
 				);
 				scheduledMatchingAt = OrderSchedulingService.calculateMatchingTime(
 					item.scheduledAt,
+					schedulingConfig,
 				);
 			}
 
@@ -541,10 +570,24 @@ export class ScheduledOrderRepository extends OrderBaseRepository {
 				);
 			}
 
+			// Fetch business configuration for both scheduling config and penalty rates
+			const businessConfig = await BusinessConfigurationService.getConfig(
+				this.db,
+				this.kv,
+			);
+			const schedulingConfig = {
+				minAdvanceMinutes: businessConfig.scheduledOrderMinAdvanceMinutes,
+				maxAdvanceDays: businessConfig.scheduledOrderMaxAdvanceDays,
+				matchingLeadTimeMinutes:
+					businessConfig.scheduledOrderMatchingLeadTimeMinutes,
+				minRescheduleHours: businessConfig.scheduledOrderMinRescheduleHours,
+			};
+
 			// Check if cancellation is free (before matching time)
 			const isFreeCancel = order.scheduledAt
 				? OrderSchedulingService.canCancelWithoutPenalty(
 						new Date(order.scheduledAt),
+						schedulingConfig,
 					)
 				: true;
 
@@ -552,13 +595,8 @@ export class ScheduledOrderRepository extends OrderBaseRepository {
 			let penaltyAmount = 0;
 
 			if (!isFreeCancel) {
-				// Apply cancellation penalty (10%)
-				const businessConfig = await BusinessConfigurationService.getConfig(
-					this.db,
-					this.kv,
-				);
-				const penaltyRate =
-					businessConfig.userCancellationFeeAfterAccept ?? 0.1;
+				// Apply cancellation penalty from config
+				const penaltyRate = businessConfig.userCancellationFeeAfterAccept;
 				penaltyAmount = order.totalPrice * penaltyRate;
 				refundAmount = order.totalPrice - penaltyAmount;
 

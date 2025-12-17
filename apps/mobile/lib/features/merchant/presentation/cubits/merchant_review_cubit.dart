@@ -1,6 +1,7 @@
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/driver/data/repositories/_export.dart';
 import 'package:akademove/features/merchant/presentation/states/_export.dart';
+import 'package:akademove/features/review/presentation/states/_export.dart';
 import 'package:api_client/api_client.dart';
 
 class MerchantReviewCubit extends BaseCubit<MerchantReviewState> {
@@ -10,14 +11,15 @@ class MerchantReviewCubit extends BaseCubit<MerchantReviewState> {
 
   final ReviewRepository _reviewRepository;
 
-  /// Submit a review for a user (customer) after completing an order
+  /// Submit a review for a user (customer or driver) after completing an order
   Future<void> submitReview({
     required String orderId,
     required String toUserId,
     required List<ReviewCategory> categories,
     required int score,
     String? comment,
-  }) async => await taskManager.execute('MRC-sR1-$orderId', () async {
+    bool isDriverReview = false,
+  }) async => await taskManager.execute('MRC-sR1-$orderId-$toUserId', () async {
     try {
       emit(state.copyWith(submitReviewResult: const OperationResult.loading()));
 
@@ -29,10 +31,24 @@ class MerchantReviewCubit extends BaseCubit<MerchantReviewState> {
         comment: comment,
       );
 
+      final newReviewStatus = ReviewStatus(
+        canReview: false,
+        alreadyReviewed: true,
+        orderCompleted: true,
+        existingReview: res.data,
+      );
+
       emit(
         state.copyWith(
           submitReviewResult: OperationResult.success(res.data),
           submitted: res.data,
+          // Update the appropriate review status
+          customerReviewStatus: isDriverReview
+              ? null
+              : OperationResult.success(newReviewStatus),
+          driverReviewStatus: isDriverReview
+              ? OperationResult.success(newReviewStatus)
+              : null,
         ),
       );
     } on BaseError catch (e, st) {
@@ -44,6 +60,70 @@ class MerchantReviewCubit extends BaseCubit<MerchantReviewState> {
       emit(state.copyWith(submitReviewResult: OperationResult.failed(e)));
     }
   });
+
+  /// Check review status for rating the customer
+  Future<void> checkCustomerReviewStatus(
+    String orderId,
+  ) async => await taskManager.execute('MRC-cCRS1-$orderId', () async {
+    try {
+      emit(
+        state.copyWith(customerReviewStatus: const OperationResult.loading()),
+      );
+
+      final res = await _reviewRepository.getReviewStatus(orderId: orderId);
+
+      emit(
+        state.copyWith(
+          customerReviewStatus: OperationResult.success(
+            res.data,
+            message: res.message,
+          ),
+        ),
+      );
+    } on BaseError catch (e, st) {
+      logger.e(
+        '[MerchantReviewCubit] Failed to check customer review status: ${e.message}',
+        error: e,
+        stackTrace: st,
+      );
+      emit(state.copyWith(customerReviewStatus: OperationResult.failed(e)));
+    }
+  });
+
+  /// Check review status for rating the driver
+  Future<void> checkDriverReviewStatus(
+    String orderId,
+  ) async => await taskManager.execute('MRC-cDRS1-$orderId', () async {
+    try {
+      emit(state.copyWith(driverReviewStatus: const OperationResult.loading()));
+
+      final res = await _reviewRepository.getReviewStatus(orderId: orderId);
+
+      emit(
+        state.copyWith(
+          driverReviewStatus: OperationResult.success(
+            res.data,
+            message: res.message,
+          ),
+        ),
+      );
+    } on BaseError catch (e, st) {
+      logger.e(
+        '[MerchantReviewCubit] Failed to check driver review status: ${e.message}',
+        error: e,
+        stackTrace: st,
+      );
+      emit(state.copyWith(driverReviewStatus: OperationResult.failed(e)));
+    }
+  });
+
+  /// Check review status for both customer and driver
+  Future<void> checkAllReviewStatuses(String orderId) async {
+    await Future.wait([
+      checkCustomerReviewStatus(orderId),
+      checkDriverReviewStatus(orderId),
+    ]);
+  }
 
   /// Load reviews received by the current merchant
   Future<void> loadMyReviews({

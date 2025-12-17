@@ -8,6 +8,14 @@ import {
 import * as z from "zod";
 import { createSuccesSchema, FEATURE_TAGS } from "@/core/constants";
 
+/** Schema for check can review response - includes existing review if already reviewed */
+const CheckCanReviewResponseSchema = z.object({
+	canReview: z.boolean(),
+	alreadyReviewed: z.boolean(),
+	orderCompleted: z.boolean(),
+	existingReview: ReviewSchema.nullable(),
+});
+
 export const ReviewSpec = {
 	list: oc
 		.route({
@@ -62,11 +70,7 @@ export const ReviewSpec = {
 		.input(z.object({ params: z.object({ orderId: z.string() }) }))
 		.output(
 			createSuccesSchema(
-				z.object({
-					canReview: z.boolean(),
-					alreadyReviewed: z.boolean(),
-					orderCompleted: z.boolean(),
-				}),
+				CheckCanReviewResponseSchema,
 				"Successfully checked review eligibility",
 			),
 		),

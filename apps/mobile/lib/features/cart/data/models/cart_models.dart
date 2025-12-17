@@ -1,207 +1,26 @@
 import 'package:api_client/api_client.dart';
-import 'package:equatable/equatable.dart';
 
-/// Local cart model for storing shopping cart data
-class Cart extends Equatable {
-  const Cart({
-    required this.merchantId,
-    required this.merchantName,
-    required this.items,
-    required this.totalItems,
-    required this.subtotal,
-    required this.lastUpdated,
-    this.merchantLocation,
-    this.merchantCategory,
-    this.attachmentUrl,
-  });
+// Re-export generated Cart and CartItem models
+export 'package:api_client/api_client.dart' show Cart, CartItem;
 
-  factory Cart.fromJson(Map<String, dynamic> json) {
-    return Cart(
-      merchantId: json['merchantId'] as String,
-      merchantName: json['merchantName'] as String,
-      items: (json['items'] as List<dynamic>)
-          .map((e) => CartItem.fromJson(e as Map<String, dynamic>))
-          .toList(),
-      totalItems: json['totalItems'] as int,
-      subtotal: json['subtotal'] as num,
-      lastUpdated: DateTime.parse(json['lastUpdated'] as String),
-      merchantLocation: json['merchantLocation'] != null
-          ? Coordinate.fromJson(
-              json['merchantLocation'] as Map<String, dynamic>,
-            )
-          : null,
-      merchantCategory: json['merchantCategory'] != null
-          ? MerchantCategory.values.firstWhere(
-              (e) => e.value == json['merchantCategory'],
-              orElse: () => MerchantCategory.food,
-            )
-          : null,
-      attachmentUrl: json['attachmentUrl'] as String?,
-    );
-  }
-
-  final String merchantId;
-  final String merchantName;
-  final List<CartItem> items;
-  final int totalItems;
-  final num subtotal;
-  final DateTime lastUpdated;
-  final Coordinate? merchantLocation;
-  final MerchantCategory? merchantCategory;
-  final String? attachmentUrl;
-
+/// Extension on [Cart] to add computed properties for UI logic
+extension CartExtension on Cart {
   /// Check if this cart is for a printing merchant (requires attachment)
   bool get isPrintingMerchant => merchantCategory == MerchantCategory.printing;
-
-  Map<String, dynamic> toJson() => {
-    'merchantId': merchantId,
-    'merchantName': merchantName,
-    'items': items.map((e) => e.toJson()).toList(),
-    'totalItems': totalItems,
-    'subtotal': subtotal,
-    'lastUpdated': lastUpdated.toIso8601String(),
-    if (merchantLocation != null)
-      'merchantLocation': merchantLocation!.toJson(),
-    if (merchantCategory != null) 'merchantCategory': merchantCategory!.value,
-    if (attachmentUrl != null) 'attachmentUrl': attachmentUrl,
-  };
-
-  Cart copyWith({
-    String? merchantId,
-    String? merchantName,
-    List<CartItem>? items,
-    int? totalItems,
-    num? subtotal,
-    DateTime? lastUpdated,
-    Coordinate? merchantLocation,
-    MerchantCategory? merchantCategory,
-    String? attachmentUrl,
-    bool clearAttachment = false,
-  }) {
-    return Cart(
-      merchantId: merchantId ?? this.merchantId,
-      merchantName: merchantName ?? this.merchantName,
-      items: items ?? this.items,
-      totalItems: totalItems ?? this.totalItems,
-      subtotal: subtotal ?? this.subtotal,
-      lastUpdated: lastUpdated ?? this.lastUpdated,
-      merchantLocation: merchantLocation ?? this.merchantLocation,
-      merchantCategory: merchantCategory ?? this.merchantCategory,
-      attachmentUrl: clearAttachment
-          ? null
-          : (attachmentUrl ?? this.attachmentUrl),
-    );
-  }
-
-  @override
-  List<Object?> get props => [
-    merchantId,
-    merchantName,
-    items,
-    totalItems,
-    subtotal,
-    lastUpdated,
-    merchantLocation,
-    merchantCategory,
-    attachmentUrl,
-  ];
 }
 
-/// Cart item model
-class CartItem extends Equatable {
-  const CartItem({
-    required this.menuId,
-    required this.merchantId,
-    required this.merchantName,
-    required this.menuName,
-    required this.unitPrice,
-    required this.quantity,
-    required this.stock,
-    this.menuImage,
-    this.notes,
-  });
+/// Extension on [CartItem] to add stock-related computed properties
+extension CartItemExtension on CartItem {
+  /// Returns the effective stock, defaulting to a high value if null
+  int get effectiveStock => stock ?? 999;
 
-  factory CartItem.fromJson(Map<String, dynamic> json) {
-    return CartItem(
-      menuId: json['menuId'] as String,
-      merchantId: json['merchantId'] as String,
-      merchantName: json['merchantName'] as String,
-      menuName: json['menuName'] as String,
-      menuImage: json['menuImage'] as String?,
-      unitPrice: json['unitPrice'] as num,
-      quantity: json['quantity'] as int,
-      stock: json['stock'] as int? ?? 999,
-      notes: json['notes'] as String?,
-    );
-  }
-
-  final String menuId;
-  final String merchantId;
-  final String merchantName;
-  final String menuName;
-  final String? menuImage;
-  final num unitPrice;
-  final int quantity;
-
-  /// Available stock for this item (from merchant menu)
-  final int stock;
-  final String? notes;
-
-  /// Returns true if this item is out of stock (quantity >= stock)
-  bool get isOutOfStock => stock <= 0;
+  /// Returns true if this item is out of stock (stock <= 0)
+  bool get isOutOfStock => effectiveStock <= 0;
 
   /// Returns true if incrementing quantity would exceed available stock
-  bool get isAtMaxStock => quantity >= stock;
+  bool get isAtMaxStock => quantity >= effectiveStock;
 
   /// Returns the remaining stock that can be added
-  int get remainingStock => (stock - quantity).clamp(0, stock);
-
-  Map<String, dynamic> toJson() => {
-    'menuId': menuId,
-    'merchantId': merchantId,
-    'merchantName': merchantName,
-    'menuName': menuName,
-    if (menuImage != null) 'menuImage': menuImage,
-    'unitPrice': unitPrice,
-    'quantity': quantity,
-    'stock': stock,
-    if (notes != null) 'notes': notes,
-  };
-
-  CartItem copyWith({
-    String? menuId,
-    String? merchantId,
-    String? merchantName,
-    String? menuName,
-    String? menuImage,
-    num? unitPrice,
-    int? quantity,
-    int? stock,
-    String? notes,
-  }) {
-    return CartItem(
-      menuId: menuId ?? this.menuId,
-      merchantId: merchantId ?? this.merchantId,
-      merchantName: merchantName ?? this.merchantName,
-      menuName: menuName ?? this.menuName,
-      menuImage: menuImage ?? this.menuImage,
-      unitPrice: unitPrice ?? this.unitPrice,
-      quantity: quantity ?? this.quantity,
-      stock: stock ?? this.stock,
-      notes: notes ?? this.notes,
-    );
-  }
-
-  @override
-  List<Object?> get props => [
-    menuId,
-    merchantId,
-    merchantName,
-    menuName,
-    menuImage,
-    unitPrice,
-    quantity,
-    stock,
-    notes,
-  ];
+  int get remainingStock =>
+      (effectiveStock - quantity).clamp(0, effectiveStock);
 }

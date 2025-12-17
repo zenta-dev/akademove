@@ -22,5 +22,10 @@ void main() {
     test('to test the property `orderCompleted`', () async {
       // TODO
     });
+
+    // Review existingReview
+    test('to test the property `existingReview`', () async {
+      // TODO
+    });
   });
 }

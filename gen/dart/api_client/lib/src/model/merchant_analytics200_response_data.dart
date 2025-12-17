@@ -23,6 +23,8 @@ class MerchantAnalytics200ResponseData {
     required this.totalOrders,
     required this.totalRevenue,
     required this.totalCommission,
+    required this.commissionRate,
+    required this.netIncome,
     required this.completedOrders,
     required this.cancelledOrders,
     required this.averageOrderValue,
@@ -37,6 +39,12 @@ class MerchantAnalytics200ResponseData {
 
   @JsonKey(name: r'totalCommission', required: true, includeIfNull: false)
   final num totalCommission;
+
+  @JsonKey(name: r'commissionRate', required: true, includeIfNull: false)
+  final num commissionRate;
+
+  @JsonKey(name: r'netIncome', required: true, includeIfNull: false)
+  final num netIncome;
 
   @JsonKey(name: r'completedOrders', required: true, includeIfNull: false)
   final num completedOrders;
@@ -61,6 +69,8 @@ class MerchantAnalytics200ResponseData {
           other.totalOrders == totalOrders &&
           other.totalRevenue == totalRevenue &&
           other.totalCommission == totalCommission &&
+          other.commissionRate == commissionRate &&
+          other.netIncome == netIncome &&
           other.completedOrders == completedOrders &&
           other.cancelledOrders == cancelledOrders &&
           other.averageOrderValue == averageOrderValue &&
@@ -72,6 +82,8 @@ class MerchantAnalytics200ResponseData {
       totalOrders.hashCode +
       totalRevenue.hashCode +
       totalCommission.hashCode +
+      commissionRate.hashCode +
+      netIncome.hashCode +
       completedOrders.hashCode +
       cancelledOrders.hashCode +
       averageOrderValue.hashCode +

@@ -63,6 +63,52 @@ abstract class _$BusinessConfigurationCWProxy {
     num? paymentPendingTimeoutMinutes,
   );
 
+  BusinessConfiguration orderCompletionTimeoutMinutes(
+    num? orderCompletionTimeoutMinutes,
+  );
+
+  BusinessConfiguration noShowTimeoutMinutes(num? noShowTimeoutMinutes);
+
+  BusinessConfiguration orderStaleTimestampMinutes(
+    num? orderStaleTimestampMinutes,
+  );
+
+  BusinessConfiguration driverLocationStaleThresholdMinutes(
+    num? driverLocationStaleThresholdMinutes,
+  );
+
+  BusinessConfiguration driverRebroadcastIntervalMinutes(
+    num? driverRebroadcastIntervalMinutes,
+  );
+
+  BusinessConfiguration driverRebroadcastRadiusMultiplier(
+    num? driverRebroadcastRadiusMultiplier,
+  );
+
+  BusinessConfiguration maxBadgeCommissionReduction(
+    num? maxBadgeCommissionReduction,
+  );
+
+  BusinessConfiguration scheduledOrderMinAdvanceMinutes(
+    num? scheduledOrderMinAdvanceMinutes,
+  );
+
+  BusinessConfiguration scheduledOrderMaxAdvanceDays(
+    num? scheduledOrderMaxAdvanceDays,
+  );
+
+  BusinessConfiguration scheduledOrderMatchingLeadTimeMinutes(
+    num? scheduledOrderMatchingLeadTimeMinutes,
+  );
+
+  BusinessConfiguration scheduledOrderMinRescheduleHours(
+    num? scheduledOrderMinRescheduleHours,
+  );
+
+  BusinessConfiguration onTimeDeliveryThresholdMinutes(
+    num? onTimeDeliveryThresholdMinutes,
+  );
+
   /// Creates a new instance with the provided field values.
   /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `BusinessConfiguration(...).copyWith.fieldName(value)`.
   ///
@@ -88,6 +134,18 @@ abstract class _$BusinessConfigurationCWProxy {
     int? driverMatchingBroadcastLimit,
     int? driverMaxCancellationsPerDay,
     num? paymentPendingTimeoutMinutes,
+    num? orderCompletionTimeoutMinutes,
+    num? noShowTimeoutMinutes,
+    num? orderStaleTimestampMinutes,
+    num? driverLocationStaleThresholdMinutes,
+    num? driverRebroadcastIntervalMinutes,
+    num? driverRebroadcastRadiusMultiplier,
+    num? maxBadgeCommissionReduction,
+    num? scheduledOrderMinAdvanceMinutes,
+    num? scheduledOrderMaxAdvanceDays,
+    num? scheduledOrderMatchingLeadTimeMinutes,
+    num? scheduledOrderMinRescheduleHours,
+    num? onTimeDeliveryThresholdMinutes,
   });
 }
 
@@ -180,6 +238,72 @@ class _$BusinessConfigurationCWProxyImpl
   ) => call(paymentPendingTimeoutMinutes: paymentPendingTimeoutMinutes);
 
   @override
+  BusinessConfiguration orderCompletionTimeoutMinutes(
+    num? orderCompletionTimeoutMinutes,
+  ) => call(orderCompletionTimeoutMinutes: orderCompletionTimeoutMinutes);
+
+  @override
+  BusinessConfiguration noShowTimeoutMinutes(num? noShowTimeoutMinutes) =>
+      call(noShowTimeoutMinutes: noShowTimeoutMinutes);
+
+  @override
+  BusinessConfiguration orderStaleTimestampMinutes(
+    num? orderStaleTimestampMinutes,
+  ) => call(orderStaleTimestampMinutes: orderStaleTimestampMinutes);
+
+  @override
+  BusinessConfiguration driverLocationStaleThresholdMinutes(
+    num? driverLocationStaleThresholdMinutes,
+  ) => call(
+    driverLocationStaleThresholdMinutes: driverLocationStaleThresholdMinutes,
+  );
+
+  @override
+  BusinessConfiguration driverRebroadcastIntervalMinutes(
+    num? driverRebroadcastIntervalMinutes,
+  ) => call(driverRebroadcastIntervalMinutes: driverRebroadcastIntervalMinutes);
+
+  @override
+  BusinessConfiguration driverRebroadcastRadiusMultiplier(
+    num? driverRebroadcastRadiusMultiplier,
+  ) => call(
+    driverRebroadcastRadiusMultiplier: driverRebroadcastRadiusMultiplier,
+  );
+
+  @override
+  BusinessConfiguration maxBadgeCommissionReduction(
+    num? maxBadgeCommissionReduction,
+  ) => call(maxBadgeCommissionReduction: maxBadgeCommissionReduction);
+
+  @override
+  BusinessConfiguration scheduledOrderMinAdvanceMinutes(
+    num? scheduledOrderMinAdvanceMinutes,
+  ) => call(scheduledOrderMinAdvanceMinutes: scheduledOrderMinAdvanceMinutes);
+
+  @override
+  BusinessConfiguration scheduledOrderMaxAdvanceDays(
+    num? scheduledOrderMaxAdvanceDays,
+  ) => call(scheduledOrderMaxAdvanceDays: scheduledOrderMaxAdvanceDays);
+
+  @override
+  BusinessConfiguration scheduledOrderMatchingLeadTimeMinutes(
+    num? scheduledOrderMatchingLeadTimeMinutes,
+  ) => call(
+    scheduledOrderMatchingLeadTimeMinutes:
+        scheduledOrderMatchingLeadTimeMinutes,
+  );
+
+  @override
+  BusinessConfiguration scheduledOrderMinRescheduleHours(
+    num? scheduledOrderMinRescheduleHours,
+  ) => call(scheduledOrderMinRescheduleHours: scheduledOrderMinRescheduleHours);
+
+  @override
+  BusinessConfiguration onTimeDeliveryThresholdMinutes(
+    num? onTimeDeliveryThresholdMinutes,
+  ) => call(onTimeDeliveryThresholdMinutes: onTimeDeliveryThresholdMinutes);
+
+  @override
   /// Creates a new instance with the provided field values.
   /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `BusinessConfiguration(...).copyWith.fieldName(value)`.
   ///
@@ -205,6 +329,19 @@ class _$BusinessConfigurationCWProxyImpl
     Object? driverMatchingBroadcastLimit = const $CopyWithPlaceholder(),
     Object? driverMaxCancellationsPerDay = const $CopyWithPlaceholder(),
     Object? paymentPendingTimeoutMinutes = const $CopyWithPlaceholder(),
+    Object? orderCompletionTimeoutMinutes = const $CopyWithPlaceholder(),
+    Object? noShowTimeoutMinutes = const $CopyWithPlaceholder(),
+    Object? orderStaleTimestampMinutes = const $CopyWithPlaceholder(),
+    Object? driverLocationStaleThresholdMinutes = const $CopyWithPlaceholder(),
+    Object? driverRebroadcastIntervalMinutes = const $CopyWithPlaceholder(),
+    Object? driverRebroadcastRadiusMultiplier = const $CopyWithPlaceholder(),
+    Object? maxBadgeCommissionReduction = const $CopyWithPlaceholder(),
+    Object? scheduledOrderMinAdvanceMinutes = const $CopyWithPlaceholder(),
+    Object? scheduledOrderMaxAdvanceDays = const $CopyWithPlaceholder(),
+    Object? scheduledOrderMatchingLeadTimeMinutes =
+        const $CopyWithPlaceholder(),
+    Object? scheduledOrderMinRescheduleHours = const $CopyWithPlaceholder(),
+    Object? onTimeDeliveryThresholdMinutes = const $CopyWithPlaceholder(),
   }) {
     return BusinessConfiguration(
       minTransferAmount:
@@ -299,6 +436,65 @@ class _$BusinessConfigurationCWProxyImpl
           ? _value.paymentPendingTimeoutMinutes
           // ignore: cast_nullable_to_non_nullable
           : paymentPendingTimeoutMinutes as num?,
+      orderCompletionTimeoutMinutes:
+          orderCompletionTimeoutMinutes == const $CopyWithPlaceholder()
+          ? _value.orderCompletionTimeoutMinutes
+          // ignore: cast_nullable_to_non_nullable
+          : orderCompletionTimeoutMinutes as num?,
+      noShowTimeoutMinutes: noShowTimeoutMinutes == const $CopyWithPlaceholder()
+          ? _value.noShowTimeoutMinutes
+          // ignore: cast_nullable_to_non_nullable
+          : noShowTimeoutMinutes as num?,
+      orderStaleTimestampMinutes:
+          orderStaleTimestampMinutes == const $CopyWithPlaceholder()
+          ? _value.orderStaleTimestampMinutes
+          // ignore: cast_nullable_to_non_nullable
+          : orderStaleTimestampMinutes as num?,
+      driverLocationStaleThresholdMinutes:
+          driverLocationStaleThresholdMinutes == const $CopyWithPlaceholder()
+          ? _value.driverLocationStaleThresholdMinutes
+          // ignore: cast_nullable_to_non_nullable
+          : driverLocationStaleThresholdMinutes as num?,
+      driverRebroadcastIntervalMinutes:
+          driverRebroadcastIntervalMinutes == const $CopyWithPlaceholder()
+          ? _value.driverRebroadcastIntervalMinutes
+          // ignore: cast_nullable_to_non_nullable
+          : driverRebroadcastIntervalMinutes as num?,
+      driverRebroadcastRadiusMultiplier:
+          driverRebroadcastRadiusMultiplier == const $CopyWithPlaceholder()
+          ? _value.driverRebroadcastRadiusMultiplier
+          // ignore: cast_nullable_to_non_nullable
+          : driverRebroadcastRadiusMultiplier as num?,
+      maxBadgeCommissionReduction:
+          maxBadgeCommissionReduction == const $CopyWithPlaceholder()
+          ? _value.maxBadgeCommissionReduction
+          // ignore: cast_nullable_to_non_nullable
+          : maxBadgeCommissionReduction as num?,
+      scheduledOrderMinAdvanceMinutes:
+          scheduledOrderMinAdvanceMinutes == const $CopyWithPlaceholder()
+          ? _value.scheduledOrderMinAdvanceMinutes
+          // ignore: cast_nullable_to_non_nullable
+          : scheduledOrderMinAdvanceMinutes as num?,
+      scheduledOrderMaxAdvanceDays:
+          scheduledOrderMaxAdvanceDays == const $CopyWithPlaceholder()
+          ? _value.scheduledOrderMaxAdvanceDays
+          // ignore: cast_nullable_to_non_nullable
+          : scheduledOrderMaxAdvanceDays as num?,
+      scheduledOrderMatchingLeadTimeMinutes:
+          scheduledOrderMatchingLeadTimeMinutes == const $CopyWithPlaceholder()
+          ? _value.scheduledOrderMatchingLeadTimeMinutes
+          // ignore: cast_nullable_to_non_nullable
+          : scheduledOrderMatchingLeadTimeMinutes as num?,
+      scheduledOrderMinRescheduleHours:
+          scheduledOrderMinRescheduleHours == const $CopyWithPlaceholder()
+          ? _value.scheduledOrderMinRescheduleHours
+          // ignore: cast_nullable_to_non_nullable
+          : scheduledOrderMinRescheduleHours as num?,
+      onTimeDeliveryThresholdMinutes:
+          onTimeDeliveryThresholdMinutes == const $CopyWithPlaceholder()
+          ? _value.onTimeDeliveryThresholdMinutes
+          // ignore: cast_nullable_to_non_nullable
+          : onTimeDeliveryThresholdMinutes as num?,
     );
   }
 }
@@ -392,6 +588,54 @@ BusinessConfiguration _$BusinessConfigurationFromJson(
       'paymentPendingTimeoutMinutes',
       (v) => v as num? ?? 15,
     ),
+    orderCompletionTimeoutMinutes: $checkedConvert(
+      'orderCompletionTimeoutMinutes',
+      (v) => v as num? ?? 60,
+    ),
+    noShowTimeoutMinutes: $checkedConvert(
+      'noShowTimeoutMinutes',
+      (v) => v as num? ?? 30,
+    ),
+    orderStaleTimestampMinutes: $checkedConvert(
+      'orderStaleTimestampMinutes',
+      (v) => v as num? ?? 5,
+    ),
+    driverLocationStaleThresholdMinutes: $checkedConvert(
+      'driverLocationStaleThresholdMinutes',
+      (v) => v as num? ?? 15,
+    ),
+    driverRebroadcastIntervalMinutes: $checkedConvert(
+      'driverRebroadcastIntervalMinutes',
+      (v) => v as num? ?? 2,
+    ),
+    driverRebroadcastRadiusMultiplier: $checkedConvert(
+      'driverRebroadcastRadiusMultiplier',
+      (v) => v as num? ?? 1.5,
+    ),
+    maxBadgeCommissionReduction: $checkedConvert(
+      'maxBadgeCommissionReduction',
+      (v) => v as num? ?? 0.5,
+    ),
+    scheduledOrderMinAdvanceMinutes: $checkedConvert(
+      'scheduledOrderMinAdvanceMinutes',
+      (v) => v as num? ?? 30,
+    ),
+    scheduledOrderMaxAdvanceDays: $checkedConvert(
+      'scheduledOrderMaxAdvanceDays',
+      (v) => v as num? ?? 7,
+    ),
+    scheduledOrderMatchingLeadTimeMinutes: $checkedConvert(
+      'scheduledOrderMatchingLeadTimeMinutes',
+      (v) => v as num? ?? 15,
+    ),
+    scheduledOrderMinRescheduleHours: $checkedConvert(
+      'scheduledOrderMinRescheduleHours',
+      (v) => v as num? ?? 1,
+    ),
+    onTimeDeliveryThresholdMinutes: $checkedConvert(
+      'onTimeDeliveryThresholdMinutes',
+      (v) => v as num? ?? 10,
+    ),
   );
   return val;
 });
@@ -417,4 +661,21 @@ Map<String, dynamic> _$BusinessConfigurationToJson(
   'driverMatchingBroadcastLimit': ?instance.driverMatchingBroadcastLimit,
   'driverMaxCancellationsPerDay': ?instance.driverMaxCancellationsPerDay,
   'paymentPendingTimeoutMinutes': ?instance.paymentPendingTimeoutMinutes,
+  'orderCompletionTimeoutMinutes': ?instance.orderCompletionTimeoutMinutes,
+  'noShowTimeoutMinutes': ?instance.noShowTimeoutMinutes,
+  'orderStaleTimestampMinutes': ?instance.orderStaleTimestampMinutes,
+  'driverLocationStaleThresholdMinutes':
+      ?instance.driverLocationStaleThresholdMinutes,
+  'driverRebroadcastIntervalMinutes':
+      ?instance.driverRebroadcastIntervalMinutes,
+  'driverRebroadcastRadiusMultiplier':
+      ?instance.driverRebroadcastRadiusMultiplier,
+  'maxBadgeCommissionReduction': ?instance.maxBadgeCommissionReduction,
+  'scheduledOrderMinAdvanceMinutes': ?instance.scheduledOrderMinAdvanceMinutes,
+  'scheduledOrderMaxAdvanceDays': ?instance.scheduledOrderMaxAdvanceDays,
+  'scheduledOrderMatchingLeadTimeMinutes':
+      ?instance.scheduledOrderMatchingLeadTimeMinutes,
+  'scheduledOrderMinRescheduleHours':
+      ?instance.scheduledOrderMinRescheduleHours,
+  'onTimeDeliveryThresholdMinutes': ?instance.onTimeDeliveryThresholdMinutes,
 };

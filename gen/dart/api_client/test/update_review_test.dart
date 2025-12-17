@@ -7,27 +7,12 @@ void main() {
   // TODO add properties to the entity
 
   group(UpdateReview, () {
-    // String orderId
-    test('to test the property `orderId`', () async {
+    // List<ReviewCategory> categories
+    test('to test the property `categories`', () async {
       // TODO
     });
 
-    // String fromUserId
-    test('to test the property `fromUserId`', () async {
-      // TODO
-    });
-
-    // String toUserId
-    test('to test the property `toUserId`', () async {
-      // TODO
-    });
-
-    // ReviewCategory category
-    test('to test the property `category`', () async {
-      // TODO
-    });
-
-    // num score
+    // int score
     test('to test the property `score`', () async {
       // TODO
     });

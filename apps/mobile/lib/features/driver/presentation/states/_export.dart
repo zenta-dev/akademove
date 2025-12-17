@@ -1,6 +1,10 @@
 import 'package:akademove/core/_export.dart';
+import 'package:akademove/features/review/presentation/states/_export.dart';
 import 'package:api_client/api_client.dart';
 import 'package:equatable/equatable.dart';
+
+export 'package:akademove/features/review/presentation/states/_export.dart'
+    show ReviewStatus;
 
 part 'driver_approval_state.dart';
 part 'driver_wallet_state.dart';

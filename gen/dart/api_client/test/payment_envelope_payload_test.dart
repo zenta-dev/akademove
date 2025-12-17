@@ -27,5 +27,10 @@ void main() {
     test('to test the property `wallet`', () async {
       // TODO
     });
+
+    // PaymentEnvelopePayloadSyncRequest syncRequest
+    test('to test the property `syncRequest`', () async {
+      // TODO
+    });
   });
 }

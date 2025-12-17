@@ -46,6 +46,8 @@ class Order {
     this.platformCommission,
     this.driverEarning,
     this.merchantCommission,
+    this.merchantEarning,
+    this.estimatedDriverEarning,
     this.couponId,
     this.couponCode,
     this.discountAmount,
@@ -127,6 +129,16 @@ class Order {
 
   @JsonKey(name: r'merchantCommission', required: false, includeIfNull: false)
   final num? merchantCommission;
+
+  @JsonKey(name: r'merchantEarning', required: false, includeIfNull: false)
+  final num? merchantEarning;
+
+  @JsonKey(
+    name: r'estimatedDriverEarning',
+    required: false,
+    includeIfNull: false,
+  )
+  final num? estimatedDriverEarning;
 
   @JsonKey(name: r'couponId', required: false, includeIfNull: false)
   final String? couponId;
@@ -233,6 +245,8 @@ class Order {
           other.platformCommission == platformCommission &&
           other.driverEarning == driverEarning &&
           other.merchantCommission == merchantCommission &&
+          other.merchantEarning == merchantEarning &&
+          other.estimatedDriverEarning == estimatedDriverEarning &&
           other.couponId == couponId &&
           other.couponCode == couponCode &&
           other.discountAmount == discountAmount &&
@@ -281,6 +295,8 @@ class Order {
       platformCommission.hashCode +
       driverEarning.hashCode +
       merchantCommission.hashCode +
+      merchantEarning.hashCode +
+      estimatedDriverEarning.hashCode +
       couponId.hashCode +
       couponCode.hashCode +
       discountAmount.hashCode +

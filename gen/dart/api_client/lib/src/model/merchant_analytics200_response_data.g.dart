@@ -13,6 +13,10 @@ abstract class _$MerchantAnalytics200ResponseDataCWProxy {
 
   MerchantAnalytics200ResponseData totalCommission(num totalCommission);
 
+  MerchantAnalytics200ResponseData commissionRate(num commissionRate);
+
+  MerchantAnalytics200ResponseData netIncome(num netIncome);
+
   MerchantAnalytics200ResponseData completedOrders(num completedOrders);
 
   MerchantAnalytics200ResponseData cancelledOrders(num cancelledOrders);
@@ -38,6 +42,8 @@ abstract class _$MerchantAnalytics200ResponseDataCWProxy {
     num totalOrders,
     num totalRevenue,
     num totalCommission,
+    num commissionRate,
+    num netIncome,
     num completedOrders,
     num cancelledOrders,
     num averageOrderValue,
@@ -65,6 +71,14 @@ class _$MerchantAnalytics200ResponseDataCWProxyImpl
   @override
   MerchantAnalytics200ResponseData totalCommission(num totalCommission) =>
       call(totalCommission: totalCommission);
+
+  @override
+  MerchantAnalytics200ResponseData commissionRate(num commissionRate) =>
+      call(commissionRate: commissionRate);
+
+  @override
+  MerchantAnalytics200ResponseData netIncome(num netIncome) =>
+      call(netIncome: netIncome);
 
   @override
   MerchantAnalytics200ResponseData completedOrders(num completedOrders) =>
@@ -100,6 +114,8 @@ class _$MerchantAnalytics200ResponseDataCWProxyImpl
     Object? totalOrders = const $CopyWithPlaceholder(),
     Object? totalRevenue = const $CopyWithPlaceholder(),
     Object? totalCommission = const $CopyWithPlaceholder(),
+    Object? commissionRate = const $CopyWithPlaceholder(),
+    Object? netIncome = const $CopyWithPlaceholder(),
     Object? completedOrders = const $CopyWithPlaceholder(),
     Object? cancelledOrders = const $CopyWithPlaceholder(),
     Object? averageOrderValue = const $CopyWithPlaceholder(),
@@ -123,6 +139,16 @@ class _$MerchantAnalytics200ResponseDataCWProxyImpl
           ? _value.totalCommission
           // ignore: cast_nullable_to_non_nullable
           : totalCommission as num,
+      commissionRate:
+          commissionRate == const $CopyWithPlaceholder() ||
+              commissionRate == null
+          ? _value.commissionRate
+          // ignore: cast_nullable_to_non_nullable
+          : commissionRate as num,
+      netIncome: netIncome == const $CopyWithPlaceholder() || netIncome == null
+          ? _value.netIncome
+          // ignore: cast_nullable_to_non_nullable
+          : netIncome as num,
       completedOrders:
           completedOrders == const $CopyWithPlaceholder() ||
               completedOrders == null
@@ -182,6 +208,8 @@ MerchantAnalytics200ResponseData _$MerchantAnalytics200ResponseDataFromJson(
       'totalOrders',
       'totalRevenue',
       'totalCommission',
+      'commissionRate',
+      'netIncome',
       'completedOrders',
       'cancelledOrders',
       'averageOrderValue',
@@ -193,6 +221,8 @@ MerchantAnalytics200ResponseData _$MerchantAnalytics200ResponseDataFromJson(
     totalOrders: $checkedConvert('totalOrders', (v) => v as num),
     totalRevenue: $checkedConvert('totalRevenue', (v) => v as num),
     totalCommission: $checkedConvert('totalCommission', (v) => v as num),
+    commissionRate: $checkedConvert('commissionRate', (v) => v as num),
+    netIncome: $checkedConvert('netIncome', (v) => v as num),
     completedOrders: $checkedConvert('completedOrders', (v) => v as num),
     cancelledOrders: $checkedConvert('cancelledOrders', (v) => v as num),
     averageOrderValue: $checkedConvert('averageOrderValue', (v) => v as num),
@@ -227,6 +257,8 @@ Map<String, dynamic> _$MerchantAnalytics200ResponseDataToJson(
   'totalOrders': instance.totalOrders,
   'totalRevenue': instance.totalRevenue,
   'totalCommission': instance.totalCommission,
+  'commissionRate': instance.commissionRate,
+  'netIncome': instance.netIncome,
   'completedOrders': instance.completedOrders,
   'cancelledOrders': instance.cancelledOrders,
   'averageOrderValue': instance.averageOrderValue,

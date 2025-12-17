@@ -8,6 +8,7 @@
  */
 
 import type { OrderStatus } from "@repo/schema/order";
+import type { Review } from "@repo/schema/review";
 import type { DatabaseService } from "@/core/services/db";
 import { logger } from "@/utils/logger";
 
@@ -18,6 +19,7 @@ export interface OrderReviewStatus {
 	canReview: boolean;
 	alreadyReviewed: boolean;
 	orderCompleted: boolean;
+	existingReview: Review | null;
 }
 
 /**
@@ -72,6 +74,41 @@ export class ReviewEligibilityService {
 				"[ReviewEligibilityService] Failed to check if user reviewed order",
 			);
 			return false;
+		}
+	}
+
+	/**
+	 * Get user's existing review for an order
+	 * Queries the database for review from user
+	 *
+	 * @param db - Database service instance
+	 * @param orderId - Order ID to check
+	 * @param userId - User ID to check
+	 * @returns Review if exists, null otherwise
+	 */
+	static async getUserReviewForOrder(
+		db: DatabaseService,
+		orderId: string,
+		userId: string,
+	): Promise<Review | null> {
+		try {
+			const result = await db.query.review.findFirst({
+				where: (f, op) =>
+					op.and(op.eq(f.orderId, orderId), op.eq(f.fromUserId, userId)),
+			});
+
+			if (!result) return null;
+
+			return {
+				...result,
+				categories: (result.categories ?? []) as Review["categories"],
+			};
+		} catch (error) {
+			logger.error(
+				{ orderId, userId, error },
+				"[ReviewEligibilityService] Failed to get user review for order",
+			);
+			return null;
 		}
 	}
 
@@ -165,7 +202,7 @@ export class ReviewEligibilityService {
 	 * @param db - Database service instance
 	 * @param orderId - Order ID to check
 	 * @param userId - User ID attempting to review
-	 * @returns Review status with eligibility flags
+	 * @returns Review status with eligibility flags and existing review if already reviewed
 	 */
 	static async getOrderReviewStatus(
 		db: DatabaseService,
@@ -183,6 +220,7 @@ export class ReviewEligibilityService {
 					canReview: false,
 					alreadyReviewed: false,
 					orderCompleted: false,
+					existingReview: null,
 				};
 			}
 
@@ -220,20 +258,22 @@ export class ReviewEligibilityService {
 				merchantUserId,
 			);
 
-			// Check if already reviewed
-			const alreadyReviewed =
-				await ReviewEligibilityService.hasUserReviewedOrder(
+			// Get existing review if already reviewed
+			const existingReview =
+				await ReviewEligibilityService.getUserReviewForOrder(
 					db,
 					orderId,
 					userId,
 				);
 
+			const alreadyReviewed = existingReview !== null;
 			const canReview = orderCompleted && isParticipant && !alreadyReviewed;
 
 			return {
 				canReview,
 				alreadyReviewed,
 				orderCompleted,
+				existingReview,
 			};
 		} catch (error) {
 			logger.error(
@@ -244,6 +284,7 @@ export class ReviewEligibilityService {
 				canReview: false,
 				alreadyReviewed: false,
 				orderCompleted: false,
+				existingReview: null,
 			};
 		}
 	}

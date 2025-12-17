@@ -639,6 +639,14 @@ class _ContentSection extends StatelessWidget {
             orderId: data.orderId,
           ),
         ),
+        // Delivery info - rebuilds on order change
+        BlocSelector<UserOrderCubit, UserOrderState, Order?>(
+          selector: (state) => state.currentOrder.value,
+          builder: (context, order) {
+            if (order == null) return const SizedBox.shrink();
+            return DeliveryInfoWidget(order: order);
+          },
+        ),
         // Order details - rebuilds on order/payment change
         BlocSelector<UserOrderCubit, UserOrderState, _OrderDetailsData>(
           selector: (state) => _OrderDetailsData(

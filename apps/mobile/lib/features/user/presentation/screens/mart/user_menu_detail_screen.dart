@@ -203,6 +203,20 @@ class _UserMenuDetailScreenState extends State<UserMenuDetailScreen> {
                               fontWeight: FontWeight.w500,
                             ),
                           ),
+                          Gap(12.w),
+                          Icon(
+                            LucideIcons.shoppingBag,
+                            size: 16.sp,
+                            color: mutedColor,
+                          ),
+                          Gap(4.w),
+                          Text(
+                            '${menu.soldStock} ${context.l10n.sold.toLowerCase()}',
+                            style: TextStyle(
+                              fontSize: 14.sp,
+                              color: mutedColor,
+                            ),
+                          ),
                         ],
                       ),
 

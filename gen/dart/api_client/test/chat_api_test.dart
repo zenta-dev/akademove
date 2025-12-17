@@ -21,7 +21,7 @@ void main() {
       // TODO
     });
 
-    //Future<QuickMessageList200Response> quickMessageList({ String role, String orderType, String locale, bool isActive }) async
+    //Future<QuickMessageList200Response> quickMessageList({ String role, String orderType, String locale, String status }) async
     test('test quickMessageList', () async {
       // TODO
     });

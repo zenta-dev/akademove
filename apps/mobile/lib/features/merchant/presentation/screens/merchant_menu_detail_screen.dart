@@ -139,6 +139,11 @@ class _MerchantMenuDetailScreenState extends State<MerchantMenuDetailScreen> {
                             ),
                             _buildDetailRow(
                               context,
+                              '${context.l10n.sold}:',
+                              '${displayMenu.soldStock}',
+                            ),
+                            _buildDetailRow(
+                              context,
                               '${context.l10n.label_created}:',
                               DateFormat(
                                 'dd MMM yyyy, HH:mm',

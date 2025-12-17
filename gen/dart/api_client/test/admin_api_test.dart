@@ -51,7 +51,7 @@ void main() {
       // TODO
     });
 
-    //Future<BroadcastCreate201Response> broadcastSend(String id) async
+    //Future<BroadcastCreate201Response> broadcastSend(String id, { Object body }) async
     test('test broadcastSend', () async {
       // TODO
     });
@@ -91,12 +91,12 @@ void main() {
       // TODO
     });
 
-    //Future<DriverGetMine200ResponseBody> driverActivate(String id) async
+    //Future<DriverGetMine200ResponseBody> driverActivate(String id, { Object body }) async
     test('test driverActivate', () async {
       // TODO
     });
 
-    //Future<DriverGetMine200ResponseBody> driverApprove(String id) async
+    //Future<DriverGetMine200ResponseBody> driverApprove(String id, { Object body }) async
     test('test driverApprove', () async {
       // TODO
     });

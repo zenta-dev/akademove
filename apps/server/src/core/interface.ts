@@ -17,6 +17,7 @@ import type { BadgeRepository } from "@/features/badge/main/badge-main-repositor
 import type { UserBadgeRepository } from "@/features/badge/user/user-badge-repository";
 import type { BannerRepository } from "@/features/banner/banner-repository";
 import type { BroadcastRepository } from "@/features/broadcast/broadcast-repository";
+import type { CartRepository } from "@/features/cart/cart-repository";
 import type { ChatRepository } from "@/features/chat/chat-repository";
 import type { ConfigurationRepository } from "@/features/configuration/configuration-repository";
 import type { ContactRepository } from "@/features/contact/contact-repository";
@@ -129,6 +130,7 @@ export interface RepositoryContext {
 		user: UserBadgeRepository;
 	};
 	banner: BannerRepository;
+	cart: CartRepository;
 	chat: ChatRepository;
 	configuration: ConfigurationRepository;
 	contact: ContactRepository;

@@ -251,6 +251,8 @@ enum ListDriverQuizQuestionQuerySortByEnum {
   price(r'price'),
   @JsonValue(r'stock')
   stock(r'stock'),
+  @JsonValue(r'soldStock')
+  soldStock(r'soldStock'),
   @JsonValue(r'completedDriverId')
   completedDriverId(r'completedDriverId'),
   @JsonValue(r'type')
@@ -277,6 +279,8 @@ enum ListDriverQuizQuestionQuerySortByEnum {
   driverEarning(r'driverEarning'),
   @JsonValue(r'merchantCommission')
   merchantCommission(r'merchantCommission'),
+  @JsonValue(r'merchantEarning')
+  merchantEarning(r'merchantEarning'),
   @JsonValue(r'couponId')
   couponId(r'couponId'),
   @JsonValue(r'couponCode')

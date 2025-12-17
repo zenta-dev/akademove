@@ -33,6 +33,13 @@ class _UserRatingScreenState extends State<UserRatingScreen> {
   final TextEditingController _commentController = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+    // Check review status when screen opens
+    context.read<UserReviewCubit>().checkReviewStatus(widget.orderId);
+  }
+
+  @override
   void dispose() {
     _commentController.dispose();
     super.dispose();
@@ -72,7 +79,7 @@ class _UserRatingScreenState extends State<UserRatingScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       headers: [DefaultAppBar(title: context.l10n.rate_your_driver)],
-      child: BlocListener<UserReviewCubit, UserReviewState>(
+      child: BlocConsumer<UserReviewCubit, UserReviewState>(
         listenWhen: (previous, current) =>
             previous.submittedReview != current.submittedReview,
         listener: (context, state) {
@@ -91,30 +98,334 @@ class _UserRatingScreenState extends State<UserRatingScreen> {
             );
           }
         },
-        child: SingleChildScrollView(
+        builder: (context, state) {
+          // Show loading while checking review status
+          if (state.reviewStatus.isLoading) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          // Show error if failed to check status
+          if (state.reviewStatus.isFailure) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    LucideIcons.circleAlert,
+                    size: 48.sp,
+                    color: context.colorScheme.destructive,
+                  ),
+                  Gap(16.h),
+                  Text(
+                    state.reviewStatus.error?.message ??
+                        context.l10n.error_generic,
+                    textAlign: TextAlign.center,
+                  ),
+                  Gap(16.h),
+                  Button.outline(
+                    onPressed: () => context
+                        .read<UserReviewCubit>()
+                        .checkReviewStatus(widget.orderId),
+                    child: Text(context.l10n.button_retry),
+                  ),
+                ],
+              ),
+            );
+          }
+
+          final reviewStatus = state.reviewStatus.value;
+
+          // If already reviewed, show existing review detail
+          if (reviewStatus != null &&
+              reviewStatus.alreadyReviewed &&
+              reviewStatus.existingReview != null) {
+            return _buildExistingReviewDetail(reviewStatus.existingReview!);
+          }
+
+          // Otherwise show the rating form
+          return _buildRatingForm(state);
+        },
+      ),
+    );
+  }
+
+  /// Build the existing review detail view (read-only)
+  Widget _buildExistingReviewDetail(Review review) {
+    return SingleChildScrollView(
+      child: Padding(
+        padding: EdgeInsets.all(16.dg),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          spacing: 24.h,
+          children: [
+            // Driver info with "already reviewed" badge
+            _buildDriverInfoWithBadge(),
+
+            // Rating display
+            _buildRatingDisplay(review.score),
+
+            // Categories display
+            _buildCategoriesDisplay(review.categories),
+
+            // Comment display (if any)
+            if (review.comment != null && review.comment!.isNotEmpty)
+              _buildCommentDisplay(review.comment!),
+
+            // Review date
+            _buildReviewDate(review.createdAt),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDriverInfoWithBadge() {
+    return Card(
+      child: Padding(
+        padding: EdgeInsets.all(16.dg),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                Avatar(
+                  size: 64.sp,
+                  initials: Avatar.getInitials(widget.driverName),
+                ),
+                Gap(16.w),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    spacing: 4.h,
+                    children: [
+                      Text(
+                        widget.driverName,
+                        style: context.typography.h4.copyWith(
+                          fontSize: 18.sp,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        context.l10n.text_driver,
+                        style: context.typography.small.copyWith(
+                          fontSize: 14.sp,
+                          color: context.colorScheme.mutedForeground,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            Gap(12.h),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+              decoration: BoxDecoration(
+                color: context.colorScheme.secondary,
+                borderRadius: BorderRadius.circular(8.r),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                spacing: 8.w,
+                children: [
+                  Icon(
+                    LucideIcons.circleCheck,
+                    size: 16.sp,
+                    color: context.colorScheme.primary,
+                  ),
+                  Text(
+                    context.l10n.text_already_reviewed,
+                    style: context.typography.small.copyWith(
+                      color: context.colorScheme.primary,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildRatingDisplay(int score) {
+    return Card(
+      child: Padding(
+        padding: EdgeInsets.all(20.dg),
+        child: Column(
+          spacing: 12.h,
+          children: [
+            Text(
+              context.l10n.text_your_rating,
+              style: context.typography.h4.copyWith(
+                fontSize: 16.sp,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            // Star display
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              spacing: 12.w,
+              children: List.generate(5, (index) {
+                final starValue = index + 1;
+                return Icon(
+                  LucideIcons.star,
+                  size: 32.sp,
+                  color: starValue <= score
+                      ? const Color(0xFFFFA000)
+                      : context.colorScheme.mutedForeground,
+                  fill: starValue <= score ? 1.0 : 0.0,
+                );
+              }),
+            ),
+            Text(
+              _getRatingLabel(score),
+              style: context.typography.h4.copyWith(
+                fontSize: 16.sp,
+                color: context.colorScheme.primary,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCategoriesDisplay(List<ReviewCategory> categories) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: 12.h,
+      children: [
+        Text(
+          context.l10n.text_selected_categories,
+          style: context.typography.h4.copyWith(
+            fontSize: 16.sp,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        Wrap(
+          spacing: 8.w,
+          runSpacing: 8.h,
+          children: categories.map((category) {
+            return Container(
+              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+              decoration: BoxDecoration(
+                color: context.colorScheme.primary.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(20.r),
+                border: Border.all(
+                  color: context.colorScheme.primary.withValues(alpha: 0.3),
+                ),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                spacing: 6.w,
+                children: [
+                  Icon(
+                    _getCategoryIcon(category),
+                    size: 14.sp,
+                    color: context.colorScheme.primary,
+                  ),
+                  Text(
+                    _getCategoryLabel(category),
+                    style: context.typography.small.copyWith(
+                      color: context.colorScheme.primary,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }).toList(),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildCommentDisplay(String comment) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: 12.h,
+      children: [
+        Text(
+          context.l10n.text_your_comment,
+          style: context.typography.h4.copyWith(
+            fontSize: 16.sp,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        Card(
           child: Padding(
             padding: EdgeInsets.all(16.dg),
-            child: Column(
+            child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
-              spacing: 24.h,
               children: [
-                // Driver info
-                _buildDriverInfo(),
-
-                // Overall rating section
-                _buildOverallRatingSection(),
-
-                // Category selector (multi-select)
-                _buildCategorySelector(),
-
-                // Comment section
-                _buildCommentSection(),
-
-                // Submit button
-                _buildSubmitButton(),
+                Icon(
+                  LucideIcons.quote,
+                  size: 20.sp,
+                  color: context.colorScheme.mutedForeground,
+                ),
+                Gap(12.w),
+                Expanded(
+                  child: Text(
+                    comment,
+                    style: context.typography.base.copyWith(
+                      fontStyle: FontStyle.italic,
+                      color: context.colorScheme.foreground,
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildReviewDate(DateTime createdAt) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      spacing: 8.w,
+      children: [
+        Icon(
+          LucideIcons.calendar,
+          size: 14.sp,
+          color: context.colorScheme.mutedForeground,
+        ),
+        Text(
+          context.l10n.text_reviewed_on(createdAt.format('d MMM yyyy')),
+          style: context.typography.small.copyWith(
+            color: context.colorScheme.mutedForeground,
+          ),
+        ),
+      ],
+    );
+  }
+
+  /// Build the rating form for submitting a new review
+  Widget _buildRatingForm(UserReviewState state) {
+    return SingleChildScrollView(
+      child: Padding(
+        padding: EdgeInsets.all(16.dg),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          spacing: 24.h,
+          children: [
+            // Driver info
+            _buildDriverInfo(),
+
+            // Overall rating section
+            _buildOverallRatingSection(),
+
+            // Category selector (multi-select)
+            _buildCategorySelector(),
+
+            // Comment section
+            _buildCommentSection(),
+
+            // Submit button
+            _buildSubmitButton(state),
+          ],
         ),
       ),
     );
@@ -285,21 +596,17 @@ class _UserRatingScreenState extends State<UserRatingScreen> {
     );
   }
 
-  Widget _buildSubmitButton() {
-    return BlocBuilder<UserReviewCubit, UserReviewState>(
-      builder: (context, state) {
-        final isLoading = state.submittedReview.isLoading;
-        return SizedBox(
-          width: double.infinity,
-          child: Button.primary(
-            enabled: _canSubmit && !isLoading,
-            onPressed: isLoading ? null : _submitReview,
-            child: isLoading
-                ? const Submiting()
-                : Text(context.l10n.button_submit_review),
-          ),
-        );
-      },
+  Widget _buildSubmitButton(UserReviewState state) {
+    final isLoading = state.submittedReview.isLoading;
+    return SizedBox(
+      width: double.infinity,
+      child: Button.primary(
+        enabled: _canSubmit && !isLoading,
+        onPressed: isLoading ? null : _submitReview,
+        child: isLoading
+            ? const Submiting()
+            : Text(context.l10n.button_submit_review),
+      ),
     );
   }
 

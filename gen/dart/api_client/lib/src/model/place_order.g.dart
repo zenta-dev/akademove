@@ -27,6 +27,8 @@ abstract class _$PlaceOrderCWProxy {
 
   PlaceOrder attachmentUrl(String? attachmentUrl);
 
+  PlaceOrder deliveryItemType(DeliveryItemType? deliveryItemType);
+
   PlaceOrder couponCode(String? couponCode);
 
   PlaceOrder payment(PlaceOrderPayment payment);
@@ -49,6 +51,7 @@ abstract class _$PlaceOrderCWProxy {
     UserGender? gender,
     PlaceOrderGenderPreferenceEnum? genderPreference,
     String? attachmentUrl,
+    DeliveryItemType? deliveryItemType,
     String? couponCode,
     PlaceOrderPayment payment,
   });
@@ -99,6 +102,10 @@ class _$PlaceOrderCWProxyImpl implements _$PlaceOrderCWProxy {
       call(attachmentUrl: attachmentUrl);
 
   @override
+  PlaceOrder deliveryItemType(DeliveryItemType? deliveryItemType) =>
+      call(deliveryItemType: deliveryItemType);
+
+  @override
   PlaceOrder couponCode(String? couponCode) => call(couponCode: couponCode);
 
   @override
@@ -123,6 +130,7 @@ class _$PlaceOrderCWProxyImpl implements _$PlaceOrderCWProxy {
     Object? gender = const $CopyWithPlaceholder(),
     Object? genderPreference = const $CopyWithPlaceholder(),
     Object? attachmentUrl = const $CopyWithPlaceholder(),
+    Object? deliveryItemType = const $CopyWithPlaceholder(),
     Object? couponCode = const $CopyWithPlaceholder(),
     Object? payment = const $CopyWithPlaceholder(),
   }) {
@@ -171,6 +179,10 @@ class _$PlaceOrderCWProxyImpl implements _$PlaceOrderCWProxy {
           ? _value.attachmentUrl
           // ignore: cast_nullable_to_non_nullable
           : attachmentUrl as String?,
+      deliveryItemType: deliveryItemType == const $CopyWithPlaceholder()
+          ? _value.deliveryItemType
+          // ignore: cast_nullable_to_non_nullable
+          : deliveryItemType as DeliveryItemType?,
       couponCode: couponCode == const $CopyWithPlaceholder()
           ? _value.couponCode
           // ignore: cast_nullable_to_non_nullable
@@ -238,6 +250,10 @@ PlaceOrder _$PlaceOrderFromJson(Map<String, dynamic> json) => $checkedCreate(
         (v) => $enumDecodeNullable(_$PlaceOrderGenderPreferenceEnumEnumMap, v),
       ),
       attachmentUrl: $checkedConvert('attachmentUrl', (v) => v as String?),
+      deliveryItemType: $checkedConvert(
+        'deliveryItemType',
+        (v) => $enumDecodeNullable(_$DeliveryItemTypeEnumMap, v),
+      ),
       couponCode: $checkedConvert('couponCode', (v) => v as String?),
       payment: $checkedConvert(
         'payment',
@@ -261,6 +277,7 @@ Map<String, dynamic> _$PlaceOrderToJson(PlaceOrder instance) =>
       'genderPreference':
           ?_$PlaceOrderGenderPreferenceEnumEnumMap[instance.genderPreference],
       'attachmentUrl': ?instance.attachmentUrl,
+      'deliveryItemType': ?_$DeliveryItemTypeEnumMap[instance.deliveryItemType],
       'couponCode': ?instance.couponCode,
       'payment': instance.payment.toJson(),
     };
@@ -279,4 +296,13 @@ const _$UserGenderEnumMap = {
 const _$PlaceOrderGenderPreferenceEnumEnumMap = {
   PlaceOrderGenderPreferenceEnum.SAME: 'SAME',
   PlaceOrderGenderPreferenceEnum.ANY: 'ANY',
+};
+
+const _$DeliveryItemTypeEnumMap = {
+  DeliveryItemType.FOOD: 'FOOD',
+  DeliveryItemType.CLOTH: 'CLOTH',
+  DeliveryItemType.DOCUMENT: 'DOCUMENT',
+  DeliveryItemType.MEDICINE: 'MEDICINE',
+  DeliveryItemType.BOOK: 'BOOK',
+  DeliveryItemType.OTHER: 'OTHER',
 };

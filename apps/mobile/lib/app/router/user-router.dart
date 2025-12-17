@@ -450,9 +450,14 @@ final userRouter = StatefulShellRoute.indexedStack(
             final extra = state.extra as Map<String, dynamic>?;
             final action = extra?['action'] as String?;
 
-            return BlocProvider.value(
-              value: BlocProvider.of<UserOrderCubit>(context)
-                ..maybeGet(orderId),
+            return MultiBlocProvider(
+              providers: [
+                BlocProvider.value(
+                  value: BlocProvider.of<UserOrderCubit>(context)
+                    ..maybeGet(orderId),
+                ),
+                BlocProvider(create: (context) => sl<UserReviewCubit>()),
+              ],
               child: UserDetailHistoryScreen(action: action),
             );
           },

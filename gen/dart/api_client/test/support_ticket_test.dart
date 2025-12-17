@@ -72,7 +72,7 @@ void main() {
       // TODO
     });
 
-    // OrderChatMessageSender assignedTo
+    // SupportTicketAssignedTo assignedTo
     test('to test the property `assignedTo`', () async {
       // TODO
     });

@@ -18,6 +18,10 @@ export interface MerchantStats {
 	totalOrders: number;
 	totalRevenue: number;
 	totalCommission: number;
+	/** Commission rate as percentage (e.g., 10 for 10%) - from server config */
+	commissionRate: number;
+	/** Net income after commission deduction (totalRevenue - totalCommission) */
+	netIncome: number;
 	completedOrders: number;
 	cancelledOrders: number;
 	averageOrderValue: number;
@@ -215,6 +219,11 @@ export class MerchantStatsService {
 
 	/**
 	 * Compose merchant stats from raw database results
+	 * @param overallStats - Raw overall stats from database
+	 * @param topSellingItems - Raw top selling items from database
+	 * @param revenueByDay - Raw revenue by day from database
+	 * @param callbacks - Callbacks for image URL generation
+	 * @param merchantCommissionRate - Commission rate from configuration (decimal, e.g., 0.1 for 10%)
 	 */
 	static composeMerchantStats(
 		overallStats: RawOverallStats | undefined,
@@ -223,6 +232,7 @@ export class MerchantStatsService {
 		callbacks: {
 			getMenuImageUrl: (key: string | null) => string | undefined;
 		},
+		merchantCommissionRate: number,
 	): MerchantStats {
 		// Handle undefined/missing stats
 		const stats = overallStats ?? {
@@ -237,11 +247,17 @@ export class MerchantStatsService {
 		const totalRevenue = Number.parseFloat(stats.total_revenue);
 		const totalCommission = Number.parseFloat(stats.total_commission);
 		const averageOrderValue = Number.parseFloat(stats.average_order_value);
+		const netIncome = totalRevenue - totalCommission;
+		// Convert decimal rate to percentage (e.g., 0.1 -> 10)
+		const commissionRate = merchantCommissionRate * 100;
 
 		logger.info(
 			{
 				totalOrders: stats.total_orders,
 				totalRevenue,
+				totalCommission,
+				commissionRate,
+				netIncome,
 				topItemsCount: topSellingItems.length,
 			},
 			"[MerchantStatsService] Composing merchant stats",
@@ -251,6 +267,8 @@ export class MerchantStatsService {
 			totalOrders: stats.total_orders,
 			totalRevenue,
 			totalCommission,
+			commissionRate,
+			netIncome,
 			completedOrders: stats.completed_orders,
 			cancelledOrders: stats.cancelled_orders,
 			averageOrderValue,

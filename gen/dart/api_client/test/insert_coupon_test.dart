@@ -62,6 +62,11 @@ void main() {
       // TODO
     });
 
+    // List<OrderType> serviceTypes
+    test('to test the property `serviceTypes`', () async {
+      // TODO
+    });
+
     // String eventName
     test('to test the property `eventName`', () async {
       // TODO

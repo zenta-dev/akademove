@@ -6,8 +6,18 @@ void main() {
   final instance = ApiClient().getOrderApi();
 
   group(OrderApi, () {
+    //Future<ChatGetUnreadCount200Response> chatGetUnreadCount(String orderId) async
+    test('test chatGetUnreadCount', () async {
+      // TODO
+    });
+
     //Future<ChatList200Response> chatList(String orderId, int limit, { String cursor }) async
     test('test chatList', () async {
+      // TODO
+    });
+
+    //Future<ChatMarkAsRead200Response> chatMarkAsRead(MarkChatAsRead markChatAsRead) async
+    test('test chatMarkAsRead', () async {
       // TODO
     });
 
@@ -86,7 +96,17 @@ void main() {
       // TODO
     });
 
-    //Future<OrderUploadDeliveryProof200Response> orderUploadDeliveryProof(String id, OrderUploadDeliveryProofRequest orderUploadDeliveryProofRequest) async
+    //Future<OrderUploadDeliveryProof200Response> orderUploadAttachment(MultipartFile file) async
+    test('test orderUploadAttachment', () async {
+      // TODO
+    });
+
+    //Future<OrderUploadDeliveryProof200Response> orderUploadDeliveryItemPhoto(String id, MultipartFile file) async
+    test('test orderUploadDeliveryItemPhoto', () async {
+      // TODO
+    });
+
+    //Future<OrderUploadDeliveryProof200Response> orderUploadDeliveryProof(String id, MultipartFile file) async
     test('test orderUploadDeliveryProof', () async {
       // TODO
     });

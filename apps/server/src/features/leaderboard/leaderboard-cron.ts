@@ -1,5 +1,6 @@
 import type { ExecutionContext } from "@cloudflare/workers-types";
 import { getServices } from "@/core/factory";
+import { BusinessConfigurationService } from "@/features/configuration/services";
 import { logger } from "@/utils/logger";
 import { LeaderboardCalculationService } from "./services/leaderboard-calculation-service";
 
@@ -18,7 +19,17 @@ export async function handleLeaderboardCron(
 		);
 
 		const svc = getServices();
-		const leaderboardService = new LeaderboardCalculationService(svc.db);
+
+		// Fetch on-time threshold from database configuration
+		const onTimeDeliveryThresholdMinutes =
+			await BusinessConfigurationService.getOnTimeDeliveryThresholdMinutes(
+				svc.db,
+				svc.kv,
+			);
+
+		const leaderboardService = new LeaderboardCalculationService(svc.db, {
+			onTimeDeliveryThresholdMinutes,
+		});
 
 		// Calculate all leaderboards (all periods and categories)
 		await leaderboardService.calculateAllLeaderboards();

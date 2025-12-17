@@ -21,6 +21,8 @@ abstract class _$OrderItemItemCWProxy {
 
   OrderItemItem stock(int? stock);
 
+  OrderItemItem soldStock(int? soldStock);
+
   OrderItemItem createdAt(DateTime? createdAt);
 
   OrderItemItem updatedAt(DateTime? updatedAt);
@@ -40,6 +42,7 @@ abstract class _$OrderItemItemCWProxy {
     String? category,
     num? price,
     int? stock,
+    int? soldStock,
     DateTime? createdAt,
     DateTime? updatedAt,
   });
@@ -74,6 +77,9 @@ class _$OrderItemItemCWProxyImpl implements _$OrderItemItemCWProxy {
   OrderItemItem stock(int? stock) => call(stock: stock);
 
   @override
+  OrderItemItem soldStock(int? soldStock) => call(soldStock: soldStock);
+
+  @override
   OrderItemItem createdAt(DateTime? createdAt) => call(createdAt: createdAt);
 
   @override
@@ -95,6 +101,7 @@ class _$OrderItemItemCWProxyImpl implements _$OrderItemItemCWProxy {
     Object? category = const $CopyWithPlaceholder(),
     Object? price = const $CopyWithPlaceholder(),
     Object? stock = const $CopyWithPlaceholder(),
+    Object? soldStock = const $CopyWithPlaceholder(),
     Object? createdAt = const $CopyWithPlaceholder(),
     Object? updatedAt = const $CopyWithPlaceholder(),
   }) {
@@ -127,6 +134,10 @@ class _$OrderItemItemCWProxyImpl implements _$OrderItemItemCWProxy {
           ? _value.stock
           // ignore: cast_nullable_to_non_nullable
           : stock as int?,
+      soldStock: soldStock == const $CopyWithPlaceholder()
+          ? _value.soldStock
+          // ignore: cast_nullable_to_non_nullable
+          : soldStock as int?,
       createdAt: createdAt == const $CopyWithPlaceholder()
           ? _value.createdAt
           // ignore: cast_nullable_to_non_nullable
@@ -160,6 +171,7 @@ OrderItemItem _$OrderItemItemFromJson(Map<String, dynamic> json) =>
         category: $checkedConvert('category', (v) => v as String?),
         price: $checkedConvert('price', (v) => v as num?),
         stock: $checkedConvert('stock', (v) => (v as num?)?.toInt()),
+        soldStock: $checkedConvert('soldStock', (v) => (v as num?)?.toInt()),
         createdAt: $checkedConvert(
           'createdAt',
           (v) => v == null ? null : DateTime.parse(v as String),
@@ -181,6 +193,7 @@ Map<String, dynamic> _$OrderItemItemToJson(OrderItemItem instance) =>
       'category': ?instance.category,
       'price': ?instance.price,
       'stock': ?instance.stock,
+      'soldStock': ?instance.soldStock,
       'createdAt': ?instance.createdAt?.toIso8601String(),
       'updatedAt': ?instance.updatedAt?.toIso8601String(),
     };

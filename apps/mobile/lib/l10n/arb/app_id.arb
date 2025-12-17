@@ -852,6 +852,7 @@
 	"label_category": "Kategori",
 	"label_price": "Harga",
 	"label_stock": "Stok",
+	"sold": "Terjual",
 	"label_created": "Dibuat",
 	"label_updated": "Diperbarui",
 	"placeholder_select_category": "Pilih kategori",
@@ -1857,5 +1858,23 @@
 	"status_preparing": "Sedang Disiapkan",
 	"status_ready_for_pickup": "Siap Diambil",
 	"status_arriving": "Driver Menuju Lokasi",
-	"status_in_trip": "Dalam Perjalanan"
+	"status_in_trip": "Dalam Perjalanan",
+	"error_generic": "Terjadi kesalahan. Silakan coba lagi.",
+	"button_retry": "Coba Lagi",
+	"text_already_reviewed": "Anda sudah mengulas pesanan ini",
+	"text_your_rating": "Rating Anda",
+	"text_selected_categories": "Kategori yang Dipilih",
+	"text_your_comment": "Komentar Anda",
+	"text_reviewed_on": "Diulas pada {date}",
+	"@text_reviewed_on": {
+		"placeholders": {
+			"date": {
+				"type": "String"
+			}
+		}
+	},
+	"fee_breakdown": "Rincian Biaya",
+	"driver_receives": "Penghasilan Driver",
+	"merchant_fee": "Biaya Merchant",
+	"merchant_receives": "Penghasilan Merchant"
 }

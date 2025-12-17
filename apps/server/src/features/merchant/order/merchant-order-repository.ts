@@ -41,6 +41,9 @@ export class MerchantOrderRepository extends BaseRepository {
 			merchantCommission: item.merchantCommission
 				? toNumberSafe(item.merchantCommission)
 				: undefined,
+			merchantEarning: item.merchantEarning
+				? toNumberSafe(item.merchantEarning)
+				: undefined,
 			discountAmount: item.discountAmount
 				? toNumberSafe(item.discountAmount)
 				: undefined,

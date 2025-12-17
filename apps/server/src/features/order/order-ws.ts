@@ -10,12 +10,15 @@ import {
 	OrderEnvelopeSchema,
 } from "@repo/schema/ws";
 import Decimal from "decimal.js";
+import { eq } from "drizzle-orm";
 import { BaseDurableObject, type BroadcastOptions } from "@/core/base";
 import { CONFIGURATION_KEYS } from "@/core/constants";
 import { getManagers, getRepositories, getServices } from "@/core/factory";
 import type { RepositoryContext, ServiceContext } from "@/core/interface";
-import type { DatabaseTransaction } from "@/core/services/db";
+import { type DatabaseTransaction, tables } from "@/core/services/db";
 import { BadgeAwardService } from "@/features/badge/services/badge-award-service";
+import { BusinessConfigurationService } from "@/features/configuration/services";
+import { OrderStockService } from "@/features/order/services";
 import { toNumberSafe } from "@/utils";
 import { logger } from "@/utils/logger";
 
@@ -442,20 +445,58 @@ export class OrderRoom extends BaseDurableObject {
 
 		// Calculate amounts
 		const totalPrice = new Decimal(order.totalPrice);
-		const platformCommission = totalPrice.times(commissionRate);
-		// For FOOD orders, merchantCommissionRate MUST come from config, no fallback allowed
+
+		// For FOOD orders, we need to split earnings between driver and merchant
+		// Driver gets: delivery fee - platform commission on delivery
+		// Merchant gets: food cost - merchant commission
+		let menuItemsTotal = new Decimal(0);
+		let deliveryFee = totalPrice;
+
+		if (order.type === "FOOD") {
+			// Calculate menu items total from order items
+			const orderItems = await tx.query.orderItem.findMany({
+				where: eq(tables.orderItem.orderId, order.id),
+			});
+
+			menuItemsTotal = orderItems.reduce((sum, item) => {
+				const unitPrice = new Decimal(item.unitPrice);
+				return sum.plus(unitPrice.times(item.quantity));
+			}, new Decimal(0));
+
+			// Delivery fee = total price - food cost
+			deliveryFee = totalPrice.minus(menuItemsTotal);
+		}
+
+		// For FOOD orders: platform commission is only on delivery fee
+		// For RIDE/DELIVERY: platform commission is on total price
+		const platformCommission =
+			order.type === "FOOD"
+				? deliveryFee.times(commissionRate)
+				: totalPrice.times(commissionRate);
+
+		// For FOOD orders, merchantCommissionRate applies to food cost (menuItemsTotal)
+		const merchantCommissionRate =
+			order.type === "FOOD"
+				? (commissionRates as FoodPricingConfiguration).merchantCommissionRate
+				: 0;
 		const merchantCommission =
 			order.type === "FOOD"
-				? totalPrice.times(
-						(commissionRates as FoodPricingConfiguration)
-							.merchantCommissionRate,
-					)
+				? menuItemsTotal.times(merchantCommissionRate)
 				: new Decimal(0);
-		// FIX: Driver earning should be calculated minus both platform AND merchant commission
-		// For FOOD orders, part of the total goes to the merchant
-		const driverEarning = totalPrice
-			.minus(platformCommission)
-			.minus(merchantCommission);
+
+		// Driver earning:
+		// - FOOD: delivery fee minus platform commission (driver only delivers, doesn't make food)
+		// - RIDE/DELIVERY: total price minus platform commission
+		const driverEarning =
+			order.type === "FOOD"
+				? deliveryFee.minus(platformCommission)
+				: totalPrice.minus(platformCommission);
+
+		// Merchant earning (FOOD orders only): food cost minus merchant commission
+		const merchantEarning =
+			order.type === "FOOD"
+				? menuItemsTotal.minus(merchantCommission)
+				: new Decimal(0);
 
 		// Get driver wallet using driver's userId (not driverId)
 		const driverwallet = await this.#repo.wallet.getByUserId(
@@ -473,9 +514,41 @@ export class OrderRoom extends BaseDurableObject {
 			{ tx: opts.tx },
 		);
 
+		// For FOOD orders, credit merchant wallet
+		let merchantBalanceResult:
+			| { balanceBefore: number; balanceAfter: number }
+			| undefined;
+		let merchantWallet: { id: string } | undefined;
+
+		if (order.type === "FOOD" && order.merchantId) {
+			// Get merchant to find their userId
+			const merchant = await tx.query.merchant.findFirst({
+				where: (f, op) => op.eq(f.id, order.merchantId ?? ""),
+			});
+
+			if (merchant?.userId) {
+				merchantWallet = await this.#repo.wallet.getByUserId(
+					merchant.userId,
+					opts,
+				);
+				merchantBalanceResult = await this.#svc.walletServices.balance.add(
+					{
+						walletId: merchantWallet.id,
+						amount: toNumberSafe(merchantEarning.toString()),
+					},
+					{ tx: opts.tx },
+				);
+			} else {
+				logger.error(
+					{ orderId: order.id, merchantId: order.merchantId },
+					"[OrderRoom] Merchant not found or missing userId - merchant earnings not credited",
+				);
+			}
+		}
+
 		// Create transaction records for driver earning and platform commission
 		// Now using correct balance values from the atomic update
-		const [updatedOrder] = await Promise.all([
+		const updatePromises: Promise<unknown>[] = [
 			// Update order with commission details and store completedDriverId for reviews
 			this.#repo.order.update(
 				done.orderId,
@@ -485,6 +558,7 @@ export class OrderRoom extends BaseDurableObject {
 					platformCommission: toNumberSafe(platformCommission.toString()),
 					driverEarning: toNumberSafe(driverEarning.toString()),
 					merchantCommission: toNumberSafe(merchantCommission.toString()),
+					merchantEarning: toNumberSafe(merchantEarning.toString()),
 				},
 				opts,
 			),
@@ -504,13 +578,14 @@ export class OrderRoom extends BaseDurableObject {
 						orderId: order.id,
 						orderType: order.type,
 						totalPrice: toNumberSafe(totalPrice.toString()),
+						deliveryFee: toNumberSafe(deliveryFee.toString()),
 						commissionRate,
 					},
 				},
 				opts,
 			),
 
-			// Record platform commission
+			// Record platform commission (audit only, no balance change)
 			this.#repo.transaction.insert(
 				{
 					walletId: driverwallet.id, // Use driver wallet for tracking
@@ -538,11 +613,74 @@ export class OrderRoom extends BaseDurableObject {
 				},
 				opts,
 			),
-		]);
+		];
+
+		// Add merchant earning transaction for FOOD orders
+		if (order.type === "FOOD" && merchantWallet && merchantBalanceResult) {
+			updatePromises.push(
+				// Credit merchant wallet with earnings
+				this.#repo.transaction.insert(
+					{
+						walletId: merchantWallet.id,
+						type: "EARNING",
+						amount: toNumberSafe(merchantEarning.toString()),
+						balanceBefore: merchantBalanceResult.balanceBefore,
+						balanceAfter: merchantBalanceResult.balanceAfter,
+						status: "SUCCESS",
+						description: `Merchant earning for order #${order.id.slice(0, 8)}`,
+						referenceId: order.id,
+						metadata: {
+							orderId: order.id,
+							orderType: order.type,
+							menuItemsTotal: toNumberSafe(menuItemsTotal.toString()),
+							merchantCommissionRate,
+						},
+					},
+					opts,
+				),
+				// Record merchant commission (audit only, no balance change)
+				this.#repo.transaction.insert(
+					{
+						walletId: merchantWallet.id,
+						type: "COMMISSION",
+						amount: toNumberSafe(merchantCommission.toString()),
+						status: "SUCCESS",
+						description: `Merchant commission for order #${order.id.slice(0, 8)}`,
+						referenceId: order.id,
+						metadata: {
+							orderId: order.id,
+							orderType: order.type,
+							menuItemsTotal: toNumberSafe(menuItemsTotal.toString()),
+							merchantCommissionRate,
+						},
+					},
+					opts,
+				),
+			);
+		}
+
+		// Update stock and soldStock for FOOD orders
+		if (order.type === "FOOD") {
+			updatePromises.push(
+				OrderStockService.updateStockOnOrderCompletion(order.id, opts),
+			);
+		}
+
+		const [updatedOrder] = (await Promise.all(updatePromises)) as [Order];
 
 		// Award badges to driver after order completion
 		if (order.driverId) {
-			const badgeAwardService = new BadgeAwardService(this.#svc.db, this.#repo);
+			// Fetch on-time threshold from database configuration
+			const onTimeDeliveryThresholdMinutes =
+				await BusinessConfigurationService.getOnTimeDeliveryThresholdMinutes(
+					this.#svc.db,
+					this.#svc.kv,
+				);
+			const badgeAwardService = new BadgeAwardService(
+				this.#svc.db,
+				this.#repo,
+				{ onTimeDeliveryThresholdMinutes },
+			);
 			await badgeAwardService
 				.evaluateAndAwardBadges(order.driverId, opts)
 				.catch((error) => {
@@ -558,9 +696,12 @@ export class OrderRoom extends BaseDurableObject {
 				orderId: order.id,
 				orderType: order.type,
 				totalPrice: toNumberSafe(totalPrice.toString()),
+				menuItemsTotal: toNumberSafe(menuItemsTotal.toString()),
+				deliveryFee: toNumberSafe(deliveryFee.toString()),
 				platformCommission: toNumberSafe(platformCommission.toString()),
 				driverEarning: toNumberSafe(driverEarning.toString()),
 				merchantCommission: toNumberSafe(merchantCommission.toString()),
+				merchantEarning: toNumberSafe(merchantEarning.toString()),
 			},
 			"[OrderRoom] Commission calculated and distributed",
 		);

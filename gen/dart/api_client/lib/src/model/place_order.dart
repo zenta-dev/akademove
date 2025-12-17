@@ -4,6 +4,7 @@
 
 // ignore_for_file: unused_element
 import 'package:api_client/src/model/order_type.dart';
+import 'package:api_client/src/model/delivery_item_type.dart';
 import 'package:api_client/src/model/coordinate.dart';
 import 'package:api_client/src/model/order_note.dart';
 import 'package:api_client/src/model/user_gender.dart';
@@ -34,6 +35,7 @@ class PlaceOrder {
     this.gender,
     this.genderPreference,
     this.attachmentUrl,
+    this.deliveryItemType,
     this.couponCode,
     required this.payment,
   });
@@ -67,6 +69,9 @@ class PlaceOrder {
   @JsonKey(name: r'attachmentUrl', required: false, includeIfNull: false)
   final String? attachmentUrl;
 
+  @JsonKey(name: r'deliveryItemType', required: false, includeIfNull: false)
+  final DeliveryItemType? deliveryItemType;
+
   @JsonKey(name: r'couponCode', required: false, includeIfNull: false)
   final String? couponCode;
 
@@ -87,6 +92,7 @@ class PlaceOrder {
           other.gender == gender &&
           other.genderPreference == genderPreference &&
           other.attachmentUrl == attachmentUrl &&
+          other.deliveryItemType == deliveryItemType &&
           other.couponCode == couponCode &&
           other.payment == payment;
 
@@ -102,6 +108,7 @@ class PlaceOrder {
       gender.hashCode +
       genderPreference.hashCode +
       attachmentUrl.hashCode +
+      deliveryItemType.hashCode +
       couponCode.hashCode +
       payment.hashCode;
 

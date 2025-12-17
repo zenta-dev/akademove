@@ -2163,6 +2163,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get label_stock => 'Stock';
 
   @override
+  String get sold => 'Sold';
+
+  @override
   String get label_created => 'Created';
 
   @override
@@ -4470,4 +4473,39 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get status_in_trip => 'In Progress';
+
+  @override
+  String get error_generic => 'An error occurred. Please try again.';
+
+  @override
+  String get button_retry => 'Retry';
+
+  @override
+  String get text_already_reviewed => 'You have already reviewed this order';
+
+  @override
+  String get text_your_rating => 'Your Rating';
+
+  @override
+  String get text_selected_categories => 'Selected Categories';
+
+  @override
+  String get text_your_comment => 'Your Comment';
+
+  @override
+  String text_reviewed_on(String date) {
+    return 'Reviewed on $date';
+  }
+
+  @override
+  String get fee_breakdown => 'Fee Breakdown';
+
+  @override
+  String get driver_receives => 'Driver Earnings';
+
+  @override
+  String get merchant_fee => 'Merchant Fee';
+
+  @override
+  String get merchant_receives => 'Merchant Receives';
 }

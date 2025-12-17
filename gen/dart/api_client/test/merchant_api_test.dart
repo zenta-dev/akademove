@@ -11,7 +11,7 @@ void main() {
       // TODO
     });
 
-    //Future<MerchantGetMine200ResponseBody> merchantActivate(String id) async
+    //Future<MerchantGetMine200ResponseBody> merchantActivate(String id, { Object body }) async
     test('test merchantActivate', () async {
       // TODO
     });
@@ -111,17 +111,17 @@ void main() {
       // TODO
     });
 
-    //Future<MerchantOrderAccept200Response> merchantOrderAccept(String merchantId, String id) async
+    //Future<MerchantOrderAccept200Response> merchantOrderAccept(String merchantId, String id, { Object body }) async
     test('test merchantOrderAccept', () async {
       // TODO
     });
 
-    //Future<MerchantOrderAccept200Response> merchantOrderMarkPreparing(String merchantId, String id) async
+    //Future<MerchantOrderAccept200Response> merchantOrderMarkPreparing(String merchantId, String id, { Object body }) async
     test('test merchantOrderMarkPreparing', () async {
       // TODO
     });
 
-    //Future<MerchantOrderAccept200Response> merchantOrderMarkReady(String merchantId, String id) async
+    //Future<MerchantOrderAccept200Response> merchantOrderMarkReady(String merchantId, String id, { Object body }) async
     test('test merchantOrderMarkReady', () async {
       // TODO
     });

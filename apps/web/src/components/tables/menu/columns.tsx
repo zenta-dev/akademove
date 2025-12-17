@@ -74,6 +74,22 @@ export const MERCHANT_MENU_COLUMNS = [
 		},
 	},
 	{
+		id: "soldStock",
+		accessorKey: "soldStock",
+		enableHiding: false,
+		header: m.sold(),
+		cell: ({ row }) => {
+			const soldStock = row.getValue("soldStock") as number;
+
+			return (
+				<div className="flex items-center gap-2">
+					<span className="font-medium">{soldStock}</span>
+					<span className="text-muted-foreground text-xs">sold</span>
+				</div>
+			);
+		},
+	},
+	{
 		id: "createdAt",
 		accessorKey: "createdAt",
 		header: m.created_at(),

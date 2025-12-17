@@ -60,6 +60,7 @@ import 'package:api_client/src/model/broadcast_stats200_response_data.dart';
 import 'package:api_client/src/model/broadcast_update_request.dart';
 import 'package:api_client/src/model/business_configuration.dart';
 import 'package:api_client/src/model/cart.dart';
+import 'package:api_client/src/model/cart_get200_response.dart';
 import 'package:api_client/src/model/cart_item.dart';
 import 'package:api_client/src/model/cart_response.dart';
 import 'package:api_client/src/model/cart_response_stock_warnings_inner.dart';
@@ -375,7 +376,6 @@ import 'package:api_client/src/model/transfer_response.dart';
 import 'package:api_client/src/model/unban_user.dart';
 import 'package:api_client/src/model/update_account_deletion.dart';
 import 'package:api_client/src/model/update_broadcast.dart';
-import 'package:api_client/src/model/update_cart_attachment_request.dart';
 import 'package:api_client/src/model/update_cart_item_request.dart';
 import 'package:api_client/src/model/update_configuration.dart';
 import 'package:api_client/src/model/update_contact.dart';
@@ -666,6 +666,9 @@ ReturnType deserialize<ReturnType, BaseType>(
           as ReturnType;
     case 'Cart':
       return Cart.fromJson(value as Map<String, dynamic>) as ReturnType;
+    case 'CartGet200Response':
+      return CartGet200Response.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
     case 'CartItem':
       return CartItem.fromJson(value as Map<String, dynamic>) as ReturnType;
     case 'CartResponse':
@@ -1870,9 +1873,6 @@ ReturnType deserialize<ReturnType, BaseType>(
           as ReturnType;
     case 'UpdateBroadcast':
       return UpdateBroadcast.fromJson(value as Map<String, dynamic>)
-          as ReturnType;
-    case 'UpdateCartAttachmentRequest':
-      return UpdateCartAttachmentRequest.fromJson(value as Map<String, dynamic>)
           as ReturnType;
     case 'UpdateCartItemRequest':
       return UpdateCartItemRequest.fromJson(value as Map<String, dynamic>)

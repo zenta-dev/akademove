@@ -41,7 +41,7 @@ void main() {
       // TODO
     });
 
-    //Future<AuthSignOut200Response> authSignOut() async
+    //Future<AuthSignOut200Response> authSignOut({ AuthSignOutRequest authSignOutRequest }) async
     test('test authSignOut', () async {
       // TODO
     });

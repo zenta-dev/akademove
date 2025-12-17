@@ -26,6 +26,8 @@ Name | Type | Description | Notes
 **platformCommission** | **num** |  | [optional] 
 **driverEarning** | **num** |  | [optional] 
 **merchantCommission** | **num** |  | [optional] 
+**merchantEarning** | **num** |  | [optional] 
+**estimatedDriverEarning** | **num** |  | [optional] 
 **couponId** | **String** |  | [optional] 
 **couponCode** | **String** |  | [optional] 
 **discountAmount** | **num** |  | [optional] 

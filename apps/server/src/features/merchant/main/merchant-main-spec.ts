@@ -196,6 +196,7 @@ export const MerchantMainSpec = {
 							category: z.string().optional(),
 							price: z.coerce.number(),
 							stock: z.coerce.number(),
+							soldStock: z.coerce.number(),
 							createdAt: z.coerce.date(),
 							updatedAt: z.coerce.date(),
 						}),
@@ -235,6 +236,10 @@ export const MerchantMainSpec = {
 					totalOrders: z.coerce.number(),
 					totalRevenue: z.coerce.number(),
 					totalCommission: z.coerce.number(),
+					/** Commission rate as percentage (e.g., 10 for 10%) - from server config */
+					commissionRate: z.coerce.number(),
+					/** Net income after commission deduction (totalRevenue - totalCommission) */
+					netIncome: z.coerce.number(),
 					completedOrders: z.coerce.number(),
 					cancelledOrders: z.coerce.number(),
 					averageOrderValue: z.coerce.number(),

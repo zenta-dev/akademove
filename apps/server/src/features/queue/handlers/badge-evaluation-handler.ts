@@ -7,6 +7,7 @@
 
 import type { BadgeEvaluationJob } from "@repo/schema/queue";
 import { BadgeAwardService } from "@/features/badge/services/badge-award-service";
+import { BusinessConfigurationService } from "@/features/configuration/services";
 import { logger } from "@/utils/logger";
 import type { QueueHandlerContext } from "../queue-handler";
 
@@ -23,7 +24,16 @@ export async function handleBadgeEvaluation(
 	);
 
 	try {
-		const badgeService = new BadgeAwardService(context.svc.db, context.repo);
+		// Fetch on-time threshold from database configuration
+		const onTimeDeliveryThresholdMinutes =
+			await BusinessConfigurationService.getOnTimeDeliveryThresholdMinutes(
+				context.svc.db,
+				context.svc.kv,
+			);
+
+		const badgeService = new BadgeAwardService(context.svc.db, context.repo, {
+			onTimeDeliveryThresholdMinutes,
+		});
 
 		const result = await badgeService.evaluateAndAwardBadges(driverId);
 

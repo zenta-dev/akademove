@@ -5,24 +5,27 @@
  * - SRP: Single responsibility for scheduled order validation and activation
  * - OCP: Open for extension with new scheduling rules
  * - LSP: All scheduling operations follow consistent patterns
+ *
+ * NOTE: All scheduling configuration values come from the database configuration.
+ * The SchedulingConfig interface must be populated from BusinessConfigurationService.
  */
 
 import { RepositoryError } from "@/core/error";
 import { logger } from "@/utils/logger";
 
 /**
- * Configuration for scheduled orders
+ * Configuration for scheduled orders - populated from database config
  */
-export const SCHEDULING_CONFIG = {
+export interface SchedulingConfig {
 	/** Minimum minutes in advance for scheduling */
-	MIN_ADVANCE_MINUTES: 30,
+	minAdvanceMinutes: number;
 	/** Maximum days in advance for scheduling */
-	MAX_ADVANCE_DAYS: 7,
+	maxAdvanceDays: number;
 	/** Minutes before scheduled time to start matching */
-	MATCHING_LEAD_TIME_MINUTES: 15,
+	matchingLeadTimeMinutes: number;
 	/** Minimum hours before scheduled time to allow rescheduling */
-	MIN_RESCHEDULE_HOURS: 1,
-} as const;
+	minRescheduleHours: number;
+}
 
 /**
  * OrderSchedulingService
@@ -32,31 +35,37 @@ export const SCHEDULING_CONFIG = {
  * - Calculate matching activation times
  * - Check rescheduling eligibility
  * - Validate cancellation timing
+ *
+ * All methods require a SchedulingConfig parameter populated from the database.
  */
 export class OrderSchedulingService {
 	/**
 	 * Validate that the scheduled time is within acceptable bounds
 	 *
 	 * @param scheduledAt - Requested scheduled time
+	 * @param config - Scheduling configuration from database
 	 * @throws {RepositoryError} When scheduled time is invalid
 	 */
-	static validateScheduledTime(scheduledAt: Date): void {
+	static validateScheduledTime(
+		scheduledAt: Date,
+		config: SchedulingConfig,
+	): void {
 		const now = new Date();
 		const minTime = new Date(
-			now.getTime() + SCHEDULING_CONFIG.MIN_ADVANCE_MINUTES * 60 * 1000,
+			now.getTime() + config.minAdvanceMinutes * 60 * 1000,
 		);
 		const maxTime = new Date(
-			now.getTime() + SCHEDULING_CONFIG.MAX_ADVANCE_DAYS * 24 * 60 * 60 * 1000,
+			now.getTime() + config.maxAdvanceDays * 24 * 60 * 60 * 1000,
 		);
 
 		if (scheduledAt < minTime) {
 			const error = new RepositoryError(
-				`Scheduled time must be at least ${SCHEDULING_CONFIG.MIN_ADVANCE_MINUTES} minutes in the future`,
+				`Scheduled time must be at least ${config.minAdvanceMinutes} minutes in the future`,
 				{ code: "BAD_REQUEST" },
 			);
 
 			logger.warn(
-				{ scheduledAt, minTime },
+				{ scheduledAt, minTime, minAdvanceMinutes: config.minAdvanceMinutes },
 				"[OrderSchedulingService] Scheduled time too soon",
 			);
 
@@ -65,12 +74,12 @@ export class OrderSchedulingService {
 
 		if (scheduledAt > maxTime) {
 			const error = new RepositoryError(
-				`Scheduled time cannot be more than ${SCHEDULING_CONFIG.MAX_ADVANCE_DAYS} days in the future`,
+				`Scheduled time cannot be more than ${config.maxAdvanceDays} days in the future`,
 				{ code: "BAD_REQUEST" },
 			);
 
 			logger.warn(
-				{ scheduledAt, maxTime },
+				{ scheduledAt, maxTime, maxAdvanceDays: config.maxAdvanceDays },
 				"[OrderSchedulingService] Scheduled time too far in the future",
 			);
 
@@ -87,12 +96,15 @@ export class OrderSchedulingService {
 	 * Calculate when driver matching should begin for a scheduled order
 	 *
 	 * @param scheduledAt - The scheduled pickup time
+	 * @param config - Scheduling configuration from database
 	 * @returns The time when matching should start
 	 */
-	static calculateMatchingTime(scheduledAt: Date): Date {
+	static calculateMatchingTime(
+		scheduledAt: Date,
+		config: SchedulingConfig,
+	): Date {
 		return new Date(
-			scheduledAt.getTime() -
-				SCHEDULING_CONFIG.MATCHING_LEAD_TIME_MINUTES * 60 * 1000,
+			scheduledAt.getTime() - config.matchingLeadTimeMinutes * 60 * 1000,
 		);
 	}
 
@@ -100,13 +112,16 @@ export class OrderSchedulingService {
 	 * Check if a scheduled order can be rescheduled
 	 *
 	 * @param currentScheduledAt - Current scheduled time
+	 * @param config - Scheduling configuration from database
 	 * @returns True if rescheduling is allowed
 	 */
-	static canReschedule(currentScheduledAt: Date): boolean {
+	static canReschedule(
+		currentScheduledAt: Date,
+		config: SchedulingConfig,
+	): boolean {
 		const now = new Date();
 		const minRescheduleTime = new Date(
-			currentScheduledAt.getTime() -
-				SCHEDULING_CONFIG.MIN_RESCHEDULE_HOURS * 60 * 60 * 1000,
+			currentScheduledAt.getTime() - config.minRescheduleHours * 60 * 60 * 1000,
 		);
 
 		return now < minRescheduleTime;
@@ -117,21 +132,23 @@ export class OrderSchedulingService {
 	 *
 	 * @param currentScheduledAt - Current scheduled time
 	 * @param newScheduledAt - New requested time
+	 * @param config - Scheduling configuration from database
 	 * @throws {RepositoryError} When rescheduling is not allowed
 	 */
 	static validateReschedule(
 		currentScheduledAt: Date,
 		newScheduledAt: Date,
+		config: SchedulingConfig,
 	): void {
-		if (!OrderSchedulingService.canReschedule(currentScheduledAt)) {
+		if (!OrderSchedulingService.canReschedule(currentScheduledAt, config)) {
 			throw new RepositoryError(
-				`Cannot reschedule order less than ${SCHEDULING_CONFIG.MIN_RESCHEDULE_HOURS} hour(s) before scheduled time`,
+				`Cannot reschedule order less than ${config.minRescheduleHours} hour(s) before scheduled time`,
 				{ code: "BAD_REQUEST" },
 			);
 		}
 
 		// Validate the new time
-		OrderSchedulingService.validateScheduledTime(newScheduledAt);
+		OrderSchedulingService.validateScheduledTime(newScheduledAt, config);
 
 		logger.info(
 			{ currentScheduledAt, newScheduledAt },
@@ -143,12 +160,18 @@ export class OrderSchedulingService {
 	 * Check if a scheduled order is ready for matching
 	 *
 	 * @param scheduledAt - Scheduled pickup time
+	 * @param config - Scheduling configuration from database
 	 * @returns True if matching should begin
 	 */
-	static isReadyForMatching(scheduledAt: Date): boolean {
+	static isReadyForMatching(
+		scheduledAt: Date,
+		config: SchedulingConfig,
+	): boolean {
 		const now = new Date();
-		const matchingTime =
-			OrderSchedulingService.calculateMatchingTime(scheduledAt);
+		const matchingTime = OrderSchedulingService.calculateMatchingTime(
+			scheduledAt,
+			config,
+		);
 		return now >= matchingTime;
 	}
 
@@ -156,12 +179,18 @@ export class OrderSchedulingService {
 	 * Check if a scheduled order can be cancelled without penalty
 	 *
 	 * @param scheduledAt - Scheduled pickup time
+	 * @param config - Scheduling configuration from database
 	 * @returns True if cancellation is free
 	 */
-	static canCancelWithoutPenalty(scheduledAt: Date): boolean {
+	static canCancelWithoutPenalty(
+		scheduledAt: Date,
+		config: SchedulingConfig,
+	): boolean {
 		const now = new Date();
-		const matchingTime =
-			OrderSchedulingService.calculateMatchingTime(scheduledAt);
+		const matchingTime = OrderSchedulingService.calculateMatchingTime(
+			scheduledAt,
+			config,
+		);
 
 		// Free cancellation if we haven't started matching yet
 		return now < matchingTime;
@@ -171,12 +200,18 @@ export class OrderSchedulingService {
 	 * Get time remaining until matching begins
 	 *
 	 * @param scheduledAt - Scheduled pickup time
+	 * @param config - Scheduling configuration from database
 	 * @returns Milliseconds until matching, or 0 if already past
 	 */
-	static getTimeUntilMatching(scheduledAt: Date): number {
+	static getTimeUntilMatching(
+		scheduledAt: Date,
+		config: SchedulingConfig,
+	): number {
 		const now = new Date();
-		const matchingTime =
-			OrderSchedulingService.calculateMatchingTime(scheduledAt);
+		const matchingTime = OrderSchedulingService.calculateMatchingTime(
+			scheduledAt,
+			config,
+		);
 		const diff = matchingTime.getTime() - now.getTime();
 		return Math.max(0, diff);
 	}

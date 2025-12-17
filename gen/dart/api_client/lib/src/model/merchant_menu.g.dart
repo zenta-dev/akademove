@@ -21,6 +21,8 @@ abstract class _$MerchantMenuCWProxy {
 
   MerchantMenu stock(int stock);
 
+  MerchantMenu soldStock(int soldStock);
+
   MerchantMenu createdAt(DateTime createdAt);
 
   MerchantMenu updatedAt(DateTime updatedAt);
@@ -40,6 +42,7 @@ abstract class _$MerchantMenuCWProxy {
     String? category,
     num price,
     int stock,
+    int soldStock,
     DateTime createdAt,
     DateTime updatedAt,
   });
@@ -74,6 +77,9 @@ class _$MerchantMenuCWProxyImpl implements _$MerchantMenuCWProxy {
   MerchantMenu stock(int stock) => call(stock: stock);
 
   @override
+  MerchantMenu soldStock(int soldStock) => call(soldStock: soldStock);
+
+  @override
   MerchantMenu createdAt(DateTime createdAt) => call(createdAt: createdAt);
 
   @override
@@ -95,6 +101,7 @@ class _$MerchantMenuCWProxyImpl implements _$MerchantMenuCWProxy {
     Object? category = const $CopyWithPlaceholder(),
     Object? price = const $CopyWithPlaceholder(),
     Object? stock = const $CopyWithPlaceholder(),
+    Object? soldStock = const $CopyWithPlaceholder(),
     Object? createdAt = const $CopyWithPlaceholder(),
     Object? updatedAt = const $CopyWithPlaceholder(),
   }) {
@@ -128,6 +135,10 @@ class _$MerchantMenuCWProxyImpl implements _$MerchantMenuCWProxy {
           ? _value.stock
           // ignore: cast_nullable_to_non_nullable
           : stock as int,
+      soldStock: soldStock == const $CopyWithPlaceholder() || soldStock == null
+          ? _value.soldStock
+          // ignore: cast_nullable_to_non_nullable
+          : soldStock as int,
       createdAt: createdAt == const $CopyWithPlaceholder() || createdAt == null
           ? _value.createdAt
           // ignore: cast_nullable_to_non_nullable
@@ -162,6 +173,7 @@ MerchantMenu _$MerchantMenuFromJson(
       'name',
       'price',
       'stock',
+      'soldStock',
       'createdAt',
       'updatedAt',
     ],
@@ -174,6 +186,7 @@ MerchantMenu _$MerchantMenuFromJson(
     category: $checkedConvert('category', (v) => v as String?),
     price: $checkedConvert('price', (v) => v as num),
     stock: $checkedConvert('stock', (v) => (v as num).toInt()),
+    soldStock: $checkedConvert('soldStock', (v) => (v as num).toInt()),
     createdAt: $checkedConvert('createdAt', (v) => DateTime.parse(v as String)),
     updatedAt: $checkedConvert('updatedAt', (v) => DateTime.parse(v as String)),
   );
@@ -189,6 +202,7 @@ Map<String, dynamic> _$MerchantMenuToJson(MerchantMenu instance) =>
       'category': ?instance.category,
       'price': instance.price,
       'stock': instance.stock,
+      'soldStock': instance.soldStock,
       'createdAt': instance.createdAt.toIso8601String(),
       'updatedAt': instance.updatedAt.toIso8601String(),
     };

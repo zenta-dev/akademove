@@ -1,4 +1,5 @@
 import 'package:akademove/core/_export.dart';
+import 'package:akademove/features/review/presentation/states/_export.dart';
 import 'package:api_client/api_client.dart';
 
 class ReviewRepository extends BaseRepository {
@@ -35,7 +36,43 @@ class ReviewRepository extends BaseRepository {
             code: ErrorCode.unknown,
           ));
 
-      return SuccessResponse(message: data.message, data: data.data);
+      final review = data.data;
+      if (review == null) {
+        throw const RepositoryError(
+          'Failed to submit review: no data returned',
+          code: ErrorCode.unknown,
+        );
+      }
+
+      return SuccessResponse(message: data.message, data: review);
+    });
+  }
+
+  /// Check if user can review an order and get existing review if already reviewed
+  Future<BaseResponse<ReviewStatus>> getReviewStatus({
+    required String orderId,
+  }) {
+    return guard(() async {
+      final res = await _apiClient.getReviewApi().reviewCheckCanReview(
+        orderId: orderId,
+      );
+
+      final data =
+          res.data ??
+          (throw const RepositoryError(
+            'Failed to check review eligibility',
+            code: ErrorCode.unknown,
+          ));
+
+      return SuccessResponse(
+        message: data.message,
+        data: ReviewStatus(
+          canReview: data.data.canReview,
+          alreadyReviewed: data.data.alreadyReviewed,
+          orderCompleted: data.data.orderCompleted,
+          existingReview: data.data.existingReview,
+        ),
+      );
     });
   }
 
@@ -96,7 +133,15 @@ class ReviewRepository extends BaseRepository {
             code: ErrorCode.notFound,
           ));
 
-      return SuccessResponse(message: data.message, data: data.data);
+      final review = data.data;
+      if (review == null) {
+        throw const RepositoryError(
+          'Review not found',
+          code: ErrorCode.notFound,
+        );
+      }
+
+      return SuccessResponse(message: data.message, data: review);
     });
   }
 }

@@ -9,7 +9,6 @@ class UserCartState extends Equatable {
     this.clearCartResult = const OperationResult.idle(),
     this.replaceCartResult = const OperationResult.idle(),
     this.placeFoodOrderResult = const OperationResult.idle(),
-    this.uploadAttachmentResult = const OperationResult.idle(),
     this.pendingItem,
     this.pendingMerchantName,
     this.pendingMerchantLocation,
@@ -37,9 +36,6 @@ class UserCartState extends Equatable {
 
   /// Place food order operation result
   final OperationResult<PlaceOrderResponse> placeFoodOrderResult;
-
-  /// Upload attachment operation result
-  final OperationResult<String> uploadAttachmentResult;
 
   /// Pending item to add (when merchant conflict detected)
   final CartItem? pendingItem;
@@ -74,11 +70,8 @@ class UserCartState extends Equatable {
   /// Computed: has merchant conflict
   bool get hasMerchantConflict => showMerchantConflict && pendingItem != null;
 
-  /// Computed: is this a printing merchant (requires attachment)
+  /// Computed: is this a printing merchant (requires attachment at checkout)
   bool get isPrintingMerchant => currentCart?.isPrintingMerchant ?? false;
-
-  /// Computed: has attachment
-  bool get hasAttachment => currentCart?.attachmentUrl != null;
 
   @override
   List<Object?> get props => [
@@ -89,7 +82,6 @@ class UserCartState extends Equatable {
     clearCartResult,
     replaceCartResult,
     placeFoodOrderResult,
-    uploadAttachmentResult,
     pendingItem,
     pendingMerchantName,
     pendingMerchantLocation,
@@ -105,7 +97,6 @@ class UserCartState extends Equatable {
     OperationResult<bool>? clearCartResult,
     OperationResult<Cart>? replaceCartResult,
     OperationResult<PlaceOrderResponse>? placeFoodOrderResult,
-    OperationResult<String>? uploadAttachmentResult,
     CartItem? pendingItem,
     String? pendingMerchantName,
     Coordinate? pendingMerchantLocation,
@@ -121,8 +112,6 @@ class UserCartState extends Equatable {
       clearCartResult: clearCartResult ?? this.clearCartResult,
       replaceCartResult: replaceCartResult ?? this.replaceCartResult,
       placeFoodOrderResult: placeFoodOrderResult ?? this.placeFoodOrderResult,
-      uploadAttachmentResult:
-          uploadAttachmentResult ?? this.uploadAttachmentResult,
       pendingItem: clearPending ? null : (pendingItem ?? this.pendingItem),
       pendingMerchantName: clearPending
           ? null

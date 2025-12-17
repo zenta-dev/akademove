@@ -965,12 +965,45 @@ export async function seedConfigurations() {
 					noShowDriverCompensationRate: 0.8, // 80% of penalty goes to driver
 					// Delivery verification
 					highValueOrderThreshold: 100_000, // 100k IDR threshold for OTP
-					// Order timeouts
-					driverMatchingTimeoutMinutes: 15, // 15 minutes for driver matching
+
+					// Driver matching configuration
+					driverMatchingTimeoutMinutes: 15, // 15 minutes max for driver matching
+					driverMatchingInitialRadiusKm: 5, // Initial 5km search radius
+					driverMatchingMaxRadiusKm: 20, // Max 20km search radius
+					driverMatchingRadiusExpansionRate: 0.2, // 20% radius expansion per attempt
+					driverMatchingIntervalSeconds: 30, // 30 seconds between matching attempts
+					driverMatchingBroadcastLimit: 10, // Max 10 drivers per broadcast
+					driverMaxCancellationsPerDay: 3, // Max 3 cancellations per day before suspension
+
+					// Payment configuration
 					paymentPendingTimeoutMinutes: 15, // 15 minutes for payment confirmation
+
+					// Order lifecycle configuration
+					orderCompletionTimeoutMinutes: 60, // 1 hour to auto-finalize completed orders
+					noShowTimeoutMinutes: 30, // 30 minutes to process NO_SHOW cleanup
+					orderStaleTimestampMinutes: 5, // 5 minutes to consider in-transit order stale
+
+					// Driver location tracking
+					driverLocationStaleThresholdMinutes: 15, // 15 minutes to consider driver location stale
+
+					// Driver rebroadcast configuration
+					driverRebroadcastIntervalMinutes: 2, // 2 minutes between rebroadcast attempts
+					driverRebroadcastRadiusMultiplier: 1.5, // 1.5x initial radius for rebroadcast
+
+					// Commission configuration
+					maxBadgeCommissionReduction: 0.5, // 50% max badge commission reduction
+
+					// Scheduled order configuration
+					scheduledOrderMinAdvanceMinutes: 30, // 30 minutes min advance for scheduling
+					scheduledOrderMaxAdvanceDays: 7, // 7 days max advance for scheduling
+					scheduledOrderMatchingLeadTimeMinutes: 15, // 15 minutes lead time for matching
+					scheduledOrderMinRescheduleHours: 1, // 1 hour min before scheduled time to reschedule
+
+					// On-time delivery configuration
+					onTimeDeliveryThresholdMinutes: 10, // 10 minutes threshold for on-time delivery
 				},
 				description:
-					"Business configuration for wallet limits, cancellation fees, delivery verification, and order timeouts",
+					"Business configuration for wallet limits, cancellation fees, delivery verification, order timeouts, driver matching, and scheduling",
 				updatedById: admin.id,
 				createdAt: now,
 				updatedAt: now,

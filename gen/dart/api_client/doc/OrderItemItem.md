@@ -15,6 +15,7 @@ Name | Type | Description | Notes
 **category** | **String** |  | [optional] 
 **price** | **num** |  | [optional] 
 **stock** | **int** |  | [optional] 
+**soldStock** | **int** | Total number of items sold | [optional] 
 **createdAt** | [**DateTime**](DateTime.md) |  | [optional] 
 **updatedAt** | [**DateTime**](DateTime.md) |  | [optional] 
 

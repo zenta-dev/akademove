@@ -20,6 +20,8 @@ enum MerchantMenuKey {
   price(r'price'),
   @JsonValue(r'stock')
   stock(r'stock'),
+  @JsonValue(r'soldStock')
+  soldStock(r'soldStock'),
   @JsonValue(r'createdAt')
   createdAt(r'createdAt'),
   @JsonValue(r'updatedAt')

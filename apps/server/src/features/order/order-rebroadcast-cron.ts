@@ -83,11 +83,20 @@ export async function handleOrderRebroadcastCron(
 				// Get the room stub for this order
 				const stub = OrderBaseRepository.getRoomStubByName(order.id);
 
+				// Fetch pricing configuration for estimated driver earning calculation
+				const pricingConfig =
+					await OrderBaseRepository.fetchPricingConfiguration(
+						order.type as "RIDE" | "DELIVERY" | "FOOD",
+						svc.kv,
+						svc.db,
+					);
+
 				// Compose the order entity properly
 				// The composed order includes driver info via the `driver` relation
 				const composedOrder = await OrderBaseRepository.composeEntity(
 					order as Parameters<typeof OrderBaseRepository.composeEntity>[0],
 					svc.storage,
+					pricingConfig,
 				);
 
 				// Build the broadcast payload with current order state

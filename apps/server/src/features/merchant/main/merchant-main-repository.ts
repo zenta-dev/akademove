@@ -21,7 +21,7 @@ import {
 } from "drizzle-orm";
 import { v7 } from "uuid";
 import { BaseRepository } from "@/core/base";
-import { CACHE_TTLS } from "@/core/constants";
+import { CACHE_TTLS, CONFIGURATION_KEYS } from "@/core/constants";
 import { RepositoryError } from "@/core/error";
 import type { ListResult, OrderByOperation, WithTx } from "@/core/interface";
 import { type DatabaseService, tables } from "@/core/services/db";
@@ -729,6 +729,10 @@ export class MerchantMainRepository extends BaseRepository {
 		totalOrders: number;
 		totalRevenue: number;
 		totalCommission: number;
+		/** Commission rate as percentage (e.g., 10 for 10%) - from server config */
+		commissionRate: number;
+		/** Net income after commission deduction (totalRevenue - totalCommission) */
+		netIncome: number;
 		completedOrders: number;
 		cancelledOrders: number;
 		averageOrderValue: number;
@@ -752,6 +756,11 @@ export class MerchantMainRepository extends BaseRepository {
 				query?.startDate,
 				query?.endDate,
 			);
+
+			// Fetch food pricing configuration to get commission rate
+			const foodPricingConfig = await this.#getFoodPricingConfig();
+			const merchantCommissionRate =
+				foodPricingConfig?.merchantCommissionRate ?? 0;
 
 			// Execute queries (SQL generation delegated to service)
 			const [statsResult, topSellingResult, revenueByDayResult] =
@@ -811,9 +820,44 @@ export class MerchantMainRepository extends BaseRepository {
 								})
 							: undefined,
 				},
+				merchantCommissionRate,
 			);
 		} catch (error) {
 			throw this.handleError(error, "get analytics");
+		}
+	}
+
+	/**
+	 * Fetch food pricing configuration from cache or database
+	 */
+	async #getFoodPricingConfig(): Promise<
+		{ merchantCommissionRate: number; platformFeeRate: number } | undefined
+	> {
+		const key = CONFIGURATION_KEYS.FOOD_SERVICE_PRICING;
+		const fallback = async () => {
+			const res = await this.db.query.configuration.findFirst({
+				where: (f, op) => op.eq(f.key, key),
+			});
+			const value = res?.value;
+			if (value) {
+				await this.setCache(key, value, {
+					expirationTtl: CACHE_TTLS["24h"],
+				});
+			}
+			return value;
+		};
+
+		try {
+			const config = await this.getCache(key, { fallback });
+			return config as
+				| { merchantCommissionRate: number; platformFeeRate: number }
+				| undefined;
+		} catch (error) {
+			logger.error(
+				{ error },
+				"[MerchantMainRepository] Failed to get food pricing config",
+			);
+			return undefined;
 		}
 	}
 

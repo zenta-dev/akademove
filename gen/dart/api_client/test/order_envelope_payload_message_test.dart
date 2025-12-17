@@ -28,6 +28,11 @@ void main() {
       // TODO
     });
 
+    // String senderRole
+    test('to test the property `senderRole`', () async {
+      // TODO
+    });
+
     // String message
     test('to test the property `message`', () async {
       // TODO

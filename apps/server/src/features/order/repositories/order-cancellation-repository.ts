@@ -374,6 +374,13 @@ export class OrderCancellationRepository extends OrderBaseRepository {
 
 		if (!driver) return;
 
+		// Get max cancellations per day from business configuration
+		const matchingConfig =
+			await BusinessConfigurationService.getDriverMatchingConfig(
+				this.db,
+				this.kv,
+			);
+
 		// Use DriverCancellationService to prepare cancellation update
 		const cancellationUpdate =
 			DriverCancellationService.prepareCancellationUpdate(
@@ -391,6 +398,7 @@ export class OrderCancellationRepository extends OrderBaseRepository {
 		if (
 			DriverCancellationService.shouldSuspendDriver(
 				cancellationUpdate.cancellationCount,
+				matchingConfig.maxCancellationsPerDay,
 			)
 		) {
 			// Use service to prepare suspension data
@@ -405,9 +413,10 @@ export class OrderCancellationRepository extends OrderBaseRepository {
 				{
 					driverId,
 					cancellationCount: cancellationUpdate.cancellationCount,
+					maxCancellationsPerDay: matchingConfig.maxCancellationsPerDay,
 					orderId,
 				},
-				"[OrderCancellationRepository] Driver suspended due to excessive cancellations (3/day)",
+				"[OrderCancellationRepository] Driver suspended due to excessive cancellations",
 			);
 		} else {
 			logger.info(

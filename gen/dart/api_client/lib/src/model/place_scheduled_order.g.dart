@@ -29,6 +29,8 @@ abstract class _$PlaceScheduledOrderCWProxy {
 
   PlaceScheduledOrder attachmentUrl(String? attachmentUrl);
 
+  PlaceScheduledOrder deliveryItemType(DeliveryItemType? deliveryItemType);
+
   PlaceScheduledOrder couponCode(String? couponCode);
 
   PlaceScheduledOrder payment(PlaceOrderPayment payment);
@@ -53,6 +55,7 @@ abstract class _$PlaceScheduledOrderCWProxy {
     UserGender? gender,
     PlaceScheduledOrderGenderPreferenceEnum? genderPreference,
     String? attachmentUrl,
+    DeliveryItemType? deliveryItemType,
     String? couponCode,
     PlaceOrderPayment payment,
     DateTime scheduledAt,
@@ -104,6 +107,10 @@ class _$PlaceScheduledOrderCWProxyImpl implements _$PlaceScheduledOrderCWProxy {
       call(attachmentUrl: attachmentUrl);
 
   @override
+  PlaceScheduledOrder deliveryItemType(DeliveryItemType? deliveryItemType) =>
+      call(deliveryItemType: deliveryItemType);
+
+  @override
   PlaceScheduledOrder couponCode(String? couponCode) =>
       call(couponCode: couponCode);
 
@@ -134,6 +141,7 @@ class _$PlaceScheduledOrderCWProxyImpl implements _$PlaceScheduledOrderCWProxy {
     Object? gender = const $CopyWithPlaceholder(),
     Object? genderPreference = const $CopyWithPlaceholder(),
     Object? attachmentUrl = const $CopyWithPlaceholder(),
+    Object? deliveryItemType = const $CopyWithPlaceholder(),
     Object? couponCode = const $CopyWithPlaceholder(),
     Object? payment = const $CopyWithPlaceholder(),
     Object? scheduledAt = const $CopyWithPlaceholder(),
@@ -183,6 +191,10 @@ class _$PlaceScheduledOrderCWProxyImpl implements _$PlaceScheduledOrderCWProxy {
           ? _value.attachmentUrl
           // ignore: cast_nullable_to_non_nullable
           : attachmentUrl as String?,
+      deliveryItemType: deliveryItemType == const $CopyWithPlaceholder()
+          ? _value.deliveryItemType
+          // ignore: cast_nullable_to_non_nullable
+          : deliveryItemType as DeliveryItemType?,
       couponCode: couponCode == const $CopyWithPlaceholder()
           ? _value.couponCode
           // ignore: cast_nullable_to_non_nullable
@@ -262,6 +274,10 @@ PlaceScheduledOrder _$PlaceScheduledOrderFromJson(Map<String, dynamic> json) =>
           ),
         ),
         attachmentUrl: $checkedConvert('attachmentUrl', (v) => v as String?),
+        deliveryItemType: $checkedConvert(
+          'deliveryItemType',
+          (v) => $enumDecodeNullable(_$DeliveryItemTypeEnumMap, v),
+        ),
         couponCode: $checkedConvert('couponCode', (v) => v as String?),
         payment: $checkedConvert(
           'payment',
@@ -290,6 +306,7 @@ Map<String, dynamic> _$PlaceScheduledOrderToJson(
       ?_$PlaceScheduledOrderGenderPreferenceEnumEnumMap[instance
           .genderPreference],
   'attachmentUrl': ?instance.attachmentUrl,
+  'deliveryItemType': ?_$DeliveryItemTypeEnumMap[instance.deliveryItemType],
   'couponCode': ?instance.couponCode,
   'payment': instance.payment.toJson(),
   'scheduledAt': instance.scheduledAt.toIso8601String(),
@@ -309,4 +326,13 @@ const _$UserGenderEnumMap = {
 const _$PlaceScheduledOrderGenderPreferenceEnumEnumMap = {
   PlaceScheduledOrderGenderPreferenceEnum.SAME: 'SAME',
   PlaceScheduledOrderGenderPreferenceEnum.ANY: 'ANY',
+};
+
+const _$DeliveryItemTypeEnumMap = {
+  DeliveryItemType.FOOD: 'FOOD',
+  DeliveryItemType.CLOTH: 'CLOTH',
+  DeliveryItemType.DOCUMENT: 'DOCUMENT',
+  DeliveryItemType.MEDICINE: 'MEDICINE',
+  DeliveryItemType.BOOK: 'BOOK',
+  DeliveryItemType.OTHER: 'OTHER',
 };

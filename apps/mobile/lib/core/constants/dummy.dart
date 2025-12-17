@@ -11,6 +11,9 @@ const dummyWalletSummary = WalletMonthlySummaryResponse(
   totalIncome: 0,
   totalExpense: 0,
   net: 0,
+  totalEarnings: 0,
+  totalCommission: 0,
+  commissionRate: 0,
 );
 
 const dummyTransaction = Transaction(

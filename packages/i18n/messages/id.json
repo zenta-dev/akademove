@@ -1180,6 +1180,7 @@
   "sign_up_dialog_driver_desc": "Nyetir sesuai keinginan, cuan sesuai jadwal Anda.",
   "sign_up_dialog_merchant_desc": "Kembangkan bisnis dan raih lebih banyak pelanggan.",
   "sign_up_dialog_user_desc": "Nikmati perjalanan andal, kapan pun Anda butuh.",
+  "sold": "Terjual",
   "sort": "Urutkan",
   "special_instructions": "Instruksi Khusus (Opsional)",
   "special_instructions_hint": "mis., 'Harap tangani dengan hati-hati', 'Telepon sebelum mengantarkan'",
@@ -1416,5 +1417,8 @@
   "emergency_contact_activate": "Aktifkan Kontak",
   "emergency_contact_activate_desc": "Aktifkan kontak darurat ini agar tersedia untuk pengguna.",
   "emergency_contact_deactivate": "Nonaktifkan Kontak",
-  "emergency_contact_deactivate_desc": "Nonaktifkan kontak darurat ini. Pengguna tidak akan melihatnya hingga diaktifkan kembali."
+  "emergency_contact_deactivate_desc": "Nonaktifkan kontak darurat ini. Pengguna tidak akan melihatnya hingga diaktifkan kembali.",
+  "fee_breakdown": "Rincian Biaya",
+  "merchant_fee": "Biaya Merchant",
+  "merchant_receives": "Penghasilan Merchant"
 }

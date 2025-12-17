@@ -5,6 +5,7 @@ export const FEATURE_TAGS = Object.freeze({
 	ADMIN: "Admin",
 	AUTH: "Auth",
 	BADGE: "Badge",
+	CART: "Cart",
 	CHAT: "Chat",
 	CONFIGURATION: "Configuration",
 	CONTACT: "Contact",
@@ -43,6 +44,7 @@ export const STORAGE_BUCKETS = [
 	"user",
 	"merchant-menu",
 	"delivery-proofs",
+	"cart-attachments",
 ] as const;
 export type StorageBucket = (typeof STORAGE_BUCKETS)[number];
 
@@ -103,17 +105,11 @@ export const DRIVER_POOL_KEY = "driver-pool";
 /**
  * Business Constants
  * NOTE: Pricing-related values (cancellation fees, min amounts, etc.) MUST be stored in database.
+ * Driver matching configuration, lifecycle timeouts, and all configurable values are now
+ * stored in database via BusinessConfigurationService.
  * Only non-pricing technical constants should be here.
  */
 export const BUSINESS_CONSTANTS = Object.freeze({
-	// Order matching
-	DRIVER_MATCHING_TIMEOUT_MS: 30_000, // 30 seconds
-	DRIVER_MATCHING_RADIUS_KM: 5, // Initial radius in kilometers
-	DRIVER_MATCHING_RADIUS_EXPANSION: 0.2, // Expand by 20% on timeout
-	DRIVER_MATCHING_MAX_EXPANSION_ATTEMPTS: 3, // Maximum radius expansion attempts (5km → 6km → 7.2km)
-	DRIVER_MATCHING_BROADCAST_LIMIT: 10, // Maximum drivers to broadcast order to
-	DRIVER_MAX_CANCELLATIONS_PER_DAY: 3,
-
 	// Location tracking
 	LOCATION_UPDATE_INTERVAL_MS: 5000, // 5 seconds
 	LOCATION_STALE_THRESHOLD_MS: 60_000, // 1 minute

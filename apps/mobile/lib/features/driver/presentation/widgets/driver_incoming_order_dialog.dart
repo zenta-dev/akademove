@@ -97,7 +97,8 @@ class DriverIncomingOrderDialog extends StatelessWidget {
             context,
             icon: LucideIcons.dollarSign,
             label: 'Earnings',
-            value: 'Rp ${_formatMoney(order.totalPrice * 0.85)}',
+            value:
+                'Rp ${_formatMoney(order.estimatedDriverEarning ?? order.driverEarning ?? order.totalPrice)}',
           ),
 
           // Gender preference if specified

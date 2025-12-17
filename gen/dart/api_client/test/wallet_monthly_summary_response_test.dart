@@ -28,5 +28,20 @@ void main() {
     test('to test the property `net`', () async {
       // TODO
     });
+
+    // num totalEarnings
+    test('to test the property `totalEarnings`', () async {
+      // TODO
+    });
+
+    // num totalCommission
+    test('to test the property `totalCommission`', () async {
+      // TODO
+    });
+
+    // num commissionRate
+    test('to test the property `commissionRate`', () async {
+      // TODO
+    });
   });
 }

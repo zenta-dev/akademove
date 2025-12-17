@@ -214,4 +214,102 @@ export class BusinessConfigurationService {
 			maxCancellationsPerDay: config.driverMaxCancellationsPerDay,
 		};
 	}
+
+	/**
+	 * Get order lifecycle configuration
+	 * Returns all values needed for order status checking and cleanup
+	 */
+	static async getOrderLifecycleConfig(
+		db: DatabaseService,
+		kv: KeyValueService,
+	): Promise<{
+		paymentPendingTimeoutMinutes: number;
+		driverMatchingTimeoutMinutes: number;
+		orderCompletionTimeoutMinutes: number;
+		noShowTimeoutMinutes: number;
+		orderStaleTimestampMinutes: number;
+	}> {
+		const config = await BusinessConfigurationService.getConfig(db, kv);
+		return {
+			paymentPendingTimeoutMinutes: config.paymentPendingTimeoutMinutes,
+			driverMatchingTimeoutMinutes: config.driverMatchingTimeoutMinutes,
+			orderCompletionTimeoutMinutes: config.orderCompletionTimeoutMinutes,
+			noShowTimeoutMinutes: config.noShowTimeoutMinutes,
+			orderStaleTimestampMinutes: config.orderStaleTimestampMinutes,
+		};
+	}
+
+	/**
+	 * Get driver location tracking configuration
+	 */
+	static async getDriverLocationStaleThresholdMinutes(
+		db: DatabaseService,
+		kv: KeyValueService,
+	): Promise<number> {
+		const config = await BusinessConfigurationService.getConfig(db, kv);
+		return config.driverLocationStaleThresholdMinutes;
+	}
+
+	/**
+	 * Get driver rebroadcast configuration
+	 * Returns all values needed for order rebroadcasting to drivers
+	 */
+	static async getDriverRebroadcastConfig(
+		db: DatabaseService,
+		kv: KeyValueService,
+	): Promise<{
+		intervalMinutes: number;
+		radiusMultiplier: number;
+	}> {
+		const config = await BusinessConfigurationService.getConfig(db, kv);
+		return {
+			intervalMinutes: config.driverRebroadcastIntervalMinutes,
+			radiusMultiplier: config.driverRebroadcastRadiusMultiplier,
+		};
+	}
+
+	/**
+	 * Get maximum badge commission reduction rate
+	 */
+	static async getMaxBadgeCommissionReduction(
+		db: DatabaseService,
+		kv: KeyValueService,
+	): Promise<number> {
+		const config = await BusinessConfigurationService.getConfig(db, kv);
+		return config.maxBadgeCommissionReduction;
+	}
+
+	/**
+	 * Get scheduled order configuration
+	 * Returns all values needed for scheduled order validation and processing
+	 */
+	static async getScheduledOrderConfig(
+		db: DatabaseService,
+		kv: KeyValueService,
+	): Promise<{
+		minAdvanceMinutes: number;
+		maxAdvanceDays: number;
+		matchingLeadTimeMinutes: number;
+		minRescheduleHours: number;
+	}> {
+		const config = await BusinessConfigurationService.getConfig(db, kv);
+		return {
+			minAdvanceMinutes: config.scheduledOrderMinAdvanceMinutes,
+			maxAdvanceDays: config.scheduledOrderMaxAdvanceDays,
+			matchingLeadTimeMinutes: config.scheduledOrderMatchingLeadTimeMinutes,
+			minRescheduleHours: config.scheduledOrderMinRescheduleHours,
+		};
+	}
+
+	/**
+	 * Get on-time delivery threshold in minutes
+	 * Used for driver metrics and leaderboard calculations
+	 */
+	static async getOnTimeDeliveryThresholdMinutes(
+		db: DatabaseService,
+		kv: KeyValueService,
+	): Promise<number> {
+		const config = await BusinessConfigurationService.getConfig(db, kv);
+		return config.onTimeDeliveryThresholdMinutes;
+	}
 }

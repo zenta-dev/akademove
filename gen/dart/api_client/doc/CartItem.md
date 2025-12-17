@@ -15,7 +15,7 @@ Name | Type | Description | Notes
 **menuImage** | **String** |  | 
 **unitPrice** | **num** |  | 
 **quantity** | **int** |  | 
-**notes** | **String** |  | [optional] 
+**notes** | **String** |  | 
 **stock** | **int** |  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

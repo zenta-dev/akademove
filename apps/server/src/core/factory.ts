@@ -21,6 +21,7 @@ import { BadgeRepository } from "@/features/badge/main/badge-main-repository";
 import { UserBadgeRepository } from "@/features/badge/user/user-badge-repository";
 import { BannerRepository } from "@/features/banner/banner-repository";
 import { BroadcastRepository } from "@/features/broadcast/broadcast-repository";
+import { CartRepository } from "@/features/cart/cart-repository";
 import { ChatRepository } from "@/features/chat/chat-repository";
 import { ConfigurationRepository } from "@/features/configuration/configuration-repository";
 import { ContactRepository } from "@/features/contact/contact-repository";
@@ -282,6 +283,7 @@ export function getRepositories(
 			user: new UserBadgeRepository(svc.db, svc.kv, svc.storage),
 		},
 		banner: new BannerRepository(svc.db, svc.kv),
+		cart: new CartRepository(svc.kv, svc.db),
 		chat: new ChatRepository(svc.db, svc.kv, svc.storage),
 		configuration: new ConfigurationRepository(svc.db, svc.kv),
 		contact: new ContactRepository(svc.db, svc.kv),

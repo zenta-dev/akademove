@@ -1,4 +1,4 @@
-# api_client.model.EmergencyContactCreate201Response
+# api_client.model.CartGet200Response
 
 ## Load the model package
 ```dart
@@ -9,7 +9,7 @@ import 'package:api_client/api.dart';
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **message** | **String** |  | 
-**data** | [**EmergencyContact**](EmergencyContact.md) |  | 
+**data** | [**CartResponse**](CartResponse.md) |  | 
 **pagination** | [**PaginationResult**](PaginationResult.md) |  | [optional] 
 **totalPages** | **int** |  | [optional] 
 

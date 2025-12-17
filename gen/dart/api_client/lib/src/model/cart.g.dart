@@ -21,9 +21,7 @@ abstract class _$CartCWProxy {
 
   Cart subtotal(num subtotal);
 
-  Cart attachmentUrl(String? attachmentUrl);
-
-  Cart lastUpdated(DateTime? lastUpdated);
+  Cart lastUpdated(DateTime lastUpdated);
 
   /// Creates a new instance with the provided field values.
   /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `Cart(...).copyWith.fieldName(value)`.
@@ -40,8 +38,7 @@ abstract class _$CartCWProxy {
     List<CartItem> items,
     int totalItems,
     num subtotal,
-    String? attachmentUrl,
-    DateTime? lastUpdated,
+    DateTime lastUpdated,
   });
 }
 
@@ -76,11 +73,7 @@ class _$CartCWProxyImpl implements _$CartCWProxy {
   Cart subtotal(num subtotal) => call(subtotal: subtotal);
 
   @override
-  Cart attachmentUrl(String? attachmentUrl) =>
-      call(attachmentUrl: attachmentUrl);
-
-  @override
-  Cart lastUpdated(DateTime? lastUpdated) => call(lastUpdated: lastUpdated);
+  Cart lastUpdated(DateTime lastUpdated) => call(lastUpdated: lastUpdated);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -98,7 +91,6 @@ class _$CartCWProxyImpl implements _$CartCWProxy {
     Object? items = const $CopyWithPlaceholder(),
     Object? totalItems = const $CopyWithPlaceholder(),
     Object? subtotal = const $CopyWithPlaceholder(),
-    Object? attachmentUrl = const $CopyWithPlaceholder(),
     Object? lastUpdated = const $CopyWithPlaceholder(),
   }) {
     return Cart(
@@ -133,14 +125,11 @@ class _$CartCWProxyImpl implements _$CartCWProxy {
           ? _value.subtotal
           // ignore: cast_nullable_to_non_nullable
           : subtotal as num,
-      attachmentUrl: attachmentUrl == const $CopyWithPlaceholder()
-          ? _value.attachmentUrl
-          // ignore: cast_nullable_to_non_nullable
-          : attachmentUrl as String?,
-      lastUpdated: lastUpdated == const $CopyWithPlaceholder()
+      lastUpdated:
+          lastUpdated == const $CopyWithPlaceholder() || lastUpdated == null
           ? _value.lastUpdated
           // ignore: cast_nullable_to_non_nullable
-          : lastUpdated as DateTime?,
+          : lastUpdated as DateTime,
     );
   }
 }
@@ -189,10 +178,9 @@ Cart _$CartFromJson(Map<String, dynamic> json) =>
         ),
         totalItems: $checkedConvert('totalItems', (v) => (v as num).toInt()),
         subtotal: $checkedConvert('subtotal', (v) => v as num),
-        attachmentUrl: $checkedConvert('attachmentUrl', (v) => v as String?),
         lastUpdated: $checkedConvert(
           'lastUpdated',
-          (v) => v == null ? null : DateTime.parse(v as String),
+          (v) => DateTime.parse(v as String),
         ),
       );
       return val;
@@ -206,8 +194,7 @@ Map<String, dynamic> _$CartToJson(Cart instance) => <String, dynamic>{
   'items': instance.items.map((e) => e.toJson()).toList(),
   'totalItems': instance.totalItems,
   'subtotal': instance.subtotal,
-  'attachmentUrl': ?instance.attachmentUrl,
-  'lastUpdated': instance.lastUpdated?.toIso8601String(),
+  'lastUpdated': instance.lastUpdated.toIso8601String(),
 };
 
 const _$MerchantCategoryEnumMap = {

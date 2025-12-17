@@ -12,7 +12,7 @@ export const CartItemSchema = z.object({
 	menuImage: z.string().nullable(),
 	unitPrice: z.coerce.number(),
 	quantity: z.coerce.number().int().min(1).max(99),
-	notes: z.string().nullable().optional(),
+	notes: z.string().nullable(),
 	// Stock info for validation
 	stock: z.coerce.number().int().nonnegative().optional(),
 });
@@ -28,7 +28,6 @@ export const CartSchema = z.object({
 	items: z.array(CartItemSchema),
 	totalItems: z.coerce.number().int().nonnegative(),
 	subtotal: z.coerce.number(),
-	attachmentUrl: z.string().nullable().optional(),
 	lastUpdated: z.coerce.date(),
 });
 
@@ -38,9 +37,9 @@ export type Cart = z.infer<typeof CartSchema>;
 export const AddToCartRequestSchema = z.object({
 	menuId: z.uuid(),
 	quantity: z.coerce.number().int().min(1).max(99).default(1),
-	notes: z.string().nullable().optional(),
+	notes: z.string().nullable().default(null),
 	// Replace cart if merchant differs (optional - defaults to error)
-	replaceIfConflict: z.boolean().optional().default(false),
+	replaceIfConflict: z.boolean().default(false),
 });
 
 export type AddToCartRequest = z.infer<typeof AddToCartRequestSchema>;
@@ -59,15 +58,6 @@ export const RemoveCartItemRequestSchema = z.object({
 });
 
 export type RemoveCartItemRequest = z.infer<typeof RemoveCartItemRequestSchema>;
-
-// Update cart attachment request
-export const UpdateCartAttachmentRequestSchema = z.object({
-	attachmentUrl: z.string().nullable(),
-});
-
-export type UpdateCartAttachmentRequest = z.infer<
-	typeof UpdateCartAttachmentRequestSchema
->;
 
 // Cart response with validation info
 export const CartResponseSchema = z.object({
@@ -91,7 +81,7 @@ export type CartResponse = z.infer<typeof CartResponseSchema>;
 export const AddToCartSchema = z.object({
 	menu: MerchantMenuSchema,
 	quantity: z.coerce.number().int().min(1).max(99).default(1),
-	notes: z.string().nullable().optional(),
+	notes: z.string().nullable().default(null),
 });
 
 export type AddToCart = z.infer<typeof AddToCartSchema>;
@@ -109,10 +99,6 @@ export const CartSchemaRegistries = {
 	},
 	RemoveCartItemRequest: {
 		schema: RemoveCartItemRequestSchema,
-		strategy: "input",
-	},
-	UpdateCartAttachmentRequest: {
-		schema: UpdateCartAttachmentRequestSchema,
 		strategy: "input",
 	},
 } satisfies SchemaRegistries;

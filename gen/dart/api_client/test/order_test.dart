@@ -22,6 +22,11 @@ void main() {
       // TODO
     });
 
+    // String completedDriverId
+    test('to test the property `completedDriverId`', () async {
+      // TODO
+    });
+
     // String merchantId
     test('to test the property `merchantId`', () async {
       // TODO
@@ -89,6 +94,16 @@ void main() {
 
     // num merchantCommission
     test('to test the property `merchantCommission`', () async {
+      // TODO
+    });
+
+    // num merchantEarning
+    test('to test the property `merchantEarning`', () async {
+      // TODO
+    });
+
+    // num estimatedDriverEarning
+    test('to test the property `estimatedDriverEarning`', () async {
       // TODO
     });
 
@@ -187,6 +202,11 @@ void main() {
       // TODO
     });
 
+    // String deliveryItemPhotoUrl
+    test('to test the property `deliveryItemPhotoUrl`', () async {
+      // TODO
+    });
+
     // int itemCount
     test('to test the property `itemCount`', () async {
       // TODO
@@ -199,6 +219,11 @@ void main() {
 
     // DeliveryItemType deliveryItemType
     test('to test the property `deliveryItemType`', () async {
+      // TODO
+    });
+
+    // String attachmentUrl
+    test('to test the property `attachmentUrl`', () async {
       // TODO
     });
 

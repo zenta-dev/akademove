@@ -47,5 +47,15 @@ void main() {
     test('to test the property `newStatus`', () async {
       // TODO
     });
+
+    // MerchantEnvelopePayloadSyncRequest syncRequest
+    test('to test the property `syncRequest`', () async {
+      // TODO
+    });
+
+    // List<Order> orders
+    test('to test the property `orders`', () async {
+      // TODO
+    });
   });
 }

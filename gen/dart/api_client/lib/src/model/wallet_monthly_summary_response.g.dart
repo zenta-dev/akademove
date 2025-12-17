@@ -15,6 +15,12 @@ abstract class _$WalletMonthlySummaryResponseCWProxy {
 
   WalletMonthlySummaryResponse net(num net);
 
+  WalletMonthlySummaryResponse totalEarnings(num totalEarnings);
+
+  WalletMonthlySummaryResponse totalCommission(num totalCommission);
+
+  WalletMonthlySummaryResponse commissionRate(num commissionRate);
+
   /// Creates a new instance with the provided field values.
   /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `WalletMonthlySummaryResponse(...).copyWith.fieldName(value)`.
   ///
@@ -27,6 +33,9 @@ abstract class _$WalletMonthlySummaryResponseCWProxy {
     num totalIncome,
     num totalExpense,
     num net,
+    num totalEarnings,
+    num totalCommission,
+    num commissionRate,
   });
 }
 
@@ -53,6 +62,18 @@ class _$WalletMonthlySummaryResponseCWProxyImpl
   WalletMonthlySummaryResponse net(num net) => call(net: net);
 
   @override
+  WalletMonthlySummaryResponse totalEarnings(num totalEarnings) =>
+      call(totalEarnings: totalEarnings);
+
+  @override
+  WalletMonthlySummaryResponse totalCommission(num totalCommission) =>
+      call(totalCommission: totalCommission);
+
+  @override
+  WalletMonthlySummaryResponse commissionRate(num commissionRate) =>
+      call(commissionRate: commissionRate);
+
+  @override
   /// Creates a new instance with the provided field values.
   /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `WalletMonthlySummaryResponse(...).copyWith.fieldName(value)`.
   ///
@@ -65,6 +86,9 @@ class _$WalletMonthlySummaryResponseCWProxyImpl
     Object? totalIncome = const $CopyWithPlaceholder(),
     Object? totalExpense = const $CopyWithPlaceholder(),
     Object? net = const $CopyWithPlaceholder(),
+    Object? totalEarnings = const $CopyWithPlaceholder(),
+    Object? totalCommission = const $CopyWithPlaceholder(),
+    Object? commissionRate = const $CopyWithPlaceholder(),
   }) {
     return WalletMonthlySummaryResponse(
       month: month == const $CopyWithPlaceholder() || month == null
@@ -85,6 +109,23 @@ class _$WalletMonthlySummaryResponseCWProxyImpl
           ? _value.net
           // ignore: cast_nullable_to_non_nullable
           : net as num,
+      totalEarnings:
+          totalEarnings == const $CopyWithPlaceholder() || totalEarnings == null
+          ? _value.totalEarnings
+          // ignore: cast_nullable_to_non_nullable
+          : totalEarnings as num,
+      totalCommission:
+          totalCommission == const $CopyWithPlaceholder() ||
+              totalCommission == null
+          ? _value.totalCommission
+          // ignore: cast_nullable_to_non_nullable
+          : totalCommission as num,
+      commissionRate:
+          commissionRate == const $CopyWithPlaceholder() ||
+              commissionRate == null
+          ? _value.commissionRate
+          // ignore: cast_nullable_to_non_nullable
+          : commissionRate as num,
     );
   }
 }
@@ -107,13 +148,24 @@ WalletMonthlySummaryResponse _$WalletMonthlySummaryResponseFromJson(
 ) => $checkedCreate('WalletMonthlySummaryResponse', json, ($checkedConvert) {
   $checkKeys(
     json,
-    requiredKeys: const ['month', 'totalIncome', 'totalExpense', 'net'],
+    requiredKeys: const [
+      'month',
+      'totalIncome',
+      'totalExpense',
+      'net',
+      'totalEarnings',
+      'totalCommission',
+      'commissionRate',
+    ],
   );
   final val = WalletMonthlySummaryResponse(
     month: $checkedConvert('month', (v) => v as String),
     totalIncome: $checkedConvert('totalIncome', (v) => v as num),
     totalExpense: $checkedConvert('totalExpense', (v) => v as num),
     net: $checkedConvert('net', (v) => v as num),
+    totalEarnings: $checkedConvert('totalEarnings', (v) => v as num),
+    totalCommission: $checkedConvert('totalCommission', (v) => v as num),
+    commissionRate: $checkedConvert('commissionRate', (v) => v as num),
   );
   return val;
 });
@@ -125,4 +177,7 @@ Map<String, dynamic> _$WalletMonthlySummaryResponseToJson(
   'totalIncome': instance.totalIncome,
   'totalExpense': instance.totalExpense,
   'net': instance.net,
+  'totalEarnings': instance.totalEarnings,
+  'totalCommission': instance.totalCommission,
+  'commissionRate': instance.commissionRate,
 };

@@ -4315,6 +4315,12 @@ abstract class AppLocalizations {
   /// **'Stock'**
   String get label_stock;
 
+  /// No description provided for @sold.
+  ///
+  /// In en, this message translates to:
+  /// **'Sold'**
+  String get sold;
+
   /// No description provided for @label_created.
   ///
   /// In en, this message translates to:
@@ -8832,6 +8838,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'In Progress'**
   String get status_in_trip;
+
+  /// No description provided for @error_generic.
+  ///
+  /// In en, this message translates to:
+  /// **'An error occurred. Please try again.'**
+  String get error_generic;
+
+  /// No description provided for @button_retry.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get button_retry;
+
+  /// No description provided for @text_already_reviewed.
+  ///
+  /// In en, this message translates to:
+  /// **'You have already reviewed this order'**
+  String get text_already_reviewed;
+
+  /// No description provided for @text_your_rating.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Rating'**
+  String get text_your_rating;
+
+  /// No description provided for @text_selected_categories.
+  ///
+  /// In en, this message translates to:
+  /// **'Selected Categories'**
+  String get text_selected_categories;
+
+  /// No description provided for @text_your_comment.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Comment'**
+  String get text_your_comment;
+
+  /// No description provided for @text_reviewed_on.
+  ///
+  /// In en, this message translates to:
+  /// **'Reviewed on {date}'**
+  String text_reviewed_on(String date);
+
+  /// No description provided for @fee_breakdown.
+  ///
+  /// In en, this message translates to:
+  /// **'Fee Breakdown'**
+  String get fee_breakdown;
+
+  /// No description provided for @driver_receives.
+  ///
+  /// In en, this message translates to:
+  /// **'Driver Earnings'**
+  String get driver_receives;
+
+  /// No description provided for @merchant_fee.
+  ///
+  /// In en, this message translates to:
+  /// **'Merchant Fee'**
+  String get merchant_fee;
+
+  /// No description provided for @merchant_receives.
+  ///
+  /// In en, this message translates to:
+  /// **'Merchant Receives'**
+  String get merchant_receives;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

@@ -478,6 +478,9 @@ class PdfService {
     required num totalRevenue,
     required num totalCommission,
     required num netIncome,
+
+    /// Commission rate as percentage (e.g., 10 for 10%) - from server config
+    num? commissionRate,
     String? merchantName,
     String? period,
   }) async {
@@ -521,6 +524,7 @@ class PdfService {
             totalRevenue: totalRevenue,
             totalCommission: totalCommission,
             netIncome: netIncome,
+            commissionRate: commissionRate,
             primaryColor: primaryColor,
           ),
           pw.SizedBox(height: 24),
@@ -726,11 +730,15 @@ class PdfService {
     required num totalRevenue,
     required num totalCommission,
     required num netIncome,
+
+    /// Commission rate as percentage (e.g., 10 for 10%) - from server config
+    num? commissionRate,
     required PdfColor primaryColor,
   }) {
-    final commissionRate = totalRevenue > 0
-        ? (totalCommission / totalRevenue) * 100
-        : 0;
+    // Use server-provided commission rate, or calculate as fallback
+    final displayCommissionRate =
+        commissionRate ??
+        (totalRevenue > 0 ? (totalCommission / totalRevenue) * 100 : 0);
 
     return pw.Container(
       padding: const pw.EdgeInsets.all(16),
@@ -760,7 +768,7 @@ class PdfService {
               _buildTableRow('Net Income', _formatCurrency(netIncome)),
               _buildTableRow(
                 'Commission Rate',
-                '${commissionRate.toStringAsFixed(2)}%',
+                '${displayCommissionRate.toStringAsFixed(2)}%',
               ),
             ],
           ),

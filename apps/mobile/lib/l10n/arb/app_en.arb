@@ -851,6 +851,7 @@
 	"label_category": "Category",
 	"label_price": "Price",
 	"label_stock": "Stock",
+	"sold": "Sold",
 	"label_created": "Created",
 	"label_updated": "Updated",
 	"placeholder_select_category": "Select category",
@@ -1856,5 +1857,23 @@
 	"status_preparing": "Preparing",
 	"status_ready_for_pickup": "Ready for Pickup",
 	"status_arriving": "Driver Arriving",
-	"status_in_trip": "In Progress"
+	"status_in_trip": "In Progress",
+	"error_generic": "An error occurred. Please try again.",
+	"button_retry": "Retry",
+	"text_already_reviewed": "You have already reviewed this order",
+	"text_your_rating": "Your Rating",
+	"text_selected_categories": "Selected Categories",
+	"text_your_comment": "Your Comment",
+	"text_reviewed_on": "Reviewed on {date}",
+	"@text_reviewed_on": {
+		"placeholders": {
+			"date": {
+				"type": "String"
+			}
+		}
+	},
+	"fee_breakdown": "Fee Breakdown",
+	"driver_receives": "Driver Earnings",
+	"merchant_fee": "Merchant Fee",
+	"merchant_receives": "Merchant Receives"
 }

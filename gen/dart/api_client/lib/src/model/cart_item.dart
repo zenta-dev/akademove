@@ -25,7 +25,7 @@ class CartItem {
     required this.menuImage,
     required this.unitPrice,
     required this.quantity,
-    this.notes,
+    required this.notes,
     this.stock,
   });
   @JsonKey(name: r'menuId', required: true, includeIfNull: false)
@@ -51,7 +51,7 @@ class CartItem {
   @JsonKey(name: r'quantity', required: true, includeIfNull: false)
   final int quantity;
 
-  @JsonKey(name: r'notes', required: false, includeIfNull: false)
+  @JsonKey(name: r'notes', required: true, includeIfNull: true)
   final String? notes;
 
   // minimum: 0

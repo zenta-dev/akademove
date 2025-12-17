@@ -13,6 +13,8 @@ abstract class _$ReviewCheckCanReview200ResponseDataCWProxy {
 
   ReviewCheckCanReview200ResponseData orderCompleted(bool orderCompleted);
 
+  ReviewCheckCanReview200ResponseData existingReview(Review? existingReview);
+
   /// Creates a new instance with the provided field values.
   /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `ReviewCheckCanReview200ResponseData(...).copyWith.fieldName(value)`.
   ///
@@ -24,6 +26,7 @@ abstract class _$ReviewCheckCanReview200ResponseDataCWProxy {
     bool canReview,
     bool alreadyReviewed,
     bool orderCompleted,
+    Review? existingReview,
   });
 }
 
@@ -48,6 +51,10 @@ class _$ReviewCheckCanReview200ResponseDataCWProxyImpl
       call(orderCompleted: orderCompleted);
 
   @override
+  ReviewCheckCanReview200ResponseData existingReview(Review? existingReview) =>
+      call(existingReview: existingReview);
+
+  @override
   /// Creates a new instance with the provided field values.
   /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `ReviewCheckCanReview200ResponseData(...).copyWith.fieldName(value)`.
   ///
@@ -59,6 +66,7 @@ class _$ReviewCheckCanReview200ResponseDataCWProxyImpl
     Object? canReview = const $CopyWithPlaceholder(),
     Object? alreadyReviewed = const $CopyWithPlaceholder(),
     Object? orderCompleted = const $CopyWithPlaceholder(),
+    Object? existingReview = const $CopyWithPlaceholder(),
   }) {
     return ReviewCheckCanReview200ResponseData(
       canReview: canReview == const $CopyWithPlaceholder() || canReview == null
@@ -77,6 +85,10 @@ class _$ReviewCheckCanReview200ResponseDataCWProxyImpl
           ? _value.orderCompleted
           // ignore: cast_nullable_to_non_nullable
           : orderCompleted as bool,
+      existingReview: existingReview == const $CopyWithPlaceholder()
+          ? _value.existingReview
+          // ignore: cast_nullable_to_non_nullable
+          : existingReview as Review?,
     );
   }
 }
@@ -101,12 +113,21 @@ _$ReviewCheckCanReview200ResponseDataFromJson(Map<String, dynamic> json) =>
     ) {
       $checkKeys(
         json,
-        requiredKeys: const ['canReview', 'alreadyReviewed', 'orderCompleted'],
+        requiredKeys: const [
+          'canReview',
+          'alreadyReviewed',
+          'orderCompleted',
+          'existingReview',
+        ],
       );
       final val = ReviewCheckCanReview200ResponseData(
         canReview: $checkedConvert('canReview', (v) => v as bool),
         alreadyReviewed: $checkedConvert('alreadyReviewed', (v) => v as bool),
         orderCompleted: $checkedConvert('orderCompleted', (v) => v as bool),
+        existingReview: $checkedConvert(
+          'existingReview',
+          (v) => v == null ? null : Review.fromJson(v as Map<String, dynamic>),
+        ),
       );
       return val;
     });
@@ -117,4 +138,5 @@ Map<String, dynamic> _$ReviewCheckCanReview200ResponseDataToJson(
   'canReview': instance.canReview,
   'alreadyReviewed': instance.alreadyReviewed,
   'orderCompleted': instance.orderCompleted,
+  'existingReview': instance.existingReview?.toJson(),
 };
