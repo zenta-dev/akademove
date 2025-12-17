@@ -135,28 +135,20 @@ class CartRepository extends BaseRepository {
     );
   }
 
-  Future<List<OrderItem>> convertToOrderItems() async {
-    return guard(() async {
-      final cart = await getCart();
-      if (cart == null || cart.items.isEmpty) {
-        throw const RepositoryError(
-          'Cart is empty',
-          code: ErrorCode.badRequest,
-        );
-      }
-
-      return cart.items.map((cartItem) {
-        return OrderItem(
-          quantity: cartItem.quantity,
-          item: OrderItemItem(
-            id: cartItem.menuId,
-            merchantId: cart.merchantId,
-            name: cartItem.menuName,
-            price: cartItem.unitPrice,
-            image: cartItem.menuImage,
-          ),
-        );
-      }).toList();
-    });
+  /// Convert cart items to order items for placing an order.
+  /// Uses the cart from state instead of fetching from server.
+  List<OrderItem> convertToOrderItems(Cart cart) {
+    return cart.items.map((cartItem) {
+      return OrderItem(
+        quantity: cartItem.quantity,
+        item: OrderItemItem(
+          id: cartItem.menuId,
+          merchantId: cart.merchantId,
+          name: cartItem.menuName,
+          price: cartItem.unitPrice,
+          image: cartItem.menuImage,
+        ),
+      );
+    }).toList();
   }
 }

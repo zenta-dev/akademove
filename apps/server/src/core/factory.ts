@@ -283,7 +283,7 @@ export function getRepositories(
 			user: new UserBadgeRepository(svc.db, svc.kv, svc.storage),
 		},
 		banner: new BannerRepository(svc.db, svc.kv),
-		cart: new CartRepository(svc.kv, svc.db),
+		cart: new CartRepository(svc.kv, svc.db, svc.storage),
 		chat: new ChatRepository(svc.db, svc.kv, svc.storage),
 		configuration: new ConfigurationRepository(svc.db, svc.kv),
 		contact: new ContactRepository(svc.db, svc.kv),

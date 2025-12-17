@@ -12,8 +12,10 @@ import type { PartialWithTx } from "@/core/interface";
 import type { DatabaseService } from "@/core/services/db";
 import { tables } from "@/core/services/db";
 import type { KeyValueService, PutCacheOptions } from "@/core/services/kv";
+import type { StorageService } from "@/core/services/storage";
 import { toNumberSafe } from "@/utils";
 import { logger } from "@/utils/logger";
+import { MenuImageService } from "@/features/merchant/services";
 
 interface StockWarning {
 	menuId: string;
@@ -44,10 +46,27 @@ interface MenuWithMerchant {
 export class CartRepository {
 	readonly #kv: KeyValueService;
 	readonly #db: DatabaseService;
+	readonly #storage: StorageService;
 
-	constructor(kv: KeyValueService, db: DatabaseService) {
+	constructor(
+		kv: KeyValueService,
+		db: DatabaseService,
+		storage: StorageService,
+	) {
 		this.#kv = kv;
 		this.#db = db;
+		this.#storage = storage;
+	}
+
+	/**
+	 * Convert menu image key to full public URL
+	 */
+	#getMenuImageUrl(imageKey: string | null | undefined): string | undefined {
+		if (!imageKey) return undefined;
+		return this.#storage.getPublicUrl({
+			bucket: MenuImageService.BUCKET,
+			key: imageKey,
+		});
 	}
 
 	#composeCacheKey(userId: string): string {
@@ -113,7 +132,8 @@ export class CartRepository {
 			throw new RepositoryError("Merchant not found", { code: "NOT_FOUND" });
 		}
 
-		const imageUrl = menu.image ?? undefined;
+		// Convert image key to full public URL
+		const imageUrl = this.#getMenuImageUrl(menu.image);
 
 		return {
 			id: menu.id,

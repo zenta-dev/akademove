@@ -11,11 +11,13 @@ class MerchantConflictDialog extends StatelessWidget {
   const MerchantConflictDialog({
     required this.currentMerchantName,
     required this.newMerchantName,
+    required this.cartCubit,
     super.key,
   });
 
   final String currentMerchantName;
   final String newMerchantName;
+  final UserCartCubit cartCubit;
 
   @override
   Widget build(BuildContext context) {
@@ -65,14 +67,14 @@ class MerchantConflictDialog extends StatelessWidget {
       actions: [
         OutlineButton(
           onPressed: () {
-            context.read<UserCartCubit>().cancelReplaceCart();
+            cartCubit.cancelReplaceCart();
             Navigator.of(context).pop();
           },
           child: Text(context.l10n.cancel),
         ),
         PrimaryButton(
           onPressed: () {
-            context.read<UserCartCubit>().confirmReplaceCart();
+            cartCubit.confirmReplaceCart();
             Navigator.of(context).pop();
           },
           child: Text(context.l10n.cart_replace_cart),
@@ -87,12 +89,16 @@ class MerchantConflictDialog extends StatelessWidget {
     required String currentMerchantName,
     required String newMerchantName,
   }) {
+    // Capture the cubit from the parent context before showing dialog
+    final cartCubit = context.read<UserCartCubit>();
+
     return showDialog<void>(
       context: context,
       barrierDismissible: false,
-      builder: (context) => MerchantConflictDialog(
+      builder: (dialogContext) => MerchantConflictDialog(
         currentMerchantName: currentMerchantName,
         newMerchantName: newMerchantName,
+        cartCubit: cartCubit,
       ),
     );
   }

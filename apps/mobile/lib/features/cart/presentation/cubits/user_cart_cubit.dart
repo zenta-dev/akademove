@@ -77,14 +77,34 @@ class UserCartCubit extends BaseCubit<UserCartState> {
     required String menuId,
     required int delta,
   }) async {
+    // Store current cart in case we need to revert on error
+    final currentCart = state.cart;
+    logger.d(
+      "[UserCartCubit] updateQuantity called: menuId=$menuId, delta=$delta",
+    );
+
     try {
       final result = await _cartRepository.updateItemQuantityByDelta(
         menuId: menuId,
         delta: delta,
       );
-      emit(state.copyWith(cart: result.data, clearError: true));
+
+      // Ensure we emit the new cart, even if it's null (empty cart)
+      final newCart = result.data;
+      logger.d(
+        "[UserCartCubit] updateQuantity success: newCart items=${newCart?.items.length}",
+      );
+
+      if (newCart != null) {
+        emit(state.copyWith(cart: newCart, clearError: true));
+      } else {
+        // Cart was cleared (last item removed)
+        emit(state.copyWith(clearCart: true, clearError: true));
+      }
     } on BaseError catch (e) {
-      emit(state.copyWith(error: e.message));
+      logger.e("[UserCartCubit] updateQuantity error: ${e.message}");
+      // Revert to previous cart state on error
+      emit(state.copyWith(cart: currentCart, error: e.message));
     }
   }
 
@@ -156,10 +176,16 @@ class UserCartCubit extends BaseCubit<UserCartState> {
     String? couponCode,
     String? attachmentUrl,
   }) async {
+    final cart = state.cart;
+    if (cart == null || cart.items.isEmpty) {
+      emit(state.copyWith(error: "Cart is empty"));
+      return null;
+    }
+
     emit(state.copyWith(isLoading: true, clearError: true));
 
     try {
-      final orderItems = await _cartRepository.convertToOrderItems();
+      final orderItems = _cartRepository.convertToOrderItems(cart);
       if (orderItems.isEmpty) {
         throw const RepositoryError(
           "Cart is empty",
