@@ -145,7 +145,7 @@ export class CartRepository {
 			image: imageUrl,
 			category: menu.category ?? undefined,
 			merchantName: merchant.name,
-			merchantCategory: merchant.categories?.[0] ?? "Food",
+			merchantCategory: merchant.category,
 		};
 	}
 
