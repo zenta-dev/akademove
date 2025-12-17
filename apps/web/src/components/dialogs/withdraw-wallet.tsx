@@ -22,7 +22,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
-import { orpcClient, queryClient } from "@/lib/orpc";
+import { orpcClient, orpcQuery, queryClient } from "@/lib/orpc";
 
 const BANK_PROVIDERS: { value: BankProvider; label: string }[] = [
 	{ value: "BCA", label: "BCA" },
@@ -55,7 +55,7 @@ export function WithdrawDialog({
 
 	// Fetch saved bank account details
 	const savedBankQuery = useQuery({
-		queryKey: ["wallet", "savedBankAccount"],
+		queryKey: orpcQuery.wallet.getSavedBankAccount.queryKey({ input: {} }),
 		queryFn: async () => {
 			const result = await orpcClient.wallet.getSavedBankAccount({});
 			if (result.status !== 200) {

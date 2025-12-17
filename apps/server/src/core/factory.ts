@@ -21,6 +21,7 @@ import { BadgeRepository } from "@/features/badge/main/badge-main-repository";
 import { UserBadgeRepository } from "@/features/badge/user/user-badge-repository";
 import { BannerRepository } from "@/features/banner/banner-repository";
 import { BroadcastRepository } from "@/features/broadcast/broadcast-repository";
+import { CartRepository } from "@/features/cart/cart-repository";
 import { ChatRepository } from "@/features/chat/chat-repository";
 import { ConfigurationRepository } from "@/features/configuration/configuration-repository";
 import { ContactRepository } from "@/features/contact/contact-repository";
@@ -42,6 +43,7 @@ import { LeaderboardRepository } from "@/features/leaderboard/leaderboard-reposi
 import { MerchantApprovalRepository } from "@/features/merchant/approval/merchant-approval-repository";
 import { MerchantMainRepository } from "@/features/merchant/main/merchant-main-repository";
 import { MerchantMenuRepository } from "@/features/merchant/menu/merchant-menu-repository";
+import { MerchantMenuCategoryRepository } from "@/features/merchant/menu-category/merchant-menu-category-repository";
 import { MerchantOperatingHoursRepository } from "@/features/merchant/operating-hours/merchant-operating-hours-repository";
 import { MerchantOrderRepository } from "@/features/merchant/order/merchant-order-repository";
 import { NotificationRepository } from "@/features/notification/notification-repository";
@@ -282,6 +284,7 @@ export function getRepositories(
 			user: new UserBadgeRepository(svc.db, svc.kv, svc.storage),
 		},
 		banner: new BannerRepository(svc.db, svc.kv),
+		cart: new CartRepository(svc.kv, svc.db, svc.storage),
 		chat: new ChatRepository(svc.db, svc.kv, svc.storage),
 		configuration: new ConfigurationRepository(svc.db, svc.kv),
 		contact: new ContactRepository(svc.db, svc.kv),
@@ -304,6 +307,7 @@ export function getRepositories(
 		merchant: {
 			main: new MerchantMainRepository(svc.db, svc.kv, svc.storage),
 			menu: new MerchantMenuRepository(svc.db, svc.kv, svc.storage),
+			menuCategory: new MerchantMenuCategoryRepository(svc.db, svc.kv),
 			operatingHours: new MerchantOperatingHoursRepository(svc.db, svc.kv),
 			order: new MerchantOrderRepository(svc.db, svc.kv),
 			approval: new MerchantApprovalRepository(

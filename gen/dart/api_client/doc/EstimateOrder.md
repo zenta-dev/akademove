@@ -18,6 +18,7 @@ Name | Type | Description | Notes
 **gender** | [**UserGender**](UserGender.md) |  | [optional] 
 **genderPreference** | **String** |  | [optional] 
 **attachmentUrl** | **String** |  | [optional] 
+**deliveryItemType** | [**DeliveryItemType**](DeliveryItemType.md) |  | [optional] 
 **couponCode** | **String** |  | [optional] 
 **discountIds** | **List&lt;int&gt;** |  | [optional] 
 **weight** | **int** |  | [optional] 

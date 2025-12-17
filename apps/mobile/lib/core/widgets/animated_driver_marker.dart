@@ -54,6 +54,9 @@ class AnimatedDriverMarker {
   /// Current driver icon
   BitmapDescriptor? _driverIcon;
 
+  /// Get the driver icon (for external use when creating markers)
+  BitmapDescriptor? get driverIcon => _driverIcon;
+
   /// Current position of the marker
   LatLng? _currentPosition;
 
@@ -71,6 +74,12 @@ class AnimatedDriverMarker {
 
   /// Driver info for marker info window
   Driver? _driverInfo;
+
+  /// Driver name override (for OrderDriver support)
+  String? _driverName;
+
+  /// Driver rating override (for OrderDriver support)
+  num? _driverRating;
 
   /// Whether the marker icon has been loaded
   bool _iconLoaded = false;
@@ -98,11 +107,17 @@ class AnimatedDriverMarker {
   /// Update the driver's location with smooth animation
   ///
   /// [coordinate] - The new driver coordinate from the server
-  /// [driver] - Optional driver info for the info window
+  /// [driver] - Optional driver info for the info window (accepts Driver type)
+  /// [orderDriver] - Optional driver info for the info window (accepts OrderDriver type)
+  /// [driverName] - Optional driver name override
+  /// [driverRating] - Optional driver rating override
   /// [animate] - Whether to animate to the new position (default: true)
   void updateDriverLocation(
     Coordinate coordinate, {
     Driver? driver,
+    OrderDriver? orderDriver,
+    String? driverName,
+    num? driverRating,
     bool animate = true,
   }) {
     final newPosition = LatLng(
@@ -110,7 +125,17 @@ class AnimatedDriverMarker {
       coordinate.x.toDouble(),
     );
 
-    _driverInfo = driver;
+    // Use driver info from any source
+    if (driver != null) {
+      _driverInfo = driver;
+    } else if (orderDriver != null) {
+      // Convert OrderDriver fields to a synthetic Driver for display
+      _driverName = orderDriver.user?.name ?? driverName;
+      _driverRating = orderDriver.rating ?? driverRating;
+    } else {
+      _driverName = driverName;
+      _driverRating = driverRating;
+    }
 
     // If no current position, just set it immediately
     if (_currentPosition == null || !animate) {
@@ -198,6 +223,10 @@ class AnimatedDriverMarker {
 
     final driver = _driverInfo;
 
+    // Use driver info if available, otherwise use override fields
+    final displayName = driver?.user?.name ?? _driverName ?? "Driver";
+    final displayRating = driver?.rating ?? _driverRating;
+
     final marker = Marker(
       markerId: MarkerId(markerId),
       position: position,
@@ -208,9 +237,9 @@ class AnimatedDriverMarker {
       rotation: _calculateBearing(),
       flat: true, // Flat marker rotates with the map
       infoWindow: InfoWindow(
-        title: driver?.user?.name ?? "Driver",
-        snippet: driver != null && driver.rating != 0
-            ? "Rating: ${driver.rating.toStringAsFixed(1)}"
+        title: displayName,
+        snippet: displayRating != null && displayRating != 0
+            ? "Rating: ${displayRating.toStringAsFixed(1)}"
             : null,
       ),
     );

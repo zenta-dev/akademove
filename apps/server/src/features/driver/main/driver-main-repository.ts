@@ -19,6 +19,7 @@ import {
 	inArray,
 	lte,
 	type SQL,
+	sql,
 } from "drizzle-orm";
 import { BaseRepository } from "@/core/base";
 import { CACHE_TTLS } from "@/core/constants";
@@ -421,13 +422,20 @@ export class DriverMainRepository extends BaseRepository {
 				});
 			}
 
+			// Extract currentLocation to handle separately with PostGIS
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
+			const { currentLocation, ...rest } = item;
+
 			// Update driver record
 			const operation = await tx
 				.update(tables.driver)
 				.set({
-					...item,
-					lastLocationUpdate:
-						item.currentLocation !== undefined ? new Date() : undefined,
+					...rest,
+					// Handle currentLocation with PostGIS if provided
+					...(currentLocation !== undefined && {
+						currentLocation: sql`ST_SetSRID(ST_MakePoint(${currentLocation.x}, ${currentLocation.y}), 4326)`,
+						lastLocationUpdate: new Date(),
+					}),
 					studentCard: existing.studentCardId,
 					driverLicense: existing.driverLicenseId,
 					vehicleCertificate: existing.vehicleCertificateId,
@@ -460,11 +468,18 @@ export class DriverMainRepository extends BaseRepository {
 				throw new RepositoryError(m.error_driver_not_found(), {
 					code: "NOT_FOUND",
 				});
+
+			// Use raw SQL to create proper PostGIS geometry point
+			// coord.x = longitude, coord.y = latitude
 			const [updated] = await tx
 				.update(tables.driver)
-				.set({ currentLocation: coord, lastLocationUpdate: new Date() })
+				.set({
+					currentLocation: sql`ST_SetSRID(ST_MakePoint(${coord.x}, ${coord.y}), 4326)`,
+					lastLocationUpdate: new Date(),
+				})
 				.where(eq(tables.driver.id, id))
 				.returning();
+
 			const user = await tx.query.user.findFirst({
 				with: { userBadges: { with: { badge: true } } },
 				where: (f, op) => op.eq(f.id, existing.userId),

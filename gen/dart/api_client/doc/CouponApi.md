@@ -22,7 +22,7 @@ Method | HTTP request | Description
 
 
 # **couponActivate**
-> CouponCreate200Response couponActivate(id)
+> CouponCreate200Response couponActivate(id, body)
 
 
 
@@ -32,9 +32,10 @@ import 'package:api_client/api.dart';
 
 final api = ApiClient().getCouponApi();
 final String id = id_example; // String | 
+final Object body = Object; // Object | 
 
 try {
-    final response = api.couponActivate(id);
+    final response = api.couponActivate(id, body);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling CouponApi->couponActivate: $e\n');
@@ -46,6 +47,7 @@ try {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **id** | **String**|  | 
+ **body** | **Object**|  | [optional] 
 
 ### Return type
 
@@ -57,7 +59,7 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
@@ -104,7 +106,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **couponDeactivate**
-> CouponCreate200Response couponDeactivate(id)
+> CouponCreate200Response couponDeactivate(id, body)
 
 
 
@@ -114,9 +116,10 @@ import 'package:api_client/api.dart';
 
 final api = ApiClient().getCouponApi();
 final String id = id_example; // String | 
+final Object body = Object; // Object | 
 
 try {
-    final response = api.couponDeactivate(id);
+    final response = api.couponDeactivate(id, body);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling CouponApi->couponDeactivate: $e\n');
@@ -128,6 +131,7 @@ try {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **id** | **String**|  | 
+ **body** | **Object**|  | [optional] 
 
 ### Return type
 
@@ -139,7 +143,7 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)

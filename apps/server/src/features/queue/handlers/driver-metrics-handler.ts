@@ -11,6 +11,7 @@
  */
 
 import type { DriverMetricsJob } from "@repo/schema/queue";
+import { BusinessConfigurationService } from "@/features/configuration/services";
 import { DriverMetricsService } from "@/features/driver/services/driver-metrics-service";
 import { logger } from "@/utils/logger";
 import type { QueueHandlerContext } from "../queue-handler";
@@ -30,6 +31,15 @@ export async function handleDriverMetrics(
 	try {
 		const metricsService = new DriverMetricsService(context.svc.db);
 
+		// Fetch on-time threshold from database configuration
+		const onTimeDeliveryThresholdMinutes =
+			await BusinessConfigurationService.getOnTimeDeliveryThresholdMinutes(
+				context.svc.db,
+				context.svc.kv,
+			);
+
+		const metricsConfig = { onTimeDeliveryThresholdMinutes };
+
 		// Currently, DriverMetricsService calculates all metrics on-demand
 		// via calculateDriverMetrics(). For incremental updates, we just
 		// recalculate the full metrics which reads from the database.
@@ -41,7 +51,10 @@ export async function handleDriverMetrics(
 			case "RATING_RECEIVED":
 			case "NO_SHOW_REPORTED": {
 				// Recalculate metrics to update any cached values
-				const metrics = await metricsService.calculateDriverMetrics(driverId);
+				const metrics = await metricsService.calculateDriverMetrics(
+					driverId,
+					metricsConfig,
+				);
 				logger.debug(
 					{ driverId, metricsType, metrics },
 					"[DriverMetricsHandler] Metrics recalculated",

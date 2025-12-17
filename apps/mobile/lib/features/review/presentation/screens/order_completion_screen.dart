@@ -6,9 +6,43 @@ import "package:api_client/api_client.dart";
 import "package:cached_network_image/cached_network_image.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:flutter_screenutil/flutter_screenutil.dart";
-import "package:go_router/go_router.dart";
 import "package:intl/intl.dart";
 import "package:shadcn_flutter/shadcn_flutter.dart";
+
+/// Helper class to abstract merchant data from different merchant types
+class MerchantInfo {
+  const MerchantInfo({
+    required this.userId,
+    required this.name,
+    this.image,
+    this.rating,
+  });
+
+  /// Create from OrderMerchant (used by driver flow)
+  factory MerchantInfo.fromOrderMerchant(OrderMerchant merchant) {
+    return MerchantInfo(
+      userId: merchant.userId ?? "",
+      name: merchant.name ?? "",
+      image: merchant.image,
+      rating: merchant.rating?.toDouble(),
+    );
+  }
+
+  /// Create from Merchant (used by user flow)
+  factory MerchantInfo.fromMerchant(Merchant merchant) {
+    return MerchantInfo(
+      userId: merchant.userId,
+      name: merchant.name,
+      image: merchant.image,
+      rating: merchant.rating.toDouble(),
+    );
+  }
+
+  final String userId;
+  final String name;
+  final String? image;
+  final double? rating;
+}
 
 /// The role of the viewer for the order completion screen.
 /// Determines who is rating whom.
@@ -36,7 +70,8 @@ class OrderCompletionScreen extends StatefulWidget {
     this.viewerRole = OrderCompletionViewerRole.user,
     this.driver,
     this.user,
-    this.merchant,
+    this.driverUser,
+    this.merchantInfo,
     this.payment,
     super.key,
   });
@@ -52,9 +87,15 @@ class OrderCompletionScreen extends StatefulWidget {
   final Driver? driver;
 
   /// User (customer) info - required when viewerRole is driver or merchant
+  /// Use [user] for User type or [driverUser] for DriverUser type (from Order.user)
   final User? user;
 
-  final Merchant? merchant;
+  /// DriverUser (customer) info - used when navigating from driver order completion
+  /// This is the type returned by Order.user in the API
+  final DriverUser? driverUser;
+
+  /// Merchant info - abstracted to handle both Merchant and OrderMerchant types
+  final MerchantInfo? merchantInfo;
   final Payment? payment;
 
   @override
@@ -88,7 +129,7 @@ class _OrderCompletionScreenState extends State<OrderCompletionScreen> {
   bool get _showSecondaryRating =>
       widget.viewerRole == OrderCompletionViewerRole.user &&
       widget.orderType == OrderType.FOOD &&
-      widget.merchant != null;
+      widget.merchantInfo != null;
 
   bool get _canSubmit {
     // Must have primary rating with at least one category
@@ -131,7 +172,8 @@ class _OrderCompletionScreenState extends State<OrderCompletionScreen> {
       case OrderCompletionViewerRole.driver:
       case OrderCompletionViewerRole.merchant:
         // Driver/Merchant rates user (customer)
-        return widget.user?.id ?? widget.order.userId;
+        // Check both user types - driverUser is from Order.user (DriverUser type)
+        return widget.user?.id ?? widget.driverUser?.id ?? widget.order.userId;
     }
   }
 
@@ -143,6 +185,7 @@ class _OrderCompletionScreenState extends State<OrderCompletionScreen> {
       case OrderCompletionViewerRole.driver:
       case OrderCompletionViewerRole.merchant:
         return widget.user?.name ??
+            widget.driverUser?.name ??
             widget.order.user?.name ??
             context.l10n.text_customer;
     }
@@ -159,6 +202,7 @@ class _OrderCompletionScreenState extends State<OrderCompletionScreen> {
       case OrderCompletionViewerRole.merchant:
         return Avatar.getInitials(
           widget.user?.name ??
+              widget.driverUser?.name ??
               widget.order.user?.name ??
               context.l10n.text_customer,
         );
@@ -172,7 +216,9 @@ class _OrderCompletionScreenState extends State<OrderCompletionScreen> {
         return widget.driver?.user?.image;
       case OrderCompletionViewerRole.driver:
       case OrderCompletionViewerRole.merchant:
-        return widget.user?.image ?? widget.order.user?.image;
+        return widget.user?.image ??
+            widget.driverUser?.image ??
+            widget.order.user?.image;
     }
   }
 
@@ -221,11 +267,11 @@ class _OrderCompletionScreenState extends State<OrderCompletionScreen> {
 
         // Submit secondary review (merchant) if applicable
         if (_showSecondaryRating) {
-          final merchant = widget.merchant;
-          if (merchant != null) {
+          final merchantInfo = widget.merchantInfo;
+          if (merchantInfo != null && merchantInfo.userId.isNotEmpty) {
             await cubit.submitReview(
               orderId: widget.orderId,
-              toUserId: merchant.userId,
+              toUserId: merchantInfo.userId,
               categories: _secondaryCategories.toList(),
               score: _secondaryRating,
               comment: _secondaryCommentController.text.trim().isNotEmpty
@@ -236,7 +282,22 @@ class _OrderCompletionScreenState extends State<OrderCompletionScreen> {
         }
       } else if (widget.viewerRole == OrderCompletionViewerRole.driver) {
         // Driver submitting review for customer
-        final cubit = context.read<DriverReviewCubit>();
+        DriverReviewCubit? cubit;
+        try {
+          cubit = context.read<DriverReviewCubit>();
+        } catch (e) {
+          logger.e(
+            '[OrderCompletionScreen] DriverReviewCubit not available',
+            error: e,
+          );
+          if (mounted) {
+            context.showMyToast(
+              context.l10n.toast_failed_submit_review,
+              type: ToastType.failed,
+            );
+          }
+          return;
+        }
 
         await cubit.submitReview(
           orderId: widget.orderId,
@@ -249,7 +310,22 @@ class _OrderCompletionScreenState extends State<OrderCompletionScreen> {
         );
       } else {
         // Merchant submitting review for customer
-        final cubit = context.read<MerchantReviewCubit>();
+        MerchantReviewCubit? cubit;
+        try {
+          cubit = context.read<MerchantReviewCubit>();
+        } catch (e) {
+          logger.e(
+            '[OrderCompletionScreen] MerchantReviewCubit not available',
+            error: e,
+          );
+          if (mounted) {
+            context.showMyToast(
+              context.l10n.toast_failed_submit_review,
+              type: ToastType.failed,
+            );
+          }
+          return;
+        }
 
         await cubit.submitReview(
           orderId: widget.orderId,
@@ -270,13 +346,21 @@ class _OrderCompletionScreenState extends State<OrderCompletionScreen> {
         );
         // For driver role, clear active order and navigate to home
         if (widget.viewerRole == OrderCompletionViewerRole.driver) {
-          context.read<DriverOrderCubit>().clearActiveOrder();
+          try {
+            context.read<DriverOrderCubit>().clearActiveOrder();
+          } catch (e) {
+            // Cubit may not be available, continue with navigation
+            logger.w(
+              '[OrderCompletionScreen] Could not clear active order: $e',
+            );
+          }
           context.popUntilRoot();
         } else if (widget.viewerRole == OrderCompletionViewerRole.merchant) {
           // For merchant role, navigate back to order list
           context.popUntilRoot();
         } else {
-          context.pop(true);
+          context.read<UserOrderCubit>().clearActiveOrder();
+          context.popUntilRoot();
         }
       }
     } catch (e) {
@@ -311,54 +395,69 @@ class _OrderCompletionScreenState extends State<OrderCompletionScreen> {
   }
 
   /// Build the appropriate BlocListener based on viewer role
+  /// Returns the child directly if the required cubit is not available
   Widget _buildBlocListener({required Widget child}) {
-    if (widget.viewerRole == OrderCompletionViewerRole.user) {
-      return BlocListener<UserReviewCubit, UserReviewState>(
-        listenWhen: (previous, current) =>
-            previous.submittedReview != current.submittedReview,
-        listener: (context, state) {
-          if (state.submittedReview.isFailure) {
-            context.showMyToast(
-              state.submittedReview.error?.message ??
-                  context.l10n.toast_failed_submit_review,
-              type: ToastType.failed,
-            );
-          }
-        },
-        child: child,
+    try {
+      if (widget.viewerRole == OrderCompletionViewerRole.user) {
+        // Verify cubit is available before wrapping
+        context.read<UserReviewCubit>();
+        return BlocListener<UserReviewCubit, UserReviewState>(
+          listenWhen: (previous, current) =>
+              previous.submittedReview != current.submittedReview,
+          listener: (context, state) {
+            if (state.submittedReview.isFailure) {
+              context.showMyToast(
+                state.submittedReview.error?.message ??
+                    context.l10n.toast_failed_submit_review,
+                type: ToastType.failed,
+              );
+            }
+          },
+          child: child,
+        );
+      } else if (widget.viewerRole == OrderCompletionViewerRole.driver) {
+        // Driver role - verify cubit is available before wrapping
+        context.read<DriverReviewCubit>();
+        return BlocListener<DriverReviewCubit, DriverReviewState>(
+          listenWhen: (previous, current) =>
+              previous.submitReviewResult != current.submitReviewResult,
+          listener: (context, state) {
+            if (state.submitReviewResult.isFailure) {
+              context.showMyToast(
+                state.submitReviewResult.error?.message ??
+                    context.l10n.toast_failed_submit_review,
+                type: ToastType.failed,
+              );
+            }
+          },
+          child: child,
+        );
+      } else {
+        // Merchant role - verify cubit is available before wrapping
+        context.read<MerchantReviewCubit>();
+        return BlocListener<MerchantReviewCubit, MerchantReviewState>(
+          listenWhen: (previous, current) =>
+              previous.submitReviewResult != current.submitReviewResult,
+          listener: (context, state) {
+            if (state.submitReviewResult.isFailure) {
+              context.showMyToast(
+                state.submitReviewResult.error?.message ??
+                    context.l10n.toast_failed_submit_review,
+                type: ToastType.failed,
+              );
+            }
+          },
+          child: child,
+        );
+      }
+    } catch (e) {
+      // If the cubit is not available, just return the child without the listener
+      // This can happen if the widget is being disposed or the navigation context
+      // has changed
+      logger.w(
+        '[OrderCompletionScreen] Review cubit not available for listener: $e',
       );
-    } else if (widget.viewerRole == OrderCompletionViewerRole.driver) {
-      // Driver role
-      return BlocListener<DriverReviewCubit, DriverReviewState>(
-        listenWhen: (previous, current) =>
-            previous.submitReviewResult != current.submitReviewResult,
-        listener: (context, state) {
-          if (state.submitReviewResult.isFailure) {
-            context.showMyToast(
-              state.submitReviewResult.error?.message ??
-                  context.l10n.toast_failed_submit_review,
-              type: ToastType.failed,
-            );
-          }
-        },
-        child: child,
-      );
-    } else {
-      // Merchant role
-      return BlocListener<MerchantReviewCubit, MerchantReviewState>(
-        listenWhen: (previous, current) =>
-            previous.submitReviewResult != current.submitReviewResult,
-        listener: (context, state) {
-          if (state.submitReviewResult.isFailure) {
-            context.showMyToast(
-              state.submitReviewResult.error?.message ??
-                  context.l10n.toast_failed_submit_review,
-              type: ToastType.failed,
-            );
-          }
-        },
-        child: child,
-      );
+      return child;
     }
   }
 
@@ -369,10 +468,22 @@ class _OrderCompletionScreenState extends State<OrderCompletionScreen> {
       onPopInvokedWithResult: (didPop, result) {
         // For driver role, clear active order when navigating away
         // (if review was not submitted)
+        // Defer the clearActiveOrder call to avoid disposing cubit during navigation
         if (didPop &&
             widget.viewerRole == OrderCompletionViewerRole.driver &&
             !_hasSubmittedReview) {
-          context.read<DriverOrderCubit>().clearActiveOrder();
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (context.mounted) {
+              try {
+                context.read<DriverOrderCubit>().clearActiveOrder();
+              } catch (e) {
+                // Cubit may already be disposed if navigating away quickly
+                logger.w(
+                  '[OrderCompletionScreen] Could not clear active order: $e',
+                );
+              }
+            }
+          });
         }
       },
       child: Scaffold(
@@ -420,18 +531,20 @@ class _OrderCompletionScreenState extends State<OrderCompletionScreen> {
                       ),
 
                       // Secondary rating section (merchant for FOOD orders when USER is viewing)
-                      if (_showSecondaryRating && widget.merchant != null)
+                      if (_showSecondaryRating && widget.merchantInfo != null)
                         Builder(
                           builder: (context) {
-                            final merchant = widget.merchant;
-                            if (merchant == null) {
+                            final merchantInfo = widget.merchantInfo;
+                            if (merchantInfo == null) {
                               return const SizedBox.shrink();
                             }
                             return _RatingSection(
                               title: context.l10n.rate_merchant_title,
-                              subtitle: merchant.name,
-                              avatarInitials: Avatar.getInitials(merchant.name),
-                              avatarImage: merchant.image,
+                              subtitle: merchantInfo.name,
+                              avatarInitials: Avatar.getInitials(
+                                merchantInfo.name,
+                              ),
+                              avatarImage: merchantInfo.image,
                               rating: _secondaryRating,
                               onRatingChanged: (rating) {
                                 setState(() {
@@ -442,8 +555,8 @@ class _OrderCompletionScreenState extends State<OrderCompletionScreen> {
                               onCategoryToggle: _toggleSecondaryCategory,
                               commentController: _secondaryCommentController,
                               onReport: () => _navigateToReport(
-                                merchant.userId,
-                                merchant.name,
+                                merchantInfo.userId,
+                                merchantInfo.name,
                               ),
                             );
                           },
@@ -547,7 +660,7 @@ class _OrderCompletedHeader extends StatelessWidget {
             Gap(4.h),
             // Order ID
             DefaultText(
-              "Order #${order.id.substring(0, 8).toUpperCase()}",
+              "Order #${order.id.prefix(8).toUpperCase()}",
               fontSize: 12.sp,
               color: context.colorScheme.mutedForeground,
             ),

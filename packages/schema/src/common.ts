@@ -28,6 +28,10 @@ export const PhoneSchema = z.object({
 });
 export type Phone = z.infer<typeof PhoneSchema>;
 
+export const SingleFileSchema = z.object({
+	file: z.file(),
+});
+
 export const DateSchema = z.coerce.date();
 
 export const DayOfWeekSchema = z.enum(CONSTANTS.DAY_OF_WEEK);

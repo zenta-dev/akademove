@@ -7,9 +7,6 @@ class MerchantRepository extends BaseRepository {
 
   final ApiClient _apiClient;
 
-  /// Cached merchant ID for availability operations
-  String? _cachedMerchantId;
-
   Future<BaseResponse<Merchant>> getMine() {
     return guard(() async {
       final res = await _apiClient.getMerchantApi().merchantGetMine();
@@ -304,30 +301,12 @@ class MerchantRepository extends BaseRepository {
     });
   }
 
-  // ========== MERCHANT AVAILABILITY METHODS ==========
-
-  /// Helper to get merchant ID (cached for performance)
-  Future<String> _getMerchantId() async {
-    final cachedId = _cachedMerchantId;
-    if (cachedId != null) {
-      return cachedId;
-    }
-    final res = await getMine();
-    final merchantId = res.data.id;
-    _cachedMerchantId = merchantId;
-    return merchantId;
-  }
-
-  /// Clear cached merchant ID (call on logout)
-  void clearCache() {
-    _cachedMerchantId = null;
-  }
-
   /// Set merchant online status
-  Future<BaseResponse<Merchant>> setOnlineStatus(bool isOnline) {
+  Future<BaseResponse<Merchant>> setOnlineStatus({
+    required String merchantId,
+    required bool isOnline,
+  }) {
     return guard(() async {
-      final merchantId = await _getMerchantId();
-
       final res = await _apiClient.getMerchantApi().merchantSetOnlineStatus(
         id: merchantId,
         driverUpdateOnlineStatusRequest: DriverUpdateOnlineStatusRequest(
@@ -350,12 +329,12 @@ class MerchantRepository extends BaseRepository {
   }
 
   /// Set merchant operating status (OPEN, CLOSED, BREAK, MAINTENANCE)
-  Future<BaseResponse<Merchant>> setOperatingStatus(
-    MerchantSetOperatingStatusRequestOperatingStatusEnum operatingStatus,
-  ) {
+  Future<BaseResponse<Merchant>> setOperatingStatus({
+    required String merchantId,
+    required MerchantSetOperatingStatusRequestOperatingStatusEnum
+    operatingStatus,
+  }) {
     return guard(() async {
-      final merchantId = await _getMerchantId();
-
       final res = await _apiClient.getMerchantApi().merchantSetOperatingStatus(
         id: merchantId,
         merchantSetOperatingStatusRequest: MerchantSetOperatingStatusRequest(
@@ -379,10 +358,8 @@ class MerchantRepository extends BaseRepository {
 
   /// Get merchant availability status
   Future<BaseResponse<MerchantGetAvailabilityStatus200ResponseData>>
-  getAvailabilityStatus() {
+  getAvailabilityStatus({required String merchantId}) {
     return guard(() async {
-      final merchantId = await _getMerchantId();
-
       final res = await _apiClient
           .getMerchantApi()
           .merchantGetAvailabilityStatus(id: merchantId);
@@ -536,13 +513,12 @@ class MerchantRepository extends BaseRepository {
 
   /// Get merchant analytics
   Future<BaseResponse<MerchantAnalytics200ResponseData>> getAnalytics({
+    required String merchantId,
     String? period,
     DateTime? startDate,
     DateTime? endDate,
   }) {
     return guard(() async {
-      final merchantId = await _getMerchantId();
-
       final res = await _apiClient.getMerchantApi().merchantAnalytics(
         id: merchantId,
         period: period,
@@ -563,12 +539,11 @@ class MerchantRepository extends BaseRepository {
 
   /// Export merchant analytics
   Future<BaseResponse<String>> exportAnalytics({
+    required String merchantId,
     required DateTime startDate,
     required DateTime endDate,
   }) {
     return guard(() async {
-      final merchantId = await _getMerchantId();
-
       final res = await _apiClient
           .getMerchantApi()
           .analyticsExportMerchantAnalytics(

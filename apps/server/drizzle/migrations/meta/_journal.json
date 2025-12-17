@@ -225,6 +225,27 @@
 			"when": 1765759010753,
 			"tag": "0031_good_leper_queen",
 			"breakpoints": true
+		},
+		{
+			"idx": 32,
+			"version": "7",
+			"when": 1765963323529,
+			"tag": "0032_elite_black_cat",
+			"breakpoints": true
+		},
+		{
+			"idx": 33,
+			"version": "7",
+			"when": 1765965634463,
+			"tag": "0033_pale_forge",
+			"breakpoints": true
+		},
+		{
+			"idx": 34,
+			"version": "7",
+			"when": 1765990924150,
+			"tag": "0034_tiresome_killmonger",
+			"breakpoints": true
 		}
 	]
 }

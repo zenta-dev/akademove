@@ -1,4 +1,5 @@
 import type { PricingConfiguration } from "@repo/schema/configuration";
+import type { Driver } from "@repo/schema/driver";
 import type {
 	EstimateOrder,
 	Order,
@@ -154,6 +155,51 @@ export class OrderRepository {
 			logger.error(
 				{ error, orderId },
 				"[OrderRepository] Failed to broadcast status change",
+			);
+			// Don't throw - broadcast failure shouldn't fail the API call
+		}
+	}
+
+	/**
+	 * Broadcast DRIVER_ACCEPTED event when driver accepts an order
+	 * Includes full driver data so customer UI can display driver info immediately
+	 */
+	static async broadcastDriverAccepted(
+		orderId: string,
+		order: Order,
+		driver: Driver,
+	): Promise<void> {
+		const stub = OrderBaseRepository.getRoomStubByName(orderId);
+		const envelope: OrderEnvelope = {
+			e: "DRIVER_ACCEPTED",
+			f: "s",
+			t: "c",
+			p: {
+				detail: {
+					order,
+					payment: null,
+					transaction: null,
+				},
+				driverAssigned: driver,
+			},
+		};
+
+		try {
+			await stub.fetch(
+				new Request("http://internal/broadcast", {
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify(envelope),
+				}),
+			);
+			logger.info(
+				{ orderId, status: order.status, driverId: driver.id },
+				"[OrderRepository] Broadcast DRIVER_ACCEPTED to WebSocket clients",
+			);
+		} catch (error) {
+			logger.error(
+				{ error, orderId },
+				"[OrderRepository] Failed to broadcast DRIVER_ACCEPTED",
 			);
 			// Don't throw - broadcast failure shouldn't fail the API call
 		}

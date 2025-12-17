@@ -22,8 +22,8 @@ void main() {
       // TODO
     });
 
-    // bool isActive
-    test('to test the property `isActive`', () async {
+    // String status
+    test('to test the property `status`', () async {
       // TODO
     });
   });

@@ -203,6 +203,13 @@ export class OrderReadRepository extends OrderBaseRepository {
 		try {
 			const tx = opts?.tx ?? this.db;
 
+			// Fetch all pricing configurations upfront for estimatedDriverEarning calculation
+			const pricingConfigs =
+				await OrderBaseRepository.fetchAllPricingConfigurations(
+					this.kv,
+					this.db,
+				);
+
 			// For DRIVER role, prioritize active orders on top
 			// Uses CASE WHEN to create a sort priority: active orders (0) before completed/cancelled (1)
 			const isActiveOrderCase = sql<number>`CASE WHEN ${tables.order.status} IN (${sql.join(
@@ -321,6 +328,7 @@ export class OrderReadRepository extends OrderBaseRepository {
 								typeof OrderBaseRepository.composeEntity
 							>[0],
 							this.storage,
+							pricingConfigs.get(item.type as "RIDE" | "DELIVERY" | "FOOD"),
 						),
 					),
 				);
@@ -348,6 +356,7 @@ export class OrderReadRepository extends OrderBaseRepository {
 							typeof OrderBaseRepository.composeEntity
 						>[0],
 						this.storage,
+						pricingConfigs.get(item.type as "RIDE" | "DELIVERY" | "FOOD"),
 					),
 				),
 			);

@@ -23,8 +23,10 @@ class OrderItemItem {
     this.name,
     this.image,
     this.category,
+    this.categoryId,
     this.price,
     this.stock,
+    this.soldStock,
     this.createdAt,
     this.updatedAt,
   });
@@ -43,6 +45,10 @@ class OrderItemItem {
   @JsonKey(name: r'category', required: false, includeIfNull: false)
   final String? category;
 
+  /// Reference to merchant menu category
+  @JsonKey(name: r'categoryId', required: false, includeIfNull: false)
+  final String? categoryId;
+
   // minimum: 0
   @JsonKey(name: r'price', required: false, includeIfNull: false)
   final num? price;
@@ -51,6 +57,12 @@ class OrderItemItem {
   // maximum: 9007199254740991
   @JsonKey(name: r'stock', required: false, includeIfNull: false)
   final int? stock;
+
+  /// Total number of items sold
+  // minimum: 0
+  // maximum: 9007199254740991
+  @JsonKey(name: r'soldStock', required: false, includeIfNull: false)
+  final int? soldStock;
 
   @JsonKey(name: r'createdAt', required: false, includeIfNull: false)
   final DateTime? createdAt;
@@ -67,8 +79,10 @@ class OrderItemItem {
           other.name == name &&
           other.image == image &&
           other.category == category &&
+          other.categoryId == categoryId &&
           other.price == price &&
           other.stock == stock &&
+          other.soldStock == soldStock &&
           other.createdAt == createdAt &&
           other.updatedAt == updatedAt;
 
@@ -79,8 +93,10 @@ class OrderItemItem {
       name.hashCode +
       image.hashCode +
       category.hashCode +
+      categoryId.hashCode +
       price.hashCode +
       stock.hashCode +
+      soldStock.hashCode +
       createdAt.hashCode +
       updatedAt.hashCode;
 

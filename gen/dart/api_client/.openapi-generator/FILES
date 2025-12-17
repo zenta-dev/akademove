@@ -16,6 +16,7 @@ doc/AccountDeletionSubmit201Response.md
 doc/AccountType.md
 doc/ActivateDriver.md
 doc/AddToCart.md
+doc/AddToCartRequest.md
 doc/AdminApi.md
 doc/AdminUpdateUser.md
 doc/ApproveDriver.md
@@ -77,7 +78,11 @@ doc/BroadcastType.md
 doc/BroadcastUpdateRequest.md
 doc/BusinessConfiguration.md
 doc/Cart.md
+doc/CartApi.md
+doc/CartGet200Response.md
 doc/CartItem.md
+doc/CartResponse.md
+doc/CartResponseStockWarningsInner.md
 doc/ChartDataPoint.md
 doc/ChatApi.md
 doc/ChatGetUnreadCount200Response.md
@@ -188,6 +193,7 @@ doc/DriverUpdateOnlineStatusRequest.md
 doc/DriverUpdateTakingOrderStatusRequest.md
 doc/DriverUser.md
 doc/DriverVerifyQuizRequest.md
+doc/DriverWalletGetCommissionReport200Response.md
 doc/DriverWalletGetMonthlySummary200Response.md
 doc/DriverWalletGetSavedBankAccount200Response.md
 doc/DriverWalletGetTransactions200Response.md
@@ -303,6 +309,12 @@ doc/MerchantGetReview200Response.md
 doc/MerchantGetReview200ResponseData.md
 doc/MerchantKey.md
 doc/MerchantMenu.md
+doc/MerchantMenuCategory.md
+doc/MerchantMenuCategoryCreate200Response.md
+doc/MerchantMenuCategoryCreateRequest.md
+doc/MerchantMenuCategoryKey.md
+doc/MerchantMenuCategoryList200Response.md
+doc/MerchantMenuCategoryUpdateRequest.md
 doc/MerchantMenuCreate200Response.md
 doc/MerchantMenuKey.md
 doc/MerchantMenuList200Response.md
@@ -372,7 +384,6 @@ doc/OrderSummaryBreakdown.md
 doc/OrderType.md
 doc/OrderUploadDeliveryProof200Response.md
 doc/OrderUploadDeliveryProof200ResponseData.md
-doc/OrderUploadDeliveryProofRequest.md
 doc/OrderVerifyDeliveryOTP200Response.md
 doc/OrderVerifyDeliveryOTP200ResponseData.md
 doc/OrderVerifyDeliveryOTPRequest.md
@@ -404,6 +415,7 @@ doc/QuickMessageList200Response.md
 doc/QuickMessageList200ResponseData.md
 doc/QuickMessageTemplate.md
 doc/RejectDriver.md
+doc/RemoveCartItemRequest.md
 doc/Report.md
 doc/ReportApi.md
 doc/ReportCategory.md
@@ -475,6 +487,7 @@ doc/TransferResponse.md
 doc/UnbanUser.md
 doc/UpdateAccountDeletion.md
 doc/UpdateBroadcast.md
+doc/UpdateCartItemRequest.md
 doc/UpdateConfiguration.md
 doc/UpdateContact.md
 doc/UpdateCoupon.md
@@ -518,7 +531,6 @@ doc/VANumber.md
 doc/VerifyEmail.md
 doc/Wallet.md
 doc/WalletApi.md
-doc/WalletGetCommissionReport200Response.md
 doc/WalletKey.md
 doc/WalletMonthlySummaryQuery.md
 doc/WalletMonthlySummaryResponse.md
@@ -530,6 +542,7 @@ lib/src/api.dart
 lib/src/api/admin_api.dart
 lib/src/api/auth_api.dart
 lib/src/api/badge_api.dart
+lib/src/api/cart_api.dart
 lib/src/api/chat_api.dart
 lib/src/api/configuration_api.dart
 lib/src/api/coupon_api.dart
@@ -569,6 +582,7 @@ lib/src/model/account_deletion_submit201_response.dart
 lib/src/model/account_type.dart
 lib/src/model/activate_driver.dart
 lib/src/model/add_to_cart.dart
+lib/src/model/add_to_cart_request.dart
 lib/src/model/admin_update_user.dart
 lib/src/model/approve_driver.dart
 lib/src/model/audit_list200_response.dart
@@ -627,7 +641,10 @@ lib/src/model/broadcast_type.dart
 lib/src/model/broadcast_update_request.dart
 lib/src/model/business_configuration.dart
 lib/src/model/cart.dart
+lib/src/model/cart_get200_response.dart
 lib/src/model/cart_item.dart
+lib/src/model/cart_response.dart
+lib/src/model/cart_response_stock_warnings_inner.dart
 lib/src/model/chart_data_point.dart
 lib/src/model/chat_get_unread_count200_response.dart
 lib/src/model/chat_list200_response.dart
@@ -732,6 +749,7 @@ lib/src/model/driver_update_online_status_request.dart
 lib/src/model/driver_update_taking_order_status_request.dart
 lib/src/model/driver_user.dart
 lib/src/model/driver_verify_quiz_request.dart
+lib/src/model/driver_wallet_get_commission_report200_response.dart
 lib/src/model/driver_wallet_get_monthly_summary200_response.dart
 lib/src/model/driver_wallet_get_saved_bank_account200_response.dart
 lib/src/model/driver_wallet_get_transactions200_response.dart
@@ -843,6 +861,12 @@ lib/src/model/merchant_get_review200_response.dart
 lib/src/model/merchant_get_review200_response_data.dart
 lib/src/model/merchant_key.dart
 lib/src/model/merchant_menu.dart
+lib/src/model/merchant_menu_category.dart
+lib/src/model/merchant_menu_category_create200_response.dart
+lib/src/model/merchant_menu_category_create_request.dart
+lib/src/model/merchant_menu_category_key.dart
+lib/src/model/merchant_menu_category_list200_response.dart
+lib/src/model/merchant_menu_category_update_request.dart
 lib/src/model/merchant_menu_create200_response.dart
 lib/src/model/merchant_menu_key.dart
 lib/src/model/merchant_menu_list200_response.dart
@@ -910,7 +934,6 @@ lib/src/model/order_summary_breakdown.dart
 lib/src/model/order_type.dart
 lib/src/model/order_upload_delivery_proof200_response.dart
 lib/src/model/order_upload_delivery_proof200_response_data.dart
-lib/src/model/order_upload_delivery_proof_request.dart
 lib/src/model/order_verify_delivery_otp200_response.dart
 lib/src/model/order_verify_delivery_otp200_response_data.dart
 lib/src/model/order_verify_delivery_otp_request.dart
@@ -941,6 +964,7 @@ lib/src/model/quick_message_list200_response.dart
 lib/src/model/quick_message_list200_response_data.dart
 lib/src/model/quick_message_template.dart
 lib/src/model/reject_driver.dart
+lib/src/model/remove_cart_item_request.dart
 lib/src/model/report.dart
 lib/src/model/report_category.dart
 lib/src/model/report_create200_response.dart
@@ -1008,6 +1032,7 @@ lib/src/model/transfer_response.dart
 lib/src/model/unban_user.dart
 lib/src/model/update_account_deletion.dart
 lib/src/model/update_broadcast.dart
+lib/src/model/update_cart_item_request.dart
 lib/src/model/update_configuration.dart
 lib/src/model/update_contact.dart
 lib/src/model/update_coupon.dart
@@ -1049,7 +1074,6 @@ lib/src/model/user_rules.dart
 lib/src/model/va_number.dart
 lib/src/model/verify_email.dart
 lib/src/model/wallet.dart
-lib/src/model/wallet_get_commission_report200_response.dart
 lib/src/model/wallet_key.dart
 lib/src/model/wallet_monthly_summary_query.dart
 lib/src/model/wallet_monthly_summary_response.dart

@@ -13,7 +13,7 @@ void main() {
       // TODO
     });
 
-    // List<Leaderboard> data
+    // List<LeaderboardWithDriver> data
     test('to test the property `data`', () async {
       // TODO
     });

@@ -115,6 +115,11 @@ Class | Method | HTTP request | Description
 [*BadgeApi*](doc/BadgeApi.md) | [**badgeUserList**](doc/BadgeApi.md#badgeuserlist) | **GET** /badges/user | 
 [*BadgeApi*](doc/BadgeApi.md) | [**badgeUserRemove**](doc/BadgeApi.md#badgeuserremove) | **DELETE** /badges/user/{id} | 
 [*BadgeApi*](doc/BadgeApi.md) | [**badgeUserUpdate**](doc/BadgeApi.md#badgeuserupdate) | **PUT** /badges/user/{id} | 
+[*CartApi*](doc/CartApi.md) | [**cartAddItem**](doc/CartApi.md#cartadditem) | **POST** /cart/items | 
+[*CartApi*](doc/CartApi.md) | [**cartClear**](doc/CartApi.md#cartclear) | **DELETE** /cart | 
+[*CartApi*](doc/CartApi.md) | [**cartGet**](doc/CartApi.md#cartget) | **GET** /cart | 
+[*CartApi*](doc/CartApi.md) | [**cartRemoveItem**](doc/CartApi.md#cartremoveitem) | **DELETE** /cart/items/{menuId} | 
+[*CartApi*](doc/CartApi.md) | [**cartUpdateItem**](doc/CartApi.md#cartupdateitem) | **PATCH** /cart/items | 
 [*ChatApi*](doc/ChatApi.md) | [**quickMessageCreate**](doc/ChatApi.md#quickmessagecreate) | **POST** /quick-messages | 
 [*ChatApi*](doc/ChatApi.md) | [**quickMessageDelete**](doc/ChatApi.md#quickmessagedelete) | **DELETE** /quick-messages/:id | 
 [*ChatApi*](doc/ChatApi.md) | [**quickMessageGet**](doc/ChatApi.md#quickmessageget) | **GET** /quick-messages/:id | 
@@ -163,6 +168,7 @@ Class | Method | HTTP request | Description
 [*DriverApi*](doc/DriverApi.md) | [**driverUpdateOnlineStatus**](doc/DriverApi.md#driverupdateonlinestatus) | **POST** /drivers/{id}/update-online-status | 
 [*DriverApi*](doc/DriverApi.md) | [**driverUpdateTakingOrderStatus**](doc/DriverApi.md#driverupdatetakingorderstatus) | **POST** /drivers/{id}/update-taking-order-status | 
 [*DriverApi*](doc/DriverApi.md) | [**driverVerifyQuiz**](doc/DriverApi.md#driververifyquiz) | **POST** /drivers/{id}/approval-review/verify-quiz | 
+[*DriverApi*](doc/DriverApi.md) | [**driverWalletGetCommissionReport**](doc/DriverApi.md#driverwalletgetcommissionreport) | **GET** /drivers/{driverId}/wallet/commission-report | 
 [*DriverApi*](doc/DriverApi.md) | [**driverWalletGetMonthlySummary**](doc/DriverApi.md#driverwalletgetmonthlysummary) | **GET** /drivers/{driverId}/wallet/summary | 
 [*DriverApi*](doc/DriverApi.md) | [**driverWalletGetSavedBankAccount**](doc/DriverApi.md#driverwalletgetsavedbankaccount) | **GET** /drivers/{driverId}/wallet/bank | 
 [*DriverApi*](doc/DriverApi.md) | [**driverWalletGetTransactions**](doc/DriverApi.md#driverwalletgettransactions) | **GET** /drivers/{driverId}/wallet/transactions | 
@@ -216,6 +222,11 @@ Class | Method | HTTP request | Description
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantGetMine**](doc/MerchantApi.md#merchantgetmine) | **GET** /merchants/mine | 
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantGetReview**](doc/MerchantApi.md#merchantgetreview) | **GET** /merchants/{id}/approval-review | 
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantList**](doc/MerchantApi.md#merchantlist) | **GET** /merchants | 
+[*MerchantApi*](doc/MerchantApi.md) | [**merchantMenuCategoryCreate**](doc/MerchantApi.md#merchantmenucategorycreate) | **POST** /merchants/{merchantId}/menu-categories | 
+[*MerchantApi*](doc/MerchantApi.md) | [**merchantMenuCategoryGet**](doc/MerchantApi.md#merchantmenucategoryget) | **GET** /merchants/{merchantId}/menu-categories/{id} | 
+[*MerchantApi*](doc/MerchantApi.md) | [**merchantMenuCategoryList**](doc/MerchantApi.md#merchantmenucategorylist) | **GET** /merchants/{merchantId}/menu-categories | 
+[*MerchantApi*](doc/MerchantApi.md) | [**merchantMenuCategoryRemove**](doc/MerchantApi.md#merchantmenucategoryremove) | **DELETE** /merchants/{merchantId}/menu-categories/{id} | 
+[*MerchantApi*](doc/MerchantApi.md) | [**merchantMenuCategoryUpdate**](doc/MerchantApi.md#merchantmenucategoryupdate) | **PUT** /merchants/{merchantId}/menu-categories/{id} | 
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantMenuCreate**](doc/MerchantApi.md#merchantmenucreate) | **POST** /merchants/{merchantId}/menus | 
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantMenuGet**](doc/MerchantApi.md#merchantmenuget) | **GET** /merchants/{merchantId}/menus/{id} | 
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantMenuList**](doc/MerchantApi.md#merchantmenulist) | **GET** /merchants/{merchantId}/menus | 
@@ -310,6 +321,7 @@ Class | Method | HTTP request | Description
 [*UserApi*](doc/UserApi.md) | [**userLookupByPhone**](doc/UserApi.md#userlookupbyphone) | **GET** /users/lookup/phone | 
 [*UserApi*](doc/UserApi.md) | [**userMeChangePassword**](doc/UserApi.md#usermechangepassword) | **PUT** /users/me/change-password | 
 [*UserApi*](doc/UserApi.md) | [**userMeUpdate**](doc/UserApi.md#usermeupdate) | **PUT** /users/me | 
+[*WalletApi*](doc/WalletApi.md) | [**driverWalletGetCommissionReport**](doc/WalletApi.md#driverwalletgetcommissionreport) | **GET** /drivers/{driverId}/wallet/commission-report | 
 [*WalletApi*](doc/WalletApi.md) | [**driverWalletGetMonthlySummary**](doc/WalletApi.md#driverwalletgetmonthlysummary) | **GET** /drivers/{driverId}/wallet/summary | 
 [*WalletApi*](doc/WalletApi.md) | [**driverWalletGetSavedBankAccount**](doc/WalletApi.md#driverwalletgetsavedbankaccount) | **GET** /drivers/{driverId}/wallet/bank | 
 [*WalletApi*](doc/WalletApi.md) | [**driverWalletGetTransactions**](doc/WalletApi.md#driverwalletgettransactions) | **GET** /drivers/{driverId}/wallet/transactions | 
@@ -350,6 +362,7 @@ Class | Method | HTTP request | Description
  - [AccountType](doc/AccountType.md)
  - [ActivateDriver](doc/ActivateDriver.md)
  - [AddToCart](doc/AddToCart.md)
+ - [AddToCartRequest](doc/AddToCartRequest.md)
  - [AdminUpdateUser](doc/AdminUpdateUser.md)
  - [ApproveDriver](doc/ApproveDriver.md)
  - [AuditList200Response](doc/AuditList200Response.md)
@@ -408,7 +421,10 @@ Class | Method | HTTP request | Description
  - [BroadcastUpdateRequest](doc/BroadcastUpdateRequest.md)
  - [BusinessConfiguration](doc/BusinessConfiguration.md)
  - [Cart](doc/Cart.md)
+ - [CartGet200Response](doc/CartGet200Response.md)
  - [CartItem](doc/CartItem.md)
+ - [CartResponse](doc/CartResponse.md)
+ - [CartResponseStockWarningsInner](doc/CartResponseStockWarningsInner.md)
  - [ChartDataPoint](doc/ChartDataPoint.md)
  - [ChatGetUnreadCount200Response](doc/ChatGetUnreadCount200Response.md)
  - [ChatList200Response](doc/ChatList200Response.md)
@@ -513,6 +529,7 @@ Class | Method | HTTP request | Description
  - [DriverUpdateTakingOrderStatusRequest](doc/DriverUpdateTakingOrderStatusRequest.md)
  - [DriverUser](doc/DriverUser.md)
  - [DriverVerifyQuizRequest](doc/DriverVerifyQuizRequest.md)
+ - [DriverWalletGetCommissionReport200Response](doc/DriverWalletGetCommissionReport200Response.md)
  - [DriverWalletGetMonthlySummary200Response](doc/DriverWalletGetMonthlySummary200Response.md)
  - [DriverWalletGetSavedBankAccount200Response](doc/DriverWalletGetSavedBankAccount200Response.md)
  - [DriverWalletGetTransactions200Response](doc/DriverWalletGetTransactions200Response.md)
@@ -624,6 +641,12 @@ Class | Method | HTTP request | Description
  - [MerchantGetReview200ResponseData](doc/MerchantGetReview200ResponseData.md)
  - [MerchantKey](doc/MerchantKey.md)
  - [MerchantMenu](doc/MerchantMenu.md)
+ - [MerchantMenuCategory](doc/MerchantMenuCategory.md)
+ - [MerchantMenuCategoryCreate200Response](doc/MerchantMenuCategoryCreate200Response.md)
+ - [MerchantMenuCategoryCreateRequest](doc/MerchantMenuCategoryCreateRequest.md)
+ - [MerchantMenuCategoryKey](doc/MerchantMenuCategoryKey.md)
+ - [MerchantMenuCategoryList200Response](doc/MerchantMenuCategoryList200Response.md)
+ - [MerchantMenuCategoryUpdateRequest](doc/MerchantMenuCategoryUpdateRequest.md)
  - [MerchantMenuCreate200Response](doc/MerchantMenuCreate200Response.md)
  - [MerchantMenuKey](doc/MerchantMenuKey.md)
  - [MerchantMenuList200Response](doc/MerchantMenuList200Response.md)
@@ -691,7 +714,6 @@ Class | Method | HTTP request | Description
  - [OrderType](doc/OrderType.md)
  - [OrderUploadDeliveryProof200Response](doc/OrderUploadDeliveryProof200Response.md)
  - [OrderUploadDeliveryProof200ResponseData](doc/OrderUploadDeliveryProof200ResponseData.md)
- - [OrderUploadDeliveryProofRequest](doc/OrderUploadDeliveryProofRequest.md)
  - [OrderVerifyDeliveryOTP200Response](doc/OrderVerifyDeliveryOTP200Response.md)
  - [OrderVerifyDeliveryOTP200ResponseData](doc/OrderVerifyDeliveryOTP200ResponseData.md)
  - [OrderVerifyDeliveryOTPRequest](doc/OrderVerifyDeliveryOTPRequest.md)
@@ -722,6 +744,7 @@ Class | Method | HTTP request | Description
  - [QuickMessageList200ResponseData](doc/QuickMessageList200ResponseData.md)
  - [QuickMessageTemplate](doc/QuickMessageTemplate.md)
  - [RejectDriver](doc/RejectDriver.md)
+ - [RemoveCartItemRequest](doc/RemoveCartItemRequest.md)
  - [Report](doc/Report.md)
  - [ReportCategory](doc/ReportCategory.md)
  - [ReportCreate200Response](doc/ReportCreate200Response.md)
@@ -789,6 +812,7 @@ Class | Method | HTTP request | Description
  - [UnbanUser](doc/UnbanUser.md)
  - [UpdateAccountDeletion](doc/UpdateAccountDeletion.md)
  - [UpdateBroadcast](doc/UpdateBroadcast.md)
+ - [UpdateCartItemRequest](doc/UpdateCartItemRequest.md)
  - [UpdateConfiguration](doc/UpdateConfiguration.md)
  - [UpdateContact](doc/UpdateContact.md)
  - [UpdateCoupon](doc/UpdateCoupon.md)
@@ -830,7 +854,6 @@ Class | Method | HTTP request | Description
  - [VANumber](doc/VANumber.md)
  - [VerifyEmail](doc/VerifyEmail.md)
  - [Wallet](doc/Wallet.md)
- - [WalletGetCommissionReport200Response](doc/WalletGetCommissionReport200Response.md)
  - [WalletKey](doc/WalletKey.md)
  - [WalletMonthlySummaryQuery](doc/WalletMonthlySummaryQuery.md)
  - [WalletMonthlySummaryResponse](doc/WalletMonthlySummaryResponse.md)

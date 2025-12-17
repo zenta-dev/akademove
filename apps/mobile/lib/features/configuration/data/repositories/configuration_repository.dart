@@ -41,6 +41,25 @@ class ConfigurationRepository extends BaseRepository {
     });
   }
 
+  /// Fetch business configuration from the server
+  Future<BaseResponse<BusinessConfiguration>> getBusinessConfiguration() {
+    return guard(() async {
+      final res = await _apiClient
+          .getConfigurationApi()
+          .configurationGetBusinessConfig();
+
+      final data = res.data?.data;
+      if (data == null) {
+        throw RepositoryError('Failed to fetch business configuration');
+      }
+
+      return SuccessResponse(
+        message: res.data?.message ?? 'Business configuration fetched',
+        data: data,
+      );
+    });
+  }
+
   /// Fetch public banners for a specific placement (USER_HOME, DRIVER_HOME, MERCHANT_HOME)
   Future<BaseResponse<List<BannerListPublic200ResponseDataInner>>>
   getPublicBanners({String? placement}) {

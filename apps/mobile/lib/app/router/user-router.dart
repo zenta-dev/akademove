@@ -132,13 +132,24 @@ final userRouter = StatefulShellRoute.indexedStack(
                     extra?['orderType'] as OrderType? ?? OrderType.RIDE;
                 final order = extra?['order'] as Order?;
                 final driver = extra?['driver'] as Driver?;
-                final merchant = extra?['merchant'] as Merchant?;
+                final orderMerchant = extra?['merchant'] as OrderMerchant?;
                 final payment = extra?['payment'] as Payment?;
 
-                // Fallback if required data is missing
+                // Log and fallback if required data is missing
+                // This should rarely happen now that we fixed the race condition
+                // in on-trip screens, but we keep logging for debugging purposes
                 if (order == null || driver == null) {
+                  logger.w(
+                    '[UserRouter] Order completion route missing required data: '
+                    'order=${order != null}, driver=${driver != null}',
+                  );
                   return const UserHomeScreen();
                 }
+
+                // Convert OrderMerchant to MerchantInfo if present
+                final merchantInfo = orderMerchant != null
+                    ? MerchantInfo.fromOrderMerchant(orderMerchant)
+                    : null;
 
                 return BlocProvider(
                   create: (context) => sl<UserReviewCubit>(),
@@ -147,7 +158,7 @@ final userRouter = StatefulShellRoute.indexedStack(
                     orderType: orderType,
                     order: order,
                     driver: driver,
-                    merchant: merchant,
+                    merchantInfo: merchantInfo,
                     payment: payment,
                   ),
                 );
@@ -439,9 +450,14 @@ final userRouter = StatefulShellRoute.indexedStack(
             final extra = state.extra as Map<String, dynamic>?;
             final action = extra?['action'] as String?;
 
-            return BlocProvider.value(
-              value: BlocProvider.of<UserOrderCubit>(context)
-                ..maybeGet(orderId),
+            return MultiBlocProvider(
+              providers: [
+                BlocProvider.value(
+                  value: BlocProvider.of<UserOrderCubit>(context)
+                    ..maybeGet(orderId),
+                ),
+                BlocProvider(create: (context) => sl<UserReviewCubit>()),
+              ],
               child: UserDetailHistoryScreen(action: action),
             );
           },

@@ -22,18 +22,38 @@ class OrderLocationCubit extends BaseCubit<OrderLocationState> {
 
   String? _searchQuery;
   String? _selectedCouponCode;
+  OrderNote? _deliveryNote;
+  DeliveryItemType? _deliveryItemType;
 
   /// Get the currently selected coupon code (used in delivery flow)
   String? get selectedCouponCode => _selectedCouponCode;
+
+  /// Get the delivery note (used in delivery flow)
+  OrderNote? get deliveryNote => _deliveryNote;
+
+  /// Get the delivery item type (used in delivery flow)
+  DeliveryItemType? get deliveryItemType => _deliveryItemType;
 
   /// Set the selected coupon code for order placement
   void setSelectedCoupon(String? couponCode) {
     _selectedCouponCode = couponCode;
   }
 
+  /// Set the delivery note for order placement
+  void setDeliveryNote(OrderNote? note) {
+    _deliveryNote = note;
+  }
+
+  /// Set the delivery item type for order placement
+  void setDeliveryItemType(DeliveryItemType? itemType) {
+    _deliveryItemType = itemType;
+  }
+
   void reset() {
     _searchQuery = null;
     _selectedCouponCode = null;
+    _deliveryNote = null;
+    _deliveryItemType = null;
     emit(const OrderLocationState());
   }
 

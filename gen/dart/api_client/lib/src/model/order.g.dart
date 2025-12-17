@@ -43,6 +43,10 @@ abstract class _$OrderCWProxy {
 
   Order merchantCommission(num? merchantCommission);
 
+  Order merchantEarning(num? merchantEarning);
+
+  Order estimatedDriverEarning(num? estimatedDriverEarning);
+
   Order couponId(String? couponId);
 
   Order couponCode(String? couponCode);
@@ -123,6 +127,8 @@ abstract class _$OrderCWProxy {
     num? platformCommission,
     num? driverEarning,
     num? merchantCommission,
+    num? merchantEarning,
+    num? estimatedDriverEarning,
     String? couponId,
     String? couponCode,
     num? discountAmount,
@@ -220,6 +226,14 @@ class _$OrderCWProxyImpl implements _$OrderCWProxy {
   @override
   Order merchantCommission(num? merchantCommission) =>
       call(merchantCommission: merchantCommission);
+
+  @override
+  Order merchantEarning(num? merchantEarning) =>
+      call(merchantEarning: merchantEarning);
+
+  @override
+  Order estimatedDriverEarning(num? estimatedDriverEarning) =>
+      call(estimatedDriverEarning: estimatedDriverEarning);
 
   @override
   Order couponId(String? couponId) => call(couponId: couponId);
@@ -337,6 +351,8 @@ class _$OrderCWProxyImpl implements _$OrderCWProxy {
     Object? platformCommission = const $CopyWithPlaceholder(),
     Object? driverEarning = const $CopyWithPlaceholder(),
     Object? merchantCommission = const $CopyWithPlaceholder(),
+    Object? merchantEarning = const $CopyWithPlaceholder(),
+    Object? estimatedDriverEarning = const $CopyWithPlaceholder(),
     Object? couponId = const $CopyWithPlaceholder(),
     Object? couponCode = const $CopyWithPlaceholder(),
     Object? discountAmount = const $CopyWithPlaceholder(),
@@ -444,6 +460,15 @@ class _$OrderCWProxyImpl implements _$OrderCWProxy {
           ? _value.merchantCommission
           // ignore: cast_nullable_to_non_nullable
           : merchantCommission as num?,
+      merchantEarning: merchantEarning == const $CopyWithPlaceholder()
+          ? _value.merchantEarning
+          // ignore: cast_nullable_to_non_nullable
+          : merchantEarning as num?,
+      estimatedDriverEarning:
+          estimatedDriverEarning == const $CopyWithPlaceholder()
+          ? _value.estimatedDriverEarning
+          // ignore: cast_nullable_to_non_nullable
+          : estimatedDriverEarning as num?,
       couponId: couponId == const $CopyWithPlaceholder()
           ? _value.couponId
           // ignore: cast_nullable_to_non_nullable
@@ -619,6 +644,11 @@ Order _$OrderFromJson(
     platformCommission: $checkedConvert('platformCommission', (v) => v as num?),
     driverEarning: $checkedConvert('driverEarning', (v) => v as num?),
     merchantCommission: $checkedConvert('merchantCommission', (v) => v as num?),
+    merchantEarning: $checkedConvert('merchantEarning', (v) => v as num?),
+    estimatedDriverEarning: $checkedConvert(
+      'estimatedDriverEarning',
+      (v) => v as num?,
+    ),
     couponId: $checkedConvert('couponId', (v) => v as String?),
     couponCode: $checkedConvert('couponCode', (v) => v as String?),
     discountAmount: $checkedConvert('discountAmount', (v) => v as num?),
@@ -726,6 +756,8 @@ Map<String, dynamic> _$OrderToJson(Order instance) => <String, dynamic>{
   'platformCommission': ?instance.platformCommission,
   'driverEarning': ?instance.driverEarning,
   'merchantCommission': ?instance.merchantCommission,
+  'merchantEarning': ?instance.merchantEarning,
+  'estimatedDriverEarning': ?instance.estimatedDriverEarning,
   'couponId': ?instance.couponId,
   'couponCode': ?instance.couponCode,
   'discountAmount': ?instance.discountAmount,

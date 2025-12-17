@@ -6,7 +6,10 @@ import { and, eq } from "drizzle-orm";
 import { v7 } from "uuid";
 import type { DatabaseService, DatabaseTransaction } from "@/core/services/db";
 import { tables } from "@/core/services/db";
-import type { DriverMetrics } from "@/features/driver/services/driver-metrics-service";
+import type {
+	DriverMetrics,
+	DriverMetricsConfig,
+} from "@/features/driver/services/driver-metrics-service";
 import { DriverMetricsService } from "@/features/driver/services/driver-metrics-service";
 import { logger } from "@/utils/logger";
 import { LeaderboardScoreCalculator } from "./leaderboard-score-calculator";
@@ -32,10 +35,16 @@ interface DriverScoreEntry {
 export class LeaderboardCalculationService {
 	#db: DatabaseService;
 	#metricsService: DriverMetricsService;
+	#metricsConfig: DriverMetricsConfig;
 
-	constructor(db: DatabaseService) {
+	/**
+	 * @param db - Database service
+	 * @param metricsConfig - Driver metrics configuration (onTimeDeliveryThresholdMinutes)
+	 */
+	constructor(db: DatabaseService, metricsConfig: DriverMetricsConfig) {
 		this.#db = db;
 		this.#metricsService = new DriverMetricsService(db);
+		this.#metricsConfig = metricsConfig;
 	}
 
 	/**
@@ -130,6 +139,7 @@ export class LeaderboardCalculationService {
 			for (const driver of activeDrivers) {
 				const metrics = await this.#metricsService.calculateDriverMetrics(
 					driver.id,
+					this.#metricsConfig,
 					opts,
 				);
 
@@ -275,8 +285,9 @@ export class LeaderboardCalculationService {
 			0,
 		);
 
-		// Calculate on-time rate for period
-		const onTimeThresholdMinutes = 10;
+		// Calculate on-time rate for period using config threshold
+		const onTimeThresholdMinutes =
+			this.#metricsConfig.onTimeDeliveryThresholdMinutes;
 		let onTimeCount = 0;
 		for (const order of completedOrders) {
 			if (!order.acceptedAt || !order.arrivedAt) continue;

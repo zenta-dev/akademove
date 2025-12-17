@@ -38,6 +38,12 @@ class MerchantAnalyticsState extends Equatable {
   /// Total commission from analytics data
   num get totalCommission => analytics.value?.totalCommission ?? 0;
 
+  /// Commission rate as percentage (e.g., 10 for 10%) - from server config
+  num get commissionRate => analytics.value?.commissionRate ?? 0;
+
+  /// Net income after commission deduction - from server
+  num get netIncome => analytics.value?.netIncome ?? 0;
+
   /// Completed orders count
   num get completedOrders => analytics.value?.completedOrders ?? 0;
 
@@ -46,9 +52,6 @@ class MerchantAnalyticsState extends Equatable {
 
   /// Average order value
   num get averageOrderValue => analytics.value?.averageOrderValue ?? 0;
-
-  /// Net income (revenue - commission)
-  num get netIncome => totalRevenue - totalCommission;
 
   /// Top selling items list
   List<MerchantAnalytics200ResponseDataTopSellingItemsInner>

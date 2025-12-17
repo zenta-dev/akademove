@@ -4,6 +4,7 @@ class DriverReviewState extends Equatable {
   const DriverReviewState({
     this.fetchReviewsResult = const OperationResult.idle(),
     this.submitReviewResult = const OperationResult.idle(),
+    this.reviewStatus = const OperationResult.idle(),
     this.submitted,
     this.reviews = const [],
     this.hasMore = true,
@@ -12,6 +13,7 @@ class DriverReviewState extends Equatable {
 
   final OperationResult<List<Review>> fetchReviewsResult;
   final OperationResult<Review> submitReviewResult;
+  final OperationResult<ReviewStatus> reviewStatus;
 
   final Review? submitted;
   final List<Review> reviews;
@@ -22,6 +24,7 @@ class DriverReviewState extends Equatable {
   List<Object?> get props => [
     fetchReviewsResult,
     submitReviewResult,
+    reviewStatus,
     submitted,
     reviews,
     hasMore,
@@ -34,6 +37,7 @@ class DriverReviewState extends Equatable {
   DriverReviewState copyWith({
     OperationResult<List<Review>>? fetchReviewsResult,
     OperationResult<Review>? submitReviewResult,
+    OperationResult<ReviewStatus>? reviewStatus,
     Review? submitted,
     List<Review>? reviews,
     bool? hasMore,
@@ -42,6 +46,7 @@ class DriverReviewState extends Equatable {
     return DriverReviewState(
       fetchReviewsResult: fetchReviewsResult ?? this.fetchReviewsResult,
       submitReviewResult: submitReviewResult ?? this.submitReviewResult,
+      reviewStatus: reviewStatus ?? this.reviewStatus,
       submitted: submitted ?? this.submitted,
       reviews: reviews ?? this.reviews,
       hasMore: hasMore ?? this.hasMore,

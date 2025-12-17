@@ -49,7 +49,7 @@ class DriverIncomingOrderDialog extends StatelessWidget {
                 ),
                 SizedBox(height: 4.h),
                 Text(
-                  'Order #${order.id.substring(0, 8)}',
+                  'Order #${order.id.prefix(8)}',
                   style: context.typography.small.copyWith(
                     color: context.colorScheme.mutedForeground,
                   ),
@@ -97,7 +97,8 @@ class DriverIncomingOrderDialog extends StatelessWidget {
             context,
             icon: LucideIcons.dollarSign,
             label: 'Earnings',
-            value: 'Rp ${_formatMoney(order.totalPrice * 0.85)}',
+            value:
+                'Rp ${_formatMoney(order.estimatedDriverEarning ?? order.driverEarning ?? order.totalPrice)}',
           ),
 
           // Gender preference if specified

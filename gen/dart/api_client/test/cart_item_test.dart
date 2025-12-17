@@ -46,5 +46,10 @@ void main() {
     test('to test the property `notes`', () async {
       // TODO
     });
+
+    // int stock
+    test('to test the property `stock`', () async {
+      // TODO
+    });
   });
 }

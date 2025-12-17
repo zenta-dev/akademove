@@ -49,29 +49,31 @@ class UserReviewCubit extends BaseCubit<UserReviewState> {
     }
   });
 
-  /// Check if user can review an order
-  Future<void> checkCanReview(
-    String orderId,
-  ) async => await taskManager.execute('URC-cCR1-$orderId', () async {
-    try {
-      emit(state.copyWith(canReview: const OperationResult.loading()));
+  /// Check review status for an order (includes existing review if already reviewed)
+  Future<void> checkReviewStatus(String orderId) async =>
+      await taskManager.execute('URC-cRS1-$orderId', () async {
+        try {
+          emit(state.copyWith(reviewStatus: const OperationResult.loading()));
 
-      final res = await _reviewRepository.canReviewOrder(orderId: orderId);
+          final res = await _reviewRepository.getReviewStatus(orderId: orderId);
 
-      emit(
-        state.copyWith(
-          canReview: OperationResult.success(res.data, message: res.message),
-        ),
-      );
-    } on BaseError catch (e, st) {
-      logger.e(
-        '[UserReviewCubit] Failed to check review eligibility: ${e.message}',
-        error: e,
-        stackTrace: st,
-      );
-      emit(state.copyWith(canReview: OperationResult.failed(e)));
-    }
-  });
+          emit(
+            state.copyWith(
+              reviewStatus: OperationResult.success(
+                res.data,
+                message: res.message,
+              ),
+            ),
+          );
+        } on BaseError catch (e, st) {
+          logger.e(
+            '[UserReviewCubit] Failed to check review status: ${e.message}',
+            error: e,
+            stackTrace: st,
+          );
+          emit(state.copyWith(reviewStatus: OperationResult.failed(e)));
+        }
+      });
 
   /// Load reviews for a specific order
   Future<void> loadOrderReviews(String orderId) async =>

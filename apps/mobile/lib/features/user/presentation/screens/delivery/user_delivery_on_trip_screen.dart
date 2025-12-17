@@ -148,6 +148,36 @@ class _UserDeliveryOnTripScreenState extends State<UserDeliveryOnTripScreen> {
       // Update driver marker with animation if driver location is available
       final driverLocation = driver?.currentLocation;
       if (driver != null && driverLocation != null) {
+        // Create driver marker synchronously and add to newMarkers
+        // This ensures the marker is included when setMapData is called
+        // The animation will update its position smoothly afterward
+        final driverLatLng = LatLng(
+          driverLocation.y.toDouble(),
+          driverLocation.x.toDouble(),
+        );
+
+        // Use existing animated marker position if available for smoother updates
+        final markerPosition =
+            _animatedDriverMarker.currentPosition ?? driverLatLng;
+
+        final driverMarker = Marker(
+          markerId: const MarkerId("driver"),
+          position: markerPosition,
+          icon:
+              _animatedDriverMarker.driverIcon ??
+              BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+          anchor: const Offset(0.5, 0.5),
+          flat: true,
+          infoWindow: InfoWindow(
+            title: driver.user?.name ?? "Driver",
+            snippet: driver.rating != 0
+                ? "Rating: ${driver.rating.toStringAsFixed(1)}"
+                : null,
+          ),
+        );
+        newMarkers.add(driverMarker);
+
+        // Start animation for smooth position updates
         _animatedDriverMarker.updateDriverLocation(
           driverLocation,
           driver: driver,
@@ -157,9 +187,7 @@ class _UserDeliveryOnTripScreenState extends State<UserDeliveryOnTripScreen> {
         if (_isFirstLoad) {
           _isFirstLoad = false;
           await _mapController?.animateCamera(
-            CameraUpdate.newLatLng(
-              LatLng(driverLocation.y.toDouble(), driverLocation.x.toDouble()),
-            ),
+            CameraUpdate.newLatLng(driverLatLng),
           );
         }
       } else if (_isFirstLoad) {
@@ -319,12 +347,19 @@ class _UserDeliveryOnTripScreenState extends State<UserDeliveryOnTripScreen> {
     if (currentOrder?.status == OrderStatus.COMPLETED &&
         mounted &&
         context.mounted) {
-      context.read<UserOrderCubit>().clearActiveOrder();
-      // Navigate to order completion screen
+      // Read driver/payment data BEFORE clearing to avoid race condition
       final driver = state.currentAssignedDriver.value;
       final payment = state.currentPayment.value;
+
+      context.showMyToast(
+        context.l10n.text_trip_completed,
+        type: ToastType.success,
+      );
+
+      // Navigate to order completion screen FIRST, then clear active order
+      // This prevents race condition where driver data is cleared before navigation
       if (driver != null && currentOrder != null) {
-        final result = await context.pushNamed(
+        await context.pushNamed(
           Routes.userOrderCompletion.name,
           extra: {
             "orderId": currentOrder.id,
@@ -334,20 +369,10 @@ class _UserDeliveryOnTripScreenState extends State<UserDeliveryOnTripScreen> {
             "payment": payment,
           },
         );
-
-        // If rating was submitted successfully, show success message
-        if (result == true && mounted && context.mounted) {
-          context.showMyToast(
-            context.l10n.text_trip_completed,
-            type: ToastType.success,
-          );
-          context.popUntilRoot();
-        }
       } else {
-        context.showMyToast(
-          context.l10n.text_trip_completed,
-          type: ToastType.success,
-        );
+        // Fallback: clear order and go to home if driver data is missing
+        context.read<UserOrderCubit>().clearActiveOrder();
+
         context.popUntilRoot();
       }
     } else if (_isOrderCancelled(currentOrder?.status) &&
@@ -573,52 +598,6 @@ class _MapSection extends StatelessWidget {
                 color: context.colorScheme.mutedForeground,
               ).asSkeleton(),
             ),
-          // Emergency button - only show during IN_TRIP status
-          BlocSelector<UserOrderCubit, UserOrderState, OrderStatus?>(
-            selector: (state) => state.currentOrder.value?.status,
-            builder: (context, status) {
-              if (status != OrderStatus.IN_TRIP) {
-                return const SizedBox.shrink();
-              }
-              return BlocSelector<
-                UserOrderCubit,
-                UserOrderState,
-                EmergencyLocation
-              >(
-                selector: (state) {
-                  final order = state.currentOrder.value;
-                  final driverLocation =
-                      state.currentAssignedDriver.value?.currentLocation;
-                  if (driverLocation != null) {
-                    return EmergencyLocation(
-                      latitude: driverLocation.y.toDouble(),
-                      longitude: driverLocation.x.toDouble(),
-                    );
-                  }
-                  return EmergencyLocation(
-                    latitude: order?.pickupLocation.y.toDouble() ?? 0,
-                    longitude: order?.pickupLocation.x.toDouble() ?? 0,
-                  );
-                },
-                builder: (context, emergencyLocation) {
-                  final order = context
-                      .read<UserOrderCubit>()
-                      .state
-                      .currentOrder
-                      .value;
-                  if (order == null) return const SizedBox.shrink();
-                  return Positioned(
-                    bottom: 16,
-                    right: 16,
-                    child: EmergencyButton(
-                      orderId: order.id,
-                      currentLocation: emergencyLocation,
-                    ),
-                  );
-                },
-              );
-            },
-          ),
         ],
       ),
     );
@@ -675,6 +654,14 @@ class _ContentSection extends StatelessWidget {
             orderStatus: data.orderStatus,
             orderId: data.orderId,
           ),
+        ),
+        // Delivery info - rebuilds on order change
+        BlocSelector<UserOrderCubit, UserOrderState, Order?>(
+          selector: (state) => state.currentOrder.value,
+          builder: (context, order) {
+            if (order == null) return const SizedBox.shrink();
+            return DeliveryInfoWidget(order: order);
+          },
         ),
         // Order details - rebuilds on order/payment change
         BlocSelector<UserOrderCubit, UserOrderState, _OrderDetailsData>(
@@ -1100,7 +1087,52 @@ class _DriverInfoContent extends StatelessWidget {
               ChatButtonWithBadge(
                 orderId: orderId!,
                 onPressed: () => _showChatDialog(context),
-              ),
+              ), // Emergency button - only show during IN_TRIP status
+            BlocSelector<UserOrderCubit, UserOrderState, OrderStatus?>(
+              selector: (state) => state.currentOrder.value?.status,
+              builder: (context, status) {
+                if (status != OrderStatus.IN_TRIP) {
+                  return const SizedBox.shrink();
+                }
+                return BlocSelector<
+                  UserOrderCubit,
+                  UserOrderState,
+                  EmergencyLocation
+                >(
+                  selector: (state) {
+                    final order = state.currentOrder.value;
+                    final driverLocation =
+                        state.currentAssignedDriver.value?.currentLocation;
+                    if (driverLocation != null) {
+                      return EmergencyLocation(
+                        latitude: driverLocation.y.toDouble(),
+                        longitude: driverLocation.x.toDouble(),
+                      );
+                    }
+                    return EmergencyLocation(
+                      latitude: order?.pickupLocation.y.toDouble() ?? 0,
+                      longitude: order?.pickupLocation.x.toDouble() ?? 0,
+                    );
+                  },
+                  builder: (context, emergencyLocation) {
+                    final order = context
+                        .read<UserOrderCubit>()
+                        .state
+                        .currentOrder
+                        .value;
+                    if (order == null) return const SizedBox.shrink();
+                    return Positioned(
+                      bottom: 16,
+                      right: 16,
+                      child: EmergencyButton(
+                        orderId: order.id,
+                        currentLocation: emergencyLocation,
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
           ],
         ),
       ),

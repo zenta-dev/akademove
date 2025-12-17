@@ -2,14 +2,16 @@ import {
 	type BucketLocationConstraint,
 	CreateBucketCommand,
 	DeleteObjectCommand,
+	DeletePublicAccessBlockCommand,
 	GetObjectCommand,
 	HeadBucketCommand,
+	PutBucketPolicyCommand,
 	PutObjectCommand,
 	S3Client,
 } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
-import type { StorageBucket } from "../constants";
+import { isPublicBucket, type StorageBucket } from "../constants";
 import { StorageError } from "../error";
 
 interface StorageBaseOptions {
@@ -77,6 +79,9 @@ export class S3StorageService implements StorageService {
 
 		try {
 			await promise;
+			if (isPublicBucket(bucket)) {
+				await this.#setPublicBucketPolicy(bucket);
+			}
 		} finally {
 			this.#bucketCreationPromises.delete(bucket);
 		}
@@ -108,12 +113,106 @@ export class S3StorageService implements StorageService {
 				}),
 			);
 
+			// Wait for bucket to become available (eventual consistency)
+			await this.#waitForBucket(bucket);
+
+			// Configure public access policy for public buckets
+			if (isPublicBucket(bucket)) {
+				await this.#setPublicBucketPolicy(bucket);
+			}
+
 			this.#bucketExists.set(bucket, true);
 			console.info("[S3StorageService] Bucket created successfully", {
 				bucket,
+				isPublic: isPublicBucket(bucket),
 			});
 		} catch (error) {
 			throw this.#wrapError(error, "Failed to create bucket");
+		}
+	}
+
+	async #waitForBucket(
+		bucket: StorageBucket,
+		maxRetries = 5,
+		delayMs = 500,
+	): Promise<void> {
+		for (let i = 0; i < maxRetries; i++) {
+			try {
+				await this.#client.send(new HeadBucketCommand({ Bucket: bucket }));
+				return;
+			} catch (error) {
+				if (i === maxRetries - 1) {
+					throw error;
+				}
+				console.debug(
+					`[S3StorageService] Waiting for bucket to become available (attempt ${i + 1}/${maxRetries})`,
+					{ bucket },
+				);
+				await new Promise((resolve) => setTimeout(resolve, delayMs));
+			}
+		}
+	}
+
+	/**
+	 * Sets a public read policy on a bucket for anonymous access
+	 * This allows objects in the bucket to be accessed via direct URL
+	 */
+	async #setPublicBucketPolicy(
+		bucket: StorageBucket,
+		maxRetries = 5,
+		delayMs = 500,
+	): Promise<void> {
+		const policy = {
+			Version: "2012-10-17",
+			Statement: [
+				{
+					Sid: "PublicReadGetObject",
+					Effect: "Allow",
+					Principal: "*",
+					Action: ["s3:GetObject"],
+					Resource: [`arn:aws:s3:::${bucket}/*`],
+				},
+			],
+		};
+
+		for (let attempt = 0; attempt < maxRetries; attempt++) {
+			try {
+				// First, remove public access block (required for MinIO/S3)
+				await this.#client.send(
+					new DeletePublicAccessBlockCommand({ Bucket: bucket }),
+				);
+
+				await this.#client.send(
+					new PutBucketPolicyCommand({
+						Bucket: bucket,
+						Policy: JSON.stringify(policy),
+					}),
+				);
+
+				console.info("[S3StorageService] Public policy set for bucket", {
+					bucket,
+				});
+				return;
+			} catch (error) {
+				const isNoSuchBucket =
+					(error as { Code?: string })?.Code === "NoSuchBucket";
+
+				if (isNoSuchBucket && attempt < maxRetries - 1) {
+					console.debug(
+						`[S3StorageService] Bucket not ready for policy, retrying (attempt ${attempt + 1}/${maxRetries})`,
+						{ bucket },
+					);
+					await new Promise((resolve) => setTimeout(resolve, delayMs));
+					continue;
+				}
+
+				// Log but don't fail - bucket is created, policy can be set manually
+				console.warn(
+					"[S3StorageService] Failed to set public policy, bucket created without public access",
+					{ bucket, error },
+				);
+				return;
+			}
 		}
 	}
 

@@ -36,7 +36,7 @@ void main() {
       // TODO
     });
 
-    //Future<BannerCreate201Response> bannerToggleActive(String id) async
+    //Future<BannerCreate201Response> bannerToggleActive(String id, { Object body }) async
     test('test bannerToggleActive', () async {
       // TODO
     });

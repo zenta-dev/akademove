@@ -13,8 +13,10 @@ Name | Type | Description | Notes
 **name** | **String** |  | 
 **image** | **String** |  | [optional] 
 **category** | **String** |  | [optional] 
+**categoryId** | **String** | Reference to merchant menu category | [optional] 
 **price** | **num** |  | 
 **stock** | **int** |  | 
+**soldStock** | **int** | Total number of items sold | 
 **createdAt** | [**DateTime**](DateTime.md) |  | 
 **updatedAt** | [**DateTime**](DateTime.md) |  | 
 

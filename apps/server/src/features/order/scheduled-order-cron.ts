@@ -10,7 +10,6 @@ import {
 } from "@/core/services/queue";
 import { BusinessConfigurationService } from "@/features/configuration/services";
 import { logger } from "@/utils/logger";
-import { SCHEDULING_CONFIG } from "./services/order-scheduling-service";
 import { OrderStateService } from "./services/order-state-service";
 
 /**
@@ -211,8 +210,8 @@ export async function handleScheduledOrderCron(
 					await ProcessingQueueService.enqueueWebSocketBroadcast(
 						{
 							roomName: DRIVER_POOL_KEY,
-							action: "MATCHING",
-							target: "SYSTEM",
+							event: "MATCHING",
+							target: "DRIVER",
 							data: {
 								detail: {
 									payment: null,
@@ -247,13 +246,20 @@ export async function handleScheduledOrderCron(
 		}
 
 		// Also send reminder notifications for orders coming up soon
-		// (within MATCHING_LEAD_TIME_MINUTES * 2 but not yet at matching time)
+		// (within matchingLeadTimeMinutes * 2 but not yet at matching time)
+		// Fetch scheduling config from database
+		const schedulingConfig =
+			await BusinessConfigurationService.getScheduledOrderConfig(
+				svc.db,
+				svc.kv,
+			);
+		const matchingLeadTimeMinutes = schedulingConfig.matchingLeadTimeMinutes;
+
 		const reminderWindowStart = new Date(
-			now.getTime() + SCHEDULING_CONFIG.MATCHING_LEAD_TIME_MINUTES * 60 * 1000,
+			now.getTime() + matchingLeadTimeMinutes * 60 * 1000,
 		);
 		const reminderWindowEnd = new Date(
-			now.getTime() +
-				SCHEDULING_CONFIG.MATCHING_LEAD_TIME_MINUTES * 2 * 60 * 1000,
+			now.getTime() + matchingLeadTimeMinutes * 2 * 60 * 1000,
 		);
 
 		const upcomingOrders = await svc.db.query.order.findMany({
@@ -282,7 +288,7 @@ export async function handleScheduledOrderCron(
 							(new Date(order.scheduledAt).getTime() - now.getTime()) /
 								(60 * 1000),
 						)
-					: SCHEDULING_CONFIG.MATCHING_LEAD_TIME_MINUTES * 2;
+					: matchingLeadTimeMinutes * 2;
 
 				await repo.notification.sendNotificationToUserId({
 					fromUserId: "system",

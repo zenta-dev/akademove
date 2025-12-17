@@ -1,4 +1,3 @@
-import { env } from "cloudflare:workers";
 import { PaginationResultSchema } from "@repo/schema/pagination";
 import * as z from "zod";
 
@@ -6,6 +5,7 @@ export const FEATURE_TAGS = Object.freeze({
 	ADMIN: "Admin",
 	AUTH: "Auth",
 	BADGE: "Badge",
+	CART: "Cart",
 	CHAT: "Chat",
 	CONFIGURATION: "Configuration",
 	CONTACT: "Contact",
@@ -36,8 +36,6 @@ export const CACHE_TTLS = Object.freeze({
 	"7d": 7 * 24 * 3600,
 } as const);
 
-export const TRUSTED_ORIGINS = [env.AUTH_URL, env.CORS_ORIGIN];
-
 export const STORAGE_BUCKETS = [
 	"badges",
 	"driver",
@@ -46,8 +44,34 @@ export const STORAGE_BUCKETS = [
 	"user",
 	"merchant-menu",
 	"delivery-proofs",
+	"cart-attachments",
 ] as const;
 export type StorageBucket = (typeof STORAGE_BUCKETS)[number];
+
+/**
+ * Bucket visibility configuration
+ * - Public buckets: Objects accessible via direct URL without authentication
+ * - Private buckets: Objects require presigned URLs for access
+ */
+export const PUBLIC_BUCKETS: readonly StorageBucket[] = [
+	"badges", // Badge icons - displayed publicly
+	"merchant", // Merchant logos/images - displayed publicly
+	"merchant-menu", // Menu item images - displayed publicly
+] as const;
+
+export const PRIVATE_BUCKETS: readonly StorageBucket[] = [
+	"driver", // Driver documents (KTM, SIM, STNK) - sensitive
+	"merchant-priv", // Merchant legal/verification docs - sensitive
+	"user", // User profile photos - private
+	"delivery-proofs", // Delivery proof photos - order-specific
+] as const;
+
+/**
+ * Check if a bucket is public
+ */
+export function isPublicBucket(bucket: StorageBucket): boolean {
+	return (PUBLIC_BUCKETS as readonly string[]).includes(bucket);
+}
 
 export const CONFIGURATION_KEYS = {
 	RIDE_SERVICE_PRICING: "ride-service-pricing",
@@ -81,17 +105,11 @@ export const DRIVER_POOL_KEY = "driver-pool";
 /**
  * Business Constants
  * NOTE: Pricing-related values (cancellation fees, min amounts, etc.) MUST be stored in database.
+ * Driver matching configuration, lifecycle timeouts, and all configurable values are now
+ * stored in database via BusinessConfigurationService.
  * Only non-pricing technical constants should be here.
  */
 export const BUSINESS_CONSTANTS = Object.freeze({
-	// Order matching
-	DRIVER_MATCHING_TIMEOUT_MS: 30_000, // 30 seconds
-	DRIVER_MATCHING_RADIUS_KM: 5, // Initial radius in kilometers
-	DRIVER_MATCHING_RADIUS_EXPANSION: 0.2, // Expand by 20% on timeout
-	DRIVER_MATCHING_MAX_EXPANSION_ATTEMPTS: 3, // Maximum radius expansion attempts (5km → 6km → 7.2km)
-	DRIVER_MATCHING_BROADCAST_LIMIT: 10, // Maximum drivers to broadcast order to
-	DRIVER_MAX_CANCELLATIONS_PER_DAY: 3,
-
 	// Location tracking
 	LOCATION_UPDATE_INTERVAL_MS: 5000, // 5 seconds
 	LOCATION_STALE_THRESHOLD_MS: 60_000, // 1 minute

@@ -1180,6 +1180,7 @@
   "sign_up_dialog_driver_desc": "Drive on your terms, earn on your schedule.",
   "sign_up_dialog_merchant_desc": "Grow your business and reach more customers.",
   "sign_up_dialog_user_desc": "Experience reliable rides, whenever you need them.",
+  "sold": "Sold",
   "sort": "Sort",
   "special_instructions": "Special Instructions (Optional)",
   "special_instructions_hint": "e.g., 'Please handle with care', 'Call before delivery'",
@@ -1417,5 +1418,8 @@
   "emergency_contact_activate": "Activate Contact",
   "emergency_contact_activate_desc": "Activate this emergency contact to make it available for users.",
   "emergency_contact_deactivate": "Deactivate Contact",
-  "emergency_contact_deactivate_desc": "Deactivate this emergency contact. Users will not see it until reactivated."
+  "emergency_contact_deactivate_desc": "Deactivate this emergency contact. Users will not see it until reactivated.",
+  "fee_breakdown": "Fee Breakdown",
+  "merchant_fee": "Merchant Fee",
+  "merchant_receives": "Merchant Receives"
 }

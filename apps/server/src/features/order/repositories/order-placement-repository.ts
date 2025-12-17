@@ -230,6 +230,7 @@ export class OrderPlacementRepository extends OrderBaseRepository {
 					gender: params.gender,
 					genderPreference: params.genderPreference ?? "ANY",
 					attachmentUrl: params.attachmentUrl,
+					deliveryItemType: params.deliveryItemType,
 					requestedAt: now,
 					createdAt: now,
 					updatedAt: now,
@@ -568,8 +569,8 @@ export class OrderPlacementRepository extends OrderBaseRepository {
 					await ProcessingQueueService.enqueueWebSocketBroadcast(
 						{
 							roomName: DRIVER_POOL_KEY,
-							action: "MATCHING",
-							target: "SYSTEM",
+							event: "MATCHING",
+							target: "DRIVER",
 							data: {
 								detail: {
 									payment,

@@ -34,11 +34,20 @@ class _MerchantHomeScreenState extends State<MerchantHomeScreen> {
 
     if (!mounted) return;
 
+    // Get merchant ID from state
+    final merchantId = context.read<MerchantCubit>().state.merchant?.id;
+    if (merchantId == null) return;
+
     // Load other data in parallel (don't need to await these)
     // Load today's analytics
-    context.read<MerchantAnalyticsCubit>().getAnalytics(period: 'today');
+    context.read<MerchantAnalyticsCubit>().getAnalytics(
+      merchantId: merchantId,
+      period: 'today',
+    );
     // Load availability status
-    context.read<MerchantAvailabilityCubit>().getAvailabilityStatus();
+    context.read<MerchantAvailabilityCubit>().getAvailabilityStatus(
+      merchantId: merchantId,
+    );
   }
 
   /// Navigate to setup screen if outlet is not set up
@@ -54,15 +63,23 @@ class _MerchantHomeScreenState extends State<MerchantHomeScreen> {
 
   /// Handle online status toggle
   void _onOnlineStatusChanged(bool isOnline) {
-    context.read<MerchantAvailabilityCubit>().setOnlineStatus(isOnline);
+    final merchantId = context.read<MerchantCubit>().state.merchant?.id;
+    if (merchantId == null) return;
+    context.read<MerchantAvailabilityCubit>().setOnlineStatus(
+      merchantId: merchantId,
+      isOnline: isOnline,
+    );
   }
 
   /// Handle operating status change
   void _onOperatingStatusChanged(
     MerchantSetOperatingStatusRequestOperatingStatusEnum operatingStatus,
   ) {
+    final merchantId = context.read<MerchantCubit>().state.merchant?.id;
+    if (merchantId == null) return;
     context.read<MerchantAvailabilityCubit>().setOperatingStatus(
-      operatingStatus,
+      merchantId: merchantId,
+      operatingStatus: operatingStatus,
     );
   }
 
@@ -481,9 +498,18 @@ class _MerchantHomeScreenState extends State<MerchantHomeScreen> {
                 ),
                 Gap(8.h),
                 OutlineButton(
-                  onPressed: () => context
-                      .read<MerchantAnalyticsCubit>()
-                      .getAnalytics(period: 'today'),
+                  onPressed: () {
+                    final merchantId = context
+                        .read<MerchantCubit>()
+                        .state
+                        .merchant
+                        ?.id;
+                    if (merchantId == null) return;
+                    context.read<MerchantAnalyticsCubit>().getAnalytics(
+                      merchantId: merchantId,
+                      period: 'today',
+                    );
+                  },
                   child: Text(context.l10n.retry),
                 ),
               ],

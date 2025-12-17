@@ -52,7 +52,7 @@ void main() {
       // TODO
     });
 
-    // OrderChatMessageSender sender
+    // SupportTicketAssignedTo sender
     test('to test the property `sender`', () async {
       // TODO
     });

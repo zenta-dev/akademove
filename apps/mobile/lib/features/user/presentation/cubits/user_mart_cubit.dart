@@ -46,6 +46,8 @@ class UserMartCubit extends BaseCubit<UserMartState> {
             category: menu.category,
             price: menu.price,
             stock: menu.stock.toInt(),
+            // Best sellers use orderCount for ranking, soldStock shown when available
+            soldStock: 0,
             createdAt: menu.createdAt ?? DateTime.now(),
             updatedAt: menu.updatedAt ?? DateTime.now(),
           ),

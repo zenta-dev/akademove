@@ -105,11 +105,16 @@ export class WalletMonthlySummaryService {
 				totalIncome: 0,
 				totalExpense: 0,
 				net: 0,
+				totalEarnings: 0,
+				totalCommission: 0,
+				commissionRate: 0,
 			};
 		}
 
 		let totalIncome = 0;
 		let totalExpense = 0;
+		let totalEarnings = 0;
+		let totalCommission = 0;
 
 		for (const row of rows) {
 			const amount = Number(row.total);
@@ -117,13 +122,31 @@ export class WalletMonthlySummaryService {
 				WalletMonthlySummaryService.categorizeTransaction(row.type, amount);
 			totalIncome += income;
 			totalExpense += expense;
+
+			// Track earnings and commission separately
+			if (row.type === "EARNING") {
+				totalEarnings = amount;
+			} else if (row.type === "COMMISSION") {
+				totalCommission = amount;
+			}
 		}
+
+		// Calculate commission rate as percentage
+		// If there are earnings, rate = (commission / earnings) * 100
+		// Otherwise default to 0
+		const commissionRate =
+			totalEarnings > 0
+				? Math.round((totalCommission / totalEarnings) * 100 * 100) / 100
+				: 0;
 
 		return {
 			month: monthStr,
 			totalIncome,
 			totalExpense,
 			net: totalIncome - totalExpense,
+			totalEarnings,
+			totalCommission,
+			commissionRate,
 		};
 	}
 

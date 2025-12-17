@@ -13,7 +13,7 @@ void main() {
       // TODO
     });
 
-    // Emergency data
+    // EmergencyWithContact data
     test('to test the property `data`', () async {
       // TODO
     });

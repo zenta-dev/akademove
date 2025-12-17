@@ -210,6 +210,9 @@ export class MerchantRoom extends BaseDurableObject {
 						merchantCommission: order.merchantCommission
 							? toNumberSafe(order.merchantCommission)
 							: undefined,
+						merchantEarning: order.merchantEarning
+							? toNumberSafe(order.merchantEarning)
+							: undefined,
 						discountAmount: order.discountAmount
 							? toNumberSafe(order.discountAmount)
 							: undefined,

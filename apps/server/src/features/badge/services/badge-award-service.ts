@@ -1,6 +1,7 @@
 import { RepositoryError } from "@/core/error";
 import type { RepositoryContext } from "@/core/interface";
 import type { DatabaseService, DatabaseTransaction } from "@/core/services/db";
+import type { DriverMetricsConfig } from "@/features/driver/services/driver-metrics-service";
 import { DriverMetricsService } from "@/features/driver/services/driver-metrics-service";
 import { logger } from "@/utils/logger";
 import { BadgeCriteriaEvaluator } from "./badge-criteria-evaluator";
@@ -9,11 +10,22 @@ export class BadgeAwardService {
 	#db: DatabaseService;
 	#repo: RepositoryContext;
 	#metricsService: DriverMetricsService;
+	#metricsConfig: DriverMetricsConfig;
 
-	constructor(db: DatabaseService, repo: RepositoryContext) {
+	/**
+	 * @param db - Database service
+	 * @param repo - Repository context
+	 * @param metricsConfig - Driver metrics configuration (onTimeDeliveryThresholdMinutes)
+	 */
+	constructor(
+		db: DatabaseService,
+		repo: RepositoryContext,
+		metricsConfig: DriverMetricsConfig,
+	) {
 		this.#db = db;
 		this.#repo = repo;
 		this.#metricsService = new DriverMetricsService(db);
+		this.#metricsConfig = metricsConfig;
 	}
 
 	/**
@@ -39,6 +51,7 @@ export class BadgeAwardService {
 
 			const metrics = await this.#metricsService.calculateDriverMetrics(
 				driverId,
+				this.#metricsConfig,
 				opts,
 			);
 
@@ -158,8 +171,10 @@ export class BadgeAwardService {
 				});
 			}
 
-			const metrics =
-				await this.#metricsService.calculateDriverMetrics(driverId);
+			const metrics = await this.#metricsService.calculateDriverMetrics(
+				driverId,
+				this.#metricsConfig,
+			);
 
 			const progress = BadgeCriteriaEvaluator.calculateProgress(
 				metrics,

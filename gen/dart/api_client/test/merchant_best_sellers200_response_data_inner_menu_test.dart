@@ -43,6 +43,11 @@ void main() {
       // TODO
     });
 
+    // num soldStock
+    test('to test the property `soldStock`', () async {
+      // TODO
+    });
+
     // DateTime createdAt
     test('to test the property `createdAt`', () async {
       // TODO

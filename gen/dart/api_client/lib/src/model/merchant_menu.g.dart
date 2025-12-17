@@ -17,9 +17,13 @@ abstract class _$MerchantMenuCWProxy {
 
   MerchantMenu category(String? category);
 
+  MerchantMenu categoryId(String? categoryId);
+
   MerchantMenu price(num price);
 
   MerchantMenu stock(int stock);
+
+  MerchantMenu soldStock(int soldStock);
 
   MerchantMenu createdAt(DateTime createdAt);
 
@@ -38,8 +42,10 @@ abstract class _$MerchantMenuCWProxy {
     String name,
     String? image,
     String? category,
+    String? categoryId,
     num price,
     int stock,
+    int soldStock,
     DateTime createdAt,
     DateTime updatedAt,
   });
@@ -68,10 +74,16 @@ class _$MerchantMenuCWProxyImpl implements _$MerchantMenuCWProxy {
   MerchantMenu category(String? category) => call(category: category);
 
   @override
+  MerchantMenu categoryId(String? categoryId) => call(categoryId: categoryId);
+
+  @override
   MerchantMenu price(num price) => call(price: price);
 
   @override
   MerchantMenu stock(int stock) => call(stock: stock);
+
+  @override
+  MerchantMenu soldStock(int soldStock) => call(soldStock: soldStock);
 
   @override
   MerchantMenu createdAt(DateTime createdAt) => call(createdAt: createdAt);
@@ -93,8 +105,10 @@ class _$MerchantMenuCWProxyImpl implements _$MerchantMenuCWProxy {
     Object? name = const $CopyWithPlaceholder(),
     Object? image = const $CopyWithPlaceholder(),
     Object? category = const $CopyWithPlaceholder(),
+    Object? categoryId = const $CopyWithPlaceholder(),
     Object? price = const $CopyWithPlaceholder(),
     Object? stock = const $CopyWithPlaceholder(),
+    Object? soldStock = const $CopyWithPlaceholder(),
     Object? createdAt = const $CopyWithPlaceholder(),
     Object? updatedAt = const $CopyWithPlaceholder(),
   }) {
@@ -120,6 +134,10 @@ class _$MerchantMenuCWProxyImpl implements _$MerchantMenuCWProxy {
           ? _value.category
           // ignore: cast_nullable_to_non_nullable
           : category as String?,
+      categoryId: categoryId == const $CopyWithPlaceholder()
+          ? _value.categoryId
+          // ignore: cast_nullable_to_non_nullable
+          : categoryId as String?,
       price: price == const $CopyWithPlaceholder() || price == null
           ? _value.price
           // ignore: cast_nullable_to_non_nullable
@@ -128,6 +146,10 @@ class _$MerchantMenuCWProxyImpl implements _$MerchantMenuCWProxy {
           ? _value.stock
           // ignore: cast_nullable_to_non_nullable
           : stock as int,
+      soldStock: soldStock == const $CopyWithPlaceholder() || soldStock == null
+          ? _value.soldStock
+          // ignore: cast_nullable_to_non_nullable
+          : soldStock as int,
       createdAt: createdAt == const $CopyWithPlaceholder() || createdAt == null
           ? _value.createdAt
           // ignore: cast_nullable_to_non_nullable
@@ -162,6 +184,7 @@ MerchantMenu _$MerchantMenuFromJson(
       'name',
       'price',
       'stock',
+      'soldStock',
       'createdAt',
       'updatedAt',
     ],
@@ -172,8 +195,10 @@ MerchantMenu _$MerchantMenuFromJson(
     name: $checkedConvert('name', (v) => v as String),
     image: $checkedConvert('image', (v) => v as String?),
     category: $checkedConvert('category', (v) => v as String?),
+    categoryId: $checkedConvert('categoryId', (v) => v as String?),
     price: $checkedConvert('price', (v) => v as num),
     stock: $checkedConvert('stock', (v) => (v as num).toInt()),
+    soldStock: $checkedConvert('soldStock', (v) => (v as num).toInt()),
     createdAt: $checkedConvert('createdAt', (v) => DateTime.parse(v as String)),
     updatedAt: $checkedConvert('updatedAt', (v) => DateTime.parse(v as String)),
   );
@@ -187,8 +212,10 @@ Map<String, dynamic> _$MerchantMenuToJson(MerchantMenu instance) =>
       'name': instance.name,
       'image': ?instance.image,
       'category': ?instance.category,
+      'categoryId': ?instance.categoryId,
       'price': instance.price,
       'stock': instance.stock,
+      'soldStock': instance.soldStock,
       'createdAt': instance.createdAt.toIso8601String(),
       'updatedAt': instance.updatedAt.toIso8601String(),
     };

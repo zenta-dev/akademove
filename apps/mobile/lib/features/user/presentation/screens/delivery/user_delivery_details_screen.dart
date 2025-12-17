@@ -375,6 +375,14 @@ class _UserDeliveryDetailsScreenState extends State<UserDeliveryDetailsScreen> {
                                 );
                                 return;
                               }
+                              // Store delivery details in OrderLocationCubit for payment screen
+                              final orderLocationCubit = context
+                                  .read<OrderLocationCubit>();
+                              orderLocationCubit.setDeliveryNote(note);
+                              orderLocationCubit.setDeliveryItemType(
+                                selectedItemType,
+                              );
+
                               context.read<UserOrderCubit>().estimate(
                                 req: EstimateOrder(
                                   pickupLocation: Coordinate(

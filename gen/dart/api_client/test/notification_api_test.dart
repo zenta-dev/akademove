@@ -11,7 +11,7 @@ void main() {
       // TODO
     });
 
-    //Future<NotificationGetUnreadCount200Response> notificationGetUnreadCount() async
+    //Future<SupportChatMarkAsRead200Response> notificationGetUnreadCount() async
     test('test notificationGetUnreadCount', () async {
       // TODO
     });
@@ -21,12 +21,12 @@ void main() {
       // TODO
     });
 
-    //Future<NotificationGetUnreadCount200Response> notificationMarkAllAsRead() async
+    //Future<SupportChatMarkAsRead200Response> notificationMarkAllAsRead({ Object body }) async
     test('test notificationMarkAllAsRead', () async {
       // TODO
     });
 
-    //Future<NotificationMarkAsRead200Response> notificationMarkAsRead(String id) async
+    //Future<NotificationMarkAsRead200Response> notificationMarkAsRead(String id, { Object body }) async
     test('test notificationMarkAsRead', () async {
       // TODO
     });

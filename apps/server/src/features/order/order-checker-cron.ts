@@ -41,13 +41,15 @@ export async function handleOrderCheckerCron(
 			svc.kv,
 		);
 
-		// Configuration timeouts (in minutes)
+		// Configuration timeouts (in minutes) - all from database configuration
 		const REQUESTED_TIMEOUT_MINUTES =
-			businessConfig.paymentPendingTimeoutMinutes ?? 15; // Cancel orders waiting for payment
+			businessConfig.paymentPendingTimeoutMinutes; // Cancel orders waiting for payment
 		const MATCHING_TIMEOUT_MINUTES =
-			businessConfig.driverMatchingTimeoutMinutes ?? 10; // Cancel orders stuck in matching
-		const COMPLETION_TIMEOUT_MINUTES = 60; // Auto-complete orders without ratings after 60 minutes
-		const NO_SHOW_TIMEOUT_MINUTES = 30; // Handle NO_SHOW orders after 30 minutes
+			businessConfig.driverMatchingTimeoutMinutes; // Cancel orders stuck in matching
+		const COMPLETION_TIMEOUT_MINUTES =
+			businessConfig.orderCompletionTimeoutMinutes; // Auto-complete orders without ratings
+		const NO_SHOW_TIMEOUT_MINUTES = businessConfig.noShowTimeoutMinutes; // Handle NO_SHOW orders
+		const STALE_TIMESTAMP_MINUTES = businessConfig.orderStaleTimestampMinutes; // Stale timestamp threshold for in-transit orders
 
 		const now = new Date();
 		let processedOrders = 0;
@@ -351,12 +353,13 @@ export async function handleOrderCheckerCron(
 							op.and(op.eq(f.referenceId, order.id), op.eq(f.type, "REFUND")),
 					});
 
-					// If no refund exists yet, process partial refund (50% for NO_SHOW)
+					// If no refund exists yet, process partial refund based on noShowFee from config
 					if (!existingRefund) {
 						const totalPrice = new Decimal(order.totalPrice);
-						// 50% refund for NO_SHOW per SRS penalty logic
-						const refundAmount = totalPrice.mul(0.5);
-						const penaltyAmount = totalPrice.sub(refundAmount);
+						// Use noShowFee from business configuration (e.g., 0.5 = 50% penalty)
+						const noShowFeeRate = businessConfig.noShowFee;
+						const penaltyAmount = totalPrice.mul(noShowFeeRate);
+						const refundAmount = totalPrice.sub(penaltyAmount);
 
 						await OrderRefundService.processRefund(
 							order.id,
@@ -364,7 +367,7 @@ export async function handleOrderCheckerCron(
 							refundAmount,
 							penaltyAmount,
 							{ tx },
-							`NO_SHOW penalty: 50% refund for order #${order.id.slice(0, 8)}`,
+							`NO_SHOW penalty: ${Math.round(noShowFeeRate * 100)}% fee for order #${order.id.slice(0, 8)}`,
 						);
 
 						logger.info(
@@ -373,6 +376,7 @@ export async function handleOrderCheckerCron(
 								userId: order.userId,
 								refundAmount: refundAmount.toNumber(),
 								penaltyAmount: penaltyAmount.toNumber(),
+								noShowFeeRate,
 							},
 							"[OrderCheckerCron] Processed NO_SHOW refund",
 						);
@@ -400,7 +404,9 @@ export async function handleOrderCheckerCron(
 		}
 
 		// 5. Update stale timestamps for orders in transit
-		const staleTimestampLimit = new Date(now.getTime() - 5 * 60 * 1000); // 5 minutes ago
+		const staleTimestampLimit = new Date(
+			now.getTime() - STALE_TIMESTAMP_MINUTES * 60 * 1000,
+		);
 		const inTransitOrders = await svc.db.query.order.findMany({
 			where: (f, _op) =>
 				and(

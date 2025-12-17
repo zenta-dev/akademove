@@ -100,6 +100,10 @@ export const OrderSchema = z.object({
 	platformCommission: z.coerce.number().optional(),
 	driverEarning: z.coerce.number().optional(),
 	merchantCommission: z.coerce.number().optional(),
+	/** Merchant earning for FOOD orders (menuItemsTotal - merchantCommission) */
+	merchantEarning: z.coerce.number().optional(),
+	/** Estimated driver earning (server-calculated) for incoming orders before acceptance */
+	estimatedDriverEarning: z.coerce.number().optional(),
 	couponId: z.uuid().optional(),
 	couponCode: z.string().optional(),
 	discountAmount: z.coerce.number().optional(),
@@ -167,6 +171,8 @@ export const OrderKeySchema = extractSchemaKeysAsEnum(OrderSchema).exclude([
 	"user",
 	"driver",
 	"merchant",
+	// Computed field, not in database
+	"estimatedDriverEarning",
 ]);
 
 export const PlaceOrderSchema = OrderSchema.pick({
@@ -180,6 +186,7 @@ export const PlaceOrderSchema = OrderSchema.pick({
 	gender: true,
 	genderPreference: true,
 	attachmentUrl: true,
+	deliveryItemType: true,
 }).safeExtend({
 	couponCode: z.string().optional(),
 	payment: z.object({

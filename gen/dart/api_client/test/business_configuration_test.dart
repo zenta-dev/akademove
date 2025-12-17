@@ -91,5 +91,71 @@ void main() {
     test('to test the property `paymentPendingTimeoutMinutes`', () async {
       // TODO
     });
+
+    // num orderCompletionTimeoutMinutes (default value: 60)
+    test('to test the property `orderCompletionTimeoutMinutes`', () async {
+      // TODO
+    });
+
+    // num noShowTimeoutMinutes (default value: 30)
+    test('to test the property `noShowTimeoutMinutes`', () async {
+      // TODO
+    });
+
+    // num orderStaleTimestampMinutes (default value: 5)
+    test('to test the property `orderStaleTimestampMinutes`', () async {
+      // TODO
+    });
+
+    // num driverLocationStaleThresholdMinutes (default value: 15)
+    test(
+      'to test the property `driverLocationStaleThresholdMinutes`',
+      () async {
+        // TODO
+      },
+    );
+
+    // num driverRebroadcastIntervalMinutes (default value: 2)
+    test('to test the property `driverRebroadcastIntervalMinutes`', () async {
+      // TODO
+    });
+
+    // num driverRebroadcastRadiusMultiplier (default value: 1.5)
+    test('to test the property `driverRebroadcastRadiusMultiplier`', () async {
+      // TODO
+    });
+
+    // num maxBadgeCommissionReduction (default value: 0.5)
+    test('to test the property `maxBadgeCommissionReduction`', () async {
+      // TODO
+    });
+
+    // num scheduledOrderMinAdvanceMinutes (default value: 30)
+    test('to test the property `scheduledOrderMinAdvanceMinutes`', () async {
+      // TODO
+    });
+
+    // num scheduledOrderMaxAdvanceDays (default value: 7)
+    test('to test the property `scheduledOrderMaxAdvanceDays`', () async {
+      // TODO
+    });
+
+    // num scheduledOrderMatchingLeadTimeMinutes (default value: 15)
+    test(
+      'to test the property `scheduledOrderMatchingLeadTimeMinutes`',
+      () async {
+        // TODO
+      },
+    );
+
+    // num scheduledOrderMinRescheduleHours (default value: 1)
+    test('to test the property `scheduledOrderMinRescheduleHours`', () async {
+      // TODO
+    });
+
+    // num onTimeDeliveryThresholdMinutes (default value: 10)
+    test('to test the property `onTimeDeliveryThresholdMinutes`', () async {
+      // TODO
+    });
   });
 }

@@ -11,12 +11,6 @@ import { logger } from "@/utils/logger";
 import { OrderBaseRepository } from "./repositories/order-base-repository";
 
 /**
- * Rebroadcast interval in minutes
- * Orders in MATCHING status without a driver will be rebroadcast every X minutes
- */
-const REBROADCAST_INTERVAL_MINUTES = 2;
-
-/**
  * Scheduled handler for rebroadcasting orders to driver pool
  * Called by Cloudflare Workers cron trigger
  *
@@ -32,7 +26,9 @@ const REBROADCAST_INTERVAL_MINUTES = 2;
  * - FOOD orders that are READY_FOR_PICKUP (status is MATCHING, no driverId)
  * - RIDE/DELIVERY orders that are MATCHING (no driverId assigned yet)
  *
- * This cron runs every 2 minutes to give drivers time to accept before rebroadcasting
+ * Configuration:
+ * - Rebroadcast interval: driverRebroadcastIntervalMinutes (from DB config)
+ * - Rebroadcast radius multiplier: driverRebroadcastRadiusMultiplier (from DB config)
  */
 export async function handleDriverRebroadcastCron(
 	_env: Env,
@@ -51,12 +47,19 @@ export async function handleDriverRebroadcastCron(
 		let rebroadcastCount = 0;
 		let errorCount = 0;
 
+		// Fetch rebroadcast configuration from database
+		const rebroadcastConfig =
+			await BusinessConfigurationService.getDriverRebroadcastConfig(
+				svc.db,
+				svc.kv,
+			);
+
 		// Find orders that:
 		// 1. Are in MATCHING status
 		// 2. Have no driver assigned (driverId is null)
-		// 3. Were updated more than REBROADCAST_INTERVAL_MINUTES ago (to avoid rebroadcasting too soon)
+		// 3. Were updated more than rebroadcastIntervalMinutes ago (to avoid rebroadcasting too soon)
 		const rebroadcastThreshold = new Date(
-			now.getTime() - REBROADCAST_INTERVAL_MINUTES * 60 * 1000,
+			now.getTime() - rebroadcastConfig.intervalMinutes * 60 * 1000,
 		);
 
 		const unmatchedOrders = await svc.db.query.order.findMany({
@@ -118,8 +121,9 @@ export async function handleDriverRebroadcastCron(
 
 		for (const order of unmatchedOrders) {
 			try {
-				// Use larger radius for rebroadcast (start with 1.5x initial radius)
-				const rebroadcastRadius = matchingConfig.initialRadiusKm * 1.5;
+				// Use larger radius for rebroadcast (use configurable multiplier)
+				const rebroadcastRadius =
+					matchingConfig.initialRadiusKm * rebroadcastConfig.radiusMultiplier;
 
 				// Find available drivers using the matching service
 				const matchedDrivers =
@@ -166,15 +170,24 @@ export async function handleDriverRebroadcastCron(
 					"[DriverRebroadcastCron] Rebroadcasting order to driver pool",
 				);
 
+				// Fetch pricing configuration for estimated driver earning calculation
+				const pricingConfig =
+					await OrderBaseRepository.fetchPricingConfiguration(
+						order.type as "RIDE" | "DELIVERY" | "FOOD",
+						svc.kv,
+						svc.db,
+					);
+
 				// Compose the order entity for broadcast
 				const composedOrder = await OrderBaseRepository.composeEntity(
 					order as Parameters<typeof OrderBaseRepository.composeEntity>[0],
 					svc.storage,
+					pricingConfig,
 				);
 
 				// Build the broadcast payload
 				const payload: OrderEnvelope = {
-					e: "OFFER",
+					e: "ORDER_OFFER",
 					f: "s",
 					t: "c",
 					tg: "DRIVER",

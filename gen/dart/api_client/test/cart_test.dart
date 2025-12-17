@@ -17,6 +17,16 @@ void main() {
       // TODO
     });
 
+    // Coordinate merchantLocation
+    test('to test the property `merchantLocation`', () async {
+      // TODO
+    });
+
+    // MerchantCategory merchantCategory
+    test('to test the property `merchantCategory`', () async {
+      // TODO
+    });
+
     // List<CartItem> items
     test('to test the property `items`', () async {
       // TODO

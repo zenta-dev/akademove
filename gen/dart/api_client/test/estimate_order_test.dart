@@ -52,6 +52,16 @@ void main() {
       // TODO
     });
 
+    // String attachmentUrl
+    test('to test the property `attachmentUrl`', () async {
+      // TODO
+    });
+
+    // DeliveryItemType deliveryItemType
+    test('to test the property `deliveryItemType`', () async {
+      // TODO
+    });
+
     // String couponCode
     test('to test the property `couponCode`', () async {
       // TODO

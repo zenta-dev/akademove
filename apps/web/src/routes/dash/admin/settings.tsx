@@ -7,10 +7,14 @@ import {
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import {
+	CalendarClockIcon,
 	ClockIcon,
+	GaugeIcon,
+	MapPinIcon,
 	PercentIcon,
 	RadarIcon,
 	Save,
+	TrophyIcon,
 	WalletIcon,
 } from "lucide-react";
 import { useForm } from "react-hook-form";
@@ -112,6 +116,78 @@ const SETTING_TABS = [
 			light: {
 				textColor: "data-[state=active]:text-amber-500",
 				bgColor: "data-[state=active]:bg-amber-500/10",
+			},
+		},
+	},
+	{
+		key: "lifecycle",
+		name: "Order Lifecycle",
+		icon: GaugeIcon,
+		description: "Configure order completion and stale timeouts",
+		textColor: "text-purple-500",
+		bgColor: "bg-purple-500/10",
+		tab: {
+			dark: {
+				textColor: "dark:data-[state=active]:text-purple-500",
+				bgColor: "dark:data-[state=active]:bg-purple-500/10",
+			},
+			light: {
+				textColor: "data-[state=active]:text-purple-500",
+				bgColor: "data-[state=active]:bg-purple-500/10",
+			},
+		},
+	},
+	{
+		key: "driver",
+		name: "Driver Settings",
+		icon: MapPinIcon,
+		description: "Configure driver location and rebroadcast settings",
+		textColor: "text-cyan-500",
+		bgColor: "bg-cyan-500/10",
+		tab: {
+			dark: {
+				textColor: "dark:data-[state=active]:text-cyan-500",
+				bgColor: "dark:data-[state=active]:bg-cyan-500/10",
+			},
+			light: {
+				textColor: "data-[state=active]:text-cyan-500",
+				bgColor: "data-[state=active]:bg-cyan-500/10",
+			},
+		},
+	},
+	{
+		key: "commission",
+		name: "Commission",
+		icon: TrophyIcon,
+		description: "Configure badge commission reductions",
+		textColor: "text-yellow-500",
+		bgColor: "bg-yellow-500/10",
+		tab: {
+			dark: {
+				textColor: "dark:data-[state=active]:text-yellow-500",
+				bgColor: "dark:data-[state=active]:bg-yellow-500/10",
+			},
+			light: {
+				textColor: "data-[state=active]:text-yellow-500",
+				bgColor: "data-[state=active]:bg-yellow-500/10",
+			},
+		},
+	},
+	{
+		key: "scheduled",
+		name: "Scheduled Orders",
+		icon: CalendarClockIcon,
+		description: "Configure scheduled order constraints",
+		textColor: "text-indigo-500",
+		bgColor: "bg-indigo-500/10",
+		tab: {
+			dark: {
+				textColor: "dark:data-[state=active]:text-indigo-500",
+				bgColor: "dark:data-[state=active]:bg-indigo-500/10",
+			},
+			light: {
+				textColor: "data-[state=active]:text-indigo-500",
+				bgColor: "data-[state=active]:bg-indigo-500/10",
 			},
 		},
 	},
@@ -294,6 +370,122 @@ const FIELD_DEFINITIONS: Record<keyof BusinessConfiguration, FieldDefinition> =
 			min: 5,
 			max: 60,
 		},
+
+		// Order lifecycle
+		orderCompletionTimeoutMinutes: {
+			label: "Order Completion Timeout",
+			description:
+				"Time after completion before order is auto-finalized without rating",
+			section: "lifecycle",
+			unit: "minutes",
+			min: 15,
+			max: 1440,
+		},
+		noShowTimeoutMinutes: {
+			label: "No-Show Timeout",
+			description:
+				"Time after which no-show orders are processed for cleanup and refund",
+			section: "lifecycle",
+			unit: "minutes",
+			min: 5,
+			max: 120,
+		},
+		orderStaleTimestampMinutes: {
+			label: "Order Stale Timestamp",
+			description:
+				"Duration after which in-transit order timestamps are considered stale",
+			section: "lifecycle",
+			unit: "minutes",
+			min: 1,
+			max: 30,
+		},
+
+		// Driver location and rebroadcast
+		driverLocationStaleThresholdMinutes: {
+			label: "Driver Location Stale Threshold",
+			description:
+				"Time after which driver location is considered stale (auto-offline)",
+			section: "driver",
+			unit: "minutes",
+			min: 5,
+			max: 60,
+		},
+		driverRebroadcastIntervalMinutes: {
+			label: "Rebroadcast Interval",
+			description: "Time between rebroadcast attempts for unmatched orders",
+			section: "driver",
+			unit: "minutes",
+			min: 1,
+			max: 10,
+		},
+		driverRebroadcastRadiusMultiplier: {
+			label: "Rebroadcast Radius Multiplier",
+			description:
+				"Multiplier for radius expansion during rebroadcast (150 = 1.5x)",
+			section: "driver",
+			unit: "%",
+			step: "10",
+			min: 100,
+			max: 300,
+			isPercentage: true,
+		},
+
+		// Commission
+		maxBadgeCommissionReduction: {
+			label: "Max Badge Commission Reduction",
+			description: "Maximum commission reduction from driver badges (50 = 50%)",
+			section: "commission",
+			unit: "%",
+			step: "5",
+			min: 0,
+			max: 100,
+			isPercentage: true,
+		},
+
+		// Scheduled orders
+		scheduledOrderMinAdvanceMinutes: {
+			label: "Minimum Advance Time",
+			description:
+				"Minimum minutes in advance required for scheduling an order",
+			section: "scheduled",
+			unit: "minutes",
+			min: 5,
+			max: 120,
+		},
+		scheduledOrderMaxAdvanceDays: {
+			label: "Maximum Advance Days",
+			description: "Maximum days in advance allowed for scheduling an order",
+			section: "scheduled",
+			unit: "days",
+			min: 1,
+			max: 30,
+		},
+		scheduledOrderMatchingLeadTimeMinutes: {
+			label: "Matching Lead Time",
+			description: "Minutes before scheduled time when driver matching begins",
+			section: "scheduled",
+			unit: "minutes",
+			min: 5,
+			max: 60,
+		},
+		scheduledOrderMinRescheduleHours: {
+			label: "Minimum Reschedule Hours",
+			description:
+				"Minimum hours before scheduled time required to allow rescheduling",
+			section: "scheduled",
+			unit: "hours",
+			min: 1,
+			max: 24,
+		},
+		onTimeDeliveryThresholdMinutes: {
+			label: "On-Time Delivery Threshold",
+			description:
+				"Threshold in minutes for considering a delivery as on-time (metrics)",
+			section: "lifecycle",
+			unit: "minutes",
+			min: 5,
+			max: 60,
+		},
 	};
 
 const DEFAULT_VALUES: BusinessConfiguration = {
@@ -314,6 +506,23 @@ const DEFAULT_VALUES: BusinessConfiguration = {
 	driverMatchingBroadcastLimit: 10,
 	driverMaxCancellationsPerDay: 3,
 	paymentPendingTimeoutMinutes: 15,
+	// Order lifecycle
+	orderCompletionTimeoutMinutes: 60,
+	noShowTimeoutMinutes: 30,
+	orderStaleTimestampMinutes: 5,
+	// Driver location and rebroadcast
+	driverLocationStaleThresholdMinutes: 15,
+	driverRebroadcastIntervalMinutes: 2,
+	driverRebroadcastRadiusMultiplier: 1.5,
+	// Commission
+	maxBadgeCommissionReduction: 0.5,
+	// Scheduled orders
+	scheduledOrderMinAdvanceMinutes: 30,
+	scheduledOrderMaxAdvanceDays: 7,
+	scheduledOrderMatchingLeadTimeMinutes: 15,
+	scheduledOrderMinRescheduleHours: 1,
+	// On-time delivery
+	onTimeDeliveryThresholdMinutes: 10,
 };
 
 export const Route = createFileRoute("/dash/admin/settings")({
@@ -321,7 +530,7 @@ export const Route = createFileRoute("/dash/admin/settings")({
 		meta: [{ title: `Business Settings - ${SUB_ROUTE_TITLES.ADMIN.OVERVIEW}` }],
 	}),
 	beforeLoad: async () => {
-		const ok = await hasAccess(["ADMIN"]);
+		const ok = await hasAccess(["ADMIN", "OPERATOR"]);
 		if (!ok) redirect({ to: "/", throw: true });
 		return { allowed: ok };
 	},
@@ -433,14 +642,14 @@ function BusinessSettingsForm() {
 			<form onSubmit={form.handleSubmit(onSubmit)}>
 				<Tabs defaultValue={SETTING_TABS[0].key}>
 					<div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-						<div className="w-min rounded-xl border bg-card p-1">
-							<TabsList className="flex flex-wrap bg-transparent">
+						<div className="max-w-full overflow-x-auto rounded-xl border bg-card p-1">
+							<TabsList className="inline-flex h-auto gap-1 bg-transparent">
 								{SETTING_TABS.map((tab) => (
 									<TabsTrigger
 										key={tab.key}
 										value={tab.key}
 										className={cn(
-											"gap-2 p-3",
+											"shrink-0 gap-2 px-3 py-2",
 											tab.tab.light.bgColor,
 											tab.tab.light.textColor,
 											tab.tab.dark.bgColor,

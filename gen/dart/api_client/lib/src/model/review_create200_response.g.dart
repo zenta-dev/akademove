@@ -9,7 +9,7 @@ part of 'review_create200_response.dart';
 abstract class _$ReviewCreate200ResponseCWProxy {
   ReviewCreate200Response message(String message);
 
-  ReviewCreate200Response data(Review data);
+  ReviewCreate200Response data(Review? data);
 
   ReviewCreate200Response pagination(PaginationResult? pagination);
 
@@ -24,7 +24,7 @@ abstract class _$ReviewCreate200ResponseCWProxy {
   /// ```
   ReviewCreate200Response call({
     String message,
-    Review data,
+    Review? data,
     PaginationResult? pagination,
     int? totalPages,
   });
@@ -42,7 +42,7 @@ class _$ReviewCreate200ResponseCWProxyImpl
   ReviewCreate200Response message(String message) => call(message: message);
 
   @override
-  ReviewCreate200Response data(Review data) => call(data: data);
+  ReviewCreate200Response data(Review? data) => call(data: data);
 
   @override
   ReviewCreate200Response pagination(PaginationResult? pagination) =>
@@ -71,10 +71,10 @@ class _$ReviewCreate200ResponseCWProxyImpl
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
           : message as String,
-      data: data == const $CopyWithPlaceholder() || data == null
+      data: data == const $CopyWithPlaceholder()
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
-          : data as Review,
+          : data as Review?,
       pagination: pagination == const $CopyWithPlaceholder()
           ? _value.pagination
           // ignore: cast_nullable_to_non_nullable
@@ -107,7 +107,7 @@ ReviewCreate200Response _$ReviewCreate200ResponseFromJson(
     message: $checkedConvert('message', (v) => v as String),
     data: $checkedConvert(
       'data',
-      (v) => Review.fromJson(v as Map<String, dynamic>),
+      (v) => v == null ? null : Review.fromJson(v as Map<String, dynamic>),
     ),
     pagination: $checkedConvert(
       'pagination',
@@ -124,7 +124,7 @@ Map<String, dynamic> _$ReviewCreate200ResponseToJson(
   ReviewCreate200Response instance,
 ) => <String, dynamic>{
   'message': instance.message,
-  'data': instance.data.toJson(),
+  'data': instance.data?.toJson(),
   'pagination': ?instance.pagination?.toJson(),
   'totalPages': ?instance.totalPages,
 };

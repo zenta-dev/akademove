@@ -12,8 +12,8 @@ export type ReportStatus = z.infer<typeof ReportStatusSchema>;
 export const ReportSchema = z.object({
 	id: z.uuid(),
 	orderId: z.uuid().optional(),
-	reporterId: z.uuid(),
-	targetUserId: z.uuid(),
+	reporterId: z.string(),
+	targetUserId: z.string(),
 	category: ReportCategorySchema,
 	description: z.string(),
 	evidenceUrl: z.string().optional(),

@@ -4,11 +4,10 @@
  * Handles WEBSOCKET_BROADCAST queue messages.
  * Broadcasts messages to connected clients via Durable Objects.
  *
- * Supports two message formats:
- * 1. Event-based (e field): { e: "COMPLETED", f: "s", t: "c", ... }
- * 2. Action-based (a field): { a: "MATCHING", f: "s", t: "c", ... }
+ * Server → Client broadcasts should ONLY use events (e field), not actions.
+ * Actions are for Client → Server communication.
  *
- * Both formats use t: "c" (to client) since broadcasts always go TO clients.
+ * Message format: { e: "EVENT_NAME", f: "s", t: "c", tg: "TARGET", p: {...} }
  */
 
 import type { WebSocketBroadcastJob } from "@repo/schema/queue";
@@ -21,42 +20,39 @@ export async function handleWebSocketBroadcast(
 	_context: QueueHandlerContext,
 ): Promise<void> {
 	const { payload } = job;
-	const { roomName, event, action, target, data, excludeUserIds } = payload;
+	const { roomName, event, target, data, excludeUserIds } = payload;
 
-	const messageType = action ?? event;
-
-	logger.debug(
-		{ roomName, event, action, target },
-		"[WebSocketBroadcastHandler] Broadcasting message",
+	logger.info(
+		{ roomName, event, target, hasData: !!data },
+		"[WebSocketBroadcastHandler] Processing broadcast job",
 	);
+
+	if (!event) {
+		logger.warn(
+			{ roomName, payload },
+			"[WebSocketBroadcastHandler] Missing event field - server broadcasts must use events, not actions",
+		);
+		return;
+	}
 
 	try {
 		// Get the Durable Object stub for the room
 		const roomStub = OrderRepository.getRoomStubByName(roomName);
 
-		// Create the broadcast message based on type (event or action)
-		// Both action-based (a field) and event-based (e field) messages are broadcast TO CLIENTS
-		// The "t" field indicates the intended recipient, which is "c" (client) for broadcasts
-		// Note: "t: s" is only used when CLIENT sends a message TO SERVER for processing
-		//
-		// Per OrderEnvelopeSchema, both `e` (event) and `a` (action) are optional.
-		// Driver app checks: envelope.e == OFFER || envelope.a == MATCHING
-		// So action-based messages with only `a: "MATCHING"` should work correctly.
-		const message = action
-			? {
-					a: action,
-					f: "s", // from server
-					t: "c", // to client (broadcasts go to connected WebSocket clients)
-					tg: target,
-					p: data,
-				}
-			: {
-					e: event,
-					f: "s", // from server
-					t: "c", // to client
-					tg: target,
-					p: data,
-				};
+		// Create the broadcast message using event (e field)
+		// Server → Client broadcasts use:
+		// - e: event name (what happened)
+		// - f: "s" (from server)
+		// - t: "c" (to client)
+		// - tg: target audience (DRIVER, USER, etc.)
+		// - p: payload data
+		const message = {
+			e: event,
+			f: "s", // from server
+			t: "c", // to client
+			tg: target,
+			p: data,
+		};
 
 		// Send the broadcast request to the Durable Object
 		// Note: The actual broadcast logic is in the OrderRoom.broadcast() method
@@ -77,13 +73,13 @@ export async function handleWebSocketBroadcast(
 			throw new Error(`Broadcast failed: ${errorText}`);
 		}
 
-		logger.debug(
-			{ roomName, messageType },
-			"[WebSocketBroadcastHandler] Broadcast completed",
+		logger.info(
+			{ roomName, event, status: response.status },
+			"[WebSocketBroadcastHandler] Broadcast completed successfully",
 		);
 	} catch (error) {
 		logger.error(
-			{ error, roomName, messageType },
+			{ error, roomName, event },
 			"[WebSocketBroadcastHandler] Failed to broadcast",
 		);
 		// Don't throw - WebSocket broadcast is best-effort

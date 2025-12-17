@@ -23,6 +23,8 @@ abstract class _$CartItemCWProxy {
 
   CartItem notes(String? notes);
 
+  CartItem stock(int? stock);
+
   /// Creates a new instance with the provided field values.
   /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `CartItem(...).copyWith.fieldName(value)`.
   ///
@@ -39,6 +41,7 @@ abstract class _$CartItemCWProxy {
     num unitPrice,
     int quantity,
     String? notes,
+    int? stock,
   });
 }
 
@@ -75,6 +78,9 @@ class _$CartItemCWProxyImpl implements _$CartItemCWProxy {
   CartItem notes(String? notes) => call(notes: notes);
 
   @override
+  CartItem stock(int? stock) => call(stock: stock);
+
+  @override
   /// Creates a new instance with the provided field values.
   /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `CartItem(...).copyWith.fieldName(value)`.
   ///
@@ -91,6 +97,7 @@ class _$CartItemCWProxyImpl implements _$CartItemCWProxy {
     Object? unitPrice = const $CopyWithPlaceholder(),
     Object? quantity = const $CopyWithPlaceholder(),
     Object? notes = const $CopyWithPlaceholder(),
+    Object? stock = const $CopyWithPlaceholder(),
   }) {
     return CartItem(
       menuId: menuId == const $CopyWithPlaceholder() || menuId == null
@@ -127,6 +134,10 @@ class _$CartItemCWProxyImpl implements _$CartItemCWProxy {
           ? _value.notes
           // ignore: cast_nullable_to_non_nullable
           : notes as String?,
+      stock: stock == const $CopyWithPlaceholder()
+          ? _value.stock
+          // ignore: cast_nullable_to_non_nullable
+          : stock as int?,
     );
   }
 }
@@ -154,6 +165,7 @@ CartItem _$CartItemFromJson(Map<String, dynamic> json) =>
           'menuImage',
           'unitPrice',
           'quantity',
+          'notes',
         ],
       );
       final val = CartItem(
@@ -165,6 +177,7 @@ CartItem _$CartItemFromJson(Map<String, dynamic> json) =>
         unitPrice: $checkedConvert('unitPrice', (v) => v as num),
         quantity: $checkedConvert('quantity', (v) => (v as num).toInt()),
         notes: $checkedConvert('notes', (v) => v as String?),
+        stock: $checkedConvert('stock', (v) => (v as num?)?.toInt()),
       );
       return val;
     });
@@ -177,5 +190,6 @@ Map<String, dynamic> _$CartItemToJson(CartItem instance) => <String, dynamic>{
   'menuImage': instance.menuImage,
   'unitPrice': instance.unitPrice,
   'quantity': instance.quantity,
-  'notes': ?instance.notes,
+  'notes': instance.notes,
+  'stock': ?instance.stock,
 };

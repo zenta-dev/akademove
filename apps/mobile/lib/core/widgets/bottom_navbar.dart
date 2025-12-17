@@ -124,7 +124,9 @@ class _BottomNavbarState extends State<BottomNavbar> {
             Icon(
               tab.icon,
               size: 24.sp,
-              color: selected ? context.colorScheme.primary : null,
+              color: selected
+                  ? context.colorScheme.primary
+                  : context.colorScheme.mutedForeground,
             ),
             ClipRect(
               child: AnimatedAlign(

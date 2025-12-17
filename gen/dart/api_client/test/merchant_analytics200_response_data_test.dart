@@ -23,6 +23,16 @@ void main() {
       // TODO
     });
 
+    // num commissionRate
+    test('to test the property `commissionRate`', () async {
+      // TODO
+    });
+
+    // num netIncome
+    test('to test the property `netIncome`', () async {
+      // TODO
+    });
+
     // num completedOrders
     test('to test the property `completedOrders`', () async {
       // TODO

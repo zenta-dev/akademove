@@ -32,6 +32,11 @@ void main() {
       // TODO
     });
 
+    // OrderEnvelopePayloadChatUnreadCount chatUnreadCount
+    test('to test the property `chatUnreadCount`', () async {
+      // TODO
+    });
+
     // OrderEnvelopePayloadMerchantAction merchantAction
     test('to test the property `merchantAction`', () async {
       // TODO
@@ -49,6 +54,11 @@ void main() {
 
     // OrderEnvelopePayloadRetryInfo retryInfo
     test('to test the property `retryInfo`', () async {
+      // TODO
+    });
+
+    // OrderEnvelopePayloadSyncRequest syncRequest
+    test('to test the property `syncRequest`', () async {
       // TODO
     });
   });

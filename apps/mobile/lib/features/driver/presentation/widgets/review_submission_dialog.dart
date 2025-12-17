@@ -257,13 +257,20 @@ Future<bool?> showReviewDialog({
   required String toUserId,
   required String toUserName,
 }) {
+  // Capture the cubit before showDialog since the dialog context
+  // won't have access to BlocProviders in the calling widget tree
+  final reviewCubit = context.read<DriverReviewCubit>();
+
   return showDialog<bool>(
     context: context,
     barrierDismissible: false,
-    builder: (context) => ReviewSubmissionDialog(
-      orderId: orderId,
-      toUserId: toUserId,
-      toUserName: toUserName,
+    builder: (dialogContext) => BlocProvider.value(
+      value: reviewCubit,
+      child: ReviewSubmissionDialog(
+        orderId: orderId,
+        toUserId: toUserId,
+        toUserName: toUserName,
+      ),
     ),
   );
 }

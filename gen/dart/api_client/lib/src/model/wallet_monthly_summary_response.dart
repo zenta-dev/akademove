@@ -22,6 +22,9 @@ class WalletMonthlySummaryResponse {
     required this.totalIncome,
     required this.totalExpense,
     required this.net,
+    required this.totalEarnings,
+    required this.totalCommission,
+    required this.commissionRate,
   });
 
   /// YYYY-MM
@@ -37,6 +40,15 @@ class WalletMonthlySummaryResponse {
   @JsonKey(name: r'net', required: true, includeIfNull: false)
   final num net;
 
+  @JsonKey(name: r'totalEarnings', required: true, includeIfNull: false)
+  final num totalEarnings;
+
+  @JsonKey(name: r'totalCommission', required: true, includeIfNull: false)
+  final num totalCommission;
+
+  @JsonKey(name: r'commissionRate', required: true, includeIfNull: false)
+  final num commissionRate;
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -44,14 +56,20 @@ class WalletMonthlySummaryResponse {
           other.month == month &&
           other.totalIncome == totalIncome &&
           other.totalExpense == totalExpense &&
-          other.net == net;
+          other.net == net &&
+          other.totalEarnings == totalEarnings &&
+          other.totalCommission == totalCommission &&
+          other.commissionRate == commissionRate;
 
   @override
   int get hashCode =>
       month.hashCode +
       totalIncome.hashCode +
       totalExpense.hashCode +
-      net.hashCode;
+      net.hashCode +
+      totalEarnings.hashCode +
+      totalCommission.hashCode +
+      commissionRate.hashCode;
 
   factory WalletMonthlySummaryResponse.fromJson(Map<String, dynamic> json) =>
       _$WalletMonthlySummaryResponseFromJson(json);

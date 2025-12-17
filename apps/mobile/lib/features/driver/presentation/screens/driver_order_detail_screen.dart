@@ -410,9 +410,7 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
                   variance: ButtonVariance.ghost,
                 ),
               ],
-              title: Text(
-                context.l10n.text_order_id_short(order.id.substring(0, 8)),
-              ),
+              title: Text(context.l10n.text_order_id_short(order.id.prefix(8))),
             ),
           ],
           child: Column(
@@ -920,8 +918,11 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
     final totalPrice = order.totalPrice;
     final tip = order.tip ?? 0;
     final platformCommission = order.platformCommission ?? 0;
+    // Use server-provided values: driverEarning (final) or estimatedDriverEarning (pre-completion)
     final driverEarning =
-        order.driverEarning ?? (totalPrice - platformCommission);
+        order.driverEarning ??
+        order.estimatedDriverEarning?.toDouble() ??
+        (totalPrice - platformCommission);
 
     return Card(
       child: Column(

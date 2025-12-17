@@ -22,6 +22,15 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
   @override
   void initState() {
     super.initState();
+    _initCubit();
+  }
+
+  void _initCubit() {
+    // Get driverId from DriverProfileCubit (single source of truth)
+    final driverId = context.read<DriverProfileCubit>().driver?.id;
+    if (driverId != null) {
+      context.read<DriverWalletCubit>().setDriverId(driverId);
+    }
     _loadData();
   }
 
@@ -84,7 +93,8 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
                         if (monthlySummary != null) _buildMonthSelector(),
                         if (monthlySummary is WalletMonthlySummaryResponse)
                           _buildEarningsSummary(monthlySummary),
-                        _buildCommissionReportSection(transactions),
+                        if (monthlySummary is WalletMonthlySummaryResponse)
+                          _buildCommissionReportSection(monthlySummary),
                         _buildRecentTransactions(transactions),
                         _buildWithdrawButton(wallet),
                       ],
@@ -272,9 +282,9 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
     );
   }
 
-  Widget _buildCommissionReportSection(List<Transaction> transactions) {
+  Widget _buildCommissionReportSection(WalletMonthlySummaryResponse summary) {
     return GestureDetector(
-      onTap: () => context.push(Routes.driverCommissionReport.path),
+      onTap: () => context.pushNamed(Routes.driverCommissionReport.name),
       child: Card(
         child: Padding(
           padding: EdgeInsets.all(16.dg),
@@ -312,7 +322,7 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
                   Expanded(
                     child: _buildCommissionStatCard(
                       context.l10n.commission,
-                      _calculateTotalCommission(transactions),
+                      summary.totalCommission,
                       LucideIcons.trendingDown,
                       const Color(0xFFF44336),
                     ),
@@ -320,7 +330,7 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
                   Expanded(
                     child: _buildCommissionStatCard(
                       context.l10n.label_platform_commission,
-                      20, // Default commission rate
+                      summary.commissionRate,
                       LucideIcons.percent,
                       context.colorScheme.primary,
                       isPercentage: true,
@@ -369,12 +379,6 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
         ],
       ),
     );
-  }
-
-  num _calculateTotalCommission(List<Transaction> transactions) {
-    return transactions
-        .where((t) => t.type == TransactionType.COMMISSION)
-        .fold<num>(0, (sum, t) => sum + t.amount);
   }
 
   Widget _buildRecentTransactions(List<Transaction> transactions) {

@@ -7,7 +7,9 @@ import 'package:akademove/locator.dart';
 import 'package:api_client/api_client.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:shadcn_flutter/shadcn_flutter.dart' show LucideIcons;
+import 'package:flutter/widgets.dart' show WidgetsBinding;
+import 'package:shadcn_flutter/shadcn_flutter.dart'
+    show LucideIcons, Scaffold, CircularProgressIndicator, Center;
 
 part 'auth-router.dart';
 part 'driver-router.dart';
@@ -84,13 +86,13 @@ enum Routes {
   /// Driver Routes
   ///
   driverHome('/driver/home'),
-  driverOrderDetail('/driver/order/:orderId'),
-  driverEarnings('/driver/earnings'),
-  driverCommissionReport('/driver/earnings/commission'),
-  driverLeaderboard('/driver/leaderboard'),
-  driverLeaderboardDetail('/driver/leaderboard/detail'),
-  driverReviews('/driver/reviews'),
-  driverReviewsDetail('/driver/reviews/detail'),
+  driverOrderDetail('/driver/home/order/:orderId'),
+  driverEarnings('/driver/home/earnings'),
+  driverCommissionReport('/driver/home/earnings/commission'),
+  driverLeaderboard('/driver/home/leaderboard'),
+  driverLeaderboardDetail('/driver/home/leaderboard/detail'),
+  driverReviews('/driver/home/reviews'),
+  driverReviewsDetail('/driver/home/reviews/detail'),
   driverKRS('/driver/krs'),
   driverKrsUpsert('/driver/krs/upsert'),
   driverHistory('/driver/history'),
@@ -98,7 +100,7 @@ enum Routes {
   driverProfile('/driver/profile'),
   driverEditProfile('/driver/profile/edit'),
   driverChangePassword('/driver/profile/change-password'),
-  driverNotifications('/driver/notifications'),
+  driverNotifications('/driver/home/notifications'),
   driverOrderCompletion('/driver/home/order-completion'),
 
   ///

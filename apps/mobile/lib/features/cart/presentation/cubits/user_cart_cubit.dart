@@ -1,46 +1,33 @@
-import 'package:akademove/core/_export.dart';
-import 'package:akademove/features/cart/data/_export.dart';
-import 'package:akademove/features/cart/data/models/cart_models.dart' as models;
-import 'package:akademove/features/cart/presentation/states/_export.dart';
-import 'package:akademove/features/order/data/repositories/order_repository.dart';
-import 'package:api_client/api_client.dart' hide Cart, CartItem;
-import 'package:dio/dio.dart';
-import 'package:http_parser/http_parser.dart' show MediaType;
+import "package:akademove/core/_export.dart";
+import "package:akademove/features/cart/data/_export.dart";
+import "package:akademove/features/cart/presentation/states/_export.dart";
+import "package:akademove/features/order/data/repositories/order_repository.dart";
+import "package:api_client/api_client.dart" hide Cart, CartItem;
 
 class UserCartCubit extends BaseCubit<UserCartState> {
   UserCartCubit({
     required CartRepository cartRepository,
     required OrderRepository orderRepository,
+    required DocumentService documentService,
   }) : _cartRepository = cartRepository,
        _orderRepository = orderRepository,
+       _documentService = documentService,
        super(const UserCartState());
 
   final CartRepository _cartRepository;
   final OrderRepository _orderRepository;
+  final DocumentService _documentService;
 
-  /// Load cart from storage on init
-  Future<void> loadCart() async => await taskManager.execute('CC-lC', () async {
+  Future<void> loadCart() async {
+    emit(state.copyWith(isLoading: true, clearError: true));
     try {
-      emit(state.copyWith(cart: const OperationResult.loading()));
-
       final cart = await _cartRepository.getCart();
-      emit(
-        state.copyWith(
-          cart: OperationResult.success(cart, message: 'Cart loaded'),
-        ),
-      );
-    } on BaseError catch (e, st) {
-      logger.e(
-        '[UserCartCubit] - loadCart Error: ${e.message}',
-        error: e,
-        stackTrace: st,
-      );
-      emit(state.copyWith(cart: OperationResult.failed(e)));
+      emit(state.copyWith(cart: cart, isLoading: false));
+    } on BaseError catch (e) {
+      emit(state.copyWith(isLoading: false, error: e.message));
     }
-  });
+  }
 
-  /// Add item to cart
-  /// If different merchant detected, shows conflict dialog instead of adding
   Future<void> addItem({
     required MerchantMenu menu,
     required String merchantName,
@@ -48,9 +35,8 @@ class UserCartCubit extends BaseCubit<UserCartState> {
     String? notes,
     Coordinate? merchantLocation,
     MerchantCategory? merchantCategory,
-  }) async => await taskManager.execute('CC-aI-${menu.id}', () async {
+  }) async {
     try {
-      // Don't emit loading for add operations to keep UI responsive
       final result = await _cartRepository.addItem(
         menu: menu,
         merchantName: merchantName,
@@ -59,359 +45,158 @@ class UserCartCubit extends BaseCubit<UserCartState> {
         merchantLocation: merchantLocation,
         merchantCategory: merchantCategory,
       );
-
-      result.when(
-        success: (cart, message) {
-          emit(
-            state.copyWith(
-              addItemResult: OperationResult.success(cart, message: message),
-              cart: OperationResult.success(cart),
-            ),
-          );
-        },
-        failed: (code, message) {
-          // Check if it's a merchant conflict error
-          if (code == ErrorCode.conflict) {
-            // Extract pending item for conflict dialog
-            final item = models.CartItem(
-              menuId: menu.id,
-              merchantId: menu.merchantId,
-              merchantName: merchantName,
-              menuName: menu.name,
-              menuImage: menu.image,
-              unitPrice: menu.price,
-              quantity: quantity,
-              stock: menu.stock,
-              notes: notes,
-            );
-
-            // Show merchant conflict dialog
-            emit(
-              state.copyWith(
-                pendingItem: item,
-                pendingMerchantName: merchantName,
-                pendingMerchantLocation: merchantLocation,
-                pendingMerchantCategory: merchantCategory,
-                showMerchantConflict: true,
-              ),
-            );
-          } else {
-            final error = RepositoryError(message, code: code);
-            emit(state.copyWith(addItemResult: OperationResult.failed(error)));
-          }
-        },
-      );
-    } on BaseError catch (e, st) {
-      logger.e(
-        '[UserCartCubit] - addItem Error: ${e.message}',
-        error: e,
-        stackTrace: st,
-      );
-      emit(state.copyWith(addItemResult: OperationResult.failed(e)));
+      emit(state.copyWith(cart: result.data, clearError: true));
+    } on RepositoryError catch (e) {
+      if (e.code == ErrorCode.conflict) {
+        final pendingItem = CartItem(
+          menuId: menu.id,
+          merchantId: menu.merchantId,
+          merchantName: merchantName,
+          menuName: menu.name,
+          menuImage: menu.image,
+          unitPrice: menu.price,
+          quantity: quantity,
+          stock: menu.stock,
+          notes: notes,
+        );
+        emit(
+          state.copyWith(
+            pendingItem: pendingItem,
+            pendingMerchantName: merchantName,
+            pendingMerchantLocation: merchantLocation,
+            pendingMerchantCategory: merchantCategory,
+            showMerchantConflict: true,
+          ),
+        );
+      } else {
+        emit(state.copyWith(error: e.message));
+      }
+    } on BaseError catch (e) {
+      emit(state.copyWith(error: e.message));
     }
-  });
+  }
 
-  /// User confirms replacing cart with new merchant item
-  Future<void> confirmReplaceCart() async =>
-      await taskManager.execute('CC-cRC', () async {
-        try {
-          final pendingItem = state.pendingItem;
-          final pendingMerchantName = state.pendingMerchantName;
-          final pendingMerchantLocation = state.pendingMerchantLocation;
-          final pendingMerchantCategory = state.pendingMerchantCategory;
+  Future<void> updateQuantity({
+    required String menuId,
+    required int delta,
+  }) async {
+    // Store current cart in case we need to revert on error
+    final currentCart = state.cart;
+    logger.d(
+      "[UserCartCubit] updateQuantity called: menuId=$menuId, delta=$delta",
+    );
 
-          if (pendingItem == null || pendingMerchantName == null) {
-            emit(state.copyWith(clearPending: true));
-            return;
-          }
+    try {
+      final result = await _cartRepository.updateItemQuantityByDelta(
+        menuId: menuId,
+        delta: delta,
+      );
 
-          emit(
-            state.copyWith(replaceCartResult: const OperationResult.loading()),
-          );
+      // Ensure we emit the new cart, even if it's null (empty cart)
+      final newCart = result.data;
+      logger.d(
+        "[UserCartCubit] updateQuantity success: newCart items=${newCart?.items.length}",
+      );
 
-          // Need to convert back to MerchantMenu for replaceCart
-          final menu = MerchantMenu(
-            id: pendingItem.menuId,
-            merchantId: pendingItem.merchantId,
-            name: pendingItem.menuName,
-            image: pendingItem.menuImage,
-            price: pendingItem.unitPrice,
-            stock: 999, // Stock not validated here (checked at checkout)
-            createdAt: DateTime.now(),
-            updatedAt: DateTime.now(),
-          );
+      if (newCart != null) {
+        emit(state.copyWith(cart: newCart, clearError: true));
+      } else {
+        // Cart was cleared (last item removed)
+        emit(state.copyWith(clearCart: true, clearError: true));
+      }
+    } on BaseError catch (e) {
+      logger.e("[UserCartCubit] updateQuantity error: ${e.message}");
+      // Revert to previous cart state on error
+      emit(state.copyWith(cart: currentCart, error: e.message));
+    }
+  }
 
-          final result = await _cartRepository.replaceCart(
-            menu: menu,
-            merchantName: pendingMerchantName,
-            quantity: pendingItem.quantity,
-            notes: pendingItem.notes,
-            merchantLocation: pendingMerchantLocation,
-            merchantCategory: pendingMerchantCategory,
-          );
+  Future<void> removeItem(String menuId) async {
+    try {
+      final result = await _cartRepository.removeItem(menuId);
+      emit(state.copyWith(cart: result.data, clearError: true));
+    } on BaseError catch (e) {
+      emit(state.copyWith(error: e.message));
+    }
+  }
 
-          result.when(
-            success: (cart, message) {
-              emit(
-                state.copyWith(
-                  replaceCartResult: OperationResult.success(
-                    cart,
-                    message: message,
-                  ),
-                  cart: OperationResult.success(cart),
-                  clearPending: true,
-                ),
-              );
-            },
-            failed: (code, message) {
-              final error = RepositoryError(message, code: code);
-              emit(
-                state.copyWith(
-                  replaceCartResult: OperationResult.failed(error),
-                  clearPending: true,
-                ),
-              );
-            },
-          );
-        } on BaseError catch (e, st) {
-          logger.e(
-            '[UserCartCubit] - confirmReplaceCart Error: ${e.message}',
-            error: e,
-            stackTrace: st,
-          );
-          emit(
-            state.copyWith(
-              replaceCartResult: OperationResult.failed(e),
-              clearPending: true,
-            ),
-          );
-        }
-      });
+  Future<void> clearCart() async {
+    try {
+      await _cartRepository.clearCart();
+      emit(state.copyWith(clearCart: true, clearError: true));
+    } on BaseError catch (e) {
+      emit(state.copyWith(error: e.message));
+    }
+  }
 
-  /// User cancels cart replacement
+  Future<void> confirmReplaceCart() async {
+    final pending = state.pendingItem;
+    final merchantName = state.pendingMerchantName;
+
+    if (pending == null || merchantName == null) {
+      emit(state.copyWith(clearPending: true));
+      return;
+    }
+
+    try {
+      final menu = MerchantMenu(
+        id: pending.menuId,
+        merchantId: pending.merchantId,
+        name: pending.menuName,
+        image: pending.menuImage,
+        price: pending.unitPrice,
+        stock: pending.stock ?? 999,
+        soldStock: 0,
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+      );
+
+      final result = await _cartRepository.replaceCart(
+        menu: menu,
+        merchantName: merchantName,
+        quantity: pending.quantity,
+        notes: pending.notes,
+        merchantLocation: state.pendingMerchantLocation,
+        merchantCategory: state.pendingMerchantCategory,
+      );
+      emit(
+        state.copyWith(cart: result.data, clearPending: true, clearError: true),
+      );
+    } on BaseError catch (e) {
+      emit(state.copyWith(error: e.message, clearPending: true));
+    }
+  }
+
   void cancelReplaceCart() {
     emit(state.copyWith(clearPending: true));
   }
 
-  /// Update item quantity by delta (positive to increment, negative to decrement)
-  /// Removes item if resulting quantity <= 0
-  ///
-  /// Uses optimistic updates for instant UI feedback:
-  /// 1. Validates stock availability for increments
-  /// 2. Immediately computes and emits new cart state
-  /// 3. Persists to storage in background (non-blocking)
-  void updateQuantity({required String menuId, required int delta}) {
-    final currentCart = state.currentCart;
-    if (currentCart == null) {
-      emit(
-        state.copyWith(
-          updateQuantityResult: OperationResult.failed(
-            const RepositoryError('Cart is empty', code: ErrorCode.notFound),
-          ),
-        ),
-      );
-      return;
-    }
-
-    final itemIndex = currentCart.items.indexWhere(
-      (item) => item.menuId == menuId,
-    );
-
-    if (itemIndex < 0) {
-      emit(
-        state.copyWith(
-          updateQuantityResult: OperationResult.failed(
-            const RepositoryError(
-              'Item not found in cart',
-              code: ErrorCode.notFound,
-            ),
-          ),
-        ),
-      );
-      return;
-    }
-
-    // Compute new cart state optimistically
-    final updatedItems = List<models.CartItem>.from(currentCart.items);
-    final currentItem = updatedItems[itemIndex];
-    final newQuantity = currentItem.quantity + delta;
-
-    // Validate stock for increments (delta > 0)
-    if (delta > 0 && newQuantity > currentItem.stock) {
-      // Cannot exceed available stock - silently ignore or emit same state
-      // The UI will show the item as "at max stock"
-      return;
-    }
-
-    models.Cart? updatedCart;
-
-    if (newQuantity <= 0) {
-      // Remove item
-      updatedItems.removeAt(itemIndex);
-
-      if (updatedItems.isEmpty) {
-        // Cart becomes empty
-        updatedCart = null;
-      } else {
-        // Recalculate totals
-        final totalItems = updatedItems.fold<int>(
-          0,
-          (sum, item) => sum + item.quantity,
-        );
-        final subtotal = updatedItems.fold<num>(
-          0,
-          (sum, item) => sum + (item.unitPrice * item.quantity),
-        );
-
-        updatedCart = currentCart.copyWith(
-          items: updatedItems,
-          totalItems: totalItems,
-          subtotal: subtotal,
-          lastUpdated: DateTime.now(),
-        );
-      }
-    } else {
-      // Update quantity
-      updatedItems[itemIndex] = currentItem.copyWith(quantity: newQuantity);
-
-      // Recalculate totals
-      final totalItems = updatedItems.fold<int>(
-        0,
-        (sum, item) => sum + item.quantity,
-      );
-      final subtotal = updatedItems.fold<num>(
-        0,
-        (sum, item) => sum + (item.unitPrice * item.quantity),
-      );
-
-      updatedCart = currentCart.copyWith(
-        items: updatedItems,
-        totalItems: totalItems,
-        subtotal: subtotal,
-        lastUpdated: DateTime.now(),
-      );
-    }
-
-    // Emit optimistic state immediately (non-blocking)
-    emit(
-      state.copyWith(
-        updateQuantityResult: OperationResult.success(
-          updatedCart,
-          message: 'Cart updated',
-        ),
-        cart: OperationResult.success(updatedCart),
-      ),
-    );
-
-    // Persist in background (fire-and-forget)
-    if (updatedCart != null) {
-      _cartRepository.persistCart(updatedCart);
-    } else {
-      _cartRepository.persistClearCart();
-    }
-  }
-
-  /// Remove item from cart
-  Future<void> removeItem(
-    String menuId,
-  ) async => await taskManager.execute('CC-rI-$menuId', () async {
-    try {
-      final result = await _cartRepository.removeItem(menuId);
-
-      result.when(
-        success: (cart, message) {
-          emit(
-            state.copyWith(
-              removeItemResult: OperationResult.success(cart, message: message),
-              cart: OperationResult.success(cart),
-            ),
-          );
-        },
-        failed: (code, message) {
-          final error = RepositoryError(message, code: code);
-          emit(state.copyWith(removeItemResult: OperationResult.failed(error)));
-        },
-      );
-    } on BaseError catch (e, st) {
-      logger.e(
-        '[UserCartCubit] - removeItem Error: ${e.message}',
-        error: e,
-        stackTrace: st,
-      );
-      emit(state.copyWith(removeItemResult: OperationResult.failed(e)));
-    }
-  });
-
-  /// Clear entire cart
-  Future<void> clearCart() async => await taskManager.execute(
-    'CC-cC',
-    () async {
-      try {
-        emit(state.copyWith(clearCartResult: const OperationResult.loading()));
-
-        await _cartRepository.clearCart();
-        emit(
-          state.copyWith(
-            clearCartResult: OperationResult.success(
-              true,
-              message: 'Cart cleared',
-            ),
-            cart: OperationResult.success(null),
-          ),
-        );
-      } on BaseError catch (e, st) {
-        logger.e(
-          '[UserCartCubit] - clearCart Error: ${e.message}',
-          error: e,
-          stackTrace: st,
-        );
-        emit(state.copyWith(clearCartResult: OperationResult.failed(e)));
-      }
-    },
-  );
-
-  /// Get order items for API submission
-  /// Returns empty list if cart is empty
-  Future<List<OrderItem>> getOrderItems() async {
-    try {
-      return await _cartRepository.convertToOrderItems();
-    } on BaseError catch (e) {
-      logger.w('[UserCartCubit] - getOrderItems failed: ${e.message}');
-      return [];
-    }
-  }
-
-  /// Reset to initial state
-  void reset() => emit(const UserCartState());
-
-  /// Place a food order from the current cart
   Future<PlaceOrderResponse?> placeFoodOrder({
     required Coordinate pickupLocation,
     required Coordinate dropoffLocation,
     required PaymentMethod paymentMethod,
     PaymentProvider paymentProvider = PaymentProvider.MANUAL,
     String? couponCode,
-  }) async => await taskManager.execute('CC-pFO', () async {
-    try {
-      emit(
-        state.copyWith(placeFoodOrderResult: const OperationResult.loading()),
-      );
+    String? attachmentUrl,
+  }) async {
+    final cart = state.cart;
+    if (cart == null || cart.items.isEmpty) {
+      emit(state.copyWith(error: "Cart is empty"));
+      return null;
+    }
 
-      // Get order items from cart
-      final orderItems = await _cartRepository.convertToOrderItems();
+    emit(state.copyWith(isLoading: true, clearError: true));
+
+    try {
+      final orderItems = _cartRepository.convertToOrderItems(cart);
       if (orderItems.isEmpty) {
         throw const RepositoryError(
-          'Cart is empty',
+          "Cart is empty",
           code: ErrorCode.badRequest,
         );
       }
 
-      // Get attachment URL from cart if present
-      final cart = await _cartRepository.getCart();
-      final attachmentUrl = cart?.attachmentUrl;
-
-      // Create place order request
-      final placeOrderRequest = PlaceOrder(
+      final request = PlaceOrder(
         type: OrderType.FOOD,
         pickupLocation: pickupLocation,
         dropoffLocation: dropoffLocation,
@@ -424,122 +209,57 @@ class UserCartCubit extends BaseCubit<UserCartState> {
         ),
       );
 
-      // Call API via repository
-      final response = await _orderRepository.placeOrder(placeOrderRequest);
-
-      // Clear cart on success
+      final response = await _orderRepository.placeOrder(request);
       await _cartRepository.clearCart();
-
-      emit(
-        state.copyWith(
-          placeFoodOrderResult: OperationResult.success(
-            response.data,
-            message: response.message,
-          ),
-          cart: OperationResult.success(null),
-        ),
-      );
-
+      emit(state.copyWith(clearCart: true, isLoading: false));
       return response.data;
-    } on BaseError catch (e, st) {
-      logger.e(
-        '[UserCartCubit] - placeFoodOrder Error: ${e.message}',
-        error: e,
-        stackTrace: st,
-      );
-      emit(state.copyWith(placeFoodOrderResult: OperationResult.failed(e)));
+    } on BaseError catch (e) {
+      emit(state.copyWith(isLoading: false, error: e.message));
       return null;
     }
-  });
+  }
 
-  /// Upload attachment file for Printing merchants
-  /// Returns the uploaded URL on success
-  Future<String?> uploadAttachment(
-    String filePath,
-  ) async => await taskManager.execute('CC-uA', () async {
+  void reset() {
+    emit(const UserCartState());
+  }
+
+  /// Pick a document attachment for Printing merchants
+  /// Supports PDF, DOC, DOCX, and image files (max 10 MB)
+  Future<void> pickAttachment() async {
     try {
-      emit(
-        state.copyWith(uploadAttachmentResult: const OperationResult.loading()),
+      final result = await _documentService.pickDocument();
+      emit(state.copyWith(attachment: result, clearError: true));
+    } on ServiceError catch (e) {
+      // Don't show error if user cancelled selection
+      if (e.code != ErrorCode.notFound) {
+        emit(state.copyWith(error: e.message));
+      }
+    }
+  }
+
+  /// Upload the selected attachment and store the URL
+  Future<String?> uploadAttachment() async {
+    final attachment = state.attachment;
+    if (attachment == null) return null;
+
+    emit(state.copyWith(isUploadingAttachment: true, clearError: true));
+
+    try {
+      final response = await _orderRepository.uploadAttachment(
+        attachment.file.path,
       );
 
-      // Create multipart file from path
-      final file = await MultipartFile.fromFile(
-        filePath,
-        contentType: _getMediaType(filePath),
-      );
-
-      // Upload to server
-      final response = await _orderRepository.uploadAttachment(file);
-
-      // Update cart with attachment URL
-      await _cartRepository.updateAttachment(response.data);
-
-      // Reload cart to get updated data
-      final updatedCart = await _cartRepository.getCart();
-
-      emit(
-        state.copyWith(
-          uploadAttachmentResult: OperationResult.success(
-            response.data,
-            message: response.message,
-          ),
-          cart: OperationResult.success(updatedCart),
-        ),
-      );
-
-      return response.data;
-    } on BaseError catch (e, st) {
-      logger.e(
-        '[UserCartCubit] - uploadAttachment Error: ${e.message}',
-        error: e,
-        stackTrace: st,
-      );
-      emit(state.copyWith(uploadAttachmentResult: OperationResult.failed(e)));
+      final url = response.data;
+      emit(state.copyWith(attachmentUrl: url, isUploadingAttachment: false));
+      return url;
+    } on BaseError catch (e) {
+      emit(state.copyWith(isUploadingAttachment: false, error: e.message));
       return null;
     }
-  });
+  }
 
-  /// Remove attachment from cart
-  Future<void> removeAttachment() async =>
-      await taskManager.execute('CC-rA', () async {
-        try {
-          await _cartRepository.updateAttachment(null);
-          final updatedCart = await _cartRepository.getCart();
-          emit(
-            state.copyWith(
-              uploadAttachmentResult: const OperationResult.idle(),
-              cart: OperationResult.success(updatedCart),
-            ),
-          );
-        } on BaseError catch (e, st) {
-          logger.e(
-            '[UserCartCubit] - removeAttachment Error: ${e.message}',
-            error: e,
-            stackTrace: st,
-          );
-        }
-      });
-
-  /// Get media type from file extension
-  MediaType _getMediaType(String filePath) {
-    final extension = filePath.split('.').last.toLowerCase();
-    switch (extension) {
-      case 'pdf':
-        return MediaType('application', 'pdf');
-      case 'doc':
-        return MediaType('application', 'msword');
-      case 'docx':
-        return MediaType(
-          'application',
-          'vnd.openxmlformats-officedocument.wordprocessingml.document',
-        );
-      case 'jpg':
-      case 'jpeg':
-        return MediaType('image', 'jpeg');
-      case 'png':
-        return MediaType('image', 'png');
-      default:
-        return MediaType('application', 'octet-stream');
-    }
+  /// Clear the selected attachment
+  void clearAttachment() {
+    emit(state.copyWith(clearAttachment: true));
   }
 }

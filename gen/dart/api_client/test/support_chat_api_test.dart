@@ -21,12 +21,12 @@ void main() {
       // TODO
     });
 
-    //Future<SupportChatListMessages200Response> supportChatListMessages(String ticketId, { int limit, String cursor }) async
+    //Future<SupportChatListMessages200Response> supportChatListMessages(String ticketId, int limit, { String cursor }) async
     test('test supportChatListMessages', () async {
       // TODO
     });
 
-    //Future<SupportChatListTickets200Response> supportChatListTickets({ SupportTicketStatus status, SupportTicketCategory category, SupportTicketPriority priority, String assignedToId, String userId, String search, int limit, String cursor }) async
+    //Future<SupportChatListTickets200Response> supportChatListTickets(int limit, { SupportTicketStatus status, SupportTicketCategory category, SupportTicketPriority priority, String assignedToId, String userId, String search, String cursor }) async
     test('test supportChatListTickets', () async {
       // TODO
     });

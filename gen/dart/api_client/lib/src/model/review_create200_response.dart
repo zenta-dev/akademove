@@ -28,8 +28,8 @@ class ReviewCreate200Response {
   @JsonKey(name: r'message', required: true, includeIfNull: false)
   final String message;
 
-  @JsonKey(name: r'data', required: true, includeIfNull: false)
-  final Review data;
+  @JsonKey(name: r'data', required: true, includeIfNull: true)
+  final Review? data;
 
   @JsonKey(name: r'pagination', required: false, includeIfNull: false)
   final PaginationResult? pagination;
@@ -51,7 +51,7 @@ class ReviewCreate200Response {
   @override
   int get hashCode =>
       message.hashCode +
-      data.hashCode +
+      (data == null ? 0 : data.hashCode) +
       pagination.hashCode +
       totalPages.hashCode;
 

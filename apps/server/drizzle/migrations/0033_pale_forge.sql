@@ -1,0 +1,2 @@
+ALTER TABLE "am_merchant_menus" ADD COLUMN "sold_stock" integer DEFAULT 0 NOT NULL;--> statement-breakpoint
+CREATE INDEX "am_merchant_menu_sold_stock_idx" ON "am_merchant_menus" USING btree ("sold_stock");

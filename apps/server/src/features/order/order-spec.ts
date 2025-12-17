@@ -1,5 +1,10 @@
 import { oc } from "@orpc/contract";
-import { DriverSchema, PaymentSchema, TransactionSchema } from "@repo/schema";
+import {
+	DriverSchema,
+	PaymentSchema,
+	SingleFileSchema,
+	TransactionSchema,
+} from "@repo/schema";
 import {
 	InsertOrderChatMessageSchema,
 	OrderChatMessageListQuerySchema,
@@ -22,6 +27,7 @@ import {
 import { UnifiedPaginationQuerySchema } from "@repo/schema/pagination";
 import * as z from "zod";
 import { createSuccesSchema, FEATURE_TAGS } from "@/core/constants";
+import { toOAPIRequestBody } from "@/utils/oapi";
 
 const OrderListQuerySchema = UnifiedPaginationQuerySchema.safeExtend({
 	statuses: z
@@ -197,13 +203,15 @@ export const OrderSpec = {
 			path: "/{id}/delivery-proof",
 			inputStructure: "detailed",
 			outputStructure: "detailed",
+			spec: (spec) => ({
+				...spec,
+				...toOAPIRequestBody(SingleFileSchema),
+			}),
 		})
 		.input(
 			z.object({
 				params: z.object({ id: z.uuid() }),
-				body: z.object({
-					file: z.instanceof(File),
-				}),
+				body: SingleFileSchema,
 			}),
 		)
 		.output(
@@ -219,13 +227,15 @@ export const OrderSpec = {
 			path: "/{id}/delivery-item-photo",
 			inputStructure: "detailed",
 			outputStructure: "detailed",
+			spec: (spec) => ({
+				...spec,
+				...toOAPIRequestBody(SingleFileSchema),
+			}),
 		})
 		.input(
 			z.object({
 				params: z.object({ id: z.uuid() }),
-				body: z.object({
-					file: z.instanceof(File),
-				}),
+				body: SingleFileSchema,
 			}),
 		)
 		.output(
@@ -246,12 +256,14 @@ export const OrderSpec = {
 			path: "/attachment",
 			inputStructure: "detailed",
 			outputStructure: "detailed",
+			spec: (spec) => ({
+				...spec,
+				...toOAPIRequestBody(SingleFileSchema),
+			}),
 		})
 		.input(
 			z.object({
-				body: z.object({
-					file: z.instanceof(File),
-				}),
+				body: SingleFileSchema,
 			}),
 		)
 		.output(

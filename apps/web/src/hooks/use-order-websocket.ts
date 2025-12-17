@@ -172,14 +172,14 @@ export const useOrderWebSocket = (
 							queryClient.invalidateQueries();
 							break;
 
-						case "COMPLETED":
-						case "CANCELED":
+						case "ORDER_COMPLETED":
+						case "ORDER_CANCELLED":
 							queryClient.invalidateQueries();
 							break;
 
-						case "MATCHING":
-						case "OFFER":
-						case "UNAVAILABLE":
+						case "ORDER_MATCHING":
+						case "ORDER_OFFER":
+						case "ORDER_UNAVAILABLE":
 							queryClient.invalidateQueries();
 							break;
 

@@ -16,6 +16,15 @@ export interface DriverMetrics {
 	lastActiveDate: Date | null;
 }
 
+/**
+ * Configuration for driver metrics calculation
+ * These values should be fetched from BusinessConfigurationService
+ */
+export interface DriverMetricsConfig {
+	/** Threshold in minutes for considering a delivery as on-time (default: 10) */
+	onTimeDeliveryThresholdMinutes: number;
+}
+
 export class DriverMetricsService {
 	#db: DatabaseService;
 
@@ -25,9 +34,14 @@ export class DriverMetricsService {
 
 	/**
 	 * Calculate comprehensive metrics for a driver
+	 *
+	 * @param driverId - The driver's ID
+	 * @param config - Metrics configuration from database (onTimeDeliveryThresholdMinutes)
+	 * @param opts - Optional transaction
 	 */
 	async calculateDriverMetrics(
 		driverId: string,
+		config: DriverMetricsConfig,
 		opts?: { tx: DatabaseTransaction },
 	): Promise<DriverMetrics> {
 		try {
@@ -37,7 +51,11 @@ export class DriverMetricsService {
 				await Promise.all([
 					this.#getOrderStats(driverId, tx),
 					this.#getRatingStats(driverId, tx),
-					this.#getOnTimeRate(driverId, tx),
+					this.#getOnTimeRate(
+						driverId,
+						config.onTimeDeliveryThresholdMinutes,
+						tx,
+					),
 					this.#getTotalEarnings(driverId, tx),
 					this.#calculateStreak(driverId, tx),
 				]);
@@ -139,10 +157,15 @@ export class DriverMetricsService {
 
 	/**
 	 * Calculate on-time delivery rate
-	 * On-time is defined as arriving within 10 minutes of accepted time
+	 * On-time threshold is configured via database configuration
+	 *
+	 * @param driverId - The driver's ID
+	 * @param onTimeThresholdMinutes - Threshold from database config
+	 * @param tx - Database transaction
 	 */
 	async #getOnTimeRate(
 		driverId: string,
+		onTimeThresholdMinutes: number,
 		tx: DatabaseService | DatabaseTransaction,
 	): Promise<{ rate: number }> {
 		const completedOrders = await tx
@@ -162,7 +185,6 @@ export class DriverMetricsService {
 			return { rate: 0 };
 		}
 
-		const onTimeThresholdMinutes = 10;
 		let onTimeCount = 0;
 
 		for (const order of completedOrders) {

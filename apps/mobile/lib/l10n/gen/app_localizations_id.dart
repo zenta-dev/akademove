@@ -2163,6 +2163,9 @@ class AppLocalizationsId extends AppLocalizations {
   String get label_stock => 'Stok';
 
   @override
+  String get sold => 'Terjual';
+
+  @override
   String get label_created => 'Dibuat';
 
   @override
@@ -3575,6 +3578,9 @@ class AppLocalizationsId extends AppLocalizations {
   String get toast_error => 'Error';
 
   @override
+  String get cancellation_reason => 'Alasan Pembatalan';
+
+  @override
   String get cancel_reason_optional => 'Alasan (opsional)';
 
   @override
@@ -4470,4 +4476,110 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get status_in_trip => 'Dalam Perjalanan';
+
+  @override
+  String get error_generic => 'Terjadi kesalahan. Silakan coba lagi.';
+
+  @override
+  String get button_retry => 'Coba Lagi';
+
+  @override
+  String get text_already_reviewed => 'Anda sudah mengulas pesanan ini';
+
+  @override
+  String get text_your_rating => 'Rating Anda';
+
+  @override
+  String get text_selected_categories => 'Kategori yang Dipilih';
+
+  @override
+  String get text_your_comment => 'Komentar Anda';
+
+  @override
+  String text_reviewed_on(String date) {
+    return 'Diulas pada $date';
+  }
+
+  @override
+  String get fee_breakdown => 'Rincian Biaya';
+
+  @override
+  String get driver_receives => 'Penghasilan Driver';
+
+  @override
+  String get merchant_fee => 'Biaya Merchant';
+
+  @override
+  String get merchant_receives => 'Penghasilan Merchant';
+
+  @override
+  String get delivery_location => 'Lokasi Pengiriman';
+
+  @override
+  String get delivery_fee => 'Biaya Pengiriman';
+
+  @override
+  String get notes => 'Catatan';
+
+  @override
+  String get pickup_note => 'Catatan Penjemputan';
+
+  @override
+  String get dropoff_note => 'Catatan Pengantaran';
+
+  @override
+  String get sender => 'Pengirim';
+
+  @override
+  String get receiver => 'Penerima';
+
+  @override
+  String get driver_arriving => 'Driver sedang menuju';
+
+  @override
+  String get order_in_delivery => 'Pesanan sedang dikirim';
+
+  @override
+  String get error_category_name_required => 'Nama kategori harus diisi';
+
+  @override
+  String get placeholder_category_name => 'Masukkan nama kategori';
+
+  @override
+  String get placeholder_no_categories => 'Tidak ada kategori tersedia';
+
+  @override
+  String get attachment_upload_title => 'Unggah Dokumen';
+
+  @override
+  String get attachment_upload_hint => 'Lampirkan dokumen untuk dicetak (opsional)';
+
+  @override
+  String get attachment_select_file => 'Pilih File';
+
+  @override
+  String get attachment_change_file => 'Ganti File';
+
+  @override
+  String get attachment_remove => 'Hapus';
+
+  @override
+  String get attachment_uploading => 'Mengunggah...';
+
+  @override
+  String get attachment_supported_formats => 'Didukung: PDF, DOC, DOCX, JPG, PNG (maks 10MB)';
+
+  @override
+  String attachment_file_selected(String fileName) {
+    return 'File dipilih: $fileName';
+  }
+
+  @override
+  String get text_refund_automatically => 'Pengembalian dana akan diproses otomatis ke dompet pelanggan';
+
+  @override
+  String get estimated_time => 'Estimasi Waktu';
+
+  @override
+  String get estimated_delivery => 'Estimasi Pengiriman';
 }

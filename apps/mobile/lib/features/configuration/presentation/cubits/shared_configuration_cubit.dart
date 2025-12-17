@@ -56,5 +56,36 @@ class SharedConfigurationCubit extends BaseCubit<SharedConfigurationState> {
         }
       });
 
+  /// Fetch business configuration from the API
+  Future<void> getBusinessConfiguration() async => await taskManager.execute(
+    'CC-getBusinessConfig',
+    () async {
+      try {
+        emit(
+          state.copyWith(
+            businessConfiguration: const OperationResult.loading(),
+          ),
+        );
+        final response = await configurationRepository
+            .getBusinessConfiguration();
+        emit(
+          state.copyWith(
+            businessConfiguration: OperationResult.success(
+              response.data,
+              message: response.message,
+            ),
+          ),
+        );
+      } on BaseError catch (e, st) {
+        logger.e(
+          '[SharedConfigurationCubit] - Error fetching business configuration: ${e.message}',
+          error: e,
+          stackTrace: st,
+        );
+        emit(state.copyWith(businessConfiguration: OperationResult.failed(e)));
+      }
+    },
+  );
+
   void reset() => emit(const SharedConfigurationState());
 }

@@ -2,143 +2,79 @@ part of '_export.dart';
 
 class UserCartState extends Equatable {
   const UserCartState({
-    this.cart = const OperationResult.idle(),
-    this.addItemResult = const OperationResult.idle(),
-    this.updateQuantityResult = const OperationResult.idle(),
-    this.removeItemResult = const OperationResult.idle(),
-    this.clearCartResult = const OperationResult.idle(),
-    this.replaceCartResult = const OperationResult.idle(),
-    this.placeFoodOrderResult = const OperationResult.idle(),
-    this.uploadAttachmentResult = const OperationResult.idle(),
+    this.cart,
+    this.isLoading = false,
+    this.error,
     this.pendingItem,
     this.pendingMerchantName,
     this.pendingMerchantLocation,
     this.pendingMerchantCategory,
     this.showMerchantConflict = false,
+    this.attachment,
+    this.attachmentUrl,
+    this.isUploadingAttachment = false,
   });
 
-  /// Current cart (loaded from storage)
-  final OperationResult<Cart?> cart;
-
-  /// Add item operation result
-  final OperationResult<Cart> addItemResult;
-
-  /// Update quantity operation result
-  final OperationResult<Cart?> updateQuantityResult;
-
-  /// Remove item operation result
-  final OperationResult<Cart?> removeItemResult;
-
-  /// Clear cart operation result
-  final OperationResult<bool> clearCartResult;
-
-  /// Replace cart operation result (when merchant conflict resolved)
-  final OperationResult<Cart> replaceCartResult;
-
-  /// Place food order operation result
-  final OperationResult<PlaceOrderResponse> placeFoodOrderResult;
-
-  /// Upload attachment operation result
-  final OperationResult<String> uploadAttachmentResult;
+  final Cart? cart;
+  final bool isLoading;
+  final String? error;
 
   /// Pending item to add (when merchant conflict detected)
   final CartItem? pendingItem;
-
-  /// Pending merchant name (when merchant conflict detected)
   final String? pendingMerchantName;
-
-  /// Pending merchant location (when merchant conflict detected)
   final Coordinate? pendingMerchantLocation;
-
-  /// Pending merchant category (when merchant conflict detected)
   final MerchantCategory? pendingMerchantCategory;
-
-  /// Whether to show merchant conflict dialog
   final bool showMerchantConflict;
 
-  /// Get the current cart data from any successful operation
-  Cart? get currentCart {
-    // Return from the most recently successful operation
-    if (replaceCartResult.isSuccess && replaceCartResult.value != null) {
-      return replaceCartResult.value;
-    }
-    if (addItemResult.isSuccess && addItemResult.value != null) {
-      return addItemResult.value;
-    }
-    if (updateQuantityResult.isSuccess && updateQuantityResult.value != null) {
-      return updateQuantityResult.value;
-    }
-    if (removeItemResult.isSuccess) {
-      return removeItemResult.value;
-    }
-    if (clearCartResult.isSuccess) {
-      return null;
-    }
-    return cart.value;
-  }
+  /// Attachment for Printing merchants
+  final DocumentPickResult? attachment;
+  final String? attachmentUrl;
+  final bool isUploadingAttachment;
 
-  /// Computed: total number of items in cart
-  int get totalItems => currentCart?.totalItems ?? 0;
-
-  /// Computed: cart subtotal
-  double get subtotal => (currentCart?.subtotal ?? 0).toDouble();
-
-  /// Computed: is cart empty
-  bool get isEmpty =>
-      currentCart == null || (currentCart?.items.isEmpty ?? true);
-
-  /// Computed: has merchant conflict
+  /// Computed properties
+  int get totalItems => cart?.totalItems ?? 0;
+  double get subtotal => (cart?.subtotal ?? 0).toDouble();
+  bool get isEmpty => cart == null || cart!.items.isEmpty;
   bool get hasMerchantConflict => showMerchantConflict && pendingItem != null;
-
-  /// Computed: is this a printing merchant (requires attachment)
-  bool get isPrintingMerchant => currentCart?.isPrintingMerchant ?? false;
-
-  /// Computed: has attachment
-  bool get hasAttachment => currentCart?.attachmentUrl != null;
+  bool get isPrintingMerchant => cart?.isPrintingMerchant ?? false;
+  bool get hasAttachment => attachment != null || attachmentUrl != null;
 
   @override
   List<Object?> get props => [
     cart,
-    addItemResult,
-    updateQuantityResult,
-    removeItemResult,
-    clearCartResult,
-    replaceCartResult,
-    placeFoodOrderResult,
-    uploadAttachmentResult,
+    isLoading,
+    error,
     pendingItem,
     pendingMerchantName,
     pendingMerchantLocation,
     pendingMerchantCategory,
     showMerchantConflict,
+    attachment,
+    attachmentUrl,
+    isUploadingAttachment,
   ];
 
   UserCartState copyWith({
-    OperationResult<Cart?>? cart,
-    OperationResult<Cart>? addItemResult,
-    OperationResult<Cart?>? updateQuantityResult,
-    OperationResult<Cart?>? removeItemResult,
-    OperationResult<bool>? clearCartResult,
-    OperationResult<Cart>? replaceCartResult,
-    OperationResult<PlaceOrderResponse>? placeFoodOrderResult,
-    OperationResult<String>? uploadAttachmentResult,
+    Cart? cart,
+    bool? isLoading,
+    String? error,
     CartItem? pendingItem,
     String? pendingMerchantName,
     Coordinate? pendingMerchantLocation,
     MerchantCategory? pendingMerchantCategory,
     bool? showMerchantConflict,
+    DocumentPickResult? attachment,
+    String? attachmentUrl,
+    bool? isUploadingAttachment,
+    bool clearError = false,
+    bool clearCart = false,
     bool clearPending = false,
+    bool clearAttachment = false,
   }) {
     return UserCartState(
-      cart: cart ?? this.cart,
-      addItemResult: addItemResult ?? this.addItemResult,
-      updateQuantityResult: updateQuantityResult ?? this.updateQuantityResult,
-      removeItemResult: removeItemResult ?? this.removeItemResult,
-      clearCartResult: clearCartResult ?? this.clearCartResult,
-      replaceCartResult: replaceCartResult ?? this.replaceCartResult,
-      placeFoodOrderResult: placeFoodOrderResult ?? this.placeFoodOrderResult,
-      uploadAttachmentResult:
-          uploadAttachmentResult ?? this.uploadAttachmentResult,
+      cart: clearCart ? null : (cart ?? this.cart),
+      isLoading: isLoading ?? this.isLoading,
+      error: clearError ? null : (error ?? this.error),
       pendingItem: clearPending ? null : (pendingItem ?? this.pendingItem),
       pendingMerchantName: clearPending
           ? null
@@ -152,9 +88,12 @@ class UserCartState extends Equatable {
       showMerchantConflict: clearPending
           ? false
           : (showMerchantConflict ?? this.showMerchantConflict),
+      attachment: clearAttachment ? null : (attachment ?? this.attachment),
+      attachmentUrl: clearAttachment
+          ? null
+          : (attachmentUrl ?? this.attachmentUrl),
+      isUploadingAttachment:
+          isUploadingAttachment ?? this.isUploadingAttachment,
     );
   }
-
-  @override
-  bool get stringify => true;
 }

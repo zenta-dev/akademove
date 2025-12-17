@@ -3,7 +3,7 @@
  *
  * Per SRS 8.3:
  * - Track driver cancellations per day
- * - Suspend driver after 3 cancellations in one day
+ * - Suspend driver after exceeding max cancellations per day (configurable via DB)
  * - Reset counter daily
  */
 export class DriverCancellationService {
@@ -45,13 +45,18 @@ export class DriverCancellationService {
 	/**
 	 * Check if driver should be suspended
 	 *
-	 * Per SRS 8.3: Suspend after 3 cancellations in one day
+	 * Per SRS 8.3: Suspend after exceeding max cancellations per day
+	 * The maxCancellationsPerDay value comes from database configuration
 	 *
 	 * @param cancellationCount - Number of cancellations
+	 * @param maxCancellationsPerDay - Maximum allowed cancellations per day (from DB config)
 	 * @returns True if driver should be suspended
 	 */
-	static shouldSuspendDriver(cancellationCount: number): boolean {
-		return cancellationCount >= 3;
+	static shouldSuspendDriver(
+		cancellationCount: number,
+		maxCancellationsPerDay: number,
+	): boolean {
+		return cancellationCount >= maxCancellationsPerDay;
 	}
 
 	/**

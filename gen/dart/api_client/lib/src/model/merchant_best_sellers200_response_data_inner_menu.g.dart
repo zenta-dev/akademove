@@ -21,6 +21,8 @@ abstract class _$MerchantBestSellers200ResponseDataInnerMenuCWProxy {
 
   MerchantBestSellers200ResponseDataInnerMenu stock(num stock);
 
+  MerchantBestSellers200ResponseDataInnerMenu soldStock(num soldStock);
+
   MerchantBestSellers200ResponseDataInnerMenu createdAt(DateTime? createdAt);
 
   MerchantBestSellers200ResponseDataInnerMenu updatedAt(DateTime? updatedAt);
@@ -40,6 +42,7 @@ abstract class _$MerchantBestSellers200ResponseDataInnerMenuCWProxy {
     String? category,
     num price,
     num stock,
+    num soldStock,
     DateTime? createdAt,
     DateTime? updatedAt,
   });
@@ -81,6 +84,10 @@ class _$MerchantBestSellers200ResponseDataInnerMenuCWProxyImpl
       call(stock: stock);
 
   @override
+  MerchantBestSellers200ResponseDataInnerMenu soldStock(num soldStock) =>
+      call(soldStock: soldStock);
+
+  @override
   MerchantBestSellers200ResponseDataInnerMenu createdAt(DateTime? createdAt) =>
       call(createdAt: createdAt);
 
@@ -104,6 +111,7 @@ class _$MerchantBestSellers200ResponseDataInnerMenuCWProxyImpl
     Object? category = const $CopyWithPlaceholder(),
     Object? price = const $CopyWithPlaceholder(),
     Object? stock = const $CopyWithPlaceholder(),
+    Object? soldStock = const $CopyWithPlaceholder(),
     Object? createdAt = const $CopyWithPlaceholder(),
     Object? updatedAt = const $CopyWithPlaceholder(),
   }) {
@@ -137,6 +145,10 @@ class _$MerchantBestSellers200ResponseDataInnerMenuCWProxyImpl
           ? _value.stock
           // ignore: cast_nullable_to_non_nullable
           : stock as num,
+      soldStock: soldStock == const $CopyWithPlaceholder() || soldStock == null
+          ? _value.soldStock
+          // ignore: cast_nullable_to_non_nullable
+          : soldStock as num,
       createdAt: createdAt == const $CopyWithPlaceholder()
           ? _value.createdAt
           // ignore: cast_nullable_to_non_nullable
@@ -176,6 +188,7 @@ _$MerchantBestSellers200ResponseDataInnerMenuFromJson(
       'name',
       'price',
       'stock',
+      'soldStock',
       'createdAt',
       'updatedAt',
     ],
@@ -188,6 +201,7 @@ _$MerchantBestSellers200ResponseDataInnerMenuFromJson(
     category: $checkedConvert('category', (v) => v as String?),
     price: $checkedConvert('price', (v) => v as num),
     stock: $checkedConvert('stock', (v) => v as num),
+    soldStock: $checkedConvert('soldStock', (v) => v as num),
     createdAt: $checkedConvert(
       'createdAt',
       (v) => v == null ? null : DateTime.parse(v as String),
@@ -210,6 +224,7 @@ Map<String, dynamic> _$MerchantBestSellers200ResponseDataInnerMenuToJson(
   'category': ?instance.category,
   'price': instance.price,
   'stock': instance.stock,
+  'soldStock': instance.soldStock,
   'createdAt': instance.createdAt?.toIso8601String(),
   'updatedAt': instance.updatedAt?.toIso8601String(),
 };

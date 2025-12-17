@@ -17,9 +17,13 @@ abstract class _$OrderItemItemCWProxy {
 
   OrderItemItem category(String? category);
 
+  OrderItemItem categoryId(String? categoryId);
+
   OrderItemItem price(num? price);
 
   OrderItemItem stock(int? stock);
+
+  OrderItemItem soldStock(int? soldStock);
 
   OrderItemItem createdAt(DateTime? createdAt);
 
@@ -38,8 +42,10 @@ abstract class _$OrderItemItemCWProxy {
     String? name,
     String? image,
     String? category,
+    String? categoryId,
     num? price,
     int? stock,
+    int? soldStock,
     DateTime? createdAt,
     DateTime? updatedAt,
   });
@@ -68,10 +74,16 @@ class _$OrderItemItemCWProxyImpl implements _$OrderItemItemCWProxy {
   OrderItemItem category(String? category) => call(category: category);
 
   @override
+  OrderItemItem categoryId(String? categoryId) => call(categoryId: categoryId);
+
+  @override
   OrderItemItem price(num? price) => call(price: price);
 
   @override
   OrderItemItem stock(int? stock) => call(stock: stock);
+
+  @override
+  OrderItemItem soldStock(int? soldStock) => call(soldStock: soldStock);
 
   @override
   OrderItemItem createdAt(DateTime? createdAt) => call(createdAt: createdAt);
@@ -93,8 +105,10 @@ class _$OrderItemItemCWProxyImpl implements _$OrderItemItemCWProxy {
     Object? name = const $CopyWithPlaceholder(),
     Object? image = const $CopyWithPlaceholder(),
     Object? category = const $CopyWithPlaceholder(),
+    Object? categoryId = const $CopyWithPlaceholder(),
     Object? price = const $CopyWithPlaceholder(),
     Object? stock = const $CopyWithPlaceholder(),
+    Object? soldStock = const $CopyWithPlaceholder(),
     Object? createdAt = const $CopyWithPlaceholder(),
     Object? updatedAt = const $CopyWithPlaceholder(),
   }) {
@@ -119,6 +133,10 @@ class _$OrderItemItemCWProxyImpl implements _$OrderItemItemCWProxy {
           ? _value.category
           // ignore: cast_nullable_to_non_nullable
           : category as String?,
+      categoryId: categoryId == const $CopyWithPlaceholder()
+          ? _value.categoryId
+          // ignore: cast_nullable_to_non_nullable
+          : categoryId as String?,
       price: price == const $CopyWithPlaceholder()
           ? _value.price
           // ignore: cast_nullable_to_non_nullable
@@ -127,6 +145,10 @@ class _$OrderItemItemCWProxyImpl implements _$OrderItemItemCWProxy {
           ? _value.stock
           // ignore: cast_nullable_to_non_nullable
           : stock as int?,
+      soldStock: soldStock == const $CopyWithPlaceholder()
+          ? _value.soldStock
+          // ignore: cast_nullable_to_non_nullable
+          : soldStock as int?,
       createdAt: createdAt == const $CopyWithPlaceholder()
           ? _value.createdAt
           // ignore: cast_nullable_to_non_nullable
@@ -158,8 +180,10 @@ OrderItemItem _$OrderItemItemFromJson(Map<String, dynamic> json) =>
         name: $checkedConvert('name', (v) => v as String?),
         image: $checkedConvert('image', (v) => v as String?),
         category: $checkedConvert('category', (v) => v as String?),
+        categoryId: $checkedConvert('categoryId', (v) => v as String?),
         price: $checkedConvert('price', (v) => v as num?),
         stock: $checkedConvert('stock', (v) => (v as num?)?.toInt()),
+        soldStock: $checkedConvert('soldStock', (v) => (v as num?)?.toInt()),
         createdAt: $checkedConvert(
           'createdAt',
           (v) => v == null ? null : DateTime.parse(v as String),
@@ -179,8 +203,10 @@ Map<String, dynamic> _$OrderItemItemToJson(OrderItemItem instance) =>
       'name': ?instance.name,
       'image': ?instance.image,
       'category': ?instance.category,
+      'categoryId': ?instance.categoryId,
       'price': ?instance.price,
       'stock': ?instance.stock,
+      'soldStock': ?instance.soldStock,
       'createdAt': ?instance.createdAt?.toIso8601String(),
       'updatedAt': ?instance.updatedAt?.toIso8601String(),
     };

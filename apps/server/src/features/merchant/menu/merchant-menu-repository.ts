@@ -60,8 +60,10 @@ export class MerchantMenuRepository extends BaseRepository {
 		return {
 			...item,
 			category: item.category ?? undefined,
+			categoryId: item.categoryId ?? undefined,
 			imageId: item.image ?? undefined,
 			price: toNumberSafe(item.price),
+			soldStock: item.soldStock,
 			image,
 		};
 	}
@@ -442,6 +444,7 @@ export class MerchantMenuRepository extends BaseRepository {
 							menuPrice: tables.merchantMenu.price,
 							menuCategory: tables.merchantMenu.category,
 							menuStock: tables.merchantMenu.stock,
+							menuSoldStock: tables.merchantMenu.soldStock,
 							menuCreatedAt: tables.merchantMenu.createdAt,
 							menuUpdatedAt: tables.merchantMenu.updatedAt,
 							merchantId: tables.merchant.id,
@@ -483,6 +486,7 @@ export class MerchantMenuRepository extends BaseRepository {
 							tables.merchantMenu.price,
 							tables.merchantMenu.category,
 							tables.merchantMenu.stock,
+							tables.merchantMenu.soldStock,
 							tables.merchantMenu.createdAt,
 							tables.merchantMenu.updatedAt,
 							tables.merchant.id,

@@ -1,6 +1,7 @@
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/l10n/l10n.dart';
+import 'package:akademove/locator.dart';
 import 'package:api_client/api_client.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -56,8 +57,17 @@ class MerchantEditMenuScreen extends StatelessWidget {
           }
         },
         builder: (context, state) {
+          final merchantId = context.read<MerchantCubit>().state.mine.value?.id;
+
+          if (merchantId == null) {
+            return Center(
+              child: Text(context.l10n.error_merchant_info_not_found),
+            );
+          }
+
           return _MerchantEditMenuForm(
             menu: menu,
+            merchantId: merchantId,
             isLoading: state.menu.isLoading,
           );
         },
@@ -67,18 +77,27 @@ class MerchantEditMenuScreen extends StatelessWidget {
 }
 
 class _MerchantEditMenuForm extends StatelessWidget {
-  const _MerchantEditMenuForm({required this.menu, required this.isLoading});
+  const _MerchantEditMenuForm({
+    required this.menu,
+    required this.merchantId,
+    required this.isLoading,
+  });
 
   final MerchantMenu menu;
+  final String merchantId;
   final bool isLoading;
 
   @override
   Widget build(BuildContext context) {
-    return MerchantMenuForm(
-      initialMenu: menu,
-      isLoading: isLoading,
-      submitButtonText: context.l10n.save_changes,
-      onSubmit: (data) => _handleSaveChanges(context, data),
+    return BlocProvider(
+      create: (context) => sl<MerchantMenuCategoryCubit>(),
+      child: MerchantMenuForm(
+        initialMenu: menu,
+        merchantId: merchantId,
+        isLoading: isLoading,
+        submitButtonText: context.l10n.save_changes,
+        onSubmit: (data) => _handleSaveChanges(context, data),
+      ),
     );
   }
 
@@ -86,22 +105,6 @@ class _MerchantEditMenuForm extends StatelessWidget {
     BuildContext context,
     MenuFormData data,
   ) async {
-    // Use MerchantCubit consistently (not AuthCubit)
-    final merchantCubit = context.read<MerchantCubit>();
-    final merchantId = merchantCubit.state.mine.value?.id;
-
-    if (merchantId == null) {
-      showToast(
-        context: context,
-        builder: (context, overlay) => context.buildToast(
-          title: context.l10n.error,
-          message: context.l10n.error_merchant_info_not_found,
-        ),
-        location: ToastLocation.topCenter,
-      );
-      return;
-    }
-
     final image = data.imageFile != null && data.imageFile!.existsSync()
         ? await MultipartFile.fromFile(data.imageFile!.path)
         : null;
@@ -114,7 +117,7 @@ class _MerchantEditMenuForm extends StatelessWidget {
       name: data.name,
       price: data.price,
       stock: data.stock,
-      category: data.category?.name,
+      category: data.categoryId,
       image: image,
     );
   }

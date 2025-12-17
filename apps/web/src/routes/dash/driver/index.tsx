@@ -133,7 +133,9 @@ function RouteComponent() {
 
 	// Fetch commission report for all-time total earnings
 	const { data: commissionReport } = useQuery({
-		queryKey: ["wallet", "commissionReport", "daily"],
+		queryKey: orpcQuery.wallet.getCommissionReport.queryKey({
+			input: { query: { period: "daily" } },
+		}),
 		queryFn: async () => {
 			const result = await orpcClient.wallet.getCommissionReport({
 				query: { period: "daily" },

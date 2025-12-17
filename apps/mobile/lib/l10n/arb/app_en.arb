@@ -851,6 +851,7 @@
 	"label_category": "Category",
 	"label_price": "Price",
 	"label_stock": "Stock",
+	"sold": "Sold",
 	"label_created": "Created",
 	"label_updated": "Updated",
 	"placeholder_select_category": "Select category",
@@ -1516,6 +1517,7 @@
 	"placeholder_menu_stock": "Enter stock quantity",
 	"hint_menu_category": "e.g., Beverages, Snacks, Main Course",
 	"toast_error": "Error",
+	"cancellation_reason": "Cancellation Reason",
 	"cancel_reason_optional": "Reason (optional)",
 	"order_cancelled_successfully": "Order cancelled successfully",
 	"failed_to_cancel_order": "Failed to cancel order",
@@ -1856,5 +1858,53 @@
 	"status_preparing": "Preparing",
 	"status_ready_for_pickup": "Ready for Pickup",
 	"status_arriving": "Driver Arriving",
-	"status_in_trip": "In Progress"
+	"status_in_trip": "In Progress",
+	"error_generic": "An error occurred. Please try again.",
+	"button_retry": "Retry",
+	"text_already_reviewed": "You have already reviewed this order",
+	"text_your_rating": "Your Rating",
+	"text_selected_categories": "Selected Categories",
+	"text_your_comment": "Your Comment",
+	"text_reviewed_on": "Reviewed on {date}",
+	"@text_reviewed_on": {
+		"placeholders": {
+			"date": {
+				"type": "String"
+			}
+		}
+	},
+	"fee_breakdown": "Fee Breakdown",
+	"driver_receives": "Driver Earnings",
+	"merchant_fee": "Merchant Fee",
+	"merchant_receives": "Merchant Receives",
+	"delivery_location": "Delivery Location",
+	"delivery_fee": "Delivery Fee",
+	"notes": "Notes",
+	"pickup_note": "Pickup Note",
+	"dropoff_note": "Dropoff Note",
+	"sender": "Sender",
+	"receiver": "Receiver",
+	"driver_arriving": "Driver is arriving",
+	"order_in_delivery": "Order is being delivered",
+	"error_category_name_required": "Category name is required",
+	"placeholder_category_name": "Enter category name",
+	"placeholder_no_categories": "No categories available",
+	"attachment_upload_title": "Upload Document",
+	"attachment_upload_hint": "Attach document to be printed (optional)",
+	"attachment_select_file": "Select File",
+	"attachment_change_file": "Change File",
+	"attachment_remove": "Remove",
+	"attachment_uploading": "Uploading...",
+	"attachment_supported_formats": "Supported: PDF, DOC, DOCX, JPG, PNG (max 10MB)",
+	"attachment_file_selected": "File selected: {fileName}",
+	"@attachment_file_selected": {
+		"placeholders": {
+			"fileName": {
+				"type": "String"
+			}
+		}
+	},
+	"text_refund_automatically": "Refund will be processed automatically to customer's wallet",
+	"estimated_time": "Est. Time",
+	"estimated_delivery": "Est. Delivery"
 }

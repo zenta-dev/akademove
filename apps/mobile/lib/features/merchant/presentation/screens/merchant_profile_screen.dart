@@ -788,7 +788,7 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
 
       if (mounted) {
         // Navigate to sign-in screen and clear navigation stack
-        context.go(Routes.authSignIn.path);
+        context.goNamed(Routes.authSignIn.name);
 
         // Show success message
         context.showMyToast(

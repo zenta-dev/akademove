@@ -160,16 +160,29 @@ class LocationService {
     LocationAccuracy accuracy = LocationAccuracy.low,
     Duration interval = const Duration(seconds: 5),
     bool forceLocationManager = false,
+    int distanceFilter = 3,
   }) {
     logger.d('[$tag] | getLocationStream called (accuracy: $accuracy)');
     try {
-      var settings = LocationSettings(accuracy: accuracy);
+      var settings = LocationSettings(
+        accuracy: accuracy,
+        distanceFilter: distanceFilter,
+      );
 
       if (Platform.isAndroid) {
         settings = AndroidSettings(
           accuracy: accuracy,
           intervalDuration: interval,
+          distanceFilter: distanceFilter,
           forceLocationManager: forceLocationManager,
+        );
+      } else if (Platform.isIOS) {
+        settings = AppleSettings(
+          accuracy: accuracy,
+          distanceFilter: distanceFilter,
+          activityType: ActivityType.automotiveNavigation,
+          pauseLocationUpdatesAutomatically: false,
+          showBackgroundLocationIndicator: true,
         );
       }
 

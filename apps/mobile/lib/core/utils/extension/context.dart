@@ -268,10 +268,10 @@ extension BuildContextExt on BuildContext {
     }
   }
 
-  void popUntilRoot() {
+  void popUntilRoot<T extends Object?>([T? result]) {
     while (canPop()) {
       try {
-        pop();
+        pop(result);
       } catch (e) {
         break;
       }

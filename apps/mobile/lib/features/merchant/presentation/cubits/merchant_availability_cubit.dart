@@ -10,12 +10,16 @@ class MerchantAvailabilityCubit extends BaseCubit<MerchantAvailabilityState> {
   final MerchantRepository _merchantRepository;
 
   /// Toggle merchant online status
-  Future<void> setOnlineStatus(
-    bool isOnline,
-  ) async => await taskManager.execute('MAC-sOS', () async {
+  Future<void> setOnlineStatus({
+    required String merchantId,
+    required bool isOnline,
+  }) async => await taskManager.execute('MAC-sOS', () async {
     try {
       emit(state.copyWith(setOnlineStatus: const OperationResult.loading()));
-      final response = await _merchantRepository.setOnlineStatus(isOnline);
+      final response = await _merchantRepository.setOnlineStatus(
+        merchantId: merchantId,
+        isOnline: isOnline,
+      );
       emit(
         state.copyWith(
           setOnlineStatus: OperationResult.success(
@@ -25,7 +29,7 @@ class MerchantAvailabilityCubit extends BaseCubit<MerchantAvailabilityState> {
         ),
       );
       // Refresh availability status after changing online status
-      await getAvailabilityStatus();
+      await getAvailabilityStatus(merchantId: merchantId);
     } on BaseError catch (e, st) {
       logger.e(
         '[MerchantAvailabilityCubit] - Error: ${e.message}',
@@ -37,13 +41,16 @@ class MerchantAvailabilityCubit extends BaseCubit<MerchantAvailabilityState> {
   });
 
   /// Set merchant operating status (OPEN, CLOSED, BREAK, MAINTENANCE)
-  Future<void> setOperatingStatus(
-    MerchantSetOperatingStatusRequestOperatingStatusEnum operatingStatus,
-  ) async => await taskManager.execute('MAC-sStatus', () async {
+  Future<void> setOperatingStatus({
+    required String merchantId,
+    required MerchantSetOperatingStatusRequestOperatingStatusEnum
+    operatingStatus,
+  }) async => await taskManager.execute('MAC-sStatus', () async {
     try {
       emit(state.copyWith(setOperatingStatus: const OperationResult.loading()));
       final response = await _merchantRepository.setOperatingStatus(
-        operatingStatus,
+        merchantId: merchantId,
+        operatingStatus: operatingStatus,
       );
       emit(
         state.copyWith(
@@ -54,7 +61,7 @@ class MerchantAvailabilityCubit extends BaseCubit<MerchantAvailabilityState> {
         ),
       );
       // Refresh availability status after changing operating status
-      await getAvailabilityStatus();
+      await getAvailabilityStatus(merchantId: merchantId);
     } on BaseError catch (e, st) {
       logger.e(
         '[MerchantAvailabilityCubit] - Error: ${e.message}',
@@ -66,13 +73,15 @@ class MerchantAvailabilityCubit extends BaseCubit<MerchantAvailabilityState> {
   });
 
   /// Get current availability status
-  Future<void> getAvailabilityStatus() async =>
+  Future<void> getAvailabilityStatus({required String merchantId}) async =>
       await taskManager.execute('MAC-gAS', () async {
         try {
           emit(
             state.copyWith(availabilityStatus: const OperationResult.loading()),
           );
-          final response = await _merchantRepository.getAvailabilityStatus();
+          final response = await _merchantRepository.getAvailabilityStatus(
+            merchantId: merchantId,
+          );
           emit(
             state.copyWith(
               availabilityStatus: OperationResult.success(

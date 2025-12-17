@@ -33,6 +33,12 @@ export const WalletMonthlySummaryResponseSchema = z.object({
 	totalIncome: z.coerce.number(),
 	totalExpense: z.coerce.number(),
 	net: z.coerce.number(),
+	/** Total earnings from completed orders (EARNING transactions) */
+	totalEarnings: z.coerce.number(),
+	/** Total platform commission deducted (COMMISSION transactions) */
+	totalCommission: z.coerce.number(),
+	/** Platform commission rate (as percentage, e.g., 20 = 20%) */
+	commissionRate: z.coerce.number(),
 });
 
 // Commission Report schemas

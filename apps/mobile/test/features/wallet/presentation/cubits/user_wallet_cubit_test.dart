@@ -55,6 +55,9 @@ void main() {
             totalIncome: 100000,
             totalExpense: 50000,
             net: 50000,
+            totalEarnings: 0,
+            totalCommission: 0,
+            commissionRate: 0,
           );
 
           when(() => mockWalletRepository.getWallet()).thenAnswer(
@@ -153,28 +156,8 @@ void main() {
         verify(() => mockWalletRepository.getWallet()).called(1);
       });
 
-      test(
-        'handles error gracefully (logs but does not emit failure)',
-        () async {
-          // Arrange
-          when(() => mockWalletRepository.getWallet()).thenThrow(
-            const RepositoryError(
-              'Failed to get wallet',
-              code: ErrorCode.internalServerError,
-            ),
-          );
-
-          // Act
-          await cubit.getMine();
-
-          // Assert - error is caught and logged, wallet remains in loading state
-          // (since no success was emitted after loading)
-          expect(cubit.state.myWallet.isLoading, true);
-        },
-      );
-
       blocTest<UserWalletCubit, UserWalletState>(
-        'handles error gracefully',
+        'emits [loading, failure] when getMine fails',
         build: () {
           when(() => mockWalletRepository.getWallet()).thenThrow(
             const RepositoryError(
@@ -186,10 +169,14 @@ void main() {
         },
         act: (cubit) => cubit.getMine(),
         expect: () => [
-          // Error is logged but state remains in loading
           isA<UserWalletState>().having(
             (s) => s.myWallet.isLoading,
             'isLoading',
+            true,
+          ),
+          isA<UserWalletState>().having(
+            (s) => s.myWallet.isFailure,
+            'isFailure',
             true,
           ),
         ],
@@ -277,6 +264,9 @@ void main() {
             totalIncome: 500000,
             totalExpense: 100000,
             net: 400000,
+            totalEarnings: 0,
+            totalCommission: 0,
+            commissionRate: 0,
           );
           when(
             () => mockWalletRepository.getMonthlySummary(
@@ -327,6 +317,9 @@ void main() {
             totalIncome: 500000,
             totalExpense: 100000,
             net: 400000,
+            totalEarnings: 0,
+            totalCommission: 0,
+            commissionRate: 0,
           );
           when(
             () => mockWalletRepository.getMonthlySummary(

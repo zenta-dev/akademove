@@ -2163,6 +2163,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get label_stock => 'Stock';
 
   @override
+  String get sold => 'Sold';
+
+  @override
   String get label_created => 'Created';
 
   @override
@@ -3575,6 +3578,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get toast_error => 'Error';
 
   @override
+  String get cancellation_reason => 'Cancellation Reason';
+
+  @override
   String get cancel_reason_optional => 'Reason (optional)';
 
   @override
@@ -4470,4 +4476,110 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get status_in_trip => 'In Progress';
+
+  @override
+  String get error_generic => 'An error occurred. Please try again.';
+
+  @override
+  String get button_retry => 'Retry';
+
+  @override
+  String get text_already_reviewed => 'You have already reviewed this order';
+
+  @override
+  String get text_your_rating => 'Your Rating';
+
+  @override
+  String get text_selected_categories => 'Selected Categories';
+
+  @override
+  String get text_your_comment => 'Your Comment';
+
+  @override
+  String text_reviewed_on(String date) {
+    return 'Reviewed on $date';
+  }
+
+  @override
+  String get fee_breakdown => 'Fee Breakdown';
+
+  @override
+  String get driver_receives => 'Driver Earnings';
+
+  @override
+  String get merchant_fee => 'Merchant Fee';
+
+  @override
+  String get merchant_receives => 'Merchant Receives';
+
+  @override
+  String get delivery_location => 'Delivery Location';
+
+  @override
+  String get delivery_fee => 'Delivery Fee';
+
+  @override
+  String get notes => 'Notes';
+
+  @override
+  String get pickup_note => 'Pickup Note';
+
+  @override
+  String get dropoff_note => 'Dropoff Note';
+
+  @override
+  String get sender => 'Sender';
+
+  @override
+  String get receiver => 'Receiver';
+
+  @override
+  String get driver_arriving => 'Driver is arriving';
+
+  @override
+  String get order_in_delivery => 'Order is being delivered';
+
+  @override
+  String get error_category_name_required => 'Category name is required';
+
+  @override
+  String get placeholder_category_name => 'Enter category name';
+
+  @override
+  String get placeholder_no_categories => 'No categories available';
+
+  @override
+  String get attachment_upload_title => 'Upload Document';
+
+  @override
+  String get attachment_upload_hint => 'Attach document to be printed (optional)';
+
+  @override
+  String get attachment_select_file => 'Select File';
+
+  @override
+  String get attachment_change_file => 'Change File';
+
+  @override
+  String get attachment_remove => 'Remove';
+
+  @override
+  String get attachment_uploading => 'Uploading...';
+
+  @override
+  String get attachment_supported_formats => 'Supported: PDF, DOC, DOCX, JPG, PNG (max 10MB)';
+
+  @override
+  String attachment_file_selected(String fileName) {
+    return 'File selected: $fileName';
+  }
+
+  @override
+  String get text_refund_automatically => 'Refund will be processed automatically to customer\'s wallet';
+
+  @override
+  String get estimated_time => 'Est. Time';
+
+  @override
+  String get estimated_delivery => 'Est. Delivery';
 }

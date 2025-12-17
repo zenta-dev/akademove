@@ -30,7 +30,11 @@ export const deliveryItemType = pgEnum(
 
 export interface OrderNote {
 	pickup?: string;
+	senderName?: string;
+	senderPhone?: string;
 	dropoff?: string;
+	recevierName?: string;
+	recevierPhone?: string;
 }
 export const order = pgTable(
 	"orders",
@@ -89,6 +93,10 @@ export const order = pgTable(
 			scale: 2,
 		}),
 		merchantCommission: numeric("merchant_commission", {
+			precision: 18,
+			scale: 2,
+		}),
+		merchantEarning: numeric("merchant_earning", {
 			precision: 18,
 			scale: 2,
 		}),

@@ -13,7 +13,7 @@ void main() {
       // TODO
     });
 
-    // Leaderboard data
+    // LeaderboardWithDriver data
     test('to test the property `data`', () async {
       // TODO
     });

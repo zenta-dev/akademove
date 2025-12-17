@@ -8,6 +8,7 @@ import 'package:api_client/src/model/account_deletion_review_request.dart';
 import 'package:api_client/src/model/account_deletion_submit201_response.dart';
 import 'package:api_client/src/model/activate_driver.dart';
 import 'package:api_client/src/model/add_to_cart.dart';
+import 'package:api_client/src/model/add_to_cart_request.dart';
 import 'package:api_client/src/model/admin_update_user.dart';
 import 'package:api_client/src/model/approve_driver.dart';
 import 'package:api_client/src/model/audit_list200_response.dart';
@@ -59,7 +60,10 @@ import 'package:api_client/src/model/broadcast_stats200_response_data.dart';
 import 'package:api_client/src/model/broadcast_update_request.dart';
 import 'package:api_client/src/model/business_configuration.dart';
 import 'package:api_client/src/model/cart.dart';
+import 'package:api_client/src/model/cart_get200_response.dart';
 import 'package:api_client/src/model/cart_item.dart';
+import 'package:api_client/src/model/cart_response.dart';
+import 'package:api_client/src/model/cart_response_stock_warnings_inner.dart';
 import 'package:api_client/src/model/chart_data_point.dart';
 import 'package:api_client/src/model/chat_get_unread_count200_response.dart';
 import 'package:api_client/src/model/chat_list200_response.dart';
@@ -146,6 +150,7 @@ import 'package:api_client/src/model/driver_update_online_status_request.dart';
 import 'package:api_client/src/model/driver_update_taking_order_status_request.dart';
 import 'package:api_client/src/model/driver_user.dart';
 import 'package:api_client/src/model/driver_verify_quiz_request.dart';
+import 'package:api_client/src/model/driver_wallet_get_commission_report200_response.dart';
 import 'package:api_client/src/model/driver_wallet_get_monthly_summary200_response.dart';
 import 'package:api_client/src/model/driver_wallet_get_saved_bank_account200_response.dart';
 import 'package:api_client/src/model/driver_wallet_get_transactions200_response.dart';
@@ -241,6 +246,11 @@ import 'package:api_client/src/model/merchant_get_mine200_response_body.dart';
 import 'package:api_client/src/model/merchant_get_review200_response.dart';
 import 'package:api_client/src/model/merchant_get_review200_response_data.dart';
 import 'package:api_client/src/model/merchant_menu.dart';
+import 'package:api_client/src/model/merchant_menu_category.dart';
+import 'package:api_client/src/model/merchant_menu_category_create200_response.dart';
+import 'package:api_client/src/model/merchant_menu_category_create_request.dart';
+import 'package:api_client/src/model/merchant_menu_category_list200_response.dart';
+import 'package:api_client/src/model/merchant_menu_category_update_request.dart';
 import 'package:api_client/src/model/merchant_menu_create200_response.dart';
 import 'package:api_client/src/model/merchant_menu_list200_response.dart';
 import 'package:api_client/src/model/merchant_operating_hours.dart';
@@ -297,7 +307,6 @@ import 'package:api_client/src/model/order_summary.dart';
 import 'package:api_client/src/model/order_summary_breakdown.dart';
 import 'package:api_client/src/model/order_upload_delivery_proof200_response.dart';
 import 'package:api_client/src/model/order_upload_delivery_proof200_response_data.dart';
-import 'package:api_client/src/model/order_upload_delivery_proof_request.dart';
 import 'package:api_client/src/model/order_verify_delivery_otp200_response.dart';
 import 'package:api_client/src/model/order_verify_delivery_otp200_response_data.dart';
 import 'package:api_client/src/model/order_verify_delivery_otp_request.dart';
@@ -320,6 +329,7 @@ import 'package:api_client/src/model/quick_message_list200_response.dart';
 import 'package:api_client/src/model/quick_message_list200_response_data.dart';
 import 'package:api_client/src/model/quick_message_template.dart';
 import 'package:api_client/src/model/reject_driver.dart';
+import 'package:api_client/src/model/remove_cart_item_request.dart';
 import 'package:api_client/src/model/report.dart';
 import 'package:api_client/src/model/report_create200_response.dart';
 import 'package:api_client/src/model/report_list200_response.dart';
@@ -372,6 +382,7 @@ import 'package:api_client/src/model/transfer_response.dart';
 import 'package:api_client/src/model/unban_user.dart';
 import 'package:api_client/src/model/update_account_deletion.dart';
 import 'package:api_client/src/model/update_broadcast.dart';
+import 'package:api_client/src/model/update_cart_item_request.dart';
 import 'package:api_client/src/model/update_configuration.dart';
 import 'package:api_client/src/model/update_contact.dart';
 import 'package:api_client/src/model/update_coupon.dart';
@@ -410,7 +421,6 @@ import 'package:api_client/src/model/user_rules.dart';
 import 'package:api_client/src/model/va_number.dart';
 import 'package:api_client/src/model/verify_email.dart';
 import 'package:api_client/src/model/wallet.dart';
-import 'package:api_client/src/model/wallet_get_commission_report200_response.dart';
 import 'package:api_client/src/model/wallet_monthly_summary_query.dart';
 import 'package:api_client/src/model/wallet_monthly_summary_response.dart';
 import 'package:api_client/src/model/withdraw_request.dart';
@@ -485,6 +495,9 @@ ReturnType deserialize<ReturnType, BaseType>(
           as ReturnType;
     case 'AddToCart':
       return AddToCart.fromJson(value as Map<String, dynamic>) as ReturnType;
+    case 'AddToCartRequest':
+      return AddToCartRequest.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
     case 'AdminUpdateUser':
       return AdminUpdateUser.fromJson(value as Map<String, dynamic>)
           as ReturnType;
@@ -658,8 +671,18 @@ ReturnType deserialize<ReturnType, BaseType>(
           as ReturnType;
     case 'Cart':
       return Cart.fromJson(value as Map<String, dynamic>) as ReturnType;
+    case 'CartGet200Response':
+      return CartGet200Response.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
     case 'CartItem':
       return CartItem.fromJson(value as Map<String, dynamic>) as ReturnType;
+    case 'CartResponse':
+      return CartResponse.fromJson(value as Map<String, dynamic>) as ReturnType;
+    case 'CartResponseStockWarningsInner':
+      return CartResponseStockWarningsInner.fromJson(
+            value as Map<String, dynamic>,
+          )
+          as ReturnType;
     case 'ChartDataPoint':
       return ChartDataPoint.fromJson(value as Map<String, dynamic>)
           as ReturnType;
@@ -1005,6 +1028,11 @@ ReturnType deserialize<ReturnType, BaseType>(
       return DriverUser.fromJson(value as Map<String, dynamic>) as ReturnType;
     case 'DriverVerifyQuizRequest':
       return DriverVerifyQuizRequest.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
+    case 'DriverWalletGetCommissionReport200Response':
+      return DriverWalletGetCommissionReport200Response.fromJson(
+            value as Map<String, dynamic>,
+          )
           as ReturnType;
     case 'DriverWalletGetMonthlySummary200Response':
       return DriverWalletGetMonthlySummary200Response.fromJson(
@@ -1354,6 +1382,30 @@ ReturnType deserialize<ReturnType, BaseType>(
     case 'MerchantKey':
     case 'MerchantMenu':
       return MerchantMenu.fromJson(value as Map<String, dynamic>) as ReturnType;
+    case 'MerchantMenuCategory':
+      return MerchantMenuCategory.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
+    case 'MerchantMenuCategoryCreate200Response':
+      return MerchantMenuCategoryCreate200Response.fromJson(
+            value as Map<String, dynamic>,
+          )
+          as ReturnType;
+    case 'MerchantMenuCategoryCreateRequest':
+      return MerchantMenuCategoryCreateRequest.fromJson(
+            value as Map<String, dynamic>,
+          )
+          as ReturnType;
+    case 'MerchantMenuCategoryKey':
+    case 'MerchantMenuCategoryList200Response':
+      return MerchantMenuCategoryList200Response.fromJson(
+            value as Map<String, dynamic>,
+          )
+          as ReturnType;
+    case 'MerchantMenuCategoryUpdateRequest':
+      return MerchantMenuCategoryUpdateRequest.fromJson(
+            value as Map<String, dynamic>,
+          )
+          as ReturnType;
     case 'MerchantMenuCreate200Response':
       return MerchantMenuCreate200Response.fromJson(
             value as Map<String, dynamic>,
@@ -1579,11 +1631,6 @@ ReturnType deserialize<ReturnType, BaseType>(
             value as Map<String, dynamic>,
           )
           as ReturnType;
-    case 'OrderUploadDeliveryProofRequest':
-      return OrderUploadDeliveryProofRequest.fromJson(
-            value as Map<String, dynamic>,
-          )
-          as ReturnType;
     case 'OrderVerifyDeliveryOTP200Response':
       return OrderVerifyDeliveryOTP200Response.fromJson(
             value as Map<String, dynamic>,
@@ -1667,6 +1714,9 @@ ReturnType deserialize<ReturnType, BaseType>(
           as ReturnType;
     case 'RejectDriver':
       return RejectDriver.fromJson(value as Map<String, dynamic>) as ReturnType;
+    case 'RemoveCartItemRequest':
+      return RemoveCartItemRequest.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
     case 'Report':
       return Report.fromJson(value as Map<String, dynamic>) as ReturnType;
     case 'ReportCategory':
@@ -1858,6 +1908,9 @@ ReturnType deserialize<ReturnType, BaseType>(
     case 'UpdateBroadcast':
       return UpdateBroadcast.fromJson(value as Map<String, dynamic>)
           as ReturnType;
+    case 'UpdateCartItemRequest':
+      return UpdateCartItemRequest.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
     case 'UpdateConfiguration':
       return UpdateConfiguration.fromJson(value as Map<String, dynamic>)
           as ReturnType;
@@ -1970,11 +2023,6 @@ ReturnType deserialize<ReturnType, BaseType>(
       return VerifyEmail.fromJson(value as Map<String, dynamic>) as ReturnType;
     case 'Wallet':
       return Wallet.fromJson(value as Map<String, dynamic>) as ReturnType;
-    case 'WalletGetCommissionReport200Response':
-      return WalletGetCommissionReport200Response.fromJson(
-            value as Map<String, dynamic>,
-          )
-          as ReturnType;
     case 'WalletKey':
     case 'WalletMonthlySummaryQuery':
       return WalletMonthlySummaryQuery.fromJson(value as Map<String, dynamic>)

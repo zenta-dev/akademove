@@ -19,6 +19,7 @@ export interface BestSellerRaw {
 	menuPrice: string;
 	menuCategory: string | null;
 	menuStock: number;
+	menuSoldStock: number;
 	menuCreatedAt: Date;
 	menuUpdatedAt: Date;
 	merchantId: string;
@@ -78,6 +79,7 @@ export class BestSellersService {
 					category: row.menuCategory ?? undefined,
 					price: callbacks.toNumberSafe(row.menuPrice),
 					stock: row.menuStock,
+					soldStock: row.menuSoldStock,
 					createdAt: row.menuCreatedAt,
 					updatedAt: row.menuUpdatedAt,
 				},

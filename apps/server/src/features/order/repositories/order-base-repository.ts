@@ -2,9 +2,10 @@ import { env } from "cloudflare:workers";
 import type { PricingConfiguration } from "@repo/schema/configuration";
 import type { Driver } from "@repo/schema/driver";
 import type { Merchant } from "@repo/schema/merchant";
-import type { Order } from "@repo/schema/order";
+import type { Order, OrderType } from "@repo/schema/order";
 import type { User } from "@repo/schema/user";
 import { nullsToUndefined } from "@repo/shared";
+import Decimal from "decimal.js";
 import { BaseRepository } from "@/core/base";
 import { CACHE_TTLS, CONFIGURATION_KEYS } from "@/core/constants";
 import type { WithTx } from "@/core/interface";
@@ -101,10 +102,42 @@ export class OrderBaseRepository extends BaseRepository {
 	}
 
 	/**
+	 * Calculate estimated driver earning for an order based on pricing configuration
+	 *
+	 * @param totalPrice - Order total price
+	 * @param orderType - Order type (RIDE, DELIVERY, FOOD)
+	 * @param pricingConfig - Pricing configuration for the order type
+	 * @param merchantCommission - Merchant commission (for FOOD orders)
+	 * @returns Estimated driver earning or undefined if calculation not possible
+	 */
+	static calculateEstimatedDriverEarning(
+		totalPrice: number,
+		orderType: OrderType,
+		pricingConfig?: PricingConfiguration,
+		merchantCommission?: number,
+	): number | undefined {
+		if (!pricingConfig) return undefined;
+
+		const platformFeeRate = new Decimal(pricingConfig.platformFeeRate);
+		const total = new Decimal(totalPrice);
+		const platformFee = total.mul(platformFeeRate);
+
+		let earning = total.minus(platformFee);
+
+		// For FOOD orders, also subtract merchant commission
+		if (orderType === "FOOD" && merchantCommission !== undefined) {
+			earning = earning.minus(new Decimal(merchantCommission));
+		}
+
+		return earning.toNumber();
+	}
+
+	/**
 	 * Compose an Order entity from database row with related entities
 	 *
 	 * @param item - Raw database order row with relations
 	 * @param storage - Optional storage service to convert image keys to URLs for menu items and user profiles
+	 * @param pricingConfig - Optional pricing configuration for calculating estimatedDriverEarning
 	 */
 	static async composeEntity(
 		item: OrderDatabase & {
@@ -114,6 +147,7 @@ export class OrderBaseRepository extends BaseRepository {
 			items?: OrderItemRow[];
 		},
 		storage?: StorageService,
+		pricingConfig?: PricingConfiguration,
 	): Promise<Order> {
 		const composedItems = OrderBaseRepository.composeOrderItems(
 			item.items,
@@ -139,6 +173,29 @@ export class OrderBaseRepository extends BaseRepository {
 		}
 
 		const result = nullsToUndefined(item);
+		const totalPrice = toNumberSafe(item.totalPrice);
+		const driverEarning = item.driverEarning
+			? toNumberSafe(item.driverEarning)
+			: undefined;
+		const merchantCommission = item.merchantCommission
+			? toNumberSafe(item.merchantCommission)
+			: undefined;
+		const merchantEarning = item.merchantEarning
+			? toNumberSafe(item.merchantEarning)
+			: undefined;
+
+		// Calculate estimated driver earning for orders that don't have final driverEarning yet
+		// (i.e., orders before completion)
+		let estimatedDriverEarning: number | undefined;
+		if (driverEarning === undefined && pricingConfig) {
+			estimatedDriverEarning =
+				OrderBaseRepository.calculateEstimatedDriverEarning(
+					totalPrice,
+					item.type as OrderType,
+					pricingConfig,
+					merchantCommission,
+				);
+		}
 
 		return {
 			...item,
@@ -161,20 +218,18 @@ export class OrderBaseRepository extends BaseRepository {
 					}
 				: undefined,
 			basePrice: toNumberSafe(item.basePrice),
-			totalPrice: toNumberSafe(item.totalPrice),
+			totalPrice,
 			tip: item.tip ? toNumberSafe(item.tip) : undefined,
 			platformCommission: item.platformCommission
 				? toNumberSafe(item.platformCommission)
 				: undefined,
-			driverEarning: item.driverEarning
-				? toNumberSafe(item.driverEarning)
-				: undefined,
-			merchantCommission: item.merchantCommission
-				? toNumberSafe(item.merchantCommission)
-				: undefined,
+			driverEarning,
+			merchantCommission,
+			merchantEarning,
 			discountAmount: item.discountAmount
 				? toNumberSafe(item.discountAmount)
 				: undefined,
+			estimatedDriverEarning,
 			items: composedItems,
 			itemCount: composedItems?.length,
 		};
@@ -219,6 +274,12 @@ export class OrderBaseRepository extends BaseRepository {
 		});
 		if (!result) return undefined;
 
+		// Fetch pricing config for estimated driver earning calculation
+		const pricingConfig = await this.getPricingConfiguration(
+			result.type as "RIDE" | "DELIVERY" | "FOOD",
+			opts,
+		);
+
 		// Type assertion needed because we're selecting specific columns from driver
 		// which changes the inferred type, but it's still compatible with Partial<Driver>
 		return OrderBaseRepository.composeEntity(
@@ -226,7 +287,85 @@ export class OrderBaseRepository extends BaseRepository {
 				typeof OrderBaseRepository.composeEntity
 			>[0],
 			this.storage,
+			pricingConfig,
 		);
+	}
+
+	/**
+	 * Get pricing configuration for an order type (static version for use outside repository context)
+	 * Uses KV cache with DB fallback
+	 *
+	 * @param type - Order type (RIDE, DELIVERY, FOOD)
+	 * @param kv - KV service instance
+	 * @param db - Database service instance
+	 */
+	static async fetchPricingConfiguration(
+		type: "RIDE" | "DELIVERY" | "FOOD",
+		kv: KeyValueService,
+		db: DatabaseService,
+	): Promise<PricingConfiguration | undefined> {
+		let key = "";
+		switch (type) {
+			case "RIDE":
+				key = CONFIGURATION_KEYS.RIDE_SERVICE_PRICING;
+				break;
+			case "DELIVERY":
+				key = CONFIGURATION_KEYS.DELIVERY_SERVICE_PRICING;
+				break;
+			case "FOOD":
+				key = CONFIGURATION_KEYS.FOOD_SERVICE_PRICING;
+				break;
+			default:
+				throw new Error(`Invalid order type: ${type}`);
+		}
+
+		// Try KV cache first
+		const cached = await safeAsync(kv.get(key));
+		if (cached.data) {
+			return cached.data as PricingConfiguration;
+		}
+
+		// Fallback to DB
+		const res = await db.query.configuration.findFirst({
+			where: (f, op) => op.eq(f.key, key),
+		});
+		const value = res?.value;
+		if (value) {
+			// Store in KV cache
+			await safeAsync(kv.put(key, value, { expirationTtl: CACHE_TTLS["24h"] }));
+		}
+		return value as PricingConfiguration | undefined;
+	}
+
+	/**
+	 * Get all pricing configurations for all order types
+	 * Useful for batch processing orders of mixed types
+	 *
+	 * @param kv - KV service instance
+	 * @param db - Database service instance
+	 * @returns Map of order type to pricing configuration
+	 */
+	static async fetchAllPricingConfigurations(
+		kv: KeyValueService,
+		db: DatabaseService,
+	): Promise<
+		Map<"RIDE" | "DELIVERY" | "FOOD", PricingConfiguration | undefined>
+	> {
+		const [rideConfig, deliveryConfig, foodConfig] = await Promise.all([
+			OrderBaseRepository.fetchPricingConfiguration("RIDE", kv, db),
+			OrderBaseRepository.fetchPricingConfiguration("DELIVERY", kv, db),
+			OrderBaseRepository.fetchPricingConfiguration("FOOD", kv, db),
+		]);
+
+		const configMap = new Map<
+			"RIDE" | "DELIVERY" | "FOOD",
+			PricingConfiguration | undefined
+		>();
+		configMap.set("RIDE", rideConfig);
+		configMap.set("DELIVERY", deliveryConfig);
+		configMap.set("FOOD", foodConfig);
+
+		return configMap;
 	}
 
 	/**

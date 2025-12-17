@@ -36,6 +36,7 @@ void _setupService() {
       ),
     )
     ..registerSingleton<ImageService>(ImagePickerService()..setup())
+    ..registerSingleton<DocumentService>(DocumentPickerService()..setup())
     ..registerSingleton<LocationService>(LocationService())
     ..registerSingletonAsync<MapService>(
       IMapService().setup,
@@ -104,9 +105,7 @@ void _setupRepository() {
       () => LeaderboardRepository(apiClient: sl<ApiClient>()),
     )
     ..registerLazySingleton(() => BadgeRepository(apiClient: sl<ApiClient>()))
-    ..registerLazySingleton(
-      () => CartRepository(keyValueService: sl<KeyValueService>()),
-    )
+    ..registerLazySingleton(() => CartRepository(apiClient: sl<ApiClient>()))
     ..registerLazySingleton(
       () => QuickMessageRepository(apiClient: sl<ApiClient>()),
     )
@@ -116,6 +115,9 @@ void _setupRepository() {
     )
     ..registerLazySingleton(
       () => MerchantWalletRepository(apiClient: sl<ApiClient>()),
+    )
+    ..registerLazySingleton(
+      () => MerchantMenuCategoryRepository(apiClient: sl<ApiClient>()),
     );
 }
 
@@ -257,6 +259,7 @@ void _setupCubit() {
       () => DriverWalletCubit(
         walletRepository: sl<WalletRepository>(),
         transactionRepository: sl<TransactionRepository>(),
+        driverRepository: sl<DriverRepository>(),
       ),
     )
     ..registerFactory(
@@ -278,6 +281,7 @@ void _setupCubit() {
       () => UserCartCubit(
         cartRepository: sl<CartRepository>(),
         orderRepository: sl<OrderRepository>(),
+        documentService: sl<DocumentService>(),
       ),
     )
     ..registerFactory(
@@ -310,5 +314,10 @@ void _setupCubit() {
     )
     ..registerFactory(
       () => MerchantReviewCubit(reviewRepository: sl<ReviewRepository>()),
+    )
+    ..registerFactory(
+      () => MerchantMenuCategoryCubit(
+        menuCategoryRepository: sl<MerchantMenuCategoryRepository>(),
+      ),
     );
 }

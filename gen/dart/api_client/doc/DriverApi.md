@@ -30,6 +30,7 @@ Method | HTTP request | Description
 [**driverUpdateOnlineStatus**](DriverApi.md#driverupdateonlinestatus) | **POST** /drivers/{id}/update-online-status | 
 [**driverUpdateTakingOrderStatus**](DriverApi.md#driverupdatetakingorderstatus) | **POST** /drivers/{id}/update-taking-order-status | 
 [**driverVerifyQuiz**](DriverApi.md#driververifyquiz) | **POST** /drivers/{id}/approval-review/verify-quiz | 
+[**driverWalletGetCommissionReport**](DriverApi.md#driverwalletgetcommissionreport) | **GET** /drivers/{driverId}/wallet/commission-report | 
 [**driverWalletGetMonthlySummary**](DriverApi.md#driverwalletgetmonthlysummary) | **GET** /drivers/{driverId}/wallet/summary | 
 [**driverWalletGetSavedBankAccount**](DriverApi.md#driverwalletgetsavedbankaccount) | **GET** /drivers/{driverId}/wallet/bank | 
 [**driverWalletGetTransactions**](DriverApi.md#driverwalletgettransactions) | **GET** /drivers/{driverId}/wallet/transactions | 
@@ -994,6 +995,55 @@ Name | Type | Description  | Notes
 ### HTTP request headers
 
  - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **driverWalletGetCommissionReport**
+> DriverWalletGetCommissionReport200Response driverWalletGetCommissionReport(driverId, period, startDate, endDate)
+
+
+
+Get commission report for driver with balance summary, chart data, and transaction history
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getDriverApi();
+final String driverId = driverId_example; // String | 
+final CommissionReportPeriod period = ; // CommissionReportPeriod | 
+final DateTime startDate = 2013-10-20T19:20:30+01:00; // DateTime | 
+final DateTime endDate = 2013-10-20T19:20:30+01:00; // DateTime | 
+
+try {
+    final response = api.driverWalletGetCommissionReport(driverId, period, startDate, endDate);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling DriverApi->driverWalletGetCommissionReport: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **driverId** | **String**|  | 
+ **period** | [**CommissionReportPeriod**](.md)|  | [optional] [default to daily]
+ **startDate** | **DateTime**|  | [optional] 
+ **endDate** | **DateTime**|  | [optional] 
+
+### Return type
+
+[**DriverWalletGetCommissionReport200Response**](DriverWalletGetCommissionReport200Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
  - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)

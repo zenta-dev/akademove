@@ -38,40 +38,49 @@ export const createWsMinEnvelopeSchema = <
 		p: payload,
 	});
 
+// =============================================================================
+// ORDER WebSocket Events & Actions
+// =============================================================================
+// Events (e): Server → Client notifications (what happened)
+// Actions (a): Client → Server requests (what to do)
+// =============================================================================
+
 export const OrderEnvelopeEventSchema = z.enum([
-	"CANCELED",
-	"OFFER",
-	"UNAVAILABLE",
-	"DRIVER_ACCEPTED",
-	"DRIVER_LOCATION_UPDATE",
-	"COMPLETED",
-	"MATCHING",
-	"CHAT_MESSAGE",
-	"CHAT_UNREAD_COUNT",
-	"MERCHANT_ACCEPTED",
-	"MERCHANT_REJECTED",
-	"MERCHANT_PREPARING",
-	"MERCHANT_READY",
-	"NO_SHOW",
-	"DRIVER_CANCELLED_REMATCHING",
-	"ORDER_STATUS_CHANGED",
+	// Order lifecycle events
+	"ORDER_OFFER", // New order available for drivers
+	"ORDER_MATCHING", // Order is being matched with drivers
+	"ORDER_UNAVAILABLE", // Order no longer available (taken by another driver)
+	"ORDER_CANCELLED", // Order was cancelled
+	"ORDER_COMPLETED", // Order completed successfully
+	"ORDER_NO_SHOW", // User was not present at pickup
+	"ORDER_STATUS_CHANGED", // Generic order status change
+
+	// Driver events
+	"DRIVER_ACCEPTED", // Driver accepted the order
+	"DRIVER_LOCATION_UPDATE", // Driver location changed during trip
+	"DRIVER_CANCELLED_REMATCHING", // Driver cancelled, order is being rematched
+
+	// Merchant events (for FOOD orders)
+	"MERCHANT_ACCEPTED", // Merchant accepted the order
+	"MERCHANT_REJECTED", // Merchant rejected the order
+	"MERCHANT_PREPARING", // Merchant started preparing
+	"MERCHANT_READY", // Order ready for pickup
+
+	// Chat events
+	"CHAT_MESSAGE", // New chat message received
+	"CHAT_UNREAD_COUNT", // Unread message count updated
+
 	// Data sync events (replaces polling)
-	"NEW_DATA",
-	"NO_DATA",
+	"NEW_DATA", // Server response with current order data
+	"NO_DATA", // Server response indicating no changes
 ]);
 export const OrderEnvelopeActionSchema = z.enum([
-	"MATCHING",
-	"ACCEPTED",
-	"UPDATE_LOCATION",
-	"DONE",
-	"SEND_MESSAGE",
-	"MERCHANT_ACCEPT",
-	"MERCHANT_REJECT",
-	"MERCHANT_MARK_PREPARING",
-	"MERCHANT_MARK_READY",
-	"REPORT_NO_SHOW",
+	// Driver actions (sent by driver app)
+	"DRIVER_UPDATE_LOCATION", // Driver updating their location during trip
+	"DRIVER_COMPLETE_ORDER", // Driver marking order as completed
+
 	// Data sync action (replaces polling)
-	"CHECK_NEW_DATA",
+	"CHECK_NEW_DATA", // Client requesting current order state
 ]);
 export const OrderEnvelopePayloadSchema = z.object({
 	detail: z

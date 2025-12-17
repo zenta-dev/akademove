@@ -19,6 +19,11 @@ Method | HTTP request | Description
 [**merchantGetMine**](MerchantApi.md#merchantgetmine) | **GET** /merchants/mine | 
 [**merchantGetReview**](MerchantApi.md#merchantgetreview) | **GET** /merchants/{id}/approval-review | 
 [**merchantList**](MerchantApi.md#merchantlist) | **GET** /merchants | 
+[**merchantMenuCategoryCreate**](MerchantApi.md#merchantmenucategorycreate) | **POST** /merchants/{merchantId}/menu-categories | 
+[**merchantMenuCategoryGet**](MerchantApi.md#merchantmenucategoryget) | **GET** /merchants/{merchantId}/menu-categories/{id} | 
+[**merchantMenuCategoryList**](MerchantApi.md#merchantmenucategorylist) | **GET** /merchants/{merchantId}/menu-categories | 
+[**merchantMenuCategoryRemove**](MerchantApi.md#merchantmenucategoryremove) | **DELETE** /merchants/{merchantId}/menu-categories/{id} | 
+[**merchantMenuCategoryUpdate**](MerchantApi.md#merchantmenucategoryupdate) | **PUT** /merchants/{merchantId}/menu-categories/{id} | 
 [**merchantMenuCreate**](MerchantApi.md#merchantmenucreate) | **POST** /merchants/{merchantId}/menus | 
 [**merchantMenuGet**](MerchantApi.md#merchantmenuget) | **GET** /merchants/{merchantId}/menus/{id} | 
 [**merchantMenuList**](MerchantApi.md#merchantmenulist) | **GET** /merchants/{merchantId}/menus | 
@@ -97,7 +102,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **merchantActivate**
-> MerchantGetMine200ResponseBody merchantActivate(id)
+> MerchantGetMine200ResponseBody merchantActivate(id, body)
 
 
 
@@ -107,9 +112,10 @@ import 'package:api_client/api.dart';
 
 final api = ApiClient().getMerchantApi();
 final String id = id_example; // String | 
+final Object body = Object; // Object | 
 
 try {
-    final response = api.merchantActivate(id);
+    final response = api.merchantActivate(id, body);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling MerchantApi->merchantActivate: $e\n');
@@ -121,6 +127,7 @@ try {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **id** | **String**|  | 
+ **body** | **Object**|  | [optional] 
 
 ### Return type
 
@@ -132,7 +139,7 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
@@ -503,8 +510,239 @@ Name | Type | Description  | Notes
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
+# **merchantMenuCategoryCreate**
+> MerchantMenuCategoryCreate200Response merchantMenuCategoryCreate(merchantId, merchantMenuCategoryCreateRequest)
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getMerchantApi();
+final String merchantId = merchantId_example; // String | 
+final MerchantMenuCategoryCreateRequest merchantMenuCategoryCreateRequest = ; // MerchantMenuCategoryCreateRequest | 
+
+try {
+    final response = api.merchantMenuCategoryCreate(merchantId, merchantMenuCategoryCreateRequest);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling MerchantApi->merchantMenuCategoryCreate: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **merchantId** | **String**|  | 
+ **merchantMenuCategoryCreateRequest** | [**MerchantMenuCategoryCreateRequest**](MerchantMenuCategoryCreateRequest.md)|  | 
+
+### Return type
+
+[**MerchantMenuCategoryCreate200Response**](MerchantMenuCategoryCreate200Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **merchantMenuCategoryGet**
+> MerchantMenuCategoryCreate200Response merchantMenuCategoryGet(merchantId, id)
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getMerchantApi();
+final String merchantId = merchantId_example; // String | 
+final String id = id_example; // String | 
+
+try {
+    final response = api.merchantMenuCategoryGet(merchantId, id);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling MerchantApi->merchantMenuCategoryGet: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **merchantId** | **String**|  | 
+ **id** | **String**|  | 
+
+### Return type
+
+[**MerchantMenuCategoryCreate200Response**](MerchantMenuCategoryCreate200Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **merchantMenuCategoryList**
+> MerchantMenuCategoryList200Response merchantMenuCategoryList(merchantId, cursor, limit, direction, page, query, sortBy, order, mode)
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getMerchantApi();
+final String merchantId = merchantId_example; // String | 
+final String cursor = cursor_example; // String | 
+final Object limit = ; // Object | 
+final String direction = direction_example; // String | 
+final Object page = ; // Object | 
+final String query = query_example; // String | 
+final String sortBy = sortBy_example; // String | 
+final PaginationOrder order = ; // PaginationOrder | 
+final PaginationMode mode = ; // PaginationMode | 
+
+try {
+    final response = api.merchantMenuCategoryList(merchantId, cursor, limit, direction, page, query, sortBy, order, mode);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling MerchantApi->merchantMenuCategoryList: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **merchantId** | **String**|  | 
+ **cursor** | **String**|  | [optional] 
+ **limit** | [**Object**](.md)|  | [optional] 
+ **direction** | **String**|  | [optional] 
+ **page** | [**Object**](.md)|  | [optional] 
+ **query** | **String**|  | [optional] 
+ **sortBy** | **String**|  | [optional] 
+ **order** | [**PaginationOrder**](.md)|  | [optional] [default to desc]
+ **mode** | [**PaginationMode**](.md)|  | [optional] [default to offset]
+
+### Return type
+
+[**MerchantMenuCategoryList200Response**](MerchantMenuCategoryList200Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **merchantMenuCategoryRemove**
+> BadgeRemove200Response merchantMenuCategoryRemove(merchantId, id)
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getMerchantApi();
+final String merchantId = merchantId_example; // String | 
+final String id = id_example; // String | 
+
+try {
+    final response = api.merchantMenuCategoryRemove(merchantId, id);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling MerchantApi->merchantMenuCategoryRemove: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **merchantId** | **String**|  | 
+ **id** | **String**|  | 
+
+### Return type
+
+[**BadgeRemove200Response**](BadgeRemove200Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **merchantMenuCategoryUpdate**
+> MerchantMenuCategoryCreate200Response merchantMenuCategoryUpdate(merchantId, id, merchantMenuCategoryUpdateRequest)
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getMerchantApi();
+final String merchantId = merchantId_example; // String | 
+final String id = id_example; // String | 
+final MerchantMenuCategoryUpdateRequest merchantMenuCategoryUpdateRequest = ; // MerchantMenuCategoryUpdateRequest | 
+
+try {
+    final response = api.merchantMenuCategoryUpdate(merchantId, id, merchantMenuCategoryUpdateRequest);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling MerchantApi->merchantMenuCategoryUpdate: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **merchantId** | **String**|  | 
+ **id** | **String**|  | 
+ **merchantMenuCategoryUpdateRequest** | [**MerchantMenuCategoryUpdateRequest**](MerchantMenuCategoryUpdateRequest.md)|  | 
+
+### Return type
+
+[**MerchantMenuCategoryCreate200Response**](MerchantMenuCategoryCreate200Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
 # **merchantMenuCreate**
-> MerchantMenuCreate200Response merchantMenuCreate(merchantId, name, price, stock, category, image)
+> MerchantMenuCreate200Response merchantMenuCreate(merchantId, name, price, stock, category, categoryId, image)
 
 
 
@@ -518,10 +756,11 @@ final String name = name_example; // String |
 final num price = 8.14; // num | 
 final int stock = 56; // int | 
 final String category = category_example; // String | 
+final String categoryId = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
 final MultipartFile image = BINARY_DATA_HERE; // MultipartFile | 
 
 try {
-    final response = api.merchantMenuCreate(merchantId, name, price, stock, category, image);
+    final response = api.merchantMenuCreate(merchantId, name, price, stock, category, categoryId, image);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling MerchantApi->merchantMenuCreate: $e\n');
@@ -537,6 +776,7 @@ Name | Type | Description  | Notes
  **price** | **num**|  | 
  **stock** | **int**|  | 
  **category** | **String**|  | [optional] 
+ **categoryId** | **String**|  | [optional] 
  **image** | **MultipartFile**|  | [optional] 
 
 ### Return type
@@ -698,7 +938,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **merchantMenuUpdate**
-> MerchantMenuCreate200Response merchantMenuUpdate(merchantId, id, name, category, price, stock, image)
+> MerchantMenuCreate200Response merchantMenuUpdate(merchantId, id, name, category, categoryId, price, stock, image)
 
 
 
@@ -711,12 +951,13 @@ final String merchantId = merchantId_example; // String |
 final String id = id_example; // String | 
 final String name = name_example; // String | 
 final String category = category_example; // String | 
+final String categoryId = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
 final num price = 8.14; // num | 
 final int stock = 56; // int | 
 final MultipartFile image = BINARY_DATA_HERE; // MultipartFile | 
 
 try {
-    final response = api.merchantMenuUpdate(merchantId, id, name, category, price, stock, image);
+    final response = api.merchantMenuUpdate(merchantId, id, name, category, categoryId, price, stock, image);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling MerchantApi->merchantMenuUpdate: $e\n');
@@ -731,6 +972,7 @@ Name | Type | Description  | Notes
  **id** | **String**|  | 
  **name** | **String**|  | [optional] 
  **category** | **String**|  | [optional] 
+ **categoryId** | **String**|  | [optional] 
  **price** | **num**|  | [optional] 
  **stock** | **int**|  | [optional] 
  **image** | **MultipartFile**|  | [optional] 
@@ -1009,7 +1251,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **merchantOrderAccept**
-> MerchantOrderAccept200Response merchantOrderAccept(merchantId, id)
+> MerchantOrderAccept200Response merchantOrderAccept(merchantId, id, body)
 
 
 
@@ -1020,9 +1262,10 @@ import 'package:api_client/api.dart';
 final api = ApiClient().getMerchantApi();
 final String merchantId = merchantId_example; // String | 
 final String id = id_example; // String | 
+final Object body = Object; // Object | 
 
 try {
-    final response = api.merchantOrderAccept(merchantId, id);
+    final response = api.merchantOrderAccept(merchantId, id, body);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling MerchantApi->merchantOrderAccept: $e\n');
@@ -1035,6 +1278,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **merchantId** | **String**|  | 
  **id** | **String**|  | 
+ **body** | **Object**|  | [optional] 
 
 ### Return type
 
@@ -1046,13 +1290,13 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **merchantOrderMarkPreparing**
-> MerchantOrderAccept200Response merchantOrderMarkPreparing(merchantId, id)
+> MerchantOrderAccept200Response merchantOrderMarkPreparing(merchantId, id, body)
 
 
 
@@ -1063,9 +1307,10 @@ import 'package:api_client/api.dart';
 final api = ApiClient().getMerchantApi();
 final String merchantId = merchantId_example; // String | 
 final String id = id_example; // String | 
+final Object body = Object; // Object | 
 
 try {
-    final response = api.merchantOrderMarkPreparing(merchantId, id);
+    final response = api.merchantOrderMarkPreparing(merchantId, id, body);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling MerchantApi->merchantOrderMarkPreparing: $e\n');
@@ -1078,6 +1323,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **merchantId** | **String**|  | 
  **id** | **String**|  | 
+ **body** | **Object**|  | [optional] 
 
 ### Return type
 
@@ -1089,13 +1335,13 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **merchantOrderMarkReady**
-> MerchantOrderAccept200Response merchantOrderMarkReady(merchantId, id)
+> MerchantOrderAccept200Response merchantOrderMarkReady(merchantId, id, body)
 
 
 
@@ -1106,9 +1352,10 @@ import 'package:api_client/api.dart';
 final api = ApiClient().getMerchantApi();
 final String merchantId = merchantId_example; // String | 
 final String id = id_example; // String | 
+final Object body = Object; // Object | 
 
 try {
-    final response = api.merchantOrderMarkReady(merchantId, id);
+    final response = api.merchantOrderMarkReady(merchantId, id, body);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling MerchantApi->merchantOrderMarkReady: $e\n');
@@ -1121,6 +1368,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **merchantId** | **String**|  | 
  **id** | **String**|  | 
+ **body** | **Object**|  | [optional] 
 
 ### Return type
 
@@ -1132,7 +1380,7 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)

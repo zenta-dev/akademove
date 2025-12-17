@@ -109,6 +109,13 @@ void main() {
       // TODO
     });
 
+    // Get commission report for drivers with balance summary, chart data, and transaction history
+    //
+    //Future<WalletGetCommissionReport200Response> walletGetCommissionReport({ CommissionReportPeriod period, DateTime startDate, DateTime endDate }) async
+    test('test walletGetCommissionReport', () async {
+      // TODO
+    });
+
     //Future<DriverWalletGetMonthlySummary200Response> walletGetMonthlySummary(num year, num month) async
     test('test walletGetMonthlySummary', () async {
       // TODO

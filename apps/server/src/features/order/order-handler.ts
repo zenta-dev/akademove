@@ -174,7 +174,26 @@ export const OrderHandler = priv.router({
 			const result = await context.repo.order.update(params.id, data, { tx });
 
 			// Broadcast status change to WebSocket clients if status was updated
-			await OrderRepository.broadcastStatusChange(params.id, result);
+			// If driver just accepted (status = ACCEPTED and driverId set), fetch driver data
+			// and broadcast DRIVER_ACCEPTED event instead of generic ORDER_STATUS_CHANGED
+			if (result.status === "ACCEPTED" && result.driverId) {
+				try {
+					const driver = await context.repo.driver.main.get(result.driverId);
+					await OrderRepository.broadcastDriverAccepted(
+						params.id,
+						result,
+						driver,
+					);
+				} catch (error) {
+					logger.error(
+						{ error, orderId: params.id, driverId: result.driverId },
+						"[OrderHandler] Failed to fetch driver for broadcast, falling back to status change",
+					);
+					await OrderRepository.broadcastStatusChange(params.id, result);
+				}
+			} else {
+				await OrderRepository.broadcastStatusChange(params.id, result);
+			}
 
 			return {
 				status: 200,

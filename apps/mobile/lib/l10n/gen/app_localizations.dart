@@ -4315,6 +4315,12 @@ abstract class AppLocalizations {
   /// **'Stock'**
   String get label_stock;
 
+  /// No description provided for @sold.
+  ///
+  /// In en, this message translates to:
+  /// **'Sold'**
+  String get sold;
+
   /// No description provided for @label_created.
   ///
   /// In en, this message translates to:
@@ -7063,6 +7069,12 @@ abstract class AppLocalizations {
   /// **'Error'**
   String get toast_error;
 
+  /// No description provided for @cancellation_reason.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancellation Reason'**
+  String get cancellation_reason;
+
   /// No description provided for @cancel_reason_optional.
   ///
   /// In en, this message translates to:
@@ -8832,6 +8844,210 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'In Progress'**
   String get status_in_trip;
+
+  /// No description provided for @error_generic.
+  ///
+  /// In en, this message translates to:
+  /// **'An error occurred. Please try again.'**
+  String get error_generic;
+
+  /// No description provided for @button_retry.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get button_retry;
+
+  /// No description provided for @text_already_reviewed.
+  ///
+  /// In en, this message translates to:
+  /// **'You have already reviewed this order'**
+  String get text_already_reviewed;
+
+  /// No description provided for @text_your_rating.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Rating'**
+  String get text_your_rating;
+
+  /// No description provided for @text_selected_categories.
+  ///
+  /// In en, this message translates to:
+  /// **'Selected Categories'**
+  String get text_selected_categories;
+
+  /// No description provided for @text_your_comment.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Comment'**
+  String get text_your_comment;
+
+  /// No description provided for @text_reviewed_on.
+  ///
+  /// In en, this message translates to:
+  /// **'Reviewed on {date}'**
+  String text_reviewed_on(String date);
+
+  /// No description provided for @fee_breakdown.
+  ///
+  /// In en, this message translates to:
+  /// **'Fee Breakdown'**
+  String get fee_breakdown;
+
+  /// No description provided for @driver_receives.
+  ///
+  /// In en, this message translates to:
+  /// **'Driver Earnings'**
+  String get driver_receives;
+
+  /// No description provided for @merchant_fee.
+  ///
+  /// In en, this message translates to:
+  /// **'Merchant Fee'**
+  String get merchant_fee;
+
+  /// No description provided for @merchant_receives.
+  ///
+  /// In en, this message translates to:
+  /// **'Merchant Receives'**
+  String get merchant_receives;
+
+  /// No description provided for @delivery_location.
+  ///
+  /// In en, this message translates to:
+  /// **'Delivery Location'**
+  String get delivery_location;
+
+  /// No description provided for @delivery_fee.
+  ///
+  /// In en, this message translates to:
+  /// **'Delivery Fee'**
+  String get delivery_fee;
+
+  /// No description provided for @notes.
+  ///
+  /// In en, this message translates to:
+  /// **'Notes'**
+  String get notes;
+
+  /// No description provided for @pickup_note.
+  ///
+  /// In en, this message translates to:
+  /// **'Pickup Note'**
+  String get pickup_note;
+
+  /// No description provided for @dropoff_note.
+  ///
+  /// In en, this message translates to:
+  /// **'Dropoff Note'**
+  String get dropoff_note;
+
+  /// No description provided for @sender.
+  ///
+  /// In en, this message translates to:
+  /// **'Sender'**
+  String get sender;
+
+  /// No description provided for @receiver.
+  ///
+  /// In en, this message translates to:
+  /// **'Receiver'**
+  String get receiver;
+
+  /// No description provided for @driver_arriving.
+  ///
+  /// In en, this message translates to:
+  /// **'Driver is arriving'**
+  String get driver_arriving;
+
+  /// No description provided for @order_in_delivery.
+  ///
+  /// In en, this message translates to:
+  /// **'Order is being delivered'**
+  String get order_in_delivery;
+
+  /// No description provided for @error_category_name_required.
+  ///
+  /// In en, this message translates to:
+  /// **'Category name is required'**
+  String get error_category_name_required;
+
+  /// No description provided for @placeholder_category_name.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter category name'**
+  String get placeholder_category_name;
+
+  /// No description provided for @placeholder_no_categories.
+  ///
+  /// In en, this message translates to:
+  /// **'No categories available'**
+  String get placeholder_no_categories;
+
+  /// No description provided for @attachment_upload_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload Document'**
+  String get attachment_upload_title;
+
+  /// No description provided for @attachment_upload_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Attach document to be printed (optional)'**
+  String get attachment_upload_hint;
+
+  /// No description provided for @attachment_select_file.
+  ///
+  /// In en, this message translates to:
+  /// **'Select File'**
+  String get attachment_select_file;
+
+  /// No description provided for @attachment_change_file.
+  ///
+  /// In en, this message translates to:
+  /// **'Change File'**
+  String get attachment_change_file;
+
+  /// No description provided for @attachment_remove.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove'**
+  String get attachment_remove;
+
+  /// No description provided for @attachment_uploading.
+  ///
+  /// In en, this message translates to:
+  /// **'Uploading...'**
+  String get attachment_uploading;
+
+  /// No description provided for @attachment_supported_formats.
+  ///
+  /// In en, this message translates to:
+  /// **'Supported: PDF, DOC, DOCX, JPG, PNG (max 10MB)'**
+  String get attachment_supported_formats;
+
+  /// No description provided for @attachment_file_selected.
+  ///
+  /// In en, this message translates to:
+  /// **'File selected: {fileName}'**
+  String attachment_file_selected(String fileName);
+
+  /// No description provided for @text_refund_automatically.
+  ///
+  /// In en, this message translates to:
+  /// **'Refund will be processed automatically to customer\'s wallet'**
+  String get text_refund_automatically;
+
+  /// No description provided for @estimated_time.
+  ///
+  /// In en, this message translates to:
+  /// **'Est. Time'**
+  String get estimated_time;
+
+  /// No description provided for @estimated_delivery.
+  ///
+  /// In en, this message translates to:
+  /// **'Est. Delivery'**
+  String get estimated_delivery;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

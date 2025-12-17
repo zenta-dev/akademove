@@ -244,8 +244,22 @@ export class ReviewValidationService {
 				driverUserId = driver?.userId ?? null;
 			}
 
-			// Check if user is part of this order (as customer or driver)
-			const isUserInOrder = order.userId === userId || driverUserId === userId;
+			// Get merchant's userId for comparison (for FOOD orders)
+			let merchantUserId: string | null = null;
+
+			if (order.merchantId) {
+				const merchantId = order.merchantId;
+				const merchant = await (opts?.tx ?? this.#db).query.merchant.findFirst({
+					where: (f, op) => op.eq(f.id, merchantId),
+				});
+				merchantUserId = merchant?.userId ?? null;
+			}
+
+			// Check if user is part of this order (as customer, driver, or merchant)
+			const isUserInOrder =
+				order.userId === userId ||
+				driverUserId === userId ||
+				merchantUserId === userId;
 
 			// Check if user already reviewed this order
 			const alreadyReviewed = await this.hasUserReviewedOrder({
@@ -355,18 +369,38 @@ export class ReviewValidationService {
 				driverUserId = driver?.userId ?? null;
 			}
 
-			// If fromUser is the customer, toUser must be the driver's userId
+			// If fromUser is the customer, toUser must be the driver OR merchant (for FOOD orders)
 			if (fromUserId === order.userId) {
-				if (!driverUserId) {
-					return { valid: false, error: "Order has no driver assigned" };
+				// Customer can review the driver
+				if (driverUserId && toUserId === driverUserId) {
+					return { valid: true };
 				}
-				if (toUserId !== driverUserId) {
+
+				// Customer can also review the merchant (for FOOD orders)
+				if (order.merchantId) {
+					const merchantId = order.merchantId;
+					const merchant = await (
+						opts?.tx ?? this.#db
+					).query.merchant.findFirst({
+						where: (f, op) => op.eq(f.id, merchantId),
+					});
+					if (merchant && toUserId === merchant.userId) {
+						return { valid: true };
+					}
+				}
+
+				// If neither driver nor merchant matched
+				if (!driverUserId && !order.merchantId) {
 					return {
 						valid: false,
-						error: "Customer can only review the assigned driver",
+						error: "Order has no driver or merchant assigned",
 					};
 				}
-				return { valid: true };
+
+				return {
+					valid: false,
+					error: "Customer can only review the assigned driver or merchant",
+				};
 			}
 
 			// If fromUser is the driver, toUser must be the customer
@@ -378,6 +412,23 @@ export class ReviewValidationService {
 					};
 				}
 				return { valid: true };
+			}
+
+			// If fromUser is the merchant, toUser must be the customer
+			if (order.merchantId) {
+				const merchantId = order.merchantId;
+				const merchant = await (opts?.tx ?? this.#db).query.merchant.findFirst({
+					where: (f, op) => op.eq(f.id, merchantId),
+				});
+				if (merchant && fromUserId === merchant.userId) {
+					if (toUserId !== order.userId) {
+						return {
+							valid: false,
+							error: "Merchant can only review the customer",
+						};
+					}
+					return { valid: true };
+				}
 			}
 
 			return {

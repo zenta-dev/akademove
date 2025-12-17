@@ -17,6 +17,8 @@ import { BannerHandler } from "./banner/banner-handler";
 import { BannerSpec } from "./banner/banner-spec";
 import { BroadcastHandler } from "./broadcast/broadcast-handler";
 import { BroadcastSpec } from "./broadcast/broadcast-spec";
+import { CartHandler } from "./cart/cart-handler";
+import { CartSpec } from "./cart/cart-spec";
 import { ChatHandler } from "./chat/chat-handler";
 import { ChatSpec } from "./chat/chat-spec";
 import { ConfigurationHandler } from "./configuration/configuration-handler";
@@ -71,6 +73,7 @@ export const FetchServerSpec = oc.router({
 	bank: oc.prefix("/bank").router(BankSpec),
 	banner: oc.prefix("/banners").router(BannerSpec),
 	broadcast: oc.prefix("/broadcasts").router(BroadcastSpec),
+	cart: oc.prefix("/cart").router(CartSpec),
 	chat: oc.prefix("/chat").router(ChatSpec),
 	configuration: oc.prefix("/configurations").router(ConfigurationSpec),
 	contact: oc.prefix("/contacts").router(ContactSpec),
@@ -111,6 +114,7 @@ export const FetchServerRouter = os.router({
 	bank: BankHandler,
 	banner: BannerHandler,
 	broadcast: BroadcastHandler,
+	cart: CartHandler,
 	chat: ChatHandler,
 	configuration: ConfigurationHandler,
 	contact: ContactHandler,

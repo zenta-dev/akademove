@@ -112,7 +112,9 @@ function RouteComponent() {
 
 	// Fetch commission report
 	const { data: commissionReport, isLoading: reportLoading } = useQuery({
-		queryKey: ["wallet", "commissionReport", selectedPeriod],
+		queryKey: orpcQuery.wallet.getCommissionReport.queryKey({
+			input: { query: { period: selectedPeriod } },
+		}),
 		queryFn: async () => {
 			const result = await orpcClient.wallet.getCommissionReport({
 				query: { period: selectedPeriod },

@@ -26,7 +26,6 @@ import 'package:api_client/src/model/order_place_order200_response.dart';
 import 'package:api_client/src/model/order_place_scheduled_order200_response.dart';
 import 'package:api_client/src/model/order_send_message_request.dart';
 import 'package:api_client/src/model/order_upload_delivery_proof200_response.dart';
-import 'package:api_client/src/model/order_upload_delivery_proof_request.dart';
 import 'package:api_client/src/model/order_verify_delivery_otp200_response.dart';
 import 'package:api_client/src/model/order_verify_delivery_otp_request.dart';
 import 'package:api_client/src/model/pagination_mode.dart';
@@ -1722,7 +1721,7 @@ class OrderApi {
   ///
   ///
   /// Parameters:
-  /// * [orderUploadDeliveryProofRequest]
+  /// * [file]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -1733,7 +1732,7 @@ class OrderApi {
   /// Returns a [Future] containing a [Response] with a [OrderUploadDeliveryProof200Response] as data
   /// Throws [DioException] if API call or serialization fails
   Future<Response<OrderUploadDeliveryProof200Response>> orderUploadAttachment({
-    required OrderUploadDeliveryProofRequest orderUploadDeliveryProofRequest,
+    required MultipartFile file,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -1751,14 +1750,14 @@ class OrderApi {
         ],
         ...?extra,
       },
-      contentType: 'application/json',
+      contentType: 'multipart/form-data',
       validateStatus: validateStatus,
     );
 
     dynamic _bodyData;
 
     try {
-      _bodyData = jsonEncode(orderUploadDeliveryProofRequest);
+      _bodyData = FormData.fromMap(<String, dynamic>{r'file': file});
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _options.compose(_dio.options, _path),
@@ -1814,7 +1813,7 @@ class OrderApi {
   ///
   /// Parameters:
   /// * [id]
-  /// * [orderUploadDeliveryProofRequest]
+  /// * [file]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -1827,7 +1826,7 @@ class OrderApi {
   Future<Response<OrderUploadDeliveryProof200Response>>
   orderUploadDeliveryItemPhoto({
     required String id,
-    required OrderUploadDeliveryProofRequest orderUploadDeliveryProofRequest,
+    required MultipartFile file,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -1850,14 +1849,14 @@ class OrderApi {
         ],
         ...?extra,
       },
-      contentType: 'application/json',
+      contentType: 'multipart/form-data',
       validateStatus: validateStatus,
     );
 
     dynamic _bodyData;
 
     try {
-      _bodyData = jsonEncode(orderUploadDeliveryProofRequest);
+      _bodyData = FormData.fromMap(<String, dynamic>{r'file': file});
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _options.compose(_dio.options, _path),
@@ -1913,7 +1912,7 @@ class OrderApi {
   ///
   /// Parameters:
   /// * [id]
-  /// * [orderUploadDeliveryProofRequest]
+  /// * [file]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -1926,7 +1925,7 @@ class OrderApi {
   Future<Response<OrderUploadDeliveryProof200Response>>
   orderUploadDeliveryProof({
     required String id,
-    required OrderUploadDeliveryProofRequest orderUploadDeliveryProofRequest,
+    required MultipartFile file,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -1949,14 +1948,14 @@ class OrderApi {
         ],
         ...?extra,
       },
-      contentType: 'application/json',
+      contentType: 'multipart/form-data',
       validateStatus: validateStatus,
     );
 
     dynamic _bodyData;
 
     try {
-      _bodyData = jsonEncode(orderUploadDeliveryProofRequest);
+      _bodyData = FormData.fromMap(<String, dynamic>{r'file': file});
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _options.compose(_dio.options, _path),

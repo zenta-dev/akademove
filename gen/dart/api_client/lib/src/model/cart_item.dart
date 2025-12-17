@@ -25,7 +25,8 @@ class CartItem {
     required this.menuImage,
     required this.unitPrice,
     required this.quantity,
-    this.notes,
+    required this.notes,
+    this.stock,
   });
   @JsonKey(name: r'menuId', required: true, includeIfNull: false)
   final String menuId;
@@ -50,8 +51,13 @@ class CartItem {
   @JsonKey(name: r'quantity', required: true, includeIfNull: false)
   final int quantity;
 
-  @JsonKey(name: r'notes', required: false, includeIfNull: false)
+  @JsonKey(name: r'notes', required: true, includeIfNull: true)
   final String? notes;
+
+  // minimum: 0
+  // maximum: 9007199254740991
+  @JsonKey(name: r'stock', required: false, includeIfNull: false)
+  final int? stock;
 
   @override
   bool operator ==(Object other) =>
@@ -64,7 +70,8 @@ class CartItem {
           other.menuImage == menuImage &&
           other.unitPrice == unitPrice &&
           other.quantity == quantity &&
-          other.notes == notes;
+          other.notes == notes &&
+          other.stock == stock;
 
   @override
   int get hashCode =>
@@ -75,7 +82,8 @@ class CartItem {
       (menuImage == null ? 0 : menuImage.hashCode) +
       unitPrice.hashCode +
       quantity.hashCode +
-      (notes == null ? 0 : notes.hashCode);
+      (notes == null ? 0 : notes.hashCode) +
+      stock.hashCode;
 
   factory CartItem.fromJson(Map<String, dynamic> json) =>
       _$CartItemFromJson(json);

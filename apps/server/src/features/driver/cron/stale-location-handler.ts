@@ -2,13 +2,8 @@ import type { ExecutionContext } from "@cloudflare/workers-types";
 import { and, eq, isNotNull, lt } from "drizzle-orm";
 import { getManagers, getRepositories, getServices } from "@/core/factory";
 import { tables } from "@/core/services/db";
+import { BusinessConfigurationService } from "@/features/configuration/services";
 import { logger } from "@/utils/logger";
-
-/**
- * Stale location threshold in minutes
- * Drivers whose last location update is older than this will be set offline
- */
-const STALE_LOCATION_THRESHOLD_MINUTES = 15;
 
 /**
  * Stale Location Cron Handler
@@ -16,8 +11,11 @@ const STALE_LOCATION_THRESHOLD_MINUTES = 15;
  *
  * Purpose:
  * - Set isOnline = false for drivers with stale location updates
- * - A stale location is one that has not been updated in 15+ minutes
+ * - A stale location is one that has not been updated in X minutes (configurable via DB)
  * - This ensures offline drivers (app closed, lost connection) do not receive orders
+ *
+ * Configuration:
+ * - Stale threshold: driverLocationStaleThresholdMinutes (from DB config)
  *
  * This handles cases where:
  * 1. Driver app crashes without proper cleanup
@@ -37,9 +35,16 @@ export async function handleStaleLocationCron(
 		const now = new Date();
 		let offlineCount = 0;
 
+		// Fetch stale location threshold from database configuration
+		const staleThresholdMinutes =
+			await BusinessConfigurationService.getDriverLocationStaleThresholdMinutes(
+				svc.db,
+				svc.kv,
+			);
+
 		// Calculate the threshold timestamp
 		const staleThreshold = new Date(
-			now.getTime() - STALE_LOCATION_THRESHOLD_MINUTES * 60 * 1000,
+			now.getTime() - staleThresholdMinutes * 60 * 1000,
 		);
 
 		// Find online drivers with stale location updates

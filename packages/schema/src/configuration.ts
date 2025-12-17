@@ -122,6 +122,104 @@ export const BusinessConfigurationSchema = z.object({
 	 * (BANK_TRANSFER, QRIS) where payment is not immediate.
 	 */
 	paymentPendingTimeoutMinutes: z.coerce.number().positive().default(15),
+
+	// ========================================================================
+	// Order Lifecycle Configuration
+	// ========================================================================
+
+	/**
+	 * Duration in minutes after which COMPLETED orders without ratings
+	 * will be auto-finalized (default: 60 minutes / 1 hour)
+	 */
+	orderCompletionTimeoutMinutes: z.coerce.number().positive().default(60),
+
+	/**
+	 * Duration in minutes after which NO_SHOW orders will be processed
+	 * for cleanup and refund if not already done (default: 30 minutes)
+	 */
+	noShowTimeoutMinutes: z.coerce.number().positive().default(30),
+
+	/**
+	 * Duration in minutes to consider an in-transit order timestamp as stale
+	 * Orders in ACCEPTED/ARRIVING/IN_TRIP will have their timestamps refreshed
+	 * if older than this threshold (default: 5 minutes)
+	 */
+	orderStaleTimestampMinutes: z.coerce.number().positive().default(5),
+
+	// ========================================================================
+	// Driver Location Tracking Configuration
+	// ========================================================================
+
+	/**
+	 * Duration in minutes after which a driver's location is considered stale
+	 * Drivers with stale locations will be automatically set offline
+	 * (default: 15 minutes)
+	 */
+	driverLocationStaleThresholdMinutes: z.coerce.number().positive().default(15),
+
+	// ========================================================================
+	// Driver Rebroadcast Configuration
+	// ========================================================================
+
+	/**
+	 * Interval in minutes between rebroadcast attempts for unmatched orders
+	 * Orders in MATCHING status without a driver will be rebroadcast
+	 * to the driver pool every X minutes (default: 2 minutes)
+	 */
+	driverRebroadcastIntervalMinutes: z.coerce.number().positive().default(2),
+
+	/**
+	 * Multiplier for radius expansion during rebroadcast (default: 1.5)
+	 * Rebroadcast uses initialRadiusKm * this multiplier to find more drivers
+	 */
+	driverRebroadcastRadiusMultiplier: z.coerce.number().positive().default(1.5),
+
+	// ========================================================================
+	// Commission Configuration
+	// ========================================================================
+
+	/**
+	 * Maximum badge commission reduction allowed (default: 0.5 = 50%)
+	 * Driver badges can reduce platform commission up to this percentage
+	 */
+	maxBadgeCommissionReduction: z.coerce.number().min(0).max(1).default(0.5),
+
+	// ========================================================================
+	// Scheduled Order Configuration
+	// ========================================================================
+
+	/**
+	 * Minimum minutes in advance required for scheduling an order (default: 30 minutes)
+	 */
+	scheduledOrderMinAdvanceMinutes: z.coerce.number().positive().default(30),
+
+	/**
+	 * Maximum days in advance allowed for scheduling an order (default: 7 days)
+	 */
+	scheduledOrderMaxAdvanceDays: z.coerce.number().positive().default(7),
+
+	/**
+	 * Minutes before scheduled time when driver matching begins (default: 15 minutes)
+	 */
+	scheduledOrderMatchingLeadTimeMinutes: z.coerce
+		.number()
+		.positive()
+		.default(5),
+
+	/**
+	 * Minimum hours before scheduled time required to allow rescheduling (default: 1 hour)
+	 */
+	scheduledOrderMinRescheduleHours: z.coerce.number().positive().default(1),
+
+	// ========================================================================
+	// On-Time Delivery Configuration
+	// ========================================================================
+
+	/**
+	 * Threshold in minutes for considering a delivery as "on-time" (default: 10 minutes)
+	 * Used for driver metrics and leaderboard calculations
+	 */
+	onTimeDeliveryThresholdMinutes: z.coerce.number().positive().default(10),
 });
 export type BusinessConfiguration = z.infer<typeof BusinessConfigurationSchema>;
 

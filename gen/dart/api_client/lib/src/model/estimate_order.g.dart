@@ -29,6 +29,8 @@ abstract class _$EstimateOrderCWProxy {
 
   EstimateOrder attachmentUrl(String? attachmentUrl);
 
+  EstimateOrder deliveryItemType(DeliveryItemType? deliveryItemType);
+
   EstimateOrder couponCode(String? couponCode);
 
   EstimateOrder discountIds(List<int>? discountIds);
@@ -53,6 +55,7 @@ abstract class _$EstimateOrderCWProxy {
     UserGender? gender,
     EstimateOrderGenderPreferenceEnum? genderPreference,
     String? attachmentUrl,
+    DeliveryItemType? deliveryItemType,
     String? couponCode,
     List<int>? discountIds,
     int? weight,
@@ -104,6 +107,10 @@ class _$EstimateOrderCWProxyImpl implements _$EstimateOrderCWProxy {
       call(attachmentUrl: attachmentUrl);
 
   @override
+  EstimateOrder deliveryItemType(DeliveryItemType? deliveryItemType) =>
+      call(deliveryItemType: deliveryItemType);
+
+  @override
   EstimateOrder couponCode(String? couponCode) => call(couponCode: couponCode);
 
   @override
@@ -132,6 +139,7 @@ class _$EstimateOrderCWProxyImpl implements _$EstimateOrderCWProxy {
     Object? gender = const $CopyWithPlaceholder(),
     Object? genderPreference = const $CopyWithPlaceholder(),
     Object? attachmentUrl = const $CopyWithPlaceholder(),
+    Object? deliveryItemType = const $CopyWithPlaceholder(),
     Object? couponCode = const $CopyWithPlaceholder(),
     Object? discountIds = const $CopyWithPlaceholder(),
     Object? weight = const $CopyWithPlaceholder(),
@@ -181,6 +189,10 @@ class _$EstimateOrderCWProxyImpl implements _$EstimateOrderCWProxy {
           ? _value.attachmentUrl
           // ignore: cast_nullable_to_non_nullable
           : attachmentUrl as String?,
+      deliveryItemType: deliveryItemType == const $CopyWithPlaceholder()
+          ? _value.deliveryItemType
+          // ignore: cast_nullable_to_non_nullable
+          : deliveryItemType as DeliveryItemType?,
       couponCode: couponCode == const $CopyWithPlaceholder()
           ? _value.couponCode
           // ignore: cast_nullable_to_non_nullable
@@ -246,6 +258,10 @@ EstimateOrder _$EstimateOrderFromJson(
       (v) => $enumDecodeNullable(_$EstimateOrderGenderPreferenceEnumEnumMap, v),
     ),
     attachmentUrl: $checkedConvert('attachmentUrl', (v) => v as String?),
+    deliveryItemType: $checkedConvert(
+      'deliveryItemType',
+      (v) => $enumDecodeNullable(_$DeliveryItemTypeEnumMap, v),
+    ),
     couponCode: $checkedConvert('couponCode', (v) => v as String?),
     discountIds: $checkedConvert(
       'discountIds',
@@ -270,6 +286,7 @@ Map<String, dynamic> _$EstimateOrderToJson(
   'genderPreference':
       ?_$EstimateOrderGenderPreferenceEnumEnumMap[instance.genderPreference],
   'attachmentUrl': ?instance.attachmentUrl,
+  'deliveryItemType': ?_$DeliveryItemTypeEnumMap[instance.deliveryItemType],
   'couponCode': ?instance.couponCode,
   'discountIds': ?instance.discountIds,
   'weight': ?instance.weight,
@@ -289,4 +306,13 @@ const _$UserGenderEnumMap = {
 const _$EstimateOrderGenderPreferenceEnumEnumMap = {
   EstimateOrderGenderPreferenceEnum.SAME: 'SAME',
   EstimateOrderGenderPreferenceEnum.ANY: 'ANY',
+};
+
+const _$DeliveryItemTypeEnumMap = {
+  DeliveryItemType.FOOD: 'FOOD',
+  DeliveryItemType.CLOTH: 'CLOTH',
+  DeliveryItemType.DOCUMENT: 'DOCUMENT',
+  DeliveryItemType.MEDICINE: 'MEDICINE',
+  DeliveryItemType.BOOK: 'BOOK',
+  DeliveryItemType.OTHER: 'OTHER',
 };

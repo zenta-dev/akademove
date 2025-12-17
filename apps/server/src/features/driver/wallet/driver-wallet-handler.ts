@@ -4,6 +4,7 @@ import { trimObjectValues } from "@repo/shared";
 import { AuthError, RepositoryError } from "@/core/error";
 import { createORPCRouter } from "@/core/router/orpc";
 import { BusinessConfigurationService } from "@/features/configuration/services";
+import { CommissionReportService } from "@/features/wallet/services/commission-report-service";
 import { logger } from "@/utils/logger";
 import { DriverWalletSpec } from "./driver-wallet-spec";
 
@@ -490,6 +491,48 @@ export const DriverWalletHandler = priv.router({
 						accountNumber: String(bankData.number),
 						accountName: bankData.accountName ?? undefined,
 					},
+				},
+			};
+		},
+	),
+
+	getCommissionReport: priv.getCommissionReport.handler(
+		async ({ context, input: { params, query } }) => {
+			// Get driver to find userId
+			const driver = await context.repo.driver.main.get(params.driverId);
+
+			// IDOR Protection: Drivers can only access their own commission report
+			if (context.user.role === "DRIVER" && driver.userId !== context.user.id) {
+				throw new AuthError("You can only access your own commission report", {
+					code: "FORBIDDEN",
+				});
+			}
+
+			// Get driver's wallet
+			const wallet = await context.repo.wallet.getByUserId(driver.userId);
+
+			// Get commission report using the service
+			const report = await CommissionReportService.getCommissionReport(
+				context.svc.db,
+				wallet.id,
+				wallet.balance,
+				query,
+			);
+
+			logger.info(
+				{
+					driverId: params.driverId,
+					userId: driver.userId,
+					period: query.period,
+				},
+				"[DriverWalletHandler] Commission report retrieved",
+			);
+
+			return {
+				status: 200,
+				body: {
+					message: m.server_report_retrieved(),
+					data: report,
 				},
 			};
 		},

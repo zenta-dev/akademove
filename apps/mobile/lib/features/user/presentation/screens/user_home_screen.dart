@@ -47,11 +47,11 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _notificationCubit.getUnreadCount();
       context.read<UserOrderCubit>().fetchActiveOrder();
+      final configCubit = context.read<SharedConfigurationCubit>();
       Future.wait([
         context.read<UserHomeCubit>().getPopulars(),
-        context.read<SharedConfigurationCubit>().getBanners(
-          placement: 'USER_HOME',
-        ),
+        configCubit.getBanners(placement: 'USER_HOME'),
+        configCubit.getBusinessConfiguration(),
         context.read<UserWalletCubit>().getMine(),
       ]);
     });
@@ -67,11 +67,11 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
   Future<void> _onRefresh() async {
     _notificationCubit.getUnreadCount();
     context.read<UserOrderCubit>().fetchActiveOrder();
+    final configCubit = context.read<SharedConfigurationCubit>();
     await Future.wait([
       context.read<UserHomeCubit>().getPopulars(),
-      context.read<SharedConfigurationCubit>().getBanners(
-        placement: 'USER_HOME',
-      ),
+      configCubit.getBanners(placement: 'USER_HOME'),
+      configCubit.getBusinessConfiguration(),
       context.read<UserWalletCubit>().getMine(),
     ]);
   }

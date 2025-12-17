@@ -42,7 +42,7 @@ export const EmergencyWithContactSchema = z.object({
 	emergency: z.object({
 		id: z.uuid(),
 		orderId: z.uuid(),
-		userId: z.uuid(),
+		userId: z.string(),
 		driverId: z.uuid().optional(),
 		type: z.string(),
 		status: z.string(),

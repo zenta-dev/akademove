@@ -13,7 +13,7 @@ void main() {
       // TODO
     });
 
-    // int limit (default value: 50)
+    // int limit
     test('to test the property `limit`', () async {
       // TODO
     });

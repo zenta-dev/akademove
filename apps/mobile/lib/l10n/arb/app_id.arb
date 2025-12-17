@@ -852,6 +852,7 @@
 	"label_category": "Kategori",
 	"label_price": "Harga",
 	"label_stock": "Stok",
+	"sold": "Terjual",
 	"label_created": "Dibuat",
 	"label_updated": "Diperbarui",
 	"placeholder_select_category": "Pilih kategori",
@@ -1517,6 +1518,7 @@
 	"placeholder_menu_stock": "Masukkan jumlah stok",
 	"hint_menu_category": "contoh: Minuman, Camilan, Makanan Utama",
 	"toast_error": "Error",
+	"cancellation_reason": "Alasan Pembatalan",
 	"cancel_reason_optional": "Alasan (opsional)",
 	"order_cancelled_successfully": "Pesanan berhasil dibatalkan",
 	"failed_to_cancel_order": "Gagal membatalkan pesanan",
@@ -1857,5 +1859,53 @@
 	"status_preparing": "Sedang Disiapkan",
 	"status_ready_for_pickup": "Siap Diambil",
 	"status_arriving": "Driver Menuju Lokasi",
-	"status_in_trip": "Dalam Perjalanan"
+	"status_in_trip": "Dalam Perjalanan",
+	"error_generic": "Terjadi kesalahan. Silakan coba lagi.",
+	"button_retry": "Coba Lagi",
+	"text_already_reviewed": "Anda sudah mengulas pesanan ini",
+	"text_your_rating": "Rating Anda",
+	"text_selected_categories": "Kategori yang Dipilih",
+	"text_your_comment": "Komentar Anda",
+	"text_reviewed_on": "Diulas pada {date}",
+	"@text_reviewed_on": {
+		"placeholders": {
+			"date": {
+				"type": "String"
+			}
+		}
+	},
+	"fee_breakdown": "Rincian Biaya",
+	"driver_receives": "Penghasilan Driver",
+	"merchant_fee": "Biaya Merchant",
+	"merchant_receives": "Penghasilan Merchant",
+	"delivery_location": "Lokasi Pengiriman",
+	"delivery_fee": "Biaya Pengiriman",
+	"notes": "Catatan",
+	"pickup_note": "Catatan Penjemputan",
+	"dropoff_note": "Catatan Pengantaran",
+	"sender": "Pengirim",
+	"receiver": "Penerima",
+	"driver_arriving": "Driver sedang menuju",
+	"order_in_delivery": "Pesanan sedang dikirim",
+	"error_category_name_required": "Nama kategori harus diisi",
+	"placeholder_category_name": "Masukkan nama kategori",
+	"placeholder_no_categories": "Tidak ada kategori tersedia",
+	"attachment_upload_title": "Unggah Dokumen",
+	"attachment_upload_hint": "Lampirkan dokumen untuk dicetak (opsional)",
+	"attachment_select_file": "Pilih File",
+	"attachment_change_file": "Ganti File",
+	"attachment_remove": "Hapus",
+	"attachment_uploading": "Mengunggah...",
+	"attachment_supported_formats": "Didukung: PDF, DOC, DOCX, JPG, PNG (maks 10MB)",
+	"attachment_file_selected": "File dipilih: {fileName}",
+	"@attachment_file_selected": {
+		"placeholders": {
+			"fileName": {
+				"type": "String"
+			}
+		}
+	},
+	"text_refund_automatically": "Pengembalian dana akan diproses otomatis ke dompet pelanggan",
+	"estimated_time": "Estimasi Waktu",
+	"estimated_delivery": "Estimasi Pengiriman"
 }

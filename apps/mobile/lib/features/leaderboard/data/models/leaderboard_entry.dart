@@ -1,3 +1,4 @@
+import 'package:akademove/core/utils/string_utils.dart';
 import 'package:api_client/api_client.dart';
 import 'package:equatable/equatable.dart';
 
@@ -53,7 +54,7 @@ class LeaderboardEntry extends Equatable {
     return LeaderboardEntry(
       id: lb.id,
       driverId: lb.driverId ?? lb.userId,
-      driverName: driver?.name ?? 'Driver ${lb.userId.substring(0, 8)}',
+      driverName: driver?.name ?? 'Driver ${lb.userId.prefix(8)}',
       driverImage: driver?.image,
       driverRating: driver?.rating.toDouble() ?? 0.0,
       rank: lb.rank,

@@ -6,7 +6,7 @@ void main() {
   final instance = ApiClient().getCouponApi();
 
   group(CouponApi, () {
-    //Future<CouponCreate200Response> couponActivate(String id) async
+    //Future<CouponCreate200Response> couponActivate(String id, { Object body }) async
     test('test couponActivate', () async {
       // TODO
     });
@@ -16,13 +16,20 @@ void main() {
       // TODO
     });
 
-    //Future<CouponCreate200Response> couponDeactivate(String id) async
+    //Future<CouponCreate200Response> couponDeactivate(String id, { Object body }) async
     test('test couponDeactivate', () async {
       // TODO
     });
 
     //Future<CouponCreate200Response> couponGet(String id) async
     test('test couponGet', () async {
+      // TODO
+    });
+
+    // Get all available coupons for browsing (active and within validity period)
+    //
+    //Future<CouponList200Response> couponGetAvailableCoupons({ OrderType serviceType }) async
+    test('test couponGetAvailableCoupons', () async {
       // TODO
     });
 

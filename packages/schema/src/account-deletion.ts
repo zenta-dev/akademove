@@ -38,8 +38,8 @@ export const AccountDeletionSchema = z.object({
 	reason: AccountDeletionReasonSchema,
 	additionalInfo: z.string().optional(),
 	status: AccountDeletionStatusSchema,
-	userId: z.uuid().optional(),
-	reviewedById: z.uuid().optional(),
+	userId: z.string().optional(),
+	reviewedById: z.string().optional(),
 	reviewNotes: z.string().optional(),
 	createdAt: DateSchema,
 	updatedAt: DateSchema,
@@ -62,7 +62,7 @@ export const InsertAccountDeletionSchema = AccountDeletionSchema.omit({
 	reviewedAt: true,
 	completedAt: true,
 }).safeExtend({
-	userId: z.uuid().optional(),
+	userId: z.string().optional(),
 });
 export type InsertAccountDeletion = z.infer<typeof InsertAccountDeletionSchema>;
 

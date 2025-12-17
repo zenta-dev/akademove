@@ -62,6 +62,11 @@ void main() {
       // TODO
     });
 
+    // num rating (default value: 0)
+    test('to test the property `rating`', () async {
+      // TODO
+    });
+
     // DateTime createdAt
     test('to test the property `createdAt`', () async {
       // TODO
