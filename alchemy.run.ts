@@ -180,7 +180,7 @@ export const [server, web] = await Promise.all([
 			"0 * * * *", // Hourly: ban expiry, payment expiry, report escalation, DLQ monitor
 			"0 0 * * *", // Daily at midnight: coupon expiry, banner expiry
 			"0 2 * * *", // Daily at 2 AM: account deletion processing
-			"0 4 * * 0", // Weekly on Sunday at 4 AM: FCM token cleanup
+			"0 4 * * SUN", // Weekly on Sunday at 4 AM: FCM token cleanup (CF requires SUN not 0)
 		],
 		dev: {
 			port: 3000,

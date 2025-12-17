@@ -185,7 +185,7 @@ export default {
 		}
 
 		// Weekly on Sunday at 4 AM: FCM token cleanup
-		if (event.cron === "0 4 * * 0") {
+		if (event.cron === "0 4 * * SUN") {
 			ctx.waitUntil(
 				import("./features/notification/cron/fcm-cleanup-handler").then((m) =>
 					m.handleFcmCleanupCron(env, ctx).catch((error: unknown) => {
