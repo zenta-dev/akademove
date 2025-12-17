@@ -300,7 +300,6 @@ import 'package:api_client/src/model/order_summary.dart';
 import 'package:api_client/src/model/order_summary_breakdown.dart';
 import 'package:api_client/src/model/order_upload_delivery_proof200_response.dart';
 import 'package:api_client/src/model/order_upload_delivery_proof200_response_data.dart';
-import 'package:api_client/src/model/order_upload_delivery_proof_request.dart';
 import 'package:api_client/src/model/order_verify_delivery_otp200_response.dart';
 import 'package:api_client/src/model/order_verify_delivery_otp200_response_data.dart';
 import 'package:api_client/src/model/order_verify_delivery_otp_request.dart';
@@ -1592,11 +1591,6 @@ ReturnType deserialize<ReturnType, BaseType>(
           as ReturnType;
     case 'OrderUploadDeliveryProof200ResponseData':
       return OrderUploadDeliveryProof200ResponseData.fromJson(
-            value as Map<String, dynamic>,
-          )
-          as ReturnType;
-    case 'OrderUploadDeliveryProofRequest':
-      return OrderUploadDeliveryProofRequest.fromJson(
             value as Map<String, dynamic>,
           )
           as ReturnType;

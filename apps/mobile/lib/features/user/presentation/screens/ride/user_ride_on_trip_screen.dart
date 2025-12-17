@@ -347,6 +347,8 @@ class _UserRideOnTripScreenState extends State<UserRideOnTripScreen> {
             context.l10n.text_trip_completed,
             type: ToastType.success,
           );
+        }
+        if (mounted && context.mounted) {
           context.popUntilRoot();
         }
       } else {
@@ -583,52 +585,6 @@ class _MapSection extends StatelessWidget {
                 color: context.colorScheme.mutedForeground,
               ).asSkeleton(),
             ),
-          // Emergency button - only show during IN_TRIP status
-          BlocSelector<UserOrderCubit, UserOrderState, OrderStatus?>(
-            selector: (state) => state.currentOrder.value?.status,
-            builder: (context, status) {
-              if (status != OrderStatus.IN_TRIP) {
-                return const SizedBox.shrink();
-              }
-              return BlocSelector<
-                UserOrderCubit,
-                UserOrderState,
-                EmergencyLocation
-              >(
-                selector: (state) {
-                  final order = state.currentOrder.value;
-                  final driverLocation =
-                      state.currentAssignedDriver.value?.currentLocation;
-                  if (driverLocation != null) {
-                    return EmergencyLocation(
-                      latitude: driverLocation.y.toDouble(),
-                      longitude: driverLocation.x.toDouble(),
-                    );
-                  }
-                  return EmergencyLocation(
-                    latitude: order?.pickupLocation.y.toDouble() ?? 0,
-                    longitude: order?.pickupLocation.x.toDouble() ?? 0,
-                  );
-                },
-                builder: (context, emergencyLocation) {
-                  final order = context
-                      .read<UserOrderCubit>()
-                      .state
-                      .currentOrder
-                      .value;
-                  if (order == null) return const SizedBox.shrink();
-                  return Positioned(
-                    bottom: 16,
-                    right: 16,
-                    child: EmergencyButton(
-                      orderId: order.id,
-                      currentLocation: emergencyLocation,
-                    ),
-                  );
-                },
-              );
-            },
-          ),
         ],
       ),
     );
@@ -1176,6 +1132,52 @@ class _DriverInfoContent extends StatelessWidget {
                 orderId: orderId!,
                 onPressed: () => _showChatDialog(context),
               ),
+            // Emergency button - only show during IN_TRIP status
+            BlocSelector<UserOrderCubit, UserOrderState, OrderStatus?>(
+              selector: (state) => state.currentOrder.value?.status,
+              builder: (context, status) {
+                if (status != OrderStatus.IN_TRIP) {
+                  return const SizedBox.shrink();
+                }
+                return BlocSelector<
+                  UserOrderCubit,
+                  UserOrderState,
+                  EmergencyLocation
+                >(
+                  selector: (state) {
+                    final order = state.currentOrder.value;
+                    final driverLocation =
+                        state.currentAssignedDriver.value?.currentLocation;
+                    if (driverLocation != null) {
+                      return EmergencyLocation(
+                        latitude: driverLocation.y.toDouble(),
+                        longitude: driverLocation.x.toDouble(),
+                      );
+                    }
+                    return EmergencyLocation(
+                      latitude: order?.pickupLocation.y.toDouble() ?? 0,
+                      longitude: order?.pickupLocation.x.toDouble() ?? 0,
+                    );
+                  },
+                  builder: (context, emergencyLocation) {
+                    final order = context
+                        .read<UserOrderCubit>()
+                        .state
+                        .currentOrder
+                        .value;
+                    if (order == null) return const SizedBox.shrink();
+                    return Positioned(
+                      bottom: 16,
+                      right: 16,
+                      child: EmergencyButton(
+                        orderId: order.id,
+                        currentLocation: emergencyLocation,
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
           ],
         ),
       ),

@@ -299,7 +299,7 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
   Widget _buildAvatarPlaceholder(DriverUser? user) {
     return Center(
       child: Text(
-        user?.name?.substring(0, 1).toUpperCase() ?? 'D',
+        user?.name?.firstChar.toUpperCase() ?? 'D',
         style: context.typography.h1.copyWith(
           fontSize: 32.sp,
           color: context.colorScheme.primary,

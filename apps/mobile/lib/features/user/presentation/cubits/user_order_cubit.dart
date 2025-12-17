@@ -488,14 +488,16 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
     if (data.e == OrderEnvelopeEvent.DRIVER_LOCATION_UPDATE) {
       final x = data.p.driverUpdateLocation?.x;
       final y = data.p.driverUpdateLocation?.y;
-      var driver = state.currentAssignedDriver.value ?? dummyDriver;
-      if (x != null && y != null) {
-        driver = driver.copyWith(
+      final existingDriver = state.currentAssignedDriver.value;
+      // Only update location if we have a valid assigned driver
+      // Avoid using dummy driver as it has invalid userId
+      if (x != null && y != null && existingDriver != null) {
+        final updatedDriver = existingDriver.copyWith(
           currentLocation: Coordinate(x: x, y: y),
         );
         emit(
           state.copyWith(
-            currentAssignedDriver: OperationResult.success(driver),
+            currentAssignedDriver: OperationResult.success(updatedDriver),
           ),
         );
       }

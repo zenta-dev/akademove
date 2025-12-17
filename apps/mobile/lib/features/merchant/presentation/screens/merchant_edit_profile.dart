@@ -851,13 +851,8 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
         ],
         child: Padding(
           padding: EdgeInsets.all(16.dg),
-          child: NotificationListener<ScrollNotification>(
-            onNotification: (notification) {
-              if (_isDraggingMarker) {
-                return true;
-              }
-              return false;
-            },
+          child: SafeScrollWrapper(
+            blockWhen: () => _isDraggingMarker,
             child: Form(
               controller: _formController,
               child: SingleChildScrollView(

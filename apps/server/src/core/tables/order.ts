@@ -30,7 +30,11 @@ export const deliveryItemType = pgEnum(
 
 export interface OrderNote {
 	pickup?: string;
+	senderName?: string;
+	senderPhone?: string;
 	dropoff?: string;
+	recevierName?: string;
+	recevierPhone?: string;
 }
 export const order = pgTable(
 	"orders",

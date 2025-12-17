@@ -407,7 +407,7 @@ class _RecentOrderCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '${context.l10n.order_id}${order.id.substring(0, 8)}',
+                    '${context.l10n.order_id}${order.id.prefix(8)}',
                     style: context.typography.h4.copyWith(fontSize: 14.sp),
                   ),
                   Gap(4.h),

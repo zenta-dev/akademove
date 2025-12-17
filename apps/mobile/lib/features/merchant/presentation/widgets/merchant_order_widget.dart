@@ -48,11 +48,37 @@ class MerchantOrderCardWidget extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    order.user?.name ?? 'Folks',
-                    style: context.typography.small.copyWith(
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.w600,
+                  Expanded(
+                    child: Row(
+                      children: [
+                        Flexible(
+                          child: Text(
+                            order.user?.name ?? 'Folks',
+                            style: context.typography.small.copyWith(
+                              fontSize: 16.sp,
+                              fontWeight: FontWeight.w600,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                        if (order.user?.rating case final rating?
+                            when rating > 0) ...[
+                          SizedBox(width: 8.w),
+                          Icon(
+                            LucideIcons.star,
+                            size: 14.sp,
+                            color: const Color(0xFFFFC107),
+                          ),
+                          SizedBox(width: 4.w),
+                          Text(
+                            rating.toStringAsFixed(1),
+                            style: context.typography.small.copyWith(
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ],
                     ),
                   ),
                   Row(

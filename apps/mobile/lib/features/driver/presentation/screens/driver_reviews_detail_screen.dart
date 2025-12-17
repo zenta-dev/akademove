@@ -493,7 +493,7 @@ class _DriverReviewsDetailScreenState extends State<DriverReviewsDetailScreen> {
                   spacing: 4.h,
                   children: [
                     Text(
-                      '${context.l10n.text_customer} #${review.fromUserId.substring(0, 8)}',
+                      '${context.l10n.text_customer} #${review.fromUserId.prefix(8)}',
                       style: context.typography.small.copyWith(
                         fontWeight: FontWeight.bold,
                       ),

@@ -5,6 +5,7 @@ export 'delivery_info_widget.dart';
 export 'driver_markers_manager.dart';
 export 'avatar.dart';
 export 'safe_refresh_trigger.dart';
+export 'safe_scroll_wrapper.dart';
 export 'bank_transfer_payment_widget.dart';
 export 'bottom_navbar.dart';
 export 'default_app_bar.dart';

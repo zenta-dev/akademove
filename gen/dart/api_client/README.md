@@ -694,7 +694,6 @@ Class | Method | HTTP request | Description
  - [OrderType](doc/OrderType.md)
  - [OrderUploadDeliveryProof200Response](doc/OrderUploadDeliveryProof200Response.md)
  - [OrderUploadDeliveryProof200ResponseData](doc/OrderUploadDeliveryProof200ResponseData.md)
- - [OrderUploadDeliveryProofRequest](doc/OrderUploadDeliveryProofRequest.md)
  - [OrderVerifyDeliveryOTP200Response](doc/OrderVerifyDeliveryOTP200Response.md)
  - [OrderVerifyDeliveryOTP200ResponseData](doc/OrderVerifyDeliveryOTP200ResponseData.md)
  - [OrderVerifyDeliveryOTPRequest](doc/OrderVerifyDeliveryOTPRequest.md)

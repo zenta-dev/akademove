@@ -830,7 +830,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **orderUploadAttachment**
-> OrderUploadDeliveryProof200Response orderUploadAttachment(orderUploadDeliveryProofRequest)
+> OrderUploadDeliveryProof200Response orderUploadAttachment(file)
 
 
 
@@ -839,10 +839,10 @@ Name | Type | Description  | Notes
 import 'package:api_client/api.dart';
 
 final api = ApiClient().getOrderApi();
-final OrderUploadDeliveryProofRequest orderUploadDeliveryProofRequest = ; // OrderUploadDeliveryProofRequest | 
+final MultipartFile file = BINARY_DATA_HERE; // MultipartFile | 
 
 try {
-    final response = api.orderUploadAttachment(orderUploadDeliveryProofRequest);
+    final response = api.orderUploadAttachment(file);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling OrderApi->orderUploadAttachment: $e\n');
@@ -853,7 +853,7 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **orderUploadDeliveryProofRequest** | [**OrderUploadDeliveryProofRequest**](OrderUploadDeliveryProofRequest.md)|  | 
+ **file** | **MultipartFile**|  | 
 
 ### Return type
 
@@ -865,13 +865,13 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: application/json
+ - **Content-Type**: multipart/form-data
  - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **orderUploadDeliveryItemPhoto**
-> OrderUploadDeliveryProof200Response orderUploadDeliveryItemPhoto(id, orderUploadDeliveryProofRequest)
+> OrderUploadDeliveryProof200Response orderUploadDeliveryItemPhoto(id, file)
 
 
 
@@ -881,10 +881,10 @@ import 'package:api_client/api.dart';
 
 final api = ApiClient().getOrderApi();
 final String id = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
-final OrderUploadDeliveryProofRequest orderUploadDeliveryProofRequest = ; // OrderUploadDeliveryProofRequest | 
+final MultipartFile file = BINARY_DATA_HERE; // MultipartFile | 
 
 try {
-    final response = api.orderUploadDeliveryItemPhoto(id, orderUploadDeliveryProofRequest);
+    final response = api.orderUploadDeliveryItemPhoto(id, file);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling OrderApi->orderUploadDeliveryItemPhoto: $e\n');
@@ -896,7 +896,7 @@ try {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **id** | **String**|  | 
- **orderUploadDeliveryProofRequest** | [**OrderUploadDeliveryProofRequest**](OrderUploadDeliveryProofRequest.md)|  | 
+ **file** | **MultipartFile**|  | 
 
 ### Return type
 
@@ -908,13 +908,13 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: application/json
+ - **Content-Type**: multipart/form-data
  - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **orderUploadDeliveryProof**
-> OrderUploadDeliveryProof200Response orderUploadDeliveryProof(id, orderUploadDeliveryProofRequest)
+> OrderUploadDeliveryProof200Response orderUploadDeliveryProof(id, file)
 
 
 
@@ -924,10 +924,10 @@ import 'package:api_client/api.dart';
 
 final api = ApiClient().getOrderApi();
 final String id = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
-final OrderUploadDeliveryProofRequest orderUploadDeliveryProofRequest = ; // OrderUploadDeliveryProofRequest | 
+final MultipartFile file = BINARY_DATA_HERE; // MultipartFile | 
 
 try {
-    final response = api.orderUploadDeliveryProof(id, orderUploadDeliveryProofRequest);
+    final response = api.orderUploadDeliveryProof(id, file);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling OrderApi->orderUploadDeliveryProof: $e\n');
@@ -939,7 +939,7 @@ try {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **id** | **String**|  | 
- **orderUploadDeliveryProofRequest** | [**OrderUploadDeliveryProofRequest**](OrderUploadDeliveryProofRequest.md)|  | 
+ **file** | **MultipartFile**|  | 
 
 ### Return type
 
@@ -951,7 +951,7 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: application/json
+ - **Content-Type**: multipart/form-data
  - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)

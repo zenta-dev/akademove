@@ -4,7 +4,6 @@ import 'package:akademove/features/cart/data/models/cart_models.dart' as models;
 import 'package:akademove/features/cart/presentation/states/_export.dart';
 import 'package:akademove/features/order/data/repositories/order_repository.dart';
 import 'package:api_client/api_client.dart' hide Cart, CartItem;
-import 'package:dio/dio.dart';
 import 'package:http_parser/http_parser.dart' show MediaType;
 
 class UserCartCubit extends BaseCubit<UserCartState> {
@@ -484,14 +483,8 @@ class UserCartCubit extends BaseCubit<UserCartState> {
         state.copyWith(uploadAttachmentResult: const OperationResult.loading()),
       );
 
-      // Create multipart file from path
-      final file = await MultipartFile.fromFile(
-        filePath,
-        contentType: _getMediaType(filePath),
-      );
-
       // Upload to server
-      final response = await _orderRepository.uploadAttachment(file);
+      final response = await _orderRepository.uploadAttachment(filePath);
 
       // Update cart with attachment URL
       await _cartRepository.updateAttachment(response.data);

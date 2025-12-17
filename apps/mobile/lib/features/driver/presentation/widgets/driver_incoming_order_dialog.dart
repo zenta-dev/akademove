@@ -49,7 +49,7 @@ class DriverIncomingOrderDialog extends StatelessWidget {
                 ),
                 SizedBox(height: 4.h),
                 Text(
-                  'Order #${order.id.substring(0, 8)}',
+                  'Order #${order.id.prefix(8)}',
                   style: context.typography.small.copyWith(
                     color: context.colorScheme.mutedForeground,
                   ),

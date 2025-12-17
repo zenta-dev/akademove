@@ -6,7 +6,7 @@ import { BaseError } from "@/core/error";
 import type { HonoContext } from "@/core/interface";
 import { isCloudflare } from "@/utils";
 import { logger } from "@/utils/logger";
-import { TRUSTED_ORIGINS } from "../constants";
+import { TRUSTED_ORIGINS } from "../constants.env";
 import { getManagers, getRepositories, getServices } from "../factory";
 import { honoAuthMiddleware } from "../middlewares/auth";
 import { honoClientAgentMiddleware } from "../middlewares/client";

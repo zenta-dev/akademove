@@ -520,7 +520,7 @@ class MerchantOrderCubit extends BaseCubit<MerchantOrderState> {
       final orderType = order.type.name.toLowerCase();
       await _notificationService.show(
         title: 'New ${orderType.toUpperCase()} Order!',
-        body: 'Order #${order.id.substring(0, 8)} - Tap to view details',
+        body: 'Order #${order.id.prefix(8)} - Tap to view details',
         data: {'orderId': order.id, 'type': orderType},
       );
 

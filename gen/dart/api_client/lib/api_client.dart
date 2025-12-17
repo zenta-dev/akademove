@@ -389,7 +389,6 @@ export 'package:api_client/src/model/order_summary_breakdown.dart';
 export 'package:api_client/src/model/order_type.dart';
 export 'package:api_client/src/model/order_upload_delivery_proof200_response.dart';
 export 'package:api_client/src/model/order_upload_delivery_proof200_response_data.dart';
-export 'package:api_client/src/model/order_upload_delivery_proof_request.dart';
 export 'package:api_client/src/model/order_verify_delivery_otp200_response.dart';
 export 'package:api_client/src/model/order_verify_delivery_otp200_response_data.dart';
 export 'package:api_client/src/model/order_verify_delivery_otp_request.dart';

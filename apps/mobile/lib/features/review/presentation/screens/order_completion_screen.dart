@@ -660,7 +660,7 @@ class _OrderCompletedHeader extends StatelessWidget {
             Gap(4.h),
             // Order ID
             DefaultText(
-              "Order #${order.id.substring(0, 8).toUpperCase()}",
+              "Order #${order.id.prefix(8).toUpperCase()}",
               fontSize: 12.sp,
               color: context.colorScheme.mutedForeground,
             ),

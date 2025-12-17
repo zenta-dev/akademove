@@ -1,5 +1,6 @@
 import 'package:akademove/core/_export.dart';
 import 'package:api_client/api_client.dart';
+import 'package:dio/dio.dart';
 
 class ListOrderQuery extends UnifiedQuery {
   const ListOrderQuery({
@@ -145,14 +146,13 @@ class OrderRepository extends BaseRepository {
   /// Returns the uploaded proof URL
   Future<BaseResponse<String>> uploadDeliveryProof(
     String orderId,
-    Object file,
+    String filePath,
   ) {
     return guard(() async {
+      final file = await MultipartFile.fromFile(filePath);
       final res = await _apiClient.getOrderApi().orderUploadDeliveryProof(
         id: orderId,
-        orderUploadDeliveryProofRequest: OrderUploadDeliveryProofRequest(
-          file: file,
-        ),
+        file: file,
       );
 
       final data =
@@ -172,14 +172,13 @@ class OrderRepository extends BaseRepository {
   /// Returns the uploaded photo URL
   Future<BaseResponse<String>> uploadDeliveryItemPhoto(
     String orderId,
-    Object file,
+    String filePath,
   ) {
     return guard(() async {
+      final file = await MultipartFile.fromFile(filePath);
       final res = await _apiClient.getOrderApi().orderUploadDeliveryItemPhoto(
         id: orderId,
-        orderUploadDeliveryProofRequest: OrderUploadDeliveryProofRequest(
-          file: file,
-        ),
+        file: file,
       );
 
       final data =
@@ -334,12 +333,11 @@ class OrderRepository extends BaseRepository {
   /// Upload order attachment (e.g., document files for Printing merchants)
   /// POST /api/orders/attachment
   /// Returns the uploaded attachment URL
-  Future<BaseResponse<String>> uploadAttachment(Object file) {
+  Future<BaseResponse<String>> uploadAttachment(String filePath) {
     return guard(() async {
+      final file = await MultipartFile.fromFile(filePath);
       final res = await _apiClient.getOrderApi().orderUploadAttachment(
-        orderUploadDeliveryProofRequest: OrderUploadDeliveryProofRequest(
-          file: file,
-        ),
+        file: file,
       );
 
       final data =

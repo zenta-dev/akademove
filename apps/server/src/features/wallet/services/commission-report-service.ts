@@ -100,10 +100,10 @@ export class CommissionReportService {
 				for (let hour = 0; hour < 24; hour++) {
 					const hourStr = `${hour.toString().padStart(2, "0")}:00`;
 					const earning = hourlyData.find(
-						(d) => d.hour === hour && d.type === "EARNING",
+						(d) => Number(d.hour) === hour && d.type === "EARNING",
 					);
 					const commission = hourlyData.find(
-						(d) => d.hour === hour && d.type === "COMMISSION",
+						(d) => Number(d.hour) === hour && d.type === "COMMISSION",
 					);
 
 					chartData.push({
@@ -142,10 +142,10 @@ export class CommissionReportService {
 				const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 				for (let i = 0; i < 7; i++) {
 					const earning = dailyData.find(
-						(d) => d.dayNum === i && d.type === "EARNING",
+						(d) => Number(d.dayNum) === i && d.type === "EARNING",
 					);
 					const commission = dailyData.find(
-						(d) => d.dayNum === i && d.type === "COMMISSION",
+						(d) => Number(d.dayNum) === i && d.type === "COMMISSION",
 					);
 
 					chartData.push({
@@ -180,16 +180,16 @@ export class CommissionReportService {
 					);
 
 				// Get unique weeks in range
-				const weeks = [...new Set(weeklyData.map((d) => d.week))].sort(
+				const weeks = [...new Set(weeklyData.map((d) => Number(d.week)))].sort(
 					(a, b) => a - b,
 				);
 
 				for (const week of weeks) {
 					const earning = weeklyData.find(
-						(d) => d.week === week && d.type === "EARNING",
+						(d) => Number(d.week) === week && d.type === "EARNING",
 					);
 					const commission = weeklyData.find(
-						(d) => d.week === week && d.type === "COMMISSION",
+						(d) => Number(d.week) === week && d.type === "COMMISSION",
 					);
 
 					chartData.push({

@@ -21,11 +21,11 @@ import type { Interceptor } from "@orpc/shared";
 import { ZodToJsonSchemaConverter } from "@orpc/zod/zod4";
 import { AllSchemaRegistries } from "@repo/schema";
 import type { Hono } from "hono";
-import { TRUSTED_ORIGINS } from "@/core/constants";
 import { BaseError, UnknownError } from "@/core/error";
 import type { HonoContext, ORPCContext, UserInContext } from "@/core/interface";
 import { FetchServerRouter } from "@/features";
 import { logger } from "@/utils/logger";
+import { TRUSTED_ORIGINS } from "../constants.env";
 import {
 	orpcAuthMiddleware,
 	orpcRequireAuthMiddleware,

@@ -142,9 +142,7 @@ class _MerchantHistoryDetailScreenState
           ],
           title: Text(
             _order != null
-                ? context.l10n.text_order_id_short(
-                    _order?.id.substring(0, 8) ?? '',
-                  )
+                ? context.l10n.text_order_id_short(_order?.id.prefix(8) ?? '')
                 : context.l10n.order_history,
           ),
         ),
@@ -572,7 +570,7 @@ class _MerchantHistoryDetailScreenState
                   ),
                   child: Center(
                     child: Text(
-                      order.user?.name?.substring(0, 1).toUpperCase() ?? 'U',
+                      order.user?.name?.firstChar.toUpperCase() ?? 'U',
                       style: context.typography.h3.copyWith(
                         fontSize: 20.sp,
                         color: context.colorScheme.primary,
@@ -585,12 +583,37 @@ class _MerchantHistoryDetailScreenState
                     crossAxisAlignment: CrossAxisAlignment.start,
                     spacing: 4.h,
                     children: [
-                      Text(
-                        order.user?.name ?? context.l10n.text_unknown_user,
-                        style: context.typography.h4.copyWith(
-                          fontSize: 16.sp,
-                          fontWeight: FontWeight.bold,
-                        ),
+                      Row(
+                        children: [
+                          Flexible(
+                            child: Text(
+                              order.user?.name ??
+                                  context.l10n.text_unknown_user,
+                              style: context.typography.h4.copyWith(
+                                fontSize: 16.sp,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          if (order.user?.rating case final rating?
+                              when rating > 0) ...[
+                            SizedBox(width: 8.w),
+                            Icon(
+                              LucideIcons.star,
+                              size: 14.sp,
+                              color: const Color(0xFFFFC107),
+                            ),
+                            SizedBox(width: 4.w),
+                            Text(
+                              rating.toStringAsFixed(1),
+                              style: context.typography.small.copyWith(
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ],
                       ),
                       if (order.user?.gender case final gender?)
                         Text(
@@ -657,7 +680,7 @@ class _MerchantHistoryDetailScreenState
                   ),
                   child: Center(
                     child: Text(
-                      driverName?.substring(0, 1).toUpperCase() ?? 'D',
+                      driverName?.firstChar.toUpperCase() ?? 'D',
                       style: context.typography.h3.copyWith(
                         fontSize: 20.sp,
                         color: context.colorScheme.secondary,

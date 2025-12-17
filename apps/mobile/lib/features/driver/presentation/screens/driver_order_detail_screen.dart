@@ -410,9 +410,7 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
                   variance: ButtonVariance.ghost,
                 ),
               ],
-              title: Text(
-                context.l10n.text_order_id_short(order.id.substring(0, 8)),
-              ),
+              title: Text(context.l10n.text_order_id_short(order.id.prefix(8))),
             ),
           ],
           child: Column(

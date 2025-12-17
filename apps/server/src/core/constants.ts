@@ -1,4 +1,3 @@
-import { env } from "cloudflare:workers";
 import { PaginationResultSchema } from "@repo/schema/pagination";
 import * as z from "zod";
 
@@ -35,8 +34,6 @@ export const CACHE_TTLS = Object.freeze({
 	"24h": 24 * 3600,
 	"7d": 7 * 24 * 3600,
 } as const);
-
-export const TRUSTED_ORIGINS = [env.AUTH_URL, env.CORS_ORIGIN];
 
 export const STORAGE_BUCKETS = [
 	"badges",

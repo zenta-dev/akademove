@@ -753,14 +753,8 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
               }
             },
             builder: (context, state) {
-              return NotificationListener<ScrollNotification>(
-                onNotification: (notification) {
-                  // Block scroll events when dragging marker
-                  if (_isDraggingMarker) {
-                    return true; // Consume the notification to prevent scrolling
-                  }
-                  return false; // Allow normal scrolling
-                },
+              return SafeScrollWrapper(
+                blockWhen: () => _isDraggingMarker,
                 child: Form(
                   controller: _formController,
                   onSubmit: _handleFormSubmit,

@@ -375,7 +375,6 @@ doc/OrderSummaryBreakdown.md
 doc/OrderType.md
 doc/OrderUploadDeliveryProof200Response.md
 doc/OrderUploadDeliveryProof200ResponseData.md
-doc/OrderUploadDeliveryProofRequest.md
 doc/OrderVerifyDeliveryOTP200Response.md
 doc/OrderVerifyDeliveryOTP200ResponseData.md
 doc/OrderVerifyDeliveryOTPRequest.md
@@ -919,7 +918,6 @@ lib/src/model/order_summary_breakdown.dart
 lib/src/model/order_type.dart
 lib/src/model/order_upload_delivery_proof200_response.dart
 lib/src/model/order_upload_delivery_proof200_response_data.dart
-lib/src/model/order_upload_delivery_proof_request.dart
 lib/src/model/order_verify_delivery_otp200_response.dart
 lib/src/model/order_verify_delivery_otp200_response_data.dart
 lib/src/model/order_verify_delivery_otp_request.dart
