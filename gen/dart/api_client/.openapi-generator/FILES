@@ -16,6 +16,7 @@ doc/AccountDeletionSubmit201Response.md
 doc/AccountType.md
 doc/ActivateDriver.md
 doc/AddToCart.md
+doc/AddToCartRequest.md
 doc/AdminApi.md
 doc/AdminUpdateUser.md
 doc/ApproveDriver.md
@@ -78,6 +79,8 @@ doc/BroadcastUpdateRequest.md
 doc/BusinessConfiguration.md
 doc/Cart.md
 doc/CartItem.md
+doc/CartResponse.md
+doc/CartResponseStockWarningsInner.md
 doc/ChartDataPoint.md
 doc/ChatApi.md
 doc/ChatGetUnreadCount200Response.md
@@ -404,6 +407,7 @@ doc/QuickMessageList200Response.md
 doc/QuickMessageList200ResponseData.md
 doc/QuickMessageTemplate.md
 doc/RejectDriver.md
+doc/RemoveCartItemRequest.md
 doc/Report.md
 doc/ReportApi.md
 doc/ReportCategory.md
@@ -475,6 +479,8 @@ doc/TransferResponse.md
 doc/UnbanUser.md
 doc/UpdateAccountDeletion.md
 doc/UpdateBroadcast.md
+doc/UpdateCartAttachmentRequest.md
+doc/UpdateCartItemRequest.md
 doc/UpdateConfiguration.md
 doc/UpdateContact.md
 doc/UpdateCoupon.md
@@ -569,6 +575,7 @@ lib/src/model/account_deletion_submit201_response.dart
 lib/src/model/account_type.dart
 lib/src/model/activate_driver.dart
 lib/src/model/add_to_cart.dart
+lib/src/model/add_to_cart_request.dart
 lib/src/model/admin_update_user.dart
 lib/src/model/approve_driver.dart
 lib/src/model/audit_list200_response.dart
@@ -628,6 +635,8 @@ lib/src/model/broadcast_update_request.dart
 lib/src/model/business_configuration.dart
 lib/src/model/cart.dart
 lib/src/model/cart_item.dart
+lib/src/model/cart_response.dart
+lib/src/model/cart_response_stock_warnings_inner.dart
 lib/src/model/chart_data_point.dart
 lib/src/model/chat_get_unread_count200_response.dart
 lib/src/model/chat_list200_response.dart
@@ -941,6 +950,7 @@ lib/src/model/quick_message_list200_response.dart
 lib/src/model/quick_message_list200_response_data.dart
 lib/src/model/quick_message_template.dart
 lib/src/model/reject_driver.dart
+lib/src/model/remove_cart_item_request.dart
 lib/src/model/report.dart
 lib/src/model/report_category.dart
 lib/src/model/report_create200_response.dart
@@ -1008,6 +1018,8 @@ lib/src/model/transfer_response.dart
 lib/src/model/unban_user.dart
 lib/src/model/update_account_deletion.dart
 lib/src/model/update_broadcast.dart
+lib/src/model/update_cart_attachment_request.dart
+lib/src/model/update_cart_item_request.dart
 lib/src/model/update_configuration.dart
 lib/src/model/update_contact.dart
 lib/src/model/update_coupon.dart

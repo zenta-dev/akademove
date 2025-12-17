@@ -170,11 +170,14 @@ const _$OrderEnvelopeEventEnumMap = {
   OrderEnvelopeEvent.MERCHANT_READY: 'MERCHANT_READY',
   OrderEnvelopeEvent.CHAT_MESSAGE: 'CHAT_MESSAGE',
   OrderEnvelopeEvent.CHAT_UNREAD_COUNT: 'CHAT_UNREAD_COUNT',
+  OrderEnvelopeEvent.NEW_DATA: 'NEW_DATA',
+  OrderEnvelopeEvent.NO_DATA: 'NO_DATA',
 };
 
 const _$OrderEnvelopeActionEnumMap = {
   OrderEnvelopeAction.DRIVER_UPDATE_LOCATION: 'DRIVER_UPDATE_LOCATION',
   OrderEnvelopeAction.DRIVER_COMPLETE_ORDER: 'DRIVER_COMPLETE_ORDER',
+  OrderEnvelopeAction.CHECK_NEW_DATA: 'CHECK_NEW_DATA',
 };
 
 const _$EnvelopeTargetEnumMap = {

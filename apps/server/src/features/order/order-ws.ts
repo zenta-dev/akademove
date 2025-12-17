@@ -160,6 +160,9 @@ export class OrderRoom extends BaseDurableObject {
 						async (tx) => await this.#handleOrderDone(ws, data, tx),
 					);
 				}
+				if (data.a === "CHECK_NEW_DATA") {
+					await this.#handleCheckNewData(ws, data);
+				}
 			} catch (error) {
 				logger.error(
 					{ error, action: data.a, userId: session },
@@ -689,6 +692,136 @@ export class OrderRoom extends BaseDurableObject {
 		};
 		this.broadcast(payload, { excludes: [ws] });
 	}
+
+	/**
+	 * Handle CHECK_NEW_DATA action - client requesting current order state
+	 *
+	 * This is called after a WebSocket client connects to get the current order state.
+	 * Server responds with NEW_DATA (with current order) or NO_DATA (if order not found).
+	 */
+	async #handleCheckNewData(ws: WebSocket, data: OrderEnvelope) {
+		const syncRequest = data.p.syncRequest;
+		if (!syncRequest?.orderId) {
+			logger.warn(data, "[OrderRoom] CHECK_NEW_DATA missing orderId");
+			const noDataPayload: OrderEnvelope = {
+				e: "NO_DATA",
+				f: "s",
+				t: "c",
+				p: {},
+			};
+			ws.send(JSON.stringify(noDataPayload));
+			return;
+		}
+
+		try {
+			// Fetch current order with related data
+			const order = await this.#repo.order.get(syncRequest.orderId);
+
+			// Check if client already has the latest version (delta sync)
+			const serverVersion = order.updatedAt.toISOString();
+			if (
+				syncRequest.lastKnownVersion &&
+				syncRequest.lastKnownVersion === serverVersion
+			) {
+				logger.debug(
+					{ orderId: order.id, version: serverVersion },
+					"[OrderRoom] Client has latest data - sending NO_DATA",
+				);
+				const noDataPayload: OrderEnvelope = {
+					e: "NO_DATA",
+					f: "s",
+					t: "c",
+					p: {},
+				};
+				ws.send(JSON.stringify(noDataPayload));
+				return;
+			}
+
+			// Get payment info using referenceId (orderId in transaction)
+			let payment = null;
+			let transaction = null;
+
+			try {
+				const paymentResult = await this.#svc.db.query.payment.findFirst({
+					where: (f, op) =>
+						op.and(
+							op.like(
+								f.metadata as unknown as Parameters<typeof op.like>[0],
+								`%"orderId":"${order.id}"%`,
+							),
+						),
+				});
+
+				if (paymentResult) {
+					const { PaymentRepository } = await import(
+						"@/features/payment/payment-repository"
+					);
+					payment = PaymentRepository.composeEntity(paymentResult);
+
+					// Get associated transaction
+					if (paymentResult.transactionId) {
+						const txResult = await this.#svc.db.query.transaction.findFirst({
+							where: (f, op) =>
+								op.eq(f.id, paymentResult.transactionId as string),
+						});
+						if (txResult) {
+							const { TransactionRepository } = await import(
+								"@/features/transaction/transaction-repository"
+							);
+							transaction = TransactionRepository.composeEntity(txResult);
+						}
+					}
+				}
+			} catch {
+				// Ignore errors fetching payment/transaction - not critical
+				logger.debug(
+					{ orderId: order.id },
+					"[OrderRoom] Could not fetch payment/transaction for CHECK_NEW_DATA",
+				);
+			}
+
+			// Get assigned driver if any
+			const assignedDriver = order.driverId
+				? await this.#repo.driver.main.get(order.driverId)
+				: null;
+
+			// Send current order state
+			const newDataPayload: OrderEnvelope = {
+				e: "NEW_DATA",
+				f: "s",
+				t: "c",
+				p: {
+					detail: {
+						order,
+						payment,
+						transaction,
+					},
+					...(assignedDriver && { driverAssigned: assignedDriver }),
+				},
+			};
+
+			ws.send(JSON.stringify(newDataPayload));
+			logger.debug(
+				{ orderId: order.id, status: order.status },
+				"[OrderRoom] Sent current order state via NEW_DATA",
+			);
+		} catch (error) {
+			logger.error(
+				{ error, orderId: syncRequest.orderId },
+				"[OrderRoom] Failed to handle CHECK_NEW_DATA",
+			);
+
+			// Send NO_DATA on error (order might not exist)
+			const noDataPayload: OrderEnvelope = {
+				e: "NO_DATA",
+				f: "s",
+				t: "c",
+				p: {},
+			};
+			ws.send(JSON.stringify(noDataPayload));
+		}
+	}
+
 	async #handleOrderDone(
 		ws: WebSocket,
 		data: OrderEnvelope,

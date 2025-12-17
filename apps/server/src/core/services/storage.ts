@@ -2,14 +2,16 @@ import {
 	type BucketLocationConstraint,
 	CreateBucketCommand,
 	DeleteObjectCommand,
+	DeletePublicAccessBlockCommand,
 	GetObjectCommand,
 	HeadBucketCommand,
+	PutBucketPolicyCommand,
 	PutObjectCommand,
 	S3Client,
 } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
-import type { StorageBucket } from "../constants";
+import { isPublicBucket, type StorageBucket } from "../constants";
 import { StorageError } from "../error";
 
 interface StorageBaseOptions {
@@ -108,12 +110,62 @@ export class S3StorageService implements StorageService {
 				}),
 			);
 
+			// Configure public access policy for public buckets
+			if (isPublicBucket(bucket)) {
+				await this.#setPublicBucketPolicy(bucket);
+			}
+
 			this.#bucketExists.set(bucket, true);
 			console.info("[S3StorageService] Bucket created successfully", {
 				bucket,
+				isPublic: isPublicBucket(bucket),
 			});
 		} catch (error) {
 			throw this.#wrapError(error, "Failed to create bucket");
+		}
+	}
+
+	/**
+	 * Sets a public read policy on a bucket for anonymous access
+	 * This allows objects in the bucket to be accessed via direct URL
+	 */
+	async #setPublicBucketPolicy(bucket: StorageBucket): Promise<void> {
+		try {
+			// First, remove public access block (required for MinIO/S3)
+			await this.#client.send(
+				new DeletePublicAccessBlockCommand({ Bucket: bucket }),
+			);
+
+			// Set bucket policy to allow public read access
+			const policy = {
+				Version: "2012-10-17",
+				Statement: [
+					{
+						Sid: "PublicReadGetObject",
+						Effect: "Allow",
+						Principal: "*",
+						Action: ["s3:GetObject"],
+						Resource: [`arn:aws:s3:::${bucket}/*`],
+					},
+				],
+			};
+
+			await this.#client.send(
+				new PutBucketPolicyCommand({
+					Bucket: bucket,
+					Policy: JSON.stringify(policy),
+				}),
+			);
+
+			console.info("[S3StorageService] Public policy set for bucket", {
+				bucket,
+			});
+		} catch (error) {
+			// Log but don't fail - bucket is created, policy can be set manually
+			console.warn(
+				"[S3StorageService] Failed to set public policy, bucket created without public access",
+				{ bucket, error },
+			);
 		}
 	}
 

@@ -49,11 +49,14 @@ class DriverHomeCubit extends BaseCubit<DriverHomeState> {
 
     // Start WebSocket and location tracking if driver is online
     if (driver != null && driver.isOnline) {
+      // Fetch and send initial location FIRST via REST API
+      // This ensures location is persisted immediately when initializing
+      await _fetchInitialLocation();
+      _startLocationTracking();
+
+      // Then connect to WebSockets for real-time updates
       await _connectToDriverPool();
       await _connectToDriverLocation(driver.id);
-      _startLocationTracking();
-      // Fetch and emit initial location immediately
-      await _fetchInitialLocation();
     }
   }
 
@@ -71,6 +74,17 @@ class DriverHomeCubit extends BaseCubit<DriverHomeState> {
           '[DriverHomeCubit] - Initial location fetched: '
           '${coordinate.y}, ${coordinate.x}',
         );
+        final currentDriver = _driver;
+        if (currentDriver == null) return;
+
+        await _driverRepository.updateLocation(
+          driverId: currentDriver.id,
+          location: CoordinateWithMeta(
+            x: coordinate.x,
+            y: coordinate.y,
+            isMockLocation: false,
+          ),
+        );
       }
     } catch (e, st) {
       logger.e(
@@ -83,7 +97,7 @@ class DriverHomeCubit extends BaseCubit<DriverHomeState> {
 
   /// Update driver reference when DriverProfileCubit's driver changes.
   /// Call this when toggle online status changes.
-  void updateDriver(Driver? driver) {
+  Future<void> updateDriver(Driver? driver) async {
     final wasOnline = _driver?.isOnline ?? false;
     final isNowOnline = driver?.isOnline ?? false;
 
@@ -91,11 +105,15 @@ class DriverHomeCubit extends BaseCubit<DriverHomeState> {
 
     // Handle online status changes
     if (!wasOnline && isNowOnline && driver != null) {
-      _connectToDriverPool();
-      _connectToDriverLocation(driver.id);
+      // Start location tracking and send initial location FIRST (via REST API)
+      // This ensures location is persisted immediately when going online
+      await _fetchInitialLocation();
       _startLocationTracking();
-      // Fetch and emit initial location when going online
-      _fetchInitialLocation();
+
+      // Then connect to WebSockets for real-time updates
+      // These connections are for receiving order offers and sending location updates
+      await _connectToDriverPool();
+      await _connectToDriverLocation(driver.id);
     } else if (wasOnline && !isNowOnline) {
       _disconnectDriverPool();
       _disconnectDriverLocation();

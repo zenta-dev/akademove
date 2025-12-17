@@ -11,11 +11,17 @@ abstract class _$CartCWProxy {
 
   Cart merchantName(String merchantName);
 
+  Cart merchantLocation(Coordinate? merchantLocation);
+
+  Cart merchantCategory(MerchantCategory? merchantCategory);
+
   Cart items(List<CartItem> items);
 
   Cart totalItems(int totalItems);
 
   Cart subtotal(num subtotal);
+
+  Cart attachmentUrl(String? attachmentUrl);
 
   Cart lastUpdated(DateTime? lastUpdated);
 
@@ -29,9 +35,12 @@ abstract class _$CartCWProxy {
   Cart call({
     String merchantId,
     String merchantName,
+    Coordinate? merchantLocation,
+    MerchantCategory? merchantCategory,
     List<CartItem> items,
     int totalItems,
     num subtotal,
+    String? attachmentUrl,
     DateTime? lastUpdated,
   });
 }
@@ -50,6 +59,14 @@ class _$CartCWProxyImpl implements _$CartCWProxy {
   Cart merchantName(String merchantName) => call(merchantName: merchantName);
 
   @override
+  Cart merchantLocation(Coordinate? merchantLocation) =>
+      call(merchantLocation: merchantLocation);
+
+  @override
+  Cart merchantCategory(MerchantCategory? merchantCategory) =>
+      call(merchantCategory: merchantCategory);
+
+  @override
   Cart items(List<CartItem> items) => call(items: items);
 
   @override
@@ -57,6 +74,10 @@ class _$CartCWProxyImpl implements _$CartCWProxy {
 
   @override
   Cart subtotal(num subtotal) => call(subtotal: subtotal);
+
+  @override
+  Cart attachmentUrl(String? attachmentUrl) =>
+      call(attachmentUrl: attachmentUrl);
 
   @override
   Cart lastUpdated(DateTime? lastUpdated) => call(lastUpdated: lastUpdated);
@@ -72,9 +93,12 @@ class _$CartCWProxyImpl implements _$CartCWProxy {
   Cart call({
     Object? merchantId = const $CopyWithPlaceholder(),
     Object? merchantName = const $CopyWithPlaceholder(),
+    Object? merchantLocation = const $CopyWithPlaceholder(),
+    Object? merchantCategory = const $CopyWithPlaceholder(),
     Object? items = const $CopyWithPlaceholder(),
     Object? totalItems = const $CopyWithPlaceholder(),
     Object? subtotal = const $CopyWithPlaceholder(),
+    Object? attachmentUrl = const $CopyWithPlaceholder(),
     Object? lastUpdated = const $CopyWithPlaceholder(),
   }) {
     return Cart(
@@ -88,6 +112,14 @@ class _$CartCWProxyImpl implements _$CartCWProxy {
           ? _value.merchantName
           // ignore: cast_nullable_to_non_nullable
           : merchantName as String,
+      merchantLocation: merchantLocation == const $CopyWithPlaceholder()
+          ? _value.merchantLocation
+          // ignore: cast_nullable_to_non_nullable
+          : merchantLocation as Coordinate?,
+      merchantCategory: merchantCategory == const $CopyWithPlaceholder()
+          ? _value.merchantCategory
+          // ignore: cast_nullable_to_non_nullable
+          : merchantCategory as MerchantCategory?,
       items: items == const $CopyWithPlaceholder() || items == null
           ? _value.items
           // ignore: cast_nullable_to_non_nullable
@@ -101,6 +133,10 @@ class _$CartCWProxyImpl implements _$CartCWProxy {
           ? _value.subtotal
           // ignore: cast_nullable_to_non_nullable
           : subtotal as num,
+      attachmentUrl: attachmentUrl == const $CopyWithPlaceholder()
+          ? _value.attachmentUrl
+          // ignore: cast_nullable_to_non_nullable
+          : attachmentUrl as String?,
       lastUpdated: lastUpdated == const $CopyWithPlaceholder()
           ? _value.lastUpdated
           // ignore: cast_nullable_to_non_nullable
@@ -136,6 +172,15 @@ Cart _$CartFromJson(Map<String, dynamic> json) =>
       final val = Cart(
         merchantId: $checkedConvert('merchantId', (v) => v as String),
         merchantName: $checkedConvert('merchantName', (v) => v as String),
+        merchantLocation: $checkedConvert(
+          'merchantLocation',
+          (v) =>
+              v == null ? null : Coordinate.fromJson(v as Map<String, dynamic>),
+        ),
+        merchantCategory: $checkedConvert(
+          'merchantCategory',
+          (v) => $enumDecodeNullable(_$MerchantCategoryEnumMap, v),
+        ),
         items: $checkedConvert(
           'items',
           (v) => (v as List<dynamic>)
@@ -144,6 +189,7 @@ Cart _$CartFromJson(Map<String, dynamic> json) =>
         ),
         totalItems: $checkedConvert('totalItems', (v) => (v as num).toInt()),
         subtotal: $checkedConvert('subtotal', (v) => v as num),
+        attachmentUrl: $checkedConvert('attachmentUrl', (v) => v as String?),
         lastUpdated: $checkedConvert(
           'lastUpdated',
           (v) => v == null ? null : DateTime.parse(v as String),
@@ -155,8 +201,17 @@ Cart _$CartFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$CartToJson(Cart instance) => <String, dynamic>{
   'merchantId': instance.merchantId,
   'merchantName': instance.merchantName,
+  'merchantLocation': ?instance.merchantLocation?.toJson(),
+  'merchantCategory': ?_$MerchantCategoryEnumMap[instance.merchantCategory],
   'items': instance.items.map((e) => e.toJson()).toList(),
   'totalItems': instance.totalItems,
   'subtotal': instance.subtotal,
+  'attachmentUrl': ?instance.attachmentUrl,
   'lastUpdated': instance.lastUpdated?.toIso8601String(),
+};
+
+const _$MerchantCategoryEnumMap = {
+  MerchantCategory.ATK: 'ATK',
+  MerchantCategory.printing: 'Printing',
+  MerchantCategory.food: 'Food',
 };

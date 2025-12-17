@@ -6,7 +6,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
 enum OrderEnvelopeEvent {
-  // Order lifecycle events
   @JsonValue(r'ORDER_OFFER')
   ORDER_OFFER(r'ORDER_OFFER'),
   @JsonValue(r'ORDER_MATCHING')
@@ -21,16 +20,12 @@ enum OrderEnvelopeEvent {
   ORDER_NO_SHOW(r'ORDER_NO_SHOW'),
   @JsonValue(r'ORDER_STATUS_CHANGED')
   ORDER_STATUS_CHANGED(r'ORDER_STATUS_CHANGED'),
-
-  // Driver events
   @JsonValue(r'DRIVER_ACCEPTED')
   DRIVER_ACCEPTED(r'DRIVER_ACCEPTED'),
   @JsonValue(r'DRIVER_LOCATION_UPDATE')
   DRIVER_LOCATION_UPDATE(r'DRIVER_LOCATION_UPDATE'),
   @JsonValue(r'DRIVER_CANCELLED_REMATCHING')
   DRIVER_CANCELLED_REMATCHING(r'DRIVER_CANCELLED_REMATCHING'),
-
-  // Merchant events (for FOOD orders)
   @JsonValue(r'MERCHANT_ACCEPTED')
   MERCHANT_ACCEPTED(r'MERCHANT_ACCEPTED'),
   @JsonValue(r'MERCHANT_REJECTED')
@@ -39,12 +34,14 @@ enum OrderEnvelopeEvent {
   MERCHANT_PREPARING(r'MERCHANT_PREPARING'),
   @JsonValue(r'MERCHANT_READY')
   MERCHANT_READY(r'MERCHANT_READY'),
-
-  // Chat events
   @JsonValue(r'CHAT_MESSAGE')
   CHAT_MESSAGE(r'CHAT_MESSAGE'),
   @JsonValue(r'CHAT_UNREAD_COUNT')
-  CHAT_UNREAD_COUNT(r'CHAT_UNREAD_COUNT');
+  CHAT_UNREAD_COUNT(r'CHAT_UNREAD_COUNT'),
+  @JsonValue(r'NEW_DATA')
+  NEW_DATA(r'NEW_DATA'),
+  @JsonValue(r'NO_DATA')
+  NO_DATA(r'NO_DATA');
 
   const OrderEnvelopeEvent(this.value);
 

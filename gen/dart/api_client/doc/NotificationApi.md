@@ -156,7 +156,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **notificationMarkAllAsRead**
-> SupportChatMarkAsRead200Response notificationMarkAllAsRead()
+> SupportChatMarkAsRead200Response notificationMarkAllAsRead(body)
 
 
 
@@ -165,9 +165,10 @@ Name | Type | Description  | Notes
 import 'package:api_client/api.dart';
 
 final api = ApiClient().getNotificationApi();
+final Object body = Object; // Object | 
 
 try {
-    final response = api.notificationMarkAllAsRead();
+    final response = api.notificationMarkAllAsRead(body);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling NotificationApi->notificationMarkAllAsRead: $e\n');
@@ -175,7 +176,10 @@ try {
 ```
 
 ### Parameters
-This endpoint does not need any parameter.
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **body** | **Object**|  | [optional] 
 
 ### Return type
 
@@ -187,13 +191,13 @@ This endpoint does not need any parameter.
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **notificationMarkAsRead**
-> NotificationMarkAsRead200Response notificationMarkAsRead(id)
+> NotificationMarkAsRead200Response notificationMarkAsRead(id, body)
 
 
 
@@ -203,9 +207,10 @@ import 'package:api_client/api.dart';
 
 final api = ApiClient().getNotificationApi();
 final String id = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
+final Object body = Object; // Object | 
 
 try {
-    final response = api.notificationMarkAsRead(id);
+    final response = api.notificationMarkAsRead(id, body);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling NotificationApi->notificationMarkAsRead: $e\n');
@@ -217,6 +222,7 @@ try {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **id** | **String**|  | 
+ **body** | **Object**|  | [optional] 
 
 ### Return type
 
@@ -228,7 +234,7 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)

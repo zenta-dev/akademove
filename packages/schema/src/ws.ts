@@ -69,11 +69,18 @@ export const OrderEnvelopeEventSchema = z.enum([
 	// Chat events
 	"CHAT_MESSAGE", // New chat message received
 	"CHAT_UNREAD_COUNT", // Unread message count updated
+
+	// Data sync events (replaces polling)
+	"NEW_DATA", // Server response with current order data
+	"NO_DATA", // Server response indicating no changes
 ]);
 export const OrderEnvelopeActionSchema = z.enum([
 	// Driver actions (sent by driver app)
 	"DRIVER_UPDATE_LOCATION", // Driver updating their location during trip
 	"DRIVER_COMPLETE_ORDER", // Driver marking order as completed
+
+	// Data sync action (replaces polling)
+	"CHECK_NEW_DATA", // Client requesting current order state
 ]);
 export const OrderEnvelopePayloadSchema = z.object({
 	detail: z

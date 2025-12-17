@@ -97,7 +97,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **merchantActivate**
-> MerchantGetMine200ResponseBody merchantActivate(id)
+> MerchantGetMine200ResponseBody merchantActivate(id, body)
 
 
 
@@ -107,9 +107,10 @@ import 'package:api_client/api.dart';
 
 final api = ApiClient().getMerchantApi();
 final String id = id_example; // String | 
+final Object body = Object; // Object | 
 
 try {
-    final response = api.merchantActivate(id);
+    final response = api.merchantActivate(id, body);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling MerchantApi->merchantActivate: $e\n');
@@ -121,6 +122,7 @@ try {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **id** | **String**|  | 
+ **body** | **Object**|  | [optional] 
 
 ### Return type
 
@@ -132,7 +134,7 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
@@ -1009,7 +1011,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **merchantOrderAccept**
-> MerchantOrderAccept200Response merchantOrderAccept(merchantId, id)
+> MerchantOrderAccept200Response merchantOrderAccept(merchantId, id, body)
 
 
 
@@ -1020,9 +1022,10 @@ import 'package:api_client/api.dart';
 final api = ApiClient().getMerchantApi();
 final String merchantId = merchantId_example; // String | 
 final String id = id_example; // String | 
+final Object body = Object; // Object | 
 
 try {
-    final response = api.merchantOrderAccept(merchantId, id);
+    final response = api.merchantOrderAccept(merchantId, id, body);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling MerchantApi->merchantOrderAccept: $e\n');
@@ -1035,6 +1038,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **merchantId** | **String**|  | 
  **id** | **String**|  | 
+ **body** | **Object**|  | [optional] 
 
 ### Return type
 
@@ -1046,13 +1050,13 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **merchantOrderMarkPreparing**
-> MerchantOrderAccept200Response merchantOrderMarkPreparing(merchantId, id)
+> MerchantOrderAccept200Response merchantOrderMarkPreparing(merchantId, id, body)
 
 
 
@@ -1063,9 +1067,10 @@ import 'package:api_client/api.dart';
 final api = ApiClient().getMerchantApi();
 final String merchantId = merchantId_example; // String | 
 final String id = id_example; // String | 
+final Object body = Object; // Object | 
 
 try {
-    final response = api.merchantOrderMarkPreparing(merchantId, id);
+    final response = api.merchantOrderMarkPreparing(merchantId, id, body);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling MerchantApi->merchantOrderMarkPreparing: $e\n');
@@ -1078,6 +1083,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **merchantId** | **String**|  | 
  **id** | **String**|  | 
+ **body** | **Object**|  | [optional] 
 
 ### Return type
 
@@ -1089,13 +1095,13 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **merchantOrderMarkReady**
-> MerchantOrderAccept200Response merchantOrderMarkReady(merchantId, id)
+> MerchantOrderAccept200Response merchantOrderMarkReady(merchantId, id, body)
 
 
 
@@ -1106,9 +1112,10 @@ import 'package:api_client/api.dart';
 final api = ApiClient().getMerchantApi();
 final String merchantId = merchantId_example; // String | 
 final String id = id_example; // String | 
+final Object body = Object; // Object | 
 
 try {
-    final response = api.merchantOrderMarkReady(merchantId, id);
+    final response = api.merchantOrderMarkReady(merchantId, id, body);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling MerchantApi->merchantOrderMarkReady: $e\n');
@@ -1121,6 +1128,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **merchantId** | **String**|  | 
  **id** | **String**|  | 
+ **body** | **Object**|  | [optional] 
 
 ### Return type
 
@@ -1132,7 +1140,7 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)

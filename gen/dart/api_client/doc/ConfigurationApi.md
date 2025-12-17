@@ -318,7 +318,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **bannerToggleActive**
-> BannerCreate201Response bannerToggleActive(id)
+> BannerCreate201Response bannerToggleActive(id, body)
 
 
 
@@ -328,9 +328,10 @@ import 'package:api_client/api.dart';
 
 final api = ApiClient().getConfigurationApi();
 final String id = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
+final Object body = Object; // Object | 
 
 try {
-    final response = api.bannerToggleActive(id);
+    final response = api.bannerToggleActive(id, body);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling ConfigurationApi->bannerToggleActive: $e\n');
@@ -342,6 +343,7 @@ try {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **id** | **String**|  | 
+ **body** | **Object**|  | [optional] 
 
 ### Return type
 
@@ -353,7 +355,7 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)

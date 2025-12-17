@@ -8,6 +8,7 @@ import 'package:api_client/src/model/account_deletion_review_request.dart';
 import 'package:api_client/src/model/account_deletion_submit201_response.dart';
 import 'package:api_client/src/model/activate_driver.dart';
 import 'package:api_client/src/model/add_to_cart.dart';
+import 'package:api_client/src/model/add_to_cart_request.dart';
 import 'package:api_client/src/model/admin_update_user.dart';
 import 'package:api_client/src/model/approve_driver.dart';
 import 'package:api_client/src/model/audit_list200_response.dart';
@@ -60,6 +61,8 @@ import 'package:api_client/src/model/broadcast_update_request.dart';
 import 'package:api_client/src/model/business_configuration.dart';
 import 'package:api_client/src/model/cart.dart';
 import 'package:api_client/src/model/cart_item.dart';
+import 'package:api_client/src/model/cart_response.dart';
+import 'package:api_client/src/model/cart_response_stock_warnings_inner.dart';
 import 'package:api_client/src/model/chart_data_point.dart';
 import 'package:api_client/src/model/chat_get_unread_count200_response.dart';
 import 'package:api_client/src/model/chat_list200_response.dart';
@@ -320,6 +323,7 @@ import 'package:api_client/src/model/quick_message_list200_response.dart';
 import 'package:api_client/src/model/quick_message_list200_response_data.dart';
 import 'package:api_client/src/model/quick_message_template.dart';
 import 'package:api_client/src/model/reject_driver.dart';
+import 'package:api_client/src/model/remove_cart_item_request.dart';
 import 'package:api_client/src/model/report.dart';
 import 'package:api_client/src/model/report_create200_response.dart';
 import 'package:api_client/src/model/report_list200_response.dart';
@@ -372,6 +376,8 @@ import 'package:api_client/src/model/transfer_response.dart';
 import 'package:api_client/src/model/unban_user.dart';
 import 'package:api_client/src/model/update_account_deletion.dart';
 import 'package:api_client/src/model/update_broadcast.dart';
+import 'package:api_client/src/model/update_cart_attachment_request.dart';
+import 'package:api_client/src/model/update_cart_item_request.dart';
 import 'package:api_client/src/model/update_configuration.dart';
 import 'package:api_client/src/model/update_contact.dart';
 import 'package:api_client/src/model/update_coupon.dart';
@@ -485,6 +491,9 @@ ReturnType deserialize<ReturnType, BaseType>(
           as ReturnType;
     case 'AddToCart':
       return AddToCart.fromJson(value as Map<String, dynamic>) as ReturnType;
+    case 'AddToCartRequest':
+      return AddToCartRequest.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
     case 'AdminUpdateUser':
       return AdminUpdateUser.fromJson(value as Map<String, dynamic>)
           as ReturnType;
@@ -660,6 +669,13 @@ ReturnType deserialize<ReturnType, BaseType>(
       return Cart.fromJson(value as Map<String, dynamic>) as ReturnType;
     case 'CartItem':
       return CartItem.fromJson(value as Map<String, dynamic>) as ReturnType;
+    case 'CartResponse':
+      return CartResponse.fromJson(value as Map<String, dynamic>) as ReturnType;
+    case 'CartResponseStockWarningsInner':
+      return CartResponseStockWarningsInner.fromJson(
+            value as Map<String, dynamic>,
+          )
+          as ReturnType;
     case 'ChartDataPoint':
       return ChartDataPoint.fromJson(value as Map<String, dynamic>)
           as ReturnType;
@@ -1667,6 +1683,9 @@ ReturnType deserialize<ReturnType, BaseType>(
           as ReturnType;
     case 'RejectDriver':
       return RejectDriver.fromJson(value as Map<String, dynamic>) as ReturnType;
+    case 'RemoveCartItemRequest':
+      return RemoveCartItemRequest.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
     case 'Report':
       return Report.fromJson(value as Map<String, dynamic>) as ReturnType;
     case 'ReportCategory':
@@ -1857,6 +1876,12 @@ ReturnType deserialize<ReturnType, BaseType>(
           as ReturnType;
     case 'UpdateBroadcast':
       return UpdateBroadcast.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
+    case 'UpdateCartAttachmentRequest':
+      return UpdateCartAttachmentRequest.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
+    case 'UpdateCartItemRequest':
+      return UpdateCartItemRequest.fromJson(value as Map<String, dynamic>)
           as ReturnType;
     case 'UpdateConfiguration':
       return UpdateConfiguration.fromJson(value as Map<String, dynamic>)

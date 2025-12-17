@@ -89,5 +89,9 @@ export const setupHonoRouter = () => {
 };
 
 function logError(error: unknown) {
+	if (error instanceof BaseError) {
+		if (error.message.includes("Missing or invalid authentication token"))
+			return;
+	}
 	logger.error({ error }, "HONO ERROR");
 }

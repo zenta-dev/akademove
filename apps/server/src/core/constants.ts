@@ -49,6 +49,31 @@ export const STORAGE_BUCKETS = [
 ] as const;
 export type StorageBucket = (typeof STORAGE_BUCKETS)[number];
 
+/**
+ * Bucket visibility configuration
+ * - Public buckets: Objects accessible via direct URL without authentication
+ * - Private buckets: Objects require presigned URLs for access
+ */
+export const PUBLIC_BUCKETS: readonly StorageBucket[] = [
+	"badges", // Badge icons - displayed publicly
+	"merchant", // Merchant logos/images - displayed publicly
+	"merchant-menu", // Menu item images - displayed publicly
+] as const;
+
+export const PRIVATE_BUCKETS: readonly StorageBucket[] = [
+	"driver", // Driver documents (KTM, SIM, STNK) - sensitive
+	"merchant-priv", // Merchant legal/verification docs - sensitive
+	"user", // User profile photos - private
+	"delivery-proofs", // Delivery proof photos - order-specific
+] as const;
+
+/**
+ * Check if a bucket is public
+ */
+export function isPublicBucket(bucket: StorageBucket): boolean {
+	return (PUBLIC_BUCKETS as readonly string[]).includes(bucket);
+}
+
 export const CONFIGURATION_KEYS = {
 	RIDE_SERVICE_PRICING: "ride-service-pricing",
 	DELIVERY_SERVICE_PRICING: "delivery-service-pricing",
