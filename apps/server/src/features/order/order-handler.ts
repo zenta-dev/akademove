@@ -367,11 +367,18 @@ export const OrderHandler = priv.router({
 				const { id: orderId } = params;
 				const { file } = body;
 
-				// Verify order exists and user is the driver
+				// Verify order exists
 				// const order = await context.repo.order.get(orderId, { tx });
 
-				// // FIX: Get driver record by userId to compare correctly
-				// // order.driverId is the driver record ID, not the user ID
+				// Verify order is a DELIVERY type
+				// if (order.type !== "DELIVERY") {
+				// 	throw new AuthError(
+				// 		"Proof of delivery can only be uploaded for delivery orders",
+				// 		{ code: "BAD_REQUEST" },
+				// 	);
+				// }
+
+				// // Verify user is the assigned driver
 				// const driver = await context.repo.driver.main.getByUserId(
 				// 	context.user.id,
 				// );
@@ -381,11 +388,13 @@ export const OrderHandler = priv.router({
 				// 	});
 				// }
 
-				// // Verify order status allows proof upload
-				// if (order.status !== "IN_TRIP" && order.status !== "ARRIVING") {
-				// 	throw new AuthError("Can only upload proof during trip", {
-				// 		code: "BAD_REQUEST",
-				// 	});
+				// // Proof of delivery can only be uploaded during IN_TRIP (at dropoff, not at pickup)
+				// // This ensures driver uploads proof when completing the delivery, not at the pickup step
+				// if (order.status !== "IN_TRIP") {
+				// 	throw new AuthError(
+				// 		"Proof of delivery can only be uploaded during delivery (after pickup). Please complete the pickup first.",
+				// 		{ code: "BAD_REQUEST" },
+				// 	);
 				// }
 
 				// Upload proof to S3
@@ -488,6 +497,34 @@ export const OrderHandler = priv.router({
 				body: {
 					message: "Attachment uploaded successfully",
 					data: { url: attachmentUrl },
+				},
+			};
+		},
+	),
+	uploadUserDeliveryItemPhoto: priv.uploadUserDeliveryItemPhoto.handler(
+		async ({ context, input: { body } }) => {
+			const { file } = body;
+
+			// Upload delivery item photo to S3
+			// This is for users to upload a photo of the item BEFORE placing a delivery order
+			const photoUrl =
+				await context.svc.orderServices.deliveryProof.uploadUserDeliveryItemPhoto(
+					{
+						file,
+						userId: context.user.id,
+					},
+				);
+
+			logger.info(
+				{ userId: context.user.id, photoUrl },
+				"[OrderHandler] User delivery item photo uploaded",
+			);
+
+			return {
+				status: 200,
+				body: {
+					message: "Delivery item photo uploaded successfully",
+					data: { url: photoUrl },
 				},
 			};
 		},

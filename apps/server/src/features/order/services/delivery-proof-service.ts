@@ -292,4 +292,57 @@ export class DeliveryProofService {
 			});
 		}
 	}
+
+	/**
+	 * Upload user delivery item photo to S3
+	 * This is used by USERS to upload a photo of the item BEFORE placing a delivery order
+	 * Drivers can see this photo when they receive the order offer to know what item they'll be delivering
+	 *
+	 * @param params - Upload parameters
+	 * @returns S3 URL of uploaded photo
+	 * @throws {RepositoryError} When upload fails
+	 */
+	async uploadUserDeliveryItemPhoto(params: {
+		file: File;
+		userId: string;
+	}): Promise<string> {
+		try {
+			const { file, userId } = params;
+
+			// Generate unique key
+			const timestamp = Date.now();
+			const uniqueId = v7();
+			const extension = file.name.split(".").pop() || "jpg";
+			const key = `user-delivery-item-photos/${userId}/${timestamp}-${uniqueId}.${extension}`;
+
+			logger.info(
+				{ userId, key, size: file.size, fileName: file.name },
+				"[DeliveryProofService] Uploading user delivery item photo",
+			);
+
+			// Upload to S3
+			const url = await this.storageService.upload({
+				bucket: "delivery-proofs",
+				key,
+				file,
+				userId,
+				isPublic: false, // Private - only accessible via presigned URL
+			});
+
+			logger.info(
+				{ userId, url },
+				"[DeliveryProofService] User delivery item photo uploaded successfully",
+			);
+
+			return url;
+		} catch (error) {
+			logger.error(
+				{ error, userId: params.userId },
+				"[DeliveryProofService] User delivery item photo upload failed",
+			);
+			throw new RepositoryError("Failed to upload delivery item photo", {
+				code: "INTERNAL_SERVER_ERROR",
+			});
+		}
+	}
 }

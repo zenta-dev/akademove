@@ -111,6 +111,11 @@ void main() {
       // TODO
     });
 
+    //Future<OrderUploadDeliveryProof200Response> orderUploadUserDeliveryItemPhoto(MultipartFile file) async
+    test('test orderUploadUserDeliveryItemPhoto', () async {
+      // TODO
+    });
+
     //Future<OrderVerifyDeliveryOTP200Response> orderVerifyDeliveryOTP(String id, OrderVerifyDeliveryOTPRequest orderVerifyDeliveryOTPRequest) async
     test('test orderVerifyDeliveryOTP', () async {
       // TODO

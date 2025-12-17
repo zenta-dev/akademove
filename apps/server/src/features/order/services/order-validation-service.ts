@@ -56,6 +56,15 @@ export class OrderValidationService {
 				code: "BAD_REQUEST",
 			});
 		}
+
+		// Validate DELIVERY orders require item photo
+		// User must include a photo of the item to be delivered so drivers can see what they'll be picking up
+		if (params.type === "DELIVERY" && !params.deliveryItemPhotoUrl) {
+			throw new RepositoryError(
+				"Delivery orders require a photo of the item to be delivered. Please upload an item photo.",
+				{ code: "BAD_REQUEST" },
+			);
+		}
 	}
 
 	/**

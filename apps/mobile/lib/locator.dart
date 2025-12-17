@@ -180,6 +180,7 @@ void _setupCubit() {
       () => OrderLocationCubit(
         driverRepository: sl<DriverRepository>(),
         mapService: sl<MapService>(),
+        orderRepository: sl<OrderRepository>(),
       ),
     )
     ..registerFactory(

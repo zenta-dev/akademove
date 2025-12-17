@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:akademove/app/router/router.dart';
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/l10n/l10n.dart';
+import 'package:akademove/locator.dart';
 import 'package:api_client/api_client.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -21,6 +24,7 @@ class _UserDeliveryDetailsScreenState extends State<UserDeliveryDetailsScreen> {
   WeightSize? selectedWeightSize;
   DeliveryItemType selectedItemType = DeliveryItemType.OTHER;
   GoogleMapController? _mapController;
+  File? _itemPhotoFile;
 
   OrderNote note = OrderNote();
 
@@ -291,6 +295,13 @@ class _UserDeliveryDetailsScreenState extends State<UserDeliveryDetailsScreen> {
                       );
                     }).toList(),
                   ),
+                  // Item Photo Section (Required)
+                  _DeliveryItemPhotoWidget(
+                    photoFile: _itemPhotoFile,
+                    onPhotoSelected: (file) {
+                      setState(() => _itemPhotoFile = file);
+                    },
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     spacing: 4.w,
@@ -364,6 +375,18 @@ class _UserDeliveryDetailsScreenState extends State<UserDeliveryDetailsScreen> {
                                 return;
                               }
 
+                              // Validate item photo is uploaded (required for DELIVERY orders)
+                              final orderLocationCubit = context
+                                  .read<OrderLocationCubit>();
+                              if (orderLocationCubit.deliveryItemPhotoUrl ==
+                                  null) {
+                                context.showMyToast(
+                                  "Please upload a photo of the item",
+                                  type: ToastType.failed,
+                                );
+                                return;
+                              }
+
                               final orderState = context
                                   .read<UserOrderCubit>()
                                   .state;
@@ -376,8 +399,6 @@ class _UserDeliveryDetailsScreenState extends State<UserDeliveryDetailsScreen> {
                                 return;
                               }
                               // Store delivery details in OrderLocationCubit for payment screen
-                              final orderLocationCubit = context
-                                  .read<OrderLocationCubit>();
                               orderLocationCubit.setDeliveryNote(note);
                               orderLocationCubit.setDeliveryItemType(
                                 selectedItemType,
@@ -499,6 +520,342 @@ class _LocationCardWidget extends StatelessWidget {
           ),
           trailingAlignment: Alignment.centerLeft,
         ),
+      ),
+    );
+  }
+}
+
+/// Widget for selecting and uploading delivery item photo
+/// Required before placing a delivery order
+class _DeliveryItemPhotoWidget extends StatelessWidget {
+  const _DeliveryItemPhotoWidget({
+    required this.photoFile,
+    required this.onPhotoSelected,
+  });
+
+  final File? photoFile;
+  final void Function(File? file) onPhotoSelected;
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocConsumer<OrderLocationCubit, OrderLocationState>(
+      listenWhen: (previous, current) =>
+          previous.uploadDeliveryItemPhoto != current.uploadDeliveryItemPhoto,
+      listener: (context, state) {
+        if (state.uploadDeliveryItemPhoto.isSuccess) {
+          context.showMyToast(context.l10n.uploaded, type: ToastType.success);
+        } else if (state.uploadDeliveryItemPhoto.isFailure) {
+          context.showMyToast(
+            state.uploadDeliveryItemPhoto.error?.message ??
+                context.l10n.an_error_occurred,
+            type: ToastType.failed,
+          );
+        }
+      },
+      builder: (context, locationState) {
+        final isUploading = locationState.uploadDeliveryItemPhoto.isLoading;
+        final isUploaded = locationState.uploadDeliveryItemPhoto.isSuccess;
+        final uploadedUrl = locationState.uploadDeliveryItemPhoto.value;
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          spacing: 8.h,
+          children: [
+            // Header row
+            Row(
+              spacing: 8.w,
+              children: [
+                Icon(
+                  LucideIcons.camera,
+                  size: 20.sp,
+                  color: context.colorScheme.primary,
+                ),
+                Text(
+                  'Item Photo',
+                  style: context.typography.small.copyWith(
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                Text(
+                  '*',
+                  style: context.typography.small.copyWith(
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.w500,
+                    color: context.colorScheme.destructive,
+                  ),
+                ),
+              ],
+            ),
+            // Description
+            Text(
+              'Take a photo of the item to be delivered',
+              style: context.typography.small.copyWith(
+                fontSize: 12.sp,
+                color: context.colorScheme.mutedForeground,
+              ),
+            ),
+            // Photo picker / preview
+            if (photoFile != null)
+              _PhotoPreview(
+                photoFile: photoFile!,
+                isUploading: isUploading,
+                isUploaded: isUploaded,
+                onRemove: () {
+                  onPhotoSelected(null);
+                  context.read<OrderLocationCubit>().clearDeliveryItemPhoto();
+                },
+                onRetryUpload: () {
+                  context.read<OrderLocationCubit>().uploadDeliveryItemPhoto(
+                    photoFile!.path,
+                  );
+                },
+              )
+            else
+              _PhotoPickerButtons(
+                onPhotoSelected: (file) async {
+                  onPhotoSelected(file);
+                  // Automatically upload when photo is selected
+                  await context
+                      .read<OrderLocationCubit>()
+                      .uploadDeliveryItemPhoto(file.path);
+                },
+              ),
+            // Upload status indicator
+            if (isUploaded && uploadedUrl != null)
+              Row(
+                spacing: 4.w,
+                children: [
+                  Icon(LucideIcons.check, size: 14.sp, color: Colors.green),
+                  Text(
+                    context.l10n.uploaded,
+                    style: context.typography.small.copyWith(
+                      fontSize: 12.sp,
+                      color: Colors.green,
+                    ),
+                  ),
+                ],
+              ),
+          ],
+        );
+      },
+    );
+  }
+}
+
+/// Photo preview with upload status
+class _PhotoPreview extends StatelessWidget {
+  const _PhotoPreview({
+    required this.photoFile,
+    required this.isUploading,
+    required this.isUploaded,
+    required this.onRemove,
+    required this.onRetryUpload,
+  });
+
+  final File photoFile;
+  final bool isUploading;
+  final bool isUploaded;
+  final VoidCallback onRemove;
+  final VoidCallback onRetryUpload;
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        ClipRRect(
+          borderRadius: BorderRadius.circular(12.r),
+          child: Image.file(
+            photoFile,
+            width: double.infinity,
+            height: 150.h,
+            fit: BoxFit.cover,
+          ),
+        ),
+        // Overlay when uploading
+        if (isUploading)
+          Positioned.fill(
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.black.withValues(alpha: 0.5),
+                borderRadius: BorderRadius.circular(12.r),
+              ),
+              child: Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  spacing: 8.h,
+                  children: [
+                    const CircularProgressIndicator(
+                      size: 24,
+                      color: Colors.white,
+                    ),
+                    Text(
+                      context.l10n.attachment_uploading,
+                      style: context.typography.small.copyWith(
+                        fontSize: 12.sp,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        // Remove button (top right)
+        if (!isUploading)
+          Positioned(
+            top: 8,
+            right: 8,
+            child: GestureDetector(
+              onTap: onRemove,
+              child: Container(
+                padding: EdgeInsets.all(6.dg),
+                decoration: BoxDecoration(
+                  color: Colors.black.withValues(alpha: 0.6),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(LucideIcons.x, size: 16.sp, color: Colors.white),
+              ),
+            ),
+          ),
+        // Retry button if upload failed
+        if (!isUploading && !isUploaded)
+          Positioned(
+            bottom: 8,
+            right: 8,
+            child: GestureDetector(
+              onTap: onRetryUpload,
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+                decoration: BoxDecoration(
+                  color: context.colorScheme.primary,
+                  borderRadius: BorderRadius.circular(8.r),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  spacing: 4.w,
+                  children: [
+                    Icon(
+                      LucideIcons.refreshCw,
+                      size: 14.sp,
+                      color: Colors.white,
+                    ),
+                    Text(
+                      context.l10n.retry,
+                      style: context.typography.small.copyWith(
+                        fontSize: 12.sp,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+      ],
+    );
+  }
+}
+
+/// Buttons to pick photo from camera or gallery
+class _PhotoPickerButtons extends StatelessWidget {
+  const _PhotoPickerButtons({required this.onPhotoSelected});
+
+  final void Function(File file) onPhotoSelected;
+
+  Future<void> _pickImage(BuildContext context, bool fromCamera) async {
+    try {
+      final imageService = sl<ImageService>();
+      final file = fromCamera
+          ? await imageService.pickFromCamera()
+          : await imageService.pickFromGallery();
+
+      onPhotoSelected(file);
+    } catch (e, st) {
+      logger.e(
+        '[_PhotoPickerButtons] - Error picking image: $e',
+        error: e,
+        stackTrace: st,
+      );
+      if (context.mounted) {
+        context.showMyToast(
+          context.l10n.error_photo_pick_failed,
+          type: ToastType.failed,
+        );
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      height: 120.h,
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: context.colorScheme.border,
+          style: BorderStyle.solid,
+        ),
+        borderRadius: BorderRadius.circular(12.r),
+        color: context.isDarkMode
+            ? Colors.neutral.shade900
+            : Colors.neutral.shade50,
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        spacing: 24.w,
+        children: [
+          _PickerButton(
+            icon: LucideIcons.camera,
+            label: context.l10n.action_take_photo,
+            onTap: () => _pickImage(context, true),
+          ),
+          _PickerButton(
+            icon: LucideIcons.image,
+            label: context.l10n.action_choose_gallery,
+            onTap: () => _pickImage(context, false),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _PickerButton extends StatelessWidget {
+  const _PickerButton({
+    required this.icon,
+    required this.label,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final String label;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        spacing: 8.h,
+        children: [
+          Container(
+            padding: EdgeInsets.all(12.dg),
+            decoration: BoxDecoration(
+              color: context.colorScheme.primary.withValues(alpha: 0.1),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(icon, size: 24.sp, color: context.colorScheme.primary),
+          ),
+          Text(
+            label,
+            style: context.typography.small.copyWith(
+              fontSize: 12.sp,
+              color: context.colorScheme.mutedForeground,
+            ),
+          ),
+        ],
       ),
     );
   }

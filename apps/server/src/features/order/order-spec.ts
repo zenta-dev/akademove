@@ -272,6 +272,35 @@ export const OrderSpec = {
 				"Attachment uploaded successfully",
 			),
 		),
+	/**
+	 * Upload delivery item photo (for DELIVERY orders)
+	 * This endpoint allows users to upload a photo of the item to be delivered
+	 * before placing a delivery order. The URL is then passed to placeOrder.
+	 * Drivers can see this photo when they receive the order offer.
+	 */
+	uploadUserDeliveryItemPhoto: oc
+		.route({
+			tags: [FEATURE_TAGS.ORDER],
+			method: "POST",
+			path: "/delivery-item-photo",
+			inputStructure: "detailed",
+			outputStructure: "detailed",
+			spec: (spec) => ({
+				...spec,
+				...toOAPIRequestBody(SingleFileSchema),
+			}),
+		})
+		.input(
+			z.object({
+				body: SingleFileSchema,
+			}),
+		)
+		.output(
+			createSuccesSchema(
+				z.object({ url: z.string().url() }),
+				"Delivery item photo uploaded successfully",
+			),
+		),
 	verifyDeliveryOTP: oc
 		.route({
 			tags: [FEATURE_TAGS.ORDER],

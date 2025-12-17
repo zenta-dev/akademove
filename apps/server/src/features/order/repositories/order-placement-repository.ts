@@ -233,6 +233,7 @@ export class OrderPlacementRepository extends OrderBaseRepository {
 					genderPreference: params.genderPreference ?? "ANY",
 					attachmentUrl: params.attachmentUrl,
 					deliveryItemType: params.deliveryItemType,
+					deliveryItemPhotoUrl: params.deliveryItemPhotoUrl,
 					requestedAt: now,
 					createdAt: now,
 					updatedAt: now,

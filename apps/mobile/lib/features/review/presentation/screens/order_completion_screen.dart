@@ -265,6 +265,11 @@ class _OrderCompletionScreenState extends State<OrderCompletionScreen> {
               : null,
         );
 
+        // Check if submission failed
+        if (cubit.state.submittedReview.isFailure) {
+          return;
+        }
+
         // Submit secondary review (merchant) if applicable
         if (_showSecondaryRating) {
           final merchantInfo = widget.merchantInfo;
@@ -278,6 +283,11 @@ class _OrderCompletionScreenState extends State<OrderCompletionScreen> {
                   ? _secondaryCommentController.text.trim()
                   : null,
             );
+
+            // Check if secondary submission failed
+            if (cubit.state.submittedReview.isFailure) {
+              return;
+            }
           }
         }
       } else if (widget.viewerRole == OrderCompletionViewerRole.driver) {
@@ -308,6 +318,11 @@ class _OrderCompletionScreenState extends State<OrderCompletionScreen> {
               ? _primaryCommentController.text.trim()
               : null,
         );
+
+        // Check if submission failed
+        if (cubit.state.submitReviewResult.isFailure) {
+          return;
+        }
       } else {
         // Merchant submitting review for customer
         MerchantReviewCubit? cubit;
@@ -336,6 +351,11 @@ class _OrderCompletionScreenState extends State<OrderCompletionScreen> {
               ? _primaryCommentController.text.trim()
               : null,
         );
+
+        // Check if submission failed
+        if (cubit.state.submitReviewResult.isFailure) {
+          return;
+        }
       }
 
       if (mounted) {
@@ -359,7 +379,15 @@ class _OrderCompletionScreenState extends State<OrderCompletionScreen> {
           // For merchant role, navigate back to order list
           context.popUntilRoot();
         } else {
-          context.read<UserOrderCubit>().clearActiveOrder();
+          // User role - clear active order and navigate to home
+          try {
+            context.read<UserOrderCubit>().clearActiveOrder();
+          } catch (e) {
+            // Cubit may not be available, continue with navigation
+            logger.w(
+              '[OrderCompletionScreen] Could not clear active order: $e',
+            );
+          }
           context.popUntilRoot();
         }
       }

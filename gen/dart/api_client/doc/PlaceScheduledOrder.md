@@ -19,6 +19,7 @@ Name | Type | Description | Notes
 **genderPreference** | **String** |  | [optional] 
 **attachmentUrl** | **String** |  | [optional] 
 **deliveryItemType** | [**DeliveryItemType**](DeliveryItemType.md) |  | [optional] 
+**deliveryItemPhotoUrl** | **String** |  | [optional] 
 **couponCode** | **String** |  | [optional] 
 **payment** | [**PlaceOrderPayment**](PlaceOrderPayment.md) |  | 
 **scheduledAt** | [**DateTime**](DateTime.md) |  | 

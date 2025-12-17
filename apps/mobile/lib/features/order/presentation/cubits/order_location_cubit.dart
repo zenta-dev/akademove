@@ -9,21 +9,26 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 /// - Fetching and searching places
 /// - Getting routes between coordinates
 /// - Managing map controller
+/// - Uploading delivery item photo
 class OrderLocationCubit extends BaseCubit<OrderLocationState> {
   OrderLocationCubit({
     required DriverRepository driverRepository,
     required MapService mapService,
+    required OrderRepository orderRepository,
   }) : _driverRepository = driverRepository,
        _mapService = mapService,
+       _orderRepository = orderRepository,
        super(const OrderLocationState());
 
   final DriverRepository _driverRepository;
   final MapService _mapService;
+  final OrderRepository _orderRepository;
 
   String? _searchQuery;
   String? _selectedCouponCode;
   OrderNote? _deliveryNote;
   DeliveryItemType? _deliveryItemType;
+  String? _deliveryItemPhotoUrl;
 
   /// Get the currently selected coupon code (used in delivery flow)
   String? get selectedCouponCode => _selectedCouponCode;
@@ -33,6 +38,9 @@ class OrderLocationCubit extends BaseCubit<OrderLocationState> {
 
   /// Get the delivery item type (used in delivery flow)
   DeliveryItemType? get deliveryItemType => _deliveryItemType;
+
+  /// Get the delivery item photo URL (required for DELIVERY orders)
+  String? get deliveryItemPhotoUrl => _deliveryItemPhotoUrl;
 
   /// Set the selected coupon code for order placement
   void setSelectedCoupon(String? couponCode) {
@@ -49,11 +57,17 @@ class OrderLocationCubit extends BaseCubit<OrderLocationState> {
     _deliveryItemType = itemType;
   }
 
+  /// Set the delivery item photo URL for order placement
+  void setDeliveryItemPhotoUrl(String? url) {
+    _deliveryItemPhotoUrl = url;
+  }
+
   void reset() {
     _searchQuery = null;
     _selectedCouponCode = null;
     _deliveryNote = null;
     _deliveryItemType = null;
+    _deliveryItemPhotoUrl = null;
     emit(const OrderLocationState());
   }
 
@@ -222,5 +236,53 @@ class OrderLocationCubit extends BaseCubit<OrderLocationState> {
       );
       return [];
     }
+  }
+
+  /// Upload delivery item photo for DELIVERY orders
+  /// User must upload a photo of the item before placing a delivery order
+  /// Returns the URL of the uploaded photo
+  Future<String?> uploadDeliveryItemPhoto(String filePath) async {
+    return await taskManager.execute("OLC-uDIP", () async {
+      try {
+        emit(
+          state.copyWith(
+            uploadDeliveryItemPhoto: const OperationResult.loading(),
+          ),
+        );
+
+        final res = await _orderRepository.uploadUserDeliveryItemPhoto(
+          filePath,
+        );
+
+        _deliveryItemPhotoUrl = res.data;
+
+        emit(
+          state.copyWith(
+            uploadDeliveryItemPhoto: OperationResult.success(
+              res.data,
+              message: res.message,
+            ),
+          ),
+        );
+
+        return res.data;
+      } on BaseError catch (e, st) {
+        logger.e(
+          "[OrderLocationCubit] - uploadDeliveryItemPhoto error: ${e.message}",
+          error: e,
+          stackTrace: st,
+        );
+        emit(
+          state.copyWith(uploadDeliveryItemPhoto: OperationResult.failed(e)),
+        );
+        return null;
+      }
+    });
+  }
+
+  /// Clear the uploaded delivery item photo
+  void clearDeliveryItemPhoto() {
+    _deliveryItemPhotoUrl = null;
+    emit(state.copyWith(uploadDeliveryItemPhoto: const OperationResult.idle()));
   }
 }

@@ -192,6 +192,28 @@ class OrderRepository extends BaseRepository {
     });
   }
 
+  /// Upload user delivery item photo (user only, before order placement)
+  /// POST /api/orders/delivery-item-photo
+  /// User uploads a photo of the item to be delivered before placing order
+  /// Returns the uploaded photo URL
+  Future<BaseResponse<String>> uploadUserDeliveryItemPhoto(String filePath) {
+    return guard(() async {
+      final file = await MultipartFile.fromFile(filePath);
+      final res = await _apiClient
+          .getOrderApi()
+          .orderUploadUserDeliveryItemPhoto(file: file);
+
+      final data =
+          res.data ??
+          (throw const RepositoryError(
+            'Failed to upload delivery item photo',
+            code: ErrorCode.unknown,
+          ));
+
+      return SuccessResponse(message: data.message, data: data.data.url);
+    });
+  }
+
   /// Verify delivery OTP (customer only)
   /// POST /api/orders/{id}/verify-otp
   /// Returns whether verification was successful

@@ -30,6 +30,7 @@ Method | HTTP request | Description
 [**orderUploadAttachment**](OrderApi.md#orderuploadattachment) | **POST** /orders/attachment | 
 [**orderUploadDeliveryItemPhoto**](OrderApi.md#orderuploaddeliveryitemphoto) | **POST** /orders/{id}/delivery-item-photo | 
 [**orderUploadDeliveryProof**](OrderApi.md#orderuploaddeliveryproof) | **POST** /orders/{id}/delivery-proof | 
+[**orderUploadUserDeliveryItemPhoto**](OrderApi.md#orderuploaduserdeliveryitemphoto) | **POST** /orders/delivery-item-photo | 
 [**orderVerifyDeliveryOTP**](OrderApi.md#orderverifydeliveryotp) | **POST** /orders/{id}/verify-otp | 
 
 
@@ -939,6 +940,47 @@ try {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **id** | **String**|  | 
+ **file** | **MultipartFile**|  | 
+
+### Return type
+
+[**OrderUploadDeliveryProof200Response**](OrderUploadDeliveryProof200Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: multipart/form-data
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **orderUploadUserDeliveryItemPhoto**
+> OrderUploadDeliveryProof200Response orderUploadUserDeliveryItemPhoto(file)
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getOrderApi();
+final MultipartFile file = BINARY_DATA_HERE; // MultipartFile | 
+
+try {
+    final response = api.orderUploadUserDeliveryItemPhoto(file);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling OrderApi->orderUploadUserDeliveryItemPhoto: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
  **file** | **MultipartFile**|  | 
 
 ### Return type

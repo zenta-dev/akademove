@@ -2,6 +2,7 @@ import 'package:akademove/app/router/router.dart';
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:api_client/api_client.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -181,6 +182,13 @@ class DriverIncomingOrderDialog extends StatelessWidget {
                 );
               },
             ),
+          ],
+
+          // Delivery item photo (only for DELIVERY orders)
+          if (order.type == OrderType.DELIVERY &&
+              order.deliveryItemPhotoUrl != null) ...[
+            SizedBox(height: 12.h),
+            _buildDeliveryItemPhotoSection(context),
           ],
         ],
       ),
@@ -394,6 +402,120 @@ class DriverIncomingOrderDialog extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+
+  /// Builds the delivery item photo section for DELIVERY orders
+  Widget _buildDeliveryItemPhotoSection(BuildContext context) {
+    final photoUrl = order.deliveryItemPhotoUrl;
+    if (photoUrl == null) return const SizedBox.shrink();
+
+    return Container(
+      padding: EdgeInsets.all(12.dg),
+      decoration: BoxDecoration(
+        color: context.colorScheme.muted,
+        borderRadius: BorderRadius.circular(8.r),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(
+                LucideIcons.camera,
+                size: 16.sp,
+                color: context.colorScheme.mutedForeground,
+              ),
+              SizedBox(width: 8.w),
+              Text(
+                'Item Photo',
+                style: context.typography.small.copyWith(
+                  color: context.colorScheme.mutedForeground,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 8.h),
+          GestureDetector(
+            onTap: () => _showFullImageDialog(context, photoUrl),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(8.r),
+              child: CachedNetworkImage(
+                imageUrl: photoUrl,
+                height: 100.h,
+                width: double.infinity,
+                fit: BoxFit.cover,
+                placeholder: (context, url) => Container(
+                  height: 100.h,
+                  color: context.colorScheme.muted,
+                  child: const Center(
+                    child: CircularProgressIndicator(size: 20),
+                  ),
+                ),
+                errorWidget: (context, url, error) => Container(
+                  height: 100.h,
+                  color: context.colorScheme.muted,
+                  child: Center(
+                    child: Icon(
+                      LucideIcons.imageOff,
+                      size: 24.sp,
+                      color: context.colorScheme.mutedForeground,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          SizedBox(height: 4.h),
+          Text(
+            'Tap to view full image',
+            style: context.typography.small.copyWith(
+              fontSize: 10.sp,
+              color: context.colorScheme.mutedForeground,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Shows a full-screen dialog with the item photo
+  void _showFullImageDialog(BuildContext context, String imageUrl) {
+    showDialog(
+      context: context,
+      builder: (dialogContext) => GestureDetector(
+        onTap: () => Navigator.of(dialogContext).pop(),
+        child: Container(
+          color: Colors.black.withValues(alpha: 0.9),
+          child: Stack(
+            children: [
+              Center(
+                child: InteractiveViewer(
+                  child: CachedNetworkImage(
+                    imageUrl: imageUrl,
+                    fit: BoxFit.contain,
+                    placeholder: (context, url) =>
+                        const Center(child: CircularProgressIndicator()),
+                    errorWidget: (context, url, error) => const Center(
+                      child: Icon(LucideIcons.imageOff, size: 48),
+                    ),
+                  ),
+                ),
+              ),
+              Positioned(
+                top: 48,
+                right: 16,
+                child: IconButton(
+                  icon: Icon(LucideIcons.x, color: Colors.white, size: 28.sp),
+                  onPressed: () => Navigator.of(dialogContext).pop(),
+                  variance: ButtonVariance.ghost,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

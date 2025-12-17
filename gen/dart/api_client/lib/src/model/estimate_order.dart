@@ -35,6 +35,7 @@ class EstimateOrder {
     this.genderPreference,
     this.attachmentUrl,
     this.deliveryItemType,
+    this.deliveryItemPhotoUrl,
     this.couponCode,
     this.discountIds,
     this.weight,
@@ -72,6 +73,9 @@ class EstimateOrder {
   @JsonKey(name: r'deliveryItemType', required: false, includeIfNull: false)
   final DeliveryItemType? deliveryItemType;
 
+  @JsonKey(name: r'deliveryItemPhotoUrl', required: false, includeIfNull: false)
+  final String? deliveryItemPhotoUrl;
+
   @JsonKey(name: r'couponCode', required: false, includeIfNull: false)
   final String? couponCode;
 
@@ -98,6 +102,7 @@ class EstimateOrder {
           other.genderPreference == genderPreference &&
           other.attachmentUrl == attachmentUrl &&
           other.deliveryItemType == deliveryItemType &&
+          other.deliveryItemPhotoUrl == deliveryItemPhotoUrl &&
           other.couponCode == couponCode &&
           other.discountIds == discountIds &&
           other.weight == weight;
@@ -115,6 +120,7 @@ class EstimateOrder {
       genderPreference.hashCode +
       attachmentUrl.hashCode +
       deliveryItemType.hashCode +
+      deliveryItemPhotoUrl.hashCode +
       couponCode.hashCode +
       discountIds.hashCode +
       weight.hashCode;

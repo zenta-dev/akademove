@@ -31,6 +31,8 @@ abstract class _$EstimateOrderCWProxy {
 
   EstimateOrder deliveryItemType(DeliveryItemType? deliveryItemType);
 
+  EstimateOrder deliveryItemPhotoUrl(String? deliveryItemPhotoUrl);
+
   EstimateOrder couponCode(String? couponCode);
 
   EstimateOrder discountIds(List<int>? discountIds);
@@ -56,6 +58,7 @@ abstract class _$EstimateOrderCWProxy {
     EstimateOrderGenderPreferenceEnum? genderPreference,
     String? attachmentUrl,
     DeliveryItemType? deliveryItemType,
+    String? deliveryItemPhotoUrl,
     String? couponCode,
     List<int>? discountIds,
     int? weight,
@@ -111,6 +114,10 @@ class _$EstimateOrderCWProxyImpl implements _$EstimateOrderCWProxy {
       call(deliveryItemType: deliveryItemType);
 
   @override
+  EstimateOrder deliveryItemPhotoUrl(String? deliveryItemPhotoUrl) =>
+      call(deliveryItemPhotoUrl: deliveryItemPhotoUrl);
+
+  @override
   EstimateOrder couponCode(String? couponCode) => call(couponCode: couponCode);
 
   @override
@@ -140,6 +147,7 @@ class _$EstimateOrderCWProxyImpl implements _$EstimateOrderCWProxy {
     Object? genderPreference = const $CopyWithPlaceholder(),
     Object? attachmentUrl = const $CopyWithPlaceholder(),
     Object? deliveryItemType = const $CopyWithPlaceholder(),
+    Object? deliveryItemPhotoUrl = const $CopyWithPlaceholder(),
     Object? couponCode = const $CopyWithPlaceholder(),
     Object? discountIds = const $CopyWithPlaceholder(),
     Object? weight = const $CopyWithPlaceholder(),
@@ -193,6 +201,10 @@ class _$EstimateOrderCWProxyImpl implements _$EstimateOrderCWProxy {
           ? _value.deliveryItemType
           // ignore: cast_nullable_to_non_nullable
           : deliveryItemType as DeliveryItemType?,
+      deliveryItemPhotoUrl: deliveryItemPhotoUrl == const $CopyWithPlaceholder()
+          ? _value.deliveryItemPhotoUrl
+          // ignore: cast_nullable_to_non_nullable
+          : deliveryItemPhotoUrl as String?,
       couponCode: couponCode == const $CopyWithPlaceholder()
           ? _value.couponCode
           // ignore: cast_nullable_to_non_nullable
@@ -262,6 +274,10 @@ EstimateOrder _$EstimateOrderFromJson(
       'deliveryItemType',
       (v) => $enumDecodeNullable(_$DeliveryItemTypeEnumMap, v),
     ),
+    deliveryItemPhotoUrl: $checkedConvert(
+      'deliveryItemPhotoUrl',
+      (v) => v as String?,
+    ),
     couponCode: $checkedConvert('couponCode', (v) => v as String?),
     discountIds: $checkedConvert(
       'discountIds',
@@ -287,6 +303,7 @@ Map<String, dynamic> _$EstimateOrderToJson(
       ?_$EstimateOrderGenderPreferenceEnumEnumMap[instance.genderPreference],
   'attachmentUrl': ?instance.attachmentUrl,
   'deliveryItemType': ?_$DeliveryItemTypeEnumMap[instance.deliveryItemType],
+  'deliveryItemPhotoUrl': ?instance.deliveryItemPhotoUrl,
   'couponCode': ?instance.couponCode,
   'discountIds': ?instance.discountIds,
   'weight': ?instance.weight,

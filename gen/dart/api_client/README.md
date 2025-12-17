@@ -287,6 +287,7 @@ Class | Method | HTTP request | Description
 [*OrderApi*](doc/OrderApi.md) | [**orderUploadAttachment**](doc/OrderApi.md#orderuploadattachment) | **POST** /orders/attachment | 
 [*OrderApi*](doc/OrderApi.md) | [**orderUploadDeliveryItemPhoto**](doc/OrderApi.md#orderuploaddeliveryitemphoto) | **POST** /orders/{id}/delivery-item-photo | 
 [*OrderApi*](doc/OrderApi.md) | [**orderUploadDeliveryProof**](doc/OrderApi.md#orderuploaddeliveryproof) | **POST** /orders/{id}/delivery-proof | 
+[*OrderApi*](doc/OrderApi.md) | [**orderUploadUserDeliveryItemPhoto**](doc/OrderApi.md#orderuploaduserdeliveryitemphoto) | **POST** /orders/delivery-item-photo | 
 [*OrderApi*](doc/OrderApi.md) | [**orderVerifyDeliveryOTP**](doc/OrderApi.md#orderverifydeliveryotp) | **POST** /orders/{id}/verify-otp | 
 [*PaymentApi*](doc/PaymentApi.md) | [**bankValidateAccount**](doc/PaymentApi.md#bankvalidateaccount) | **POST** /bank/validate | 
 [*PaymentApi*](doc/PaymentApi.md) | [**paymentWebhookMidtrans**](doc/PaymentApi.md#paymentwebhookmidtrans) | **POST** /payments/webhook/midtrans | 

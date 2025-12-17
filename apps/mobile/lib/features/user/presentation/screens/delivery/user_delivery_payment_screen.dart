@@ -47,6 +47,7 @@ class _UserDeliveryPaymentScreenState extends State<UserDeliveryPaymentScreen> {
       couponCode: orderLocationCubit.selectedCouponCode,
       note: orderLocationCubit.deliveryNote,
       deliveryItemType: orderLocationCubit.deliveryItemType,
+      deliveryItemPhotoUrl: orderLocationCubit.deliveryItemPhotoUrl,
     );
   }
 

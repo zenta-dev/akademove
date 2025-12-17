@@ -62,6 +62,11 @@ void main() {
       // TODO
     });
 
+    // String deliveryItemPhotoUrl
+    test('to test the property `deliveryItemPhotoUrl`', () async {
+      // TODO
+    });
+
     // String couponCode
     test('to test the property `couponCode`', () async {
       // TODO

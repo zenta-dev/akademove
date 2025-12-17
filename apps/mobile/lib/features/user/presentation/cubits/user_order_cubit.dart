@@ -268,6 +268,7 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
     String? couponCode,
     OrderNote? note,
     DeliveryItemType? deliveryItemType,
+    String? deliveryItemPhotoUrl,
   }) async => await taskManager.execute('UOC-pO', () async {
     try {
       emit(
@@ -289,6 +290,7 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
           couponCode: couponCode,
           note: note,
           deliveryItemType: deliveryItemType,
+          deliveryItemPhotoUrl: deliveryItemPhotoUrl,
           payment: PlaceOrderPayment(
             provider: PaymentProvider.MIDTRANS,
             method: method,

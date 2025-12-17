@@ -187,6 +187,7 @@ export const PlaceOrderSchema = OrderSchema.pick({
 	genderPreference: true,
 	attachmentUrl: true,
 	deliveryItemType: true,
+	deliveryItemPhotoUrl: true,
 }).safeExtend({
 	couponCode: z.string().optional(),
 	payment: z.object({
