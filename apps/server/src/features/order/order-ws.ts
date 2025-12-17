@@ -681,6 +681,16 @@ export class OrderRoom extends BaseDurableObject {
 			);
 		}
 
+		// Decrement merchant active order count for FOOD orders
+		if (order.type === "FOOD" && order.merchantId) {
+			updatePromises.push(
+				this.#repo.merchant.main.decrementActiveOrderCount(
+					order.merchantId,
+					opts,
+				),
+			);
+		}
+
 		// Update stock and soldStock for FOOD orders
 		if (order.type === "FOOD") {
 			updatePromises.push(
