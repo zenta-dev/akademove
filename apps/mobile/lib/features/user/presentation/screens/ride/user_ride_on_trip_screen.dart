@@ -1180,13 +1180,9 @@ class _DriverInfoContent extends StatelessWidget {
                         .currentOrder
                         .value;
                     if (order == null) return const SizedBox.shrink();
-                    return Positioned(
-                      bottom: 16,
-                      right: 16,
-                      child: EmergencyButton(
-                        orderId: order.id,
-                        currentLocation: emergencyLocation,
-                      ),
+                    return EmergencyButton(
+                      orderId: order.id,
+                      currentLocation: emergencyLocation,
                     );
                   },
                 );

@@ -1150,8 +1150,8 @@ class _UserDetailHistoryScreenState extends State<UserDetailHistoryScreen> {
 
     return BlocBuilder<UserReviewCubit, UserReviewState>(
       builder: (context, state) {
-        // Show loading state
-        if (state.reviewStatus.isLoading) {
+        // Show loading state while fetching review status (including initial idle state)
+        if (state.reviewStatus.isIdle || state.reviewStatus.isLoading) {
           return Card(
             child: Padding(
               padding: EdgeInsets.all(16.w),
