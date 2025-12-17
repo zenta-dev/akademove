@@ -23,17 +23,14 @@ import { generateOrderCode } from "@/utils/uuid";
 import { PaymentChargeService } from "./payment-charge-service";
 
 /**
- * Webhook processing request
+ * Webhook processing request from Midtrans
+ *
+ * NOTE: Midtrans webhooks do NOT return custom metadata we send during charge.
+ * The metadata (type, orderId, customerId) is retrieved from the stored payment record.
  */
 export interface WebhookProcessRequest {
 	order_id: string;
 	transaction_status: string;
-	metadata: {
-		type: OrderType | "TOPUP";
-		orderId?: string;
-		customerId?: string;
-		[key: string]: unknown;
-	};
 	[key: string]: unknown;
 }
 
@@ -163,7 +160,50 @@ export class PaymentWebhookService {
 			}
 
 			if (status === "settlement" || status === "success") {
-				const type = body.metadata.type;
+				// CRITICAL: Midtrans webhook does NOT return custom metadata we sent during charge.
+				// We must extract metadata from the stored payment record instead.
+				// The metadata is stored in payment.payload.metadata during payment creation.
+				logger.debug(
+					{ paymentId, payloadRaw: payment.payload },
+					"[PaymentWebhookService] Extracting metadata from payment.payload",
+				);
+
+				const payloadData = payment.payload as {
+					metadata?: {
+						type?: OrderType | "TOPUP";
+						orderId?: string;
+						customerId?: string;
+					};
+				} | null;
+				const metadata = payloadData?.metadata;
+
+				logger.debug(
+					{ paymentId, metadata, hasPayloadData: !!payloadData },
+					"[PaymentWebhookService] Parsed metadata from payment record",
+				);
+
+				if (!metadata?.type) {
+					logger.error(
+						{ paymentId, payload: payment.payload, payloadData, metadata },
+						"[PaymentWebhookService] Payment metadata missing type - cannot process webhook",
+					);
+					throw new RepositoryError(
+						"Payment metadata missing - cannot determine payment type",
+						{ code: "BAD_REQUEST" },
+					);
+				}
+
+				const type = metadata.type;
+				logger.info(
+					{
+						paymentId,
+						type,
+						orderId: metadata.orderId,
+						customerId: metadata.customerId,
+					},
+					"[PaymentWebhookService] Processing successful payment webhook",
+				);
+
 				if (type === "TOPUP") {
 					await this.handleTopUpSuccess({
 						tx,
@@ -175,8 +215,20 @@ export class PaymentWebhookService {
 					});
 				}
 				if (type === "RIDE" || type === "FOOD" || type === "DELIVERY") {
-					const orderId = body.metadata.orderId as string;
-					const customerId = body.metadata.customerId as string;
+					const orderId = metadata.orderId;
+					const customerId = metadata.customerId;
+
+					if (!orderId || !customerId) {
+						logger.error(
+							{ paymentId, metadata },
+							"[PaymentWebhookService] Order payment missing orderId or customerId",
+						);
+						throw new RepositoryError(
+							"Order payment metadata incomplete - missing orderId or customerId",
+							{ code: "BAD_REQUEST" },
+						);
+					}
+
 					await this.handleOrderPaymentSuccess({
 						tx,
 						orderId,
