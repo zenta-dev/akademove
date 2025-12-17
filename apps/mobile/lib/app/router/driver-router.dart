@@ -141,7 +141,9 @@ final driverRouter = StatefulShellRoute.indexedStack(
                   );
                   // Navigate back to home if route data is missing
                   WidgetsBinding.instance.addPostFrameCallback((_) {
-                    context.goNamed(Routes.driverHome.name);
+                    if (context.mounted) {
+                      context.goNamed(Routes.driverHome.name);
+                    }
                   });
                   return const Scaffold(
                     child: Center(child: CircularProgressIndicator()),
@@ -160,7 +162,9 @@ final driverRouter = StatefulShellRoute.indexedStack(
                     'order=${order != null}',
                   );
                   WidgetsBinding.instance.addPostFrameCallback((_) {
-                    context.goNamed(Routes.driverHome.name);
+                    if (context.mounted) {
+                      context.goNamed(Routes.driverHome.name);
+                    }
                   });
                   return const Scaffold(
                     child: Center(child: CircularProgressIndicator()),

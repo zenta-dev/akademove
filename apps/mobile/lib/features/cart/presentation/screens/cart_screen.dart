@@ -64,37 +64,33 @@ class _CartScreenState extends State<CartScreen> {
         onRefresh: _onRefresh,
         child: BlocConsumer<UserCartCubit, UserCartState>(
           listener: (context, state) {
-            // Listen to cart load failures
-            state.cart.whenOr(
-              failure: (error) {
-                showToast(
-                  context: context,
-                  builder: (context, overlay) => context.buildToast(
-                    title: context.l10n.error,
-                    message: error.message ?? context.l10n.an_error_occurred,
-                  ),
-                  location: ToastLocation.topCenter,
-                );
-              },
-              orElse: () {},
-            );
+            if (state.error != null) {
+              showToast(
+                context: context,
+                builder: (context, overlay) => context.buildToast(
+                  title: context.l10n.error,
+                  message: state.error ?? context.l10n.an_error_occurred,
+                ),
+                location: ToastLocation.topCenter,
+              );
+            }
           },
           builder: (context, state) {
-            return state.cart.whenOr(
-              success: (cart, _) {
-                if (state.isEmpty) {
-                  return _buildEmptyCart(context);
-                }
-                return _buildContent(context, state);
-              },
-              failure: (error) => Center(
+            if (state.isLoading && state.cart == null) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            if (state.error != null && state.cart == null) {
+              return Center(
                 child: OopsAlertWidget(
-                  message: error.message ?? context.l10n.cart_failed_to_load,
+                  message: state.error ?? context.l10n.cart_failed_to_load,
                   onRefresh: () => context.read<UserCartCubit>().loadCart(),
                 ),
-              ),
-              orElse: () => const Center(child: CircularProgressIndicator()),
-            );
+              );
+            }
+            if (state.isEmpty) {
+              return _buildEmptyCart(context);
+            }
+            return _buildContent(context, state);
           },
         ),
       ),
@@ -151,7 +147,7 @@ class _CartScreenState extends State<CartScreen> {
   }
 
   Widget _buildContent(BuildContext context, UserCartState state) {
-    final cart = state.currentCart;
+    final cart = state.cart;
     if (cart == null) return const SizedBox.shrink();
 
     return Column(

@@ -449,7 +449,7 @@ const FIELD_DEFINITIONS: Record<keyof BusinessConfiguration, FieldDefinition> =
 				"Minimum minutes in advance required for scheduling an order",
 			section: "scheduled",
 			unit: "minutes",
-			min: 15,
+			min: 5,
 			max: 120,
 		},
 		scheduledOrderMaxAdvanceDays: {
@@ -530,7 +530,7 @@ export const Route = createFileRoute("/dash/admin/settings")({
 		meta: [{ title: `Business Settings - ${SUB_ROUTE_TITLES.ADMIN.OVERVIEW}` }],
 	}),
 	beforeLoad: async () => {
-		const ok = await hasAccess(["ADMIN"]);
+		const ok = await hasAccess(["ADMIN", "OPERATOR"]);
 		if (!ok) redirect({ to: "/", throw: true });
 		return { allowed: ok };
 	},
@@ -642,14 +642,14 @@ function BusinessSettingsForm() {
 			<form onSubmit={form.handleSubmit(onSubmit)}>
 				<Tabs defaultValue={SETTING_TABS[0].key}>
 					<div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-						<div className="w-min rounded-xl border bg-card p-1">
-							<TabsList className="flex flex-wrap bg-transparent">
+						<div className="max-w-full overflow-x-auto rounded-xl border bg-card p-1">
+							<TabsList className="inline-flex h-auto gap-1 bg-transparent">
 								{SETTING_TABS.map((tab) => (
 									<TabsTrigger
 										key={tab.key}
 										value={tab.key}
 										className={cn(
-											"gap-2 p-3",
+											"shrink-0 gap-2 px-3 py-2",
 											tab.tab.light.bgColor,
 											tab.tab.light.textColor,
 											tab.tab.dark.bgColor,

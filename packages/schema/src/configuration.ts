@@ -204,7 +204,7 @@ export const BusinessConfigurationSchema = z.object({
 	scheduledOrderMatchingLeadTimeMinutes: z.coerce
 		.number()
 		.positive()
-		.default(15),
+		.default(5),
 
 	/**
 	 * Minimum hours before scheduled time required to allow rescheduling (default: 1 hour)

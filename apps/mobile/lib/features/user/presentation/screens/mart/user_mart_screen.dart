@@ -519,6 +519,7 @@ class _NearbyMerchantCard extends StatelessWidget {
         context.pushNamed(
           Routes.userMartDetail.name,
           pathParameters: {'merchantId': merchant.id},
+          extra: {'merchant': merchant},
         );
       },
       child: SizedBox(

@@ -23,4 +23,7 @@ extension CartItemExtension on CartItem {
   /// Returns the remaining stock that can be added
   int get remainingStock =>
       (effectiveStock - quantity).clamp(0, effectiveStock);
+
+  /// Returns the subtotal for this item (unitPrice * quantity)
+  num get subtotal => unitPrice * quantity;
 }

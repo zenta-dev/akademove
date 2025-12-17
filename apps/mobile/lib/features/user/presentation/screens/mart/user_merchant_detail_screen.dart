@@ -50,6 +50,32 @@ class _UserMerchantDetailScreenState extends State<UserMerchantDetailScreen> {
     );
   }
 
+  void _onCartStateChanged(BuildContext context, UserCartState state) {
+    // Handle merchant conflict dialog
+    if (state.showMerchantConflict && state.pendingItem != null) {
+      final currentMerchantName = state.cart?.merchantName ?? "";
+      final newMerchantName = state.pendingMerchantName ?? "";
+      MerchantConflictDialog.show(
+        context,
+        currentMerchantName: currentMerchantName,
+        newMerchantName: newMerchantName,
+      );
+      return;
+    }
+
+    // Handle errors
+    if (state.error != null) {
+      showToast(
+        context: context,
+        location: ToastLocation.bottomCenter,
+        builder: (context, overlay) => context.buildToast(
+          title: context.l10n.error,
+          message: state.error ?? context.l10n.an_error_occurred,
+        ),
+      );
+    }
+  }
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -90,37 +116,40 @@ class _UserMerchantDetailScreenState extends State<UserMerchantDetailScreen> {
           ],
         ),
       ],
-      child: BlocConsumer<UserMerchantDetailCubit, UserMerchantDetailState>(
-        listener: (context, state) {
-          if (state.menuByCategory.isFailure &&
-              state.menuByCategory.message != null) {
-            showToast(
-              context: context,
-              location: ToastLocation.bottomCenter,
-              builder: (context, overlay) => context.buildToast(
-                title: context.l10n.error,
-                message: state.menuByCategory.message!,
-              ),
-            );
-          }
-        },
-        builder: (context, state) {
-          if (state.menuByCategory.isLoading &&
-              state.menuByCategory.value == null) {
-            return const Center(child: CircularProgressIndicator());
-          }
+      child: BlocListener<UserCartCubit, UserCartState>(
+        listener: _onCartStateChanged,
+        child: BlocConsumer<UserMerchantDetailCubit, UserMerchantDetailState>(
+          listener: (context, state) {
+            if (state.menuByCategory.isFailure &&
+                state.menuByCategory.message != null) {
+              showToast(
+                context: context,
+                location: ToastLocation.bottomCenter,
+                builder: (context, overlay) => context.buildToast(
+                  title: context.l10n.error,
+                  message: state.menuByCategory.message!,
+                ),
+              );
+            }
+          },
+          builder: (context, state) {
+            if (state.menuByCategory.isLoading &&
+                state.menuByCategory.value == null) {
+              return const Center(child: CircularProgressIndicator());
+            }
 
-          if (state.menuByCategory.isFailure &&
-              state.menuByCategory.value == null) {
-            return _buildErrorState(context, state);
-          }
+            if (state.menuByCategory.isFailure &&
+                state.menuByCategory.value == null) {
+              return _buildErrorState(context, state);
+            }
 
-          if (state.isEmpty) {
-            return _buildEmptyState(context);
-          }
+            if (state.isEmpty) {
+              return _buildEmptyState(context);
+            }
 
-          return _buildDetailContent(context, state);
-        },
+            return _buildDetailContent(context, state);
+          },
+        ),
       ),
     );
   }
@@ -460,7 +489,7 @@ class _UserMerchantDetailScreenState extends State<UserMerchantDetailScreen> {
           ),
           Gap(12.h),
           ...allItems.map((item) {
-            final cartItem = cartState.currentCart?.items
+            final cartItem = cartState.cart?.items
                 .where((cartItem) => cartItem.menuId == item.id)
                 .toList();
             final currentQty = cartItem != null && cartItem.isNotEmpty
@@ -591,7 +620,7 @@ class _UserMerchantDetailScreenState extends State<UserMerchantDetailScreen> {
                   // Add button
                   Button(
                     style: const ButtonStyle.outline(
-                      density: ButtonDensity.compact,
+                      // density: ButtonDensity.compact,
                     ),
                     onPressed: () => _onQuantityChanged(
                       item: item,
@@ -744,6 +773,11 @@ class _UserMerchantDetailScreenState extends State<UserMerchantDetailScreen> {
     required int currentQty,
     required Merchant merchant,
   }) {
+    logger.d(
+      '[MerchantDetailScreen] _onQuantityChanged: '
+      'menuId=${item.id}, newQty=$newQty, currentQty=$currentQty',
+    );
+
     if (newQty > item.stock) {
       showToast(
         context: context,
@@ -759,6 +793,7 @@ class _UserMerchantDetailScreenState extends State<UserMerchantDetailScreen> {
     if (newQty > 0) {
       if (currentQty == 0) {
         // Adding new item to cart
+        logger.d('[MerchantDetailScreen] Calling addItem for ${item.name}');
         _cartCubit.addItem(
           menu: item,
           merchantName: merchant.name,
@@ -777,7 +812,7 @@ class _UserMerchantDetailScreenState extends State<UserMerchantDetailScreen> {
   }
 
   Widget _buildBottomActionBar(BuildContext context, UserCartState cartState) {
-    final firstItem = cartState.currentCart?.items.firstOrNull;
+    final firstItem = cartState.cart?.items.firstOrNull;
     final itemName = firstItem?.menuName ?? "";
     final totalPrice = cartState.subtotal;
 

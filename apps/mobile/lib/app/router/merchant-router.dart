@@ -106,7 +106,9 @@ final merchantRouter = StatefulShellRoute.indexedStack(
                 '[MerchantRouter] Order completion route missing extra data',
               );
               WidgetsBinding.instance.addPostFrameCallback((_) {
-                context.goNamed(Routes.merchantHome.name);
+                if (context.mounted) {
+                  context.goNamed(Routes.merchantHome.name);
+                }
               });
               return const Scaffold(
                 child: Center(child: CircularProgressIndicator()),
@@ -125,7 +127,9 @@ final merchantRouter = StatefulShellRoute.indexedStack(
                 'order=${order != null}',
               );
               WidgetsBinding.instance.addPostFrameCallback((_) {
-                context.goNamed(Routes.merchantHome.name);
+                if (context.mounted) {
+                  context.goNamed(Routes.merchantHome.name);
+                }
               });
               return const Scaffold(
                 child: Center(child: CircularProgressIndicator()),

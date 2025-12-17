@@ -392,7 +392,11 @@ export class MerchantMainRepository extends BaseRepository {
 		try {
 			const fallback = async () => {
 				const res = await this.#getFromDB(id);
-				if (!res) throw new RepositoryError(m.error_failed_get_merchant());
+				if (!res) {
+					throw new RepositoryError(m.error_failed_get_merchant(), {
+						code: "NOT_FOUND",
+					});
+				}
 				await this.setCache(id, res, { expirationTtl: CACHE_TTLS["24h"] });
 				return res;
 			};
@@ -409,7 +413,11 @@ export class MerchantMainRepository extends BaseRepository {
 				where: (f, op) => op.eq(f.userId, userId),
 			});
 
-			if (!result) throw new RepositoryError(m.error_failed_get_merchant());
+			if (!result) {
+				throw new RepositoryError(m.error_failed_get_merchant(), {
+					code: "NOT_FOUND",
+				});
+			}
 
 			return await MerchantMainRepository.composeEntity(result, this.#storage);
 		} catch (error) {

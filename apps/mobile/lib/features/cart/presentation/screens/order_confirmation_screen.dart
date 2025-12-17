@@ -66,7 +66,7 @@ class _OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
   void _loadEligibleCoupons() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final cartState = context.read<UserCartCubit>().state;
-      final totalAmount = cartState.currentCart?.subtotal ?? 0;
+      final totalAmount = cartState.cart?.subtotal ?? 0;
       if (totalAmount > 0) {
         context.read<UserCouponCubit>().loadEligibleCoupons(
           serviceType: OrderType.FOOD,
@@ -262,38 +262,21 @@ class _OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
       ],
       child: BlocConsumer<UserCartCubit, UserCartState>(
         listenWhen: (prev, curr) =>
-            prev.placeFoodOrderResult != curr.placeFoodOrderResult,
+            prev.isLoading != curr.isLoading || prev.error != curr.error,
         listener: (context, state) async {
-          if (state.placeFoodOrderResult.isSuccess) {
-            showToast(
-              context: context,
-              builder: (ctx, overlay) => ctx.buildToast(
-                title: context.l10n.order_confirm_success,
-                message: context.l10n.order_confirm_success_message,
-              ),
-              location: ToastLocation.topCenter,
-            );
-
-            await context.read<UserOrderCubit>().recoverActiveOrder();
-
-            if (context.mounted) {
-              context.popUntilRoot();
-              context.pushNamed(Routes.userMartOnTrip.name);
-            }
-          } else if (state.placeFoodOrderResult.isFailed) {
-            final error = state.placeFoodOrderResult.error;
+          if (state.error != null) {
             showToast(
               context: context,
               builder: (ctx, overlay) => ctx.buildToast(
                 title: context.l10n.order_confirm_failed,
-                message: error?.message ?? "Unknown error",
+                message: state.error ?? "Unknown error",
               ),
               location: ToastLocation.topCenter,
             );
           }
         },
         builder: (context, state) {
-          final cart = state.currentCart;
+          final cart = state.cart;
           if (state.isEmpty || cart == null) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
               if (mounted) context.pop();
@@ -816,7 +799,7 @@ class _OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
           final walletBalance =
               walletState.myWallet.value?.balance.toDouble() ?? 0;
           final cartState = context.read<UserCartCubit>().state;
-          final totalCost = cartState.currentCart?.subtotal ?? 0;
+          final totalCost = cartState.cart?.subtotal ?? 0;
           final isWalletSufficient = walletBalance >= totalCost;
 
           return Column(
@@ -1072,7 +1055,7 @@ class _OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
   }
 
   Widget _buildBottomBar(BuildContext context, Cart cart, UserCartState state) {
-    final isPlacingOrder = state.placeFoodOrderResult.isLoading;
+    final isPlacingOrder = state.isLoading;
     const handlingAndShipping = 16000.0;
     final totalPrice = cart.subtotal + handlingAndShipping - _discountAmount;
 
@@ -1230,7 +1213,7 @@ class _OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
     }
   }
 
-  void _placeOrder(BuildContext context, Cart cart) {
+  Future<void> _placeOrder(BuildContext context, Cart cart) async {
     final userLocationCubit = context.read<UserLocationCubit>();
     final userLocation = userLocationCubit.state.coordinate;
 
@@ -1271,11 +1254,16 @@ class _OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
       return;
     }
 
-    context.read<UserCartCubit>().placeFoodOrder(
+    final response = await context.read<UserCartCubit>().placeFoodOrder(
       pickupLocation: pickupLocation,
       dropoffLocation: dropoffLocation,
       paymentMethod: _selectedPaymentMethod,
       couponCode: _selectedCoupon?.code,
     );
+
+    if (response != null && mounted) {
+      // Navigate to order tracking screen on success
+      context.goNamed(Routes.userMartOnTrip.name);
+    }
   }
 }

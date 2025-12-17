@@ -131,14 +131,6 @@ export class MerchantApprovalRepository extends BaseRepository {
 
 			const review = await this.getReview(merchantId, opts);
 
-			// Validate all documents are approved
-			if (review.businessDocumentStatus !== "APPROVED") {
-				throw new RepositoryError(
-					"All documents must be approved before submitting approval",
-					{ code: "BAD_REQUEST" },
-				);
-			}
-
 			// Get the merchant
 			const merchantRecord = await (
 				opts?.tx ?? this.db
@@ -156,6 +148,17 @@ export class MerchantApprovalRepository extends BaseRepository {
 			if (merchantRecord.status !== "PENDING") {
 				throw new RepositoryError(
 					"Merchant must be in PENDING status to approve",
+					{ code: "BAD_REQUEST" },
+				);
+			}
+
+			// Only validate document status if a document was uploaded
+			if (
+				merchantRecord.document &&
+				review.businessDocumentStatus !== "APPROVED"
+			) {
+				throw new RepositoryError(
+					"Business document must be approved before submitting approval",
 					{ code: "BAD_REQUEST" },
 				);
 			}

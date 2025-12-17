@@ -30,7 +30,14 @@ class _MerchantCommissionReportDetailScreenState
   void initState() {
     super.initState();
     // Fetch analytics data on init
-    context.read<MerchantAnalyticsCubit>().getMonthlyAnalytics();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final merchantId = context.read<MerchantCubit>().state.merchant?.id;
+      if (merchantId != null) {
+        context.read<MerchantAnalyticsCubit>().getMonthlyAnalytics(
+          merchantId: merchantId,
+        );
+      }
+    });
   }
 
   Future<void> _handleExport() async {
@@ -423,9 +430,19 @@ class _MerchantCommissionReportDetailScreenState
           child: isLoading
               ? const Center(child: CircularProgressIndicator())
               : SafeRefreshTrigger(
-                  onRefresh: () => context
-                      .read<MerchantAnalyticsCubit>()
-                      .getMonthlyAnalytics(),
+                  onRefresh: () {
+                    final merchantId = context
+                        .read<MerchantCubit>()
+                        .state
+                        .merchant
+                        ?.id;
+                    if (merchantId != null) {
+                      return context
+                          .read<MerchantAnalyticsCubit>()
+                          .getMonthlyAnalytics(merchantId: merchantId);
+                    }
+                    return Future.value();
+                  },
                   child: SingleChildScrollView(
                     physics: const AlwaysScrollableScrollPhysics(),
                     child: Padding(

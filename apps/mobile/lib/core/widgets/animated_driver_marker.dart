@@ -54,6 +54,9 @@ class AnimatedDriverMarker {
   /// Current driver icon
   BitmapDescriptor? _driverIcon;
 
+  /// Get the driver icon (for external use when creating markers)
+  BitmapDescriptor? get driverIcon => _driverIcon;
+
   /// Current position of the marker
   LatLng? _currentPosition;
 

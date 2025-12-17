@@ -147,6 +147,36 @@ class _UserRideOnTripScreenState extends State<UserRideOnTripScreen> {
       // Update driver marker with animation if driver location is available
       final driverLocation = driver?.currentLocation;
       if (driver != null && driverLocation != null) {
+        // Create driver marker synchronously and add to newMarkers
+        // This ensures the marker is included when setMapData is called
+        // The animation will update its position smoothly afterward
+        final driverLatLng = LatLng(
+          driverLocation.y.toDouble(),
+          driverLocation.x.toDouble(),
+        );
+
+        // Use existing animated marker position if available for smoother updates
+        final markerPosition =
+            _animatedDriverMarker.currentPosition ?? driverLatLng;
+
+        final driverMarker = Marker(
+          markerId: const MarkerId("driver"),
+          position: markerPosition,
+          icon:
+              _animatedDriverMarker.driverIcon ??
+              BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+          anchor: const Offset(0.5, 0.5),
+          flat: true,
+          infoWindow: InfoWindow(
+            title: driver.user?.name ?? "Driver",
+            snippet: driver.rating != 0
+                ? "Rating: ${driver.rating.toStringAsFixed(1)}"
+                : null,
+          ),
+        );
+        newMarkers.add(driverMarker);
+
+        // Start animation for smooth position updates
         _animatedDriverMarker.updateDriverLocation(
           driverLocation,
           driver: driver,
@@ -156,9 +186,7 @@ class _UserRideOnTripScreenState extends State<UserRideOnTripScreen> {
         if (_isFirstLoad) {
           _isFirstLoad = false;
           await _mapController?.animateCamera(
-            CameraUpdate.newLatLng(
-              LatLng(driverLocation.y.toDouble(), driverLocation.x.toDouble()),
-            ),
+            CameraUpdate.newLatLng(driverLatLng),
           );
         }
       } else if (_isFirstLoad) {
@@ -322,10 +350,16 @@ class _UserRideOnTripScreenState extends State<UserRideOnTripScreen> {
       final driver = state.currentAssignedDriver.value;
       final payment = state.currentPayment.value;
 
+      context.showMyToast(
+        context.l10n.text_trip_completed,
+        type: ToastType.success,
+      );
+
       // Navigate to order completion screen FIRST, then clear active order
       // This prevents race condition where driver data is cleared before navigation
+
       if (driver != null && currentOrder != null) {
-        final result = await context.pushNamed(
+        await context.pushNamed(
           Routes.userOrderCompletion.name,
           extra: {
             "orderId": currentOrder.id,
@@ -335,29 +369,9 @@ class _UserRideOnTripScreenState extends State<UserRideOnTripScreen> {
             "payment": payment,
           },
         );
-
-        // Clear active order AFTER navigation completes
-        if (mounted && context.mounted) {
-          context.read<UserOrderCubit>().clearActiveOrder();
-        }
-
-        // If rating was submitted successfully, show success message
-        if (result == true && mounted && context.mounted) {
-          context.showMyToast(
-            context.l10n.text_trip_completed,
-            type: ToastType.success,
-          );
-        }
-        if (mounted && context.mounted) {
-          context.popUntilRoot();
-        }
       } else {
         // Fallback: clear order and go to home if driver data is missing
         context.read<UserOrderCubit>().clearActiveOrder();
-        context.showMyToast(
-          context.l10n.text_trip_completed,
-          type: ToastType.success,
-        );
         context.popUntilRoot();
       }
     } else if (_isOrderCancelled(currentOrder?.status) &&

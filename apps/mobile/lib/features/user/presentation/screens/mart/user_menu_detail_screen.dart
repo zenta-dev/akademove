@@ -6,7 +6,6 @@ import 'package:api_client/api_client.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 
 /// Menu detail screen showing menu information with Add to Cart functionality
@@ -60,21 +59,19 @@ class _UserMenuDetailScreenState extends State<UserMenuDetailScreen> {
         if (state.showMerchantConflict) {
           MerchantConflictDialog.show(
             context,
-            currentMerchantName: state.currentCart?.merchantName ?? '',
+            currentMerchantName: state.cart?.merchantName ?? '',
             newMerchantName: state.pendingMerchantName ?? '',
           );
-        } else if (state.addItemResult.isSuccess &&
-            !state.showMerchantConflict) {
-          // Successfully added to cart without conflict
+        } else if (state.error != null) {
+          // Show error toast
           showToast(
             context: context,
             builder: (context, overlay) => context.buildToast(
-              title: context.l10n.menu_added_to_cart,
-              message: context.l10n.menu_item_added_to_cart,
+              title: context.l10n.error,
+              message: state.error ?? context.l10n.an_error_occurred,
             ),
             location: ToastLocation.topCenter,
           );
-          context.pop(); // Go back after success
         }
       },
       child: Scaffold(

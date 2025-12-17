@@ -142,7 +142,7 @@ type Configuration = (typeof CONFIGURATIONS)[number];
 export const Route = createFileRoute("/dash/admin/pricing")({
 	head: () => ({ meta: [{ title: SUB_ROUTE_TITLES.ADMIN.PRICING }] }),
 	beforeLoad: async () => {
-		const ok = await hasAccess(["ADMIN"]);
+		const ok = await hasAccess(["ADMIN", "OPERATOR"]);
 		if (!ok) redirect({ to: "/", throw: true });
 		return { allowed: ok };
 	},

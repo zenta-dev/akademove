@@ -10,6 +10,7 @@ class MerchantAnalyticsCubit extends BaseCubit<MerchantAnalyticsState> {
 
   /// Get merchant analytics with optional date filters
   Future<void> getAnalytics({
+    required String merchantId,
     String? period,
     DateTime? startDate,
     DateTime? endDate,
@@ -17,6 +18,7 @@ class MerchantAnalyticsCubit extends BaseCubit<MerchantAnalyticsState> {
     try {
       emit(state.copyWith(analytics: const OperationResult.loading()));
       final response = await _merchantRepository.getAnalytics(
+        merchantId: merchantId,
         period: period,
         startDate: startDate,
         endDate: endDate,
@@ -40,26 +42,34 @@ class MerchantAnalyticsCubit extends BaseCubit<MerchantAnalyticsState> {
   });
 
   /// Get weekly analytics
-  Future<void> getWeeklyAnalytics() async => await getAnalytics(period: 'week');
+  Future<void> getWeeklyAnalytics({required String merchantId}) async =>
+      await getAnalytics(merchantId: merchantId, period: 'week');
 
   /// Get monthly analytics
-  Future<void> getMonthlyAnalytics() async =>
-      await getAnalytics(period: 'month');
+  Future<void> getMonthlyAnalytics({required String merchantId}) async =>
+      await getAnalytics(merchantId: merchantId, period: 'month');
 
   /// Get analytics for a custom date range
   Future<void> getAnalyticsForDateRange({
+    required String merchantId,
     required DateTime startDate,
     required DateTime endDate,
-  }) async => await getAnalytics(startDate: startDate, endDate: endDate);
+  }) async => await getAnalytics(
+    merchantId: merchantId,
+    startDate: startDate,
+    endDate: endDate,
+  );
 
   /// Export merchant analytics to PDF/CSV
   Future<void> exportAnalytics({
+    required String merchantId,
     required DateTime startDate,
     required DateTime endDate,
   }) async => await taskManager.execute('MAC-exportAnalytics', () async {
     try {
       emit(state.copyWith(exportResult: const OperationResult.loading()));
       final response = await _merchantRepository.exportAnalytics(
+        merchantId: merchantId,
         startDate: startDate,
         endDate: endDate,
       );

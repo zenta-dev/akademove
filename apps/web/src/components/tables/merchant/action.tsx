@@ -5,6 +5,7 @@ import { useNavigate } from "@tanstack/react-router";
 import { MoreHorizontal } from "lucide-react";
 import { useState } from "react";
 import { ActivateMerchantDialog } from "@/components/dialogs/activate-merchant";
+import { ApproveMerchantDialog } from "@/components/dialogs/approve-merchant";
 import { DeactivateMerchantDialog } from "@/components/dialogs/deactivate-merchant";
 import { Button } from "@/components/ui/button";
 import {
@@ -25,6 +26,7 @@ export const MerchantActionTable = ({ val }: { val: Merchant }) => {
 	const navigate = useNavigate();
 	const [activateOpen, setActivateOpen] = useState(false);
 	const [deactivateOpen, setDeactivateOpen] = useState(false);
+	const [approveOpen, setApproveOpen] = useState(false);
 	const [_locationOpen, _setLocationOpen] = useState(false);
 
 	const handleApprovalReview = () => {
@@ -44,6 +46,9 @@ export const MerchantActionTable = ({ val }: { val: Merchant }) => {
 	const showApprovalOption =
 		val.status === "PENDING" || val.status === "REJECTED";
 
+	// Show direct approve button for PENDING merchants (especially those without documents)
+	const showDirectApprove = val.status === "PENDING";
+
 	return (
 		<>
 			<DropdownMenu>
@@ -55,6 +60,14 @@ export const MerchantActionTable = ({ val }: { val: Merchant }) => {
 				</DropdownMenuTrigger>
 				<DropdownMenuContent align="end">
 					<DropdownMenuLabel>{m.actions()}</DropdownMenuLabel>
+					{showDirectApprove && (
+						<DropdownMenuItem
+							className="text-green-600"
+							onClick={() => setApproveOpen(true)}
+						>
+							Approve
+						</DropdownMenuItem>
+					)}
 					{showApprovalOption && (
 						<>
 							<DropdownMenuItem
@@ -86,6 +99,11 @@ export const MerchantActionTable = ({ val }: { val: Merchant }) => {
 				</DropdownMenuContent>
 			</DropdownMenu>
 
+			<ApproveMerchantDialog
+				open={approveOpen}
+				onOpenChange={setApproveOpen}
+				merchant={val}
+			/>
 			<ActivateMerchantDialog
 				open={activateOpen}
 				onOpenChange={setActivateOpen}

@@ -6,7 +6,6 @@ import "package:api_client/api_client.dart";
 import "package:cached_network_image/cached_network_image.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:flutter_screenutil/flutter_screenutil.dart";
-import "package:go_router/go_router.dart";
 import "package:intl/intl.dart";
 import "package:shadcn_flutter/shadcn_flutter.dart";
 
@@ -360,7 +359,8 @@ class _OrderCompletionScreenState extends State<OrderCompletionScreen> {
           // For merchant role, navigate back to order list
           context.popUntilRoot();
         } else {
-          context.pop(true);
+          context.read<UserOrderCubit>().clearActiveOrder();
+          context.popUntilRoot();
         }
       }
     } catch (e) {
