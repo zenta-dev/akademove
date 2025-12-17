@@ -210,7 +210,7 @@ export async function handleScheduledOrderCron(
 					await ProcessingQueueService.enqueueWebSocketBroadcast(
 						{
 							roomName: DRIVER_POOL_KEY,
-							event: "MATCHING",
+							event: "ORDER_MATCHING",
 							target: "DRIVER",
 							data: {
 								detail: {

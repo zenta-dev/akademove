@@ -572,7 +572,7 @@ export class OrderPlacementRepository extends OrderBaseRepository {
 					await ProcessingQueueService.enqueueWebSocketBroadcast(
 						{
 							roomName: DRIVER_POOL_KEY,
-							event: "MATCHING",
+							event: "ORDER_MATCHING",
 							target: "DRIVER",
 							data: {
 								detail: {
