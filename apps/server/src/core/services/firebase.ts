@@ -8,8 +8,8 @@
  */
 
 import { importPKCS8, SignJWT } from "jose";
-import { FirebaseError } from "../error";
 import { logger } from "@/utils/logger";
+import { FirebaseError } from "../error";
 
 // FCM message types (compatible with firebase-admin types)
 export interface AndroidNotification {

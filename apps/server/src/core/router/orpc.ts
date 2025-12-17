@@ -25,7 +25,6 @@ import { BaseError, UnknownError } from "@/core/error";
 import type { HonoContext, ORPCContext, UserInContext } from "@/core/interface";
 import { FetchServerRouter } from "@/features";
 import { logger } from "@/utils/logger";
-import { TRUSTED_ORIGINS } from "../constants.env";
 import {
 	orpcAuthMiddleware,
 	orpcRequireAuthMiddleware,
@@ -79,16 +78,10 @@ export const setupOrpcRouter = (app: Hono<HonoContext>) => {
 		}
 
 		const corsPlugin = new CORSPlugin({
-			origin: TRUSTED_ORIGINS,
-			allowHeaders: [
-				"Content-Type",
-				"Authorization",
-				"Accept-Language",
-				"X-Client-Agent",
-				"X-Orpc-Batch",
-			],
-			allowMethods: ["POST", "GET", "PUT", "OPTIONS"],
-			exposeHeaders: ["Content-Length"],
+			origin: (origin) => origin, // Echo back requesting origin to allow all with credentials
+			allowHeaders: ["*"],
+			allowMethods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+			exposeHeaders: ["*"],
 			maxAge: 600,
 			credentials: true,
 		});

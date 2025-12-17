@@ -6,7 +6,6 @@ import { BaseError } from "@/core/error";
 import type { HonoContext } from "@/core/interface";
 import { isCloudflare } from "@/utils";
 import { logger } from "@/utils/logger";
-import { TRUSTED_ORIGINS } from "../constants.env";
 import { getManagers, getRepositories, getServices } from "../factory";
 import { honoAuthMiddleware } from "../middlewares/auth";
 import { honoClientAgentMiddleware } from "../middlewares/client";
@@ -25,15 +24,10 @@ export const setupHonoRouter = () => {
 		}
 
 		const corsMiddlewareHandler = cors({
-			origin: TRUSTED_ORIGINS,
-			allowMethods: ["GET", "POST", "PUT", "OPTIONS"],
-			allowHeaders: [
-				"Content-Type",
-				"Authorization",
-				"Accept-Language",
-				"X-Client-Agent",
-				"X-Orpc-Batch",
-			],
+			origin: (origin) => origin, // Echo back requesting origin to allow all with credentials
+			allowMethods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+			allowHeaders: ["*"],
+			exposeHeaders: ["*"],
 			credentials: true,
 		});
 		return corsMiddlewareHandler(c, next);
