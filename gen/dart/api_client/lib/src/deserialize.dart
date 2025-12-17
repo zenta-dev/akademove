@@ -150,6 +150,7 @@ import 'package:api_client/src/model/driver_update_online_status_request.dart';
 import 'package:api_client/src/model/driver_update_taking_order_status_request.dart';
 import 'package:api_client/src/model/driver_user.dart';
 import 'package:api_client/src/model/driver_verify_quiz_request.dart';
+import 'package:api_client/src/model/driver_wallet_get_commission_report200_response.dart';
 import 'package:api_client/src/model/driver_wallet_get_monthly_summary200_response.dart';
 import 'package:api_client/src/model/driver_wallet_get_saved_bank_account200_response.dart';
 import 'package:api_client/src/model/driver_wallet_get_transactions200_response.dart';
@@ -415,7 +416,6 @@ import 'package:api_client/src/model/user_rules.dart';
 import 'package:api_client/src/model/va_number.dart';
 import 'package:api_client/src/model/verify_email.dart';
 import 'package:api_client/src/model/wallet.dart';
-import 'package:api_client/src/model/wallet_get_commission_report200_response.dart';
 import 'package:api_client/src/model/wallet_monthly_summary_query.dart';
 import 'package:api_client/src/model/wallet_monthly_summary_response.dart';
 import 'package:api_client/src/model/withdraw_request.dart';
@@ -1023,6 +1023,11 @@ ReturnType deserialize<ReturnType, BaseType>(
       return DriverUser.fromJson(value as Map<String, dynamic>) as ReturnType;
     case 'DriverVerifyQuizRequest':
       return DriverVerifyQuizRequest.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
+    case 'DriverWalletGetCommissionReport200Response':
+      return DriverWalletGetCommissionReport200Response.fromJson(
+            value as Map<String, dynamic>,
+          )
           as ReturnType;
     case 'DriverWalletGetMonthlySummary200Response':
       return DriverWalletGetMonthlySummary200Response.fromJson(
@@ -1989,11 +1994,6 @@ ReturnType deserialize<ReturnType, BaseType>(
       return VerifyEmail.fromJson(value as Map<String, dynamic>) as ReturnType;
     case 'Wallet':
       return Wallet.fromJson(value as Map<String, dynamic>) as ReturnType;
-    case 'WalletGetCommissionReport200Response':
-      return WalletGetCommissionReport200Response.fromJson(
-            value as Map<String, dynamic>,
-          )
-          as ReturnType;
     case 'WalletKey':
     case 'WalletMonthlySummaryQuery':
       return WalletMonthlySummaryQuery.fromJson(value as Map<String, dynamic>)

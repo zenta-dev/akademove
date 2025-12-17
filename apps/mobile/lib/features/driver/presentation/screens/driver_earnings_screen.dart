@@ -22,6 +22,15 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
   @override
   void initState() {
     super.initState();
+    _initCubit();
+  }
+
+  void _initCubit() {
+    // Get driverId from DriverProfileCubit (single source of truth)
+    final driverId = context.read<DriverProfileCubit>().driver?.id;
+    if (driverId != null) {
+      context.read<DriverWalletCubit>().setDriverId(driverId);
+    }
     _loadData();
   }
 
@@ -275,7 +284,7 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
 
   Widget _buildCommissionReportSection(WalletMonthlySummaryResponse summary) {
     return GestureDetector(
-      onTap: () => context.push(Routes.driverCommissionReport.path),
+      onTap: () => context.pushNamed(Routes.driverCommissionReport.name),
       child: Card(
         child: Padding(
           padding: EdgeInsets.all(16.dg),

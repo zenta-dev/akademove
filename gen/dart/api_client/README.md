@@ -168,6 +168,7 @@ Class | Method | HTTP request | Description
 [*DriverApi*](doc/DriverApi.md) | [**driverUpdateOnlineStatus**](doc/DriverApi.md#driverupdateonlinestatus) | **POST** /drivers/{id}/update-online-status | 
 [*DriverApi*](doc/DriverApi.md) | [**driverUpdateTakingOrderStatus**](doc/DriverApi.md#driverupdatetakingorderstatus) | **POST** /drivers/{id}/update-taking-order-status | 
 [*DriverApi*](doc/DriverApi.md) | [**driverVerifyQuiz**](doc/DriverApi.md#driververifyquiz) | **POST** /drivers/{id}/approval-review/verify-quiz | 
+[*DriverApi*](doc/DriverApi.md) | [**driverWalletGetCommissionReport**](doc/DriverApi.md#driverwalletgetcommissionreport) | **GET** /drivers/{driverId}/wallet/commission-report | 
 [*DriverApi*](doc/DriverApi.md) | [**driverWalletGetMonthlySummary**](doc/DriverApi.md#driverwalletgetmonthlysummary) | **GET** /drivers/{driverId}/wallet/summary | 
 [*DriverApi*](doc/DriverApi.md) | [**driverWalletGetSavedBankAccount**](doc/DriverApi.md#driverwalletgetsavedbankaccount) | **GET** /drivers/{driverId}/wallet/bank | 
 [*DriverApi*](doc/DriverApi.md) | [**driverWalletGetTransactions**](doc/DriverApi.md#driverwalletgettransactions) | **GET** /drivers/{driverId}/wallet/transactions | 
@@ -315,6 +316,7 @@ Class | Method | HTTP request | Description
 [*UserApi*](doc/UserApi.md) | [**userLookupByPhone**](doc/UserApi.md#userlookupbyphone) | **GET** /users/lookup/phone | 
 [*UserApi*](doc/UserApi.md) | [**userMeChangePassword**](doc/UserApi.md#usermechangepassword) | **PUT** /users/me/change-password | 
 [*UserApi*](doc/UserApi.md) | [**userMeUpdate**](doc/UserApi.md#usermeupdate) | **PUT** /users/me | 
+[*WalletApi*](doc/WalletApi.md) | [**driverWalletGetCommissionReport**](doc/WalletApi.md#driverwalletgetcommissionreport) | **GET** /drivers/{driverId}/wallet/commission-report | 
 [*WalletApi*](doc/WalletApi.md) | [**driverWalletGetMonthlySummary**](doc/WalletApi.md#driverwalletgetmonthlysummary) | **GET** /drivers/{driverId}/wallet/summary | 
 [*WalletApi*](doc/WalletApi.md) | [**driverWalletGetSavedBankAccount**](doc/WalletApi.md#driverwalletgetsavedbankaccount) | **GET** /drivers/{driverId}/wallet/bank | 
 [*WalletApi*](doc/WalletApi.md) | [**driverWalletGetTransactions**](doc/WalletApi.md#driverwalletgettransactions) | **GET** /drivers/{driverId}/wallet/transactions | 
@@ -522,6 +524,7 @@ Class | Method | HTTP request | Description
  - [DriverUpdateTakingOrderStatusRequest](doc/DriverUpdateTakingOrderStatusRequest.md)
  - [DriverUser](doc/DriverUser.md)
  - [DriverVerifyQuizRequest](doc/DriverVerifyQuizRequest.md)
+ - [DriverWalletGetCommissionReport200Response](doc/DriverWalletGetCommissionReport200Response.md)
  - [DriverWalletGetMonthlySummary200Response](doc/DriverWalletGetMonthlySummary200Response.md)
  - [DriverWalletGetSavedBankAccount200Response](doc/DriverWalletGetSavedBankAccount200Response.md)
  - [DriverWalletGetTransactions200Response](doc/DriverWalletGetTransactions200Response.md)
@@ -840,7 +843,6 @@ Class | Method | HTTP request | Description
  - [VANumber](doc/VANumber.md)
  - [VerifyEmail](doc/VerifyEmail.md)
  - [Wallet](doc/Wallet.md)
- - [WalletGetCommissionReport200Response](doc/WalletGetCommissionReport200Response.md)
  - [WalletKey](doc/WalletKey.md)
  - [WalletMonthlySummaryQuery](doc/WalletMonthlySummaryQuery.md)
  - [WalletMonthlySummaryResponse](doc/WalletMonthlySummaryResponse.md)

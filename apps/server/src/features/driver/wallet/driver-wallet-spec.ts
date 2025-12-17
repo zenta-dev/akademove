@@ -10,6 +10,8 @@ import {
 } from "@repo/schema/payment";
 import { TransactionSchema } from "@repo/schema/transaction";
 import {
+	CommissionReportQuerySchema,
+	CommissionReportResponseSchema,
 	WalletMonthlySummaryQuerySchema,
 	WalletMonthlySummaryResponseSchema,
 	WalletSchema,
@@ -143,6 +145,28 @@ export const DriverWalletSpec = {
 			createSuccesSchema(
 				SavedBankAccountSchema,
 				"Successfully retrieved saved bank account",
+			),
+		),
+	getCommissionReport: oc
+		.route({
+			tags: [FEATURE_TAGS.DRIVER, FEATURE_TAGS.wallet],
+			method: "GET",
+			path: "/commission-report",
+			inputStructure: "detailed",
+			outputStructure: "detailed",
+			description:
+				"Get commission report for driver with balance summary, chart data, and transaction history",
+		})
+		.input(
+			z.object({
+				params: z.object({ driverId: z.string() }),
+				query: CommissionReportQuerySchema,
+			}),
+		)
+		.output(
+			createSuccesSchema(
+				CommissionReportResponseSchema,
+				"Successfully retrieved commission report",
 			),
 		),
 };

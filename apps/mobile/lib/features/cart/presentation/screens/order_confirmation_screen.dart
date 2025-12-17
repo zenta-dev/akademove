@@ -1261,9 +1261,8 @@ class _OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
       couponCode: _selectedCoupon?.code,
     );
 
-    if (response != null && mounted) {
-      // Navigate to order tracking screen on success
-      context.goNamed(Routes.userMartOnTrip.name);
+    if (response != null && context.mounted && mounted) {
+      context.pushNamed(Routes.userMartOnTrip.name);
     }
   }
 }

@@ -13,9 +13,9 @@ import type { DatabaseService } from "@/core/services/db";
 import { tables } from "@/core/services/db";
 import type { KeyValueService, PutCacheOptions } from "@/core/services/kv";
 import type { StorageService } from "@/core/services/storage";
+import { MenuImageService } from "@/features/merchant/services";
 import { toNumberSafe } from "@/utils";
 import { logger } from "@/utils/logger";
-import { MenuImageService } from "@/features/merchant/services";
 
 interface StockWarning {
 	menuId: string;

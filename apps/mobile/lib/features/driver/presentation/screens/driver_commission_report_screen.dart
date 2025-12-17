@@ -26,7 +26,13 @@ class _DriverCommissionReportScreenState
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<DriverWalletCubit>().init();
+      // Get driverId from DriverProfileCubit (single source of truth)
+      final driverId = context.read<DriverProfileCubit>().driver?.id;
+      if (driverId != null) {
+        final walletCubit = context.read<DriverWalletCubit>();
+        walletCubit.setDriverId(driverId);
+        walletCubit.init();
+      }
     });
   }
 
@@ -744,7 +750,7 @@ class _DriverCommissionReportScreenState
         Expanded(
           child: OutlineButton(
             onPressed: () {
-              context.push(Routes.driverEarnings.path);
+              context.pushNamed(Routes.driverEarnings.name);
             },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,

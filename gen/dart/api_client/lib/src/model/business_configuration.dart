@@ -44,7 +44,7 @@ class BusinessConfiguration {
     this.maxBadgeCommissionReduction = 0.5,
     this.scheduledOrderMinAdvanceMinutes = 30,
     this.scheduledOrderMaxAdvanceDays = 7,
-    this.scheduledOrderMatchingLeadTimeMinutes = 15,
+    this.scheduledOrderMatchingLeadTimeMinutes = 5,
     this.scheduledOrderMinRescheduleHours = 1,
     this.onTimeDeliveryThresholdMinutes = 10,
   });
@@ -242,7 +242,7 @@ class BusinessConfiguration {
   final num? scheduledOrderMaxAdvanceDays;
 
   @JsonKey(
-    defaultValue: 15,
+    defaultValue: 5,
     name: r'scheduledOrderMatchingLeadTimeMinutes',
     required: false,
     includeIfNull: false,

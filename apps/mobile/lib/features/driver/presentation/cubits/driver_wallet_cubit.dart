@@ -6,12 +6,25 @@ class DriverWalletCubit extends BaseCubit<DriverWalletState> {
   DriverWalletCubit({
     required WalletRepository walletRepository,
     required TransactionRepository transactionRepository,
+    required DriverRepository driverRepository,
   }) : _walletRepository = walletRepository,
        _transactionRepository = transactionRepository,
+       _driverRepository = driverRepository,
        super(const DriverWalletState());
 
   final WalletRepository _walletRepository;
   final TransactionRepository _transactionRepository;
+  final DriverRepository _driverRepository;
+
+  String? _driverId;
+
+  /// Set the driver ID. Should be called with the driver ID from DriverProfileCubit.
+  void setDriverId(String? driverId) {
+    _driverId = driverId;
+  }
+
+  /// Get the current driver ID.
+  String? get driverId => _driverId;
 
   Future<void> init({int? month, int? year}) async {
     await Future.wait([
@@ -106,13 +119,22 @@ class DriverWalletCubit extends BaseCubit<DriverWalletState> {
   Future<void> getCommissionReport({EarningsPeriod? period}) async {
     await taskManager.execute("DWC-gCR1", () async {
       try {
+        final driverId = _driverId;
+        if (driverId == null) {
+          logger.w(
+            "[DriverWalletCubit] - getCommissionReport called without driverId",
+          );
+          return;
+        }
+
         emit(
           state.copyWith(
             fetchCommissionReportResult: const OperationResult.loading(),
           ),
         );
         final selectedPeriod = period ?? state.selectedPeriod;
-        final res = await _walletRepository.getCommissionReport(
+        final res = await _driverRepository.getCommissionReport(
+          driverId: driverId,
           period: _mapPeriodToApi(selectedPeriod),
         );
         emit(

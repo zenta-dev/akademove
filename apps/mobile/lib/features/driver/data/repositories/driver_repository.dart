@@ -274,4 +274,24 @@ class DriverRepository extends BaseRepository {
 
         return SuccessResponse(message: data.message, data: data.data);
       });
+
+  // Commission Report
+  Future<BaseResponse<CommissionReportResponse>> getCommissionReport({
+    required String driverId,
+    required CommissionReportPeriod period,
+  }) {
+    return guard(() async {
+      final res = await _apiClient
+          .getDriverApi()
+          .driverWalletGetCommissionReport(driverId: driverId, period: period);
+      final data =
+          res.data ??
+          (throw const RepositoryError(
+            'Commission report not found',
+            code: ErrorCode.notFound,
+          ));
+
+      return SuccessResponse(message: data.message, data: data.data);
+    });
+  }
 }

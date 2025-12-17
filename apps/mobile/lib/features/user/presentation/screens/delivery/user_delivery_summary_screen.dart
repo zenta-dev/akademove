@@ -75,7 +75,7 @@ class _UserDeliverySummaryScreenState extends State<UserDeliverySummaryScreen> {
                           coupon.code,
                         );
                       }
-                      context.push(Routes.userDeliveryPayment.path);
+                      context.pushNamed(Routes.userDeliveryPayment.name);
                     },
                     child: Text(context.l10n.button_choose_payment_method),
                   ),

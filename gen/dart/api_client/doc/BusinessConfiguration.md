@@ -34,7 +34,7 @@ Name | Type | Description | Notes
 **maxBadgeCommissionReduction** | **num** |  | [optional] [default to 0.5]
 **scheduledOrderMinAdvanceMinutes** | **num** |  | [optional] [default to 30]
 **scheduledOrderMaxAdvanceDays** | **num** |  | [optional] [default to 7]
-**scheduledOrderMatchingLeadTimeMinutes** | **num** |  | [optional] [default to 15]
+**scheduledOrderMatchingLeadTimeMinutes** | **num** |  | [optional] [default to 5]
 **scheduledOrderMinRescheduleHours** | **num** |  | [optional] [default to 1]
 **onTimeDeliveryThresholdMinutes** | **num** |  | [optional] [default to 10]
 

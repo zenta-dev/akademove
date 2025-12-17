@@ -255,6 +255,7 @@ void _setupCubit() {
       () => DriverWalletCubit(
         walletRepository: sl<WalletRepository>(),
         transactionRepository: sl<TransactionRepository>(),
+        driverRepository: sl<DriverRepository>(),
       ),
     )
     ..registerFactory(

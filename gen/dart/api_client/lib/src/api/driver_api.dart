@@ -10,6 +10,7 @@ import 'package:api_client/src/deserialize.dart';
 import 'package:dio/dio.dart';
 
 import 'package:api_client/src/model/badge_remove200_response.dart';
+import 'package:api_client/src/model/commission_report_period.dart';
 import 'package:api_client/src/model/coordinate_with_meta.dart';
 import 'package:api_client/src/model/driver_get_analytics200_response.dart';
 import 'package:api_client/src/model/driver_get_mine200_response.dart';
@@ -26,6 +27,7 @@ import 'package:api_client/src/model/driver_update_document_status_request.dart'
 import 'package:api_client/src/model/driver_update_online_status_request.dart';
 import 'package:api_client/src/model/driver_update_taking_order_status_request.dart';
 import 'package:api_client/src/model/driver_verify_quiz_request.dart';
+import 'package:api_client/src/model/driver_wallet_get_commission_report200_response.dart';
 import 'package:api_client/src/model/driver_wallet_get_monthly_summary200_response.dart';
 import 'package:api_client/src/model/driver_wallet_get_saved_bank_account200_response.dart';
 import 'package:api_client/src/model/driver_wallet_get_transactions200_response.dart';
@@ -2062,6 +2064,105 @@ class DriverApi {
     }
 
     return Response<DriverGetReview200Response>(
+      data: _responseData,
+      headers: _response.headers,
+      isRedirect: _response.isRedirect,
+      requestOptions: _response.requestOptions,
+      redirects: _response.redirects,
+      statusCode: _response.statusCode,
+      statusMessage: _response.statusMessage,
+      extra: _response.extra,
+    );
+  }
+
+  /// driverWalletGetCommissionReport
+  /// Get commission report for driver with balance summary, chart data, and transaction history
+  ///
+  /// Parameters:
+  /// * [driverId]
+  /// * [period]
+  /// * [startDate]
+  /// * [endDate]
+  /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
+  /// * [headers] - Can be used to add additional headers to the request
+  /// * [extras] - Can be used to add flags to the request
+  /// * [validateStatus] - A [ValidateStatus] callback that can be used to determine request success based on the HTTP status of the response
+  /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
+  /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
+  ///
+  /// Returns a [Future] containing a [Response] with a [DriverWalletGetCommissionReport200Response] as data
+  /// Throws [DioException] if API call or serialization fails
+  Future<Response<DriverWalletGetCommissionReport200Response>>
+  driverWalletGetCommissionReport({
+    required String driverId,
+    CommissionReportPeriod? period = CommissionReportPeriod.daily,
+    DateTime? startDate,
+    DateTime? endDate,
+    CancelToken? cancelToken,
+    Map<String, dynamic>? headers,
+    Map<String, dynamic>? extra,
+    ValidateStatus? validateStatus,
+    ProgressCallback? onSendProgress,
+    ProgressCallback? onReceiveProgress,
+  }) async {
+    final _path = r'/drivers/{driverId}/wallet/commission-report'.replaceAll(
+      '{'
+      r'driverId'
+      '}',
+      driverId.toString(),
+    );
+    final _options = Options(
+      method: r'GET',
+      headers: <String, dynamic>{...?headers},
+      extra: <String, dynamic>{
+        'secure': <Map<String, String>>[
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
+        ],
+        ...?extra,
+      },
+      validateStatus: validateStatus,
+    );
+
+    final _queryParameters = <String, dynamic>{
+      if (period != null) r'period': period,
+      if (startDate != null) r'startDate': startDate,
+      if (endDate != null) r'endDate': endDate,
+    };
+
+    final _response = await _dio.request<Object>(
+      _path,
+      options: _options,
+      queryParameters: _queryParameters,
+      cancelToken: cancelToken,
+      onSendProgress: onSendProgress,
+      onReceiveProgress: onReceiveProgress,
+    );
+
+    DriverWalletGetCommissionReport200Response? _responseData;
+
+    try {
+      final rawData = _response.data;
+      _responseData = rawData == null
+          ? null
+          : deserialize<
+              DriverWalletGetCommissionReport200Response,
+              DriverWalletGetCommissionReport200Response
+            >(
+              rawData,
+              'DriverWalletGetCommissionReport200Response',
+              growable: true,
+            );
+    } catch (error, stackTrace) {
+      throw DioException(
+        requestOptions: _response.requestOptions,
+        response: _response,
+        type: DioExceptionType.unknown,
+        error: error,
+        stackTrace: stackTrace,
+      );
+    }
+
+    return Response<DriverWalletGetCommissionReport200Response>(
       data: _responseData,
       headers: _response.headers,
       isRedirect: _response.isRedirect,

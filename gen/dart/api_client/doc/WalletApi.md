@@ -9,6 +9,7 @@ All URIs are relative to *http://localhost:3000/api*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
+[**driverWalletGetCommissionReport**](WalletApi.md#driverwalletgetcommissionreport) | **GET** /drivers/{driverId}/wallet/commission-report | 
 [**driverWalletGetMonthlySummary**](WalletApi.md#driverwalletgetmonthlysummary) | **GET** /drivers/{driverId}/wallet/summary | 
 [**driverWalletGetSavedBankAccount**](WalletApi.md#driverwalletgetsavedbankaccount) | **GET** /drivers/{driverId}/wallet/bank | 
 [**driverWalletGetTransactions**](WalletApi.md#driverwalletgettransactions) | **GET** /drivers/{driverId}/wallet/transactions | 
@@ -32,6 +33,55 @@ Method | HTTP request | Description
 [**walletTransfer**](WalletApi.md#wallettransfer) | **POST** /wallets/transfer | 
 [**walletWithdraw**](WalletApi.md#walletwithdraw) | **POST** /wallets/withdraw | 
 
+
+# **driverWalletGetCommissionReport**
+> DriverWalletGetCommissionReport200Response driverWalletGetCommissionReport(driverId, period, startDate, endDate)
+
+
+
+Get commission report for driver with balance summary, chart data, and transaction history
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getWalletApi();
+final String driverId = driverId_example; // String | 
+final CommissionReportPeriod period = ; // CommissionReportPeriod | 
+final DateTime startDate = 2013-10-20T19:20:30+01:00; // DateTime | 
+final DateTime endDate = 2013-10-20T19:20:30+01:00; // DateTime | 
+
+try {
+    final response = api.driverWalletGetCommissionReport(driverId, period, startDate, endDate);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling WalletApi->driverWalletGetCommissionReport: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **driverId** | **String**|  | 
+ **period** | [**CommissionReportPeriod**](.md)|  | [optional] [default to daily]
+ **startDate** | **DateTime**|  | [optional] 
+ **endDate** | **DateTime**|  | [optional] 
+
+### Return type
+
+[**DriverWalletGetCommissionReport200Response**](DriverWalletGetCommissionReport200Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **driverWalletGetMonthlySummary**
 > DriverWalletGetMonthlySummary200Response driverWalletGetMonthlySummary(driverId, year, month)
@@ -725,7 +775,7 @@ This endpoint does not need any parameter.
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **walletGetCommissionReport**
-> WalletGetCommissionReport200Response walletGetCommissionReport(period, startDate, endDate)
+> DriverWalletGetCommissionReport200Response walletGetCommissionReport(period, startDate, endDate)
 
 
 
@@ -758,7 +808,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**WalletGetCommissionReport200Response**](WalletGetCommissionReport200Response.md)
+[**DriverWalletGetCommissionReport200Response**](DriverWalletGetCommissionReport200Response.md)
 
 ### Authorization
 

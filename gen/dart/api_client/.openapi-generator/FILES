@@ -193,6 +193,7 @@ doc/DriverUpdateOnlineStatusRequest.md
 doc/DriverUpdateTakingOrderStatusRequest.md
 doc/DriverUser.md
 doc/DriverVerifyQuizRequest.md
+doc/DriverWalletGetCommissionReport200Response.md
 doc/DriverWalletGetMonthlySummary200Response.md
 doc/DriverWalletGetSavedBankAccount200Response.md
 doc/DriverWalletGetTransactions200Response.md
@@ -524,7 +525,6 @@ doc/VANumber.md
 doc/VerifyEmail.md
 doc/Wallet.md
 doc/WalletApi.md
-doc/WalletGetCommissionReport200Response.md
 doc/WalletKey.md
 doc/WalletMonthlySummaryQuery.md
 doc/WalletMonthlySummaryResponse.md
@@ -743,6 +743,7 @@ lib/src/model/driver_update_online_status_request.dart
 lib/src/model/driver_update_taking_order_status_request.dart
 lib/src/model/driver_user.dart
 lib/src/model/driver_verify_quiz_request.dart
+lib/src/model/driver_wallet_get_commission_report200_response.dart
 lib/src/model/driver_wallet_get_monthly_summary200_response.dart
 lib/src/model/driver_wallet_get_saved_bank_account200_response.dart
 lib/src/model/driver_wallet_get_transactions200_response.dart
@@ -1061,7 +1062,6 @@ lib/src/model/user_rules.dart
 lib/src/model/va_number.dart
 lib/src/model/verify_email.dart
 lib/src/model/wallet.dart
-lib/src/model/wallet_get_commission_report200_response.dart
 lib/src/model/wallet_key.dart
 lib/src/model/wallet_monthly_summary_query.dart
 lib/src/model/wallet_monthly_summary_response.dart
@@ -1069,3 +1069,4 @@ lib/src/model/weight_size.dart
 lib/src/model/withdraw_request.dart
 lib/src/model/withdraw_response.dart
 pubspec.yaml
+test/driver_wallet_get_commission_report200_response_test.dart

@@ -626,7 +626,7 @@ BusinessConfiguration _$BusinessConfigurationFromJson(
     ),
     scheduledOrderMatchingLeadTimeMinutes: $checkedConvert(
       'scheduledOrderMatchingLeadTimeMinutes',
-      (v) => v as num? ?? 15,
+      (v) => v as num? ?? 5,
     ),
     scheduledOrderMinRescheduleHours: $checkedConvert(
       'scheduledOrderMinRescheduleHours',
