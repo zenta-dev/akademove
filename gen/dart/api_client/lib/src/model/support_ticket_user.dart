@@ -40,7 +40,8 @@ class SupportTicketUser {
           other.email == email;
 
   @override
-  int get hashCode => name.hashCode + image.hashCode + email.hashCode;
+  int get hashCode =>
+      name.hashCode + (image == null ? 0 : image.hashCode) + email.hashCode;
 
   factory SupportTicketUser.fromJson(Map<String, dynamic> json) =>
       _$SupportTicketUserFromJson(json);

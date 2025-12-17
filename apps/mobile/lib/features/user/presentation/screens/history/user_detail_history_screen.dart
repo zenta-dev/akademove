@@ -24,6 +24,19 @@ class UserDetailHistoryScreen extends StatefulWidget {
 class _UserDetailHistoryScreenState extends State<UserDetailHistoryScreen> {
   bool _hasTriggeredAction = false;
 
+  @override
+  void initState() {
+    super.initState();
+    // Check if order is already loaded and trigger review status check
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      final order = context.read<UserOrderCubit>().state.selectedOrder.value;
+      if (order != null) {
+        _handleAutoAction(order);
+      }
+    });
+  }
+
   Future<void> _onRefresh() async {
     final orderId = context
         .read<UserOrderCubit>()
@@ -1258,11 +1271,14 @@ class _UserDetailHistoryScreenState extends State<UserDetailHistoryScreen> {
                   color: context.colorScheme.primary,
                 ),
                 Gap(8.w),
-                DefaultText(
-                  context.l10n.text_already_reviewed,
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.w600,
-                  color: context.colorScheme.primary,
+                Expanded(
+                  child: DefaultText(
+                    context.l10n.text_already_reviewed,
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.w600,
+                    color: context.colorScheme.primary,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
               ],
             ),
@@ -1314,13 +1330,17 @@ class _UserDetailHistoryScreenState extends State<UserDetailHistoryScreen> {
   Widget _buildExistingRatingStars(BuildContext context, int score) {
     return Row(
       children: [
-        DefaultText(
-          context.l10n.text_your_rating,
-          fontSize: 14.sp,
-          color: context.colorScheme.mutedForeground,
+        Flexible(
+          child: DefaultText(
+            context.l10n.text_your_rating,
+            fontSize: 14.sp,
+            color: context.colorScheme.mutedForeground,
+            overflow: TextOverflow.ellipsis,
+          ),
         ),
         Gap(12.w),
         Row(
+          mainAxisSize: MainAxisSize.min,
           children: List.generate(5, (index) {
             final starValue = index + 1;
             return Padding(
@@ -1337,11 +1357,14 @@ class _UserDetailHistoryScreenState extends State<UserDetailHistoryScreen> {
           }),
         ),
         Gap(8.w),
-        DefaultText(
-          _getRatingLabel(context, score),
-          fontSize: 13.sp,
-          fontWeight: FontWeight.w500,
-          color: context.colorScheme.primary,
+        Flexible(
+          child: DefaultText(
+            _getRatingLabel(context, score),
+            fontSize: 13.sp,
+            fontWeight: FontWeight.w500,
+            color: context.colorScheme.primary,
+            overflow: TextOverflow.ellipsis,
+          ),
         ),
       ],
     );
@@ -1557,11 +1580,19 @@ class _UserDetailHistoryScreenState extends State<UserDetailHistoryScreen> {
   }
 
   Future<void> _navigateToRating(BuildContext context, Order order) async {
+    // Use driver's userId (not driverId) for review submission
+    // The server validates that toUserId matches the driver's userId
+    final driverUserId = order.driver?.userId;
+    if (driverUserId == null) {
+      context.showMyToast(context.l10n.error_generic, type: ToastType.failed);
+      return;
+    }
+
     final result = await context.pushNamed(
       Routes.userRating.name,
       extra: {
         'orderId': order.id,
-        'driverId': order.driverId!,
+        'driverId': driverUserId,
         'driverName': order.driver?.user?.name ?? context.l10n.text_driver,
       },
     );

@@ -297,30 +297,90 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
         final acceptSuccess =
             !previous.acceptOrderResult.isSuccess &&
             current.acceptOrderResult.isSuccess;
+        final acceptFailed =
+            !previous.acceptOrderResult.isFailure &&
+            current.acceptOrderResult.isFailure;
         final markArrivedSuccess =
             !previous.markArrivedResult.isSuccess &&
             current.markArrivedResult.isSuccess;
+        final markArrivedFailed =
+            !previous.markArrivedResult.isFailure &&
+            current.markArrivedResult.isFailure;
         final startTripSuccess =
             !previous.startTripResult.isSuccess &&
             current.startTripResult.isSuccess;
+        final startTripFailed =
+            !previous.startTripResult.isFailure &&
+            current.startTripResult.isFailure;
         final completeTripSuccess =
             !previous.completeTripResult.isSuccess &&
             current.completeTripResult.isSuccess;
+        final completeTripFailed =
+            !previous.completeTripResult.isFailure &&
+            current.completeTripResult.isFailure;
+        final cancelOrderFailed =
+            !previous.cancelOrderResult.isFailure &&
+            current.cancelOrderResult.isFailure;
         final orderStatusChanged = previous.orderStatus != current.orderStatus;
 
         return fetchFailed ||
             acceptSuccess ||
+            acceptFailed ||
             markArrivedSuccess ||
+            markArrivedFailed ||
             startTripSuccess ||
+            startTripFailed ||
             completeTripSuccess ||
+            completeTripFailed ||
+            cancelOrderFailed ||
             orderStatusChanged;
       },
       listener: (context, state) {
-        // Show error messages on failure transition
+        // Show error messages on failure transitions
         if (state.fetchOrderResult.isFailure) {
           context.showMyToast(
             state.fetchOrderResult.error?.message ??
                 context.l10n.an_error_occurred,
+            type: ToastType.failed,
+          );
+        }
+
+        if (state.acceptOrderResult.isFailure) {
+          context.showMyToast(
+            state.acceptOrderResult.error?.message ??
+                'Failed to accept order. Please try again.',
+            type: ToastType.failed,
+          );
+        }
+
+        if (state.markArrivedResult.isFailure) {
+          context.showMyToast(
+            state.markArrivedResult.error?.message ??
+                'Failed to update status. Please try again.',
+            type: ToastType.failed,
+          );
+        }
+
+        if (state.startTripResult.isFailure) {
+          context.showMyToast(
+            state.startTripResult.error?.message ??
+                'Failed to start trip. Please try again.',
+            type: ToastType.failed,
+          );
+        }
+
+        if (state.completeTripResult.isFailure) {
+          context.showMyToast(
+            state.completeTripResult.error?.message ??
+                'Failed to complete trip. Please try again.',
+            type: ToastType.failed,
+          );
+        }
+
+        if (state.cancelOrderResult.isFailure) {
+          context.showMyToast(
+            state.cancelOrderResult.error?.message ??
+                'Failed to cancel order. Please try again.',
             type: ToastType.failed,
           );
         }

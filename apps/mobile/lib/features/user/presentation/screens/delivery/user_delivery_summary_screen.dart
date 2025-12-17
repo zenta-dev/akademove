@@ -24,23 +24,47 @@ class _UserDeliverySummaryScreenState extends State<UserDeliverySummaryScreen> {
   @override
   void initState() {
     super.initState();
-    // Load eligible coupons when screen loads
+    // Load eligible coupons when screen loads (if estimate is already available)
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final orderState = context.read<UserOrderCubit>().state;
-      final totalAmount =
-          orderState.estimateOrder.value?.summary.totalCost ?? 0;
-      if (totalAmount > 0) {
-        context.read<UserCouponCubit>().loadEligibleCoupons(
-          serviceType: OrderType.DELIVERY,
-          totalAmount: totalAmount,
-        );
-      }
+      _loadEligibleCouponsIfReady();
     });
+  }
+
+  /// Load eligible coupons if the estimate is ready
+  void _loadEligibleCouponsIfReady() {
+    final orderState = context.read<UserOrderCubit>().state;
+    final totalAmount = orderState.estimateOrder.value?.summary.totalCost ?? 0;
+    if (totalAmount > 0) {
+      context.read<UserCouponCubit>().loadEligibleCoupons(
+        serviceType: OrderType.DELIVERY,
+        totalAmount: totalAmount,
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<UserOrderCubit, UserOrderState>(
+    return BlocConsumer<UserOrderCubit, UserOrderState>(
+      listenWhen: (previous, current) {
+        // Listen when estimate changes from loading/null to success with data
+        final hadNoEstimate = previous.estimateOrder.value == null;
+        final hasEstimate = current.estimateOrder.value != null;
+        return hadNoEstimate && hasEstimate;
+      },
+      listener: (context, state) {
+        // Load eligible coupons when estimate becomes available
+        final couponState = context.read<UserCouponCubit>().state;
+        if (couponState.eligibleCoupons.isIdle &&
+            state.estimateOrder.value != null) {
+          final totalAmount = state.estimateOrder.value?.summary.totalCost ?? 0;
+          if (totalAmount > 0) {
+            context.read<UserCouponCubit>().loadEligibleCoupons(
+              serviceType: OrderType.DELIVERY,
+              totalAmount: totalAmount,
+            );
+          }
+        }
+      },
       builder: (context, state) {
         final estimate = state.estimateOrder.value;
         return Scaffold(

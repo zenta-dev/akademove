@@ -140,7 +140,7 @@ void main() {
       // TODO
     });
 
-    // num scheduledOrderMatchingLeadTimeMinutes (default value: 15)
+    // num scheduledOrderMatchingLeadTimeMinutes (default value: 5)
     test(
       'to test the property `scheduledOrderMatchingLeadTimeMinutes`',
       () async {

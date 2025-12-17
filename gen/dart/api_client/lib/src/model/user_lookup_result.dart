@@ -47,7 +47,10 @@ class UserLookupResult {
 
   @override
   int get hashCode =>
-      id.hashCode + name.hashCode + phone.hashCode + image.hashCode;
+      id.hashCode +
+      name.hashCode +
+      phone.hashCode +
+      (image == null ? 0 : image.hashCode);
 
   factory UserLookupResult.fromJson(Map<String, dynamic> json) =>
       _$UserLookupResultFromJson(json);

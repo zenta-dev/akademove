@@ -32,6 +32,12 @@ void main() {
       // TODO
     });
 
+    // Reference to merchant menu category
+    // String categoryId
+    test('to test the property `categoryId`', () async {
+      // TODO
+    });
+
     // num price
     test('to test the property `price`', () async {
       // TODO

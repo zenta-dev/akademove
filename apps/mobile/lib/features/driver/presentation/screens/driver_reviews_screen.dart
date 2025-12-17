@@ -180,7 +180,12 @@ class _ReviewCard extends StatelessWidget {
               ],
             ),
             if (review.comment?.isNotEmpty == true)
-              Text(review.comment ?? '', style: context.typography.small),
+              Text(
+                review.comment ?? '',
+                style: context.typography.small,
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis,
+              ),
             Row(
               children: [
                 Icon(

@@ -54,6 +54,7 @@ export const CouponHandler = priv.router({
 	getEligibleCoupons: priv.getEligibleCoupons.handler(
 		async ({ context, input: { body } }) => {
 			const { serviceType, totalAmount, merchantId } = trimObjectValues(body);
+
 			const result = await context.repo.coupon.getEligibleCoupons({
 				serviceType,
 				totalAmount,

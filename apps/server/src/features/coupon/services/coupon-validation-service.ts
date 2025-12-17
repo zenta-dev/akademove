@@ -290,10 +290,31 @@ export class CouponValidationService {
 				getUserOrderCount,
 			} = params;
 
+			logger.debug(
+				{
+					couponCode: coupon.code,
+					couponId: coupon.id,
+					orderAmount,
+					serviceType,
+					merchantId,
+					couponServiceTypes: coupon.serviceTypes,
+					couponMinOrderAmount: coupon.rules?.general?.minOrderAmount,
+				},
+				"[CouponValidationService] Starting eligibility checks",
+			);
+
 			// Check discount type
 			const discountTypeCheck =
 				CouponValidationService.validateDiscountType(coupon);
 			if (!discountTypeCheck.valid) {
+				logger.debug(
+					{
+						couponCode: coupon.code,
+						check: "discountType",
+						reason: discountTypeCheck.reason,
+					},
+					"[CouponValidationService] Check failed",
+				);
 				return discountTypeCheck;
 			}
 
@@ -303,6 +324,16 @@ export class CouponValidationService {
 				serviceType,
 			);
 			if (!serviceTypeCheck.valid) {
+				logger.debug(
+					{
+						couponCode: coupon.code,
+						check: "serviceType",
+						reason: serviceTypeCheck.reason,
+						couponServiceTypes: coupon.serviceTypes,
+						requestedServiceType: serviceType,
+					},
+					"[CouponValidationService] Check failed",
+				);
 				return serviceTypeCheck;
 			}
 
@@ -312,6 +343,14 @@ export class CouponValidationService {
 				merchantId,
 			);
 			if (!merchantCheck.valid) {
+				logger.debug(
+					{
+						couponCode: coupon.code,
+						check: "merchant",
+						reason: merchantCheck.reason,
+					},
+					"[CouponValidationService] Check failed",
+				);
 				return merchantCheck;
 			}
 
@@ -321,6 +360,16 @@ export class CouponValidationService {
 				orderAmount,
 			);
 			if (!minOrderCheck.valid) {
+				logger.debug(
+					{
+						couponCode: coupon.code,
+						check: "minOrderAmount",
+						reason: minOrderCheck.reason,
+						orderAmount,
+						minOrderAmount: coupon.rules?.general?.minOrderAmount,
+					},
+					"[CouponValidationService] Check failed",
+				);
 				return minOrderCheck;
 			}
 
@@ -332,6 +381,16 @@ export class CouponValidationService {
 					userUsageCount,
 				);
 			if (!userUsageCheck.valid) {
+				logger.debug(
+					{
+						couponCode: coupon.code,
+						check: "userUsageLimit",
+						reason: userUsageCheck.reason,
+						userUsageCount,
+						perUserLimit: coupon.rules?.user?.perUserLimit,
+					},
+					"[CouponValidationService] Check failed",
+				);
 				return userUsageCheck;
 			}
 
@@ -342,8 +401,23 @@ export class CouponValidationService {
 				userOrderCount,
 			);
 			if (!newUserCheck.valid) {
+				logger.debug(
+					{
+						couponCode: coupon.code,
+						check: "newUserOnly",
+						reason: newUserCheck.reason,
+						userOrderCount,
+						newUserOnly: coupon.rules?.user?.newUserOnly,
+					},
+					"[CouponValidationService] Check failed",
+				);
 				return newUserCheck;
 			}
+
+			logger.debug(
+				{ couponCode: coupon.code, couponId: coupon.id },
+				"[CouponValidationService] All eligibility checks passed",
+			);
 
 			return { valid: true };
 		} catch (error) {

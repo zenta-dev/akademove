@@ -20,7 +20,9 @@ class UserCouponSelectorWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<UserCouponCubit, UserCouponState>(
       builder: (context, state) {
-        if (state.eligibleCoupons.isLoading) {
+        // Show loading indicator for both idle and loading states
+        // Idle state means loadEligibleCoupons hasn't completed yet
+        if (state.eligibleCoupons.isIdle || state.eligibleCoupons.isLoading) {
           return const Center(child: CircularProgressIndicator());
         }
 

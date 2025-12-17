@@ -319,11 +319,46 @@ class DriverOrderCubit extends BaseCubit<DriverOrderState> {
         '[DriverOrderCubit] - Cannot complete trip: '
         'orderId=$orderId, driverId=$driverId',
       );
+      emit(
+        state.copyWith(
+          completeTripResult: const OperationResult.failed(
+            UnknownError('Order or driver ID is missing. Please try again.'),
+          ),
+        ),
+      );
       return;
     }
 
     try {
       emit(state.copyWith(completeTripResult: const OperationResult.loading()));
+
+      // Check WebSocket connection first
+      if (!_webSocketService.isConnected(orderId)) {
+        logger.w(
+          '[DriverOrderCubit] - WebSocket not connected for order: $orderId. '
+          'Attempting to reconnect...',
+        );
+        // Try to reconnect WebSocket before proceeding
+        await _setupOrderWebSocket(orderId);
+        // Give it a moment to connect
+        await Future<void>.delayed(const Duration(milliseconds: 500));
+
+        if (!_webSocketService.isConnected(orderId)) {
+          logger.e(
+            '[DriverOrderCubit] - Failed to reconnect WebSocket for order: $orderId',
+          );
+          emit(
+            state.copyWith(
+              completeTripResult: const OperationResult.failed(
+                UnknownError(
+                  'Connection lost. Please check your internet and try again.',
+                ),
+              ),
+            ),
+          );
+          return;
+        }
+      }
 
       // Get current location for the DONE payload
       final permission = await Geolocator.checkPermission();
@@ -332,8 +367,10 @@ class DriverOrderCubit extends BaseCubit<DriverOrderState> {
         logger.w('[DriverOrderCubit] - Location permission denied');
         emit(
           state.copyWith(
-            completeTripResult: OperationResult.failed(
-              const UnknownError('Location permission required'),
+            completeTripResult: const OperationResult.failed(
+              UnknownError(
+                'Location permission is required to complete the trip.',
+              ),
             ),
           ),
         );
@@ -346,13 +383,7 @@ class DriverOrderCubit extends BaseCubit<DriverOrderState> {
         ),
       );
 
-      // Update status via API first
-      final res = await _orderRepository.update(
-        orderId,
-        const UpdateOrder(status: OrderStatus.COMPLETED),
-      );
-
-      // Send DONE action via WebSocket
+      // Send DONE action via WebSocket FIRST (handles financial calculations)
       final envelope = OrderEnvelope(
         f: EnvelopeSender.c,
         t: EnvelopeSender.s,
@@ -376,14 +407,39 @@ class DriverOrderCubit extends BaseCubit<DriverOrderState> {
         '[DriverOrderCubit] - Sent DONE action via WebSocket for order: $orderId',
       );
 
-      // Update local state with result
-      emit(
-        state.copyWith(
-          completeTripResult: OperationResult.success(res.data),
-          currentOrder: res.data,
-          orderStatus: res.data.status,
-        ),
-      );
+      // Small delay to allow WebSocket handler to process
+      await Future<void>.delayed(const Duration(milliseconds: 300));
+
+      // Fetch the updated order to get the latest status and financial data
+      final res = await _orderRepository.get(orderId);
+
+      // Verify the order was actually completed
+      if (res.data.status != OrderStatus.COMPLETED) {
+        logger.w(
+          '[DriverOrderCubit] - Order status is ${res.data.status} after completion attempt',
+        );
+        // Fallback: try to update via API if WebSocket didn't work
+        final updateRes = await _orderRepository.update(
+          orderId,
+          const UpdateOrder(status: OrderStatus.COMPLETED),
+        );
+        emit(
+          state.copyWith(
+            completeTripResult: OperationResult.success(updateRes.data),
+            currentOrder: updateRes.data,
+            orderStatus: updateRes.data.status,
+          ),
+        );
+      } else {
+        // Update local state with result
+        emit(
+          state.copyWith(
+            completeTripResult: OperationResult.success(res.data),
+            currentOrder: res.data,
+            orderStatus: res.data.status,
+          ),
+        );
+      }
 
       _stopLocationTracking();
       // Don't teardown WebSocket immediately - wait for COMPLETED confirmation
@@ -691,6 +747,33 @@ class DriverOrderCubit extends BaseCubit<DriverOrderState> {
       void handleMessage(Map<String, dynamic> json) {
         // Handle server-pushed events via OrderEnvelope
         try {
+          // Check for ORDER_ERROR event first (before parsing enum)
+          // This handles the case where the generated client doesn't have ORDER_ERROR yet
+          final eventStr = json['e'] as String?;
+          if (eventStr == 'ORDER_ERROR') {
+            final payload = json['p'] as Map<String, dynamic>?;
+            final error = payload?['error'] as Map<String, dynamic>?;
+            final errorMessage =
+                error?['message'] as String? ?? 'An unknown error occurred';
+            final errorCode = error?['code'] as String? ?? 'UNKNOWN_ERROR';
+
+            logger.e(
+              '[DriverOrderCubit] - Order error received: $errorCode - $errorMessage',
+            );
+
+            // Emit error state for completion if the error is related to completion
+            if (errorCode == 'COMPLETION_FAILED') {
+              emit(
+                state.copyWith(
+                  completeTripResult: OperationResult.failed(
+                    UnknownError(errorMessage),
+                  ),
+                ),
+              );
+            }
+            return;
+          }
+
           final envelope = OrderEnvelope.fromJson(json);
           _handleOrderEnvelopeEvent(envelope);
         } catch (e, st) {

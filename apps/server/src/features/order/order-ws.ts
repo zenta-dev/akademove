@@ -363,13 +363,29 @@ export class OrderRoom extends BaseDurableObject {
 		const done = data.p.done;
 		if (!done) {
 			logger.warn(data, "Invalid order done payload");
+			// Send error back to client
+			this.#sendErrorToClient(
+				ws,
+				"COMPLETION_FAILED",
+				"Invalid order completion payload",
+			);
 			return;
 		}
 
 		const opts = { tx };
 
 		// Get order details to calculate commission
-		const order = await this.#repo.order.get(done.orderId, opts);
+		let order: Order;
+		try {
+			order = await this.#repo.order.get(done.orderId, opts);
+		} catch (error) {
+			logger.error(
+				{ orderId: done.orderId, error },
+				"[OrderRoom] Order not found for completion",
+			);
+			this.#sendErrorToClient(ws, "COMPLETION_FAILED", "Order not found");
+			return;
+		}
 
 		let key = "";
 		if (order.type === "RIDE") {
@@ -405,6 +421,12 @@ export class OrderRoom extends BaseDurableObject {
 			logger.error(
 				{ orderId: order.id, driverId: order.driverId },
 				"[OrderRoom] Driver not found or missing userId for order completion",
+			);
+			// Send error back to client instead of silently returning
+			this.#sendErrorToClient(
+				ws,
+				"COMPLETION_FAILED",
+				"Driver account not properly configured. Please contact support.",
 			);
 			return;
 		}
@@ -805,6 +827,36 @@ export class OrderRoom extends BaseDurableObject {
 			logger.warn(
 				{ error, orderId: order.id, merchantId, event },
 				"[OrderRoom] Failed to notify MerchantRoom - non-critical",
+			);
+		}
+	}
+
+	/**
+	 * Send error message back to client via WebSocket
+	 * This ensures the client knows when an operation failed instead of silently failing
+	 */
+	#sendErrorToClient(ws: WebSocket, errorCode: string, message: string): void {
+		try {
+			const errorPayload: OrderEnvelope = {
+				e: "ORDER_ERROR",
+				f: "s",
+				t: "c",
+				p: {
+					error: {
+						code: errorCode,
+						message,
+					},
+				},
+			};
+			ws.send(JSON.stringify(errorPayload));
+			logger.debug(
+				{ errorCode, message },
+				"[OrderRoom] Sent error message to client",
+			);
+		} catch (error) {
+			logger.warn(
+				{ error, errorCode, message },
+				"[OrderRoom] Failed to send error message to client",
 			);
 		}
 	}

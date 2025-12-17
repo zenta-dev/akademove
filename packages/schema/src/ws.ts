@@ -54,6 +54,7 @@ export const OrderEnvelopeEventSchema = z.enum([
 	"ORDER_COMPLETED", // Order completed successfully
 	"ORDER_NO_SHOW", // User was not present at pickup
 	"ORDER_STATUS_CHANGED", // Generic order status change
+	"ORDER_ERROR", // Error occurred during order operation
 
 	// Driver events
 	"DRIVER_ACCEPTED", // Driver accepted the order
@@ -144,6 +145,13 @@ export const OrderEnvelopePayloadSchema = z.object({
 			cancelledDriverId: z.uuid(),
 			excludedDriverCount: z.number(),
 			reason: z.string().optional(),
+		})
+		.optional(),
+	// Error payload for ORDER_ERROR event
+	error: z
+		.object({
+			code: z.string(),
+			message: z.string(),
 		})
 		.optional(),
 	// Data sync payload - client sends last known version hash/timestamp

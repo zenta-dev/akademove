@@ -56,7 +56,32 @@ void main() {
       // TODO
     });
 
-    //Future<MerchantMenuCreate200Response> merchantMenuCreate(String merchantId, String name, num price, int stock, { String category, MultipartFile image }) async
+    //Future<MerchantMenuCategoryCreate200Response> merchantMenuCategoryCreate(String merchantId, MerchantMenuCategoryCreateRequest merchantMenuCategoryCreateRequest) async
+    test('test merchantMenuCategoryCreate', () async {
+      // TODO
+    });
+
+    //Future<MerchantMenuCategoryCreate200Response> merchantMenuCategoryGet(String merchantId, String id) async
+    test('test merchantMenuCategoryGet', () async {
+      // TODO
+    });
+
+    //Future<MerchantMenuCategoryList200Response> merchantMenuCategoryList(String merchantId, { String cursor, Object limit, String direction, Object page, String query, String sortBy, PaginationOrder order, PaginationMode mode }) async
+    test('test merchantMenuCategoryList', () async {
+      // TODO
+    });
+
+    //Future<BadgeRemove200Response> merchantMenuCategoryRemove(String merchantId, String id) async
+    test('test merchantMenuCategoryRemove', () async {
+      // TODO
+    });
+
+    //Future<MerchantMenuCategoryCreate200Response> merchantMenuCategoryUpdate(String merchantId, String id, MerchantMenuCategoryUpdateRequest merchantMenuCategoryUpdateRequest) async
+    test('test merchantMenuCategoryUpdate', () async {
+      // TODO
+    });
+
+    //Future<MerchantMenuCreate200Response> merchantMenuCreate(String merchantId, String name, num price, int stock, { String category, String categoryId, MultipartFile image }) async
     test('test merchantMenuCreate', () async {
       // TODO
     });
@@ -76,7 +101,7 @@ void main() {
       // TODO
     });
 
-    //Future<MerchantMenuCreate200Response> merchantMenuUpdate(String merchantId, String id, { String name, String category, num price, int stock, MultipartFile image }) async
+    //Future<MerchantMenuCreate200Response> merchantMenuUpdate(String merchantId, String id, { String name, String category, String categoryId, num price, int stock, MultipartFile image }) async
     test('test merchantMenuUpdate', () async {
       // TODO
     });

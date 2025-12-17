@@ -91,7 +91,7 @@ class OrderItemItem {
       id.hashCode +
       merchantId.hashCode +
       name.hashCode +
-      image.hashCode +
+      (image == null ? 0 : image.hashCode) +
       category.hashCode +
       categoryId.hashCode +
       price.hashCode +

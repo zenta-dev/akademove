@@ -94,20 +94,71 @@ class _DriverHistoryDetailScreenState extends State<DriverHistoryDetailScreen> {
       ),
     };
 
-    // Simple straight line for historical view
-    final newPolylines = <Polyline>{
-      Polyline(
-        polylineId: const PolylineId('route'),
-        points: [LatLng(pickupLat, pickupLng), LatLng(dropoffLat, dropoffLng)],
-        color: context.colorScheme.primary,
-        width: 4,
-      ),
-    };
-
     setState(() {
       _markers = newMarkers;
-      _polylines = newPolylines;
     });
+
+    // Fetch actual route polyline from MapService
+    try {
+      final routePoints = await sl<MapService>().getRoutes(
+        order.pickupLocation,
+        order.dropoffLocation,
+      );
+
+      if (!mounted) return;
+
+      final newPolylines = <Polyline>{};
+
+      if (routePoints.isNotEmpty) {
+        // Use actual route polyline
+        newPolylines.add(
+          Polyline(
+            polylineId: const PolylineId('route'),
+            points: routePoints
+                .map((c) => LatLng(c.y.toDouble(), c.x.toDouble()))
+                .toList(),
+            color: context.colorScheme.primary,
+            width: 4,
+          ),
+        );
+      } else {
+        // Fallback to straight line if route fetch fails
+        newPolylines.add(
+          Polyline(
+            polylineId: const PolylineId('route'),
+            points: [
+              LatLng(pickupLat, pickupLng),
+              LatLng(dropoffLat, dropoffLng),
+            ],
+            color: context.colorScheme.primary,
+            width: 4,
+          ),
+        );
+      }
+
+      setState(() {
+        _polylines = newPolylines;
+      });
+    } catch (e) {
+      // Fallback to straight line on error
+      if (!mounted) return;
+
+      final newPolylines = <Polyline>{
+        Polyline(
+          polylineId: const PolylineId('route'),
+          points: [
+            LatLng(pickupLat, pickupLng),
+            LatLng(dropoffLat, dropoffLng),
+          ],
+          color: context.colorScheme.primary,
+          width: 4,
+        ),
+      };
+
+      setState(() {
+        _polylines = newPolylines;
+      });
+    }
 
     // Fit bounds after map is ready
     _fitMapBounds();
@@ -543,12 +594,15 @@ class _DriverHistoryDetailScreenState extends State<DriverHistoryDetailScreen> {
                   color: context.colorScheme.primary,
                 ),
                 Gap(8.w),
-                Text(
-                  context.l10n.text_already_reviewed,
-                  style: context.typography.h4.copyWith(
-                    fontSize: 16.sp,
-                    fontWeight: FontWeight.w600,
-                    color: context.colorScheme.primary,
+                Expanded(
+                  child: Text(
+                    context.l10n.text_already_reviewed,
+                    style: context.typography.h4.copyWith(
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.w600,
+                      color: context.colorScheme.primary,
+                    ),
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
               ],
@@ -603,15 +657,19 @@ class _DriverHistoryDetailScreenState extends State<DriverHistoryDetailScreen> {
   Widget _buildExistingRatingStars(int score) {
     return Row(
       children: [
-        Text(
-          context.l10n.text_your_rating,
-          style: context.typography.small.copyWith(
-            fontSize: 14.sp,
-            color: context.colorScheme.mutedForeground,
+        Flexible(
+          child: Text(
+            context.l10n.text_your_rating,
+            style: context.typography.small.copyWith(
+              fontSize: 14.sp,
+              color: context.colorScheme.mutedForeground,
+            ),
+            overflow: TextOverflow.ellipsis,
           ),
         ),
         Gap(12.w),
         Row(
+          mainAxisSize: MainAxisSize.min,
           children: List.generate(5, (index) {
             final starValue = index + 1;
             return Padding(
@@ -628,12 +686,15 @@ class _DriverHistoryDetailScreenState extends State<DriverHistoryDetailScreen> {
           }),
         ),
         Gap(8.w),
-        Text(
-          _getRatingLabel(score),
-          style: context.typography.small.copyWith(
-            fontSize: 13.sp,
-            fontWeight: FontWeight.w500,
-            color: context.colorScheme.primary,
+        Flexible(
+          child: Text(
+            _getRatingLabel(score),
+            style: context.typography.small.copyWith(
+              fontSize: 13.sp,
+              fontWeight: FontWeight.w500,
+              color: context.colorScheme.primary,
+            ),
+            overflow: TextOverflow.ellipsis,
           ),
         ),
       ],

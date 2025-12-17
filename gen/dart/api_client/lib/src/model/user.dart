@@ -116,7 +116,7 @@ class User {
       name.hashCode +
       email.hashCode +
       emailVerified.hashCode +
-      image.hashCode +
+      (image == null ? 0 : image.hashCode) +
       role.hashCode +
       banned.hashCode +
       banReason.hashCode +

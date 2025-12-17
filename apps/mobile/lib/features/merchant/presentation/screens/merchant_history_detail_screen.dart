@@ -1366,12 +1366,15 @@ class _MerchantHistoryDetailScreenState
                   color: context.colorScheme.primary,
                 ),
                 Gap(8.w),
-                Text(
-                  context.l10n.text_already_reviewed,
-                  style: context.typography.small.copyWith(
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w500,
-                    color: context.colorScheme.primary,
+                Expanded(
+                  child: Text(
+                    context.l10n.text_already_reviewed,
+                    style: context.typography.small.copyWith(
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w500,
+                      color: context.colorScheme.primary,
+                    ),
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
               ],
@@ -1426,15 +1429,19 @@ class _MerchantHistoryDetailScreenState
   Widget _buildExistingRatingStars(int score) {
     return Row(
       children: [
-        Text(
-          context.l10n.text_your_rating,
-          style: context.typography.small.copyWith(
-            fontSize: 14.sp,
-            color: context.colorScheme.mutedForeground,
+        Flexible(
+          child: Text(
+            context.l10n.text_your_rating,
+            style: context.typography.small.copyWith(
+              fontSize: 14.sp,
+              color: context.colorScheme.mutedForeground,
+            ),
+            overflow: TextOverflow.ellipsis,
           ),
         ),
         Gap(12.w),
         Row(
+          mainAxisSize: MainAxisSize.min,
           children: List.generate(5, (index) {
             final starValue = index + 1;
             return Padding(
@@ -1451,12 +1458,15 @@ class _MerchantHistoryDetailScreenState
           }),
         ),
         Gap(8.w),
-        Text(
-          _getRatingLabel(score),
-          style: context.typography.small.copyWith(
-            fontSize: 13.sp,
-            fontWeight: FontWeight.w500,
-            color: context.colorScheme.primary,
+        Flexible(
+          child: Text(
+            _getRatingLabel(score),
+            style: context.typography.small.copyWith(
+              fontSize: 13.sp,
+              fontWeight: FontWeight.w500,
+              color: context.colorScheme.primary,
+            ),
+            overflow: TextOverflow.ellipsis,
           ),
         ),
       ],
