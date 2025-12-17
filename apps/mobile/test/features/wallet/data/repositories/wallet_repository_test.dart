@@ -254,3 +254,7 @@
 
 // // Mock API class
 // class MockWalletApi extends Mock implements WalletApi {}
+
+void main() {
+  // Tests are commented out pending implementation
+}
