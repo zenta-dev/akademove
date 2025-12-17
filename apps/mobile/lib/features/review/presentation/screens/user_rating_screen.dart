@@ -3,7 +3,6 @@ import 'package:akademove/features/features.dart';
 import 'package:api_client/api_client.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 import 'package:akademove/l10n/l10n.dart';
 
@@ -88,8 +87,9 @@ class _UserRatingScreenState extends State<UserRatingScreen> {
               context.l10n.text_thank_you_for_review,
               type: ToastType.success,
             );
-            // Pop back to previous screen
-            context.pop(true);
+            // Clear active order and navigate back to home screen
+            context.read<UserOrderCubit>().clearActiveOrder();
+            context.popUntilRoot();
           } else if (state.submittedReview.isFailure) {
             context.showMyToast(
               state.submittedReview.error?.message ??
