@@ -57,6 +57,11 @@ void main() {
       // TODO
     });
 
+    // OrderEnvelopePayloadError error
+    test('to test the property `error`', () async {
+      // TODO
+    });
+
     // OrderEnvelopePayloadSyncRequest syncRequest
     test('to test the property `syncRequest`', () async {
       // TODO

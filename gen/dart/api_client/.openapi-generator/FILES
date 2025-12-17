@@ -359,6 +359,7 @@ doc/OrderEnvelopePayloadChatUnreadCount.md
 doc/OrderEnvelopePayloadDetail.md
 doc/OrderEnvelopePayloadDone.md
 doc/OrderEnvelopePayloadDriverUpdateLocation.md
+doc/OrderEnvelopePayloadError.md
 doc/OrderEnvelopePayloadMerchantAction.md
 doc/OrderEnvelopePayloadMessage.md
 doc/OrderEnvelopePayloadNoShow.md
@@ -909,6 +910,7 @@ lib/src/model/order_envelope_payload_chat_unread_count.dart
 lib/src/model/order_envelope_payload_detail.dart
 lib/src/model/order_envelope_payload_done.dart
 lib/src/model/order_envelope_payload_driver_update_location.dart
+lib/src/model/order_envelope_payload_error.dart
 lib/src/model/order_envelope_payload_merchant_action.dart
 lib/src/model/order_envelope_payload_message.dart
 lib/src/model/order_envelope_payload_no_show.dart
@@ -1435,6 +1437,7 @@ test/order_envelope_payload_chat_unread_count_test.dart
 test/order_envelope_payload_detail_test.dart
 test/order_envelope_payload_done_test.dart
 test/order_envelope_payload_driver_update_location_test.dart
+test/order_envelope_payload_error_test.dart
 test/order_envelope_payload_merchant_action_test.dart
 test/order_envelope_payload_message_test.dart
 test/order_envelope_payload_no_show_test.dart

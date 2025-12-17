@@ -372,6 +372,7 @@ export 'package:api_client/src/model/order_envelope_payload_chat_unread_count.da
 export 'package:api_client/src/model/order_envelope_payload_detail.dart';
 export 'package:api_client/src/model/order_envelope_payload_done.dart';
 export 'package:api_client/src/model/order_envelope_payload_driver_update_location.dart';
+export 'package:api_client/src/model/order_envelope_payload_error.dart';
 export 'package:api_client/src/model/order_envelope_payload_merchant_action.dart';
 export 'package:api_client/src/model/order_envelope_payload_message.dart';
 export 'package:api_client/src/model/order_envelope_payload_no_show.dart';

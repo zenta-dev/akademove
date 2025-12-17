@@ -363,7 +363,7 @@ export class ScheduledOrderRepository extends OrderBaseRepository {
 					columns: { name: true, image: true, gender: true, rating: true },
 				},
 				driver: {
-					columns: {},
+					columns: { userId: true },
 					with: { user: { columns: { name: true, image: true } } },
 				},
 				merchant: { columns: { name: true } },

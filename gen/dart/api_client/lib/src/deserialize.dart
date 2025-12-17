@@ -285,6 +285,7 @@ import 'package:api_client/src/model/order_envelope_payload_chat_unread_count.da
 import 'package:api_client/src/model/order_envelope_payload_detail.dart';
 import 'package:api_client/src/model/order_envelope_payload_done.dart';
 import 'package:api_client/src/model/order_envelope_payload_driver_update_location.dart';
+import 'package:api_client/src/model/order_envelope_payload_error.dart';
 import 'package:api_client/src/model/order_envelope_payload_merchant_action.dart';
 import 'package:api_client/src/model/order_envelope_payload_message.dart';
 import 'package:api_client/src/model/order_envelope_payload_no_show.dart';
@@ -1547,6 +1548,9 @@ ReturnType deserialize<ReturnType, BaseType>(
       return OrderEnvelopePayloadDriverUpdateLocation.fromJson(
             value as Map<String, dynamic>,
           )
+          as ReturnType;
+    case 'OrderEnvelopePayloadError':
+      return OrderEnvelopePayloadError.fromJson(value as Map<String, dynamic>)
           as ReturnType;
     case 'OrderEnvelopePayloadMerchantAction':
       return OrderEnvelopePayloadMerchantAction.fromJson(

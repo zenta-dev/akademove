@@ -688,6 +688,7 @@ Class | Method | HTTP request | Description
  - [OrderEnvelopePayloadDetail](doc/OrderEnvelopePayloadDetail.md)
  - [OrderEnvelopePayloadDone](doc/OrderEnvelopePayloadDone.md)
  - [OrderEnvelopePayloadDriverUpdateLocation](doc/OrderEnvelopePayloadDriverUpdateLocation.md)
+ - [OrderEnvelopePayloadError](doc/OrderEnvelopePayloadError.md)
  - [OrderEnvelopePayloadMerchantAction](doc/OrderEnvelopePayloadMerchantAction.md)
  - [OrderEnvelopePayloadMessage](doc/OrderEnvelopePayloadMessage.md)
  - [OrderEnvelopePayloadNoShow](doc/OrderEnvelopePayloadNoShow.md)

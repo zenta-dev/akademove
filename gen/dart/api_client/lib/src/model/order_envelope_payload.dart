@@ -10,6 +10,7 @@ import 'package:api_client/src/model/order_envelope_payload_retry_info.dart';
 import 'package:api_client/src/model/order_envelope_payload_driver_update_location.dart';
 import 'package:api_client/src/model/order_envelope_payload_chat_unread_count.dart';
 import 'package:api_client/src/model/driver.dart';
+import 'package:api_client/src/model/order_envelope_payload_error.dart';
 import 'package:api_client/src/model/order_envelope_payload_merchant_action.dart';
 import 'package:api_client/src/model/order_envelope_payload_no_show.dart';
 import 'package:api_client/src/model/order_envelope_payload_message.dart';
@@ -38,6 +39,7 @@ class OrderEnvelopePayload {
     this.cancelReason,
     this.noShow,
     this.retryInfo,
+    this.error,
     this.syncRequest,
   });
   @JsonKey(name: r'detail', required: false, includeIfNull: false)
@@ -70,6 +72,9 @@ class OrderEnvelopePayload {
   @JsonKey(name: r'retryInfo', required: false, includeIfNull: false)
   final OrderEnvelopePayloadRetryInfo? retryInfo;
 
+  @JsonKey(name: r'error', required: false, includeIfNull: false)
+  final OrderEnvelopePayloadError? error;
+
   @JsonKey(name: r'syncRequest', required: false, includeIfNull: false)
   final OrderEnvelopePayloadSyncRequest? syncRequest;
 
@@ -87,6 +92,7 @@ class OrderEnvelopePayload {
           other.cancelReason == cancelReason &&
           other.noShow == noShow &&
           other.retryInfo == retryInfo &&
+          other.error == error &&
           other.syncRequest == syncRequest;
 
   @override
@@ -101,6 +107,7 @@ class OrderEnvelopePayload {
       cancelReason.hashCode +
       noShow.hashCode +
       retryInfo.hashCode +
+      error.hashCode +
       syncRequest.hashCode;
 
   factory OrderEnvelopePayload.fromJson(Map<String, dynamic> json) =>

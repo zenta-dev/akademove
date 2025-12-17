@@ -33,6 +33,8 @@ abstract class _$OrderEnvelopePayloadCWProxy {
 
   OrderEnvelopePayload retryInfo(OrderEnvelopePayloadRetryInfo? retryInfo);
 
+  OrderEnvelopePayload error(OrderEnvelopePayloadError? error);
+
   OrderEnvelopePayload syncRequest(
     OrderEnvelopePayloadSyncRequest? syncRequest,
   );
@@ -55,6 +57,7 @@ abstract class _$OrderEnvelopePayloadCWProxy {
     String? cancelReason,
     OrderEnvelopePayloadNoShow? noShow,
     OrderEnvelopePayloadRetryInfo? retryInfo,
+    OrderEnvelopePayloadError? error,
     OrderEnvelopePayloadSyncRequest? syncRequest,
   });
 }
@@ -110,6 +113,10 @@ class _$OrderEnvelopePayloadCWProxyImpl
       call(retryInfo: retryInfo);
 
   @override
+  OrderEnvelopePayload error(OrderEnvelopePayloadError? error) =>
+      call(error: error);
+
+  @override
   OrderEnvelopePayload syncRequest(
     OrderEnvelopePayloadSyncRequest? syncRequest,
   ) => call(syncRequest: syncRequest);
@@ -133,6 +140,7 @@ class _$OrderEnvelopePayloadCWProxyImpl
     Object? cancelReason = const $CopyWithPlaceholder(),
     Object? noShow = const $CopyWithPlaceholder(),
     Object? retryInfo = const $CopyWithPlaceholder(),
+    Object? error = const $CopyWithPlaceholder(),
     Object? syncRequest = const $CopyWithPlaceholder(),
   }) {
     return OrderEnvelopePayload(
@@ -176,6 +184,10 @@ class _$OrderEnvelopePayloadCWProxyImpl
           ? _value.retryInfo
           // ignore: cast_nullable_to_non_nullable
           : retryInfo as OrderEnvelopePayloadRetryInfo?,
+      error: error == const $CopyWithPlaceholder()
+          ? _value.error
+          // ignore: cast_nullable_to_non_nullable
+          : error as OrderEnvelopePayloadError?,
       syncRequest: syncRequest == const $CopyWithPlaceholder()
           ? _value.syncRequest
           // ignore: cast_nullable_to_non_nullable
@@ -259,6 +271,12 @@ OrderEnvelopePayload _$OrderEnvelopePayloadFromJson(
           ? null
           : OrderEnvelopePayloadRetryInfo.fromJson(v as Map<String, dynamic>),
     ),
+    error: $checkedConvert(
+      'error',
+      (v) => v == null
+          ? null
+          : OrderEnvelopePayloadError.fromJson(v as Map<String, dynamic>),
+    ),
     syncRequest: $checkedConvert(
       'syncRequest',
       (v) => v == null
@@ -282,5 +300,6 @@ Map<String, dynamic> _$OrderEnvelopePayloadToJson(
   'cancelReason': ?instance.cancelReason,
   'noShow': ?instance.noShow?.toJson(),
   'retryInfo': ?instance.retryInfo?.toJson(),
+  'error': ?instance.error?.toJson(),
   'syncRequest': ?instance.syncRequest?.toJson(),
 };
