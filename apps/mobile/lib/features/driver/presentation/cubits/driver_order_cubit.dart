@@ -512,14 +512,17 @@ class DriverOrderCubit extends BaseCubit<DriverOrderState> {
         imagePath,
       );
 
+      // Update currentOrder with the new proofOfDeliveryUrl from response
       final currentOrder = state.currentOrder;
+      final updatedOrder = currentOrder?.copyWith(proofOfDeliveryUrl: res.data);
+
       emit(
         state.copyWith(
-          uploadProofResult: currentOrder != null
-              ? OperationResult.success(currentOrder)
+          uploadProofResult: updatedOrder != null
+              ? OperationResult.success(updatedOrder)
               : const OperationResult.idle(),
-          currentOrder: currentOrder,
-          orderStatus: currentOrder?.status,
+          currentOrder: updatedOrder,
+          orderStatus: updatedOrder?.status,
         ),
       );
 
@@ -559,14 +562,19 @@ class DriverOrderCubit extends BaseCubit<DriverOrderState> {
         imagePath,
       );
 
+      // Update currentOrder with the new deliveryItemPhotoUrl from response
       final currentOrder = state.currentOrder;
+      final updatedOrder = currentOrder?.copyWith(
+        deliveryItemPhotoUrl: res.data,
+      );
+
       emit(
         state.copyWith(
-          uploadItemPhotoResult: currentOrder != null
-              ? OperationResult.success(currentOrder)
+          uploadItemPhotoResult: updatedOrder != null
+              ? OperationResult.success(updatedOrder)
               : const OperationResult.idle(),
-          currentOrder: currentOrder,
-          orderStatus: currentOrder?.status,
+          currentOrder: updatedOrder,
+          orderStatus: updatedOrder?.status,
         ),
       );
 
