@@ -1,5 +1,8 @@
 /** @jsxImportSource react */
-import { Heading, Hr, Section, Text } from "@react-email/components";
+import { Heading } from "@react-email/heading";
+import { Hr } from "@react-email/hr";
+import { Section } from "@react-email/section";
+import { Text } from "@react-email/text";
 import { BaseLayout } from "./components/base-layout";
 
 interface ContactResponseEmailProps {

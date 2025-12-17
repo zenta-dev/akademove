@@ -10,7 +10,7 @@ import type {
 	AndroidConfig,
 	ApnsConfig,
 	WebpushConfig,
-} from "firebase-admin/messaging";
+} from "@/core/services/firebase";
 import { logger } from "@/utils/logger";
 import type { QueueHandlerContext } from "../queue-handler";
 
