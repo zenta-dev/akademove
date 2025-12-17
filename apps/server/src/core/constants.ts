@@ -139,7 +139,7 @@ export const BUSINESS_CONSTANTS = Object.freeze({
 	 * does not actually delay in Cloudflare Workers due to security restrictions.
 	 * @see https://developers.cloudflare.com/workers/runtime-apis/nodejs/timers/
 	 */
-	BROADCAST_DELAY_SECONDS: 1,
+	BROADCAST_DELAY_SECONDS: 0,
 
 	// File Upload
 	MAX_FILE_SIZE_MB: 5,
