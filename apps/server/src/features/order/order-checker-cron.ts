@@ -1,5 +1,6 @@
 import type { ExecutionContext } from "@cloudflare/workers-types";
 import type { OrderStatus } from "@repo/schema/order";
+import type { MerchantEnvelope } from "@repo/schema/ws";
 import Decimal from "decimal.js";
 import { and, eq, inArray, lte } from "drizzle-orm";
 import { getManagers, getRepositories, getServices } from "@/core/factory";
@@ -264,6 +265,44 @@ export async function handleOrderCheckerCron(
 					}
 				});
 
+				// Notify merchant via WebSocket if this is a FOOD order
+				if (order.merchantId && order.type === "FOOD") {
+					await notifyMerchantRoom(
+						order.merchantId,
+						order.id,
+						"CANCELLED_BY_SYSTEM",
+						cancelReason,
+					);
+				}
+
+				// Send push notification to user about the cancellation
+				try {
+					await repo.notification.sendNotificationToUserId({
+						fromUserId: "system",
+						toUserId: order.userId,
+						title: "Order Cancelled",
+						body: cancelReason,
+						data: {
+							type: "ORDER_CANCELLED",
+							orderId: order.id,
+							reason: "TIMEOUT",
+							deeplink: `akademove://order/${order.id}`,
+						},
+						android: {
+							priority: "high",
+							notification: { clickAction: "ORDER_DETAIL" },
+						},
+						apns: {
+							payload: { aps: { category: "ORDER_DETAIL", sound: "default" } },
+						},
+					});
+				} catch (notifError) {
+					logger.warn(
+						{ error: notifError, orderId: order.id },
+						"[OrderCheckerCron] Failed to send cancellation notification to user",
+					);
+				}
+
 				logger.info(
 					{
 						orderId: order.id,
@@ -459,5 +498,56 @@ export async function handleOrderCheckerCron(
 	} catch (error) {
 		logger.error({ error }, "[OrderCheckerCron] Failed to check orders");
 		return new Response("Order checker failed", { status: 500 });
+	}
+}
+
+/**
+ * Notify MerchantRoom of order cancellation via WebSocket
+ *
+ * @param merchantId - Merchant ID to notify
+ * @param orderId - Order ID that was cancelled
+ * @param newStatus - New order status
+ * @param reason - Cancellation reason
+ */
+async function notifyMerchantRoom(
+	merchantId: string,
+	orderId: string,
+	newStatus: OrderStatus,
+	reason: string,
+): Promise<void> {
+	try {
+		const { MerchantRoom } = await import("@/features/merchant/merchant-ws");
+		const merchantStub = MerchantRoom.getRoomStubByName(merchantId);
+
+		const payload: MerchantEnvelope = {
+			e: "ORDER_CANCELLED",
+			f: "s",
+			t: "c",
+			p: {
+				orderId,
+				merchantId,
+				newStatus,
+				cancelReason: reason,
+			},
+		};
+
+		await merchantStub.fetch(
+			new Request("http://internal/broadcast", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify(payload),
+			}),
+		);
+
+		logger.info(
+			{ orderId, merchantId, newStatus },
+			"[OrderCheckerCron] Notified merchant room of order cancellation",
+		);
+	} catch (error) {
+		// Non-critical - log and continue
+		logger.warn(
+			{ error, orderId, merchantId },
+			"[OrderCheckerCron] Failed to notify merchant room - non-critical",
+		);
 	}
 }

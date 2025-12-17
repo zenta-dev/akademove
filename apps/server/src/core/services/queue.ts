@@ -101,6 +101,12 @@ export const OrderQueueService = {
 	 * Scheduled when matching starts. If not cancelled (by driver acceptance),
 	 * this job will execute after the configured timeout and cancel the order.
 	 *
+	 * Note: The idempotency key includes a timestamp to ensure each timeout job
+	 * is unique. This is important because:
+	 * 1. When driver cancels, a new timeout job is enqueued for re-matching
+	 * 2. The old timeout job might still be pending in the queue
+	 * 3. Using unique keys ensures both jobs can coexist without conflicts
+	 *
 	 * @param payload - Order details for timeout handling
 	 * @param delaySeconds - Delay before timeout (default: from config)
 	 */
@@ -108,7 +114,8 @@ export const OrderQueueService = {
 		payload: OrderTimeoutJob["payload"],
 		delaySeconds: number,
 	): Promise<void> {
-		const idempotencyKey = `timeout-${payload.orderId}`;
+		// Include timestamp in idempotency key to ensure uniqueness across re-matching attempts
+		const idempotencyKey = `timeout-${payload.orderId}-${Date.now()}`;
 
 		const message: OrderTimeoutJob = {
 			type: "ORDER_TIMEOUT",
@@ -124,6 +131,7 @@ export const OrderQueueService = {
 				orderId: payload.orderId,
 				userId: payload.userId,
 				delaySeconds,
+				idempotencyKey,
 			},
 			"[QueueService] Enqueueing order timeout job",
 		);

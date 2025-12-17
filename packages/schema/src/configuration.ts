@@ -174,6 +174,13 @@ export const BusinessConfigurationSchema = z.object({
 	 */
 	driverRebroadcastRadiusMultiplier: z.coerce.number().positive().default(1.5),
 
+	/**
+	 * Maximum number of rebroadcast attempts before giving up (default: 5)
+	 * This prevents spamming drivers with the same order too many times
+	 * After max attempts, the order will wait for the timeout handler to cancel it
+	 */
+	driverRebroadcastMaxAttempts: z.coerce.number().int().positive().default(5),
+
 	// ========================================================================
 	// Commission Configuration
 	// ========================================================================

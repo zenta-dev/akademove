@@ -260,11 +260,13 @@ export class BusinessConfigurationService {
 	): Promise<{
 		intervalMinutes: number;
 		radiusMultiplier: number;
+		maxAttempts: number;
 	}> {
 		const config = await BusinessConfigurationService.getConfig(db, kv);
 		return {
 			intervalMinutes: config.driverRebroadcastIntervalMinutes,
 			radiusMultiplier: config.driverRebroadcastRadiusMultiplier,
+			maxAttempts: config.driverRebroadcastMaxAttempts,
 		};
 	}
 
