@@ -484,7 +484,7 @@ class _LocationCardWidget extends StatelessWidget {
           subtitle: SizedBox(
             width: double.infinity,
             child: Column(
-              crossAxisAlignment: .start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   place.vicinity,

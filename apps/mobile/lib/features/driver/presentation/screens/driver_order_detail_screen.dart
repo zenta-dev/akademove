@@ -1682,9 +1682,6 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
       return Column(
         spacing: 12.h,
         children: [
-          // Show photo upload button for DELIVERY orders
-          if (order.type == OrderType.DELIVERY)
-            _buildDeliveryItemPhotoButton(order),
           SizedBox(
             width: double.infinity,
             child: ActionButton.primary(
@@ -1715,9 +1712,6 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
       return Column(
         spacing: 12.h,
         children: [
-          // Show photo upload button for DELIVERY orders
-          if (order.type == OrderType.DELIVERY)
-            _buildDeliveryItemPhotoButton(order),
           SizedBox(
             width: double.infinity,
             child: ActionButton.primary(
@@ -1744,17 +1738,35 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
     if (status == OrderStatus.IN_TRIP) {
       final isCompletingTrip = state.completeTripResult.isLoading;
 
-      return SizedBox(
-        width: double.infinity,
-        child: ActionButton.primary(
-          isLoading: isCompletingTrip,
-          onPressed: () {
-            context.read<DriverOrderCubit>().completeTrip();
-            // Refresh stats after trip completion
-            context.read<DriverProfileCubit>().refreshStats();
-          },
-          child: Text(context.l10n.complete_trip),
-        ),
+      return Column(
+        spacing: 12.h,
+        children: [
+          // Show proof of delivery upload button for DELIVERY orders
+          if (order.type == OrderType.DELIVERY)
+            _buildProofOfDeliveryButton(order),
+          SizedBox(
+            width: double.infinity,
+            child: ActionButton.primary(
+              isLoading: isCompletingTrip,
+              onPressed: () {
+                // For DELIVERY orders, require proof of delivery before completing
+                if (order.type == OrderType.DELIVERY &&
+                    (order.proofOfDeliveryUrl == null ||
+                        order.proofOfDeliveryUrl!.isEmpty)) {
+                  context.showMyToast(
+                    'Please upload proof of delivery before completing',
+                    type: ToastType.failed,
+                  );
+                  return;
+                }
+                context.read<DriverOrderCubit>().completeTrip();
+                // Refresh stats after trip completion
+                context.read<DriverProfileCubit>().refreshStats();
+              },
+              child: Text(context.l10n.complete_trip),
+            ),
+          ),
+        ],
       );
     }
 
@@ -1804,37 +1816,41 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
     );
   }
 
-  /// Build the delivery item photo upload button for DELIVERY orders
-  Widget _buildDeliveryItemPhotoButton(Order order) {
-    final hasPhoto =
-        order.deliveryItemPhotoUrl != null &&
-        order.deliveryItemPhotoUrl!.isNotEmpty;
+  /// Build the proof of delivery upload button for DELIVERY orders
+  Widget _buildProofOfDeliveryButton(Order order) {
+    final hasProof =
+        order.proofOfDeliveryUrl != null &&
+        order.proofOfDeliveryUrl!.isNotEmpty;
 
     return SizedBox(
       width: double.infinity,
       child: OutlineButton(
-        onPressed: () => _showDeliveryItemPhotoDialog(context, order.id),
+        onPressed: () => _showProofOfDeliveryDialog(context, order.id),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           spacing: 8.w,
           children: [
             Icon(
-              hasPhoto ? LucideIcons.circleCheck : LucideIcons.camera,
+              hasProof ? LucideIcons.circleCheck : LucideIcons.camera,
               size: 20.sp,
             ),
-            Text(hasPhoto ? 'View/Update Item Photo' : 'Take Item Photo'),
+            Text(
+              hasProof
+                  ? 'View/Update Proof of Delivery'
+                  : 'Upload Proof of Delivery',
+            ),
           ],
         ),
       ),
     );
   }
 
-  void _showDeliveryItemPhotoDialog(BuildContext context, String orderId) {
+  void _showProofOfDeliveryDialog(BuildContext context, String orderId) {
     showDialog(
       context: context,
       builder: (dialogContext) => BlocProvider.value(
         value: context.read<DriverOrderCubit>(),
-        child: DeliveryItemPhotoUploadDialog(orderId: orderId),
+        child: DeliveryProofUploadDialog(orderId: orderId),
       ),
     );
   }

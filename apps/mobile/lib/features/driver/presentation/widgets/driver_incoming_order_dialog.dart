@@ -60,137 +60,143 @@ class DriverIncomingOrderDialog extends StatelessWidget {
           ),
         ],
       ),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          // Customer info with rating
-          if (order.user != null) ...[
-            _buildCustomerInfoRow(context),
-            SizedBox(height: 12.h),
-          ],
+      content: ConstrainedBox(
+        constraints: BoxConstraints(maxHeight: 400.h),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // Customer info with rating
+              if (order.user != null) ...[
+                _buildCustomerInfoRow(context),
+                SizedBox(height: 12.h),
+              ],
 
-          // Order Details
-          _buildLocationDetailRow(
-            context,
-            icon: LucideIcons.mapPin,
-            label: 'Pickup',
-            address: order.pickupAddress,
-            coordinate: order.pickupLocation,
-          ),
-          SizedBox(height: 12.h),
-          _buildLocationDetailRow(
-            context,
-            icon: LucideIcons.navigation,
-            label: 'Dropoff',
-            address: order.dropoffAddress,
-            coordinate: order.dropoffLocation,
-          ),
-          SizedBox(height: 12.h),
-          _buildDetailRow(
-            context,
-            icon: LucideIcons.ruler,
-            label: 'Distance',
-            value: '${order.distanceKm.toStringAsFixed(1)} km',
-          ),
-          SizedBox(height: 12.h),
-          _buildDetailRow(
-            context,
-            icon: LucideIcons.dollarSign,
-            label: 'Earnings',
-            value:
-                'Rp ${_formatMoney(order.estimatedDriverEarning ?? order.driverEarning ?? order.totalPrice)}',
-          ),
-
-          // Gender preference if specified
-          if (order.gender != null) ...[
-            SizedBox(height: 12.h),
-            Container(
-              padding: EdgeInsets.all(12.dg),
-              decoration: BoxDecoration(
-                color: context.colorScheme.muted,
-                borderRadius: BorderRadius.circular(8.r),
+              // Order Details
+              _buildLocationDetailRow(
+                context,
+                icon: LucideIcons.mapPin,
+                label: 'Pickup',
+                address: order.pickupAddress,
+                coordinate: order.pickupLocation,
               ),
-              child: Row(
-                children: [
-                  Icon(
-                    LucideIcons.user,
-                    size: 16.sp,
-                    color: context.colorScheme.mutedForeground,
-                  ),
-                  SizedBox(width: 8.w),
-                  Text(
-                    'Gender preference: ${order.gender?.value}',
-                    style: context.typography.small.copyWith(
-                      color: context.colorScheme.mutedForeground,
-                    ),
-                  ),
-                ],
+              SizedBox(height: 12.h),
+              _buildLocationDetailRow(
+                context,
+                icon: LucideIcons.navigation,
+                label: 'Dropoff',
+                address: order.dropoffAddress,
+                coordinate: order.dropoffLocation,
               ),
-            ),
-          ],
+              SizedBox(height: 12.h),
+              _buildDetailRow(
+                context,
+                icon: LucideIcons.ruler,
+                label: 'Distance',
+                value: '${order.distanceKm.toStringAsFixed(1)} km',
+              ),
+              SizedBox(height: 12.h),
+              _buildDetailRow(
+                context,
+                icon: LucideIcons.dollarSign,
+                label: 'Earnings',
+                value:
+                    'Rp ${_formatMoney(order.estimatedDriverEarning ?? order.driverEarning ?? order.totalPrice)}',
+              ),
 
-          // Note if provided
-          if (order.note != null) ...[
-            Builder(
-              builder: (context) {
-                final note = order.note;
-                if (note == null || !_hasNoteContent(note)) {
-                  return const SizedBox.shrink();
-                }
-
-                return Column(
-                  children: [
-                    SizedBox(height: 12.h),
-                    Container(
-                      padding: EdgeInsets.all(12.dg),
-                      decoration: BoxDecoration(
-                        color: context.colorScheme.muted,
-                        borderRadius: BorderRadius.circular(8.r),
+              // Gender preference if specified
+              if (order.gender != null) ...[
+                SizedBox(height: 12.h),
+                Container(
+                  padding: EdgeInsets.all(12.dg),
+                  decoration: BoxDecoration(
+                    color: context.colorScheme.muted,
+                    borderRadius: BorderRadius.circular(8.r),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(
+                        LucideIcons.user,
+                        size: 16.sp,
+                        color: context.colorScheme.mutedForeground,
                       ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
+                      SizedBox(width: 8.w),
+                      Text(
+                        'Gender preference: ${order.gender?.value}',
+                        style: context.typography.small.copyWith(
+                          color: context.colorScheme.mutedForeground,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+
+              // Note if provided
+              if (order.note != null) ...[
+                Builder(
+                  builder: (context) {
+                    final note = order.note;
+                    if (note == null || !_hasNoteContent(note)) {
+                      return const SizedBox.shrink();
+                    }
+
+                    return Column(
+                      children: [
+                        SizedBox(height: 12.h),
+                        Container(
+                          padding: EdgeInsets.all(12.dg),
+                          decoration: BoxDecoration(
+                            color: context.colorScheme.muted,
+                            borderRadius: BorderRadius.circular(8.r),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Icon(
-                                LucideIcons.stickyNote,
-                                size: 16.sp,
-                                color: context.colorScheme.mutedForeground,
+                              Row(
+                                children: [
+                                  Icon(
+                                    LucideIcons.stickyNote,
+                                    size: 16.sp,
+                                    color: context.colorScheme.mutedForeground,
+                                  ),
+                                  SizedBox(width: 8.w),
+                                  Text(
+                                    'Note:',
+                                    style: context.typography.small.copyWith(
+                                      color:
+                                          context.colorScheme.mutedForeground,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
                               ),
-                              SizedBox(width: 8.w),
+                              SizedBox(height: 4.h),
                               Text(
-                                'Note:',
+                                _getNoteText(note),
                                 style: context.typography.small.copyWith(
                                   color: context.colorScheme.mutedForeground,
-                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
                             ],
                           ),
-                          SizedBox(height: 4.h),
-                          Text(
-                            _getNoteText(note),
-                            style: context.typography.small.copyWith(
-                              color: context.colorScheme.mutedForeground,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                );
-              },
-            ),
-          ],
+                        ),
+                      ],
+                    );
+                  },
+                ),
+              ],
 
-          // Delivery item photo (only for DELIVERY orders)
-          if (order.type == OrderType.DELIVERY &&
-              order.deliveryItemPhotoUrl != null) ...[
-            SizedBox(height: 12.h),
-            _buildDeliveryItemPhotoSection(context),
-          ],
-        ],
+              // Delivery item photo (only for DELIVERY orders)
+              if (order.type == OrderType.DELIVERY &&
+                  order.deliveryItemPhotoUrl != null) ...[
+                SizedBox(height: 12.h),
+                _buildDeliveryItemPhotoSection(context),
+              ],
+            ],
+          ),
+        ),
       ),
       actions: [
         DestructiveButton(

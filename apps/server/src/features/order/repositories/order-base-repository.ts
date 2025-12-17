@@ -172,6 +172,34 @@ export class OrderBaseRepository extends BaseRepository {
 			});
 		}
 
+		// Convert delivery-related URLs to presigned URLs (private bucket)
+		let proofOfDeliveryPresignedUrl: string | undefined;
+		if (item.proofOfDeliveryUrl && storage) {
+			proofOfDeliveryPresignedUrl =
+				await OrderBaseRepository.getDeliveryProofPresignedUrl(
+					item.proofOfDeliveryUrl,
+					storage,
+				);
+		}
+
+		let deliveryItemPhotoPresignedUrl: string | undefined;
+		if (item.deliveryItemPhotoUrl && storage) {
+			deliveryItemPhotoPresignedUrl =
+				await OrderBaseRepository.getDeliveryProofPresignedUrl(
+					item.deliveryItemPhotoUrl,
+					storage,
+				);
+		}
+
+		let attachmentPresignedUrl: string | undefined;
+		if (item.attachmentUrl && storage) {
+			attachmentPresignedUrl =
+				await OrderBaseRepository.getDeliveryProofPresignedUrl(
+					item.attachmentUrl,
+					storage,
+				);
+		}
+
 		const result = nullsToUndefined(item);
 		const totalPrice = toNumberSafe(item.totalPrice);
 		const driverEarning = item.driverEarning
@@ -232,7 +260,49 @@ export class OrderBaseRepository extends BaseRepository {
 			estimatedDriverEarning,
 			items: composedItems,
 			itemCount: composedItems?.length,
+			// Override with presigned URLs for private bucket files
+			proofOfDeliveryUrl:
+				proofOfDeliveryPresignedUrl ?? result.proofOfDeliveryUrl,
+			deliveryItemPhotoUrl:
+				deliveryItemPhotoPresignedUrl ?? result.deliveryItemPhotoUrl,
+			attachmentUrl: attachmentPresignedUrl ?? result.attachmentUrl,
 		};
+	}
+
+	/**
+	 * Convert a delivery proof URL to a presigned URL
+	 * Handles URLs stored in the delivery-proofs private bucket
+	 *
+	 * @param proofUrl - S3 public URL format
+	 * @param storage - Storage service instance
+	 * @returns Presigned URL valid for 15 minutes, or undefined if conversion fails
+	 */
+	static async getDeliveryProofPresignedUrl(
+		proofUrl: string,
+		storage: StorageService,
+	): Promise<string | undefined> {
+		try {
+			// Extract bucket and key from URL
+			// URL format: https://storage.example.com/delivery-proofs/path/to/file.jpg
+			const url = new URL(proofUrl);
+			const pathParts = url.pathname.split("/").filter(Boolean);
+
+			if (pathParts.length < 2) {
+				return undefined;
+			}
+
+			const bucket = pathParts[0] as "delivery-proofs";
+			const key = pathParts.slice(1).join("/");
+
+			return await storage.getPresignedUrl({
+				bucket,
+				key,
+				expiresIn: 900, // 15 minutes
+			});
+		} catch {
+			// If URL parsing fails, return undefined and let the original URL pass through
+			return undefined;
+		}
 	}
 
 	/**
