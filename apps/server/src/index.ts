@@ -1,32 +1,18 @@
 import "./polyfill";
 
 import type { QueueMessage } from "@repo/schema/queue";
+import { setupHonoRouter } from "./core/router/hono";
+import { setupOrpcRouter } from "./core/router/orpc";
+import { handleQueue } from "./features/queue/queue-handler";
+import { setupWebsocketRouter } from "./features/ws";
 import { logger } from "./utils/logger";
-
-// Lazy-loaded app instance to avoid CPU timeout during startup
-let _app: Awaited<ReturnType<typeof initApp>> | null = null;
-
-async function initApp() {
-	const { setupHonoRouter } = await import("@/core/router/hono");
-	const { setupOrpcRouter } = await import("./core/router/orpc");
-	const { setupWebsocketRouter } = await import("./features/ws");
-
-	const app = setupHonoRouter();
-	setupOrpcRouter(app);
-	setupWebsocketRouter(app);
-	return app;
-}
-
-async function getApp() {
-	if (!_app) {
-		_app = await initApp();
-	}
-	return _app;
-}
 
 export default {
 	async fetch(request: Request, env: Env, ctx: ExecutionContext) {
-		const app = await getApp();
+		const app = setupHonoRouter();
+		setupOrpcRouter(app);
+		setupWebsocketRouter(app);
+
 		return app.fetch(request, env, ctx);
 	},
 	async scheduled(event: ScheduledEvent, env: Env, ctx: ExecutionContext) {
@@ -208,7 +194,6 @@ export default {
 		env: Env,
 		ctx: ExecutionContext,
 	) {
-		const { handleQueue } = await import("./features/queue/queue-handler");
 		await handleQueue(batch, env, ctx);
 	},
 };
