@@ -106,7 +106,7 @@ interface ServiceAccountCredentials {
 	private_key: string;
 }
 
-interface TopicManagementResponse {
+export interface TopicManagementResponse {
 	successCount: number;
 	failureCount: number;
 	errors?: Array<{ index: number; error: { code: string; message: string } }>;

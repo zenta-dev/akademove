@@ -192,7 +192,7 @@ export const MerchantMainSpec = {
 							id: z.string(),
 							merchantId: z.string(),
 							name: z.string(),
-							image: z.string().optional(),
+							image: z.string().nullish(),
 							category: z.string().optional(),
 							price: z.coerce.number(),
 							stock: z.coerce.number(),
@@ -203,7 +203,7 @@ export const MerchantMainSpec = {
 						merchant: z.object({
 							id: z.string(),
 							name: z.string(),
-							image: z.string().optional(),
+							image: z.string().nullish(),
 							rating: z.coerce.number(),
 						}),
 						orderCount: z.coerce.number(),

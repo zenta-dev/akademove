@@ -153,39 +153,41 @@ export class OrderPlacementRepository extends OrderBaseRepository {
 				couponCode = couponResult.couponCode;
 				discountAmount = couponResult.discountAmount;
 				finalTotalCost = couponResult.finalTotalCost;
-			} else {
-				// No coupon provided - auto-apply the best eligible coupon
-				const autoCouponResult = await OrderCouponService.getAndApplyBestCoupon(
-					baseTotalCost,
-					params.userId,
-					params.type,
-					this.db,
-					this.kv,
-					merchantId,
-				);
-
-				if (autoCouponResult.autoApplied) {
-					couponId = autoCouponResult.couponId;
-					couponCode = autoCouponResult.couponCode;
-					discountAmount = autoCouponResult.discountAmount;
-					finalTotalCost = autoCouponResult.finalTotalCost;
-					autoAppliedCoupon = {
-						code: autoCouponResult.couponCode ?? "",
-						discountAmount: autoCouponResult.discountAmount,
-					};
-
-					logger.info(
-						{
-							userId: params.userId,
-							couponCode,
-							discountAmount,
-							originalTotal: baseTotalCost,
-							finalTotal: finalTotalCost,
-						},
-						"[OrderPlacementRepository] Auto-applied best eligible coupon",
-					);
-				}
 			}
+			// TODO: Auto-apply coupon feature disabled temporarily
+			// else {
+			// 	// No coupon provided - auto-apply the best eligible coupon
+			// 	const autoCouponResult = await OrderCouponService.getAndApplyBestCoupon(
+			// 		baseTotalCost,
+			// 		params.userId,
+			// 		params.type,
+			// 		this.db,
+			// 		this.kv,
+			// 		merchantId,
+			// 	);
+
+			// 	if (autoCouponResult.autoApplied) {
+			// 		couponId = autoCouponResult.couponId;
+			// 		couponCode = autoCouponResult.couponCode;
+			// 		discountAmount = autoCouponResult.discountAmount;
+			// 		finalTotalCost = autoCouponResult.finalTotalCost;
+			// 		autoAppliedCoupon = {
+			// 			code: autoCouponResult.couponCode ?? "",
+			// 			discountAmount: autoCouponResult.discountAmount,
+			// 		};
+
+			// 		logger.info(
+			// 			{
+			// 				userId: params.userId,
+			// 				couponCode,
+			// 				discountAmount,
+			// 				originalTotal: baseTotalCost,
+			// 				finalTotal: finalTotalCost,
+			// 			},
+			// 			"[OrderPlacementRepository] Auto-applied best eligible coupon",
+			// 		);
+			// 	}
+			// }
 
 			if (!user)
 				throw new RepositoryError(`User ${params.userId} not found`, {
