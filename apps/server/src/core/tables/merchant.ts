@@ -83,6 +83,31 @@ export const merchant = pgTable(
 	],
 );
 
+export const merchantMenuCategory = pgTable(
+	"merchant_menu_categories",
+	{
+		id: uuid().primaryKey(),
+		merchantId: uuid()
+			.notNull()
+			.references(() => merchant.id, { onDelete: "cascade" }),
+		name: varchar({ length: 255 }).notNull(),
+		description: text(),
+		sortOrder: integer("sort_order").notNull().default(0),
+		...DateModifier,
+	},
+	(t) => [
+		index("merchant_menu_category_merchant_id_idx").on(t.merchantId),
+		index("merchant_menu_category_name_idx").on(t.name),
+		index("merchant_menu_category_sort_order_idx").on(t.sortOrder),
+		// Composite index for merchant + name uniqueness check
+		uniqueIndex("merchant_menu_category_merchant_name_idx").on(
+			t.merchantId,
+			t.name,
+		),
+		index("merchant_menu_category_created_at_idx").on(t.createdAt),
+	],
+);
+
 export const merchantMenu = pgTable(
 	"merchant_menus",
 	{
@@ -92,6 +117,9 @@ export const merchantMenu = pgTable(
 			.references(() => merchant.id, { onDelete: "cascade" }),
 		name: varchar({ length: 255 }).notNull(),
 		category: varchar({ length: 255 }),
+		categoryId: uuid("category_id").references(() => merchantMenuCategory.id, {
+			onDelete: "set null",
+		}),
 		price: numeric("base_price", {
 			precision: 10,
 			scale: 2,
@@ -104,9 +132,14 @@ export const merchantMenu = pgTable(
 	(t) => [
 		index("merchant_menu_merchant_id_idx").on(t.merchantId),
 		index("merchant_menu_category_idx").on(t.category),
+		index("merchant_menu_category_id_idx").on(t.categoryId),
 		index("merchant_menu_stock_idx").on(t.stock),
 		index("merchant_menu_sold_stock_idx").on(t.soldStock),
 		index("merchant_menu_merchant_category_idx").on(t.merchantId, t.category),
+		index("merchant_menu_merchant_category_id_idx").on(
+			t.merchantId,
+			t.categoryId,
+		),
 		index("merchant_menu_price_idx").on(t.price),
 		index("merchant_menu_created_at_idx").on(t.createdAt),
 	],
@@ -148,13 +181,29 @@ export const merchantRelations = relations(merchant, ({ one, many }) => ({
 		references: [user.id],
 	}),
 	menus: many(merchantMenu),
+	menuCategories: many(merchantMenuCategory),
 	operatingHours: many(merchantOperatingHours),
 }));
+
+export const merchantMenuCategoryRelations = relations(
+	merchantMenuCategory,
+	({ one, many }) => ({
+		merchant: one(merchant, {
+			fields: [merchantMenuCategory.merchantId],
+			references: [merchant.id],
+		}),
+		menus: many(merchantMenu),
+	}),
+);
 
 export const merchantMenuRelations = relations(merchantMenu, ({ one }) => ({
 	merchant: one(merchant, {
 		fields: [merchantMenu.merchantId],
 		references: [merchant.id],
+	}),
+	menuCategory: one(merchantMenuCategory, {
+		fields: [merchantMenu.categoryId],
+		references: [merchantMenuCategory.id],
 	}),
 }));
 
@@ -170,5 +219,7 @@ export const merchantOperatingHoursRelations = relations(
 
 export type MerchantDatabase = typeof merchant.$inferSelect;
 export type MerchantMenuDatabase = typeof merchantMenu.$inferSelect;
+export type MerchantMenuCategoryDatabase =
+	typeof merchantMenuCategory.$inferSelect;
 export type MerchantOperatingHoursDatabase =
 	typeof merchantOperatingHours.$inferSelect;

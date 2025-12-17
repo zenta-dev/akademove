@@ -246,6 +246,11 @@ import 'package:api_client/src/model/merchant_get_mine200_response_body.dart';
 import 'package:api_client/src/model/merchant_get_review200_response.dart';
 import 'package:api_client/src/model/merchant_get_review200_response_data.dart';
 import 'package:api_client/src/model/merchant_menu.dart';
+import 'package:api_client/src/model/merchant_menu_category.dart';
+import 'package:api_client/src/model/merchant_menu_category_create200_response.dart';
+import 'package:api_client/src/model/merchant_menu_category_create_request.dart';
+import 'package:api_client/src/model/merchant_menu_category_list200_response.dart';
+import 'package:api_client/src/model/merchant_menu_category_update_request.dart';
 import 'package:api_client/src/model/merchant_menu_create200_response.dart';
 import 'package:api_client/src/model/merchant_menu_list200_response.dart';
 import 'package:api_client/src/model/merchant_operating_hours.dart';
@@ -1377,6 +1382,30 @@ ReturnType deserialize<ReturnType, BaseType>(
     case 'MerchantKey':
     case 'MerchantMenu':
       return MerchantMenu.fromJson(value as Map<String, dynamic>) as ReturnType;
+    case 'MerchantMenuCategory':
+      return MerchantMenuCategory.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
+    case 'MerchantMenuCategoryCreate200Response':
+      return MerchantMenuCategoryCreate200Response.fromJson(
+            value as Map<String, dynamic>,
+          )
+          as ReturnType;
+    case 'MerchantMenuCategoryCreateRequest':
+      return MerchantMenuCategoryCreateRequest.fromJson(
+            value as Map<String, dynamic>,
+          )
+          as ReturnType;
+    case 'MerchantMenuCategoryKey':
+    case 'MerchantMenuCategoryList200Response':
+      return MerchantMenuCategoryList200Response.fromJson(
+            value as Map<String, dynamic>,
+          )
+          as ReturnType;
+    case 'MerchantMenuCategoryUpdateRequest':
+      return MerchantMenuCategoryUpdateRequest.fromJson(
+            value as Map<String, dynamic>,
+          )
+          as ReturnType;
     case 'MerchantMenuCreate200Response':
       return MerchantMenuCreate200Response.fromJson(
             value as Map<String, dynamic>,

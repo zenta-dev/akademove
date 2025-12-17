@@ -72,3 +72,5 @@ class MockCartRepository extends Mock implements CartRepository {}
 class MockWebSocketService extends Mock implements WebSocketService {}
 
 class MockKeyValueService extends Mock implements KeyValueService {}
+
+class MockDocumentService extends Mock implements DocumentService {}

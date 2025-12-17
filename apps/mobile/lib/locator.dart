@@ -36,6 +36,7 @@ void _setupService() {
       ),
     )
     ..registerSingleton<ImageService>(ImagePickerService()..setup())
+    ..registerSingleton<DocumentService>(DocumentPickerService()..setup())
     ..registerSingleton<LocationService>(LocationService())
     ..registerSingletonAsync<MapService>(
       IMapService().setup,
@@ -114,6 +115,9 @@ void _setupRepository() {
     )
     ..registerLazySingleton(
       () => MerchantWalletRepository(apiClient: sl<ApiClient>()),
+    )
+    ..registerLazySingleton(
+      () => MerchantMenuCategoryRepository(apiClient: sl<ApiClient>()),
     );
 }
 
@@ -277,6 +281,7 @@ void _setupCubit() {
       () => UserCartCubit(
         cartRepository: sl<CartRepository>(),
         orderRepository: sl<OrderRepository>(),
+        documentService: sl<DocumentService>(),
       ),
     )
     ..registerFactory(
@@ -309,5 +314,10 @@ void _setupCubit() {
     )
     ..registerFactory(
       () => MerchantReviewCubit(reviewRepository: sl<ReviewRepository>()),
+    )
+    ..registerFactory(
+      () => MerchantMenuCategoryCubit(
+        menuCategoryRepository: sl<MerchantMenuCategoryRepository>(),
+      ),
     );
 }

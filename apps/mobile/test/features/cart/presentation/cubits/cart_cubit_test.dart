@@ -15,14 +15,17 @@ void main() {
     late UserCartCubit cubit;
     late MockCartRepository mockCartRepository;
     late MockOrderRepository mockOrderRepository;
+    late MockDocumentService mockDocumentService;
 
     setUp(() {
       mockCartRepository = MockCartRepository();
       mockOrderRepository = MockOrderRepository();
+      mockDocumentService = MockDocumentService();
 
       cubit = UserCartCubit(
         cartRepository: mockCartRepository,
         orderRepository: mockOrderRepository,
+        documentService: mockDocumentService,
       );
     });
 

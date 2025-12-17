@@ -13,6 +13,7 @@ Name | Type | Description | Notes
 **name** | **String** |  | [optional] 
 **image** | **String** |  | [optional] 
 **category** | **String** |  | [optional] 
+**categoryId** | **String** | Reference to merchant menu category | [optional] 
 **price** | **num** |  | [optional] 
 **stock** | **int** |  | [optional] 
 **soldStock** | **int** | Total number of items sold | [optional] 

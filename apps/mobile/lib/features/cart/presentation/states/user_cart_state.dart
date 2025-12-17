@@ -10,6 +10,9 @@ class UserCartState extends Equatable {
     this.pendingMerchantLocation,
     this.pendingMerchantCategory,
     this.showMerchantConflict = false,
+    this.attachment,
+    this.attachmentUrl,
+    this.isUploadingAttachment = false,
   });
 
   final Cart? cart;
@@ -23,12 +26,18 @@ class UserCartState extends Equatable {
   final MerchantCategory? pendingMerchantCategory;
   final bool showMerchantConflict;
 
+  /// Attachment for Printing merchants
+  final DocumentPickResult? attachment;
+  final String? attachmentUrl;
+  final bool isUploadingAttachment;
+
   /// Computed properties
   int get totalItems => cart?.totalItems ?? 0;
   double get subtotal => (cart?.subtotal ?? 0).toDouble();
   bool get isEmpty => cart == null || cart!.items.isEmpty;
   bool get hasMerchantConflict => showMerchantConflict && pendingItem != null;
   bool get isPrintingMerchant => cart?.isPrintingMerchant ?? false;
+  bool get hasAttachment => attachment != null || attachmentUrl != null;
 
   @override
   List<Object?> get props => [
@@ -40,6 +49,9 @@ class UserCartState extends Equatable {
     pendingMerchantLocation,
     pendingMerchantCategory,
     showMerchantConflict,
+    attachment,
+    attachmentUrl,
+    isUploadingAttachment,
   ];
 
   UserCartState copyWith({
@@ -51,9 +63,13 @@ class UserCartState extends Equatable {
     Coordinate? pendingMerchantLocation,
     MerchantCategory? pendingMerchantCategory,
     bool? showMerchantConflict,
+    DocumentPickResult? attachment,
+    String? attachmentUrl,
+    bool? isUploadingAttachment,
     bool clearError = false,
     bool clearCart = false,
     bool clearPending = false,
+    bool clearAttachment = false,
   }) {
     return UserCartState(
       cart: clearCart ? null : (cart ?? this.cart),
@@ -72,6 +88,12 @@ class UserCartState extends Equatable {
       showMerchantConflict: clearPending
           ? false
           : (showMerchantConflict ?? this.showMerchantConflict),
+      attachment: clearAttachment ? null : (attachment ?? this.attachment),
+      attachmentUrl: clearAttachment
+          ? null
+          : (attachmentUrl ?? this.attachmentUrl),
+      isUploadingAttachment:
+          isUploadingAttachment ?? this.isUploadingAttachment,
     );
   }
 }

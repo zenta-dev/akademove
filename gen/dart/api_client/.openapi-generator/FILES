@@ -309,6 +309,12 @@ doc/MerchantGetReview200Response.md
 doc/MerchantGetReview200ResponseData.md
 doc/MerchantKey.md
 doc/MerchantMenu.md
+doc/MerchantMenuCategory.md
+doc/MerchantMenuCategoryCreate200Response.md
+doc/MerchantMenuCategoryCreateRequest.md
+doc/MerchantMenuCategoryKey.md
+doc/MerchantMenuCategoryList200Response.md
+doc/MerchantMenuCategoryUpdateRequest.md
 doc/MerchantMenuCreate200Response.md
 doc/MerchantMenuKey.md
 doc/MerchantMenuList200Response.md
@@ -855,6 +861,12 @@ lib/src/model/merchant_get_review200_response.dart
 lib/src/model/merchant_get_review200_response_data.dart
 lib/src/model/merchant_key.dart
 lib/src/model/merchant_menu.dart
+lib/src/model/merchant_menu_category.dart
+lib/src/model/merchant_menu_category_create200_response.dart
+lib/src/model/merchant_menu_category_create_request.dart
+lib/src/model/merchant_menu_category_key.dart
+lib/src/model/merchant_menu_category_list200_response.dart
+lib/src/model/merchant_menu_category_update_request.dart
 lib/src/model/merchant_menu_create200_response.dart
 lib/src/model/merchant_menu_key.dart
 lib/src/model/merchant_menu_list200_response.dart
@@ -1069,4 +1081,3 @@ lib/src/model/weight_size.dart
 lib/src/model/withdraw_request.dart
 lib/src/model/withdraw_response.dart
 pubspec.yaml
-test/driver_wallet_get_commission_report200_response_test.dart

@@ -60,6 +60,7 @@ export class MerchantMenuRepository extends BaseRepository {
 		return {
 			...item,
 			category: item.category ?? undefined,
+			categoryId: item.categoryId ?? undefined,
 			imageId: item.image ?? undefined,
 			price: toNumberSafe(item.price),
 			soldStock: item.soldStock,

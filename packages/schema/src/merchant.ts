@@ -98,6 +98,10 @@ export const MerchantMenuSchema = z.object({
 	name: z.string(),
 	image: z.url().optional(),
 	category: z.string().optional(),
+	categoryId: z
+		.uuid()
+		.optional()
+		.describe("Reference to merchant menu category"),
 	price: z.coerce.number<number>().nonnegative(),
 	stock: z.coerce.number<number>().int().nonnegative(),
 	soldStock: z.coerce
@@ -203,17 +207,60 @@ export type SetMerchantOperatingStatus = z.infer<
 	typeof SetMerchantOperatingStatusSchema
 >;
 
+// ========== MERCHANT MENU CATEGORY ==========
+// Dynamic menu categories owned by each merchant
+export const MerchantMenuCategorySchema = z.object({
+	id: z.uuid(),
+	merchantId: z.uuid(),
+	name: z.string().min(1, m.required_placeholder({ field: m.name() })),
+	description: z.string().optional(),
+	sortOrder: z.coerce.number().int().nonnegative().default(0),
+	createdAt: DateSchema,
+	updatedAt: DateSchema,
+});
+export type MerchantMenuCategory = z.infer<typeof MerchantMenuCategorySchema>;
+
+export const MerchantMenuCategoryKeySchema = extractSchemaKeysAsEnum(
+	MerchantMenuCategorySchema,
+);
+
+export const InsertMerchantMenuCategorySchema = MerchantMenuCategorySchema.omit(
+	{
+		id: true,
+		merchantId: true,
+		createdAt: true,
+		updatedAt: true,
+	},
+);
+export type InsertMerchantMenuCategory = z.infer<
+	typeof InsertMerchantMenuCategorySchema
+>;
+
+export const UpdateMerchantMenuCategorySchema =
+	InsertMerchantMenuCategorySchema.partial();
+export type UpdateMerchantMenuCategory = z.infer<
+	typeof UpdateMerchantMenuCategorySchema
+>;
+
 export const MerchantSchemaRegistries = {
 	MerchantCategory: { schema: MerchantCategorySchema, strategy: "output" },
 	MerchantStatus: { schema: MerchantStatusSchema, strategy: "output" },
 	Merchant: { schema: MerchantSchema, strategy: "output" },
 	MerchantMenu: { schema: MerchantMenuSchema, strategy: "output" },
+	MerchantMenuCategory: {
+		schema: MerchantMenuCategorySchema,
+		strategy: "output",
+	},
 	MerchantOperatingHours: {
 		schema: MerchantOperatingHoursSchema,
 		strategy: "output",
 	},
 	MerchantKey: { schema: MerchantKeySchema, strategy: "input" },
 	MerchantMenuKey: { schema: MerchantMenuKeySchema, strategy: "input" },
+	MerchantMenuCategoryKey: {
+		schema: MerchantMenuCategoryKeySchema,
+		strategy: "input",
+	},
 	MerchantOperatingHoursKey: {
 		schema: MerchantOperatingHoursKeySchema,
 		strategy: "input",

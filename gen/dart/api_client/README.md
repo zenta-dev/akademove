@@ -222,6 +222,11 @@ Class | Method | HTTP request | Description
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantGetMine**](doc/MerchantApi.md#merchantgetmine) | **GET** /merchants/mine | 
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantGetReview**](doc/MerchantApi.md#merchantgetreview) | **GET** /merchants/{id}/approval-review | 
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantList**](doc/MerchantApi.md#merchantlist) | **GET** /merchants | 
+[*MerchantApi*](doc/MerchantApi.md) | [**merchantMenuCategoryCreate**](doc/MerchantApi.md#merchantmenucategorycreate) | **POST** /merchants/{merchantId}/menu-categories | 
+[*MerchantApi*](doc/MerchantApi.md) | [**merchantMenuCategoryGet**](doc/MerchantApi.md#merchantmenucategoryget) | **GET** /merchants/{merchantId}/menu-categories/{id} | 
+[*MerchantApi*](doc/MerchantApi.md) | [**merchantMenuCategoryList**](doc/MerchantApi.md#merchantmenucategorylist) | **GET** /merchants/{merchantId}/menu-categories | 
+[*MerchantApi*](doc/MerchantApi.md) | [**merchantMenuCategoryRemove**](doc/MerchantApi.md#merchantmenucategoryremove) | **DELETE** /merchants/{merchantId}/menu-categories/{id} | 
+[*MerchantApi*](doc/MerchantApi.md) | [**merchantMenuCategoryUpdate**](doc/MerchantApi.md#merchantmenucategoryupdate) | **PUT** /merchants/{merchantId}/menu-categories/{id} | 
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantMenuCreate**](doc/MerchantApi.md#merchantmenucreate) | **POST** /merchants/{merchantId}/menus | 
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantMenuGet**](doc/MerchantApi.md#merchantmenuget) | **GET** /merchants/{merchantId}/menus/{id} | 
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantMenuList**](doc/MerchantApi.md#merchantmenulist) | **GET** /merchants/{merchantId}/menus | 
@@ -636,6 +641,12 @@ Class | Method | HTTP request | Description
  - [MerchantGetReview200ResponseData](doc/MerchantGetReview200ResponseData.md)
  - [MerchantKey](doc/MerchantKey.md)
  - [MerchantMenu](doc/MerchantMenu.md)
+ - [MerchantMenuCategory](doc/MerchantMenuCategory.md)
+ - [MerchantMenuCategoryCreate200Response](doc/MerchantMenuCategoryCreate200Response.md)
+ - [MerchantMenuCategoryCreateRequest](doc/MerchantMenuCategoryCreateRequest.md)
+ - [MerchantMenuCategoryKey](doc/MerchantMenuCategoryKey.md)
+ - [MerchantMenuCategoryList200Response](doc/MerchantMenuCategoryList200Response.md)
+ - [MerchantMenuCategoryUpdateRequest](doc/MerchantMenuCategoryUpdateRequest.md)
  - [MerchantMenuCreate200Response](doc/MerchantMenuCreate200Response.md)
  - [MerchantMenuKey](doc/MerchantMenuKey.md)
  - [MerchantMenuList200Response](doc/MerchantMenuList200Response.md)

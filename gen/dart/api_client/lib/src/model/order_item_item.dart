@@ -23,6 +23,7 @@ class OrderItemItem {
     this.name,
     this.image,
     this.category,
+    this.categoryId,
     this.price,
     this.stock,
     this.soldStock,
@@ -43,6 +44,10 @@ class OrderItemItem {
 
   @JsonKey(name: r'category', required: false, includeIfNull: false)
   final String? category;
+
+  /// Reference to merchant menu category
+  @JsonKey(name: r'categoryId', required: false, includeIfNull: false)
+  final String? categoryId;
 
   // minimum: 0
   @JsonKey(name: r'price', required: false, includeIfNull: false)
@@ -74,6 +79,7 @@ class OrderItemItem {
           other.name == name &&
           other.image == image &&
           other.category == category &&
+          other.categoryId == categoryId &&
           other.price == price &&
           other.stock == stock &&
           other.soldStock == soldStock &&
@@ -87,6 +93,7 @@ class OrderItemItem {
       name.hashCode +
       image.hashCode +
       category.hashCode +
+      categoryId.hashCode +
       price.hashCode +
       stock.hashCode +
       soldStock.hashCode +

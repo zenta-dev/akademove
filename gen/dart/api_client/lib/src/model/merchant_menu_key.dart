@@ -16,6 +16,8 @@ enum MerchantMenuKey {
   image(r'image'),
   @JsonValue(r'category')
   category(r'category'),
+  @JsonValue(r'categoryId')
+  categoryId(r'categoryId'),
   @JsonValue(r'price')
   price(r'price'),
   @JsonValue(r'stock')

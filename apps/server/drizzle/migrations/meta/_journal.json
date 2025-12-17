@@ -239,6 +239,13 @@
 			"when": 1765965634463,
 			"tag": "0033_pale_forge",
 			"breakpoints": true
+		},
+		{
+			"idx": 34,
+			"version": "7",
+			"when": 1765990924150,
+			"tag": "0034_tiresome_killmonger",
+			"breakpoints": true
 		}
 	]
 }

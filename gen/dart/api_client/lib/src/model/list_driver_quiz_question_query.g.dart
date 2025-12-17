@@ -317,6 +317,7 @@ const _$ListDriverQuizQuestionQuerySortByEnumEnumMap = {
   ListDriverQuizQuestionQuerySortByEnum.image: 'image',
   ListDriverQuizQuestionQuerySortByEnum.category: 'category',
   ListDriverQuizQuestionQuerySortByEnum.categories: 'categories',
+  ListDriverQuizQuestionQuerySortByEnum.categoryId: 'categoryId',
   ListDriverQuizQuestionQuerySortByEnum.price: 'price',
   ListDriverQuizQuestionQuerySortByEnum.stock: 'stock',
   ListDriverQuizQuestionQuerySortByEnum.soldStock: 'soldStock',

@@ -247,6 +247,8 @@ enum ListDriverQuizQuestionQuerySortByEnum {
   category(r'category'),
   @JsonValue(r'categories')
   categories(r'categories'),
+  @JsonValue(r'categoryId')
+  categoryId(r'categoryId'),
   @JsonValue(r'price')
   price(r'price'),
   @JsonValue(r'stock')

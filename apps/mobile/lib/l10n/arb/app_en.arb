@@ -1517,6 +1517,7 @@
 	"placeholder_menu_stock": "Enter stock quantity",
 	"hint_menu_category": "e.g., Beverages, Snacks, Main Course",
 	"toast_error": "Error",
+	"cancellation_reason": "Cancellation Reason",
 	"cancel_reason_optional": "Reason (optional)",
 	"order_cancelled_successfully": "Order cancelled successfully",
 	"failed_to_cancel_order": "Failed to cancel order",
@@ -1875,5 +1876,35 @@
 	"fee_breakdown": "Fee Breakdown",
 	"driver_receives": "Driver Earnings",
 	"merchant_fee": "Merchant Fee",
-	"merchant_receives": "Merchant Receives"
+	"merchant_receives": "Merchant Receives",
+	"delivery_location": "Delivery Location",
+	"delivery_fee": "Delivery Fee",
+	"notes": "Notes",
+	"pickup_note": "Pickup Note",
+	"dropoff_note": "Dropoff Note",
+	"sender": "Sender",
+	"receiver": "Receiver",
+	"driver_arriving": "Driver is arriving",
+	"order_in_delivery": "Order is being delivered",
+	"error_category_name_required": "Category name is required",
+	"placeholder_category_name": "Enter category name",
+	"placeholder_no_categories": "No categories available",
+	"attachment_upload_title": "Upload Document",
+	"attachment_upload_hint": "Attach document to be printed (optional)",
+	"attachment_select_file": "Select File",
+	"attachment_change_file": "Change File",
+	"attachment_remove": "Remove",
+	"attachment_uploading": "Uploading...",
+	"attachment_supported_formats": "Supported: PDF, DOC, DOCX, JPG, PNG (max 10MB)",
+	"attachment_file_selected": "File selected: {fileName}",
+	"@attachment_file_selected": {
+		"placeholders": {
+			"fileName": {
+				"type": "String"
+			}
+		}
+	},
+	"text_refund_automatically": "Refund will be processed automatically to customer's wallet",
+	"estimated_time": "Est. Time",
+	"estimated_delivery": "Est. Delivery"
 }

@@ -1,3 +1,4 @@
+export 'document_service.dart';
 export 'firebase_service.dart';
 export 'global_error_handler.dart';
 export 'image_service.dart';

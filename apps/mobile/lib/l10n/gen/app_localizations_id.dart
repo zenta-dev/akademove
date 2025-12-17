@@ -3578,6 +3578,9 @@ class AppLocalizationsId extends AppLocalizations {
   String get toast_error => 'Error';
 
   @override
+  String get cancellation_reason => 'Alasan Pembatalan';
+
+  @override
   String get cancel_reason_optional => 'Alasan (opsional)';
 
   @override
@@ -4508,4 +4511,75 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get merchant_receives => 'Penghasilan Merchant';
+
+  @override
+  String get delivery_location => 'Lokasi Pengiriman';
+
+  @override
+  String get delivery_fee => 'Biaya Pengiriman';
+
+  @override
+  String get notes => 'Catatan';
+
+  @override
+  String get pickup_note => 'Catatan Penjemputan';
+
+  @override
+  String get dropoff_note => 'Catatan Pengantaran';
+
+  @override
+  String get sender => 'Pengirim';
+
+  @override
+  String get receiver => 'Penerima';
+
+  @override
+  String get driver_arriving => 'Driver sedang menuju';
+
+  @override
+  String get order_in_delivery => 'Pesanan sedang dikirim';
+
+  @override
+  String get error_category_name_required => 'Nama kategori harus diisi';
+
+  @override
+  String get placeholder_category_name => 'Masukkan nama kategori';
+
+  @override
+  String get placeholder_no_categories => 'Tidak ada kategori tersedia';
+
+  @override
+  String get attachment_upload_title => 'Unggah Dokumen';
+
+  @override
+  String get attachment_upload_hint => 'Lampirkan dokumen untuk dicetak (opsional)';
+
+  @override
+  String get attachment_select_file => 'Pilih File';
+
+  @override
+  String get attachment_change_file => 'Ganti File';
+
+  @override
+  String get attachment_remove => 'Hapus';
+
+  @override
+  String get attachment_uploading => 'Mengunggah...';
+
+  @override
+  String get attachment_supported_formats => 'Didukung: PDF, DOC, DOCX, JPG, PNG (maks 10MB)';
+
+  @override
+  String attachment_file_selected(String fileName) {
+    return 'File dipilih: $fileName';
+  }
+
+  @override
+  String get text_refund_automatically => 'Pengembalian dana akan diproses otomatis ke dompet pelanggan';
+
+  @override
+  String get estimated_time => 'Estimasi Waktu';
+
+  @override
+  String get estimated_delivery => 'Estimasi Pengiriman';
 }

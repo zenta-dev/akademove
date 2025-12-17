@@ -4,6 +4,7 @@ import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/l10n/l10n.dart';
 import 'package:api_client/api_client.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 
@@ -20,14 +21,14 @@ class MenuFormData {
     required this.name,
     required this.price,
     required this.stock,
-    this.category,
+    this.categoryId,
     this.imageFile,
   });
 
   final String name;
   final int price;
   final int stock;
-  final MenuCategory? category;
+  final String? categoryId;
   final File? imageFile;
 }
 
@@ -39,6 +40,7 @@ class MerchantMenuForm extends StatefulWidget {
     required this.isLoading,
     required this.onSubmit,
     required this.submitButtonText,
+    required this.merchantId,
   });
 
   /// The menu to edit (null for create mode)
@@ -53,6 +55,9 @@ class MerchantMenuForm extends StatefulWidget {
   /// Text to display on the submit button
   final String submitButtonText;
 
+  /// The merchant ID for fetching categories
+  final String merchantId;
+
   @override
   State<MerchantMenuForm> createState() => _MerchantMenuFormState();
 }
@@ -62,11 +67,13 @@ class _MerchantMenuFormState extends State<MerchantMenuForm> {
   late final TextEditingController _nameController;
   late final TextEditingController _priceController;
   late final TextEditingController _stockController;
+  late final TextEditingController _newCategoryController;
 
-  MenuCategory? _selectedCategory;
+  MerchantMenuCategory? _selectedCategory;
   int _stock = 0;
   File? _imageFile;
   bool _isProgrammaticUpdate = false;
+  bool _showNewCategoryField = false;
 
   bool get _isEditMode => widget.initialMenu != null;
 
@@ -77,8 +84,16 @@ class _MerchantMenuFormState extends State<MerchantMenuForm> {
     _nameController = TextEditingController();
     _priceController = TextEditingController();
     _stockController = TextEditingController(text: "0");
+    _newCategoryController = TextEditingController();
 
     _initializeForm();
+
+    // Fetch categories
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<MerchantMenuCategoryCubit>().getCategories(
+        merchantId: widget.merchantId,
+      );
+    });
   }
 
   void _initializeForm() {
@@ -88,7 +103,7 @@ class _MerchantMenuFormState extends State<MerchantMenuForm> {
       _priceController.text = menu.price.toInt().toString();
       _stock = menu.stock;
       _stockController.text = menu.stock.toString();
-      _selectedCategory = MenuCategory.fromString(menu.category);
+      // Category will be set after categories are loaded
     }
   }
 
@@ -98,6 +113,7 @@ class _MerchantMenuFormState extends State<MerchantMenuForm> {
     _nameController.dispose();
     _priceController.dispose();
     _stockController.dispose();
+    _newCategoryController.dispose();
     super.dispose();
   }
 
@@ -142,7 +158,7 @@ class _MerchantMenuFormState extends State<MerchantMenuForm> {
         name: name,
         price: price,
         stock: _stock,
-        category: _selectedCategory,
+        categoryId: _selectedCategory?.id,
         imageFile: _imageFile,
       ),
     );
@@ -177,6 +193,35 @@ class _MerchantMenuFormState extends State<MerchantMenuForm> {
     });
   }
 
+  Future<void> _handleCreateCategory() async {
+    final categoryName = _newCategoryController.text.trim();
+    if (categoryName.isEmpty) {
+      _showToast(
+        context.l10n.error_validation,
+        context.l10n.error_category_name_required,
+      );
+      return;
+    }
+
+    final cubit = context.read<MerchantMenuCategoryCubit>();
+    await cubit.createCategory(
+      merchantId: widget.merchantId,
+      name: categoryName,
+    );
+
+    if (!mounted) return;
+
+    // Check if creation was successful
+    final state = cubit.state;
+    if (state.category.isSuccess) {
+      setState(() {
+        _selectedCategory = state.category.data?.value;
+        _showNewCategoryField = false;
+        _newCategoryController.clear();
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -209,14 +254,130 @@ class _MerchantMenuFormState extends State<MerchantMenuForm> {
   }
 
   Widget _buildCategoryField() {
-    return AuthEnumSelect<MenuCategory>(
-      label: context.l10n.label_menu_category,
-      placeholder: context.l10n.placeholder_select_category,
-      value: _selectedCategory,
-      items: MenuCategory.values,
-      enabled: !widget.isLoading,
-      itemBuilder: (context, item) => Text(item.displayName),
-      onChanged: (value) => setState(() => _selectedCategory = value),
+    return BlocConsumer<MerchantMenuCategoryCubit, MerchantMenuCategoryState>(
+      listener: (context, state) {
+        // Set the selected category when categories are loaded (for edit mode)
+        if (state.categories.isSuccess &&
+            _isEditMode &&
+            _selectedCategory == null) {
+          final menu = widget.initialMenu;
+          if (menu?.categoryId != null) {
+            final categories = state.categories.data?.value ?? [];
+            final match = categories
+                .where((c) => c.id == menu!.categoryId)
+                .firstOrNull;
+            if (match != null) {
+              setState(() => _selectedCategory = match);
+            }
+          }
+        }
+      },
+      builder: (context, state) {
+        final categories = state.categories.data?.value ?? [];
+        final isLoading = state.categories.isLoading;
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          spacing: 8.h,
+          children: [
+            Text(
+              context.l10n.label_menu_category,
+              style: context.typography.p.copyWith(
+                fontSize: 16.sp,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            if (_showNewCategoryField) ...[
+              Row(
+                spacing: 8.w,
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: _newCategoryController,
+                      placeholder: Text(context.l10n.placeholder_category_name),
+                      enabled: !state.category.isLoading,
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: state.category.isLoading
+                        ? null
+                        : _handleCreateCategory,
+                    icon: state.category.isLoading
+                        ? const SizedBox(
+                            height: 16,
+                            width: 16,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
+                        : const Icon(LucideIcons.check, size: 16),
+                    variance: ButtonVariance.primary,
+                  ),
+                  IconButton(
+                    onPressed: () => setState(() {
+                      _showNewCategoryField = false;
+                      _newCategoryController.clear();
+                    }),
+                    icon: const Icon(LucideIcons.x, size: 16),
+                    variance: ButtonVariance.outline,
+                  ),
+                ],
+              ),
+            ] else ...[
+              Row(
+                spacing: 8.w,
+                children: [
+                  Expanded(
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: isLoading
+                          ? const Center(
+                              child: SizedBox(
+                                height: 24,
+                                width: 24,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                ),
+                              ),
+                            )
+                          : Select<MerchantMenuCategory>(
+                              enabled:
+                                  !widget.isLoading && categories.isNotEmpty,
+                              itemBuilder: (context, item) => Text(item.name),
+                              value: _selectedCategory,
+                              placeholder: Text(
+                                categories.isEmpty
+                                    ? context.l10n.placeholder_no_categories
+                                    : context.l10n.placeholder_select_category,
+                              ),
+                              onChanged: (value) =>
+                                  setState(() => _selectedCategory = value),
+                              popup: SelectPopup<MerchantMenuCategory>(
+                                items: SelectItemList(
+                                  children: categories
+                                      .map(
+                                        (e) => SelectItemButton(
+                                          value: e,
+                                          child: Text(e.name),
+                                        ),
+                                      )
+                                      .toList(),
+                                ),
+                              ).call,
+                            ),
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: widget.isLoading
+                        ? null
+                        : () => setState(() => _showNewCategoryField = true),
+                    icon: const Icon(LucideIcons.plus, size: 16),
+                    variance: ButtonVariance.outline,
+                  ),
+                ],
+              ),
+            ],
+          ],
+        );
+      },
     );
   }
 

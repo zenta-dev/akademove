@@ -8,12 +8,15 @@ class UserCartCubit extends BaseCubit<UserCartState> {
   UserCartCubit({
     required CartRepository cartRepository,
     required OrderRepository orderRepository,
+    required DocumentService documentService,
   }) : _cartRepository = cartRepository,
        _orderRepository = orderRepository,
+       _documentService = documentService,
        super(const UserCartState());
 
   final CartRepository _cartRepository;
   final OrderRepository _orderRepository;
+  final DocumentService _documentService;
 
   Future<void> loadCart() async {
     emit(state.copyWith(isLoading: true, clearError: true));
@@ -218,5 +221,45 @@ class UserCartCubit extends BaseCubit<UserCartState> {
 
   void reset() {
     emit(const UserCartState());
+  }
+
+  /// Pick a document attachment for Printing merchants
+  /// Supports PDF, DOC, DOCX, and image files (max 10 MB)
+  Future<void> pickAttachment() async {
+    try {
+      final result = await _documentService.pickDocument();
+      emit(state.copyWith(attachment: result, clearError: true));
+    } on ServiceError catch (e) {
+      // Don't show error if user cancelled selection
+      if (e.code != ErrorCode.notFound) {
+        emit(state.copyWith(error: e.message));
+      }
+    }
+  }
+
+  /// Upload the selected attachment and store the URL
+  Future<String?> uploadAttachment() async {
+    final attachment = state.attachment;
+    if (attachment == null) return null;
+
+    emit(state.copyWith(isUploadingAttachment: true, clearError: true));
+
+    try {
+      final response = await _orderRepository.uploadAttachment(
+        attachment.file.path,
+      );
+
+      final url = response.data;
+      emit(state.copyWith(attachmentUrl: url, isUploadingAttachment: false));
+      return url;
+    } on BaseError catch (e) {
+      emit(state.copyWith(isUploadingAttachment: false, error: e.message));
+      return null;
+    }
+  }
+
+  /// Clear the selected attachment
+  void clearAttachment() {
+    emit(state.copyWith(clearAttachment: true));
   }
 }

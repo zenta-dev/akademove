@@ -309,8 +309,9 @@ class _OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
                 // Selected Item Card
                 _buildSelectedItemCard(context, cart),
 
-                // TODO: Add attachment upload for Printing merchants during checkout flow
-                // This will be handled separately in the checkout process
+                // Attachment upload for Printing merchants
+                if (state.isPrintingMerchant)
+                  _buildAttachmentCard(context, state),
 
                 // Payment Summary Card
                 _buildPaymentSummaryCard(context, cart),
@@ -513,6 +514,154 @@ class _OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
                 ),
               ),
             ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAttachmentCard(BuildContext context, UserCartState state) {
+    final attachment = state.attachment;
+    final isUploading = state.isUploadingAttachment;
+    final hasAttachment = state.hasAttachment;
+
+    return _buildCard(
+      context,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(LucideIcons.paperclip, size: 20.sp),
+              Gap(8.w),
+              Text(
+                context.l10n.attachment_upload_title,
+                style: context.typography.semiBold.copyWith(fontSize: 16.sp),
+              ),
+              Gap(8.w),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 2.h),
+                decoration: BoxDecoration(
+                  color: context.colorScheme.muted.withValues(alpha: 0.3),
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: Text(
+                  context.l10n.optional,
+                  style: TextStyle(
+                    fontSize: 10.sp,
+                    color: context.colorScheme.mutedForeground,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Gap(8.h),
+          Text(
+            context.l10n.attachment_upload_hint,
+            style: TextStyle(
+              fontSize: 12.sp,
+              color: context.colorScheme.mutedForeground,
+            ),
+          ),
+          Gap(12.h),
+          if (hasAttachment && attachment != null) ...[
+            Container(
+              padding: EdgeInsets.all(12.dg),
+              decoration: BoxDecoration(
+                color: context.colorScheme.primary.withValues(alpha: 0.05),
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(
+                  color: context.colorScheme.primary.withValues(alpha: 0.3),
+                ),
+              ),
+              child: Row(
+                children: [
+                  Icon(
+                    LucideIcons.file,
+                    size: 24.sp,
+                    color: context.colorScheme.primary,
+                  ),
+                  Gap(12.w),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          attachment.fileName,
+                          style: context.typography.semiBold.copyWith(
+                            fontSize: 14.sp,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        Gap(2.h),
+                        Text(
+                          attachment.formattedSize,
+                          style: TextStyle(
+                            fontSize: 12.sp,
+                            color: context.colorScheme.mutedForeground,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  IconButton(
+                    icon: Icon(LucideIcons.x, size: 18.sp),
+                    variance: ButtonVariance.ghost,
+                    onPressed: isUploading
+                        ? null
+                        : () => context.read<UserCartCubit>().clearAttachment(),
+                  ),
+                ],
+              ),
+            ),
+            Gap(12.h),
+          ],
+          SizedBox(
+            width: double.infinity,
+            child: OutlineButton(
+              onPressed: isUploading
+                  ? null
+                  : () => context.read<UserCartCubit>().pickAttachment(),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                spacing: 8.w,
+                children: [
+                  if (isUploading)
+                    SizedBox(
+                      width: 14.sp,
+                      height: 14.sp,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        size: 14.sp,
+                      ),
+                    )
+                  else
+                    Icon(
+                      hasAttachment
+                          ? LucideIcons.refreshCw
+                          : LucideIcons.upload,
+                      size: 14.sp,
+                    ),
+                  Text(
+                    isUploading
+                        ? context.l10n.attachment_uploading
+                        : hasAttachment
+                        ? context.l10n.attachment_change_file
+                        : context.l10n.attachment_select_file,
+                    style: TextStyle(fontSize: 12.sp),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Gap(8.h),
+          Text(
+            context.l10n.attachment_supported_formats,
+            style: TextStyle(
+              fontSize: 11.sp,
+              color: context.colorScheme.mutedForeground,
+            ),
           ),
         ],
       ),
@@ -1217,8 +1366,25 @@ class _OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
     final userLocationCubit = context.read<UserLocationCubit>();
     final userLocation = userLocationCubit.state.coordinate;
 
-    // TODO: For Printing merchants, attachment upload will be handled
-    // in a separate checkout flow before calling placeFoodOrder
+    // Upload attachment if selected but not yet uploaded (for Printing merchants)
+    final cartCubit = context.read<UserCartCubit>();
+    final cartState = cartCubit.state;
+    if (cartState.isPrintingMerchant &&
+        cartState.hasAttachment &&
+        cartState.attachmentUrl == null) {
+      final uploadedUrl = await cartCubit.uploadAttachment();
+      if (uploadedUrl == null && context.mounted && mounted) {
+        showToast(
+          context: context,
+          builder: (ctx, overlay) => ctx.buildToast(
+            title: context.l10n.order_confirm_failed,
+            message: "Failed to upload attachment",
+          ),
+          location: ToastLocation.topCenter,
+        );
+        return;
+      }
+    }
 
     // Pickup location = merchant location (where food is prepared)
     final pickupLocation = cart.merchantLocation ?? userLocation;
@@ -1230,19 +1396,21 @@ class _OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
         : userLocation;
 
     if (pickupLocation == null || dropoffLocation == null) {
-      showToast(
-        context: context,
-        builder: (ctx, overlay) => ctx.buildToast(
-          title: context.l10n.order_confirm_failed,
-          message:
-              "Unable to determine location. Please enable location services.",
-        ),
-        location: ToastLocation.topCenter,
-      );
+      if (context.mounted && mounted) {
+        showToast(
+          context: context,
+          builder: (ctx, overlay) => ctx.buildToast(
+            title: context.l10n.order_confirm_failed,
+            message:
+                "Unable to determine location. Please enable location services.",
+          ),
+          location: ToastLocation.topCenter,
+        );
+      }
       return;
     }
 
-    if (_deliveryLocation == null) {
+    if (_deliveryLocation == null && context.mounted && mounted) {
       showToast(
         context: context,
         builder: (ctx, overlay) => ctx.buildToast(
@@ -1254,15 +1422,22 @@ class _OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
       return;
     }
 
-    final response = await context.read<UserCartCubit>().placeFoodOrder(
-      pickupLocation: pickupLocation,
-      dropoffLocation: dropoffLocation,
-      paymentMethod: _selectedPaymentMethod,
-      couponCode: _selectedCoupon?.code,
-    );
+    // Get the latest attachment URL after upload
 
-    if (response != null && context.mounted && mounted) {
-      context.pushNamed(Routes.userMartOnTrip.name);
+    if (context.mounted && mounted) {
+      final attachmentUrl = context.read<UserCartCubit>().state.attachmentUrl;
+
+      final response = await context.read<UserCartCubit>().placeFoodOrder(
+        pickupLocation: pickupLocation,
+        dropoffLocation: dropoffLocation,
+        paymentMethod: _selectedPaymentMethod,
+        couponCode: _selectedCoupon?.code,
+        attachmentUrl: attachmentUrl,
+      );
+
+      if (response != null && context.mounted && mounted) {
+        context.pushNamed(Routes.userMartOnTrip.name);
+      }
     }
   }
 }
