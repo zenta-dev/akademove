@@ -10,8 +10,12 @@ import { BUSINESS_CONSTANTS, DRIVER_POOL_KEY } from "@/core/constants";
 import { RepositoryError } from "@/core/error";
 import type { WithTx } from "@/core/interface";
 import { tables } from "@/core/services/db";
-import { ProcessingQueueService } from "@/core/services/queue";
+import {
+	OrderQueueService,
+	ProcessingQueueService,
+} from "@/core/services/queue";
 import type { PaymentDatabase } from "@/core/tables/payment";
+import { BusinessConfigurationService } from "@/features/configuration/services/business-configuration-service";
 import { OrderStateService } from "@/features/order/services/order-state-service";
 import { toNumberSafe, toStringNumberSafe } from "@/utils";
 import { logger } from "@/utils/logger";
@@ -659,6 +663,57 @@ export class PaymentWebhookService {
 		// For RIDE/DELIVERY orders: Trigger driver matching via driver pool broadcast
 		// For FOOD orders: Skip driver pool - matching only starts after merchant marks READY_FOR_PICKUP
 		if (!isFoodOrder) {
+			try {
+				// Fetch driver matching config from database
+				// Note: We need to use tx as db here since we're inside a transaction
+				const matchingConfig =
+					await BusinessConfigurationService.getDriverMatchingConfig(
+						tx as unknown as Parameters<
+							typeof BusinessConfigurationService.getDriverMatchingConfig
+						>[0],
+						env.MAIN_KV as unknown as Parameters<
+							typeof BusinessConfigurationService.getDriverMatchingConfig
+						>[1],
+					);
+
+				// Enqueue driver matching job (which handles push notifications to drivers)
+				// This is critical for notifying drivers - WebSocket alone is not enough
+				await OrderQueueService.enqueueDriverMatching({
+					orderId: order.id,
+					pickupLocation: order.pickupLocation,
+					orderType: order.type,
+					genderPreference: order.genderPreference ?? undefined,
+					userGender: order.gender ?? undefined,
+					initialRadiusKm: matchingConfig.initialRadiusKm,
+					maxRadiusKm: matchingConfig.maxRadiusKm,
+					maxMatchingDurationMinutes: matchingConfig.timeoutMinutes,
+					currentAttempt: 1,
+					maxExpansionAttempts: Math.ceil(
+						Math.log(
+							matchingConfig.maxRadiusKm / matchingConfig.initialRadiusKm,
+						) / Math.log(1 + matchingConfig.expansionRate),
+					),
+					expansionRate: matchingConfig.expansionRate,
+					matchingIntervalSeconds: matchingConfig.intervalSeconds,
+					broadcastLimit: matchingConfig.broadcastLimit,
+					maxCancellationsPerDay: matchingConfig.maxCancellationsPerDay,
+					paymentId: payment.id,
+					excludedDriverIds: [],
+					isRetry: false,
+				});
+
+				logger.info(
+					{ orderId: order.id },
+					"[PaymentWebhookService] Driver matching job enqueued after QRIS/Bank Transfer payment success",
+				);
+			} catch (matchingError) {
+				// Log but don't fail the webhook - the cron rebroadcast will handle stuck orders
+				logger.error(
+					{ error: matchingError, orderId: order.id },
+					"[PaymentWebhookService] Failed to enqueue driver matching job - cron will handle",
+				);
+			}
+
 			// Trigger order matching with delayed broadcast via queue
 			// Note: setTimeout doesn't work reliably in Cloudflare Workers due to security restrictions
 			// @see https://developers.cloudflare.com/workers/runtime-apis/nodejs/timers/
