@@ -275,6 +275,27 @@ class DriverRepository extends BaseRepository {
         return SuccessResponse(message: data.message, data: data.data);
       });
 
+  // Analytics
+  Future<BaseResponse<DriverGetAnalytics200ResponseData>> getAnalytics({
+    required String driverId,
+    String? period,
+  }) {
+    return guard(() async {
+      final res = await _apiClient.getDriverApi().driverGetAnalytics(
+        id: driverId,
+        period: period,
+      );
+      final data =
+          res.data ??
+          (throw const RepositoryError(
+            'Analytics not found',
+            code: ErrorCode.notFound,
+          ));
+
+      return SuccessResponse(message: data.message, data: data.data);
+    });
+  }
+
   // Commission Report
   Future<BaseResponse<CommissionReportResponse>> getCommissionReport({
     required String driverId,

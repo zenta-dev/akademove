@@ -36,21 +36,13 @@ class DriverUpdateProfileRequest {
 class DriverProfileCubit extends BaseCubit<DriverProfileState> {
   DriverProfileCubit({
     required DriverRepository driverRepository,
-    required OrderRepository orderRepository,
-    required ConfigurationRepository configurationRepository,
     required UserRepository userRepository,
   }) : _driverRepository = driverRepository,
-       _orderRepository = orderRepository,
-       _configurationRepository = configurationRepository,
        _userRepository = userRepository,
        super(const DriverProfileState());
 
   final DriverRepository _driverRepository;
-  final OrderRepository _orderRepository;
-  final ConfigurationRepository _configurationRepository;
   final UserRepository _userRepository;
-
-  double? _platformFeeRate;
 
   /// Get current driver from state (single source of truth).
   Driver? get driver => state.driver;
@@ -62,31 +54,20 @@ class DriverProfileCubit extends BaseCubit<DriverProfileState> {
 
       // Get driver profile
       final driverRes = await _driverRepository.getMine();
+      final driverData = driverRes.data;
 
-      // Get today's stats
-      final orders = await _orderRepository.list(
-        const ListOrderQuery(statuses: [OrderStatus.COMPLETED]),
+      // Get today's stats using server-side analytics API
+      final analyticsRes = await _driverRepository.getAnalytics(
+        driverId: driverData.id,
+        period: 'today',
       );
-
-      // Calculate today's earnings and trips
-      final now = DateTime.now();
-      final todayOrders = orders.data.where((order) {
-        final orderDate = order.updatedAt;
-        return order.status == OrderStatus.COMPLETED &&
-            orderDate.year == now.year &&
-            orderDate.month == now.month &&
-            orderDate.day == now.day;
-      }).toList();
-
-      // Calculate driver earnings (totalPrice - platform commission)
-      final todayEarnings = await _calculateDriverEarnings(todayOrders);
 
       emit(
         state.copyWith(
-          driver: driverRes.data,
-          initResult: OperationResult.success(driverRes.data),
-          todayEarnings: todayEarnings,
-          todayTrips: todayOrders.length,
+          driver: driverData,
+          initResult: OperationResult.success(driverData),
+          todayEarnings: analyticsRes.data.totalEarnings,
+          todayTrips: analyticsRes.data.completedOrders.toInt(),
         ),
       );
     } on BaseError catch (e, st) {
@@ -102,32 +83,25 @@ class DriverProfileCubit extends BaseCubit<DriverProfileState> {
   /// Refresh today's stats only.
   Future<void> refreshStats() async =>
       await taskManager.execute('DPC-rS1', () async {
+        final currentDriver = state.driver;
+        if (currentDriver == null) return;
+
         try {
           emit(
             state.copyWith(refreshStatsResult: const OperationResult.loading()),
           );
 
-          final orders = await _orderRepository.list(
-            const ListOrderQuery(statuses: [OrderStatus.COMPLETED]),
+          // Get today's stats using server-side analytics API
+          final analyticsRes = await _driverRepository.getAnalytics(
+            driverId: currentDriver.id,
+            period: 'today',
           );
-
-          final now = DateTime.now();
-          final todayOrders = orders.data.where((order) {
-            final orderDate = order.updatedAt;
-            return order.status == OrderStatus.COMPLETED &&
-                orderDate.year == now.year &&
-                orderDate.month == now.month &&
-                orderDate.day == now.day;
-          }).toList();
-
-          // Calculate driver earnings (totalPrice - platform commission)
-          final todayEarnings = await _calculateDriverEarnings(todayOrders);
 
           emit(
             state.copyWith(
               refreshStatsResult: OperationResult.success(true),
-              todayEarnings: todayEarnings,
-              todayTrips: todayOrders.length,
+              todayEarnings: analyticsRes.data.totalEarnings,
+              todayTrips: analyticsRes.data.completedOrders.toInt(),
             ),
           );
         } on BaseError catch (e, st) {
@@ -139,58 +113,6 @@ class DriverProfileCubit extends BaseCubit<DriverProfileState> {
           // Don't emit error for stats refresh failure
         }
       });
-
-  /// Calculate total driver earnings from orders after platform commission.
-  /// NOTE: Platform fee rate MUST come from database configuration.
-  /// Fallback values are forbidden per business requirements.
-  Future<num> _calculateDriverEarnings(List<Order> orders) async {
-    if (orders.isEmpty) return 0;
-
-    // Fetch platform fee rate from configuration if not already cached
-    if (_platformFeeRate == null) {
-      try {
-        // Fetch ride pricing configuration (contains platformFeeRate)
-        final configRes = await _configurationRepository.get(
-          'ride-service-pricing',
-        );
-        final pricingConfig = configRes.data.value;
-
-        // Parse the pricing configuration JSON
-        if (pricingConfig is Map<String, Object?>) {
-          final platformFeeRate = pricingConfig['platformFeeRate'];
-          if (platformFeeRate is num) {
-            _platformFeeRate = platformFeeRate.toDouble();
-          } else {
-            logger.e(
-              '[DriverProfileCubit] platformFeeRate not found in configuration',
-            );
-            // Return 0 earnings to indicate error rather than showing wrong data
-            return 0;
-          }
-        }
-      } catch (e) {
-        logger.e(
-          '[DriverProfileCubit] Failed to fetch platform fee rate from database',
-          error: e,
-        );
-        // Return 0 earnings to indicate error rather than showing wrong data
-        return 0;
-      }
-    }
-
-    // platformFeeRate should now be available from database
-    if (_platformFeeRate == null) {
-      logger.e('[DriverProfileCubit] Platform fee rate not available');
-      return 0;
-    }
-
-    final driverShare = 1.0 - _platformFeeRate!;
-
-    return orders.fold<num>(
-      0,
-      (sum, order) => sum + (order.totalPrice * driverShare),
-    );
-  }
 
   /// Load driver profile from server (alias for refreshProfile).
   Future<void> loadProfile() async =>
@@ -426,7 +348,6 @@ class DriverProfileCubit extends BaseCubit<DriverProfileState> {
 
   /// Reset state.
   void reset() {
-    _platformFeeRate = null;
     emit(const DriverProfileState());
   }
 

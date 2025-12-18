@@ -229,8 +229,6 @@ void _setupCubit() {
     ..registerFactory(
       () => DriverProfileCubit(
         driverRepository: sl<DriverRepository>(),
-        orderRepository: sl<OrderRepository>(),
-        configurationRepository: sl<ConfigurationRepository>(),
         userRepository: sl<UserRepository>(),
       ),
     )
