@@ -55,11 +55,9 @@ export default {
 					logger.error({ error }, "[Cron] Order rebroadcast handler failed");
 				}),
 			);
-		}
 
-		// Every 2 minutes: Rebroadcast orders to driver pool if no driver accepted
-		// Handles cases where first broadcast had no drivers or all drivers ignored the order
-		if (event.cron === "*/2 * * * *") {
+			// Every minute: Rebroadcast orders to driver pool if no driver accepted
+			// Handles cases where first broadcast had no drivers or all drivers ignored the order
 			ctx.waitUntil(
 				handleDriverRebroadcastCron(env, ctx).catch((error) => {
 					logger.error({ error }, "[Cron] Driver rebroadcast handler failed");

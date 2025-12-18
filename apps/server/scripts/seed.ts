@@ -987,7 +987,7 @@ export async function seedConfigurations() {
 					driverLocationStaleThresholdMinutes: 15, // 15 minutes to consider driver location stale
 
 					// Driver rebroadcast configuration
-					driverRebroadcastIntervalMinutes: 2, // 2 minutes between rebroadcast attempts
+					driverRebroadcastIntervalMinutes: 1, // 1 minute between rebroadcast attempts
 					driverRebroadcastRadiusMultiplier: 1.5, // 1.5x initial radius for rebroadcast
 
 					// Commission configuration

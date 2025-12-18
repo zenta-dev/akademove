@@ -166,7 +166,7 @@ export const BusinessConfigurationSchema = z.object({
 	 * Orders in MATCHING status without a driver will be rebroadcast
 	 * to the driver pool every X minutes (default: 2 minutes)
 	 */
-	driverRebroadcastIntervalMinutes: z.coerce.number().positive().default(2),
+	driverRebroadcastIntervalMinutes: z.coerce.number().positive().default(1),
 
 	/**
 	 * Multiplier for radius expansion during rebroadcast (default: 1.5)
