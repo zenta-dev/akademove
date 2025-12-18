@@ -303,7 +303,7 @@ export function getRepositories(
 		emergency: new EmergencyRepository(svc.db, svc.kv),
 		emergencyContact: new EmergencyContactRepository(svc.db, svc.kv),
 		fraud: new FraudRepository(svc.db, svc.kv),
-		leaderboard: new LeaderboardRepository(svc.db, svc.kv),
+		leaderboard: new LeaderboardRepository(svc.db, svc.kv, svc.storage),
 		merchant: {
 			main: new MerchantMainRepository(svc.db, svc.kv, svc.storage),
 			menu: new MerchantMenuRepository(svc.db, svc.kv, svc.storage),

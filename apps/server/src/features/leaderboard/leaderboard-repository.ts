@@ -19,14 +19,22 @@ import type {
 } from "@/core/interface";
 import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
+import { S3StorageService, type StorageService } from "@/core/services/storage";
 import type { LeaderboardDatabase } from "@/core/tables/leaderboard";
 import { toNumberSafe } from "@/utils";
 import { logger } from "@/utils/logger";
 import { LeaderboardListQueryService } from "./services/leaderboard-list-query-service";
 
 export class LeaderboardRepository extends BaseRepository {
-	constructor(db: DatabaseService, kv: KeyValueService) {
+	readonly #storage: StorageService;
+
+	constructor(
+		db: DatabaseService,
+		kv: KeyValueService,
+		storage: StorageService,
+	) {
 		super("leaderboard", kv, db);
+		this.#storage = storage;
 	}
 
 	static composeEntity(item: LeaderboardDatabase): Leaderboard {
@@ -65,10 +73,24 @@ export class LeaderboardRepository extends BaseRepository {
 
 			for (const driver of drivers) {
 				if (driver.user) {
+					// Generate presigned URL for user image (private bucket)
+					let imageUrl: string | undefined;
+					if (driver.user.image) {
+						try {
+							imageUrl = await this.#storage.getPresignedUrl({
+								bucket: "user",
+								key: driver.user.image,
+								expiresIn: S3StorageService.SEVEN_DAY_PRESIGNED_URL_EXPIRY,
+							});
+						} catch {
+							// Image might not exist, continue without it
+						}
+					}
+
 					driverMap.set(driver.id, {
 						id: driver.id,
 						name: driver.user.name,
-						image: driver.user.image ?? undefined,
+						image: imageUrl,
 						rating: toNumberSafe(driver.rating),
 					});
 				}
