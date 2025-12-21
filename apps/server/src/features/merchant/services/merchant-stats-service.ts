@@ -71,6 +71,7 @@ interface RawRevenueByDay {
 export class MerchantStatsService {
 	/**
 	 * Calculate date range based on period or custom dates
+	 * Returns inclusive start and end dates for the period
 	 */
 	static calculateDateRange(
 		period?: "today" | "week" | "month" | "year",
@@ -80,27 +81,36 @@ export class MerchantStatsService {
 		startDate: Date;
 		endDate: Date;
 	} {
-		// If custom dates provided, use them
+		// If custom dates provided, use them with proper end-of-day for end date
 		if (customStartDate && customEndDate) {
-			return { startDate: customStartDate, endDate: customEndDate };
+			const endDate = new Date(customEndDate);
+			endDate.setHours(23, 59, 59, 999);
+			return { startDate: customStartDate, endDate };
 		}
 
 		// Otherwise calculate from period
-		const startDate = new Date();
-		const endDate = new Date();
+		const now = new Date();
+		const startDate = new Date(now);
+		const endDate = new Date(now);
+
+		// Set end date to end of today for all periods
+		endDate.setHours(23, 59, 59, 999);
 
 		switch (period ?? "month") {
 			case "today":
 				startDate.setHours(0, 0, 0, 0);
 				break;
 			case "week":
-				startDate.setDate(startDate.getDate() - 7);
+				startDate.setDate(startDate.getDate() - 6);
+				startDate.setHours(0, 0, 0, 0);
 				break;
 			case "month":
-				startDate.setMonth(startDate.getMonth() - 1);
+				startDate.setDate(startDate.getDate() - 29);
+				startDate.setHours(0, 0, 0, 0);
 				break;
 			case "year":
 				startDate.setFullYear(startDate.getFullYear() - 1);
+				startDate.setHours(0, 0, 0, 0);
 				break;
 		}
 
