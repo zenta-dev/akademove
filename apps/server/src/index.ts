@@ -20,6 +20,7 @@ import { handleQueue } from "./features/queue/queue-handler";
 import { handleReportEscalationCron } from "./features/report/cron/report-escalation-handler";
 import { handleRatingRecalculationCron } from "./features/review/cron/rating-recalculation-handler";
 import { handleBanExpiryCron } from "./features/user/cron/ban-expiry-handler";
+import { handleCommissionReportCron } from "./features/wallet/cron/commission-report-cron";
 import { setupWebsocketRouter } from "./features/ws";
 import { logger } from "./utils/logger";
 
@@ -89,6 +90,17 @@ export default {
 			ctx.waitUntil(
 				handleRatingRecalculationCron(env, ctx).catch((error) => {
 					logger.error({ error }, "[Cron] Rating recalculation handler failed");
+				}),
+			);
+
+			// Every 5 minutes: Pre-compute commission reports for drivers and merchants
+			// Ensures reports are cached for quick access
+			ctx.waitUntil(
+				handleCommissionReportCron(env, ctx).catch((error) => {
+					logger.error(
+						{ error },
+						"[Cron] Commission report caching handler failed",
+					);
 				}),
 			);
 		}

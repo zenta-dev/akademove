@@ -511,9 +511,10 @@ export const DriverWalletHandler = priv.router({
 			// Get driver's wallet
 			const wallet = await context.repo.wallet.getByUserId(driver.userId);
 
-			// Get commission report using the service
-			const report = await CommissionReportService.getCommissionReport(
+			// Get commission report using the service with cache support
+			const report = await CommissionReportService.getCommissionReportWithCache(
 				context.svc.db,
+				context.svc.kv,
 				wallet.id,
 				wallet.balance,
 				query,

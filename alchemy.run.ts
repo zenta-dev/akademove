@@ -174,7 +174,7 @@ export const [server, web] = await Promise.all([
 		],
 		crons: [
 			"* * * * *", // Every minute: auto-offline + scheduled orders + order rebroadcast + driver rebroadcast
-			"*/5 * * * *", // Every 5 minutes: order checker (timeouts, cleanup) + stale location
+			"*/5 * * * *", // Every 5 minutes: order checker (timeouts, cleanup) + stale location + commission report caching
 			"*/15 * * * *", // Every 15 minutes: leaderboard calculation
 			"0 * * * *", // Hourly: ban expiry, payment expiry, report escalation, DLQ monitor
 			"0 0 * * *", // Daily at midnight: coupon expiry, banner expiry

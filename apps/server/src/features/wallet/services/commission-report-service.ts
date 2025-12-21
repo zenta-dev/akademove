@@ -6,14 +6,26 @@ import type {
 	CommissionTransaction,
 } from "@repo/schema/wallet";
 import { and, desc, eq, gte, inArray, lte, sql } from "drizzle-orm";
+import { CACHE_TTLS } from "@/core/constants";
 import type { DatabaseService, DatabaseTransaction } from "@/core/services/db";
 import { tables } from "@/core/services/db";
+import type { KeyValueService } from "@/core/services/kv";
 import { toNumberSafe } from "@/utils";
 import { logger } from "@/utils/logger";
 
 const log = logger.child({ module: "CommissionReportService" });
 
 type DatabaseOrTransaction = DatabaseService | DatabaseTransaction;
+
+/**
+ * Cache key pattern for driver commission reports
+ */
+export function getCommissionReportCacheKey(
+	walletId: string,
+	period: CommissionReportPeriod,
+): string {
+	return `commission-report:driver:${walletId}:${period}`;
+}
 
 /**
  * Service responsible for generating commission reports for drivers
@@ -423,5 +435,83 @@ export class CommissionReportService {
 			transactions,
 			period,
 		};
+	}
+
+	/**
+	 * Get commission report with cache support
+	 *
+	 * This method first checks KV cache for pre-computed reports
+	 * (populated by the commission report cron job).
+	 * Falls back to computing the report if cache miss.
+	 *
+	 * @param db - Database service
+	 * @param kv - KV cache service
+	 * @param walletId - Wallet ID to get report for
+	 * @param currentBalance - Current wallet balance
+	 * @param query - Report query parameters
+	 * @returns Commission report response
+	 */
+	static async getCommissionReportWithCache(
+		db: DatabaseOrTransaction,
+		kv: KeyValueService,
+		walletId: string,
+		currentBalance: number,
+		query: CommissionReportQuery,
+	): Promise<CommissionReportResponse> {
+		const period = query.period ?? "daily";
+
+		// For custom date ranges, always compute fresh (don't use cache)
+		if (query.startDate || query.endDate) {
+			return CommissionReportService.getCommissionReport(
+				db,
+				walletId,
+				currentBalance,
+				query,
+			);
+		}
+
+		const cacheKey = getCommissionReportCacheKey(walletId, period);
+
+		// Use fallback pattern to handle cache miss gracefully
+		const report = await kv.get<CommissionReportResponse>(cacheKey, {
+			fallback: async () => {
+				log.debug(
+					{ walletId, period, cacheKey },
+					"[CommissionReportService] Cache miss, computing fresh report",
+				);
+
+				// Compute fresh report
+				const freshReport = await CommissionReportService.getCommissionReport(
+					db,
+					walletId,
+					currentBalance,
+					query,
+				);
+
+				// Cache the result for future requests
+				try {
+					await kv.put(cacheKey, freshReport, {
+						expirationTtl: CACHE_TTLS["1h"],
+					});
+				} catch (error) {
+					log.warn(
+						{ error, walletId, period },
+						"[CommissionReportService] Failed to cache report",
+					);
+				}
+
+				return freshReport;
+			},
+		});
+
+		// Update current balance as it may have changed since cache was created
+		report.currentBalance = currentBalance;
+
+		log.debug(
+			{ walletId, period, cacheKey },
+			"[CommissionReportService] Returning commission report",
+		);
+
+		return report;
 	}
 }
