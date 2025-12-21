@@ -5,10 +5,13 @@ import type {
 	CommissionReportResponse,
 	CommissionTransaction,
 } from "@repo/schema/wallet";
-import { and, desc, eq, gte, inArray, lt, sql } from "drizzle-orm";
+import { and, desc, eq, gte, inArray, lte, sql } from "drizzle-orm";
 import type { DatabaseService, DatabaseTransaction } from "@/core/services/db";
 import { tables } from "@/core/services/db";
 import { toNumberSafe } from "@/utils";
+import { logger } from "@/utils/logger";
+
+const log = logger.child({ module: "CommissionReportService" });
 
 type DatabaseOrTransaction = DatabaseService | DatabaseTransaction;
 
@@ -20,6 +23,7 @@ type DatabaseOrTransaction = DatabaseService | DatabaseTransaction;
 export class CommissionReportService {
 	/**
 	 * Calculate date range based on period
+	 * Returns inclusive start and end dates for the period
 	 */
 	static calculateDateRange(
 		period: CommissionReportPeriod,
@@ -27,34 +31,52 @@ export class CommissionReportService {
 		endDate?: Date,
 	): { start: Date; end: Date } {
 		const now = new Date();
-		const end = endDate ?? now;
 
-		if (startDate) {
+		// If custom dates are provided, use them with proper end-of-day for end date
+		if (startDate && endDate) {
+			const end = new Date(endDate);
+			end.setHours(23, 59, 59, 999);
 			return { start: startDate, end };
 		}
 
+		if (startDate) {
+			// If only start date provided, end is now
+			return { start: startDate, end: now };
+		}
+
 		let start: Date;
+		let end: Date;
+
 		switch (period) {
 			case "daily":
-				// Last 24 hours
-				start = new Date(end);
+				// Today from 00:00:00 to 23:59:59
+				start = new Date(now);
 				start.setHours(0, 0, 0, 0);
+				end = new Date(now);
+				end.setHours(23, 59, 59, 999);
 				break;
 			case "weekly":
-				// Last 7 days
-				start = new Date(end);
+				// Last 7 days from start of first day to end of today
+				start = new Date(now);
 				start.setDate(start.getDate() - 6);
 				start.setHours(0, 0, 0, 0);
+				end = new Date(now);
+				end.setHours(23, 59, 59, 999);
 				break;
 			case "monthly":
-				// Last 30 days
-				start = new Date(end);
+				// Last 30 days from start of first day to end of today
+				start = new Date(now);
 				start.setDate(start.getDate() - 29);
 				start.setHours(0, 0, 0, 0);
+				end = new Date(now);
+				end.setHours(23, 59, 59, 999);
 				break;
 			default:
-				start = new Date(end);
+				// Default to today
+				start = new Date(now);
 				start.setHours(0, 0, 0, 0);
+				end = new Date(now);
+				end.setHours(23, 59, 59, 999);
 		}
 
 		return { start, end };
@@ -88,7 +110,7 @@ export class CommissionReportService {
 							eq(tables.transaction.status, "SUCCESS"),
 							inArray(tables.transaction.type, ["EARNING", "COMMISSION"]),
 							gte(tables.transaction.createdAt, start),
-							lt(tables.transaction.createdAt, end),
+							lte(tables.transaction.createdAt, end),
 						),
 					)
 					.groupBy(
@@ -130,7 +152,7 @@ export class CommissionReportService {
 							eq(tables.transaction.status, "SUCCESS"),
 							inArray(tables.transaction.type, ["EARNING", "COMMISSION"]),
 							gte(tables.transaction.createdAt, start),
-							lt(tables.transaction.createdAt, end),
+							lte(tables.transaction.createdAt, end),
 						),
 					)
 					.groupBy(
@@ -171,7 +193,7 @@ export class CommissionReportService {
 							eq(tables.transaction.status, "SUCCESS"),
 							inArray(tables.transaction.type, ["EARNING", "COMMISSION"]),
 							gte(tables.transaction.createdAt, start),
-							lt(tables.transaction.createdAt, end),
+							lte(tables.transaction.createdAt, end),
 						),
 					)
 					.groupBy(
@@ -242,7 +264,7 @@ export class CommissionReportService {
 					eq(tables.transaction.status, "SUCCESS"),
 					inArray(tables.transaction.type, ["EARNING", "COMMISSION"]),
 					gte(tables.transaction.createdAt, start),
-					lt(tables.transaction.createdAt, end),
+					lte(tables.transaction.createdAt, end),
 				),
 			)
 			.orderBy(desc(tables.transaction.createdAt))
@@ -293,7 +315,7 @@ export class CommissionReportService {
 						"PAYMENT",
 					]),
 					gte(tables.transaction.createdAt, start),
-					lt(tables.transaction.createdAt, end),
+					lte(tables.transaction.createdAt, end),
 				),
 			)
 			.groupBy(tables.transaction.type);
@@ -349,6 +371,16 @@ export class CommissionReportService {
 			query.endDate,
 		);
 
+		log.info(
+			{
+				walletId,
+				period,
+				start: start.toISOString(),
+				end: end.toISOString(),
+			},
+			"[CommissionReportService] Generating commission report",
+		);
+
 		const [totals, chartData, transactions] = await Promise.all([
 			CommissionReportService.calculateTotals(db, walletId, start, end),
 			CommissionReportService.generateChartData(
@@ -360,6 +392,18 @@ export class CommissionReportService {
 			),
 			CommissionReportService.fetchTransactions(db, walletId, start, end),
 		]);
+
+		log.info(
+			{
+				walletId,
+				totalEarnings: totals.totalEarnings,
+				totalCommission: totals.totalCommission,
+				incomingBalance: totals.incomingBalance,
+				outgoingBalance: totals.outgoingBalance,
+				transactionsCount: transactions.length,
+			},
+			"[CommissionReportService] Commission report generated",
+		);
 
 		const netIncome = totals.totalEarnings - totals.totalCommission;
 		const commissionRate =
