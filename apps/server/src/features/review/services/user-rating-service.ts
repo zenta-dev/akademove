@@ -1,7 +1,7 @@
 import { avg, eq } from "drizzle-orm";
 import type { DatabaseService, DatabaseTransaction } from "@/core/services/db";
 import { tables } from "@/core/services/db";
-import { toNumberSafe } from "@/utils";
+import { safeAsync, toNumberSafe } from "@/utils";
 import { logger } from "@/utils/logger";
 
 /**
@@ -29,6 +29,7 @@ export class UserRatingService {
 
 	/**
 	 * Update the user's rating in the database based on their received reviews.
+	 * Also updates the driver rating if the user is a driver.
 	 * This should be called after a new review is submitted for a user.
 	 */
 	static async updateUserRating(
@@ -38,13 +39,27 @@ export class UserRatingService {
 		try {
 			const newRating = await UserRatingService.calculateUserRating(db, userId);
 
-			await db
-				.update(tables.user)
-				.set({
-					rating: newRating,
-					updatedAt: new Date(),
-				})
-				.where(eq(tables.user.id, userId));
+			// Also update driver.rating if this user is a driver
+			// The driver table has a separate rating column used for order matching
+			await safeAsync(
+				async () =>
+					await Promise.all([
+						db
+							.update(tables.user)
+							.set({
+								rating: newRating,
+								updatedAt: new Date(),
+							})
+							.where(eq(tables.user.id, userId)),
+						db
+							.update(tables.driver)
+							.set({
+								rating: newRating,
+								updatedAt: new Date(),
+							})
+							.where(eq(tables.driver.userId, userId)),
+					]),
+			);
 
 			logger.info(
 				{ userId, newRating },

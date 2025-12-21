@@ -1,18 +1,30 @@
-import {
-	type BucketLocationConstraint,
-	CreateBucketCommand,
-	DeleteObjectCommand,
-	DeletePublicAccessBlockCommand,
-	GetObjectCommand,
-	HeadBucketCommand,
-	PutBucketPolicyCommand,
-	PutObjectCommand,
-	S3Client,
+import type {
+	BucketLocationConstraint,
+	S3Client as S3ClientType,
 } from "@aws-sdk/client-s3";
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 import { isPublicBucket, type StorageBucket } from "../constants";
 import { StorageError } from "../error";
+
+// Lazy-load AWS SDK to reduce cold start time
+// The AWS SDK is very heavy and can cause Cloudflare Workers to exceed CPU time limits during startup
+let _s3ClientModule: typeof import("@aws-sdk/client-s3") | null = null;
+let _s3PresignerModule: typeof import("@aws-sdk/s3-request-presigner") | null =
+	null;
+
+async function getS3ClientModule() {
+	if (!_s3ClientModule) {
+		_s3ClientModule = await import("@aws-sdk/client-s3");
+	}
+	return _s3ClientModule;
+}
+
+async function getS3PresignerModule() {
+	if (!_s3PresignerModule) {
+		_s3PresignerModule = await import("@aws-sdk/s3-request-presigner");
+	}
+	return _s3PresignerModule;
+}
 
 interface StorageBaseOptions {
 	bucket: StorageBucket;
@@ -46,26 +58,35 @@ interface S3StorageOptions {
 }
 
 export class S3StorageService implements StorageService {
-	readonly #client: S3Client;
+	#client: S3ClientType | null = null;
+	readonly #options: S3StorageOptions;
 	readonly #publicUrl: string;
 	readonly #bucketExists = new Map<StorageBucket, boolean>();
 	readonly #bucketCreationPromises = new Map<StorageBucket, Promise<void>>();
 
 	static readonly DEFAULT_PRESIGNED_URL_EXPIRY = 900; // 15 minutes
 	static readonly ONE_DAY_PRESIGNED_URL_EXPIRY = 86400; // 1 day
-	static readonly SEVEN_DAY_PRESIGNED_URL_EXPIRY = 604800; // 1 day
+	static readonly SEVEN_DAY_PRESIGNED_URL_EXPIRY = 604800; // 7 days
 
 	constructor(options: S3StorageOptions) {
-		this.#client = new S3Client({
-			endpoint: options.endpoint,
-			region: options.region,
-			credentials: {
-				accessKeyId: options.accessKeyId,
-				secretAccessKey: options.secretAccessKey,
-			},
-			forcePathStyle: true,
-		});
+		this.#options = options;
 		this.#publicUrl = options.publicUrl;
+	}
+
+	async #getClient(): Promise<S3ClientType> {
+		if (!this.#client) {
+			const { S3Client } = await getS3ClientModule();
+			this.#client = new S3Client({
+				endpoint: this.#options.endpoint,
+				region: this.#options.region,
+				credentials: {
+					accessKeyId: this.#options.accessKeyId,
+					secretAccessKey: this.#options.secretAccessKey,
+				},
+				forcePathStyle: true,
+			});
+		}
+		return this.#client;
 	}
 
 	async ensureBucket(bucket: StorageBucket): Promise<void> {
@@ -88,8 +109,11 @@ export class S3StorageService implements StorageService {
 	}
 
 	async #createBucketIfNeeded(bucket: StorageBucket): Promise<void> {
+		const client = await this.#getClient();
+		const { HeadBucketCommand } = await getS3ClientModule();
+
 		try {
-			await this.#client.send(new HeadBucketCommand({ Bucket: bucket }));
+			await client.send(new HeadBucketCommand({ Bucket: bucket }));
 			this.#bucketExists.set(bucket, true);
 			console.debug("[S3StorageService] Bucket already exists", { bucket });
 		} catch (error) {
@@ -102,12 +126,15 @@ export class S3StorageService implements StorageService {
 	}
 
 	async #createBucket(bucket: StorageBucket): Promise<void> {
+		const client = await this.#getClient();
+		const { CreateBucketCommand } = await getS3ClientModule();
+
 		try {
-			await this.#client.send(
+			await client.send(
 				new CreateBucketCommand({
 					Bucket: bucket,
 					CreateBucketConfiguration: {
-						LocationConstraint: this.#client.config
+						LocationConstraint: this.#options
 							.region as BucketLocationConstraint,
 					},
 				}),
@@ -136,9 +163,12 @@ export class S3StorageService implements StorageService {
 		maxRetries = 5,
 		delayMs = 500,
 	): Promise<void> {
+		const client = await this.#getClient();
+		const { HeadBucketCommand } = await getS3ClientModule();
+
 		for (let i = 0; i < maxRetries; i++) {
 			try {
-				await this.#client.send(new HeadBucketCommand({ Bucket: bucket }));
+				await client.send(new HeadBucketCommand({ Bucket: bucket }));
 				return;
 			} catch (error) {
 				if (i === maxRetries - 1) {
@@ -162,6 +192,10 @@ export class S3StorageService implements StorageService {
 		maxRetries = 5,
 		delayMs = 500,
 	): Promise<void> {
+		const client = await this.#getClient();
+		const { DeletePublicAccessBlockCommand, PutBucketPolicyCommand } =
+			await getS3ClientModule();
+
 		const policy = {
 			Version: "2012-10-17",
 			Statement: [
@@ -178,11 +212,11 @@ export class S3StorageService implements StorageService {
 		for (let attempt = 0; attempt < maxRetries; attempt++) {
 			try {
 				// First, remove public access block (required for MinIO/S3)
-				await this.#client.send(
+				await client.send(
 					new DeletePublicAccessBlockCommand({ Bucket: bucket }),
 				);
 
-				await this.#client.send(
+				await client.send(
 					new PutBucketPolicyCommand({
 						Bucket: bucket,
 						Policy: JSON.stringify(policy),
@@ -218,13 +252,15 @@ export class S3StorageService implements StorageService {
 
 	async upload(options: UploadOptions): Promise<string> {
 		const { file, bucket, key, userId, isPublic = false } = options;
+		const client = await this.#getClient();
+		const { PutObjectCommand } = await getS3ClientModule();
 
 		try {
 			await this.ensureBucket(bucket);
 
 			const body = new Uint8Array(await file.arrayBuffer());
 
-			await this.#client.send(
+			await client.send(
 				new PutObjectCommand({
 					Bucket: bucket,
 					Key: key,
@@ -242,8 +278,11 @@ export class S3StorageService implements StorageService {
 	}
 
 	async delete(options: StorageBaseOptions): Promise<void> {
+		const client = await this.#getClient();
+		const { DeleteObjectCommand } = await getS3ClientModule();
+
 		try {
-			await this.#client.send(
+			await client.send(
 				new DeleteObjectCommand({
 					Bucket: options.bucket,
 					Key: options.key,
@@ -256,6 +295,10 @@ export class S3StorageService implements StorageService {
 	}
 
 	async getPresignedUrl(options: GetPresignedUrl): Promise<string> {
+		const client = await this.#getClient();
+		const { GetObjectCommand } = await getS3ClientModule();
+		const { getSignedUrl } = await getS3PresignerModule();
+
 		try {
 			await this.ensureBucket(options.bucket);
 
@@ -264,7 +307,7 @@ export class S3StorageService implements StorageService {
 				Key: options.key,
 			});
 
-			return await getSignedUrl(this.#client, command, {
+			return await getSignedUrl(client, command, {
 				expiresIn:
 					options.expiresIn ?? S3StorageService.DEFAULT_PRESIGNED_URL_EXPIRY,
 			});

@@ -1,7 +1,5 @@
 import { env } from "cloudflare:workers";
 import type { AnyContractRouter } from "@orpc/contract";
-import { OpenAPIHandler } from "@orpc/openapi/fetch";
-import { OpenAPIReferencePlugin } from "@orpc/openapi/plugins";
 import {
 	type Context,
 	type Implementer,
@@ -18,18 +16,28 @@ import {
 } from "@orpc/server/plugins";
 import type { StandardHandleResult } from "@orpc/server/standard";
 import type { Interceptor } from "@orpc/shared";
-import { ZodToJsonSchemaConverter } from "@orpc/zod/zod4";
-import { AllSchemaRegistries } from "@repo/schema";
 import type { Hono } from "hono";
 import { BaseError, UnknownError } from "@/core/error";
 import type { HonoContext, ORPCContext, UserInContext } from "@/core/interface";
-import { FetchServerRouter } from "@/features";
 import { logger } from "@/utils/logger";
 import { TRUSTED_ORIGINS } from "../constants.env";
 import {
 	orpcAuthMiddleware,
 	orpcRequireAuthMiddleware,
 } from "../middlewares/auth";
+
+// Lazy-load heavy dependencies to reduce cold start time
+// These modules are loaded on first request instead of at script startup
+// biome-ignore lint/suspicious/noExplicitAny: Dynamic import type inference is complex
+let _fetchServerRouter: any = null;
+
+async function getFetchServerRouter() {
+	if (!_fetchServerRouter) {
+		const { FetchServerRouter } = await import("@/features");
+		_fetchServerRouter = FetchServerRouter;
+	}
+	return _fetchServerRouter;
+}
 
 const _sharedInterceptor: Interceptor<
 	// biome-ignore lint/suspicious/noExplicitAny: i dunno how refer from orpc
@@ -107,6 +115,7 @@ export const setupOrpcRouter = (app: Hono<HonoContext>) => {
 		};
 
 		if (isRPC) {
+			const FetchServerRouter = await getFetchServerRouter();
 			const handler = new FetchRPCHandler(FetchServerRouter, {
 				plugins: [
 					corsPlugin,
@@ -127,6 +136,20 @@ export const setupOrpcRouter = (app: Hono<HonoContext>) => {
 		}
 
 		if (isAPI) {
+			// Lazy load OpenAPI dependencies - these are only needed for /api routes
+			const [
+				{ OpenAPIHandler },
+				{ OpenAPIReferencePlugin },
+				{ ZodToJsonSchemaConverter },
+				{ AllSchemaRegistries },
+			] = await Promise.all([
+				import("@orpc/openapi/fetch"),
+				import("@orpc/openapi/plugins"),
+				import("@orpc/zod/zod4"),
+				import("@repo/schema"),
+			]);
+
+			const FetchServerRouter = await getFetchServerRouter();
 			const converter = new ZodToJsonSchemaConverter();
 
 			const handler = new OpenAPIHandler(FetchServerRouter, {

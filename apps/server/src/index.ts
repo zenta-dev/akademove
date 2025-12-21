@@ -18,6 +18,7 @@ import { handlePaymentExpiryCron } from "./features/payment/cron/payment-expiry-
 import { handleDlqMonitorCron } from "./features/queue/cron/dlq-monitor-handler";
 import { handleQueue } from "./features/queue/queue-handler";
 import { handleReportEscalationCron } from "./features/report/cron/report-escalation-handler";
+import { handleRatingRecalculationCron } from "./features/review/cron/rating-recalculation-handler";
 import { handleBanExpiryCron } from "./features/user/cron/ban-expiry-handler";
 import { setupWebsocketRouter } from "./features/ws";
 import { logger } from "./utils/logger";
@@ -55,9 +56,11 @@ export default {
 					logger.error({ error }, "[Cron] Order rebroadcast handler failed");
 				}),
 			);
+		}
 
-			// Every minute: Rebroadcast orders to driver pool if no driver accepted
-			// Handles cases where first broadcast had no drivers or all drivers ignored the order
+		// Every 2 minutes: Rebroadcast orders to driver pool if no driver accepted
+		// Handles cases where first broadcast had no drivers or all drivers ignored the order
+		if (event.cron === "*/2 * * * *") {
 			ctx.waitUntil(
 				handleDriverRebroadcastCron(env, ctx).catch((error) => {
 					logger.error({ error }, "[Cron] Driver rebroadcast handler failed");
@@ -78,6 +81,14 @@ export default {
 			ctx.waitUntil(
 				handleStaleLocationCron(env, ctx).catch((error) => {
 					logger.error({ error }, "[Cron] Stale location handler failed");
+				}),
+			);
+
+			// Every 5 minutes: Recalculate ratings for customers, drivers, and merchants
+			// Acts as a safety net for real-time rating updates
+			ctx.waitUntil(
+				handleRatingRecalculationCron(env, ctx).catch((error) => {
+					logger.error({ error }, "[Cron] Rating recalculation handler failed");
 				}),
 			);
 		}
