@@ -21,6 +21,7 @@ import { handleReportEscalationCron } from "./features/report/cron/report-escala
 import { handleRatingRecalculationCron } from "./features/review/cron/rating-recalculation-handler";
 import { handleBanExpiryCron } from "./features/user/cron/ban-expiry-handler";
 import { handleCommissionReportCron } from "./features/wallet/cron/commission-report-cron";
+import { handleWalletTransferVerificationCron } from "./features/wallet/cron/wallet-transfer-verification-cron";
 import { setupWebsocketRouter } from "./features/ws";
 import { logger } from "./utils/logger";
 
@@ -100,6 +101,17 @@ export default {
 					logger.error(
 						{ error },
 						"[Cron] Commission report caching handler failed",
+					);
+				}),
+			);
+
+			// Every 5 minutes: Verify wallet transfers for completed orders
+			// Ensures driver/merchant earnings were properly credited
+			ctx.waitUntil(
+				handleWalletTransferVerificationCron(env, ctx).catch((error) => {
+					logger.error(
+						{ error },
+						"[Cron] Wallet transfer verification handler failed",
 					);
 				}),
 			);
